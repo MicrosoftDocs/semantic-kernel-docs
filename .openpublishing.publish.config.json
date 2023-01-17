@@ -1,0 +1,19 @@
+{
+  "docsets_to_publish": [],
+  "notification_subscribers": [
+    "evchaki@microsoft.com",
+    " johnmaeda@microsoft.com"
+  ],
+  "sync_notification_subscribers": [],
+  "branches_to_filter": [],
+  "need_preview_pull_request": true,
+  "dependent_repositories": [
+    {
+      "path_to_root": "_themes",
+      "url": "https://github.com/Microsoft/templates.docs.msft",
+      "branch": "main",
+      "branch_mapping": {}
+    }
+  ],
+  "branch_target_mapping": {}
+}
