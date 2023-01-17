@@ -28,7 +28,23 @@
       "url": "https://github.com/Microsoft/templates.docs.msft",
       "branch": "main",
       "branch_mapping": {}
+    },
+    {
+      "path_to_root": "_themes.pdf",
+      "url": "https://github.com/Microsoft/templates.docs.msft.pdf",
+      "branch": "main",
+      "branch_mapping": {}
     }
   ],
-  "branch_target_mapping": {}
+  "branch_target_mapping": {
+    "live": [
+      "Publish",
+      "Pdf"
+    ]
+  },
+  "targets": {
+    "pdf": {
+      "template_folder": "_themes.pdf"
+    }
+  }
 }
