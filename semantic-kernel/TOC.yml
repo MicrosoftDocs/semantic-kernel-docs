@@ -1,2 +1,18 @@
-- name: Index
-  href: index.md
+- name: Overview
+  href: overview.md
+- name: Getting started
+  href: getstarted.md
+- name: Concepts
+  href: concepts.md
+- name: Skill Building
+  href: skillbuilding.md
+- name: Samples
+  href: samples.md
+- name: Native Skills
+  href: nativeskills.md
+- name: Troubleshooting
+  href: troubleshooting.md
+- name: Resources
+  href: resource.md
+- name: FAQ's
+  href: faq.md
