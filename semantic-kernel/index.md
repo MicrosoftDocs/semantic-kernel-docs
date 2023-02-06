@@ -1,1 +1,1 @@
-# Welcome to semantic-kernel!
+# What is Semantic Kernel?
