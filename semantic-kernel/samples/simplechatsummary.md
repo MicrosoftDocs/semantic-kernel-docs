@@ -15,4 +15,4 @@ The Simple Chat Summary sample allows you to see the power of [functions](/seman
 
 --- Animated Gif Here ----
 
---- Video Simple chat summary sample app here ----
+--- Video Simple chat summary sample app here https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17727 ----
