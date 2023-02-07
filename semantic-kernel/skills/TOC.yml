@@ -1,8 +1,6 @@
-- name: Building SK Functions
+- name: Building functions
   href: skfunctions.md
-- name: Create a prompt function
+- name: Create a native function
   href: promptfunction.md
-- name: Create a function template
+- name: Create a semantic function
   href: functiontemplate.md
-- name: Create a code function
-  href: codefunction.md
