@@ -8,6 +8,7 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 # Book creator sample app
+The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. 
 
 
 > [!IMPORTANT]
