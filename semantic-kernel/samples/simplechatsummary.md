@@ -10,7 +10,8 @@ ms.prod: semantic-kernel
 # Simple chat summary sample app
 The Simple Chat Summary sample allows you to see the power of [functions](/semantic-kernel/skills/skfunctions) used in a chat sample app.  The sample highlights the Summarize, Topics and Action Items functions in the Summarize Skill.  Each function calls Open AI to review the information in the chat window and produces insights.   
 
-NOTE: Each SK function will call Open AI which will use tokens that you will be billed for. 
+> [!IMPORTANT]
+> Each function will call Open AI which will use tokens that you will be billed for. 
 
 --- Animated Gif Here ----
 
