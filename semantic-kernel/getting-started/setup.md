@@ -15,4 +15,6 @@ Getting started with Semantic Kernel is quick and simple by following these step
 3. Follow the instructions on the Read Me
 
 
+Note: Make sure you have the [preqequisites](prereqs) installed
+
 ---- Video ----
