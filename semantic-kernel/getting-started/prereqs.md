@@ -17,8 +17,3 @@ For the best experience with Semantic Kernel and to run all of the samples you w
 3.  [.Net 7 SDK](https://dotnet.microsoft.com/en-us/download) installed
 4.  [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) installed
 5.  [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
-
-
-----Video-----
-
-JM was here ...
