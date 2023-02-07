@@ -20,7 +20,5 @@ Semantic Kernel  is designed to support and encapsulate several design patterns 
  
 # Why use Semantic Kernel to make your apps intelligent?
 - Easy integration: The framework is designed to be embedded in any type of application, making it easy for developers to add LLM functionality to their apps with minimal setup and configuration.
-- Powerful language understanding: Developers bring their own key for state-of-the-art language models to understand and interpret natural language input. Employees to create skills that enhance their application and make them much more productive.
+- Powerful language understanding: Developers bring their own key for state-of-the-art language models to understand and interpret natural language input and create skills that enhance their application and make them much more productive.
 - Connect to Azure services: The framework allows developers to connect to Azure services allowing their apps to take advantage of Microsoft's powerful capabilities.
-
-
