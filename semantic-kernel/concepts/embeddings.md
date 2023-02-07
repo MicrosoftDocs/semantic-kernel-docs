@@ -8,3 +8,6 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 # What are Embeddings?
+
+
+---- Video  https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17540 ---
