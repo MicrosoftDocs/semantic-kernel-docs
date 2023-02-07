@@ -7,4 +7,4 @@ ms.author: evchaki
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-# Embeddings in Semantic Kernel
+# What are Embeddings?
