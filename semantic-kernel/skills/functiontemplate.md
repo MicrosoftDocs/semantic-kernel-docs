@@ -7,5 +7,5 @@ ms.author: evchaki
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-# SK Function Templates in Semantic Kernel
+# SK Function Templates
 
