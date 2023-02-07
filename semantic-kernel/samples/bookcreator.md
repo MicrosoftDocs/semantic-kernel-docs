@@ -16,4 +16,4 @@ The Book creator sample allows you to enter in a topic then the [Planner](/seman
 
 --- Animated Gif Here ----
 
---- Video book creator sample app here ----
+--- Video book creator sample app here https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17728  ----
