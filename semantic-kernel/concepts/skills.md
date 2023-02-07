@@ -11,7 +11,7 @@ ms.prod: semantic-kernel
 
 A Skill refers to a domain of expertise made avaialble to the kernel as a group of finely tuned computational functions. 
 
----- Video - Skills and Functions ----
+---- Video - Skills and Functions https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17755 ----
 
 # What is a Semantic Kernel function?
 A function is a computational machine comprised of Semantic AI and/or native code that's avaialble in a Skill.
