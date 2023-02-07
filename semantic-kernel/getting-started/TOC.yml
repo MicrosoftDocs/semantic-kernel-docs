@@ -1,4 +1,4 @@
 - name: Setup
-  href: getting-started/setup.md
+  href: setup.md
 - name: PreReqs
-  href: getting-started/prereqs.md
+  href: prereqs.md
