@@ -17,4 +17,4 @@ Getting started with Semantic Kernel is quick and simple by following these step
 
 Note: Make sure you have the [prerequisites ](prereqs) installed on your machine
 
----- Video ----
+---- Video https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17507 ----
