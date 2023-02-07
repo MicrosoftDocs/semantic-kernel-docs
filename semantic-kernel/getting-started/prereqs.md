@@ -19,3 +19,5 @@ For the best experience with Semantic Kernel and to run all of the samples you w
 
 
 ----Video-----
+
+JM was here ...
