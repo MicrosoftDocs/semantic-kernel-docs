@@ -8,8 +8,6 @@
   href: skills/toc.yml
 - name: Samples
   href: samples/toc.yml
-- name: Native Skills
-  href: nativeskills.md
 - name: Troubleshooting
   href: troubleshooting.md
 - name: Resources
