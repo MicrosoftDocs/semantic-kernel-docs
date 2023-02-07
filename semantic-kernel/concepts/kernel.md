@@ -11,4 +11,4 @@ ms.prod: semantic-kernel
 
 The kernel in Semantic Kernel is the orchestrator of a user's Ask that works to fulfill the user's desired results using Skills.
 
----- VIDEO Kernel -----
+ 
