@@ -1,1 +1,10 @@
-
+- name: All Samples
+  href: samplelist.md
+- name: Simple Chat Summary 
+  href: simplechatsummary.md
+- name: Book Creator
+  href: bookcreator.md
+- name: Authenication and APIs
+  href: authapi.md
+- name: GitHub Repo Q&A Bot
+  href: githubrepoqabot.md
