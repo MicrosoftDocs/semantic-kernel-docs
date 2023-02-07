@@ -1,13 +1,11 @@
 - name: Overview
   href: index.md
-      - name: What is Semantic Kernel
-        href: aboutsk.md
 - name: Getting started
-  href: getstarted.md
+  href: getting-started/toc.yml
 - name: Concepts
-  href: concepts.md
+  href: concepts/toc.yml
 - name: Skill Building
-  href: skillbuilding.md
+  href: skills/toc.yml
 - name: Samples
   href: samples.md
 - name: Native Skills
