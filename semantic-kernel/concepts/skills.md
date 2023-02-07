@@ -9,3 +9,4 @@ ms.prod: semantic-kernel
 ---
 # What are Skills?
 
+A Skill refers to a domain of expertise made avaialble to the kernel as a group of finely tuned computational functions. 
