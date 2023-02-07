@@ -1,5 +1,7 @@
 - name: Overview
   href: index.md
+      - name: What is Semantic Kernel
+        href: aboutsk.md
 - name: Getting started
   href: getstarted.md
 - name: Concepts
