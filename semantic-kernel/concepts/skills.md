@@ -17,5 +17,6 @@ A Skill refers to a domain of expertise made avaialble to the kernel as a group 
 A function is acomputational machine comprised of Semantic AI and/or native code that's avaialble in a Skill.
 
 ## Types of functions
-- Native Function: is expressed in the conventions of the computing language and easily integrates with Semantic Kernel
-- Semantic Function: is expressed as a text file “skprompt.txt” using Semantic Kernel’s Prompt Template 
+- [Semantic Function](/semantic-kernel/skills/promptfunction): is expressed as a text file “skprompt.txt” using Semantic Kernel’s Prompt Template 
+- [Native Function](/semantic-kernel/skills/functiontemplate): is expressed in the conventions of the computing language and easily integrates with Semantic Kernel
+
