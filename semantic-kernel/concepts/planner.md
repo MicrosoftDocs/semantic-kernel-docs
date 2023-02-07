@@ -8,4 +8,7 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 # What is Planner?
+The Planner works backwards from a goal that’s been given with an Ask. Because the Planner has access to all the available Skills it can generate the set of necessary steps to reach the end goal. 
 
+
+---- VIDEO Planner ----
