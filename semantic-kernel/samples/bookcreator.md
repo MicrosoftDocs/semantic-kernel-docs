@@ -16,4 +16,4 @@ The Book creator sample allows you to enter in a topic then the [Planner](/seman
 
 --- Animated Gif Here ----
 
---- Video Simple chat summary sample app here ----
+--- Video book creator sample app here ----
