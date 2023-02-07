@@ -9,3 +9,10 @@ ms.prod: semantic-kernel
 ---
 # GitHub Repo Q&A bot sample app
 
+
+> [!IMPORTANT]
+> Each function will call Open AI which will use tokens that you will be billed for. 
+
+--- Animated Gif Here ----
+
+--- Video Simple chat summary sample app here ----
