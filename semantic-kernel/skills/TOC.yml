@@ -1,2 +1,8 @@
-- name: Overview
-  href: index.md
+- name: What are SK Functions?
+  href: skills/skfunctions.md
+- name: Create a prompt function
+  href: skills/promptfunction.md
+- name: Create a function template
+  href: skills/functiontemplate.md
+- name: Create a code function
+  href: skills/codefunction.md
