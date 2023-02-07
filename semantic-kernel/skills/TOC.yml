@@ -1,4 +1,4 @@
-- name: What are SK Functions?
+- name: Building SK Functions
   href: skfunctions.md
 - name: Create a prompt function
   href: promptfunction.md
