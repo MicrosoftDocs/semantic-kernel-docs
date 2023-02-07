@@ -1,10 +1,10 @@
 - name: Kernel
-  href: concepts/kernel.md
+  href: kernel.md
 - name: Planner
-  href: concepts/planner.md
+  href: planner.md
 - name: Skills
-  href: concepts/skills.md
+  href: skills.md
 - name: Memories
-  href: concepts/memories.md
+  href: memories.md
 - name: Embeddings
-  href: concepts/embeddings.md
+  href: embeddings.md
