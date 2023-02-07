@@ -16,4 +16,4 @@ The GitHub Repo Q&A Bot sample allows you to pull in data from a public GitHub r
 
 --- Animated Gif Here ----
 
---- Video GitHub Q&A Bot sample app here ----
+--- Video GitHub Q&A Bot sample app here https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17730 ----
