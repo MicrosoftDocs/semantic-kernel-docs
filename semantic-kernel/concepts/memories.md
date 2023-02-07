@@ -9,3 +9,4 @@ ms.prod: semantic-kernel
 ---
 # What are Memories?
 
+--- Video https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17538 ---
