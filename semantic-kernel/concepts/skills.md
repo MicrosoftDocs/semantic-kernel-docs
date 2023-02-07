@@ -14,7 +14,7 @@ A Skill refers to a domain of expertise made avaialble to the kernel as a group 
 ---- Video - Skills and Functions ----
 
 # What is a Semantic Kernel function?
-A function is acomputational machine comprised of Semantic AI and/or native code that's avaialble in a Skill.
+A function is a computational machine comprised of Semantic AI and/or native code that's avaialble in a Skill.
 
 ## Types of functions
 - [Semantic Function](/semantic-kernel/skills/promptfunction): is expressed as a text file “skprompt.txt” using Semantic Kernel’s Prompt Template 
