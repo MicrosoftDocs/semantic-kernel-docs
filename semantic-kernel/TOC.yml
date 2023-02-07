@@ -7,7 +7,7 @@
 - name: Skill Building
   href: skills/toc.yml
 - name: Samples
-  href: samples.md
+  href: samples/toc.yml
 - name: Native Skills
   href: nativeskills.md
 - name: Troubleshooting
