@@ -1,8 +1,8 @@
 - name: What are SK Functions?
-  href: skills/skfunctions.md
+  href: skfunctions.md
 - name: Create a prompt function
-  href: skills/promptfunction.md
+  href: promptfunction.md
 - name: Create a function template
-  href: skills/functiontemplate.md
+  href: functiontemplate.md
 - name: Create a code function
-  href: skills/codefunction.md
+  href: codefunction.md
