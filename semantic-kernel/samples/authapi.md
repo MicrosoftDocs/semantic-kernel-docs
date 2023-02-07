@@ -17,4 +17,4 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 
 --- Animated Gif Here ----
 
---- Video Auth sample app here ----
+--- Video Auth sample app here https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17729 ----
