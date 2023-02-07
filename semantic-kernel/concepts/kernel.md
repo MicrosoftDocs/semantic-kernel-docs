@@ -7,4 +7,4 @@ ms.author: evchaki
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-# What is the Kernel in Semantic Kernel
+# What is the Kernel?
