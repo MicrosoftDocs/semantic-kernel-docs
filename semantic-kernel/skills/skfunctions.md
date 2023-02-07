@@ -7,6 +7,6 @@ ms.author: evchaki
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-# Building SK Functions in Semantic Kernel
+# Building SK Functions
 
 
