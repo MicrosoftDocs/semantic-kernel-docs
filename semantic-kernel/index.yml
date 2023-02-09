@@ -1,0 +1,19 @@
+## YamlMime:Hub
+
+title: Semantic Kernel Documentation # < 60 chars
+summary: Add LLM AI to your app with a powerful, lightweight SDK # < 160 chars
+
+metadata:
+  title: Semantic Kernel Documentation # Required; page title displayed in search results. Include the brand. < 60 chars.
+  description: Semantic Kernel lets you easily add LLM AI to your app with a powerful, lightweight SDK. # Required; article description that is displayed in search results. < 160 chars.
+  ms.service: semantic-kernel #Required; service per approved list. service slug assigned to your service by ACOM.
+  ms.prod: semantic-kernel
+  ms.topic: landing-page # Required
+  author: johnmaeda #Required; your GitHub user alias, with correct capitalization.
+  ms.author: johnmaeda #Required; microsoft alias of author; optional team alias.
+  ms.date: 02/09/2023 #Required; mm/dd/yyyy format.
+
+# highlightedContent section (optional)
+# Maximum of 8 items
+
+This is a test
