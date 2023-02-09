@@ -9,6 +9,8 @@ ms.prod: semantic-kernel
 ---
 # Setting up Semantic Kernel
 
+![pink circles of semantic kernel](../media/mainpattern.png)
+
 Test note.
 
 Getting started with Semantic Kernel is quick and simple by following these steps:
