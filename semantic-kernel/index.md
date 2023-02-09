@@ -3,7 +3,7 @@ title: What is Semantic Kernel?
 description: Overview of Semantic Kernel
 author: evchaki
 ms.topic: quickstart
-ms.author: evchaki
+ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
@@ -11,9 +11,9 @@ ms.prod: semantic-kernel
 
 ![pink circles of semantic kernel](media/mainpattern.png)
 
-Semantic Kernel is a lightweight SDK that offers a simple, powerful, and consistent programming model mixing classical code with AI and "semantic" functions, covering multiple programming languages and platforms.
+## Semantic Kernel (SK) is a lightweight SDK that lets you easily mix conventional programming languages with the latest in Large Language Model (LLM) AI "prompts" with templating, chaining, and planning readily available out-of-the-box.
 
-Semantic Kernel  is designed to support and encapsulate several design patterns from the latest in AI research such that developers can infuse their applications with complex skills like prompt chaining, recursive reasoning, summarization, zero/few-shot learning, contextual memory, long-term memory, embeddings, semantic indexing, planning, and accessing external knowledge stores as well as your own data.
+SK is designed to support and encapsulate several design patterns from the latest in Large Language Model (LLM) AI research such that developers can infuse their applications with complex skills like prompt chaining, recursive reasoning, summarization, zero/few-shot learning, contextual memory, long-term memory, embeddings, semantic indexing, planning, and accessing external knowledge stores as well as your own data.
 
 [Get started](getting-started/setup) with Semantic Kernel 
 
