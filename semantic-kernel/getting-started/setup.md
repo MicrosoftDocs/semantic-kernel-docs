@@ -9,6 +9,8 @@ ms.prod: semantic-kernel
 ---
 # Setting up Semantic Kernel
 
+Test note.
+
 Getting started with Semantic Kernel is quick and simple by following these steps:
 1. Go to the Semantic Kernel [GitHub repository](https://github.com/microsoft/semantic-kernel)
 2. [Clone](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository) the repository
