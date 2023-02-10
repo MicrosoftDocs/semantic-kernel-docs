@@ -7,7 +7,6 @@ metadata:
   title: Semantic Kernel Documentation # Required; page title displayed in search results. Include the brand. < 60 chars.
   description: Semantic Kernel lets you easily add LLM AI to your app with a powerful, lightweight SDK. # Required; article description that is displayed in search results. < 160 chars.
   ms.service: semantic-kernel #Required; service per approved list. service slug assigned to your service by ACOM.
-  ms.prod: semantic-kernel
   ms.topic: landing-page # Required
   author: johnmaeda #Required; your GitHub user alias, with correct capitalization.
   ms.author: johnmaeda #Required; microsoft alias of author; optional team alias.
