@@ -25,12 +25,12 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 
 | Journey Phase** | Short Description |
 |:---:|:---|
-| <img src="media/ask.png" alt="An Ask" width = "50"> | A user's goal is sent to SK as an ask |
-| <img src="media/kernel.png" alt="Kernel" height="100"> | The kernel orchestrates a user's ask |
-| <img src="media/planner.png" alt="Planner" height="100"> | The planner breaks it down into steps |
-| <img src="media/enhancers.png" alt="Enhancers" height="100"> | The steps get enriched with skills, memories, and connectors |
-| <img src="media/pipeline.png" alt="Pipeline" height="100"> | Execution of the steps results in fulfilling the user's ask |
-| <img src="media/get.png" alt="The Get" height="100"> | And the user gets what they asked for |
+| <img src="media/ask.png" alt="An Ask" width = "300"> | A user's goal is sent to SK as an ask |
+| <img src="media/kernel.png" alt="Kernel" width = "300"> | The kernel orchestrates a user's ask |
+| <img src="media/planner.png" alt="Planner" width = "300"> | The planner breaks it down into steps |
+| <img src="media/enhancers.png" alt="Enhancers" width = "300"> | The steps get enriched with skills, memories, and connectors |
+| <img src="media/pipeline.png" alt="Pipeline" width = "300"> | Execution of the steps results in fulfilling the user's ask |
+| <img src="media/get.png" alt="The Get" width = "300"> | And the user gets what they asked for |
 
 **_Note that this diagram is not technically accurate and is provided to explain the general flow of how SK works. Please refer to the actual source code to examine its underlying architecture._
 
