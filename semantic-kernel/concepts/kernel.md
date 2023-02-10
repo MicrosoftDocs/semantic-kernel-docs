@@ -10,6 +10,7 @@ ms.prod: semantic-kernel
 # What is the Kernel?
 
 ![](../media/kernelsm.png)
+
 The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfill the user's desired goal using its available skills, memories, and connectors. Key features of the **kernel** that can make a developer faster include:
 
 * Integrating native code with prompts
@@ -17,6 +18,10 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
 * Packaging of hybrid prompts as reusable skills
 * Orchestrating complicated LLM AI prompts
 * Using multiple LLM AI models and configurations
+
+## Get familiar with SK's concepts
+
+Kernel | [Skills](skills) | [Planner](planner) | Memories | Embeddings | Connectors
 
 ## History of the Kernel
 
