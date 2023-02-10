@@ -19,11 +19,20 @@ SK is engineered to accelerate Microsoft teams' understandings of the continual 
 
 ## SK is a kit of parts that all interlock
 
-![](media/fullview.png)
+With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ask" in mind — that gets driven to a dynamically informed outcome with the orchestration capabilities of the kernel. The flow from a user's ask to getting what the user asked for with SK can be visualized as a flow of connected parts:
 
-| The kernel orchestrates a user's ask<br /> <img src="media/kernel.png" height="100"> | The planner breaks it down into steps<br /> <img src="media/planner.png" height="100"> | The steps get enriched with skills, memories, and connectors <img src="media/enhancers.png" height="100"> | And the user gets what they asked for  <img src="media/pipeline.png" height="100"> |
-|---|---|---|---|
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
 
+| Journey Phase** | Short Description |
+|:---:|:---|
+| <img src="media/ask.png" alt="An Ask" height="100"> | A user's goal is sent to SK as an ask |
+| <img src="media/kernel.png" alt="Kernel" height="100"> | The kernel orchestrates a user's ask |
+| <img src="media/planner.png" alt="Planner" height="100"> | The planner breaks it down into steps |
+| <img src="media/enhancers.png" alt="Enhancers" height="100"> | The steps get enriched with skills, memories, and connectors |
+| <img src="media/pipeline.png" alt="Pipeline" height="100"> | Execution of the steps results in fulfilling the user's ask |
+| <img src="media/get.png" alt="The Get" height="100"> | And the user gets what they asked for |
+
+**_Note that this diagram is not technically accurate and is provided to explain the general flow of how SK works. Please refer to the actual source code to examine its underlying architecture._
 
 ## SK gets your LLM AI journey started  
 
