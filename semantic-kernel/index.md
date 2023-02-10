@@ -13,9 +13,23 @@ ms.prod: semantic-kernel
 
 **Semantic Kernel (SK) is a lightweight SDK that lets you easily mix conventional programming languages with the latest in Large Language Model (LLM) AI "prompts" with templating, chaining, and planning capabilities out-of-the-box.**
 
-With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK has been built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing.
+With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK is being built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing.
 
-SK was engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecitng into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
+SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
+
+## SK is a kit of parts that all interlock
+
+| ![](media/ask.png) | ![](media/kernel.png) | ![](media/planner.png) | ![](media/enhancers.png) | ![](media/pipeline.png) | ![](media/get.png) |
+|---|---|---|---|---|---|
+
+| ![](media/ask.png) | ![](media/kernel.png) | ![](media/planner.png) | 
+|---|---|---|
+
+| ![](media/enhancers.png) |
+|---|
+
+![](media/pipeline.png) | ![](media/get.png) |
+|---|---|
 
 ## SK gets your LLM AI journey started  
 
@@ -28,16 +42,13 @@ SK was engineered to accelerate Microsoft teams' understandings of the continual
 
 1. **Fast Integration:** SK is designed to be embedded in any kind of application, making it easy for developers to add LLM AI functionality to test inside their apps.
 
-2. **Scalable Magic:** Plain prompts that are fed as API calls only get you so far. SK provides the abstractions and machinery to unlock your OpenAI or Azure OpenAI API key.
+2. **Power Prompting:** Plain prompts that are fed as API calls can only get you so far. SK provides the abstractions and machinery to unlock your OpenAI or Azure OpenAI API key.
 
 3. **Novel-But-Familiar:** For 100% determininism, native code is always available as a first-class partner on your prompt engineering quests. You get the best of both worlds.
 
 ## SK is for developers facing new pressures
 
-| 1️⃣ </br> You, or your boss, have noticed that ChatGPT has gotten a lot of attention. | → | 2️⃣  </br> There's a big push to do something similar with LLM AI in your app ... asap. | ↓ |
-| --- | --- | --- | --- |
-
-| → | 3️⃣  </br> You quickly learn that making AI tell a joke is easy. Everything else isn't. | → |  4️⃣  </br> Rather than waste time on LLM AI itself, you want to work on your app instead. |
+| 1️⃣<br /> You, or your boss, have noticed that ChatGPT has gotten a lot of attention. | 2️⃣<br />  There's a big push to do something similar with LLM AI in your app ... _asap._ | 3️⃣<br /> You quickly learn that making AI tell a joke is easy. Everything else isn't. |  4️⃣<br />  Rather than waste time on LLM AI itself, you want to work on your app instead. |
 | --- | --- | --- | --- |
 
 ## SK is under construction and is hungry for feedback
