@@ -20,10 +20,11 @@ SK was engineered to accelerate Microsoft teams' understandings of the continual
 ## SK gets your LLM AI journey started  
 
 **[Get started](getting-started/setup) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts × code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
+<br />
 
 > [!VIDEO https://aka.ms/SK-First-Steps]
 
-## SK makes app developers work lives easier
+## SK makes app developers' work lives easier
 
 1. **Fast Integration:** SK is designed to be embedded in any kind of application, making it easy for developers to add LLM AI functionality to test inside their apps.
 
