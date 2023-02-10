@@ -21,7 +21,7 @@ SK was engineered to accelerate Microsoft teams' understandings of the continual
 
 **[Get started](getting-started/setup) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts × code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
 
-[!VIDEO https://aka.ms/SK-First-Steps]
+> [!VIDEO https://aka.ms/SK-First-Steps]
 
 ## SK makes app developers work lives easier
 
