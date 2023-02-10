@@ -19,4 +19,9 @@ Getting started with Semantic Kernel is quick and simple by following these step
 
 Note: Make sure you have the [prerequisites ](prereqs) installed on your machine
 
+Watch this video to learn step-by-step how to clone the repository locally
 > [!VIDEO https://aka.ms/SK-Local-Setup]
+
+
+Once you have the repository cloned and setup this video will show step-by-step how to use the getting started notebook
+> [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
