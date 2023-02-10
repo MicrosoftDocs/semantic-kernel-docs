@@ -19,4 +19,4 @@ Getting started with Semantic Kernel is quick and simple by following these step
 
 Note: Make sure you have the [prerequisites ](prereqs) installed on your machine
 
-> [!VIDEO https://review.learn.microsoft.com/en-us/semantic-kernel/getting-started/SK-Getting-Started-Notebook_720.mp4]
+> [!VIDEO https://aka.ms/SK-Getting-Started-Notebook]
