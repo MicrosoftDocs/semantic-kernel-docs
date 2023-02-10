@@ -23,7 +23,7 @@ SK was engineered to accelerate Microsoft teams' understandings of the continual
 
 [!VIDEO https://aka.ms/SK-First-Steps]
 
-## SK makes app developers lives easier
+## SK makes app developers work lives easier
 
 1. **Fast Integration:** SK is designed to be embedded in any kind of application, making it easy for developers to add LLM AI functionality to test inside their apps.
 
