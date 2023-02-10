@@ -17,7 +17,7 @@ With SK, you can now build AI-first apps faster by design while also having a fr
 
 SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
 
-## SK is a kit of parts that all interlock
+## SK is a kit of parts that interlock
 
 With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ask" in mind — that gets driven to a dynamically informed outcome with the orchestration capabilities of the kernel. The flow from a user's ask to getting what the user asked for with SK can be visualized as a flow of connected parts:
 
@@ -27,8 +27,8 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 |:---:|:---|
 | <img src="media/asksm.png" alt="An Ask"> | A user's goal is sent to SK as an ask |
 | <img src="media/kernelsm.png" alt="Kernel"> | [The kernel](concepts/kernel) orchestrates a user's ask |
-| <img src="media/plannersm.png" alt="Planner"> | The planner breaks it down into steps |
-| <img src="media/enhancers.png" alt="Enhancers"> | The steps get enriched with skills, memories, and connectors |
+| <img src="media/plannersm.png" alt="Planner"> | [The planner](concepts/planner) breaks it down into steps |
+| <img src="media/enhancers.png" alt="Enhancers"> | The steps get enriched with [skills,](concepts/skills) [memories,](concepts/memories) and [connectors](concepts/connectors) |
 | <img src="media/pipeline.png" alt="Pipeline"> | Execution of the steps results in fulfilling the user's ask |
 | <img src="media/getsm.png" alt="The Get"> | And the user gets what they asked for |
 
