@@ -25,7 +25,7 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 
 | Journey Phase** | Short Description |
 |:---:|:---|
-| <img src="media/ask.png" alt="An Ask" height="100"> | A user's goal is sent to SK as an ask |
+| <img src="media/ask.png" alt="An Ask" width = "50"> | A user's goal is sent to SK as an ask |
 | <img src="media/kernel.png" alt="Kernel" height="100"> | The kernel orchestrates a user's ask |
 | <img src="media/planner.png" alt="Planner" height="100"> | The planner breaks it down into steps |
 | <img src="media/enhancers.png" alt="Enhancers" height="100"> | The steps get enriched with skills, memories, and connectors |
