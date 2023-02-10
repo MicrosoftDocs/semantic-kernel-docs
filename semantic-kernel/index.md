@@ -19,17 +19,11 @@ SK is engineered to accelerate Microsoft teams' understandings of the continual 
 
 ## SK is a kit of parts that all interlock
 
-| ![](media/ask.png) | ![](media/kernel.png) | ![](media/planner.png) | ![](media/enhancers.png) | ![](media/pipeline.png) | ![](media/get.png) |
-|---|---|---|---|---|---|
+![](media/fullview.png)
 
-| ![](media/ask.png) | ![](media/kernel.png) | ![](media/planner.png) | 
-|---|---|---|
+| The kernel orchestrates a user's ask<br /> <img src="media/kernel.png" height="100"> | The planner breaks it down into steps<br /> <img src="media/planner.png" height="100"> | The steps get enriched with skills, memories, and connectors <img src="media/enhancers.png" height="100"> | And the user gets what they asked for  <img src="media/pipeline.png" height="100"> |
+|---|---|---|---|
 
-| ![](media/enhancers.png) |
-|---|
-
-![](media/pipeline.png) | ![](media/get.png) |
-|---|---|
 
 ## SK gets your LLM AI journey started  
 
