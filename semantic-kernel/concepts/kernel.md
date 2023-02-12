@@ -20,7 +20,7 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
 * Using multiple LLM AI models and configurations
 
 :::row:::
-   :::column span="":n:n:
+    :::column span="":::
         **SK Concepts**
 
         [Kernel](kernel)
@@ -28,13 +28,13 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
         [Skills](skills)
         [Memories](memories)
         [Connectors](connectors) 
-   :::column-end:::
-   :::column span="":::
+    :::column-end:::
+    :::column span="":::
         **LLM AI Terms**
 
         [Models](models)
         [Prompts](prompts)
         [Tokens](tokens)
         [Embeddings](embeddings)
-   :::column-end:::
+    :::column-end:::
 :::row-end:::
