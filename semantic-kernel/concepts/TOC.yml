@@ -1,18 +1,18 @@
-- name: Kernel
+- name: SK Kernel
   href: kernel.md
-- name: Planner
+- name: SK Planner
   href: planner.md
-- name: Skills
+- name: SK Skills
   href: skills.md
-- name: Memories
+- name: SK Memories
   href: memories.md
-- name: Connectors
+- name: SK Connectors
   href: connectors.md
-- name: Models
+- name: LLM AI Models
   href: models.md
-- name: Prompts
+- name: LLM AI Prompts
   href: prompts.md
-- name: Tokens
+- name: LLM AI Tokens
   href: tokens.md
-- name: Embeddings
+- name: LLM AI Embeddings
   href: embeddings.md
