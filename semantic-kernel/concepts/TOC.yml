@@ -6,7 +6,13 @@
   href: skills.md
 - name: Memories
   href: memories.md
-- name: Embeddings
-  href: embeddings.md
 - name: Connectors
   href: connectors.md
+- name: Models
+  href: models.md
+- name: Prompts
+  href: prompts.md
+- name: Tokens
+  href: tokens.md
+- name: Embeddings
+  href: embeddings.md
