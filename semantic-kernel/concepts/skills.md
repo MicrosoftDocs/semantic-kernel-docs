@@ -26,6 +26,6 @@ A function is a computational machine comprised of Semantic AI and/or native cod
 
 [Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
 
-## Learn basic LLM AI lingo
+## Learn core LLM AI lingo
 
 [Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)

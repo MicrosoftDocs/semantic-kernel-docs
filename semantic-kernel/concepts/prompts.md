@@ -1,19 +1,24 @@
 ---
-title: Prompts in Semantic Kernel
-description: Prompts in Semantic Kernel
+title: LLM AI Prompts
+description: LLM AI Prompts
 author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-# What are Tokens?
+# What are Prompts?
 
+Prompts are the inputs or queries that a user or a program gives to an LLM AI, in order to elicit a specific output or response from the model. Prompts can be natural language sentences or questions, or code snippets or commands, or any combination of text or code, depending on the domain and the task. Prompts can also contain parameters or options, such as temperature, top-k, or top-p, that control the behavior and the quality of the model's output. 
+
+Prompts can also be nested or chained, meaning that the output of one prompt can be used as the input of another prompt, creating more complex and dynamic interactions with the model. 
+
+Prompts are the way of communicating and directing the model.
+
+## Learn core LLM AI lingo
+
+[Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)
 
 ## Get familiar with SK's concepts
 
 [Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
-
-## Learn basic LLM AI lingo
-
-[Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)
