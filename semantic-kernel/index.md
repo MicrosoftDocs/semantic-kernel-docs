@@ -13,6 +13,8 @@ ms.prod: semantic-kernel
 
 **Semantic Kernel (SK) is a lightweight SDK that lets you easily mix conventional programming languages with the latest in Large Language Model (LLM) AI "prompts" with templating, chaining, and planning capabilities out-of-the-box.**
 
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
+
 With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK is being built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing.
 
 SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
@@ -20,22 +22,21 @@ SK is engineered to accelerate Microsoft teams' understandings of the continual 
 
 ## SK is a kit of parts that interlock
 
-With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ask" in mind — that gets driven to a dynamically informed outcome with the orchestration capabilities of the kernel. The flow from a user's ask to getting what the user asked for with SK can be visualized as a flow of connected parts:
+With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ASK" in mind — that gets driven to a dynamically informed outcome with the orchestration capabilities of the kernel. The flow from a user's ask to getting what the user asked for with SK can be visualized as a flow of connected parts:
 
-![ALt image info](media/flowchart.svg)
 
-![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
+![Technical perspective of what's happening](media/flowdiagram.png)
 
-| Journey Phase** | Short Description |
+| Journey | Short Description |
 |:---:|:---|
-| <img src="media/asksm.png" alt="An Ask"> | A user's goal is sent to SK as an ask |
-| <img src="media/kernelsm.png" alt="Kernel"> | [The kernel](concepts/kernel) orchestrates a user's ask |
-| <img src="media/plannersm.png" alt="Planner"> | [The planner](concepts/planner) breaks it down into steps |
-| <img src="media/enhancers.png" alt="Enhancers"> | The steps get enriched with [skills,](concepts/skills) [memories,](concepts/memories) and [connectors](concepts/connectors) |
-| <img src="media/pipeline.png" alt="Pipeline"> | Execution of the steps results in fulfilling the user's ask |
-| <img src="media/getsm.png" alt="The Get"> | And the user gets what they asked for |
+| **ASK** | A user's goal is sent to SK as an ASK |
+| **Kernel** | [The kernel](concepts/kernel) orchestrates a user's ASK |
+| **Planner** | [The planner](concepts/planner) breaks it down into steps based upon resources that are available |
+| **Resources** | Planning involves leveraging available [skills,](concepts/skills) [memories,](concepts/memories) and [connectors](concepts/connectors) |
+| **Steps** | A plan is a series of steps for the kernel to execute |
+| **Pipeline** | Executing the steps results in fulfilling the user's ASK |
+| **GET** | And the user gets what they asked for ... |
 
-**_Note that this diagram is not technically accurate and is provided to explain the general flow of how SK works. Please refer to the actual source code to examine its underlying architecture._
 
 ## SK gets your LLM AI journey started  
 
