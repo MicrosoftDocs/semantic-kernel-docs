@@ -21,4 +21,8 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
 
 ## Get familiar with SK's concepts
 
-[Kernel](kernel) | [Skills](skills) | [Planner](planner) | [Memories](memories) | [Embeddings](embeddings) | [Connectors](connectors)
+[Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
+
+## Learn basic LLM AI lingo
+
+[Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)

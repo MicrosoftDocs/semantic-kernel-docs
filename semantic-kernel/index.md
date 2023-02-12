@@ -22,8 +22,7 @@ SK is engineered to accelerate Microsoft teams' understandings of the continual 
 
 ## SK is a kit of parts that interlock
 
-With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ASK" in mind — that gets driven to a dynamically informed outcome with the orchestration capabilities of the kernel. The flow from a user's ask to getting what the user asked for with SK can be visualized as a flow of connected parts:
-
+With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ASK" in mind. An ASK is driven to a dynamically informed outcome with the orchestration capabilities of the kernel. Starting from a user's ask to GET-ting what they want can be represented as a flow of connected parts:
 
 ![Technical perspective of what's happening](media/flowdiagram.png)
 
