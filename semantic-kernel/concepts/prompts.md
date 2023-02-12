@@ -1,6 +1,6 @@
 ---
-title: Tokens in Semantic Kernel
-description: Tokens in Semantic Kernel
+title: Prompts in Semantic Kernel
+description: Prompts in Semantic Kernel
 author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda

@@ -10,10 +10,6 @@ ms.prod: semantic-kernel
 
 # What are Embeddings?
 
-![](../media/enhancers.png)
-
----- Video  https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17540 ---
-
 ## Get familiar with SK's concepts
 
 [Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
