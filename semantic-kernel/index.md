@@ -17,20 +17,12 @@ With SK, you can now build AI-first apps faster by design while also having a fr
 
 SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
 
-flowchart LR
-    A[ASK] --> B[Kernel]
-    B --> C[Planner]
-    C --> |Gather| E 
-    C --> |Gather| F
-    C --> |Gather| G
-    E[Skills] --> |Inform| H
-    F[Memories] --> |Inform| H 
-    G[Connectors] --> |Inform| H
-    H[Steps\nPlanned] --> |Pipeline| J[GET]
 
 ## SK is a kit of parts that interlock
 
 With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ask" in mind — that gets driven to a dynamically informed outcome with the orchestration capabilities of the kernel. The flow from a user's ask to getting what the user asked for with SK can be visualized as a flow of connected parts:
+
+![](media/flowchart.svg)
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
 
