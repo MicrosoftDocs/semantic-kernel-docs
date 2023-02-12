@@ -22,7 +22,7 @@ SK is engineered to accelerate Microsoft teams' understandings of the continual 
 
 With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ask" in mind — that gets driven to a dynamically informed outcome with the orchestration capabilities of the kernel. The flow from a user's ask to getting what the user asked for with SK can be visualized as a flow of connected parts:
 
-![](media/flowchart.svg)
+![ALt image info](media/flowchart.svg)
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
 
