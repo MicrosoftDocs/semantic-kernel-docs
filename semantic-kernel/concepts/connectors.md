@@ -12,6 +12,7 @@ ms.prod: semantic-kernel
 
 ![](../media/enhancers.png)
 
+
 ## Get familiar with SK's concepts
 
 [Kernel](kernel) | [Skills](skills) | [Planner](planner) | [Memories](memories) | [Embeddings](embeddings) | [Connectors](connectors)
