@@ -10,4 +10,6 @@ ms.prod: semantic-kernel
 
 # Concepts in Semantic Kernel
 
+[!INCLUDE [conceptheader.md](../includes/conceptheader.md)]
+
 Blah blah

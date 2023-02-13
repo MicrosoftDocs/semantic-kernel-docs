@@ -9,22 +9,16 @@ ms.prod: semantic-kernel
 ---
 # Setting up Semantic Kernel
 
-![pink circles of semantic kernel](../media/skpattern.png)
+[!INCLUDE [subheader.md](../includes/subheader.md)]
 
 Getting started with Semantic Kernel (SK) is quick and simple by following these steps:
 1. Go to the Semantic Kernel [GitHub repository](https://github.com/microsoft/semantic-kernel)
 2. [Clone](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository) the repository
-3. Follow the instructions on the Read Me
-
-> [!IMPORTANT]
-> Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
-
-> [!div class="nextstepaction"]
-> [Browse requirements](requirements)
+3. Jump into the Jupyter notebooks to get going quickly
 
 ## Clone the repo locally to set up
 
-Your first step is to clone the repository and move it to your local machine:
+Your first step is to clone the repository and move it to your local machine.
 
 > [!IMPORTANT]
 > Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
@@ -39,6 +33,8 @@ Watch this video for step-by-step instructions:
 
 ## Run the Jupyter notebooks locally
 
+Your second step is to run the Jupyter notebooks locally on your machine.
+
 > [!IMPORTANT]
 > Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
 
@@ -52,12 +48,17 @@ Watch this video for step-by-step instructions:
 
 ## Take the next step
 
-For someone who is just starting to learn LLM AI, you may want to start here:
+For beginners who are just starting to learn LLM AI, you may want to start here:
 
 > [!div class="nextstepaction"]
-> [Learn core LLM AI concepts](../concepts-ai)
+> [Learn core LLM AI concepts](../concepts-ai/overview)
 
-For someone who is well on their path with LLM AI, you can jump into SK immediately:
+For people who are well versed in LLM AI, you can jump into SK immediately:
 
 > [!div class="nextstepaction"]
-> [Learn basic SK concepts](../concepts-sk)
+> [Learn basic SK concepts](../concepts-sk/overview)
+
+For people who are ready to run SK sample apps:
+
+> [!div class="nextstepaction"]
+> [Run SK sample apps](../samples/overview)

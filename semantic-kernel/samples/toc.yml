@@ -1,5 +1,5 @@
-- name: All Samples
-  href: samplelist.md
+- name: Overview
+  href: overview.md
 - name: Simple Chat Summary 
   href: simplechatsummary.md
 - name: Book Creator

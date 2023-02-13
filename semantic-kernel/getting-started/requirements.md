@@ -9,11 +9,12 @@ ms.prod: semantic-kernel
 ---
 # Requirements for running Semantic Kernel
 
-![pink circles of semantic kernel](../media/skpattern.png)
+[!INCLUDE [subheader.md](../includes/subheader.md)]
 
 Semantic Kernel is an open-source SDK that is available on GitHub.  
 
-For the best experience with Semantic Kernel and to run all of the samples you will need the following:
+For the best experience working with Semantic Kernel and all of the samples you will need:
+
 1. `git` or the [GitHub app](https://desktop.github.com/) installed
 2. [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/) installed
 3. An OpenAI key via either [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio) or [OpenAI](https://openai.com/api/)
