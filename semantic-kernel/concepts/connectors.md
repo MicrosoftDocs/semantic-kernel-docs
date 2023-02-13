@@ -14,7 +14,7 @@ ms.prod: semantic-kernel
 
 ## You've reached the end of your journey
 
-Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts.
+Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts. 
 
 > [!div class="nextstepaction"]
 > [LLM AI Models Refresher](models.md)
