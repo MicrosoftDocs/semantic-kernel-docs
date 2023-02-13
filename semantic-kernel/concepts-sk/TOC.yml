@@ -1,0 +1,12 @@
+- name: Guide
+  href: guide.md
+- name: Kernel
+  href: kernel.md
+- name: Planner
+  href: planner.md
+- name: Skills
+  href: skills.md
+- name: Memories
+  href: memories.md
+- name: Connectors
+  href: connectors.md

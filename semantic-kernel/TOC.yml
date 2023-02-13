@@ -1,9 +1,11 @@
 - name: Overview
   href: index.md
-- name: Getting started
+- name: Getting Started
   href: getting-started/toc.yml
-- name: Concepts
-  href: concepts/toc.yml
+- name: Concepts: LLM AI
+  href: concepts-ai/toc.yml
+- name: Concepts: Semantic Kernel
+  href: concepts-sk/toc.yml
 - name: Skill Building
   href: skills/toc.yml
 - name: Samples
