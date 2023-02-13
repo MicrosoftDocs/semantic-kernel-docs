@@ -30,7 +30,7 @@ The **planner* will work within its constraints of the [skills](skills) it has a
 
 ## Next step
 
-Now that you know about the **kernel** and the *planner**, you are ready to learn about **skills**.
+Now that you know about the **kernel** and the *p*lanner**, you are ready to learn about **skills**.
 
 > [!div class="nextstepaction"]
 > [Learn about SKills](skills.md)

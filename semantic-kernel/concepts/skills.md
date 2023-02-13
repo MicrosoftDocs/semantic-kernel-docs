@@ -9,23 +9,38 @@ ms.prod: semantic-kernel
 ---
 # What are Skills?
 
-![](../media/enhancers.png)
+![](../media/skills.png)
 
-A Skill refers to a domain of expertise made avaialble to the kernel as a group of finely tuned computational functions. 
+A **skill** refers to a domain of expertise made available to the [kernel](kernel) as a single function, or as a group of functions related to the **skill**. 
 
----- Video - Skills and Functions https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17755 ----
+## What are Functions?
 
-# What is a Semantic Kernel function?
-A function is a computational machine comprised of Semantic AI and/or native code that's avaialble in a Skill.
+![](../media/skills01.png)
+
+A **function** is expressed as either:
+
+1. an LLM AI prompt
+2. native computer code
+
+Note that when using native computer code, it's also possible to call an LLM AI prompt — which means that hybrid LLM AI × native **functions** can be created. In addition, prompts can be connected end-to-end, or "chained together," to create more powerful capabilities.
+
+## How are skills packaged in code?
+
+With a text file "skprompt.txt" that's using SK's Prompt Template format ...
+
+## What are prompt templates?
 
 ## Types of functions
-- [Semantic Function](/semantic-kernel/skills/promptfunction): is expressed as a text file “skprompt.txt” using Semantic Kernel’s Prompt Template 
-- [Native Function](/semantic-kernel/skills/functiontemplate): is expressed in the conventions of the computing language and easily integrates with Semantic Kernel
 
-## Get familiar with SK's concepts
 
-[Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
+## Concepts Glossary
 
-## Learn core LLM AI lingo
+| Semantic Kernel | | LLM AI |
+|---|---|---|
+| [Connectors](connectors) || [Embeddings](embeddings) |
+| [Kernel](kernel) || [Models](models) |
+| [Planner](planner) || [Prompts](prompts) |
+| [Memories](memories) || [Tokens](tokens) |
+| [Skills](skills) ||  |
 
-[Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)
+[!INCLUDE [glossary.md](./includes)]
