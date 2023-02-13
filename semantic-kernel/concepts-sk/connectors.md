@@ -29,10 +29,6 @@ Now that you know about the **kernel**, **planner**, **skills**, **memories**, *
 | [Memories](memories) || [Tokens](tokens) |
 | [Skills](skills) ||  |
 
-Try 1
-
-[!INCLUDE [glossary.md](/includes/glossary.md)]
-
-Try 2
+Try this
 
 [!INCLUDE [glossary.md](../includes/glossary.md)]
