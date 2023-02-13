@@ -31,17 +31,8 @@ Now that you know about the **kernel**, **planner**, **skills**, **memories**, *
 
 Try 1
 
-[!INCLUDE [glossary.md](/includes)]
+[!INCLUDE [glossary.md](/includes/glossary.md)]
 
 Try 2
 
-[!INCLUDE [glossary.md](/includes/)]
-
-Try 3
-
-[!INCLUDE [glossary.md](../includes/)]
-
-
-Try 4
-
-[!INCLUDE [glossary.md](../includes)]
+[!INCLUDE [glossary.md](../includes/glossary.md)]

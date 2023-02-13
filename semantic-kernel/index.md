@@ -19,6 +19,8 @@ With SK, you can now build AI-first apps faster by design while also having a fr
 
 SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
 
+> [!div class="nextstepaction"]
+> [Get started with Semantic Kernel](getting-started/setup)
 
 ## SK is a kit of parts that interlock
 
@@ -60,3 +62,6 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 ## SK is under construction and is hungry for feedback
 
 Given that new breakthroughs in LLM AIs are landing on a daily basis, you should consider this SDK a work-in-progress as the team's "best-guess practices" for adding semantically-rich AI to existing apps. And since there are still so many unknown-unknowns in this kind of work, we defer to the community's feedback and contributions to find even better practices going forward. Together.
+
+> [!div class="nextstepaction"]
+> [Get started with Semantic Kernel](getting-started/setup)
