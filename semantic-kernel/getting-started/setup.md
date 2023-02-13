@@ -43,8 +43,8 @@ Watch this video for step-by-step instructions:
 > Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
 
 1. While you have the repository open in VSCode or Visual Studio, go to the jupyter-notebooks section
-2. Activate each code snippet with the "play" button on the left
-3. Bes ure to have your OpenAI or Azure OpenAI keys ready to enter when prompted
+2. Activate each code snippet with the "play" button on the left hand side
+3. Have your OpenAI or Azure OpenAI keys ready to enter when prompted
 
 Watch this video for step-by-step instructions:
 
@@ -52,12 +52,12 @@ Watch this video for step-by-step instructions:
 
 ## Take the next step
 
-For someone who is just starting to learn LLM AI, you might want to start here:
+For someone who is just starting to learn LLM AI, you may want to start here:
 
 > [!div class="nextstepaction"]
 > [Learn core LLM AI concepts](../concepts-ai)
 
-For someone who is well on their path with LLM AI, you should jump into the kernel immediately:
+For someone who is well on their path with LLM AI, you can jump into SK immediately:
 
 > [!div class="nextstepaction"]
 > [Learn basic SK concepts](../concepts-sk)
