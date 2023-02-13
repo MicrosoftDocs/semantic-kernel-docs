@@ -17,31 +17,47 @@ Getting started with Semantic Kernel (SK) is quick and simple by following these
 3. Follow the instructions on the Read Me
 
 > [!IMPORTANT]
-> Make sure you have fulfilled the [requirements](requirements) to run SK on your machine.
+> Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
 
 > [!div class="nextstepaction"]
 > [Browse requirements](requirements)
 
 ## Clone the repo locally to set up
 
-Watch this video to learn step-by-step how to clone the repository locally:
+Your first step is to clone the repository and move it to your local machine:
+
+> [!IMPORTANT]
+> Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
+
+1. Go to [aka.ms/semantic-kernel](https://aka.ms/semantic-kernel) to visit the main GitHub page
+2. While you're at the SK GitHub page please give it a star to show your support
+4. [Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the repository to your local machine
+
+Watch this video for step-by-step instructions:
 
 > [!VIDEO https://aka.ms/SK-Local-Setup]
 
 ## Run the Jupyter notebooks locally
 
-Once you have the repository cloned and set up, run the getting started notebooks:
+> [!IMPORTANT]
+> Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
+
+1. While you have the repository open in VSCode or Visual Studio, go to the jupyter-notebooks section
+2. Activate each code snippet with the "play" button on the left
+3. Bes ure to have your OpenAI or Azure OpenAI keys ready to enter when prompted
+
+Watch this video for step-by-step instructions:
 
 > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
 
 ## Take the next step
 
-### For beginners
+For someone who is just starting to learn LLM AI, you might want to start here:
 
 > [!div class="nextstepaction"]
 > [Learn core LLM AI concepts](../concepts-ai)
 
-### For advanced
+For someone who is well on their path with LLM AI, you should jump into the kernel immediately:
 
 > [!div class="nextstepaction"]
 > [Learn basic SK concepts](../concepts-sk)
