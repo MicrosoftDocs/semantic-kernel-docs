@@ -17,6 +17,6 @@ ms.prod: semantic-kernel
 
 [Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
 
-## Learn basic LLM AI lingo
+## Learn core LLM AI lingo
 
 [Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)
