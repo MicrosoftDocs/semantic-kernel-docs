@@ -1,5 +1,5 @@
-- name: Guide
-  href: guide.md
+- name: Overview
+  href: overview.md
 - name: Models
   href: models.md
 - name: Prompts

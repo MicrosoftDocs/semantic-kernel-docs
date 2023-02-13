@@ -1,5 +1,5 @@
-- name: Guide
-  href: guide.md
+- name: Overview
+  href: overview.md
 - name: Kernel
   href: kernel.md
 - name: Planner

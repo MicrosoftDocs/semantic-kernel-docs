@@ -1,6 +1,6 @@
 ---
-title: Concepts Guide for LLM AI
-description: Concepts Guide for LLM AI
+title: Concepts Overview for LLM AI
+description: Concepts Overview for LLM AI
 author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda

@@ -1,4 +1,5 @@
-- name: Setup
+- name: Set Up
   href: setup.md
-- name: Prerequisites
-  href: prereqs.md
+- name: Requirements
+  href: requirements
+  .md

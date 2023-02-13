@@ -1,6 +1,6 @@
 ---
-title: Concepts Guide for Semantic Kernel
-description: Concepts Guide for Semantic Kernel
+title: Concepts Overview for Semantic Kernel
+description: Concepts Overview for Semantic Kernel
 author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
