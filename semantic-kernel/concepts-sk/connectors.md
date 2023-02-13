@@ -29,4 +29,19 @@ Now that you know about the **kernel**, **planner**, **skills**, **memories**, *
 | [Memories](memories) || [Tokens](tokens) |
 | [Skills](skills) ||  |
 
-[!INCLUDE [glossary.md](./includes)]
+Try 1
+
+[!INCLUDE [glossary.md](/includes)]
+
+Try 2
+
+[!INCLUDE [glossary.md](/includes/)]
+
+Try 3
+
+[!INCLUDE [glossary.md](../includes/)]
+
+
+Try 4
+
+[!INCLUDE [glossary.md](../includes)]
