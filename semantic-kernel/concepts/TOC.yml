@@ -10,6 +10,8 @@
   href: connectors.md
 - name: LLM AI Models
   href: models.md
+- name: LLM AI Prompts
+  href: prompts.md
 - name: LLM AI Tokens
   href: tokens.md
 - name: LLM AI Embeddings
