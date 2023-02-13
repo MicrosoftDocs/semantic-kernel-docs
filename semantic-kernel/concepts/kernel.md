@@ -20,7 +20,7 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
 * Using multiple LLM AI models and configurations
 
 > [!div class="nextstepaction"]
-> [Learn about skills](skills.md)
+> [Learn about Planner](planner.md)
 
 ## Concepts Glossary
 
@@ -32,6 +32,4 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
 | [Memories](memories) || [Tokens](tokens) |
 | [Skills](skills) ||  |
 
-[!INCLUDE [glossary.md](includes)]
-
-Some new text
+[!INCLUDE [glossary.md](./includes)]
