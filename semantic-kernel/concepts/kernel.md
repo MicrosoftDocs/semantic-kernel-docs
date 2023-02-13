@@ -40,6 +40,7 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
     :::column-end:::
 :::row-end:::
 
+
 | SK Concepts | | LLM AI Concepts |
 |---|---|---|
 | [Kernel](kernel) || [Models](models) |
