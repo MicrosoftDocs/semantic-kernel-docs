@@ -1,3 +1,5 @@
+- name: Guide
+  href: guide.md
 - name: SK Kernel
   href: kernel.md
 - name: SK Planner
