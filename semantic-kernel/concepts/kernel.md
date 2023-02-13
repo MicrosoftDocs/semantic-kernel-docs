@@ -30,4 +30,6 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
 | [Kernel](kernel) || [Models](models) |
 | [Planner](planner) || [Prompts](prompts) |
 | [Memories](memories) || [Tokens](tokens) |
-| [Skills](skills) ||  | 
+| [Skills](skills) ||  |
+
+[!INCLUDE [glossary.md](includes)]
