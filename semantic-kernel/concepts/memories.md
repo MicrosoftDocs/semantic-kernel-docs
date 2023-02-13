@@ -10,14 +10,25 @@ ms.prod: semantic-kernel
 
 # What are Memories?
 
-![](../media/enhancers.png)
+![](../media/memories.png)
 
 --- Video https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17538 ---
 
-## Get familiar with SK's concepts
+## Take the next step
 
-[Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
+Now that you know about the **kernel**, **planner**, **skills**, **memories**, it's time for **connectors**.
 
-## Learn core LLM AI lingo
+> [!div class="nextstepaction"]
+> [Learn about Connectors](connectors.md)
 
-[Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)
+## Concepts Glossary
+
+| Semantic Kernel | | LLM AI |
+|---|---|---|
+| [Connectors](connectors) || [Embeddings](embeddings) |
+| [Kernel](kernel) || [Models](models) |
+| [Planner](planner) || [Prompts](prompts) |
+| [Memories](memories) || [Tokens](tokens) |
+| [Skills](skills) ||  |
+
+[!INCLUDE [glossary.md](./includes)]

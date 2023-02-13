@@ -42,7 +42,7 @@ There are a variety of things that you can do with `my_kernel` that include:
 * Choosing to provide [skills] to it as inline expressions
 * Feeding a desired skill with inputs to drive towards output
 
-## Next step
+## Take the next step
 
 Now that you know a bit about the **kernel** you will definitely want to learn about the **planner**.
 

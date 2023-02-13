@@ -28,9 +28,9 @@ The ["Jobs To Be Done (JTBD)"](https://hbr.org/2016/09/know-your-customers-jobs-
 
 The **planner* will work within its constraints of the [skills](skills) it has available. In the event that a desired skill does not exist, the **planner* can suggest you to create the [skill](skill). Or, depending upon the level of complexity the [kernel](kernel) can write and add the missing [skill](skill). 
 
-## Next step
+## Take the next step
 
-Now that you know about the **kernel** and the *p*lanner**, you are ready to learn about **skills**.
+Now that you know about the **kernel** and the **planner**, you are ready to learn about **skills**.
 
 > [!div class="nextstepaction"]
 > [Learn about SKills](skills.md)

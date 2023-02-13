@@ -13,8 +13,6 @@ ms.prod: semantic-kernel
 
 A **skill** refers to a domain of expertise made available to the [kernel](kernel) as a single function, or as a group of functions related to the **skill**. 
 
-## What are Functions?
-
 ![](../media/skills01.png)
 
 A **function** is expressed as either:
@@ -24,14 +22,18 @@ A **function** is expressed as either:
 
 Note that when using native computer code, it's also possible to call an LLM AI prompt — which means that hybrid LLM AI × native **functions** can be created. In addition, prompts can be connected end-to-end, or "chained together," to create more powerful capabilities.
 
-## How are skills packaged in code?
+## What are "prompt templates"?
+
+## How are functions packaged in code?
 
 With a text file "skprompt.txt" that's using SK's Prompt Template format ...
 
-## What are prompt templates?
+## Take the next step
 
-## Types of functions
+Now that you know about the **kernel**, **planner**, **skills**, you can take on **memories**.
 
+> [!div class="nextstepaction"]
+> [Learn about Memories](memories.md)
 
 ## Concepts Glossary
 

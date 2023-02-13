@@ -10,13 +10,23 @@ ms.prod: semantic-kernel
 
 # What are Connectors?
 
-![](../media/enhancers.png)
+![](../media/connectors.png)
 
+## You've reached the end of your journey
 
-## Get familiar with SK's concepts
+Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts.
 
-[Kernel](kernel) | [Planner](planner) | [Skills](skills) |  [Memories](memories) | [Connectors](connectors)
+> [!div class="nextstepaction"]
+> [LLM AI Models Refresher](models.md)
 
-## Learn core LLM AI lingo
+## Concepts Glossary
 
-[Models](models) | [Prompts](prompts) | [Tokens](tokens) | [Embeddings](embeddings)
+| Semantic Kernel | | LLM AI |
+|---|---|---|
+| [Connectors](connectors) || [Embeddings](embeddings) |
+| [Kernel](kernel) || [Models](models) |
+| [Planner](planner) || [Prompts](prompts) |
+| [Memories](memories) || [Tokens](tokens) |
+| [Skills](skills) ||  |
+
+[!INCLUDE [glossary.md](./includes)]
