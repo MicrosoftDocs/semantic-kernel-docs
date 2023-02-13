@@ -20,16 +20,27 @@ The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The 
 
 The **kernel** is designed to encourage "function composition" which allows developers to combine and interconnect the input and outputs of skills into a single pipeline.
 
-# Why is it called a "kernel"?
+# Why is the Kernel called a "kernel"?
 
 > **Kernel**: "The core, center, or essence of an object or system." —[Wiktionary](https://en.wiktionary.org/wiki/kernel)
 
-The term "kernel" can have different meanings in different contexts, but in the case of the Semantic Kernel, the **kernel** refers to an instance of the processing engine that processes an ASK all the way through to fulfillment. In code you will see it instantiated as:
+The term "kernel" can have different meanings in different contexts, but in the case of the Semantic Kernel, the **kernel** refers to an instance of the processing engine that processes an ASK all the way through to fulfillment. 
+
+# How does the Kernel appear in code?
+
+In code you will see the **kernel** instantiated as `ISemanticKernel`:
 
 ```csharp
 // Simple instance
 ISemanticKernel my_kernel = SemanticKernel.Build();
 ```
+
+There are a variety of things that you can do with `my_kernel` that include:
+
+* Configuring the kernel to use OpenAI or Azure OpenAI
+* Letting it know where to source a collection of [skills](skills)
+* Choosing to provide [skills] to it as inline expressions
+* Feeding a desired skill with inputs to drive towards output
 
 > [!div class="nextstepaction"]
 > [Learn about Planner](planner.md)
