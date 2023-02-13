@@ -11,13 +11,25 @@ ms.prod: semantic-kernel
 
 ![](../media/kernelsm.png)
 
-The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfill the user's desired goal using its available skills, memories, and connectors. Key features of the **kernel** that can make a developer faster include:
+The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](skills), [memories](memories), and [connectors](connectors). Key features of the **kernel** that facilitate faster development include:
 
-* Integrating native code with prompts
-* Packaging of useful prompts as reusable [skills](skills)
-* Packaging of hybrid prompts as reusable [skills](skills)
-* Orchestrating complicated LLM AI prompts
-* Using multiple LLM AI models and configurations
+* [Skills](skills): Package your most useful prompts as fully reusable [skills](skills)
+* Hybrid Development: Mix your AI prompts with conventional native code fluidly
+* Orchestration: Manage complicated LLM AI prompts with complete control
+* Future Proof: Use multiple LLM AI models and configurations with specificity
+
+The **kernel** is designed to encourage "function composition" which allows developers to combine and interconnect the input and outputs of skills into a single pipeline.
+
+# Why is it called a "kernel"?
+
+> **Kernel**: "The core, center, or essence of an object or system." —[Wiktionary](https://en.wiktionary.org/wiki/kernel)
+
+The term "kernel" can have different meanings in different contexts, but in the case of the Semantic Kernel, the **kernel** refers to an instance of the processing engine that processes an ASK all the way through to fulfillment. In code you will see it instantiated as:
+
+```csharp
+// Simple instance
+ISemanticKernel my_kernel = SemanticKernel.Build();
+```
 
 > [!div class="nextstepaction"]
 > [Learn about Planner](planner.md)
