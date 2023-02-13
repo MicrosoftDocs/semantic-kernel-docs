@@ -19,33 +19,15 @@ The **kernel** in Semantic Kernel is the orchestrator of a user's Ask. It fulfil
 * Orchestrating complicated LLM AI prompts
 * Using multiple LLM AI models and configurations
 
-:::row:::
-    :::column span="":::
-        **SK Concepts**
+> [!div class="nextstepaction"]
+> [Learn about skills](skills.md)
 
-        |---|
-        | [Kernel](kernel) |
-        | [Planner](planner) |
-        | [Skills](skills) |
-        | [Memories](memories) |
-        | [Connectors](connectors) | 
-    :::column-end:::
-    :::column span="":::
-        **LLM AI Terms**
+## Concepts Glossary
 
-        [Models](models)
-        [Prompts](prompts)
-        [Tokens](tokens)
-        [Embeddings](embeddings)
-    :::column-end:::
-:::row-end:::
-
-
-| SK Concepts | | LLM AI Concepts |
+| Semantic Kernel | | LLM AI |
 |---|---|---|
+| [Connectors](connectors) || [Embeddings](embeddings) |
 | [Kernel](kernel) || [Models](models) |
 | [Planner](planner) || [Prompts](prompts) |
-| [Skills](skills) || [Tokens](tokens) |
-| [Memories](memories) || [Embeddings](embeddings)
-| [Connectors](connectors) ||  | 
-        
+| [Memories](memories) || [Tokens](tokens) |
+| [Skills](skills) ||  | 
