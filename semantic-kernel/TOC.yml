@@ -1,18 +1,14 @@
 - name: Overview
   href: index.md
-- name: Getting Started
+- name: Get Started
   href: getting-started/toc.yml
 - name: LLM AI Concepts
   href: concepts-ai/toc.yml
 - name: Semantic Kernel Concepts
   href: concepts-sk/toc.yml
-- name: Skill Building
-  href: skills/toc.yml
-- name: Samples
+- name: Sample Apps
   href: samples/toc.yml
-- name: Troubleshooting
-  href: troubleshooting.md
-- name: Resources
-  href: resource.md
-- name: FAQ's
-  href: faq.md
+- name: How To
+  href: howto/toc.yml
+- name: Get Supported
+  href: support/toc.yml
