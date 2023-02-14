@@ -12,7 +12,7 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
 Semantic Kernel builds upon five concepts:
 
