@@ -10,8 +10,13 @@ ms.prod: semantic-kernel
 
 # Concepts in Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 Blah blah
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Learn about the Kernel](kernel)
+
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]

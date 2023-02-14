@@ -27,4 +27,4 @@ For the best experience working with Semantic Kernel and all of the samples you 
 > [!div class="nextstepaction"]
 > [Return to set up](setup)
 
-[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
+[!INCLUDE [footer.md](includes/footer.md)]

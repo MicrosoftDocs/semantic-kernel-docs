@@ -15,7 +15,7 @@ ms.prod: semantic-kernel
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
 
-With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK is being built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing.
+With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK is being built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing. 
 
 SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
 

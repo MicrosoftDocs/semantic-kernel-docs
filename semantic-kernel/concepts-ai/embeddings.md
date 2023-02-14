@@ -19,4 +19,4 @@ Embeddings are the representations or encodings of tokens, or of larger units of
 > [!div class="nextstepaction"]
 > [Learn SK concepts](../concepts-sk/overview)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+[!INCLUDE [footer.md](includes/footer.md)]

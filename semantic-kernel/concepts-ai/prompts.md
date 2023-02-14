@@ -22,4 +22,4 @@ Prompts are the way of communicating and directing the model.
 > [!div class="nextstepaction"]
 > [Learn about tokens](tokens)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+[!INCLUDE [footer.md](includes/footer.md)]

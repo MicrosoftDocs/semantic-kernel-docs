@@ -18,4 +18,4 @@ A model refers to a specific instance or version of an LLM AI, such as GPT-3 or 
 > [!div class="nextstepaction"]
 > [Learn about prompts](prompts)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+[!INCLUDE [footer.md](includes/footer.md)]
