@@ -10,6 +10,8 @@ ms.prod: semantic-kernel
 # Schillace Laws of Semantic AI
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
+## How to think into the future of this decidedly "semantic" AI
+
 The "Schillace Laws" were created after working with a variety of Large Language Model (LLM) AI systems to date. Knowing them will accelerate your journey into this exciting space of reimagining the future of software engineering. Welcome!
 
 1. **Don’t write code if the model can do it; the model will get better, but the code won't.** The overall goal of the system is to build very high leverage programs using the LLM's capacity to plan and understand intent. It'’'s very easy to slide back into a more imperative mode of thinking and write code for aspects of a program. Resist this temptation – to the degree that you can get the model to do something reliably now, it will be that much better and more robust as the model develops.  

@@ -35,4 +35,4 @@ The **planner* will work within its constraints of the [skills](skills) it has a
 Now that you know about the **kernel** and the **planner**, you are ready to learn about **skills**.
 
 > [!div class="nextstepaction"]
-> [Learn about SKills](skills.md)
+> [Learn about Skills](skills.md)

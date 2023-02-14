@@ -47,6 +47,6 @@ There are a variety of things that you can do with `my_kernel` that include:
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about the Kernel](kernel)
+> [Learn about the Planner](planner)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
