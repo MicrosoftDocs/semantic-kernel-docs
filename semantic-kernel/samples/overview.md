@@ -11,7 +11,7 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/fineheader.md)]
 
-Multiple learning samples are provided in the [Semantic Kernel GitHub reposistory](/semantic-kernel/getting-started/setup) to help you learn core concepts of Semantic Kernel.
+Multiple learning samples are provided in the [Semantic Kernel GitHub repository](/semantic-kernel/getting-started/setup) to help you learn core concepts of Semantic Kernel.
 
 ## Getting started samples:
 

@@ -8,8 +8,18 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 
-# Concepts in Semantic Kernel
+# Concepts in LLM AI
 
 [!INCLUDE [conceptheader.md](../includes/conceptheader.md)]
 
-Blah blah
+Semantic Kernel builds upon four core ideas in Large Language Model AI (LLM) systems:
+
+1. Models
+2. Prompts
+3. Tokens
+4. Embeddings
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Learn about models](models)
