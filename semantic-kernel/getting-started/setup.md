@@ -63,4 +63,4 @@ For people who are ready to run SK sample apps:
 > [!div class="nextstepaction"]
 > [Run SK sample apps](../samples/overview)
 
-[!INCLUDE [footer.md](includes/footer.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]
