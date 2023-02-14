@@ -1,1 +1,1 @@
-![pink circles of semantic kernel](../media/skpattern.png)
+![pink circles of semantic kernel](../media/skpatternsmall.png)

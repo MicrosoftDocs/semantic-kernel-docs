@@ -9,4 +9,13 @@ ms.prod: semantic-kernel
 ---
 # What are Tokens?
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 Tokens are the basic units of text or code that an LLM AI uses to process and generate language. Tokens can be characters, words, subwords, or other segments of text or code, depending on the chosen tokenization method or scheme. Tokens are assigned numerical values or identifiers, and are arranged in sequences or vectors, and are fed into or outputted from the model. Tokens are the building blocks of language for the model.
+ 
+ ## Take the next step
+
+> [!div class="nextstepaction"]
+> [Learn about embeddings](embeddings)
+
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
