@@ -11,20 +11,14 @@ ms.prod: semantic-kernel
 # What are Connectors?
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
-## You've reached the end of 
 
 ![](../media/connectors.png)
 
-your journey
+## Take the next step
 
 Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts. 
 
 > [!div class="nextstepaction"]
-> [LLM AI Models Refresher](models.md)
-
-## Take the next step
-
-> [!div class="nextstepaction"]
-> [Learn about the Kernel](kernel)
+> [Jump into sample a pps](../samples/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

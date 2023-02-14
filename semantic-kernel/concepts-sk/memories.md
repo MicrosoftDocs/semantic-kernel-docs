@@ -20,9 +20,7 @@ ms.prod: semantic-kernel
 
 Now that you know about the **kernel**, **planner**, **skills**, **memories**, it's time for **connectors**.
 
-## Take the next step
-
 > [!div class="nextstepaction"]
-> [Learn about the Kernel](kernel)
+> [Learn about Connectors](connectors)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

@@ -41,9 +41,4 @@ Now that you know about the **kernel**, **planner**, **skills**, you can take on
 > [!div class="nextstepaction"]
 > [Learn about Memories](memories.md)
 
-## Take the next step
-
-> [!div class="nextstepaction"]
-> [Learn about the Kernel](kernel)
-
 [!INCLUDE [footer.md](../includes/footer.md)]

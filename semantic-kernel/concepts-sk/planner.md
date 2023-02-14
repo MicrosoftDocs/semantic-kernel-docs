@@ -36,10 +36,3 @@ Now that you know about the **kernel** and the **planner**, you are ready to lea
 
 > [!div class="nextstepaction"]
 > [Learn about SKills](skills.md)
-
-## Take the next step
-
-> [!div class="nextstepaction"]
-> [Learn about the Kernel](kernel)
-
-[!INCLUDE [footer.md](../includes/footer.md)]
