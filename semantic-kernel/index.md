@@ -65,3 +65,5 @@ Given that new breakthroughs in LLM AIs are landing on a daily basis, you should
 
 > [!div class="nextstepaction"]
 > [Get started with Semantic Kernel](getting-started/setup)
+
+[!INCLUDE [pat_small.md](includes/pat_small.md)]
