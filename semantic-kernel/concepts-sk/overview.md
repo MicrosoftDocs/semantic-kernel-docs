@@ -12,7 +12,13 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-Blah blah
+Semantic Kernel builds upon five concepts:
+
+1. [Kernel](kernel)
+2. [Planner](planner)
+3. [Skills](skills)
+4. [Memories](memories)
+5. [Memories](Connectors)
 
 ## Take the next step
 
