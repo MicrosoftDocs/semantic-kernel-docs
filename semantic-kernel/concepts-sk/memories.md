@@ -10,9 +10,9 @@ ms.prod: semantic-kernel
 
 # What are Memories?
 
-![](../media/memories.png)
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+![](../media/memories.png)
 
 --- Video https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17538 ---
 

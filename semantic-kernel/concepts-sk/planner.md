@@ -10,9 +10,9 @@ ms.prod: semantic-kernel
 
 # What is Planner?
 
-![](../media/plannersm.png)
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+![](../media/plannersm.png)
 
 The **planner** works backwards from a goal that’s provided from a user's ASK. 
 

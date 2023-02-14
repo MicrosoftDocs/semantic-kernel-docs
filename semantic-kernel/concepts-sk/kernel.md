@@ -9,9 +9,11 @@ ms.prod: semantic-kernel
 ---
 # What is the Kernel?
 
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
+
 ![](../media/kernelsm.png)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+## You've reached the end of 
 
 The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](skills), [memories](memories), and [connectors](connectors). Key features of the **kernel** that facilitate faster development include:
 

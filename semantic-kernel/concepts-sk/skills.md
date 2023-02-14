@@ -9,9 +9,9 @@ ms.prod: semantic-kernel
 ---
 # What are Skills?
 
-![](../media/skills.png)
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+![](../media/skills.png)
 
 A **skill** refers to a domain of expertise made available to the [kernel](kernel) as a single function, or as a group of functions related to the **skill**. The design of SK **skills** has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
 
