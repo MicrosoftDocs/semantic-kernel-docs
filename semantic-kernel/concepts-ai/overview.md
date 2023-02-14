@@ -14,14 +14,14 @@ ms.prod: semantic-kernel
 
 Semantic Kernel builds upon four core ideas in Large Language Model AI (LLM) systems:
 
-1. Models
-2. Prompts
-3. Tokens
-4. Embeddings
+1. [Models](models)
+2. [Prompts](prompts)
+3. [Tokens](tokens)
+4. [Embeddings](embeddings)
 
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about models](models)
+> [Start by learning about models](models)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

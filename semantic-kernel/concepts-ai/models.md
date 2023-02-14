@@ -13,6 +13,47 @@ ms.prod: semantic-kernel
 
 A model refers to a specific instance or version of an LLM AI, such as GPT-3 or Codex, that has been trained and fine-tuned on a large corpus of text or code (in the case of the Codex model), and that can be accessed and used through an API or a platform. OpenAI and Azure OpenAI offer a variety of models that can be customized and controlled through parameters or options, and that can be applied and integrated to various domains and tasks.
 
+## About available OpenAI and Azure OpenAI GPT models
+
+There are four Generalized Pre-trained Transformer (GPT) models currently available from OpenAI and Azure OpenAI. They are composed of four variants: Ada, Babbage, Curie, and Davinci. They differ in the number of parameters, the amount of data they were trained on, and the types of tasks they can perform. 
+
+Ada is the smallest and simplest model, with 350 million parameters and 40GB of text data. It can handle basic natural language understanding and generation tasks, such as classification, sentiment analysis, summarization, and simple conversation. 
+
+Babbage is a larger model, with 3 billion parameters and 300GB of text data. It can handle more complex natural language tasks, such as reasoning, logic, arithmetic, and word analogy. 
+
+Curie is a very large model, with 13 billion parameters and 800GB of text data. It can handle advanced natural language tasks, such as text-to-speech, speech-to-text, translation, paraphrasing, and question answering. 
+
+Davinci is the largest and most powerful model, with 175 billion parameters and 45TB of text data. It can handle almost any natural language task, as well as some multimodal tasks, such as image captioning, style transfer, and visual reasoning. It can also generate coherent and creative texts on any topic, with a high level of fluency, consistency, and diversity.
+
+| Model | Parameters | Data | Tasks |
+|-------|------------|------|-------|
+| Ada | 350 million | 40GB | Basic NLU** and NLG** |
+| Babbage | 3 billion | 300GB | Complex NLU and NLG |
+| Curie | 13 billion | 800GB | Advanced NLU and NLG |
+| Davinci | 175 billion | 45TB | Almost any NLU, NLG, and multimodal task |
+
+**_Natural Language Understanding (NLU) / Natural Language Generating (NLG)_
+
+## How does a GPT model work?
+
+A GPT model is a type of neural network that uses the [transformer architecture](https://arxiv.org/abs/1706.03762) to learn from large amounts of text data. The model has two main components: an encoder and a decoder. The encoder processes the input text and converts it into a sequence of vectors, called embeddings, that represent the meaning and context of each word. The decoder generates the output text by predicting the next word in the sequence, based on the embeddings and the previous words. The model uses a technique called attention to focus on the most relevant parts of the input and output texts, and to capture long-range dependencies and relationships between words. The model is trained by using a large corpus of texts as both the input and the output, and by minimizing the difference between the predicted and the actual words. The model can then be fine-tuned or adapted to specific tasks or domains, by using smaller and more specialized datasets.
+
+## What LLM AI models are similar to GPT?
+
+Besides GPT, a couple of similar LLM models are Meena and Blender. [Meena](https://ai.googleblog.com/2020/01/towards-conversational-agent-that-can.html) is a conversational model developed by Google that can engage in open-ended and specific dialogues, with a high degree of sensibleness and specificity. [BlenderBot](https://about.fb.com/news/2022/08/blenderbot-ai-chatbot-improves-through-conversation/) is a chatbot model developed by Meta that can blend various skills, such as empathy, personality, and knowledge, to create engaging and diverse conversations.
+
+| LLM AI Model | Parameters | Application areas | Year invented |
+|-------|------------|-------------------|---------------|
+| BERT | 340 million | NLU and NLG | 2018 |
+| XLNet | 340 million | NLG | 2019 |
+| T5 | 11 billion | Text-to-text | 2019 |
+| EleutherAI | 175 billion | NLU and NLG | 2021 |
+| Meena | 2.6 billion | Conversational | 2020 |
+| BlenderBot | 9.4 billion | Chatbot | 2020 |
+| DIALOGPT | 1.5 billion | Dialogue | 2020 |
+
+LLM AI models are generally compared by the number of parameters — where bigger is usually better. A parameter is usually a weight or a bias that is assigned to a connection or a node in the neural network that forms the model. A weight is a value that determines how much influence one node has on another, and a bias is a value that determines how much an input or an output is shifted or offset. The number of parameters is a measure of the size and the complexity of the model. The more parameters a model has, the more data it can process, learn from, and generate. However, having more parameters also means having more computational and memory resources, and more potential for overfitting or underfitting the data. Parameters are learned or updated during the training process, by using an optimization algorithm that tries to minimize the error or the loss between the predicted and the actual outputs. By adjusting the parameters, the model can improve its performance and accuracy on the given task or domain.
+
 ## Take the next step
 
 > [!div class="nextstepaction"]
