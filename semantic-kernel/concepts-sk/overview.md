@@ -10,6 +10,8 @@ ms.prod: semantic-kernel
 
 # Concepts in Semantic Kernel
 
-[!INCLUDE [conceptheader.md](../includes/conceptheader.md)]
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
 Blah blah
+
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
