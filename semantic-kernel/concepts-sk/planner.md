@@ -12,6 +12,8 @@ ms.prod: semantic-kernel
 
 ![](../media/plannersm.png)
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 The **planner** works backwards from a goal that’s provided from a user's ASK. 
 
 ![](../media/goaloriented.png)

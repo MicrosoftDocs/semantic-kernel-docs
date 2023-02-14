@@ -18,11 +18,11 @@ Semantic Kernel builds upon five concepts:
 
 | Concept | Short Description |
 |---|---|
-| [Kernel](kernel) | The kernel orchestrates a user's ASK |
+| [Kernel](kernel) | The kernel orchestrates a user's ASK expressed as a goal |
 | [Planner](planner)| The planner breaks it down into steps based upon resources that are available |
-| [Skills](skills)| Skills are customizable resources built from LLM AI prompts and native code |
+| [Skills](skills)| Skills are customizable resources built from LLM AI [prompts](../concepts-ai/prompts) and native code |
 | [Memories](memories)| Memories are customizable resources that manage contextual information |
-| [Connectors](Connectors)| Connectors are customizable resources that enable external data acceess |
+| [Connectors](Connectors)| Connectors are customizable resources that enable external data access |
 
 ## Take the next step
 

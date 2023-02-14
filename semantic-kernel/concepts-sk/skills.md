@@ -11,6 +11,8 @@ ms.prod: semantic-kernel
 
 ![](../media/skills.png)
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 A **skill** refers to a domain of expertise made available to the [kernel](kernel) as a single function, or as a group of functions related to the **skill**. The design of SK **skills** has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
 
 ## What is a Function?

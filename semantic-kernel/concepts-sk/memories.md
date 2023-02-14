@@ -12,6 +12,8 @@ ms.prod: semantic-kernel
 
 ![](../media/memories.png)
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 --- Video https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17538 ---
 
 ## Take the next step

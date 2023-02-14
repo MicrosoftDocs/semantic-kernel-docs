@@ -11,6 +11,8 @@ ms.prod: semantic-kernel
 
 ![](../media/kernelsm.png)
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](skills), [memories](memories), and [connectors](connectors). Key features of the **kernel** that facilitate faster development include:
 
 * [Skills](skills): Package your most useful prompts as fully reusable [skills](skills)

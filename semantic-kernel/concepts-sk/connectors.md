@@ -12,6 +12,8 @@ ms.prod: semantic-kernel
 
 ![](../media/connectors.png)
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 ## You've reached the end of your journey
 
 Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts. 
