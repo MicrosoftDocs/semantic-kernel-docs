@@ -9,7 +9,7 @@ ms.prod: semantic-kernel
 ---
 # Setting up Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/subheader.md)]
+[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
 
 Getting started with Semantic Kernel (SK) is quick and simple by following these steps:
 1. Go to the Semantic Kernel [GitHub repository](https://github.com/microsoft/semantic-kernel)
@@ -62,3 +62,5 @@ For people who are ready to run SK sample apps:
 
 > [!div class="nextstepaction"]
 > [Run SK sample apps](../samples/overview)
+
+[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]

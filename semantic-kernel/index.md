@@ -9,7 +9,7 @@ ms.prod: semantic-kernel
 ---
 # What is Semantic Kernel?
 
-[!INCLUDE [subheader.md](includes/fineheader.md)]
+[!INCLUDE [pat_small.md](includes/pat_small.md)]
 
 **Semantic Kernel (SK) is a lightweight SDK that lets you easily mix conventional programming languages with the latest in Large Language Model (LLM) AI "prompts" with templating, chaining, and planning capabilities out-of-the-box.**
 

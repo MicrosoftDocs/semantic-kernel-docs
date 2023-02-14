@@ -9,7 +9,7 @@ ms.prod: semantic-kernel
 ---
 # Requirements for running Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/subheader.md)]
+[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
 
 Semantic Kernel is an open-source SDK that is available on GitHub.  
 
@@ -26,3 +26,5 @@ For the best experience working with Semantic Kernel and all of the samples you 
 
 > [!div class="nextstepaction"]
 > [Return to set up](setup)
+
+[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
