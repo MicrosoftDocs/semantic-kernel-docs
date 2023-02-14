@@ -12,13 +12,17 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
+
 Semantic Kernel builds upon five concepts:
 
-1. [Kernel](kernel)
-2. [Planner](planner)
-3. [Skills](skills)
-4. [Memories](memories)
-5. [Memories](Connectors)
+| Concept | Short Description |
+|---|---|
+| [Kernel](kernel) | The kernel orchestrates a user's ASK |
+| [Planner](planner)| The planner breaks it down into steps based upon resources that are available |
+| [Skills](skills)| Skills are customizable resources built from LLM AI prompts and native code |
+| [Memories](memories)| Memories are customizable resources that manage contextual information |
+| [Connectors](Connectors)| Connectors are customizable resources that enable external data acceess |
 
 ## Take the next step
 
