@@ -19,16 +19,9 @@ Now that you know about the **kernel**, **planner**, **skills**, **memories**, *
 > [!div class="nextstepaction"]
 > [LLM AI Models Refresher](models.md)
 
-## Concepts Glossary
+## Take the next step
 
-| Semantic Kernel | | LLM AI |
-|---|---|---|
-| [Connectors](connectors) || [Embeddings](embeddings) |
-| [Kernel](kernel) || [Models](models) |
-| [Planner](planner) || [Prompts](prompts) |
-| [Memories](memories) || [Tokens](tokens) |
-| [Skills](skills) ||  |
+> [!div class="nextstepaction"]
+> [Learn about the Kernel](kernel)
 
-Try this
-
-[!INCLUDE [glossary.md](../includes/glossary.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]

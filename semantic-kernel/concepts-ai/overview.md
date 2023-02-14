@@ -24,4 +24,4 @@ Semantic Kernel builds upon four core ideas in Large Language Model AI (LLM) sys
 > [!div class="nextstepaction"]
 > [Learn about models](models)
 
-[!INCLUDE [footer.md](includes/footer.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]

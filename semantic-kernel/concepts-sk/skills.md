@@ -39,14 +39,9 @@ Now that you know about the **kernel**, **planner**, **skills**, you can take on
 > [!div class="nextstepaction"]
 > [Learn about Memories](memories.md)
 
-## Concepts Glossary
+## Take the next step
 
-| Semantic Kernel | | LLM AI |
-|---|---|---|
-| [Connectors](connectors) || [Embeddings](embeddings) |
-| [Kernel](kernel) || [Models](models) |
-| [Planner](planner) || [Prompts](prompts) |
-| [Memories](memories) || [Tokens](tokens) |
-| [Skills](skills) ||  |
+> [!div class="nextstepaction"]
+> [Learn about the Kernel](kernel)
 
-[!INCLUDE [glossary.md](./includes)]
+[!INCLUDE [footer.md](../includes/footer.md)]

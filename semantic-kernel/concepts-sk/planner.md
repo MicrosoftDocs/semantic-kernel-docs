@@ -35,14 +35,9 @@ Now that you know about the **kernel** and the **planner**, you are ready to lea
 > [!div class="nextstepaction"]
 > [Learn about SKills](skills.md)
 
-## Concepts Glossary
+## Take the next step
 
-| Semantic Kernel | | LLM AI |
-|---|---|---|
-| [Connectors](connectors) || [Embeddings](embeddings) |
-| [Kernel](kernel) || [Models](models) |
-| [Planner](planner) || [Prompts](prompts) |
-| [Memories](memories) || [Tokens](tokens) |
-| [Skills](skills) ||  |
+> [!div class="nextstepaction"]
+> [Learn about the Kernel](kernel)
 
-[!INCLUDE [glossary.md](./includes)]
+[!INCLUDE [footer.md](../includes/footer.md)]

@@ -18,17 +18,9 @@ ms.prod: semantic-kernel
 
 Now that you know about the **kernel**, **planner**, **skills**, **memories**, it's time for **connectors**.
 
+## Take the next step
+
 > [!div class="nextstepaction"]
-> [Learn about Connectors](connectors.md)
+> [Learn about the Kernel](kernel)
 
-## Concepts Glossary
-
-| Semantic Kernel | | LLM AI |
-|---|---|---|
-| [Connectors](connectors) || [Embeddings](embeddings) |
-| [Kernel](kernel) || [Models](models) |
-| [Planner](planner) || [Prompts](prompts) |
-| [Memories](memories) || [Tokens](tokens) |
-| [Skills](skills) ||  |
-
-[!INCLUDE [glossary.md](./includes)]
+[!INCLUDE [footer.md](../includes/footer.md)]

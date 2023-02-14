@@ -19,4 +19,4 @@ Blah blah
 > [!div class="nextstepaction"]
 > [Learn about the Kernel](kernel)
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]

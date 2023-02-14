@@ -44,19 +44,7 @@ There are a variety of things that you can do with `my_kernel` that include:
 
 ## Take the next step
 
-Now that you know a bit about the **kernel** you will definitely want to learn about the **planner**.
-
 > [!div class="nextstepaction"]
-> [Learn about Planner](planner.md)
+> [Learn about the Kernel](kernel)
 
-## Concepts Glossary
-
-| Semantic Kernel | | LLM AI |
-|---|---|---|
-| [Connectors](connectors) || [Embeddings](embeddings) |
-| [Kernel](kernel) || [Models](models) |
-| [Planner](planner) || [Prompts](prompts) |
-| [Memories](memories) || [Tokens](tokens) |
-| [Skills](skills) ||  |
-
-[!INCLUDE [glossary.md](./includes)]
+[!INCLUDE [footer.md](../includes/footer.md)]

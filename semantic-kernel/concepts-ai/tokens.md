@@ -18,4 +18,4 @@ Tokens are the basic units of text or code that an LLM AI uses to process and ge
 > [!div class="nextstepaction"]
 > [Learn about embeddings](embeddings)
 
-[!INCLUDE [footer.md](includes/footer.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]
