@@ -8,7 +8,7 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 # Book creator sample app
-The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The functions are chained togheter based on the asks.
+The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/WriterSkill) functions are chained togheter based on the asks.
 
 
 > [!IMPORTANT]
@@ -33,4 +33,8 @@ The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/
 ## Setup Screen
 Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
-## Interact Screen
+## Topics Screen
+On this screen you can enter in a topic for the children's book that will be created for you.  This will use functions and AI to generate book ideas based on this topic.
+
+## Book Screen
+By clicking on the asks, multiple steps will be found from the Planner and the process will run to return results.
