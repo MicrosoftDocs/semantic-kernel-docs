@@ -32,7 +32,7 @@ Let's try another example where we are eager to play with the summarizing capabi
 ```Summarize the following text in two sentences or less. 
 [BEGIN TEXT]
 Jan had always wanted to be a writer, ever since they were a kid. They spent hours reading books, writing stories, and imagining worlds. They grew up and pursued their passion, studying literature and journalism, and submitting their work to magazines and publishers. They faced rejection after rejection, but they never gave up hope. Jan finally got their breakthrough, when a famous editor discovered their manuscript and offered them a book deal.
-[END TEXT]
+[END TEXT]```
 
 The result of this prompt from an actual LLM AI model is:
 
