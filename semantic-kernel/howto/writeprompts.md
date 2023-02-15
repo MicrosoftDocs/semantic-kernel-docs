@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-## It all starts with an ASK
+# It all starts with an ASK
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
