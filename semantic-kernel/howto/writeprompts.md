@@ -117,11 +117,13 @@ Congratulations! We have written two SK functions that can belong to a `TestSkil
 ```File-Structure-For-Skill-Definition-With-Functions
 TestSkill
 │
-└───sloganmaker
-│   │   skprompt.txt
+└─── sloganmaker
+|    |
+│    └─── skprompt.txt
 │   
-└───summarizeblurb
-    │   skprompt.txt
+└─── summarizeblurb
+     |
+     └─── skprompt.txt
 ```
 
 The difference is that we can now pass an input parameter to the function — which enables it to become a generalized machine for generating outputs:
