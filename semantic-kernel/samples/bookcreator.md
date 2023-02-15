@@ -21,7 +21,7 @@ The Book creator sample allows you to enter in a topic then the [Planner](/seman
 # Running the app
 The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-create-book-webapp-react) is located in the Semantic Kernel GitHub repository.
 
-1) Follow the [Setup](/semantic-kernel/getting-started) instructions if you do not already have a clone of Semantic Kernel locally.
+1) Follow the [Setup](/semantic-kernel/getting-started/setup) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Start the [local API service](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-api-azure-function).
 3) Open the ReadMe file in the Book creator sample folder.
 4) Open the Integrated Terminal window.
