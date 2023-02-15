@@ -13,13 +13,13 @@ ms.prod: semantic-kernel
 
 ![](../media/skills.png)
 
-A **skill** refers to a domain of expertise made available to the [kernel](kernel) as a single function, or as a group of functions related to the **skill**. The design of SK **skills** has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
+A **skill** refers to a domain of expertise made available to the [kernel](kernel) as a single function, or as a group of functions related to the skill* The design of SK skills has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
 
 ## What is a Function?
 
 ![](../media/skills01.png)
 
-A **function** is the basic building block of a **skills**. A **function** can be expressed as either:
+An SK **function** is the basic building block of a skills. A function can be expressed as either:
 
 1. an LLM AI [prompt](prompt)
 2. native computer code
@@ -28,11 +28,23 @@ When using native computer code, it's also possible to invoke an LLM AI prompt �
 
 **Functions** can be connected end-to-end, or "chained together," to create more powerful capabilities. When they are represented as pure LLM AI prompts, the word "function" and "prompt" can be used interchangeably. 
 
-## What are "prompt templates"?
+## What is the relationship between functions and skills?
 
-## How are functions packaged in code?
+A skill is the container in which functions live. You can think of a skill as a directory of folders where the skill encloses multiple functions, or a single function.
 
-With a text file "skprompt.txt" that's using SK's Prompt Template format ...
+```Skills-Are-Folders-Of-Functions
+SkillName
+│
+└─── Function1Name
+│   
+└─── Function2Name
+```
+
+A function can be represented as a plain LLM AI prompt or as an SK prompt template.
+
+## What are SK "prompt templates"?
+
+SK Prompt templates are prompts that include variables and function calls that can dynamically change the content and the behavior of an otherwise plain prompt. Prompt templates can help you to generate more diverse, relevant, and effective prompts, and to reuse and combine them for different tasks and domains. 
 
 ## To go deeper into skills ...
 
