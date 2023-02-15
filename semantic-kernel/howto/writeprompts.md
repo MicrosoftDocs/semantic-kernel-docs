@@ -38,7 +38,7 @@ Let's try another example where we are eager to play with the summarizing capabi
 
 ```Plain-Prompt
 Summarize the following text in two sentences or less. 
-[BEGIN TEXT]
+---Begin Text---
 Jan had always wanted to be a writer, ever since they 
 were a kid. They spent hours reading books, writing 
 stories, and imagining worlds. They grew up and pursued 
@@ -48,7 +48,7 @@ faced rejection after rejection, but they never gave up
 hope. Jan finally got their breakthrough, when a famous 
 editor discovered their manuscript and offered them a 
 book deal.
-[END TEXT]
+---End Text---
 ```
 
 The result of this prompt from an actual LLM AI model is:
@@ -105,13 +105,13 @@ sacrificing quality.
 
 The double curly braces signify to SK that there's something special for it to notice within the LLM AI prompt. All prompting variables that are passed to SK will begin with a dollar sign `$` — with `$INPUT` being a reserved name for the first passed variable. 
 
-We can do the same for how we summarize text into two sentences by removing the body of the text we want to summarize, and replacing it with "{{$input}}" to pass into the prompt at runtime.
+We can do the same for how we summarize text into two sentences by removing the body of the text we want to summarize, and replacing it with `{{$INPUT}}` to pass into the prompt at runtime.
 
 ```Templated-Prompt
 Summarize the following text in two sentences or less. 
-[BEGIN TEXT]
-{{$input}}
-[END TEXT]
+---Begin Text---
+{{$INPUT}}
+---End Text---
 ```
 
 This function would be named `SloganMakerGeneral` and the other would be named `SummarizeBlurbGeneral` — as two new SK functions that can belong to a `TestSkillImproved` skill. To package these two function to be used by SK in the context of a skill, we do the same as we did before:
