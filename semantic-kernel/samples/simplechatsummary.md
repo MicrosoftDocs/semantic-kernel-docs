@@ -13,9 +13,9 @@ The Simple Chat Summary sample allows you to see the power of [functions](/seman
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
-:::image type="content" source="https://aka.ms/SK-Samples-SimChat-Gif" alt-text="Simple chat summary sample app.":::
+> :::image type="content" source="https://aka.ms/SK-Samples-SimChat-Gif" alt-text="Simple chat summary sample app.":::
 
-[!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
+> [!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
 
 # Running the app
 The [Simple chat summary sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-chat-webapp-react) is located in the Semantic Kernel GitHub repository.
