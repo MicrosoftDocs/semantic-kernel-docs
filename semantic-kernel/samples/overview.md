@@ -19,7 +19,7 @@ Multiple learning samples are provided in the [Semantic Kernel GitHub repository
 |---|---|
 | [Simple chat summary](simplechatsummary) | Use ready-to-use [skills](../concepts-sk/skills) and get those skills into **your** app easily |
 | [Book creator](bookcreator) | Use [planner](../concepts-sk/planner) to deconstruct a complex goal and envision using the planner in **your** app |
-| [Authentication and APIs](authapi) | Use a basic [connector](../concepts-sk/connector) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI |
+| [Authentication and APIs](authapi) | Use a basic [connector](/semantic-kernel/concepts-sk/connectors) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI |
 | [GitHub Repo Q&A Bot](githubrepoqabot) | Use [memories](../concepts-sk/memories) to manage contextual information that lets you reach beyond [token](../concepts-ai/tokens) limitations |
 
 ## Take the next step
