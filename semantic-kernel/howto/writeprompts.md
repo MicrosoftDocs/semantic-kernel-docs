@@ -76,11 +76,13 @@ Similarly, we place the second plain prompt into a directory named `SummarizeBlu
 ```File-Structure-For-Skill-Definition-With-Functions
 TestSkill
 │
-└───SloganMaker
-│   │   skprompt.txt
+└─── SloganMaker
+|    |
+│    └─── skprompt.txt
 │   
-└───SummarizeBlurb
-    │   skprompt.txt
+└─── SummarizeBlurb
+     |
+     └─── skprompt.txt
 ```
 
 This skill can do one of two things by calling one of its two functions:

@@ -37,10 +37,12 @@ The `config.json` file is optional, but if you wish to exercise precise control 
 TestSkillImproved
 │
 └─── SloganMakerGeneral
+|    |
 │    └─── skprompt.txt
 │    └─── config.json
 │   
 └─── SummarizeBlurbGeneral
+|    |
      └─── skprompt.txt
      └─── config.json
 
