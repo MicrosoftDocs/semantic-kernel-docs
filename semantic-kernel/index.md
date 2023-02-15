@@ -31,9 +31,9 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 | Journey | Short Description |
 |:---:|:---|
 | **ASK** | A user's goal is sent to SK as an ASK |
-| **Kernel** | [The kernel](concepts/kernel) orchestrates a user's ASK |
-| **Planner** | [The planner](concepts/planner) breaks it down into steps based upon resources that are available |
-| **Resources** | Planning involves leveraging available [skills,](concepts/skills) [memories,](concepts/memories) and [connectors](concepts/connectors) |
+| **Kernel** | [The kernel](/semantic-kernel/concepts-sk/kernel) orchestrates a user's ASK |
+| **Planner** | [The planner](/semantic-kernel/concepts-sk/planner) breaks it down into steps based upon resources that are available |
+| **Resources** | Planning involves leveraging available [skills,](/semantic-kernel/concepts-sk/skills) [memories,](/semantic-kernel/concepts-sk/memories) and [connectors](/semantic-kernel/concepts-sk/connectors) |
 | **Steps** | A plan is a series of steps for the kernel to execute |
 | **Pipeline** | Executing the steps results in fulfilling the user's ASK |
 | **GET** | And the user gets what they asked for ... |
