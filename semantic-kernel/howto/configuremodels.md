@@ -34,13 +34,13 @@ LLM AI [models](../concepts-ai/models) have a variety of parameters associated t
 The `config.json` file is optional, but if you wish to exercise precise control of a function's behavior be sure to include it inside each function directory.
 
 ```File-Structure-For-Skill-Definition-With-Functions
-TestSkill
+TestSkillImproved
 │
-└─── sloganmaker
+└─── SloganMakerGeneral
 │    └─── skprompt.txt
 │    └─── config.json
 │   
-└─── summarizeblurb
+└─── SummarizeBlurbGeneral
      └─── skprompt.txt
      └─── config.json
 

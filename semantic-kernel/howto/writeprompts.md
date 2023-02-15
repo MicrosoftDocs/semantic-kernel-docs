@@ -63,7 +63,7 @@ years of rejection and perseverance.
 
 And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking it to give us a marketing slogan, and 2/ we're asking it to summarize a body of text down to two sentences.
 
-Both of these simple prompts qualify as "functions" that can be packaged as part of an SK skill. The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in SK within a directory named `sloganmaker` into a file named `skprompt.txt`:
+Both of these simple prompts qualify as "functions" that can be packaged as part of an SK skill. The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in SK within a directory named `SloganMaker` into a file named `skprompt.txt`:
 
 ```sloganmaker/skprompt.txt
 Write me a marketing slogan for my apparel shop in New 
@@ -71,22 +71,22 @@ York City with a focus on how affordable we are without
 sacrificing quality.
 ```
 
-Similarly, we place the second plain prompt into a directory named `summarizeblurb` as a file named into a file named `skprompt.txt`. Each of these directories comprise a SK function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
+Similarly, we place the second plain prompt into a directory named `SummarizeBlurb` as a file named into a file named `skprompt.txt`. Each of these directories comprise a SK function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
 
 ```File-Structure-For-Skill-Definition-With-Functions
 TestSkill
 │
-└───sloganmaker
+└───SloganMaker
 │   │   skprompt.txt
 │   
-└───summarizeblurb
+└───SummarizeBlurb
     │   skprompt.txt
 ```
 
 This skill can do one of two things by calling one of its two functions:
 
-* TestSkill.sloganmaker() generates a slogan for a specific kind of shop in NYC
-* TestSkill.summmarizeblurb() creates a short summary of a specific blurb
+* TestSkill.SloganMaker() generates a slogan for a specific kind of shop in NYC
+* TestSkill.SummmarizeBlurb() creates a short summary of a specific blurb
 
 Next, we'll show you how to make a more powerful skill by introducing SK prompt templates.
 
@@ -112,16 +112,16 @@ Summarize the following text in two sentences or less.
 [END TEXT]
 ```
 
-Congratulations! We have written two SK functions that can belong to a `TestSkillImproved` skill. To package these two skills to be used by SK, we do the same as we did before:
+This function would be named `SloganMakerGeneral` and the other would be named `SummarizeBlurbGeneral` — as two new SK functions that can belong to a `TestSkillImproved` skill. To package these two function to be used by SK in the context of a skill, we do the same as we did before:
 
 ```File-Structure-For-Skill-Definition-With-Functions
-TestSkill
+TestSkillImproved
 │
-└─── sloganmaker
+└─── SloganMakerGeneral
 |    |
 │    └─── skprompt.txt
 │   
-└─── summarizeblurb
+└─── SummarizeBlurbGeneral
      |
      └─── skprompt.txt
 ```
