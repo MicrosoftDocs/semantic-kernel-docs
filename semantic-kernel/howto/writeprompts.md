@@ -87,8 +87,8 @@ TestSkill
 
 This skill can do one of two things by calling one of its two functions:
 
-* TestSkill.SloganMaker() generates a slogan for a specific kind of shop in NYC
-* TestSkill.SummmarizeBlurb() creates a short summary of a specific blurb
+* `TestSkill.SloganMaker()` generates a slogan for a specific kind of shop in NYC
+* `TestSkill.SummmarizeBlurb()` creates a short summary of a specific blurb
 
 Next, we'll show you how to make a more powerful skill by introducing SK prompt templates.
 
@@ -103,7 +103,7 @@ York City with a focus on how affordable we are without
 sacrificing quality.
 ```
 
-The double curly braces signify to SK that there's something special for it to notice within the LLM AI prompt. All prompting variables that are passed to SK will begin with a dollar sign "$" — with "$INPUT" being a reserved name for the first passed variable. 
+The double curly braces signify to SK that there's something special for it to notice within the LLM AI prompt. All prompting variables that are passed to SK will begin with a dollar sign `$` — with `$INPUT` being a reserved name for the first passed variable. 
 
 We can do the same for how we summarize text into two sentences by removing the body of the text we want to summarize, and replacing it with "{{$input}}" to pass into the prompt at runtime.
 
@@ -130,8 +130,8 @@ TestSkillImproved
 
 The difference is that we can now pass an input parameter to the function — which enables it to become a generalized machine for generating outputs:
 
-* TestSkill.sloganmaker('flatware') generates a slogan for a 'flatware' shop in NYC
-* TestSkill.summmarizeblurb('<insert long text here>') creates a short summary of given blurb
+* `TestSkill.sloganmaker('flatware')` generates a slogan for a 'flatware' shop in NYC
+* `TestSkill.summmarizeblurb('<insert long text here>')` creates a short summary of given blurb
 
 Templated prompts can be further customized to call on more kinds of inputs to have even more generalized capabilities.
 
