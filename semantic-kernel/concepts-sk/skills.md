@@ -34,6 +34,18 @@ When using native computer code, it's also possible to invoke an LLM AI prompt â
 
 With a text file "skprompt.txt" that's using SK's Prompt Template format ...
 
+## To go deeper into skills ...
+
+There are a set of "core" skills in SK that reside in:
+
+`semantic-kernel/dotnet/src/SemanticKernel/CoreSkills`
+
+These skills embody a few standard capabilities like working with time, text, files, http requests, and the [Planner](planner).
+
+For more examples of skills, and the ones that we use in our sample apps, look inside:
+
+`semantic-kernel/samples/skills`
+
 ## Take the next step
 
 Now that you know about the **kernel**, **planner**, **skills**, you can take on **memories**.
