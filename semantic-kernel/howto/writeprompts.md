@@ -36,7 +36,12 @@ Let's try another example where we are eager to play with the summarizing capabi
 ```Plain-Prompt
 Summarize the following text in two sentences or less. 
 [BEGIN TEXT]
-Jan had always wanted to be a writer, ever since they were a kid. They spent hours reading books, writing stories, and imagining worlds. They grew up and pursued their passion, studying literature and journalism, and submitting their work to magazines and publishers. They faced rejection after rejection, but they never gave up hope. Jan finally got their breakthrough, when a famous editor discovered their manuscript and offered them a book deal.
+Jan had always wanted to be a writer, ever since they were a kid. They spent hours
+reading books, writing stories, and imagining worlds. They grew up and pursued their 
+passion, studying literature and journalism, and submitting their work to magazines 
+and publishers. They faced rejection after rejection, but they never gave up hope. 
+Jan finally got their breakthrough, when a famous editor discovered their manuscript 
+and offered them a book deal.
 [END TEXT]
 ```
 
@@ -45,17 +50,22 @@ The result of this prompt from an actual LLM AI model is:
 ```Model-Response
 A possible summary is:
 
-Jan's lifelong dream of becoming a writer came true when a famous editor offered them a book deal, after years of rejection and perseverance.
+Jan's lifelong dream of becoming a writer came true when a famous editor offered them 
+a book deal, after years of rejection and perseverance.
 ```
 
 And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking it to give us a marketing slogan, and 2/ we're asking it to summarize a body of text down to two sentences.
 
 ## Writing a function that can become part of an SK skill
 
-Let's say we want to go into the advertising business with AI powering the slogan-side of our offerings. We'd like to encapsulate how we create slogans to be repeatable and across any industry. To do so, we take our first prompt and write it as such:
+Let's say we want to go into the advertising business with AI powering the 
+slogan-side of our offerings. We'd like to encapsulate how we create slogans to be 
+repeatable and across any industry. To do so, we take our first prompt and write it
+as such:
 
 ```SK-Semantic-Function
-Write me a marketing slogan for my {{$INPUT}} in New York City with a focus on how affordable we are without sacrificing quality.
+Write me a marketing slogan for my {{$INPUT}} in New York City with a focus on how 
+affordable we are without sacrificing quality.
 ```
 
 The double curly braces signify to SK that there's something special for it to notice within the LLM AI prompt. All prompting variables that are passed to SK will begin with a dollar sign "$" — with "$INPUT" being a reserved name for the first passed variable. 
