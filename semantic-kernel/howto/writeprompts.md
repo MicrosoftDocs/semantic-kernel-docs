@@ -21,17 +21,20 @@ Congratulations! You have imagined a delicious ASK for SK to run to completion. 
 
 Writing prompts is like making a wish. Let's imagine we are entrepreneurs trying to make it in downtown Manhattan and we need to drive more leads to our store. We write the prompt:
 
-```Write me a marketing slogan for my apparel shop in New York City with a focus on how affordable we are without sacrificing quality.
+```Plain Prompt
+Write me a marketing slogan for my apparel shop in New York City with a focus on how affordable we are without sacrificing quality.
 ```
 
 The result of this prompt from an actual LLM AI model is:
 
-```New York Style, Low-Cost Smile: Shop at NYC's Best Apparel Store!
+```Model Response
+New York Style, Low-Cost Smile: Shop at NYC's Best Apparel Store!
 ```
 
 Let's try another example where we are eager to play with the summarizing capability of LLM AIs and want to show off its superpower when applied to text that we explicitly define:
 
-```Summarize the following text in two sentences or less. 
+```Plain Prompt
+Summarize the following text in two sentences or less. 
 [BEGIN TEXT]
 Jan had always wanted to be a writer, ever since they were a kid. They spent hours reading books, writing stories, and imagining worlds. They grew up and pursued their passion, studying literature and journalism, and submitting their work to magazines and publishers. They faced rejection after rejection, but they never gave up hope. Jan finally got their breakthrough, when a famous editor discovered their manuscript and offered them a book deal.
 [END TEXT]
@@ -39,7 +42,8 @@ Jan had always wanted to be a writer, ever since they were a kid. They spent hou
 
 The result of this prompt from an actual LLM AI model is:
 
-```A possible summary is:
+```Model Response
+A possible summary is:
 
 Jan's lifelong dream of becoming a writer came true when a famous editor offered them a book deal, after years of rejection and perseverance.
 ```
@@ -50,14 +54,16 @@ And there we have it. Two simple prompts that aren't asking the model for too mu
 
 Let's say we want to go into the advertising business with AI powering the slogan-side of our offerings. We'd like to encapsualte how we create slogans to be repeatable and across any industry. To do so, we take our first prompt and write it as such:
 
-```Write me a marketing slogan for my {{$INPUT}} in New York City with a focus on how affordable we are without sacrificing quality.
+```Templated Prompt
+Write me a marketing slogan for my {{$INPUT}} in New York City with a focus on how affordable we are without sacrificing quality.
 ```
 
 The double curly braces signify to SK that there's something special for it to notice within the LLM AI prompt. All prompting variables that are passed to SK will begin with a dollar sign "$" — with "$INPUT" being a reserved name for the first passed variable. 
 
 We can do the same for how we summarize text into two sentences by removing the body of the text we want to summarize, and replacing it with "{{$input}}" to pass into the prompt at runtime.
 
-```Summarize the following text in two sentences or less. 
+```Templated Prompt
+Summarize the following text in two sentences or less. 
 [BEGIN TEXT]
 {{$input}}
 [END TEXT]
