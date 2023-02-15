@@ -20,7 +20,7 @@ The Simple Chat Summary sample allows you to see the power of [functions](/seman
 # Running the app
 The [Simple chat summary sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-chat-webapp-react) is located in the Semantic Kernel GitHub repository.
 
-1) Follow the [Setup](/semantic-kernel/getting-started) instructions if you do not already have a clone of Semantic Kernel locally.
+1) Follow the [Setup](/semantic-kernel/getting-started/setup) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Start the [local API service](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-api-azure-function).
 3) Open the ReadMe file in the Simple Chat Summary sample folder.
 4) Open the Integrated Terminal window.
