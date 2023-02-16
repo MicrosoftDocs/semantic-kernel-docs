@@ -10,8 +10,8 @@ ms.prod: semantic-kernel
 
 # Concepts in Semantic Kernel
 
-| ASK⇾ [Kernel](kernel) [Planner](planner) [Skills](skills) [Memories](memories) [Connectors](Connectors) >>>  ⇾GET | 
-|---|
+| ASK⇾ | [Kernel](kernel) | [Planner](planner) | [Skills](skills)|  [Memories](memories) |[Connectors](Connectors) | >>>|  ⇾GET | 
+|---|---|---|---|---|---|---|---|
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
