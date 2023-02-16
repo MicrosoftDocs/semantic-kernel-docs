@@ -1,6 +1,8 @@
-- name: Write Prompts
-  href: writeprompts.md
+- name: Write Semantic Skills
+  href: writesemanticskills.md
 - name: Configure Models
   href: configuremodels.md
+- name: Write Native Skills
+  href: writenativeskills.md
 - name: The Schillace Laws
   href: schillacelaws.md

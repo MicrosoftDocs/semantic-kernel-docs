@@ -1,6 +1,6 @@
 ---
-title: How to write prompts in Semantic Kernel
-description: How to write prompts in Semantic Kernel
+title: How to write semantic skills in Semantic Kernel
+description: How to write semantic skills in Semantic Kernel
 author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
@@ -142,8 +142,50 @@ a focus on {{$SPECIALTY}} we are without sacrificing quality.
 
 We can add this function to our `TestSkillFlex` skill as `SloganMakerExtraFlex` to serve the minimum capabilities of a copywriting agency.
 
+Skills that are created using LLM AI prompts are called "semantic skills."
+
+## Invoking a semantic skill from a file from C#
+
 ```csharp
-calling it from csharp
+// LOOK AT CRAIG CONSOLE APP EXAMPLE
+
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.SemanticKernel;
+    using Microsoft.SemanticKernel.KernelExtensions;
+    using Microsoft.SemanticKernel.Orchestration;
+    using Microsoft.SemanticKernel.Registry;
+
+    ILogger s_log = ConsoleLogger.Log;
+    IKernel kernel = Kernel.Build(s_log);
+
+//System.IO.Directory.GetCurrentDirectory(), <-- gather directory correctly
+    var testSkillFlex = kernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillFlex");
+
+    var myContext = new ContextVariables("apparel"); // set $INPUT variable
+    myContext.Set("city", "Seattle")); // set $CITY
+    myContext.Set("specialty","ribbons"); // set $SPECIALTY
+
+    SKContext result = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerExtraFlex"]); <-- native fun is difeferent>
+
+    Console.WriteLine(result);
+```
+
+## Invoking a semantic function inline from C#
+
+It's possible to bypass the need to package your semantic skill's functions explicitly in  `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. 
+
+```csharp
+string sloganMakerFlex = """
+Write me a marketing slogan for my {{$INPUT}} in New 
+York City with a focus on how affordable we are without 
+sacrificing quality.
+""";
+
+var sloganFunction = kernel.CreateSemanticFunction(sloganMakerFlex);
+
+var slogan = await kernel.RunAsync(input, sloganFunction);
+Console.WriteLine(slogan);
 ```
 
 ## Take the next step
