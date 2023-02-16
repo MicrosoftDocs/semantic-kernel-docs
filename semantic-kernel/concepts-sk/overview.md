@@ -12,6 +12,9 @@ ms.prod: semantic-kernel
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
+| [Kernel](kernel) | [Planner](planner)| | [Skills](skills)| | [Memories](memories)| [Connectors](Connectors)| 
+|---|---|---|---|---|
+
 Semantic Kernel builds upon five concepts:
 
 | Concept | Short Description |
