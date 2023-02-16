@@ -65,7 +65,7 @@ And there we have it. Two simple prompts that aren't asking the model for too mu
 
 Both of these simple prompts qualify as "functions" that can be packaged as part of an SK skill. The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in SK within a directory named `SloganMaker` into a file named `skprompt.txt`:
 
-```sloganmaker/skprompt.txt
+```SloganMaker/skprompt.txt
 Write me a marketing slogan for my apparel shop in New 
 York City with a focus on how affordable we are without 
 sacrificing quality.
@@ -103,9 +103,9 @@ York City with a focus on how affordable we are without
 sacrificing quality.
 ```
 
-The double curly braces signify to SK that there's something special for it to notice within the LLM AI prompt. All prompting variables that are passed to SK will begin with a dollar sign `$` — with `$INPUT` being a reserved name for the first passed variable. 
+The double `{{` curly braces `}}` signify to SK that there's something special for it to notice within the LLM AI prompt. To pass an input to a prompt, we refer to the default input variable `$INPUT` — and by the same token if we have other variables to work with, they will start with a dollar sign `$` as well. 
 
-We can do the same for how we summarize text into two sentences by removing the body of the text we want to summarize, and replacing it with `{{$INPUT}}` to pass into the prompt at runtime.
+Our other plain prompt for summarizing text into two sentences can take an `input` by simply replacing the existing body of text and replacing it with `{{$INPUT}}` as follows:
 
 ```Templated-Prompt
 Summarize the following text in two sentences or less. 
@@ -114,26 +114,37 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-This function would be named `SloganMakerGeneral` and the other would be named `SummarizeBlurbGeneral` — as two new SK functions that can belong to a `TestSkillImproved` skill. To package these two function to be used by SK in the context of a skill, we do the same as we did before:
+We can name these functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new SK functions that can belong to a new `TestSkillFlex` skill that now takes an input. To package these two function to be used by SK in the context of a skill, we do the same as we did before:
 
 ```File-Structure-For-Skill-Definition-With-Functions
 TestSkillImproved
 │
-└─── SloganMakerGeneral
+└─── SloganMakerFlex
 |    |
 │    └─── skprompt.txt
 │   
-└─── SummarizeBlurbGeneral
+└─── SummarizeBlurbFlex
      |
      └─── skprompt.txt
 ```
 
-The difference is that we can now pass an input parameter to the function — which enables it to become a generalized machine for generating outputs:
+The difference between `TestSkillFlex` and `TestSkill` is that in the former case, we can pass an input parameter to its functions.
 
-* `TestSkill.sloganmaker('flatware')` generates a slogan for a 'flatware' shop in NYC
-* `TestSkill.summmarizeblurb('<insert long text here>')` creates a short summary of given blurb
+* `TestSkillFlex.SloganMakerFlex('flatware')` generates a slogan for a 'flatware' shop in NYC
+* `TestSkillFlex.SummarizeBlurbFlex('<insert long text here>')` creates a short summary of a given blurb
 
-Templated prompts can be further customized to call on more kinds of inputs to have even more generalized capabilities.
+Templated prompts can be further customized beyond a single `$INPUT` variable to take more inputs. For instance, if we wanted our SloganMaker skill to not only take into account the kind of shop but also the shop's location and specialty, we would write the function as:
+
+```Templated-Prompt
+Write me a marketing slogan for my {{$INPUT}} in {{$CITY}} with 
+a focus on {{$SPECIALTY}} we are without sacrificing quality.
+```
+
+We can add this function to our `TestSkillFlex` skill as `SloganMakerExtraFlex` to serve the minimum capabilities of a copywriting agency.
+
+```csharp
+calling it from csharp
+```
 
 ## Take the next step
 
