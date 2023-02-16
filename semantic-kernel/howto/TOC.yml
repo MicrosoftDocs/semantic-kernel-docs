@@ -1,8 +1,8 @@
-- name: Write Semantic Skills
+- name: Creating Semantic Functions
   href: writesemanticskills.md
-- name: Configure Models
-  href: configuremodels.md
-- name: Write Native Skills
+- name: Creating Native Functions
   href: writenativeskills.md
+- name: Configuration Functions
+  href: configuremodels.md
 - name: The Schillace Laws
   href: schillacelaws.md
