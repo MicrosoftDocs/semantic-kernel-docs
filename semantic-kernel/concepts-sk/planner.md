@@ -32,10 +32,9 @@ The ["Jobs To Be Done (JTBD)"](https://hbr.org/2016/09/know-your-customers-jobs-
 The **planner** will operate within the [skills](/semantic-kernel/concepts-sk/skills) it has available. In the event that a desired skill does not exist, the planner can suggest you to create the [skill](/semantic-kernel/concepts-sk/skills). Or, depending upon the level of complexity the [kernel](/semantic-kernel/concepts-sk/kernel) can write and add the missing [skill](/semantic-kernel/concepts-sk/skills). 
 
 ## Take the next step
+Try the [Book creator sample app](/semantic-kernel/samples/bookcreator) to see it in action.
 
 Now that you know about the **kernel** and the **planner**, you are ready to learn about **skills**.
-
-Try the [Book creator sample app](/semantic-kernel/samples/bookcreator) to see it in action.
 
 > [!div class="nextstepaction"]
 > [Learn about Skills](skills.md)
