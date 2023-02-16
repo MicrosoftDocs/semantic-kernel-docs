@@ -35,5 +35,7 @@ The **planner** will operate within the [skills](/semantic-kernel/concepts-sk/sk
 
 Now that you know about the **kernel** and the **planner**, you are ready to learn about **skills**.
 
+Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to see it in action.
+
 > [!div class="nextstepaction"]
 > [Learn about Skills](skills.md)
