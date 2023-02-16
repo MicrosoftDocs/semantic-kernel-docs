@@ -22,8 +22,6 @@ For the best experience working with Semantic Kernel and all of the samples you 
 5. In VSCode or Visual Studio the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) extension installed
 6. [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local)** installed
 
-** If you are using an M-series Macbook there are a few [special things](https://maeda.pm/2023/02/12/running-azure-functions-on-m-series-macbooks-in-early-2023/will need to do to get Azure Functions running
-
 > [!div class="nextstepaction"]
 > [Return to set up](setup)
 

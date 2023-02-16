@@ -10,7 +10,7 @@ ms.prod: semantic-kernel
 
 # What is Planner?
 
-| ASK ⇾ | [Kernel](kernel) | Planner | [Skills](skills) | [Memories](memories)| [Connectors](Connectors)|... |  ⇾ GET | 
+| ASK ⇾ | [Kernel](kernel) | Planner | [Skills](skills) | [Memories](memories)| [Connectors](Connectors)| * * * |  ⇾ GET | 
 |---|---|---|---|---|---|---|---|
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
