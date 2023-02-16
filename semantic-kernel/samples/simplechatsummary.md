@@ -13,8 +13,6 @@ The Simple Chat Summary sample allows you to see the power of [functions](/seman
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
-![Simple chat summary sample app.](../media/Simple_Chat_Summary_AnimGif.gif)
-
 > [!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
 
 # Running the app

@@ -14,8 +14,6 @@ The Book creator sample allows you to enter in a topic then the [Planner](/seman
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
---- Animated Gif Here ----
-
 >[!Video https://aka.ms/SK-Samples-CreateBook-Video]
 
 ## Running the app
