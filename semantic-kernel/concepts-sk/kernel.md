@@ -9,7 +9,7 @@ ms.prod: semantic-kernel
 ---
 # What is the Kernel?
 
-| ASK⇾ | Kernel | [Planner](planner) | [Skills](skills)|  [Memories](memories) |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | Kernel | [Planner](planner) | [Skills](skills)|  Memories |[Connectors](Connectors) | >>>|  ⇾GET | 
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
