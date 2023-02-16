@@ -20,18 +20,18 @@ A **skill** refers to a domain of expertise made available to the [kernel](kerne
 
 ![](../media/skills01.png)
 
-An SK **function** is the basic building block of a skills. A function can be expressed as either:
+A **function** is the basic building block for a skill. A function can be expressed as either:
 
-1. an LLM AI [prompt](prompt)
-2. native computer code
+1. an LLM AI [prompt](prompt) — also called a "semantic" function
+2. native computer code -- also called a "native" function
 
 When using native computer code, it's also possible to invoke an LLM AI prompt — which means that there can be **functions** that are hybrid LLM AI × native code as well. 
 
-**Functions** can be connected end-to-end, or "chained together," to create more powerful capabilities. When they are represented as pure LLM AI prompts, the word "function" and "prompt" can be used interchangeably. 
+**Functions** can be connected end-to-end, or "chained together," to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
 
-## What is the relationship between functions and skills?
+## What is the relationship between semantic functions and skills?
 
-A skill is the container in which functions live. You can think of a skill as a directory of folders where the skill encloses multiple functions, or a single function.
+A skill is the container in which functions live. You can think of a semantic skill as a directory of folders that contain multiple directories of semantic functions or a single directory as well.
 
 ```Skills-Are-Folders-Of-Functions
 SkillName
@@ -41,7 +41,7 @@ SkillName
 └─── Function2Name
 ```
 
-A function can be represented as a plain LLM AI prompt or as an SK prompt template.
+A function can 
 
 ## What are SK "prompt templates"?
 
