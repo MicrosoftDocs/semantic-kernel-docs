@@ -9,9 +9,8 @@ ms.prod: semantic-kernel
 ---
 # What is the Kernel?
 
-| ASK ⇾ | Kernel | [Planner](planner)| | [Skills](skills)| | [Memories](memories)| [Connectors](Connectors)| >>  ⇾GET | 
-|---|---|---|---|---|---|---|
-
+| ASK⇾ | Kernel | [Planner](planner) | [Skills](skills)|  [Memories](memories) |[Connectors](Connectors) | >>>|  ⇾GET | 
+|---|---|---|---|---|---|---|---|
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
 The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](skills), [memories](memories), and [connectors](connectors). Key features of the **kernel** that facilitate faster development include:
