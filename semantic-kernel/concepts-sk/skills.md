@@ -9,6 +9,9 @@ ms.prod: semantic-kernel
 ---
 # What are Skills?
 
+| ASK ⇾ | [Kernel](kernel) | [Planner](planner)| | Skills| [Memories](memories)| [Connectors](Connectors)| 
+|---|---|---|---|---|---|
+
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
 ![](../media/skills.png)

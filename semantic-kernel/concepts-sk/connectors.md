@@ -10,6 +10,9 @@ ms.prod: semantic-kernel
 
 # What are Connectors?
 
+| ASK ⇾ | [Kernel](kernel) | [Planner](planner)| [Skills](skills)| | [Memories](memories)| Connectors| 
+|---|---|---|---|---|---|
+
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
 ![](../media/connectors.png)
