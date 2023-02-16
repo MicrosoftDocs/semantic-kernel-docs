@@ -22,6 +22,8 @@ ms.prod: semantic-kernel
 
 Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts. 
 
+Try the [Authentication and API sample app](/semantic-kernel/samples/authapi) to see it in action.
+
 > [!div class="nextstepaction"]
 > [Jump into sample apps](../samples/overview)
 
