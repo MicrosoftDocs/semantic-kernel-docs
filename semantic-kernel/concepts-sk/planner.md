@@ -27,9 +27,9 @@ Because the **planner** has access to either a pre-defined library of pre-made [
 
 The ["Jobs To Be Done (JTBD)"](https://hbr.org/2016/09/know-your-customers-jobs-to-be-done) movement has popularized a shift in moving from work _outputs_ to work _outcomes_. Instead of focusing on the features or the functions of a product or a service, the JTBD approach emphasizes the goals and desires of the customer or the user, and the value or the benefit that they seek or expect from using the product or service. By understanding and articulating the JTBD of the customer or the user, a product or service can be designed and delivered more effectively. You just need to make the right ASK that isn't just "turn on the lights" and instead a more challenging goal like "I want a job promotion."
 
-## What if the Planner needs a skill that's unavailable?
+## What if the Planner needs a Skill that's unavailable?
 
-The **planner* will work within its constraints of the [skills](/semantic-kernel/concepts-sk/skills) it has available. In the event that a desired skill does not exist, the **planner* can suggest you to create the [skill](/semantic-kernel/concepts-sk/skills). Or, depending upon the level of complexity the [kernel](/semantic-kernel/concepts-sk/kernel) can write and add the missing [skill](/semantic-kernel/concepts-sk/skills). 
+The **planner** will operate within the [skills](/semantic-kernel/concepts-sk/skills) it has available. In the event that a desired skill does not exist, the planner can suggest you to create the [skill](/semantic-kernel/concepts-sk/skills). Or, depending upon the level of complexity the [kernel](/semantic-kernel/concepts-sk/kernel) can write and add the missing [skill](/semantic-kernel/concepts-sk/skills). 
 
 ## Take the next step
 
