@@ -18,7 +18,7 @@ The Book creator sample allows you to enter in a topic then the [Planner](/seman
 
 >[!Video https://aka.ms/SK-Samples-CreateBook-Video]
 
-# Running the app
+## Running the app
 The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-create-book-webapp-react) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/getting-started/setup) instructions if you do not already have a clone of Semantic Kernel locally.
@@ -28,13 +28,20 @@ The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/
 5) Run 'yarn install' - if this is the first time you are running the sample.  Then run 'yarn start'.
 6) A browser will open with the sample app running
 
-# Exploring the app
+## Exploring the app
 
-## Setup Screen
+### Setup Screen
 Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
-## Topics Screen
+### Topics Screen
 On this screen you can enter in a topic for the children's book that will be created for you.  This will use functions and AI to generate book ideas based on this topic.
 
-## Book Screen
+### Book Screen
 By clicking on the asks, multiple steps will be found from the Planner and the process will run to return results.
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Run the auth and API app](authapi)
+
+[!INCLUDE [footer.md](../includes/footer.md)]

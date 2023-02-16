@@ -40,3 +40,10 @@ Three semantic functions are called on this screen
 1) [Summarize](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Summarize)
 2) [Topics](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Topics) 
 3) [Action Items](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/ActionItems) 
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Run the book creator app](bookcreator)
+
+[!INCLUDE [footer.md](../includes/footer.md)]
