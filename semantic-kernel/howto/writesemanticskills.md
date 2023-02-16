@@ -146,6 +146,9 @@ Skills that are created using LLM AI prompts are called "semantic skills."
 
 ## Invoking a semantic skill from a file from C#
 
+> [!CAUTION]
+> This section is still under construction
+
 ```csharp
 // LOOK AT CRAIG CONSOLE APP EXAMPLE
 
@@ -172,6 +175,9 @@ Skills that are created using LLM AI prompts are called "semantic skills."
 ```
 
 ## Invoking a semantic function inline from C#
+
+> [!CAUTION]
+> This section is still under construction
 
 It's possible to bypass the need to package your semantic skill's functions explicitly in  `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. 
 

@@ -9,6 +9,9 @@ ms.prod: semantic-kernel
 ---
 # Additional Resources
 
+> [!CAUTION]
+> This information is not yet active. For internal support go to aka.ms/sksupport -- see you there!
+
 Join the Semantic Kernel [Discord community](https://aka.ms/SKDiscord)
 
 Visit our [blog](https://aka.ms/semantic-kernel) to learn about the latest news

@@ -8,3 +8,6 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 # Semantic Kernel FAQ's
+
+> [!CAUTION]
+> This section is still under construction

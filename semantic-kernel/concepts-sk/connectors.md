@@ -15,6 +15,9 @@ ms.prod: semantic-kernel
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
+> [!CAUTION]
+> This section is still under construction
+
 ## Take the next step
 
 Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts. 

@@ -15,7 +15,8 @@ ms.prod: semantic-kernel
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
 
---- Video https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17538 ---
+> [!CAUTION]
+> This section is still under construction
 
 ## Take the next step
 
