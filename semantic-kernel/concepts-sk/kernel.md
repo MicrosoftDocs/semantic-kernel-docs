@@ -46,10 +46,10 @@ There are a variety of things that you can do with `my_kernel` that include:
 * Feeding a desired skill with inputs to drive towards output
 
 ## Take the next step
+Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to see it in action.
 
 > [!div class="nextstepaction"]
 > [Learn about the Planner](planner)
 
-Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to see it in action.
 
 [!INCLUDE [footer.md](../includes/footer.md)]
