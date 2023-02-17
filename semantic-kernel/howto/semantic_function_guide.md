@@ -1,4 +1,17 @@
+---
+title: How to write native skills in Semantic Kernel
+description: How to write skills in Semantic Kernel
+author: johnmaeda
+ms.topic: skills
+ms.author: johnmaeda
+ms.date: 02/07/2023
+ms.prod: semantic-kernel
+---
 # SK Prompt Template Syntax
+
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
+
 
 The Semantic Kernel prompt template language is a simple and powerful way to
 define and compose AI functions **using plain text**.
