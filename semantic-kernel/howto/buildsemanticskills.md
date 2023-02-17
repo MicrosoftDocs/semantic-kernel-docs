@@ -95,7 +95,7 @@ Next, we'll show you how to make a more powerful skill by introducing SK prompt 
 ## Writing a more powerful, "templated" prompt
 
 Let's say we want to go into the advertising business with AI powering the slogan-side of our offerings. We'd like to encapsulate how we create slogans to be repeatable and across any industry. To do so, we take our first prompt and write it
-as such:
+as such as a "templated prompt":
 
 ```Templated-Prompt
 Write me a marketing slogan for my {{$INPUT}} in New 
@@ -103,7 +103,9 @@ York City with a focus on how affordable we are without
 sacrificing quality.
 ```
 
-The double `{{` curly braces `}}` signify to SK that there's something special for it to notice within the LLM AI prompt. To pass an input to a prompt, we refer to the default input variable `$INPUT` — and by the same token if we have other variables to work with, they will start with a dollar sign `$` as well. 
+Such "templated" prompts include variables and function calls that can dynamically change the content and the behavior of an otherwise plain prompt. Prompt templates can help you to generate more diverse, relevant, and effective prompts, and to reuse and combine them for different tasks and domains. 
+
+In a templated prompt, the double `{{` curly braces `}}` signify to SK that there's something special for it to notice within the LLM AI prompt. To pass an input to a prompt, we refer to the default input variable `$INPUT` — and by the same token if we have other variables to work with, they will start with a dollar sign `$` as well. 
 
 Our other plain prompt for summarizing text into two sentences can take an `input` by simply replacing the existing body of text and replacing it with `{{$INPUT}}` as follows:
 

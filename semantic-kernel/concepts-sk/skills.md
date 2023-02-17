@@ -25,15 +25,15 @@ A **function** is the basic building block for a skill. A function can be expres
 1. an LLM AI [prompt](prompt) — also called a "semantic" function
 2. native computer code -- also called a "native" function
 
-When using native computer code, it's also possible to invoke an LLM AI prompt — which means that there can be **functions** that are hybrid LLM AI × native code as well. 
+When using native computer code, it's also possible to invoke an LLM AI prompt — which means that there can be functions that are hybrid LLM AI × native code as well. 
 
-**Functions** can be connected end-to-end, or "chained together," to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
+Functions can be connected end-to-end, or "chained together," to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
 
 ## What is the relationship between semantic functions and skills?
 
 A skill is the container in which functions live. You can think of a semantic skill as a directory of folders that contain multiple directories of semantic functions or a single directory as well.
 
-```Skills-Are-Folders-Of-Functions
+```Semantic-Skills-Are-Folders-Of-Functions
 SkillName
 │
 └─── Function1Name
@@ -41,11 +41,7 @@ SkillName
 └─── Function2Name
 ```
 
-A function can 
-
-## What are SK "prompt templates"?
-
-SK Prompt templates are prompts that include variables and function calls that can dynamically change the content and the behavior of an otherwise plain prompt. Prompt templates can help you to generate more diverse, relevant, and effective prompts, and to reuse and combine them for different tasks and domains. 
+There's more to learn about semantic functions in [Creative Semantic Functions](../howto/writesemanticskills).
 
 ## To go deeper into skills ...
 
