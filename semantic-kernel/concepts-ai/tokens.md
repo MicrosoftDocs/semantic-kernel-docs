@@ -12,12 +12,12 @@ ms.prod: semantic-kernel
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 > [!TIP]
+> _This list of key topics was produced with the semantic skill `SummarizeSkill.Topics`_
 > Key topics: 
 > 1. Tokens: basic units of text/code for LLM AI models to process/generate language.
 > 2. Tokenization: splitting input/output texts into smaller units for LLM AI models.
 > 3. Vocabulary size: the number of tokens each model uses, which varies among different GPT models.
 > 4. Tokenization cost: affects the memory and computational resources that a model needs, which influences the cost and performance of running an OpenAI or Azure OpenAI model.
-> _This list of key topics was produced with the semantic skill `SummarizeSkill.Topics`_
 
 _Tokens_ are the basic units of text or code that an LLM AI uses to process and generate language. Tokens can be characters, words, subwords, or other segments of text or code, depending on the chosen tokenization method or scheme. Tokens are assigned numerical values or identifiers, and are arranged in sequences or vectors, and are fed into or outputted from the model. Tokens are the building blocks of language for the model.
  
