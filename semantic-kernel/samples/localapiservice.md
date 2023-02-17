@@ -16,7 +16,6 @@ This service API is written in C# against Azure Function Runtime v4 and exposes 
 >[!Video https://aka.ms/SK-Local-API-Setup]
 
 ## Running the service API locally
-The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-create-book-webapp-react) is located in the Semantic Kernel GitHub repository.
 **Run** `func start --csharp` from the command line. This will run the service API locally at `http://localhost:7071`.
 
 Two endpoints will be exposed by the service API:
