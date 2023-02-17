@@ -63,6 +63,7 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 Now that you know about the **kernel**, **planner**, **skills**, you can take on **memories**.
 
 > [!div class="nextstepaction"]
-> [Jump into all the sample apps](../samples/overview)
+> [Learn about the Connectors](connectors)
+
 
 [!INCLUDE [footer.md](../includes/footer.md)]
