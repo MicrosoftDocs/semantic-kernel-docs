@@ -6,3 +6,5 @@
   href: bookcreator.md
 - name: Authentication and APIs
   href: authapi.md
+- name: Local API Service
+  href: localapiservice.md
