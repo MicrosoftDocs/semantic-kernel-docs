@@ -9,7 +9,7 @@ ms.prod: semantic-kernel
 ---
 # What is the Kernel?
 
-| ASK⇾ | Kernel | [Planner](Planner) | [Skills](skills)|  Memories |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | Kernel | [Planner](Planner) | [Skills](skills)|  ~Memories~ |[Connectors](Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 ![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
@@ -17,7 +17,7 @@ ms.prod: semantic-kernel
 The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](skills), [memories](memories), and [connectors](connectors). Key features of the **kernel** that facilitate faster development include:
 
 * [Skills](skills): Package your most useful prompts as fully reusable [skills](skills)
-* Hybrid Development: Mix your AI prompts with conventional native code fluidly
+* Hybrid Development: Fluidly mix your AI prompts with conventional native code
 * Orchestration: Manage complicated LLM AI prompts with complete control
 * Future Proof: Use multiple LLM AI models and configurations with specificity
 
@@ -46,7 +46,9 @@ There are a variety of things that you can do with `my_kernel` that include:
 * Feeding a desired skill with inputs to drive towards output
 
 ## Take the next step
-Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to see it in action.
+
+> [!TIP]
+> Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see the **Kernel** in action.
 
 > [!div class="nextstepaction"]
 > [Learn about the Planner](planner)

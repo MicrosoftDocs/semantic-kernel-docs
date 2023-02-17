@@ -57,6 +57,9 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 
 ## Take the next step
 
+> [!TIP]
+> Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see **Skills** in action.
+
 Now that you know about the **kernel**, **planner**, **skills**, you can take on **memories**.
 
 > [!div class="nextstepaction"]
