@@ -16,7 +16,7 @@ ms.prod: semantic-kernel
 
 > Prompts are the way of communicating and directing an LLM AI model's behavior.
 
-Prompts are the inputs or queries that a user or a program gives to an LLM AI, in order to elicit a specific response from the model. Prompts can be natural language sentences or questions, or code snippets or commands, or any combination of text or code, depending on the domain and the task. Prompts can also be nested or chained, meaning that the output of one prompt can be used as the input of another prompt, creating more complex and dynamic interactions with the model. 
+_Prompts_ are the inputs or queries that a user or a program gives to an LLM AI, in order to elicit a specific response from the model. Prompts can be natural language sentences or questions, or code snippets or commands, or any combination of text or code, depending on the domain and the task. Prompts can also be nested or chained, meaning that the output of one prompt can be used as the input of another prompt, creating more complex and dynamic interactions with the model. 
 
 ## Subtleties of prompting
 

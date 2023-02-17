@@ -8,19 +8,22 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
-
 # What are Embeddings?
 
-**Embeddings** are the representations or encodings of [tokens](tokens), such as sentences, paragraphs, or documents, in a high-dimensional vector space, where each dimension corresponds to a learned feature or attribute of the language. Embeddings are the way that the model captures and stores the meaning and the relationships of the language, and the way that the model compares and contrasts different tokens or units of language. Embeddings are the bridge between the discrete and the continuous, and between the symbolic and the numeric, aspects of language for the model.
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
+> [!TIP]
+> Memory: Embeddings / Embeddings are vectors or arrays of numbers that represent the meaning and the context of tokens processed by the model. / They are used to encode and decode input and output texts, and can vary in size and dimension. / Embeddings can help the model understand the relationships between tokens, and generate relevant and coherent texts. / They are used for text classification, summarization, translation, and generation, as well as image and code generation. _This summary was produced with the semantic skill `SummarizeSkill.Notegen`_
+
+_Embeddings_ are the representations or encodings of [tokens](tokens), such as sentences, paragraphs, or documents, in a high-dimensional vector space, where each dimension corresponds to a learned feature or attribute of the language. Embeddings are the way that the model captures and stores the meaning and the relationships of the language, and the way that the model compares and contrasts different tokens or units of language. Embeddings are the bridge between the discrete and the continuous, and between the symbolic and the numeric, aspects of language for the model.
 
 ## What are embeddings in less-abstract terms?
 
-**Embeddings** are vectors or arrays of numbers that represent the meaning and the context of the tokens that the model processes and generates. Embeddings are derived from the parameters or the weights of the model, and are used to encode and decode the input and output texts. Embeddings can help the model to understand the semantic and syntactic relationships between the tokens, and to generate more relevant and coherent texts. Embeddings can also enable the model to handle multimodal tasks, such as image and code generation, by converting different types of data into a common representation. Embeddings are an essential component of the transformer architecture that GPT-based models use, and they can vary in size and dimension depending on the model and the task.
+_Embeddings_ are vectors or arrays of numbers that represent the meaning and the context of the tokens that the model processes and generates. Embeddings are derived from the parameters or the weights of the model, and are used to encode and decode the input and output texts. Embeddings can help the model to understand the semantic and syntactic relationships between the tokens, and to generate more relevant and coherent texts. Embeddings can also enable the model to handle multimodal tasks, such as image and code generation, by converting different types of data into a common representation. Embeddings are an essential component of the transformer architecture that GPT-based models use, and they can vary in size and dimension depending on the model and the task.
 
 ## How are embeddings used?
 
-**Embeddings** are used for:
+_Embeddings_ are used for:
 
 * Text classification: Embeddings can help the model to assign labels or categories to texts, based on their meaning and context. For example, embeddings can help the model to classify texts as positive or negative, spam or not spam, news or opinion, etc.
 * Text summarization: Embeddings can help the model to extract or generate the most important or relevant information from texts, and to create concise and coherent summaries. For example, embeddings can help the model to summarize news articles, product reviews, research papers, etc.
