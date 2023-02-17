@@ -1,6 +1,6 @@
 ---
-title: Book creator sample app
-description: Book creator sample app
+title: Local API Service Example
+description: Local API Service Example
 author: evchaki
 ms.topic: samples
 ms.author: evchaki
