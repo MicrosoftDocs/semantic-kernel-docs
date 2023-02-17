@@ -10,10 +10,10 @@ ms.prod: semantic-kernel
 
 # Concepts in Semantic Kernel
 
-| ASK⇾ | [Kernel](kernel) | [Planner](planner) | [Skills](skills)|  <span style="color:#777777">Memories</span> |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel](kernel) | [Planner](planner) | [Skills](skills)| |[Connectors](Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
-![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
+[!INCLUDE [fullview.md](../includes/fullview.md)]
 
 Semantic Kernel builds upon five concepts:
 

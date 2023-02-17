@@ -13,7 +13,7 @@ ms.prod: semantic-kernel
 | ASK⇾ | [Kernel](kernel) | Planner | [Skills](skills)| |[Connectors](Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
-![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
+[!INCLUDE [fullview.md](../includes/fullview.md)]
 
 The _planner_ works backwards from a goal that’s provided from a user's _ASK_. 
 

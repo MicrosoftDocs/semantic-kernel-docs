@@ -12,7 +12,7 @@ ms.prod: semantic-kernel
 | ASK⇾ | Kernel | [Planner](Planner) | [Skills](skills)|  ~Memories~ |[Connectors](Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
-![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
+[!INCLUDE [fullview.md](../includes/fullview.md)]
 
 The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](skills), [memories](memories), and [connectors](connectors). Key features of the **kernel** that facilitate faster development include:
 

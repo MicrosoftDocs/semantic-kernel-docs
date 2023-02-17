@@ -13,7 +13,7 @@ ms.prod: semantic-kernel
 | ASK⇾ | [Kernel](kernel) | [Planner](planner) | [Skills](skills)|  Memories |[Connectors](Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
-![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](../media/fullview.png)
+[!INCLUDE [fullview.md](../includes/fullview.md)]
 
 > [!CAUTION]
 > This section is still under construction
