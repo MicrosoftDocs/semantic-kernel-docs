@@ -20,10 +20,10 @@ ms.prod: semantic-kernel
 
 ## Take the next step
 
-Now that you know about the **kernel**, **planner**, **skills**, **memories**, **connectors**, then you might want to do a quick refresher of core LLM AI concepts. 
-
 > [!TIP]
 > Try the [Authentication and API sample app](/semantic-kernel/samples/authapi) to see a **Connector** in action.
+
+Now that you know about the _kernel_, _planner_, _skills_, _connectors_ then you're ready for all the sample apps.
 
 > [!div class="nextstepaction"]
 > [Jump into all the sample apps](../samples/overview)

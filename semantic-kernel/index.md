@@ -13,7 +13,7 @@ ms.prod: semantic-kernel
 
 **Semantic Kernel (SK) is a lightweight SDK that lets you easily mix conventional programming languages with the latest in Large Language Model (LLM) AI "prompts" with templating, chaining, and planning capabilities out-of-the-box.**
 
-![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](media/fullview.png)
+[!INCLUDE [fullview.md](includes/fullview.md)]
 
 With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK is being built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing. 
 
