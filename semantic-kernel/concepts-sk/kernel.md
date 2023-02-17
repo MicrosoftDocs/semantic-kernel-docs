@@ -9,7 +9,7 @@ ms.prod: semantic-kernel
 ---
 # What is the Kernel?
 
-| ASK⇾ | Kernel | [Planner](Planner) | [Skills](skills)|  ~Memories~ |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | Kernel | [Planner](Planner) | [Skills](skills)| |[Connectors](Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]

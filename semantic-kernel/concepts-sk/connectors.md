@@ -10,7 +10,7 @@ ms.prod: semantic-kernel
 
 # What are Connectors?
 
-| ASK⇾ | [Kernel](kernel) | [Planner](planner) | [Skills](skills)|  ~Memories~ |Connectors | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel](kernel) | [Planner](planner) | [Skills](skills)| |Connectors | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]

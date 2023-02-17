@@ -9,7 +9,7 @@ ms.prod: semantic-kernel
 ---
 # What are Skills?
 
-| ASK⇾ | [Kernel](kernel) | [Planner](planner) | Skills | <span style="color:gray">Memories<span> |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel](kernel) | [Planner](planner) | Skills |  |[Connectors](Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
