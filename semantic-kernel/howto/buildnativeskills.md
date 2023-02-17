@@ -11,6 +11,12 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-Let's get started
+> [!CAUTION]
+> This section is still under construction
 
-## Writing a simple prompt
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Run the samples](../samples)
+
+[!INCLUDE [footer.md](../includes/footer.md)]
