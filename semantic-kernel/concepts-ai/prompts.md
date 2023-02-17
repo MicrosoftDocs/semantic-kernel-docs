@@ -12,7 +12,8 @@ ms.prod: semantic-kernel
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 > [!TIP]
-> The article is about prompts and their importance in directing the behavior of Large Language Models (LLM) AI. Prompts are inputs or queries that a user or a program gives to an LLM AI to elicit a specific response from the model. Prompt design or prompt engineering is an emerging field that involves the process of crafting effective and efficient prompts. The article concludes by providing a link to learn about tokens. _This summary was produced with the semantic skill `SummarizeSkill.Summarize`_
+> The article is about prompts and their importance in directing the behavior of Large Language Models (LLM) AI. Prompts are inputs or queries that a user or a program gives to an LLM AI to elicit a specific response from the model. Prompt design or prompt engineering is an emerging field that involves the process of crafting effective and efficient prompts. The article concludes by providing a link to learn about tokens. 
+> _This summary was produced with the semantic skill `SummarizeSkill.Summarize`_
 
 > Prompts are the way of communicating and directing an LLM AI model's behavior.
 

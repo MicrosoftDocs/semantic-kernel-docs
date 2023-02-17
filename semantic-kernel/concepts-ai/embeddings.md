@@ -13,7 +13,11 @@ ms.prod: semantic-kernel
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 > [!TIP]
-> Memory: Embeddings / Embeddings are vectors or arrays of numbers that represent the meaning and the context of tokens processed by the model. / They are used to encode and decode input and output texts, and can vary in size and dimension. / Embeddings can help the model understand the relationships between tokens, and generate relevant and coherent texts. / They are used for text classification, summarization, translation, and generation, as well as image and code generation. _This summary was produced with the semantic skill `SummarizeSkill.Notegen`_
+> Memory: Embeddings
+> * Embeddings are vectors or arrays of numbers that represent the meaning and the context of tokens processed by the model.
+> * They are used to encode and decode input and output texts, and can vary in size and dimension. / Embeddings can help the model understand the relationships between tokens, and generate relevant and coherent texts.
+> * They are used for text classification, summarization, translation, and generation, as well as image and code generation.
+> _This summary was produced with the semantic skill `SummarizeSkill.Notegen`_
 
 _Embeddings_ are the representations or encodings of [tokens](tokens), such as sentences, paragraphs, or documents, in a high-dimensional vector space, where each dimension corresponds to a learned feature or attribute of the language. Embeddings are the way that the model captures and stores the meaning and the relationships of the language, and the way that the model compares and contrasts different tokens or units of language. Embeddings are the bridge between the discrete and the continuous, and between the symbolic and the numeric, aspects of language for the model.
 
