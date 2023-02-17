@@ -23,15 +23,11 @@ Two endpoints will be exposed by the service API:
 -   **InvokeFunction**: [POST] `http://localhost:7071/api/skills/{skillName}/invoke/{functionName}`
 -   **Ping**: [GET] `http://localhost:7071/api/ping`
 
-## Next steps
-
-Now that your service API is running locally,
-let's try it out in a sample app so you can learn core Semantic Kernel concepts!  
-The service API will need to be run or running for each sample app you want to try.
-
-Sample app learning examples:
 ## Take the next step
 
+Now that your service API is running locally, try out some of the sample apps so you can learn core Semantic Kernel concepts!  
 
+> [!div class="nextstepaction"]
+> [Jump into all the sample apps](../samples/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
