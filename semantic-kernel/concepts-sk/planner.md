@@ -25,7 +25,7 @@ Because the _planner_ has access to either a pre-defined library of pre-made [sk
 
 ## What is the value of "goal-oriented" AI?
 
-The ["Jobs To Be Done (JTBD)"](https://hbr.org/2016/09/know-your-customers-jobs-to-be-done) movement has popularized a shift in moving from work _outputs_ to work _outcomes_. Instead of focusing on the features or the functions of a product or a service, the JTBD approach emphasizes the goals and desires of the customer or the user, and the value or the benefit that they seek or expect from using the product or service. By understanding and articulating the JTBD of the customer or the user, a product or service can be designed and delivered more effectively. You just need to make the right ASK that isn't just "turn on the lights" and instead a more challenging goal like "I want a job promotion."
+The ["Jobs To Be Done (JTBD)"](../support/bibliography) movement has popularized a shift in moving from work _outputs_ to work _outcomes_. Instead of focusing on the features or the functions of a product or a service, the JTBD approach emphasizes the goals and desires of the customer or the user, and the value or the benefit that they seek or expect from using the product or service. By understanding and articulating the JTBD of the customer or the user, a product or service can be designed and delivered more effectively. You just need to make the right ASK that isn't just "turn on the lights" and instead a more challenging goal like "I want a job promotion."
 
 ## What if the Planner needs a Skill that's unavailable?
 

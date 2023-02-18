@@ -34,26 +34,14 @@ Functions can be connected end-to-end, or "chained together," to create more pow
 A skill is the container in which functions live. You can think of a semantic skill as a directory of folders that contain multiple directories of semantic functions or a single directory as well.
 
 ```Semantic-Skills-Are-Folders-Of-Functions
-SkillName
+SkillName (directory name)
 │
-└─── Function1Name
+└─── Function1Name (directory name)
 │   
-└─── Function2Name
+└─── Function2Name (directory name)
 ```
 
-There's more to learn about semantic functions in [Creative Semantic Functions](../howto/writesemanticskills).
-
-## To go deeper into skills ...
-
-There are a set of "core" skills in SK that reside in:
-
-`semantic-kernel/dotnet/src/SemanticKernel/CoreSkills`
-
-These skills embody a few standard capabilities like working with time, text, files, http requests, and the [Planner](planner).
-
-For more examples of skills, and the ones that we use in our sample apps, look inside:
-
-`semantic-kernel/samples/skills`
+Each function directory will have an `skprompt.txt` file and a `config.json` file. There's much more to learn about semantic functions in [Building Semantic Functions](../howto/buildsemanticskills) if you wish to go deeper.
 
 ## Take the next step
 

@@ -35,7 +35,7 @@ In code you will see the **kernel** instantiated as `ISemanticKernel`:
 
 ```csharp
 // Simple instance
-ISemanticKernel my_kernel = SemanticKernel.Build();
+ISemanticKernel myKernel = SemanticKernel.Build();
 ```
 
 There are a variety of things that you can do with `my_kernel` that include:
