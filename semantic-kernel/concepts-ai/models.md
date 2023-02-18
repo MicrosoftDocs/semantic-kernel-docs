@@ -13,6 +13,7 @@ ms.prod: semantic-kernel
 
 > [!TIP]
 >_This summary was produced with the semantic skill `SummarizeSkill.SummarizeMore`_
+>
 > The article provides a brief overview of GPT models, including their variants, how they work, and how they can be fine-tuned. It also mentions similar LLM AI models and compares models based on their number of parameters. 
 
 A _model_ refers to a specific instance or version of an LLM AI, such as GPT-3 or Codex, that has been trained and fine-tuned on a large corpus of text or code (in the case of the Codex model), and that can be accessed and used through an API or a platform. OpenAI and Azure OpenAI offer a variety of models that can be customized and controlled through parameters or options, and that can be applied and integrated to various domains and tasks.
