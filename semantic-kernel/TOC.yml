@@ -2,7 +2,7 @@
   href: index.md
 - name: Get Started
   href: getting-started/toc.yml
-- name: LLM AI Concepts
+- name: Concepts\: LLM AI
   href: concepts-ai/toc.yml
 - name: Semantic Kernel Concepts
   href: concepts-sk/toc.yml
