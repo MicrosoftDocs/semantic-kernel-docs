@@ -152,8 +152,6 @@ Skills that are created using LLM AI prompts are called "semantic skills."
 > This section is still under construction
 
 ```csharp
-// LOOK AT CRAIG CONSOLE APP EXAMPLE
-
     using System;
     using System.Threading.Tasks;
     using Microsoft.SemanticKernel;
@@ -164,14 +162,14 @@ Skills that are created using LLM AI prompts are called "semantic skills."
     ILogger s_log = ConsoleLogger.Log;
     IKernel kernel = Kernel.Build(s_log);
 
-//System.IO.Directory.GetCurrentDirectory(), <-- gather directory correctly
+    // System.IO.Directory.GetCurrentDirectory(), // remove later
     var testSkillFlex = kernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillFlex");
 
     var myContext = new ContextVariables("apparel"); // set $INPUT variable
     myContext.Set("city", "Seattle")); // set $CITY
     myContext.Set("specialty","ribbons"); // set $SPECIALTY
 
-    SKContext result = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerExtraFlex"]); <-- native fun is difeferent>
+    SKContext result = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerExtraFlex"]);
 
     Console.WriteLine(result);
 ```
