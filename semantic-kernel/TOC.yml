@@ -2,13 +2,13 @@
   href: index.md
 - name: Get Started
   href: getting-started/toc.yml
-- name: Concepts\: LLM AI
+- name: Learn LLM AI
   href: concepts-ai/toc.yml
-- name: Semantic Kernel Concepts
+- name: Learn Semantic Kernel
   href: concepts-sk/toc.yml
-- name: Sample Apps
+- name: Run Sample Apps
   href: samples/toc.yml
-- name: For AI Skill Builders
+- name: Build AI Skills
   href: howto/toc.yml
 - name: Get Supported
   href: support/toc.yml
