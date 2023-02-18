@@ -43,6 +43,22 @@ SkillName (directory name)
 
 Each function directory will have an `skprompt.txt` file and a `config.json` file. There's much more to learn about semantic functions in [Building Semantic Functions](../howto/buildsemanticskills) if you wish to go deeper.
 
+## Where to find skills in the GitHub repo
+
+Skills are stored in one of three places flavors:
+
+1. Core Skills: these are skills available at any time to the kernel that embody a few standard capabilities like working with time, text, files, http requests, and the [Planner](planner).
+
+> `semantic-kernel/dotnet/src/SemanticKernel/CoreSkills`
+
+2. Semantic Skills: these skills are managed by you in a directory of your choice.
+
+3. Native Skills: these skills are also managed by you in a directory of your choice.
+
+For more examples of skills, and the ones that we use in our sample apps, look inside:
+
+> `semantic-kernel/samples/skills`
+
 ## Take the next step
 
 > [!TIP]
