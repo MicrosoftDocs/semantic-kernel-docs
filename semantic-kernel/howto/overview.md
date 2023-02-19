@@ -12,7 +12,7 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-## Start where you feel the most ready
+## Start where you feel ready
 
 | Basic | Intermediate | Advanced |
 |---|---|---|
