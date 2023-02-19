@@ -73,7 +73,7 @@ sacrificing quality.
 
 Similarly, we place the second plain prompt into a directory named `SummarizeBlurb` as a file named into a file named `skprompt.txt`. Each of these directories comprise a SK function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
 
-```File-Structure-For-Skill-Definition-With-Functions
+```Semantic-Skills-And-Their-Functions
 TestSkill
 │
 └─── SloganMaker
@@ -94,7 +94,7 @@ This skill can do one of two things by calling one of its two functions:
 
 Next, we'll show you how to make a more powerful skill by introducing SK prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](configurefunctions) but no worries — we'll take you there at the end of this section anyways. Let's keep going!
 
-## Writing a more powerful, "templated" prompt
+## Writing a more powerful "templated" prompt
 
 Let's say we want to go into the advertising business with AI powering the slogan-side of our offerings. We'd like to encapsulate how we create slogans to be repeatable and across any industry. To do so, we take our first prompt and write it
 as such as a "templated prompt":
@@ -199,9 +199,9 @@ In code that will look like:
     myContext.Set("CITY", "Seattle")); 
     myContext.Set("SPECIALTY","ribbons"); 
 
-    SKContext result = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerFlex"]);
+    SKContext myResult = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerFlex"]);
 
-    Console.WriteLine(result);
+    Console.WriteLine(myResult);
 ```
 
 ## Invoking a semantic function inline from C#
@@ -230,10 +230,11 @@ var myFunction = myKernel.CreateSemanticFunction("summarizeBlurbFlex", summarize
 
 var output = await kernel.RunAsync("This is my input that will get summarized for me. And when I go off on a tangent it will make it harder. But it will figure out that the only thing to summarize is that this is a text to be summarized. You think?", 
     myFunction);
+
 Console.WriteLine(output);
 ```
 
-Note that the configuration was given inline to the kernel with a reference to the maximum number of tokens to use `maxTokens`, the variability of words it will use as `topP`, and the amount of randomness to consider in its response with `temperature`. To learn more about this you will want to read about how to [configure functions](configurefunctions).
+Note that the configuration was given inline to the kernel with a reference to the maximum number of tokens to use `maxTokens`, the variability of words it will use as `topP`, and the amount of randomness to consider in its response with `temperature`. To learn more about these function parameters read how to [configure functions](configurefunctions).
 
 ## Take the next step
 

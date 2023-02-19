@@ -10,15 +10,14 @@ ms.prod: semantic-kernel
 
 # Learn how to build AI skills
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
 ## Start where you feel the most ready
 
 | Basic | Intermediate | Advanced |
 |---|---|---|
-| [Create Skills with Semantic Functions](buildsemanticskills) | [Configure Functions](configurefunctions)
- | [Ponder the nature of programming with the Schillace Laws](schillacelaws) |
-| | [Create Skills with Native Functions](buildnativeskills) | |
+| [Create Skills With Semantic Functions](buildsemanticskills) | [Configure Functions](configurefunctions) | [Consider The New Art Of AI Programming](schillacelaws) |
+| | [Create Skills With Native Functions](buildnativeskills) | |
 
 ## Take the next step
 
