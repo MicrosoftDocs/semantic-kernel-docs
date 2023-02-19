@@ -51,16 +51,16 @@ Watch this video for step-by-step instructions:
 For beginners who are just starting to learn LLM AI, you may want to start here:
 
 > [!div class="nextstepaction"]
-> [Learn core LLM AI concepts](../concepts-ai/overview)
+> [Learn LLM AI Concepts](../concepts-ai/overview)
 
 For people who are well versed in LLM AI, you can jump into SK immediately:
 
 > [!div class="nextstepaction"]
-> [Learn basic SK concepts](../concepts-sk/overview)
+> [Discover Semantic Kernel Concepts](../concepts-sk/overview)
 
 For people who are ready to run SK sample apps:
 
 > [!div class="nextstepaction"]
-> [Run SK sample apps](../samples/overview)
+> [Run Sample Apps](../samples/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
