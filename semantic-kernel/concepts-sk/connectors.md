@@ -26,6 +26,6 @@ ms.prod: semantic-kernel
 Now that you know about the _kernel_, _planner_, _skills_, _connectors_ then you're ready for all the sample apps.
 
 > [!div class="nextstepaction"]
-> [Jump into all the sample apps](../samples/overview)
+> [Run Sample Apps](../samples/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
