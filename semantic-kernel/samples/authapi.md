@@ -13,7 +13,7 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
-> [!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
+> [!VIDEO https://aka.ms/SK-Samples-AuthAPI-Video]
 
 # Running the app
 The [Authentication and API sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-identity-webapp-react) is located in the Semantic Kernel GitHub repository.
