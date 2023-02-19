@@ -1,8 +1,8 @@
-- name: Building Semantic Skills
+- name: Semantic Functions
   href: buildsemanticskills.md
-- name: Building Native Skills
+- name: Native Functions
   href: buildnativeskills.md
-- name: Configuring Functions
+- name: Function Configuration
   href: configurefunctions.md
 - name: The Schillace Laws
   href: schillacelaws.md

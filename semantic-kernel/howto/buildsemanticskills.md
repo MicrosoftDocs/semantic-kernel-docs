@@ -79,10 +79,12 @@ TestSkill
 └─── SloganMaker
 |    |
 │    └─── skprompt.txt
+│    └─── config.json
 │   
 └─── SummarizeBlurb
      |
      └─── skprompt.txt
+     └─── config.json
 ```
 
 This skill can do one of two things by calling one of its two functions:
@@ -90,7 +92,7 @@ This skill can do one of two things by calling one of its two functions:
 * `TestSkill.SloganMaker()` generates a slogan for a specific kind of shop in NYC
 * `TestSkill.SummmarizeBlurb()` creates a short summary of a specific blurb
 
-Next, we'll show you how to make a more powerful skill by introducing SK prompt templates.
+Next, we'll show you how to make a more powerful skill by introducing SK prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](configurefunctions) but no worries — we'll take you there at the end of this section anyways. Let's keep going!
 
 ## Writing a more powerful, "templated" prompt
 
@@ -116,7 +118,7 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-We can name these functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new SK functions that can belong to a new `TestSkillFlex` skill that now takes an input. To package these two function to be used by SK in the context of a skill, we do the same as we did before:
+We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new SK functions that can belong to a new `TestSkillFlex` skill that now takes an input. To package these two function to be used by SK in the context of a skill, we arrange our file hierarchy the same as we did before:
 
 ```File-Structure-For-Skill-Definition-With-Functions
 TestSkillImproved
@@ -124,50 +126,78 @@ TestSkillImproved
 └─── SloganMakerFlex
 |    |
 │    └─── skprompt.txt
+│    └─── config.json
 │   
 └─── SummarizeBlurbFlex
      |
      └─── skprompt.txt
+     └─── config.json
 ```
 
-The difference between `TestSkillFlex` and `TestSkill` is that in the former case, we can pass an input parameter to its functions.
+Recall that the difference between our new "flex" skills and our original "plain" skills is that we've gained the added flexibility of being able to pass a single parameter like:
 
-* `TestSkillFlex.SloganMakerFlex('flatware')` generates a slogan for a 'flatware' shop in NYC
+* `TestSkillFlex.SloganMakerFlex('detective agency')` generates a slogan for a 'detective agency' in NYC
 * `TestSkillFlex.SummarizeBlurbFlex('<insert long text here>')` creates a short summary of a given blurb
 
-Templated prompts can be further customized beyond a single `$INPUT` variable to take more inputs. For instance, if we wanted our SloganMaker skill to not only take into account the kind of shop but also the shop's location and specialty, we would write the function as:
+Templated prompts can be further customized beyond a single `$INPUT` variable to take on more inputs to gain even greater flexibility. For instance, if we wanted our SloganMaker skill to not only take into account the kind of shop but also the shop's location and specialty, we would write the function as:
 
 ```Templated-Prompt
 Write me a marketing slogan for my {{$INPUT}} in {{$CITY}} with 
 a focus on {{$SPECIALTY}} we are without sacrificing quality.
 ```
 
-We can add this function to our `TestSkillFlex` skill as `SloganMakerExtraFlex` to serve the minimum capabilities of a copywriting agency.
+Note that although the use of `$INPUT` made sense as a generic input for a templated prompt, you're likely to want to give it a name that makes immediate sense like `$BUSINESS` — so let's change the function accordingly:
 
-Skills that are created using LLM AI prompts are called "semantic skills."
+```Templated-Prompt
+Write me a marketing slogan for my {{$BUSINESS}} in {{$CITY}} with 
+a focus on {{$SPECIALTY}} we are without sacrificing quality.
+```
 
-## Invoking a semantic skill from a file from C#
+We can replace our `TestSkillFlex` skill with this new definition to serve the minimum capabilities of a copywriting agency.
 
-> [!CAUTION]
-> This section is still under construction
+In SK, we refer to prompts and templated prompts as _"functions"_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _"native"_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Skill](buildnativeskills), but we'll get to them at the end of this unit. Hang in there!
+
+## Invoking a semantic skill in C#
+
+When running a semantic skill from your app's root source directory `MyAppSource` your file structure will looks like:
+
+```Your-App-And-Semantic-Skills
+MyAppSource
+│
+└───MySkillsDirectory
+    │
+    └─── TestSkillImproved
+        │
+        └─── SloganMakerFlex
+        |    |
+        │    └─── skprompt.txt
+        │    └─── config.json
+        │   
+        └─── SummarizeBlurbFlex
+             |
+             └─── skprompt.txt
+             └─── config.json
+```
+
+When running the kernel in C# you will:
+
+1. Build an instance of `ISemanticKernel`
+2. Import your desired semantic skill by specifying the root skills directory and the skill's name
+3. Get ready to pass your semantic skill parameters with a `ContextVariables` 
+4. Set the corresponding context variables with `<your context variables>.Set`
+5. Select the semantic function to run within the skill via `<your kernel instance>.RunAsync`
+
+In code that will look like:
 
 ```csharp
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.SemanticKernel;
-    using Microsoft.SemanticKernel.KernelExtensions;
-    using Microsoft.SemanticKernel.Orchestration;
-    using Microsoft.SemanticKernel.Registry;
+    ISemanticKernel myKernel = SemanticKernel.Build();
 
-    ILogger s_log = ConsoleLogger.Log;
-    IKernel kernel = Kernel.Build(s_log);
+    var mySkill = kernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillFlex");
 
-    // System.IO.Directory.GetCurrentDirectory(), // remove later
-    var testSkillFlex = kernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillFlex");
-
-    var myContext = new ContextVariables("apparel"); // set $INPUT variable
-    myContext.Set("city", "Seattle")); // set $CITY
-    myContext.Set("specialty","ribbons"); // set $SPECIALTY
+    var myContext = new ContextVariables(); 
+    myContext.Set("BUSINESS", "Basketweaving Service")); 
+    myContext.Set("CITY", "Seattle")); 
+    myContext.Set("SPECIALTY","ribbons"); 
 
     SKContext result = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerExtraFlex"]);
 
