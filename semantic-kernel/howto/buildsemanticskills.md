@@ -199,34 +199,45 @@ In code that will look like:
     myContext.Set("CITY", "Seattle")); 
     myContext.Set("SPECIALTY","ribbons"); 
 
-    SKContext result = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerExtraFlex"]);
+    SKContext result = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerFlex"]);
 
     Console.WriteLine(result);
 ```
 
 ## Invoking a semantic function inline from C#
 
-> [!CAUTION]
-> This section is still under construction
+It's possible to bypass the need to package your semantic skill's functions explicitly in `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. Let's take `summarizeBlurbFlex`:
 
-It's possible to bypass the need to package your semantic skill's functions explicitly in  `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. 
+```summarizeBlurbFlex
+Summarize the following text in two sentences or less. 
+---Begin Text---
+{{$INPUT}}
+---End Text---
+```
+
+and define the function inline in C#:
 
 ```csharp
-string sloganMakerFlex = """
-Write me a marketing slogan for my {{$INPUT}} in New 
-York City with a focus on how affordable we are without 
-sacrificing quality.
+string summarizeBlurbFlex = """
+Summarize the following text in two sentences or less. 
+---Begin Text---
+{{$INPUT}}
+---End Text---
 """;
 
-var sloganFunction = kernel.CreateSemanticFunction(sloganMakerFlex);
+var myFunction = myKernel.CreateSemanticFunction("summarizeBlurbFlex", summarizeBlurbFlex,
+    maxTokens: 500, topP: 1, temperature: 0.4);
 
-var slogan = await kernel.RunAsync(input, sloganFunction);
-Console.WriteLine(slogan);
+var output = await kernel.RunAsync("This is my input that will get summarized for me. And when I go off on a tangent it will make it harder. But it will figure out that the only thing to summarize is that this is a text to be summarized. You think?", 
+    myFunction);
+Console.WriteLine(output);
 ```
+
+Note that the configuration was given inline to the kernel with a reference to the maximum number of tokens to use `maxTokens`, the variability of words it will use as `topP`, and the amount of randomness to consider in its response with `temperature`. To learn more about this you will want to read about how to [configure functions](configurefunctions).
 
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn how to configure models](configuremodels)
+> [Learn how to configure functions](configurefunctions)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
