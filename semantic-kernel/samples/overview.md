@@ -13,7 +13,7 @@ ms.prod: semantic-kernel
 
 Multiple learning samples are provided in the [Semantic Kernel GitHub repository](/semantic-kernel/getting-started/setup) to help you learn core concepts of Semantic Kernel.
 
-## Getting started samples:
+## Samples to get you started
 
 | Sample App | Illustrates |
 |---|---|
