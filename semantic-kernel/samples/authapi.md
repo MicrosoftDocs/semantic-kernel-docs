@@ -13,7 +13,7 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
-> [!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
+> [!VIDEO https://aka.ms/SK-Samples-AuthAPI-Video]
 
 # Running the app
 The [Authentication and API sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-identity-webapp-react) is located in the Semantic Kernel GitHub repository.
@@ -38,4 +38,9 @@ You can sign in with your Microsoft account by clicking 'Sign in with Microsoft'
 Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
 ## Interact Screen
-When you select each of the 3 options, native functions will be called to preform actions through the graph API.
+When you select each of the 3 actions, native functions will be called to preform actions through the Microsoft Graph API and connector.
+
+The actions on this screen are:
+1) Summarize and create a new Word document and save it to OneDrive
+2) Get a shareable link and email the link to myself
+3) Add a reminder to follow-up with the email sent above
