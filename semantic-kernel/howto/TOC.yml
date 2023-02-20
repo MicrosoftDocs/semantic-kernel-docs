@@ -1,7 +1,7 @@
 - name: Overview
   href: overview.md
 - name: Semantic Functions
-  href: buildsemanticskills.md
+  href: semanticfunctions.md
 - name: Function Composition
   href: functioncomposition.md
 - name: Function Configuration

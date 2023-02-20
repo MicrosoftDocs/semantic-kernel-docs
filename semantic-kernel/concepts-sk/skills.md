@@ -41,7 +41,7 @@ SkillName (directory name)
 └─── Function2Name (directory name)
 ```
 
-Each function directory will have an `skprompt.txt` file and a `config.json` file. There's much more to learn about semantic functions in [Building Semantic Functions](../howto/buildsemanticskills) if you wish to go deeper.
+Each function directory will have an `skprompt.txt` file and a `config.json` file. There's much more to learn about semantic functions in [Building Semantic Functions](../howto/semanticfunctions) if you wish to go deeper.
 
 ## Where to find skills in the GitHub repo
 

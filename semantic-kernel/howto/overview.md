@@ -16,12 +16,12 @@ ms.prod: semantic-kernel
 
 | Basic | Intermediate | Advanced |
 |---|---|---|
-| [Create Skills With Semantic Functions](buildsemanticskills) | [Configure Functions](configurefunctions) | [Consider The New Art Of AI Programming](schillacelaws) |
+| [Create Skills With Semantic Functions](semanticfunctions) | [Configure Functions](configurefunctions) | [Consider The New Art Of AI Programming](schillacelaws) |
 | | [Create Skills With Native Functions](buildnativeskills) | |
 
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Build a semantic skill](buildsemanticskills)
+> [Build a semantic skill](semanticfunctions)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

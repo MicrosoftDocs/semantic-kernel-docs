@@ -309,6 +309,6 @@ Console.WriteLine(myOutput);
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn how to configure functions](configurefunctions)
+> [Compose functions to connect them end-to-end](functioncomposition)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
