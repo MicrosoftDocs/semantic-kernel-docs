@@ -159,6 +159,28 @@ In SK, we refer to prompts and templated prompts as _"functions"_ to clarify the
 
 ## Invoking a semantic skill from C#
 
+First off you'll want to create an instance of the kernel and configure it to run with Azure OpenAI or regular OpenAI:
+
+```csharp
+
+using Microsoft.SemanticKernel;
+var myKernel = Kernel.Build();
+
+kernel.Config.AddAzureOpenAICompletionBackend(
+    "Azure_davinci",                        // LLM AI model alias
+    "text-davinci-003",                     // Azure OpenAI *Deployment ID*
+    "https://contoso.openai.azure.com/",    // Azure OpenAI *Endpoint*
+    "...your Azure OpenAI Key..."           // Azure OpenAI *Key*
+);
+
+kernel.Config.AddOpenAICompletionBackend(
+    "OpenAI_davinci",                       // LLM AI model alias
+    "text-davinci-003",                     // OpenAI Model Name
+    "...your OpenAI API Key...",            // OpenAI API key
+    "...your OpenAI Org ID..."              // *optional* OpenAI Organization ID
+);
+```
+
 When running a semantic skill from your app's root source directory `MyAppSource` your file structure will looks like:
 
 ```Your-App-And-Semantic-Skills
@@ -189,6 +211,7 @@ When running the kernel in C# you will:
 In code that will look like:
 
 ```csharp
+
 var mySkill = myKernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillImproved");
 
 var myContext = new ContextVariables(); 
