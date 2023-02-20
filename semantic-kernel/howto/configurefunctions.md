@@ -69,6 +69,6 @@ Learn more about [available GPT-3](https://learn.microsoft.com/en-us/azure/cogni
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn how to think deeper about LLM AI](schillacelaws)
+> [Think deeply about LLM AI](schillacelaws)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
