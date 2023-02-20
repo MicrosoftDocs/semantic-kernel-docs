@@ -225,13 +225,33 @@ Summarize the following text in two sentences or less.
 ---End Text---
 """;
 
-var myFunction = myKernel.CreateSemanticFunction("summarizeBlurbFlex", summarizeBlurbFlex,
-    maxTokens: 500, topP: 1, temperature: 0.4);
+var myPromptConfig = new PromptTemplateConfig
+{
+    Completion =
+    {
+        MaxTokens = 2000,
+        Temperature = 0.2,
+        TopP = 0.5,
+    }
+};
 
-var output = await kernel.RunAsync("This is my input that will get summarized for me. And when I go off on a tangent it will make it harder. But it will figure out that the only thing to summarize is that this is a text to be summarized. You think?", 
+var myPromptTemplate = new PromptTemplate(
+    summarizeBlurbFlex, 
+    myPromptConfig, 
+    myKernel
+);
+
+var myFunctionConfig = new SemanticFunctionConfig(myPromptConfig, myPromptTemplate);
+
+var myFunction = myKernel.RegisterSemanticFunction(
+    "TestSkillImproved", 
+    "summarizeBlurbFlex",
+    myFunctionConfig);
+
+var myOutput = await myKernel.RunAsync("This is my input that will get summarized for me. And when I go off on a tangent it will make it harder. But it will figure out that the only thing to summarize is that this is a text to be summarized. You think?", 
     myFunction);
 
-Console.WriteLine(output);
+Console.WriteLine(myOutput);
 ```
 
 Note that the configuration was given inline to the kernel with a reference to the maximum number of tokens to use `maxTokens`, the variability of words it will use as `topP`, and the amount of randomness to consider in its response with `temperature`. To learn more about these function parameters read how to [configure functions](configurefunctions).
