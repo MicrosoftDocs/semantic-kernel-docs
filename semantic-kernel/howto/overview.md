@@ -17,7 +17,7 @@ ms.prod: semantic-kernel
 | Basic | Intermediate | Advanced |
 |---|---|---|
 | [Create Skills With Semantic Functions](semanticfunctions) | [Configure Functions](configurefunctions) | [Consider The New Art Of AI Programming](schillacelaws) |
-| | [Create Skills With Native Functions](buildnativeskills) | |
+| | [Create Skills With Native Functions](nativefunctions) | |
 
 ## Take the next step
 

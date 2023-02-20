@@ -28,8 +28,12 @@ The core skills currently supported include:
 
 # Example of how a core skill is used in SK
 
+When using a core skill, be sure to include a `using Microsoft.SemanticKernel.CoreSkills`:
+
 ```csharp
 using Microsoft.SemanticKernel.CoreSkills;
+
+// ( You want to instantiate a kernel and configure it first )
 
 myKernel.ImportSkill(new TimeSkill(), "time");
 
@@ -47,7 +51,7 @@ var myOutput = await myKindOfDay.InvokeAsync();
 Console.WriteLine(myOutput);
 ```
 
-The output is:
+The output is what you would expect when you read `ThePromptTemplate` to be:
 
 ```resulting-output
 {

@@ -7,7 +7,7 @@
 - name: Function Configuration
   href: configurefunctions.md
 - name: Native Functions
-  href: buildnativeskills.md
+  href: nativefunctions.md
 - name: Core Skills
   href: coreskills.md
 - name: The Schillace Laws
