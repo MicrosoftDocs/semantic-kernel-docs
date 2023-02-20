@@ -18,12 +18,12 @@ To provide a degree of standardization across Semantic Kernel (SK) implementatio
 
 `/semantic-kernel/dotnet/src/CoreSkills`
 
-The core skills currently supported incldue:
+The core skills currently supported include:
 
 * TimeSkill: To acquire the time of day and any other temporal information
 * TextSkill: To deterministically manipulating text strings
 * FileIOSkill: To read and write to the filesystem
-* HttpSkill: To call apis
+* HttpSkill: To call APIs
 * PlannerSkill: To create and execute plans
 
 # Example of how a core skill is used in SK
