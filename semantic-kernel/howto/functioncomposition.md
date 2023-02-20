@@ -11,49 +11,9 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-To provide a degree of standardization across Semantic Kernel (SK) implementations, the GitHub repo has several skills available to any SK prompt which you can browse at:
+> [!CAUTION]
+> This section is still under construction
 
-`/semantic-kernel/dotnet/src/CoreSkills`
-
-The core skills currently supported incldue:
-
-* TimeSkill: To acquire the time of day and any other temporal information
-* TextSkill: To deterministically manipulating text strings
-* FileIOSkill: To read and write to the filesystem
-* HttpSkill: To call apis
-* PlannerSkill: To create and execute plans
-
-# Example of how a core skill is used in SK
-
-```csharp
-using Microsoft.SemanticKernel.CoreSkills;
-
-myKernel.ImportSkill(new TimeSkill(), "time");
-
-const string ThePromptTemplate = @"
-Today is: {{time.Date}}
-Current time is: {{time.Time}}
-
-Answer to the following questions using JSON syntax, including the data used.
-Is it morning, afternoon, evening, or night (morning/afternoon/evening/night)?
-Is it weekend time (weekend/not weekend)?";
-
-var myKindOfDay = myKernel.CreateSemanticFunction(ThePromptTemplate, maxTokens: 150);
-
-var myOutput = await myKindOfDay.InvokeAsync();
-Console.WriteLine(myOutput);
-```
-
-The out is:
-
-```resulting-output
-{
-  "date": "Monday, February 20, 2023",
-  "time": "01:27:44 PM",
-  "period": "afternoon",
-  "weekend": "not weekend"
-}
-```
 
 ## Take the next step
 
