@@ -227,6 +227,7 @@ Summarize the following text in two sentences or less.
 
 var myPromptConfig = new PromptTemplateConfig
 {
+    Description = "Take an input and summarize it super-succinctly.",
     Completion =
     {
         MaxTokens = 2000,
