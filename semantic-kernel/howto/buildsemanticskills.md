@@ -227,7 +227,6 @@ Summarize the following text in two sentences or less.
 
 var myPromptConfig = new PromptTemplateConfig
 {
-    Description = "Take an input and summarize it super-succinctly.",
     Completion =
     {
         MaxTokens = 2000,
@@ -255,7 +254,7 @@ var myOutput = await myKernel.RunAsync("This is my input that will get summarize
 Console.WriteLine(myOutput);
 ```
 
-Note that the configuration was given inline to the kernel with a reference to the maximum number of tokens to use `maxTokens`, the variability of words it will use as `topP`, and the amount of randomness to consider in its response with `temperature`. To learn more about these function parameters read how to [configure functions](configurefunctions).
+Note that the configuration was given inline to the kernel with a `PromptTemplateConfig` object instead of a `config.json` file with the maximum number of tokens to use `MaxTokens`, the variability of words it will use as `TopP`, and the amount of randomness to consider in its response with `Temperature`. Keep in mind that when using C# these parameters will be _PascalCased_ (each word is explicitly capitalized in a string) to be consistent with C# conventions, but in the `config.json` the parameters are _lowercase._  To learn more about these function parameters read how to [configure functions](configurefunctions).
 
 ## Take the next step
 
