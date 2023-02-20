@@ -157,12 +157,11 @@ We can replace our `TestSkillFlex` skill with this new definition to serve the m
 
 In SK, we refer to prompts and templated prompts as _"functions"_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _"native"_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Skill](buildnativeskills), but we'll get to them at the end of this unit. Hang in there!
 
-## Invoking a semantic skill from C#
+## Get your kernel ready
 
-First off you'll want to create an instance of the kernel and configure it to run with Azure OpenAI or regular OpenAI:
+First off you'll want to create an instance of the kernel and configure it to run with Azure OpenAI or regular OpenAI. If you're using Azure OpenAI:
 
 ```csharp
-
 using Microsoft.SemanticKernel;
 var myKernel = Kernel.Build();
 
@@ -172,6 +171,13 @@ kernel.Config.AddAzureOpenAICompletionBackend(
     "https://contoso.openai.azure.com/",    // Azure OpenAI *Endpoint*
     "...your Azure OpenAI Key..."           // Azure OpenAI *Key*
 );
+```
+
+If you're using regular OpenAI:
+
+```csharp
+using Microsoft.SemanticKernel;
+var myKernel = Kernel.Build();
 
 kernel.Config.AddOpenAICompletionBackend(
     "OpenAI_davinci",                       // LLM AI model alias
@@ -180,6 +186,8 @@ kernel.Config.AddOpenAICompletionBackend(
     "...your OpenAI Org ID..."              // *optional* OpenAI Organization ID
 );
 ```
+
+## Invoking a semantic skill from C#
 
 When running a semantic skill from your app's root source directory `MyAppSource` your file structure will looks like:
 
@@ -211,6 +219,7 @@ When running the kernel in C# you will:
 In code that will look like:
 
 ```csharp
+using Microsoft.SemanticKernel.SemanticFunctions;
 
 var mySkill = myKernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillImproved");
 
@@ -238,6 +247,9 @@ Summarize the following text in two sentences or less.
 and define the function inline in C#:
 
 ```csharp
+using Microsoft.SemanticKernel.KernelExtensions;
+using Microsoft.SemanticKernel.Orchestration;
+
 string summarizeBlurbFlex = """
 Summarize the following text in two sentences or less. 
 ---Begin Text---
