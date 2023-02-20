@@ -139,7 +139,7 @@ Recall that the difference between our new "flex" skills and our original "plain
 * `TestSkillFlex.SloganMakerFlex('detective agency')` generates a slogan for a 'detective agency' in NYC
 * `TestSkillFlex.SummarizeBlurbFlex('<insert long text here>')` creates a short summary of a given blurb
 
-Templated prompts can be further customized beyond a single `$INPUT` variable to take on more inputs to gain even greater flexibility. For instance, if we wanted our SloganMaker skill to not only take into account the kind of shop but also the shop's location and specialty, we would write the function as:
+Templated prompts can be further customized beyond a single `$INPUT` variable to take on more inputs to gain even greater flexibility. For instance, if we wanted our SloganMaker skill to not only take into account the kind of business but also the business' location and specialty, we would write the function as:
 
 ```Templated-Prompt
 Write me a marketing slogan for my {{$INPUT}} in {{$CITY}} with 
@@ -157,7 +157,7 @@ We can replace our `TestSkillFlex` skill with this new definition to serve the m
 
 In SK, we refer to prompts and templated prompts as _"functions"_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _"native"_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Skill](buildnativeskills), but we'll get to them at the end of this unit. Hang in there!
 
-## Invoking a semantic skill in C#
+## Invoking a semantic skill from C#
 
 When running a semantic skill from your app's root source directory `MyAppSource` your file structure will looks like:
 
@@ -181,27 +181,24 @@ MyAppSource
 
 When running the kernel in C# you will:
 
-1. Build an instance of `ISemanticKernel`
-2. Import your desired semantic skill by specifying the root skills directory and the skill's name
-3. Get ready to pass your semantic skill parameters with a `ContextVariables` 
-4. Set the corresponding context variables with `<your context variables>.Set`
-5. Select the semantic function to run within the skill via `<your kernel instance>.RunAsync`
+1. Import your desired semantic skill by specifying the root skills directory and the skill's name
+2. Get ready to pass your semantic skill parameters with a `ContextVariables` object 
+3. Set the corresponding context variables with `<your context variables>.Set`
+4. Select the semantic function to run within the skill by selecting a function
 
 In code that will look like:
 
 ```csharp
-    ISemanticKernel myKernel = SemanticKernel.Build();
+var mySkill = myKernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillImproved");
 
-    var mySkill = kernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillFlex");
+var myContext = new ContextVariables(); 
+myContext.Set("BUSINESS", "Basketweaving Service"); 
+myContext.Set("CITY", "Seattle"); 
+myContext.Set("SPECIALTY","ribbons"); 
 
-    var myContext = new ContextVariables(); 
-    myContext.Set("BUSINESS", "Basketweaving Service")); 
-    myContext.Set("CITY", "Seattle")); 
-    myContext.Set("SPECIALTY","ribbons"); 
+var myResult = await myKernel.RunAsync(myContext,mySkill["SloganMakerFlex"]);
 
-    SKContext myResult = await kernel.RunAsync(initialMemory,testSkillFlex["SloganMakerFlex"]);
-
-    Console.WriteLine(myResult);
+Console.WriteLine(myResult);
 ```
 
 ## Invoking a semantic function inline from C#
@@ -227,6 +224,7 @@ Summarize the following text in two sentences or less.
 
 var myPromptConfig = new PromptTemplateConfig
 {
+    Description = "Take an input and summarize it super-succinctly.",
     Completion =
     {
         MaxTokens = 2000,
