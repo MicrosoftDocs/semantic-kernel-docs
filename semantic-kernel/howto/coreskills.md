@@ -11,9 +11,6 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-> [!CAUTION]
-> This section is still under construction
-
 To provide a degree of standardization across Semantic Kernel (SK) implementations, the GitHub repo has several skills available to any SK prompt which you can browse at:
 
 `/semantic-kernel/dotnet/src/CoreSkills`
