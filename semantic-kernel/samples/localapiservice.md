@@ -13,6 +13,7 @@ This service API is written in C# against Azure Function Runtime v4 and exposes 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
+Watch this video for step-by-step instructions:
 >[!Video https://aka.ms/SK-Local-API-Setup]
 
 ## Running the service API locally
