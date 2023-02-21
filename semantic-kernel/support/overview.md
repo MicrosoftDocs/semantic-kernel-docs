@@ -21,7 +21,6 @@ There are a variety of ways to get supported in Semantic Kernel (SK).
 | Realtime video | We will be hosting regular office hours that will be announced in our [Discord channel](https://aka.ms/sk/discord) |
 | Social media | Our Twitter handle is [@semantic_kernel](https://aka.ms/sk/twitter) |
 
-
 ## More support information
 
 * [Frequently Asked Questions (FAQs)](faqs)
