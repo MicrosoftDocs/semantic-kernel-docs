@@ -1,7 +1,7 @@
+- name: Overview
+  href: overview.md
 - name: Troubleshooting
   href: troubleshooting.md
-- name: Resources
-  href: resources.md
 - name: FAQs
   href: faqs.md
 - name: Code of Conduct
