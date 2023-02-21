@@ -1,14 +1,14 @@
 - name: Overview
   href: overview.md
-- name: Semantic Functions
+- name: On Semantic Functions
   href: semanticfunctions.md
-- name: Function Composition
+- name: Composing Functions
   href: functioncomposition.md
-- name: Function Configuration
+- name: Configuring Functions
   href: configurefunctions.md
-- name: Native Functions
+- name: On Native Functions
   href: nativefunctions.md
-- name: Core Skills
+- name: On Core Skills
   href: coreskills.md
 - name: The Schillace Laws
   href: schillacelaws.md
