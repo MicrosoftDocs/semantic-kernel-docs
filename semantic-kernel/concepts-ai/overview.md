@@ -38,6 +38,6 @@ As a user of Semantic Kernel, you are likely to have an existing app to which yo
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Start by learning about models](models)
+> [Learn about models](models)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

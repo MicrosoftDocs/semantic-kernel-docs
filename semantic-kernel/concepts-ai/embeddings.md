@@ -30,18 +30,18 @@ _Embeddings_ are vectors or arrays of numbers that represent the meaning and the
 
 _Embeddings_ are used for:
 
-* Text classification: Embeddings can help the model to assign labels or categories to texts, based on their meaning and context. For example, embeddings can help the model to classify texts as positive or negative, spam or not spam, news or opinion, etc.
-* Text summarization: Embeddings can help the model to extract or generate the most important or relevant information from texts, and to create concise and coherent summaries. For example, embeddings can help the model to summarize news articles, product reviews, research papers, etc.
-* Text translation: Embeddings can help the model to convert texts from one language to another, while preserving the meaning and the structure of the original texts. For example, embeddings can help the model to translate texts between English and Spanish, French and German, Chinese and Japanese, etc.
-* Text generation: Embeddings can help the model to create new and original texts, based on the input or the prompt that the user provides. For example, embeddings can help the model to generate texts such as stories, poems, jokes, slogans, captions, etc.
-* Image generation: Embeddings can help the model to create images from texts, or vice versa, by converting different types of data into a common representation. For example, embeddings can help the model to generate images such as logos, faces, animals, landscapes, etc.
-* Code generation: Embeddings can help the model to create code from texts, or vice versa, by converting different types of data into a common representation. For example, embeddings can help the model to generate code such as HTML, CSS, JavaScript, Python, etc.
+* **Text classification:** Embeddings can help the model to assign labels or categories to texts, based on their meaning and context. For example, embeddings can help the model to classify texts as positive or negative, spam or not spam, news or opinion, etc.
+* **Text summarization:** Embeddings can help the model to extract or generate the most important or relevant information from texts, and to create concise and coherent summaries. For example, embeddings can help the model to summarize news articles, product reviews, research papers, etc.
+* **Text translation:** Embeddings can help the model to convert texts from one language to another, while preserving the meaning and the structure of the original texts. For example, embeddings can help the model to translate texts between English and Spanish, French and German, Chinese and Japanese, etc.
+* **Text generation:** Embeddings can help the model to create new and original texts, based on the input or the prompt that the user provides. For example, embeddings can help the model to generate texts such as stories, poems, jokes, slogans, captions, etc.
+* **Image generation:** Embeddings can help the model to create images from texts, or vice versa, by converting different types of data into a common representation. For example, embeddings can help the model to generate images such as logos, faces, animals, landscapes, etc.
+* **Code generation:** Embeddings can help the model to create code from texts, or vice versa, by converting different types of data into a common representation. For example, embeddings can help the model to generate code such as HTML, CSS, JavaScript, Python, etc.
 
 ## Take the next step
 
 Congratulations on mastering the basic concepts of LLM AI. You're now ready to leap into the world of SK. You can do it!
 
 > [!div class="nextstepaction"]
-> [Discover Semantic Kernel Concepts](../concepts-sk/overview)
+> [Discover Semantic Kernel](../concepts-sk/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

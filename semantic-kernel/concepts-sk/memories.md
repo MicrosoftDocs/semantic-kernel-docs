@@ -15,6 +15,10 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
+Useful later:
+
+| [Memories](memories)| Memories are customizable resources that manage contextual information |
+
 > [!CAUTION]
 > This section is still under construction
 
