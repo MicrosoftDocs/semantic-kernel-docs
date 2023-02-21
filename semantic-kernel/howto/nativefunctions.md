@@ -165,6 +165,8 @@ var myOutput = await myKernel.RunAsync(myContext,myCshSkill["FullNamer"]);
 Console.WriteLine(myOutput);
 ```
 
+The output is `"Sam AppDev"`. 
+
 ## Take the next step
 
 > [!div class="nextstepaction"]

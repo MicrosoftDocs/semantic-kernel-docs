@@ -14,6 +14,21 @@ ms.prod: semantic-kernel
 > [!CAUTION]
 > This section is still under construction
 
+```csharp
+        Console.WriteLine("======== Pipeline ========");
+
+        IKernel kernel = Kernel.Build(s_log);
+
+        // Load native skill
+        var text = kernel.ImportSkill(new TextSkill());
+
+        SKContext result = await kernel.RunAsync("    i n f i n i t e     s p a c e     ",
+            text["LStrip"],
+            text["RStrip"],
+            text["Uppercase"]);
+
+        Console.WriteLine(result);
+```
 
 ## Take the next step
 
