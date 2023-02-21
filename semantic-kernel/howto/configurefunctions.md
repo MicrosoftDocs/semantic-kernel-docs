@@ -12,15 +12,15 @@ ms.prod: semantic-kernel
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 ```File-Structure-For-Semantic-Skills
-TestSkillImproved
+TestSkill
 │
-└─── SloganMakerGeneral
+└─── SloganMaker
 |    |
 │    └─── skprompt.txt
 │    └─── config.json
 │   
-└─── SummarizeBlurbGeneral
-|    |
+└─── OtherFunction
+     |
      └─── skprompt.txt
      └─── config.json
 ```
@@ -31,7 +31,7 @@ LLM AI [models](../concepts-ai/models) have a variety of parameters associated t
 {
   "schema": 1,
   "type": "completion",
-  "description": "a function that generates marketing slogans for shops in NYC",
+  "description": "a function that generates marketing slogans",
   "completion": {
     "max_tokens": 1000,
     "temperature": 0.0,
@@ -48,7 +48,7 @@ LLM AI [models](../concepts-ai/models) have a variety of parameters associated t
 The text used in `description` is arguably the most important parameter to consider because it's used by the [planner](../concepts-sk/planner) to get a quick read on what the function can do for a user.
 
 > [!NOTE]
-> `config.json` file is currently optional, but if you wish to exercise precise control of a function's behavior be sure to include it inside each function directory. 
+> The `config.json` file is currently optional, but if you wish to exercise precise control of a function's behavior be sure to include it inside each function directory. 
 
 To learn more about the various parameters available for tuning how a function works, visit the [Azure OpenAI reference](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/reference).
 
