@@ -12,6 +12,9 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
+> [!TIP]
+> Save time by installing the latest [Azure CLI](https://github.com/Azure/azure-functions-core-tools) that supports M-series Macbooks.
+
 If you’re attempting to do a:
 
 `func start host`

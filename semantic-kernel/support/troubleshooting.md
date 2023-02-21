@@ -14,7 +14,7 @@ ms.prod: semantic-kernel
 
 We've worked hard to remove the kinks from getting going with Semantic Kernel, but we realize that every developer experience is different and challenging. 
 
-> [!INFO]
+> [!TIP]
 > There are a variety of [support options](overview) available to you at any time.
 
 For the cases we've bumped into that you may be experiencing, here's our most current list to get your productivity game back up to speed.
