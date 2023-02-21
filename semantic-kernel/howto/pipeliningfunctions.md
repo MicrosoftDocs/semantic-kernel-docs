@@ -13,36 +13,61 @@ ms.prod: semantic-kernel
 
 Semantic Kernel (SK) was designed in the spirit of UNIX's piping capability to take one command and stream its output to the next command in the sequence. You can see that legacy design built-in to the use of the `$INPUT` parameter as a default intake for a function to stream its output into the next `$INPUT`-ready function.
 
-Let's illustrate that approach with the core skill `TextSkill` that lets us do some basic string manipulation:
+For example we can make three inline semantic functions and string their outputs into the next input, and so forth:
 
 ```csharp
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.CoreSkills;
+string myJokePrompt = """
+Tell a short joke about {{$INPUT}}.
+""";
 
-var myKernel = Kernel.Build();
+string myPoemPrompt = """
+Take this "{{$INPUT}}" and convert it to a nursery rhyme.
+""";
 
-var myText = myKernel.ImportSkill(new TextSkill());
+string myMenuPrompt = """
+Make this poem "{{$INPUT}}" influence the three items in a coffee shop menu. 
+The menu reads in enumerated form:
+1.
+""";
 
-SKContext myOutput = await myKernel.RunAsync(
-    "    i n f i n i t e     s p a c e     ",
-    myText["TrimStart"],
-    myText["TrimEnd"],
-    myText["Uppercase"]);
+var myJokeFunction = myKernel.CreateSemanticFunction(myJokePrompt, maxTokens: 500);
+var myPoemFunction = myKernel.CreateSemanticFunction(myPoemPrompt, maxTokens: 500);
+var myMenuFunction = myKernel.CreateSemanticFunction(myMenuPrompt, maxTokens: 500);
+
+var myOutput = await myKernel.RunAsync(
+    new ContextVariables("Charlie Brown"),
+    myJokeFunction,
+    myPoemFunction,
+    myMenuFunction);
 
 Console.WriteLine(myOutput);
 ```
 
-Note how the input streams through a pipeline of three functions executed serially. Expressed in an exaggerated manner, that's like:
+This can result in something like:
 
-| "   i n f i n i t e    s p a c e    " → | TextSkill.TrimStart → | TextSkill.TrimEnd → | TextSkill.Uppercase → |
-|---|---|---|---|
+```Output
+1. Charlie Brown's Surprise - A sweet and creamy latte with a hint of caramel 
+2. Good Grief! - A bold espresso with a dash of cinnamon 
+3. Wide Smile - A smooth cappuccino with a sprinkle of nutmeg
+```
 
-The output reads as:
+We could have stopped the process one step short with:
 
-`I N F I N I T E     S P A C E`
+```csharp
+var myOutput = await myKernel.RunAsync(
+    new ContextVariables("Charlie Brown"),
+    myJokeFunction,
+    myPoemFunction);
+```
 
-Semantic functions can be composed similarly -- as well as any mixture of semantic or native functions.
+Which would result in something like:
+
+```Output
+Charlie Brown got a present one day
+He said "Oh good grief!" in dismay
+He opened it up with a smile so wide
+But it wasn't what he had in mind
+```
 
 ## Take the next step
 

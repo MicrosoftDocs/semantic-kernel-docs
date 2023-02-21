@@ -62,6 +62,37 @@ The output is what you would expect when you read `ThePromptTemplate` to be:
 }
 ```
 
+## Pipelining example with core skillls
+
+Using the core `TextSkill` it's easy to transform text by modifying it sequentially:
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Orchestration;
+using Microsoft.SemanticKernel.CoreSkills;
+
+var myKernel = Kernel.Build();
+
+var myText = myKernel.ImportSkill(new TextSkill());
+
+SKContext myOutput = await myKernel.RunAsync(
+    "    i n f i n i t e     s p a c e     ",
+    myText["TrimStart"],
+    myText["TrimEnd"],
+    myText["Uppercase"]);
+
+Console.WriteLine(myOutput);
+```
+
+Note how the input streams through a pipeline of three functions executed serially. Expressed in an exaggerated manner, that's like:
+
+| "   i n f i n i t e    s p a c e    " → | TextSkill.TrimStart → | TextSkill.TrimEnd → | TextSkill.Uppercase → |
+|---|---|---|---|
+
+The output reads as:
+
+`I N F I N I T E     S P A C E`
+
 ## Take the next step
 
 > [!div class="nextstepaction"]
