@@ -21,13 +21,13 @@ Semantic Kernel builds upon four core ideas in LLM AI:
 3. [Tokens](tokens)
 4. [Embeddings](embeddings)
 
-## Pick apart those letters "LLM" for me
+## Double-clicking on "LLM"
 
-Here's a simple decoder ring:
+Here's a simple decoder ring to understand the implications of each of these letters:
 
 |L|L|M|
 |---|---|---|
-| "Large" in the case of LLM means really, really, really large — like on the scale of millions and billions. | "Language" refers to the fact that words, sentences, paragraphs — the building blocks of language — live at the core of how this kind of "semantic" AI works. | "Models" is discussed [in detail](models) but in a nutshell, a model is a high-dimensional, mathematical representation of a large amount of written information. | 
+| "Large" in the case of LLM means really, really, really large — like on the scale of millions and billions. | "Language" refers to the fact that words, sentences, paragraphs — the building blocks of language — live at the core of how this kind of "semantic" AI works. | ["Models"](models) are higher-dimensional, mathematical representations of a large amount of written information. | 
 
 ## How does LLM AI relate to ChatGPT?
 

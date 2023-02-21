@@ -11,18 +11,24 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-## BlenderBot
+> [!IMPORTANT]
+> These items link to sites outside of this learning resource.
+
+## [Kernel](../concepts-sk/kernel)
+"The core, center, or essence of an object or system." —[Wiktionary](https://en.wiktionary.org/wiki/kernel)
+
+## [Jobs To Be Done](../concepts-sk/planner)
+["Know Your Customers 'Jobs To Be Done'](https://hbr.org/2016/09/know-your-customers-jobs-to-be-done) HBR (2016) by Clayton Christensen et al
+
+## [BlenderBot](../concepts-ai/model)
 [BlenderBot](https://about.fb.com/news/2022/08/blenderbot-ai-chatbot-improves-through-conversation/) is a chatbot model developed by Meta that can blend various skills, such as empathy, personality, and knowledge, to create engaging and diverse conversations.
 
-## Meena
-[Meena](https://ai.googleblog.com/2020/01/towards-conversational-agent-that-can.html) is a conversational model developed by Google that can engage in open-ended and specific dialogues, with a high degree of sensibleness and specificity.
-
-## Jobs To Be Done
-["Know Your Customers 'Jobs To Be Done'](https://hbr.org/2016/09/know-your-customers-jobs-to-be-done) HBR (2016) by Clayton Christensen et al
+## [Bard](../concepts-ai/model)
+[Bard](https://blog.google/technology/ai/bard-google-ai-search-updates/) is a conversational model developed by Google that can engage in open-ended and specific dialogues, with a high degree of sensibleness and specificity.
 
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Get more support](overview)
+> [Get supported](overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

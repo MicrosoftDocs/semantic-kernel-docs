@@ -22,12 +22,12 @@ A **skill** refers to a domain of expertise made available to the [kernel](kerne
 
 A **function** is the basic building block for a skill. A function can be expressed as either:
 
-1. an LLM AI [prompt](prompt) — also called a "semantic" function
-2. native computer code -- also called a "native" function
+1. an LLM AI [prompt](prompt) — also called a ["semantic" function](../howto/semanticfunctions)
+2. native computer code -- also called a ["native" function](../howto/nativefunctions)
 
 When using native computer code, it's also possible to invoke an LLM AI prompt — which means that there can be functions that are hybrid LLM AI × native code as well. 
 
-Functions can be connected end-to-end, or "chained together," to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
+Functions can be [connected end-to-end, or "chained together,"](../howto/pipeliningfunctions) to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
 
 ## What is the relationship between semantic functions and skills?
 
@@ -43,9 +43,29 @@ SkillName (directory name)
 
 Each function directory will have an `skprompt.txt` file and a `config.json` file. There's much more to learn about semantic functions in [Building Semantic Functions](../howto/semanticfunctions) if you wish to go deeper.
 
+## What is the relationship between native functions and skills?
+
+Native functions are loosely inspired by Azure Functions and exist as individual native skill files as in `MyNativeSkill.cs` below:
+
+```Your-App-And-Skills
+MyAppSource
+│
+└───MySkillsDirectory
+    │
+    └─── MySemanticSkill (a directory)
+    |   │
+    |   └─── MyFirstSemanticFunction (a directory)
+    |   └─── MyOtherSemanticFunction (a directory)
+    │
+    └─── MyNativeSkill.cs (a file)
+    └─── MyOtherNativeSkill.cs (a file)
+```
+
+Each file will contain multiple native functions that are associated with a skill.
+
 ## Where to find skills in the GitHub repo
 
-Skills are stored in one of three places flavors:
+Skills are stored in one of three places:
 
 1. Core Skills: these are skills available at any time to the kernel that embody a few standard capabilities like working with time, text, files, http requests, and the [Planner](planner).
 
@@ -64,7 +84,7 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 > [!TIP]
 > Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see **Skills** in action.
 
-Now that you know about the **kernel**, **planner**, **skills**, you can take on **memories**.
+Now that you know about the _kernel_, _planner_, _skills_, you can take on _connectors.__
 
 > [!div class="nextstepaction"]
 > [Learn about the Connectors](connectors)

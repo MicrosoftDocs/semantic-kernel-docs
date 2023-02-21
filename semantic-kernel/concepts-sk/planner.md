@@ -29,7 +29,7 @@ The ["Jobs To Be Done (JTBD)"](../support/bibliography#jobs-to-be-done) movement
 
 ## What if the Planner needs a Skill that's unavailable?
 
-The _planner_ will operate within the [skills](/semantic-kernel/concepts-sk/skills) it has available. In the event that a desired skill does not exist, the planner can suggest you to create the [skill](/semantic-kernel/concepts-sk/skills). Or, depending upon the level of complexity the [kernel](/semantic-kernel/concepts-sk/kernel) can write and add the missing [skill](/semantic-kernel/concepts-sk/skills). 
+The _planner_ will operate within the [skills](/semantic-kernel/concepts-sk/skills) it has available. In the event that a desired skill does not exist, the planner can suggest you to [create the skill](/semantic-kernel/concepts-sk/skills). Or, depending upon the level of complexity the kernel can help you write the missing skill.
 
 ## Take the next step
 

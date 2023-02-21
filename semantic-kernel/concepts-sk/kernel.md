@@ -25,7 +25,7 @@ The **kernel** is designed to encourage "function composition" which allows deve
 
 ## Why is the Kernel called a "kernel"?
 
-> **Kernel**: "The core, center, or essence of an object or system." —[Wiktionary](https://en.wiktionary.org/wiki/kernel)
+> **Kernel**: "The core, center, or essence of an object or system." —[Wiktionary](../support/bibliography#kernel)
 
 The term "kernel" can have different meanings in different contexts, but in the case of the Semantic Kernel, the **kernel** refers to an instance of the processing engine that processes an ASK all the way through to fulfillment. The **kernel** is the seed around which everything else in the Semantic Kernel world grows.
 
@@ -34,17 +34,18 @@ The term "kernel" can have different meanings in different contexts, but in the 
 In code you will see the **kernel** instantiated with `Kernel.Build()`:
 
 ```csharp
-// Simple instance
 using Microsoft.SemanticKernel;
+
 var myKernel = Kernel.Build();
 ```
 
-There are a variety of things that you can do with `my_kernel` that include:
+There are a variety of things that you can do with `myKernel` that include:
 
 * Configuring the kernel to use OpenAI or Azure OpenAI
 * Letting it know where to source a collection of [skills](skills)
 * Choosing to provide [skills] to it as inline expressions
 * Feeding a desired skill with inputs to drive towards output
+* Pipelining multiple skills' inputs and outputs
 
 ## Take the next step
 
