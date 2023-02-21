@@ -93,4 +93,4 @@ The output reads as:
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](../samples)
+> [Run the samples](../samples/overview)

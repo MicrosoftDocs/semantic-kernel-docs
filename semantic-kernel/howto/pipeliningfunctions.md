@@ -13,7 +13,7 @@ ms.prod: semantic-kernel
 
 Semantic Kernel (SK) was designed in the spirit of UNIX's piping capability to take one command and stream its output to the next command in the sequence. You can see that legacy design built-in to the use of the `$INPUT` parameter as a default intake for a function to stream its output into the next `$INPUT`-ready function.
 
-For example we can make three inline semantic functions and string their outputs into the next input, and so forth:
+For example we can make three inline semantic functions and string their outputs into the next input, and so forth after preparing `myKernel` as [before](semanticfunctions#get-your-kernel-ready).
 
 ```csharp
 string myJokePrompt = """
@@ -51,7 +51,7 @@ This can result in something like:
 3. Wide Smile - A smooth cappuccino with a sprinkle of nutmeg
 ```
 
-We could have stopped the process one step short with:
+We could also have stopped the pipelining process one step shorter with:
 
 ```csharp
 var myOutput = await myKernel.RunAsync(
@@ -72,4 +72,4 @@ But it wasn't what he had in mind
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](../samples)
+> [Run the samples](../samples/overview)

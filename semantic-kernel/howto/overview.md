@@ -12,13 +12,13 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-## Start however you like
+## Choose your learning velocity
 
 | Basic | Intermediate | Advanced |
 |---|---|---|
 | [Create Skills With Semantic Functions](semanticfunctions) | [Create Skills With Native Functions](nativefunctions) | [Consider The New Art Of AI Programming](schillacelaws) |
 | [Pipelining Functions](pipeliningfunctions) | [Use Core Skills](coreskills) | |
-| [Configure Functions](configurefunctions) |  | |
+| [Configure Functions](configuringfunctions) |  | |
 
 ## Take the next step
 

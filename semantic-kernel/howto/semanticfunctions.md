@@ -61,7 +61,7 @@ when a famous editor offered them a book deal, after
 years of rejection and perseverance.
 ```
 
-And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking it to give us a marketing slogan, and 2/ we're asking it to summarize a body of text down to two sentences.
+And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking the model to give us a marketing slogan, and separately 2/ we're asking the model to summarize a body of text down to two sentences.
 
 Both of these simple prompts qualify as "functions" that can be packaged as part of an SK skill. The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in SK within a directory named `SloganMaker` into a file named `skprompt.txt`:
 
@@ -71,7 +71,24 @@ York City with a focus on how affordable we are without
 sacrificing quality.
 ```
 
-Similarly, we place the second plain prompt into a directory named `SummarizeBlurb` as a file named into a file named `skprompt.txt`. Each of these directories comprise a SK function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
+Similarly, we place the second plain prompt into a directory named `SummarizeBlurb` as a file named into a file named `skprompt.txt`. 
+
+```SummarizeBlurb/skprompt.txt
+Summarize the following text in two sentences or less. 
+---Begin Text---
+Jan had always wanted to be a writer, ever since they 
+were a kid. They spent hours reading books, writing 
+stories, and imagining worlds. They grew up and pursued 
+their passion, studying literature and journalism, and 
+submitting their work to magazines and publishers. They 
+faced rejection after rejection, but they never gave up 
+hope. Jan finally got their breakthrough, when a famous 
+editor discovered their manuscript and offered them a 
+book deal.
+---End Text---
+```
+
+Each of these directories comprise a SK function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
 
 ```Semantic-Skills-And-Their-Functions
 TestSkill
@@ -79,12 +96,12 @@ TestSkill
 └─── SloganMaker
 |    |
 │    └─── skprompt.txt
-│    └─── config.json
+│    └─── [config.json](../howto/configuringfunctions)
 │   
 └─── SummarizeBlurb
      |
      └─── skprompt.txt
-     └─── config.json
+     └─── [config.json](../howto/configuringfunctions)
 ```
 
 This skill can do one of two things by calling one of its two functions:
@@ -92,14 +109,14 @@ This skill can do one of two things by calling one of its two functions:
 * `TestSkill.SloganMaker()` generates a slogan for a specific kind of shop in NYC
 * `TestSkill.SummmarizeBlurb()` creates a short summary of a specific blurb
 
-Next, we'll show you how to make a more powerful skill by introducing SK prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](configurefunctions) but no worries — we'll take you there at the end of this section anyways. Let's keep going!
+Next, we'll show you how to make a more powerful skill by introducing SK prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
 
 ## Writing a more powerful "templated" prompt
 
 Let's say we want to go into the advertising business with AI powering the slogan-side of our offerings. We'd like to encapsulate how we create slogans to be repeatable and across any industry. To do so, we take our first prompt and write it
 as such as a "templated prompt":
 
-```Templated-Prompt
+```SloganMakerFlex/skprompt.txt
 Write me a marketing slogan for my {{$INPUT}} in New 
 York City with a focus on how affordable we are without 
 sacrificing quality.
@@ -111,7 +128,7 @@ In a templated prompt, the double `{{` curly braces `}}` signify to SK that ther
 
 Our other plain prompt for summarizing text into two sentences can take an `input` by simply replacing the existing body of text and replacing it with `{{$INPUT}}` as follows:
 
-```Templated-Prompt
+```SummarizeBlurbFlex/skprompt.txt
 Summarize the following text in two sentences or less. 
 ---Begin Text---
 {{$INPUT}}
@@ -121,7 +138,7 @@ Summarize the following text in two sentences or less.
 We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new SK functions that can belong to a new `TestSkillFlex` skill that now takes an input. To package these two function to be used by SK in the context of a skill, we arrange our file hierarchy the same as we did before:
 
 ```File-Structure-For-Skill-Definition-With-Functions
-TestSkillImproved
+TestSkillFlex
 │
 └─── SloganMakerFlex
 |    |
@@ -141,25 +158,25 @@ Recall that the difference between our new "flex" skills and our original "plain
 
 Templated prompts can be further customized beyond a single `$INPUT` variable to take on more inputs to gain even greater flexibility. For instance, if we wanted our SloganMaker skill to not only take into account the kind of business but also the business' location and specialty, we would write the function as:
 
-```Templated-Prompt
+```SloganMakerFlex/skprompt.txt
 Write me a marketing slogan for my {{$INPUT}} in {{$CITY}} with 
 a focus on {{$SPECIALTY}} we are without sacrificing quality.
 ```
 
 Note that although the use of `$INPUT` made sense as a generic input for a templated prompt, you're likely to want to give it a name that makes immediate sense like `$BUSINESS` — so let's change the function accordingly:
 
-```Templated-Prompt
+```SloganMakerFlex/skprompt.txt
 Write me a marketing slogan for my {{$BUSINESS}} in {{$CITY}} with 
 a focus on {{$SPECIALTY}} we are without sacrificing quality.
 ```
 
-We can replace our `TestSkillFlex` skill with this new definition to serve the minimum capabilities of a copywriting agency.
+We can replace our `TestSkillFlex` skill with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
 
-In SK, we refer to prompts and templated prompts as _"functions"_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _"native"_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Skill](buildnativeskills), but we'll get to them at the end of this unit. Hang in there!
+In SK, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Functions](nativefunctions) if you're anxious.
 
 ## Get your kernel ready
 
-First off you'll want to create an instance of the kernel and configure it to run with Azure OpenAI or regular OpenAI. If you're using Azure OpenAI:
+First off, you'll want to create an instance of the kernel and configure it to run with Azure OpenAI or regular OpenAI. If you're using Azure OpenAI:
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -218,7 +235,7 @@ When running the kernel in C# you will:
 3. Set the corresponding context variables with `<your context variables>.Set`
 4. Select the semantic function to run within the skill by selecting a function
 
-In code that will look like:
+In code, and assuming you've already instantiated and configured your kernel as `myKernel` as described [above](semanticfunctions#get-your-kernel-ready):
 
 ```csharp
 using Microsoft.SemanticKernel.SemanticFunctions;
@@ -246,7 +263,7 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-and define the function inline in C#:
+and define the function inline in C# — assuming you've already instantiated and configured your kernel as `myKernel` as described [above](semanticfunctions#get-your-kernel-ready):
 
 ```csharp
 using Microsoft.SemanticKernel.KernelExtensions;
@@ -289,9 +306,10 @@ var myOutput = await myKernel.RunAsync("This is my input that will get summarize
 Console.WriteLine(myOutput);
 ```
 
-Note that the configuration was given inline to the kernel with a `PromptTemplateConfig` object instead of a `config.json` file with the maximum number of tokens to use `MaxTokens`, the variability of words it will use as `TopP`, and the amount of randomness to consider in its response with `Temperature`. Keep in mind that when using C# these parameters will be _PascalCased_ (each word is explicitly capitalized in a string) to be consistent with C# conventions, but in the `config.json` the parameters are _lowercase._  To learn more about these function parameters read how to [configure functions](configurefunctions).
+Note that the configuration was given inline to the kernel with a `PromptTemplateConfig` object instead of a `config.json` file with the maximum number of tokens to use `MaxTokens`, the variability of words it will use as `TopP`, and the amount of randomness to consider in its response with `Temperature`. Keep in mind that when using C# these parameters will be _PascalCased_ (each word is explicitly capitalized in a string) to be consistent with C# conventions, but in the `config.json` the parameters are _lowercase._  To learn more about these function parameters read how to [configure functions](configuringfunctions).
 
-A more succinct way of doing this inline with default settings across the board is:
+A more succinct way to make this happen is with default settings across the board:
+
 ```csharp
 string summarizeBlurbFlex = """
 Summarize the following text in two sentences or less. 
@@ -299,6 +317,7 @@ Summarize the following text in two sentences or less.
 {{$INPUT}}
 ---End Text---
 """;
+
 var mySummarizeFunction = myKernel.CreateSemanticFunction(summarizeBlurbFlex, maxTokens: 1000);
 
 var myOutput = await myKernel.RunAsync(

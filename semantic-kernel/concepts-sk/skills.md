@@ -87,7 +87,7 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 Now that you know about the _kernel_, _planner_, _skills_, you can take on _connectors.__
 
 > [!div class="nextstepaction"]
-> [Learn about the Connectors](connectors)
+> [Learn about Connectors](connectors)
 
 
 [!INCLUDE [footer.md](../includes/footer.md)]
