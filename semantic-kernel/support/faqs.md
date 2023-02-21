@@ -9,9 +9,6 @@ ms.prod: semantic-kernel
 ---
 # Semantic Kernel FAQ's
 
-> [!CAUTION]
-> This section is still under construction
-
 ## Why is the Kernel only in C#?
 C# is a popular coding language.  We wanted to make sure we could support one language before turning our attention to other languages.  Additional language support for the kernel will come based on feedback.
 
@@ -19,4 +16,4 @@ C# is a popular coding language.  We wanted to make sure we could support one la
 We have [sample apps](/semantic-kernel/samples/overview) and skills you can try out so you can learn the concepts of Semantic Kernel.
 
 ## How do I get help or provide feedback?
-We will have Office Hours avaialble for you coming soon.  You can join the [Semantic Kernel community](https://aka.ms/SKDiscord) on Discord.
+There are a variety of [support options available](overview)!

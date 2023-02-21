@@ -7,13 +7,13 @@ ms.author: author: johnmaeda
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-# Overview of sample apps
+# Overview of support options
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-There are a variety of ways to get supported in Semantic Kernel (SK).
+👋 Welcome! There are a variety of ways to get supported in the Semantic Kernel (SK) world. 
 
-| Your preferences | What's available |
+| Your preference | What's available |
 |---|---|
 | Read the docs | [This learning site](https://aka.ms/sk/learn) is the home of the latest information for developers |
 | Visit the repo | Our open-source [GitHub repository](https://aka.ms/sk/repo) is availble for perusal and suggestions |
