@@ -9,6 +9,8 @@ ms.prod: semantic-kernel
 ---
 # Bibliography
 
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+
 ## BlenderBot
 [BlenderBot](https://about.fb.com/news/2022/08/blenderbot-ai-chatbot-improves-through-conversation/) is a chatbot model developed by Meta that can blend various skills, such as empathy, personality, and knowledge, to create engaging and diverse conversations.
 
@@ -17,3 +19,10 @@ ms.prod: semantic-kernel
 
 ## Jobs To Be Done
 ["Know Your Customers 'Jobs To Be Done'](https://hbr.org/2016/09/know-your-customers-jobs-to-be-done) HBR (2016) by Clayton Christensen et al
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Get more support](overview)
+
+[!INCLUDE [footer.md](../includes/footer.md)]

@@ -26,3 +26,10 @@ ms.prod: semantic-kernel
 * [Frequently Asked Questions (FAQs)](faqs)
 * [Quick Troubleshooting](troubleshooting)
 * [Code of Conduct](codeofconduct)
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Run the samples](../samples)
+
+[!INCLUDE [footer.md](../includes/footer.md)]

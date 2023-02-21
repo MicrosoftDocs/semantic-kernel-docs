@@ -9,6 +9,9 @@ ms.prod: semantic-kernel
 ---
 # Semantic Kernel FAQ's
 
+
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+
 ## Why is the Kernel only in C#?
 C# is a popular coding language.  We wanted to make sure we could support one language before turning our attention to other languages.  Additional language support for the kernel will come based on feedback.
 
@@ -17,3 +20,10 @@ We have [sample apps](/semantic-kernel/samples/overview) and skills you can try 
 
 ## How do I get help or provide feedback?
 There are a variety of [support options available](overview)!
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Get more support](overview)
+
+[!INCLUDE [footer.md](../includes/footer.md)]

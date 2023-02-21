@@ -1,5 +1,8 @@
 # Contributor Covenant Code of Conduct
 
+
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+
 ## Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as owners, contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
@@ -44,3 +47,10 @@ This Code of Conduct is adapted from the [Contributor Covenant][homepage], versi
 
 [homepage]: http://contributor-covenant.org
 [version]: http://contributor-covenant.org/version/1/4/
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Run the samples](../samples)
+
+[!INCLUDE [footer.md](../includes/footer.md)]
