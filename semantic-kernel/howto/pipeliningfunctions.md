@@ -11,9 +11,6 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-> [!CAUTION]
-> This section is still under construction
-
 Semantic Kernel (SK) was designed in the spirit of UNIX's piping capability to take one command and stream its output to the next command in the sequence. You can see that legacy design built-in to the use of the `$INPUT` parameter as a default intake for a function to stream its output into the next `$INPUT`-ready function.
 
 Let's illustrate that approach with the core skill `TextSkill` that lets us do some basic string manipulation:

@@ -11,9 +11,6 @@ ms.prod: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-> [!CAUTION]
-> This section is still under construction
-
 If you're new to C#, here's a few quick tips to get you started in the context of Semantic Kernel (SK):
 
 * With semantic functions, they went into folders with an `skprompt.txt` file and a `config.json` file; with native C# functions they live as a `.cs` file like _MyCSharpSkill.cs._
