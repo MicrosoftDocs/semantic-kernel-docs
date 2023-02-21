@@ -33,7 +33,7 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 | **ASK** | A user's goal is sent to SK as an ASK |
 | **Kernel** | [The kernel](/semantic-kernel/concepts-sk/kernel) orchestrates a user's ASK |
 | **Planner** | [The planner](/semantic-kernel/concepts-sk/planner) breaks it down into steps based upon resources that are available |
-| **Resources** | Planning involves leveraging available [skills,](/semantic-kernel/concepts-sk/skills) [memories,](/semantic-kernel/concepts-sk/memories) and [connectors](/semantic-kernel/concepts-sk/connectors) |
+| **Resources** | Planning involves leveraging available [skills,](/semantic-kernel/concepts-sk/skills) memories, and [connectors](/semantic-kernel/concepts-sk/connectors) |
 | **Steps** | A plan is a series of steps for the kernel to execute |
 | **Pipeline** | Executing the steps results in fulfilling the user's ASK |
 | **GET** | And the user gets what they asked for ... |
@@ -42,8 +42,8 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 ## SK gets your LLM AI journey started  
 
 **[Get started](getting-started/setup) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts × code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
-<br />
 
+### First steps
 > [!VIDEO https://aka.ms/SK-First-Steps]
 
 ## SK makes app developers' work lives easier
