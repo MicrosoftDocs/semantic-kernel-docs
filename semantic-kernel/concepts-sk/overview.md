@@ -28,10 +28,11 @@ Semantic Kernel (SK) builds upon these concepts:
 
 The second "L" in LLM says it all: **Language**. Because instead of an operating kernel that's been built atop just conventional computer code, it's been built with LLM AI as the driving force for how it functions, like with the [planner](planner). A simple way to think of the shift that's happening with SK is how we're moving from syntax to semantics, or:
 
-| |  FROM Syntax | TO Semantics |
+| |  Syntax | Semantics |
 |------------------|------------------|----------------------|
-|Natural language  | The rules and patterns of how words and sentences are formed and structured. | The meaning and interpretation of words and sentences, and how they relate to the real world. |
-| Programming language | The rules and symbols of how code and commands are written and structured. | The meaning and execution of code and commands, and how they affect the system state. |
+| For natural language  | The rules and patterns of how words and sentences are formed and structured. | The meaning and interpretation of words and sentences, and how they relate to the real world. |
+| For programming languages | The rules and symbols of how code and commands are written and structured. | The meaning and execution of code and commands, and how they affect the system state. |
+| THE SHIFT | FROM PRECISE AND BRITTLE | TO BROAD AND FLEXIBLE |
 
 ## Take the next step
 
