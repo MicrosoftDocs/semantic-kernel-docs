@@ -14,6 +14,5 @@ The GitHub Repo Q&A Bot sample allows you to pull in data from a public GitHub r
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
---- Animated Gif Here ----
-
+Watch this video for step-by-step instructions:
 --- Video GitHub Q&A Bot sample app here https://dev.azure.com/msctoproj/Lightspeed/_workitems/edit/17730 ----
