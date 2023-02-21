@@ -1,14 +1,14 @@
 - name: Overview
   href: overview.md
-- name: On Semantic Functions
+- name: Building Semantic Functions
   href: semanticfunctions.md
 - name: Pipelining Functions
   href: pipeliningfunctions.md
 - name: Configuring Functions
   href: configuringfunctions.md
-- name: On Native Functions
+- name: Building Native Functions
   href: nativefunctions.md
-- name: On Core Skills
+- name: Using Core Skills
   href: coreskills.md
 - name: The Schillace Laws
   href: schillacelaws.md
