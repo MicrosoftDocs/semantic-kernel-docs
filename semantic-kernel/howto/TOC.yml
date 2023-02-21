@@ -2,10 +2,10 @@
   href: overview.md
 - name: On Semantic Functions
   href: semanticfunctions.md
-- name: Composing Functions
-  href: functioncomposition.md
+- name: Pipelining Functions
+  href: pipelininingfunctions.md
 - name: Configuring Functions
-  href: configurefunctions.md
+  href: configuringfunctions.md
 - name: On Native Functions
   href: nativefunctions.md
 - name: On Core Skills

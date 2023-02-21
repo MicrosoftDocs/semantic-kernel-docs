@@ -124,6 +124,47 @@ The output will look similar to this:
  "Twinnify, Twinnify - Run Faster, Run Further, with Earth-Shattering Comfort!"
 ```
 
+## Adding extra input parameters to a native function
+
+Use an `SKContext` as input to the native function to extract the context variables:
+
+```csharp
+using Microsoft.SemanticKernel.Registry;
+namespace MySkillsDirectory;
+
+public class MyCSharpSkill
+{
+    [SKFunction(description: "Return a string that's duplicated")]
+    public string DupDup(string text)
+    {
+        return text + text;
+    }
+
+    [SKFunction(description: "Joins a first and last name together")]
+    [SKFunctionContextParameter(Name = "firstname", Description = "Informal name you use")]
+    [SKFunctionContextParameter(Name = "lastname", Description = "More formal name you use")]
+    public string FullNamer(SKContext context)
+    {
+        return context["firstname"] + " " + context["lastname"];
+    }
+}
+```
+
+The context parameters are pushed into the native function in a similar manner to how semantic functions work:
+
+```csharp
+using MySkillsDirectory;
+
+var myContext = new ContextVariables(); 
+myContext.Set("firstname","Sam");
+myContext.Set("lastname","Appdev");
+
+var myCshSkill = myKernel.ImportSkill ( new MyCSharpSkill(), "MyCSharpSkill");
+var myOutput = await myKernel.RunAsync(myContext,myCshSkill["FullNamer"]);
+
+Console.WriteLine(myOutput);
+```
+
 ## Take the next step
 
 > [!div class="nextstepaction"]
