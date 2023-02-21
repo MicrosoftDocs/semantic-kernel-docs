@@ -13,6 +13,7 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
+Watch this video for step-by-step instructions:
 > [!VIDEO https://aka.ms/SK-Samples-AuthAPI-Video]
 
 # Running the app
