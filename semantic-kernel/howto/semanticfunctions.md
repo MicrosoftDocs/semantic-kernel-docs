@@ -163,6 +163,7 @@ First off you'll want to create an instance of the kernel and configure it to ru
 
 ```csharp
 using Microsoft.SemanticKernel;
+
 var myKernel = Kernel.Build();
 
 kernel.Config.AddAzureOpenAICompletionBackend(
@@ -177,6 +178,7 @@ If you're using regular OpenAI:
 
 ```csharp
 using Microsoft.SemanticKernel;
+
 var myKernel = Kernel.Build();
 
 kernel.Config.AddOpenAICompletionBackend(

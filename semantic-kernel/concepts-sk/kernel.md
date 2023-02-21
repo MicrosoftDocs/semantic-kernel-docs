@@ -31,11 +31,12 @@ The term "kernel" can have different meanings in different contexts, but in the 
 
 ## How does the Kernel appear in code?
 
-In code you will see the **kernel** instantiated as `ISemanticKernel`:
+In code you will see the **kernel** instantiated with `Kernel.Build()`:
 
 ```csharp
 // Simple instance
-ISemanticKernel myKernel = SemanticKernel.Build();
+using Microsoft.SemanticKernel;
+var myKernel = Kernel.Build();
 ```
 
 There are a variety of things that you can do with `my_kernel` that include:
