@@ -45,13 +45,13 @@ namespace MySkillsDirectory;
 
 public class MyCSharpSkill
 {
-    [SKFunction(description: "Return the first row of a qwerty keyboard")]
+    [SKFunction("Return the first row of a qwerty keyboard")]
     public string Qwerty(string input)
     {
         return "qwertyuiop";
     }
 
-    [SKFunction(description: "Return a string that's duplicated")]
+    [SKFunction("Return a string that's duplicated")]
     public string DupDup(string text)
     {
         return text + text;
@@ -62,7 +62,7 @@ public class MyCSharpSkill
 And then use the native skill in your C# project:
 
 ```csharp
-var mySkill = myKernel.ImportSkill ( ew MyCSharpSkill(), "MyCSharpSkill");
+var mySkill = myKernel.ImportSkill (new MyCSharpSkill(), "MyCSharpSkill");
 
 var myContext = new ContextVariables(); 
 myContext.Set("INPUT","This is input.");
@@ -131,13 +131,13 @@ namespace MySkillsDirectory;
 
 public class MyCSharpSkill
 {
-    [SKFunction(description: "Return a string that's duplicated")]
+    [SKFunction("Return a string that's duplicated")]
     public string DupDup(string text)
     {
         return text + text;
     }
 
-    [SKFunction(description: "Joins a first and last name together")]
+    [SKFunction("Joins a first and last name together")]
     [SKFunctionContextParameter(Name = "firstname", Description = "Informal name you use")]
     [SKFunctionContextParameter(Name = "lastname", Description = "More formal name you use")]
     public string FullNamer(SKContext context)
