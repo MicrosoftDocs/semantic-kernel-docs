@@ -15,9 +15,13 @@ ms.prod: semantic-kernel
 We've worked hard to remove the kinks from getting going with Semantic Kernel, but we realize that every developer experience is different and challenging. 
 
 > [!TIP]
-> There are a variety of [support options](overview) available to you at any time.
+> There are a variety of [support options](overview) available to you at any time to match how you may like to learn.
 
 For the cases we've bumped into that you may be experiencing, here's our most current list to get your productivity game back up to speed.
+
+## My OpenAI or Azure OpenAI key doesn't seem to be working all the time
+
+Depending upon the model you are trying to access, there may be times when your key may not work because of high demand. Or, because your access to the model is limited by the plan you're currently signed up for — so-called "throttling". In general, however, your key will work according to the plan agreement with your LLM AI provider. 
 
 ## The Jupyter notebooks aren't coming up in my VSCode or Visual Studio
 
