@@ -60,6 +60,6 @@ This Code of Conduct is adapted from the [Contributor Covenant][https://www.cont
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](/semantic-kernel/samples/overview.md)
+> [Run the samples](/semantic-kernel/samples)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

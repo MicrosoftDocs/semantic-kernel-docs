@@ -167,6 +167,6 @@ The output is `"Sam AppDev"`.
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](../samples/overview)
+> [Run the samples](/semantic-kernel/samples)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

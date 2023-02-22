@@ -54,16 +54,16 @@ From your local machine:
 For beginners who are just starting to learn LLM AI, you may want to start here:
 
 > [!div class="nextstepaction"]
-> [Learn LLM AI Concepts](/semantic-kernel/concepts-ai/overview)
+> [Learn LLM AI Concepts](/semantic-kernel/concepts-ai)
 
 For people who are well versed in LLM AI, you can jump into SK immediately:
 
 > [!div class="nextstepaction"]
-> [Discover Semantic Kernel Concepts](/semantic-kernel/concepts-sk/overview)
+> [Discover Semantic Kernel Concepts](/semantic-kernel/concepts-sk)
 
 For people who are ready to run SK sample apps:
 
 > [!div class="nextstepaction"]
-> [Run Sample Apps](/semantic-kernel/samples/overview)
+> [Run Sample Apps](/semantic-kernel/samples)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

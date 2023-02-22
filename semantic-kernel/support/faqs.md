@@ -16,14 +16,14 @@ ms.service: mssearch
 C# is a popular coding language.  We wanted to make sure we could support one language before turning our attention to other languages.  Additional language support for the kernel will come based on feedback.
 
 ## Where are the sample skills?
-We have [sample apps](/semantic-kernel/samples/overview) and skills you can try out so you can quickly learn the concepts of Semantic Kernel.
+We have [sample apps](/semantic-kernel/samples) and skills you can try out so you can quickly learn the concepts of Semantic Kernel.
 
 ## How do I get help or provide feedback?
-There are a variety of [support options available](overview)!
+There are a variety of [support options available](/semantic-kernel/support)!
 
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Get more support](/semantic-kernel/support/overview)
+> [Get more support](/semantic-kernel/support)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

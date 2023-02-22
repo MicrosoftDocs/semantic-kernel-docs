@@ -50,6 +50,6 @@ The actions on this screen are:
 ### Take the next step
 
 > [!div class="nextstepaction"]
-> [Build AI Skills](/semantic-kernel/howto/overview)
+> [Build AI Skills](/semantic-kernel/howto)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

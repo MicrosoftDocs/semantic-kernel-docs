@@ -29,6 +29,6 @@ ms.service: mssearch
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Get supported](/semantic-kernel/support/overview)
+> [Get supported](/semantic-kernel/support)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

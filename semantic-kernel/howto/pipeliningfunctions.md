@@ -72,4 +72,4 @@ But it wasn't what he had in mind
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](../samples/overview)
+> [Run the samples](/semantic-kernel/samples)
