@@ -26,7 +26,7 @@ Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub
 ## Step 2: Clone the repo locally
 
 > [!IMPORTANT]
-> Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
+> Make sure you have fulfilled the [requirements list](/semantic-kernel/getting-started/requirements) to run SK on your machine.
 
 If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
 
@@ -37,7 +37,7 @@ If you are new to using GitHub and have never cloned a repo to your local machin
 ## Step 3: Run the Jupyter notebooks locally
 
 > [!IMPORTANT]
-> Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
+> Make sure you have fulfilled the [requirements list](/semantic-kernel/getting-started/requirements) to run SK on your machine.
 
 From your local machine:
 
@@ -66,4 +66,4 @@ For people who are ready to run SK sample apps:
 > [!div class="nextstepaction"]
 > [Run Sample Apps](/semantic-kernel/samples/overview)
 
-[!INCLUDE [footer.md](/semantic-kernel/includes/footer.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]
