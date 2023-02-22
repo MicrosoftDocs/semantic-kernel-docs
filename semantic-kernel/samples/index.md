@@ -3,7 +3,7 @@ title: List of all sample apps
 description: List of all sample apps
 author: johnmaeda
 ms.topic: samples
-ms.author: author: johnmaeda
+ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
@@ -32,6 +32,6 @@ Multiple learning samples are provided in the [Semantic Kernel GitHub repository
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the simple chat summary app](simplechatsummary)
+> [Run the simple chat summary app](/semantic-kernel/samples/simplechatsummary)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
