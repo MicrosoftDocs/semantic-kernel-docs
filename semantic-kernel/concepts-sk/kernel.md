@@ -25,7 +25,7 @@ The **kernel** is designed to encourage "function composition" which allows deve
 
 ## Why is the Kernel called a "kernel"?
 
-> **Kernel**: "The core, center, or essence of an object or system." —[Wiktionary](../support/bibliography#kernel)
+> **Kernel**: "The core, center, or essence of an object or system." —[Wiktionary](/semantic-kernel/support/bibliography#kernel)
 
 The term "kernel" can have different meanings in different contexts, but in the case of the Semantic Kernel, the **kernel** refers to an instance of the processing engine that processes an ASK all the way through to fulfillment. The **kernel** is the seed around which everything else in the Semantic Kernel world grows.
 

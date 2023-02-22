@@ -10,7 +10,7 @@ ms.service: mssearch
 
 # What are Connectors?
 
-| ASK⇾ | [Kernel](kernel) | [Planner](planner) | [Skills](skills)| | Connectors | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | [Planner](/semantic-kernel/concepts-sk/planner) | [Skills](/semantic-kernel/concepts-sk/skills)| | Connectors | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
