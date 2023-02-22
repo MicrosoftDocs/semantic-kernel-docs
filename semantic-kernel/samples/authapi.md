@@ -13,11 +13,11 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
-## Walkthrough video
+### Walkthrough video
 
 > [!VIDEO https://aka.ms/SK-Samples-AuthAPI-Video]
 
-# Running the app
+## Running the app
 The [Authentication and API sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-identity-webapp-react) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/getting-started/setup) instructions if you do not already have a clone of Semantic Kernel locally.
@@ -28,18 +28,18 @@ The [Authentication and API sample app](https://github.com/microsoft/semantic-ke
 - It is recommended you use the `Personal Microsoft accounts` account type for this sample
 5) Once registered, copy the Application (client) ID from the Azure Portal and paste in the GUID into the [env](https://github.com/microsoft/semantic-kernel/blob/main/samples/starter-identity-webapp-react/.env) file next to `REACT_APP_GRAPH_CLIENT_ID=`
 6) Open the Integrated Terminal window.
-7) Run 'yarn install' - if this is the first time you are running the sample.  Then run 'yarn start'.
+7) Run `yarn install` - if this is the first time you are running the sample.  Then run `yarn start`.
 8) A browser will open with the sample app running
 
-# Exploring the app
+## Exploring the app
 
-## Your Info Screen
+### Your Info Screen
 You can sign in with your Microsoft account by clicking 'Sign in with Microsoft'.  This will give the sample app access to Microsoft Graph on your behalf and will be used for the functions to run on the Interact screen.
 
-## Setup Screen
+### Setup Screen
 Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
-## Interact Screen
+### Interact Screen
 When you select each of the 3 actions, native functions will be called to preform actions through the Microsoft Graph API and connector.
 
 The actions on this screen are:
@@ -47,7 +47,7 @@ The actions on this screen are:
 2. Get a shareable link and email the link to myself
 3. Add a reminder to follow-up with the email sent above
 
-## Take the next step
+### Take the next step
 
 > [!div class="nextstepaction"]
 > [Build AI Skills](../howto/overview)
