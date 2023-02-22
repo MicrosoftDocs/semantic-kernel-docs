@@ -329,6 +329,8 @@ Console.WriteLine(myOutput);
 
 ## Take the next step
 
+You're now ready to take advantage of the _Kernel's_ pipelining capability. 
+
 > [!div class="nextstepaction"]
 > [Compose functions to connect them end-to-end](/semantic-kernel/howto/pipeliningfunctions)
 

@@ -67,7 +67,9 @@ Learn more about [available GPT-3](https://learn.microsoft.com/en-us/azure/cogni
 
 ## Take the next step
 
-> [!div class="nextstepaction"]
-> [Learn how to create native functions](/semantic-kernel/howto/nativefunctions)
+Running the app samples will give you the quickest sense of what you can do with SK. 
 
-[!INCLUDE [footer.md](../includes/footer.md)]
+> [!div class="nextstepaction"]
+> [Run the app samples](/semantic-kernel/samples)
+
+But if you wish to stay a little longer and learn about native functions, [then keep going](/semantic-kernel/howto/nativefunctions).

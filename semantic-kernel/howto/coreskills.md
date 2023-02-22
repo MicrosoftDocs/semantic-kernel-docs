@@ -92,5 +92,9 @@ The output reads as:
 
 ## Take the next step
 
+Running the app samples will give you the quickest sense of what you can do with SK. 
+
 > [!div class="nextstepaction"]
-> [Run the samples](/semantic-kernel/samples)
+> [Run the app samples](/semantic-kernel/samples)
+
+But if you wish to stay a little longer and learn about native functions, [then keep going](/semantic-kernel/howto/nativefunctions).

@@ -1,6 +1,6 @@
 - name: Overview
   href: index.md
-- name: Required Local API Service
+- name: Required Local Service
   href: localapiservice.md
 - name: Simple Chat Summary 
   href: simplechatsummary.md

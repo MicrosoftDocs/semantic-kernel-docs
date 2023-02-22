@@ -23,7 +23,7 @@ ms.service: mssearch
 
 ## More support information
 
-* [Frequently Asked Questions (FAQs)](faqs)
+* [Frequently Asked Questions (FAQs)](/semantic-kernel/support/faqs)
 * [Quick Troubleshooting](troubleshooting)
 * [Code of Conduct](codeofconduct)
 
