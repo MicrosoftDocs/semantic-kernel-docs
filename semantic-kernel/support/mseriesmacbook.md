@@ -5,6 +5,7 @@ author: johnmaeda
 ms.topic: samples
 ms.author: johnmaeda
 ms.date: 02/07/2023
+ms.service: mssearch
 ---
 # Running Azure Functions on M-series Macbooks in early 2023
 

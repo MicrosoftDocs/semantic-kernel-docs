@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
+ms.service: mssearch
 ---
 
 # Learn how to build AI skills

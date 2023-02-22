@@ -5,6 +5,7 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
+ms.service: mssearch
 ---
 # Authentication and API calls sample app
 The Authenticated API’s sample allows you to use authentication to connect to the Microsoft Graph using your personal account. If you don’t have a Microsoft account or do not want to connect to it, you can review the code to see the patterns needed to call out to APIs. The sample highlights connecting to Microsoft Graph and calling APIs for Outlook, OneDrive, and ToDo. Each function will call Microsoft Graph and/or Open AI to perform the tasks.

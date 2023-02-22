@@ -1,5 +1,5 @@
 - name: Overview
-  href: overview.md
+  href: index.md
 - name: Building Semantic Functions
   href: semanticfunctions.md
 - name: Pipelining Functions

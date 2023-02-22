@@ -5,6 +5,7 @@ author: evchaki
 ms.topic: faq
 ms.author: evchaki
 ms.date: 02/07/2023
+ms.service: mssearch
 ---
 # Semantic Kernel FAQ's
 
@@ -23,6 +24,6 @@ There are a variety of [support options available](overview)!
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Get more support](overview)
+> [Get more support](/semantic-kernel/support/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

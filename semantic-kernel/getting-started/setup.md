@@ -5,6 +5,7 @@ author: johnmaeda
 ms.topic: getting-started
 ms.author: johnmaeda
 ms.date: 02/07/2023
+ms.service: mssearch
 ---
 # Setting up Semantic Kernel
 
