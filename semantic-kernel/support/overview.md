@@ -3,7 +3,7 @@ title: Support for Semantic Kernel
 description: Support for Semantic Kernel
 author: johnmaeda
 ms.topic: samples
-ms.author: author: johnmaeda
+ms.author: johnmaeda
 ms.date: 02/07/2023
 ---
 # Overview of support options

@@ -3,7 +3,7 @@ title: Support for Semantic Kernel on M-series Macbooks
 description: Support for Semantic Kernel on M-series Macbooks
 author: johnmaeda
 ms.topic: samples
-ms.author: author: johnmaeda
+ms.author: johnmaeda
 ms.date: 02/07/2023
 ---
 # Running Azure Functions on M-series Macbooks in early 2023

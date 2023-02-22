@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.subservice: common
+ms.service: common
 ---
 
 # What are Embeddings?
