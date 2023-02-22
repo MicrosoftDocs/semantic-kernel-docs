@@ -56,17 +56,23 @@ productDirectory:
            text: Overview
          - url: /semantic-kernel/howto/semanticfunctions
            text: Semantic Functions
-         - url: /semantic-kernel/howto/
-           text: Overview
-         - url: /semantic-kernel/howto/
-           text: Overview           
+         - url: /semantic-kernel/howto/nativefunctions
+           text: Native Functions
+         - url: /semantic-kernel/howto/coreskills
+           text: Core Skills           
     - title: Samples
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
-        - url: /appcenter
-          text: Documentation
-        - url: https://visualstudio.microsoft.com/app-center/
-          text: Portal
+        - url: /semantic-kernel/samples/
+          text: Overview
+        - url: /semantic-kernel/samples/localapiservice
+          text: Local API Service
+        - url: /semantic-kernel/samples/simplechatsummary
+          text: Simple Chat Summary
+        - url: /semantic-kernel/samples/bookcreator
+          text: Book Creator
+        - url: /semantic-kernel/samples/authapi
+          text: Authentication and API  
     - title: Community
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
