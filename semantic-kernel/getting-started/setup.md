@@ -13,24 +13,24 @@ ms.prod: semantic-kernel
 
 Getting started with Semantic Kernel (SK) is quick and simple by following these three steps:
 
-1. Go to the SK [GitHub repository ("repo")](https://github.com/microsoft/semantic-kernel)
-2. Clone the repo
-3. Run the [Jupyter notebooks](../support/troubleshooting#the-jupyter-notebooks-arent-coming-up-in-my-vscode-or-visual-studio) locally
+1. Go to the SK GitHub repository ("repo")
+2. Clone the repo to yoru local machine
+3. Run the Jupyter notebooks locally
 
 ## Step 1: Browse the SK GitHub repo
 
 Use your web browser to visit [aka.ms/sk/repo](aka.ms/sk/repo) and please give it a ⭐️ star to show your support.
 
-## Step 2: Clone the repo to get set up
+## Step 2: Clone the repo locally
 
 > [!IMPORTANT]
 > Make sure you have fulfilled the [requirements list](requirements) to run SK on your machine.
 
-### Walk through video
+If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
+
+### Walkthrough video
 
 > [!VIDEO https://aka.ms/SK-Local-Setup]
-
-If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
 
 ## Step 3: Run the Jupyter notebooks locally
 
@@ -39,11 +39,11 @@ If you are new to using GitHub and have never cloned a repo to your local machin
 
 From your local machine:
 
-1. While you have the repository open in VSCode or Visual Studio, go to the jupyter-notebooks section
+1. While you have the repository open in VSCode or Visual Studio, go to the `notebooks` section
 2. Activate each code snippet with the "play" button on the left hand side
 3. Have your OpenAI or Azure OpenAI keys ready to enter when prompted
 
-### Walk through video
+### Walkthrough video
 
 > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
 
