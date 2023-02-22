@@ -1,7 +1,7 @@
 - name: Overview
   href: index.md
 - name: Get Started
-  href: getting-started/toc.yml
+  href: getstarted.md
 - name: Learn LLM AI
   href: concepts-ai/toc.yml
 - name: Discover Semantic Kernel
