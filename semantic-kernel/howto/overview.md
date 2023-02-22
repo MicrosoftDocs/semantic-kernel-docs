@@ -10,19 +10,19 @@ ms.prod: semantic-kernel
 
 # Learn how to build AI skills
 
-[!INCLUDE [subheader.md](/semantic-kernel/includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
 ## Choose your learning velocity
 
 | Basic | Intermediate | Advanced |
 |---|---|---|
-| [Create Skills With Semantic Functions](semanticfunctions) | [Create Skills With Native Functions](nativefunctions) | [Consider The New Art Of AI Programming](schillacelaws) |
-| [Pipelining Functions](pipeliningfunctions) | [Use Core Skills](coreskills) | |
-| [Configure Functions](configuringfunctions) |  | |
+| [Create Skills With Semantic Functions](/semantic-kernel/howto/semanticfunctions) | [Create Skills With Native Functions](/semantic-kernel/howto/nativefunctions) | [Consider The New Art Of AI Programming](/semantic-kernel/howto/schillacelaws) |
+| [Pipelining Functions](/semantic-kernel/howto/pipeliningfunctions) | [Use Core Skills](/semantic-kernel/howto/coreskills) | |
+| [Configure Functions](/semantic-kernel/howto/configuringfunctions) |  | |
 
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Build a semantic skill](semanticfunctions)
+> [Build a semantic skill](/semantic-kernel/howto/semanticfunctions)
 
-[!INCLUDE [footer.md](/semantic-kernel/includes/footer.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]
