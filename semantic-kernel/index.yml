@@ -36,11 +36,19 @@ productDirectory:
           text: Tokens  
         - url: /semantic-kernel/concepts-ai/embeddings
           text: Embeddings          
-    - title: Concepts
+    - title: Semantic Kernel Concepts
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
-        - url: https://code.visualstudio.com/docs
-          text: Documentation
+        - url: /semantic-kernel/concepts-sk/
+          text: Overview
+        - url: /semantic-kernel/concepts-sk/kernel
+          text: Kernel
+        - url: /semantic-kernel/concepts-sk/
+          text: Planner
+        - url: /semantic-kernel/concepts-sk/skills
+          text: Skills  
+         - url: /semantic-kernel/concepts-sk/connectors
+          text: Connectors          
     - title: Building Skills
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
