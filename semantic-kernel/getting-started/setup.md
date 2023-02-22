@@ -21,7 +21,7 @@ Getting started with Semantic Kernel (SK) is quick and simple by following these
 
 Use your web browser to visit [aka.ms/sk/repo](aka.ms/sk/repo) on GitHub and please give the repo a ⭐️ star to show your support.
 
-![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.gif)
+![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
 
 ## Step 2: Clone the repo locally
 
