@@ -1,11 +1,1 @@
 ### YamlMime:ContentNav
-category:
-  href: https://learn.microsoft.com/azure/
-  title: Azure
-callToAction:
-  primary:
-    href: https://azure.microsoft.com/free/
-    title: Free account
-  secondary:
-    href: https://portal.azure.com
-    title: Portal
