@@ -50,6 +50,6 @@ By clicking on the asks, multiple steps will be found from the Planner and the p
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the auth and API app](/semantic-kernel/samples/authapi)
+> [Run the authentication and API app](/semantic-kernel/samples/authapi)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

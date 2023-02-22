@@ -49,7 +49,7 @@ Three semantic functions are called on this screen
 2) [Topics](https://aka.ms/sk/repo/topics) 
 3) [Action Items](https://aka.ms/sk/repo/actionitems) 
 
-## Take the next step
+## Next step
 
 > [!div class="nextstepaction"]
 > [Run the book creator app](/semantic-kernel/samples/bookcreator)

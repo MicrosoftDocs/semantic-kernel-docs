@@ -16,6 +16,9 @@ ms.service: mssearch
 
 A _skill_ refers to a domain of expertise made available to the [kernel](/semantic-kernel/concepts-sk/kernel) as a single function, or as a group of functions related to the skill* The design of SK skills has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
 
+> [!TIP]
+> Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see **Skills** in action.
+
 ## What is a Function?
 
 ![](../media/skills01.png)
@@ -80,9 +83,6 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 > `semantic-kernel/samples/skills`
 
 ## Take the next step
-
-> [!TIP]
-> Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see **Skills** in action.
 
 Now that you know about the _kernel_, _planner_, _skills_, you can take on _connectors.__
 
