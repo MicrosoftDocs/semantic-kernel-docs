@@ -19,6 +19,11 @@ The Simple Chat Summary sample allows you to see the power of [functions](/seman
 ### Walkthrough video
 > [!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
 
+## Requirements to run this app
+
+> [!div class="checklist"]
+> * [Local API service](/semantic-kernel/samples/localapiservice) is running
+> * [Yarn](https://yarnpkg.com/getting-started/install) - used for installing the app's dependencies
 
 ## Running the app
 The [Simple chat summary sample app](https://aka.ms/sk/repo/samples/starter-chat) is located in the Semantic Kernel GitHub repository.

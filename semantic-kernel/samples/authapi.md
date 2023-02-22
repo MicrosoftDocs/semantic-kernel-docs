@@ -17,11 +17,17 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 
 > [!VIDEO https://aka.ms/SK-Samples-AuthAPI-Video]
 
+## Requirements to run this app
+
+> [!div class="checklist"]
+> * [Local API service](/semantic-kernel/samples/localapiservice) is running
+> * [Yarn](https://yarnpkg.com/getting-started/install) - used for installing the app's dependencies
+
 ## Running the app
 The [Authentication and API sample app](https://aka.ms/sk/samples/starter-identity) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/getting-started/setup) instructions if you do not already have a clone of Semantic Kernel locally.
-2) Start the [local API service](localapiservice).
+2) Start the [local API service](/semantic-kernel/samples/localapiservice).
 3) Open the ReadMe file in the Authentication and API sample folder.
 4) You will need to register your application in the Azure Portal. Follow the steps to register your app [here](https://learn.microsoft.com/azure/active-directory/develop/quickstart-register-app).
 - Your Redirect URI will be <http://localhost:3000>

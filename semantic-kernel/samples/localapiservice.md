@@ -21,6 +21,11 @@ This service API is written in C# against Azure Function Runtime v4 and exposes 
 
 >[!Video https://aka.ms/SK-Local-API-Setup]
 
+## Requirements to run the local service
+
+> [!div class="checklist"]
+> * [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local) - used for running the kernel as a local API
+
 ## Running the service API locally
 
 **Run** `func start --csharp` from the command line. This will run the service API locally at `http://localhost:7071`.

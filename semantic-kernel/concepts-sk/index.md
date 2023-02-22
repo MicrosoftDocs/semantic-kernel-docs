@@ -37,6 +37,6 @@ The second "L" in LLM says it all: **Language**. Because instead of an operating
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about the Kernel]((/semantic-kernel/concepts-sk/kernel)
+> [Learn about the Kernel](/semantic-kernel/concepts-sk/kernel)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

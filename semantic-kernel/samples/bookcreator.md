@@ -13,13 +13,18 @@ ms.service: mssearch
 
 The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/WriterSkill) functions are chained togheter based on the asks.
 
-
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
 ### Walkthrough video
 
 >[!Video https://aka.ms/SK-Samples-CreateBook-Video]
+
+## Requirements to run this app
+
+> [!div class="checklist"]
+> * [Local API service](/semantic-kernel/samples/localapiservice) is running
+> * [Yarn](https://yarnpkg.com/getting-started/install) - used for installing the app's dependencies
 
 ## Running the app
 The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/starter-create-book-webapp-react) is located in the Semantic Kernel GitHub repository.

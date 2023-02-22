@@ -9,12 +9,12 @@ ms.service: mssearch
 ---
 # What are Skills?
 
-| ASK⇾ | [Kernel](kernel) | [Planner](planner) | Skills |  |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | [Planner](/semantic-kernel/concepts-sk/planner) | Skills |  |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
-A **skill** refers to a domain of expertise made available to the [kernel](kernel) as a single function, or as a group of functions related to the skill* The design of SK skills has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
+A _skill_ refers to a domain of expertise made available to the [kernel](/semantic-kernel/concepts-sk/kernel) as a single function, or as a group of functions related to the skill* The design of SK skills has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
 
 ## What is a Function?
 
@@ -22,12 +22,12 @@ A **skill** refers to a domain of expertise made available to the [kernel](kerne
 
 A **function** is the basic building block for a skill. A function can be expressed as either:
 
-1. an LLM AI [prompt](prompt) — also called a ["semantic" function](../howto/semanticfunctions)
-2. native computer code -- also called a ["native" function](../howto/nativefunctions)
+1. an LLM AI [prompt](/semantic-kernel/concepts-ai/prompt) — also called a ["semantic" function](/semantic-kernel/concepts-sk//howto/semanticfunctions)
+2. native computer code -- also called a ["native" function](/semantic-kernel/concepts-sk//howto/nativefunctions)
 
 When using native computer code, it's also possible to invoke an LLM AI prompt — which means that there can be functions that are hybrid LLM AI × native code as well. 
 
-Functions can be [connected end-to-end, or "chained together,"](../howto/pipeliningfunctions) to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
+Functions can be [connected end-to-end, or "chained together,"](/semantic-kernel/concepts-sk//howto/pipeliningfunctions) to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
 
 ## What is the relationship between semantic functions and skills?
 
@@ -41,7 +41,7 @@ SkillName (directory name)
 └─── Function2Name (directory name)
 ```
 
-Each function directory will have an `skprompt.txt` file and a `config.json` file. There's much more to learn about semantic functions in [Building Semantic Functions](../howto/semanticfunctions) if you wish to go deeper.
+Each function directory will have an `skprompt.txt` file and a `config.json` file. There's much more to learn about semantic functions in [Building Semantic Functions](/semantic-kernel/howto/semanticfunctions) if you wish to go deeper.
 
 ## What is the relationship between native functions and skills?
 
@@ -67,7 +67,7 @@ Each file will contain multiple native functions that are associated with a skil
 
 Skills are stored in one of three places:
 
-1. Core Skills: these are skills available at any time to the kernel that embody a few standard capabilities like working with time, text, files, http requests, and the [Planner](planner).
+1. Core Skills: these are skills available at any time to the kernel that embody a few standard capabilities like working with time, text, files, http requests, and the [Planner](/semantic-kernel/concepts-sk/planner).
 
 > `semantic-kernel/dotnet/src/SemanticKernel/CoreSkills`
 
