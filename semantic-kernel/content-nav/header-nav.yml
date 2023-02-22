@@ -2,30 +2,7 @@
 category:
   href: https://learn.microsoft.com/azure/
   title: Azure
-items:
-  - title: Product documentation
-    items:
-      - title: Compute
-        href: https://learn.microsoft.com/azure/virtual-machines/
-      - title: Networking
-        href: https://learn.microsoft.com/azure/networking/networking-overview
-      - title: Storage
-        href: https://learn.microsoft.com/azure/storage/
-      - title: Web
-        href: https://learn.microsoft.com/azure/app-service/
-      - title: Mobile
-        href: https://learn.microsoft.com/azure/app-service-mobile/
-      - title: Containers
-        href: https://learn.microsoft.com/azure/containers/
-      - title: Databases
-        href: https://learn.microsoft.com/azure/sql-database/
-      - title: All products
-        href: https://learn.microsoft.com/azure
-  - title: Architecture
-    items:
-      - title: Get started
-        href: https://learn.microsoft.com/azure/architecture/guide/
-  callToAction:
+callToAction:
   primary:
     href: https://azure.microsoft.com/free/
     title: Free account
