@@ -42,6 +42,6 @@ _Embeddings_ are used for:
 Congratulations on mastering the basic concepts of LLM AI. You're now ready to leap into the world of SK. You can do it!
 
 > [!div class="nextstepaction"]
-> [Discover Semantic Kernel](../concepts-sk/overview)
+> [Discover Semantic Kernel](/semantic-kernel/concepts-sk/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

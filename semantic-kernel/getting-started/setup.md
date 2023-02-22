@@ -14,14 +14,14 @@ ms.prod: semantic-kernel
 Getting started with Semantic Kernel (SK) is quick and simple by following these three steps:
 
 1. Go to the SK GitHub repository ("repo")
-2. Clone the repo to yoru local machine
+2. Clone the repo to your local machine
 3. Run the Jupyter notebooks locally
 
 ## Step 1: Access the public SK repo
 
 Use your web browser to visit [aka.ms/sk/repo](aka.ms/sk/repo) on GitHub and please give the repo a ⭐️ star to show your support.
 
-![Starring the repo for SK](media/pleasestarrepo.gif)
+![Starring the repo for SK](/semantic-kernel/media/pleasestarrepo.gif)
 
 ## Step 2: Clone the repo locally
 
