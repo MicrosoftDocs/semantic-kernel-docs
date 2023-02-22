@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: samples
 ms.author: author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # Overview of support options
 
