@@ -1,6 +1,6 @@
 ---
 title: Requirements for running Semantic Kernel
-description: PrereqRequirementsuisites for running Semantic Kernel
+description: Requirements for running Semantic Kernel
 author: johnmaeda
 ms.topic: getting-started
 ms.author: johnmaeda
