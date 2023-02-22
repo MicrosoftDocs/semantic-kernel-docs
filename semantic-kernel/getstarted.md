@@ -9,13 +9,22 @@ ms.service: mssearch
 ---
 # Setting up Semantic Kernel
 
-[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
+[!INCLUDE [pat_medium.md](includes/pat_medium.md)]
 
 Getting started with Semantic Kernel (SK) is quick and simple by following these three steps:
 
 1. Go to the SK GitHub repository ("repo")
 2. Clone the repo to your local machine
 3. Run the Jupyter notebooks locally
+
+## Requirements for repo and for running notebook samples
+
+> [!div class="checklist"]
+> * `git` or the [GitHub app](https://desktop.github.com/) 
+> * [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/) 
+> * An OpenAI key via either [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio) or [OpenAI](https://openai.com/api/)
+> * [.Net 7 SDK](https://dotnet.microsoft.com/en-us/download) - for notebook samples
+> * In VSCode or Visual Studio the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) -for notebook samples
 
 ## Step 1: Access the public SK repo
 
@@ -66,4 +75,4 @@ For people who are ready to run SK sample apps:
 > [!div class="nextstepaction"]
 > [Run Sample Apps](/semantic-kernel/samples)
 
-[!INCLUDE [footer.md](../includes/footer.md)]
+[!INCLUDE [footer.md](includes/footer.md)]

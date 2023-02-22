@@ -13,6 +13,12 @@ ms.service: mssearch
 
 Multiple learning samples are provided in the [Semantic Kernel GitHub repository](/semantic-kernel/getting-started/setup) to help you learn core concepts of Semantic Kernel.
 
+## Requirements to run the app samples
+
+> [!div class="checklist"]
+> * [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local) - used for running the kernel as a local API
+> * [Yarn](https://yarnpkg.com/getting-started/install) - used installing dependencies of the React sample apps and running the sample apps
+
 ## Samples to get you started
 
 | Sample App | Illustrates |
