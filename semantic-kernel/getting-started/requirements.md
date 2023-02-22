@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: getting-started
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # Requirements for running Semantic Kernel
 
@@ -25,6 +24,6 @@ For the best experience working with Semantic Kernel and all of the samples you 
 > * [Yarn](https://yarnpkg.com/getting-started/install) - used installing dependencies of the React sample apps and running the sample apps
 
 > [!div class="nextstepaction"]
-> [Return to set up](setup)
+> [Return to set up](/semantic-kernel/getting-started/setup)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

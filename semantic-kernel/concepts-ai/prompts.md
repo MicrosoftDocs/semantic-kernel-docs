@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # What are Prompts?
 
@@ -35,6 +34,6 @@ SK has been created to empower developers to craft complex chains of LLM AI prom
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about tokens](tokens)
+> [Learn about tokens](/semantic-kernel/concepts-ai/tokens)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

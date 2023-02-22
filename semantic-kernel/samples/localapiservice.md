@@ -5,7 +5,6 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # Local API service example
 
@@ -35,6 +34,6 @@ Two endpoints will be exposed by the service API:
 Now that your service API is running locally, try out some of the sample apps so you can learn core Semantic Kernel concepts!  
 
 > [!div class="nextstepaction"]
-> [Jump into all the sample apps](../samples/overview)
+> [Jump into all the sample apps](/semantic-kernel/samples/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

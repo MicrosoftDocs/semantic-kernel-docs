@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: samples
 ms.author: author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # Overview of sample apps
 
@@ -17,10 +16,10 @@ Multiple learning samples are provided in the [Semantic Kernel GitHub repository
 
 | Sample App | Illustrates |
 |---|---|
-| [Local API service](localapiservice) | Use the local API service to run the sample apps |
-| [Simple chat summary](simplechatsummary) | Use ready-to-use [skills](../concepts-sk/skills) and get those skills into **your** app easily |
-| [Book creator](bookcreator) | Use [planner](../concepts-sk/planner) to deconstruct a complex goal and envision using the planner in **your** app |
-| [Authentication and APIs](authapi) | Use a basic [connector](/semantic-kernel/concepts-sk/connectors) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI |
+| [Local API service](/semantic-kernel/samples/localapiservice) | Use the local API service to run the sample apps |
+| [Simple chat summary](/semantic-kernel/samples/simplechatsummary) | Use ready-to-use [skills](/semantic-kernel/concepts-sk/skills) and get those skills into **your** app easily |
+| [Book creator](/semantic-kernel/samples/bookcreator) | Use [planner](/semantic-kernel/concepts-sk/planner) to deconstruct a complex goal and envision using the planner in **your** app |
+| [Authentication and APIs](/semantic-kernel/samples/authapi) | Use a basic [connector](/semantic-kernel/concepts-sk/connectors) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI |
 
 
 ## Take the next step

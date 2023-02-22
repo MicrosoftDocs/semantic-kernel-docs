@@ -30,6 +30,6 @@ ms.prod: semantic-kernel
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](../samples)
+> [Run the samples](/semantic-kernel/support/samples)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

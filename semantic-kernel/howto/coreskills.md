@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # Core skills are always ready to be accessed
 

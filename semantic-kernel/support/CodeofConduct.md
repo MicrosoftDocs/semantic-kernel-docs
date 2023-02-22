@@ -1,5 +1,13 @@
-# Contributor Covenant Code of Conduct
+---
+title: Contributor Covenant Code of Conduct
+description: Contributor Covenant Code of Conduct
+author: johnmaeda
+ms.topic: codeofconduct
+ms.author: johnmaeda
+ms.date: 02/07/2023
+---
 
+# Contributor Covenant Code of Conduct
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
@@ -43,7 +51,7 @@ Project maintainers who do not follow or enforce the Code of Conduct in good fai
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [http://contributor-covenant.org/version/1/4][version]
+This Code of Conduct is adapted from the [Contributor Covenant][https://www.contributor-covenant.org/], version 1.4, available [here](http://contributor-covenant.org/version/1/4).
 
 [homepage]: http://contributor-covenant.org
 [version]: http://contributor-covenant.org/version/1/4/
@@ -51,6 +59,6 @@ This Code of Conduct is adapted from the [Contributor Covenant][homepage], versi
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](../samples)
+> [Run the samples](/semantic-kernel/samples/overview.md)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

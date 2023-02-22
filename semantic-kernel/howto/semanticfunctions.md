@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # It all starts with an ASK
 
@@ -109,7 +108,7 @@ This skill can do one of two things by calling one of its two functions:
 * `TestSkill.SloganMaker()` generates a slogan for a specific kind of shop in NYC
 * `TestSkill.SummmarizeBlurb()` creates a short summary of a specific blurb
 
-Next, we'll show you how to make a more powerful skill by introducing SK prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
+Next, we'll show you how to make a more powerful skill by introducing SK prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
 
 ## Writing a more powerful "templated" prompt
 
@@ -172,7 +171,7 @@ a focus on {{$SPECIALTY}} we are without sacrificing quality.
 
 We can replace our `TestSkillFlex` skill with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
 
-In SK, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Functions](nativefunctions) if you're anxious.
+In SK, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Functions](/semantic-kernel/howto/nativefunctions) if you're anxious.
 
 ## Get your kernel ready
 
@@ -235,7 +234,7 @@ When running the kernel in C# you will:
 3. Set the corresponding context variables with `<your context variables>.Set`
 4. Select the semantic function to run within the skill by selecting a function
 
-In code, and assuming you've already instantiated and configured your kernel as `myKernel` as described [above](semanticfunctions#get-your-kernel-ready):
+In code, and assuming you've already instantiated and configured your kernel as `myKernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
 
 ```csharp
 using Microsoft.SemanticKernel.SemanticFunctions;
@@ -263,7 +262,7 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-and define the function inline in C# — assuming you've already instantiated and configured your kernel as `myKernel` as described [above](semanticfunctions#get-your-kernel-ready):
+and define the function inline in C# — assuming you've already instantiated and configured your kernel as `myKernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
 
 ```csharp
 using Microsoft.SemanticKernel.KernelExtensions;
@@ -306,7 +305,7 @@ var myOutput = await myKernel.RunAsync("This is my input that will get summarize
 Console.WriteLine(myOutput);
 ```
 
-Note that the configuration was given inline to the kernel with a `PromptTemplateConfig` object instead of a `config.json` file with the maximum number of tokens to use `MaxTokens`, the variability of words it will use as `TopP`, and the amount of randomness to consider in its response with `Temperature`. Keep in mind that when using C# these parameters will be _PascalCased_ (each word is explicitly capitalized in a string) to be consistent with C# conventions, but in the `config.json` the parameters are _lowercase._  To learn more about these function parameters read how to [configure functions](configuringfunctions).
+Note that the configuration was given inline to the kernel with a `PromptTemplateConfig` object instead of a `config.json` file with the maximum number of tokens to use `MaxTokens`, the variability of words it will use as `TopP`, and the amount of randomness to consider in its response with `Temperature`. Keep in mind that when using C# these parameters will be _PascalCased_ (each word is explicitly capitalized in a string) to be consistent with C# conventions, but in the `config.json` the parameters are _lowercase._  To learn more about these function parameters read how to [configure functions](/semantic-kernel/howto/configuringfunctions).
 
 A more succinct way to make this happen is with default settings across the board:
 
@@ -330,6 +329,6 @@ Console.WriteLine(myOutput);
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Compose functions to connect them end-to-end](pipeliningfunctions)
+> [Compose functions to connect them end-to-end](/semantic-kernel/howto/pipeliningfunctions)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

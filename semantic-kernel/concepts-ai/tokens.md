@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # What are Tokens?
 
@@ -35,6 +34,6 @@ Tokenization affects the amount of data and the number of calculations that the 
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about embeddings](embeddings)
+> [Learn about embeddings](/semantic-kernel/concepts-ai/embeddings)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

@@ -5,18 +5,17 @@ author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # What is the Kernel?
 
-| ASK⇾ | Kernel | [Planner](Planner) | [Skills](skills)| |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | Kernel | [Planner](/semantic-kernel/concepts-sk/Planner) | [Skills](/semantic-kernel/concepts-sk/skills)| |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
-The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](skills), [memories](memories), and [connectors](connectors). Key features of the **kernel** that facilitate faster development include:
+The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](/semantic-kernel/concepts-sk/skills), [memories](/semantic-kernel/concepts-sk/memories), and [connectors](/semantic-kernel/concepts-sk/connectors). Key features of the **kernel** that facilitate faster development include:
 
-* [Skills](skills): Package your most useful prompts as fully reusable [skills](skills)
+* [Skills](/semantic-kernel/concepts-sk/skills): Package your most useful prompts as fully reusable [skills](/semantic-kernel/concepts-sk/skills)
 * Hybrid Development: Fluidly mix your AI prompts with conventional native code
 * Orchestration: Manage complicated LLM AI prompts with complete control
 * Future Proof: Use multiple LLM AI models and configurations with specificity
@@ -42,10 +41,10 @@ var myKernel = Kernel.Build();
 There are a variety of things that you can do with `myKernel` that include:
 
 * Configuring the kernel to use OpenAI or Azure OpenAI
-* Letting it know where to source a collection of [skills](skills)
-* Choosing to provide [skills] to it as inline expressions
-* Feeding a desired skill with inputs to drive towards output
-* Pipelining multiple skills' inputs and outputs
+* Letting it know where to source a collection of [skills](/semantic-kernel/concepts-sk/skills)
+* Choosing to provide [skills](/semantic-kernel/concepts-sk/skills) to it as inline expressions
+* Feeding a desired [skill](/semantic-kernel/concepts-sk/skills) with inputs to drive towards output
+* Pipelining multiple [skills](/semantic-kernel/concepts-sk/skills)' inputs and outputs
 
 ## Take the next step
 
@@ -53,7 +52,7 @@ There are a variety of things that you can do with `myKernel` that include:
 > Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see the **Kernel** in action.
 
 > [!div class="nextstepaction"]
-> [Learn about the Planner](planner)
+> [Learn about the Planner](/semantic-kernel/concepts-sk/planner)
 
 
 [!INCLUDE [footer.md](../includes/footer.md)]

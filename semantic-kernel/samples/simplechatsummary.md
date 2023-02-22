@@ -5,7 +5,6 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # Simple chat summary sample app
 
@@ -47,6 +46,6 @@ Three semantic functions are called on this screen
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the book creator app](bookcreator)
+> [Run the book creator app](/semantic-kernel/samples/bookcreator)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # It all starts with a little C# knowledge
 

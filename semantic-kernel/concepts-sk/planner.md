@@ -5,12 +5,11 @@ author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 
 # What is Planner?
 
-| ASK⇾ | [Kernel](kernel) | Planner | [Skills](skills)| |[Connectors](Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel]((/semantic-kernel/concepts-sk/kernel) | Planner | [Skills]((/semantic-kernel/concepts-sk/skills)| |[Connectors]((/semantic-kernel/concepts-sk/connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
@@ -19,7 +18,7 @@ The _planner_ works backwards from a goal that’s provided from a user's _ASK_.
 
 ![](../media/goaloriented.png)
 
-We call this approach "goal-oriented AI" — harking back to the early days of AI when researchers aspired for computers to beat the world's reigning chess champion. That grand goal was achieved eventually, but with the unusual competence of new LLM AI [models](/semantic-kernel/concepts-ai/models) to provide step-by-step directions for practically any goal can be attainable when the right **skills* are available. 
+We call this approach "goal-oriented AI" — harking back to the early days of AI when researchers aspired for computers to beat the world's reigning chess champion. That grand goal was achieved eventually, but with the unusual competence of new LLM AI [models](/semantic-kernel/concepts-ai/models) to provide step-by-step directions for practically any goal can be attainable when the right _skills_ are available. 
 
 Because the _planner_ has access to either a pre-defined library of pre-made [skills](/semantic-kernel/concepts-sk/skills) and/or a dynamically defined set of [skills](/semantic-kernel/concepts-sk/skills) it is able to fulfill an ASK with confidence. In addition, the **planner* calls upon [memories](/semantic-kernel/concepts-sk/memories) to best situate the ASK's context and [connectors](/semantic-kernel/concepts-sk/connectors) to call APIs and to leverage other external capabilities.
 

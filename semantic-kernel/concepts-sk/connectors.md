@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 
 # What are Connectors?
@@ -44,6 +43,6 @@ The set of example connectors provided in the [repo](https://aka.ms/sk/repo) hav
 Now that you know about the _kernel_, _planner_, _skills_, _connectors_ then you're ready for all the sample apps.
 
 > [!div class="nextstepaction"]
-> [Run Sample Apps](../samples/overview)
+> [Run Sample Apps](/semantic-kernel/samples/overview)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

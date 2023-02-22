@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: samples
 ms.author: author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 # Running Azure Functions on M-series Macbooks in early 2023
 
@@ -63,4 +62,4 @@ And you are now good to go:
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](../samples)
+> [Run the samples](/semantic-kernel/support/samples)

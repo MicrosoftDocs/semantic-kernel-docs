@@ -5,7 +5,6 @@ author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.prod: semantic-kernel
 ---
 ## Configuring templates
 
@@ -25,7 +24,7 @@ TestSkill
      └─── config.json
 ```
 
-LLM AI [models](../concepts-ai/models) have a variety of parameters associated them that can alter their behavior. SK enables the developer to have complete control over how a model is to be configured by using a `config.json` file placed in the same directory as the `skprompt.txt` file.
+LLM AI [models](/semantic-kernel/concepts-ai/models) have a variety of parameters associated them that can alter their behavior. SK enables the developer to have complete control over how a model is to be configured by using a `config.json` file placed in the same directory as the `skprompt.txt` file.
 
 ```config.json-example
 {
@@ -45,7 +44,7 @@ LLM AI [models](../concepts-ai/models) have a variety of parameters associated t
 }
 ```
 
-The text used in `description` is arguably the most important parameter to consider because it's used by the [planner](../concepts-sk/planner) to get a quick read on what the function can do for a user.
+The text used in `description` is arguably the most important parameter to consider because it's used by the [planner](/semantic-kernel/concepts-sk/planner) to get a quick read on what the function can do for a user.
 
 > [!NOTE]
 > The `config.json` file is currently optional, but if you wish to exercise precise control of a function's behavior be sure to include it inside each function directory. 
@@ -69,6 +68,6 @@ Learn more about [available GPT-3](https://learn.microsoft.com/en-us/azure/cogni
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn how to create native functions](nativefunctions)
+> [Learn how to create native functions](/semantic-kernel/howto/nativefunctions)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
