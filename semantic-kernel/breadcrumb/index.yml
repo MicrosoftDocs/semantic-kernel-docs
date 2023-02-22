@@ -45,7 +45,7 @@ productDirectory:
         - url: https://visualstudio.microsoft.com/app-center/
           text: Portal
     - title: Visual Studio Subscriptions
-      imageSrc: .https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
         - url: /visualstudio/subscriptions
           text: Documentation
