@@ -20,7 +20,7 @@ With SK, you can now build AI-first apps faster by design while also having a fr
 SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
 
 > [!div class="nextstepaction"]
-> [Get started with Semantic Kernel](getting-started/setup)
+> [Get started with Semantic Kernel](/semantic-kernel/get-started)
 
 ## SK is a kit of parts that interlock
 
@@ -41,7 +41,7 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 
 ## SK gets your LLM AI journey started  
 
-**[Get started](getting-started/setup) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts × code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
+**[Get started](/semantic-kernel/get-started) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts × code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
 
 ### First steps video
 > [!VIDEO https://aka.ms/SK-First-Steps]
@@ -64,6 +64,6 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 Given that new breakthroughs in LLM AIs are landing on a daily basis, you should consider this SDK a work-in-progress as the team's "best-guess practices" for adding semantically-rich AI to existing apps. And since there are still so many unknown-unknowns in this kind of work, we defer to the community's feedback and contributions to find even better practices going forward. Together.
 
 > [!div class="nextstepaction"]
-> [Get started with Semantic Kernel](getting-started/setup)
+> [Get started with Semantic Kernel](/semantic-kernel/get-started)
 
 [!INCLUDE [footer.md](includes/footer.md)]
