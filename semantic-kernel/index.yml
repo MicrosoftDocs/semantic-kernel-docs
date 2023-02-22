@@ -1,6 +1,6 @@
 ### YamlMime:Hub
 title: Semantic Kernel documentation
-summary: Semantic Kernel documentation
+summary: Explore documentation for Semantic Kernel.
 metadata:
   title: Semantic Kernel documentation
   description: Semantic Kernel documentation.
@@ -16,34 +16,52 @@ metadata:
 
 productDirectory:
     items:
-    - title: Semantic Kernel
+    - title: About Semantic Kernel
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
         - url: /semantic-kernel/get-started
-          text: Visual Studio 2022 (current)
-    - title: Visual Studio for Mac
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
-      links:
+          text: About
         - url: /semantic-kernel/get-started
-          text: Visual Studio 2022 for Mac (current)
-    - title: Visual Studio Code
+          text: Getting Started
+    - title: Large Language Models
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
-        - url: https://code.visualstudio.com/docs
-          text: Documentation
-    - title: GitHub Codespaces
+        - url: /semantic-kernel/concepts-ai/
+          text: Overview
+        - url: /semantic-kernel/concepts-ai/models
+          text: Models
+        - url: /semantic-kernel/concepts-ai/prompts
+          text: Prompts
+        - url: /semantic-kernel/concepts-ai/tokens
+          text: Tokens  
+        - url: /semantic-kernel/concepts-ai/embeddings
+          text: Embeddings          
+    - title: Semantic Kernel Concepts
+      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      links:
+        - url: /semantic-kernel/concepts-sk/
+          text: Overview
+        - url: /semantic-kernel/concepts-sk/kernel
+          text: Kernel
+        - url: /semantic-kernel/concepts-sk/
+          text: Planner
+        - url: /semantic-kernel/concepts-sk/skills
+          text: Skills  
+         - url: /semantic-kernel/concepts-sk/connectors
+          text: Connectors          
+    - title: Building Skills
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
          - url: https://docs.github.com/codespaces
            text: Documentation
-    - title: Visual Studio App Center
+    - title: Samples
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
         - url: /appcenter
           text: Documentation
         - url: https://visualstudio.microsoft.com/app-center/
           text: Portal
-    - title: Visual Studio Subscriptions
+    - title: Community
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
         - url: /visualstudio/subscriptions
