@@ -15,6 +15,7 @@ Semantic Kernel is an open-source SDK that is available on GitHub.
 
 For the best experience working with Semantic Kernel and all of the samples you will need:
 
+> [!div class="checklist"]
 > * `git` or the [GitHub app](https://desktop.github.com/) 
 > * [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/) 
 > * An OpenAI key via either [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio) or [OpenAI](https://openai.com/api/)
