@@ -17,11 +17,11 @@ To provide a degree of standardization across Semantic Kernel (SK) implementatio
 
 The core skills currently supported include:
 
-* TimeSkill: To acquire the time of day and any other temporal information
-* TextSkill: To deterministically manipulating text strings
-* FileIOSkill: To read and write to the filesystem
-* HttpSkill: To call APIs
-* PlannerSkill: To create and execute plans
+* `TimeSkill`: To acquire the time of day and any other temporal information
+* `TextSkill`: To deterministically manipulating text strings
+* `FileIOSkill`: To read and write to the filesystem
+* `HttpSkill`: To call APIs
+* `PlannerSkill`: To create and execute plans
 
 # Example of how a core skill is used in SK
 
@@ -81,7 +81,7 @@ SKContext myOutput = await myKernel.RunAsync(
 Console.WriteLine(myOutput);
 ```
 
-Note how the input streams through a pipeline of three functions executed serially. Expressed in an exaggerated manner, that's like:
+Note how the input streams through a pipeline of three functions executed serially. Expressed sequentially as in a pipeline:
 
 | "   i n f i n i t e    s p a c e    " → | TextSkill.TrimStart → | TextSkill.TrimEnd → | TextSkill.Uppercase → |
 |---|---|---|---|

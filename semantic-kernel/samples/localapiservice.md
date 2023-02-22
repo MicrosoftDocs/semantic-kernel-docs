@@ -13,10 +13,12 @@ This service API is written in C# against Azure Function Runtime v4 and exposes 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
 
-Watch this video for step-by-step instructions:
+## Walkthrough video
+
 >[!Video https://aka.ms/SK-Local-API-Setup]
 
-## Running the service API locally
+# Running the service API locally
+
 **Run** `func start --csharp` from the command line. This will run the service API locally at `http://localhost:7071`.
 
 Two endpoints will be exposed by the service API:

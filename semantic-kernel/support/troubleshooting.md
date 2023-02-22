@@ -7,7 +7,7 @@ ms.author: evchaki
 ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
-# Troubleshooting Semantic Kernel
+# Troubleshooting SK
 
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
