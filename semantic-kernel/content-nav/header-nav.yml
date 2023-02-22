@@ -2,8 +2,9 @@
 category:
   href: /semantic-kernel/
   title: Semantic Kernel
-  items:
+
+items:
   - title: 
     items:
-      - title: Compute
-        href: https://learn.microsoft.com/azure/virtual-machines/
+      - title: Get Started
+        href: /semantic-kernel/getting-started/
