@@ -20,7 +20,7 @@ Semantic Kernel (SK) builds upon these concepts:
 |---|---|
 | [Kernel]((/semantic-kernel/concepts-sk/kernel) | The kernel orchestrates a user's ASK expressed as a goal |
 | [Planner]((/semantic-kernel/concepts-sk/planner)| The planner breaks it down into steps based upon resources that are available |
-| [Skills]((/semantic-kernel/concepts-sk/skills)| Skills are customizable resources built from LLM AI [prompts](../concepts-ai/prompts) and native code |
+| [Skills]((/semantic-kernel/concepts-sk/skills)| Skills are customizable resources built from LLM AI [prompts](/semantic-kernel/concepts-ai/prompts) and native code |
 | [Connectors]((/semantic-kernel/concepts-sk/connectors)| Connectors are customizable resources that enable external data access |
 
 ## Why is the word "semantic" used in SK?

@@ -37,6 +37,6 @@ As a user of Semantic Kernel, you are likely to have an existing app to which yo
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about models](models)
+> [Learn about models](/semantic-kernel/concepts-ai/models)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
