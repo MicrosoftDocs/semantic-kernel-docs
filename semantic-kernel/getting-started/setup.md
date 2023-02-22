@@ -19,7 +19,7 @@ Getting started with Semantic Kernel (SK) is quick and simple by following these
 
 ## Step 1: Access the public SK repo
 
-Use your web browser to visit [aka.ms/sk/repo](aka.ms/sk/repo) on GitHub and please give the repo a ⭐️ star to show your support.
+Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub and please give the repo a ⭐️ star to show your support.
 
 ![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
 
@@ -54,16 +54,16 @@ From your local machine:
 For beginners who are just starting to learn LLM AI, you may want to start here:
 
 > [!div class="nextstepaction"]
-> [Learn LLM AI Concepts](../concepts-ai/overview)
+> [Learn LLM AI Concepts](/semantic-kernel/concepts-ai/overview)
 
 For people who are well versed in LLM AI, you can jump into SK immediately:
 
 > [!div class="nextstepaction"]
-> [Discover Semantic Kernel Concepts](../concepts-sk/overview)
+> [Discover Semantic Kernel Concepts](/semantic-kernel/concepts-sk/overview)
 
 For people who are ready to run SK sample apps:
 
 > [!div class="nextstepaction"]
-> [Run Sample Apps](../samples/overview)
+> [Run Sample Apps](/semantic-kernel/samples/overview)
 
-[!INCLUDE [footer.md](../includes/footer.md)]
+[!INCLUDE [footer.md](/semantic-kernel/includes/footer.md)]

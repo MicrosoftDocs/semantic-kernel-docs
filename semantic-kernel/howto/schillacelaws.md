@@ -8,7 +8,7 @@ ms.date: 02/07/2023
 ms.prod: semantic-kernel
 ---
 # Schillace Laws of Semantic AI
-[!INCLUDE [pat_large.md](/semantic-kernel/includes/pat_small.md)]
+[!INCLUDE [pat_large.md](../includes/pat_small.md)]
 
 ## Consider the future of this decidedly "semantic" AI
 
@@ -39,4 +39,4 @@ If you're interested in LLM AI models and feel inspired by the Schillace Laws, b
 > [!div class="nextstepaction"]
 > [Go to the SK GitHub repository](https://aka.ms/sk/repo)
 
-[!INCLUDE [footer.md](/semantic-kernel/includes/footer.md)]
+[!INCLUDE [footer.md](../includes/footer.md)]
