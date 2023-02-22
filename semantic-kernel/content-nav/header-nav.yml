@@ -1,0 +1,10 @@
+### YamlMime:ContentNav
+category:
+  href: /semantic-kernel/
+  title: Semantic Kernel
+
+items:
+  - title: 
+    items:
+      - title: Get Started
+        href: /semantic-kernel/getting-started/
