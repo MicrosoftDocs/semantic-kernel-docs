@@ -2,8 +2,8 @@
   href: index.md
 - name: Building Semantic Functions
   href: semanticfunctions.md
-- name: Pipelining Functions
-  href: pipeliningfunctions.md
+- name: Chaining Functions
+  href: chainingfunctions.md
 - name: Configuring Functions
   href: configuringfunctions.md
 - name: Building Native Functions

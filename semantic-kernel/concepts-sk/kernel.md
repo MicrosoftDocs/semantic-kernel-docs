@@ -44,11 +44,10 @@ var myKernel = Kernel.Build();
 
 There are a variety of things that you can do with `myKernel` that include:
 
-* Configuring the kernel to use OpenAI or Azure OpenAI
-* Letting it know where to source a collection of [skills](/semantic-kernel/concepts-sk/skills)
-* Choosing to provide [skills](/semantic-kernel/concepts-sk/skills) to it as inline expressions
-* Feeding a desired [skill](/semantic-kernel/concepts-sk/skills) with inputs to drive towards output
-* Pipelining multiple [skills](/semantic-kernel/concepts-sk/skills)' inputs and outputs
+* Configuring the _kernel_ to use OpenAI or Azure OpenAI
+* Sourcing a collection of [skills](/semantic-kernel/concepts-sk/skills)
+* Chaining multiple [skills](/semantic-kernel/concepts-sk/skills)' together
+* Customize how the _kernel_ works to fit your exact needs
 
 ## Take the next step
 

@@ -51,7 +51,7 @@ This can result in something like:
 3. Wide Smile - A smooth cappuccino with a sprinkle of nutmeg
 ```
 
-We could also have stopped the pipelining process one step shorter with:
+We could also have stopped the Chaining process one step shorter with:
 
 ```csharp
 var myOutput = await myKernel.RunAsync(

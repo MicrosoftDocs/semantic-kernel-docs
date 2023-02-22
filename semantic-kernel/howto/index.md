@@ -17,7 +17,7 @@ ms.service: mssearch
 | Basic | Intermediate | Advanced |
 |---|---|---|
 | [Create Skills With Semantic Functions](/semantic-kernel/howto/semanticfunctions) | [Create Skills With Native Functions](/semantic-kernel/howto/nativefunctions) | [Consider The New Art Of AI Programming](/semantic-kernel/howto/schillacelaws) |
-| [Pipelining Functions](/semantic-kernel/howto/pipeliningfunctions) | [Use Core Skills](/semantic-kernel/howto/coreskills) | |
+| [Chaining Functions](/semantic-kernel/howto/chainingfunctions) | [Use Core Skills](/semantic-kernel/howto/coreskills) | |
 | [Configure Functions](/semantic-kernel/howto/configuringfunctions) |  | |
 
 ## Take the next step

@@ -30,7 +30,7 @@ A **function** is the basic building block for a skill. A function can be expres
 
 When using native computer code, it's also possible to invoke an LLM AI prompt — which means that there can be functions that are hybrid LLM AI × native code as well. 
 
-Functions can be [connected end-to-end, or "chained together,"](/semantic-kernel/concepts-sk//howto/pipeliningfunctions) to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
+Functions can be [connected end-to-end, or "chained together,"](/semantic-kernel/concepts-sk//howto/chainingfunctions) to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
 
 ## What is the relationship between semantic functions and skills?
 

@@ -59,7 +59,7 @@ The output is what you would expect when you read `ThePromptTemplate` to be:
 }
 ```
 
-## Pipelining example with core skillls
+## Chaining example with core skillls
 
 Using the core `TextSkill` it's easy to transform text by modifying it sequentially:
 
@@ -81,7 +81,7 @@ SKContext myOutput = await myKernel.RunAsync(
 Console.WriteLine(myOutput);
 ```
 
-Note how the input streams through a pipeline of three functions executed serially. Expressed sequentially as in a pipeline:
+Note how the input streams through a pipeline of three functions executed serially. Expressed sequentially as in a chain of functions:
 
 | "   i n f i n i t e    s p a c e    " → | TextSkill.TrimStart → | TextSkill.TrimEnd → | TextSkill.Uppercase → |
 |---|---|---|---|
