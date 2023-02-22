@@ -10,7 +10,7 @@ ms.prod: semantic-kernel
 
 # Learn how to build AI skills
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](/semantic-kernel/includes/pat_medium.md)]
 
 ## Choose your learning velocity
 
@@ -25,4 +25,4 @@ ms.prod: semantic-kernel
 > [!div class="nextstepaction"]
 > [Build a semantic skill](semanticfunctions)
 
-[!INCLUDE [footer.md](../includes/footer.md)]
+[!INCLUDE [footer.md](/semantic-kernel/includes/footer.md)]
