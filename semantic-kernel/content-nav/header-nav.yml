@@ -1,6 +1,9 @@
 ### YamlMime:ContentNav
-items:
-  - title: Semantic Kernel
+category:
+  href: /semantic-kernel/
+  title: Semantic Kernel
+  items:
+  - title: 
     items:
       - title: Compute
         href: https://learn.microsoft.com/azure/virtual-machines/
