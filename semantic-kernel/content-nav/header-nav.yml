@@ -2,7 +2,7 @@
 category:
   href: https://learn.microsoft.com/azure/
   title: Azure
-  items:
+items:
   - title: Product documentation
     items:
       - title: Compute
