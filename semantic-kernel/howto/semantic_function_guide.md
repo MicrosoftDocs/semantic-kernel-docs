@@ -34,7 +34,7 @@ To include a variable value in your text, use the `{{$variableName}}` syntax.
 For example, if you have a variable called `name` that holds the user's name,
 you can write:
 
-    Hello {{$name}}, welcome to Semantic Kernel!
+    ```Hello {{$name}}, welcome to Semantic Kernel!```
 
 This will produce a greeting with the user's name.
 
@@ -45,14 +45,14 @@ To call an external function and embed the result in your text, use the
 For example, if you have a function called `weather.getForecast` that returns
 the weather forecast for a given location, you can write:
 
-    The weather today is {{weather.getForecast}}.
+    ```The weather today is {{weather.getForecast}}.```
 
 This will produce a sentence with the weather forecast for the default location
 stored in the `input` variable.
 The `input` variable is set automatically by the kernel when invoking a function.
 For instance, the code above is equivalent to:
 
-    The weather today is {{weather.getForecast $input}}.
+    ```The weather today is {{weather.getForecast $input}}.```
 
 ## Function parameters
 
@@ -61,8 +61,8 @@ To call an external function and pass a parameter to it, use the
 For example, if you want to pass a different input to the weather forecast
 function, you can write:
 
-    The weather today in {{$city}} is {weather.getForecast $city}.
-    The weather today in {{$region}} is {weather.getForecast $region}.
+    ```The weather today in {{$city}} is {weather.getForecast $city}.```
+    ```The weather today in {{$region}} is {weather.getForecast $region}.```
 
 This will produce two sentences with the weather forecast for two different
 locations, using the city stored in the `city` variable and the region name
