@@ -32,7 +32,7 @@ First of all, you'll need to be running locally on your own machine to interact 
 
 ## What's up with Azure Functions running on my M-series Mac?
 
-If you're running our samples, you'll need to get a local server running on your machine. We've noticed that if you're running an older version of Azure Functions, it's possible to run into some problems. There's a troubleshooting guide [here](mseriesmacbook) if that's the case.
+If you're running our samples, you'll need to get a local server running on your machine. We've noticed that if you're running an older version of Azure Functions, it's possible to run into some problems. There's a troubleshooting guide [here](/semantic-kernel/support/mseriesmacbook) if that's the case.
 
 ## Next step
 
