@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# Core skills are always ready to be accessed
+## Core skills are always ready to be accessed
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
@@ -23,7 +23,7 @@ The core skills currently supported include:
 * `HttpSkill`: To call APIs
 * `PlannerSkill`: To create and execute plans
 
-# Example of how a core skill is used in SK
+## Example of how a core skill is used in SK
 
 When using a core skill, be sure to include a `using Microsoft.SemanticKernel.CoreSkills`:
 
@@ -59,7 +59,7 @@ The output is what you would expect when you read `ThePromptTemplate` to be:
 }
 ```
 
-## Chaining example with core skillls
+### Chaining example with core skillls
 
 Using the core `TextSkill` it's easy to transform text by modifying it sequentially:
 
@@ -90,7 +90,7 @@ The output reads as:
 
 `I N F I N I T E     S P A C E`
 
-## Take the next step
+### Take the next step
 
 Running the app samples will give you the quickest sense of what you can do with SK. 
 
