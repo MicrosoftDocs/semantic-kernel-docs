@@ -47,7 +47,7 @@ On this screen you can enter in a topic for the children's book that will be cre
 ### Book Screen
 By clicking on the asks, multiple steps will be found from the Planner and the process will run to return results.
 
-## Take the next step
+## Next step
 
 > [!div class="nextstepaction"]
 > [Run the authentication and API app](/semantic-kernel/samples/authapi)

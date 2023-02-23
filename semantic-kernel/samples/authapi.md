@@ -53,9 +53,11 @@ The actions on this screen are:
 2. Get a shareable link and email the link to myself
 3. Add a reminder to follow-up with the email sent above
 
-### Take the next step
+## Take the next step
+
+If you've tried all the apps and are excited to see more, please star the GitHub repo and join the SK community!
 
 > [!div class="nextstepaction"]
-> [Build AI Skills](/semantic-kernel/howto)
+> [Star the SK repo](https://aka.ms/sk/repo)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
