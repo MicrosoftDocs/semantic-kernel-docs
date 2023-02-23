@@ -1,3 +1,7 @@
 - name: Microsoft Semantic Kernel
   tocHref: /semantic-kernel/
   topicHref: /semantic-kernel/index
+callToAction:
+  primary:
+    href: https://aka.ms/skrepo
+    title: GitHub Repo
