@@ -1,7 +1,7 @@
 ### YamlMime:Hub
 title: Semantic Kernel documentation
 summary: Learn how to easily add powerful LLM AI capabilities to your app
-brand: azure
+brand: dotnet
 metadata:
   title: Semantic Kernel documentation
   description: Semantic Kernel documentation.
@@ -18,7 +18,7 @@ metadata:
 productDirectory:
     items:
     - title: About Semantic Kernel
-      itemType: how-to-guide
+      itemType: learn
       links:
         - url: /semantic-kernel/whatissk
           text: About
