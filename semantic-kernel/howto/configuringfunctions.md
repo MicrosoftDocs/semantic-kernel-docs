@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-## Configuring templates
+# Configuring templates
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
