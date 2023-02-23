@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# Overview of support options
+# Support for Semantic Kernel
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
@@ -27,7 +27,7 @@ ms.service: mssearch
 * [Quick Troubleshooting](troubleshooting)
 * [Code of Conduct](codeofconduct)
 
-## Take the next step
+## Next step
 
 > [!div class="nextstepaction"]
 > [Run the samples](/semantic-kernel/support/samples)
