@@ -24,7 +24,7 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 > * [Yarn](https://yarnpkg.com/getting-started/install) - used for installing the app's dependencies
 
 ## Running the app
-The [Authentication and API sample app](https://aka.ms/sk/samples/starter-identity) is located in the Semantic Kernel GitHub repository.
+The [Authentication and API sample app](https://aka.ms/sk/repo/samples/starter-identity) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/getting-started/setup) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Start the [local API service](/semantic-kernel/samples/localapiservice).
@@ -32,7 +32,7 @@ The [Authentication and API sample app](https://aka.ms/sk/samples/starter-identi
 4) You will need to register your application in the Azure Portal. Follow the steps to register your app [here](/azure/active-directory/develop/quickstart-register-app).
 - Your Redirect URI will be <http://localhost:3000>
 - It is recommended you use the `Personal Microsoft accounts` account type for this sample
-5) Once registered, copy the Application (client) ID from the Azure Portal and paste in the GUID into the [env](https://aka.ms/sk/repo/identity_dotenv) file next to `REACT_APP_GRAPH_CLIENT_ID=`
+5) Once registered, copy the Application (client) ID from the Azure Portal and paste in the GUID into the [env](https://aka.ms/sk/repo/starter-identity-dotenv) file next to `REACT_APP_GRAPH_CLIENT_ID=`
 6) Open the Integrated Terminal window.
 7) Run `yarn install` - if this is the first time you are running the sample.  Then run `yarn start`.
 8) A browser will open with the sample app running
