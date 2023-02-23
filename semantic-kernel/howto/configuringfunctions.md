@@ -49,11 +49,11 @@ The text used in `description` is arguably the most important parameter to consi
 > [!NOTE]
 > The `config.json` file is currently optional, but if you wish to exercise precise control of a function's behavior be sure to include it inside each function directory. 
 
-To learn more about the various parameters available for tuning how a function works, visit the [Azure OpenAI reference](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/reference).
+To learn more about the various parameters available for tuning how a function works, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference).
 
 ## Default backends setting for OpenAI and Azure OpenAI
 
-Learn more about [available GPT-3](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/concepts/models) models besides `text-davinci-003` for completion.
+Learn more about [available GPT-3](/azure/cognitive-services/openai/concepts/models) models besides `text-davinci-003` for completion.
 
 ## Completion parameters that can be set in config.json
 

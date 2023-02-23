@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# Connecting multiple functions together
+# Chaining functions together
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 

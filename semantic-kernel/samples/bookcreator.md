@@ -39,7 +39,7 @@ The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/
 ## Exploring the app
 
 ### Setup Screen
-Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
+Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
 ### Topics Screen
 On this screen you can enter in a topic for the children's book that will be created for you.  This will use functions and AI to generate book ideas based on this topic.

@@ -29,7 +29,7 @@ The [Authentication and API sample app](https://aka.ms/sk/samples/starter-identi
 1) Follow the [Setup](/semantic-kernel/getting-started/setup) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Start the [local API service](/semantic-kernel/samples/localapiservice).
 3) Open the ReadMe file in the Authentication and API sample folder.
-4) You will need to register your application in the Azure Portal. Follow the steps to register your app [here](https://learn.microsoft.com/azure/active-directory/develop/quickstart-register-app).
+4) You will need to register your application in the Azure Portal. Follow the steps to register your app [here](/azure/active-directory/develop/quickstart-register-app).
 - Your Redirect URI will be <http://localhost:3000>
 - It is recommended you use the `Personal Microsoft accounts` account type for this sample
 5) Once registered, copy the Application (client) ID from the Azure Portal and paste in the GUID into the [env](https://aka.ms/sk/repo/identity_dotenv) file next to `REACT_APP_GRAPH_CLIENT_ID=`
@@ -43,7 +43,7 @@ The [Authentication and API sample app](https://aka.ms/sk/samples/starter-identi
 You can sign in with your Microsoft account by clicking 'Sign in with Microsoft'.  This will give the sample app access to Microsoft Graph on your behalf and will be used for the functions to run on the Interact screen.
 
 ### Setup Screen
-Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
+Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
 ### Interact Screen
 When you select each of the 3 actions, native functions will be called to preform actions through the Microsoft Graph API and connector.
