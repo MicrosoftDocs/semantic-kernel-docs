@@ -21,7 +21,7 @@ A _skill_ refers to a domain of expertise made available to the [kernel](/semant
 
 ## What is a Function?
 
-![](/semantic-kernel/media/skillsdiagram.png)
+![Diagram showing how skills can work](/semantic-kernel/media/skillsdiagram.png)
 
 A **function** is the basic building block for a skill. A function can be expressed as either:
 
@@ -87,7 +87,7 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 Now that you know about the _kernel_, _planner_, _skills_, you can take on _connectors.__
 
 > [!div class="nextstepaction"]
-> [Learn about Connectors](connectors)
+> [Learn about Connectors](/semantic-kernel/concepts-sk/Connectors)
 
 
 [!INCLUDE [footer.md](../includes/footer.md)]
