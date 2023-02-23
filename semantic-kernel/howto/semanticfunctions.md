@@ -181,7 +181,7 @@ First off, you'll want to create an instance of the kernel and configure it to r
 ```csharp
 using Microsoft.SemanticKernel;
 
-var myKernel = Kernel.Build();
+var myKernel = Kernel.Builder.Build();
 
 kernel.Config.AddAzureOpenAICompletionBackend(
     "Azure_davinci",                        // LLM AI model alias
@@ -196,7 +196,7 @@ If you're using regular OpenAI:
 ```csharp
 using Microsoft.SemanticKernel;
 
-var myKernel = Kernel.Build();
+var myKernel = Kernel.Builder.Build();
 
 kernel.Config.AddOpenAICompletionBackend(
     "OpenAI_davinci",                       // LLM AI model alias
