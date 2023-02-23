@@ -18,14 +18,14 @@ metadata:
 productDirectory:
     items:
     - title: About Semantic Kernel
-      itemType: learn
+      imageSrc: /semantic-kernel/media/learn.svg
       links:
         - url: /semantic-kernel/whatissk
           text: About
         - url: /semantic-kernel/get-started
           text: Getting Started
     - title: Large Language Model AI
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/learn.svg
       links:
         - url: /semantic-kernel/concepts-ai/
           text: Overview
@@ -38,7 +38,7 @@ productDirectory:
         - url: /semantic-kernel/concepts-ai/embeddings
           text: Embeddings          
     - title: Semantic Kernel Concepts
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/learn.svg
       links:
         - url: /semantic-kernel/concepts-sk/
           text: Overview
@@ -51,7 +51,7 @@ productDirectory:
         - url: /semantic-kernel/concepts-sk/connectors
           text: Connectors          
     - title: Building Skills
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/learn.svg
       links:
          - url: /semantic-kernel/howto/
            text: Overview
@@ -62,7 +62,7 @@ productDirectory:
          - url: /semantic-kernel/howto/coreskills
            text: Core Skills           
     - title: App Samples
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/learn.svg
       links:
         - url: /semantic-kernel/samples/
           text: Overview
@@ -74,8 +74,12 @@ productDirectory:
           text: Book Creator
         - url: /semantic-kernel/samples/authapi
           text: Authentication and API  
-    - title: SK Community
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+    - title: Community
+      imageSrc: /semantic-kernel/media/learn.svg
       links:
-        - url: /visualstudio/subscriptions
-          text: Documentation
+        - url: https://aka.ms/sk/repo
+          text: Visit the GitHub Repo
+        - url: https://aka.ms/sk/discord
+          text: Join the Community
+        - url: https://aka.ms/sk/twitter
+          text: Follow Us on Twitter      
