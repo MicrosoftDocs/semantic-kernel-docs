@@ -18,7 +18,7 @@ metadata:
 productDirectory:
     items:
     - title: About Semantic Kernel
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      itemType: how-to-guide
       links:
         - url: /semantic-kernel/whatissk
           text: About
