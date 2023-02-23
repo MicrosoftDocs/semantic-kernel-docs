@@ -18,14 +18,14 @@ metadata:
 productDirectory:
     items:
     - title: About Semantic Kernel
-      imageSrc: /semantic-kernel/media/learn.svg
+      imageSrc: /semantic-kernel/media/learn.png
       links:
         - url: /semantic-kernel/whatissk
           text: About
         - url: /semantic-kernel/get-started
           text: Getting Started
     - title: Large Language Model AI
-      imageSrc: /semantic-kernel/media/learn.svg
+      imageSrc: /semantic-kernel/media/learn.png
       links:
         - url: /semantic-kernel/concepts-ai/
           text: Overview
@@ -38,7 +38,7 @@ productDirectory:
         - url: /semantic-kernel/concepts-ai/embeddings
           text: Embeddings          
     - title: Semantic Kernel Concepts
-      imageSrc: /semantic-kernel/media/learn.svg
+      imageSrc: /semantic-kernel/media/learn.png
       links:
         - url: /semantic-kernel/concepts-sk/
           text: Overview
@@ -51,7 +51,7 @@ productDirectory:
         - url: /semantic-kernel/concepts-sk/connectors
           text: Connectors          
     - title: Building Skills
-      imageSrc: /semantic-kernel/media/learn.svg
+      imageSrc: /semantic-kernel/media/learn.png
       links:
          - url: /semantic-kernel/howto/
            text: Overview
@@ -62,7 +62,7 @@ productDirectory:
          - url: /semantic-kernel/howto/coreskills
            text: Core Skills           
     - title: App Samples
-      imageSrc: /semantic-kernel/media/learn.svg
+      imageSrc: /semantic-kernel/media/learn.png
       links:
         - url: /semantic-kernel/samples/
           text: Overview
@@ -75,7 +75,7 @@ productDirectory:
         - url: /semantic-kernel/samples/authapi
           text: Authentication and API  
     - title: Community
-      imageSrc: /semantic-kernel/media/learn.svg
+      imageSrc: /semantic-kernel/media/learn.png
       links:
         - url: https://aka.ms/sk/repo
           text: Visit the GitHub Repo
