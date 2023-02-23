@@ -38,7 +38,7 @@ productDirectory:
         - url: /semantic-kernel/concepts-ai/embeddings
           text: Embeddings          
     - title: Semantic Kernel Concepts
-      imageSrc: /semantic-kernel/media/learn.png
+      imageSrc: /semantic-kernel/media/openbook.png
       links:
         - url: /semantic-kernel/concepts-sk/
           text: Overview
@@ -51,7 +51,7 @@ productDirectory:
         - url: /semantic-kernel/concepts-sk/connectors
           text: Connectors          
     - title: Building Skills
-      imageSrc: /semantic-kernel/media/learn.png
+      imageSrc: /semantic-kernel/media/concept.png
       links:
          - url: /semantic-kernel/howto/
            text: Overview
@@ -62,7 +62,7 @@ productDirectory:
          - url: /semantic-kernel/howto/coreskills
            text: Core Skills           
     - title: App Samples
-      imageSrc: /semantic-kernel/media/learn.png
+      imageSrc: /semantic-kernel/media/get-started-blue.png
       links:
         - url: /semantic-kernel/samples/
           text: Overview
