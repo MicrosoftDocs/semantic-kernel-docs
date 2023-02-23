@@ -44,7 +44,7 @@ productDirectory:
           text: Overview
         - url: /semantic-kernel/concepts-sk/kernel
           text: Kernel
-        - url: /semantic-kernel/concepts-sk/
+        - url: /semantic-kernel/concepts-sk/planner
           text: Planner
         - url: /semantic-kernel/concepts-sk/skills
           text: Skills  
