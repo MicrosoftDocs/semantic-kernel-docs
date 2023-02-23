@@ -17,7 +17,7 @@ ms.service: mssearch
 |---|---|
 | Read the docs | [This learning site](https://aka.ms/sk/learn) is the home of the latest information for developers |
 | Visit the repo | Our open-source [GitHub repository](https://aka.ms/sk/repo) is availble for perusal and suggestions |
-| Realtime chat | Visit our [Discord channel](https://aka.ms/sk/discord) to get supported quickly with our [CoC](CodeofConduct) actively enforced | 
+| Realtime chat | Visit our [Discord channel](https://aka.ms/sk/discord) to get supported quickly with our [CoC](/semantic-kernel/support/CodeofConduct) actively enforced | 
 | Realtime video | We will be hosting regular office hours that will be announced in our [Discord channel](https://aka.ms/sk/discord) |
 | Social media | Our Twitter handle is [@semantic_kernel](https://aka.ms/sk/twitter) |
 
