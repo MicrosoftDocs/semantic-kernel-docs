@@ -21,7 +21,7 @@ A _skill_ refers to a domain of expertise made available to the [kernel](/semant
 
 ## What is a Function?
 
-![](../media/skills01.png)
+![](/semantic-kernel/media/skillsdiagram.png)
 
 A **function** is the basic building block for a skill. A function can be expressed as either:
 
