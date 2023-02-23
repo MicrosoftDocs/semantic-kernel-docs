@@ -1,6 +1,6 @@
 ---
-title: How to write native skills in Semantic Kernel
-description: How to write skills in Semantic Kernel
+title: How to use prompt template language in Semantic Kernel
+description: How to use prompt template language in Semantic Kernel
 author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
