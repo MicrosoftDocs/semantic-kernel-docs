@@ -25,7 +25,7 @@ productDirectory:
         - url: /semantic-kernel/get-started
           text: Getting Started
     - title: Large Language Model AI
-      imageSrc: /semantic-kernel/media/learn.png
+      imageSrc: /semantic-kernel/media/connector-blue.png
       links:
         - url: /semantic-kernel/concepts-ai/
           text: Overview
@@ -75,7 +75,7 @@ productDirectory:
         - url: /semantic-kernel/samples/authapi
           text: Authentication and API  
     - title: Community
-      imageSrc: /semantic-kernel/media/learn.png
+      imageSrc: /semantic-kernel/media/i_best-practices.png
       links:
         - url: https://aka.ms/sk/repo
           text: Visit the GitHub Repo
