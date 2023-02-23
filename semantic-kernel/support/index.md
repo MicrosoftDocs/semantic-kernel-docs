@@ -24,7 +24,7 @@ ms.service: mssearch
 ## More support information
 
 * [Frequently Asked Questions (FAQs)](/semantic-kernel/support/faqs)
-* [Code of Conduct](/semantic-kernel/support/CodeofConduct.md)
+* [Code of Conduct](/semantic-kernel/support/CodeofConduct)
 
 ## Next step
 
