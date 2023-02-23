@@ -83,7 +83,3 @@ productDirectory:
           text: Join the Community
         - url: https://aka.ms/sk/twitter
           text: Follow Us on Twitter      
-callToAction:
-  primary:
-    href: https://aka.ms/skrepo
-    title: GitHub Repo
