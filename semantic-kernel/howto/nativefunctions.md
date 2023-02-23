@@ -17,7 +17,7 @@ If you're new to C#, here's a few quick tips to get you started in the context o
 * Strings in C# can span multiple lines with the `@` sign and enclosing `""`
  or by being enclosed within a pair of three double quotes `"""`.
 
-## Sample C# skill in a file _MyCSharpSkill.cs_
+## C# skill as file _MyCSharpSkill.cs_
 
 A C# sharp skill goes into the same directory as the other semantic skills:
 
@@ -75,7 +75,7 @@ The output will look like: `This is input.This is input.`
 
 This might seem like a lot of extra work to simply get native C# code to work within a C# codebase itself, but that's not really the point. The magic is in how you can easily call a native function from a semantic function. It's cool!
 
-## Invoking a native function from a semantic function
+## Calling a native function from a semantic function
 
 We start with our native function `MyCSharpSkill` that has the simplistic `DupDup` function within a mixed directory of semantic and native skills:
 
@@ -166,7 +166,7 @@ The output is `"Sam AppDev"`.
 
 ## Take the next step
 
-> [!div class="nextstepaction"]
-> [Run the samples](/semantic-kernel/samples)
+Running the app samples will give you the quickest sense of what you can do with SK. 
 
-[!INCLUDE [footer.md](../includes/footer.md)]
+> [!div class="nextstepaction"]
+> [Run the app samples](/semantic-kernel/samples)
