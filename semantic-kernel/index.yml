@@ -1,7 +1,7 @@
 ### YamlMime:Hub
 title: Semantic Kernel documentation
 summary: Learn how to easily add powerful LLM AI capabilities to your app
-brand: dotnet
+brand: azure
 metadata:
   title: Semantic Kernel documentation
   description: Semantic Kernel documentation.
@@ -18,14 +18,14 @@ metadata:
 productDirectory:
     items:
     - title: About Semantic Kernel
-      itemType: learn
+      imageSrc: /semantic-kernel/media/learn.png
       links:
         - url: /semantic-kernel/whatissk
           text: About
         - url: /semantic-kernel/get-started
           text: Getting Started
     - title: Large Language Model AI
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/connector-blue.png
       links:
         - url: /semantic-kernel/concepts-ai/
           text: Overview
@@ -38,20 +38,20 @@ productDirectory:
         - url: /semantic-kernel/concepts-ai/embeddings
           text: Embeddings          
     - title: Semantic Kernel Concepts
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/openbook.png
       links:
         - url: /semantic-kernel/concepts-sk/
           text: Overview
         - url: /semantic-kernel/concepts-sk/kernel
           text: Kernel
-        - url: /semantic-kernel/concepts-sk/
+        - url: /semantic-kernel/concepts-sk/planner
           text: Planner
         - url: /semantic-kernel/concepts-sk/skills
           text: Skills  
         - url: /semantic-kernel/concepts-sk/connectors
           text: Connectors          
     - title: Building Skills
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/concept.png
       links:
          - url: /semantic-kernel/howto/
            text: Overview
@@ -62,7 +62,7 @@ productDirectory:
          - url: /semantic-kernel/howto/coreskills
            text: Core Skills           
     - title: App Samples
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+      imageSrc: /semantic-kernel/media/get-started-blue.png
       links:
         - url: /semantic-kernel/samples/
           text: Overview
@@ -74,8 +74,12 @@ productDirectory:
           text: Book Creator
         - url: /semantic-kernel/samples/authapi
           text: Authentication and API  
-    - title: SK Community
-      imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
+    - title: Community
+      imageSrc: /semantic-kernel/media/i_best-practices.png
       links:
-        - url: /visualstudio/subscriptions
-          text: Documentation
+        - url: https://aka.ms/sk/repo
+          text: Visit the GitHub Repo
+        - url: https://aka.ms/sk/discord
+          text: Join the Community
+        - url: https://aka.ms/sk/twitter
+          text: Follow Us on Twitter      
