@@ -41,7 +41,7 @@ The [Simple chat summary sample app](https://aka.ms/sk/repo/samples/starter-chat
 Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
 ### Interact Screen
-A preloaded chat conversation is avaialble.  You can add additional items in the chat or modify the [chat thread](https://aka.ms/sk/repo/chatthread) before running the sample. 
+A preloaded chat conversation is avaialble.  You can add additional items in the chat or modify the [chat thread](https://aka.ms/sk/repo/samples/starter-chat/chat-thread) before running the sample. 
 
 ### AI Summaries Screen
 Three semantic functions are called on this screen
