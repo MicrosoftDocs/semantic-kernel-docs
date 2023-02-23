@@ -1,6 +1,6 @@
 ### YamlMime:Hub
 title: Semantic Kernel documentation
-summary: Explore documentation for Semantic Kernel.
+summary: Learn how to easily add powerful LLM AI capabilities to your app
 brand: azure
 metadata:
   title: Semantic Kernel documentation
@@ -24,7 +24,7 @@ productDirectory:
           text: About
         - url: /semantic-kernel/get-started
           text: Getting Started
-    - title: Large Language Models
+    - title: Large Language Model AI
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
         - url: /semantic-kernel/concepts-ai/
@@ -61,7 +61,7 @@ productDirectory:
            text: Native Functions
          - url: /semantic-kernel/howto/coreskills
            text: Core Skills           
-    - title: Samples
+    - title: App Samples
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
         - url: /semantic-kernel/samples/
@@ -74,7 +74,7 @@ productDirectory:
           text: Book Creator
         - url: /semantic-kernel/samples/authapi
           text: Authentication and API  
-    - title: Community
+    - title: SK Community
       imageSrc: https://review.learn.microsoft.com/en-us/semantic-kernel/media/skpatternlarge.png
       links:
         - url: /visualstudio/subscriptions
