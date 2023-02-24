@@ -21,7 +21,7 @@ Semantic Kernel builds upon four core ideas in LLM AI:
 3. [Tokens](/semantic-kernel/concepts-ai/tokens)
 4. [Embeddings](/semantic-kernel/concepts-ai/embeddings)
 
-## Double-clicking on "LLM"
+## Zooming in on the letters "L-L-M"
 
 Here's a simple decoder ring to understand the implications of each of these letters:
 
