@@ -164,6 +164,76 @@ Console.WriteLine(myOutput);
 
 The output is `"Sam AppDev"`. 
 
+## Advanced: Building a native asynchronous function in a skill
+
+Recall our first function example `Qwerty` and compare it with a new function called `Asdfg`:
+
+```csharp
+public class MyCSharpSkill
+{
+    [SKFunction("Return the first row of a qwerty keyboard")]
+    public string Qwerty(string input)
+    {
+        return "qwertyuiop";
+    }
+
+    [SKFunction("Return the second row of a qwerty keyboard")]
+    [SKFunctionName("Asdfg")]
+    public async Task<string> AsdfgAsync(string input)
+    {
+        await ...do something asynchronous...
+        
+        return "asdfghjkl";
+    }
+```
+
+All semantic functions run asynchronously by default. But native functions can run synchronous or asynchronous. In the above example, `Qwerty` runs synchronously (i.e. it returns immediately) where as `Asdfg` runs asynchronously (i.e. it may be calling an API). Two things to note about this syntax:
+
+1. We use the convention `<functionname>Async` to identify the C# function as running asynchronously. As a result, the function needs to be called `MyCSharpSkill.AsdfgAsync` explicitly — which isn't great. 
+
+2. So to fix that, we write `[SKFunctionName("Asdfg")]` to rename how SK accesses the function as `MyCSharpSkill.Asdfg` that is more readily legible to humans. 
+
+## Advanced: Using a semantic function from within a native C# skill
+
+To access a semantic function `funSkill.joker` from a native function, there are one of two ways to achieve that goal: 
+
+```csharp
+public class MyCSharpSkill
+{
+    [SKFunction("Tell me a joke in one line of text")]
+    [SKFunctionName("TellAJokeInOneLine")]
+    public async Task<string> TellAJokeInOneLineAsync(SKContext context)
+    {
+        // Fetch a semantic function previously loaded into the kernel, 2 equivalent ways
+        ISKFunction joker1 = context.Func("funSkill", "joker");
+        ISKFunction joker2 = context.Skills.GetSemanticFunction("funSkill", "joker");
+
+        var joke = await joker1.InvokeAsync();
+
+        return joke.Result.ReplaceLineEndings(" ");
+    }
+}
+```
+
+Or also:
+
+```csharp
+public class MyCSharpSkill
+{
+    [SKFunction("Tell me a joke in one line of text")]
+    [SKFunctionName("TellAJokeInOneLine")]
+    public async Task<string> TellAJokeInOneLineAsync(SKContext context)
+    {
+        // Fetch a semantic function previously loaded into the kernel, 2 equivalent ways
+        ISKFunction joker2 = context.Skills.GetSemanticFunction("funSkill", "joker");
+
+        var joke = await joker2.InvokeAsync();
+
+        return joke.Result.ReplaceLineEndings(" ");
+    }
+}
+```
+
 ## Take the next step
 
 Running the app samples will give you the quickest sense of what you can do with SK. 
