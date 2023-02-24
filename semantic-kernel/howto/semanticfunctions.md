@@ -215,7 +215,7 @@ MyAppSource
 │
 └───MySkillsDirectory
     │
-    └─── TestSkillImproved
+    └─── TestSkillFlex
         │
         └─── SloganMakerFlex
         |    |
@@ -238,9 +238,13 @@ When running the kernel in C# you will:
 In code, and assuming you've already instantiated and configured your kernel as `myKernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
 
 ```csharp
-using Microsoft.SemanticKernel.SemanticFunctions;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.KernelExtensions;
+using Microsoft.SemanticKernel.Orchestration;
 
-var mySkill = myKernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillImproved");
+// ... instantiate a kernel as myKernel
+
+var mySkill = myKernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillFlex");
 
 var myContext = new ContextVariables(); 
 myContext.Set("BUSINESS", "Basketweaving Service"); 
@@ -251,6 +255,10 @@ var myResult = await myKernel.RunAsync(myContext,mySkill["SloganMakerFlex"]);
 
 Console.WriteLine(myResult);
 ```
+
+The output will read similar to:
+
+`"Ribbons with Seattle Style: Quality You Can Count On!"`
 
 ## Invoking a semantic function inline from C#
 
@@ -266,8 +274,10 @@ Summarize the following text in two sentences or less.
 and define the function inline in C# — assuming you've already instantiated and configured your kernel as `myKernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
 
 ```csharp
-using Microsoft.SemanticKernel.KernelExtensions;
-using Microsoft.SemanticKernel.Orchestration;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.SemanticFunctions;
+
+// ... instantiate a kernel as myKernel
 
 string summarizeBlurbFlex = """
 Summarize the following text in two sentences or less. 
@@ -296,7 +306,7 @@ var myPromptTemplate = new PromptTemplate(
 var myFunctionConfig = new SemanticFunctionConfig(myPromptConfig, myPromptTemplate);
 
 var myFunction = myKernel.RegisterSemanticFunction(
-    "TestSkillImproved", 
+    "TestSkillFlex", 
     "summarizeBlurbFlex",
     myFunctionConfig);
 
@@ -311,6 +321,12 @@ Note that the configuration was given inline to the kernel with a `PromptTemplat
 A more succinct way to make this happen is with default settings across the board:
 
 ```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.KernelExtensions;
+using Microsoft.SemanticKernel.Orchestration;
+
+// ... instantiate a kernel as myKernel
+
 string summarizeBlurbFlex = """
 Summarize the following text in two sentences or less. 
 ---Begin Text---

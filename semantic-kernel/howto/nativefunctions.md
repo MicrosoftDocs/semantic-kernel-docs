@@ -40,7 +40,9 @@ MyAppSource
 Set up the `namespace` to match the enclosing skills directory:
 
 ```csharp
+using Microsoft.SemanticKernel.SkillDefinition;
 using Microsoft.SemanticKernel.Orchestration;
+
 namespace MySkillsDirectory;
 
 public class MyCSharpSkill
@@ -62,6 +64,13 @@ public class MyCSharpSkill
 And then use the native skill in your C# project:
 
 ```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Orchestration;
+
+using MySkillsDirectory;
+
+// ... instantiate a kernel as myKernel
+
 var mySkill = myKernel.ImportSkill (new MyCSharpSkill(), "MyCSharpSkill");
 
 var myContext = new ContextVariables(); 
@@ -86,7 +95,7 @@ MyAppSource
     │
     └─── MySemanticSkill
     |   │
-    |   └─── MyFirstSemanticFunction
+    |   └─── MySemanticFunction
     |   │    └─── skprompt.txt
     |   │    └─── config.json
     |   └─── MyOtherSemanticFunctions
@@ -105,7 +114,13 @@ Earth-shattering slogan:
 And then to use the skill we simply make sure that both the semantic skills and native skills are imported before we ask the kernel to do its thing:
 
 ```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.KernelExtensions;
+using Microsoft.SemanticKernel.Orchestration;
+
 using MySkillsDirectory;
+
+// ... instantiate a kernel as myKernel
 
 var myContext = new ContextVariables("*Twinnify"); 
 var myCshSkill = myKernel.ImportSkill ( new MyCSharpSkill(), "MyCSharpSkill");
@@ -126,7 +141,9 @@ The output will look similar to this:
 Use an `SKContext` as input to the native function to extract the context variables:
 
 ```csharp
+using Microsoft.SemanticKernel.SkillDefinition;
 using Microsoft.SemanticKernel.Orchestration;
+
 namespace MySkillsDirectory;
 
 public class MyCSharpSkill
@@ -150,7 +167,12 @@ public class MyCSharpSkill
 The context parameters are pushed into the native function in a similar manner to how semantic functions work:
 
 ```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Orchestration;
+
 using MySkillsDirectory;
+
+// ... instantiate a kernel as myKernel
 
 var myContext = new ContextVariables(); 
 myContext.Set("firstname","Sam");
@@ -169,6 +191,9 @@ The output is `"Sam AppDev"`.
 Recall our first function example `Qwerty` and compare it with a new function called `Asdfg`:
 
 ```csharp
+using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel.Orchestration;
+
 public class MyCSharpSkill
 {
     [SKFunction("Return the first row of a qwerty keyboard")]
@@ -198,6 +223,11 @@ All semantic functions run asynchronously by default. But native functions can r
 To access a semantic function `funSkill.joker` from a native function, there are one of two ways to achieve that goal: 
 
 ```csharp
+using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel.Orchestration;
+
+namespace MySkillsDirectory;
+
 public class MyCSharpSkill
 {
     [SKFunction("Tell me a joke in one line of text")]
@@ -218,6 +248,11 @@ public class MyCSharpSkill
 Or also:
 
 ```csharp
+using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel.Orchestration;
+
+namespace MySkillsDirectory;
+
 public class MyCSharpSkill
 {
     [SKFunction("Tell me a joke in one line of text")]
