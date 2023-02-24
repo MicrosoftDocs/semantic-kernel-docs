@@ -32,7 +32,7 @@ Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub
 
 ![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
 
-## Step 2: Clone the repo locally
+## Step 2: Clone or fork the repo
 
 If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
 
