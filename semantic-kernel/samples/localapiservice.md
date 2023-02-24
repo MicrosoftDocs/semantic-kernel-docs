@@ -1,18 +1,17 @@
 ---
-title: Local API Service Example
-description: Local API Service Example
+title: Local API Service for samples
+description: Local API Service app samples
 author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# Local API service example
-
+# Local API service for app samples
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-This service API is written in C# against Azure Function Runtime v4 and exposes some Semantic Kernel APIs that you can call via HTTP POST requests for the learning samples.
+This service API is written in C# against Azure Function Runtime v4 and exposes some Semantic Kernel APIs that you can call via HTTP POST requests for the [learning samples](/semantic-kernel/samples).
 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
