@@ -57,9 +57,9 @@ From your local machine:
 
 > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
 
-### For experienced C# .NET developers
+## For experienced C# .NET developers
 
-Instructions on accessing the `Microsoft.SemanticKernel] nuget package is available [here](https://aka.ms/sk/nuget).
+Instructions for accessing the `Microsoft.SemanticKernel] nuget package is available [here](https://aka.ms/sk/nuget).
 
 ## Take the next step
 
