@@ -11,7 +11,7 @@ ms.service: mssearch
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://aka.ms/sk/repo/writerskill) functions are chained togheter based on the asks.
+The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://aka.ms/sk/repo/writerskill) functions are chained together based on the asks.
 
 > [!IMPORTANT]
 > Each function will call Open AI which will use tokens that you will be billed for. 
