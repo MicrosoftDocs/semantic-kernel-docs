@@ -40,7 +40,7 @@ MyAppSource
 Set up the `namespace` to match the enclosing skills directory:
 
 ```csharp
-using Microsoft.SemanticKernel.Registry;
+using Microsoft.SemanticKernel.Orchestration;
 namespace MySkillsDirectory;
 
 public class MyCSharpSkill
@@ -73,7 +73,7 @@ Console.WriteLine(myOutput);
 
 The output will look like: `This is input.This is input.`
 
-This might seem like a lot of extra work to simply get native C# code to work within a C# codebase itself, but that's not really the point. The magic is in how you can easily call a native function from a semantic function. It's cool!
+This might seem like a lot of extra work to simply get native C# code to work within a C# codebase itself, but that's not really the point. The magic is in how you can easily call a native function from a semantic function. 
 
 ## Calling a native function from a semantic function
 
@@ -126,7 +126,7 @@ The output will look similar to this:
 Use an `SKContext` as input to the native function to extract the context variables:
 
 ```csharp
-using Microsoft.SemanticKernel.Registry;
+using Microsoft.SemanticKernel.Orchestration;
 namespace MySkillsDirectory;
 
 public class MyCSharpSkill
