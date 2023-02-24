@@ -47,15 +47,12 @@ A GPT model is a type of neural network that uses the transformer architecture t
 
 Besides GPT, a couple of similar LLM models are Meena and Bard. [Meena](/semantic-kernel/support/bibliography#meena) is a conversational model developed by Meta; [Bard](/semantic-kernel/support/bibliography#bard) is a chatbot model developed by Google. 
 
-| LLM AI Model | Parameters | Application areas | Year invented |
-|-------|------------|-------------------|---------------|
-| BERT | 340 million | NLU and NLG | 2018 |
-| XLNet | 340 million | NLG | 2019 |
-| T5 | 11 billion | Text-to-text | 2019 |
-| EleutherAI | 175 billion | NLU and NLG | 2021 |
-| Meena | 2.6 billion | Conversational | 2020 |
-| BlenderBot | 9.4 billion | Chatbot | 2020 |
-| DIALOGPT | 1.5 billion | Dialogue | 2020 |
+| LLM AI Model | Parameters | Year invented |
+|-------|------------|---------------|
+| BERT | 340 million | 2018 |
+| GPT-2 | 1.5 billion | 2019 |
+| Meena | 2.6 billion | 2020 |
+| EleutherAI | 6 billion | 2021 |
 
 LLM AI models are generally compared by the number of parameters — where bigger is usually better. A parameter is usually a weight or a bias that is assigned to a connection or a node in the neural network that forms the model. A weight is a value that determines how much influence one node has on another, and a bias is a value that determines how much an input or an output is shifted or offset. The number of parameters is a measure of the size and the complexity of the model. The more parameters a model has, the more data it can process, learn from, and generate. However, having more parameters also means having more computational and memory resources, and more potential for overfitting or underfitting the data. Parameters are learned or updated during the training process, by using an optimization algorithm that tries to minimize the error or the loss between the predicted and the actual outputs. By adjusting the parameters, the model can improve its performance and accuracy on the given task or domain.
 
