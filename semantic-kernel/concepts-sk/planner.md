@@ -21,7 +21,7 @@ The _planner_ works backwards from a goal that’s provided from a user's _ASK_.
 
 We call this approach "goal-oriented AI" — harking back to the early days of AI when researchers aspired for computers to beat the world's reigning chess champion. That grand goal was achieved eventually, but with the unusual competence of new LLM AI [models](/semantic-kernel/concepts-ai/models) to provide step-by-step directions for practically any goal can be attainable when the right _skills_ are available. 
 
-Because the _planner_ has access to either a pre-defined library of pre-made [skills](/semantic-kernel/concepts-sk/skills) and/or a dynamically defined set of [skills](/semantic-kernel/concepts-sk/skills) it is able to fulfill an ASK with confidence. In addition, the **planner* calls upon [memories](/semantic-kernel/concepts-sk/memories) to best situate the ASK's context and [connectors](/semantic-kernel/concepts-sk/connectors) to call APIs and to leverage other external capabilities.
+Because the _planner_ has access to either a pre-defined library of pre-made [skills](/semantic-kernel/concepts-sk/skills) and/or a dynamically defined set of [skills](/semantic-kernel/concepts-sk/skills) it is able to fulfill an ASK with confidence. In addition, the _planner_ calls upon [memories](/semantic-kernel/concepts-sk/memories) to best situate the ASK's context and [connectors](/semantic-kernel/concepts-sk/connectors) to call APIs and to leverage other external capabilities.
 
 > [!TIP]
 > Try the [Book creator sample app](/semantic-kernel/samples/bookcreator) to see the Planner in action.

@@ -17,7 +17,7 @@ ms.service: mssearch
 
 With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK is being built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing. 
 
-SK is engineered to accelerate Microsoft teams' understandings of the continual evolution of LLM AIs — directly connecting into the practice of integrating LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
+SK has been engineered to flexibly integrate LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
 
 > [!div class="nextstepaction"]
 > [Get started with Semantic Kernel](/semantic-kernel/get-started)
@@ -41,7 +41,7 @@ With their increasing ability to understand complex intents, LLM AIs are enablin
 
 ## SK gets your LLM AI journey started  
 
-**[Get started](/semantic-kernel/get-started) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts × code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
+**[Get started](/semantic-kernel/get-started) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts with code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
 
 ### First steps video
 > [!VIDEO https://aka.ms/SK-First-Steps]

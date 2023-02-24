@@ -14,32 +14,32 @@ ms.service: mssearch
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
-The **kernel** in Semantic Kernel (SK) is the orchestrator of a user's ASK. The **kernel** fulfill the user's desired goal using its available [skills](/semantic-kernel/concepts-sk/skills), memories, and [connectors](/semantic-kernel/concepts-sk/connectors). Key features of the **kernel** that facilitate faster development include:
+The _kernel_ in Semantic Kernel (SK) is the orchestrator of a user's ASK. The _kernel_ fulfills the user's desired goal using its available [skills](/semantic-kernel/concepts-sk/skills), memories, and [connectors](/semantic-kernel/concepts-sk/connectors). Key features of the _kernel_ that facilitate faster development include:
 
 * [Skills](/semantic-kernel/concepts-sk/skills): Package your most useful prompts as fully reusable components
 * Hybrid Development: Fluidly mix your AI prompts with conventional native code
 * Orchestration: Manage complicated LLM AI prompts with complete control
 * Future Proof: Use multiple LLM AI models and configurations with specificity
 
-The **kernel** is designed to encourage "function composition" which allows developers to combine and interconnect the input and outputs of skills into a single pipeline.
+The _kernel_ is designed to encourage "function composition" which allows developers to combine and interconnect the input and outputs of skills into a single pipeline.
 
 > [!TIP]
 > Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see the _Kernel_ in action.
 
 ## Why is the Kernel called a "kernel"?
 
-> **Kernel**: "The core, center, or essence of an object or system." —[Wiktionary](/semantic-kernel/support/bibliography#kernel)
+> _Kernel_: "The core, center, or essence of an object or system." —[Wiktionary](/semantic-kernel/support/bibliography#kernel)
 
 The term "kernel" can have different meanings in different contexts, but in the case of the Semantic Kernel, the _kernel_ refers to an instance of the processing engine that processes an ASK all the way through to fulfillment. The _kernel_ is the seed around which everything else in the Semantic Kernel world grows.
 
 ## How does the Kernel appear in code?
 
-In code you will see the _kernel_ instantiated with `Kernel.Build()`:
+In code you will see the _kernel_ instantiated with `Kernel.Builder.Build()`:
 
 ```csharp
 using Microsoft.SemanticKernel;
 
-var myKernel = Kernel.Build();
+var myKernel = Kernel.Builder.Build();
 ```
 
 There are a variety of things that you can do with `myKernel` that include:
