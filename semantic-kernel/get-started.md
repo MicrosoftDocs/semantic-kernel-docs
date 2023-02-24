@@ -34,7 +34,9 @@ Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub
 
 ## Step 2: Clone or fork the repo
 
-If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
+**New to GitHub?** If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
+
+**New to contributing?** If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
 
 ### Walkthrough video
 
