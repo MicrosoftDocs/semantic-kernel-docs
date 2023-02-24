@@ -59,7 +59,7 @@ From your local machine:
 
 ## For experienced C# .NET developers
 
-Instructions for accessing the `Microsoft.SemanticKernel] nuget package is available [here](https://aka.ms/sk/nuget).
+Instructions for accessing the `Microsoft.SemanticKernel` nuget package is available [here](https://aka.ms/sk/nuget).
 
 ## Take the next step
 
