@@ -15,7 +15,11 @@ Getting started with Semantic Kernel (SK) is quick and simple by following these
 
 1. Go to the SK GitHub repository ("repo")
 2. Clone or fork the repo to your local machine
-3. Run the Jupyter [notebooks](https://aka.ms/skjupyter) locally
+3. Run the Jupyter [notebooks](https://aka.ms/skjupyter) **locally**
+
+### For experienced C# .NET developers
+
+Instructions for accessing the `Microsoft.SemanticKernel` nuget package is available [here](https://aka.ms/sk/nuget).
 
 ## Requirements to run notebook samples
 
@@ -56,10 +60,6 @@ From your local machine:
 ### Walkthrough video
 
 > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
-
-## For experienced C# .NET developers
-
-Instructions for accessing the `Microsoft.SemanticKernel` nuget package is available [here](https://aka.ms/sk/nuget).
 
 ## Take the next step
 
