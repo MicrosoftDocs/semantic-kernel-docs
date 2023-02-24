@@ -13,7 +13,7 @@ ms.service: mssearch
 
 To provide a degree of standardization across Semantic Kernel (SK) implementations, the GitHub repo has several skills available to any SK prompt which you can browse at:
 
-`/semantic-kernel/dotnet/src/CoreSkills`
+[`/semantic-kernel/dotnet/src/SemanticKernel/CoreSkills/`](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/SemanticKernel/CoreSkills)
 
 The core skills currently supported include:
 
@@ -68,7 +68,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.CoreSkills;
 
-var myKernel = Kernel.Build();
+var myKernel = Kernel.Builder.Build();
 
 var myText = myKernel.ImportSkill(new TextSkill());
 
