@@ -45,7 +45,7 @@ A GPT model is a type of neural network that uses the transformer architecture t
 
 ## What LLM AI models are similar to GPT?
 
-Besides GPT, a couple of similar LLM models are Meena and Bard. [Meena](/semantic-kernel/support/bibliography#meena) is a conversational model developed by Meta; [Bard](/semantic-kernel/support/bibliography#bard) is a chatbot model developed by Google.
+Besides GPT, a couple of similar LLM models are Meena and Bard. [Meena](/semantic-kernel/support/bibliography#meena) is a conversational model developed by Meta; [Bard](/semantic-kernel/support/bibliography#bard) is a chatbot model developed by Google. 
 
 | LLM AI Model | Parameters | Application areas | Year invented |
 |-------|------------|-------------------|---------------|
