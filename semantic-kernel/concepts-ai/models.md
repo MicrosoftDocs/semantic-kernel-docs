@@ -45,12 +45,13 @@ A GPT model is a type of neural network that uses the transformer architecture t
 
 ## What is a baseline comparison rubric for LLM AIs?
 
-| LLM AI Model | Parameters | Year invented |
+| LLM AI Model | Parameters | Year |
 |-------|------------|---------------|
 | BERT | 340 million | 2018 |
 | GPT-2 | 1.5 billion | 2019 |
 | Meena | 2.6 billion | 2020 |
 | GPT-3 | 175 billion | 2020 |
+| LaMDA | 137 billion | 2022 |
 | BLOOM | 176 billion | 2022 |
 
 LLM AI models are generally compared by the number of parameters — where bigger is usually better. The number of parameters is a measure of the size and the complexity of the model. The more parameters a model has, the more data it can process, learn from, and generate. However, having more parameters also means having more computational and memory resources, and more potential for overfitting or underfitting the data. Parameters are learned or updated during the training process, by using an optimization algorithm that tries to minimize the error or the loss between the predicted and the actual outputs. By adjusting the parameters, the model can improve its performance and accuracy on the given task or domain.
