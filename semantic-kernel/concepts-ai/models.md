@@ -43,9 +43,7 @@ Davinci is the largest and most powerful model, with 175 billion parameters and 
 
 A GPT model is a type of neural network that uses the transformer architecture to learn from large amounts of text data. The model has two main components: an encoder and a decoder. The encoder processes the input text and converts it into a sequence of vectors, called embeddings, that represent the meaning and context of each word. The decoder generates the output text by predicting the next word in the sequence, based on the embeddings and the previous words. The model uses a technique called attention to focus on the most relevant parts of the input and output texts, and to capture long-range dependencies and relationships between words. The model is trained by using a large corpus of texts as both the input and the output, and by minimizing the difference between the predicted and the actual words. The model can then be fine-tuned or adapted to specific tasks or domains, by using smaller and more specialized datasets.
 
-## What LLM AI models are similar to GPT?
-
-Besides GPT, a couple of similar LLM models are Meena and Bard. [Meena](/semantic-kernel/support/bibliography#meena) is a conversational model developed by Meta; [Bard](/semantic-kernel/support/bibliography#bard) is a chatbot model developed by Google. 
+## What is a baseline comparison rubric for LLM AIs?
 
 | LLM AI Model | Parameters | Year invented |
 |-------|------------|---------------|
@@ -53,6 +51,7 @@ Besides GPT, a couple of similar LLM models are Meena and Bard. [Meena](/semanti
 | GPT-2 | 1.5 billion | 2019 |
 | Meena | 2.6 billion | 2020 |
 | EleutherAI | 6 billion | 2021 |
+| BLOOM | 176 billion | 2022 |
 
 LLM AI models are generally compared by the number of parameters — where bigger is usually better. The number of parameters is a measure of the size and the complexity of the model. The more parameters a model has, the more data it can process, learn from, and generate. However, having more parameters also means having more computational and memory resources, and more potential for overfitting or underfitting the data. Parameters are learned or updated during the training process, by using an optimization algorithm that tries to minimize the error or the loss between the predicted and the actual outputs. By adjusting the parameters, the model can improve its performance and accuracy on the given task or domain.
 
