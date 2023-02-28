@@ -32,10 +32,10 @@ Davinci is the largest and most powerful model, with 175 billion parameters and 
 
 | Model | Parameters | Data | Tasks |
 |-------|------------|------|-------|
-| text-ada-001 (a.k.a "Ada")| 350 million | 40GB | Basic NLU** and NLG** |
-| text-babbage-001 (a.k.a. "Babbage") | 3 billion | 300GB | Complex NLU and NLG |
-| text-curie-001 (a.k.a. "Curie") | 13 billion | 800GB | Advanced NLU and NLG |
-| text-davinci-003 (a.k.a. "Davinci) | 175 billion | 45TB | Almost any NLU, NLG, and multimodal task |
+| text-ada-001 | 350 million | 40GB | Basic NLU** and NLG** |
+| text-babbage-001 | 3 billion | 300GB | Complex NLU and NLG |
+| text-curie-001 | 13 billion | 800GB | Advanced NLU and NLG |
+| text-davinci-003 | 175 billion | 45TB | Almost any NLU, NLG, and multimodal task |
 
 **_Natural Language Understanding (NLU) / Natural Language Generating (NLG)_
 
