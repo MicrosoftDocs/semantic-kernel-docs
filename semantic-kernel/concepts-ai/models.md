@@ -30,7 +30,7 @@ Curie is a very large model, with 13 billion parameters and 800GB of text data. 
 
 Davinci is the largest and most powerful model, with 175 billion parameters and 45TB of text data. It can handle almost any natural language task, as well as some multimodal tasks, such as image captioning, style transfer, and visual reasoning. It can also generate coherent and creative texts on any topic, with a high level of fluency, consistency, and diversity.
 
-| Model | Parameters | Data | Tasks |
+| [Model](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/concepts/models#gpt-3-models) | Parameters | Data | Tasks |
 |-------|------------|------|-------|
 | text-ada-001 | 350 million | 40GB | Basic NLU** and NLG** |
 | text-babbage-001 | 3 billion | 300GB | Complex NLU and NLG |
