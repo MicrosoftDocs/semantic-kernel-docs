@@ -343,6 +343,13 @@ var myOutput = await myKernel.RunAsync(
 Console.WriteLine(myOutput);
 ```
 
+## Links to learn more about prompts
+
+* [Azure OAI Text Generation Tutorial](https://learn.microsoft.com/en-us/ai-builder/azure-openai-textgen)
+* [Transparency Note On Azure OAI](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/transparency-note)
+* [Mini-Course on Azure OAI](https://learn.microsoft.com/en-us/training/modules/explore-azure-openai/)
+* [OpenAI's Best Practices Guide](https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-openai-api)
+
 ## Take the next step
 
 You're now ready to take advantage of the _Kernel's_ pipelining capability. 
