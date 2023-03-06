@@ -234,9 +234,8 @@ public class MyCSharpSkill
     [SKFunctionName("TellAJokeInOneLine")]
     public async Task<string> TellAJokeInOneLineAsync(SKContext context)
     {
-        // Fetch a semantic function previously loaded into the kernel, 2 equivalent ways
+        // Fetch a semantic function previously loaded into the kernel
         ISKFunction joker1 = context.Func("funSkill", "joker");
-        ISKFunction joker2 = context.Skills.GetSemanticFunction("funSkill", "joker");
 
         var joke = await joker1.InvokeAsync();
 
@@ -259,7 +258,7 @@ public class MyCSharpSkill
     [SKFunctionName("TellAJokeInOneLine")]
     public async Task<string> TellAJokeInOneLineAsync(SKContext context)
     {
-        // Fetch a semantic function previously loaded into the kernel, 2 equivalent ways
+        // Fetch a semantic function previously loaded into the kernel
         ISKFunction joker2 = context.Skills.GetSemanticFunction("funSkill", "joker");
 
         var joke = await joker2.InvokeAsync();
