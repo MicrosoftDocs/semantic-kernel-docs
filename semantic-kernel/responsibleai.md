@@ -23,16 +23,15 @@ Semantic Kernel (SK) is a lightweight SDK that lets you easily mix conventional 
 
 ## The basics of Semantic Kernel
 
-Semantic Kernel (SK) builds upon these concepts:
+Semantic Kernel (SK) builds upon the following five concepts:
 
 | Concept | Short Description |
 |---|---|
-| [Kernel](concepts-sk/kernel) | The kernel orchestrates a user's ASK expressed as a goal |
-| [Planner](concepts-sk/planner)| The planner breaks it down into steps based upon resources that are available |
-| [Skills](concepts-sk/skills)| Skills are customizable resources built from LLM AI [prompts](concepts-ai/prompts) and native code |
-| [Connectors](concepts-sk/connectors)| Connectors are customizable resources that enable external data access |
-
-as a means to make it easy to add LLM AI capabilities into existing and new apps.
+| Kernel | The kernel orchestrates a user's ASK expressed as a goal |
+| Planner | The planner breaks it down into steps based upon resources that are available |
+| Skills | Skills are customizable resources built from LLM AI prompts and native code |
+| Memories | Memories are customizable resources that manage contextual information |
+| Connectors | Connectors are customizable resources that enable external data access |
 
 ## Use cases for LLM AI
 
