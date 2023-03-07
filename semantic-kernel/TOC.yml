@@ -10,5 +10,7 @@
   href: samples/toc.yml
 - name: Build AI Skills
   href: howto/toc.yml
+- name: Responsible AI
+  href: responsibleai.md
 - name: Get Supported
   href: support/toc.yml
