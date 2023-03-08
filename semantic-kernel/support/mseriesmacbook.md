@@ -12,6 +12,10 @@ ms.service: mssearch
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
+## What's up with Azure Functions running on my M-series Mac?
+
+If you're running our samples, you'll need to get a local server running on your machine. We've noticed that if you're running an older version of Azure Functions, it's possible to run into some problems. This is a troubleshooting guide if that's the case.
+
 > [!TIP]
 > Save time by installing the latest [Azure CLI](https://github.com/Azure/azure-functions-core-tools) that supports M-series Macbooks.
 
@@ -21,7 +25,7 @@ If you’re attempting to do a:
 
 and there's a complaint about architecture mismatch, then it means [you have an older version of Azure Functions installed](https://github.com/Azure/azure-functions-core-tools/issues/2834). In the event that you still want to proceed without fixing your current situation, here are instructions based upon [this post](https://github.com/Azure/azure-functions-python-worker/issues/915) to keep you going:
 
-1. Enable Rosetta in iTerm by doing something a bit contorted: i/ duplicate iTerm, ii/ rename it as iTerm Rosetta, iii/ do a command-i to set it as a Rosetta terminal
+1. Enable Rosetta in iTerm by doing something a bit unusual: i/ duplicate iTerm, ii/ rename it as iTerm Rosetta, iii/ do a command-i to set it as a Rosetta terminal
 2. Verify that it’s running the i386 architecture by typing arch at the terminal
 3. Next you install the i386 version of homebrew
 
