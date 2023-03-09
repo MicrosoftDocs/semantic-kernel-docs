@@ -8,10 +8,10 @@ ms.date: 02/07/2023
 ms.service: mssearch
 ---
 # Authentication and API calls sample app
-The Authenticated API’s sample allows you to use authentication to connect to the Microsoft Graph using your personal account. If you don’t have a Microsoft account or do not want to connect to it, you can review the code to see the patterns needed to call out to APIs. The sample highlights connecting to Microsoft Graph and calling APIs for Outlook, OneDrive, and ToDo. Each function will call Microsoft Graph and/or Open AI to perform the tasks.
+The Authenticated API’s sample allows you to use authentication to connect to the Microsoft Graph using your personal account. If you don’t have a Microsoft account or do not want to connect to it, you can review the code to see the patterns needed to call out to APIs. The sample highlights connecting to Microsoft Graph and calling APIs for Outlook, OneDrive, and ToDo. Each function will call Microsoft Graph and/or OpenAI to perform the tasks.
 
 > [!IMPORTANT]
-> Each function will call Open AI which will use tokens that you will be billed for. 
+> Each function will call OpenAI which will use tokens that you will be billed for. 
 
 ### Walkthrough video
 
@@ -43,7 +43,7 @@ The [Authentication and API sample app](https://aka.ms/sk/repo/samples/starter-i
 You can sign in with your Microsoft account by clicking 'Sign in with Microsoft'.  This will give the sample app access to Microsoft Graph on your behalf and will be used for the functions to run on the Interact screen.
 
 ### Setup Screen
-Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
+Start by entering in your [OpenAI key](https://openai.com/api/) or if you are using [Azure OpenAI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
 ### Interact Screen
 When you select each of the 3 actions, native functions will be called to preform actions through the Microsoft Graph API and connector.

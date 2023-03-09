@@ -11,10 +11,10 @@ ms.service: mssearch
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-The Simple Chat Summary sample allows you to see the power of [functions](/semantic-kernel/skills/skfunctions) used in a chat sample app.  The sample highlights the [Summarize](https://aka.ms/sk/repo/summarize), [Topics](https://aka.ms/sk/repo/topics) and [Action Items](https://aka.ms/sk/repo/actionitems) functions in the [Summarize Skill](https://aka.ms/sk/repo/summarizeskill).  Each function calls Open AI to review the information in the chat window and produces insights.   
+The Simple Chat Summary sample allows you to see the power of [functions](/semantic-kernel/skills/skfunctions) used in a chat sample app.  The sample highlights the [Summarize](https://aka.ms/sk/repo/summarize), [Topics](https://aka.ms/sk/repo/topics) and [Action Items](https://aka.ms/sk/repo/actionitems) functions in the [Summarize Skill](https://aka.ms/sk/repo/summarizeskill).  Each function calls OpenAI to review the information in the chat window and produces insights.   
 
 > [!IMPORTANT]
-> Each function will call Open AI which will use tokens that you will be billed for. 
+> Each function will call OpenAI which will use tokens that you will be billed for. 
 
 ### Walkthrough video
 > [!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
@@ -38,7 +38,7 @@ The [Simple chat summary sample app](https://aka.ms/sk/repo/samples/starter-chat
 ## Exploring the app
 
 ### Setup Screen
-Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
+Start by entering in your [OpenAI key](https://openai.com/api/) or if you are using [Azure OpenAI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
 ### Interact Screen
 A preloaded chat conversation is avaialble.  You can add additional items in the chat or modify the [chat thread](https://aka.ms/sk/repo/samples/starter-chat/chat-thread) before running the sample. 

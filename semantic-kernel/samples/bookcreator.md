@@ -14,7 +14,7 @@ ms.service: mssearch
 The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://aka.ms/sk/repo/writerskill) functions are chained together based on the asks.
 
 > [!IMPORTANT]
-> Each function will call Open AI which will use tokens that you will be billed for. 
+> Each function will call OpenAI which will use tokens that you will be billed for. 
 
 ### Walkthrough video
 
@@ -39,7 +39,7 @@ The [Book creator sample app](https://aka.ms/sk/repo/samples/starter-book-creato
 ## Exploring the app
 
 ### Setup Screen
-Start by entering in your [Open AI key](https://openai.com/api/) or if you are using [Azure Open AI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
+Start by entering in your [OpenAI key](https://openai.com/api/) or if you are using [Azure OpenAI Service](/azure/cognitive-services/openai/quickstart) the key and endpoint.  Then enter in the model you would like to use in this sample.
 
 ### Topics Screen
 On this screen you can enter in a topic for the children's book that will be created for you.  This will use functions and AI to generate book ideas based on this topic.

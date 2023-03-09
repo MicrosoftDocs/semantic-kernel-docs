@@ -14,7 +14,7 @@ ms.service: mssearch
 This service API is written in C# against Azure Function Runtime v4 and exposes some Semantic Kernel APIs that you can call via HTTP POST requests for the [learning samples](/semantic-kernel/samples).
 
 > [!IMPORTANT]
-> Each function will call Open AI which will use tokens that you will be billed for. 
+> Each function will call OpenAI which will use tokens that you will be billed for. 
 
 ### Walkthrough video
 
