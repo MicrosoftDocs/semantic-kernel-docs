@@ -19,7 +19,11 @@ Getting started with Semantic Kernel (SK) is quick and simple by following these
 
 ### For experienced C# .NET developers
 
-Instructions for accessing the `Microsoft.SemanticKernel` nuget package is available [here](https://aka.ms/sk/nuget).
+Instructions for accessing the `Microsoft.SemanticKernel` nuget feed is available [here](https://aka.ms/sk/nuget). It's as easy as:
+
+```Nuget
+#r "nuget: Microsoft.SemanticKernel, *-*"
+```
 
 ## Requirements to run notebook samples
 
