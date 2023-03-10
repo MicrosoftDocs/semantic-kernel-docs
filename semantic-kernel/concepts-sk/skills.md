@@ -14,7 +14,7 @@ ms.service: mssearch
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
-A _skill_ refers to a domain of expertise made available to the [kernel](/semantic-kernel/concepts-sk/kernel) as a single function, or as a group of functions related to the skill* The design of SK skills has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
+A _skill_ refers to a domain of expertise made available to the [kernel](/semantic-kernel/concepts-sk/kernel) as a single function, or as a group of functions related to the skill. The design of SK skills has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
 
 > [!TIP]
 > Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see **Skills** in action.
