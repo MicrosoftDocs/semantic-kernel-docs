@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # What is the Kernel?
 
-| ASK⇾ | Kernel | [Planner](/semantic-kernel/concepts-sk/Planner) | [Skills](/semantic-kernel/concepts-sk/skills)| |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | Kernel | [Planner](/semantic-kernel/concepts-sk/Planner) | [Skills](/semantic-kernel/concepts-sk/skills)| [Memories](/semantic-kernel/concepts-sk/memories) |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]

@@ -10,7 +10,7 @@ ms.service: mssearch
 
 # Discover Semantic Kernel
 
-| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | [Planner](/semantic-kernel/concepts-sk/planner) | [Skills](/semantic-kernel/concepts-sk/skills)| |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | [Planner](/semantic-kernel/concepts-sk/planner) | [Skills](/semantic-kernel/concepts-sk/skills)| [Memories](/semantic-kernel/concepts-sk/memories) | [Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]

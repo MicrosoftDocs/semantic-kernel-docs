@@ -10,7 +10,7 @@ ms.service: mssearch
 
 # What is Planner?
 
-| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | Planner | [Skills](/semantic-kernel/concepts-sk/skills)| |[Connectors](/semantic-kernel/concepts-sk/connectors) | >>>|  ⇾GET | 
+| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | Planner | [Skills](/semantic-kernel/concepts-sk/skills)| [Memories](/semantic-kernel/concepts-sk/memories) |[Connectors](/semantic-kernel/concepts-sk/connectors) | >>>|  ⇾GET | 
 |---|---|---|---|---|---|---|---|
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
