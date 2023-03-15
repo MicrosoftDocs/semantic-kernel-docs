@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: concepts
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: semantic-kernel
+ms.service: semantickernel
 ---
 
 # Discover Semantic Kernel
