@@ -27,6 +27,6 @@ Useful later:
 Now that you know about the **kernel**, **planner**, **skills**, **memories**, it's time for **connectors**.
 
 > [!div class="nextstepaction"]
-> [Learn about Connectors]((/semantic-kernel/concepts-sk/connectors)
+> [Learn about Connectors](/semantic-kernel/concepts-sk/connectors)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

@@ -87,7 +87,7 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 Now that you know about the _kernel_, _planner_, _skills_, you can take on _connectors.__
 
 > [!div class="nextstepaction"]
-> [Learn about Connectors](/semantic-kernel/concepts-sk/Connectors)
+> [Learn about Memoriers](/semantic-kernel/concepts-sk/memories)
 
 
 [!INCLUDE [footer.md](../includes/footer.md)]
