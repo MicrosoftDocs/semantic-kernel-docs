@@ -17,7 +17,7 @@ ms.service: mssearch
 
 Useful later:
 
-| [Memories]((/semantic-kernel/concepts-sk/memories)| Memories are customizable resources that manage contextual information |
+| [Memories](/semantic-kernel/concepts-sk/memories)| Memories are customizable resources that manage contextual information |
 
 > [!CAUTION]
 > This section is still under construction
