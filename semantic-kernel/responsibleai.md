@@ -88,13 +88,13 @@ When getting ready to deploy any AI-powered products or features, the following 
 An easy-to-remember email address for feedback,
 Anonymous feedback boxes placed in semi-private spaces, and
 Knowledgeable representatives on site.
-Feedback: Seek out feedback from a diverse sampling of the community during the development and evaluation process (for example, historically marginalized groups, people with disabilities, and service workers). See: [Community Jury](https://learn.microsoft.com/azure/architecture/guide/responsible-innovation/community-jury/).
+Feedback: Seek out feedback from a diverse sampling of the community during the development and evaluation process (for example, historically marginalized groups, people with disabilities, and service workers). See: [Community Jury](/azure/architecture/guide/responsible-innovation/community-jury/).
 
 * User Study: Any consent or disclosure recommendations should be framed in a user study. Evaluate the first and continuous-use experience with a representative sample of the community to validate that the design choices lead to effective disclosure. Conduct user research with 10-20 community members (affected stakeholders) to evaluate their comprehension of the information and to determine if their expectations are met.
 
 ## Learn more about responsible AI
 
 * [Microsoft responsible AI resources]()
-* [Microsoft Azure Learning course on responsible AI](https://learn.microsoft.com/training/paths/responsible-ai-business-principles/)
+* [Microsoft Azure Learning course on responsible AI](/training/paths/responsible-ai-business-principles/)
 
 [!INCLUDE [footer.md](includes/footer.md)]
