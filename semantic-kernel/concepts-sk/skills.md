@@ -84,7 +84,7 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 
 ## Take the next step
 
-Now that you know about the _kernel_, _planner_, _skills_, you can take on _connectors.__
+Now that you know about the _kernel_, _planner_, _skills_, you can take on _memories.__
 
 > [!div class="nextstepaction"]
 > [Learn about Memoriers](/semantic-kernel/concepts-sk/memories)

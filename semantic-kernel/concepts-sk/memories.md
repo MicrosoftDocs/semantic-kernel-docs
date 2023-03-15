@@ -15,16 +15,12 @@ ms.service: mssearch
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
-Useful later:
-
-| [Memories](/semantic-kernel/concepts-sk/memories)| Memories are customizable resources that manage contextual information |
-
 > [!CAUTION]
 > This section is still under construction
 
 ## Take the next step
 
-Now that you know about the **kernel**, **planner**, **skills**, **memories**, it's time for **connectors**.
+Now that you know about the _kernel, planner, skills, memories,_ it's time for _connectors._
 
 > [!div class="nextstepaction"]
 > [Learn about Connectors](/semantic-kernel/concepts-sk/connectors)
