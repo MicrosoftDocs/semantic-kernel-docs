@@ -23,7 +23,7 @@ We access memories to be fed into SK in one of three ways — with the third way
 
 2. Conventional local-storage: When you save information to a file, it can be retrieved with its filename. When you have a lot of information to store in a key-value pair, you're best off keeping it on disk.
 
-3. Semantic memory search: You can also store text information as a long vector of numbers, known as "embeddings." This lets you execute a "semantic" search that compares meaning-to-meaning with your query. 
+3. Semantic memory search: You can also represent text information as a long vector of numbers, known as "embeddings." This lets you execute a "semantic" search that compares meaning-to-meaning with your query. 
 
 ## How does semantic memory work?
 
