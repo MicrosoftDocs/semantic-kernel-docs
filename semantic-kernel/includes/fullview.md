@@ -1,0 +1,1 @@
+![Journey of an ask to a get in Semantic Kernel visualized as phases as annotated immediately below](/semantic-kernel/media/fullview.png)

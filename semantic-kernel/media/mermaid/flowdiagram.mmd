@@ -1,0 +1,14 @@
+%% This is the main flow diagram illustration
+%% You can render it from mermaid-cli https://github.com/mermaid-js/mermaid-cli
+%% Desktop % mmdc -i test.mmd -o output.png -w 1920 -b transparent -t dark
+flowchart LR
+    A>ASK] --> B{Kernel}
+    B --> C(((Planner)))
+    C --> |Gather| E 
+    C --> |Gather| F
+    C --> |Gather| G
+    E[(Skills)] --> |Inform| H
+    F[(Memories)] --> |Inform| H 
+    G[(Connectors)] --> |Inform| H
+    H((Steps)) --> J[/Pipeline/]
+    J --> K(GET)

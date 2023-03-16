@@ -1,0 +1,16 @@
+- name: Overview
+  href: whatissk.md
+- name: Get Started
+  href: get-started.md
+- name: Learn LLM AI
+  href: concepts-ai/toc.yml
+- name: Discover Semantic Kernel
+  href: concepts-sk/toc.yml
+- name: Run Sample Apps
+  href: samples/toc.yml
+- name: Build AI Skills
+  href: howto/toc.yml
+- name: Get Supported
+  href: support/toc.yml
+- name: Responsible AI
+  href: responsibleai.md

@@ -1,0 +1,83 @@
+### YamlMime:Hub
+title: Semantic Kernel documentation
+summary: Learn how to easily add powerful LLM AI capabilities to your app
+brand: semantic-kernel
+metadata:
+  title: Semantic Kernel documentation
+  description: Semantic Kernel documentation.
+  ms.topic: hub-page
+  ms.custom: "contperf-fy21q1, contperf-fy21q3"
+  ms.date: 02/22/2023
+  searchScope: []
+  titleSuffix: ""
+  ms.author: evchaki
+  author: evchaki
+  ms.manager: evchaki
+  hide_bc: true
+
+productDirectory:
+    items:
+    - title: About Semantic Kernel
+      imageSrc: /semantic-kernel/media/learn.png
+      links:
+        - url: /semantic-kernel/whatissk
+          text: About
+        - url: /semantic-kernel/get-started
+          text: Getting Started
+    - title: Large Language Model AI
+      imageSrc: /semantic-kernel/media/connector-blue.png
+      links:
+        - url: /semantic-kernel/concepts-ai/
+          text: Overview
+        - url: /semantic-kernel/concepts-ai/models
+          text: Models
+        - url: /semantic-kernel/concepts-ai/prompts
+          text: Prompts
+        - url: /semantic-kernel/concepts-ai/tokens
+          text: Tokens  
+        - url: /semantic-kernel/concepts-ai/embeddings
+          text: Embeddings          
+    - title: Semantic Kernel Concepts
+      imageSrc: /semantic-kernel/media/openbook.png
+      links:
+        - url: /semantic-kernel/concepts-sk/
+          text: Overview
+        - url: /semantic-kernel/concepts-sk/kernel
+          text: Kernel
+        - url: /semantic-kernel/concepts-sk/planner
+          text: Planner
+        - url: /semantic-kernel/concepts-sk/skills
+          text: Skills  
+        - url: /semantic-kernel/concepts-sk/connectors
+          text: Connectors          
+    - title: Building Skills
+      imageSrc: /semantic-kernel/media/concept.png
+      links:
+         - url: /semantic-kernel/howto/
+           text: Overview
+         - url: /semantic-kernel/howto/semanticfunctions
+           text: Semantic Functions
+         - url: /semantic-kernel/howto/nativefunctions
+           text: Native Functions
+         - url: /semantic-kernel/howto/coreskills
+           text: Core Skills           
+    - title: App Samples
+      imageSrc: /semantic-kernel/media/get-started-blue.png
+      links:
+        - url: /semantic-kernel/samples/
+          text: Overview
+        - url: /semantic-kernel/samples/localapiservice
+          text: Local API Service
+        - url: /semantic-kernel/samples/simplechatsummary
+          text: Simple Chat Summary
+        - url: /semantic-kernel/samples/bookcreator
+          text: Book Creator
+        - url: /semantic-kernel/samples/authapi
+          text: Authentication and API  
+    - title: Community
+      imageSrc: /semantic-kernel/media/i_best-practices.png
+      links:
+        - url: https://aka.ms/sk/repo
+          text: Visit the GitHub Repo
+        - url: https://aka.ms/sk/discord
+          text: Join the Community
