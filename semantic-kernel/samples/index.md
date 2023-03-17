@@ -11,7 +11,7 @@ ms.service: mssearch
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-Multiple learning samples are provided in the [Semantic Kernel GitHub repository](/semantic-kernel/getting-started/setup) to help you learn core concepts of Semantic Kernel.
+Multiple learning samples are provided in the [Semantic Kernel GitHub repository](https://github.com/microsoft/semantic-kernel/tree/main/samples) to help you learn core concepts of Semantic Kernel.
 
 ## Requirements to run the apps
 
