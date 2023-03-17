@@ -49,7 +49,9 @@ By default the Markdown files are stored as embeddings.  You can ask questions i
 
 ## Next step
 
+If you've tried all the apps and are excited to see more, please star the GitHub repo and join the SK community!
+
 > [!div class="nextstepaction"]
-> [Run the authentication and API app](/semantic-kernel/samples/authapi)
+> [Star the SK repo](https://aka.ms/sk/repo)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
