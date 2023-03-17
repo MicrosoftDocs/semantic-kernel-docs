@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# Overview of sample apps
+# Overview of sample apps 
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
