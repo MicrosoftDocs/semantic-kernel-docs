@@ -22,7 +22,7 @@ _Prompts_ are the inputs or queries that a user or a program gives to an LLM AI,
 
 ## Subtleties of prompting
 
-The art of creatively defining LLM AI prompts is an emerging field known as "prompt design" and also "prompt engineering". It involves the process of rafting effective and efficient prompts that can elicit the desired response from the LLM AI model. Key challenges include choosing the right words, phrases, symbols, and formats that can guide the model to generate high-quality and relevant texts. One can also involves experimenting with different parameters and settings that can influence the behavior and performance of the model, such as temperature, top-k, top-p, frequency penalty, and presence penalty.
+The art of creatively defining LLM AI prompts is an emerging field known as "prompt design" and also "prompt engineering". It involves the process of crafting effective and efficient prompts that can elicit the desired response from the LLM AI model. Key challenges include choosing the right words, phrases, symbols, and formats that can guide the model to generate high-quality and relevant texts. One can also experiment with different parameters and settings that can influence the behavior and performance of the model, such as temperature, top-k, top-p, frequency penalty, and presence penalty.
 
 Three common considerations when designing or engineering prompts are:
 
