@@ -32,7 +32,7 @@ Instructions for accessing the `Microsoft.SemanticKernel` nuget feed is availabl
 > * [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/) 
 > * An OpenAI key via either [Azure OpenAI Service](/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio) or [OpenAI](https://openai.com/api/)
 > * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for notebook samples
-> * In VSCode or Visual Studio the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook samples
+> * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook samples
 
 ## Step 1: Access the public SK repo
 
@@ -57,7 +57,7 @@ Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub
 
 From your local machine:
 
-1. While you have the repository open in VSCode or Visual Studio, go to the `notebooks` section
+1. While you have the repository open in VS Code, go to the `notebooks` section
 2. Activate each code snippet with the "play" button on the left hand side
 3. Have your OpenAI or Azure OpenAI keys ready to enter when prompted
 
