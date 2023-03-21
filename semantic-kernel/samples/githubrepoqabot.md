@@ -11,7 +11,7 @@ ms.service: mssearch
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
-The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those files are created as [embeddings](semantic-kernel/concepts-ai/embeddings). You can then question the stored files from the embedding local storage.
+The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those files are created as [embeddings](/semantic-kernel/concepts-ai/embeddings). You can then question the stored files from the embedding local storage.
 
 > [!IMPORTANT]
 > Each function will call OpenAI which will use tokens that you will be billed for. 
