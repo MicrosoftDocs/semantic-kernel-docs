@@ -55,9 +55,7 @@ The actions on this screen are:
 
 ## Take the next step
 
-If you've tried all the apps and are excited to see more, please star the GitHub repo and join the SK community!
-
 > [!div class="nextstepaction"]
-> [Star the SK repo](https://aka.ms/sk/repo)
+> [Run the GitHub Repo Q&A Bot app](/semantic-kernel/samples/githubrepoqabot)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
