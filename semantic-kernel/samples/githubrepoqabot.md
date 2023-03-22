@@ -20,6 +20,7 @@ The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those f
 
 >[!Video https://aka.ms/SK-GitHub-QA-Bot-Video]
 
+
 ## Requirements to run this app
 
 > [!div class="checklist"]
