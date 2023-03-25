@@ -25,12 +25,12 @@ A _skill_ refers to a domain of expertise made available to the [kernel](/semant
 
 A **function** is the basic building block for a skill. A function can be expressed as either:
 
-1. an LLM AI [prompt](/semantic-kernel/concepts-ai/prompt) — also called a ["semantic" function](/semantic-kernel/concepts-sk//howto/semanticfunctions)
-2. native computer code -- also called a ["native" function](/semantic-kernel/concepts-sk//howto/nativefunctions)
+1. an LLM AI [prompt](/semantic-kernel/concepts-ai/prompts) — also called a ["semantic" function](/semantic-kernel/concepts-sk/howto/semanticfunctions)
+2. native computer code -- also called a ["native" function](/semantic-kernel/concepts-sk/howto/nativefunctions)
 
 When using native computer code, it's also possible to invoke an LLM AI prompt — which means that there can be functions that are hybrid LLM AI × native code as well. 
 
-Functions can be [connected end-to-end, or "chained together,"](/semantic-kernel/concepts-sk//howto/chainingfunctions) to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
+Functions can be [connected end-to-end, or "chained together,"](/semantic-kernel/concepts-sk/howto/chainingfunctions) to create more powerful capabilities. When they are represented as pure LLM AI prompts in semantic functions, the word "function" and "prompt" can be used interchangeably. 
 
 ## What is the relationship between semantic functions and skills?
 
