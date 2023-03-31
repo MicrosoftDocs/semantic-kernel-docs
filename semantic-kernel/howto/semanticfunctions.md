@@ -183,7 +183,7 @@ using Microsoft.SemanticKernel;
 
 var myKernel = Kernel.Builder.Build();
 
-kernel.Config.AddAzureOpenAICompletionBackend(
+kernel.Config.AddAzureOpenAITextCompletion(
     "Azure_davinci",                        // LLM AI model alias
     "text-davinci-003",                     // Azure OpenAI *Deployment ID*
     "https://contoso.openai.azure.com/",    // Azure OpenAI *Endpoint*
@@ -198,7 +198,7 @@ using Microsoft.SemanticKernel;
 
 var myKernel = Kernel.Builder.Build();
 
-kernel.Config.AddOpenAICompletionBackend(
+kernel.Config.AddOpenAITextCompletion(
     "OpenAI_davinci",                       // LLM AI model alias
     "text-davinci-003",                     // OpenAI Model Name
     "...your OpenAI API Key...",            // OpenAI API key
