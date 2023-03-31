@@ -4,7 +4,7 @@ description: Build AI Skills Overview for Semantic Kernel
 author: johnmaeda
 ms.topic: skills
 ms.author: johnmaeda
-ms.date: 03/31/2023
+ms.date: 03/30/2023
 ms.service: mssearch
 ---
 
