@@ -8,7 +8,7 @@ ms.date: 02/07/2023
 ms.service: mssearch
 ---
 
-# Get going with the NEW experimental recipe book for quickly learning Semantic Kernel
+# NEW: Get going with the experimental recipe book for quickly learning Semantic Kernel
 
 ## Learn how the NEW Open-Source Semantic Kernel is like a kitchen for "Design Thinking" and more
 
