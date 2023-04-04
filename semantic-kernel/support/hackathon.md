@@ -52,9 +52,9 @@ We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to h
 
 If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
 
--[Semantic.Kernel.Support] ( https://docs.microsoft.com/en-us/semantic-kernel/support/)
--[Semantic.Kernel.Community] ( https://github.com/microsoft/Semantic-Kernel/discussions)
--[Semantic.Kernel.Blog] ( https://techcommunity.microsoft.com/t5/Semantic-Kernel-Blog/bg-p/SemanticKernelBlog)
+- [Semantic.Kernel.Support] ( https://docs.microsoft.com/en-us/semantic-kernel/support/) 
+- [Semantic.Kernel.Community] ( https://github.com/microsoft/Semantic-Kernel/discussions)
+- [Semantic.Kernel.Blog] ( https://techcommunity.microsoft.com/t5/Semantic-Kernel-Blog/bg-p/SemanticKernelBlog)
 
 Thank you for your engagement and creativity during the hackathon. We look forward to seeing what you create next with Semantic Kernel!
 
