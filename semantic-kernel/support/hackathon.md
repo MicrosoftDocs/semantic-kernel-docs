@@ -63,11 +63,11 @@ Thank you for your engagement and creativity during the hackathon. We look forwa
 
 
 # List of all Hackathon resources
-- [Hackathon Sample Agenda](https://aka.ms/sk/discord)
-- [Hackathon Prerequisites](https://aka.ms/sk/blog)
-- [Hackathon facilitator Presentation](https://aka.ms/sk/repo)
-- [Hackathon Team Template](https://aka.ms/sk/repo)
-- [Hackathon Exit Survey](https://aka.ms/sk/hack/feedback)
+- [Hackathon sample agenda](https://aka.ms/sk/discord)
+- [Hackathon prerequisites](https://aka.ms/sk/blog)
+- [Hackathon facilitator presentation](https://aka.ms/sk/repo)
+- [Hackathon team template](https://aka.ms/sk/repo)
+- [Hackathon exit survey](https://aka.ms/sk/hack/feedback)
 
 
 ## Next step
