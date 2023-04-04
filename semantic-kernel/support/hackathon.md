@@ -44,11 +44,11 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 
 | Length (Minutes)  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
 | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 15  | Welcome     | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. You can download the PowerPoint presentation here: [Hackathon Presentation](link) |
+| 15  | Welcome     | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. |
 | 60  | Overview    | The facilitator will guide you through either a pre-recorded video or a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. Along with an overview of Semantic Kernel and its features, such the [kernel](/semantic-kernel/concepts-sk/kernel), [planner](/semantic-kernel/concepts-sk/planner), [skills](/semantic-kernel/concepts-sk/skills), [memories](/semantic-kernel/concepts-sk/memories) and more. You will also see demos of how Semantic Kernel can be used for different scenarios.                              |
 | 120 | Brainstorming | The facilitator will help you form teams based on your interests or skill levels. You will then brainstorm ideas for your own AI skills or apps using design thinking techniques.  |
 | 360+ | Development | You will use Semantic Kernel SDKs tools, and resources to develop, test, and deploy your projects. This could be for the rest of the day or over multiple days based on the time available and problem to be solved. |
-| 60 | Presentation   | Each team will present their results using a PowerPoint template provided. You will have about 15 minutes per team to showcase your project, demonstrate how it works, and explain how it solves a problem with AI. You will also receive feedback from other participants. You can download the [PowerPoint template](link). |
+| 60 | Presentation   | Each team will present their results using a PowerPoint template provided. You will have about 15 minutes per team to showcase your project, demonstrate how it works, and explain how it solves a problem with AI. You will also receive feedback from other participants. |
 | 30 | Feedback   | Each team can share their feedback on the hackathon and Semantic Kernel with the group and fill out the [Hackathon Exit Survey](https://aka.ms/sk/hack/feedback). |
 
 
@@ -64,12 +64,12 @@ If you want to continue developing your AI skills or projects after the hackatho
 Thank you for your engagement and creativity during the hackathon. We look forward to seeing what you create next with Semantic Kernel!
 
 
-## List of all Hackathon resources
-- [Hackathon sample agenda](link)
-- [Hackathon prerequisites](link)
-- [Hackathon facilitator presentation](link)
-- [Hackathon team template](link)
-- [Hackathon exit survey](link)
+## List of all Hackathon resources on the [Hackathon facilitator download](link)
+- Hackathon sample agenda
+- Hackathon prerequisites
+- Hackathon facilitator presentation
+- Hackathon team template
+
 
 
 ## Next step
