@@ -37,8 +37,8 @@ Additionally, you can check out some sample AI skills that demonstrate how Seman
 - [Semantic Kernel Samples](/semantic-kernel/samples/)
 
 
-# How to run
-The hackathon will consist of four main phases: welcome, overview, development, and presentation. Here is an approximate agenda and structure for each phase but feel free to modify this based on your team.:
+# How to run [NEED TO UPDATE - SAMPLE TABLE BELOW]
+The hackathon will consist of four main phases: welcome, overview, development, and presentation. Here is an approximate agenda and structure for each phase but feel free to modify this based on your team:
 
 | Time  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
 | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
