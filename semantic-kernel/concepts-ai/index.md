@@ -36,6 +36,7 @@ The popular ChatGPT system is powered by an LLM AI model invented at OpenAI base
 
 As a user of Semantic Kernel, you are likely to have an existing app to which you want to add LLM AI — instead of building your own ChatGPT-like system. But if you are interested in building your own chat system, we have a [code sample](/semantic-kernel/samples/simplechatsummary) that gets you going asap.
 
+
 ## Take the next step
 
 > [!div class="nextstepaction"]
