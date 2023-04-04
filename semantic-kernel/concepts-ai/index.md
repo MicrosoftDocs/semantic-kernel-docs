@@ -20,7 +20,7 @@ Semantic Kernel builds upon four core ideas in LLM AI:
 2. [Prompts](/semantic-kernel/concepts-ai/prompts)
 3. [Tokens](/semantic-kernel/concepts-ai/tokens)
 4. [Embeddings](/semantic-kernel/concepts-ai/embeddings)
-5. [Vector databases](/semantic-kernel/concepts-ai/vectordb)
+5. [Vector databases](/semantic-kernel/concepts-ai/vectordb) 
 
 ## Zooming in on the letters "L-L-M"
 
@@ -35,7 +35,6 @@ Here's a simple decoder ring to understand the implications of each of these let
 The popular ChatGPT system is powered by an LLM AI model invented at OpenAI based upon the GPT-3 [model](/semantic-kernel/concepts-ai/models). You can think of ChatGPT as an application built on top of LLM AI that has been specifically tuned to engage in interactive chats. 
 
 As a user of Semantic Kernel, you are likely to have an existing app to which you want to add LLM AI — instead of building your own ChatGPT-like system. But if you are interested in building your own chat system, we have a [code sample](/semantic-kernel/samples/simplechatsummary) that gets you going asap.
-
 
 ## Take the next step
 
