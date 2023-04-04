@@ -37,10 +37,10 @@ Additionally, you can check out some sample AI skills that demonstrate how Seman
 - [Semantic Kernel Samples](/semantic-kernel/samples/)
 
 
-# How to run [NEED TO UPDATE - SAMPLE TABLE BELOW]
+# How to run
 The hackathon will consist of four main phases: welcome, overview, development, and presentation. Here is an approximate agenda and structure for each phase but feel free to modify this based on your team:
 
-| Length  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
+| Length (Minutes)  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
 | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 15  | Welcome     | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. You can download the PowerPoint presentation here: [Hackathon Presentation](link) |
 | 60  | Overview    | The facilitator will guide you through either a pre-recorded video or a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. Along with an overview of Semantic Kernel and its features, such the [kernel](/semantic-kernel/concepts-sk/kernel), [planner](/semantic-kernel/concepts-sk/planner), [skills](/semantic-kernel/concepts-sk/skills), [memories](/semantic-kernel/concepts-sk/memories) and more. You will also see demos of how Semantic Kernel can be used for different scenarios.                              |
@@ -49,8 +49,9 @@ The hackathon will consist of four main phases: welcome, overview, development, 
 | 60 | Presentation   | Each team will present their results using a PowerPoint template provided. You will have about 15 minutes per team to showcase your project, demonstrate how it works, and explain how it solves a problem with AI. You will also receive feedback from other participants. You can download the PowerPoint template here:[Hackathon Template](link) |
 | 60 | Feedback   | Each team can share their feedback on the hackathon and Semantic Kernel with the group and fill out the [Hackathon Exit Survey](link) |
 
+
 # How to follow up
-We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future events. Please take a few minutes to fill out this survey and share your feedback and suggestions with us.[Hackathon Survey] (link).
+We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future events. Please take a few minutes to fill out this survey and share your feedback and suggestions with us.[Hackathon Survey](link).
 
 If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
