@@ -51,7 +51,7 @@ The hackathon will consist of four main phases: welcome, overview, development, 
 
 
 # How to follow up
-We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future events. Please take a few minutes to fill out this survey and share your feedback and suggestions with us.[Hackathon Survey](link).
+We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future events. Please take a few minutes to fill out the [hackathon survey](link) and share your feedback and suggestions with us.
 
 If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
@@ -63,11 +63,11 @@ Thank you for your engagement and creativity during the hackathon. We look forwa
 
 
 # List of all Hackathon resources
-- [Hackathon sample agenda](https://aka.ms/sk/discord)
-- [Hackathon prerequisites](https://aka.ms/sk/blog)
-- [Hackathon facilitator presentation](https://aka.ms/sk/repo)
-- [Hackathon team template](https://aka.ms/sk/repo)
-- [Hackathon exit survey](https://aka.ms/sk/hack/feedback)
+- [Hackathon sample agenda](link)
+- [Hackathon prerequisites](link)
+- [Hackathon facilitator presentation](link)
+- [Hackathon team template](link)
+- [Hackathon exit survey](link)
 
 
 ## Next step
