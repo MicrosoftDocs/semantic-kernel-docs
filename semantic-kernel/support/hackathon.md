@@ -64,12 +64,14 @@ If you want to continue developing your AI skills or projects after the hackatho
 Thank you for your engagement and creativity during the hackathon. We look forward to seeing what you create next with Semantic Kernel!
 
 
-## List of all Hackathon resources on the [Hackathon facilitator download](link)
+## List of all Hackathon resources
 - Hackathon sample agenda
 - Hackathon prerequisites
 - Hackathon facilitator presentation
 - Hackathon team template
 
+## Download the facilitator materials
+- [Hackathon facilitator download](link)
 
 
 ## Next step
