@@ -40,6 +40,6 @@ _Embeddings_ are used for:
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about prompts](/semantic-kernel/concepts-ai/vectordb)
+> [Learn about vector databases](/semantic-kernel/concepts-ai/vectordb)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
