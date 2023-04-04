@@ -24,31 +24,11 @@ The result of the similarity search and retrieval is usually a ranked list of ve
 Vector databases have many use cases across different domains and applications that involve natural language processing (NLP), computer vision (CV), recommendation systems (RS), and other areas that require semantic understanding and matching of data.
 
 One use case for storing information in a vector database is to enable large language models (LLMs) to generate more relevant and coherent text based on
-a prompt. A large language model is a type of neural network model that can generate natural language text based on a given input or prompt. A large language model uses
-a large amount of training data and parameters to learn how to produce fluent and diverse text across different genres and tasks.
+a [AI skill](/semantic-kernel/howto/). 
 
 However, large language models often face challenges such as generating inaccurate or irrelevant information; lacking factual consistency or common sense; repeating or contradicting themselves; being biased or offensive; etc. To overcome these challenges,
-you can use a vector database to store information about different topics,
-keywords,
-facts,
-opinions,
-sources,
-etc.,
-related to your desired domain or genre.
-Then,
-you can use
-a large language model
-to query
-the
-vector
-database with your prompt
-and retrieve
-the most similar
-or relevant information based on
-the
-vector similarity.
-This can help
-the model generate more informative and engaging content that matches your intent and style.
+you can use a vector database to store information about different topics,keywords,facts,opinions,sources,etc.,related to your desired domain or genre.
+Then, you can use a large language model and pass information from the vector database with your AI skill to generate more informative and engaging content that matches your intent and style.
 
 For example,
 if you want to write
