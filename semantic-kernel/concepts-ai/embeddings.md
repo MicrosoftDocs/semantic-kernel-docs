@@ -39,9 +39,7 @@ _Embeddings_ are used for:
 
 ## Take the next step
 
-Congratulations on mastering the basic concepts of LLM AI. You're now ready to leap into the world of SK. You can do it!
-
 > [!div class="nextstepaction"]
-> [Discover Semantic Kernel](/semantic-kernel/concepts-sk)
+> [Learn about vector databases](/semantic-kernel/concepts-ai/vectordb)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

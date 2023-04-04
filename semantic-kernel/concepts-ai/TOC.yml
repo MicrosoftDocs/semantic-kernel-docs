@@ -8,3 +8,5 @@
   href: tokens.md
 - name: Embeddings
   href: embeddings.md
+- name: Vector Databases
+  href: vectordb.md

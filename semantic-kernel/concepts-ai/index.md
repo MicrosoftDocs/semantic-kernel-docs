@@ -20,6 +20,7 @@ Semantic Kernel builds upon four core ideas in LLM AI:
 2. [Prompts](/semantic-kernel/concepts-ai/prompts)
 3. [Tokens](/semantic-kernel/concepts-ai/tokens)
 4. [Embeddings](/semantic-kernel/concepts-ai/embeddings)
+5. [Vector databases](/semantic-kernel/concepts-ai/vectordb)
 
 ## Zooming in on the letters "L-L-M"
 
