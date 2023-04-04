@@ -23,7 +23,7 @@ By participating and running in this hackathon, you will have the opportunity to
 - Have fun!
 
 
-# How to prepare
+## How to prepare
 Before the hackathon, you and your peers will need to download or install some technical prerequisites on your computer. We created a [document]() you can send out.
 
 You will also need to familiarize yourself with the documentation and samples for Semantic Kernel, which will provide you with guidance and examples on how to use its features and functions. You can find them here:
@@ -37,7 +37,7 @@ Additionally, you can check out some sample AI skills that demonstrate how Seman
 - [Semantic Kernel Samples](/semantic-kernel/samples/)
 
 
-# How to run
+## How to run
 The hackathon will consist of six main phases: welcome, overview, brainstorming, development, presentation, and feedback. 
 
 Here is an approximate agenda and structure for each phase but feel free to modify this based on your team:
@@ -52,7 +52,7 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 | 30 | Feedback   | Each team can share their feedback on the hackathon and Semantic Kernel with the group and fill out the [Hackathon Exit Survey](https://aka.ms/sk/hack/feedback). |
 
 
-# How to follow up
+## How to follow up
 We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future events. Please take a few minutes to fill out the [hackathon survey](link) and share your feedback and suggestions with us.
 
 If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
@@ -64,7 +64,7 @@ If you want to continue developing your AI skills or projects after the hackatho
 Thank you for your engagement and creativity during the hackathon. We look forward to seeing what you create next with Semantic Kernel!
 
 
-# List of all Hackathon resources
+## List of all Hackathon resources
 - [Hackathon sample agenda](link)
 - [Hackathon prerequisites](link)
 - [Hackathon facilitator presentation](link)
