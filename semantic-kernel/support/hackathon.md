@@ -51,10 +51,10 @@ The hackathon will consist of four main phases: welcome, overview, development, 
 We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future events. Please take a few minutes to fill out this survey and share your feedback and suggestions with us.[Hackathon Survey] (link).
 
 If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
-
-- [Semantic.Kernel.Support] ( https://docs.microsoft.com/en-us/semantic-kernel/support/) 
-- [Semantic.Kernel.Community] ( https://github.com/microsoft/Semantic-Kernel/discussions)
-- [Semantic.Kernel.Blog] ( https://techcommunity.microsoft.com/t5/Semantic-Kernel-Blog/bg-p/SemanticKernelBlog)
+ 
+- [Semantic Kernel Community] (https://aka.ms/sk/discord)
+- [Semantic Kernel Blog] (https://aka.ms/sk/blog)
+- [Semantic Kernel GitHub Repo] (https://aka.ms/sk/repo)
 
 Thank you for your engagement and creativity during the hackathon. We look forward to seeing what you create next with Semantic Kernel!
 
