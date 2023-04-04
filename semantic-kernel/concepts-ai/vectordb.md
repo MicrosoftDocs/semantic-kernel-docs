@@ -31,16 +31,8 @@ you can use a vector database to store information about different topics,keywor
 Then, you can use a large language model and pass information from the vector database with your AI skill to generate more informative and engaging content that matches your intent and style.
 
 For example,
-if you want to write
-a blog post about the latest trends in AI,
-you can use
-a vector database to store information about different topics,
-keywords,
-facts,
-opinions,
-sources,
-etc.,
-related to AI.
+if you want to write a blog post about the latest trends in AI,
+you can use a vector database to store the latest information about that topic and pass the information along with the ask to a LLM in order to generate a blog post that leverages the latest information.
 
 ## Take the next step
 
