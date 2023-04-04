@@ -30,7 +30,8 @@ You will also need to familiarize yourself with the documentation and samples fo
 
 - [Semantic Kernel Documentation](/semantic-kernel/)
 - [Semantic Kernel Recipes](/semantic-kernel/howto/recipes)
-- [Semantic kernel Receipes Videos](https://devblogs.microsoft.com/semantic-kernel/recipes/)
+- [Semantic kernel Recipes Videos](https://devblogs.microsoft.com/semantic-kernel/recipes/)
+- [Semantic Kernel LinkedIn Training Video](https://aka.ms/sk/li/introducing-semantic-kernel)
 
 Additionally, you can check out some sample AI skills that demonstrate how Semantic Kernel can be used for various scenarios or domains. You can use them as inspiration or modify them for your own projects. You can find them here:
 
