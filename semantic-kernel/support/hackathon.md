@@ -10,3 +10,12 @@ ms.service: mssearch
 # Hackathon Materials for Semantic Kernel
 
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
+
+
+
+## Next step
+
+> [!div class="nextstepaction"]
+> [Run the samples](/semantic-kernel/support/samples)
+
+[!INCLUDE [footer.md](../includes/footer.md)]
