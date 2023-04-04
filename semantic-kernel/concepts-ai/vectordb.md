@@ -11,3 +11,11 @@ ms.service: mssearch
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
+
+
+## Take the next step
+
+> [!div class="nextstepaction"]
+> [Learn about prompts](/semantic-kernel/concepts-ai/prompts)
+
+[!INCLUDE [footer.md](../includes/footer.md)]
