@@ -15,7 +15,9 @@ ms.service: mssearch
 
 ## Take the next step
 
+Congratulations on mastering the basic concepts of LLM AI. You're now ready to leap into the world of SK. You can do it!
+
 > [!div class="nextstepaction"]
-> [Learn about prompts](/semantic-kernel/concepts-ai/prompts)
+> [Discover Semantic Kernel](/semantic-kernel/concepts-sk)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
