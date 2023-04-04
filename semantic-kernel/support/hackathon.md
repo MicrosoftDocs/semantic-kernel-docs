@@ -24,7 +24,7 @@ By participating and running in this hackathon, you will have the opportunity to
 
 
 ## How to prepare
-Before the hackathon, you and your peers will need to download or install some technical prerequisites on your computer. We created a [document]() you can send out.
+Before the hackathon, you and your peers will need to download or install some technical prerequisites on your computer. See the prerequisites document in the facilitator download.
 
 You will also need to familiarize yourself with the documentation and samples for Semantic Kernel, which will provide you with guidance and examples on how to use its features and functions. You can find them here:
 
