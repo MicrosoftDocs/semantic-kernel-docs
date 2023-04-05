@@ -54,7 +54,7 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 
 
 ## How to follow up
-We hope you enjoyed the Semantic Kernel Hackathon experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future events. Please take a few minutes to fill out the [hackathon survey](link) and share your feedback and suggestions with us.
+We hope you enjoyed running a Semantic Kernel Hackathon and the overall experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future content. Please take a few minutes to fill out the [hackathon facilitator survey](https://aka.ms/sk/hack/facilitatorfeedback) and share your feedback and suggestions with us.
 
 If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
@@ -70,9 +70,10 @@ Thank you for your engagement and creativity during the hackathon. We look forwa
 - Hackathon prerequisites
 - Hackathon facilitator presentation
 - Hackathon team template
+- Helpful links
 
 ## Download the facilitator materials
-- [Hackathon facilitator download](link)
+- [Hackathon facilitator download](https://aka.ms/sk/hack/materials)
 
 
 ## Next step
