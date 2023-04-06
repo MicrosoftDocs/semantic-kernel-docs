@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: samples
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: mssearch 
 ---
 # Support for Semantic Kernel
 
@@ -24,6 +24,7 @@ ms.service: mssearch
 ## More support information
 
 * [Frequently Asked Questions (FAQs)](/semantic-kernel/support/faqs)
+* [Hackathon Materials](/semantic-kernel/support/hackathon) 
 * [Code of Conduct](/semantic-kernel/support/CodeofConduct)
 
 ## Next step
