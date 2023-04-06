@@ -24,7 +24,7 @@ ms.service: mssearch
 ## More support information
 
 * [Frequently Asked Questions (FAQs)](/semantic-kernel/support/faqs)
-* [Hackathon Materials](/semantic-kernel/support/hackathon)
+* [Hackathon Materials](/semantic-kernel/support/hackathon) 
 * [Code of Conduct](/semantic-kernel/support/CodeofConduct)
 
 ## Next step
