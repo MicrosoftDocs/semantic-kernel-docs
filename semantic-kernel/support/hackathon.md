@@ -5,7 +5,7 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 04/04/2023
-ms.service: mssearch
+ms.service: mssearch 
 ---
 # Hackathon Materials for Semantic Kernel
 
