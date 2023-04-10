@@ -20,7 +20,7 @@ A _model_ refers to a specific instance or version of an LLM AI, such as GPT-3 o
 
 ## About available OpenAI and Azure OpenAI GPT models
 
-There are four Generalized Pre-trained Transformer (GPT) models currently available from OpenAI and Azure OpenAI. They are composed of four variants: Ada, Babbage, Curie, and Davinci. They differ in the number of parameters, the amount of data they were trained on, and the types of tasks they can perform. 
+There are four Generative Pre-trained Transformer (GPT) models currently available from OpenAI and Azure OpenAI. They are composed of four variants: Ada, Babbage, Curie, and Davinci. They differ in the number of parameters, the amount of data they were trained on, and the types of tasks they can perform. 
 
 Ada is the smallest and simplest model, with 350 million parameters and 40GB of text data. It can handle basic natural language understanding and generation tasks, such as classification, sentiment analysis, summarization, and simple conversation. 
 
