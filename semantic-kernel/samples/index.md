@@ -30,7 +30,7 @@ Multiple learning samples are provided in the [Semantic Kernel GitHub repository
 | [Book creator](/semantic-kernel/samples/bookcreator) | Use [planner](/semantic-kernel/concepts-sk/planner) to deconstruct a complex goal and envision using the planner in **your** app. _Be sure that the [local API service](/semantic-kernel/samples/localapiservice) is running for this sample to work._ |
 | [Authentication and APIs](/semantic-kernel/samples/authapi) | Use a basic [connector](/semantic-kernel/concepts-sk/connectors) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI. _Be sure that the [local API service](/semantic-kernel/samples/localapiservice) is running for this sample to work._ |
 | [GitHub Repo Q&A Bot](/semantic-kernel/samples/githubrepoqabot) | Use [embeddings](/semantic-kernel/concepts-ai/embeddings) to store local data and functions to question the embedded data. _Be sure that the [local API service](/semantic-kernel/samples/localapiservice) is running for this sample to work._ |
-
+| [Copilot Chat Sample App](/semantic-kernel/samples/copilotchat) | Build your own chatbot based on the Semantic Kernel. |
 
 ## Next step
 
