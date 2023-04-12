@@ -23,6 +23,7 @@ ms.service: mssearch
 ## Take the next step
 
 > [!div class="nextstepaction"]
+> [Download the Semantic Kernel Tools extension for VS Code)(semantic-kernel/howto/semantickerneltools)
 > [Build a semantic skill](/semantic-kernel/howto/semanticfunctions)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
