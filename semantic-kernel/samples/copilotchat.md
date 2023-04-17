@@ -33,7 +33,7 @@ The chat prompt and response will evolve as the conversation between the user an
 The [Copilot Chat Sample App](https://aka.ms/sk/repo/samples/copilot-chat-app) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/get-started) instructions if you do not already have a clone of Semantic Kernel locally.
-2) Follow the instructions to [Register an Azure Application](https://learn.microsoft.com/azure/active-directory/develop/quickstart-register-app)
+2) Follow the instructions to [Register an Azure Application](/azure/active-directory/develop/quickstart-register-app)
 3) Open the ReadMe file in the Copilot Chat sample folder.
 4) Follow the ReadMe instructions to configure, start, and test the Backend API Server
 5) Follow the ReadMe instructions to start the front end WebApp
