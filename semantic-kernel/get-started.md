@@ -31,7 +31,7 @@ Instructions for accessing the `SemanticKernel` Nuget feed is available [here](h
 
 Instructions for accessing the `SemanticKernel` Python package is available [here](https://aka.ms/sk/pypi). It's as easy as:
 
-```Python
+```PyPI
 pip install semantic-kernel
 ```
 
