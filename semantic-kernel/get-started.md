@@ -27,11 +27,11 @@ Instructions for accessing the `Microsoft.SemanticKernel` nuget feed is availabl
 
 # [Python](#tab/python)
 
-``` this is python```
+```Python test```
 
 # [C#](#tab/Csharp)
 
-``` this is C#```
+```C# test```
 
 ---
 
