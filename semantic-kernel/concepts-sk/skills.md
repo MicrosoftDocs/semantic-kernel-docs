@@ -84,10 +84,10 @@ For more examples of skills, and the ones that we use in our sample apps, look i
 
 ## Take the next step
 
-Now that you know about the _kernel_, _planner_, _skills_, you can take on _memories.__
+Now that you know about the _kernel_, _planner_, _skills_, you can take on _memories._
 
 > [!div class="nextstepaction"]
-> [Learn about Memoriers](/semantic-kernel/concepts-sk/memories)
+> [Learn about Memories](/semantic-kernel/concepts-sk/memories)
 
 
 [!INCLUDE [footer.md](../includes/footer.md)]
