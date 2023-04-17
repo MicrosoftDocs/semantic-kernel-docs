@@ -25,6 +25,11 @@ Instructions for accessing the `Microsoft.SemanticKernel` nuget feed is availabl
 #r "nuget: Microsoft.SemanticKernel, *-*"
 ```
 
+::: zone pivot="programming-language-python"
+For Python
+
+::: zone-end
+
 ## Requirements to run notebook samples
 
 > [!div class="checklist"]
