@@ -27,7 +27,7 @@ Semantic Kernel (SK) builds upon these concepts:
 
 ## Why is the word "semantic" used in SK?
 
-The second "L" in LLM says it all: **Language**. Because instead of an operating kernel that's been built atop just conventional computer code, it's been built with LLM AI as the driving force for how it functions, like with the [planner]((/semantic-kernel/concepts-sk/planner). A simple way to think of the shift that's happening with SK is how we're moving from syntax to semantics, or:
+The second "L" in LLM says it all: **Language**. Because instead of an operating kernel that's been built atop just conventional computer code, it's been built with LLM AI as the driving force for how it functions, like with the [planner](/semantic-kernel/concepts-sk/planner). A simple way to think of the shift that's happening with SK is how we're moving from syntax to semantics, or:
 
 | |  Syntax | Semantics |
 |------------------|------------------|----------------------|

@@ -38,10 +38,7 @@ LLM AI [models](/semantic-kernel/concepts-ai/models) have a variety of parameter
     "top_p": 0.0,
     "presence_penalty": 0.0,
     "frequency_penalty": 0.0
-  },
-  "default_backends": [
-    "text-davinci-003"
-  ]
+  }
 }
 ```
 

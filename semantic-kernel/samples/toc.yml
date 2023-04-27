@@ -10,3 +10,5 @@
   href: authapi.md
 - name: GitHub Repo Q&A Bot
   href: githubrepoqabot.md
+- name: Copilot Chat Sample App
+  href: copilotchat.md

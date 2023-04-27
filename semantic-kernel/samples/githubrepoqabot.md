@@ -50,9 +50,10 @@ By default the Markdown files are stored as embeddings.  You can ask questions i
 
 ## Next step
 
-If you've tried all the apps and are excited to see more, please star the GitHub repo and join the SK community!
+Run the Copilot Chat sample app!
 
 > [!div class="nextstepaction"]
-> [Star the SK repo](https://aka.ms/sk/repo)
+> [Run the Copilot Chat Sample App](/semantic-kernel/samples/copilotchat)
+
 
 [!INCLUDE [footer.md](../includes/footer.md)]
