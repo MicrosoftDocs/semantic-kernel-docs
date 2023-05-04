@@ -1,7 +1,5 @@
 - name: Overview
-  href: whatissk.md
-- name: Get Started
-  href: get-started.md
+  href: SK-overview.md
 - name: Learn LLM AI
   href: concepts-ai/toc.yml
 - name: Discover Semantic Kernel
