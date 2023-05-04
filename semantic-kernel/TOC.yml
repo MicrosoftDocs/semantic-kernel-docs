@@ -1,5 +1,5 @@
 - name: Overview
-  href: sk-overview.md
+  href: overview/toc.yml
 - name: Learn LLM AI
   href: concepts-ai/toc.yml
 - name: Discover Semantic Kernel
