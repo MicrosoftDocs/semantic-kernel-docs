@@ -65,7 +65,7 @@ Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub
 ## Step 3: Run the Jupyter notebooks locally
 
 > [!IMPORTANT]
-> Make sure you have fulfilled the [requirements list](/semantic-kernel/get-started#requirements-to-run-notebook-samples) to run SK on your machine.
+> Make sure you have fulfilled the [requirements list](/semantic-kernel/overview/get-started#requirements-to-run-notebook-samples) to run SK on your machine.
 
 From your local machine:
 
