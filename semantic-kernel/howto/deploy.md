@@ -111,7 +111,5 @@ az group delete --name YOUR_RESOURCE_GROUP
 ## Take the next step
 Try deploying a custom Co-pilot to your SK instance. Follow the steps [here](../samples/copilotchat.md)
 
-If you have not already done so please star the GitHub repo and join the SK community!
-
-> [!div class="nextstepaction"]
-> [Star the SK repo](https://aka.ms/sk/repo)
+If you have not already done so please star the GitHub repo and join the SK community! 
+[Star the SK repo](https://aka.ms/sk/repo)
