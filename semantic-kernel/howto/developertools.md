@@ -4,7 +4,7 @@ description: How to use Semantic Kernel Tools Extension in Visual Code Studio
 author: smonroe
 ms.topic: skills
 ms.author: smonroe
-ms.date: 04/13/2023
+ms.date: 05/12/2023
 ms.service: mssearch
 ---
 # Visual Code Studio Semantic Kernel Extension
