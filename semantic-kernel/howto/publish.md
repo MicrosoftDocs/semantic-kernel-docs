@@ -66,7 +66,7 @@ Changes via this method are limited since the Web App does not contain binaries 
 10. Now your web app is configured to use your Semantic Skills.
 
 ## Take the next step
->To explor how you build a front end web app explore the [Copilot Chat App](/semantic-kernel/samples/copilot-chat-app) sample.
+>To explore how you build a front end web app explore the [Copilot Chat App](../samples/copilotchat.md) sample.
 
 >If you have not already done so please star the GitHub repo and join the Semantic Kernel community! 
 [Star the Semantic Kernel repo](https://aka.ms/sk/repo)
