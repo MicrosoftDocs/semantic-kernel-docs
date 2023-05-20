@@ -127,7 +127,7 @@ Both Completion:Endpoint and Embedding:Endpoint are ignored for OpenAI instances
 
 
 ## How to clean up resources
-To save costs you may want to clean up resources from this deployment. You can do this by deleting the resource group created via Azure portal or run the following in [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/):
+To save costs you may want to clean up resources from this deployment. You can do this by deleting the resource group created via Azure portal or run the following in [Azure CLI](https://learn.microsoft.com/cli/azure/):
 ```powershell
 az group delete --name YOUR_RESOURCE_GROUP
 ```
