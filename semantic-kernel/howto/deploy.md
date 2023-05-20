@@ -16,7 +16,7 @@ Deploying Semantic Kernel as Web Service to Azure provides a great pathway for d
 
 You can use one of the deployment options to deploy based on your use case and preference.
 
-> [!TIP]
+## Considerations
 1. Azure currently limits the number of Azure OpenAI resources per region per subscription to 3. Azure OpenAI is not available in every region.
 (Refer to this [availability map](https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?products=cognitive-services)) Bearing this in mind, you might want to use the same Azure OpenAI instance for multiple deployments of Semantic Kernel to Azure.
 
