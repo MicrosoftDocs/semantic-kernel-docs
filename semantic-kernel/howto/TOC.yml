@@ -16,5 +16,7 @@
   href: schillacelaws.md
 - name: NEW SK Recipes
   href: recipes.md
-- name: Deploy to Azure
+- name: Deploy Semantic Kernel to Azure as a web app service
   href: deploy.md
+- name: Publish changes to Semantic Kernel web app service
+  href: publish.md
