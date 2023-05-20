@@ -18,7 +18,7 @@ You can use one of the deployment options to deploy based on your use case and p
 
 ## Considerations
 1. Azure currently limits the number of Azure OpenAI resources per region per subscription to 3. Azure OpenAI is not available in every region.
-(Refer to this [availability map](https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?products=cognitive-services)) Bearing this in mind, you might want to use the same Azure OpenAI instance for multiple deployments of Semantic Kernel to Azure.
+(Refer to this [availability map](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?products=cognitive-services)) Bearing this in mind, you might want to use the same Azure OpenAI instance for multiple deployments of Semantic Kernel to Azure.
 
 2. F1 and D1 App Service SKU's (the Free and Shared) are not supported for this deployment.
 
@@ -30,7 +30,7 @@ You can use one of the deployment options to deploy based on your use case and p
 | Use Case     | Deployment Option     |
 |--------------|-----------|
 | <u>Use existing : Azure OpenAI Resources</u><p>Use this option to use an existing Azure OpenAI instance and connect the Semantic Kernel web API to it.| [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-existing-azureopenai-portal)<br>[PowerShell File](https://aka.ms/sk-deploy-existing-azureopenai-powershell)<br>[Bash File](https://aka.ms/sk-deploy-existing-azureopenai-bash)
-|<u>Create new : Azure OpenAI Resources</u> <p>Use this option to deploy Semantic Kernel in a web app service and have it use a new instance of Azure OpenAI.<p>Note: Getting access to New [Azure OpenAI](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/overview) Resources is limited due to high demand. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-new-azureopenai-portal) <br> [PowerShell File ](https://aka.ms/sk-deploy-new-azureopenai-powershell) <br> [Bash File](https://aka.ms/sk-deploy-new-azureopenai-bash)
+|<u>Create new : Azure OpenAI Resources</u> <p>Use this option to deploy Semantic Kernel in a web app service and have it use a new instance of Azure OpenAI.<p>Note: Getting access to New [Azure OpenAI](https://learn.microsoft.com/azure/cognitive-services/openai/overview) Resources is limited due to high demand. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-new-azureopenai-portal) <br> [PowerShell File ](https://aka.ms/sk-deploy-new-azureopenai-powershell) <br> [Bash File](https://aka.ms/sk-deploy-new-azureopenai-bash)
 |<u>Use existing: OpenAI Resources</u><p>Use this option to use your OpenAI account and connect the Semantic Kernel web API to it. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-openai-portal)<br>[PowerShell File](https://aka.ms/sk-deploy-openai-powershell)<br>[Bash File](https://aka.ms/sk-deploy-openai-bash) |
 
  
@@ -96,7 +96,7 @@ Below is a list of the key resources created within the Resource Group when you 
 1. Azure Speech Services : used for speech to text (optional)
 
 
-# Verifying the deployment
+## Verifying the deployment
 
 To make sure your web app service is running, go to <!-- markdown-link-check-disable -->https://YOUR_INSTANCE_NAME.azurewebsites.net/probe<!-- markdown-link-check-enable-->
 
