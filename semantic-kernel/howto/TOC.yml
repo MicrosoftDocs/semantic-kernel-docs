@@ -1,5 +1,7 @@
 - name: Overview
   href: index.md
+- name: Developer Tool
+  href: developertools.md
 - name: Building Semantic Functions
   href: semanticfunctions.md
 - name: Chaining Functions
@@ -14,3 +16,5 @@
   href: schillacelaws.md
 - name: NEW SK Recipes
   href: recipes.md
+- name: Deploy to Azure
+  href: deploy.md

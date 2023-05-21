@@ -10,9 +10,9 @@ metadata:
   ms.date: 02/22/2023
   searchScope: []
   titleSuffix: ""
-  ms.author: evchaki
-  author: evchaki
-  ms.manager: evchaki
+  ms.author: johnmaeda
+  author: johnmaeda
+  ms.manager: johnmaeda
   hide_bc: true
 
 productDirectory:
@@ -20,9 +20,11 @@ productDirectory:
     - title: About Semantic Kernel
       imageSrc: /semantic-kernel/media/learn.png
       links:
-        - url: /semantic-kernel/whatissk
-          text: About
-        - url: /semantic-kernel/get-started
+        - url: /semantic-kernel/overview
+          text: Overview
+        - url: /semantic-kernel/overview/get-started
+          text: What's new?
+        - url: /semantic-kernel/overview/whats-new
           text: Getting Started
     - title: Large Language Model AI
       imageSrc: /semantic-kernel/media/connector-blue.png
@@ -37,7 +39,7 @@ productDirectory:
           text: Tokens  
         - url: /semantic-kernel/concepts-ai/embeddings
           text: Embeddings          
-    - title: Semantic Kernel Concepts
+    - title: Semantic Kernel concepts
       imageSrc: /semantic-kernel/media/openbook.png
       links:
         - url: /semantic-kernel/concepts-sk/
@@ -50,7 +52,7 @@ productDirectory:
           text: Skills  
         - url: /semantic-kernel/concepts-sk/connectors
           text: Connectors          
-    - title: Building Skills
+    - title: Building skills
       imageSrc: /semantic-kernel/media/concept.png
       links:
          - url: /semantic-kernel/howto/
@@ -61,7 +63,7 @@ productDirectory:
            text: Native Functions
          - url: /semantic-kernel/howto/coreskills
            text: Core Skills           
-    - title: App Samples
+    - title: App samples
       imageSrc: /semantic-kernel/media/get-started-blue.png
       links:
         - url: /semantic-kernel/samples/
@@ -78,6 +80,6 @@ productDirectory:
       imageSrc: /semantic-kernel/media/i_best-practices.png
       links:
         - url: https://aka.ms/sk/repo
-          text: Visit the GitHub Repo
+          text: Visit the GitHub repo
         - url: https://aka.ms/sk/discord
           text: Join the Community
