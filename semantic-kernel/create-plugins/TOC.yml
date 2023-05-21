@@ -5,4 +5,4 @@
 - name: Create Open AI plugins
   href: open-ai.md
 - name: Create Azure AI plugins
-  href: azure.md
+  href: azure-ai.md

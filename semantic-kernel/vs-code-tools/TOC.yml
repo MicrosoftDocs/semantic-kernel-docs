@@ -1,6 +1,6 @@
 - name: Overview
   href: index.md
-- name: Getting started
-  href: getting-started.md
+- name: Get started
+  href: get-started.md
 - name: Features
-  href: commands.md
+  href: features.md

@@ -13,7 +13,7 @@
 - name: Deploy your AI app
   href: deploy/TOC.yml
 - name: Run sample apps
-  href: samples/TOC.yml
+  href: samples-and-solutions/TOC.yml
 - name: Visual Studio Code tools
   href: vs-code-tools/TOC.yml
 - name: Get Support
