@@ -4,9 +4,9 @@
   href: get-started/TOC.yml
 - name: Prompt engineering
   href: prompt-engineering/TOC.yml
-- name: Chain prompts and native functions
+- name: Chaining prompts and native functions
   href: create-chains/TOC.yml
-- name: Give your AI memories
+- name: Giving your AI memories
   href: memories/TOC.yml
 - name: Create AI plugins
   href: create-plugins/TOC.yml

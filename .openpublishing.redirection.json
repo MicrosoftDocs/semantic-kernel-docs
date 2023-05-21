@@ -107,7 +107,7 @@
         },
         {
             "source_path": "semantic-kernel/concepts-ai/tokens.md",
-            "redirect_url": "/semantic-kernel/prompt-engineering/configure-prompts",
+            "redirect_url": "/semantic-kernel/prompt-engineering/understanding-tokens",
             "redirect_document_id": false
         },
         {

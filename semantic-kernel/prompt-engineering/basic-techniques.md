@@ -1,16 +1,4 @@
 ---
-title: Basic prompt engineering techniques
-description: Learn common techniques for prompt engineering
-author: mabolan
-ms.topic: prompt-engineering
-ms.author: mabolan
-ms.date: 05/21/2023
-ms.service: mssearch
----
-# What are Prompts?
-
-
----
 title: How to use prompt template language in Semantic Kernel
 description: How to use prompt template language in Semantic Kernel
 author: johnmaeda

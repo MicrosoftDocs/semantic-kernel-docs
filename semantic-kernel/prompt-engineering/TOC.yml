@@ -6,11 +6,7 @@
   href: llm-models.md
 - name: Configure prompts
   href: configure-prompts.md
+- name: Understanding tokens
+  href: understanding-tokens.md
 - name: Basic prompt techniques
   href: basic-techniques.md
-- name: Advanced prompt techniques
-  href: advanced-techniques.md
-- name: Test prompts
-  href: test-prompts.md
-- name: Additional resources
-  href: additional-resources.md
