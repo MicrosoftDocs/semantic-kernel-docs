@@ -1,0 +1,6 @@
+- name: Overview
+  href: index.md
+- name: Getting started
+  href: getting-started.md
+- name: VS Code extension commands
+  href: commands.md

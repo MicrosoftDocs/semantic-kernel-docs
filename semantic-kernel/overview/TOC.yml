@@ -1,4 +1,4 @@
-- name: Semantic kernel overview
+- name: Semantic Kernel overview
   href: index.md
-- name: Get started
-  href: get-started.md
+- name: Core concepts
+  href: semantic-kernel-concepts.md

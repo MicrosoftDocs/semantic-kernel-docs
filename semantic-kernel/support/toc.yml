@@ -1,8 +1,8 @@
 - name: Overview
   href: index.md
+- name: Join Discord
+  href: join-discord.md
 - name: FAQs
   href: faqs.md
-- name: Hackathon Materials
-  href: hackathon.md
 - name: Code of Conduct
-  href: codeofconduct.md
+  href: code-of-conduct.md
