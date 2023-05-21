@@ -41,6 +41,8 @@ Instructions for accessing the `SemanticKernel` Python package is available [her
 pip install semantic-kernel
 ```
 
+---
+
 [!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
 
 ## Requirements to run the guides
