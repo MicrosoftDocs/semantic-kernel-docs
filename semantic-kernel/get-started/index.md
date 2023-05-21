@@ -18,7 +18,7 @@ In just a few steps, you can run the getting started guides for Semantic Kernel 
 - Store and retrieve memory with embeddings
 
 
-If you are an experienced developer, you can skip the guides and directly access the packages within your existing app using your preferred programming language.
+If you are an experienced developer, you can skip the guides and directly access the packages.
 
 # [C#](#tab/Csharp)
 
@@ -95,7 +95,8 @@ The guides are designed to be run in order to build on the concepts learned in t
 
 ## Like what you see?
 If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support. 
-![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
+
+:::image type="content" source="/semantic-kernel/media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
 
 ## Keep learning
 The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. Based on your experience level, you can jump to the section that best fits your needs.

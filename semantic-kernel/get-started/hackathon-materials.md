@@ -20,8 +20,8 @@ By participating and running a Semantic Kernel hackathon, you will have the oppo
 [!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
 
-## Download the hackathon materials
-To run your own hackathon, you will need to first download the hackathon materials. You can download the zip file for them here:
+## Download the materials
+To run your own hackathon, you will first need to download the materials. You can download the zip file here:
 
 > [!div class="nextstepaction"]
 > [Download hackathon materials](https://aka.ms/sk/hack/materials)
@@ -33,7 +33,7 @@ Once you have unzipped the file, you will find the following resources:
 - Hackathon team template
 - Helpful links
 
-![Hackathon materials](../media/hackathon-materials.png)
+:::image type="content" source="../media/hackathon-materials.png" alt-text="Hackathon materials":::
 
 ## Preparing for the hackathon
 Before the hackathon, you and your peers will need to download and install software needed for Semantic Kernel to run. Additionally, you should already have API keys for either OpenAI or Azure OpenAI and access to the Semantic Kernel repo. Please refer to the prerequisites document in the facilitator materials for the complete list of tasks participants should complete before the hackathon.
