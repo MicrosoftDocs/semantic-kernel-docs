@@ -2,9 +2,9 @@
   href: index.md
 - name: Create your first prompt
   href: your-first-prompt.md
-- name: Choose an LLM model
+- name: Choosing an LLM model
   href: llm-models.md
-- name: Configure prompts
+- name: Configuring prompts
   href: configure-prompts.md
 - name: Understanding tokens
   href: tokens.md
