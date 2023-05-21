@@ -1,14 +1,22 @@
 - name: Overview
-  href: overview/toc.yml
-- name: Learn LLM AI
-  href: concepts-ai/toc.yml
-- name: Discover Semantic Kernel
-  href: concepts-sk/toc.yml
+  href: overview/TOC.yml
+- name: Getting started
+  href: getting-started/TOC.yml
+- name: Prompt engineering 101
+  href: prompt-engineering/TOC.yml
+- name: Chaining prompts
+  href: create-chains/TOC.yml
+- name: Giving your AI memories
+  href: memories/TOC.yml
+- name: Create AI plugins
+  href: create-plugins/TOC.yml
+- name: Deploy your AI app
+  href: deploy/TOC.yml
 - name: Run Sample Apps
-  href: samples/toc.yml
-- name: Build AI Skills
-  href: howto/toc.yml
+  href: samples/TOC.yml
+- name: Visual Studio Code tools
+  href: vs-code-tools/TOC.yml
 - name: Get Support
-  href: support/toc.yml
-- name: Responsible AI
-  href: responsibleai.md
+  href: support/TOC.yml
+- name: When to use AI
+  href: when-to-use-AI/TOC.yml

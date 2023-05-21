@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Responsible AI and Semantic Kernel
 
-[!INCLUDE [pat_small.md](includes/pat_small.md)]
+[!INCLUDE [pat_small.md](../includes/pat_small.md)]
 
 ## What is a Transparency Note?
 
@@ -96,5 +96,3 @@ Feedback: Seek out feedback from a diverse sampling of the community during the 
 
 * [Microsoft responsible AI resources]()
 * [Microsoft Azure Learning course on responsible AI](/training/paths/responsible-ai-business-principles/)
-
-[!INCLUDE [footer.md](includes/footer.md)]
