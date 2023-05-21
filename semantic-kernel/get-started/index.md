@@ -7,17 +7,23 @@ ms.author: johnmaeda
 ms.date: 05/04/2023
 ms.service: mssearch
 ---
-# Setting up Semantic Kernel
+# Get started learning how to use Semantic Kernel
 
-[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
+By following these three steps, you can run the getting started Jupyter notebook guides for either C# or Python.
 
-Getting started with Semantic Kernel (SK) is quick and simple by following these three steps:
+1. Go to the [Semantic Kernel GitHub repository](https://aka.ms/sk/repo).
+2. Clone or fork the repo to your local machine.
+3. Run the [Jupyter notebooks](https://aka.ms/skjupyter) locally.
 
-1. Go to the SK GitHub repository ("repo")
-2. Clone or fork the repo to your local machine
-3. Run the Jupyter [notebooks](https://aka.ms/skjupyter) **locally**
+After completing the guides, you'll know how to...
+- Configure your local machine to run Semantic Kernel
+- Run prompts from the kernel
+- Make prompts dynamic with variables
+- Create prompt chains
+- Automatically create new chains with the planner
+- Store and retrieve memory with embeddings
 
-### For experienced developers
+If you are an experienced developer, you can skip the guides and directly access the packages within your existing app using your preferred programming language.
 
 # [C#](#tab/Csharp)
 
@@ -35,63 +41,80 @@ Instructions for accessing the `SemanticKernel` Python package is available [her
 pip install semantic-kernel
 ```
 
----
+[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
 
-## Requirements to run notebook samples
+## Requirements to run the guides
+Before running the guides, make sure you have the following installed on your local machine:
 
 > [!div class="checklist"]
 > * `git` or the [GitHub app](https://desktop.github.com/) 
 > * [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/) 
 > * An OpenAI key via either [Azure OpenAI Service](/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio) or [OpenAI](https://openai.com/api/)
-> * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for notebook samples
-> * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook samples
+> * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for C# notebook guides
+> * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook guides
 
-## Step 1: Access the public SK repo
-
-Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub and please give the repo a ⭐️ star to show your support.
-
-![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
-
-## Step 2: Clone or fork the repo
-
-**New to GitHub?** If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
-
-**New to contributing?** If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
-
-### Walkthrough video
+## Setting up the guides
+To setup the guides, either watch the video or follow the steps below.
 
 > [!VIDEO https://aka.ms/SK-Local-Setup]
 
-## Step 3: Run the Jupyter notebooks locally
+1. Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub. Please give the repo a ⭐️ star to show your support. 
+   ![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
 
-> [!IMPORTANT]
-> Make sure you have fulfilled the [requirements list](/semantic-kernel/overview/get-started#requirements-to-run-notebook-samples) to run SK on your machine.
+2. Clone or fork the repo to your local machine. 
+   > [!TIP]
+   > If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
 
-From your local machine:
+   > [!TIP]
+   > If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
 
-1. While you have the repository open in VS Code, go to the `notebooks` section
-2. Activate each code snippet with the "play" button on the left hand side
-3. Have your OpenAI or Azure OpenAI keys ready to enter when prompted
+3. Run the Jupyter notebooks locally.
+   > [!IMPORTANT]
+   > Make sure you have fulfilled the [requirements list](/semantic-kernel/overview/get-started/index#requirements-to-run-notebook-samples) to run Semantic Kernel on your machine.
 
-### Walkthrough video
+   > [!TIP]
+   > Have your OpenAI or Azure OpenAI keys ready to enter when prompted by the Jupyter notebook.
 
-> [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
+    1. While the repository is open in VS Code, navigate to the `semantic-kernel/samples/notebooks` folder.
+    2. Choose either the .Net or Python folder based on your preferred programming language.
+    3. Open the `00-getting-started.ipynb` notebook.
+    4. Activate each code snippet with the "play" button on the left hand side.
+    5. Repeat for the remaining notebooks.
+    
+    If you need help running the `00-getting-started.ipynb` notebook, you can watch the video below.
+    > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
 
-## Take the next step
+### Using the guides
+The guides are designed to be run in order to build on the concepts learned in the previous notebook. If you are interested in learning a particular concept, however, you can jump to the notebook that covers that concept. Below are the available guides.
 
-For beginners who are just starting to learn LLM AI, you may want to start here:
+- `00-getting-started.ipynb` – Run your first prompt
+- `01-basic-loading-the-kernel.ipynb` – Changing the configuration of the kernel
+- `02-running-prompts-from-file.ipynb` – Learn how to run prompts from a file
+- `03-semantic-function-inline.ipynb` – Configure and run prompts directly in code
+- `04-context-variables-chat.ipynb` – Use variables to make prompts dynamic
+- `05-using-the-planner.ipynb` – Dynamically create prompt chains with the planner
+- `06-memory-and-embeddings.ipynb` – Store and retrieve memory with embeddings
+
+## Keep learning
+The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. Based on your experience level, you can jump to the section that best fits your needs.
+
+For beginners who are just starting to learn about AI, we recommend learning more about prompt engineering:
 
 > [!div class="nextstepaction"]
-> [Learn LLM AI Concepts](/semantic-kernel/concepts-ai)
+> [Learn prompt engineering](/semantic-kernel/prompt-engineering/index)
 
-For people who are well versed in LLM AI, you can jump into SK immediately:
-
-> [!div class="nextstepaction"]
-> [Discover Semantic Kernel Concepts](/semantic-kernel/concepts-sk)
-
-For people who are ready to run SK sample apps:
+For people who are well versed in prompt engineering, you can learn how to use the Semantic Kernel API to orchestrate chains of prompts and native functions:
 
 > [!div class="nextstepaction"]
-> [Run Sample Apps](/semantic-kernel/samples)
+> [Chain prompts and native functions](/semantic-kernel/create-chains/index)
 
-[!INCLUDE [footer.md](../includes/footer.md)]
+If you are already familiar with chaining prompts and native functions, you can learn how to use the Semantic Kernel API to store and retrieve memory with embeddings:
+
+> [!div class="nextstepaction"]
+> [Add memories to your apps](/semantic-kernel/memories/index)
+
+And for those who want to see how it all works together, you can run the sample apps:
+
+> [!div class="nextstepaction"]
+> [Run sample apps](/semantic-kernel/samples-and-solutions/index)
+
