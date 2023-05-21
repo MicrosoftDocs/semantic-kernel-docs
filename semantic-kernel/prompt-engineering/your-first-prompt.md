@@ -11,11 +11,11 @@ ms.service: mssearch
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-To write an LLM AI prompt that Semantic Kernel (SK) is uniquely fit for, all you need is a concrete goal in mind — something you would like an AI to get done for you. For example:
+To write an LLM AI prompt that Semantic Kernel is uniquely fit for, all you need is a concrete goal in mind — something you would like an AI to get done for you. For example:
 
 > I want to make a cake. Give me the best chocolate cake recipe you can think of.
 
-Congratulations! You have imagined a delicious ask for SK to run to completion. This ask can be given to the Planner to get decomposed into steps. Although to make the Planner work reliably, you'll need to use the most advanced model available to you. So let's start from writing basic prompts to begin with.
+Congratulations! You have imagined a delicious ask for Semantic Kernel to run to completion. This ask can be given to the Planner to get decomposed into steps. Although to make the Planner work reliably, you'll need to use the most advanced model available to you. So let's start from writing basic prompts to begin with.
 
 ## Writing a simple prompt
 
@@ -63,7 +63,7 @@ years of rejection and perseverance.
 
 And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking the model to give us a marketing slogan, and separately 2/ we're asking the model to summarize a body of text down to two sentences.
 
-Both of these simple prompts qualify as "functions" that can be packaged as part of an SK skill. The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in SK within a directory named `SloganMaker` into a file named `skprompt.txt`:
+Both of these simple prompts qualify as "functions" that can be packaged as part of an Semantic Kernel skill. The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in Semantic Kernel within a directory named `SloganMaker` into a file named `skprompt.txt`:
 
 ```SloganMaker/skprompt.txt
 Write me a marketing slogan for my apparel shop in New 
@@ -88,7 +88,7 @@ book deal.
 ---End Text---
 ```
 
-Each of these directories comprise a SK function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
+Each of these directories comprise a Semantic Kernel function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
 
 ```Semantic-Skills-And-Their-Functions
 TestSkill
@@ -109,7 +109,7 @@ This skill can do one of two things by calling one of its two functions:
 * `TestSkill.SloganMaker()` generates a slogan for a specific kind of shop in NYC
 * `TestSkill.SummmarizeBlurb()` creates a short summary of a specific blurb
 
-Next, we'll show you how to make a more powerful skill by introducing SK prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
+Next, we'll show you how to make a more powerful skill by introducing Semantic Kernel prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
 
 ## Writing a more powerful "templated" prompt
 
@@ -124,7 +124,7 @@ sacrificing quality.
 
 Such "templated" prompts include variables and function calls that can dynamically change the content and the behavior of an otherwise plain prompt. Prompt templates can help you to generate more diverse, relevant, and effective prompts, and to reuse and combine them for different tasks and domains. 
 
-In a templated prompt, the double `{{` curly braces `}}` signify to SK that there's something special for it to notice within the LLM AI prompt. To pass an input to a prompt, we refer to the default input variable `$INPUT` — and by the same token if we have other variables to work with, they will start with a dollar sign `$` as well. 
+In a templated prompt, the double `{{` curly braces `}}` signify to Semantic Kernel that there's something special for it to notice within the LLM AI prompt. To pass an input to a prompt, we refer to the default input variable `$INPUT` — and by the same token if we have other variables to work with, they will start with a dollar sign `$` as well. 
 
 Our other plain prompt for summarizing text into two sentences can take an `input` by simply replacing the existing body of text and replacing it with `{{$INPUT}}` as follows:
 
@@ -135,7 +135,7 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new SK functions that can belong to a new `TestSkillFlex` skill that now takes an input. To package these two function to be used by SK in the context of a skill, we arrange our file hierarchy the same as we did before:
+We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new Semantic Kernel functions that can belong to a new `TestSkillFlex` skill that now takes an input. To package these two function to be used by Semantic Kernel in the context of a skill, we arrange our file hierarchy the same as we did before:
 
 ```File-Structure-For-Skill-Definition-With-Functions
 TestSkillFlex
@@ -172,7 +172,7 @@ a focus on {{$SPECIALTY}} we are without sacrificing quality.
 
 We can replace our `TestSkillFlex` skill with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
 
-In SK, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Functions](/semantic-kernel/howto/nativefunctions) if you're anxious.
+In Semantic Kernel, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Functions](/semantic-kernel/howto/nativefunctions) if you're anxious.
 
 ## Get your kernel ready
 

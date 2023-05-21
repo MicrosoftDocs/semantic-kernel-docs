@@ -18,18 +18,17 @@ Effective prompt design is essential to achieving desired outcomes with LLM AI m
 
 If you've already experimented with ChatGPT, you can see how the model's behavior changes dramatically based on the inputs you provide. For example, the following prompts produce very different outputs:
 
-`Please give me the history of humans.`
+```Prompt
+Please give me the history of humans.
+```
 
-`Please give me the history of humans in 3 sentences.`
+```Prompt
+Please give me the history of humans in 3 sentences.
+```
 
-The first prompt produces a long, detailed report, while the second prompt produces a short, concise response because it includes a parameter that limits the length of the output. If you were building a UI with limited space, the second prompt would be more suitable for your needs. Further refined behavior can be achieved by adding even more details to the prompt, but its possible to go too far and produce irrelevant outputs. As a prompt engineer, one must find the right balance between specificity and relevance.
+The first prompt produces a long report, while the second prompt produces a concise response. If you were building a UI with limited space, the second prompt would be more suitable for your needs. Further refined behavior can be achieved by adding even more details to the prompt, but its possible to go too far and produce irrelevant outputs. As a prompt engineer, you must find the right balance between specificity and relevance.
 
-### Other controls for prompting 
 When you work directly with LLM models, you can also use other controls to influence the model's behavior. For example, you can use the `temperature` parameter to control the randomness of the model's output.  Other parameters like top-k, top-p, frequency penalty, and presence penalty also influence the model's behavior.
-
-WIth so many options, it's important to understand the tradeoffs between different models and parameters. For example, while a model may produce more relevant outputs with a higher temperature, it may also produce more errors. Similarly, while a model may produce more relevant outputs with a higher frequency penalty, it may also produce less diverse outputs.
-
-Perhaps most importantly, however, you can also choose between completely different models. While you can use general-purpose models like GPT-4, more specialized models could be more useful depending on the domain (e.g., healthcare and coding). Models that support other modalities (e.g., text-to-image) are also available and can be refined through prompt engineering.
 
 ## Prompt engineering: a new career
 Because of the amount of control that exists, prompt engineering is a critical skill for anyone working with LLM AI models. It's also a skill that's in high demand as more organizations adopt LLM AI models to automate tasks and improve productivity. A good prompt engineer can help organizations get the most out of their LLM AI models by designing prompts that produce the desired outputs.
@@ -37,18 +36,21 @@ Because of the amount of control that exists, prompt engineering is a critical s
 ### Becoming a great prompt engineer with Semantic Kernel
 Semantic Kernel is a valuable tool for prompt engineering because it allows you to experiment with different prompts and parameters across multiple different models using a common interface. This allows you to quickly compare the outputs of different models and parameters, and iterate on prompts to achieve the desired results.
 
-Once you've become familiar with the basics of prompt engineering, you can also use Semantic Kernel to apply your skills to real-world scenarios. By combining your prompts with native functions and connectors, you can build powerful applications that automate tasks and improve productivity.
+Once you've become familiar with prompt engineering, you can also use Semantic Kernel to apply your skills to real-world scenarios. By combining your prompts with native functions and connectors, you can build powerful AI-powered applications.
 
-Lastly, by deeply integrating with Visual Studio Code, Semantic Kernel also makes it easy for you to integrate prompt engineering into your existing development processes. Create prompts directly in your preferred code editor, write tests for them using your existing testing frameworks, and deploy them to production using your existing CI/CD pipelines.
+Lastly, by deeply integrating with Visual Studio Code, Semantic Kernel also makes it easy for you to integrate prompt engineering into your existing development processes.
+- Create prompts directly in your preferred code editor,
+- Write tests for them using your existing testing frameworks,
+- And deploy them to production using your existing CI/CD pipelines.
 
 ### Additional tips for prompt engineering
 Becoming a skilled prompt engineer requires a combination of technical knowledge, creativity, and experimentation. Here are some tips to excel in prompt engineering:
 
-- Understand LLM AI models: Gain a deep understanding of how LLM AI models work, including their architecture, training processes, and behavior.
-- Domain knowledge: Acquire domain-specific knowledge to design prompts that align with the desired outputs and tasks.
-- Experimentation: Explore different parameters and settings to fine-tune prompts and optimize the model's behavior for specific tasks or domains.
-- Feedback and iteration: Continuously analyze the outputs generated by the model and iterate on prompts based on user feedback to improve their quality and relevance.
-- Stay updated: Keep up with the latest advancements in prompt engineering techniques, research, and best practices to enhance your skills and stay ahead in the field.
+- **Understand LLM AI models:** Gain a deep understanding of how LLM AI models work, including their architecture, training processes, and behavior.
+- **Domain knowledge:** Acquire domain-specific knowledge to design prompts that align with the desired outputs and tasks.
+- **Experimentation:** Explore different parameters and settings to fine-tune prompts and optimize the model's behavior for specific tasks or domains.
+- **Feedback and iteration:** Continuously analyze the outputs generated by the model and iterate on prompts based on user feedback to improve their quality and relevance.
+- **Stay updated:** Keep up with the latest advancements in prompt engineering techniques, research, and best practices to enhance your skills and stay ahead in the field.
 
 Prompt engineering is a dynamic and evolving field, and skilled prompt engineers play a crucial role in harnessing the capabilities of LLM AI models effectively.
 

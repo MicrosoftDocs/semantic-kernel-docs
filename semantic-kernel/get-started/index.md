@@ -50,7 +50,7 @@ Before running the guides, make sure you have the following installed on your lo
 > * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for C# notebook guides
 > * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook guides
 
-## Downloading and running the guides
+## Download and run the guides
 To setup the guides, follow the steps below.
 
 > [!TIP]
@@ -82,7 +82,7 @@ To setup the guides, follow the steps below.
 7. Repeat for the remaining notebooks.
     
 
-## Using the guides
+## Navigating the guides
 The guides are designed to be run in order to build on the concepts learned in the previous notebook. If you are interested in learning a particular concept, however, you can jump to the notebook that covers that concept. Below are the available guides.
 
 - `00-getting-started.ipynb` – Run your first prompt
