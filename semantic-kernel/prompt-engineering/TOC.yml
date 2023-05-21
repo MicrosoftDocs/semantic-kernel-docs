@@ -5,7 +5,7 @@
 - name: Creating your first prompt
   href: your-first-prompt.md
 - name: Choosing an LLM model
-  href: choosing-a-model.md
+  href: llm-models.md
 - name: Configuring prompts
   href: configuring-prompts.md
 - name: Basic prompt techniques

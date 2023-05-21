@@ -1,0 +1,184 @@
+{
+    "redirections": [
+        {
+            "source_path": "semantic-kernel/concepts-ai/index.md",
+            "redirect_url": "/semantic-kernel/overview/semantic-kernel-concepts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/configuringfunctions.md",
+            "redirect_url": "/semantic-kernel/prompt-engineering/configuring-functions",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/index.md",
+            "redirect_url": "/semantic-kernel/create-plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-sk/connectors.md",
+            "redirect_url": "/semantic-kernel/create-chains/connectors",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/chainingfunctions.md",
+            "redirect_url": "/semantic-kernel/create-chains",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-sk/kernel.md",
+            "redirect_url": "/semantic-kernel/create-chains/kernel",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/nativefunctions.md",
+            "redirect_url": "/semantic-kernel/create-chains/native-functions",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-sk/planner.md",
+            "redirect_url": "/semantic-kernel/create-chains/planner",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/semanticfunctions.md",
+            "redirect_url": "/semantic-kernel/create-chains/semantic-functions",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-sk/skills.md",
+            "redirect_url": "/semantic-kernel/create-plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/coreskills.md",
+            "redirect_url": "/semantic-kernel/create-plugins/out-of-the-box-plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/deploy.md",
+            "redirect_url": "/semantic-kernel/deploy",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/hackathon.md",
+            "redirect_url": "/semantic-kernel/get-started/hackathon-materials",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/overview/get-started.md",
+            "redirect_url": "/semantic-kernel/get-started",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/recipes.md",
+            "redirect_url": "/semantic-kernel/get-started/tutorials",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-ai/embeddings.md",
+            "redirect_url": "/semantic-kernel/memories/embeddings",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-sk/memories.md",
+            "redirect_url": "/semantic-kernel/memories",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-ai/vectordb.md",
+            "redirect_url": "/semantic-kernel/memories/vector-db",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-sk/index.md",
+            "redirect_url": "/semantic-kernel/overview/semantic-kernel-concepts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/semantic_function_guide.md",
+            "redirect_url": "/semantic-kernel/prompt-engineering/basic-techniques",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-ai/models.md",
+            "redirect_url": "/semantic-kernel/prompt-engineering/llm-models",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-ai/tokens.md",
+            "redirect_url": "/semantic-kernel/prompt-engineering/configuring-prompts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/concepts-ai/prompts.md",
+            "redirect_url": "/semantic-kernel/prompt-engineering",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples/authapi.md",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/authentication-api",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples/bookcreator.md",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/book-creator",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples/copilotchat.md",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/copilot-chat",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples/githubrepoqabot.md",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/github-repo-qa-bot",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples/index.md",
+            "redirect_url": "/semantic-kernel/samples-and-solutions",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples/localapiservice.md",
+            "redirect_url": "/semantic-kernel/samples-and-solutions",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples/simplechatsummary.md",
+            "redirect_url": "/semantic-kernel/samples-and-solution/simple-chat-summary",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/CodeofConduct.md",
+            "redirect_url": "/semantic-kernel/support/code-of-conduct",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/developertools.md",
+            "redirect_url": "/semantic-kernel/vs-code-tools",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/responsibleai.md",
+            "redirect_url": "/semantic-kernel/when-to-use-ai/responsible-ai",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/schillacelaws.md",
+            "redirect_url": "/semantic-kernel/when-to-use-ai/schillace-laws",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/howto/semantickerneltools",
+            "redirect_url": "/semantic-kernel/vs-code-tools",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started",
+            "redirect_url": "/semantic-kernel/get-started",
+            "redirect_document_id": false
+        }
+    ]
+}
