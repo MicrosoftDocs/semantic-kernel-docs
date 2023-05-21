@@ -56,10 +56,3 @@ This Code of Conduct is adapted from the [Contributor Covenant][https://www.cont
 
 [homepage]: http://contributor-covenant.org
 [version]: http://contributor-covenant.org/version/1/4/
-
-## Next step
-
-> [!div class="nextstepaction"]
-> [Run the samples](/semantic-kernel/samples)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

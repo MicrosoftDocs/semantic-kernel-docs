@@ -10,12 +10,12 @@
   href: memories/TOC.yml
 - name: Create AI plugins
   href: create-plugins/TOC.yml
-- name: Deploy your AI app
-  href: deploy/TOC.yml
+- name: Deploy your Semantic Kernel app
+  href: deploy/index.md
 - name: Run sample apps
   href: samples-and-solutions/TOC.yml
 - name: Visual Studio Code tools
-  href: vs-code-tools/TOC.yml
+  href: vs-code-tools/index.md
 - name: Get Support
   href: support/TOC.yml
 - name: Using AI responsibly

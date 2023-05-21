@@ -42,7 +42,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/semanticfunctions.md",
-            "redirect_url": "/semantic-kernel/create-chains/semantic-functions",
+            "redirect_url": "/semantic-kernel/prompt-engineering/your-first-prompt",
             "redirect_document_id": true
         },
         {
@@ -142,7 +142,7 @@
         },
         {
             "source_path": "semantic-kernel/samples/localapiservice.md",
-            "redirect_url": "/semantic-kernel/samples-and-solutions/index",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/local-api-service",
             "redirect_document_id": false
         },
         {

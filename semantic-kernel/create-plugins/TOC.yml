@@ -2,7 +2,3 @@
   href: index.md
 - name: Out-of-the-box plugins
   href: out-of-the-box-plugins.md
-- name: Create Open AI plugins
-  href: open-ai.md
-- name: Create Azure AI plugins
-  href: azure-ai.md

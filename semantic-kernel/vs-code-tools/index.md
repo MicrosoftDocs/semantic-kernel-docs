@@ -9,9 +9,9 @@ ms.service: mssearch
 ---
 # Visual Code Studio Semantic Kernel Extension
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
-
 The Semantic Kernel Tools help developers to write semanic skills for the [Semantic Kernel](https://github.com/microsoft/semantic-kernel).
+
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 ## Installing the Semantic Kernel Extension
 
