@@ -9,14 +9,9 @@ ms.service: mssearch
 ---
 # What is Semantic Kernel?
 
+Semantic Kernel is a lightweight open-source orchestration SDK that lets you easily mix-and-match AI prompts with conventional programming languages like C# and Python.
+
 [!INCLUDE [pat_small.md](../includes/pat_small.md)]
-
-Semantic Kernel is a lightweight open-source orchestration SDK that lets you easily mix-and-match AI prompts with conventional programming languages like C# and Python. By combining native functions with AI, you can create apps that are more intelligent while still keeping the benefits of traditional code like determinism, performance, and reliability.
-
-## Semantic Kernel is open-source
-You may be familiar with the [Microsoft 365 Copilot System](https://www.youtube.com/watch?v=E5g20qmeKpg), the steps Microsoft uses to power its new Copilot experiences on top of GPT-4 and other AI models. This SDK formalizes many of the patterns Microsoft has developed while creating systems like these so that building LLM-powered apps can be made easier. To make sure all developers could take advantage of our learnings, we have released Semantic Kernel as an [open-source project](https://aka.ms/skrepo) on GitHub. 
-
-Given that new breakthroughs in LLM AIs are landing on a daily basis, you should expect this SDK evolve as the broader community learns how to best add semantically-rich AI to existing apps. We're excited to see what you build with Semantic Kernel and we look forward to your feedback and contributions so we can build the best practices together in the SDK.
 
 ## The SDK simplifies the development of AI apps
 Semantic Kernel has been engineered to allow developers to flexibly integrate AI into their existing apps. To do so, Semantic Kernel provides a set of abstractions that make it easy to create and manage prompts, native functions, memories, and connectors as individual components. You can then orchestrate these components with pipeline using Semantic Kernel APIs to complete users' requests or automate actions.
@@ -35,7 +30,7 @@ If you use _all_ of the pieces of Semantic Kernel to respond to a user's ask, yo
 ![Technical perspective of what's happening](../media/flowdiagram.png)
 
 | Step | Description |
-|:---:|:---|
+|:-|:-|
 | **Ask** | A user's goal is sent to Semantic Kernel as an ask |
 | **Kernel** | [The kernel](/semantic-kernel/create-chains/kernel) orchestrates a user's ask |
 | **Planner** | [The planner](/semantic-kernel/create-chains/planner) breaks it down into steps based upon resources that are available |
@@ -49,12 +44,19 @@ If you use _all_ of the pieces of Semantic Kernel to respond to a user's ask, yo
 ## Get started using the Semantic Kernel SDK
 Now that you know what Semantic Kernel is, follow the [get started](/semantic-kernel/get-started) link to try it out. Within minutes you can create prompts and chain them with out-of-the-box plugins and native code. Soon afterwards, you can give your apps memories with embeddings and summon even more power from external APIs.
 
-> [!VIDEO https://aka.ms/SK-First-Steps]
-
 > [!div class="nextstepaction"]
 > [Get started with Semantic Kernel](/semantic-kernel/get-started)
 
-## Contributing to Semantic Kernel
+
+## Semantic Kernel is open-source
+You may be familiar with the [Microsoft 365 Copilot System](https://www.youtube.com/watch?v=E5g20qmeKpg), the steps Microsoft uses to power its new Copilot experiences on top of GPT-4. This SDK formalizes patterns like these so that building LLM-powered apps can be easier. To make sure all developers could take advantage of our learnings, we have released Semantic Kernel as an [open-source project](https://aka.ms/skrepo) on GitHub. 
+
+Given that new breakthroughs in LLM AIs are landing on a daily basis, you should expect this SDK evolve. We're excited to see what you build with Semantic Kernel and we look forward to your feedback and contributions so we can build the best practices together in the SDK.
+
+![GitHub repo of Semantic Kernel](../media/github.png)
+
+
+### Contributing to Semantic Kernel
 We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the GitHub repository. Bug reports and fixes are welcome!
 
 For new features, components, or extensions, please open an issue and discuss with us before sending a PR. This will help avoid rejections since it will allow us to discuss the impact to the larger ecosystem.

@@ -1,5 +1,5 @@
 - name: Overview
-  href: overview/TOC.yml
+  href: overview/index.md
 - name: Get started
   href: get-started/TOC.yml
 - name: Prompt engineering

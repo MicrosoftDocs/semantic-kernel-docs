@@ -2,7 +2,7 @@
     "redirections": [
         {
             "source_path": "semantic-kernel/concepts-ai/index.md",
-            "redirect_url": "/semantic-kernel/overview/semantic-kernel-concepts",
+            "redirect_url": "/semantic-kernel/overview/index",
             "redirect_document_id": false
         },
         {
@@ -92,8 +92,8 @@
         },
         {
             "source_path": "semantic-kernel/concepts-sk/index.md",
-            "redirect_url": "/semantic-kernel/overview/semantic-kernel-concepts",
-            "redirect_document_id": true
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/howto/semantic_function_guide.md",
