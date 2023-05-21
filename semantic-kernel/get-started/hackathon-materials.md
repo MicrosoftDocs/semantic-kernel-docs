@@ -8,37 +8,48 @@ ms.date: 04/04/2023
 ms.service: mssearch 
 ---
 # Hackathon Materials for Semantic Kernel
+With these materials you can run your own Semantic Kernel Hackathon, a hands-on event where you can learn and create AI solutions using Semantic Kernel tools and resources. 
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
-
-
-# Introduction
-We created materials so you can run your own Semantic Kernel Hackathon, a hands-on event where you can learn and create AI solutions using Semantic Kernel tools and resources. 
-
-By participating and running in this hackathon, you will have the opportunity to:
+By participating and running a Semantic Kernel hackathon, you will have the opportunity to:
 
 - Explore the features and capabilities of Semantic Kernel and how it can help you solve problems with AI
 - Work in teams to brainstorm and develop your own AI skills or apps using Semantic Kernel SDK and services
 - Present your results and get feedback from other participants 
 - Have fun!
 
-
-## How to prepare
-Before the hackathon, you and your peers will need to download or install some technical prerequisites on your computer. See the prerequisites document in the facilitator download.
-
-You will also need to familiarize yourself with the documentation and samples for Semantic Kernel, which will provide you with guidance and examples on how to use its features and functions. You can find them here:
-
-- [Semantic Kernel Documentation](/semantic-kernel/)
-- [Semantic Kernel Recipes](/semantic-kernel/howto/recipes)
-- [Semantic kernel Recipes Videos](https://devblogs.microsoft.com/semantic-kernel/recipes/)
-- [Semantic Kernel LinkedIn Training Video](https://aka.ms/sk/li/introducing-semantic-kernel)
-
-Additionally, you can check out some sample AI skills that demonstrate how Semantic Kernel can be used for various scenarios or domains. You can use them as inspiration or modify them for your own projects. You can find them here:
-
-- [Semantic Kernel Samples](/semantic-kernel/samples/)
+[!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
 
-## How to run
+## Download the hackathon materials
+To run your own hackathon, you will need to first download the hackathon materials. You can download the zip file for them here:
+
+> [!div class="nextstepaction"]
+> [Download hackathon materials](https://aka.ms/sk/hack/materials)
+
+Once you have unzipped the file, you will find the following resources:
+- Hackathon sample agenda
+- Hackathon prerequisites
+- Hackathon facilitator presentation
+- Hackathon team template
+- Helpful links
+
+![Hackathon materials](../media/hackathon-materials.png)
+
+## Preparing for the hackathon
+Before the hackathon, you and your peers will need to download and install software needed for Semantic Kernel to run. Additionally, you should already have API keys for either OpenAI or Azure OpenAI and access to the Semantic Kernel repo. Please refer to the prerequisites document in the facilitator materials for the complete list of tasks participants should complete before the hackathon.
+
+You should also familiarize yourself with the available documentation and tutorials. This will ensure that you are knowledgeable of core Semantic Kernel concepts and features so that you can help others during the hackathon. The following resources are highly recommended:
+
+- [What is Semantic Kernel?](/semantic-kernel/overview/index)
+- [Semantic Kernel recipes](/semantic-kernel/get-started/recipes)
+- [Semantic kernel recipes videos](https://devblogs.microsoft.com/semantic-kernel/recipes/)
+- [Semantic Kernel LinkedIn training video](https://aka.ms/sk/li/introducing-semantic-kernel)
+
+Additionally, you can check out the available sample AI plugins and apps that demonstrate how Semantic Kernel can be used for various scenarios. You can use them as inspiration and even modify them for your own projects during the hackathon. You can find them here:
+
+- [Semantic Kernel samples](/semantic-kernel/samples-and-solutions/)
+
+## How to run the hackathon
 The hackathon will consist of six main phases: welcome, overview, brainstorming, development, presentation, and feedback. 
 
 Here is an approximate agenda and structure for each phase but feel free to modify this based on your team:
@@ -53,32 +64,13 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 | 30 | Feedback   | Each team can share their feedback on the hackathon and Semantic Kernel with the group and fill out the [Hackathon Exit Survey](https://aka.ms/sk/hack/feedback). |
 
 
-## How to follow up
+## Following up after the hackathon
 We hope you enjoyed running a Semantic Kernel Hackathon and the overall experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future content. Please take a few minutes to fill out the [hackathon facilitator survey](https://aka.ms/sk/hack/facilitatorfeedback) and share your feedback and suggestions with us.
 
 If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
-- [Semantic Kernel Community](https://aka.ms/sk/discord)
-- [Semantic Kernel Blog](https://aka.ms/sk/blog)
-- [Semantic Kernel GitHub Repo](https://aka.ms/sk/repo)
+- [Semantic Kernel community](https://aka.ms/sk/discord)
+- [Semantic Kernel blog](https://aka.ms/sk/blog)
+- [Semantic Kernel GitHub repo](https://aka.ms/sk/repo)
 
 Thank you for your engagement and creativity during the hackathon. We look forward to seeing what you create next with Semantic Kernel!
-
-
-## List of all Hackathon resources
-- Hackathon sample agenda
-- Hackathon prerequisites
-- Hackathon facilitator presentation
-- Hackathon team template
-- Helpful links
-
-## Download the facilitator materials
-- [Hackathon facilitator download](https://aka.ms/sk/hack/materials)
-
-
-## Next step
-
-> [!div class="nextstepaction"]
-> [Run the samples](/semantic-kernel/support/samples)
-
-[!INCLUDE [footer.md](../includes/footer.md)]
