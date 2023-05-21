@@ -11,8 +11,6 @@ ms.service: mssearch
 
 Semantic Kernel is a lightweight open-source orchestration SDK that lets you easily mix-and-match AI prompts with conventional programming languages like C# and Python.
 
-[!INCLUDE [pat_small.md](../includes/pat_small.md)]
-
 ## The SDK simplifies the development of AI apps
 Semantic Kernel has been engineered to allow developers to flexibly integrate AI into their existing apps. To do so, Semantic Kernel provides a set of abstractions that make it easy to create and manage prompts, native functions, memories, and connectors. You can then orchestrate these components using Semantic Kernel pipelines to complete users' requests or automate actions.
 
