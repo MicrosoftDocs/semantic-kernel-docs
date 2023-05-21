@@ -16,7 +16,9 @@ Semantic Kernel is a lightweight open-source orchestration SDK that lets you eas
 ## Semantic Kernel simplifies development of AI apps
 Semantic Kernel has been engineered to allow developers to flexibly integrate AI into their existing apps. To do so, Semantic Kernel provides a set of abstractions that make it easy to create and manage prompts, native functions, memories, and connectors. You can then orchestrate these components using Semantic Kernel pipelines to complete users' requests or automate actions.
 
-As a developer, you can use these pieces individually. For example, if you just need an abstraction over OpenAI and Azure OpenAI services, you could use the SDK to run pre-configured prompts.
+Because of the abstractions Semantic Kernel provides, you can use it to orchestrate AI from any provider. For example, you can use Semantic Kernel to orchestrate AI from OpenAI, Azure, or even Hugging Face.
+
+As a developer, you can then use these pieces individually. For example, if you just need an abstraction over OpenAI and Azure OpenAI services, you could use the SDK to run pre-configured prompts.
 
 ### Orchestrating AI with Semantic Kernel
 The real power of Semantic Kernel, however, comes from its ability to combine these components together. By using multiple AI models, native functions, and memory all together within Semantic Kernel, you can create sophisticated pipelines that use AI to automate complex tasks.
