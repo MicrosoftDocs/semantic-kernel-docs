@@ -3,7 +3,7 @@
         {
             "source_path": "semantic-kernel/concepts-ai/index.md",
             "redirect_url": "/semantic-kernel/overview/semantic-kernel-concepts",
-            "redirect_document_id": true
+            "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/howto/configuringfunctions.md",
@@ -12,7 +12,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/index.md",
-            "redirect_url": "/semantic-kernel/create-plugins",
+            "redirect_url": "/semantic-kernel/create-plugins/index",
             "redirect_document_id": false
         },
         {
@@ -22,7 +22,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/chainingfunctions.md",
-            "redirect_url": "/semantic-kernel/create-chains",
+            "redirect_url": "/semantic-kernel/create-chains/index",
             "redirect_document_id": true
         },
         {
@@ -47,7 +47,7 @@
         },
         {
             "source_path": "semantic-kernel/concepts-sk/skills.md",
-            "redirect_url": "/semantic-kernel/create-plugins",
+            "redirect_url": "/semantic-kernel/create-plugins/index",
             "redirect_document_id": true
         },
         {
@@ -57,7 +57,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/deploy.md",
-            "redirect_url": "/semantic-kernel/deploy",
+            "redirect_url": "/semantic-kernel/deploy/index",
             "redirect_document_id": true
         },
         {
@@ -67,7 +67,7 @@
         },
         {
             "source_path": "semantic-kernel/overview/get-started.md",
-            "redirect_url": "/semantic-kernel/get-started",
+            "redirect_url": "/semantic-kernel/get-started/index",
             "redirect_document_id": true
         },
         {
@@ -82,7 +82,7 @@
         },
         {
             "source_path": "semantic-kernel/concepts-sk/memories.md",
-            "redirect_url": "/semantic-kernel/memories",
+            "redirect_url": "/semantic-kernel/memories/index",
             "redirect_document_id": true
         },
         {
@@ -112,7 +112,7 @@
         },
         {
             "source_path": "semantic-kernel/concepts-ai/prompts.md",
-            "redirect_url": "/semantic-kernel/prompt-engineering",
+            "redirect_url": "/semantic-kernel/prompt-engineering/index",
             "redirect_document_id": true
         },
         {
@@ -137,12 +137,12 @@
         },
         {
             "source_path": "semantic-kernel/samples/index.md",
-            "redirect_url": "/semantic-kernel/samples-and-solutions",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/index",
             "redirect_document_id": true
         },
         {
             "source_path": "semantic-kernel/samples/localapiservice.md",
-            "redirect_url": "/semantic-kernel/samples-and-solutions",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/index",
             "redirect_document_id": false
         },
         {
@@ -157,7 +157,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/developertools.md",
-            "redirect_url": "/semantic-kernel/vs-code-tools",
+            "redirect_url": "/semantic-kernel/vs-code-tools/index",
             "redirect_document_id": true
         },
         {
@@ -172,12 +172,12 @@
         },
         {
             "source_path": "semantic-kernel/howto/semantickerneltools",
-            "redirect_url": "/semantic-kernel/vs-code-tools",
+            "redirect_url": "/semantic-kernel/vs-code-tools/get-started",
             "redirect_document_id": true
         },
         {
             "source_path": "semantic-kernel/get-started",
-            "redirect_url": "/semantic-kernel/get-started",
+            "redirect_url": "/semantic-kernel/get-started/index",
             "redirect_document_id": true
         }
     ]
