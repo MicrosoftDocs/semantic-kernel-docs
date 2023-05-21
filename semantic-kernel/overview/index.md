@@ -18,11 +18,12 @@ Semantic Kernel has been engineered to allow developers to flexibly integrate AI
 
 As a developer, you can use these pieces individually. For example, if you just need an abstraction over OpenAI and Azure OpenAI services, you could use the SDK to run pre-configured prompts.
 
-The real power of Semantic Kernel, however, comes from its ability to orchestrate these components together. By using multiple AI models, native functions, and memory all together within Semantic Kernel, you can create sophisticated pipelines that use AI to automate complex tasks.
+### Orchestrating AI with Semantic Kernel
+The real power of Semantic Kernel, however, comes from its ability to combine these components together. By using multiple AI models, native functions, and memory all together within Semantic Kernel, you can create sophisticated pipelines that use AI to automate complex tasks.
 
 For example, with Semantic Kernel, you could create a pipeline that helps a user send a customer email. With memory, you could retrieve information about the customer and then use GPT-4 to generate a response. Finally, you could use a native function to automatically send the response to a user's email address.
 
-The Semantic Kernel documentation will explain how to use the individual components and how to orchestrate them together to create flows like the following.
+The Semantic Kernel documentation will explain how to use each of the core components so that you can orchestrate them together to create flows like the following.
 
 ![Technical perspective of what's happening](../media/flowdiagram.png)
 
