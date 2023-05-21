@@ -1,12 +1,12 @@
 - name: Overview
   href: index.md
-- name: Prompt orchestration
+- name: The kernel
   href: kernel.md
-- name: Chaining prompts
+- name: Chain prompts
   href: semantic-functions.md
-- name: Chaining native functions
+- name: Chain native functions
   href: native-functions.md
-- name: Using connectors
+- name: Get data with connectors
   href: connectors.md
 - name: Use chains to create responsible AI
   href: responsible-ai.md

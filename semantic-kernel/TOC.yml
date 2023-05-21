@@ -1,22 +1,22 @@
 - name: Overview
   href: overview/TOC.yml
-- name: Getting started
-  href: getting-started/TOC.yml
-- name: Prompt engineering 101
+- name: Get started
+  href: get-started/TOC.yml
+- name: Prompt engineering
   href: prompt-engineering/TOC.yml
-- name: Chaining prompts
+- name: Chain prompts and native functions
   href: create-chains/TOC.yml
-- name: Giving your AI memories
+- name: Give your AI memories
   href: memories/TOC.yml
 - name: Create AI plugins
   href: create-plugins/TOC.yml
 - name: Deploy your AI app
   href: deploy/TOC.yml
-- name: Run Sample Apps
+- name: Run sample apps
   href: samples/TOC.yml
 - name: Visual Studio Code tools
   href: vs-code-tools/TOC.yml
 - name: Get Support
   href: support/TOC.yml
-- name: When to use AI
+- name: Using AI responsibly
   href: when-to-use-AI/TOC.yml

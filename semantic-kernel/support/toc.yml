@@ -1,8 +1,6 @@
-- name: Overview
-  href: index.md
-- name: Join Discord
-  href: join-discord.md
 - name: FAQs
   href: faqs.md
+- name: Join our Discord
+  href: join-discord.md
 - name: Code of Conduct
   href: code-of-conduct.md

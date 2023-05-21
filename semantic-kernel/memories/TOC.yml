@@ -1,6 +1,6 @@
 - name: Overview
   href: index.md
-- name: Conversation history and context
+- name: Remember conversation context
   href: conversation-context.md
 - name: Index context with embeddings
   href: embeddings.md

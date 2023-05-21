@@ -7,7 +7,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/configuringfunctions.md",
-            "redirect_url": "/semantic-kernel/prompt-engineering/configuring-prompts",
+            "redirect_url": "/semantic-kernel/prompt-engineering/configure-prompts",
             "redirect_document_id": true
         },
         {
@@ -107,7 +107,7 @@
         },
         {
             "source_path": "semantic-kernel/concepts-ai/tokens.md",
-            "redirect_url": "/semantic-kernel/prompt-engineering/configuring-prompts",
+            "redirect_url": "/semantic-kernel/prompt-engineering/configure-prompts",
             "redirect_document_id": false
         },
         {
@@ -176,7 +176,7 @@
             "redirect_document_id": true
         },
         {
-            "source_path": "semantic-kernel/get-started",
+            "source_path": "semantic-kernel/get-started.md",
             "redirect_url": "/semantic-kernel/get-started/index",
             "redirect_document_id": true
         }

@@ -1,18 +1,16 @@
 - name: Overview
   href: index.md
-- name: Following along in VS Code
-  href: vs-code.md
-- name: Creating your first prompt
+- name: Create your first prompt
   href: your-first-prompt.md
-- name: Choosing an LLM model
+- name: Choose an LLM model
   href: llm-models.md
-- name: Configuring prompts
-  href: configuring-prompts.md
+- name: Configure prompts
+  href: configure-prompts.md
 - name: Basic prompt techniques
   href: basic-techniques.md
 - name: Advanced prompt techniques
   href: advanced-techniques.md
-- name: Testing prompts
-  href: testing-prompts.md
+- name: Test prompts
+  href: test-prompts.md
 - name: Additional resources
   href: additional-resources.md
