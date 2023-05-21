@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 05/04/2023
 ms.service: mssearch
 ---
-# Get started learning how to use Semantic Kernel
+# Start learning how to use Semantic Kernel
 
 By following these three steps, you can run the getting started Jupyter notebook guides for either C# or Python.
 
