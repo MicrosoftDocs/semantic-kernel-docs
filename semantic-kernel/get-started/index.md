@@ -60,8 +60,11 @@ To setup the guides, follow the steps below.
 1. Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub. 
 
 2. Clone or fork the repo to your local machine.
-   - If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
-   - If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
+
+   > [!NOTE]
+   > If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
+   > [!NOTE]
+   > If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
 
    If you have trouble cloning or forking the repo, you can watch the video below.
    > [!VIDEO https://aka.ms/SK-Local-Setup]
