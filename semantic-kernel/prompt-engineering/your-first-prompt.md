@@ -7,7 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# It all starts with an ASK
+# It all starts with an ask
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
@@ -15,7 +15,7 @@ To write an LLM AI prompt that Semantic Kernel (SK) is uniquely fit for, all you
 
 > I want to make a cake. Give me the best chocolate cake recipe you can think of.
 
-Congratulations! You have imagined a delicious ASK for SK to run to completion. This ASK can be given to the Planner to get decomposed into steps. Although to make the Planner work reliably, you'll need to use the most advanced model available to you. So let's start from writing basic prompts to begin with.
+Congratulations! You have imagined a delicious ask for SK to run to completion. This ask can be given to the Planner to get decomposed into steps. Although to make the Planner work reliably, you'll need to use the most advanced model available to you. So let's start from writing basic prompts to begin with.
 
 ## Writing a simple prompt
 

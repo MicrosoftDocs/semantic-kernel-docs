@@ -97,7 +97,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/semantic_function_guide.md",
-            "redirect_url": "/semantic-kernel/prompt-engineering/basic-techniques",
+            "redirect_url": "/semantic-kernel/prompt-engineering/prompt-template-syntax",
             "redirect_document_id": true
         },
         {
@@ -107,7 +107,7 @@
         },
         {
             "source_path": "semantic-kernel/concepts-ai/tokens.md",
-            "redirect_url": "/semantic-kernel/prompt-engineering/understanding-tokens",
+            "redirect_url": "/semantic-kernel/prompt-engineering/tokens",
             "redirect_document_id": false
         },
         {
