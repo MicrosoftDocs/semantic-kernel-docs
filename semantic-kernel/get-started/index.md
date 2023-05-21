@@ -73,8 +73,8 @@ To setup the guides, follow the steps below.
 5. Open the `00-getting-started.ipynb` notebook.
 6. Activate each code snippet with the "play" button on the left hand side.
 
-If you need help running the `00-getting-started.ipynb` notebook, you can watch the video below.
-> [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
+   If you need help running the `00-getting-started.ipynb` notebook, you can watch the video below.
+   > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
 
 7. Repeat for the remaining notebooks.
     
