@@ -9,13 +9,7 @@ ms.service: mssearch
 ---
 # Start learning how to use Semantic Kernel
 
-By following these three steps, you can run the getting started Jupyter notebook guides for either C# or Python.
-
-1. Go to the [Semantic Kernel GitHub repository](https://aka.ms/sk/repo).
-2. Clone or fork the repo to your local machine.
-3. Run the [Jupyter notebooks](https://aka.ms/skjupyter) locally.
-
-After completing the guides, you'll know how to...
+In just a few steps, you can run the getting started guides for Semantic Kernel in either C# or Python. After completing the guides, you'll know how to...
 - Configure your local machine to run Semantic Kernel
 - Run prompts from the kernel
 - Make prompts dynamic with variables
@@ -23,8 +17,6 @@ After completing the guides, you'll know how to...
 - Automatically create new chains with the planner
 - Store and retrieve memory with embeddings
 
-
-[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
 
 If you are an experienced developer, you can skip the guides and directly access the packages within your existing app using your preferred programming language.
 
@@ -46,9 +38,9 @@ pip install semantic-kernel
 
 ---
 
-## Setting up the guides
+[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
 
-### Requirements to run the guides
+## Requirements to run the guides
 Before running the guides, make sure you have the following installed on your local machine:
 
 > [!div class="checklist"]
@@ -58,8 +50,7 @@ Before running the guides, make sure you have the following installed on your lo
 > * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for C# notebook guides
 > * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook guides
 
-
-### Downloading and running the guides
+## Downloading and running the guides
 To setup the guides, follow the steps below.
 
 > [!TIP]
@@ -88,7 +79,7 @@ If you need help running the `00-getting-started.ipynb` notebook, you can watch 
 7. Repeat for the remaining notebooks.
     
 
-### Using the guides
+## Using the guides
 The guides are designed to be run in order to build on the concepts learned in the previous notebook. If you are interested in learning a particular concept, however, you can jump to the notebook that covers that concept. Below are the available guides.
 
 - `00-getting-started.ipynb` – Run your first prompt
@@ -99,7 +90,7 @@ The guides are designed to be run in order to build on the concepts learned in t
 - `05-using-the-planner.ipynb` – Dynamically create prompt chains with the planner
 - `06-memory-and-embeddings.ipynb` – Store and retrieve memory with embeddings
 
-### Like what you see?
+## Like what you see?
 If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support. 
 ![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
 
