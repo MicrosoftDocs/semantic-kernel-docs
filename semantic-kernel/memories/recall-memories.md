@@ -1,9 +1,9 @@
 ---
 title: Recall memories in a chain
 description: Retrieve context from a previous conversation using memories in prompt chains
-author: matthewbolanos
+author: mabolan
 ms.topic: memories
-ms.author: matthewbolanos
+ms.author: mabolan
 ms.date: 05/21/2023
 ms.service: mssearch
 ---

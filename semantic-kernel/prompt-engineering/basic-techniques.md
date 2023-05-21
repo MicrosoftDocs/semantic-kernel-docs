@@ -1,9 +1,9 @@
 ---
 title: Basic prompt engineering techniques
 description: Learn common techniques for prompt engineering
-author: matthewbolanos
+author: mabolan
 ms.topic: prompt-engineering
-ms.author: matthewbolanos
+ms.author: mabolan
 ms.date: 05/21/2023
 ms.service: mssearch
 ---

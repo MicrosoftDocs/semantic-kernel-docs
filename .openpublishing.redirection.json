@@ -147,7 +147,7 @@
         },
         {
             "source_path": "semantic-kernel/samples/simplechatsummary.md",
-            "redirect_url": "/semantic-kernel/samples-and-solution/simple-chat-summary",
+            "redirect_url": "/semantic-kernel/samples-and-solutions/simple-chat-summary",
             "redirect_document_id": true
         },
         {
@@ -178,7 +178,7 @@
         {
             "source_path": "semantic-kernel/get-started.md",
             "redirect_url": "/semantic-kernel/get-started/index",
-            "redirect_document_id": true
+            "redirect_document_id": false
         }
     ]
 }
