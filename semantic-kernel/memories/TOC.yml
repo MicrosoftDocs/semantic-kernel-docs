@@ -1,6 +1,6 @@
 - name: Overview
   href: index.md
-- name: Index context with embeddings
+- name: Understanding embeddings
   href: embeddings.md
 - name: Store context in vector databases
   href: vector-db.md
