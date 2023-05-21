@@ -40,7 +40,7 @@ The Semantic Kernel documentation will explain how to use each of the core compo
 ## Semantic Kernel is open-source
 You may be familiar with the [Microsoft 365 Copilot System](https://www.youtube.com/watch?v=E5g20qmeKpg), the steps Microsoft uses to power its new Copilot experiences on top of GPT-4. This SDK formalizes patterns like these so building LLM-powered apps can be easier. To make sure all developers can take advantage of our learnings, we have released Semantic Kernel as an [open-source project](https://aka.ms/skrepo) on GitHub. 
 
-![GitHub repo of Semantic Kernel](../media/github.png)
+:::image type="content" source="../media/github.png" alt-text="GitHub repo of Semantic Kernel":::
 
 Given that new breakthroughs in LLM AIs are landing on a daily basis, you should expect this SDK evolve. We're excited to see what you build with Semantic Kernel and we look forward to your feedback and contributions so we can build the best practices together in the SDK.
 
