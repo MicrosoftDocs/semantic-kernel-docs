@@ -60,9 +60,11 @@ Before running the guides, make sure you have the following installed on your lo
 
 
 ### Downloading and running the guides
-To setup the guides, either watch the video or follow the steps below.
+To setup the guides, follow the steps below.
 
-> [!VIDEO https://aka.ms/SK-Local-Setup]
+> [!TIP]
+> Have your OpenAI or Azure OpenAI keys ready to enter when prompted by the Jupyter notebook.
+
 
 1. Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub. 
 
@@ -70,18 +72,21 @@ To setup the guides, either watch the video or follow the steps below.
    - If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
    - If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
 
-3. Run the Jupyter notebooks locally.
-   > [!TIP]
-   > Have your OpenAI or Azure OpenAI keys ready to enter when prompted by the Jupyter notebook.
+   If you have trouble cloning or forking the repo, you can watch the video below.
+   > [!VIDEO https://aka.ms/SK-Local-Setup]
 
-    1. While the repository is open in VS Code, navigate to the `semantic-kernel/samples/notebooks` folder.
-    2. Choose either the .Net or Python folder based on your preferred programming language.
-    3. Open the `00-getting-started.ipynb` notebook.
-    4. Activate each code snippet with the "play" button on the left hand side.
-    5. Repeat for the remaining notebooks.
+3. While the repository is open in VS Code, navigate to the `semantic-kernel/samples/notebooks` folder.
+
+4. Choose either the .Net or Python folder based on your preferred programming language.
+
+5. Open the `00-getting-started.ipynb` notebook.
+6. Activate each code snippet with the "play" button on the left hand side.
+
+If you need help running the `00-getting-started.ipynb` notebook, you can watch the video below.
+> [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
+
+7. Repeat for the remaining notebooks.
     
-    If you need help running the `00-getting-started.ipynb` notebook, you can watch the video below.
-    > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
 
 ### Using the guides
 The guides are designed to be run in order to build on the concepts learned in the previous notebook. If you are interested in learning a particular concept, however, you can jump to the notebook that covers that concept. Below are the available guides.
@@ -101,7 +106,9 @@ If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show 
 ## Keep learning
 The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. Based on your experience level, you can jump to the section that best fits your needs.
 
-- For beginners who are just starting to learn about AI, we recommend learning more about [prompt engineering](/semantic-kernel/prompt-engineering/index).
-- For people who are well versed in prompt engineering, you can learn how to use the Semantic Kernel API to [orchestrate chains of prompts and native functions](/semantic-kernel/create-chains/index).
-- If you are already familiar with chaining prompts and native functions, you can learn how to use the Semantic Kernel API to [store and retrieve memory with embeddings](/semantic-kernel/memories/index).
-- And for those who want to see how it all works together, you can [run the sample apps](/semantic-kernel/samples-and-solutions/index).
+| Experience level     | Next step     |
+|--------------|-----------|
+| For beginners who are just starting to learn about AI | [Learn prompt engineering](/semantic-kernel/prompt-engineering/index) |
+| For people who are well versed in prompt engineering | [Orchestrate prompt chains](/semantic-kernel/create-chains/index) |
+| For people familiar with chaining prompts |  [Store and retrieve memory ](/semantic-kernel/memories/index) |
+| For those who want to see how it all works together |  [Run the sample apps](/semantic-kernel/samples-and-solutions/index) |
