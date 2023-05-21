@@ -23,6 +23,9 @@ After completing the guides, you'll know how to...
 - Automatically create new chains with the planner
 - Store and retrieve memory with embeddings
 
+
+[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
+
 If you are an experienced developer, you can skip the guides and directly access the packages within your existing app using your preferred programming language.
 
 # [C#](#tab/Csharp)
@@ -43,9 +46,9 @@ pip install semantic-kernel
 
 ---
 
-[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
+## Setting up the guides
 
-## Requirements to run the guides
+### Requirements to run the guides
 Before running the guides, make sure you have the following installed on your local machine:
 
 > [!div class="checklist"]
@@ -55,25 +58,19 @@ Before running the guides, make sure you have the following installed on your lo
 > * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for C# notebook guides
 > * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook guides
 
-## Setting up the guides
+
+### Downloading and running the guides
 To setup the guides, either watch the video or follow the steps below.
 
 > [!VIDEO https://aka.ms/SK-Local-Setup]
 
-1. Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub. Please give the repo a ⭐️ star to show your support. 
-   ![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
+1. Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub. 
 
-2. Clone or fork the repo to your local machine. 
-   > [!TIP]
-   > If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
-
-   > [!TIP]
-   > If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
+2. Clone or fork the repo to your local machine.
+   - If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
+   - If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
 
 3. Run the Jupyter notebooks locally.
-   > [!IMPORTANT]
-   > Make sure you have fulfilled the [requirements list](/semantic-kernel/overview/get-started/index#requirements-to-run-notebook-samples) to run Semantic Kernel on your machine.
-
    > [!TIP]
    > Have your OpenAI or Azure OpenAI keys ready to enter when prompted by the Jupyter notebook.
 
@@ -97,26 +94,14 @@ The guides are designed to be run in order to build on the concepts learned in t
 - `05-using-the-planner.ipynb` – Dynamically create prompt chains with the planner
 - `06-memory-and-embeddings.ipynb` – Store and retrieve memory with embeddings
 
+### Like what you see?
+If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support. 
+![Starring the repo for SK to show support](/semantic-kernel/media/pleasestarrepo.png)
+
 ## Keep learning
 The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. Based on your experience level, you can jump to the section that best fits your needs.
 
-For beginners who are just starting to learn about AI, we recommend learning more about prompt engineering:
-
-> [!div class="nextstepaction"]
-> [Learn prompt engineering](/semantic-kernel/prompt-engineering/index)
-
-For people who are well versed in prompt engineering, you can learn how to use the Semantic Kernel API to orchestrate chains of prompts and native functions:
-
-> [!div class="nextstepaction"]
-> [Chain prompts and native functions](/semantic-kernel/create-chains/index)
-
-If you are already familiar with chaining prompts and native functions, you can learn how to use the Semantic Kernel API to store and retrieve memory with embeddings:
-
-> [!div class="nextstepaction"]
-> [Add memories to your apps](/semantic-kernel/memories/index)
-
-And for those who want to see how it all works together, you can run the sample apps:
-
-> [!div class="nextstepaction"]
-> [Run sample apps](/semantic-kernel/samples-and-solutions/index)
-
+- For beginners who are just starting to learn about AI, we recommend learning more about [prompt engineering](/semantic-kernel/prompt-engineering/index).
+- For people who are well versed in prompt engineering, you can learn how to use the Semantic Kernel API to [orchestrate chains of prompts and native functions](/semantic-kernel/create-chains/index).
+- If you are already familiar with chaining prompts and native functions, you can learn how to use the Semantic Kernel API to [store and retrieve memory with embeddings](/semantic-kernel/memories/index).
+- And for those who want to see how it all works together, you can [run the sample apps](/semantic-kernel/samples-and-solutions/index).

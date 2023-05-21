@@ -49,7 +49,7 @@ Additionally, you can check out the available sample AI plugins and apps that de
 
 - [Semantic Kernel samples](/semantic-kernel/samples-and-solutions/)
 
-## How to run the hackathon
+## Running the hackathon
 The hackathon will consist of six main phases: welcome, overview, brainstorming, development, presentation, and feedback. 
 
 Here is an approximate agenda and structure for each phase but feel free to modify this based on your team:
