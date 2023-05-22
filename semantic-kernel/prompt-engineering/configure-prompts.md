@@ -72,5 +72,3 @@ Learn more about tokens.
 > [!div class="nextstepaction"]
 > [Understanding tokens](./tokens.md)
 
-
----

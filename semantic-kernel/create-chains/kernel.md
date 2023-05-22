@@ -50,7 +50,5 @@ There are a variety of things that you can do with `myKernel` that include:
 
 ## Take the next step
 
-Now that you know about the _kernel_, you are ready to learn about the _planner_.
-
 > [!div class="nextstepaction"]
 > [Create native functions](./native-functions.md)
