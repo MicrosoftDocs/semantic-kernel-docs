@@ -47,6 +47,9 @@ You may be familiar with the [Microsoft 365 Copilot System](https://www.youtube.
 
 Given that new breakthroughs in LLM AIs are landing on a daily basis, you should expect this SDK evolve. We're excited to see what you build with Semantic Kernel and we look forward to your feedback and contributions so we can build the best practices together in the SDK.
 
+> [!div class="nextstepaction"]
+> [Open the Semantic Kernel repo](https://aka.ms/skrepo)
+
 ### Contribute to Semantic Kernel
 We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the GitHub repository. Bug reports and fixes are welcome!
 
