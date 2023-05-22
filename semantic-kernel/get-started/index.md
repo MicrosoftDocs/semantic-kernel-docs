@@ -98,14 +98,14 @@ The guides are designed to be run in order to build on the concepts learned in t
 ## Like what you see?
 If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support. 
 
-:::image type="content" source="/semantic-kernel/media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
+:::image type="content" source="../media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
 
 ## Keep learning
 The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. Based on your experience level, you can jump to the section that best fits your needs.
 
 | Experience level     | Next step     |
 |--------------|-----------|
-| For beginners who are just starting to learn about AI | [Learn prompt engineering](/semantic-kernel/prompt-engineering/index) |
-| For people who are well versed in prompt engineering | [Orchestrate prompt chains](/semantic-kernel/create-chains/index) |
-| For people familiar with chaining prompts |  [Store and retrieve memory ](/semantic-kernel/memories/index) |
-| For those who want to see how it all works together |  [Run the sample apps](/semantic-kernel/samples-and-solutions/index) |
+| For beginners who are just starting to learn about AI | [Learn prompt engineering](../prompt-engineering) |
+| For people who are well versed in prompt engineering | [Orchestrate prompt chains](../create-chains) |
+| For people familiar with chaining prompts |  [Store and retrieve memory ](../memories) |
+| For those who want to see how it all works together |  [Run the sample apps](../samples-and-solutions) |

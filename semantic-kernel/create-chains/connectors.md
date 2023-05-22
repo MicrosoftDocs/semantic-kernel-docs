@@ -36,9 +36,9 @@ The set of example connectors provided in the [repo](https://aka.ms/sk/repo) hav
 ## Take the next step
 
 > [!TIP]
-> Try the [Authentication and API sample app](/semantic-kernel/samples/authapi) to see a _Connector_ in action.
+> Try the [Authentication and API sample app](../samples-and-solutions/authentication-api.md) to see a _Connector_ in action.
 
 Now that you know about the _kernel_, _planner_, _plugins_, _connectors_ then you're ready for all the sample apps.
 
 > [!div class="nextstepaction"]
-> [Run Sample Apps](/semantic-kernel/samples)
+> [Run Sample Apps](../samples-and-solutions)

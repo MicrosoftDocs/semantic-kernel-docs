@@ -43,14 +43,14 @@ Before the hackathon, you and your peers will need to download and install softw
 
 You should also familiarize yourself with the available documentation and tutorials. This will ensure that you are knowledgeable of core Semantic Kernel concepts and features so that you can help others during the hackathon. The following resources are highly recommended:
 
-- [What is Semantic Kernel?](/semantic-kernel/overview/index)
-- [Semantic Kernel recipes](/semantic-kernel/get-started/recipes)
+- [What is Semantic Kernel?](../overview)
+- [Semantic Kernel recipes](../get-started/tutorials)
 - [Semantic kernel recipes videos](https://devblogs.microsoft.com/semantic-kernel/recipes/)
 - [Semantic Kernel LinkedIn training video](https://aka.ms/sk/li/introducing-semantic-kernel)
 
 Additionally, you can check out the available sample AI plugins and apps that demonstrate how Semantic Kernel can be used for various scenarios. You can use them as inspiration and even modify them for your own projects during the hackathon. You can find them here:
 
-- [Semantic Kernel samples](/semantic-kernel/samples-and-solutions/)
+- [Semantic Kernel samples](/semantic-kernel/samples-and-solutions)
 
 ## Running the hackathon
 The hackathon will consist of six main phases: welcome, overview, brainstorming, development, presentation, and feedback. 
@@ -60,7 +60,7 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 | Length (Minutes)  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
 | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 15  | Welcome     | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. |
-| 60  | Overview    | The facilitator will guide you through either a pre-recorded video or a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. Along with an overview of Semantic Kernel and its features, such the [kernel](/semantic-kernel/create-chains/kernel), [planner](/semantic-kernel/create-chains/planner), [plugins](/semantic-kernel/create-plugins/), [memories](/semantic-kernel/memories/index) and more. You will also see demos of how Semantic Kernel can be used for different scenarios.                              |
+| 60  | Overview    | The facilitator will guide you through either a pre-recorded video or a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. Along with an overview of Semantic Kernel and its features, such the [kernel](../create-chains/kernel), [planner](../create-chains/planner), [plugins](../create-plugins/), [memories](../memories) and more. You will also see demos of how Semantic Kernel can be used for different scenarios.                              |
 | 120 | Brainstorming | The facilitator will help you form teams based on your interests or skill levels. You will then brainstorm ideas for your own AI plugins or apps using design thinking techniques.  |
 | 360+ | Development | You will use Semantic Kernel SDKs tools, and resources to develop, test, and deploy your projects. This could be for the rest of the day or over multiple days based on the time available and problem to be solved. |
 | 60 | Presentation   | Each team will present their results using a PowerPoint template provided. You will have about 15 minutes per team to showcase your project, demonstrate how it works, and explain how it solves a problem with AI. You will also receive feedback from other participants. |

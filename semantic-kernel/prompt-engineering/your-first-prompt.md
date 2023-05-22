@@ -68,7 +68,7 @@ years of rejection and perseverance.
 
 And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking the model to give us a marketing slogan, and separately 2/ we're asking the model to summarize a body of text down to two sentences.
 
-Both of these simple prompts qualify as "functions" that can be packaged as part of an [Semantic Kernel plugin](/semantic-kernel/create-plugins/). The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in Semantic Kernel within a directory named `SloganMaker` into a file named `skprompt.txt`:
+Both of these simple prompts qualify as "functions" that can be packaged as part of an [Semantic Kernel plugin](../create-plugins/). The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in Semantic Kernel within a directory named `SloganMaker` into a file named `skprompt.txt`:
 
 ```SloganMaker/skprompt.txt
 Write me a marketing slogan for my apparel shop in New 
@@ -177,7 +177,7 @@ a focus on {{$SPECIALTY}} we are without sacrificing quality.
 
 We can replace our `TestPluginFlex` plugin with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
 
-In Semantic Kernel, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native function you can skip ahead to [building a native functions](/semantic-kernel/create-chains/native-functions) if you're anxious.
+In Semantic Kernel, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native function you can skip ahead to [building a native functions](../create-chains/native-functions) if you're anxious.
 
 ## Get your kernel ready
 

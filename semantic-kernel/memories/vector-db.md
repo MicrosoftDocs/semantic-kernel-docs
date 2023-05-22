@@ -29,7 +29,7 @@ The result of the similarity search and retrieval is usually a ranked list of ve
 Vector databases have many use cases across different domains and applications that involve natural language processing (NLP), computer vision (CV), recommendation systems (RS), and other areas that require semantic understanding and matching of data.
 
 One use case for storing information in a vector database is to enable large language models (LLMs) to generate more relevant and coherent text based on
-an [AI plugin](/semantic-kernel/create-plugin/index). 
+an [AI plugin](../create-plugin). 
 
 However, large language models often face challenges such as generating inaccurate or irrelevant information; lacking factual consistency or common sense; repeating or contradicting themselves; being biased or offensive. To overcome these challenges,
 you can use a vector database to store information about different topics,keywords,facts,opinions,sources, related to your desired domain or genre.

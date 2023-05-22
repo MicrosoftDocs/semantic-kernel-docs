@@ -33,9 +33,9 @@ The Semantic Kernel documentation will explain how to use each of the core compo
 | Step | Description |
 |:-|:-|
 | **Ask** | A user's goal is sent to Semantic Kernel as an ask |
-| **Kernel** | [The kernel](/semantic-kernel/create-chains/kernel) orchestrates a user's ask |
-| **Planner** | [The planner](/semantic-kernel/create-chains/planner) breaks it down into steps based upon resources that are available |
-| **Resources** | Planning involves leveraging available [plugins](/semantic-kernel/create-plugins/), [memories](/semantic-kernel/memories/index), and [connectors](/semantic-kernel/create-chains/connectors) |
+| **Kernel** | [The kernel](../create-chains/kernel) orchestrates a user's ask |
+| **Planner** | [The planner](../create-chains/planner) breaks it down into steps based upon resources that are available |
+| **Resources** | Planning involves leveraging available [plugins](../create-plugins), [memories](../memories/index), and [connectors](../create-chains/connectors) |
 | **Steps** | A plan is a series of steps for the kernel to execute |
 | **Pipeline** | Executing the steps results in fulfilling the user's ask |
 | **Response** | The output sent back to the user |
@@ -55,7 +55,7 @@ For new features, components, or extensions, please open an issue and discuss wi
 <!-- ## Semantic Kernel is one part of the entire AI ecosystem -->
 
 ## Get started using the Semantic Kernel SDK
-Now that you know what Semantic Kernel is, follow the [get started](/semantic-kernel/get-started) link to try it out. Within minutes you can create prompts and chain them with out-of-the-box plugins and native code. Soon afterwards, you can give your apps memories with embeddings and summon even more power from external APIs.
+Now that you know what Semantic Kernel is, follow the [get started](../get-started) link to try it out. Within minutes you can create prompts and chain them with out-of-the-box plugins and native code. Soon afterwards, you can give your apps memories with embeddings and summon even more power from external APIs.
 
 > [!div class="nextstepaction"]
-> [Get started with Semantic Kernel](/semantic-kernel/get-started)
+> [Get started with Semantic Kernel](../get-started)

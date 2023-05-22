@@ -1,6 +1,11 @@
 {
     "redirections": [
         {
+            "source_path": "semantic-kernel/whatissk.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
             "source_path": "semantic-kernel/concepts-ai/index.md",
             "redirect_url": "/semantic-kernel/overview/index",
             "redirect_document_id": false

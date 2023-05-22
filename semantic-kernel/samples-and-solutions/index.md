@@ -22,17 +22,17 @@ Multiple learning samples are provided in the [Semantic Kernel GitHub repository
 ## Try the TypeScript/React sample apps
 
 > [!IMPORTANT]
-> [The local API service](/semantic-kernel/samples-and-solutions/local-api-service) must be active for the sample apps to run.
+> [The local API service](../samples-and-solutions/local-api-service) must be active for the sample apps to run.
 
 | Sample App | Illustrates |
 |---|---|
-| [Simple chat summary](/semantic-kernel/samples-and-solutions/simple-chat-summary) | Use ready-to-use [plugins](/semantic-kernel/create-plugins/out-of-the-box-plugins) and get those plugins into **your** app easily. _Be sure that the [local API service](/semantic-kernel/samples-and-solutions/local-api-service) is running for this sample to work._ |
-| [Book creator](/semantic-kernel/samples-and-solutions/book-creator) | Use [planner](/semantic-kernel/create-chains/planner) to deconstruct a complex goal and envision using the planner in **your** app. _Be sure that the [local API service](/semantic-kernel/samples-and-solutions/local-api-service) is running for this sample to work._ |
-| [Authentication and APIs](/semantic-kernel/samples-and-solutions/authentication-api) | Use a basic [connector](/semantic-kernel/create-chains/connectors) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI. _Be sure that the [local API service](/semantic-kernel/samples-and-solutions/local-api-service) is running for this sample to work._ |
-| [GitHub Repo Q&A Bot](/semantic-kernel/samples-and-solutions/github-repo-qa-bot) | Use [embeddings](/semantic-kernel/memories/index) to store local data and functions to question the embedded data. _Be sure that the [local API service](/semantic-kernel/samples-and-solutions/local-api-service) is running for this sample to work._ |
-| [Copilot Chat Sample App](/semantic-kernel/samples-and-solutions/copilot-chat) | Build your own chatbot based on the Semantic Kernel. |
+| [Simple chat summary](../samples-and-solutions/simple-chat-summary) | Use ready-to-use [plugins](../create-plugins/out-of-the-box-plugins) and get those plugins into **your** app easily. _Be sure that the [local API service](../samples-and-solutions/local-api-service) is running for this sample to work._ |
+| [Book creator](../samples-and-solutions/book-creator) | Use [planner](../create-chains/planner) to deconstruct a complex goal and envision using the planner in **your** app. _Be sure that the [local API service](../samples-and-solutions/local-api-service) is running for this sample to work._ |
+| [Authentication and APIs](../samples-and-solutions/authentication-api) | Use a basic [connector](../create-chains/connectors) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI. _Be sure that the [local API service](../samples-and-solutions/local-api-service) is running for this sample to work._ |
+| [GitHub Repo Q&A Bot](../samples-and-solutions/github-repo-qa-bot) | Use [embeddings](../memories) to store local data and functions to question the embedded data. _Be sure that the [local API service](../samples-and-solutions/local-api-service) is running for this sample to work._ |
+| [Copilot Chat Sample App](../samples-and-solutions/copilot-chat) | Build your own chatbot based on the Semantic Kernel. |
 
 ## Next step
 
 > [!div class="nextstepaction"]
-> [Run the simple chat summary app](/semantic-kernel/samples-and-solutions/simple-chat-summary)
+> [Run the simple chat summary app](../samples-and-solutions/simple-chat-summary)

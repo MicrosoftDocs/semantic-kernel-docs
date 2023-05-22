@@ -59,4 +59,4 @@ Prompt engineering is a dynamic and evolving field, and skilled prompt engineers
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Create your first prompt](/semantic-kernel/prompt-engineering/your-first-prompt.md)
+> [Create your first prompt](../prompt-engineering/your-first-prompt.md)
