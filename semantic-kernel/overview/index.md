@@ -35,7 +35,7 @@ The Semantic Kernel documentation will explain how to use each of the core compo
 | **Ask** | A user's goal is sent to Semantic Kernel as an ask |
 | **Kernel** | [The kernel](/semantic-kernel/create-chains/kernel) orchestrates a user's ask |
 | **Planner** | [The planner](/semantic-kernel/create-chains/planner) breaks it down into steps based upon resources that are available |
-| **Resources** | Planning involves leveraging available [plugins](/semantic-kernel/create-plugins/index), [memories](/semantic-kernel/memories/index), and [connectors](/semantic-kernel/create-chains/connectors) |
+| **Resources** | Planning involves leveraging available [plugins](/semantic-kernel/create-plugins/), [memories](/semantic-kernel/memories/index), and [connectors](/semantic-kernel/create-chains/connectors) |
 | **Steps** | A plan is a series of steps for the kernel to execute |
 | **Pipeline** | Executing the steps results in fulfilling the user's ask |
 | **Response** | The output sent back to the user |

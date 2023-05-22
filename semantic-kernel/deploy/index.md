@@ -61,7 +61,7 @@ After entering the command below, you will be prompted to enter your OpenAI API 
 ## Considerations
 
 1. Azure currently limits the number of Azure OpenAI resources per region per subscription to 3. Azure OpenAI is not available in every region.
-(Refer to this [availability map](https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?products=cognitive-services))
+(Refer to this [availability map](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?products=cognitive-services))
 Bearing this in mind, you might want to use the same Azure OpenAI instance for multiple deployments of Semantic Kernel to Azure.
 
 2. F1 and D1 App Service SKU's (the Free and Shared ones) are not supported for this deployment.
@@ -103,7 +103,7 @@ Both Completion:Endpoint and Embedding:Endpoint are ignored for OpenAI instances
 <br></br>
 ## How to clean up resources
 
-To save costs you may want to clean up resources from this deployment. You can do this by deleting the resource group that contains you created via Azure portal or run the following in [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/):
+To save costs you may want to clean up resources from this deployment. You can do this by deleting the resource group that contains you created via Azure portal or run the following in [Azure CLI](/cli/azure/):
 ```powershell
 az group delete --name YOUR_RESOURCE_GROUP
 ```

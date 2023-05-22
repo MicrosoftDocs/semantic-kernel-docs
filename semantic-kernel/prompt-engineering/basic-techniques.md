@@ -1,6 +1,6 @@
 ---
-title: How to use prompt template language in Semantic Kernel
-description: How to use prompt template language in Semantic Kernel
+title: Basic prompt engineering techniques
+description: Basic prompt engineering techniques
 author: johnmaeda
 ms.topic: prompt-engineering
 ms.author: johnmaeda

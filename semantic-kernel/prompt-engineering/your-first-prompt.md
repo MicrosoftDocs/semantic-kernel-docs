@@ -68,7 +68,7 @@ years of rejection and perseverance.
 
 And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking the model to give us a marketing slogan, and separately 2/ we're asking the model to summarize a body of text down to two sentences.
 
-Both of these simple prompts qualify as "functions" that can be packaged as part of an [Semantic Kernel plugin](/semantic-kernel/create-plugins/index). The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in Semantic Kernel within a directory named `SloganMaker` into a file named `skprompt.txt`:
+Both of these simple prompts qualify as "functions" that can be packaged as part of an [Semantic Kernel plugin](/semantic-kernel/create-plugins/). The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in Semantic Kernel within a directory named `SloganMaker` into a file named `skprompt.txt`:
 
 ```SloganMaker/skprompt.txt
 Write me a marketing slogan for my apparel shop in New 
