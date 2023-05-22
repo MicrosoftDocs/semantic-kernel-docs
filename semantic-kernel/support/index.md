@@ -30,4 +30,4 @@ ms.service: mssearch
 ## Next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](/semantic-kernel/support/samples)
+> [Run the samples](../samples-and-solutions/index.md)

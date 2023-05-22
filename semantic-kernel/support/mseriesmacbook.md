@@ -67,4 +67,4 @@ And you are now good to go:
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Run the samples](/semantic-kernel/support/samples)
+> [Run the samples](../samples-and-solutions/index.md)

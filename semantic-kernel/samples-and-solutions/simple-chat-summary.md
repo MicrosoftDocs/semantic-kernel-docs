@@ -11,7 +11,7 @@ ms.service: mssearch
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-The Simple Chat Summary sample allows you to see the power of [functions](/semantic-kernel/prompt-engineering/your-first-prompt) used in a chat sample app.  The sample highlights the [Summarize](https://aka.ms/sk/repo/summarize), [Topics](https://aka.ms/sk/repo/topics) and [Action Items](https://aka.ms/sk/repo/actionitems) functions in the [Summarize Plugin](https://aka.ms/sk/repo/summarizeskill).  Each function calls OpenAI to review the information in the chat window and produces insights.   
+The Simple Chat Summary sample allows you to see the power of [functions](../prompt-engineering/your-first-prompt) used in a chat sample app.  The sample highlights the [Summarize](https://aka.ms/sk/repo/summarize), [Topics](https://aka.ms/sk/repo/topics) and [Action Items](https://aka.ms/sk/repo/actionitems) functions in the [Summarize Plugin](https://aka.ms/sk/repo/summarizeskill).  Each function calls OpenAI to review the information in the chat window and produces insights.   
 
 > [!IMPORTANT]
 > Each function will call OpenAI which will use tokens that you will be billed for. 

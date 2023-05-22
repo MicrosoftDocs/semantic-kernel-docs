@@ -71,7 +71,7 @@ Once you have a AI endpoint configured proceed as follows:
 3. Click the "Add Semantic Skill" icon in the Semantic Kernel Functions view title bar
 4. You will be prompted to select a folder
  - This will be the location of the plugin which will contain your new Semantic Function
- - Create a new folder called MyPlugin1 in this directory <location of your clone>\semantic-kernel\samples\skills
+ - Create a new folder called MyPlugin1 in this directory &lt;location of your clone&gt;\semantic-kernel\samples\skills
  - Select this new folder as your Plugin folder
 5. You will be prompted for a function name, enter MyFunction1
 6. You will be prompted for a function description2
@@ -91,13 +91,13 @@ Once you have a AI endpoint configured proceed as follows:
 Below is a list of possible errors you might receive and details on how to address them.
 
 Errors creating a Semantic Function
-- Unable to create function prompt file for <name>
+- Unable to create function prompt file for &lt;name&gt;
  - An error occurred creating the skprompt.txt file for a new semantic function. Check you can create new folders and files in the location specified for the semantic function.
-- Function <name> already exists. Found function prompt file: <file name>
+- Function &lt;name&gt; already exists. Found function prompt file: &lt;file name&gt;
  - A skprompt.txt file already exists for the semantic function you are trying to create. Switch to the explorer view to find the conflicting file.
-- Unable to create function configuration file for <file name>
+- Unable to create function configuration file for &lt;file name&gt;
  - An error occurred creating the config.json file for a new semantic function. Check you can create new folders and files in the location specified for the semantic function.
-- Configuration file for <file> already exists. Found function config file: <file name>
+- Configuration file for &lt;file&gt; already exists. Found function config file: &lt;file name&gt;
  - A config.json file already exists for the semantic function you are trying to create. Switch to the explorer view to find the conflicting file.
 
 Errors configuring an AI Endpoint

@@ -50,7 +50,7 @@ You should also familiarize yourself with the available documentation and tutori
 
 Additionally, you can check out the available sample AI plugins and apps that demonstrate how Semantic Kernel can be used for various scenarios. You can use them as inspiration and even modify them for your own projects during the hackathon. You can find them here:
 
-- [Semantic Kernel samples](/semantic-kernel/samples-and-solutions/index.md)
+- [Semantic Kernel samples](../samples-and-solutions/index.md)
 
 ## Running the hackathon
 The hackathon will consist of six main phases: welcome, overview, brainstorming, development, presentation, and feedback. 
