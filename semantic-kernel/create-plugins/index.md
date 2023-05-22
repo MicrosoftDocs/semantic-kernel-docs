@@ -9,10 +9,7 @@ ms.service: mssearch
 ---
 # What are Plugins?
 
-| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | [Planner](/semantic-kernel/concepts-sk/planner) | Skills | [Memories](/semantic-kernel/concepts-sk/memories) |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
-|---|---|---|---|---|---|---|---|
-
-[!INCLUDE [fullview.md](../includes/fullview.md)]
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 A _plugin_ refers to a domain of expertise made available to the [kernel](/semantic-kernel/concepts-sk/kernel) as a single function, or as a group of functions related to the plugin. The design of Semantic Kernel plugins has prioritized maximum flexibility for the developer to be both lightweight and extensible.  
 
@@ -89,5 +86,3 @@ Now that you know about the _kernel_, _planner_, _plugins_, you can take on _mem
 > [!div class="nextstepaction"]
 > [Learn about Memories](/semantic-kernel/concepts-sk/memories)
 
-
-[!INCLUDE [footer.md](../includes/footer.md)]

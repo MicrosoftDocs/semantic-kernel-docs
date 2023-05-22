@@ -17,6 +17,11 @@ To write an LLM AI prompt that Semantic Kernel is uniquely fit for, all you need
 
 Congratulations! You have imagined a delicious ask for Semantic Kernel to run to completion. This ask can be given to the Planner to get decomposed into steps. Although to make the Planner work reliably, you'll need to use the most advanced model available to you. So let's start from writing basic prompts to begin with.
 
+
+
+> [!Note]
+> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
+
 ## Writing a simple prompt
 
 Writing prompts is like making a wish. Let's imagine we are entrepreneurs trying to make it in downtown Manhattan and we need to drive more leads to our store. We write the prompt:
@@ -88,10 +93,10 @@ book deal.
 ---End Text---
 ```
 
-Each of these directories comprise a Semantic Kernel function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new plugin. 
+Each of these directories comprise a Semantic Kernel function. When both of the directories are placed inside an enclosing directory called `TestPlugin` the result is a brand new plugin. 
 
-```Semantic-Skills-And-Their-Functions
-TestSkill
+```Semantic-Plugins-And-Their-Functions
+TestPlugin
 │
 └─── SloganMaker
 |    |
@@ -106,8 +111,8 @@ TestSkill
 
 This plugin can do one of two things by calling one of its two functions:
 
-* `TestSkill.SloganMaker()` generates a slogan for a specific kind of shop in NYC
-* `TestSkill.SummmarizeBlurb()` creates a short summary of a specific blurb
+* `TestPlugin.SloganMaker()` generates a slogan for a specific kind of shop in NYC
+* `TestPlugin.SummmarizeBlurb()` creates a short summary of a specific blurb
 
 Next, we'll show you how to make a more powerful plugin by introducing Semantic Kernel prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
 
@@ -135,10 +140,10 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new Semantic Kernel functions that can belong to a new `TestSkillFlex` plugin that now takes an input. To package these two function to be used by Semantic Kernel in the context of a plugin, we arrange our file hierarchy the same as we did before:
+We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new Semantic Kernel functions that can belong to a new `TestPluginFlex` plugin that now takes an input. To package these two function to be used by Semantic Kernel in the context of a plugin, we arrange our file hierarchy the same as we did before:
 
-```File-Structure-For-Skill-Definition-With-Functions
-TestSkillFlex
+```File-Structure-For-Plugin-Definition-With-Functions
+TestPluginFlex
 │
 └─── SloganMakerFlex
 |    |
@@ -153,8 +158,8 @@ TestSkillFlex
 
 Recall that the difference between our new "flex" plugins and our original "plain" plugins is that we've gained the added flexibility of being able to pass a single parameter like:
 
-* `TestSkillFlex.SloganMakerFlex('detective agency')` generates a slogan for a 'detective agency' in NYC
-* `TestSkillFlex.SummarizeBlurbFlex('<insert long text here>')` creates a short summary of a given blurb
+* `TestPluginFlex.SloganMakerFlex('detective agency')` generates a slogan for a 'detective agency' in NYC
+* `TestPluginFlex.SummarizeBlurbFlex('<insert long text here>')` creates a short summary of a given blurb
 
 Templated prompts can be further customized beyond a single `$INPUT` variable to take on more inputs to gain even greater flexibility. For instance, if we wanted our SloganMaker plugin to not only take into account the kind of business but also the business' location and specialty, we would write the function as:
 
@@ -170,7 +175,7 @@ Write me a marketing slogan for my {{$BUSINESS}} in {{$CITY}} with
 a focus on {{$SPECIALTY}} we are without sacrificing quality.
 ```
 
-We can replace our `TestSkillFlex` plugin with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
+We can replace our `TestPluginFlex` plugin with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
 
 In Semantic Kernel, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native function you can skip ahead to [building a native functions](/semantic-kernel/create-chains/native-functions) if you're anxious.
 
@@ -210,12 +215,12 @@ kernel.Config.AddOpenAITextCompletion(
 
 When running a semantic function from your app's root source directory `MyAppSource` your file structure will looks like:
 
-```Your-App-And-Semantic-Skills
+```Your-App-And-Semantic-Plugins
 MyAppSource
 │
-└───MySkillsDirectory
+└───MyPluginsDirectory
     │
-    └─── TestSkillFlex
+    └─── TestPluginFlex
         │
         └─── SloganMakerFlex
         |    |
@@ -244,14 +249,14 @@ using Microsoft.SemanticKernel.Orchestration;
 
 // ... instantiate a kernel as myKernel
 
-var mySkill = myKernel.ImportSemanticSkillFromDirectory("MySkillsDirectory", "TestSkillFlex");
+var myPlugin = myKernel.ImportSemanticSkillFromDirectory("MyPluginsDirectory", "TestPluginFlex");
 
 var myContext = new ContextVariables(); 
 myContext.Set("BUSINESS", "Basketweaving Service"); 
 myContext.Set("CITY", "Seattle"); 
 myContext.Set("SPECIALTY","ribbons"); 
 
-var myResult = await myKernel.RunAsync(myContext,mySkill["SloganMakerFlex"]);
+var myResult = await myKernel.RunAsync(myContext,myPlugin["SloganMakerFlex"]);
 
 Console.WriteLine(myResult);
 ```
@@ -306,7 +311,7 @@ var myPromptTemplate = new PromptTemplate(
 var myFunctionConfig = new SemanticFunctionConfig(myPromptConfig, myPromptTemplate);
 
 var myFunction = myKernel.RegisterSemanticFunction(
-    "TestSkillFlex", 
+    "TestPluginFlex", 
     "summarizeBlurbFlex",
     myFunctionConfig);
 

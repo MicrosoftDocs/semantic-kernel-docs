@@ -9,6 +9,9 @@ ms.service: mssearch
 ---
 
 # What are Connectors?
+
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 _Connectors_ let you reach outside of the plugins universe to external APIs and whatever else you can imagine. By combining your custom plugins with a custom set of connectors, you can build LLM AI app features that fully leverage realtime data into fully reusable "AI ready" components to add to all of your projects. 
 
 ## What's the MS Graph Connector Kit?
@@ -39,5 +42,3 @@ Now that you know about the _kernel_, _planner_, _plugins_, _connectors_ then yo
 
 > [!div class="nextstepaction"]
 > [Run Sample Apps](/semantic-kernel/samples)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

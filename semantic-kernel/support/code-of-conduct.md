@@ -10,7 +10,7 @@ ms.service: mssearch
 
 # Contributor Covenant Code of Conduct
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 ## Our Pledge
 

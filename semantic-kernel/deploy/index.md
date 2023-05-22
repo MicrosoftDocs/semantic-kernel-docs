@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 
 # Learn how to deploy Semantic Kernel to Azure as a web app service
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 You can use one of the following methods to deploy Semantic Kernel to Azure in a web app service based on your use case.  
 

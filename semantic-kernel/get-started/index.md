@@ -9,6 +9,8 @@ ms.service: mssearch
 ---
 # Start learning how to use Semantic Kernel
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 In just a few steps, you can run the getting started guides for Semantic Kernel in either C# or Python. After completing the guides, you'll know how to...
 - Configure your local machine to run Semantic Kernel
 - Run prompts from the kernel
@@ -38,7 +40,7 @@ pip install semantic-kernel
 
 ---
 
-[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
+
 
 ## Requirements to run the guides
 Before running the guides, make sure you have the following installed on your local machine:

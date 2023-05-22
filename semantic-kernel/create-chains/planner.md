@@ -10,10 +10,7 @@ ms.service: mssearch
 
 # What is Planner?
 
-| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | Planner | [Skills](/semantic-kernel/concepts-sk/skills)| [Memories](/semantic-kernel/concepts-sk/memories) |[Connectors](/semantic-kernel/concepts-sk/connectors) | >>>|  ⇾GET | 
-|---|---|---|---|---|---|---|---|
-
-[!INCLUDE [fullview.md](../includes/fullview.md)]
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 The _planner_ works backwards from a goal that’s provided from a user's _ask_. 
 

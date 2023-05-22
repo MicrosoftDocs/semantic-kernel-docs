@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Support for Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 👋 Welcome! There are a variety of ways to get supported in the Semantic Kernel (SK) world. 
 
@@ -31,5 +31,3 @@ ms.service: mssearch
 
 > [!div class="nextstepaction"]
 > [Run the samples](/semantic-kernel/support/samples)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

@@ -8,6 +8,10 @@ ms.date: 04/04/2023
 ms.service: mssearch 
 ---
 # Hackathon Materials for Semantic Kernel
+
+
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
+
 With these materials you can run your own Semantic Kernel Hackathon, a hands-on event where you can learn and create AI solutions using Semantic Kernel tools and resources. 
 
 By participating and running a Semantic Kernel hackathon, you will have the opportunity to:
@@ -17,7 +21,6 @@ By participating and running a Semantic Kernel hackathon, you will have the oppo
 - Present your results and get feedback from other participants 
 - Have fun!
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
 
 
 ## Download the materials

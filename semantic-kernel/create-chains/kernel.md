@@ -9,10 +9,7 @@ ms.service: mssearch
 ---
 # What is the Kernel?
 
-| ASK⇾ | Kernel | [Planner](/semantic-kernel/concepts-sk/Planner) | [Skills](/semantic-kernel/concepts-sk/skills)| [Memories](/semantic-kernel/concepts-sk/memories) |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
-|---|---|---|---|---|---|---|---|
-
-[!INCLUDE [fullview.md](../includes/fullview.md)]
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 The _kernel_ in Semantic Kernel is the orchestrator of a user's ask. The _kernel_ fulfills the user's desired goal using its available [plugins](/semantic-kernel/concepts-sk/skills), memories, and [connectors](/semantic-kernel/concepts-sk/connectors). Key features of the _kernel_ that facilitate faster development include:
 
@@ -25,6 +22,8 @@ The _kernel_ is designed to encourage "function composition" which allows develo
 
 > [!TIP]
 > Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see the _Kernel_ in action.
+
+
 
 ## Why is the Kernel called a "kernel"?
 
@@ -55,5 +54,3 @@ Now that you know about the _kernel_, you are ready to learn about the _planner_
 
 > [!div class="nextstepaction"]
 > [Learn about the Planner](/semantic-kernel/concepts-sk/planner)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

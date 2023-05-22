@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Local API service for app samples
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 This service API is written in C# against Azure Function Runtime v4 and exposes some Semantic Kernel APIs that you can call via HTTP POST requests for the [learning samples](/semantic-kernel/samples).
 
@@ -42,5 +42,3 @@ Now that your service API is running locally, try out some of the sample apps so
 
 > [!div class="nextstepaction"]
 > [Jump into all the sample apps](/semantic-kernel/samples)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

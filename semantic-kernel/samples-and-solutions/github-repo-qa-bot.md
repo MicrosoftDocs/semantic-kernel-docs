@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # GitHub Repo Q&A Bot sample app
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those files are created as [embeddings](/semantic-kernel/concepts-ai/embeddings). You can then question the stored files from the embedding local storage.
 
@@ -55,5 +55,3 @@ Run the Copilot Chat sample app!
 > [!div class="nextstepaction"]
 > [Run the Copilot Chat Sample App](/semantic-kernel/samples/copilotchat)
 
-
-[!INCLUDE [footer.md](../includes/footer.md)]

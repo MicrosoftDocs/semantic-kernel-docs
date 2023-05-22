@@ -13,6 +13,9 @@ The Semantic Kernel Tools help developers to write semantic functions for [Seman
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
+> [!Note]
+> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
+
 ## Installing the Semantic Kernel Extension
 
 To get started with Semantic Kernel Tools, follow these simple steps:
@@ -60,16 +63,16 @@ Once you have a AI endpoint configured proceed as follows:
 4. The response will be displayed in the Output view in the "Semantic Kernel" section
 
 
-## Create A Semantic Skill
+## Create a semantic function
 
 1. Once you have installed the Semantic Kernel Tools extension you will see a new Semantic Kernel option in the activity bar
  - We recommend you clone the semantic-kernel repository and open this in your VS Code workspace
 2. Click the Semantic Kernel icon to open Semantic Kernel Functions view
 3. Click the "Add Semantic Skill" icon in the Semantic Kernel Functions view title bar
 4. You will be prompted to select a folder
- - This will be the location of the Skill which will contain your new Semantic Function
- - Create a new folder called MySkill1 in this directory <location of your clone>\semantic-kernel\samples\skills
- - Select this new folder as your Skill folder
+ - This will be the location of the plugin which will contain your new Semantic Function
+ - Create a new folder called MyPlugin1 in this directory <location of your clone>\semantic-kernel\samples\skills
+ - Select this new folder as your Plugin folder
 5. You will be prompted for a function name, enter MyFunction1
 6. You will be prompted for a function description2
 7. A new prompt text file will be automatically created for your new function

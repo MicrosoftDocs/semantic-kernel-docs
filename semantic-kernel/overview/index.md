@@ -9,7 +9,8 @@ ms.service: mssearch
 ---
 # What is Semantic Kernel?
 
-[!INCLUDE [pat_medium.md](../includes/pat_medium.md)]
+
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 Semantic Kernel is a lightweight open-source orchestration SDK that lets you easily mix-and-match AI prompts with conventional programming languages like C# and Python.
 

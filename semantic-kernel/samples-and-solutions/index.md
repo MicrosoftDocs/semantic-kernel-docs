@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Overview of sample apps 
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 Multiple learning samples are provided in the [Semantic Kernel GitHub repository](https://github.com/microsoft/semantic-kernel/tree/main/samples) to help you learn core concepts of Semantic Kernel.
 
@@ -36,5 +36,3 @@ Multiple learning samples are provided in the [Semantic Kernel GitHub repository
 
 > [!div class="nextstepaction"]
 > [Run the simple chat summary app](/semantic-kernel/samples-and-solutions/simple-chat-summary)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

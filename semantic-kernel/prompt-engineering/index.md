@@ -9,9 +9,10 @@ ms.service: mssearch
 ---
 # What are Prompts?
 
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
+
 Prompts play a crucial role in communicating and directing the behavior of Large Language Models (LLMs) AI. They serve as inputs or queries that users can provide to elicit specific responses from a model. 
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 ## The subtleties of prompting
 Effective prompt design is essential to achieving desired outcomes with LLM AI models. Prompt engineering, also known as prompt design, is an emerging field that requires creativity and attention to detail. It involves selecting the right words, phrases, symbols, and formats that guide the model in generating high-quality and relevant texts.
@@ -59,5 +60,3 @@ Prompt engineering is a dynamic and evolving field, and skilled prompt engineers
 
 > [!div class="nextstepaction"]
 > [Create your first prompt](/semantic-kernel/prompt-engineering/your-first-prompt.md)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

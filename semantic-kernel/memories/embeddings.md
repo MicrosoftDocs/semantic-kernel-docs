@@ -42,4 +42,3 @@ _Embeddings_ are used for:
 > [!div class="nextstepaction"]
 > [Learn about vector databases](/semantic-kernel/concepts-ai/vectordb)
 
-[!INCLUDE [footer.md](../includes/footer.md)]

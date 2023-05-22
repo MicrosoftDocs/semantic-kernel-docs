@@ -10,10 +10,7 @@ ms.service: mssearch
 
 # What are Memories?
 
-| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | [Planner](/semantic-kernel/concepts-sk/planner) | [Skills](/semantic-kernel/concepts-sk/skills)|   [Memories](/semantic-kernel/concepts-sk/memories) |[Connectors](/semantic-kernel/concepts-sk/Connectors) | >>>|  ⇾GET | 
-|---|---|---|---|---|---|---|---|
-
-[!INCLUDE [fullview.md](../includes/fullview.md)]
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 _Memories_ are a powerful way to provide broader context for your ask. Historically, we've always called upon memory as a core component for how computers work: think the RAM in your laptop. For with just a CPU that can crunch numbers, the computer isn't that useful unless it knows what numbers you care about. Memories are what make computation relevant to the task at hand.
 
@@ -43,5 +40,3 @@ Now that you know about the _kernel, planner, plugins, memories,_ it's time for 
 
 > [!div class="nextstepaction"]
 > [Learn about Connectors](/semantic-kernel/concepts-sk/connectors)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

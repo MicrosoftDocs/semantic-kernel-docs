@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Simple chat summary sample app
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 The Simple Chat Summary sample allows you to see the power of [functions](/semantic-kernel/prompt-engineering/your-first-prompt) used in a chat sample app.  The sample highlights the [Summarize](https://aka.ms/sk/repo/summarize), [Topics](https://aka.ms/sk/repo/topics) and [Action Items](https://aka.ms/sk/repo/actionitems) functions in the [Summarize Plugin](https://aka.ms/sk/repo/summarizeskill).  Each function calls OpenAI to review the information in the chat window and produces insights.   
 
@@ -53,5 +53,3 @@ Three semantic functions are called on this screen
 
 > [!div class="nextstepaction"]
 > [Run the book creator app](/semantic-kernel/samples/bookcreator)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

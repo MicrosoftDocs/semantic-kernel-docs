@@ -57,5 +57,3 @@ The actions on this screen are:
 
 > [!div class="nextstepaction"]
 > [Run the GitHub Repo Q&A Bot app](/semantic-kernel/samples/githubrepoqabot)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

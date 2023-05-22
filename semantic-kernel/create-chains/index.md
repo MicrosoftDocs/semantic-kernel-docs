@@ -11,7 +11,7 @@ ms.service: mssearch
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-Semantic Kernel (SK) was designed in the spirit of UNIX's piping capability to take one command and stream its output to the next command in the sequence. You can see that legacy design built-in to the use of the `$INPUT` parameter as a default intake for a function to stream its output into the next `$INPUT`-ready function.
+Semantic Kernel was designed in the spirit of UNIX's piping capability to take one command and stream its output to the next command in the sequence. You can see that legacy design built-in to the use of the `$INPUT` parameter as a default intake for a function to stream its output into the next `$INPUT`-ready function.
 
 For example we can make three inline semantic functions and string their outputs into the next input, and so forth after preparing `myKernel` as [before](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready).
 

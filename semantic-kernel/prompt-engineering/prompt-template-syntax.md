@@ -9,6 +9,7 @@ ms.service: mssearch
 ---
 # Prompt template syntax
 
+
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 The Semantic Kernel prompt template language is a simple and powerful way to

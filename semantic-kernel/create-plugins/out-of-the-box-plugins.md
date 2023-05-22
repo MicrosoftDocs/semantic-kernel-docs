@@ -11,9 +11,14 @@ ms.service: mssearch
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
+
+> [!Note]
+> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
+
 To provide a degree of standardization across Semantic Kernel implementations, the GitHub repo has several plugins available to any Semantic Kernel prompt which you can browse at:
 
 [`/semantic-kernel/dotnet/src/SemanticKernel/CoreSkills/`](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/SemanticKernel/CoreSkills)
+
 
 The core plugins currently supported include:
 

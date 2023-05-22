@@ -8,11 +8,11 @@ ms.date: 02/07/2023
 ms.service: mssearch
 ---
 
-# It all starts with a little C# knowledge
+# Adding native functions to Semantic Kernel chains
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-If you're new to C#, here's a few quick tips to get you started in the context of Semantic Kernel (SK):
+If you're new to C#, here's a few quick tips to get you started in the context of Semantic Kernel:
 
 * With semantic functions, they went into folders with an `skprompt.txt` file and a `config.json` file; with native C# functions they live as a `.cs` file like _MyCSharpPlugin.cs._
 * Strings in C# can span multiple lines with the `@` sign and enclosing `""`

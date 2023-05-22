@@ -7,12 +7,16 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# Configuring templates
+# Configuring prompts
+
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-```File-Structure-For-Semantic-Skills
-TestSkill
+
+LLM AI [models](/semantic-kernel/concepts-ai/models) have a variety of parameters associated them that can alter their behavior. Semantic Kernel enables the developer to have complete control over how a model is to be configured by using a `config.json` file placed in the same directory as the `skprompt.txt` file.
+
+```File-Structure-For-Semantic-Plugins
+TestPlugin
 │
 └─── SloganMaker
 |    |
@@ -24,8 +28,6 @@ TestSkill
      └─── skprompt.txt
      └─── config.json
 ```
-
-LLM AI [models](/semantic-kernel/concepts-ai/models) have a variety of parameters associated them that can alter their behavior. SK enables the developer to have complete control over how a model is to be configured by using a `config.json` file placed in the same directory as the `skprompt.txt` file.
 
 ```config.json-example
 {

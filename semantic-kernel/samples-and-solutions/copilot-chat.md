@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Copilot Chat Sample App
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 The Copilot Chat sample allows you to build your own integrated large language model chatbot.  This is an enriched intelligence app, with multiple dynamic components including command messages, user intent, and memories.  
 
@@ -78,5 +78,3 @@ If you've tried all the apps and are excited to see more, please star the GitHub
 
 > [!div class="nextstepaction"]
 > [Star the Semantic Kernel repo](https://aka.ms/sk/repo)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

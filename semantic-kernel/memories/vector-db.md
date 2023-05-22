@@ -45,5 +45,3 @@ Congratulations on mastering the basic concepts of LLM AI. You're now ready to l
 
 > [!div class="nextstepaction"]
 > [Discover Semantic Kernel](/semantic-kernel/concepts-sk)
-
-[!INCLUDE [footer.md](../includes/footer.md)]

@@ -10,7 +10,7 @@ ms.service: mssearch
 # Running Azure Functions on M-series Macbooks in early 2023
 
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 ## What's up with Azure Functions running on my M-series Mac?
 

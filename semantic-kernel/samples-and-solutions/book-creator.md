@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Book creator sample app
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://aka.ms/sk/repo/writerskill) functions are chained together based on the asks.
 
@@ -51,5 +51,3 @@ By clicking on the asks, multiple steps will be found from the Planner and the p
 
 > [!div class="nextstepaction"]
 > [Run the authentication and API app](/semantic-kernel/samples/authapi)
-
-[!INCLUDE [footer.md](../includes/footer.md)]
