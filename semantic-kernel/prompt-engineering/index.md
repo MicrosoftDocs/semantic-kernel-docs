@@ -40,9 +40,11 @@ Semantic Kernel is a valuable tool for prompt engineering because it allows you 
 Once you've become familiar with prompt engineering, you can also use Semantic Kernel to apply your skills to real-world scenarios. By combining your prompts with native functions and connectors, you can build powerful AI-powered applications.
 
 Lastly, by deeply integrating with Visual Studio Code, Semantic Kernel also makes it easy for you to integrate prompt engineering into your existing development processes.
-- Create prompts directly in your preferred code editor,
-- Write tests for them using your existing testing frameworks,
-- And deploy them to production using your existing CI/CD pipelines.
+
+> [!div class="checklist"]
+> * Create prompts directly in your preferred code editor,
+> * Write tests for them using your existing testing frameworks,
+> * And deploy them to production using your existing CI/CD pipelines.
 
 ### Additional tips for prompt engineering
 Becoming a skilled prompt engineer requires a combination of technical knowledge, creativity, and experimentation. Here are some tips to excel in prompt engineering:
