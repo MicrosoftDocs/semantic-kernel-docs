@@ -8,7 +8,7 @@ ms.date: 02/07/2023
 ms.service: mssearch
 ---
 
-# What is Planner?
+# What is planner?
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
@@ -27,9 +27,17 @@ Because the _planner_ has access to either a pre-defined library of pre-made [pl
 
 The ["Jobs To Be Done (JTBD)"](/semantic-kernel/support/bibliography#jobs-to-be-done) movement has popularized a shift in moving from work _outputs_ to work _outcomes_. Instead of focusing on the features or the functions of a product or a service, the JTBD approach emphasizes the goals and desires of the customer or the user, and the value or the benefit that they seek or expect from using the product or service. By understanding and articulating the JTBD of the customer or the user, a product or service can be designed and delivered more effectively. You just need to make the right ask that isn't just "turn on the lights" and instead a more challenging goal like "I want a job promotion."
 
+
+
+
+
 ## What if the Planner needs a function that's unavailable?
 
 The _planner_ will operate within the [plugins](/semantic-kernel/concepts-sk/skills) it has available. In the event that a desired function does not exist, the planner can suggest you to [create the function](/semantic-kernel/concepts-sk/skills). Or, depending upon the level of complexity the kernel can help you write the missing function.
+
+## Getting started with planner
+Find planner examples on Semantic Kernel Github; [sequential planner](https://github.com/microsoft/semantic-kernel/blob/main/samples/dotnet/kernel-syntax-examples/Example12_SequentialPlanner.cs), [action planner](https://github.com/microsoft/semantic-kernel/blob/main/samples/dotnet/kernel-syntax-examples/Example28_ActionPlanner.cs), [custom planner](https://github.com/microsoft/semantic-kernel/blob/main/samples/dotnet/kernel-syntax-examples/Example31_CustomPlanner.cs) and more. 
+
 
 ## Take the next step
 

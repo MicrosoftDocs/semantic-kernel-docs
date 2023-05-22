@@ -54,24 +54,6 @@ Chatbot responses will appear in the main conversation thread, along with a hist
 ### Prompt Entry Box
 The bottom of the screen contains the prompt entry box, where users can type their prompts, and click the "Send" icon to the right of the box when ready to send it to the bot.
 
-### Deploying your Copilot Chat App to Azure as a web application 
-You can build and upload a customized version of the Semantic Kernel service to Azure.
-
-Once you have cloned the code from the GitHub [repo](https://aka.ms/sk/repo/samples-and-solutions/copilot-chat-app),you can choose to modify for your needs (for example, by adding your own plugins) or leave as is. Once you are ready, go into the ../semantic-kernel/samples/apps/copilot-chat-app/webapi
-directory and enter the following command:
-```powershell
-dotnet publish CopilotChatApi.csproj --configuration Release --arch x64 --os win
-```
-
-This will create a directory which contains all the files needed for a deployment:
-../semantic-kernel/samples/apps/copilot-chat-app/webapi/bin/Release/net6.0/win-x64/publish
-
-Zip the contents of that directory and store the resulting zip file on cloud storage.
-
-Put its URI in the "Package Uri" field in the web deployment page you access through the "Deploy to Azure" buttons above, or use its URI as the value for the PackageUri parameter of the Powershell scripts above.
-
-Your deployment will then use your customized deployment package. That package will be used to create a new Azure Web App, which will be configured to run your customized version of the Semantic Kernel service.
-
 ## Next step
 
 If you've tried all the apps and are excited to see more, please star the GitHub repo and join the Semantic Kernel community!
