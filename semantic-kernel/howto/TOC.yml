@@ -12,9 +12,11 @@
   href: nativefunctions.md
 - name: Using Core Skills
   href: coreskills.md
+- name: Deploy as a web app service
+  href: deploy.md
+- name: Make changes to web app service
+  href: publish.md
 - name: The Schillace Laws
   href: schillacelaws.md
 - name: NEW SK Recipes
   href: recipes.md
-- name: Deploy to Azure
-  href: deploy.md

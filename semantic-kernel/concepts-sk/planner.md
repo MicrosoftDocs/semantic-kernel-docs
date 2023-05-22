@@ -39,4 +39,9 @@ The _planner_ will operate within the [skills](/semantic-kernel/concepts-sk/skil
 Now that you know about the _kernel_ and the _planner_, you are ready to learn about _skills_.
 
 > [!div class="nextstepaction"]
-> [Learn about Skills](skills.md)
+ > Learn about [Skills](skills.md)
+
+> Find planner examples on Semantic Kernel Github; [sequential planner](https://github.com/microsoft/semantic-kernel/blob/main/samples/dotnet/kernel-syntax-examples/Example12_SequentialPlanner.cs), [action planner](https://github.com/microsoft/semantic-kernel/blob/main/samples/dotnet/kernel-syntax-examples/Example28_ActionPlanner.cs), [custom planner](https://github.com/microsoft/semantic-kernel/blob/main/samples/dotnet/kernel-syntax-examples/Example31_CustomPlanner.cs) and more. 
+
+
+
