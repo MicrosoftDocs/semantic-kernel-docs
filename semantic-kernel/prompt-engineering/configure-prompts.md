@@ -67,10 +67,10 @@ Learn more about [available GPT-3](/azure/cognitive-services/openai/concepts/mod
 
 ## Take the next step
 
-Running the app samples will give you the quickest sense of what you can do with SK. 
+Learn more about tokens. 
 
 > [!div class="nextstepaction"]
-> [Run the app samples](/semantic-kernel/samples)
+> [Understanding tokens](./tokens.md)
 
 
 ---

@@ -36,7 +36,5 @@ It would be nice if we could use an entire 10,000-page operating manual as conte
 
 ## Take the next step
 
-Now that you know about the _kernel, planner, plugins, memories,_ it's time for _connectors._
-
 > [!div class="nextstepaction"]
-> [Learn about Connectors](/semantic-kernel/concepts-sk/connectors)
+> [Learn about embeddings](./embeddings.md)

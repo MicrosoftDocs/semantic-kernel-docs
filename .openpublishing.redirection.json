@@ -62,7 +62,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/deploy.md",
-            "redirect_url": "/semantic-kernel/deploy/index",
+            "redirect_url": "/semantic-kernel/create-plugins/deploy-plugins",
             "redirect_document_id": true
         },
         {

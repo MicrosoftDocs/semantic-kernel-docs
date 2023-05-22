@@ -274,7 +274,5 @@ public class MyCSharpPlugin
 
 ## Take the next step
 
-Running the app samples will give you the quickest sense of what you can do with Semantic Kernel. 
-
 > [!div class="nextstepaction"]
-> [Run the app samples](/semantic-kernel/samples)
+> [Get data from connectors](./connectors.md)

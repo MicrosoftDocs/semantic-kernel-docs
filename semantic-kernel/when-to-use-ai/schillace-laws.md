@@ -39,4 +39,3 @@ If you're interested in LLM AI models and feel inspired by the Schillace Laws, b
 > [!div class="nextstepaction"]
 > [Go to the SK GitHub repository](https://aka.ms/sk/repo)
 
-[!INCLUDE [footer.md](../includes/footer.md)]

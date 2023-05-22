@@ -44,4 +44,4 @@ you can use a vector database to store the latest information about that topic a
 Congratulations on mastering the basic concepts of LLM AI. You're now ready to leap into the world of Semantic Kernel. You can do it!
 
 > [!div class="nextstepaction"]
-> [Discover Semantic Kernel](/semantic-kernel/concepts-sk)
+> [Create and deploy plugins](../create-plugins/index.md)

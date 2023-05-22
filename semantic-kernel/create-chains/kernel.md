@@ -53,4 +53,4 @@ There are a variety of things that you can do with `myKernel` that include:
 Now that you know about the _kernel_, you are ready to learn about the _planner_.
 
 > [!div class="nextstepaction"]
-> [Learn about the Planner](/semantic-kernel/concepts-sk/planner)
+> [Create native functions](./native-functions.md)

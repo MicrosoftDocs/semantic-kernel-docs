@@ -84,5 +84,5 @@ For more examples of plugins, and the ones that we use in our sample apps, look 
 Now that you know about the _kernel_, _planner_, _plugins_, you can take on _memories._
 
 > [!div class="nextstepaction"]
-> [Learn about Memories](/semantic-kernel/concepts-sk/memories)
+> [Learn about out-of-the-box plugins](./out-of-the-box-plugins.md)
 

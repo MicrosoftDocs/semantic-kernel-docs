@@ -59,4 +59,4 @@ LLM AI models are generally compared by the number of parameters — where bigge
 ## Take the next step
 
 > [!div class="nextstepaction"]
-> [Learn about prompts](/semantic-kernel/concepts-ai/prompts)
+> [Learn about configuring prompts](./configure-prompts.md)

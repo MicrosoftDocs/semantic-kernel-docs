@@ -97,9 +97,5 @@ The output reads as:
 
 ### Take the next step
 
-Running the app samples will give you the quickest sense of what you can do with Semantic Kernel. 
-
 > [!div class="nextstepaction"]
-> [Run the app samples](/semantic-kernel/samples)
-
-But if you wish to stay a little longer and learn about native functions, [then keep going](/semantic-kernel/howto/nativefunctions).
+> [Deploy your plugins to Azure](./deploy-plugins.md)

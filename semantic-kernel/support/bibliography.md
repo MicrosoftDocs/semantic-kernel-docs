@@ -25,4 +25,3 @@ ms.service: mssearch
 > [!div class="nextstepaction"]
 > [Get supported](/semantic-kernel/support)
 
-[!INCLUDE [footer.md](../includes/footer.md)]
