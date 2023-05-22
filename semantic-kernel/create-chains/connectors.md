@@ -9,13 +9,7 @@ ms.service: mssearch
 ---
 
 # What are Connectors?
-
-| ASK⇾ | [Kernel](/semantic-kernel/concepts-sk/kernel) | [Planner](/semantic-kernel/concepts-sk/planner) | [Skills](/semantic-kernel/concepts-sk/skills)| [Memories](/semantic-kernel/concepts-sk/memories) | Connectors | >>>|  ⇾GET | 
-|---|---|---|---|---|---|---|---|
-
-[!INCLUDE [fullview.md](../includes/fullview.md)]
-
-_Connectors_ let you reach outside of the skills universe to external APIs and whatever else you can imagine. By combining your custom skills with a custom set of connectors, you can build LLM AI app features that fully leverage realtime data into fully reusable "AI ready" components to add to all of your projects. 
+_Connectors_ let you reach outside of the plugins universe to external APIs and whatever else you can imagine. By combining your custom plugins with a custom set of connectors, you can build LLM AI app features that fully leverage realtime data into fully reusable "AI ready" components to add to all of your projects. 
 
 ## What's the MS Graph Connector Kit?
 
@@ -34,14 +28,14 @@ The MS Graph Connector Kit lets you fluidly connect with useful data that's only
 * Read OpenXML streams (e.g. Word docs)
 * Use SQLite as a lightweight database
 
-The set of example connectors provided in the [repo](https://aka.ms/sk/repo) have designed to start you on your path to building your own external interfaces to SK.
+The set of example connectors provided in the [repo](https://aka.ms/sk/repo) have designed to start you on your path to building your own external interfaces to Semantic Kernel.
 
 ## Take the next step
 
 > [!TIP]
 > Try the [Authentication and API sample app](/semantic-kernel/samples/authapi) to see a _Connector_ in action.
 
-Now that you know about the _kernel_, _planner_, _skills_, _connectors_ then you're ready for all the sample apps.
+Now that you know about the _kernel_, _planner_, _plugins_, _connectors_ then you're ready for all the sample apps.
 
 > [!div class="nextstepaction"]
 > [Run Sample Apps](/semantic-kernel/samples)

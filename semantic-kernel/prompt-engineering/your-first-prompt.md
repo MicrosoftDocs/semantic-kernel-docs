@@ -1,6 +1,6 @@
 ---
-title: How to write semantic skills in Semantic Kernel
-description: How to write semantic skills in Semantic Kernel
+title: How to write semantic functions in Semantic Kernel
+description: How to write semantic functions in Semantic Kernel
 author: johnmaeda
 ms.topic: creating-chains
 ms.author: johnmaeda
@@ -63,7 +63,7 @@ years of rejection and perseverance.
 
 And there we have it. Two simple prompts that aren't asking the model for too much: 1/ we're asking the model to give us a marketing slogan, and separately 2/ we're asking the model to summarize a body of text down to two sentences.
 
-Both of these simple prompts qualify as "functions" that can be packaged as part of an Semantic Kernel skill. The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in Semantic Kernel within a directory named `SloganMaker` into a file named `skprompt.txt`:
+Both of these simple prompts qualify as "functions" that can be packaged as part of an [Semantic Kernel plugin](/semantic-kernel/create-plugins/index). The only problem is that they can do only one thing — as defined by the prompt — and with no flexibility. We set up the first plain prompt in Semantic Kernel within a directory named `SloganMaker` into a file named `skprompt.txt`:
 
 ```SloganMaker/skprompt.txt
 Write me a marketing slogan for my apparel shop in New 
@@ -88,7 +88,7 @@ book deal.
 ---End Text---
 ```
 
-Each of these directories comprise a Semantic Kernel function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new skill. 
+Each of these directories comprise a Semantic Kernel function. When both of the directories are placed inside an enclosing directory called `TestSkill` the result is a brand new plugin. 
 
 ```Semantic-Skills-And-Their-Functions
 TestSkill
@@ -104,12 +104,12 @@ TestSkill
      └─── [config.json](../howto/configuringfunctions)
 ```
 
-This skill can do one of two things by calling one of its two functions:
+This plugin can do one of two things by calling one of its two functions:
 
 * `TestSkill.SloganMaker()` generates a slogan for a specific kind of shop in NYC
 * `TestSkill.SummmarizeBlurb()` creates a short summary of a specific blurb
 
-Next, we'll show you how to make a more powerful skill by introducing Semantic Kernel prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
+Next, we'll show you how to make a more powerful plugin by introducing Semantic Kernel prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
 
 ## Writing a more powerful "templated" prompt
 
@@ -135,7 +135,7 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new Semantic Kernel functions that can belong to a new `TestSkillFlex` skill that now takes an input. To package these two function to be used by Semantic Kernel in the context of a skill, we arrange our file hierarchy the same as we did before:
+We can name these two functions `SloganMakerFlex` and `SummarizeBlurbFlex` — as two new Semantic Kernel functions that can belong to a new `TestSkillFlex` plugin that now takes an input. To package these two function to be used by Semantic Kernel in the context of a plugin, we arrange our file hierarchy the same as we did before:
 
 ```File-Structure-For-Skill-Definition-With-Functions
 TestSkillFlex
@@ -151,12 +151,12 @@ TestSkillFlex
      └─── config.json
 ```
 
-Recall that the difference between our new "flex" skills and our original "plain" skills is that we've gained the added flexibility of being able to pass a single parameter like:
+Recall that the difference between our new "flex" plugins and our original "plain" plugins is that we've gained the added flexibility of being able to pass a single parameter like:
 
 * `TestSkillFlex.SloganMakerFlex('detective agency')` generates a slogan for a 'detective agency' in NYC
 * `TestSkillFlex.SummarizeBlurbFlex('<insert long text here>')` creates a short summary of a given blurb
 
-Templated prompts can be further customized beyond a single `$INPUT` variable to take on more inputs to gain even greater flexibility. For instance, if we wanted our SloganMaker skill to not only take into account the kind of business but also the business' location and specialty, we would write the function as:
+Templated prompts can be further customized beyond a single `$INPUT` variable to take on more inputs to gain even greater flexibility. For instance, if we wanted our SloganMaker plugin to not only take into account the kind of business but also the business' location and specialty, we would write the function as:
 
 ```SloganMakerFlex/skprompt.txt
 Write me a marketing slogan for my {{$INPUT}} in {{$CITY}} with 
@@ -170,9 +170,9 @@ Write me a marketing slogan for my {{$BUSINESS}} in {{$CITY}} with
 a focus on {{$SPECIALTY}} we are without sacrificing quality.
 ```
 
-We can replace our `TestSkillFlex` skill with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
+We can replace our `TestSkillFlex` plugin with this new definition for `SloganMakerFlex` to serve the minimum capabilities of a copywriting agency.
 
-In Semantic Kernel, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native skill you can skip ahead to [Building a Native Functions](/semantic-kernel/howto/nativefunctions) if you're anxious.
+In Semantic Kernel, we refer to prompts and templated prompts as _functions_ to clarify their role as a fundamental unit of computation within the kernel. We specifically refer to _semantic_ functions when LLM AI prompts are used; and when conventional programming code is used we say _native_ functions. To learn how to make a native function you can skip ahead to [building a native functions](/semantic-kernel/create-chains/native-functions) if you're anxious.
 
 ## Get your kernel ready
 
@@ -206,9 +206,9 @@ kernel.Config.AddOpenAITextCompletion(
 );
 ```
 
-## Invoking a semantic skill from C#
+## Invoking a semantic function from C#
 
-When running a semantic skill from your app's root source directory `MyAppSource` your file structure will looks like:
+When running a semantic function from your app's root source directory `MyAppSource` your file structure will looks like:
 
 ```Your-App-And-Semantic-Skills
 MyAppSource
@@ -230,10 +230,10 @@ MyAppSource
 
 When running the kernel in C# you will:
 
-1. Import your desired semantic skill by specifying the root skills directory and the skill's name
-2. Get ready to pass your semantic skill parameters with a `ContextVariables` object 
+1. Import your desired semantic function by specifying the root plugins directory and the plugin's name
+2. Get ready to pass your semantic function parameters with a `ContextVariables` object 
 3. Set the corresponding context variables with `<your context variables>.Set`
-4. Select the semantic function to run within the skill by selecting a function
+4. Select the semantic function to run within the plugin by selecting a function
 
 In code, and assuming you've already instantiated and configured your kernel as `myKernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
 
@@ -262,7 +262,7 @@ The output will read similar to:
 
 ## Invoking a semantic function inline from C#
 
-It's possible to bypass the need to package your semantic skill's functions explicitly in `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. Let's take `summarizeBlurbFlex`:
+It's possible to bypass the need to package your semantic functions explicitly in `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. Let's take `summarizeBlurbFlex`:
 
 ```summarizeBlurbFlex
 Summarize the following text in two sentences or less. 

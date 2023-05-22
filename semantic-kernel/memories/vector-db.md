@@ -29,11 +29,11 @@ The result of the similarity search and retrieval is usually a ranked list of ve
 Vector databases have many use cases across different domains and applications that involve natural language processing (NLP), computer vision (CV), recommendation systems (RS), and other areas that require semantic understanding and matching of data.
 
 One use case for storing information in a vector database is to enable large language models (LLMs) to generate more relevant and coherent text based on
-a [AI skill](/semantic-kernel/howto/). 
+an [AI plugin](/semantic-kernel/create-plugin/index). 
 
 However, large language models often face challenges such as generating inaccurate or irrelevant information; lacking factual consistency or common sense; repeating or contradicting themselves; being biased or offensive. To overcome these challenges,
 you can use a vector database to store information about different topics,keywords,facts,opinions,sources, related to your desired domain or genre.
-Then, you can use a large language model and pass information from the vector database with your AI skill to generate more informative and engaging content that matches your intent and style.
+Then, you can use a large language model and pass information from the vector database with your AI plugin to generate more informative and engaging content that matches your intent and style.
 
 For example,
 if you want to write a blog post about the latest trends in AI,
@@ -41,7 +41,7 @@ you can use a vector database to store the latest information about that topic a
 
 ## Take the next step
 
-Congratulations on mastering the basic concepts of LLM AI. You're now ready to leap into the world of SK. You can do it!
+Congratulations on mastering the basic concepts of LLM AI. You're now ready to leap into the world of Semantic Kernel. You can do it!
 
 > [!div class="nextstepaction"]
 > [Discover Semantic Kernel](/semantic-kernel/concepts-sk)

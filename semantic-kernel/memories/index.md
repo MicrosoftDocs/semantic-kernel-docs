@@ -15,11 +15,11 @@ ms.service: mssearch
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
-_Memories_ are a powerful way to provide broader context for your ASK. Historically, we've always called upon memory as a core component for how computers work: think the RAM in your laptop. For with just a CPU that can crunch numbers, the computer isn't that useful unless it knows what numbers you care about. Memories are what make computation relevant to the task at hand.
+_Memories_ are a powerful way to provide broader context for your ask. Historically, we've always called upon memory as a core component for how computers work: think the RAM in your laptop. For with just a CPU that can crunch numbers, the computer isn't that useful unless it knows what numbers you care about. Memories are what make computation relevant to the task at hand.
 
-We access memories to be fed into SK in one of three ways — with the third way being the most interesting:
+We access memories to be fed into Semantic Kernel in one of three ways — with the third way being the most interesting:
 
-1. Conventional key-value pairs: Just like you would set an environment variable in your shell, the same can be done when using SK. The lookup is "conventional" because it's a one-to-one match between a key and your query. 
+1. Conventional key-value pairs: Just like you would set an environment variable in your shell, the same can be done when using Semantic Kernel. The lookup is "conventional" because it's a one-to-one match between a key and your query. 
 
 2. Conventional local-storage: When you save information to a file, it can be retrieved with its filename. When you have a lot of information to store in a key-value pair, you're best off keeping it on disk.
 
@@ -39,7 +39,7 @@ It would be nice if we could use an entire 10,000-page operating manual as conte
 
 ## Take the next step
 
-Now that you know about the _kernel, planner, skills, memories,_ it's time for _connectors._
+Now that you know about the _kernel, planner, plugins, memories,_ it's time for _connectors._
 
 > [!div class="nextstepaction"]
 > [Learn about Connectors](/semantic-kernel/concepts-sk/connectors)

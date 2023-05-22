@@ -13,7 +13,7 @@ With these materials you can run your own Semantic Kernel Hackathon, a hands-on 
 By participating and running a Semantic Kernel hackathon, you will have the opportunity to:
 
 - Explore the features and capabilities of Semantic Kernel and how it can help you solve problems with AI
-- Work in teams to brainstorm and develop your own AI skills or apps using Semantic Kernel SDK and services
+- Work in teams to brainstorm and develop your own AI plugins or apps using Semantic Kernel SDK and services
 - Present your results and get feedback from other participants 
 - Have fun!
 
@@ -57,8 +57,8 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 | Length (Minutes)  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
 | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 15  | Welcome     | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. |
-| 60  | Overview    | The facilitator will guide you through either a pre-recorded video or a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. Along with an overview of Semantic Kernel and its features, such the [kernel](/semantic-kernel/concepts-sk/kernel), [planner](/semantic-kernel/concepts-sk/planner), [skills](/semantic-kernel/concepts-sk/skills), [memories](/semantic-kernel/concepts-sk/memories) and more. You will also see demos of how Semantic Kernel can be used for different scenarios.                              |
-| 120 | Brainstorming | The facilitator will help you form teams based on your interests or skill levels. You will then brainstorm ideas for your own AI skills or apps using design thinking techniques.  |
+| 60  | Overview    | The facilitator will guide you through either a pre-recorded video or a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. Along with an overview of Semantic Kernel and its features, such the [kernel](/semantic-kernel/create-chains/kernel), [planner](/semantic-kernel/create-chains/planner), [plugins](/semantic-kernel/create-plugins/index), [memories](/semantic-kernel/memories/index) and more. You will also see demos of how Semantic Kernel can be used for different scenarios.                              |
+| 120 | Brainstorming | The facilitator will help you form teams based on your interests or skill levels. You will then brainstorm ideas for your own AI plugins or apps using design thinking techniques.  |
 | 360+ | Development | You will use Semantic Kernel SDKs tools, and resources to develop, test, and deploy your projects. This could be for the rest of the day or over multiple days based on the time available and problem to be solved. |
 | 60 | Presentation   | Each team will present their results using a PowerPoint template provided. You will have about 15 minutes per team to showcase your project, demonstrate how it works, and explain how it solves a problem with AI. You will also receive feedback from other participants. |
 | 30 | Feedback   | Each team can share their feedback on the hackathon and Semantic Kernel with the group and fill out the [Hackathon Exit Survey](https://aka.ms/sk/hack/feedback). |
@@ -67,7 +67,7 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 ## Following up after the hackathon
 We hope you enjoyed running a Semantic Kernel Hackathon and the overall experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future content. Please take a few minutes to fill out the [hackathon facilitator survey](https://aka.ms/sk/hack/facilitatorfeedback) and share your feedback and suggestions with us.
 
-If you want to continue developing your AI skills or projects after the hackathon, you can find more resources and support for Semantic Kernel.
+If you want to continue developing your AI plugins or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
 - [Semantic Kernel community](https://aka.ms/sk/discord)
 - [Semantic Kernel blog](https://aka.ms/sk/blog)

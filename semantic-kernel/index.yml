@@ -49,10 +49,10 @@ productDirectory:
         - url: /semantic-kernel/concepts-sk/planner
           text: Planner
         - url: /semantic-kernel/concepts-sk/skills
-          text: Skills  
+          text: Plugins  
         - url: /semantic-kernel/concepts-sk/connectors
           text: Connectors          
-    - title: Building skills
+    - title: Building Plugins
       imageSrc: /semantic-kernel/media/concept.png
       links:
          - url: /semantic-kernel/howto/
@@ -62,7 +62,7 @@ productDirectory:
          - url: /semantic-kernel/howto/nativefunctions
            text: Native Functions
          - url: /semantic-kernel/howto/coreskills
-           text: Core Skills           
+           text: Core Plugins           
     - title: App samples
       imageSrc: /semantic-kernel/media/get-started-blue.png
       links:

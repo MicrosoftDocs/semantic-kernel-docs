@@ -2,14 +2,14 @@
 title: How to use Semantic Kernel Tools Extension in Visual Code Studio
 description: How to use Semantic Kernel Tools Extension in Visual Code Studio
 author: smonroe
-ms.topic: skills
+ms.topic: vs-code-tools
 ms.author: smonroe
 ms.date: 05/12/2023
 ms.service: mssearch
 ---
 # Visual Code Studio Semantic Kernel Extension
 
-The Semantic Kernel Tools help developers to write semanic skills for the [Semantic Kernel](https://github.com/microsoft/semantic-kernel).
+The Semantic Kernel Tools help developers to write semantic functions for [Semantic Kernel](https://github.com/microsoft/semantic-kernel).
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
@@ -62,9 +62,9 @@ Once you have a AI endpoint configured proceed as follows:
 
 ## Create A Semantic Skill
 
-1. Once you have installed the Semantic Kernel Tools extension you will see a new SK option in the activity bar
+1. Once you have installed the Semantic Kernel Tools extension you will see a new Semantic Kernel option in the activity bar
  - We recommend you clone the semantic-kernel repository and open this in your VS Code workspace
-2. Click the SK icon to open Semantic Kernel Functions view
+2. Click the Semantic Kernel icon to open Semantic Kernel Functions view
 3. Click the "Add Semantic Skill" icon in the Semantic Kernel Functions view title bar
 4. You will be prompted to select a folder
  - This will be the location of the Skill which will contain your new Semantic Function
@@ -73,14 +73,14 @@ Once you have a AI endpoint configured proceed as follows:
 5. You will be prompted for a function name, enter MyFunction1
 6. You will be prompted for a function description2
 7. A new prompt text file will be automatically created for your new function
-8. You can now enter your prompt. More information on how to write semantic skills in Semantic Kernel.
+8. You can now enter your prompt.
 
 ### Troubleshooting
 
 - Enabling Trace Level Logs
  - You can enable trace level logging for the Semantic Kernel using the following steps:
   1. Open settings (Ctrl + ,)
-  2. Type “Semantic Kernel”
+  2. Type "Semantic Kernel"
   3. Select Semantic Kernel Tools -> Configuration
   4. Change the log level to “Trace”
   5. Repeat the steps to execute a semantic function and this time you should see trace level debugging of the semantic kernel execution
@@ -89,11 +89,11 @@ Below is a list of possible errors you might receive and details on how to addre
 
 Errors creating a Semantic Function
 - Unable to create function prompt file for <name>
- - An error occurred creating the skprompt.txt file for a new semantic function. Check you can create new folders and files in the location specified for the semantic skill.
+ - An error occurred creating the skprompt.txt file for a new semantic function. Check you can create new folders and files in the location specified for the semantic function.
 - Function <name> already exists. Found function prompt file: <file name>
  - A skprompt.txt file already exists for the semantic function you are trying to create. Switch to the explorer view to find the conflicting file.
 - Unable to create function configuration file for <file name>
- - An error occurred creating the config.json file for a new semantic function. Check you can create new folders and files in the location specified for the semantic skill.
+ - An error occurred creating the config.json file for a new semantic function. Check you can create new folders and files in the location specified for the semantic function.
 - Configuration file for <file> already exists. Found function config file: <file name>
  - A config.json file already exists for the semantic function you are trying to create. Switch to the explorer view to find the conflicting file.
 
@@ -122,6 +122,6 @@ Errors executing a Semantic Function
 Now you can start building your own Semantic Functions
 
 > [!div class="nextstepaction"]
-> [It all starts with an ASK](/semantic-kernel/howto/semanticfunctions)
+> [It all starts with an ask](/semantic-kernel/howto/semanticfunctions)
 
 

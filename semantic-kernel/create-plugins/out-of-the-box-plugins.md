@@ -1,21 +1,21 @@
 ---
-title: How to use core skills in Semantic Kernel
-description: How to use core skills in Semantic Kernel
+title: How to use core plugins in Semantic Kernel
+description: How to use core plugins in Semantic Kernel
 author: johnmaeda
 ms.topic: ai-plugins
 ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch
 ---
-# Core skills are always ready to be accessed
+# Core plugins are always ready to be accessed
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-To provide a degree of standardization across Semantic Kernel (SK) implementations, the GitHub repo has several skills available to any SK prompt which you can browse at:
+To provide a degree of standardization across Semantic Kernel implementations, the GitHub repo has several plugins available to any Semantic Kernel prompt which you can browse at:
 
 [`/semantic-kernel/dotnet/src/SemanticKernel/CoreSkills/`](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/SemanticKernel/CoreSkills)
 
-The core skills currently supported include:
+The core plugins currently supported include:
 
 * `TimeSkill`: To acquire the time of day and any other temporal information
 * `TextSkill`: To deterministically manipulating text strings
@@ -23,9 +23,9 @@ The core skills currently supported include:
 * `HttpSkill`: To call APIs
 * `PlannerSkill`: To create and execute plans
 
-## Example of how a core skill is used in SK
+## Example of how a core plugin is used in Semantic Kernel
 
-When using a core skill, be sure to include a `using Microsoft.SemanticKernel.CoreSkills`:
+When using a core plugin, be sure to include a `using Microsoft.SemanticKernel.CoreSkills`:
 
 ```csharp
 using Microsoft.SemanticKernel.CoreSkills;
@@ -59,7 +59,7 @@ The output is what you would expect when you read `ThePromptTemplate` to be:
 }
 ```
 
-### Chaining example with core skillls
+### Chaining example with core plugins
 
 Using the core `TextSkill` it's easy to transform text by modifying it sequentially:
 
@@ -92,7 +92,7 @@ The output reads as:
 
 ### Take the next step
 
-Running the app samples will give you the quickest sense of what you can do with SK. 
+Running the app samples will give you the quickest sense of what you can do with Semantic Kernel. 
 
 > [!div class="nextstepaction"]
 > [Run the app samples](/semantic-kernel/samples)

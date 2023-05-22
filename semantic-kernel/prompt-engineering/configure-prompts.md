@@ -2,7 +2,7 @@
 title: Configure prompts 
 description: Learn how to configure prompts for your functions in Semantic Kernel
 author: johnmaeda
-ms.topic: skills
+ms.topic: prompt-engineering
 ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: mssearch

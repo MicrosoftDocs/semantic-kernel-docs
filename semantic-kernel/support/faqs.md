@@ -15,8 +15,8 @@ ms.service: mssearch
 ## Why is the Kernel only in C# and Python?
 C# is a popular coding language.  We wanted to make sure we could support one language before turning our attention to other languages. And we've included [preview Python support](https://aka.ms/sk/python) to evaluate community interest there. Additional language support for the kernel will come based on feedback.
 
-## Where are the sample skills?
-We have [sample apps](/semantic-kernel/samples) and skills you can try out so you can quickly learn the concepts of Semantic Kernel.
+## Where are the sample plugins?
+We have [sample apps](/semantic-kernel/samples) and plugins you can try out so you can quickly learn the concepts of Semantic Kernel.
 
 ## How do I get help or provide feedback?
 

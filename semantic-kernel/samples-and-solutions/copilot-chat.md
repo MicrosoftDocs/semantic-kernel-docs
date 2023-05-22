@@ -13,7 +13,7 @@ ms.service: mssearch
 
 The Copilot Chat sample allows you to build your own integrated large language model chatbot.  This is an enriched intelligence app, with multiple dynamic components including command messages, user intent, and memories.  
 
-The chat prompt and response will evolve as the conversation between the user and the application proceeds.  This chat experience is a chat skill containing multiple functions that work together to construct the final prompt for each exchange.
+The chat prompt and response will evolve as the conversation between the user and the application proceeds.  This chat experience uses a chat plugin containing multiple functions that work together to construct the final prompt for each exchange.
 
 
 > [!IMPORTANT]
@@ -30,7 +30,7 @@ The chat prompt and response will evolve as the conversation between the user an
 > * [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
 ## Running the app
-The [Copilot Chat Sample App](https://aka.ms/sk/repo/samples/copilot-chat-app) is located in the Semantic Kernel GitHub repository.
+The [Copilot Chat Sample App](https://aka.ms/sk/repo/samples-and-solutions/copilot-chat-app) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/get-started) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Follow the instructions to [Register an Azure Application](/azure/active-directory/develop/quickstart-register-app)
@@ -57,7 +57,7 @@ The bottom of the screen contains the prompt entry box, where users can type the
 ### Deploying your Copilot Chat App to Azure as a web application 
 You can build and upload a customized version of the Semantic Kernel service to Azure.
 
-Once you have cloned the code from the GitHub [repo](https://aka.ms/sk/repo/samples/copilot-chat-app),you can choose to modify for your needs (for example, by adding your own skills) or leave as is. Once you are ready, go into the ../semantic-kernel/samples/apps/copilot-chat-app/webapi
+Once you have cloned the code from the GitHub [repo](https://aka.ms/sk/repo/samples-and-solutions/copilot-chat-app),you can choose to modify for your needs (for example, by adding your own plugins) or leave as is. Once you are ready, go into the ../semantic-kernel/samples/apps/copilot-chat-app/webapi
 directory and enter the following command:
 ```powershell
 dotnet publish CopilotChatApi.csproj --configuration Release --arch x64 --os win
@@ -74,9 +74,9 @@ Your deployment will then use your customized deployment package. That package w
 
 ## Next step
 
-If you've tried all the apps and are excited to see more, please star the GitHub repo and join the SK community!
+If you've tried all the apps and are excited to see more, please star the GitHub repo and join the Semantic Kernel community!
 
 > [!div class="nextstepaction"]
-> [Star the SK repo](https://aka.ms/sk/repo)
+> [Star the Semantic Kernel repo](https://aka.ms/sk/repo)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

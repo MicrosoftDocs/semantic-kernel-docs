@@ -14,14 +14,14 @@ ms.service: mssearch
 
 [!INCLUDE [fullview.md](../includes/fullview.md)]
 
-The _kernel_ in Semantic Kernel (SK) is the orchestrator of a user's ASK. The _kernel_ fulfills the user's desired goal using its available [skills](/semantic-kernel/concepts-sk/skills), memories, and [connectors](/semantic-kernel/concepts-sk/connectors). Key features of the _kernel_ that facilitate faster development include:
+The _kernel_ in Semantic Kernel is the orchestrator of a user's ask. The _kernel_ fulfills the user's desired goal using its available [plugins](/semantic-kernel/concepts-sk/skills), memories, and [connectors](/semantic-kernel/concepts-sk/connectors). Key features of the _kernel_ that facilitate faster development include:
 
-* [Skills](/semantic-kernel/concepts-sk/skills): Package your most useful prompts as fully reusable components
+* [Plugins](/semantic-kernel/concepts-sk/skills): Package your most useful prompts as fully reusable components
 * Hybrid Development: Fluidly mix your AI prompts with conventional native code
 * Orchestration: Manage complicated LLM AI prompts with complete control
 * Future Proof: Use multiple LLM AI models and configurations with specificity
 
-The _kernel_ is designed to encourage "function composition" which allows developers to combine and interconnect the input and outputs of skills into a single pipeline.
+The _kernel_ is designed to encourage "function composition" which allows developers to combine and interconnect the input and outputs of plugins into a single pipeline.
 
 > [!TIP]
 > Try the [Simple chat summary sample app](/semantic-kernel/samples/simplechatsummary) to quickly see the _Kernel_ in action.
@@ -45,8 +45,8 @@ var myKernel = Kernel.Builder.Build();
 There are a variety of things that you can do with `myKernel` that include:
 
 * Configuring the _kernel_ to use OpenAI or Azure OpenAI
-* Sourcing a collection of [skills](/semantic-kernel/concepts-sk/skills)
-* Chaining multiple [skills](/semantic-kernel/concepts-sk/skills)' together
+* Sourcing a collection of [plugins](/semantic-kernel/concepts-sk/skills)
+* Chaining multiple [plugins](/semantic-kernel/concepts-sk/skills)' together
 * Customize how the _kernel_ works to fit your exact needs
 
 ## Take the next step
