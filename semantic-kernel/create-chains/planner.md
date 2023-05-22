@@ -36,4 +36,4 @@ The _planner_ will operate within the [plugins](/semantic-kernel/concepts-sk/ski
 Now that you know about the _kernel_ and the _planner_, you are ready to learn about _skills_.
 
 > [!div class="nextstepaction"]
-> [Learn about plugins](../create-plugins)
+> [Learn about plugins](../create-plugins/index.md)

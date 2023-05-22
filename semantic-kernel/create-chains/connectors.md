@@ -41,4 +41,4 @@ The set of example connectors provided in the [repo](https://aka.ms/sk/repo) hav
 Now that you know about the _kernel_, _planner_, _plugins_, _connectors_ then you're ready for all the sample apps.
 
 > [!div class="nextstepaction"]
-> [Run Sample Apps](../samples-and-solutions)
+> [Run Sample Apps](../samples-and-solutions/index.md)
