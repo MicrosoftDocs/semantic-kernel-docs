@@ -8,8 +8,10 @@
   href: create-chains/TOC.yml
 - name: Giving your AI memories
   href: memories/TOC.yml
-- name: Create and deploy AI plugins
+- name: Create AI plugins
   href: create-plugins/TOC.yml
+- name: Deploy Semantic Kernel
+  href: deploy/TOC.yml
 - name: Run sample apps
   href: samples-and-solutions/TOC.yml
 - name: Visual Studio Code tools
