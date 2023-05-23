@@ -29,7 +29,7 @@ In the following image you can see how a user can easily view all of their seman
 To get started with Semantic Kernel Tools, follow these simple steps:
 1. Ensure that you have [Visual Studio Code](https://code.visualstudio.com/) installed on your computer.
 2. Open Visual Studio Code and press Shift+Control+X to bring up the [Extensions marketplace](https://marketplace.visualstudio.com/).
-3. In the Extensions menu, search for “[Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel)“.
+3. In the Extensions menu, search for "[Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel)".
 4. Select Semantic Kernel Tools from the search results and click the Install button.
   :::image type="content" source="../media/semantic-kernel-tools-install.png" alt-text="Semantic Kernel Tools Extension":::
 5. Wait for the installation to complete, then restart Visual Studio Code.
