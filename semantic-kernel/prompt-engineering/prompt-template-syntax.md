@@ -85,9 +85,7 @@ external dependencies, resulting in a fast and memory efficient processing.
 Here's a very simple example of a semantic function defined with a prompt
 template, using the syntax described.
 
-`== File: skprompt.txt ==`
-
-```
+```skprompt.txt
 My name: {{msgraph.GetMyName}}
 My email: {{msgraph.GetMyEmailAddress}}
 Recipient: {{$recipient}}
