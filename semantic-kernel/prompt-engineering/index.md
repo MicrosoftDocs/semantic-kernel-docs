@@ -42,8 +42,8 @@ Once you've become familiar with prompt engineering, you can also use Semantic K
 Lastly, by deeply integrating with Visual Studio Code, Semantic Kernel also makes it easy for you to integrate prompt engineering into your existing development processes.
 
 > [!div class="checklist"]
-> * Create prompts directly in your preferred code editor,
-> * Write tests for them using your existing testing frameworks,
+> * Create prompts directly in your preferred code editor.
+> * Write tests for them using your existing testing frameworks.
 > * And deploy them to production using your existing CI/CD pipelines.
 
 ### Additional tips for prompt engineering

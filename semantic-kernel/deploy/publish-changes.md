@@ -14,7 +14,7 @@ ms.service: mssearch
 In this how to guide we will provide steps to make changes to your deployed Semantic Kernel web App to update  skills. Currently you can only make changes to Semantic Skills without redeploying a new web app service. Don't worry though, we will guide you through the process in order you want to make changes beyond Semantic Skills. 
 
 ## Prerequisites
-1. Semantic Kernel web app service must deployed in your Azure subscription. You can follow the how to guide [here](/semantic-kernel/howto/deploy.md) for details.
+1. Semantic Kernel web app service must deployed in your Azure subscription. You can follow the how to guide [here](./deploy-to-azure.md) for details.
 1. Have your Web App Name handy. To find the Web App Name, goto [Azure Portal](https://portal.azure.com/). Within the resource group created for your Semantic Kernel Web App Service. Find the 'App Service' resource and click on it. You will see the App Name in the Web App Section next to the name.
 1. Locally tested [skills](../concepts-sk/skills.md) or [planner](../concepts-sk/planner.md) ready to be added to your Semantic Kernel web app service.
 
@@ -39,7 +39,7 @@ This will create a directory which contains all the files needed for a deploymen
 ```
 </br>
 
-Zip the contents of that directory and store the resulting zip file on cloud storage e.g. Azure Blob Container. Put its URI in the "Package Uri" field in the web deployment page you access through the "Deploy to Azure" buttons or use its URI as the value for the PackageUri parameter of the Powershell scripts found on this [page](deploy.md).
+Zip the contents of that directory and store the resulting zip file on cloud storage e.g. Azure Blob Container. Put its URI in the "Package Uri" field in the web deployment page you access through the "Deploy to Azure" buttons or use its URI as the value for the PackageUri parameter of the Powershell scripts found on this [page](./deploy-to-azure.md).
 
 Your deployment will then use your customized deployment package. That package will be used to create a new Azure Web App, which will be configured to run your customized version of the Semantic Kernel service. 
 Now you have a new web app service with your customized version of Semantic Kernel! 
@@ -48,7 +48,7 @@ Now you have a new web app service with your customized version of Semantic Kern
 Changes via this method are limited since the Web App does not contain binaries for Semantic Kernel. This method is useful for making changes when adding new Semantic skills only.
 
 #### How to add Semantic Skills
-1. Go to <!-- markdown-link-check-disable -->https://YOUR_APP_NAME.scm.azurewebsites.net<!-- markdown-link-check-enable-->, replacing YOUR_APP_NAME in the URL with your app name found in Azure Portal. This will take you to the [Kudu](https://learn.microsoft.com/azure/app-service/resources-kudu) console for your app hosting.
+1. Go to <!-- markdown-link-check-disable -->https://YOUR_APP_NAME.scm.azurewebsites.net<!-- markdown-link-check-enable-->, replacing YOUR_APP_NAME in the URL with your app name found in Azure Portal. This will take you to the [Kudu](/azure/app-service/resources-kudu) console for your app hosting.
 2. Click on Debug Console and select CMD.
 3. Navigate to the 'site\wwwroot\Skills'
 4. Create a new folder using the (+) sign at the top and give a folder name to store your Semantic Skills e.g. SemanticSkills.

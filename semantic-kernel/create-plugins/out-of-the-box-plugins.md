@@ -98,4 +98,4 @@ The output reads as:
 ### Take the next step
 
 > [!div class="nextstepaction"]
-> [Deploy your plugins to Azure](./deploy-plugins.md)
+> [Deploy your plugins to Azure](../deploy/deploy-to-azure.md)

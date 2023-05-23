@@ -43,7 +43,7 @@ pip install semantic-kernel
 
 
 ## Requirements to run the guides
-Before running the guides, make sure you have the following installed on your local machine:
+Before running the guides in C#, make sure you have the following installed on your local machine. If you are using the Python guides, you just need `git` and `python`.
 
 > [!div class="checklist"]
 > * `git` or the [GitHub app](https://desktop.github.com/) 

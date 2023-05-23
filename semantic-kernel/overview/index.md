@@ -28,9 +28,9 @@ For example, with Semantic Kernel, you could create a pipeline that helps a user
 
 The Semantic Kernel documentation will explain how to use each of the core components so that you can orchestrate them together to create flows like the following.
 
-![Technical perspective of what's happening](../media/flowdiagram.png)
+![Technical perspective of what's happening](../media/kernel-flow.png)
 
-| Step | Description |
+| Component | Description |
 |:-|:-|
 | **Ask** | A user's goal is sent to Semantic Kernel as an ask |
 | **Kernel** | [The kernel](../create-chains/kernel.md) orchestrates a user's ask |
@@ -51,7 +51,7 @@ Given that new breakthroughs in LLM AIs are landing on a daily basis, you should
 > [Open the Semantic Kernel repo](https://aka.ms/skrepo)
 
 ### Contribute to Semantic Kernel
-We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the GitHub repository. Bug reports and fixes are welcome!
+We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the [GitHub repository](https://aka.ms/skrepo). Bug reports and fixes are welcome!
 
 For new features, components, or extensions, please open an issue and discuss with us before sending a PR. This will help avoid rejections since it will allow us to discuss the impact to the larger ecosystem.
 

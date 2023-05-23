@@ -30,7 +30,7 @@ You can use one of the deployment options to deploy based on your use case and p
 | Use Case     | Deployment Option     |
 |--------------|-----------|
 | <u>Use existing : Azure OpenAI Resources</u><p>Use this option to use an existing Azure OpenAI instance and connect the Semantic Kernel web API to it.| [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-existing-azureopenai-portal)<br>[PowerShell File](https://aka.ms/sk-deploy-existing-azureopenai-powershell)<br>[Bash File](https://aka.ms/sk-deploy-existing-azureopenai-bash)
-|<u>Create new : Azure OpenAI Resources</u> <p>Use this option to deploy Semantic Kernel in a web app service and have it use a new instance of Azure OpenAI.<p>Note: Getting access to New [Azure OpenAI](https://learn.microsoft.com/azure/cognitive-services/openai/overview) Resources is limited due to high demand. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-new-azureopenai-portal) <br> [PowerShell File ](https://aka.ms/sk-deploy-new-azureopenai-powershell) <br> [Bash File](https://aka.ms/sk-deploy-new-azureopenai-bash)
+|<u>Create new : Azure OpenAI Resources</u> <p>Use this option to deploy Semantic Kernel in a web app service and have it use a new instance of Azure OpenAI.<p>Note: Getting access to New [Azure OpenAI](/azure/cognitive-services/openai/overview) Resources is limited due to high demand. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-new-azureopenai-portal) <br> [PowerShell File ](https://aka.ms/sk-deploy-new-azureopenai-powershell) <br> [Bash File](https://aka.ms/sk-deploy-new-azureopenai-bash)
 |<u>Use existing: OpenAI Resources</u><p>Use this option to use your OpenAI account and connect the Semantic Kernel web API to it. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-openai-portal)<br>[PowerShell File](https://aka.ms/sk-deploy-openai-powershell)<br>[Bash File](https://aka.ms/sk-deploy-openai-bash) |
 
  
@@ -126,13 +126,13 @@ Both Completion:Endpoint and Embedding:Endpoint are ignored for OpenAI instances
 
 
 ## How to clean up resources
-To save costs you may want to clean up resources from this deployment. You can do this by deleting the resource group created via Azure portal or run the following in [Azure CLI](https://learn.microsoft.com/cli/azure/):
+To save costs you may want to clean up resources from this deployment. You can do this by deleting the resource group created via Azure portal or run the following in [Azure CLI](/cli/azure/):
 ```powershell
 az group delete --name YOUR_RESOURCE_GROUP
 ```
 
 ## Take the next step
->Learn how to make changes to your web app, such as adding new skills. To learn more click [here](publish.md).
+>Learn how to make changes to your web app, such as adding new skills. To learn more click [here](./publish-changes.md).
 
 >If you have not already done so please star the GitHub repo and join the Semantic Kernel community! 
 [Star the Semantic Kernel repo](https://aka.ms/sk/repo)

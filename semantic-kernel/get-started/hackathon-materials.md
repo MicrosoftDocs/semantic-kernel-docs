@@ -72,7 +72,7 @@ We hope you enjoyed running a Semantic Kernel Hackathon and the overall experien
 
 If you want to continue developing your AI plugins or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
-- [Semantic Kernel community](https://aka.ms/sk/discord)
+- [Semantic Kernel Discord community](https://aka.ms/sk/discord)
 - [Semantic Kernel blog](https://aka.ms/sk/blog)
 - [Semantic Kernel GitHub repo](https://aka.ms/sk/repo)
 

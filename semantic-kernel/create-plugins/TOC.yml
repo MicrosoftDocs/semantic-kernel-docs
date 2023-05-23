@@ -2,5 +2,3 @@
   href: index.md
 - name: Out-of-the-box plugins
   href: out-of-the-box-plugins.md
-- name: Deploy plugins to Azure
-  href: deploy-plugins.md
