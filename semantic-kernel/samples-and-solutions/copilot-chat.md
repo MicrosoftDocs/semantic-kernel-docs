@@ -30,7 +30,7 @@ The chat prompt and response will evolve as the conversation between the user an
 > * [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
 ## Running the app
-The [Copilot Chat Sample App](https://aka.ms/sk/repo/samples-and-solutions/copilot-chat-app) is located in the Semantic Kernel GitHub repository.
+The [Copilot Chat Sample App](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/get-started) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Follow the instructions to [Register an Azure Application](/azure/active-directory/develop/quickstart-register-app)
@@ -40,19 +40,15 @@ The [Copilot Chat Sample App](https://aka.ms/sk/repo/samples-and-solutions/copil
 5) A browser should automatically launch and navigate to https://localhost:3000. with the sample app running
 
 ## Exploring the app
+With the Copilot Chat sample app running, you can start interacting with the chatbot.  The app will start with a default conversation thread where you can ask it questions.
 
-### Conversation Title
-This will default to date and time, but can easily be edited by clicking the pencil icon.
+![Copilot Chat Sample App](../media/copilot-chat.png)
 
-
-### Conversation Panel
-The left portion of the screen shows different conversation threads the user is holding with the chatbot.  To start a new conversation, click the '+'Bot symbol.
-
-### Conversation Thread
-Chatbot responses will appear in the main conversation thread, along with a history of your prompts.   Users can scroll up and down to review a complete conversation history.
-
-### Prompt Entry Box
-The bottom of the screen contains the prompt entry box, where users can type their prompts, and click the "Send" icon to the right of the box when ready to send it to the bot.
+| Feature | Name | Description |
+|:-|:-|:-|
+| **1** | Conversation Pane | The left portion of the screen shows different conversation threads the user is holding with the chatbot.  To start a new conversation, click the '+'Bot symbol. |
+| **2** | Conversation Thread | Chatbot responses will appear in the main conversation thread, along with a history of your prompts.   Users can scroll up and down to review a complete conversation history. |
+| **3** | Prompt Entry Box | The bottom of the screen contains the prompt entry box, where users can type their prompts, and click the "Send" icon to the right of the box when ready to send it to the bot. |
 
 ## Next step
 

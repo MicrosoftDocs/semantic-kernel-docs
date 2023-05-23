@@ -1,6 +1,6 @@
 ---
-title: Create plugins for Open AI
-description: Learn how to create AI plugins for Open AI using Semantic Kernel
+title: Create plugins for OpenAI
+description: Learn how to create AI plugins for OpenAI using Semantic Kernel
 author: matthewbolanos
 ms.topic: ai-plugins
 ms.author: mabolan

@@ -22,6 +22,11 @@ Congratulations! You have imagined a delicious ask for Semantic Kernel to run to
 > [!Note]
 > Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
 
+> [!TIP]
+> Want to easily follow along as you write your first prompts? Download the [Semantic Kernel VS Code Extension](../vs-code-tools/index.md) which allows you to easily create and run prompts from within VS Code.
+> [:::image type="content" source="../media/semantic-kernel-tools-install.png" alt-text="Semantic Kernel Tools Extension":::](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel)
+
+
 ## Writing a simple prompt
 
 Writing prompts is like making a wish. Let's imagine we are entrepreneurs trying to make it in downtown Manhattan and we need to drive more leads to our store. We write the prompt:

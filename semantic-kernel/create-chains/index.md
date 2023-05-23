@@ -1,6 +1,6 @@
 ---
-title: How to compose functions in Semantic Kernel
-description: How to compose functions in Semantic Kernel
+title: Chaining functions together
+description: How to chain functions together in Semantic Kernel
 author: johnmaeda
 ms.topic: creating-chains
 ms.author: johnmaeda

@@ -24,20 +24,19 @@ As a developer, you can then use these pieces individually. For example, if you 
 ### Orchestrating AI with Semantic Kernel
 The real power of Semantic Kernel, however, comes from its ability to combine these components together. By using multiple AI models, native functions, and memory all together within Semantic Kernel, you can create sophisticated pipelines that use AI to automate complex tasks.
 
-For example, with Semantic Kernel, you could create a pipeline that helps a user send a customer email. With memory, you could retrieve information about the customer and then use GPT-4 to generate a response. Finally, you could use a native function to automatically send the response to a user's email address.
-
-The Semantic Kernel documentation will explain how to use each of the core components so that you can orchestrate them together to create flows like the following.
+For example, with Semantic Kernel, you could create a pipeline that helps a user send an email to their marketing team. With memory, you could retrieve information about the project and then use planner to autogenerate the remaining steps (e.g., ground the user's ask with Microsoft Graph data, generate a response with GPT-4, and send the email). Finally, you can display a success message back to the user in your custom app.
 
 ![Technical perspective of what's happening](../media/kernel-flow.png)
 
-| Component | Description |
-|:-|:-|
-| **Ask** | A user's goal is sent to Semantic Kernel as an ask |
-| **Kernel** | [The kernel](../create-chains/kernel.md) orchestrates a user's ask |
-| **Pipeline** | To complete the user's goal, a developer can create a [chain](../create-chains/index.md) of steps to fulfill the user's ask |
-| **Steps** | The functions involved in completing a request; these include functions within [plugins](../create-plugins/index.md) and specialized steps for [memories](../memories/index.md) and [connectors](../create-chains/connectors.md) |
-| **Planner** | [The planner](../create-chains/planner.md) is a special plugin that can automatically generate new steps based on a user's goal |
-| **Response** | The output sent back to the user |
+| Step | Component | Description |
+|:-|:-|:-|
+| **1** | Ask | It starts with goal being sent to Semantic Kernel as an ask by either a user or developer. |
+| **2** | Kernel | The [kernel](../create-chains/kernel.md) orchestrates a user's ask. To do so, the kernel runs a [pipeline / chain](../create-chains/index.md) that is defined by a developer. While the chain is run, a common context is provided by the kernel so data can be shared between functions. |
+| **2.1** | Memories | With a specialized plugin, a developer can recall and store context in vector databases. This allows developers to simulate [memory](../memories/index.md) within their AI apps. |
+| **2.2** | Planner | Developers can ask Semantic Kernel to auto create chains to address novel needs for a user using [planner](../create-chains/planner.md). Planner is able to use any of the plugins that have already been loaded into the kernel to create new additional steps. |
+| **2.3** | Connectors | To get additional data or to perform autonomous actions, you can use out-of-the-box [connectors](../create-chains/connectors.md) like the Microsoft Graph Connector kit or create a custom connector to connect to your own services. |
+| **2.4** | Custom functions | As a developer, you can create custom functions that run inside of Semantic Kernel. These can either be LLM prompts (semantic functions) or native C# or Python code (native function). This allows you to add new AI capabilities and integrate your existing apps and services into Semantic Kernel. |
+| **3** | Response | Once the kernel is done, you can send the response back to the user to let them know the process is complete. |
 
 ## Semantic Kernel is open-source
 You may be familiar with the [Microsoft 365 Copilot System](https://www.youtube.com/watch?v=E5g20qmeKpg), the steps Microsoft uses to power its new Copilot experiences on top of GPT-4. This SDK formalizes patterns like these so building LLM-powered apps can be easier. To make sure all developers can take advantage of our learnings, we have released Semantic Kernel as an [open-source project](https://aka.ms/skrepo) on GitHub. 
