@@ -24,7 +24,6 @@ Congratulations! You have imagined a delicious ask for Semantic Kernel to run to
 
 > [!TIP]
 > Want to easily follow along as you write your first prompts? Download the [Semantic Kernel VS Code Extension](../vs-code-tools/index.md) which allows you to easily create and run prompts from within VS Code.
-> ![Semantic Kernel VS Code Extension](../media/vs-code-extension.png)
 
 
 ## Writing a simple prompt
