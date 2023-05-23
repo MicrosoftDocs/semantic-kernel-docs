@@ -16,17 +16,26 @@ The Semantic Kernel Tools help developers to write semantic functions for [Seman
 > [!Note]
 > Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
 
+## These tools simplify Semantic Kernel development
+With the Semantic Kernel Tools, you can easily create new semantic functions and test them without needing to write any code. Behind the scenes, the tools use the Semantic Kernel SDK so you can easily transition from using the tools to integrating your semantic functions into your own code.
+
+In the following image you can see how a user can easily view all of their semantic functions, edit them, and run them from within Visual Studio Code using any of the supported AI endpoints.
+
+![Semantic Kernel Tools](../media/vs-code-extension.png)
+
+
 ## Installing the Semantic Kernel Extension
 
 To get started with Semantic Kernel Tools, follow these simple steps:
 1. Ensure that you have [Visual Studio Code](https://code.visualstudio.com/) installed on your computer.
 2. Open Visual Studio Code and press Shift+Control+X to bring up the [Extensions marketplace](https://marketplace.visualstudio.com/).
-3. In the Extensions menu, search for “[Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel)“.
+3. In the Extensions menu, search for "[Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel)".
 4. Select Semantic Kernel Tools from the search results and click the Install button.
+  :::image type="content" source="../media/semantic-kernel-tools-install.png" alt-text="Semantic Kernel Tools Extension":::
 5. Wait for the installation to complete, then restart Visual Studio Code.
 
 
-## Connecting the Semantic Kernel Extension to your AI Endpoint
+## Connecting the extension to your AI endpoint
 
 First you must configure an AI endpoint to be used by the Semantic Kernel
 

@@ -32,4 +32,9 @@ OpenAI and Azure OpenAI uses a subword tokenization method called "Byte-Pair Enc
 
 Tokenization affects the amount of data and the number of calculations that the model needs to process. The more tokens that the model has to deal with, the more memory and computational resources that the model consumes. Therefore, the cost of running an OpenAI or Azure OpenAI model depends on the tokenization method and the vocabulary size that the model uses, as well as the length and the complexity of the input and output texts. Based on the number of tokens used for interacting with a model and the different rates for different models, your costs can widely differ. For example, as of February 2023, the rate for using Davinci is $0.06 per 1,000 tokens, while the rate for using Ada is $0.0008 per 1,000 tokens. The rate also varies depending on the type of usage, such as playground, search, or engine. Therefore, tokenization is an important factor that influences the cost and the performance of running an OpenAI or [Azure OpenAI model](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/).
 
+## Using Semantic Kernel tools to measure token use
+If you want to measure how much consumption each of your prompt uses, you can use the [Semantic Kernel VS Code Extension](../vs-code-tools/index.md) to see how many input and output tokens are necessary to run a prompt.
+
+![Semantic Kernel](../media/semantic-kernel-tools-token-use.png)
+
 

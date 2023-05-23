@@ -1,6 +1,6 @@
 ---
-title: Setting up Semantic Kernel
-description: Setting up Semantic Kernel
+title: Learn how to use Semantic Kernel
+description: Learn how to use Semantic Kernel
 author: johnmaeda
 ms.topic: getting-started
 ms.author: johnmaeda

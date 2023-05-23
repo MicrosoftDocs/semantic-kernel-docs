@@ -57,6 +57,11 @@ A GPT model is a type of neural network that uses the transformer architecture t
 
 LLM AI models are generally compared by the number of parameters — where bigger is usually better. The number of parameters is a measure of the size and the complexity of the model. The more parameters a model has, the more data it can process, learn from, and generate. However, having more parameters also means having more computational and memory resources, and more potential for overfitting or underfitting the data. Parameters are learned or updated during the training process, by using an optimization algorithm that tries to minimize the error or the loss between the predicted and the actual outputs. By adjusting the parameters, the model can improve its performance and accuracy on the given task or domain.
 
+## Easily test different models using Semantic Kernel tools
+If you want to easily test how different models perform, you can use the [Semantic Kernel VS Code Extension](../vs-code-tools/index.md) to quickly run a prompt on AI models from OpenAI, Azure OpenAI, and even Hugging Face.
+
+![Switching models in the Semantic Kernel VS Code Extension](../media/semantic-kernel-tools-model-switching.png)
+
 ## Take the next step
 
 > [!div class="nextstepaction"]
