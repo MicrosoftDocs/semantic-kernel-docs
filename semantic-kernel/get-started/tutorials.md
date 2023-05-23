@@ -17,7 +17,7 @@ Want to learn more about Semantic Kernel? Check out these in-depth tutorials and
 
 
 
-## Video tutorials
+## Tutorials
 The following guided walkthroughs are available for you to learn more about Semantic Kernel.
 
 ### Ready to cook with Semantic Kernel?
@@ -25,6 +25,12 @@ How would you like to solve gnarly design problems in seconds instead of hours? 
 
 > [!div class="nextstepaction"]
 > [Start the tutorial](https://aka.ms/sk/recipes)
+
+### Kernel syntax examples
+This project contains a collection of .NET examples for various scenarios using Semantic Kernel components. There are already 40 examples that show how to achieve basic tasks like creating a chain, adding a plugin, and running a chain. There are also more advanced examples that show how to use the Semantic Kernel API to create a custom plugin, stream data, and more.
+
+> [!div class="nextstepaction"]
+> [Start the tutorial](https://github.com/microsoft/semantic-kernel/tree/main/samples/dotnet/kernel-syntax-examples)
 
 ### More tutorials coming soon
 If you have a tutorial you would like to share, please let us know on our [Discord server](https://aka.ms/sk/discord). We would love to highlight your content with the community here!

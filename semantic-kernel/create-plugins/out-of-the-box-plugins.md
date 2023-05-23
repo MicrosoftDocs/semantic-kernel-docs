@@ -15,18 +15,21 @@ ms.service: mssearch
 > [!Note]
 > Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
 
-To provide a degree of standardization across Semantic Kernel implementations, the GitHub repo has several plugins available to any Semantic Kernel prompt which you can browse at:
+To provide a degree of standardization across Semantic Kernel implementations, the GitHub repo has several plugins available to any Semantic Kernel prompt which you view on the [Semantic Kernel GitHub repo](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/SemanticKernel/CoreSkills).
 
-[`/semantic-kernel/dotnet/src/SemanticKernel/CoreSkills/`](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/SemanticKernel/CoreSkills)
-
+![Core plugins in Semantic Kernel](../media/core-plugins.png)
 
 The core plugins currently supported include:
 
-* `TimeSkill`: To acquire the time of day and any other temporal information
-* `TextSkill`: To deterministically manipulating text strings
+* `ConversationSummarySkill`: To summarize a conversation
 * `FileIOSkill`: To read and write to the filesystem
 * `HttpSkill`: To call APIs
-* `PlannerSkill`: To create and execute plans
+* `MathSkill`: To perform mathematical operations
+* `TextMemorySkill`: To store and retrieve text in memory
+* `TextSkill`: To deterministically manipulating text strings
+* `TimeSkill`: To acquire the time of day and any other temporal information
+* `WaitSkill`: To pause execution for a specified amount of time
+
 
 ## Example of how a core plugin is used in Semantic Kernel
 

@@ -7,7 +7,7 @@ ms.author: evchaki
 ms.date: 04/04/2023
 ms.service: mssearch
 ---
-# What is a Vector Database?
+# What is a vector database?
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
@@ -38,6 +38,18 @@ Then, you can use a large language model and pass information from the vector da
 For example,
 if you want to write a blog post about the latest trends in AI,
 you can use a vector database to store the latest information about that topic and pass the information along with the ask to a LLM in order to generate a blog post that leverages the latest information.
+
+## Available connectors to vector databases
+Today, we have several connectors to vector databases that you can use to store and retrieve information. These include:
+
+- [Azure Cognitive Search](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCognitiveSearch)
+- [COSMOS DB](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.CosmosDB)
+- [Pinecone](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Pinecone)
+- [Postgres](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Postgres)
+- [Qdrant](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Qdrant)
+- [Sqlite](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Sqlite)
+
+![Vector Database Connectors](../media/vector-db-connector-folder.png)
 
 ## Take the next step
 

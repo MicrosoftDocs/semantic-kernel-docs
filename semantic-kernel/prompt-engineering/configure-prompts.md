@@ -13,7 +13,11 @@ ms.service: mssearch
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 
-LLM AI [models](/semantic-kernel/concepts-ai/models) have a variety of parameters associated them that can alter their behavior. Semantic Kernel enables the developer to have complete control over how a model is to be configured by using a `config.json` file placed in the same directory as the `skprompt.txt` file.
+When creating a prompt, there are many parameters that can be set to control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is used by [planner](/semantic-kernel/concepts-sk/planner) and how it is run by an [LLM AI model](../prompt-engineering/llm-models.md).
+
+Semantic Kernel allows a developer to have complete control over these parameters by using a `config.json` file placed in the same directory as the `skprompt.txt` file.
+
+For example, if you were to create a plugin called `TestPlugin` with two semantic functions called `SloganMaker` and `OtherFunction`, the file structure would look like this:
 
 ```File-Structure-For-Semantic-Plugins
 TestPlugin
@@ -29,6 +33,8 @@ TestPlugin
      └─── config.json
 ```
 
+The `config.json` file for the `SloganMaker` function would look like this:
+
 ```config.json-example
 {
   "schema": 1,
@@ -41,21 +47,35 @@ TestPlugin
     "presence_penalty": 0.0,
     "frequency_penalty": 0.0
   }
+  "input": {
+    "parameters": [
+      {
+        "name": "input",
+        "description": "The product to generate a slogan for",
+        "defaultValue": ""
+      }
+    ]
+  }
 }
 ```
-
-The text used in `description` is arguably the most important parameter to consider because it's used by the [planner](/semantic-kernel/concepts-sk/planner) to get a quick read on what the function can do for a user.
 
 > [!NOTE]
 > The `config.json` file is currently optional, but if you wish to exercise precise control of a function's behavior be sure to include it inside each function directory. 
 
-To learn more about the various parameters available for tuning how a function works, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference).
+## Parameters used by planner
+The `description` field in the root object and `input` object are used by [planner](/semantic-kernel/concepts-sk/planner) to determine how to use a function. The root `description` tells planner what the function does, and the input `description` tells planner how to populate the input parameters.
 
-## Default backends setting for OpenAI and Azure OpenAI
+Because these parameters impact the behavior of planner, we recommend running tests on the values you provide to ensure  they are used by planner correctly.
 
-Learn more about [available GPT-3](/azure/cognitive-services/openai/concepts/models) models besides `text-davinci-003` for completion.
+When writing `description` and `input`, we recommend using the following guidelines:
+- The `description` fields should be short and concise so that it does not consume too many tokens when used in the planner prompt.
+- Consider the `description`s of other functions in the same plugin to ensure that they are sufficiently unique. If they are not, planner may not be able to distinguish between them.
+- If you have trouble getting planner to use a function, try adding recommendations or examples for when to use the function.
 
-## Completion parameters that can be set in config.json
+## Completion parameters in config.json
+In addition to providing parameters for planner, the `config.json` file also allows you to control how a function is run by an [LLM AI model](../prompt-engineering/llm-models.md). The `completion` object in the root object of the `config.json` file allows you to set the parameters used by the model.
+
+The following table describes the parameters available for use in the `completion` object for the OpenAI and Azure OpenAI APIs:
 
 | Completion Parameter | Type | Required? | Default | Description |
 |---|---|---|---|
@@ -65,10 +85,12 @@ Learn more about [available GPT-3](/azure/cognitive-services/openai/concepts/mod
 | `presence_penalty` | number	| Optional	| 0	| Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. |
 | `frequency_penalty` |	number	| Optional	|0 |	Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. |
 
+To learn more about the various parameters available for tuning how a function works, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference).
+
+### Default setting for OpenAI and Azure OpenAI
+If you do not provide completion parameters in the `config.json` file, Semantic Kernel will use the default parameters for the OpenAI API. Learn more about the current defaults by reading the [Azure OpenAI API reference](/azure/cognitive-services/openai/reference).
+
 ## Take the next step
-
-Learn more about tokens. 
-
 > [!div class="nextstepaction"]
 > [Understanding tokens](./tokens.md)
 

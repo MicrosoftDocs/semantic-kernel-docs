@@ -16,7 +16,7 @@ _Connectors_ let you reach outside of the plugins universe to external APIs and 
 
 ## What's the MS Graph Connector Kit?
 
-The MS Graph Connector Kit lets you fluidly connect with useful data that's only available **to you** when securely logged-in. We currently support your ability to:
+The [Microsoft Graph Connector Kit](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.MsGraph) lets you fluidly connect with useful data that's only available to you when securely logged-in. We currently support your ability to:
 
 * Add an event to your calendar
 * Send an email for you
@@ -25,13 +25,15 @@ The MS Graph Connector Kit lets you fluidly connect with useful data that's only
 * Query your organization hierarchy
 * Manage your MS To Do list
 
+[![Microsoft Graph Connector folder on Github](../media/ms-graph-connector-folder.png)](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.MsGraph)
+
 ## More out-of-the-box connectors
 
-* Issue a Bing search query
-* Read OpenXML streams (e.g. Word docs)
-* Use SQLite as a lightweight database
+* Issue a [Bing or Google search query](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Web)
+* Read [OpenXML streams](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Document) (e.g. Word docs)
+* Make a [REST API call](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.OpenAPI) using OpenAPI
 
-The set of example connectors provided in the [repo](https://aka.ms/sk/repo) have designed to start you on your path to building your own external interfaces to Semantic Kernel.
+The set of example connectors provided in the [repo](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src) have designed to start you on your path to building your own external interfaces to Semantic Kernel.
 
 ## Take the next step
 
