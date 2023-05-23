@@ -132,7 +132,7 @@ az group delete --name YOUR_RESOURCE_GROUP
 ```
 
 ## Take the next step
->Learn how to make changes to your web app, such as adding new skills. To learn more click [here](./publish-changes.md).
+>Learn how to make changes to your web app, such as adding new skills. To learn more click [here](./publish-changes-to-azure.md).
 
 >If you have not already done so please star the GitHub repo and join the Semantic Kernel community! 
 [Star the Semantic Kernel repo](https://aka.ms/sk/repo)
