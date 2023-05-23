@@ -9,7 +9,7 @@ ms.service: mssearch
 ---
 # Bibliography
 
-[!INCLUDE [subheader.md](../includes/pat_medium.md)]
+[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 > [!IMPORTANT]
 > These items link to sites outside of this learning resource.
@@ -25,4 +25,3 @@ ms.service: mssearch
 > [!div class="nextstepaction"]
 > [Get supported](/semantic-kernel/support)
 
-[!INCLUDE [footer.md](../includes/footer.md)]

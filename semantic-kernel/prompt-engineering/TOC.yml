@@ -1,0 +1,12 @@
+- name: Overview
+  href: index.md
+- name: Create your first prompt
+  href: your-first-prompt.md
+- name: Choosing an LLM model
+  href: llm-models.md
+- name: Configuring prompts
+  href: configure-prompts.md
+- name: Understanding tokens
+  href: tokens.md
+- name: Prompt template syntax
+  href: prompt-template-syntax.md

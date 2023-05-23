@@ -1,0 +1,14 @@
+- name: Overview
+  href: index.md
+- name: Required Local Service
+  href: local-api-service.md
+- name: Simple Chat Summary 
+  href: simple-chat-summary.md
+- name: Book Creator
+  href: book-creator.md
+- name: Authentication and APIs
+  href: authentication-api.md
+- name: GitHub Repo Q&A Bot
+  href: github-repo-qa-bot.md
+- name: Copilot Chat Sample App
+  href: copilot-chat.md
