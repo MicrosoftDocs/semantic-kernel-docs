@@ -16,7 +16,7 @@ The Semantic Kernel Tools help developers to write semantic functions for [Seman
 > [!Note]
 > Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
 
-## These tools are a perfect companion to the Semantic Kernel SDK
+## These tools simplify Semantic Kernel development
 With the Semantic Kernel Tools, you can easily create new semantic functions and test them without needing to write any code. Behind the scenes, the tools use the Semantic Kernel SDK so you can easily transition from using the tools to integrating your semantic functions into your own code.
 
 In the following image you can see how a user can easily view all of their semantic functions, edit them, and run them from within Visual Studio Code using any of the supported AI endpoints.
