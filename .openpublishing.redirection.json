@@ -67,7 +67,7 @@
         },
         {
             "source_path": "semantic-kernel/howto/publish.md",
-            "redirect_url": "/semantic-kernel/deploy/publish-changes",
+            "redirect_url": "/semantic-kernel/deploy/publish-changes-to-azure",
             "redirect_document_id": true
         },
         {
