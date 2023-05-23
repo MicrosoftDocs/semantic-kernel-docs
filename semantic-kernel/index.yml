@@ -1,6 +1,6 @@
 ### YamlMime:Hub
 title: Semantic Kernel documentation
-summary: Learn how to easily add powerful LLM AI capabilities to your app
+summary: Learn how to easily add powerful LLM AI capabilities to your app with Semantic Kernel.
 brand: semantic-kernel
 metadata:
   title: Semantic Kernel documentation
@@ -22,47 +22,47 @@ productDirectory:
       links:
         - url: /semantic-kernel/overview
           text: Overview
-        - url: /semantic-kernel/overview/get-started
-          text: What's new?
-        - url: /semantic-kernel/overview/whats-new
-          text: Getting Started
-    - title: Large Language Model AI
-      imageSrc: /semantic-kernel/media/connector-blue.png
-      links:
-        - url: /semantic-kernel/concepts-ai/
-          text: Overview
-        - url: /semantic-kernel/concepts-ai/models
-          text: Models
-        - url: /semantic-kernel/concepts-ai/prompts
-          text: Prompts
-        - url: /semantic-kernel/concepts-ai/tokens
-          text: Tokens  
-        - url: /semantic-kernel/concepts-ai/embeddings
-          text: Embeddings          
-    - title: Semantic Kernel concepts
+        - url: /semantic-kernel/get-started
+          text: Quick start guide
+        - url: /semantic-kernel/get-started/hackathon-materials
+          text: Hackathon materials
+        - url: /semantic-kernel/get-started/tutorials
+          text: In-depth tutorials
+    - title: Prompt engineering 101
       imageSrc: /semantic-kernel/media/openbook.png
       links:
-        - url: /semantic-kernel/concepts-sk/
+        - url: /semantic-kernel/prompt-engineering/
           text: Overview
-        - url: /semantic-kernel/concepts-sk/kernel
-          text: Kernel
-        - url: /semantic-kernel/concepts-sk/planner
-          text: Planner
-        - url: /semantic-kernel/concepts-sk/skills
-          text: Skills  
-        - url: /semantic-kernel/concepts-sk/connectors
-          text: Connectors          
-    - title: Building skills
+        - url: /semantic-kernel/prompt-engineering/your-first-prompt
+          text: Writing your first prompt
+        - url: /semantic-kernel/prompt-engineering/llm-models
+          text: About LLM Models
+        - url: /semantic-kernel/prompt-engineering/configure-prompts
+          text: Configuring prompts
+        - url: /semantic-kernel/prompt-engineering/tokens
+          text: Understanding tokens   
+    - title: Creating chains in Semantic Kernel
+      imageSrc: /semantic-kernel/media/connector-blue.png
+      links:
+        - url: /semantic-kernel/create-chains/
+          text: Overview
+        - url: /semantic-kernel/create-chains/kernel
+          text: Orchestrating with the kernel
+        - url: /semantic-kernel/create-chains/native-functions
+          text: Chaining native functions
+        - url: /semantic-kernel/create-chains/connectors
+          text: Getting data with connectors   
+        - url: /semantic-kernel/create-chains/planner
+          text: Auto create chains with Planner   
+    - title: Building and deploying plugins
       imageSrc: /semantic-kernel/media/concept.png
       links:
-         - url: /semantic-kernel/howto/
+         - url: /semantic-kernel/create-plugins/
            text: Overview
-         - url: /semantic-kernel/howto/semanticfunctions
-           text: Semantic Functions
-         - url: /semantic-kernel/howto/nativefunctions
-           text: Native Functions
-         - url: /semantic-kernel/howto/coreskills
-           text: Core Skills           
+         - url: /semantic-kernel/create-plugins/out-of-the-box-plugins
+           text: Out-of-the-box plugins
+         - url: /semantic-kernel/create-plugins/deploy-plugins
+           text: Deploy plugins to Azure
     - title: App samples
       imageSrc: /semantic-kernel/media/get-started-blue.png
       links:
@@ -79,7 +79,7 @@ productDirectory:
     - title: Community
       imageSrc: /semantic-kernel/media/i_best-practices.png
       links:
+        - url: https://aka.ms/sk/discord
+          text: Join the community on Discord
         - url: https://aka.ms/sk/repo
           text: Visit the GitHub repo
-        - url: https://aka.ms/sk/discord
-          text: Join the Community

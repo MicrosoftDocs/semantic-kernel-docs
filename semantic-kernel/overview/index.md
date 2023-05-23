@@ -4,66 +4,60 @@ description: Overview of Semantic Kernel
 author: johnmaeda
 ms.topic: quickstart
 ms.author: johnmaeda
-ms.date: 05/04/2023
+ms.date: 05/21/2023
 ms.service: mssearch
 ---
 # What is Semantic Kernel?
 
-[!INCLUDE [pat_small.md](../includes/pat_small.md)]
 
-**Semantic Kernel (SK) is a lightweight SDK that lets you easily mix conventional programming languages with the latest in Large Language Model (LLM) AI "prompts" with templating, chaining, and planning capabilities out-of-the-box.**
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-[!INCLUDE [fullview.md](../includes/fullview.md)]
+Semantic Kernel is a lightweight open-source orchestration SDK that lets you easily mix-and-match AI prompts with conventional programming languages like C# and Python.
 
-With SK, you can now build AI-first apps faster by design while also having a front-row peek at how the SDK is being built. SK has been released as open-source so that more pioneering developers can join us in crafting the future of this landmark moment in the history of computing. 
+## Semantic Kernel simplifies development of AI apps
+Semantic Kernel has been engineered to allow developers to flexibly integrate AI into their existing apps. To do so, Semantic Kernel provides a set of abstractions that make it easy to create and manage prompts, native functions, memories, and connectors. You can then orchestrate these components using Semantic Kernel pipelines to complete users' requests or automate actions.
 
-SK has been engineered to flexibly integrate LLM AI into existing apps. With SK, it's easier to accelerate your innovations' time to market, and to manage for reliability and performance in the long run.
+Because of the abstractions Semantic Kernel provides, you can use it to orchestrate AI from any provider. For example, you can use Semantic Kernel to orchestrate AI from OpenAI, Azure, or even Hugging Face.
 
-> [!div class="nextstepaction"]
-> [Get started with Semantic Kernel](/semantic-kernel/get-started)
+As a developer, you can then use these pieces individually. For example, if you just need an abstraction over OpenAI and Azure OpenAI services, you could use the SDK to run pre-configured prompts.
 
-## SK is a kit of parts that interlock
+### Orchestrating AI with Semantic Kernel
+The real power of Semantic Kernel, however, comes from its ability to combine these components together. By using multiple AI models, native functions, and memory all together within Semantic Kernel, you can create sophisticated pipelines that use AI to automate complex tasks.
 
-With their increasing ability to understand complex intents, LLM AIs are enabling a more "goal-oriented" approach to problem solving. Therefore, SK was created to start with an "ASK" in mind. An ASK is driven to a dynamically informed outcome with the orchestration capabilities of the kernel. Starting from a user's ask to GET-ting what they want can be represented as a flow of connected parts:
+For example, with Semantic Kernel, you could create a pipeline that helps a user send a customer email. With memory, you could retrieve information about the customer and then use GPT-4 to generate a response. Finally, you could use a native function to automatically send the response to a user's email address.
 
-![Technical perspective of what's happening](../media/flowdiagram.png)
+The Semantic Kernel documentation will explain how to use each of the core components so that you can orchestrate them together to create flows like the following.
 
-| Journey | Short Description |
-|:---:|:---|
-| **ASK** | A user's goal is sent to SK as an ASK |
-| **Kernel** | [The kernel](/semantic-kernel/concepts-sk/kernel) orchestrates a user's ASK |
-| **Planner** | [The planner](/semantic-kernel/concepts-sk/planner) breaks it down into steps based upon resources that are available |
-| **Resources** | Planning involves leveraging available [skills,](/semantic-kernel/concepts-sk/skills) [memories,](/semantic-kernel/concepts-sk/memories) and [connectors](/semantic-kernel/concepts-sk/connectors) |
-| **Steps** | A plan is a series of steps for the kernel to execute |
-| **Pipeline** | Executing the steps results in fulfilling the user's ASK |
-| **GET** | And the user gets what they asked for ... |
+![Technical perspective of what's happening](../media/kernel-flow.png)
 
+| Component | Description |
+|:-|:-|
+| **Ask** | A user's goal is sent to Semantic Kernel as an ask |
+| **Kernel** | [The kernel](../create-chains/kernel.md) orchestrates a user's ask |
+| **Pipeline** | To complete the user's goal, a developer can create a [chain](../create-chains/index.md) of steps to fulfill the user's ask |
+| **Steps** | The functions involved in completing a request; these include functions within [plugins](../create-plugins/index.md) and specialized steps for [memories](../memories/index.md) and [connectors](../create-chains/connectors.md) |
+| **Planner** | [The planner](../create-chains/planner.md) is a special plugin that can automatically generate new steps based on a user's goal |
+| **Response** | The output sent back to the user |
 
-## SK gets your LLM AI journey started  
+## Semantic Kernel is open-source
+You may be familiar with the [Microsoft 365 Copilot System](https://www.youtube.com/watch?v=E5g20qmeKpg), the steps Microsoft uses to power its new Copilot experiences on top of GPT-4. This SDK formalizes patterns like these so building LLM-powered apps can be easier. To make sure all developers can take advantage of our learnings, we have released Semantic Kernel as an [open-source project](https://aka.ms/skrepo) on GitHub. 
 
-**[Get started](/semantic-kernel/get-started) with Semantic Kernel.** Within minutes you can create templated prompts, chained prompts, and reusable skills as pure prompts, native code, or hybrid prompts with code. And soon afterwards, you'll be breaking the barrier to ultra-long prompts with embeddings while summoning even more power from any external APIs.
+:::image type="content" source="../media/github.png" alt-text="GitHub repo of Semantic Kernel":::
 
-### First steps video
-> [!VIDEO https://aka.ms/SK-First-Steps]
-
-## SK makes app developers' work lives easier
-
-1. **Fast Integration:** SK is designed to be embedded in any kind of application, making it easy for developers to add LLM AI functionality to test inside their apps.
-
-2. **Power Prompting:** Plain prompts that are fed as API calls can only get you so far. SK provides the abstractions and machinery to unlock your OpenAI or Azure OpenAI API key.
-
-3. **Novel-But-Familiar:** For 100% determininism, native code is always available as a first-class partner on your prompt engineering quests. You get the best of both worlds.
-
-## SK is for developers facing new pressures
-
-| 1️⃣<br /> You, or your boss, have noticed that ChatGPT has gotten a lot of attention. | 2️⃣<br />  There's a big push to do something similar with LLM AI in your app ... _asap._ | 3️⃣<br /> You quickly learn that making AI tell a joke is easy. Everything else isn't. |  4️⃣<br />  Rather than waste time on LLM AI itself, you want to work on your app instead. |
-| --- | --- | --- | --- |
-
-## SK is under construction and is hungry for feedback
-
-Given that new breakthroughs in LLM AIs are landing on a daily basis, you should consider this SDK a work-in-progress as the team's "best-guess practices" for adding semantically-rich AI to existing apps. And since there are still so many unknown-unknowns in this kind of work, we defer to the community's feedback and contributions to find even better practices going forward. Together.
+Given that new breakthroughs in LLM AIs are landing on a daily basis, you should expect this SDK evolve. We're excited to see what you build with Semantic Kernel and we look forward to your feedback and contributions so we can build the best practices together in the SDK.
 
 > [!div class="nextstepaction"]
-> [Get started with Semantic Kernel](/semantic-kernel/get-started)
+> [Open the Semantic Kernel repo](https://aka.ms/skrepo)
 
-[!INCLUDE [footer.md](../includes/footer.md)]
+### Contribute to Semantic Kernel
+We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the [GitHub repository](https://aka.ms/skrepo). Bug reports and fixes are welcome!
+
+For new features, components, or extensions, please open an issue and discuss with us before sending a PR. This will help avoid rejections since it will allow us to discuss the impact to the larger ecosystem.
+
+<!-- ## Semantic Kernel is one part of the entire AI ecosystem -->
+
+## Get started using the Semantic Kernel SDK
+Now that you know what Semantic Kernel is, follow the [get started](../get-started/index.md) link to try it out. Within minutes you can create prompts and chain them with out-of-the-box plugins and native code. Soon afterwards, you can give your apps memories with embeddings and summon even more power from external APIs.
+
+> [!div class="nextstepaction"]
+> [Get started with Semantic Kernel](../get-started/index.md)
