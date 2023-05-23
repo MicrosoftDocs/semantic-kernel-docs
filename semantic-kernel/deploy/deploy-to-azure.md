@@ -80,7 +80,7 @@ If you choose to use Azure Portal as your deployment method, you will need to re
 App Service SKU: Select the pricing tier based on your usage. Click here to learn more about Azure App Service Plan
 1. Package URI: There is no need to change this. Should you in future want to deploy a customized version of Semantic Kernel you can update to use your package URI.
 1. Completion, Embedding and Planner Model: These are by default using the appropriate models based on the current use case e.g. Azure OpenAI or OpenAI. You can update these based on your preference for available models by each provider.
-1. End point: If using Azure Open AI enter the Model Endpoint, this can be found for the model you are using in Azure OpenAI Studio.
+1. End point: If using Azure OpenAI enter the Model Endpoint, this can be found for the model you are using in Azure OpenAI Studio.
 1. API Key: Enter the API key for either Azure OpenAI or OpenAI
 Semantic Kernel API Key: This is created automatically via the template for authentication. If you do not want to use any authentication you can remove the value in this field.
 1. CosmosDB: Deploy this resource if you want to use store chats, this is optional.

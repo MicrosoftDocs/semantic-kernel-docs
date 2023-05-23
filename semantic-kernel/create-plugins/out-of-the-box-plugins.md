@@ -1,6 +1,6 @@
 ---
-title: How to use core plugins in Semantic Kernel
-description: How to use core plugins in Semantic Kernel
+title: How to use out-of-the-box plugins in Semantic Kernel
+description: How to use out-of-the-box plugins in Semantic Kernel
 author: johnmaeda
 ms.topic: ai-plugins
 ms.author: johnmaeda

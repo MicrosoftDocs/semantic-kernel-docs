@@ -49,8 +49,6 @@ Today, we have several connectors to vector databases that you can use to store 
 - [Qdrant](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Qdrant)
 - [Sqlite](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Sqlite)
 
-![Vector Database Connectors](../media/vector-db-connector-folder.png)
-
 ## Take the next step
 
 > [!div class="nextstepaction"]
