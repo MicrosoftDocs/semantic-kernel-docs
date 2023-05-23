@@ -35,7 +35,7 @@ To get started with Semantic Kernel Tools, follow these simple steps:
 5. Wait for the installation to complete, then restart Visual Studio Code.
 
 
-## Connecting the Semantic Kernel Extension to your AI Endpoint
+## Connecting the extension to your AI endpoint
 
 First you must configure an AI endpoint to be used by the Semantic Kernel
 
