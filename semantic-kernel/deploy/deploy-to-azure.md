@@ -89,7 +89,7 @@ App Service SKU: select the pricing tier based on your usage. Click [here](https
 
 ## What resources are deployed?
 Below is a list of the key resources created within the resource group when you deploy Semantic Kernel to Azure as a web app service.
-1. Azure Web app service: hosts Semantic Kernel
+1. Azure web app service: hosts Semantic Kernel
 1. Application Insights: application logs and debugging 
 1. Azure Cosmos DB: used for chat storage (optional)
 1. Qdrant vector database (within a container): used for embeddings storage (optional)
