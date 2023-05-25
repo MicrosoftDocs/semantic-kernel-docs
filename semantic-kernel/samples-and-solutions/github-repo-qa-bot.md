@@ -6,6 +6,7 @@ ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
 ms.service: mssearch
+ms.custom: build-2023, build-2023-dataai
 ---
 # GitHub Repo Q&A Bot sample app
 
@@ -54,4 +55,3 @@ Run the Copilot Chat sample app!
 
 > [!div class="nextstepaction"]
 > [Run the Copilot Chat Sample App](/semantic-kernel/samples/copilotchat)
-
