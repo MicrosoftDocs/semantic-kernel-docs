@@ -119,7 +119,7 @@ check that you have correctly entered the values for the following settings:
 - AIService:Models:Embedding
 - AIService:Models:Planner
 
-AIService:Models:Completion is ignored for OpenAI instances from [openai.com](https://openai.com) but MUST be properly populated when using Azure OpenAI instances.
+AIService:Endpoint is ignored for OpenAI instances from [openai.com](https://openai.com) but MUST be properly populated when using Azure OpenAI instances.
 
 
 ## How to clean up resources

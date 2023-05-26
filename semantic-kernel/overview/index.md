@@ -6,6 +6,7 @@ ms.topic: quickstart
 ms.author: johnmaeda
 ms.date: 05/21/2023
 ms.service: mssearch
+ms.custom: build-2023, build-2023-dataai
 ---
 # What is Semantic Kernel?
 

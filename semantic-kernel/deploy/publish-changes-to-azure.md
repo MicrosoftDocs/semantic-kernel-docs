@@ -20,13 +20,17 @@ This guide provides steps to make changes to the skills of a deployed instance o
 
 > Tip: You can find examples [skills](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills) & [planners](https://github.com/microsoft/semantic-kernel/tree/main/samples/dotnet/kernel-syntax-examples) in the GitHub Semantic Kernel repo.
 
-## How to make changes to the Semantic Kernel web app service 
-There are two main ways to deploy changes to the Semantic Kernel web app service. If you have been working locally and are ready to deploy your changes to Azure as a new web app service, you can follow the steps in the first section. If you have already deployed your Semantic Kernel web app service and want to make changes to add Semantic skills, you can follow the steps in the second section. 
+## How to publish changes to the Semantic Kernel web app service
+There are two main ways to deploy changes to the Semantic Kernel web app service. If you have been working locally and are ready to deploy your changes to Azure as a new web app service, you can follow the steps in the first section. If you have already deployed your Semantic Kernel web app service and want to make changes to add Semantic skills, you can follow the steps in the second section.
 
-### 1.Deploying your Copilot Chat App to Azure as a web application 
-After working locally, i.e. you cloned the code from the GitHub [repo](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) and have made changes to the code for your needs, you can deploy your changes to Azure as a web application. 
+### 1.Deploying your Copilot Chat App to Azure as a web application
+After working locally, i.e. you cloned the code from the GitHub [repo](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) and have made changes to the code for your needs, you can deploy your changes to Azure as a web application.
 
-To do this you will need to build and upload your customized version of the Semantic Kernel service to Azure. Once you are ready, using Powershell or the command line tool go to the '../semantic-kernel/samples/apps/copilot-chat-app/webapi' directory and enter the following command:
+You can use the standard methods available to [deploy an ASP.net web app](https://learn.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore?pivots=development-environment-vs&tabs=net70) in order to do so.
+
+Alternatively, you can follow the steps below to manually build and upload your customized version of the Semantic Kernel service to Azure.
+
+First, at the command line, go to the '../semantic-kernel/samples/apps/copilot-chat-app/webapi' directory and enter the following command:
 
 ```powershell
 dotnet publish CopilotChatApi.csproj --configuration Release --arch x64 --os win
@@ -41,7 +45,7 @@ This will create a directory which contains all the files needed for a deploymen
 
 Zip the contents of that directory and store the resulting zip file on cloud storage, e.g. Azure Blob Container. Put its URI in the "Package Uri" field in the web deployment page you access through the "Deploy to Azure" buttons or use its URI as the value for the PackageUri parameter of the deployment scripts found on this [page](./deploy-to-azure.md).
 
-Your deployment will then use your customized deployment package. That package will be used to create a new Azure web app, which will be configured to run your customized version of the Semantic Kernel service. 
+Your deployment will then use your customized deployment package. That package will be used to create a new Azure web app, which will be configured to run your customized version of the Semantic Kernel service.
 
 ### 2. Publish skills directly to the Semantic Kernel web app service
 This method is useful for making changes when adding new semantic skills only.
@@ -54,7 +58,7 @@ This method is useful for making changes when adding new semantic skills only.
 5. Now you can drag and drop your Semantic Skills into this folder
 6. Next navigate to 'site\wwwroot'
 7. Click on the pencil icon to edit the appsettings.json file.
-8. In the appsettings.json file, update the SemanticSkillDirectory with the location of the skills you have created. 
+8. In the appsettings.json file, update the SemanticSkillDirectory with the location of the skills you have created.
 ```json
     "Service": {
     "SemanticSkillsDirectory": "/SemanticSkills",
@@ -67,7 +71,7 @@ This method is useful for making changes when adding new semantic skills only.
 ## Take the next step
 >To explore how you build a front-end web app explore the [Copilot Chat App](../samples/copilotchat.md) sample.
 
->If you have not already done so, please star the GitHub repo and join the Semantic Kernel community! 
+>If you have not already done so, please star the GitHub repo and join the Semantic Kernel community!
 [Star the Semantic Kernel repo](https://aka.ms/sk/repo)
 
 [!INCLUDE [footer.md](../includes/footer.md)]
