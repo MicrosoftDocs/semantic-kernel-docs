@@ -61,8 +61,6 @@ productDirectory:
            text: Overview
          - url: /semantic-kernel/create-plugins/out-of-the-box-plugins
            text: Out-of-the-box plugins
-         - url: /semantic-kernel/create-plugins/deploy-plugins
-           text: Deploy plugins to Azure
     - title: App samples
       imageSrc: /semantic-kernel/media/get-started-blue.png
       links:
