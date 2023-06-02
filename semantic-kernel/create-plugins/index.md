@@ -69,7 +69,7 @@ Plugins are stored in one of three places:
 
 1. Core Plugins: these are plugins available at any time to the kernel that embody a few standard capabilities like working with time, text, files, http requests, and the [Planner](/semantic-kernel/concepts-sk/planner).
 
-> `semantic-kernel/dotnet/src/SemanticKernel/CorePlugins`
+> `semantic-kernel/dotnet/src/SemanticKernel/CoreSkills`
 
 2. Semantic Plugins: these plugins are managed by you in a directory of your choice.
 
