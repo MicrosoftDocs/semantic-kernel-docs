@@ -64,11 +64,11 @@ The following steps describe how you can setup your Azure OpenAI API with Azure 
     5. Select **Set headers**.
     6. In the **Set headers** page, enter `openai-key` for the **Name** field
     7. For the **Value** field, take the display name of your named value in the previous step and wrap it in double curly braces. For example, if the display name of your named value was `azure-openai-key`, you would enter `{{azure-openai-key}}`.
-    8. leave the action as `append`.
+    8. Leave the action as `append`.
         :::image type="content" source="../media/api-management-define-header.png" alt-text="Set header in inbound processing":::
     7. Select **Save**.
 
-    You can also use named values and key vault secrets to protect your Auzre OpenAI API key even more. To learn more, see [using named values in Azure API Management policies](azure/api-management/api-management-howto-properties). 
+    You can also use key vault secrets to protect your Auzre OpenAI API key even more. To learn more, see [using named values in Azure API Management policies](azure/api-management/api-management-howto-properties). 
 
 You've now created and initially setup your Azure OpenAI API with Azure API Management.  You can now test your API by selecting the **Test** tab in Azure API Management. For more information, see [Test an API](/azure/api-management/import-and-publish#test-the-new-api-in-the-azure-portal). Next, we'll configure authentication for your new API so only authorized users can access it.
     
