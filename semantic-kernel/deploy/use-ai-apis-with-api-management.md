@@ -137,7 +137,6 @@ Once users have the correct permissions, they can access your API from within Se
 
     ```csharp
     IKernel kernel = new KernelBuilder()
-    .WithLogger(loggerFactory.CreateLogger<IKernel>())
     .WithAzureTextCompletionService(
         "text-davinci-003",
         "https://apim...api.net/",
