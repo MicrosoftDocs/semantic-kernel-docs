@@ -8,7 +8,7 @@ ms.date: 05/19/2023
 ms.service: mssearch
 ---
 
-# Protect your AI API keys with Azure API Management
+# Protect your Azure OpenAI API keys with Azure API Management
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
@@ -48,22 +48,9 @@ The following steps describe how you can setup your Azure OpenAI API with Azure 
     ],
     ```
 
-3. You can now import the file from step 2 into Azure API Management.
-
-    The full process is described in the [import and publish](/azure/api-management/import-and-publish) article. You can also follow the steps below to import your file:
-
-    1. In the Azure portal, navigate to your API Management instance.
-    2. Select **APIs** from the left-hand menu.
-    3. Select **OpenAPI** tile.
-    4. In the Create from OpenAPI specification window, select Full.
-    5. Upload the API definition file you edited in step 2 by selecting **Select a file**.
-    6. Populate the required **Title** and **Description** fields.
-    7. Select **Create**.
+3. You can now import the file from step 2 into Azure API Management. The full process is described in the [import and publish](/azure/api-management/import-and-publish) article.
 
 4. Finally, [edit the inbound policy](/azure/api-management/set-edit-policies) so your API adds the `api-key` header to your request.
-
-    Follow these steps to add the `api-key` header to your request:
-
     1. Navigate to your API Management instance and select **APIs** from the left-hand menu.
     2. Select your API from the list of APIs.
     3. Select the **Design** tab.
@@ -87,9 +74,9 @@ By default, your new Azure API Management service uses subscriptions to control 
 
     :::image type="content" source="../media/api-management-turn-off-subscription.png" alt-text="Turn off subscription required":::
 
-2. Next, configure OAuth 2.0.
+2. Next, configure OAuth 2.0 by folloing the steps in the [protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](/azure/api-management/api-management-howto-protect-backend-with-aad#register-an-application-in-azure-ad-to-represent-the-api) article.
 
-    Follow the steps in [Protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](/azure/api-management/api-management-howto-protect-backend-with-aad#register-an-application-in-azure-ad-to-represent-the-api). Once you're done with these steps you'll have an Azure AD application with the necessary scopes.
+    Once you're done with these steps you'll have an Azure AD application with the necessary scopes.
 
 3. Lastly, [configure a JWT validation policy to pre-authorize requests](/azure/api-management/api-management-howto-protect-backend-with-aad#configure-a-jwt-validation-policy-to-pre-authorize-requests).
 
