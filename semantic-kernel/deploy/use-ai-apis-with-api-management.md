@@ -26,7 +26,7 @@ To create a new API Management instance, see [Create an API Management instance]
 ## Setup Azure API Management instance with Azure OpenAI API
 The following steps describe how you can setup your Azure OpenAI API with Azure API Management. You can follow a similar process for OpenAI APIs.
 
-1. Start by [downloading the API definition for Azure OpenAI](https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference/preview/2023-03-15-preview/inference.json) and saving them to your local machine.
+1. Start by [downloading the API definition for Azure OpenAI](https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference/preview/2023-03-15-preview/inference.json) and saving it to your local machine.
 
     > [!div class="nextstepaction"]
     > [Download API reference](https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference/preview/2023-03-15-preview/inference.json)
@@ -50,7 +50,8 @@ The following steps describe how you can setup your Azure OpenAI API with Azure 
 
 3. You can now import the file from step 2 into Azure API Management.
 
-    The full process is described in [Import and publish](/azure/api-management/import-and-publish) but the following steps will get you started:
+    The full process is described in the [import and publish](/azure/api-management/import-and-publish) article. You can also follow the steps below to import your file:
+
     1. In the Azure portal, navigate to your API Management instance.
     2. Select **APIs** from the left-hand menu.
     3. Select **OpenAPI** tile.
@@ -61,7 +62,8 @@ The following steps describe how you can setup your Azure OpenAI API with Azure 
 
 4. Finally, [edit the inbound policy](/azure/api-management/set-edit-policies) so your API adds the `api-key` header to your request.
 
-    To do this, follow these steps:
+    Follow these steps to add the `api-key` header to your request:
+
     1. Navigate to your API Management instance and select **APIs** from the left-hand menu.
     2. Select your API from the list of APIs.
     3. Select the **Design** tab.
@@ -81,15 +83,16 @@ By default, your new Azure API Management service uses subscriptions to control 
 
 1. First, turn off **Subscription required** for your API.
 
-    To do this, navigate to your API Management instance and select **APIs** from the left-hand menu. Then select your API from the list of APIs. In the **Settings** tab, find the **Subscription required** checkbox and uncheck it.
+    Navigate to your API Management instance and select **APIs** from the left-hand menu. Then select your API from the list of APIs. In the **Settings** tab, find the **Subscription required** checkbox and uncheck it.
 
     :::image type="content" source="../media/api-management-turn-off-subscription.png" alt-text="Turn off subscription required":::
 
 2. Next, configure OAuth 2.0.
 
-    To do this, follow the steps in [Protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](/azure/api-management/api-management-howto-protect-backend-with-aad#register-an-application-in-azure-ad-to-represent-the-api). Once you're done with these steps you'll have an Azure AD application with the necessary scopes.
+    Follow the steps in [Protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](/azure/api-management/api-management-howto-protect-backend-with-aad#register-an-application-in-azure-ad-to-represent-the-api). Once you're done with these steps you'll have an Azure AD application with the necessary scopes.
 
 3. Lastly, [configure a JWT validation policy to pre-authorize requests](/azure/api-management/api-management-howto-protect-backend-with-aad#configure-a-jwt-validation-policy-to-pre-authorize-requests).
+
     This will ensure that only users with the correct permissions can access your API and underlying Azure OpenAI API. 
 
 Congrats, you've now configured authentication for your Azure OpenAI API with Azure API Management. You can now provide users with access to your API by creating users in Azure AD and assigning them the correct permissions. For more information, see [Assign a user or group to an enterprise app in Azure Active Directory](/azure/active-directory/manage-apps/assign-user-or-group-access-portal).
