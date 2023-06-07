@@ -76,7 +76,6 @@ You've now created and initially setup your Azure OpenAI API with Azure API Mana
 ## Configure authentication for your new API
 By default, your new Azure API Management service uses subscriptions to control access to your APIs, but this would be functionally equivalent to giving your users direct access to your API keys. So instead, we'll demonstrate how to setup OAuth 2.0 to control access to your Azure OpenAI APIs.
 
-
 2. Configure OAuth 2.0 by folloing the steps in the [protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](/azure/api-management/api-management-howto-protect-backend-with-aad#register-an-application-in-azure-ad-to-represent-the-api) article.
 
     Once you're done with these steps you'll have an Azure AD application with the necessary scopes.
@@ -96,4 +95,53 @@ Congrats, you've now configured authentication for your Azure OpenAI API with Az
 
 ## Access your API from Semantic Kernel
 
-Once users have the correct permissions, they can access your API by using the ??? connector in Semantic Kernel.
+Once users have the correct permissions, they can access your API from within Semantic Kernel. There are a few steps to complete to test this connection within a console application.
+
+1. First, create a new class that implements the `TokenCredential` class. This class will be used to provide Semantic Kernel with the user authentication token for your service.
+
+    ```csharp
+    using Azure.Core;
+
+    public class BearerTokenCredential : TokenCredential
+    {
+        private readonly AccessToken _accessToken;
+
+        // Constructor that takes a Bearer token string and its expiration date
+        public BearerTokenCredential(AccessToken accessToken)
+        {
+            _accessToken = accessToken;
+        }
+
+        public override AccessToken GetToken(TokenRequestContext requestContext, CancellationToken cancellationToken)
+        {
+            return _accessToken;
+        }
+
+        public override ValueTask<AccessToken> GetTokenAsync(TokenRequestContext requestContext, CancellationToken cancellationToken)
+        {
+            return new ValueTask<AccessToken>(_accessToken);
+        }
+    }
+    ```
+
+2. Next, within your console application, you'll create an interactive logon to get the user's token.
+
+    ```csharp
+    string[] scopes = new string[] { "https://cognitiveservices.azure.com/.default" };
+    var credential = new InteractiveBrowserCredential();
+    var requestContext = new TokenRequestContext(scopes);
+    var accessToken = await credential.GetTokenAsync(requestContext);
+    ```
+
+3. Finally, you can create a new instance of the `KernelBuilder` class and pass in the `BearerTokenCredential` class you created in step 1 along with the access token you retrieved in step 2.
+
+    ```csharp
+    IKernel kernel = new KernelBuilder()
+    .WithLogger(loggerFactory.CreateLogger<IKernel>())
+    .WithAzureTextCompletionService(
+        "text-davinci-003",
+        "https://apim...api.net/",
+        new BearerTokenCredential(accessToken)
+    )
+    .Build();
+    ```
