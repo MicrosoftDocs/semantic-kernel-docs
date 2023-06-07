@@ -1,4 +1,4 @@
-# Microsoft Power Apps Documentation
+# Microsoft Semantic Kernel Documentation
 
 This is the GitHub repository for the technical product documentation for **Semantic Kernel**. This documentation is published at [Microsoft Semantic Kernel documentation](https://learn.microsoft.com/semantic-kernel).
 

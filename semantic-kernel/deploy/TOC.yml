@@ -2,3 +2,5 @@
   href: deploy-to-azure.md
 - name: Publish changes to Azure
   href: publish-changes-to-azure.md
+- name: Using API Management with the kernel
+  href: use-ai-apis-with-api-management.md
