@@ -97,7 +97,7 @@ Below is a list of the key resources created within the resource group when you 
 
 ## Verifying the deployment
 
-To make sure your web app service is running, go to <!-- markdown-link-check-disable -->https://YOUR_INSTANCE_NAME.azurewebsites.net/probe<!-- markdown-link-check-enable-->
+To make sure your web app service is running, go to <!-- markdown-link-check-disable -->https://YOUR_INSTANCE_NAME.azurewebsites.net/healthz<!-- markdown-link-check-enable-->
 
 To get your instance's URL, go to your deployment's resource group (by clicking on the "Go to resource group" button seen at the conclusion of your deployment if you use the "Deploy to Azure" button). Then click on the resource whose name ends with "-skweb".
 
