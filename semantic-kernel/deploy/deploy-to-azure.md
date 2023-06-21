@@ -77,8 +77,8 @@ If you choose to use Azure Portal as your deployment method, you will need to re
 1. Resource Group: the resource group in which your deployment will go. Creating a new resource group helps isolate resources, especially if you are still in active development.
 1. Region: select the geo-region for deployment. Note: Azure OpenAI is not available in all regions and is currently to three instances per region per subscription.
 1. Name: used to identify the app.
-App Service SKU: select the pricing tier based on your usage. Click [here](https://azure.microsoft.com/en-ca/pricing/details/app-service/windows/) to learn more about Azure App Service plans.
-1. Package URI: there is no need to change this unless you want to deploy a customized version of Semantic Kernel. (See [this page](https://learn.microsoft.com/en-us/semantic-kernel/deploy/publish-changes-to-azure) for more information on publishing your own version of the Semantic Kernel web app service)
+App Service SKU: select the pricing tier based on your usage. Click [here](https://azure.microsoft.com/pricing/details/app-service/windows/) to learn more about Azure App Service plans.
+1. Package URI: there is no need to change this unless you want to deploy a customized version of Semantic Kernel. (See [this page](./publish-changes-to-azure.md) for more information on publishing your own version of the Semantic Kernel web app service)
 1. Completion, Embedding and Planner Models: these are by default using the appropriate models based on the current use case - that is Azure OpenAI or OpenAI. You can update these based on your needs.
 1. Endpoint: this is only applicable if using Azure OpenAI and is the Azure OpenAI endpoint to use.
 1. API Key: enter the API key for the instance of Azure OpenAI or OpenAI to use.

@@ -1,22 +1,20 @@
 - name: Overview
   href: overview/index.md
-- name: Get started
+- name: Getting started
   href: get-started/TOC.yml
+- name: Orchestrating AI plugins
+  href: ai-orchestration/TOC.yml
 - name: Prompt engineering
   href: prompt-engineering/TOC.yml
-- name: Chaining prompts and native functions
-  href: create-chains/TOC.yml
 - name: Giving your AI memories
   href: memories/TOC.yml
-- name: Create AI plugins
-  href: create-plugins/TOC.yml
-- name: Deploy Semantic Kernel
+- name: Deploying Semantic Kernel
   href: deploy/TOC.yml
-- name: Run sample apps
+- name: Running sample apps
   href: samples-and-solutions/TOC.yml
 - name: Visual Studio Code tools
   href: vs-code-tools/index.md
-- name: Get Support
+- name: Getting Support
   href: support/TOC.yml
 - name: Using AI responsibly
   href: when-to-use-AI/TOC.yml
