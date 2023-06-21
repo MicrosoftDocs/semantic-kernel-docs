@@ -1,14 +1,13 @@
 ---
-title: Hackathon Materials for Semantic Kernel
-description: Hackathon Materials for Semantic Kernel
-author: evchaki
-ms.topic: samples
-ms.author: evchaki
-ms.date: 04/04/2023
+title: Hackathon materials for Semantic Kernel
+description: Host your own Semantic Kernel hackathon with these materials.
+author: matthewbolanos
+ms.topic: sample
+ms.author: mabolan
+ms.date: 07/11/2023
 ms.service: mssearch 
 ---
-# Hackathon Materials for Semantic Kernel
-
+# Hackathon materials for Semantic Kernel
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 

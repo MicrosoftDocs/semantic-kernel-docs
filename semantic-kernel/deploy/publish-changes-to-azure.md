@@ -26,7 +26,7 @@ There are two main ways to deploy changes to the Semantic Kernel web app service
 ### 1.Deploying your Copilot Chat App to Azure as a web application
 After working locally, i.e. you cloned the code from the GitHub [repo](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) and have made changes to the code for your needs, you can deploy your changes to Azure as a web application.
 
-You can use the standard methods available to [deploy an ASP.net web app](https://learn.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore?pivots=development-environment-vs&tabs=net70) in order to do so.
+You can use the standard methods available to [deploy an ASP.net web app](/azure/app-service/quickstart-dotnetcore?pivots=development-environment-vs&tabs=net70) in order to do so.
 
 Alternatively, you can follow the steps below to manually build and upload your customized version of the Semantic Kernel service to Azure.
 

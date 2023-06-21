@@ -1,0 +1,14 @@
+- name: Overview
+  href: index.md
+- name: Understanding AI plugins
+  href: plugins.md
+- name: Creating semantic functions
+  href: semantic-functions.md
+- name: Creating native functions
+  href: native-functions.md
+- name: Chaining functions together
+  href: chaining-functions.md
+- name: Auto create plans with planner
+  href: planner.md
+- name: Out-of-the-box plugins
+  href: out-of-the-box-plugins.md
