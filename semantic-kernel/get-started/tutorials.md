@@ -42,7 +42,7 @@ Want to learn more about Semantic Kernel? Check out these in-depth tutorials and
         This project contains a collection of .NET examples for various scenarios using Semantic Kernel components. There are already 40 examples that show how to achieve basic tasks like creating a chain, adding a plugin, and running a chain. There are also more advanced examples that show how to use the Semantic Kernel API to create a custom plugin, stream data, and more.
 
         > [!div class="nextstepaction"]
-        > [Start the tutorial](https://github.com/microsoft/semantic-kernel/tree/main/samples/dotnet/kernel-syntax-examples)
+        > [Start the tutorial](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/KernelSyntaxExamples)
    :::column-end:::
    :::column span="2":::
 

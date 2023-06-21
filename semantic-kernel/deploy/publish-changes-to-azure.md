@@ -18,8 +18,6 @@ This guide provides steps to make changes to the skills of a deployed instance o
 1. Have your web app's name handy. If you used the deployment templates provided with the Copilot Chat, you can find the web app's name by going to the [Azure Portal](https://portal.azure.com/) and selecting the resource group created for your Semantic Kernel web app service. Your web app's name is the one of the resource listed that ends with "skweb".
 1. Locally tested [skills](../concepts-sk/skills.md) or [planner](../concepts-sk/planner.md) ready to be added to your Semantic Kernel web app service.
 
-> Tip: You can find examples [skills](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills) & [planners](https://github.com/microsoft/semantic-kernel/tree/main/samples/dotnet/kernel-syntax-examples) in the GitHub Semantic Kernel repo.
-
 ## How to publish changes to the Semantic Kernel web app service
 There are two main ways to deploy changes to the Semantic Kernel web app service. If you have been working locally and are ready to deploy your changes to Azure as a new web app service, you can follow the steps in the first section. If you have already deployed your Semantic Kernel web app service and want to make changes to add Semantic skills, you can follow the steps in the second section.
 
