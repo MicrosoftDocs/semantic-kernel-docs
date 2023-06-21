@@ -16,7 +16,13 @@ In the [how to create semantic functions](./semantic-functions.md) article, we s
 
 As an example, we'll add an additional function to the `OrchestratorPlugin`  we created in the [semantic functions](./semantic-functions.md) article to route the user's intent. We'll also add a new plugin called `MathPlugin` that will perform simple arithmetic for the user.
 
-By the end of this article, you'll have a kernel that can correctly answer user questions like `What is the square root of 634?` and `What is 42 plus 1513?`.
+By the end of this article, you'll have a kernel that can correctly answer user questions like `What is the square root of 634?` and `What is 42 plus 1513?`. If you want to see the final solution, you can check out the following samples in the public documentation repository.
+
+| Language  | Link to final solution |
+| --- | --- |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/02-Native-Functions) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/02-Native-Functions) |
+
 
 > [!Note]
 > Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.

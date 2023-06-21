@@ -18,7 +18,13 @@ In previous articles, we demonstrated [how to load a semantic function](./index.
 
 In this article, we'll demonstrate how to actually _create_ a semantic function so you can easily import them into Semantic Kernel. As an example in this article, we will demonstrate how to create a semantic function that gathers the intent of the user. This semantic function will be called `GetIntent` and will be part of a plugin called `OrchestratorPlugin`.
 
-By following this example, you'll learn how to create a semantic function that can use multiple context variables and functions to elicit an AI response.
+By following this example, you'll learn how to create a semantic function that can use multiple context variables and functions to elicit an AI response. If you want to see the final solution, you can check out the following samples in the public documentation repository.
+
+| Language  | Link to final solution |
+| --- | --- |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/01-Semantic-Functions) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/01-Semantic-Functions) |
+
 
 > [!Note]
 > Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
