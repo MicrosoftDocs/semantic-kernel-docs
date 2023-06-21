@@ -11,7 +11,15 @@ ms.service: mssearch
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-In previous articles, we showed how you could invoke a Semantic Kernel function (whether semantic or native) individually. Oftentimes, however, you may want to string multiple functions together into a single pipeline to simplify your code. [Laster in this article](./chaining-functions.md#passing-more-than-just-input-with-native-functions), we'll put this knowledge to use by demonstrating how you could refactor the code from the [native functions](./native-functions.md) to make it more readable and maintainable.
+In previous articles, we showed how you could invoke a Semantic Kernel function (whether semantic or native) individually. Oftentimes, however, you may want to string multiple functions together into a single pipeline to simplify your code.
+
+[Laster in this article](./chaining-functions.md#passing-more-than-just-input-with-native-functions), we'll put this knowledge to use by demonstrating how you could refactor the code from the [native functions](./native-functions.md) to make it more readable and maintainable. If you want to see the final solution, you can check out the following samples in the public documentation repository.
+
+| Language  | Link to final solution |
+| --- | --- |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/03-Chaining-Functions) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/03-Chaining-Functions) |
+
 
 ## Passing data to semantic functions with `$input`
 Semantic Kernel was designed in the spirit of UNIX's piping and filtering capabilities. To replicate this behavior, we've added a special variable called `$input` into the kernel's context object that allows you to stream output from one semantic function to the next.
