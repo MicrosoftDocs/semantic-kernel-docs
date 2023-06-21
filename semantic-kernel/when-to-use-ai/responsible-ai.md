@@ -28,7 +28,7 @@ Semantic Kernel (SK) builds upon the following five concepts:
 | Concept | Short Description |
 |---|---|
 | Kernel | The kernel orchestrates a user's ASK expressed as a goal |
-| Planner | The planner breaks it down into steps based upon resources that are available |
+| Planner | Planner breaks it down into steps based upon resources that are available |
 | Plugins | Plugins are customizable resources built from LLM AI prompts and native code |
 | Memories | Memories are customizable resources that manage contextual information |
 | Connectors | Connectors are customizable resources that enable external data access |
