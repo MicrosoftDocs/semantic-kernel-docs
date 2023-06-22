@@ -13,7 +13,7 @@ ms.service: mssearch
 
 In previous articles, we showed how you could invoke a Semantic Kernel function (whether semantic or native) individually. Oftentimes, however, you may want to string multiple functions together into a single pipeline to simplify your code.
 
-[Laster in this article](./chaining-functions.md#passing-more-than-just-input-with-native-functions), we'll put this knowledge to use by demonstrating how you could refactor the code from the [native functions](./native-functions.md) to make it more readable and maintainable. If you want to see the final solution, you can check out the following samples in the public documentation repository.
+[Later in this article](./chaining-functions.md#passing-more-than-just-input-with-native-functions), we'll put this knowledge to use by demonstrating how you could refactor the code from the [native functions](./native-functions.md) to make it more readable and maintainable. If you want to see the final solution, you can check out the following samples in the public documentation repository.
 
 | Language  | Link to final solution |
 | --- | --- |
