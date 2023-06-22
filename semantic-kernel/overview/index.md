@@ -1,5 +1,5 @@
 ---
-title: Orchestrate your AI with Semantic Kernel. 
+title: Orchestrate your AI with Semantic Kernel
 description: With the Semantic Kernel SDK, you can easily mix-and-match AI prompts with conventional programming languages like C# and Python.
 author: matthewbolanos
 ms.topic: overview
@@ -52,7 +52,7 @@ As a developer, you can use these pieces individually or together. For example, 
 ### Why do you need an AI orchestration SDK?
 If you wanted, you could use the APIs for popular AI services directly and directly feed the results into your existing apps and services. This, however, requires you to learn the APIs for each service and then integrate them into your app. Using the APIs directly also does not allow you to easily draw from the recent advances in AI research that require solutions _on top_ of these services. For example, the existing APIs do not provide planning or AI memories out-of-the-box.
 
-To simplify the creation of AI apps, open source projects like [LangChang](https://docs.langchain.com/docs/) have emerged. Semantic Kernel is Microsoft's contribution to this space and is designed to support enterprise app developers who want to integrate AI into their existing apps.
+To simplify the creation of AI apps, open source projects like [LangChain](https://docs.langchain.com/docs/) have emerged. Semantic Kernel is Microsoft's contribution to this space and is designed to support enterprise app developers who want to integrate AI into their existing apps.
 
 ## Seeing AI orchestration with Semantic Kernel
 By using multiple AI models, plugins, and memory all together within Semantic Kernel, you can create sophisticated pipelines that allow AI to automate complex tasks for users.
