@@ -56,12 +56,12 @@ For instance, the code above is equivalent to:
 ## Function parameters
 
 To call an external function and pass a parameter to it, use the
-`{namespace.functionName $varName}` syntax.
+`{{namespace.functionName $varName}}` syntax.
 For example, if you want to pass a different input to the weather forecast
 function, you can write:
 
-```The weather today in {{$city}} is {weather.getForecast $city}.```
-```The weather today in {{$region}} is {weather.getForecast $region}.```
+```The weather today in {{$city}} is {{weather.getForecast $city}}.```
+```The weather today in {{$region}} is {{weather.getForecast $region}}.```
 
 This will produce two sentences with the weather forecast for two different
 locations, using the city stored in the `city` variable and the region name
