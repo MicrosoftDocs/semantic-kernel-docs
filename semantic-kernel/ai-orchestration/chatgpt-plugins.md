@@ -358,7 +358,7 @@ To test the plugin in Semantic Kernel, follow these steps:
     }
     ```
 
-    After running the code, you should see the following output:
+4. After running the code, you should see the following output:
 
     ```output
     Result: After the amount grew by 24% and $5 was spent on a latte, you would have $2636.4852 remaining.
