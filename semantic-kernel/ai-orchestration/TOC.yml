@@ -11,6 +11,6 @@
 - name: Auto create plans with planner
   href: planner.md
 - name: Create and run a ChatGPT plugin
-  href: create-chatgpt-plugin.md
+  href: chatgpt-plugins.md
 - name: Out-of-the-box plugins
   href: out-of-the-box-plugins.md

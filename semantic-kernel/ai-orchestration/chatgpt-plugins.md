@@ -9,13 +9,13 @@ ms.service: mssearch
 ---
 
 
-# Expose your plugins to ChatGPT and Bing
+# Create and run your plugins in ChatGPT or Bing
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 So far, we've demonstrated how to create plugins that can be used natively in Semantic Kernel. This is great if you are building a custom application that only uses Semantic Kernel, but what if you want to use your plugins in applications that _don't_ use Semantic Kernel, like ChatGPT, or Bing?
 
-In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin.
+In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin. By following these steps, you'll also learn how to load a ChatGPT plugin back into Semantic Kernel.
 
 Once we're done, you'll have an Azure Function that exposes each of your plugin's native functions as HTTP endpoints so they can be used by Semantic Kernel _or_ ChatGPT. If you want to see the final solution, you can check out the sample in the public documentation repository.
 
@@ -55,7 +55,7 @@ There are three steps we must take to turn our existing `MathPlugin`` into a Cha
 3. Test the plugin in Semantic Kernel and ChatGPT.
 
 
-## Create HTTP endpoints for each function
+## Provide HTTP endpoints for each function
 Before we can expose our plugin to other applications, we need to create an HTTP endpoint for each of our native functions. This will allow us to call our native functions from any other service. You can achieve this multiple ways, but in this article we'll use Azure Functions.
 
 ### Create a new Azure Function project
@@ -114,7 +114,7 @@ There are several ways to create an Azure Function, but in this article we'll us
     dotnet restore
     ```
 
-### Add your native functions to the Azure Function project
+### Add the native functions to the Azure Function project
 We can now add our native functions to the Azure Function project.
 
 1. Run the following command in your terminal to create placeholder for the `Add` function:
@@ -152,6 +152,7 @@ We can now add our native functions to the Azure Function project.
     ```
 4. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
 
+### Validate the HTTP endpoints
 At this point, you should have five HTTP endpoints in your Azure Function project. You can test them by following these steps:
 
 1. Run the following command in your terminal:
@@ -213,6 +214,7 @@ An OpenAPI specification describes the HTTP endpoints that are available in your
     | Divide | Divide two numbers. |
     | Sqrt | Take the square root of a number. |
 
+### Validate the OpenAPI spec
 You can then test the OpenAPI document by following these steps:
 
 1. Run the following command in your terminal:
@@ -291,6 +293,7 @@ To create an Azure Function that serves up this manifest, follow these steps:
     }
     ```
 
+### Validate the plugin manifest file
 You can then test that the plugin manifest file is being served up by following these steps:
 
 1. Run the following command in your terminal:
@@ -302,7 +305,7 @@ You can then test that the plugin manifest file is being served up by following 
     http://localhost:7071/.well-known/ai-plugin.json
     ```
 
-You should now see the plugin manifest file.
+    You should now see the plugin manifest file.
 
 ## Testing the plugin end-to-end
 You now have a complete plugin that can be used in Semantic Kernel and ChatGPT. Since there is currently a waitlist for creating plugins for ChatGPT, we'll first demonstrate how you can test your plugin with Semantic Kernel.
@@ -351,13 +354,13 @@ To test the plugin in Semantic Kernel, follow these steps:
     }
     ```
 
-After running the code, you should see the following output:
+    After running the code, you should see the following output:
 
-```output
-Result: After the amount grew by 24% and $5 was spent on a latte, you would have $2636.4852 remaining.
-Steps Taken: 3
-Skills Used: 2 (MathPlugin.Multiply(1), MathPlugin.Subtract(1))
-```
+    ```output
+    Result: After the amount grew by 24% and $5 was spent on a latte, you would have $2636.4852 remaining.
+    Steps Taken: 3
+    Skills Used: 2 (MathPlugin.Multiply(1), MathPlugin.Subtract(1))
+    ```
 
 ### Running the plugin in ChatGPT
 If you would like to test your plugin in ChatGPT, you can do so by following these steps:
