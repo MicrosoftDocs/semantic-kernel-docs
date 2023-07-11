@@ -28,14 +28,14 @@ Once we're done, you'll have an Azure Function that exposes each of your plugin'
 ## Prerequisites
 To complete this tutorial, you'll need the following:
 - [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools)  version 4.x.
-- [].NET 6.0 SDK.](https://dotnet.microsoft.com/download)
+- [.NET 6.0 SDK.](https://dotnet.microsoft.com/download)
 - One of the following tools for creating Azure resources:
   - [Azure CLI](/cli/azure/install-azure-cli) [version 2.4](/cli/azure/release-notes-azure-cli#april-21-2020) or later.
   - The [Azure Az PowerShell module](https://learn.microsoft.com/en-us/powershell/azure/install-azure-powershell) version 5.9.0 or later.
 
-To publish your plugin, you'll also need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio).
+To publish your plugin once you're complete, you'll also need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio).
 
-You do _not_ need to have access to OpenAI's plugin preview to complete this tutorial. If you do have access, however, you can upload your final plugin to OpenAI and use it in ChatGPT.
+You do _not_ need to have access to OpenAI's plugin preview to complete this tutorial. If you do have access, however, you can upload your final plugin to OpenAI and use it in ChatGPT at the very end.
 
 
 ## What are ChatGPT plugins?
@@ -60,7 +60,7 @@ So far, however, we've only shown how to create plugins that are _natively_ load
    :::column-end:::
 :::row-end:::
 
-## 1) Create HTTP endpoints for each native function
+## Create HTTP endpoints for each function
 Before we can expose our plugin to other applications, we need to create an HTTP endpoint for each of our native functions. This will allow us to call our native functions from any other service. You can achieve this multiple ways, but in this article we'll use Azure Functions.
 
 ### Create a new Azure Function project
@@ -181,10 +181,10 @@ You should see the following responses:
 3
 ```
 
-## 2) Create an OpenAPI specification and plugin manifest file
+## Create the manifest files
 Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating an OpenAPI specification and plugin manifest file.
 
-### Add an OpenAPI specification to your Azure Function project
+### Add an OpenAPI spec to your Azure Function project
 An OpenAPI specification describes the HTTP endpoints that are available in your plugin. Instead of manually creating an OpenAPI specification, you can use NuGet packages provided by Azure Functions to automatically create and serve up these files. To add an OpenAPI specification to your Azure Function project, follow these steps:
 
 1. Run the following commands in your terminal:
@@ -229,13 +229,13 @@ You can then test the OpenAPI document by following these steps:
     http://localhost:7071/swagger/ui
     ```
 
-You should see the following page:
-:::image type="content" source="../media/swagger-ui.png" alt-text="Swagger UI":::
+    You should see the following page:
+    :::image type="content" source="../media/swagger-ui.png" alt-text="Swagger UI":::
 
 Navigating to _http://localhost:7071/swagger.json_ will allow you to download the OpenAPI specification.
 
-### Serve up the plugin manifest file
-The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always named _ai-plugin.json_ and contains the following information:
+### Add the plugin manifest file
+The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always served up from the _/.well-known/ai-plugin.json_ file and contains the following information:
 
 | Field | Type | Description | Required |
 | --- | --- | --- | --- |
@@ -255,7 +255,7 @@ The last step is to serve up the plugin manifest file. Based on the OpenAI speci
 | ManifestNoAuth | ManifestNoAuth | No authentication required: BaseManifestAuth & { type: 'none', } |  |
 | ManifestAuth | ManifestAuth | ManifestNoAuth, ManifestServiceHttpAuth, ManifestUserHttpAuth, ManifestOAuthAuth |  |
 
-In this example, we'll create a new Azure Function that serves up the plugin manifest file, but you could use any web server technology to do this. To create the Azure Function for this manifest, follow these steps:
+To create an Azure Function that serves up this manifest, follow these steps:
 
 1. Run the following command in your terminal:
     ```bash
@@ -309,10 +309,10 @@ You can then test that the plugin manifest file is being served up by following 
 
 You should now see the plugin manifest file.
 
-## 3) Test the plugin in Semantic Kernel and ChatGPT
+## Testing the plugin end-to-end
 You now have a complete plugin that can be used in Semantic Kernel and ChatGPT. Since there is currently a waitlist for creating plugins for ChatGPT, we'll first demonstrate how you can test your plugin with Semantic Kernel.
 
-### Test the plugin in Semantic Kernel
+### Run the plugin in Semantic Kernel
 By testing your plugin in Semantic Kernel, you can ensure that it is working as expected before you get access to the plugin developer portal for ChatGPT. While testing in Semantic Kernel, we recommend using the Stepwise Planner to invoke your plugin since it is the only planner that supports JSON responses.
 
 To test the plugin in Semantic Kernel, follow these steps:
@@ -364,7 +364,7 @@ Steps Taken: 3
 Skills Used: 2 (MathPlugin.Multiply(1), MathPlugin.Subtract(1))
 ```
 
-### Test the plugin in ChatGPT
+### Run the plugin in ChatGPT
 If you would like to test your plugin in ChatGPT, you can do so by following these steps:
 1. Request access to plugin development by filling out the [waitlist form](https://openai.com/waitlist/plugins).
 2. Once you have access, follow the steps [provided by OpenAI](https://platform.openai.com/docs/plugins/getting-started/running-a-plugin) to register your plugin.
