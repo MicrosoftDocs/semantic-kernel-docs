@@ -32,22 +32,22 @@ To complete this tutorial, you'll need the following:
 You do _not_ need to have access to OpenAI's plugin preview to complete this tutorial. If you do have access, however, you can upload your final plugin to OpenAI and use it in ChatGPT.
 
 
-## How are ChatGPT plugins different?
-In short, they aren't! In the [plugin article](./plugins#what-is-a-plugin) we described how all plugins are moving towards the common standard defined by OpenAI. This standard uses a plugin manifest file that points to an accompanying [OpenAPI specification](https://swagger.io/specification/). Plugins defined in this way can then be used by any application that supports the OpenAI specification, including Semantic Kernel and ChatGPT.
+## What are ChatGPT plugins?
+In the [plugin article](./plugins#what-is-a-plugin) we described how all plugins are moving towards the common standard defined by OpenAI. This standard, which is called a ChatGPT plugin in this article, uses a plugin manifest file that points to an accompanying [OpenAPI specification](https://swagger.io/resources/open-api/). Plugins defined in this way can then be used by any application that supports the OpenAI specification, including Semantic Kernel and ChatGPT.
 
 > [!Note]
 > OpenAPI is different than OpenAI. OpenAPI is a specification for describing REST APIs, while OpenAI is a company that develops AI models and APIs. While the two are not related, OpenAI has adopted the OpenAPI specification for describing plugin APIs.
 
 So far, however, we've only shown how to create plugins that are _natively_ loaded into Semantic Kernel instead of being exposed through an OpenAPI specification. This has helped us demonstrate the core concepts of plugins without adding the additional complexity of standing up an HTTP endpoint. With minimal changes, however, we can take the plugins we've already created and expose them to ChatGPT.
 
-### Transforming `MathPlugin` into a ChatGPT plugin
+### Transforming our `MathPlugin` into a ChatGPT plugin
 
 :::row:::
-   :::column span="2":::
-        At a high level, there are three steps required to take our existing `MathPlugin` and turn it into a ChatGPT plugin:
-        1. Create HTTP endpoints for each of the plugin's native functions.
-        2. Create and expose a ChatGPT plugin manifest and OpenAPI specification file for the plugin.
-        3. Test the ChatGPT plugin by importing the manifest into Semantic Kernel.
+   :::column span="1":::
+        There are three steps we must take to turn our existing plugin into a ChatGPT plugin:
+        1. Create HTTP endpoints for each functions.
+        2. Create an OpenAPI specification and plugin manifest file.
+        3. Test the plugin by importing it into Semantic Kernel.
    :::column-end:::
    :::column span="3":::
       ![The Math plugin, before and after ](../media/plugin-before-and-after.png)
