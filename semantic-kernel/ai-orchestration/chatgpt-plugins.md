@@ -9,37 +9,36 @@ ms.service: mssearch
 ---
 
 
-# Create and run your plugins in ChatGPT or Bing
+# Create and run ChatGPT plugins with Semantic Kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-So far, we've demonstrated how to create plugins that can be used natively in Semantic Kernel. This is great if you are building a custom application that only uses Semantic Kernel, but what if you want to use your plugins in applications that _don't_ use Semantic Kernel, like ChatGPT, or Bing?
+In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin.
 
-In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin. By following these steps, you'll also learn how to load a ChatGPT plugin back into Semantic Kernel.
+At the [end of this article](./chatgpt-plugins.md#running-the-plugin-with-semantic-kernel), you'll also learn how to load a ChatGPT plugin into Semantic Kernel and use it with a planner.
 
 Once we're done, you'll have an Azure Function that exposes each of your plugin's native functions as HTTP endpoints so they can be used by Semantic Kernel _or_ ChatGPT. If you want to see the final solution, you can check out the sample in the public documentation repository.
 
 
 | Language  | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/05-Create-ChatGPT-Plugin) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-pr/tree/main/samples/dotnet/05-Create-ChatGPT-Plugin) |
 | Python | _Coming soon_ |
 
 ## Prerequisites
 To complete this tutorial, you'll need the following:
-- [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools)  version 4.x.
+- [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools) version 4.x.
 - [.NET 6.0 SDK.](https://dotnet.microsoft.com/download)
-- One of the following tools for creating Azure resources:
-  - [Azure CLI](/cli/azure/install-azure-cli) [version 2.4](/cli/azure/release-notes-azure-cli#april-21-2020) or later.
-  - The [Azure Az PowerShell module](https://learn.microsoft.com/en-us/powershell/azure/install-azure-powershell) version 5.9.0 or later.
 
-To publish your plugin once you're complete, you'll also need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio).
+To publish your plugin once you're complete, you'll also need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio) and one of the following tools for creating Azure resources:
+- [Azure CLI](/cli/azure/install-azure-cli) [version 2.4](/cli/azure/release-notes-azure-cli#april-21-2020) or later.
+- The [Azure Az PowerShell module](/powershell/azure/install-azure-powershell) version 5.9.0 or later.
 
-You do _not_ need to have access to OpenAI's plugin preview to complete this tutorial. If you do have access, however, you can upload your final plugin to OpenAI and use it in ChatGPT at the very end.
+You do **_not_** need to have access to OpenAI's plugin preview to complete this tutorial. If you do have access, however, you can upload your final plugin to OpenAI and use it in ChatGPT at the very end.
 
 
 ## What are ChatGPT plugins?
-In the [plugin article](./plugins#what-is-a-plugin) we described how all plugins are moving towards the common standard defined by OpenAI. This standard, which is called a ChatGPT plugin in this article, uses a plugin manifest file that points to an accompanying [OpenAPI specification](https://swagger.io/resources/open-api/). Plugins defined in this way can then be used by any application that supports the OpenAI specification, including Semantic Kernel and ChatGPT.
+In the [plugin article](./plugins.md#what-is-a-plugin) we described how all plugins are moving towards the common standard defined by OpenAI. This standard, which is called a ChatGPT plugin in this article, uses a plugin manifest file that points to an accompanying [OpenAPI specification](https://swagger.io/resources/open-api/). Plugins defined in this way can then be used by any application that supports the OpenAI specification, including Semantic Kernel and ChatGPT.
 
 > [!Important]
 > OpenAPI is different than OpenAI. OpenAPI is a specification for describing REST APIs, while OpenAI is a company that develops AI models and APIs. While the two are not related, OpenAI has adopted the OpenAPI specification for describing plugin APIs.

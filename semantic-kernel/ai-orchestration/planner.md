@@ -447,4 +447,4 @@ To achieve this, you can generate plans for common scenarios offline, and store 
 You now have the skills necessary to automatically generate plans for your users. You can use these skills to create more advanced AI apps that can handle increasingly complex scenarios. In the next section, you'll learn how to author plugins that can be used by planner _and_ ChatGPT.
 
 > [!div class="nextstepaction"]
-> [Create and run ChatGPT plugins](./create-chatgpt-plugins.md)
+> [Create and run ChatGPT plugins](./chatgpt-plugins.md)
