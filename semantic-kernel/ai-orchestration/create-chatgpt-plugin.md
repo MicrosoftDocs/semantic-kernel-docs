@@ -44,12 +44,12 @@ So far, however, we've only shown how to create plugins that are _natively_ load
 
 :::row:::
    :::column span="1":::
-        There are three steps we must take to turn our existing plugin into a ChatGPT plugin:
-        1. Create HTTP endpoints for each functions.
+        There are three steps we must take to turn our existing `MathPlugin`` into a ChatGPT plugin:
+        1. Create HTTP endpoints for each native function.
         2. Create an OpenAPI specification and plugin manifest file.
         3. Test the plugin by importing it into Semantic Kernel.
    :::column-end:::
-   :::column span="3":::
+   :::column span="2":::
       ![The Math plugin, before and after ](../media/plugin-before-and-after.png)
    :::column-end:::
 :::row-end:::
