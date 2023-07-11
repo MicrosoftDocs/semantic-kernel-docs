@@ -44,6 +44,7 @@ In the [plugin article](./plugins#what-is-a-plugin) we described how all plugins
 > [!Note]
 > OpenAPI is different than OpenAI. OpenAPI is a specification for describing REST APIs, while OpenAI is a company that develops AI models and APIs. While the two are not related, OpenAI has adopted the OpenAPI specification for describing plugin APIs.
 
+### Transforming our `MathPlugin` into a ChatGPT plugin
 So far, however, we've only shown how to create plugins that are _natively_ loaded into Semantic Kernel instead of being exposed through an OpenAPI specification. This has helped us demonstrate the core concepts of plugins without adding the additional complexity of standing up an HTTP endpoint. With minimal changes, however, we can take the plugins we've already created and expose them to ChatGPT.
 
 ![The Math plugin, before and after ](../media/plugin-before-and-after.png)
