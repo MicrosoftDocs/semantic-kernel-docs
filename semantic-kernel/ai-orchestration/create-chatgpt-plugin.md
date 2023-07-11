@@ -83,8 +83,6 @@ There are several ways to create an Azure Function, but in this article we'll us
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.17.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.11.0" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="1.5.1" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="1.5.1" />
     ```
 4. Run the following command to restore the packages:
 
@@ -136,7 +134,7 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     ```bash
     func start
     ```
-2. Open a new terminal window and run the following command:
+2. Open a new terminal window and run the following commands:
     ```bash
     curl "http://localhost:7071/api/Add?number1=1&number2=2"
     curl "http://localhost:7071/api/Subtract?number1=1&number2=2"
@@ -155,8 +153,54 @@ You should see the following responses:
 ```
 
 ### Add an OpenAPI document to your Azure Function project
+Now that we have HTTP endpoints for each of our native functions, we need to create an OpenAPI specification that describes them. Thankfully, Azure Functions provides a NuGet package that makes this easy. To add an OpenAPI document to your Azure Function project, follow these steps:
 
-### Test your native functions
+1. Run the following commands in your terminal:
+    ```bash
+    dotnet add package Microsoft.Azure.WebJobs.Extensions.OpenApi --version 1.5.1
+    ```
+    ```bash
+    dotnet add package Microsoft.Azure.Functions.Worker.Extensions.OpenApi --version 1.5.1
+    ```
+2. Open the _Add.cs_ file.
+3. Add the following `using` statements:
+    ```csharp
+    using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+    using Microsoft.OpenApi.Models;
+    ```
+4. Add the following attributes to the `Run` function:
+    ```csharp
+    [OpenApiOperation(operationId: "Add", tags: new[] { "ExecuteFunction" }, Description = "Adds two numbers.")]
+    [OpenApiParameter(name: "number1", Description = "The first number to add'", Required = true, In = ParameterLocation.Query)]
+    [OpenApiParameter(name: "number2", Description = "The second number to add", Required = true, In = ParameterLocation.Query)]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]  
+    ```
+5. Repeat the previous steps to add OpenAPI attributes to the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When adding the attributes, be sure to update the operation and parameter descriptions accordingly. The `Description` fields are the most important attributes because they will be used by the planner to determine which function to call. We recommend reusing the same description values from the previous walkthroughs.
+
+    | Function | Description |
+    | --- | --- |
+    | Add | Add two numbers. |
+    | Subtract | Subtract two numbers. |
+    | Multiply | Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage. |
+    | Divide | Divide two numbers. |
+    | Sqrt | Take the square root of a number. |
+
+You can then test the OpenAPI document by following these steps:
+
+1. Run the following command in your terminal:
+    ```bash
+    func start
+    ```
+2. Navigate to the following URL in your browser:
+    ```bash
+    http://localhost:7071/api/swagger/ui
+    ```
+
+You should see the following page:
+:::image type="content" source="../media/swagger-ui.png" alt-text="Swagger UI":::
+
+Navigating to _http://localhost:7071/api/swagger.json_ will allow you to download the OpenAPI specification.
 
 ## 2) Create an OpenAPI specification and plugin manifest file
 

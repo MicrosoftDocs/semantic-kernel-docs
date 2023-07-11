@@ -9,9 +9,9 @@ namespace MathPlugin
 {
     public class Divide
     {
-        [OpenApiOperation(operationId: "Divide", tags: new[] { "ExecuteFunction" }, Description = "Divides two numbers.")]
-        [OpenApiParameter(name: "dividend", Description = "The number to be divided", Required = true, In = ParameterLocation.Query)]
-        [OpenApiParameter(name: "divisor", Description = "The number to divide by", Required = true, In = ParameterLocation.Query)]
+        [OpenApiOperation(operationId: "Divide", tags: new[] { "ExecuteFunction" }, Description = "Divide two numbers")]
+        [OpenApiParameter(name: "number1", Description = "The first number to divide from", Required = true, In = ParameterLocation.Query)]
+        [OpenApiParameter(name: "number2", Description = "The second number to divide by", Required = true, In = ParameterLocation.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the quotient of the division.")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
         [Function("Divide")]

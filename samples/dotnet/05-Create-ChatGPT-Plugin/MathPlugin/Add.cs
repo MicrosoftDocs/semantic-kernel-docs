@@ -1,8 +1,8 @@
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.OpenApi.Models;
 
 namespace MathPlugin
@@ -16,7 +16,7 @@ namespace MathPlugin
             _logger = loggerFactory.CreateLogger<Add>();
         }
 
-        [OpenApiOperation(operationId: "Add", tags: new[] { "ExecuteFunction" }, Description = "Adds two numbers.")]
+        [OpenApiOperation(operationId: "Add", tags: new[] { "ExecuteFunction" }, Description = "Add two numbers")]
         [OpenApiParameter(name: "number1", Description = "The first number to add'", Required = true, In = ParameterLocation.Query)]
         [OpenApiParameter(name: "number2", Description = "The second number to add", Required = true, In = ParameterLocation.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]

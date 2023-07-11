@@ -9,9 +9,9 @@ namespace MathPlugin
 {
     public class Subtract
     {
-        [OpenApiOperation(operationId: "Subtract", tags: new[] { "ExecuteFunction" }, Description = "Subtracts two numbers.")]
-        [OpenApiParameter(name: "number1", Description = "The number to subtract from", Required = true, In = ParameterLocation.Query)]
-        [OpenApiParameter(name: "number2", Description = "The number to subtract", Required = true, In = ParameterLocation.Query)]
+        [OpenApiOperation(operationId: "Subtract", tags: new[] { "ExecuteFunction" }, Description = "Subtract two numbers")]
+        [OpenApiParameter(name: "number1", Description = "The first number to subtract from", Required = true, In = ParameterLocation.Query)]
+        [OpenApiParameter(name: "number2", Description = "The second number to subtract away", Required = true, In = ParameterLocation.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the difference of the two numbers.")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
         [Function("Subtract")]
