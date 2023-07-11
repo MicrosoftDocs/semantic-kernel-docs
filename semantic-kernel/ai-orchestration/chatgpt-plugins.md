@@ -273,8 +273,8 @@ To create an Azure Function that serves up this manifest, follow these steps:
 
         var json = $@"{{
         ""schema_version"": ""v1"",
-        ""name_for_human"": ""TODO List"",
-        ""name_for_model"": ""todo"",
+        ""name_for_human"": ""Simple calculator"",
+        ""name_for_model"": ""calculator"",
         ""description_for_human"": ""This plugin performs basic math operations."",
         ""description_for_model"": ""Help the user perform math. You can add, subtract, multiple, divide, and perform square roots."",
         ""auth"": {{
