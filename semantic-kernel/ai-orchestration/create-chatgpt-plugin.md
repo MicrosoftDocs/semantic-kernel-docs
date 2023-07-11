@@ -52,7 +52,7 @@ So far, however, we've only shown how to create plugins that are _natively_ load
    :::column span="1":::
         There are three steps we must take to turn our existing `MathPlugin`` into a ChatGPT plugin:
         1. Create HTTP endpoints for each native function.
-        2. Create and serve up an OpenAI manifest file.
+        2. Create an OpenAPI specification and plugin manifest file.
         3. Test the plugin by importing it into Semantic Kernel.
    :::column-end:::
    :::column span="2":::
@@ -152,6 +152,9 @@ You should see the following responses:
 3
 ```
 
+## 2) Create an OpenAPI specification and plugin manifest file
+
+
 ### Add an OpenAPI document to your Azure Function project
 Now that we have HTTP endpoints for each of our native functions, we need to create an OpenAPI specification that describes them. Thankfully, Azure Functions provides a NuGet package that makes this easy. To add an OpenAPI document to your Azure Function project, follow these steps:
 
@@ -202,13 +205,80 @@ You should see the following page:
 
 Navigating to _http://localhost:7071/api/swagger.json_ will allow you to download the OpenAPI specification.
 
-## 2) Create an OpenAPI specification and plugin manifest file
+### Serve up the plugin manifest file
+The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always named _ai-plugin.json_ and contains the following information:
 
-### Create the manifest file
+| Field | Type | Description | Required |
+| --- | --- | --- | --- |
+| schema_version | String | Manifest schema version | ✅ |
+| name_for_model | String | Name the model will use to target the plugin (no spaces allowed, only letters and numbers). 50 character max. | ✅ |
+| name_for_human | String | Human-readable name, such as the full company name. 20 character max. | ✅ |
+| description_for_model | String | Description better tailored to the model, such as token context length considerations or keyword usage for improved plugin prompting. 8,000 character max. | ✅ |
+| description_for_human | String | Human-readable description of the plugin. 100 character max. | ✅ |
+| auth | ManifestAuth | Authentication schema | ✅ |
+| api | Object | API specification | ✅ |
+| logo_url | String | URL used to fetch the logo. Suggested size: 512 x 512. Transparent backgrounds are supported. Must be an image, no GIFs are allowed. | ✅ |
+| contact_email | String | Email contact for safety/moderation | ✅ |
+| legal_info_url | String | Redirect URL for users to view plugin information | ✅ |
+| HttpAuthorizationType | HttpAuthorizationType | "bearer" or "basic" | ✅ |
+| ManifestAuthType | ManifestAuthType | "none", "user_http", "service_http", or "oauth" |  |
+| interface BaseManifestAuth | BaseManifestAuth | type: ManifestAuthType; instructions: string; |  |
+| ManifestNoAuth | ManifestNoAuth | No authentication required: BaseManifestAuth & { type: 'none', } |  |
+| ManifestAuth | ManifestAuth | ManifestNoAuth, ManifestServiceHttpAuth, ManifestUserHttpAuth, ManifestOAuthAuth |  |
 
-### Expose the manifest from the Azure Function
+In this example, we'll create a new Azure Function that serves up the plugin manifest file, but you could use any web server technology to do this. To create the Azure Function for this manifest, follow these steps:
+
+1. Run the following command in your terminal:
+    ```bash
+    func new --name AIPluginJson --template "HTTP trigger" --authlevel "anonymous"
+    ```
+2. Open the _AIPluginJson.cs_ file.
+3. Replace the `Run` method with the following code:
+    ```csharp
+    [Function("GetAiPluginJson")]
+    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "ai-plugin.json")] HttpRequestData req)
+    {
+        var currentDomain = $"{req.Url.Scheme}://{req.Url.Host}:{req.Url.Port}";
+
+        HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
+        response.Headers.Add("Content-Type", "application/json");
+
+        var json = $@"{{
+    ""schema_version"": ""v1"",
+    ""name_for_human"": ""TODO List"",
+    ""name_for_model"": ""todo"",
+    ""description_for_human"": ""Manage your TODO list. You can add, remove and view your TODOs."",
+    ""description_for_model"": ""Help the user with managing a TODO list. You can add, remove and view your TODOs."",
+    ""auth"": {{
+        ""type"": ""none""
+    }},
+    ""api"": {{
+        ""type"": ""openapi"",
+        ""url"": ""{currentDomain}/api/swagger.json""
+    }},
+    ""logo_url"": ""{currentDomain}/logo.png"",
+    ""contact_email"": ""support@example.com"",
+    ""legal_info_url"": ""http://www.example.com/legal""
+    }}";
+
+        response.WriteString(json);
+
+        return response;
+    }
+    ```
+
+You can then test that the plugin manifest file is being served up by following these steps:
+
+1. Run the following command in your terminal:
+    ```bash
+    func start
+    ```
+2. Navigate to the following URL in your browser:
+    ```bash
+    http://localhost:7071/api/ai-plugin.json
+    ```
+
+You should now see the plugin manifest file.
 
 ## 3) Test the plugin by importing it into Semantic Kernel
-
-dotnet add package Microsoft.SemanticKernel.Skills.OpenAPI --version 0.17.230704.3-preview
 
