@@ -27,7 +27,13 @@ Once we're done, you'll have an Azure Function that exposes each of your plugin'
 
 ## Prerequisites
 To complete this tutorial, you'll need the following:
-- [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools)
+- [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools)  version 4.x.
+- [].NET 6.0 SDK.](https://dotnet.microsoft.com/download)
+- One of the following tools for creating Azure resources:
+  - [Azure CLI](/cli/azure/install-azure-cli) [version 2.4](/cli/azure/release-notes-azure-cli#april-21-2020) or later.
+  - The [Azure Az PowerShell module](https://learn.microsoft.com/en-us/powershell/azure/install-azure-powershell) version 5.9.0 or later.
+
+To publish your plugin, you'll also need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio).
 
 You do _not_ need to have access to OpenAI's plugin preview to complete this tutorial. If you do have access, however, you can upload your final plugin to OpenAI and use it in ChatGPT.
 
@@ -54,24 +60,111 @@ So far, however, we've only shown how to create plugins that are _natively_ load
    :::column-end:::
 :::row-end:::
 
-## Create HTTP endpoints for your native functions
+## 1) Create HTTP endpoints for each native function
+Before we can expose our plugin to other applications, we need to create an HTTP endpoint for each of our native functions. This will allow us to call our native functions from any other service. You can achieve this multiple ways, but in this article we'll use Azure Functions.
 
+### Create a new Azure Function project
+There are several ways to create an Azure Function, but in this article we'll use the Azure Functions Core Tools. If you are using Visual Studio or Visual Studio Code, you can also use the Azure Functions extension to create a new Azure Function project. For more information, see [Create your first function using Visual Studio](/azure/azure-functions/functions-create-your-first-function-visual-studio) or [Create your first function using Visual Studio Code](/azure/azure-functions/create-first-function-vs-code-csharp).
 
-### Create a new Azure Function
+1. To create a new Azure Function project, run the following command in your terminal:
 
-### Add your native functions to the Azure Function
+    ```bash
+    func init MathPlugin --worker-runtime dotnet-isolated --target-framework net6.0
+    ```
 
-### Add an OpenAPI document to your Azure Function
+2. Navigate into the `MathPlugin` directory:
+
+    ```bash
+    cd MathPlugin
+    ```
+3. Update the `MathPlugin.csproj` file to include the following package references:
+
+    ```xml
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.11.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="1.5.1" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="1.5.1" />
+    ```
+4. Run the following command to restore the packages:
+
+    ```bash
+    dotnet restore
+    ```
+
+### Add your native functions to the Azure Function project
+We can now add our native functions to the Azure Function project.
+
+1. Run the following command in your terminal to create placeholder for the `Add` function:
+
+    ```bash
+    func new --name Add --template "HTTP trigger" --authlevel "anonymous"
+    ```
+2. Open the _Add.cs_ file.
+3. Replace the `Run` function with the following code:
+    ```csharp
+    [Function("Add")]
+    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+    {
+        bool result1 = double.TryParse(req.Query["number1"], out double number1);
+        bool result2 = double.TryParse(req.Query["number2"], out double number2);
+
+        if (result1 && result2)
+        {
+            HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
+            response.Headers.Add("Content-Type", "application/json");
+            double sum = number1 + number2;
+            response.WriteString(sum.ToString());
+            
+            return response;
+        }
+        else
+        {
+            HttpResponseData response = req.CreateResponse(HttpStatusCode.BadRequest);
+            response.Headers.Add("Content-Type", "application/json");
+            response.WriteString("Please pass two numbers on the query string or in the request body");
+
+            return response;
+        }
+    }
+    ```
+4. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
+
+At this point, you should have five HTTP endpoints in your Azure Function project. You can test them by following these steps:
+
+1. Run the following command in your terminal:
+    ```bash
+    func start
+    ```
+2. Open a new terminal window and run the following command:
+    ```bash
+    curl "http://localhost:7071/api/Add?number1=1&number2=2"
+    curl "http://localhost:7071/api/Subtract?number1=1&number2=2"
+    curl "http://localhost:7071/api/Multiply?number1=1&number2=2"
+    curl "http://localhost:7071/api/Divide?number1=1&number2=2"
+    curl "http://localhost:7071/api/Sqrt?number=9"
+    ```
+
+You should see the following responses:
+```bash
+3
+-1
+2
+0.5
+3
+```
+
+### Add an OpenAPI document to your Azure Function project
 
 ### Test your native functions
 
-## Create the ChatGPT plugin manifest
+## 2) Create an OpenAPI specification and plugin manifest file
 
 ### Create the manifest file
 
 ### Expose the manifest from the Azure Function
 
-## Test your ChatGPT plugin in Semantic Kernel
+## 3) Test the plugin by importing it into Semantic Kernel
 
 dotnet add package Microsoft.SemanticKernel.Skills.OpenAPI --version 0.17.230704.3-preview
 

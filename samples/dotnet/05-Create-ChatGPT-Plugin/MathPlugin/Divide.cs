@@ -17,8 +17,8 @@ namespace MathPlugin
         [Function("Divide")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
         {
-            bool result1 = double.TryParse(req.Query["dividend"], out double dividend);
-            bool result2 = double.TryParse(req.Query["divisor"], out double divisor);
+            bool result1 = double.TryParse(req.Query["number1"], out double dividend);
+            bool result2 = double.TryParse(req.Query["number2"], out double divisor);
 
             if (result1 && result2 && divisor != 0)
             {
