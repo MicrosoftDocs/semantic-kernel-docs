@@ -48,17 +48,12 @@ So far, however, we've only shown how to create plugins that are _natively_ load
 
 ### Transforming our `MathPlugin` into a ChatGPT plugin
 
-:::row:::
-   :::column span="1":::
-        There are three steps we must take to turn our existing `MathPlugin`` into a ChatGPT plugin:
-        1. Create HTTP endpoints for each native function.
-        2. Create an OpenAPI specification and plugin manifest file.
-        3. Test the plugin in Semantic Kernel and ChatGPT.
-   :::column-end:::
-   :::column span="2":::
-      ![The Math plugin, before and after ](../media/plugin-before-and-after.png)
-   :::column-end:::
-:::row-end:::
+There are three steps we must take to turn our existing `MathPlugin`` into a ChatGPT plugin:
+1. Create HTTP endpoints for each native function.
+2. Create an OpenAPI specification and plugin manifest file.
+3. Test the plugin in Semantic Kernel and ChatGPT.
+
+![The Math plugin, before and after ](../media/plugin-before-and-after.png)
 
 ## Create HTTP endpoints for each function
 Before we can expose our plugin to other applications, we need to create an HTTP endpoint for each of our native functions. This will allow us to call our native functions from any other service. You can achieve this multiple ways, but in this article we'll use Azure Functions.
