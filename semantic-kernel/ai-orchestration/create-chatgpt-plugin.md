@@ -17,17 +17,13 @@ So far, we've demonstrated how to create plugins that can be used natively in Se
 
 In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin.
 
-Once we're done, you'll have a Azure Function that exposes each of your plugin's native functions as HTTP endpoints along with the necessary manifest and schema files to import your plugin into Semantic Kernel or ChatGPT. If you want to see the final solution, you can check out the  sample in the public documentation repository.
+Once we're done, you'll have an Azure Function that exposes each of your plugin's native functions as HTTP endpoints so they can be used by Semantic Kernel _or_ ChatGPT. If you want to see the final solution, you can check out the sample in the public documentation repository.
 
 
 | Language  | Link to final solution |
 | --- | --- |
 | C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/05-Create-ChatGPT-Plugin) |
 | Python | _Coming soon_ |
-
-
-> [!Note]
-> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
 
 ## Prerequisites
 To complete this tutorial, you'll need the following:
@@ -45,13 +41,18 @@ In short, they aren't! In the [plugin article](./plugins#what-is-a-plugin) we de
 So far, however, we've only shown how to create plugins that are _natively_ loaded into Semantic Kernel instead of being exposed through an OpenAPI specification. This has helped us demonstrate the core concepts of plugins without adding the additional complexity of standing up an HTTP endpoint. With minimal changes, however, we can take the plugins we've already created and expose them to ChatGPT.
 
 ### Transforming `MathPlugin` into a ChatGPT plugin
-At a high level, there are three steps required to take our existing `MathPlugin` and turn it into a ChatGPT plugin:
-1. Create HTTP endpoints for each of the plugin's native functions.
-2. Create and expose a ChatGPT plugin manifest and OpenAPI specification file for the plugin.
-3. Test the ChatGPT plugin by importing the manifest into Semantic Kernel.
 
-![The Math plugin, before and after ](../media/plugin-before-and-after.png)
-
+:::row:::
+   :::column span="2":::
+        At a high level, there are three steps required to take our existing `MathPlugin` and turn it into a ChatGPT plugin:
+        1. Create HTTP endpoints for each of the plugin's native functions.
+        2. Create and expose a ChatGPT plugin manifest and OpenAPI specification file for the plugin.
+        3. Test the ChatGPT plugin by importing the manifest into Semantic Kernel.
+   :::column-end:::
+   :::column span="3":::
+      ![The Math plugin, before and after ](../media/plugin-before-and-after.png)
+   :::column-end:::
+:::row-end:::
 
 ## Create HTTP endpoints for your native functions
 
