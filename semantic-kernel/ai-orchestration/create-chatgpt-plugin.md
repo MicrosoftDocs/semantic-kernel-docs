@@ -46,14 +46,13 @@ In the [plugin article](./plugins#what-is-a-plugin) we described how all plugins
 
 So far, however, we've only shown how to create plugins that are _natively_ loaded into Semantic Kernel instead of being exposed through an OpenAPI specification. This has helped us demonstrate the core concepts of plugins without adding the additional complexity of standing up an HTTP endpoint. With minimal changes, however, we can take the plugins we've already created and expose them to ChatGPT.
 
-### Transforming our `MathPlugin` into a ChatGPT plugin
+![The Math plugin, before and after ](../media/plugin-before-and-after.png)
 
 There are three steps we must take to turn our existing `MathPlugin`` into a ChatGPT plugin:
 1. Create HTTP endpoints for each native function.
 2. Create an OpenAPI specification and plugin manifest file.
 3. Test the plugin in Semantic Kernel and ChatGPT.
 
-![The Math plugin, before and after ](../media/plugin-before-and-after.png)
 
 ## Create HTTP endpoints for each function
 Before we can expose our plugin to other applications, we need to create an HTTP endpoint for each of our native functions. This will allow us to call our native functions from any other service. You can achieve this multiple ways, but in this article we'll use Azure Functions.
@@ -307,7 +306,7 @@ You should now see the plugin manifest file.
 ## Testing the plugin end-to-end
 You now have a complete plugin that can be used in Semantic Kernel and ChatGPT. Since there is currently a waitlist for creating plugins for ChatGPT, we'll first demonstrate how you can test your plugin with Semantic Kernel.
 
-### Run the plugin in Semantic Kernel
+### Running the plugin with Semantic Kernel
 By testing your plugin in Semantic Kernel, you can ensure that it is working as expected before you get access to the plugin developer portal for ChatGPT. While testing in Semantic Kernel, we recommend using the Stepwise Planner to invoke your plugin since it is the only planner that supports JSON responses.
 
 To test the plugin in Semantic Kernel, follow these steps:
@@ -359,7 +358,7 @@ Steps Taken: 3
 Skills Used: 2 (MathPlugin.Multiply(1), MathPlugin.Subtract(1))
 ```
 
-### Run the plugin in ChatGPT
+### Running the plugin in ChatGPT
 If you would like to test your plugin in ChatGPT, you can do so by following these steps:
 1. Request access to plugin development by filling out the [waitlist form](https://openai.com/waitlist/plugins).
 2. Once you have access, follow the steps [provided by OpenAI](https://platform.openai.com/docs/plugins/getting-started/running-a-plugin) to register your plugin.
