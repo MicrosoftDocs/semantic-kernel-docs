@@ -170,7 +170,7 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     curl "http://localhost:7071/Sqrt?number=9"
     ```
 
-    You should see the following responses:
+3. You should see the following responses:
     ```output
     3
     -1
@@ -229,10 +229,10 @@ You can then test the OpenAPI document by following these steps:
     http://localhost:7071/swagger/ui
     ```
 
-    You should see the following page:
+3. You should see the following page:
     :::image type="content" source="../media/swagger-ui.png" alt-text="Swagger UI":::
 
-Navigating to _http://localhost:7071/swagger.json_ will allow you to download the OpenAPI specification.
+4. Navigating to _http://localhost:7071/swagger.json_ will allow you to download the OpenAPI specification.
 
 ### Add the plugin manifest file
 The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always served up from the _/.well-known/ai-plugin.json_ file and contains the following information:
@@ -273,21 +273,21 @@ To create an Azure Function that serves up this manifest, follow these steps:
         response.Headers.Add("Content-Type", "application/json");
 
         var json = $@"{{
-    ""schema_version"": ""v1"",
-    ""name_for_human"": ""TODO List"",
-    ""name_for_model"": ""todo"",
-    ""description_for_human"": ""Manage your TODO list. You can add, remove and view your TODOs."",
-    ""description_for_model"": ""Help the user with managing a TODO list. You can add, remove and view your TODOs."",
-    ""auth"": {{
-        ""type"": ""none""
-    }},
-    ""api"": {{
-        ""type"": ""openapi"",
-        ""url"": ""{currentDomain}/swagger.json""
-    }},
-    ""logo_url"": ""{currentDomain}/logo.png"",
-    ""contact_email"": ""support@example.com"",
-    ""legal_info_url"": ""http://www.example.com/legal""
+        ""schema_version"": ""v1"",
+        ""name_for_human"": ""TODO List"",
+        ""name_for_model"": ""todo"",
+        ""description_for_human"": ""This plugin performs basic math operations."",
+        ""description_for_model"": ""Help the user perform math. You can add, subtract, multiple, divide, and perform square roots."",
+        ""auth"": {{
+            ""type"": ""none""
+        }},
+        ""api"": {{
+            ""type"": ""openapi"",
+            ""url"": ""{currentDomain}/swagger.json""
+        }},
+        ""logo_url"": ""{currentDomain}/logo.png"",
+        ""contact_email"": ""support@example.com"",
+        ""legal_info_url"": ""http://www.example.com/legal""
     }}";
 
         response.WriteString(json);
@@ -308,7 +308,8 @@ You can then test that the plugin manifest file is being served up by following 
     http://localhost:7071/.well-known/ai-plugin.json
     ```
 
-    You should now see the plugin manifest file.
+3. You should now see the plugin manifest file.
+    :::image type="content" source="../media/ai-plugin-json.png" alt-text="ai-plugin.json file":::
 
 ## Testing the plugin end-to-end
 You now have a complete plugin that can be used in Semantic Kernel and ChatGPT. Since there is currently a waitlist for creating plugins for ChatGPT, we'll first demonstrate how you can test your plugin with Semantic Kernel.
