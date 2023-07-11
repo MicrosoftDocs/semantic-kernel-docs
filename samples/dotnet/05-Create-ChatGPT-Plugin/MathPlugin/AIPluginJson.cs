@@ -22,8 +22,8 @@ namespace MathPlugin
     ""schema_version"": ""v1"",
     ""name_for_human"": ""TODO List"",
     ""name_for_model"": ""todo"",
-    ""description_for_human"": ""Manage your TODO list. You can add, remove and view your TODOs."",
-    ""description_for_model"": ""Help the user with managing a TODO list. You can add, remove and view your TODOs."",
+    ""description_for_human"": ""This plugin performs basic math operations."",
+    ""description_for_model"": ""Help the user perform math. You can add, subtract, multiple, divide, and perform square roots."",
     ""auth"": {{
         ""type"": ""none""
     }},
