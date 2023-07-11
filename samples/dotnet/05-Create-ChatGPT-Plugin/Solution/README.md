@@ -1,13 +1,16 @@
-# Using planner
+# Creating and using a ChatGPT plugin
 
-The `03-Chaining-Functions` console application shows the final solution to the [Planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planner) doc article.
+The `05-Create-ChatGPT-Plugin` console application shows the final solution to the [ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/chatgpt-plugins) doc article.
 
 ## Prerequisites
 
+- [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools) version 4.x.
 - [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0) is required to run this sample.
 - Install the recommended extensions
   - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
   - [Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel)
+
+You must also have the Azure Function located [here](../MathPlugin/) running locally, otherwise the sample will fail.
 
 ## Configuring the sample
 
@@ -70,6 +73,7 @@ Configure an Azure OpenAI endpoint
 1. Edit the file to add your Azure OpenAI endpoint configuration
 
 ## Running the sample
+Before running the sample, make sure you have the [Math Plugin](../MathPlugin/) running locally.
 
 To run the console application just hit `F5`.
 
