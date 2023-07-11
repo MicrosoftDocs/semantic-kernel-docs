@@ -8,7 +8,6 @@ ms.date: 07/8/2023
 ms.service: mssearch
 ---
 
-
 # Create and run ChatGPT plugins with Semantic Kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
@@ -370,3 +369,8 @@ To test the plugin in Semantic Kernel, follow these steps:
 If you would like to test your plugin in ChatGPT, you can do so by following these steps:
 1. Request access to plugin development by filling out the [waitlist form](https://openai.com/waitlist/plugins).
 2. Once you have access, follow the steps [provided by OpenAI](https://platform.openai.com/docs/plugins/getting-started/running-a-plugin) to register your plugin.
+
+## Next steps
+Congratulations! You have successfully created a plugin that can be used in Semantic Kernel and ChatGPT. Once you have fully tested your plugin, you can deploy it to Azure Functions and register it with OpenAI. For more information, see the following resources:
+- [Deploying Azure Functions](/azure/azure-functions/functions-deployment-technologies)
+- [Submit a plugin to the OpenAI plugin store](https://platform.openai.com/docs/plugins/review)
