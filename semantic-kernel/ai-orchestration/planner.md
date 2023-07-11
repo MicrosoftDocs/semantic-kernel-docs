@@ -203,7 +203,7 @@ var planner = new SequentialPlanner(kernel);
 
 ```python
 import semantic_kernel as sk
-from plugins.MathPlugin import MathPlugin
+from plugins.MathPlugin.MathPlugin import MathPlugin
 from semantic_kernel.planning.basic_planner import BasicPlanner
 
 
