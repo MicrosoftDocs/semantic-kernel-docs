@@ -8,7 +8,7 @@ ms.date: 07/8/2023
 ms.service: mssearch
 ---
 
-# Create and run ChatGPT plugins with Semantic Kernel
+# Create and run ChatGPT plugins using Semantic Kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
