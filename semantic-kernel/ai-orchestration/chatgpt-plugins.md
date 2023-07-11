@@ -41,7 +41,7 @@ You do _not_ need to have access to OpenAI's plugin preview to complete this tut
 ## What are ChatGPT plugins?
 In the [plugin article](./plugins#what-is-a-plugin) we described how all plugins are moving towards the common standard defined by OpenAI. This standard, which is called a ChatGPT plugin in this article, uses a plugin manifest file that points to an accompanying [OpenAPI specification](https://swagger.io/resources/open-api/). Plugins defined in this way can then be used by any application that supports the OpenAI specification, including Semantic Kernel and ChatGPT.
 
-> [!Note]
+> [!Important]
 > OpenAPI is different than OpenAI. OpenAPI is a specification for describing REST APIs, while OpenAI is a company that develops AI models and APIs. While the two are not related, OpenAI has adopted the OpenAPI specification for describing plugin APIs.
 
 ### Transforming our `MathPlugin` into a ChatGPT plugin
@@ -49,10 +49,10 @@ So far, however, we've only shown how to create plugins that are _natively_ load
 
 ![The Math plugin, before and after ](../media/plugin-before-and-after.png)
 
-There are three steps we must take to turn our existing `MathPlugin`` into a ChatGPT plugin:
+There are three steps we must take to turn our existing `MathPlugin` into a ChatGPT plugin:
 1. Create HTTP endpoints for each native function.
-2. Create an OpenAPI specification and plugin manifest file.
-3. Test the plugin in Semantic Kernel and ChatGPT.
+2. Create an OpenAPI specification and plugin manifest file that describes our plugin.
+3. Test the plugin in either Semantic Kernel or ChatGPT.
 
 
 ## Provide HTTP endpoints for each function
@@ -106,7 +106,10 @@ There are several ways to create an Azure Function, but in this article we'll us
     }
     ```
 
-    Later, this will allow us to serve up the plugin manifest file from the _.well-known_ directory as required by the OpenAI specification.
+    > [!Note]
+    > Later, this will allow us to serve up the plugin manifest file from the _.well-known_ directory as required by the OpenAI specification.
+
+    
 
 4. Run the following command to restore the packages:
 
