@@ -11,7 +11,7 @@ namespace MathPlugin
     public class AiPluginJson
     {
         [Function("GetAiPluginJson")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "ai-plugin.json")] HttpRequestData req)
+        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = ".well-known/ai-plugin.json")] HttpRequestData req)
         {
             var currentDomain = $"{req.Url.Scheme}://{req.Url.Host}:{req.Url.Port}";
 

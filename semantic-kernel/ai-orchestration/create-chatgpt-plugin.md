@@ -1,5 +1,5 @@
 ---
-title: How to create a plugin for ChatGPT with Semantic Kernel
+title: Create and run a ChatGPT plugin with Semantic Kernel
 description: Learn how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions.
 author: matthewbolanos
 ms.topic: conceptual
@@ -53,7 +53,7 @@ So far, however, we've only shown how to create plugins that are _natively_ load
         There are three steps we must take to turn our existing `MathPlugin`` into a ChatGPT plugin:
         1. Create HTTP endpoints for each native function.
         2. Create an OpenAPI specification and plugin manifest file.
-        3. Test the plugin by importing it into Semantic Kernel.
+        3. Test the plugin in Semantic Kernel and ChatGPT.
    :::column-end:::
    :::column span="2":::
       ![The Math plugin, before and after ](../media/plugin-before-and-after.png)
@@ -77,13 +77,42 @@ There are several ways to create an Azure Function, but in this article we'll us
     ```bash
     cd MathPlugin
     ```
-3. Update the `MathPlugin.csproj` file to include the following package references:
+
+3. Open the _MathPlugin.csproj_ file.
+
+3. Update the _MathPlugin.csproj_ file to include the following package references:
 
     ```xml
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.17.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.11.0" />
     ```
+
+4. Open the _host.json_ file.
+
+5. Update the _host.json_ file to include the following configuration:
+
+    ```json
+    {
+        "version": "2.0",
+        "logging": {
+            "applicationInsights": {
+                "samplingSettings": {
+                    "isEnabled": true,
+                    "excludedTypes": "Request"
+                }
+            }
+        },
+        "extensions": {
+            "http": {
+                "routePrefix": ""
+            }
+        }
+    }
+    ```
+
+    Later, this will allow us to serve up the plugin manifest file from the _.well-known_ directory as required by the OpenAI specification.
+
 4. Run the following command to restore the packages:
 
     ```bash
@@ -136,11 +165,11 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     ```
 2. Open a new terminal window and run the following commands:
     ```bash
-    curl "http://localhost:7071/api/Add?number1=1&number2=2"
-    curl "http://localhost:7071/api/Subtract?number1=1&number2=2"
-    curl "http://localhost:7071/api/Multiply?number1=1&number2=2"
-    curl "http://localhost:7071/api/Divide?number1=1&number2=2"
-    curl "http://localhost:7071/api/Sqrt?number=9"
+    curl "http://localhost:707/Add?number1=1&number2=2"
+    curl "http://localhost:7071/Subtract?number1=1&number2=2"
+    curl "http://localhost:7071/Multiply?number1=1&number2=2"
+    curl "http://localhost:7071/Divide?number1=1&number2=2"
+    curl "http://localhost:7071/Sqrt?number=9"
     ```
 
 You should see the following responses:
@@ -153,10 +182,10 @@ You should see the following responses:
 ```
 
 ## 2) Create an OpenAPI specification and plugin manifest file
+Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating an OpenAPI specification and plugin manifest file.
 
-
-### Add an OpenAPI document to your Azure Function project
-Now that we have HTTP endpoints for each of our native functions, we need to create an OpenAPI specification that describes them. Thankfully, Azure Functions provides a NuGet package that makes this easy. To add an OpenAPI document to your Azure Function project, follow these steps:
+### Add an OpenAPI specification to your Azure Function project
+An OpenAPI specification describes the HTTP endpoints that are available in your plugin. Instead of manually creating an OpenAPI specification, you can use NuGet packages provided by Azure Functions to automatically create and serve up these files. To add an OpenAPI specification to your Azure Function project, follow these steps:
 
 1. Run the following commands in your terminal:
     ```bash
@@ -197,13 +226,13 @@ You can then test the OpenAPI document by following these steps:
     ```
 2. Navigate to the following URL in your browser:
     ```bash
-    http://localhost:7071/api/swagger/ui
+    http://localhost:7071/swagger/ui
     ```
 
 You should see the following page:
 :::image type="content" source="../media/swagger-ui.png" alt-text="Swagger UI":::
 
-Navigating to _http://localhost:7071/api/swagger.json_ will allow you to download the OpenAPI specification.
+Navigating to _http://localhost:7071/swagger.json_ will allow you to download the OpenAPI specification.
 
 ### Serve up the plugin manifest file
 The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always named _ai-plugin.json_ and contains the following information:
@@ -236,7 +265,7 @@ In this example, we'll create a new Azure Function that serves up the plugin man
 3. Replace the `Run` method with the following code:
     ```csharp
     [Function("GetAiPluginJson")]
-    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "ai-plugin.json")] HttpRequestData req)
+    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = ".well-known/ai-plugin.json")] HttpRequestData req)
     {
         var currentDomain = $"{req.Url.Scheme}://{req.Url.Host}:{req.Url.Port}";
 
@@ -254,7 +283,7 @@ In this example, we'll create a new Azure Function that serves up the plugin man
     }},
     ""api"": {{
         ""type"": ""openapi"",
-        ""url"": ""{currentDomain}/api/swagger.json""
+        ""url"": ""{currentDomain}/swagger.json""
     }},
     ""logo_url"": ""{currentDomain}/logo.png"",
     ""contact_email"": ""support@example.com"",
@@ -275,10 +304,67 @@ You can then test that the plugin manifest file is being served up by following 
     ```
 2. Navigate to the following URL in your browser:
     ```bash
-    http://localhost:7071/api/ai-plugin.json
+    http://localhost:7071/.well-known/ai-plugin.json
     ```
 
 You should now see the plugin manifest file.
 
-## 3) Test the plugin by importing it into Semantic Kernel
+## 3) Test the plugin in Semantic Kernel and ChatGPT
+You now have a complete plugin that can be used in Semantic Kernel and ChatGPT. Since there is currently a waitlist for creating plugins for ChatGPT, we'll first demonstrate how you can test your plugin with Semantic Kernel.
 
+### Test the plugin in Semantic Kernel
+By testing your plugin in Semantic Kernel, you can ensure that it is working as expected before you get access to the plugin developer portal for ChatGPT. While testing in Semantic Kernel, we recommend using the Stepwise Planner to invoke your plugin since it is the only planner that supports JSON responses.
+
+To test the plugin in Semantic Kernel, follow these steps:
+
+1. Create a new C# project.
+2. Add the necessary Semantic Kernel NuGet packages:
+    ```bash
+    dotnet add package Microsoft.SemanticKernel
+    dotnet add package Microsoft.SemanticKernel.Planning
+    dotnet add package Microsoft.SemanticKernel.Skills.OpenAPI
+    ```
+3. Paste the following code into your _program.cs_ file:
+    ```csharp
+    using Microsoft.Extensions.Logging;
+    using Microsoft.SemanticKernel;
+    using Microsoft.SemanticKernel.Planning;
+
+    // ... create a new Semantic Kernel instance here
+
+    // Add the math plugin using the plugin manifest URL
+    const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
+    var mathPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("MathPlugin", new Uri(pluginManifestUrl));
+
+    // Create a stepwise planner and invoke it
+    var planner = new StepwisePlanner(kernel);
+    var question = "I have $2130.23. How much would I have after it grew by 24% and after I spent $5 on a latte?";
+    var plan = planner.CreatePlan(question);
+    var result = await plan.InvokeAsync(kernel.CreateNewContext());
+
+    // Print the results
+    Console.WriteLine("Result: " + result);
+
+    // Print details about the plan
+    if (result.Variables.TryGetValue("stepCount", out string? stepCount))
+    {
+        Console.WriteLine("Steps Taken: " + stepCount);
+    }
+    if (result.Variables.TryGetValue("skillCount", out string? skillCount))
+    {
+        Console.WriteLine("Skills Used: " + skillCount);
+    }
+    ```
+
+After running the code, you should see the following output:
+
+```output
+Result: After the amount grew by 24% and $5 was spent on a latte, you would have $2636.4852 remaining.
+Steps Taken: 3
+Skills Used: 2 (MathPlugin.Multiply(1), MathPlugin.Subtract(1))
+```
+
+### Test the plugin in ChatGPT
+If you would like to test your plugin in ChatGPT, you can do so by following these steps:
+1. Request access to plugin development by filling out the [waitlist form](https://openai.com/waitlist/plugins).
+2. Once you have access, follow the steps [provided by OpenAI](https://platform.openai.com/docs/plugins/getting-started/running-a-plugin) to register your plugin.

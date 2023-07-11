@@ -19,7 +19,7 @@ IKernel kernel = new KernelBuilder()
     .Build();
 
 // Add the math plugin using the plugin manifest URL
-const string pluginManifestUrl = "http://localhost:7071/api/ai-plugin.json";
+const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
 var mathPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("MathPlugin", new Uri(pluginManifestUrl));
 
 // Create a stepwise planner and invoke it
@@ -30,6 +30,8 @@ var result = await plan.InvokeAsync(kernel.CreateNewContext());
 
 // Print the results
 Console.WriteLine("Result: " + result);
+
+// Print details about the plan
 if (result.Variables.TryGetValue("stepCount", out string? stepCount))
 {
     Console.WriteLine("Steps Taken: " + stepCount);
