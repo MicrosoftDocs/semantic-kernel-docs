@@ -170,14 +170,14 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     curl "http://localhost:7071/Sqrt?number=9"
     ```
 
-You should see the following responses:
-```bash
-3
--1
-2
-0.5
-3
-```
+    You should see the following responses:
+    ```output
+    3
+    -1
+    2
+    0.5
+    3
+    ```
 
 ## Create the manifest files
 Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating an OpenAPI specification and plugin manifest file.
@@ -185,11 +185,9 @@ Now that we have HTTP endpoints for each of our native functions, we need to cre
 ### Add an OpenAPI spec to your Azure Function project
 An OpenAPI specification describes the HTTP endpoints that are available in your plugin. Instead of manually creating an OpenAPI specification, you can use NuGet packages provided by Azure Functions to automatically create and serve up these files. To add an OpenAPI specification to your Azure Function project, follow these steps:
 
-1. Run the following commands in your terminal:
+1. Run the following commands in your Azure Function project directory:
     ```bash
     dotnet add package Microsoft.Azure.WebJobs.Extensions.OpenApi --version 1.5.1
-    ```
-    ```bash
     dotnet add package Microsoft.Azure.Functions.Worker.Extensions.OpenApi --version 1.5.1
     ```
 2. Open the _Add.cs_ file.
@@ -206,7 +204,10 @@ An OpenAPI specification describes the HTTP endpoints that are available in your
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]  
     ```
-5. Repeat the previous steps to add OpenAPI attributes to the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When adding the attributes, be sure to update the operation and parameter descriptions accordingly. The `Description` fields are the most important attributes because they will be used by the planner to determine which function to call. We recommend reusing the same description values from the previous walkthroughs.
+5. Repeat the previous steps for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When adding the attributes, update the operation and parameter descriptions accordingly.
+
+    > [!Important]
+    > The `Description` fields are the most important attributes because they will be used by the planner to determine which function to call. We recommend reusing the same description values from the previous walkthroughs.
 
     | Function | Description |
     | --- | --- |
