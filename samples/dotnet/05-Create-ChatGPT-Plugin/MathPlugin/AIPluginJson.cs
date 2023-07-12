@@ -29,7 +29,7 @@ namespace MathPlugin
     }},
     ""api"": {{
         ""type"": ""openapi"",
-        ""url"": ""{currentDomain}/api/swagger.json""
+        ""url"": ""{currentDomain}/swagger.json""
     }},
     ""logo_url"": ""{currentDomain}/logo.png"",
     ""contact_email"": ""support@example.com"",
