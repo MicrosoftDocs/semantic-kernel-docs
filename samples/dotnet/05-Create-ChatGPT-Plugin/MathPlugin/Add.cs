@@ -22,7 +22,7 @@ namespace MathPlugin
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
         [Function("Add")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
         {
             bool result1 = double.TryParse(req.Query["number1"], out double number1);
             bool result2 = double.TryParse(req.Query["number2"], out double number2);
