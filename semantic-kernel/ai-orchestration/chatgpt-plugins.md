@@ -127,7 +127,7 @@ We can now add our native functions to the Azure Function project.
 3. Replace the `Run` function with the following code:
     ```csharp
     [Function("Add")]
-    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
     {
         bool result1 = double.TryParse(req.Query["number1"], out double number1);
         bool result2 = double.TryParse(req.Query["number2"], out double number2);
@@ -264,7 +264,7 @@ To create an Azure Function that serves up this manifest, follow these steps:
 3. Replace the `Run` method with the following code:
     ```csharp
     [Function("GetAiPluginJson")]
-    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = ".well-known/ai-plugin.json")] HttpRequestData req)
+    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = ".well-known/ai-plugin.json")] HttpRequestData req)
     {
         var currentDomain = $"{req.Url.Scheme}://{req.Url.Host}:{req.Url.Port}";
 
