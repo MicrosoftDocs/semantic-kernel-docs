@@ -3,7 +3,7 @@ from semantic_kernel.connectors.ai.open_ai import (
     OpenAITextCompletion,
     AzureTextCompletion,
 )
-from plugins.MathPlugin import MathPlugin
+from plugins.MathPlugin.MathPlugin import MathPlugin
 from semantic_kernel.planning.basic_planner import BasicPlanner
 
 
