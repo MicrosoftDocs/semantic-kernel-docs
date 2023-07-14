@@ -29,20 +29,20 @@ By the end of this article, you'll have a kernel that can correctly answer user 
 
 ## Finding a home for your native function
 
-You can place plugins in the same directory as the other semantic plugins. The main difference is that instead of creating a folder for your plugin, you'll create a C# or Python file. For example, to create a plugin called `MyCSharpPlugin`, you can create a new file called _MyCSharpPlugin.cs_ in the same directory as the other plugins:
+You can place plugins in the same directory as the other plugins. For example, to create functions for a plugin called `MyNewPlugin`, you can create a new file called _MyCSharpPlugin.cs_ in the same directory as your semantic functions.
 
 ```directory
 MyPluginsDirectory
 │
-└─── MySemanticPlugin
-|    │
-|    └─── MyFirstSemanticFunction
-|    │    └─── skprompt.txt
-|    │    └─── config.json
-|    └─── MyOtherSemanticFunctions
-|         | ...
-│
-└─── MyCSharpPlugin.cs
+└─── MyNewPlugin
+     │
+     └─── MyFirstSemanticFunction
+     │    └─── skprompt.txt
+     │    └─── config.json
+     └─── MyOtherSemanticFunctions
+     |    | ...  
+     │
+     └─── MyNewPlugin.cs
 ```
 
 In our example, we'll create two files one for the native `OrchestratorPlugin` functions and another for the `MathPlugin`. Depending on the language you're using, you'll create either C# or Python files for each.
@@ -57,9 +57,11 @@ Plugins
 |    └─── GetIntent
 |         └─── skprompt.txt
 |         └─── config.json
+|         └─── OrchestratorPlugin.cs
 |
-└─── OrchestratorPlugin.cs
-└─── MathPlugin.cs
+└─── MathPlugin
+     │
+     └─── MathPlugin.cs
 ```
 
 # [Python](#tab/python)
@@ -72,13 +74,15 @@ Plugins
 |    └─── GetIntent
 |         └─── skprompt.txt
 |         └─── config.json
+|         └─── OrchestratorPlugin.py
 |
-└─── OrchestratorPlugin.py
-└─── MathPlugin.py
+└─── MathPlugin
+     │
+     └─── MathPlugin.py
 ```
 ---
 
-It's ok if you have a semantic plugin folder and a native plugin file with the same name. The kernel will load both functions into the same plugin namespace. What's important is that you don't have two functions with the same name within the same plugin namespace. If you do, the last function loaded will overwrite the previous function.
+It's ok if you have a plugin folder with native functions and semantic functions. The kernel will load both functions into the same plugin namespace. What's important is that you don't have two functions with the same name within the same plugin namespace. If you do, the last function loaded will overwrite the previous function.
 
 We'll begin by creating the `MathPlugin` functions. Afterwards, we'll call the `MathPlugin` functions from within the `OrchestratorPlugin`. At the end of this example you will have the following supported functions.
 
@@ -212,7 +216,7 @@ Console.WriteLine(result2);
 
 ```python
 import semantic_kernel as sk
-from plugins.MathPlugin import MathPlugin
+from plugins.MathPlugin.MathPlugin import MathPlugin
 
 async def main():
     # Instantiate your kernel and register your skill
@@ -348,8 +352,8 @@ Extract the numbers from the input and output them in JSON format.
 
 -------------------
 
-INPUT: Add 2 and 3 together
-OUTPUT: {"number1":2,"number2":3}
+INPUT: Take the square root of 4
+OUTPUT: {"number1":4}
 
 INPUT: Subtract 3 dollars from 2 dollars
 OUTPUT: {"number1":2,"number2":3}
@@ -487,8 +491,8 @@ from semantic_kernel.connectors.ai.open_ai import (
     OpenAITextCompletion,
     AzureChatCompletion,
 )
-from plugins.OrchestratorPlugin import OrchestratorPlugin
-from plugins.MathPlugin import MathPlugin
+from plugins.OrchestratorPlugin.OrchestratorPlugin import OrchestratorPlugin
+from plugins.MathPlugin.MathPlugin import MathPlugin
 
 
 async def main():

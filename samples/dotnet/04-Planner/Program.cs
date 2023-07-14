@@ -7,10 +7,6 @@ IKernel kernel = new KernelBuilder()
     .WithCompletionService(kernelSettings)
     .Build();
 
-var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
-kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
-kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizeSkill");
-
 // Add the math plugin
 var mathPlugin = kernel.ImportSkill(new MathPlugin(), "MathPlugin");
 

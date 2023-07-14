@@ -203,7 +203,7 @@ var planner = new SequentialPlanner(kernel);
 
 ```python
 import semantic_kernel as sk
-from plugins.MathPlugin import MathPlugin
+from plugins.MathPlugin.MathPlugin import MathPlugin
 from semantic_kernel.planning.basic_planner import BasicPlanner
 
 
@@ -439,14 +439,12 @@ There are, however, considerations you should make before using a planner. The f
 ### Using predefined plans
 There are likely common scenarios that your users will frequently ask for. To avoid the performance hit and the costs associated with planner, you can pre-create plans and serve them up to a user.
 
+This is similar to the front-end development adage coined by Aaron Swartz: "[Bake, don't fry](http://www.aaronsw.com/weblog/000404)." By pre-creating, or "baking," your plans, you can avoid generating them on the fly (i.e., "frying"). You won't be able to get rid of "frying" entirely when creating AI apps, but you can reduce your reliance on it so you can use healthier alternatives instead.
 
-:::row:::
-   :::column span="3":::
-    This is similar to the front-end development adage coined by Aaron Swartz: "[Bake, don't fry](http://www.aaronsw.com/weblog/000404)." By pre-creating, or "baking," your plans, you can avoid generating them on the fly (i.e., "frying"). You won't be able to get rid of "frying" entirely when creating AI apps, but you can reduce your reliance on it so you can use healthier alternatives instead.
+To achieve this, you can generate plans for common scenarios offline, and store them as XML in your project. Based on the intent of the user, you can then serve the plan back up so it can be executed. By "baking" your plans, you also have the opportunity to create additional optimizations to improve speed or lower costs.
 
-    To achieve this, you can generate plans for common scenarios offline, and store them as XML in your project. Based on the intent of the user, you can then serve the plan back up so it can be executed. By "baking" your plans, you also have the opportunity to create additional optimizations to improve speed or lower costs.
-   :::column-end:::
-   :::column span="2":::
-        ![Bake; don't fry](../media/bake-dont-fry.png)
-   :::column-end:::
-:::row-end:::
+## Next steps
+You now have the skills necessary to automatically generate plans for your users. You can use these skills to create more advanced AI apps that can handle increasingly complex scenarios. In the next section, you'll learn how to author plugins that can be used by planner _and_ ChatGPT.
+
+> [!div class="nextstepaction"]
+> [Create and run ChatGPT plugins](./chatgpt-plugins.md)

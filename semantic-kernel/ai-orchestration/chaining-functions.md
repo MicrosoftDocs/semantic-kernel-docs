@@ -508,8 +508,8 @@ from semantic_kernel.connectors.ai.open_ai import (
     OpenAITextCompletion,
     AzureChatCompletion,
 )
-from plugins.OrchestratorPlugin import OrchestratorPlugin
-from plugins.MathPlugin import MathPlugin
+from plugins.OrchestratorPlugin.OrchestratorPlugin import OrchestratorPlugin
+from plugins.MathPlugin.MathPlugin import MathPlugin
 
 
 async def main():

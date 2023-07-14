@@ -2,8 +2,8 @@ Extract the numbers from the input and output them in JSON format.
 
 -------------------
 
-INPUT: Add 2 and 3 together
-OUTPUT: {"number1":2,"number2":3}
+INPUT: Take the square root of 4
+OUTPUT: {"number1":4}
 
 INPUT: Subtract 3 dollars from 2 dollars
 OUTPUT: {"number1":2,"number2":3}
