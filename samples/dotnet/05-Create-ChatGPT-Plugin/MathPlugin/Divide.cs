@@ -12,7 +12,7 @@ namespace MathPlugin
         [OpenApiOperation(operationId: "Divide", tags: new[] { "ExecuteFunction" }, Description = "Divide two numbers")]
         [OpenApiParameter(name: "number1", Description = "The first number to divide from", Required = true, In = ParameterLocation.Query)]
         [OpenApiParameter(name: "number2", Description = "The second number to divide by", Required = true, In = ParameterLocation.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the quotient of the division.")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the quotient of the division.")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
         [Function("Divide")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
@@ -23,7 +23,7 @@ namespace MathPlugin
             if (result1 && result2 && divisor != 0)
             {
                 HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-                response.Headers.Add("Content-Type", "application/json");
+                response.Headers.Add("Content-Type", "text/plain");
                 double quotient = dividend / divisor;
                 response.WriteString(quotient.ToString());
 

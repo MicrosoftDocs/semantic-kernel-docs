@@ -135,7 +135,7 @@ We can now add our native functions to the Azure Function project.
         if (result1 && result2)
         {
             HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "application/json");
+            response.Headers.Add("Content-Type", "text/plain");
             double sum = number1 + number2;
             response.WriteString(sum.ToString());
             
@@ -200,7 +200,7 @@ An OpenAPI specification describes the HTTP endpoints that are available in your
     [OpenApiOperation(operationId: "Add", tags: new[] { "ExecuteFunction" }, Description = "Adds two numbers.")]
     [OpenApiParameter(name: "number1", Description = "The first number to add'", Required = true, In = ParameterLocation.Query)]
     [OpenApiParameter(name: "number2", Description = "The second number to add", Required = true, In = ParameterLocation.Query)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]  
     ```
 5. Repeat the previous steps for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When adding the attributes, update the operation and parameter descriptions accordingly.

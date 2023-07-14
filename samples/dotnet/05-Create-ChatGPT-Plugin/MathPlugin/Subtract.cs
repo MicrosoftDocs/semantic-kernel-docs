@@ -12,7 +12,7 @@ namespace MathPlugin
         [OpenApiOperation(operationId: "Subtract", tags: new[] { "ExecuteFunction" }, Description = "Subtract two numbers")]
         [OpenApiParameter(name: "number1", Description = "The first number to subtract from", Required = true, In = ParameterLocation.Query)]
         [OpenApiParameter(name: "number2", Description = "The second number to subtract away", Required = true, In = ParameterLocation.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the difference of the two numbers.")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the difference of the two numbers.")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
         [Function("Subtract")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
@@ -23,7 +23,7 @@ namespace MathPlugin
             if (result1 && result2)
             {
                 HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-                response.Headers.Add("Content-Type", "application/json");
+                response.Headers.Add("Content-Type", "text/plain");
                 double difference = number1 - number2;
                 response.WriteString(difference.ToString());
 
