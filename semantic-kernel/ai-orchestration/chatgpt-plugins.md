@@ -21,7 +21,7 @@ Once we're done, you'll have an Azure Function that exposes each of your plugin'
 
 | Language  | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-pr/tree/matthew-chatGPT-plugin-sample/samples/dotnet/05-Create-ChatGPT-Plugin) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/05-Create-ChatGPT-Plugin) |
 | Python | _Coming soon_ |
 
 ## Prerequisites
@@ -135,7 +135,7 @@ We can now add our native functions to the Azure Function project.
         if (result1 && result2)
         {
             HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "application/json");
+            response.Headers.Add("Content-Type", "text/plain");
             double sum = number1 + number2;
             response.WriteString(sum.ToString());
             
@@ -162,7 +162,7 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     ```
 2. Open a new terminal window and run the following commands:
     ```bash
-    curl "http://localhost:707/Add?number1=1&number2=2"
+    curl "http://localhost:7071/Add?number1=1&number2=2"
     curl "http://localhost:7071/Subtract?number1=1&number2=2"
     curl "http://localhost:7071/Multiply?number1=1&number2=2"
     curl "http://localhost:7071/Divide?number1=1&number2=2"
@@ -198,23 +198,25 @@ An OpenAPI specification describes the HTTP endpoints that are available in your
 4. Add the following attributes to the `Run` function:
     ```csharp
     [OpenApiOperation(operationId: "Add", tags: new[] { "ExecuteFunction" }, Description = "Adds two numbers.")]
-    [OpenApiParameter(name: "number1", Description = "The first number to add'", Required = true, In = ParameterLocation.Query)]
+    [OpenApiParameter(name: "number1", Description = "The first number to add", Required = true, In = ParameterLocation.Query)]
     [OpenApiParameter(name: "number2", Description = "The second number to add", Required = true, In = ParameterLocation.Query)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]  
     ```
 5. Repeat the previous steps for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When adding the attributes, update the operation and parameter descriptions accordingly.
 
     > [!Important]
-    > The `Description` fields are the most important attributes because they will be used by the planner to determine which function to call. We recommend reusing the same description values from the previous walkthroughs.
+    > The `Description` fields for both the operation and the parameters are the most important attributes because they will be used by the planner to determine which function to call. We recommend reusing the same description values from the previous walkthroughs.
 
-    | Function | Description |
+    | Function | Description | Number 1 | Number 2 |
     | --- | --- |
-    | Add | Add two numbers. |
-    | Subtract | Subtract two numbers. |
+    | Add | Add two numbers. | The first number to add | The second number to add | 
+    | Subtract | Subtract two numbers. | The first number to subtract from | The second number to subtract away |
     | Multiply | Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage. |
-    | Divide | Divide two numbers. |
-    | Sqrt | Take the square root of a number. |
+    | Divide | Divide two numbers. | The first number to divide from | The second number to divide by |
+    | Sqrt | Take the square root of a number. | The number to calculate the square root of | N/A |
+
+    
 
 ### Validate the OpenAPI spec
 You can then test the OpenAPI document by following these steps:
@@ -322,7 +324,7 @@ To test the plugin in Semantic Kernel, follow these steps:
 2. Add the necessary Semantic Kernel NuGet packages:
     ```bash
     dotnet add package Microsoft.SemanticKernel
-    dotnet add package Microsoft.SemanticKernel.Planning
+    dotnet add package Microsoft.SemanticKernel.Planning.StepwisePlanner
     dotnet add package Microsoft.SemanticKernel.Skills.OpenAPI
     ```
 3. Paste the following code into your _program.cs_ file:

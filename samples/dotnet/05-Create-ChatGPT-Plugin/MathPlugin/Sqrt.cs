@@ -12,7 +12,7 @@ namespace MathPlugin
     {
         [OpenApiOperation(operationId: "Sqrt", tags: new[] { "ExecuteFunction" }, Description = "Take the square root of a number")]
         [OpenApiParameter(name: "number", Description = "The number to calculate the square root of", Required = true, In = ParameterLocation.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the square root of the number.")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the square root of the number.")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns an error message.")]
         [Function("Sqrt")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
@@ -23,7 +23,7 @@ namespace MathPlugin
             {
                 double sqrt = Math.Sqrt(number);
                 HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-                response.Headers.Add("Content-Type", "application/json");
+                response.Headers.Add("Content-Type", "text/plain");
                 response.WriteString(sqrt.ToString());
 
                 return response;
