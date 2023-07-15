@@ -24,6 +24,7 @@ Configure an OpenAI endpoint
 
 ```powershell
 cd 01-Semantic-Functions
+dotnet user-secrets set "endpointType" "text-completion"
 dotnet user-secrets set "serviceType" "OpenAI"
 dotnet user-secrets set "serviceId" "text-davinci-003"
 dotnet user-secrets set "deploymentOrModelId" "text-davinci-003"
@@ -34,6 +35,7 @@ Configure an Azure OpenAI endpoint
 
 ```powershell
 cd 01-Semantic-Functions
+dotnet user-secrets set "endpointType" "text-completion"
 dotnet user-secrets set "serviceType" "AzureOpenAI"
 dotnet user-secrets set "serviceId" "text-davinci-003"
 dotnet user-secrets set "deploymentOrModelId" "text-davinci-003"
