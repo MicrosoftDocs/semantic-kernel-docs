@@ -12,7 +12,7 @@ namespace Plugins.MathPlugin
         [OpenApiOperation(operationId: "Multiply", tags: new[] { "ExecuteFunction" }, Description = "Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage.")]
         [OpenApiParameter(name: "number1", Description = "The first number to multiply", Required = true, In = ParameterLocation.Query)]
         [OpenApiParameter(name: "number2", Description = "The second number to multiply", Required = true, In = ParameterLocation.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Returns the product of the two numbers.")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the product of the two numbers.")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
         [Function("Multiply")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
@@ -23,7 +23,7 @@ namespace Plugins.MathPlugin
             if (result1 && result2)
             {
                 HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-                response.Headers.Add("Content-Type", "application/json");
+                response.Headers.Add("Content-Type", "text/plain");
                 double product = number1 * number2;
                 response.WriteString(product.ToString());
 
