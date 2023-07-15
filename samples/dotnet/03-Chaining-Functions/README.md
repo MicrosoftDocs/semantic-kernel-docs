@@ -23,7 +23,8 @@ For Debugging the console application alone, we suggest using .NET [Secret Manag
 Configure an OpenAI endpoint
 
 ```powershell
-cd 01-Semantic-Functions
+cd 03-Chaining-Functions
+dotnet user-secrets set "endpointType" "text-completion"
 dotnet user-secrets set "serviceType" "OpenAI"
 dotnet user-secrets set "serviceId" "text-davinci-003"
 dotnet user-secrets set "deploymentOrModelId" "text-davinci-003"
@@ -33,7 +34,8 @@ dotnet user-secrets set "apiKey" "... your OpenAI key ..."
 Configure an Azure OpenAI endpoint
 
 ```powershell
-cd 01-Semantic-Functions
+cd 03-Chaining-Functions
+dotnet user-secrets set "endpointType" "text-completion"
 dotnet user-secrets set "serviceType" "AzureOpenAI"
 dotnet user-secrets set "serviceId" "text-davinci-003"
 dotnet user-secrets set "deploymentOrModelId" "text-davinci-003"
