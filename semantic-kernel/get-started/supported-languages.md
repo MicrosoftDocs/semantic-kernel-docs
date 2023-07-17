@@ -25,7 +25,7 @@ While the overall architecture of the kernel is consistent across all languages,
 
 ## Available features
 
-Today, not all features are available in all languages. The following tables show which features are available in each language. The __*️__ symbol indicates that the feature is partially implemented, please see the associated note column for more details. The ❌ symbol indicates that the feature is not yet available in that language; if you would like to see a feature implemented in a language, please consider [contributing to the project](./contributing.md) or [opening an issue](./contributing.md#reporting-issues).
+Today, not all features are available in all languages. The following tables show which features are available in each language. The 🔄 symbol indicates that the feature is partially implemented, please see the associated note column for more details. The ❌ symbol indicates that the feature is not yet available in that language; if you would like to see a feature implemented in a language, please consider [contributing to the project](./contributing.md) or [opening an issue](./contributing.md#reporting-issues).
 
 
 ### AI Services
@@ -43,9 +43,9 @@ Today, not all features are available in all languages. The following tables sho
 |-----------------------------------|:----:|:------:|:----:|-------|
 | OpenAI                            | ✅ | ✅ | ✅ | |
 | AzureOpenAI                       | ✅ | ✅ | ✅ | |
-| Hugging Face Inference API        | *️ | ❌ | ❌ | Coming soon to Python, not all scenarios are covered for .NET |
+| Hugging Face Inference API        | 🔄 | ❌ | ❌ | Coming soon to Python, not all scenarios are covered for .NET |
 | Hugging Face Local                | ❌ | ✅ | ❌ | |
-| Custom                            | ✅ | *️ | ❌ | Requires the user to define the service schema in their application |
+| Custom                            | ✅ | 🔄 | ❌ | Requires the user to define the service schema in their application |
 
 ### Tokenizers
 
@@ -53,43 +53,43 @@ Today, not all features are available in all languages. The following tables sho
 |-----------------------------------|:----:|:------:|:----:|-------|
 | GPT2                              | ✅ | ✅ | ✅ | |
 | GPT3                              | ✅ | ❌ | ❌ | |
-| tiktoken                          | *️ | ❌ | ❌ | Coming soon to Python and C#. Can be manually added to Python via `pip install tiktoken` |
+| tiktoken                          | 🔄 | ❌ | ❌ | Coming soon to Python and C#. Can be manually added to Python via `pip install tiktoken` |
 
 ### Core plugins
 
 | Plugins                           |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| TextMemorySkill                   | ✅ | ✅ | *️ | |
+| TextMemorySkill                   | ✅ | ✅ | 🔄 | |
 | ConversationSummarySkill          | ✅ | ✅ | ❌ | |
-| FileIOSkill                       | ✅ | ✅ | ❌ | |
-| HttpSkill                         | ✅ | ✅ | ❌ | |
-| MathSkill                         | ✅ | ✅ | ❌ | |
-| TextSkill                         | ✅ | ✅ | *️ | |
-| TimeSkill                         | ✅ | ✅ | *️ | |
-| WaitSkill                         | ✅ | ❌ | ❌ | |
+| FileIOSkill                       | ✅ | ✅ | ✅ | |
+| HttpSkill                         | ✅ | ✅ | ✅ | |
+| MathSkill                         | ✅ | ✅ | ✅ | |
+| TextSkill                         | ✅ | ✅ | 🔄 | |
+| TimeSkill                         | ✅ | ✅ | ✅ | |
+| WaitSkill                         | ✅ | ✅ | ✅ | |
 
 ### Planners
 
 | Planners                          |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| Plan                              | ✅ | ✅ | ❌ | Need to port the Plan object model |
-| BasicPlanner                      | ❌ | ✅ | ❌ | |
-| ActionPlanner                     | ✅ | ❌ | ❌ | |
-| SequentialPlanner                 | ✅ | ❌ | ❌ | |
+| Plan Object Model                 | ✅ | ✅ | ❌ | |
+| BasicPlanner                      | ❌ | ✅ | ❌ | | 
+| ActionPlanner                     | ✅ | 🔄 | 🔄 | In development| 
+| SequentialPlanner                 | ✅ | 🔄 | 🔄 | In development|
+| StepwisePlanner                   | ✅ | ❌ | ❌ | | |
 
 ### Connectors
 
 | Connectors                        |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| Qdrant (Memory)                   | ✅ | ❌ | ❌ | |
-| ChromaDb (Memory)                 | ❌ | *️ | ❌ | |
+| Qdrant (Memory)                   | ✅ | 🔄 | ❌ | In feature branch for review | 
+| ChromaDb (Memory)                 | ✅ | ✅ | ❌ | |
 | Milvus (Memory)                   | ❌ | ❌ | ❌ | |
-| Pinecone (Memory)                 | ✅ | ❌ | ❌ | |
-| Weaviate (Memory)                 | ❌ | ❌ | ❌ | |
-| CosmosDB (Memory)                 | ✅ | ❌ | ❌ | CosmosDB is not optimized for vector storage |
+| Pinecone (Memory)                 | ✅ | ✅ | ❌ | |
+| Weaviate (Memory)                 | ✅ | ✅ | ❌ | |
 | Sqlite (Memory)                   | ✅ | ❌ | ❌ | Sqlite is not optimized for vector storage |
-| Postgres (Memory)                 | ✅ | ❌ | ❌ | Vector optimized (required the [pgvector](https://github.com/pgvector/pgvector) extension) |
-| Azure Cognitive Search            | ✅ | *️ | ❌ | |
+| Postgres (Memory)                 | ✅ | ✅ | ❌ | Vector optimized (requires the [pgvector](https://github.com/pgvector/pgvector) extension) |
+| Azure Cognitive Search            | ✅ | ✅ | ❌ | |
 
 ### Plugins
 | Plugins                        |  C#  | Python | Java | Notes |
@@ -97,8 +97,8 @@ Today, not all features are available in all languages. The following tables sho
 | MsGraph                           | ✅ | ❌ | ❌ | Contains plugins for OneDrive, Outlook, ToDos, and Organization Hierarchies |
 | Document and data loading plugins (i.e. pdf, csv, docx, pptx)  | ✅ | ❌ | ❌ | Currently only supports Word documents |
 | OpenAPI                           | ✅ | ❌ | ❌ | |
-| Web search plugins (i.e. Bing, Google) | ✅ | ❌ | ❌ | |
-| Text chunkers                     | *️ | *️ | ❌ | |
+| Web search plugins (i.e. Bing, Google) | ✅ | ✅ | ❌ | |
+| Text chunkers                     | 🔄 | 🔄 | ❌ | |
 
 
 ## Notes about the Python SDK
