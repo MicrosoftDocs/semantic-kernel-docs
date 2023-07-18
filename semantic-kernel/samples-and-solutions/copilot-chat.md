@@ -34,40 +34,53 @@ The [Copilot Chat Sample App](https://github.com/microsoft/semantic-kernel/blob/
 
 1) Clone [Semantic Kernel](https://github.com/microsoft/semantic-kernel) locally.
 2) To enable authentication, [register an Azure Application](/azure/active-directory/develop/quickstart-register-app). We recommend using the following properties:
-    - Select Single-page application (SPA) as platform type, and set the Web redirect URI to http://localhost:3000
-    - Select Accounts in any organizational directory and personal Microsoft Accounts as supported account types for this sample.
+    - Select __Single-page application (SPA)__ as platform type, and set the Web redirect URI to _http://localhost:3000_
+    - Select __Accounts in any organizational directory and personal Microsoft Accounts__ as supported account types for this sample.
     
     > [!Note]
-    > Make a note of the Application (client) ID from the Azure Portal, we will use it in step 4.
+    > Make a note of the Application (client) ID from the Azure Portal; we will use it in step 4.
 
 3) Install requirements
 
     # [Windows](#tab/Windows)
+    Open a PowerShell terminal as an administrator and navigate to the _/samples/apps/copilot-chat-app/scripts_ directory in the Semantic Kernel project.
 
+    ```powershell
+    cd /samples/apps/copilot-chat-app/scripts
+    ```
+    
+    Next, run the following command to install the required dependencies:
     ```powershell
     ./Install-Requirements.ps1
     ```
 
     # [Ubuntu/Debian Linux](#tab/Linux)
-
+    Open a bash terminal as an administrator and navigate to the _/samples/apps/copilot-chat-app/scripts_ directory in the Semantic Kernel project:
     ```bash
-    ./Install-Requirements-UbuntuDebian.ps1
+    cd samples/apps/copilot-chat-app/scripts
+
+    # Ensure the install scripts are executable
+    chmod +x Install-Requirements-UbuntuDebian.sh
+    ```
+
+    Next, run the following command to install the required dependencies:
+    ```bash
+    ./Install-Requirements-UbuntuDebian.sh
     ```
     # [Other](#tab/other)
 
     For all other operating systems, ensure NET 6.0 SDK (or newer), Node.js 14 (or newer), and Yarn classic ([v1.22.19](https://classic.yarnpkg.com/)) package manager are installed before proceeding.
 
+    Afterwards open a terminal and navigate to the _/samples/apps/copilot-chat-app/scripts_ directory in the Semantic Kernel project.
+    ```bash
+    cd samples/apps/copilot-chat-app/scripts
+    ```
     ---
 
 
 4) Run the configuration script
 
     # [PowerShell](#tab/Powershell)
-
-    ```powershell
-    cd /samples/apps/copilot-chat-app/scripts
-    ```
-
     If you are using Azure OpenAI, replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
 
     ```powershell
@@ -81,15 +94,13 @@ The [Copilot Chat Sample App](https://github.com/microsoft/semantic-kernel/blob/
     ```
 
     # [Bash](#tab/Bash)
-
-    If you are using Azure OpenAI, replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
-
+    First, ensure the configuration script is executable:
     ```bash
-    cd samples/apps/copilot-chat-app/scripts
-
-    # Ensure the start scripts are executable
+    # Ensure the configure scripts are executable
     chmod +x Configure.sh
     ```
+    
+    If you are using Azure OpenAI, replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
 
     ```bash
     ./Configure.sh --azureopenai --endpoint {AZURE_OPENAI_ENDPOINT} --apikey {AZURE_OPENAI_API_KEY} --clientid {APPLICATION_CLIENT_ID}
