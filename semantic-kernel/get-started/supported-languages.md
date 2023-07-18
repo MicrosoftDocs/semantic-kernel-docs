@@ -82,14 +82,14 @@ Today, not all features are available in all languages. The following tables sho
 
 | Connectors                        |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
+| Azure Cognitive Search            | ✅ | ✅ | ❌ | |
 | Qdrant (Memory)                   | ✅ | 🔄 | ❌ | In feature branch for review | 
 | ChromaDb (Memory)                 | ✅ | ✅ | ❌ | |
-| Milvus (Memory)                   | ❌ | ❌ | ❌ | |
 | Pinecone (Memory)                 | ✅ | ✅ | ❌ | |
-| Weaviate (Memory)                 | ✅ | ✅ | ❌ | |
-| Sqlite (Memory)                   | ✅ | ❌ | ❌ | Sqlite is not optimized for vector storage |
-| Postgres (Memory)                 | ✅ | ✅ | ❌ | Vector optimized (requires the [pgvector](https://github.com/pgvector/pgvector) extension) |
-| Azure Cognitive Search            | ✅ | ✅ | ❌ | |
+| Weaviate (Memory)                 | ✅ | ✅ | ❌ | Currently supported on Python 3.9+, 3.8 coming soon |
+| Postgres (Memory)                 | ✅ | ✅ | ❌ | Vector optimization requires [pgvector](https://github.com/pgvector/pgvector) |
+| Sqlite (Memory)                   | ✅ | ❌ | ❌ | Vector optimization requires [sqlite-vss](https://github.com/asg017/sqlite-vss) |
+| Milvus (Memory)                   | 🔄 | 🔄 | ❌ | |
 
 ### Plugins
 | Plugins                        |  C#  | Python | Java | Notes |
