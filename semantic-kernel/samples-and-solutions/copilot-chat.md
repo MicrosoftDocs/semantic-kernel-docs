@@ -1,17 +1,17 @@
 ---
-title: Copilot Chat Sample App
-description: Copilot Chat sample app
+title: Get started using Chat Copilot
+description: Learn how to use the Chat Copilot reference app to build your own integrated large language model chatbot.
 author: smonroe
 ms.topic: samples
 ms.author: smonroe
 ms.date: 04/07/2023
 ms.service: mssearch
 ---
-# Copilot Chat Sample App
+# Chat Copilot
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-The Copilot Chat sample allows you to build your own integrated large language model chatbot.  This is an enriched intelligence app, with multiple dynamic components including command messages, user intent, and memories.  
+The Chat Copilot reference app allows you to build your own integrated large language model chatbot.  This is an enriched intelligence app, with multiple dynamic components including command messages, user intent, and memories.  
 
 The chat prompt and response will evolve as the conversation between the user and the application proceeds.  This chat experience uses a chat plugin containing multiple functions that work together to construct the final prompt for each exchange.
 
@@ -32,12 +32,101 @@ The chat prompt and response will evolve as the conversation between the user an
 ## Running the app
 The [Copilot Chat Sample App](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) is located in the Semantic Kernel GitHub repository.
 
-1) Follow the [Setup](/semantic-kernel/get-started) instructions if you do not already have a clone of Semantic Kernel locally.
-2) Follow the instructions to [Register an Azure Application](/azure/active-directory/develop/quickstart-register-app)
-3) Open the ReadMe file in the Copilot Chat sample folder.
-4) Follow the ReadMe instructions to configure, start, and test the Backend API Server
-5) Follow the ReadMe instructions to start the front end WebApp
-5) A browser should automatically launch and navigate to https://localhost:3000. with the sample app running
+1) Clone [Semantic Kernel](https://github.com/microsoft/semantic-kernel) locally.
+2) To enable authentication, [register an Azure Application](/azure/active-directory/develop/quickstart-register-app). We recommend using the following properties:
+    - Select Single-page application (SPA) as platform type, and set the Web redirect URI to http://localhost:3000
+    - Select Accounts in any organizational directory and personal Microsoft Accounts as supported account types for this sample.
+    
+    > [!Note]
+    > Make a note of the Application (client) ID from the Azure Portal, we will use it in step 4.
+
+3) Install requirements
+
+    # [Windows](#tab/Windows)
+
+    ```powershell
+    ./Install-Requirements.ps1
+    ```
+
+    # [Ubuntu/Debian Linux](#tab/Linux)
+
+    ```bash
+    ./Install-Requirements-UbuntuDebian.ps1
+    ```
+    # [Other](#tab/other)
+
+    For all other operating systems, ensure NET 6.0 SDK (or newer), Node.js 14 (or newer), and Yarn classic ([v1.22.19](https://classic.yarnpkg.com/)) package manager are installed before proceeding.
+
+    ---
+
+
+4) Run the configuration script
+
+    # [PowerShell](#tab/Powershell)
+
+    ```powershell
+    cd /samples/apps/copilot-chat-app/scripts
+    ```
+
+    If you are using Azure OpenAI, replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
+
+    ```powershell
+    ./Configure.ps1 -AzureOpenAI -Endpoint {AZURE_OPENAI_ENDPOINT} -ApiKey {AZURE_OPENAI_API_KEY} -ClientId {APPLICATION_CLIENT_ID}
+    ```
+
+    If you are using OpenAI, replace the  `{AZURE_OPENAI_API_KEY}` and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
+
+    ```powershell
+    ./Configure.ps1 -openai -ApiKey {AZURE_OPENAI_API_KEY} -ClientId {APPLICATION_CLIENT_ID}
+    ```
+
+    # [Bash](#tab/Bash)
+
+    If you are using Azure OpenAI, replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
+
+    ```bash
+    cd samples/apps/copilot-chat-app/scripts
+
+    # Ensure the start scripts are executable
+    chmod +x Configure.sh
+    ```
+
+    ```bash
+    ./Configure.sh --azureopenai --endpoint {AZURE_OPENAI_ENDPOINT} --apikey {AZURE_OPENAI_API_KEY} --clientid {APPLICATION_CLIENT_ID}
+    ```
+
+     If you are using Azure OpenAI, replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
+
+    ```bash
+    ./Configure.sh --openai --apikey {AZURE_OPENAI_API_KEY} --clientid {APPLICATION_CLIENT_ID}
+    ```
+    ---
+
+5) Run the start script
+    
+    # [PowerShell](#tab/Powershell)
+
+    ```powershell
+    setx ASPNETCORE_ENVIRONMENT "Development"
+
+    ./Start.ps1
+    ```
+
+    # [Bash](#tab/Bash)
+
+    ```bash
+    export ASPNETCORE_ENVIRONMENT=Development
+
+    # Ensure the start scripts are executable
+    chmod +x Start.sh
+    chmod +x Start-Backend.sh
+    chmod +x Start-Frontend.sh
+
+    # Start CopilotChat 
+    ./Start.sh
+    ```
+    ---
+6) Congrats! A browser should automatically launch and navigate to https://localhost:3000 with the sample app running
 
 ## Exploring the app
 With the Copilot Chat sample app running, you can start interacting with the chatbot.  The app will start with a default conversation thread where you can ask it questions.
