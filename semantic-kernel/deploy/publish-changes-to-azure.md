@@ -15,13 +15,13 @@ This guide provides steps to make changes to the skills of a deployed instance o
 
 ## Prerequisites
 1. An instance of the Semantic Kernel web app service deployed in your Azure subscription. You can follow the how-to guide [here](./deploy-to-azure.md) for details.
-1. Have your web app's name handy. If you used the deployment templates provided with the Copilot Chat, you can find the web app's name by going to the [Azure Portal](https://portal.azure.com/) and selecting the resource group created for your Semantic Kernel web app service. Your web app's name is the one of the resource listed that ends with "skweb".
+1. Have your web app's name handy. If you used the deployment templates provided with the Chat Copilot, you can find the web app's name by going to the [Azure Portal](https://portal.azure.com/) and selecting the resource group created for your Semantic Kernel web app service. Your web app's name is the one of the resource listed that ends with "skweb".
 1. Locally tested [skills](../concepts-sk/skills.md) or [planner](../concepts-sk/planner.md) ready to be added to your Semantic Kernel web app service.
 
 ## How to publish changes to the Semantic Kernel web app service
 There are two main ways to deploy changes to the Semantic Kernel web app service. If you have been working locally and are ready to deploy your changes to Azure as a new web app service, you can follow the steps in the first section. If you have already deployed your Semantic Kernel web app service and want to make changes to add Semantic skills, you can follow the steps in the second section.
 
-### 1.Deploying your Copilot Chat App to Azure as a web application
+### 1.Deploying your Chat Copilot App to Azure as a web application
 After working locally, i.e. you cloned the code from the GitHub [repo](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) and have made changes to the code for your needs, you can deploy your changes to Azure as a web application.
 
 You can use the standard methods available to [deploy an ASP.net web app](/azure/app-service/quickstart-dotnetcore?pivots=development-environment-vs&tabs=net70) in order to do so.
@@ -67,7 +67,7 @@ This method is useful for making changes when adding new semantic skills only.
 10. Now your web app is configured to use your Semantic Skills.
 
 ## Take the next step
->To explore how you build a front-end web app explore the [Copilot Chat App](../samples/copilotchat.md) sample.
+>To explore how you build a front-end web app explore the [Chat Copilot app](../samples/copilotchat.md).
 
 >If you have not already done so, please star the GitHub repo and join the Semantic Kernel community!
 [Star the Semantic Kernel repo](https://aka.ms/sk/repo)

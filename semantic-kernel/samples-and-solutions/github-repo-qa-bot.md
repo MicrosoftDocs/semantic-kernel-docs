@@ -51,7 +51,7 @@ By default the Markdown files are stored as embeddings.  You can ask questions i
 
 ## Next step
 
-Run the Copilot Chat sample app!
+Run the Chat Copilot reference app!
 
 > [!div class="nextstepaction"]
-> [Run the Copilot Chat Sample App](/semantic-kernel/samples/copilotchat)
+> [Run the Chat Copilot reference app](/semantic-kernel/samples/copilotchat)

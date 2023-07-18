@@ -30,7 +30,7 @@ The chat prompt and response will evolve as the conversation between the user an
 > * [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
 ## Running the app
-The [Copilot Chat Sample App](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) is located in the Semantic Kernel GitHub repository.
+The [Chat Copilot reference app](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) is located in the Semantic Kernel GitHub repository.
 
 1) Clone [Semantic Kernel](https://github.com/microsoft/semantic-kernel) locally.
 2) To enable authentication, [register an Azure Application](/azure/active-directory/develop/quickstart-register-app). We recommend using the following properties:
@@ -140,9 +140,9 @@ The [Copilot Chat Sample App](https://github.com/microsoft/semantic-kernel/blob/
 6) Congrats! A browser should automatically launch and navigate to _https://localhost:3000_ with the sample app running.
 
 ## Exploring the app
-With the Copilot Chat sample app running, you can start interacting with the chatbot.  The app will start with a default conversation thread where you can ask it questions.
+With the Chat Copilot reference app running, you can start interacting with the chatbot.  The app will start with a default conversation thread where you can ask it questions.
 
-![Copilot Chat Sample App](../media/copilot-chat.png)
+![Chat Copilot reference app](../media/copilot-chat.png)
 
 | Feature | Name | Description |
 |:-|:-|:-|
