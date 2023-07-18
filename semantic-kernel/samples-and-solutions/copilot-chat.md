@@ -137,7 +137,7 @@ The [Copilot Chat Sample App](https://github.com/microsoft/semantic-kernel/blob/
     ./Start.sh
     ```
     ---
-6) Congrats! A browser should automatically launch and navigate to https://localhost:3000 with the sample app running
+6) Congrats! A browser should automatically launch and navigate to _https://localhost:3000_ with the sample app running.
 
 ## Exploring the app
 With the Copilot Chat sample app running, you can start interacting with the chatbot.  The app will start with a default conversation thread where you can ask it questions.
