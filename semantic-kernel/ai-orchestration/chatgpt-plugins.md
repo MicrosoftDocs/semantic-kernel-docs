@@ -239,6 +239,14 @@ At this point, you should have six HTTP endpoints in your Azure Function project
 
 3. Test each of the endpoints by clicking the __Try it out__ button.
 
+## Add a semantic function to the plugin
+
+### Setup the kernel
+
+### Create a semantic function
+
+### Test the semantic function
+
 ## Create the manifest files
 Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating an OpenAPI specification and plugin manifest file.
 

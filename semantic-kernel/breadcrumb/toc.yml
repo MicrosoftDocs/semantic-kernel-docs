@@ -1,7 +1,3 @@
 - name: Microsoft Semantic Kernel
   tocHref: /semantic-kernel/
   topicHref: /semantic-kernel/overview/index
-  items:
-    - name: Quick start guide
-      tocHref: /semantic-kernel/get-started/quick-start-guide
-      topicHref: /semantic-kernel/get-started/quick-start-guide
