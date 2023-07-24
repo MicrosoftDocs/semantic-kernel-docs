@@ -77,27 +77,6 @@ Once you've downloaded the starter project, you'll see two main projects:
 
 For the remainder of this walkthrough, we'll be working in the _azure-functions_ project since that is where we'll be adding our native functions, prompts, and settings for the plugin manifest file.
 
-### Test the starter project
-Before we start adding our native functions, we'll first test the starter project to make sure it's working as expected. To do this, follow these steps within Visual Studio Code:
-1. Navigate to the Run and Debug tab.
-2. Select the __Start Debugging__ button or press __F5__.
-
-If you are not using Visual Studio Code, you can also test the starter project by following these steps:
-1. Open a terminal window and navigate to the _azure-functions_ directory.
-2. Build the project by running the following command:
-    ```bash
-    dotnet build
-    ```
-3. Run the following command to start the Azure Functions project:
-    ```bash
-    func start --csharp
-    ```
-
-Once the project is running, you can test it by navigating to _http://localhost:7071/swagger/ui_. If you see a page load, then the starter project is working as expected.
-
-> [!Note]
-> The __Joke__ function will not work at this point until you've added your API key to the Azure Functions settings. We'll cover how to do this in one of the following sections.
-
 ## Provide HTTP endpoints for each function
 Now that we have validated our starter, we now need to create HTTP endpoints for each of our functions. This will allow us to call our functions from any other service.
 
