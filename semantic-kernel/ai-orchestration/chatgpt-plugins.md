@@ -72,8 +72,8 @@ If you don't want to use the VS Code extension, you can also download the starte
 
 ### Understand the starter project
 Once you've downloaded the starter project, you'll see two main projects:
-- _azure-functions_ – This is the main project that contains the Azure Functions that will serve up the plugin manifest file and each of your functions.
-- _semantic-functions-generator_ – This project contains a code generator that will automatically convert prompts into semantic function endpoints.
+- **_azure-functions_** – This is the main project that contains the Azure Functions that will serve up the plugin manifest file and each of your functions.
+- **_semantic-functions-generator_** – This project contains a code generator that will automatically convert prompts into semantic function endpoints.
 
 For the remainder of this walkthrough, we'll be working in the _azure-functions_ project since that is where we'll be adding our native functions, prompts, and settings for the plugin manifest file.
 
@@ -93,9 +93,7 @@ If you are not using Visual Studio Code, you can also test the starter project b
     func start --csharp
     ```
 
-Once the project is running, you can test it by navigating to _http://localhost:7071/swagger/ui_. If you see the following page, then you have successfully validated the starter project.
-
-![The Swagger UI page](../media/swagger-ui-chatgpt-starter.png)
+Once the project is running, you can test it by navigating to _http://localhost:7071/swagger/ui_. If you see a page load, then the starter project is working as expected.
 
 > [!Note]
 > The __Joke__ function will not work at this point until you've added your API key to the Azure Functions settings. We'll cover how to do this in one of the following sections.
@@ -106,11 +104,7 @@ Now that we have validated our starter, we now need to create HTTP endpoints for
 ### Add the math native functions to the Azure Function project
 Now that you have your starter, it's time to add your native functions to the plugin. To do this, we'll use Azure Functions to create HTTP endpoints for each function.
 
-1. Navigate into the _MathPlugin/azure-function_ directory:
-
-    ```bash
-    cd MathPlugin/azure-function
-    ```
+1. Navigate into the _MathPlugin/azure-function_ directory.
 2. Create a new empty file called _Add.cs_:
 3. Open the _Add.cs_ file.
 4. Paste in the following code:
@@ -235,17 +229,11 @@ At this point, you should have six HTTP endpoints in your Azure Function project
     ```bash
     func start --csharp
     ```
-2. Open a browser and navigate to _http://localhost:7071/swagger/ui_.
+2. Open a browser and navigate to _http://localhost:7071/swagger/ui_. You should see the Swagger UI page load.
 
-3. Test each of the endpoints by clicking the __Try it out__ button.
+    :::image type="content" source="../media/swagger-ui.png" alt-text="Swagger UI":::
 
-## Add a semantic function to the plugin
-
-### Setup the kernel
-
-### Create a semantic function
-
-### Test the semantic function
+3. Test each of the endpoints by clicking the __Try it out__ button and by providing input values.
 
 ## Create the manifest files
 Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating an OpenAPI specification and plugin manifest file.
@@ -297,15 +285,7 @@ You can then test the OpenAPI document by following these steps:
     ```bash
     func start
     ```
-2. Navigate to the following URL in your browser:
-    ```bash
-    http://localhost:7071/swagger/ui
-    ```
-
-3. You should see the following page:
-    :::image type="content" source="../media/swagger-ui.png" alt-text="Swagger UI":::
-
-4. Navigating to _http://localhost:7071/swagger.json_ will allow you to download the OpenAPI specification.
+2. Navigating to _http://localhost:7071/swagger.json_ will allow you to download the OpenAPI specification.
 
 ### Add the plugin manifest file
 The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always served up from the _/.well-known/ai-plugin.json_ file and contains the following information:
@@ -421,16 +401,6 @@ To test the plugin in Semantic Kernel, follow these steps:
 If you would like to test your plugin in ChatGPT, you can do so by following these steps:
 1. Request access to plugin development by filling out the [waitlist form](https://openai.com/waitlist/plugins).
 2. Once you have access, follow the steps [provided by OpenAI](https://platform.openai.com/docs/plugins/getting-started/running-a-plugin) to register your plugin.
-
-## Deploy the plugin to Azure
-Once you have fully tested your plugin, you can deploy it to Azure Functions. To do so, follow these steps:
-
-1. Create a new Azure Functions resource in the Azure portal.
-2. Add your API key to the Azure Functions settings.
-3. Navigate to the Azure extension in Visual Studio Code.
-4. Select your Azure Function project.
-5. Select the deploy command.
-
 
 ## Next steps
 Congratulations! You have successfully created a plugin that can be used in Semantic Kernel and ChatGPT. Once you have fully tested your plugin, you can deploy it to Azure Functions and register it with OpenAI. For more information, see the following resources:
