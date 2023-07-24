@@ -52,79 +52,41 @@ There are three steps we must take to turn our existing `MathPlugin` into a Chat
 2. Create an OpenAPI specification and plugin manifest file that describes our plugin.
 3. Test the plugin in either Semantic Kernel or ChatGPT.
 
+## Download the ChatGPT plugin starter
+To make it easier to create ChatGPT plugins, we've created a [starter project]() that you can use as a template. The starter project includes the following features:
+- An endpoint that serves up an ai-plugin.json file for ChatGPT to discover the plugin
+- A generator that automatically converts prompts into semantic function endpoints
+- The ability to add additional native functions as endpoints to the plugin
+
+To easiest way to get started is to use the Semantic Kernel VS Code extension. Follow the steps to download the starter with VS Code:
+1. If you don't have VS Code installed, you can download it [here](https://code.visualstudio.com/).
+2. Afterwards, navigate to the __Extensions__ tab and search for "Semantic Kernel".
+3. Click __Install__ to install the extension.
+4. Once the extension is installed, you'll see a welcome message. Select __Create a new app__.
+    > [!Note]
+    > If you've already installed the extension, you can also create a new app by pressing __Ctrl+Shift+P__ and typing "Semantic Kernel: Create Project".
+5. Finally, select __C# ChatGPT Plugin__ to create a new ChatGPT plugin project.
+
+If you don't want to use the VS Code extension, you can also download the [starter project from GitHub]().
 
 ## Provide HTTP endpoints for each function
 Before we can expose our plugin to other applications, we need to create an HTTP endpoint for each of our native functions. This will allow us to call our native functions from any other service. You can achieve this multiple ways, but in this article we'll use Azure Functions.
 
-### Create a new Azure Function project
-There are several ways to create an Azure Function, but in this article we'll use the Azure Functions Core Tools. If you are using Visual Studio or Visual Studio Code, you can also use the Azure Functions extension to create a new Azure Function project. For more information, see [Create your first function using Visual Studio](/azure/azure-functions/functions-create-your-first-function-visual-studio) or [Create your first function using Visual Studio Code](/azure/azure-functions/create-first-function-vs-code-csharp).
-
-1. To create a new Azure Function project, run the following command in your terminal:
-
-    ```bash
-    func init MathPlugin --worker-runtime dotnet-isolated --target-framework net6.0
-    ```
-
-2. Navigate into the `MathPlugin` directory:
-
-    ```bash
-    cd MathPlugin
-    ```
-
-3. Open the _MathPlugin.csproj_ file.
-
-3. Update the _MathPlugin.csproj_ file to include the following package references:
-
-    ```xml
-    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.17.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.11.0" />
-    ```
-
-4. Open the _host.json_ file.
-
-5. Update the _host.json_ file to include the following configuration:
-
-    ```json
-    {
-        "version": "2.0",
-        "logging": {
-            "applicationInsights": {
-                "samplingSettings": {
-                    "isEnabled": true,
-                    "excludedTypes": "Request"
-                }
-            }
-        },
-        "extensions": {
-            "http": {
-                "routePrefix": ""
-            }
-        }
-    }
-    ```
-
-    > [!Note]
-    > Later, this will allow us to serve up the plugin manifest file from the _.well-known_ directory as required by the OpenAI specification.
-
-    
-
-4. Run the following command to restore the packages:
-
-    ```bash
-    dotnet restore
-    ```
-
 ### Add the native functions to the Azure Function project
-We can now add our native functions to the Azure Function project.
+Now that you have your starter, it's time to add your native functions to the plugin. To do this, we'll use Azure Functions to create HTTP endpoints for each function.
 
-1. Run the following command in your terminal to create placeholder for the `Add` function:
+1. Navigate into the _MathPlugin/azure-function_ directory:
+
+    ```bash
+    cd MathPlugin/azure-function
+    ```
+2. Run the following command in your terminal to create placeholder for the `Add` function:
 
     ```bash
     func new --name Add --template "HTTP trigger" --authlevel "anonymous"
     ```
-2. Open the _Add.cs_ file.
-3. Replace the `Run` function with the following code:
+3. Open the _Add.cs_ file.
+4. Replace the `Run` function with the following code:
     ```csharp
     [Function("Add")]
     public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
@@ -151,7 +113,7 @@ We can now add our native functions to the Azure Function project.
         }
     }
     ```
-4. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
+5. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
 
 ### Validate the HTTP endpoints
 At this point, you should have five HTTP endpoints in your Azure Function project. You can test them by following these steps:
@@ -177,6 +139,14 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     0.5
     3
     ```
+
+## Add a semantic function to the plugin
+
+### Setup the kernel
+
+### Create a semantic function
+
+### Test the semantic function
 
 ## Create the manifest files
 Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating an OpenAPI specification and plugin manifest file.
@@ -216,8 +186,6 @@ An OpenAPI specification describes the HTTP endpoints that are available in your
     | Divide | Divide two numbers. | The first number to divide from | The second number to divide by |
     | Sqrt | Take the square root of a number. | The number to calculate the square root of | N/A |
 
-    
-
 ### Validate the OpenAPI spec
 You can then test the OpenAPI document by following these steps:
 
@@ -238,62 +206,44 @@ You can then test the OpenAPI document by following these steps:
 ### Add the plugin manifest file
 The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always served up from the _/.well-known/ai-plugin.json_ file and contains the following information:
 
-| Field | Type | Description | Required |
-| --- | --- | --- | --- |
-| schema_version | String | Manifest schema version | ✅ |
-| name_for_model | String | Name the model will use to target the plugin (no spaces allowed, only letters and numbers). 50 character max. | ✅ |
-| name_for_human | String | Human-readable name, such as the full company name. 20 character max. | ✅ |
-| description_for_model | String | Description better tailored to the model, such as token context length considerations or keyword usage for improved plugin prompting. 8,000 character max. | ✅ |
-| description_for_human | String | Human-readable description of the plugin. 100 character max. | ✅ |
-| auth | ManifestAuth | Authentication schema | ✅ |
-| api | Object | API specification | ✅ |
-| logo_url | String | URL used to fetch the logo. Suggested size: 512 x 512. Transparent backgrounds are supported. Must be an image, no GIFs are allowed. | ✅ |
-| contact_email | String | Email contact for safety/moderation | ✅ |
-| legal_info_url | String | Redirect URL for users to view plugin information | ✅ |
-| HttpAuthorizationType | HttpAuthorizationType | "bearer" or "basic" | ✅ |
-| ManifestAuthType | ManifestAuthType | "none", "user_http", "service_http", or "oauth" |  |
-| interface BaseManifestAuth | BaseManifestAuth | type: ManifestAuthType; instructions: string; |  |
-| ManifestNoAuth | ManifestNoAuth | No authentication required: BaseManifestAuth & { type: 'none', } |  |
-| ManifestAuth | ManifestAuth | ManifestNoAuth, ManifestServiceHttpAuth, ManifestUserHttpAuth, ManifestOAuthAuth |  |
+| Field | Type | Description |
+| --- | --- | --- |
+| schema_version | String | Manifest schema version |
+| name_for_model | String | Name the model will use to target the plugin (no spaces allowed, only letters and numbers). 50 character max. |
+| name_for_human | String | Human-readable name, such as the full company name. 20 character max. |
+| description_for_model | String | Description better tailored to the model, such as token context length considerations or keyword usage for improved plugin prompting. 8,000 character max. |
+| description_for_human | String | Human-readable description of the plugin. 100 character max. |
+| auth | ManifestAuth | Authentication schema |
+| api | Object | API specification |
+| logo_url | String | URL used to fetch the logo. Suggested size: 512 x 512. Transparent backgrounds are supported. Must be an image, no GIFs are allowed. |
+| contact_email | String | Email contact for safety/moderation |
+| legal_info_url | String | Redirect URL for users to view plugin information | 
 
-To create an Azure Function that serves up this manifest, follow these steps:
+The starter already has an endpoint for this manifest file. To customize the output, follow these steps:
 
 1. Run the following command in your terminal:
     ```bash
     func new --name AIPluginJson --template "HTTP trigger" --authlevel "anonymous"
     ```
-2. Open the _AIPluginJson.cs_ file.
-3. Replace the `Run` method with the following code:
-    ```csharp
-    [Function("GetAiPluginJson")]
-    public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = ".well-known/ai-plugin.json")] HttpRequestData req)
-    {
-        var currentDomain = $"{req.Url.Scheme}://{req.Url.Host}:{req.Url.Port}";
-
-        HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-        response.Headers.Add("Content-Type", "application/json");
-
-        var json = $@"{{
-        ""schema_version"": ""v1"",
-        ""name_for_human"": ""Simple calculator"",
-        ""name_for_model"": ""calculator"",
-        ""description_for_human"": ""This plugin performs basic math operations."",
-        ""description_for_model"": ""Help the user perform math. You can add, subtract, multiple, divide, and perform square roots."",
-        ""auth"": {{
-            ""type"": ""none""
-        }},
-        ""api"": {{
-            ""type"": ""openapi"",
-            ""url"": ""{currentDomain}/swagger.json""
-        }},
-        ""logo_url"": ""{currentDomain}/logo.png"",
-        ""contact_email"": ""support@example.com"",
-        ""legal_info_url"": ""http://www.example.com/legal""
-    }}";
-
-        response.WriteString(json);
-
-        return response;
+2. Open the _appsettings.cs_ file.
+3. Update the values in the `aiPlugin` object
+    ```json
+    "aiPlugin": {
+        "schemaVersion": "v1",
+        "nameForModel": "MathPlugin",
+        "nameForHuman": "Math Plugin",
+        "descriptionForModel": "Used to perform math operations (i.e., add, subtract, multiple, divide).",
+        "descriptionForHuman": "Used to perform math operations.",
+        "auth": {
+            "type": "none"
+        },
+        "api": {
+            "type": "openapi",
+            "url": "{url}/swagger.json"
+        },
+        "logoUrl": "{url}/logo.png",
+        "contactEmail": "support@example.com",
+        "legalInfoUrl": "http://www.example.com/legal"
     }
     ```
 
@@ -371,6 +321,16 @@ To test the plugin in Semantic Kernel, follow these steps:
 If you would like to test your plugin in ChatGPT, you can do so by following these steps:
 1. Request access to plugin development by filling out the [waitlist form](https://openai.com/waitlist/plugins).
 2. Once you have access, follow the steps [provided by OpenAI](https://platform.openai.com/docs/plugins/getting-started/running-a-plugin) to register your plugin.
+
+## Deploy the plugin to Azure
+Once you have fully tested your plugin, you can deploy it to Azure Functions. To do so, follow these steps:
+
+1. Create a new Azure Functions resource in the Azure portal.
+2. Add your API key to the Azure Functions settings.
+3. Navigate to the Azure extension in Visual Studio Code.
+4. Select your Azure Function project.
+5. Select the deploy command.
+
 
 ## Next steps
 Congratulations! You have successfully created a plugin that can be used in Semantic Kernel and ChatGPT. Once you have fully tested your plugin, you can deploy it to Azure Functions and register it with OpenAI. For more information, see the following resources:
