@@ -18,7 +18,7 @@ With plugins, you can encapsulate AI capabilities into a single unit of function
 > Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
 
 ## What is a plugin?
-To drive alignment across the industry, we're in progress of adopting the [OpenAI plugin specification](https://platform.openai.com/docs/plugins/getting-started/) as the standard for plugins. This will help create an ecosystem of interoperable plugins that can be used across all of the major AI apps and services like ChatGPT, Bing, and Microsoft 365.
+To drive alignment across the industry, we've adopted the [OpenAI plugin specification](https://platform.openai.com/docs/plugins/getting-started/) as the standard for plugins. This will help create an ecosystem of interoperable plugins that can be used across all of the major AI apps and services like ChatGPT, Bing, and Microsoft 365.
 
 :::row:::
    :::column span="2":::
@@ -29,7 +29,7 @@ To drive alignment across the industry, we're in progress of adopting the [OpenA
    :::column-end:::
 :::row-end:::
 
-To see our status on adopting the OpenAI plugin specification, see [our roadmap](./plugins.md#plugins-will-soon-be-interoperable) at the bottom of the page. Each of the integration points have accompanying issues on GitHub that you can follow to stay up-to-date on our progress. We are also open to feedback on our unification plan, so feel free to leave a comment on the GitHub issues so that we can best support your needs.
+To show how to make interoperable plugins, we've created an in-depth walkthrough on how to create a ChatGPT plugin using OpenAI's specification and how to use that _same_ plugin in Semantic Kernel. You can find the walkthrough in the [Create and run ChatGPT plugins](./chatgpt-plugins.md) article.
 
 ### What does a plugin look like?
 At a high-level, a plugin is a group of functions that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions either manually (see [chaining functions](./chaining-functions.md)) or automatically with a [planner](./planner.md).
@@ -192,28 +192,6 @@ You can learn more about creating native functions in the [Creating native funct
 
 > [!div class="nextstepaction"]
 > [Learn more about creating native functions](./semantic-functions.md)
-
-## Plugins will soon be interoperable
-Both OpenAI and Microsoft are converging on the same [plugin definition](https://platform.openai.com/docs/plugins/getting-started/plugin-manifest), so as a developer, you can build one plugin that works seamlessly across ChatGPT, Bing, Microsoft 365 Business Chat, and soon, Semantic Kernel.
-
-To support this effort, the Semantic Kernel team is in the progress of updating what was previously known as "skills" into plugins. After this unification process, we will allow developers to bring outside AI plugins into Semantic Kernel _and_ deploy Semantic Kernel plugins so they can be consumed by other apps and services.
-
-The following tables describe the teams progress towards plugin unification. The 🔁 symbol means the feature is currently being planned for.
-
-### Bringing ChatGPT plugins to Semantic Kernel
-
-| Feature | Description | Link |  Status |
-|---|---|---|:----:|
-| Use OpenAPI files in Semantic Kernel | With the OpenAPI plugin, you can take an OpenAPI file from a ChatGPT plugin and bring it into Semantic Kernel |  [Blog post](https://devblogs.microsoft.com/semantic-kernel/how-to-use-plugins-with-semantic-kernel/) |  ✅  |
-| Import a ai-plugin.json manifest in Semantic Kernel | This will make it even easier to bring in a ChatGPT plugin. By providing an ai-plugin.json file, we can pull in the relevant OpenAPI file and also provide the plugin description planner for more effective plan generation.  | _Coming soon_ | 🔁 |
-
-### Bringing Semantic Kernel plugins to ChatGPT
-
-| Feature | Description | Link |  Status |
-|---|---|---|:----:|
-| Deploy Semantic Kernel plugins for ChatGPT | Today, you can deploy your existing semantic and native functions to Azure. Once they've been deployed, you can manually craft the necessary OpenAPI specification and ai-plugin.json file so that your functions can be used by ChatGPT. | [Documentation](../deploy/deploy-to-azure.md) | ✅ |
-| Automatically generate OpenAPI spec and ai-plugin.json file | To make it easier to deploy your plugins to ChatGPT, we will help you automatically create the files that ChatGPT requires to use a plugin. You can then host these files yourself so you can provide them to ChatGPT. | _Coming soon_ | 🔁 |
-
 
 ## Take the next step
 Now that you understand the basics of plugins, you can now go deeper into the details of creating semantic and native functions for your plugin.
