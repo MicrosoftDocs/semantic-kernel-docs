@@ -19,12 +19,12 @@ IKernel kernel = new KernelBuilder()
     .Build();
 
 // Add the math plugin using the plugin manifest URL
-const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
+const string pluginManifestUrl = "https://mathplugin.azurewebsites.net/.well-known/ai-plugin.json";
 var mathPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("MathPlugin", new Uri(pluginManifestUrl));
 
 // Create a stepwise planner and invoke it
 var planner = new StepwisePlanner(kernel);
-var question = "I have $2130.23. How much would I have after it grew by 24% and after I spent $5 on a latte?";
+var question = "I have $2130.23. How much money would I have if it grew by 5.25% and after I bought a $10 latte from Starbucks?";
 var plan = planner.CreatePlan(question);
 var result = await plan.InvokeAsync(kernel.CreateNewContext());
 

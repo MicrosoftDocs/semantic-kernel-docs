@@ -33,13 +33,13 @@ To include a variable value in your text, use the `{{$variableName}}` syntax.
 For example, if you have a variable called `name` that holds the user's name,
 you can write:
 
-    Hello {{$name}}, welcome to Semantic Kernel!
+```Hello {{$name}}, welcome to Semantic Kernel!```
 
 This will produce a greeting with the user's name.
 
 Spaces are ignored, so if you find it more readable, you can also write:
 
-    Hello {{ $name }}, welcome to Semantic Kernel!
+```Hello {{ $name }}, welcome to Semantic Kernel!```
 
 ## Function calls
 
@@ -48,14 +48,14 @@ To call an external function and embed the result in your text, use the
 For example, if you have a function called `weather.getForecast` that returns
 the weather forecast for a given location, you can write:
 
-    The weather today is {{weather.getForecast}}.
+```The weather today is {{weather.getForecast}}.```
 
 This will produce a sentence with the weather forecast for the default location
 stored in the `input` variable.
 The `input` variable is set automatically by the kernel when invoking a function.
 For instance, the code above is equivalent to:
 
-    The weather today is {{weather.getForecast $input}}.
+```The weather today is {{weather.getForecast $input}}.```
 
 ## Function parameters
 
@@ -65,11 +65,15 @@ To call an external function and pass a parameter to it, use the
 For example, if you want to pass a different input to the weather forecast
 function, you can write:
 
-    The weather today in {{$city}} is {{weather.getForecast $city}}.
-    The weather today in Schio is {{weather.getForecast "Schio"}}.
+
+```
+The weather today in {{$city}} is {{weather.getForecast $city}}.
+The weather today in Schio is {{weather.getForecast "Schio"}}.
+```
 
 This will produce two sentences with the weather forecast for two different
-locations, using the city stored in the _`city`_ **variable** and the _"Schio"_
+locations, using the city stored in the `city` **variable** and the _"Schio"_
+
 location **value** hardcoded in the prompt template.
 
 ## Design Principles
@@ -141,7 +145,7 @@ async Task<string> GenResponseToEmailAsync(
 }
 ```
 
-# Notes about special chars
+## Notes about special chars
 
 Semantic function templates are text files, so there is no need to escape special chars
 like new lines and tabs. However, there are two cases that require a special syntax:
@@ -160,11 +164,12 @@ enclosed in quotes, like `{{ "{{" }}` and `{{ "}}" }}`
 
 For example:
 
-    {{ "{{" }} and {{ "}}" }} are special SK sequences.
+
+```{{ "{{" }} and {{ "}}" }} are special SK sequences.```
 
 will render to:
 
-    {{ and }} are special SK sequences.
+```{{ and }} are special SK sequences.```
 
 ## Values that include quotes, and escaping
 
@@ -176,8 +181,11 @@ when using a value that contains _double quotes_, wrap the value with _single qu
 
 For example:
 
-    ...text... {{ functionName "one 'quoted' word" }} ...text...
-    ...text... {{ functionName 'one "quoted" word' }} ...text...
+
+```
+...text... {{ functionName "one 'quoted' word" }} ...text...
+...text... {{ functionName 'one "quoted" word' }} ...text...
+```
 
 For those cases where the value contains both single and double quotes, you will
 need _escaping_, using the special **«`\`»** symbol.
@@ -185,31 +193,34 @@ need _escaping_, using the special **«`\`»** symbol.
 When using double quotes around a value, use **«`\"`»** to include a double quote
 symbol inside the value:
 
-    ... {{ "quotes' \"escaping\" example" }} ...
+
+```... {{ "quotes' \"escaping\" example" }} ...```
 
 and similarly, when using single quotes, use **«`\'`»** to include a single quote
 inside the value:
 
-    ... {{ 'quotes\' "escaping" example' }} ...
+
+```... {{ 'quotes\' "escaping" example' }} ...```
 
 Both are rendered to:
 
-    ... quotes' "escaping" example ...
+```... quotes' "escaping" example ...```
 
 Note that for consistency, the sequences **«`\'`»** and **«`\"`»** do always render
 to **«`'`»** and **«`"`»**, even when escaping might not be required.
 
 For instance:
 
-    ... {{ 'no need to \"escape" ' }} ...
+
+```... {{ 'no need to \"escape" ' }} ...```
 
 is equivalent to:
 
-    ... {{ 'no need to "escape" ' }} ...
+```... {{ 'no need to "escape" ' }} ...```
 
 and both render to:
 
-    ... no need to "escape"  ...
+```... no need to "escape"  ...```
 
 In case you may need to render a backslash in front of a quote, since **«`\`»**
 is a special char, you will need to escape it too, and use the special sequences
@@ -217,26 +228,28 @@ is a special char, you will need to escape it too, and use the special sequences
 
 For example:
 
-    {{ 'two special chars \\\' here' }}
+
+```{{ 'two special chars \\\' here' }}```
 
 is rendered to:
 
-    two special chars \' here
+```two special chars \' here```
 
 Similarly to single and double quotes, the symbol **«`\`»** doesn't always need
 to be escaped. However, for consistency, it can be escaped even when not required.
 
 For instance:
 
-    ... {{ 'c:\\documents\\ai' }} ...
+
+```... {{ 'c:\\documents\\ai' }} ...```
 
 is equivalent to:
 
-    ... {{ 'c:\documents\ai' }} ...
+```... {{ 'c:\documents\ai' }} ...```
 
 and both are rendered to:
 
-    ... c:\documents\ai ...
+```... c:\documents\ai ...```
 
 Lastly, backslashes have a special meaning only when used in front of
 **«`'`»**, **«`"`»** and **«`\`»**.
@@ -244,8 +257,9 @@ Lastly, backslashes have a special meaning only when used in front of
 In all other cases, the backslash character has no impact and is rendered as is.
 For example:
 
-    {{ "nothing special about these sequences: \0 \n \t \r \foo" }}
+
+```{{ "nothing special about these sequences: \0 \n \t \r \foo" }}```
 
 is rendered to:
 
-    nothing special about these sequences: \0 \n \t \r \foo
+```nothing special about these sequences: \0 \n \t \r \foo```
