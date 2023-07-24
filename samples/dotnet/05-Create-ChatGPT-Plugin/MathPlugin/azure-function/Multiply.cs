@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -9,6 +10,13 @@ namespace Plugins.MathPlugin
 {
     public class Multiply
     {
+        private readonly ILogger _logger;
+
+        public Multiply(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<Multiply>();
+        }
+
         [OpenApiOperation(operationId: "Multiply", tags: new[] { "ExecuteFunction" }, Description = "Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage.")]
         [OpenApiParameter(name: "number1", Description = "The first number to multiply", Required = true, In = ParameterLocation.Query)]
         [OpenApiParameter(name: "number2", Description = "The second number to multiply", Required = true, In = ParameterLocation.Query)]
@@ -17,6 +25,11 @@ namespace Plugins.MathPlugin
         [Function("Multiply")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
         {
+            if (req is null)
+            {
+                throw new System.ArgumentNullException(nameof(req));
+            }
+
             bool result1 = double.TryParse(req.Query["number1"], out double number1);
             bool result2 = double.TryParse(req.Query["number2"], out double number2);
 
@@ -25,7 +38,9 @@ namespace Plugins.MathPlugin
                 HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
                 response.Headers.Add("Content-Type", "text/plain");
                 double product = number1 * number2;
-                response.WriteString(product.ToString());
+                response.WriteString(product.ToString(CultureInfo.CurrentCulture));
+
+                _logger.LogInformation($"Multiply function processed a request. Product: {product}");
 
                 return response;
             }
