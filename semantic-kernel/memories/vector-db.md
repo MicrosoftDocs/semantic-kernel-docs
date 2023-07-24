@@ -42,13 +42,15 @@ you can use a vector database to store the latest information about that topic a
 ## Available connectors to vector databases
 Today, we have several connectors to vector databases that you can use to store and retrieve information. These include:
 
-- [Azure Cognitive Search](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCognitiveSearch)
-- [Chroma](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/chroma) 
+- [Azure Cognitive Search](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCognitiveSearch) .net and [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cognitive_search)
+- [Chroma](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/chroma) .net and [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/chroma)
 - [COSMOS DB](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.CosmosDB)
+- [Milvus](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/milvus) in Python
 - [Redis](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Redis)
-- [Pinecone](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Pinecone)
-- [Postgres](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Postgres)
+- [Pinecone](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Pinecone) .net and [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/pinecone)
+- [Postgres](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Postgres) .net and [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/postgres)
 - [Qdrant](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Qdrant)
+- [Redis](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Redis)
 - [Sqlite](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Sqlite)
 - [Weaviate](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Weaviate) .net and [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/weaviate)
 
