@@ -201,6 +201,8 @@ Finally, we need to add the semantic function to the plugin. In this example, we
 
     ```
 
+    Once you've added the prompt, the code generator will automatically create an HTTP endpoint for the `GenerateValue` function. You can validate the function in the next section.
+
 ### Validate the HTTP endpoints
 At this point, you should have six HTTP endpoints in your Azure Function project. You can test them by following these steps:
 
