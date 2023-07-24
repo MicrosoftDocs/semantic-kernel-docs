@@ -33,7 +33,7 @@ To include a variable value in your text, use the `{{$variableName}}` syntax.
 For example, if you have a variable called `name` that holds the user's name,
 you can write:
 
-    Hello {{$name}}, welcome to Semantic Kernel!
+```Hello {{$name}}, welcome to Semantic Kernel!```
 
 This will produce a greeting with the user's name.
 
@@ -48,14 +48,14 @@ To call an external function and embed the result in your text, use the
 For example, if you have a function called `weather.getForecast` that returns
 the weather forecast for a given location, you can write:
 
-    The weather today is {{weather.getForecast}}.
+```The weather today is {{weather.getForecast}}.```
 
 This will produce a sentence with the weather forecast for the default location
 stored in the `input` variable.
 The `input` variable is set automatically by the kernel when invoking a function.
 For instance, the code above is equivalent to:
 
-    The weather today is {{weather.getForecast $input}}.
+```The weather today is {{weather.getForecast $input}}.```
 
 ## Function parameters
 
@@ -145,7 +145,7 @@ async Task<string> GenResponseToEmailAsync(
 }
 ```
 
-# Notes about special chars
+## Notes about special chars
 
 Semantic function templates are text files, so there is no need to escape special chars
 like new lines and tabs. However, there are two cases that require a special syntax:
