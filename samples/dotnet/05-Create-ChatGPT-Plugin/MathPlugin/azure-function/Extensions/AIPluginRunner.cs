@@ -23,7 +23,6 @@ public class AIPluginRunner : IAIPluginRunner
         this._logger = loggerFactory.CreateLogger<AIPluginRunner>();
     }
 
-
     /// <summary>
     /// Runs a semantic function using the operationID and returns back an HTTP response.
     /// </summary>
@@ -33,7 +32,6 @@ public class AIPluginRunner : IAIPluginRunner
     {
         try
         {
-
             ContextVariables contextVariables = LoadContextVariablesFromRequest(req);
 
             var appSettings = AppSettings.LoadSettings();
@@ -60,9 +58,10 @@ public class AIPluginRunner : IAIPluginRunner
             response.Headers.Add("Content-Type", "text/plain;charset=utf-8");
             await response.WriteStringAsync(result.Result).ConfigureAwait(false);
             return response;
-
         }
+        #pragma warning disable CA1031
         catch (System.Exception ex)
+        #pragma warning restore CA1031
         {
             HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
             await errorResponse.WriteStringAsync(ex.Message).ConfigureAwait(false);

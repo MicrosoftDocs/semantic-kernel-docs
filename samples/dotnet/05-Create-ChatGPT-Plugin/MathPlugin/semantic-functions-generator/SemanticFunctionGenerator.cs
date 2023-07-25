@@ -63,8 +63,8 @@ public class SemanticFunctionGenerator : ISourceGenerator
         foreach (var functionGroup in folderGroup)
         {
             // Get the "skprompt.txt" and "config.json" files for this function
-            AdditionalText? configFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionConfigFilename, StringComparison.InvariantCultureIgnoreCase));
-            AdditionalText? promptFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionPromptFilename, StringComparison.InvariantCultureIgnoreCase));
+            AdditionalText? configFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionConfigFilename, StringComparison.Ordinal));
+            AdditionalText? promptFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionPromptFilename, StringComparison.Ordinal));
             if (promptFile != default && configFile != default)
             {
                 functionsCode.AppendLine(GenerateFunctionSource(promptFile, configFile) ?? string.Empty);
@@ -81,6 +81,8 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using AIPlugins.AzureFunctions.Extensions;
+
+#pragma warning disable VSTHRD200
 
 namespace {rootNamespace};
 
@@ -139,7 +141,7 @@ public class {folderName}
         {
             foreach (var parameter in parameters)
             {
-                if (parameter.Name.Equals("input", StringComparison.InvariantCultureIgnoreCase))
+                if (parameter.Name.Equals("input", StringComparison.Ordinal))
                 {
                     // "input" is a special parameter that is handled differently. It must be added as
                     // the body attribute.

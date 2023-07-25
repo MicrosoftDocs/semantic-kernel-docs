@@ -3,10 +3,11 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-#pragma warning disable CS8618
-
 namespace AIPlugins.AzureFunctions.Generator.Models;
 
+#pragma warning disable CS8618
+#pragma warning disable CA1812
+#pragma warning disable CA1852
 internal class PromptConfig
 {
     [JsonProperty("schema")]
@@ -47,7 +48,6 @@ internal class PromptConfig
         [JsonProperty("parameters")]
         public List<ParameterConfig> Parameters { get; set; }
     }
-
     public class ParameterConfig
     {
         [JsonProperty("name")]

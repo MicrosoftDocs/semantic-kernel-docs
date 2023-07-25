@@ -141,7 +141,7 @@ Add the following code to your `OrchestratorPlugin` class.
 
 # [C#](#tab/Csharp)
 ```csharp
-[SKFunction("Extracts numbers from JSON")]
+[SKFunction, Description("Extracts numbers from JSON")]
 public SKContext ExtractNumbersFromJson(SKContext context)
 {
     JObject numbers = JObject.Parse(context["input"]);
@@ -194,7 +194,7 @@ Now that we have a function that can extracts numbers, we can update our `RouteR
 
 # [C#](#tab/Csharp)
 ```csharp
-[SKFunction("Routes the request to the appropriate function.")]
+[SKFunction, Description("Routes the request to the appropriate function.")]
 public async Task<string> RouteRequest(SKContext context)
 {
     // Save the original user request
@@ -362,7 +362,7 @@ You can now update the `RouteRequest` function to include the `CreateResponse` f
 
 # [C#](#tab/Csharp)
 ```csharp
-[SKFunction("Routes the request to the appropriate function.")]
+[SKFunction, Description("Routes the request to the appropriate function.")]
 public async Task<string> RouteRequest(SKContext context)
 {
     // Save the original user request

@@ -37,7 +37,7 @@ To start using the kernel, you must first create an instance of it.
 using Microsoft.SemanticKernel;
 
 // Set Simple kernel instance
-IKernel kernel = KernelBuilder.Create();
+IKernel kernel_1 = KernelBuilder.Create();
 ```
 
 # [Python](#tab/python)
@@ -106,20 +106,26 @@ The following code snippets show how to add a model to the kernel in C# and Pyth
 # [C#](#tab/Csharp)
 
 ```csharp
-IKernel kernel = KernelBuilder.Create();
-
-kernel.Config.AddAzureTextCompletionService(
-    "my-finetuned-Curie",                   // Azure OpenAI *Deployment ID*
+Kernel.Builder
+.WithAzureTextCompletionService(
+    "my-finetuned-Curie",                   // Azure OpenAI *Deployment Name*
     "https://contoso.openai.azure.com/",    // Azure OpenAI *Endpoint*
-    "...your Azure OpenAI Key...",          // Azure OpenAI *Key*
-    "Azure_curie"                           // alias used in the prompt templates' config.json
-);
-
-kernel.Config.AddOpenAITextCompletionService(
+    "...your Azure OpenAI Key..."           // Azure OpenAI *Key*
+)
+.WithOpenAITextCompletionService(
     "text-davinci-003",                     // OpenAI Model Name
     "...your OpenAI API Key...",            // OpenAI API key
-    "...your OpenAI Org ID...",             // *optional* OpenAI Organization ID
-    "OpenAI_davinci"                        // alias used in the prompt templates' config.json
+    "...your OpenAI Org ID..."              // *optional* OpenAI Organization ID
+)
+.WithAzureChatCompletionService(
+    "gpt-.5-turbo",                   // Azure OpenAI *Deployment Name*
+    "https://contoso.openai.azure.com/",    // Azure OpenAI *Endpoint*
+    "...your Azure OpenAI Key..."           // Azure OpenAI *Key*
+)
+.WithOpenAIChatCompletionService(
+    "gpt-3.5-turbo",                        // OpenAI Model Name
+    "...your OpenAI API Key...",            // OpenAI API key
+    "...your OpenAI Org ID..."              // *optional* OpenAI Organization ID
 );
 ```
 

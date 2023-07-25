@@ -1,15 +1,25 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.SemanticKernel;
+
+using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder
+        .SetMinimumLevel(0)
+        .AddDebug();
+});
+var logger = loggerFactory.CreateLogger<Kernel>();
 
 var kernelSettings = KernelSettings.LoadSettings();
 IKernel kernel = new KernelBuilder()
     .WithCompletionService(kernelSettings)
+    .WithLogger(logger)
     .Build();
 
 var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
 
 // Import the OrchestratorPlugin and SummarizeSkill from the plugins directory.
 var orchestrationPlugin = kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
-var summarizationPlugin = kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizeSkill");
+var summarizationPlugin = kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizePlugin");
 
 // Create a new context and set the input, history, and options variables.
 var context = kernel.CreateNewContext();
