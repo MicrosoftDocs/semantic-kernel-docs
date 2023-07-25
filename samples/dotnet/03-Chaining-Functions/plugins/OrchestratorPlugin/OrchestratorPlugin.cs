@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SkillDefinition;
@@ -14,7 +15,7 @@ public class OrchestratorPlugin
         _kernel = kernel;
     }
 
-    [SKFunction("Routes the request to the appropriate function.")]
+    [SKFunction, Description("Routes the request to the appropriate function.")]
     public async Task<string> RouteRequest(SKContext context)
     {
         // Save the original user request
@@ -59,7 +60,7 @@ public class OrchestratorPlugin
         return output["input"];
     }
 
-    [SKFunction("Extracts numbers from JSON")]
+    [SKFunction, Description("Extracts numbers from JSON")]
     public SKContext ExtractNumbersFromJson(SKContext context)
     {
         JObject numbers = JObject.Parse(context["input"]);
@@ -69,13 +70,11 @@ public class OrchestratorPlugin
         {
             if (number.Key == "number1")
             {
-                context["input"] = number.Value.ToString();
+                context["input"] = number.Value!.ToString();
                 continue;
             }
-            else
-            {
-                context[number.Key] = number.Value.ToString();
-            }
+
+            context[number.Key] = number.Value!.ToString();
         }
         return context;
     }

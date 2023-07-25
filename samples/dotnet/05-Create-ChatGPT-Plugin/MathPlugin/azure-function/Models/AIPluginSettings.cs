@@ -38,7 +38,6 @@ public class AIPluginSettings
     [JsonPropertyName("legal_info_url")]
     public string LegalInfoUrl { get; set; } = string.Empty;
 
-
     public class AuthModel
     {
         [JsonPropertyName("type")]

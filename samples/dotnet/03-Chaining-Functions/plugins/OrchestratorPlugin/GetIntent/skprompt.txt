@@ -1,4 +1,4 @@
-{{SummarizeSkill.Summarize $history}}
+{{SummarizePlugin.Summarize $history}}
 User: {{$input}}
 
 ---------------------------------------------

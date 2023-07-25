@@ -14,7 +14,7 @@ public class OrchestratorPlugin
         _kernel = kernel;
     }
 
-    [SKFunction("Routes the request to the appropriate function.")]
+    [SKFunction]
     public async Task<string> RouteRequest(SKContext context)
     {
         // Save the original user request

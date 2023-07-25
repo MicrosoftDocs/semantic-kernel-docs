@@ -2,18 +2,27 @@
 using Microsoft.SemanticKernel;
 using Plugins;
 
+using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder
+        .SetMinimumLevel(0)
+        .AddDebug();
+});
+var logger = loggerFactory.CreateLogger<Kernel>();
+
 var kernelSettings = KernelSettings.LoadSettings();
 IKernel kernel = new KernelBuilder()
     .WithCompletionService(kernelSettings)
+    .WithLogger(logger)
     .Build();
 
 var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
 
 // Import the semantic functions
 kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
-kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizeSkill");
+kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "SummarizePlugin");
 
-// Import the native functions 
+// Import the native functions
 var mathPlugin = kernel.ImportSkill(new MathPlugin(), "MathPlugin");
 var orchestratorPlugin = kernel.ImportSkill(new OrchestratorPlugin(kernel), "OrchestratorPlugin");
 
