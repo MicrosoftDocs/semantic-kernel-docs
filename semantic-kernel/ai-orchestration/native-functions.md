@@ -110,7 +110,7 @@ namespace Plugins;
 
 public class MathPlugin
 {
-    [SKFunction("Takes the square root of a number")]
+    [SKFunction, Description("Takes the square root of a number")]
     public string Sqrt(string number)
     {
         return Math.Sqrt(Convert.ToDouble(number)).ToString();
@@ -152,9 +152,9 @@ Add the following code to your `MathPlugin` class to create a function that adds
 # [C#](#tab/Csharp)
 
 ```csharp
-[SKFunction("Adds two numbers together")]
-[SKFunctionContextParameter(Name = "input", Description = "The first number to add")]
-[SKFunctionContextParameter(Name = "number2", Description = "The second number to add")]
+[SKFunction, Description("Adds two numbers together")]
+[SKParameter("input", "The first number to add")]
+[SKParameter("number2", "The second number to add")]
 public string Add(SKContext context)
 {
     return (
@@ -269,7 +269,7 @@ public class OrchestratorPlugin
         _kernel = kernel;
     }
 
-    [SKFunction("Routes the request to the appropriate function.")]
+    [SKFunction, Description("Routes the request to the appropriate function.")]
     public async Task<string> RouteRequest(SKContext context)
     {
         // Save the original user request
