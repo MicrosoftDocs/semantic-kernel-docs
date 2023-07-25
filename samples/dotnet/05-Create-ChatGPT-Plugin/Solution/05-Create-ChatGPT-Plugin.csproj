@@ -15,14 +15,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <!-- <PackageReference Include="Microsoft.SemanticKernel" Version="0.17.230704.3-preview" />
-    <PackageReference Include="Microsoft.SemanticKernel.Skills.OpenAPI" Version="0.17.230704.3-preview" />
-    <PackageReference Include="Microsoft.SemanticKernel.Planning.StepwisePlanner" Version="0.17.230704.3-preview" /> -->
-
-    <ProjectReference Include="../../../../../../semantic-kernel/dotnet/src/Extensions/Planning.StepwisePlanner/Planning.StepwisePlanner.csproj" />
-    <ProjectReference Include="../../../../../../semantic-kernel/dotnet/src/SemanticKernel/SemanticKernel.csproj" />
-    <ProjectReference Include="../../../../../../semantic-kernel/dotnet/src/Connectors/Connectors.AI.OpenAI/Connectors.AI.OpenAI.csproj" />
-    <ProjectReference Include="../../../../../../semantic-kernel/dotnet/src/Skills/Skills.OpenAPI/Skills.OpenAPI.csproj" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="0.18.230725.3-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Skills.OpenAPI" Version="0.18.230725.3-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Planning.StepwisePlanner" Version="0.18.230725.3-preview" />
   </ItemGroup>
 
   

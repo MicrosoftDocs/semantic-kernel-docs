@@ -1,5 +1,5 @@
 ---
-title: Using AI plugins in Semantic Kernel and beyond
+title: Understanding AI plugins in Semantic Kernel and beyond
 description: Learn how to use AI plugins and how they relate to AI plugins in ChatGPT, Bing, and Microsoft 365.
 author: matthewbolanos
 ms.topic: conceptual
@@ -8,7 +8,7 @@ ms.date: 07/12/2023
 ms.service: mssearch
 ---
 
-# Using AI plugins in Semantic Kernel
+# Understanding AI plugins in Semantic Kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
@@ -147,7 +147,7 @@ Instead of providing a separate configuration file with semantic descriptions, p
 The following code is an excerpt from the `DocumentSkill` plugin, which can be found in the [document plugin](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Document) folder in the GitHub repository. It demonstrates how you can use the `SKFunction` and `SKFunctionInput` attributes to describe the function's input and output to planner.
 
 ```csharp
-[SKFunction("Read all text from a document")]
+[SKFunction, Description("Read all text from a document")]
 [SKFunctionInput(Description = "Path to the file to read")]
 public async Task<string> ReadTextAsync(string filePath, SKContext context)
 {
