@@ -81,10 +81,6 @@ Given that new breakthroughs in LLM AIs are landing on a daily basis, you should
 > [!div class="nextstepaction"]
 > [Open the Semantic Kernel repo](https://aka.ms/skrepo)
 
-### Watch the latest Semantic Kernel roadmap video
-
-> [!VIDEO b60199d8-1fa4-41b3-a9e0-68a068681b2a]
-
 ### Contribute to Semantic Kernel
 We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the [GitHub repository](https://aka.ms/skrepo). Bug reports and fixes are welcome!
 
