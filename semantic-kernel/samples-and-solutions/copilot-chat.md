@@ -30,7 +30,7 @@ The chat prompt and response will evolve as the conversation between the user an
 > * [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
 ## Running the app
-The [Chat Copilot reference app](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) is located in the Semantic Kernel GitHub repository.
+The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/main/README.md) is located in the Semantic Kernel GitHub repository.
 
 1) Clone [Semantic Kernel](https://github.com/microsoft/semantic-kernel) locally.
 2) To enable authentication, [register an Azure Application](/azure/active-directory/develop/quickstart-register-app). We recommend using the following properties:
@@ -43,10 +43,10 @@ The [Chat Copilot reference app](https://github.com/microsoft/semantic-kernel/bl
 3) Install requirements
 
     # [Windows](#tab/Windows)
-    Open a PowerShell terminal as an administrator and navigate to the _/samples/apps/copilot-chat-app/scripts_ directory in the Semantic Kernel project.
+    Open a PowerShell terminal as an administrator and navigate to the _/scripts_ directory in the Semantic Kernel project.
 
     ```powershell
-    cd /samples/apps/copilot-chat-app/scripts
+    cd ./scripts
     ```
     
     Next, run the following command to install the required dependencies:
@@ -55,9 +55,9 @@ The [Chat Copilot reference app](https://github.com/microsoft/semantic-kernel/bl
     ```
 
     # [Ubuntu/Debian Linux](#tab/Linux)
-    Open a bash terminal as an administrator and navigate to the _/samples/apps/copilot-chat-app/scripts_ directory in the Semantic Kernel project:
+    Open a bash terminal as an administrator and navigate to the _/scripts_ directory in the Semantic Kernel project:
     ```bash
-    cd samples/apps/copilot-chat-app/scripts
+    cd ./scripts
 
     # Ensure the install scripts are executable
     chmod +x Install-Requirements-UbuntuDebian.sh
@@ -71,9 +71,9 @@ The [Chat Copilot reference app](https://github.com/microsoft/semantic-kernel/bl
 
     For all other operating systems, ensure NET 6.0 SDK (or newer), Node.js 14 (or newer), and Yarn classic ([v1.22.19](https://classic.yarnpkg.com/)) package manager are installed before proceeding.
 
-    Afterwards open a terminal and navigate to the _/samples/apps/copilot-chat-app/scripts_ directory in the Semantic Kernel project.
+    Afterwards open a terminal and navigate to the _/scripts_ directory in the Semantic Kernel project.
     ```bash
-    cd samples/apps/copilot-chat-app/scripts
+    cd ./scripts
     ```
     ---
 
