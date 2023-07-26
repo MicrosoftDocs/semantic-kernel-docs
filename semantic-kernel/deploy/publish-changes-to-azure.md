@@ -22,13 +22,13 @@ This guide provides steps to make changes to the skills of a deployed instance o
 There are two main ways to deploy changes to the Semantic Kernel web app service. If you have been working locally and are ready to deploy your changes to Azure as a new web app service, you can follow the steps in the first section. If you have already deployed your Semantic Kernel web app service and want to make changes to add Semantic skills, you can follow the steps in the second section.
 
 ### 1.Deploying your Chat Copilot App to Azure as a web application
-After working locally, i.e. you cloned the code from the GitHub [repo](https://github.com/microsoft/semantic-kernel/blob/main/samples/apps/copilot-chat-app/README.md) and have made changes to the code for your needs, you can deploy your changes to Azure as a web application.
+After working locally, i.e. you cloned the code from the GitHub [repo](https://github.com/microsoft/chat-copilot/blob/main/README.md) and have made changes to the code for your needs, you can deploy your changes to Azure as a web application.
 
 You can use the standard methods available to [deploy an ASP.net web app](/azure/app-service/quickstart-dotnetcore?pivots=development-environment-vs&tabs=net70) in order to do so.
 
 Alternatively, you can follow the steps below to manually build and upload your customized version of the Semantic Kernel service to Azure.
 
-First, at the command line, go to the '../semantic-kernel/samples/apps/copilot-chat-app/webapi' directory and enter the following command:
+First, at the command line, go to the '/webapi' directory and enter the following command:
 
 ```powershell
 dotnet publish CopilotChatApi.csproj --configuration Release --arch x64 --os win
@@ -37,7 +37,7 @@ dotnet publish CopilotChatApi.csproj --configuration Release --arch x64 --os win
 This will create a directory which contains all the files needed for a deployment:
 <Br>
 ```cmd
-../semantic-kernel/samples/apps/copilot-chat-app/webapi/bin/Release/net6.0/win-x64/publish'
+../webapi/bin/Release/net6.0/win-x64/publish'
 ```
 </br>
 
