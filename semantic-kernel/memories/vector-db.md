@@ -32,7 +32,7 @@ One use case for storing information in a vector database is to enable large lan
 an [AI plugin](../create-plugins/index.md). 
 
 However, large language models often face challenges such as generating inaccurate or irrelevant information; lacking factual consistency or common sense; repeating or contradicting themselves; being biased or offensive. To overcome these challenges,
-you can use a vector database to store information about different topics,keywords,facts,opinions,sources, related to your desired domain or genre.
+you can use a vector database to store information about different topics, keywords, facts, opinions, and/or sources related to your desired domain or genre.
 Then, you can use a large language model and pass information from the vector database with your AI plugin to generate more informative and engaging content that matches your intent and style.
 
 For example,
