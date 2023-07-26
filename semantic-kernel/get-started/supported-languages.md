@@ -84,6 +84,8 @@ Today, not all features are available in all languages. The following tables sho
 |--------------------------|:----:|:------:|:----:|-------|
 | Azure Cognitive Search   | ✅ | ✅ | ✅ | |
 | Chroma                   | ✅ | ✅ | ❌ | |
+| CosmosDB                 | ✅ | ❌ | ❌ | |
+| DuckDB                   | ✅ | ❌ | ❌ | |
 | Milvus                   | 🔄 | ✅ | ❌ | |
 | Pinecone                 | ✅ | ✅ | ❌ | |
 | Postgres                 | ✅ | ✅ | ❌ | Vector optimization requires [pgvector](https://github.com/pgvector/pgvector) |
