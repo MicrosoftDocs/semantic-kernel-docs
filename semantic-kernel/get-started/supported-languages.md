@@ -19,7 +19,7 @@ Semantic Kernel plans on providing support to the following languages:
 > [!div class="checklist"]
 > * C#
 > * Python
-> * Java ([coming soon](https://github.com/microsoft/semantic-kernel/tree/experimental-java))
+> * Java ([available here](https://github.com/microsoft/semantic-kernel/tree/experimental-java))
 
 While the overall architecture of the kernel is consistent across all languages, we made sure the SDK for each language follows common paradigms and styles in each language to make it feel native and easy to use.
 
@@ -34,7 +34,7 @@ Today, not all features are available in all languages. The following tables sho
 |-----------------------------------|:----:|:------:|:----:|-------|
 | TextGeneration                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
 | TextEmbeddings                    | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
-| ChatCompletion                    | ✅ | ✅ | ❌ | Example: GPT4, Chat-GPT |
+| ChatCompletion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
 | Image Generation                  | ✅ | ❌ | ❌ | Example: Dall-E |
 
 ### AI service endpoints
@@ -60,11 +60,11 @@ Today, not all features are available in all languages. The following tables sho
 | Plugins                           |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
 | TextMemorySkill                   | ✅ | ✅ | 🔄 | |
-| ConversationSummarySkill          | ✅ | ✅ | ❌ | |
+| ConversationSummarySkill          | ✅ | ✅ | ✅ | |
 | FileIOSkill                       | ✅ | ✅ | ✅ | |
 | HttpSkill                         | ✅ | ✅ | ✅ | |
 | MathSkill                         | ✅ | ✅ | ✅ | |
-| TextSkill                         | ✅ | ✅ | 🔄 | |
+| TextSkill                         | ✅ | ✅ | ✅ | |
 | TimeSkill                         | ✅ | ✅ | ✅ | |
 | WaitSkill                         | ✅ | ✅ | ✅ | |
 
@@ -72,9 +72,9 @@ Today, not all features are available in all languages. The following tables sho
 
 | Planners                          |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| Plan Object Model                 | ✅ | ✅ | ❌ | |
-| BasicPlanner                      | ❌ | ✅ | ❌ | | 
-| ActionPlanner                     | ✅ | 🔄 | 🔄 | In development| 
+| Plan Object Model                 | ✅ | ✅ | 🔄 | |
+| BasicPlanner                      | ❌ | ✅ | ❌ | |
+| ActionPlanner                     | ✅ | 🔄 | 🔄 | In development|
 | SequentialPlanner                 | ✅ | 🔄 | 🔄 | In development|
 | StepwisePlanner                   | ✅ | ❌ | ❌ | | |
 
@@ -92,7 +92,7 @@ Today, not all features are available in all languages. The following tables sho
 | Milvus                   | 🔄 | 🔄 | ❌ | |
 
 ### Plugins
-| Plugins                        |  C#  | Python | Java | Notes |
+| Plugins                           |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
 | MsGraph                           | ✅ | ❌ | ❌ | Contains plugins for OneDrive, Outlook, ToDos, and Organization Hierarchies |
 | Document and data loading plugins (i.e. pdf, csv, docx, pptx)  | ✅ | ❌ | ❌ | Currently only supports Word documents |
