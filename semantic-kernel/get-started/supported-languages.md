@@ -82,14 +82,15 @@ Today, not all features are available in all languages. The following tables sho
 
 | Memory Connectors        |  C#  | Python | Java | Notes |
 |--------------------------|:----:|:------:|:----:|-------|
-| Azure Cognitive Search   | ✅ | ✅ | ❌ | |
+| Azure Cognitive Search   | ✅ | ✅ | ✅ | |
 | Chroma                   | ✅ | ✅ | ❌ | |
+| Milvus                   | 🔄 | ✅ | ❌ | |
 | Pinecone                 | ✅ | ✅ | ❌ | |
-| Weaviate                 | ✅ | ✅ | ❌ | Currently supported on Python 3.9+, 3.8 coming soon |
-| Qdrant                   | ✅ | 🔄 | ❌ | In feature branch for review | 
 | Postgres                 | ✅ | ✅ | ❌ | Vector optimization requires [pgvector](https://github.com/pgvector/pgvector) |
-| Sqlite                   | ✅ | ❌ | ❌ | Vector optimization requires [sqlite-vss](https://github.com/asg017/sqlite-vss) |
-| Milvus                   | 🔄 | 🔄 | ❌ | |
+| Qdrant                   | ✅ | 🔄 | ❌ | In feature branch for review |
+| Redis                    | ✅ | 🔄 | ❌ | Vector optimization requires [RediSearch](https://redis.io/docs/stack/search) |
+| Sqlite                   | ✅ | ❌ | 🔄 | Vector optimization requires [sqlite-vss](https://github.com/asg017/sqlite-vss) |
+| Weaviate                 | ✅ | ✅ | ❌ | Currently supported on Python 3.9+, 3.8 coming soon |
 
 ### Plugins
 | Plugins                           |  C#  | Python | Java | Notes |
