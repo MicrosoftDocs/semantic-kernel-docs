@@ -19,11 +19,10 @@ To learn more about using this starter, see the Semantic Kernel documentation th
 
 To configure the starter, you need to provide the following information:
 
-- Define the properties of the plugin in the [appsettings.json](./config/appsettings.json) file.
-- Enter the API key for your AI endpoint using [.NET Secret Manager](#using-net-secret-manager)
+- Define the properties of the plugin in the [appsettings.json](./azure-function/appsettings.json) file.
+- Enter the API key for your AI endpoint in the [local.settings.json](./azure-function/local.settings.json) file.
 
 For Debugging the console application alone, we suggest using .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) to avoid the risk of leaking secrets into the repository, branches and pull requests.
-
 
 ### Using appsettings.json
 
@@ -39,21 +38,11 @@ Configure an Azure OpenAI endpoint
 1. Edit the `kernel` object to add your Azure OpenAI endpoint configuration
 1. Edit the `aiPlugin` object to define the properties that get exposed in the ai-plugin.json file
 
-### Using .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
+### Using local.settings.json
 
-Configure an OpenAI endpoint
+1. Copy [local.settings.json.example](./azure-function/local.settings.json.example) to `./azure-function/local.settings.json`
+1. Edit the `Values` object to add your OpenAI endpoint configuration in the `apiKey` property
 
-```powershell
-cd azure-function
-dotnet user-secrets set "apiKey" "... your OpenAI key ..."
-```
-
-Configure an Azure OpenAI endpoint
-
-```powershell
-cd azure-function
-dotnet user-secrets set "apiKey" "... your Azure OpenAI key ..."
-```
 
 ## Running the starter
 
@@ -64,5 +53,6 @@ To build and run the Azure Functions application from a terminal use the followi
 ```powershell
 cd azure-function
 dotnet build
-func start --csharp
+cd bin/Debug/net6.0
+func host start   
 ```
