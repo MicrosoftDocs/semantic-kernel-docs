@@ -79,5 +79,5 @@ productDirectory:
       links:
         - url: https://aka.ms/sk/discord
           text: Join the community on Discord
-        - url: https://aka.ms/sk/repo
+        - url: https://github.com/microsoft/semantic-kernel
           text: Visit the GitHub repo

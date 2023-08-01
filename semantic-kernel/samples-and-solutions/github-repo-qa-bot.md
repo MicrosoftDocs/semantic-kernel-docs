@@ -29,7 +29,7 @@ The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those f
 > * [Yarn](https://yarnpkg.com/getting-started/install) - used for installing the app's dependencies
 
 ## Running the app
-The [GitHub Repo Q&A Bot sample app](https://aka.ms/sk/repo/samples/github-repo-qa-bot) is located in the Semantic Kernel GitHub repository.
+The [GitHub Repo Q&A Bot sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/apps/github-qna-webapp-react) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/get-started) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Start the [local API service](/semantic-kernel/samples/localapiservice).

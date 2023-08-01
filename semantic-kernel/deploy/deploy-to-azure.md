@@ -29,9 +29,9 @@ You can use one of the deployment options to deploy based on your use case and p
 
 | Use Case     | Deployment Option     |
 |--------------|-----------|
-| <u>Use existing: Azure OpenAI Resources</u><p>Use this option to use an existing Azure OpenAI instance and connect the Semantic Kernel web API to it.| [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-existing-azureopenai-portal)<br>[PowerShell File](https://aka.ms/sk-deploy-existing-azureopenai-powershell)<br>[Bash File](https://aka.ms/sk-deploy-existing-azureopenai-bash)
-|<u>Create new: Azure OpenAI Resources</u> <p>Use this option to deploy Semantic Kernel in a web app service and have it use a new instance of Azure OpenAI.<p>Note: access to new [Azure OpenAI](/azure/cognitive-services/openai/overview) resources is currently limited due to high demand. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-new-azureopenai-portal) <br> [PowerShell File ](https://aka.ms/sk-deploy-new-azureopenai-powershell) <br> [Bash File](https://aka.ms/sk-deploy-new-azureopenai-bash)
-|<u>Use existing: OpenAI Resources</u><p>Use this option to use your OpenAI account and connect the Semantic Kernel web API to it. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-openai-portal)<br>[PowerShell File](https://aka.ms/sk-deploy-openai-powershell)<br>[Bash File](https://aka.ms/sk-deploy-openai-bash) |
+| <u>Use existing: Azure OpenAI Resources</u><p>Use this option to use an existing Azure OpenAI instance and connect the Semantic Kernel web API to it.| [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-existing-azureopenai-portal)<br>[PowerShell File](https://github.com/microsoft/chat-copilot/blob/main/deploy/deploy-azure.ps1)<br>[Bash File](https://github.com/microsoft/chat-copilot/blob/main/deploy/deploy-azure.sh)
+|<u>Create new: Azure OpenAI Resources</u> <p>Use this option to deploy Semantic Kernel in a web app service and have it use a new instance of Azure OpenAI.<p>Note: access to new [Azure OpenAI](/azure/cognitive-services/openai/overview) resources is currently limited due to high demand. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-new-azureopenai-portal) <br> [PowerShell File ](https://github.com/microsoft/chat-copilot/blob/main/deploy/deploy-azure.ps1) <br> [Bash File](https://github.com/microsoft/chat-copilot/blob/main/deploy/deploy-azure.sh)
+|<u>Use existing: OpenAI Resources</u><p>Use this option to use your OpenAI account and connect the Semantic Kernel web API to it. | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sk-deploy-openai-portal)<br>[PowerShell File](https://github.com/microsoft/chat-copilot/blob/main/deploy/deploy-azure.ps1)<br>[Bash File](https://github.com/microsoft/chat-copilot/blob/main/deploy/deploy-azure.sh) |
 
  
 ## Script Parameters
@@ -132,6 +132,6 @@ az group delete --name YOUR_RESOURCE_GROUP
 >Learn [how to make changes to your Semantic Kernel web app](./publish-changes-to-azure.md), such as adding new skills.
 
 >If you have not already done so, please star the GitHub repo and join the Semantic Kernel community! 
-[Star the Semantic Kernel repo](https://aka.ms/sk/repo)
+[Star the Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

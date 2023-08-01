@@ -15,8 +15,8 @@ ms.service: mssearch
 
 | Your preference | What's available |
 |---|---|
-| Read the docs | [This learning site](https://aka.ms/sk/learn) is the home of the latest information for developers |
-| Visit the repo | Our open-source [GitHub repository](https://aka.ms/sk/repo) is availble for perusal and suggestions |
+| Read the docs | [This learning site](/semantic-kernel/overview) is the home of the latest information for developers |
+| Visit the repo | Our open-source [GitHub repository](https://github.com/microsoft/semantic-kernel) is availble for perusal and suggestions |
 | Realtime chat | Visit our [Discord channel](https://aka.ms/sk/discord) to get supported quickly with our [CoC](/semantic-kernel/support/CodeofConduct) actively enforced | 
 | Realtime video | We will be hosting regular office hours that will be announced in our [Discord channel](https://aka.ms/sk/discord) |
 

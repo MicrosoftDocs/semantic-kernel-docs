@@ -37,5 +37,5 @@ The "Schillace Laws" were formulated after working with a variety of Large Langu
 If you're interested in LLM AI models and feel inspired by the Schillace Laws, be sure to visit the Semantic Kernel GitHub repository and add a star to show your support!
 
 > [!div class="nextstepaction"]
-> [Go to the SK GitHub repository](https://aka.ms/sk/repo)
+> [Go to the SK GitHub repository](https://github.com/microsoft/semantic-kernel)
 
