@@ -249,6 +249,11 @@
             "source_path": "semantic-kernel/get-started/index.md",
             "redirect_url": "/semantic-kernel/get-started/quick-start-guide/index?toc=/semantic-kernel/toc.json",
             "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/copilot-chat.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index?toc=/semantic-kernel/toc.json",
+            "redirect_document_id": true
         }
     ]
 }
