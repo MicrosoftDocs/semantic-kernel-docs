@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: reference
 ms.author: mabolan
 ms.date: 07/11/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Supported Semantic Kernel languages

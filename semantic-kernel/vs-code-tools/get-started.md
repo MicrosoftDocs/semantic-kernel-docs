@@ -5,7 +5,7 @@ author: smonroe
 ms.topic: howto
 ms.author: smonroe
 ms.date: 04/12/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # It's really this simple
 

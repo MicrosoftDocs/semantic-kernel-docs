@@ -5,7 +5,7 @@ author: nilesha
 ms.topic: Azure
 ms.author: nilesha
 ms.date: 05/19/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Deploy Chat Copilot to Azure as a web app service

@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: quickstart
 ms.author: mabolan
 ms.date: 05/04/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Running prompts from files 
