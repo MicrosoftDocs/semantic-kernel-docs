@@ -5,7 +5,7 @@ author: evchaki
 ms.topic: faq
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Semantic Kernel FAQ's
 

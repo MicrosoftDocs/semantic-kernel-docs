@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: Azure
 ms.author: mabolanos
 ms.date: 05/19/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Protect your Azure OpenAI API keys with Azure API Management

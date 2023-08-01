@@ -5,7 +5,7 @@ author: smonroe
 ms.topic: samples
 ms.author: smonroe
 ms.date: 04/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Chat Copilot
 

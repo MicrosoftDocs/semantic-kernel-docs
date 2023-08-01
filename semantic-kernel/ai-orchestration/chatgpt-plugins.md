@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: conceptual
 ms.author: mabolan
 ms.date: 07/8/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Create and run ChatGPT plugins using Semantic Kernel
