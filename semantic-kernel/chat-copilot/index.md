@@ -1,17 +1,17 @@
 ---
-title: Get started using Chat Copilot
-description: Learn how to use the Chat Copilot reference app to build your own integrated large language model chatbot.
+title: See Semantic Kernel working end-to-end with Chat Copilot
+description: Use the Chat Copilot reference app to learn how to build a custom conversational agent and to test your plugins..
 author: smonroe
 ms.topic: samples
 ms.author: smonroe
 ms.date: 04/07/2023
 ms.service: mssearch
 ---
-# Chat Copilot
+# See Semantic Kernel working end-to-end with Chat Copilot
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-The Chat Copilot reference app allows you to build your own integrated large language model chatbot.  This is an enriched intelligence app, with multiple dynamic components including command messages, user intent, and memories.  
+The Chat Copilot reference app provides an example of how to build a conversational experience using large language models.  This is an enriched intelligence app, with multiple dynamic components including command messages, user intent, and memories.  
 
 The chat prompt and response will evolve as the conversation between the user and the application proceeds.  This chat experience uses a chat plugin containing multiple functions that work together to construct the final prompt for each exchange.
 

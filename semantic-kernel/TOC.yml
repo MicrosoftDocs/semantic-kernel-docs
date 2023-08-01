@@ -8,8 +8,6 @@
   href: prompt-engineering/TOC.yml
 - name: Giving your AI memories
   href: memories/TOC.yml
-- name: Deploying Semantic Kernel
-  href: deploy/TOC.yml
 - name: Chat Copilot
   href: chat-copilot/TOC.yml
 - name: Running sample apps

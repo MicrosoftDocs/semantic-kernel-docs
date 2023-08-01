@@ -252,7 +252,17 @@
         },
         {
             "source_path": "semantic-kernel/samples-and-solutions/copilot-chat.md",
-            "redirect_url": "/semantic-kernel/chat-copilot/index?toc=/semantic-kernel/toc.json",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/deploy/deploy-to-azure.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/deploy-to-azure",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/deploy/publish-changes-to-azure.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/publish-changes-to-azure",
             "redirect_document_id": true
         }
     ]

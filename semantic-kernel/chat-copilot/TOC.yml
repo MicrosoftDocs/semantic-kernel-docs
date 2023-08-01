@@ -1,0 +1,10 @@
+- name: Overview
+  href: index.md
+- name: Customizing Chat Copilot
+  href: customizing-chat-copilot.md
+- name: Test plugins with Chat Copilot
+  href: testing-plugins-with-chat-copilot.md
+- name: Deploy to Azure
+  href: deploy-to-azure.md
+- name: Publish changes to Azure
+  href: publish-changes-to-azure.md
