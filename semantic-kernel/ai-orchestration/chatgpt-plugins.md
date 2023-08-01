@@ -286,7 +286,7 @@ The last step is to serve up the plugin manifest file. Based on the OpenAI speci
 
 The starter already has an endpoint for this manifest file. To customize the output, follow these steps:
 
-1. Open the _appsettings.cs_ file.
+1. Open the _appsettings.json_ file.
 2. Update the values in the `aiPlugin` object
     ```json
     "aiPlugin": {
