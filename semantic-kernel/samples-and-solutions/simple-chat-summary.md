@@ -5,7 +5,7 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Simple chat summary sample app
 

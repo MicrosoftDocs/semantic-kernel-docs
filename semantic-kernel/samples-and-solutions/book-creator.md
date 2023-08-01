@@ -5,7 +5,7 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Book creator sample app
 

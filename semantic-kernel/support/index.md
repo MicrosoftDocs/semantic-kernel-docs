@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: samples
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: mssearch 
+ms.service: semantic-kernel 
 ---
 # Support for Semantic Kernel
 

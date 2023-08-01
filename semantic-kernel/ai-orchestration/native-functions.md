@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: conceptual
 ms.author: mabolan
 ms.date: 07/12/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Adding native functions to the kernel

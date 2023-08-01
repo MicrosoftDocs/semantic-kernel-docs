@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: advanced
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Schillace Laws of Semantic AI
 [!INCLUDE [pat_large.md](../includes/pat_small.md)]

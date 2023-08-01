@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: quickstart
 ms.author: mabolan
 ms.date: 07/11/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Start learning how to use Semantic Kernel
 

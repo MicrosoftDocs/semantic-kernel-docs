@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: samples
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ms.custom: build-2023, build-2023-dataai
 ---
 # Overview of sample apps 

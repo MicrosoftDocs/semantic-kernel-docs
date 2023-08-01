@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: contributor-guide
 ms.author: mabolan
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Contributing to Semantic Kernel

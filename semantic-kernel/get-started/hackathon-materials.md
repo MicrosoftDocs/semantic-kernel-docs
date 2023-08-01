@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: sample
 ms.author: mabolan
 ms.date: 07/11/2023
-ms.service: mssearch 
+ms.service: semantic-kernel 
 ---
 # Hackathon materials for Semantic Kernel
 

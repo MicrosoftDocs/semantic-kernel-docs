@@ -5,7 +5,7 @@ author: johnmaeda
 ms.topic: codeofconduct
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Contributor Covenant Code of Conduct

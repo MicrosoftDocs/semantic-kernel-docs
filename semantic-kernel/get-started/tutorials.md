@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: tutorial
 ms.author: mabolan
 ms.date: 07/11/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Additional learning for Semantic Kernel
