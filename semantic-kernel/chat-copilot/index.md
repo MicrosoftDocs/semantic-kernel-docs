@@ -155,4 +155,4 @@ With the Chat Copilot reference app running, you can start interacting with the 
 If you've tried all the apps and are excited to see more, please star the GitHub repo and join the Semantic Kernel community!
 
 > [!div class="nextstepaction"]
-> [Star the Semantic Kernel repo](https://aka.ms/sk/repo)
+> [Star the Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)

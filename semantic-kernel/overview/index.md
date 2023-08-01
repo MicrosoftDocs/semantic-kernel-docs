@@ -72,17 +72,17 @@ For example, with Semantic Kernel, you could create a pipeline that helps a user
 | **3** | Response | Once the kernel is done, you can send the response back to the user to let them know the process is complete. |
 
 ## Semantic Kernel is open-source
-To make sure all developers can take advantage of our learnings building Copilots, we have released Semantic Kernel as an [open-source project](https://aka.ms/skrepo) on GitHub. Today, we provide the SDK in .NET and Python flavors (Typescript and Java are coming soon). For a full list of what is supported in each language, see [supported languages](../get-started/supported-languages.md).
+To make sure all developers can take advantage of our learnings building Copilots, we have released Semantic Kernel as an [open-source project](https://github.com/microsoft/semantic-kernel) on GitHub. Today, we provide the SDK in .NET and Python flavors (Typescript and Java are coming soon). For a full list of what is supported in each language, see [supported languages](../get-started/supported-languages.md).
 
 :::image type="content" source="../media/github.png" alt-text="GitHub repo of Semantic Kernel":::
 
 Given that new breakthroughs in LLM AIs are landing on a daily basis, you should expect this SDK evolve. We're excited to see what you build with Semantic Kernel and we look forward to your feedback and contributions so we can build the best practices together in the SDK.
 
 > [!div class="nextstepaction"]
-> [Open the Semantic Kernel repo](https://aka.ms/skrepo)
+> [Open the Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
 
 ### Contribute to Semantic Kernel
-We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the [GitHub repository](https://aka.ms/skrepo). Bug reports and fixes are welcome!
+We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the [GitHub repository](https://github.com/microsoft/semantic-kernel). Bug reports and fixes are welcome!
 
 For new features, components, or extensions, please [open an issue](../get-started/contributing.md#reporting-issues) and discuss with us before sending a PR. This will help avoid rejections since it will allow us to discuss the impact to the larger ecosystem.
 
