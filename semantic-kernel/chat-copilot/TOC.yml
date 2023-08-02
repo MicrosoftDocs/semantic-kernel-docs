@@ -1,5 +1,7 @@
 - name: About Chat Copilot
   href: index.md
+- name: Running Chat Copilot locally
+  href: getting-started.md
 - name: Customizing Chat Copilot
   href: customizing-chat-copilot.md
 - name: Test plugins with Chat Copilot
