@@ -1,24 +1,21 @@
 ---
-title: Get started using Chat Copilot
-description: Learn how to use the Chat Copilot reference app to build your own integrated large language model chatbot.
-author: smonroe
+title: Get started using Chat Copilot locally
+description: Run Chat Copilot locally to see how it works.
+author: matthewbolanos
 ms.topic: samples
-ms.author: smonroe
+ms.author: mabolan
 ms.date: 04/07/2023
 ms.service: semantic-kernel
 ---
-# Chat Copilot
+# Getting started with Chat Copilot
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-The Chat Copilot reference app allows you to build your own integrated large language model chatbot.  This is an enriched intelligence app, with multiple dynamic components including command messages, user intent, and memories.  
+Chat Copilot consists of two components:
+- A [React web app](https://github.com/microsoft/chat-copilot/tree/main/webapp) that provides a user interface for interacting with the Semantic Kernel.
+- And a [.NET web service](https://github.com/microsoft/chat-copilot/tree/main/webapi) that provides an API for the React web app to interact with the Semantic Kernel.
 
-The chat prompt and response will evolve as the conversation between the user and the application proceeds.  This chat experience uses a chat plugin containing multiple functions that work together to construct the final prompt for each exchange.
-
-
-> [!IMPORTANT]
-> Each function will call OpenAI which will use tokens that you will be billed for. 
-
+In this article, we'll walk through the steps you need to take to run these two components locally on your machine.
 
 ## Requirements to run this app
 
@@ -40,7 +37,7 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     > [!Note]
     > Make a note of the Application (client) ID from the Azure Portal; we will use it in step 4.
 
-3) Install requirements
+3) Install requirements. The following scripts will install yarn, node, and .NET SDK on your machine.
 
     # [Windows](#tab/Windows)
     Open a PowerShell terminal as an administrator and navigate to the _/scripts_ directory in the Semantic Kernel project.
@@ -51,7 +48,7 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     
     Next, run the following command to install the required dependencies:
     ```powershell
-    ./Install-Requirements.ps1
+    ./Install.ps1
     ```
 
     # [Ubuntu/Debian Linux](#tab/Linux)
@@ -60,20 +57,26 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     cd ./scripts
 
     # Ensure the install scripts are executable
-    chmod +x Install-Requirements-UbuntuDebian.sh
+    chmod +x Install-apt.sh
     ```
 
     Next, run the following command to install the required dependencies:
     ```bash
-    ./Install-Requirements-UbuntuDebian.sh
+    ./Install-apt.sh
     ```
-    # [Other](#tab/other)
+    # [MacOS](#tab/macos)
 
-    For all other operating systems, ensure NET 6.0 SDK (or newer), Node.js 14 (or newer), and Yarn classic ([v1.22.19](https://classic.yarnpkg.com/)) package manager are installed before proceeding.
-
-    Afterwards open a terminal and navigate to the _/scripts_ directory in the Semantic Kernel project.
+    Open a bash terminal as an administrator and navigate to the _/scripts_ directory in the Semantic Kernel project:
     ```bash
     cd ./scripts
+
+    # Ensure the install scripts are executable
+    chmod +x Install-brew.sh
+    ```
+
+    Next, run the following command to install the required dependencies. The MacOS install script uses [Homebrew](https://brew.sh/) to install dependencies:
+    ```bash
+    ./Install-brew.sh
     ```
     ---
 
@@ -139,20 +142,9 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     ---
 6) Congrats! A browser should automatically launch and navigate to _https://localhost:3000_ with the sample app running.
 
-## Exploring the app
-With the Chat Copilot reference app running, you can start interacting with the chatbot.  The app will start with a default conversation thread where you can ask it questions.
-
-![Chat Copilot reference app](../media/copilot-chat.png)
-
-| Feature | Name | Description |
-|:-|:-|:-|
-| **1** | Conversation Pane | The left portion of the screen shows different conversation threads the user is holding with the chatbot.  To start a new conversation, click the '+'Bot symbol. |
-| **2** | Conversation Thread | Chatbot responses will appear in the main conversation thread, along with a history of your prompts.   Users can scroll up and down to review a complete conversation history. |
-| **3** | Prompt Entry Box | The bottom of the screen contains the prompt entry box, where users can type their prompts, and click the "Send" icon to the right of the box when ready to send it to the bot. |
-
 ## Next step
 
-If you've tried all the apps and are excited to see more, please star the GitHub repo and join the Semantic Kernel community!
+Now that you've gotten Chat Copilot running locally, you can now learn how to customize it to your needs.
 
 > [!div class="nextstepaction"]
-> [Star the Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
+> [Customize Chat Copilot](./customizing-chat-copilot.md)
