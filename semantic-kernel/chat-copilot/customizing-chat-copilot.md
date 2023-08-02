@@ -14,7 +14,7 @@ ms.service: semantic-kernel
 Most of the customization for Chat Copilot is done in the app settings file. This file is located in the _webapi_ folder and is named [_appsettings.json_](https://github.com/microsoft/chat-copilot/blob/main/webapi/appsettings.json). Most of the configurable settings have been commented to help you understand what they do, in this article we will go over the most important ones.
 
 ## Defining which models to use
-Chat Copilot has been designed and tested with OpenAI models from either OpenAI or Azure OpenAI. The app settings file has a section called _AIService_ that allows you to define which service you want to use and which models to use for each task. The following snippet demonstrates how to configure the app to use models from either service.
+Chat Copilot has been designed and tested with OpenAI models from either OpenAI or Azure OpenAI. The app settings file has a section called `AIService` that allows you to define which service you want to use and which models to use for each task. The following snippet demonstrates how to configure the app to use models from either service.
 
 # [Azure OpenAI](#tab/AzureOpenAI)
 
@@ -45,10 +45,11 @@ Chat Copilot has been designed and tested with OpenAI models from either OpenAI 
 ```
 ---
 
-Since the app has been developed and tested with the GPT-3.5-turbo model, we recommend using that model for the completion and planner tasks. If you have access to GPT-4, you can also use that model instead for improved quality, but the performance will degrade. Because of this, we recommend using GPT-3.5-turbo for the completion tasks and GPT-4 for the more advanced planner tasks.
+> [!NOTE]
+> Since the app has been developed and tested with the GPT-3.5-turbo model, we recommend using that model for the completion and planner tasks. If you have access to GPT-4, you can also use that model for improved quality, but the speed of the app may degrade. Because of this, we recommend using GPT-3.5-turbo for the chat completion tasks and GPT-4 for the more advanced planner tasks.
 
 ## Choosing a planner
-Today, Chat Copilot supports two different planners: action and sequential. The action planner is the default planner; use this planner if you only want the planner to ever use a single function at a time. The sequential planner is a more advanced planner that allows the chat bot to string together _multiple_ functions.
+Today, Chat Copilot supports two different planners: action and sequential. Action planner is the default planner; use this planner if you only want a plan with only a single step. The sequential planner is a more advanced planner that allows the agent to string together _multiple_ functions.
 
 If you want to use SequentialPlanner (multi-step) instead ActionPlanner (single-step), you'll want update the _appsettings.json_ file to use  SequentialPlanner. The following code snippet demonstrates how to configure the app to use SequentialPlanner.
 
@@ -65,7 +66,7 @@ If using gpt-3.5-turbo, we also recommend changing [_CopilotChatPlanner.cs_](htt
 
 To make the necessary changes, follow these steps:
 1. Open [_CopilotChatPlanner.cs_](https://github.com/microsoft/chat-copilot/blob/main/webapi/CopilotChat/Skills/ChatSkills/CopilotChatPlanner.cs).
-2. Add using statement to top of the file:
+2. Add the following `using`` statement to top of the file:
     ```csharp
     using Microsoft.SemanticKernel.Planning.Sequential;
     ```
@@ -76,10 +77,10 @@ To make the necessary changes, follow these steps:
         return new SequentialPlanner(this.Kernel, new SequentialPlannerConfig { RelevancyThreshold = 0.75 }).CreatePlanAsync(goal);
     }
     ```
-4. The the `RelevancyThreshold` based on your experience with Chat Copilot. `0.75`` is an arbitrary threshold and we recommend playing around with this number to see what best fits your scenarios.
+4. Update the `RelevancyThreshold` based on your experience with Chat Copilot. `0.75` is an arbitrary threshold and we recommend playing around with this number to see what best fits your scenarios.
 
 ## Change the system prompts
-Chat Copilot has a set of prompts that are used to evoke the correct responses from the LLMs. These prompts are defined in the _appsettings.json_ file under the `Prompts` section. By updating these prompts you can adjust everything from how the bot responds to the user to how the bot memorizes information. Try updating the prompts to see how it affects the bot's behavior.
+Chat Copilot has a set of prompts that are used to evoke the correct responses from the LLMs. These prompts are defined in the _appsettings.json_ file under the `Prompts` section. By updating these prompts you can adjust everything from how the agent responds to the user to how the agent memorizes information. Try updating the prompts to see how it affects the agent's behavior.
 
 Below are the default prompts for Chat Copilot.
 

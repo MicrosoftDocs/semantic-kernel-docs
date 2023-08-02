@@ -15,7 +15,7 @@ In just a few steps, you can start running  the getting started guides for Seman
 - Configure your local machine to run Semantic Kernel
 - Run AI prompts from the kernel
 - Make AI prompts dynamic with variables
-- Create a simple AI chatbot
+- Create a simple AI agent
 - Automatically combine functions together with planner
 - Store and retrieve memory with embeddings
 
