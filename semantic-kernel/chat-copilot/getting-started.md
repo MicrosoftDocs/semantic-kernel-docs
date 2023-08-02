@@ -37,7 +37,7 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     > [!Note]
     > Make a note of the Application (client) ID from the Azure Portal; we will use it in step 4.
 
-3) Install requirements
+3) Install requirements. The following scripts will install yarn, node, and .NET SDK on your machine.
 
     # [Windows](#tab/Windows)
     Open a PowerShell terminal as an administrator and navigate to the _/scripts_ directory in the Semantic Kernel project.
@@ -48,7 +48,7 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     
     Next, run the following command to install the required dependencies:
     ```powershell
-    ./Install-Requirements.ps1
+    ./Install.ps1
     ```
 
     # [Ubuntu/Debian Linux](#tab/Linux)
@@ -57,20 +57,26 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     cd ./scripts
 
     # Ensure the install scripts are executable
-    chmod +x Install-Requirements-UbuntuDebian.sh
+    chmod +x Install-apt.sh
     ```
 
     Next, run the following command to install the required dependencies:
     ```bash
-    ./Install-Requirements-UbuntuDebian.sh
+    ./Install-apt.sh
     ```
-    # [Other](#tab/other)
+    # [MacOS](#tab/macos)
 
-    For all other operating systems, ensure NET 6.0 SDK (or newer), Node.js 14 (or newer), and Yarn classic ([v1.22.19](https://classic.yarnpkg.com/)) package manager are installed before proceeding.
-
-    Afterwards open a terminal and navigate to the _/scripts_ directory in the Semantic Kernel project.
+    Open a bash terminal as an administrator and navigate to the _/scripts_ directory in the Semantic Kernel project:
     ```bash
     cd ./scripts
+
+    # Ensure the install scripts are executable
+    chmod +x Install-brew.sh
+    ```
+
+    Next, run the following command to install the required dependencies. The MacOS install script uses [Homebrew](https://brew.sh/) to install dependencies:
+    ```bash
+    ./Install-brew.sh
     ```
     ---
 
