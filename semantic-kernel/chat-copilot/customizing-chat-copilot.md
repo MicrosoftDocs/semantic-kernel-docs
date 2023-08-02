@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: Azure
 ms.author: mabolan
 ms.date: 05/19/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Customize Chat Copilot for your use case
@@ -107,8 +107,7 @@ Below are the default prompts for Chat Copilot.
 ```
 
 ## Next step
-
-Now that you've customized Chat Copilot for your needs, you can now use it to test any ChatGPT plugins you have authored.
+Now that you've customized Chat Copilot for your needs, you can now use it to test plugins you have authored using the ChatGPT plugin standard.
 
 > [!div class="nextstepaction"]
 > [Testing ChatGPT plugins](./testing-plugins-with-chat-copilot.md)
