@@ -5,7 +5,7 @@ author: nilesha
 ms.topic: Azure
 ms.author: nilesha
 ms.date: 05/19/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Learn how to make changes to the Semantic Kernel web app service
@@ -70,6 +70,6 @@ This method is useful for making changes when adding new semantic skills only.
 >To explore how you build a front-end web app explore the [Chat Copilot app](../samples/copilotchat.md).
 
 >If you have not already done so, please star the GitHub repo and join the Semantic Kernel community!
-[Star the Semantic Kernel repo](https://aka.ms/sk/repo)
+[Star the Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
 
 [!INCLUDE [footer.md](../includes/footer.md)]

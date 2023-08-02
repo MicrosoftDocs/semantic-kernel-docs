@@ -5,7 +5,7 @@ author: evchaki
 ms.topic: memories
 ms.author: evchaki
 ms.date: 04/04/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # What is a vector database?
 

@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: quickstart
 ms.author: mabolan
 ms.date: 07/11/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Start learning how to use Semantic Kernel
 
@@ -15,7 +15,7 @@ In just a few steps, you can start running  the getting started guides for Seman
 - Configure your local machine to run Semantic Kernel
 - Run AI prompts from the kernel
 - Make AI prompts dynamic with variables
-- Create a simple AI chatbot
+- Create a simple AI agent
 - Automatically combine functions together with planner
 - Store and retrieve memory with embeddings
 
@@ -24,7 +24,7 @@ If you are an experienced developer, you can skip the guides and directly access
 
 # [C#](#tab/Csharp)
 
-Instructions for accessing the `SemanticKernel` Nuget feed is available [here](https://aka.ms/sk/nuget). It's as easy as:
+Instructions for accessing the `SemanticKernel` Nuget feed is available [here](https://www.nuget.org/packages/Microsoft.SemanticKernel/). It's as easy as:
 
 ```Nuget
 #r "nuget: Microsoft.SemanticKernel, *-*"
@@ -32,7 +32,7 @@ Instructions for accessing the `SemanticKernel` Nuget feed is available [here](h
 
 # [Python](#tab/python)
 
-Instructions for accessing the `SemanticKernel` Python package is available [here](https://aka.ms/sk/pypi). It's as easy as:
+Instructions for accessing the `SemanticKernel` Python package is available [here](https://pypi.org/project/semantic-kernel/). It's as easy as:
 
 ```PyPI
 pip install semantic-kernel
@@ -61,7 +61,7 @@ To setup the guides, follow the steps below.
 > Have your OpenAI or Azure OpenAI keys ready to enter when prompted by the Jupyter notebook.
 
 
-1. Use your web browser to visit [aka.ms/sk/repo](https://aka.ms/sk/repo) on GitHub. 
+1. Use your web browser to visit [aka.ms/sk/repo](https://github.com/microsoft/semantic-kernel) on GitHub. 
 
 2. Clone or fork the repo to your local machine.
 

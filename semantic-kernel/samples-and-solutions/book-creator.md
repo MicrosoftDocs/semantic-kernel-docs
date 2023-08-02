@@ -5,13 +5,13 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Book creator sample app
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://aka.ms/sk/repo/writerskill) functions are chained together based on the asks.
+The Book creator sample allows you to enter in a topic then the [Planner](/semantic-kernel/concepts-sk/planner) creates a plan for the functions to run based on the ask. You can see the plan along with the results. The  [Writer Skill](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/WriterSkill) functions are chained together based on the asks.
 
 > [!IMPORTANT]
 > Each function will call OpenAI which will use tokens that you will be billed for. 
@@ -27,7 +27,7 @@ The Book creator sample allows you to enter in a topic then the [Planner](/seman
 > * [Yarn](https://yarnpkg.com/getting-started/install) - used for installing the app's dependencies
 
 ## Running the app
-The [Book creator sample app](https://aka.ms/sk/repo/samples/starter-book-creator) is located in the Semantic Kernel GitHub repository.
+The [Book creator sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/apps/book-creator-webapp-react) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/get-started) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Start the [local API service](/semantic-kernel/samples/localapiservice).

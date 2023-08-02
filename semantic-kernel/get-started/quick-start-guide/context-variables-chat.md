@@ -1,11 +1,11 @@
 ---
-title: Quick start guide | Create a simple chatbot
+title: Quick start guide | Create a simple chat agent
 description: Learn how to create a basic chat experience with Semantic Kernel.
 author: matthewbolanos
 ms.topic: quickstart
 ms.author: mabolan
 ms.date: 07/11/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Creating a basic chat experience with context variables 
@@ -22,7 +22,7 @@ The following steps walk through the _04-context-variables-chat.ipynb_ notebook 
 
 
 ## 1) Load and configure the kernel
-In this guide, we'll show how you can build a simple chat bot by sending and updating context with your requests. To begin, load and configure the kernel as usual. The following code snippets use the configuration that was created in the [getting started notebook](./getting-started.md).
+In this guide, we'll show how you can build a simple chat agent by sending and updating context with your requests. To begin, load and configure the kernel as usual. The following code snippets use the configuration that was created in the [getting started notebook](./getting-started.md).
 
 # [C#](#tab/Csharp)
 
@@ -65,8 +65,8 @@ else:
 ---
 
 
-## 2) Create the semantic function for the chat bot
-To get the chat bot to respond to our requests, we'll need to create and register a semantic function that can process our requests and return a response. Notice the `{{$history}}` and `{{$userInput}}` variables in the prompt. These variables will be used to pass in the conversation history and the user's input respectively.
+## 2) Create the semantic function for the chat agent
+To get the agent to respond to our requests, we'll need to create and register a semantic function that can process our requests and return a response. Notice the `{{$history}}` and `{{$userInput}}` variables in the prompt. These variables will be used to pass in the conversation history and the user's input respectively.
 
 # [C#](#tab/Csharp)
 
@@ -113,11 +113,11 @@ chat_function = kernel.create_semantic_function(sk_prompt, "ChatBot", max_tokens
 
 ## 3) Initialize the context
 
-If we used the semantic function above as is, the chat bot would be able to respond to our requests, but it would not be able to remember the context of the rest of the conversation. To enable the chat bot to remember the context of the conversation, we'll need to use context variables.
+If we used the semantic function above as is, the agent would be able to respond to our requests, but it would not be able to remember the context of the rest of the conversation. To enable the agent to remember the context of the conversation, we'll need to use context variables.
 
 Context variables behave like a key-value store you can use while running the kernel. The context stored in the kernel is local (i.e. in your computer's RAM) and not persisted anywhere beyond the life of the program. In future examples, we will show how to persist the context on disk so that you can bring it back up later.
 
-In this example, we'll  initialize the context with a `history` variable. The `history` variable will be used to store the entire conversation history so that the chat bot can use it to know what has been said before.
+In this example, we'll  initialize the context with a `history` variable. The `history` variable will be used to store the entire conversation history so that the agent can use it to know what has been said before.
 
 
 # [C#](#tab/Csharp)
@@ -139,8 +139,8 @@ context["history"] = ""
 
 ---
 
-## 4) Send the first request to the chat bot
-Now that we have initialized the context, we can send the first request to the chat bot and store the response in a variable called `bot_answer`. To set the `userInput` variable in the semantic function, we'll need to set the `userInput` variable in the context.
+## 4) Send the first request to the agent
+Now that we have initialized the context, we can send the first request to the agent and store the response in a variable called `bot_answer`. To set the `userInput` variable in the semantic function, we'll need to set the `userInput` variable in the context.
 
 # [C#](#tab/Csharp)
 
@@ -163,7 +163,7 @@ print(bot_answer)
 
 
 ## 5) Update the history with the response
-We can now update the `history` variable in the context with the response from the chat bot. To do this, we'll append the `userInput` and `bot_answer` variables to the `history` context variable.
+We can now update the `history` variable in the context with the response from the agent. To do this, we'll append the `userInput` and `bot_answer` variables to the `history` context variable.
 
 # [C#](#tab/Csharp)
 
@@ -184,8 +184,8 @@ print(context["history"])
 ---
 
 
-## 6) Make a function to send requests to the chat bot
-To make it easier to send requests to the chat bot, we'll create a function called `Chat` that takes in a string and sends it to the chat bot. The `Chat` function will then update the `history` context variable with the new interaction and print the response from the chat bot.
+## 6) Make a function to send requests to the agent
+To make it easier to send requests to the agent, we'll create a function called `Chat` that takes in a string and sends it to the agent. The `Chat` function will then update the `history` context variable with the new interaction and print the response from the agent.
 
 # [C#](#tab/Csharp)
 
@@ -227,7 +227,7 @@ async def chat(input_text: str) -> None:
 ---
 
 ## 7) Keep chatting!
-You can now chat with the chat bot by calling the `Chat` function with a string. Try it out multiple times and see what happens!
+You can now chat with the agent by calling the `Chat` function with a string. Try it out multiple times and see what happens!
 
 
 # [C#](#tab/Csharp)

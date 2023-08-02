@@ -5,6 +5,6 @@ author: matthewbolanos
 ms.topic: semantic-kernel-tools
 ms.author: mabolan
 ms.date: 05/21/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Commands for the Semantic Kernel VS Code extension

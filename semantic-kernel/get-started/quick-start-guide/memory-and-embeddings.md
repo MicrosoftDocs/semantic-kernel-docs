@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: quickstart
 ms.author: mabolan
 ms.date: 05/04/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Building semantic memory with embeddings
@@ -197,8 +197,8 @@ what do I do for work? I currently work as a tourist operator
 ```
 
 
-## 5) Adding memories to our chatbot
-Let's now revisit our chat sample from the [previous notebook](./context-variables-chat.md). If you remember, we used context variables to fill the prompt with a `history` variable that continuously got populated as we chatted with the bot. Let's improve our bot by adding memory to it!
+## 5) Adding memories to our agent
+Let's now revisit our chat sample from the [previous notebook](./context-variables-chat.md). If you remember, we used context variables to fill the prompt with a `history` variable that continuously got populated as we chatted with the agent. Let's improve our agent by adding memory to it!
 
 We will achieve this by using the `TextMemorySkill` plugin which exposes the `recall` native function. The `recall` function takes an input ask and performs a similarity search on the contents that have been previously embedded in the memory Store. By default, `recall` returns the most relevant memory.
 
@@ -365,7 +365,7 @@ while chatting:
 
 ---
 
-Whenever you run the chat function, the bot should be able to successfully recall the personal information about Andrea that we stored in the memory collection.
+Whenever you run the chat function, the agent should be able to successfully recall the personal information about Andrea that we stored in the memory collection.
 
 
 ## 6) Adding documents to memory

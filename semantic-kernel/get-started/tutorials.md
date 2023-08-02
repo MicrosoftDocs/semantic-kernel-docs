@@ -5,7 +5,7 @@ author: matthewbolanos
 ms.topic: tutorial
 ms.author: mabolan
 ms.date: 07/11/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 
 # Additional learning for Semantic Kernel
@@ -22,7 +22,7 @@ Want to learn more about Semantic Kernel? Check out these in-depth tutorials and
         Learn how to supercharge your problem-solving creativity with Semantic Kernel running on your own machine just like your own “Easy Bake Oven.” We’ll use plenty of cooking analogies to land the core ideas of LLM AI running on Semantic Kernel so be prepared to get hungry!
 
         > [!div class="nextstepaction"]
-        > [Start the tutorial](https://aka.ms/sk/recipes)
+        > [Start the tutorial](https://devblogs.microsoft.com/semantic-kernel/recipes/)
    :::column-end:::
    :::column span="2":::
 
