@@ -43,7 +43,7 @@ you can use a vector database to store the latest information about that topic a
 Today, we have several connectors to vector databases that you can use to store and retrieve information. These include:
 
 
-| Service                  |    |  |
+| Service                  | C# | Python |
 |--------------------------|:----:|:------:|
 | Azure Cognitive Search   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCognitiveSearch) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cognitive_search) |
 | Chroma                   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/chroma) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/chroma) |
