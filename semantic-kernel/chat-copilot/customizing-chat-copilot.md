@@ -66,7 +66,7 @@ If using gpt-3.5-turbo, we also recommend changing [_CopilotChatPlanner.cs_](htt
 
 To make the necessary changes, follow these steps:
 1. Open [_CopilotChatPlanner.cs_](https://github.com/microsoft/chat-copilot/blob/main/webapi/CopilotChat/Skills/ChatSkills/CopilotChatPlanner.cs).
-2. Add the following `using`` statement to top of the file:
+2. Add the following `using` statement to top of the file:
     ```csharp
     using Microsoft.SemanticKernel.Planning.Sequential;
     ```
