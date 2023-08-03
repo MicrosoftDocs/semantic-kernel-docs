@@ -15,6 +15,8 @@ Chat Copilot provides a reference application for building a chat experience usi
 
 :::image type="content" source="../media/chat-copilot-in-action.gif" alt-text="Chat Copilot in action":::
 
+To access the app, check it out on its [GitHub repo: Chat Copilot](https://github.com/microsoft/chat-copilot).
+
 ## Exploring the app
 With Chat Copilot, you'll have access to an experience that is similar to the paid version of ChatGPT. You can create new conversations with an agent and ask it to perform requests using [ChatGPT plugins](../ai-orchestration/chatgpt-plugins.md).
 
