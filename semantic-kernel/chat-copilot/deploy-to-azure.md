@@ -128,16 +128,16 @@ When you want to clean up the resources from this deployment, use the Azure port
 az group delete --name YOUR_RESOURCE_GROUP
 ```
 
-# Deploy Chat Copilot to AzureML as an Online Endpoint
+## Deploy Chat Copilot to AzureML as an Online Endpoint
 
 Advance your Semantic Kernel app by deploying to an AzureML Online Endpoint which helps to manage your real-time inferencing workload. 
 
-## Prerequisites
+### Prerequisites
 
-* An Azure Machine Learning Workspace - [Create a new one](https://learn.microsoft.com/en-us/azure/machine-learning/concept-workspace?view=azureml-api-2#create-a-workspace)
-* Get an OpenAI API Key or create an [Azure OpenAI Deployment](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal)
+* An Azure Machine Learning Workspace - [Create a new one](/azure/machine-learning/concept-workspace?view=azureml-api-2#create-a-workspace)
+* Get an OpenAI API Key or create an [Azure OpenAI Deployment](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal)
 
-## Follow the sample notebook
+### Follow the sample notebook
 
 In the [azureml-examples github repo](https://github.com/Azure/azureml-examples/blob/e249562545b9653c4621f2091748edb32abc84bf/sdk/python/endpoints/online/llm/semantic-kernel/1_semantic_http_server.ipynb), fill in the sample notebook with your AzureML resources. Executing the notebook deploys a sample Semantic Kernel app to an Online Endpoint in your AzureML Workspace. The sample uses a custom container to deploy a Flask web server which exposes the Semantic Kernel app's API endpoints for inferencing. 
 
