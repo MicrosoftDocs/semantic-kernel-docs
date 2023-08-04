@@ -27,27 +27,24 @@ In this article, we'll walk through the steps to run these two components locall
 > * [Azure account](https://azure.microsoft.com/free)
 > * [Azure AD Tenant](/azure/active-directory/develop/quickstart-create-new-tenant)
 > * [Registered application](/azure/active-directory/develop/quickstart-register-app#register-an-application) and its _Application (client) ID_
+
+> * Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
+> * Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
+
+
+> [!div class="checklist"]
 > * AI Service
 
 | AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Azure OpenAI | > [!div class="checklist] > * [Access](https://aka.ms/oai/access) > * [Resource](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource) > * [Deployed models](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo` and `text-embedding-ada-002`) > * [Endpoint](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) > * [API key](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
-| OpenAI       | > [!div class="checklist] > * [Account](https://platform.openai.com) > * [API key](https://platform.openai.com/account/api-keys)                    
+| Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Deployed models](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo` and `text-embedding-ada-002`)<br>- [Endpoint](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [API key](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
+| OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)                    
 
 Installed by the Setup script:
 > [!div class="checklist"]
 > * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) 
 > * [Node.js](https://nodejs.org/en/download)
 > * [Yarn](https://classic.yarnpkg.com/docs/install)
-
-
-> [!div class="checklist]
-> * Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
-> * Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
-
-
-
-
 
 ## Instructions
 
