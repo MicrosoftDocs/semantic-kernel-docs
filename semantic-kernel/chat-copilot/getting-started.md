@@ -20,7 +20,8 @@ In this article, we'll walk through the steps to run these two components locall
 > [!IMPORTANT]
 > Each chat interaction will call Azure OpenAI/OpenAI which will use tokens that you may be billed for.
 
-## Requirements to run this app
+## Requirements
+You will need the following items to run the sample:
 
 > [!div class="checklist"]
 > * [Git](https://git-scm.com/book/v2/Getting-Started-Installing-Git)
@@ -42,11 +43,13 @@ Installed by the Setup script:
 ## Instructions
 1) Register an application.
 
-    To register an application, follow the steps in [Register an application](/azure/active-directory/develop/quickstart-register-app) and use the settings below. Take note of your application's _Application (client) ID_. Chat Copilot will use this ID for authentication.
+    To register an application, follow [these instructions](/azure/active-directory/develop/quickstart-register-app) and use the settings below:
 
-   - `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
-   - `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
-
+   - `Supported account types`: "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
+   - `Redirect URI (optional)`: `Single-page application (SPA)` and use `http://localhost:3000`.
+    
+    > [!NOTE]
+    > Take note of your application's _Application (client) ID_. Chat Copilot will use this ID for authentication.
 
 2) Install .NET 7.0 SDK, Node.js, and Yarn on your machine.
 
