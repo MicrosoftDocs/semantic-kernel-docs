@@ -25,20 +25,17 @@ You will need the following items to run the sample:
 
 > [!div class="checklist"]
 > * [Git](https://git-scm.com/book/v2/Getting-Started-Installing-Git)
+> * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) _(via Setup script below)_
+> * [Node.js](https://nodejs.org/en/download) _(via Setup script below)_
+> * [Yarn](https://classic.yarnpkg.com/docs/install) _(via Setup script below)_
 > * [Azure account](https://azure.microsoft.com/free)
 > * [Azure AD Tenant](/azure/active-directory/develop/quickstart-create-new-tenant)
-> * AI Service
+> * AI Service:
 
 | AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Deployed models](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo` and `text-embedding-ada-002`)<br>- [Endpoint](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [API key](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
 | OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)                    
-
-Installed by the Setup script:
-> [!div class="checklist"]
-> * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) 
-> * [Node.js](https://nodejs.org/en/download)
-> * [Yarn](https://classic.yarnpkg.com/docs/install)
 
 ## Instructions
 1) Register an application.
@@ -46,7 +43,7 @@ Installed by the Setup script:
     To register an application, follow [these instructions](/azure/active-directory/develop/quickstart-register-app) and use the settings below:
 
    - `Supported account types`: "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
-   - `Redirect URI (optional)`: `Single-page application (SPA)` and use `http://localhost:3000`.
+   - `Redirect URI (optional)`: _Single-page application (SPA)_ and use _http://localhost:3000_.
     
     > [!NOTE]
     > Take note of your application's _Application (client) ID_. Chat Copilot will use this ID for authentication.
@@ -60,13 +57,10 @@ Installed by the Setup script:
     cd .\scripts\
     ```
     
-    Next, run the following command to install the required dependencies:
+    Next, run the following command to install the required dependencies. This script will also install `Chocolatey`:
     ```powershell
     .\Install.ps1
     ```
-
-    > [!NOTE]
-    > This script will also install `Chocolatey`.
 
     # [Debian/Ubuntu Linux](#tab/Linux)
     Open a Bash terminal as an administrator and navigate to the _/scripts_ directory in the Chat Copilot project:
@@ -91,7 +85,7 @@ Installed by the Setup script:
     chmod +x Install-brew.sh
     ```
 
-    Next, run the following command to install the required dependencies. The MacOS install script uses [Homebrew](https://brew.sh/) to install dependencies:
+    Next, run the following command to install the required dependencies. The macOS install script uses [Homebrew](https://brew.sh/) to install dependencies:
     ```bash
     ./Install-brew.sh
     ```
@@ -145,18 +139,18 @@ Installed by the Setup script:
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
 
     > [!IMPORTANT]
-    > If you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
+    > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
 
-    ```bash
-    --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME}
-    ```
+        ```bash
+        --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME}
+        ```
 
     > [!TIP] 
     > To set a specific Tenant Id, use the optional parameter:
 
-    ```bash
-    --tenantid {TENANT_ID}
-    ```
+        ```bash
+        --tenantid {TENANT_ID}
+        ```
     ---
 
 4) Run the start script.
@@ -167,11 +161,10 @@ Installed by the Setup script:
     .\Start.ps1
     ```
 
+    It may take a few minutes for Yarn packages to install on the first run.
+
     > [!TIP]
     > Confirm pop-ups are not bocked and you are logged in with the same account used to register the application. 
-
-    > [!NOTE]
-    > It may take a few minutes for Yarn packages to install on the first run.
 
     # [Bash](#tab/Bash)
 
@@ -185,11 +178,11 @@ Installed by the Setup script:
     ./Start.sh
     ```
 
+    It may take a few minutes for Yarn packages to install on the first run.
+
     > [!TIP]
     > Confirm pop-ups are not bocked and you are logged in with the same account used to register the application. 
 
-    > [!NOTE]
-    > It may take a few minutes for Yarn packages to install on the first run.
     ---
 5) Congrats! A browser should automatically launch and navigate to _https://localhost:3000_ with the sample app running.
 
