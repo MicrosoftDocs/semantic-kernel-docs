@@ -1,9 +1,9 @@
 ---
 title: Get started using Chat Copilot locally
 description: Run Chat Copilot locally to see how it works.
-author: matthewbolanos & molliemunoz
+author: matthewbolanos, molliemunoz
 ms.topic: samples
-ms.author: mabolan & momuno
+ms.author: mabolan, momuno
 ms.date: 08/03/2023
 ms.service: semantic-kernel
 ---
@@ -23,21 +23,20 @@ In this article, we'll walk through the steps you need to take to run these two 
 **Environment:**
 > [!div class="checklist"]
 > * [Visual Studio Code](https://code.visualstudio.com/Download)
-> * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+> * [Git](https://git-scm.com/book/v2/Getting-Started-Installing-Git)
 > * [Azure account](https://azure.microsoft.com/free)
 > * [.NET 7.0](https://dotnet.microsoft.com/download/dotnet/7.0) - Installed by script below
-> * [Node.js](https://nodejs.org/en/download) - Installed by script below
-> * [Yarn](https://classic.yarnpkg.com/lang/docs/install) - Installed by script below
+> * [Node.js](https://nodejs.org/download) - Installed by script below
+> * [Yarn](https://classic.yarnpkg.com/docs/install) - Installed by script below
 
 **AI Service (select one):**
-
 Azure OpenAI: 
 > [!div class="checklist"]
 > * [Access](https://aka.ms/oai/access)
-> * [Resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)
-> * [Deployed models](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo` and `text-embedding-ada-002`)
-> * [Endpoint](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) (e.g., `http://contoso.openai.azure.com`)
-> * [API key](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)
+> * [Resource](../../../azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)
+> * [Deployed models](../../../azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo` and `text-embedding-ada-002`)
+> * [Endpoint](../../../azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) (e.g., `http://contoso.openai.azure.com`)
+> * [API key](../../../azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)
 
 OpenAI:
 > [!div class="checklist"]
@@ -46,12 +45,12 @@ OpenAI:
 
 **Web Application:**
 > [!div class="checklist]
-> * [Azure AD Tenant](https://learn.microsoft.com/azure/active-directory/develop/quickstart-create-new-tenant)
-> * [Registered application](https://learn.microsoft.com/azure/active-directory/develop/quickstart-register-app#register-an-application) - See [Registering your web application](#registering-your-web-application)
-> * [Application (client) ID](https://learn.microsoft.com/azure/active-directory/develop/quickstart-register-app#register-an-application) - See [Registering your web application](#registering-your-web-application)
+> * [Azure AD Tenant](../../../azure/active-directory/develop/quickstart-create-new-tenant)
+> * [Registered application](../../../azure/active-directory/develop/quickstart-register-app#register-an-application) - See [Registering your web application](#registering-your-web-application)
+> * [Application (client) ID](https://../../../azure/active-directory/develop/quickstart-register-app#register-an-application) - See [Registering your web application](#registering-your-web-application)
 
 ## Registering your web application
-When [registering your application](https://learn.microsoft.com/azure/active-directory/develop/quickstart-register-app#register-an-application), we recommend using the following properties:
+When [registering your application](https://../../../azure/active-directory/develop/quickstart-register-app#register-an-application), we recommend using the following properties:
 
 - Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
 - Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
@@ -118,7 +117,8 @@ When [registering your application](https://learn.microsoft.com/azure/active-dir
     - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource `Endpoint` address.
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
 
-    > [!Important] If you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
+    > [!Important]
+    > If you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
 
     ```powershell
     -CompletionModel {DEPLOYMENT_NAME} -EmbeddingModel {DEPLOYMENT_NAME} -PlannerModel {DEPLOYMENT_NAME}
@@ -133,11 +133,12 @@ When [registering your application](https://learn.microsoft.com/azure/active-dir
     - `API_KEY`: The `API key` for OpenAI.
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
 
-    > [!Optional]: To set a specific Tenant Id for the web application, use the parameter:
+    > [!Optional]
+    > To set a specific Tenant Id for the web application, use the parameter:
 
-        ```powershell
-        -TenantId {TENANT_ID}
-        ```
+    ```powershell
+    -TenantId {TENANT_ID}
+    ```
 
     # [Bash](#tab/Bash)
     First, ensure the configuration script is executable:
@@ -156,7 +157,8 @@ When [registering your application](https://learn.microsoft.com/azure/active-dir
     - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource `Endpoint` address.
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
   
-    > [!Important] If you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
+    > [!Important]
+    > If you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
 
     ```bash
     --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME}
@@ -171,7 +173,8 @@ When [registering your application](https://learn.microsoft.com/azure/active-dir
     - `API_KEY`: The `API key` for OpenAI.
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
   
-    > [!Optional] To set a specific Tenant Id, use the parameter:
+    > [!Optional] 
+    > To set a specific Tenant Id, use the parameter:
 
     ```bash
     --tenantid {TENANT_ID}
