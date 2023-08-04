@@ -139,10 +139,7 @@ You will need the following items to run the sample:
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
 
     > [!IMPORTANT]
-    > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
-    > ```bash
-    > --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME}
-    > ```
+    > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters: ```bash --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME} ```
 
     > [!TIP] 
     > To set a specific Tenant Id, use the optional parameter:
