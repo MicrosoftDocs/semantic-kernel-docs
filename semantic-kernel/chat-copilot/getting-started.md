@@ -1,9 +1,9 @@
 ---
 title: Get started using Chat Copilot locally
 description: Run Chat Copilot locally to see how it works.
-author: matthewbolanos, molliemunoz
+author: matthewbolanos
 ms.topic: samples
-ms.author: mabolan, momuno
+ms.author: mabolan
 ms.date: 08/03/2023
 ms.service: semantic-kernel
 ---
@@ -26,13 +26,6 @@ In this article, we'll walk through the steps to run these two components locall
 > * [Git](https://git-scm.com/book/v2/Getting-Started-Installing-Git)
 > * [Azure account](https://azure.microsoft.com/free)
 > * [Azure AD Tenant](/azure/active-directory/develop/quickstart-create-new-tenant)
-> * [Registered application](/azure/active-directory/develop/quickstart-register-app#register-an-application) and its _Application (client) ID_
-
-> * Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
-> * Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
-
-
-> [!div class="checklist"]
 > * AI Service
 
 | AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -47,8 +40,15 @@ Installed by the Setup script:
 > * [Yarn](https://classic.yarnpkg.com/docs/install)
 
 ## Instructions
+1) Register an application.
 
-1) Install .NET 7.0 SDK, Node.js, and Yarn on your machine.
+    To register an application, follow the steps in [Register an application](/azure/active-directory/develop/quickstart-register-app) and use the settings below. Take note of your application's _Application (client) ID_. Chat Copilot will use this ID for authentication.
+
+   - `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
+   - `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
+
+
+2) Install .NET 7.0 SDK, Node.js, and Yarn on your machine.
 
     # [Windows](#tab/Windows)
     Open a PowerShell terminal as an administrator and navigate to the _\scripts_ directory in the Chat Copilot project.
@@ -94,7 +94,7 @@ Installed by the Setup script:
     ```
     ---
 
-2) Configure Chat Copilot.
+3) Configure Chat Copilot.
 
     # [PowerShell](#tab/Powershell)
 
@@ -156,7 +156,7 @@ Installed by the Setup script:
     ```
     ---
 
-3) Run the start script.
+4) Run the start script.
     
     # [PowerShell](#tab/Powershell)
 
@@ -188,7 +188,7 @@ Installed by the Setup script:
     > [!NOTE]
     > It may take a few minutes for Yarn packages to install on the first run.
     ---
-4) Congrats! A browser should automatically launch and navigate to _https://localhost:3000_ with the sample app running.
+5) Congrats! A browser should automatically launch and navigate to _https://localhost:3000_ with the sample app running.
 
 ## Next step
 
