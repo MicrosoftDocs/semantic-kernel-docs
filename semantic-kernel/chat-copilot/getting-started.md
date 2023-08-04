@@ -34,16 +34,15 @@ Installed by the Setup script:
 > * [Yarn](https://classic.yarnpkg.com/docs/install)
 
 **Frontend Web Application:**
-
 > [!div class="checklist]
 > * [Azure AD Tenant](/azure/active-directory/develop/quickstart-create-new-tenant)
-> * [Registered application](/azure/active-directory/develop/quickstart-register-app#register-an-application)
+> * [Registered application](/azure/active-directory/develop/quickstart-register-app#register-an-application) and its _Application (client) ID_
 
-    > [!div class="checklist]
-    > * Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
-    > * Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
-    
-> * [Application (client) ID](/azure/active-directory/develop/quickstart-register-app#register-an-application)
+
+> [!div class="checklist]
+> * Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
+> * Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
+
 
 **Backend Web Service (choose one AI Service):**
 
