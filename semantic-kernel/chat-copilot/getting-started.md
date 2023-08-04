@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-Chat Copilot is an educational AI chat application sample. It is built on Microsoft Semantic Kernel and has two components:
+Chat Copilot is an AI chat application sample created for educational purposes. It is built on Microsoft Semantic Kernel and has two components:
 - A frontend [React web app](https://github.com/microsoft/chat-copilot/tree/main/webapp) that provides a user interface for interacting with the Semantic Kernel.
 - A backend [.NET web service](https://github.com/microsoft/chat-copilot/tree/main/webapi) that provides an API for the React web app to interact with the Semantic Kernel.
 
@@ -26,24 +26,25 @@ In this article, we'll walk through the steps to run these two components locall
 > [!div class="checklist"]
 > * [Git](https://git-scm.com/book/v2/Getting-Started-Installing-Git)
 > * [Azure account](https://azure.microsoft.com/free)
-> * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) - Installed by script below
-> * [Node.js](https://nodejs.org/download) - Installed by script below
-> * [Yarn](https://classic.yarnpkg.com/docs/install) - Installed by script below
+> * Installed by the Setup script:
+    > * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) 
+    > * [Node.js](https://nodejs.org/en/download)
+    > * [Yarn](https://classic.yarnpkg.com/docs/install)
 
 **Frontend Web Application:**
 > [!div class="checklist]
 > * [Azure AD Tenant](/azure/active-directory/develop/quickstart-create-new-tenant)
 > * [Registered application](/azure/active-directory/develop/quickstart-register-app#register-an-application)
-    - Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
-    - Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
+    > * Under `Supported account types`: Select "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
+    > * Under `Redirect URI (optional)`: Select `Single-page application (SPA)` and set the URI to `http://localhost:3000`.
 > * [Application (client) ID](/azure/active-directory/develop/quickstart-register-app#register-an-application)
 
 **Backend AI Service (select one):**
 
 | AI Service   | Item                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Azure OpenAI | > [!div class="checklist]<br>> * [Access](https://aka.ms/oai/access)<br>> * [Resource](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>> * [Deployed models](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo` and `text-embedding-ada-002`) <br>> * [Endpoint](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>> * [API key](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
-| OpenAI       | > [!div class="checklist]<br>> * [Account](https://platform.openai.com)<br>> * [API key](https://platform.openai.com/account/api-keys)                    
+| Azure OpenAI | > [!div class="checklist] > * [Access](https://aka.ms/oai/access) > * [Resource](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource) > * [Deployed models](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo` and `text-embedding-ada-002`) > * [Endpoint](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) > * [API key](/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
+| OpenAI       | > [!div class="checklist] > * [Account](https://platform.openai.com) > * [API key](https://platform.openai.com/account/api-keys)                    
 
 
 ## Instructions
