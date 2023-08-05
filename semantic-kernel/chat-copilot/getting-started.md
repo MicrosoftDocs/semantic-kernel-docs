@@ -102,9 +102,9 @@ You will need the following items to run the sample:
     ```
 
     - `AI_SERVICE`: `AzureOpenAI` or `OpenAI`.
-    - `API_KEY`: The `API key` for Azure OpenAI or for OpenAI.
-    - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource `Endpoint` address. Omit `-Endpoint` if using OpenAI.
-    - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
+    - `API_KEY`: The _API key_ for Azure OpenAI or for OpenAI.
+    - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource _Endpoint_ address. Omit `-Endpoint` if using OpenAI.
+    - `AZURE_APPLICATION_ID`: The _Application (client) ID_ associated with the registered application.
 
     - (Optional): To set a specific Tenant Id for the web application, use the parameter:
 
@@ -114,12 +114,14 @@ You will need the following items to run the sample:
 
     > [!IMPORTANT]
     > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
-        ```powershell
-        -CompletionModel {DEPLOYMENT_NAME} -EmbeddingModel {DEPLOYMENT_NAME} -PlannerModel {DEPLOYMENT_NAME}
-        ```
+
+    ```powershell
+    -CompletionModel {DEPLOYMENT_NAME} -EmbeddingModel {DEPLOYMENT_NAME} -PlannerModel {DEPLOYMENT_NAME}
+    ```
 
     # [Bash](#tab/Bash)
     First, ensure the configuration script is executable:
+
     ```bash
     # Ensure the configure scripts are executable
     chmod +x Configure.sh
@@ -132,9 +134,9 @@ You will need the following items to run the sample:
     ```
 
     - `AI_SERVICE`: `AzureOpenAI` or `OpenAI`.
-    - `API_KEY`: The `API key` for Azure OpenAI or for OpenAI.
-    - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource `Endpoint` address. Omit `--endpoint` if using OpenAI.
-    - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
+    - `API_KEY`: The _API key_ for Azure OpenAI or for OpenAI.
+    - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource _Endpoint_ address. Omit `--endpoint` if using OpenAI.
+    - `AZURE_APPLICATION_ID`: The _Application (client) ID_ associated with the registered application.
 
     - (Optional): To set a specific Tenant Id, use the parameter:
 
@@ -145,9 +147,9 @@ You will need the following items to run the sample:
     > [!IMPORTANT]
     > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters: 
 
-        ```bash 
-        --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME} 
-        ```
+    ```bash 
+    --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME} 
+    ```
 
     ---
 
