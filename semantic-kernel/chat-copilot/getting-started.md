@@ -56,7 +56,7 @@ You will need the following items to run the sample:
     ```powershell
     cd .\scripts\
     ```
-    
+
     Next, run the following command to install the required dependencies. This script will also install [Chocolatey](https://chocolatey.org/):
     ```powershell
     .\Install.ps1
@@ -124,7 +124,7 @@ You will need the following items to run the sample:
     # Ensure the configure scripts are executable
     chmod +x Configure.sh
     ```
-    
+
     Replace the values in brackets below before running the command:
 
     ```bash
@@ -137,13 +137,14 @@ You will need the following items to run the sample:
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
 
     - (Optional): To set a specific Tenant Id, use the parameter:
-    
+
         ```bash
         --tenantid {TENANT_ID}
         ```
 
     > [!IMPORTANT]
     > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters: 
+
         ```bash 
         --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME} 
         ```
