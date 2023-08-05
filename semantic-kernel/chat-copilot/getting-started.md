@@ -25,9 +25,9 @@ You will need the following items to run the sample:
 
 > [!div class="checklist"]
 > * [Git](https://git-scm.com/book/v2/Getting-Started-Installing-Git)
-> * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) _(via Setup script below)_
-> * [Node.js](https://nodejs.org/en/download) _(via Setup script below)_
-> * [Yarn](https://classic.yarnpkg.com/docs/install) _(via Setup script below)_
+> * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) _(via Setup script)_
+> * [Node.js](https://nodejs.org/en/download) _(via Setup script)_
+> * [Yarn](https://classic.yarnpkg.com/docs/install) _(via Setup script)_
 > * [Azure account](https://azure.microsoft.com/free)
 > * [Azure AD Tenant](/azure/active-directory/develop/quickstart-create-new-tenant)
 > * AI Service:
@@ -57,7 +57,7 @@ You will need the following items to run the sample:
     cd .\scripts\
     ```
     
-    Next, run the following command to install the required dependencies. This script will also install `Chocolatey`:
+    Next, run the following command to install the required dependencies. This script will also install [Chocolatey](https://chocolatey.org/):
     ```powershell
     .\Install.ps1
     ```
@@ -106,18 +106,17 @@ You will need the following items to run the sample:
     - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource `Endpoint` address. Omit `-Endpoint` if using OpenAI.
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
 
+    - (Optional): To set a specific Tenant Id for the web application, use the parameter:
+
+        ```powershell
+        -TenantId {TENANT_ID}
+        ```
+
     > [!IMPORTANT]
     > If you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
 
     ```powershell
     -CompletionModel {DEPLOYMENT_NAME} -EmbeddingModel {DEPLOYMENT_NAME} -PlannerModel {DEPLOYMENT_NAME}
-    ```
-
-    > [!TIP]
-    > To set a specific Tenant Id for the web application, use the optional parameter:
-
-    ```powershell
-    -TenantId {TENANT_ID}
     ```
 
     # [Bash](#tab/Bash)
@@ -138,14 +137,15 @@ You will need the following items to run the sample:
     - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource `Endpoint` address. Omit `--endpoint` if using OpenAI.
     - `AZURE_APPLICATION_ID`: The `Application (client) ID` associated with the registered application.
 
+    - (Optional): To set a specific Tenant Id, use the parameter:
+    
+        ```bash
+        --tenantid {TENANT_ID}
+        ```
+
     > [!IMPORTANT]
     > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters: ```bash --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME} ```
 
-    > [!TIP] 
-    > To set a specific Tenant Id, use the optional parameter:
-    > ```bash
-    > --tenantid {TENANT_ID}
-    > ```
     ---
 
 4) Run the start script.
@@ -158,8 +158,7 @@ You will need the following items to run the sample:
 
     It may take a few minutes for Yarn packages to install on the first run.
 
-    > [!TIP]
-    > Confirm pop-ups are not bocked and you are logged in with the same account used to register the application. 
+    Confirm pop-ups are not bocked and you are logged in with the same account used to register the application. 
 
     # [Bash](#tab/Bash)
 
@@ -175,8 +174,7 @@ You will need the following items to run the sample:
 
     It may take a few minutes for Yarn packages to install on the first run.
 
-    > [!TIP]
-    > Confirm pop-ups are not bocked and you are logged in with the same account used to register the application. 
+    Confirm pop-ups are not bocked and you are logged in with the same account used to register the application. 
 
     ---
 5) Congrats! A browser should automatically launch and navigate to _https://localhost:3000_ with the sample app running.
