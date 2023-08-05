@@ -113,11 +113,10 @@ You will need the following items to run the sample:
         ```
 
     > [!IMPORTANT]
-    > If you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
-
-    ```powershell
-    -CompletionModel {DEPLOYMENT_NAME} -EmbeddingModel {DEPLOYMENT_NAME} -PlannerModel {DEPLOYMENT_NAME}
-    ```
+    > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
+        ```powershell
+        -CompletionModel {DEPLOYMENT_NAME} -EmbeddingModel {DEPLOYMENT_NAME} -PlannerModel {DEPLOYMENT_NAME}
+        ```
 
     # [Bash](#tab/Bash)
     First, ensure the configuration script is executable:
@@ -144,7 +143,10 @@ You will need the following items to run the sample:
         ```
 
     > [!IMPORTANT]
-    > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters: ```bash --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME} ```
+    > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters: 
+        ```bash 
+        --completionmodel {DEPLOYMENT_NAME} --embeddingmodel {DEPLOYMENT_NAME} --plannermodel {DEPLOYMENT_NAME} 
+        ```
 
     ---
 
