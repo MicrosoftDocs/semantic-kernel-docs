@@ -86,13 +86,13 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     If you are using Azure OpenAI, run the following command. Replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
 
     ```powershell
-    ./Configure.ps1 -AzureOpenAI -Endpoint {AZURE_OPENAI_ENDPOINT} -ApiKey {AZURE_OPENAI_API_KEY} -ClientId {APPLICATION_CLIENT_ID}
+    ./Configure.ps1 -AIService AzureOpenAi -Endpoint {AZURE_OPENAI_ENDPOINT} -ApiKey {AZURE_OPENAI_API_KEY} -ClientId {APPLICATION_CLIENT_ID}
     ```
 
     If you are using OpenAI, run the following command. Replace the  `{OPENAI_API_KEY}` and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
 
     ```powershell
-    ./Configure.ps1 -openai -ApiKey {OPENAI_API_KEY} -ClientId {APPLICATION_CLIENT_ID}
+    ./Configure.ps1 -AIService OpenAi -ApiKey {OPENAI_API_KEY} -ClientId {APPLICATION_CLIENT_ID}
     ```
 
     # [Bash](#tab/Bash)
@@ -105,13 +105,13 @@ The [Chat Copilot reference app](https://github.com/microsoft/chat-copilot/blob/
     If you are using Azure OpenAI, run the following command. Replace the `{AZURE_OPENAI_ENDPOINT}`, `{AZURE_OPENAI_API_KEY}`, and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
 
     ```bash
-    ./Configure.sh --azureopenai --endpoint {AZURE_OPENAI_ENDPOINT} --apikey {AZURE_OPENAI_API_KEY} --clientid {APPLICATION_CLIENT_ID}
+    ./Configure.sh --aiservice azureopenai --endpoint {AZURE_OPENAI_ENDPOINT} --apikey {AZURE_OPENAI_API_KEY} --clientid {APPLICATION_CLIENT_ID}
     ```
 
      If you are using OpenAI, run the following command. Replace the `{OPENAI_API_KEY}` and `{APPLICATION_CLIENT_ID}` values in the following command before running it:
 
     ```bash
-    ./Configure.sh --openai --apikey {OPENAI_API_KEY} --clientid {APPLICATION_CLIENT_ID}
+    ./Configure.sh --aiservice openai --apikey {OPENAI_API_KEY} --clientid {APPLICATION_CLIENT_ID}
     ```
     ---
 
