@@ -22,11 +22,11 @@ The following steps walk through the _06-memory-and-embeddings.ipynb_ notebook i
 
 
 ## 1) Import the SDK
-So far, we've mostly treated the kernel as a stateless orchestration engine to send text into a model and receive text out. 
+So far, we've mostly treated the kernel as a stateless orchestration engine to send text into a model and receive text out.
 
-In a [previous guide](./context-variables-chat.md), we used context variables to pass in additional text into prompts to enrich them with more context. This allowed us to create a basic chat experience. 
+In a [previous guide](./context-variables-chat.md), we used context variables to pass in additional text into prompts to enrich them with more context. This allowed us to create a basic chat experience.
 
-However, if you solely relied on context variables, you would quickly realize that eventually your prompt would grow so large that you would run into a the model's token limit. What we need is a way to persist state and build both short-term and long-term memory to empower even more intelligent applications. 
+However, if you solely relied on context variables, you would quickly realize that eventually your prompt would grow so large that you would run into a the model's token limit. What we need is a way to persist state and build both short-term and long-term memory to empower even more intelligent applications.
 
 To do this, we can leverage semantic memories in the Semantic Kernel. To get started, we will import the necessary packages.
 
@@ -62,7 +62,7 @@ from semantic_kernel.connectors.ai.open_ai import OpenAITextCompletion, OpenAITe
 ## 2) Instantiate the kernel with memory
 At its core, semantic memory is a set of data structures that allow you to store the meaning of text that comes from different data sources, and optionally to store the source text too. These texts can be from the web, e-mail providers, chats, a database, or from your local directory, and are hooked up to the Semantic Kernel through data source connectors.
 
-In order to use memory in our example, we'll first instantiate the kernel with memory storage and an embedding service. In this example, we make use of the `VolatileMemoryStore` which can be thought of as a temporary in-memory storage (not to be confused with Semantic Memory). This memory is not written to disk and is only available during the app session. When developing your app you will have the option to plug in persistent storage like Azure Cosmos Db, PostgreSQL, SQLite, etc.
+In order to use memory in our example, we'll first instantiate the kernel with memory storage and an embedding service. In this example, we make use of the `VolatileMemoryStore` which can be thought of as a temporary in-memory storage (not to be confused with Semantic Memory). This memory is not written to disk and is only available during the app session. When developing your app you will have the option to plug in persistent storage like Azure Cognitive Search, PostgreSQL, SQLite, etc.
 
 # [C#](#tab/Csharp)
 
@@ -306,7 +306,7 @@ Func<string, Task> Chat = async (string input) => {
     // Append the new interaction to the chat history
     history += $"\nUser: {input}\nChatBot: {answer}\n";
     context["history"] = history;
-    
+
     // Show the bot response
     Console.WriteLine("ChatBot: " + context);
 };
@@ -536,7 +536,7 @@ Congrats! You've now completed the quick start guide for the Semantic Kernel. Yo
 | _00-getting-started.ipynb_| [Open guide](./getting-started.md)| Run your first prompt  |
 | _01-basic-loading-the-kernel.ipynb_ | [Open guide](./loading-the-kernel.md) | Changing the configuration of the kernel |
 | _02-running-prompts-from-file.ipynb_ | [Open guide](./running-prompts-from-files.md) | Learn how to run prompts from a file |
-| _03-semantic-function-inline.ipynb_ | [Open guide](./semantic-function-inline.md) | Configure and run prompts directly in code | 
+| _03-semantic-function-inline.ipynb_ | [Open guide](./semantic-function-inline.md) | Configure and run prompts directly in code |
 | _04-context-variables-chat.ipynb_ | [Open guide](./context-variables-chat.md) | Use variables to make prompts dynamic |
 | _05-using-the-planner.ipynb_ | [Open guide](./using-the-planner.md) | Dynamically create prompt chains with planner |
 | _06-memory-and-embeddings.ipynb_ | **You are here**  | Store and retrieve memory with embeddings |
