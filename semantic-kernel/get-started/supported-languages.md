@@ -76,7 +76,7 @@ Today, not all features are available in all languages. The following tables sho
 | BasicPlanner                      | ❌ | ✅ | ❌ | |
 | ActionPlanner                     | ✅ | 🔄 | 🔄 | In development|
 | SequentialPlanner                 | ✅ | 🔄 | 🔄 | In development|
-| StepwisePlanner                   | ✅ | ❌ | ❌ | | |
+| StepwisePlanner                   | ✅ | ❌ | ❌ | |
 
 ### Connectors
 
@@ -84,7 +84,6 @@ Today, not all features are available in all languages. The following tables sho
 |--------------------------|:----:|:------:|:----:|-------|
 | Azure Cognitive Search   | ✅ | ✅ | ✅ | |
 | Chroma                   | ✅ | ✅ | ❌ | |
-| CosmosDB                 | ✅ | ❌ | ❌ | |
 | DuckDB                   | ✅ | ❌ | ❌ | |
 | Milvus                   | 🔄 | ✅ | ❌ | |
 | Pinecone                 | ✅ | ✅ | ❌ | |
