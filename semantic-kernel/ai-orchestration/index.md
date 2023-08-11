@@ -118,7 +118,7 @@ Kernel.Builder
     "...your OpenAI Org ID..."              // *optional* OpenAI Organization ID
 )
 .WithAzureChatCompletionService(
-    "gpt-.5-turbo",                   // Azure OpenAI *Deployment Name*
+    "gpt-35-turbo",                         // Azure OpenAI *Deployment Name*
     "https://contoso.openai.azure.com/",    // Azure OpenAI *Endpoint*
     "...your Azure OpenAI Key..."           // Azure OpenAI *Key*
 )
