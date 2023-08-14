@@ -10,12 +10,12 @@ ms.service: semantic-kernel
 
 # Creating a basic chat experience with context variables 
 
-The following steps walk through the _04-context-variables-chat.ipynb_ notebook in the `/samples/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
+The following steps walk through the _04-context-variables-chat.ipynb_ notebook in the `/dotnet/notebooks` or `/python/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
 
 | Language | File | Link |
 | --- | --- | --- |
-| C# | _/samples/notebooks/dotnet/04-context-variables-chat.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/04-context-variables-chat.ipynb) |
-| Python | +/samples/notebooks/python/04-context-variables-chat.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/python/04-context-variables-chat.ipynb) |
+| C# | _/dotnet/notebooks/04-context-variables-chat.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/04-context-variables-chat.ipynb) |
+| Python | +/python/notebooks/04-context-variables-chat.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/04-context-variables-chat.ipynb) |
 
 
 ![Creating a basic chat experience with context variables ](../../media/quick-start/context-variables.png)

@@ -10,12 +10,12 @@ ms.service: semantic-kernel
 
 # Loading the kernel 
 
-The following steps walk through the _01-basic-loading-the-kernel.ipynb_ notebook in the `/samples/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
+The following steps walk through the _01-basic-loading-the-kernel.ipynb_ notebook in the `/dotnet/notebooks` or `/python/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
 
 | Language | File | Link |
 | --- | --- | --- |
-| C# | _/samples/notebooks/dotnet/01-basic-loading-the-kernel.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/01-basic-loading-the-kernel.ipynb) |
-| Python | _/samples/notebooks/python/01-basic-loading-the-kernel.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/python/01-basic-loading-the-kernel.ipynb) |
+| C# | _/dotnet/notebooks/01-basic-loading-the-kernel.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/01-basic-loading-the-kernel.ipynb) |
+| Python | _/python/notebooks/01-basic-loading-the-kernel.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/01-basic-loading-the-kernel.ipynb) |
 
 
 ![Loading the kernel](../../media/quick-start/loading-the-kernel.png)

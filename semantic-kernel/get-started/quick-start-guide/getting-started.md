@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 
 # Getting started 
 
-The following steps walk through the _00-getting-started.ipynb_ notebook in the `/samples/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
+The following steps walk through the _00-getting-started.ipynb_ notebook in the `/dotnet/notebooks` or `/python/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
 
 
 ![Getting started notebook](../../media/quick-start/getting-started.png)
@@ -20,8 +20,8 @@ The following steps walk through the _00-getting-started.ipynb_ notebook in the 
 
 | Language | File | Link |
 | --- | --- | --- |
-| C# | _/samples/notebooks/dotnet/00-getting-started.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/00-getting-started.ipynb) |
-| Python | _/samples/notebooks/python/00-getting-started.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/python/00-getting-started.ipynb) |
+| C# | _/dotnet/notebooks/00-getting-started.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/00-getting-started.ipynb) |
+| Python | _/python/notebooks/00-getting-started.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/00-getting-started.ipynb) |
 
 
 
@@ -89,14 +89,14 @@ else
 
 # [Python](#tab/python)
 
-If you are using OpenAI as your service, add your [OpenAI Key](https://openai.com/api/) to a `.env` file in the `/samples/notebooks/python` folder. Optionally include the org Id if you have multiple orgs. There is a `.env.example` file in the folder that you can use as a template.
+If you are using OpenAI as your service, add your [OpenAI Key](https://openai.com/api/) to a `.env` file in the `/python/notebooks` folder. Optionally include the org Id if you have multiple orgs. There is a `.env.example` file in the folder that you can use as a template.
 
 ```.env
 OPENAI_API_KEY="sk-..."
 OPENAI_ORG_ID=""
 ```
 
-If, however, you are using Azure OpenAI instead, you wil need to populate the following values in the `.env` file in the `/samples/notebooks/python` folder. There is a `.env.example` file in the folder that you can use as a template.
+If, however, you are using Azure OpenAI instead, you wil need to populate the following values in the `.env` file in the `/python/notebooks` folder. There is a `.env.example` file in the folder that you can use as a template.
 
 ```.env
 AZURE_OPENAI_DEPLOYMENT_NAME=""
