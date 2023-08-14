@@ -73,7 +73,7 @@ To setup the guides, follow the steps below.
    If you have trouble cloning or forking the repo, you can watch the video below.
    > [!VIDEO https://aka.ms/SK-Local-Setup]
 
-3. While the repository is open in VS Code, navigate to the `/samples/notebooks` folder.
+3. While the repository is open in VS Code, navigate to the `/dotnet/notebooks` or `/python/notebooks` folder.
 
 4. Choose either the `dotnet` or `python` folder based on your preferred programming language.
 
