@@ -10,12 +10,12 @@ ms.service: semantic-kernel
 
 # Running prompts from files 
 
-The following steps walk through the _02-running-prompts-from-file.ipynb_ notebook in the `/samples/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
+The following steps walk through the _02-running-prompts-from-file.ipynb_ notebook in the `/dotnet/notebooks` or `/python/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
 
 | Language | File | Link |
 | --- | --- | --- |
-| C# | _/samples/notebooks/dotnet/02-running-prompts-from-file.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/02-running-prompts-from-file.ipynb) |
-| Python | _/samples/notebooks/python/02-running-prompts-from-file.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/python/02-running-prompts-from-file.ipynb) |
+| C# | _/dotnet/notebooks/02-running-prompts-from-file.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/02-running-prompts-from-file.ipynb) |
+| Python | _/python/notebooks/02-running-prompts-from-file.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/02-running-prompts-from-file.ipynb) |
 
 
 ![Running prompts from files](../../media/quick-start/run-semantic-skills-from-files.png)

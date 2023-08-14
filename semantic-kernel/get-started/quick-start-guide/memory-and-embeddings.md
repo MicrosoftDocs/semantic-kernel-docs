@@ -10,12 +10,12 @@ ms.service: semantic-kernel
 
 # Building semantic memory with embeddings
 
-The following steps walk through the _06-memory-and-embeddings.ipynb_ notebook in the `/samples/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
+The following steps walk through the _06-memory-and-embeddings.ipynb_ notebook in the `/dotnet/notebooks` or `/python/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
 
 | Language | File | Link |
 | --- | --- | --- |
-| C# | _/samples/notebooks/dotnet/06-memory-and-embeddings.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/06-memory-and-embeddings.ipynb) |
-| Python | _/samples/notebooks/python/06-memory-and-embeddings.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/python/06-memory-and-embeddings.ipynb) |
+| C# | _/dotnet/notebooks/06-memory-and-embeddings.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/06-memory-and-embeddings.ipynb) |
+| Python | _/python/notebooks/06-memory-and-embeddings.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/06-memory-and-embeddings.ipynb) |
 
 
 ![Memory and embeddings ](../../media/quick-start/memory-and-embeddings.png)
@@ -380,9 +380,9 @@ var githubFiles = new Dictionary<string, string>()
 {
     ["https://github.com/microsoft/semantic-kernel/blob/main/README.md"]
         = "README: Installation, getting started, and how to contribute",
-    ["https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/02-running-prompts-from-file.ipynb"]
+    ["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/02-running-prompts-from-file.ipynb"]
         = "Jupyter notebook describing how to pass prompts from a file to a semantic skill or function",
-    ["https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/00-getting-started.ipynb"]
+    ["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/00-getting-started.ipynb"]
         = "Jupyter notebook describing how to get started with the Semantic Kernel",
     ["https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/ChatSkill/ChatGPT"]
         = "Sample demonstrating how to create a chat skill interfacing with ChatGPT",
@@ -457,9 +457,9 @@ await foreach (MemoryQueryResult memory in memories)
 github_files ={}
 github_files["https://github.com/microsoft/semantic-kernel/blob/main/README.md"] = \
     "README: Installation, getting started, and how to contribute"
-github_files["https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/02-running-prompts-from-file.ipynb"] = \
+github_files["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/02-running-prompts-from-file.ipynb"] = \
     "Jupyter notebook describing how to pass prompts from a file to a semantic skill or function"
-github_files["https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/00-getting-started.ipynb"] = \
+github_files["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/00-getting-started.ipynb"] = \
     "Jupyter notebook describing how to get started with the Semantic Kernel"
 github_files["https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/ChatSkill/ChatGPT"] = \
     "Sample demonstrating how to create a chat skill interfacing with ChatGPT"
@@ -512,12 +512,12 @@ After running the code above, you should see an output that looks something like
 Query: I love Jupyter notebooks, how should I get started?
 
 Result 1:
-  URL:     : https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/00-getting-started.ipynb
+  URL:     : https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/00-getting-started.ipynb
   Title    : Jupyter notebook describing how to get started with the Semantic Kernel
   Relevance: 0.8676699896124279
 
 Result 2:
-  URL:     : https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/02-running-prompts-from-file.ipynb
+  URL:     : https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/02-running-prompts-from-file.ipynb
   Title    : Jupyter notebook describing how to pass prompts from a file to a semantic skill or function
   Relevance: 0.8163699804499914
 

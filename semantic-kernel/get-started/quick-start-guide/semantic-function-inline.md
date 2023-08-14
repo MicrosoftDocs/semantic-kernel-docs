@@ -10,12 +10,12 @@ ms.service: semantic-kernel
 
 # Running semantic functions inline
 
-The following steps walk through the _03-semantic-function-inline.ipynb_ notebook in the `/samples/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
+The following steps walk through the _03-semantic-function-inline.ipynb_ notebook in the `/dotnet/notebooks` or `/python/notebooks` folder. We recommend following along in the notebook so that you can easily run the code snippets by pressing the run button next to each code snippet.
 
 | Language | File | Link |
 | --- | --- | --- |
-| C# | _/samples/notebooks/dotnet/03-semantic-function-inline.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/dotnet/03-semantic-function-inline.ipynb) |
-| Python | _/samples/notebooks/python/03-semantic-function-inline.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/samples/notebooks/python/03-semantic-function-inline.ipynb) |
+| C# | _/dotnet/notebooks/03-semantic-function-inline.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/03-semantic-function-inline.ipynb) |
+| Python | _/python/notebooks/03-semantic-function-inline.ipynb_ | [Open notebook in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/03-semantic-function-inline.ipynb) |
 
 
 ![Running functions inline](../../media/quick-start/running-semantic-functions-inline.png)
