@@ -139,7 +139,7 @@ Advance your Semantic Kernel app by deploying to an AzureML Online Endpoint whic
 
 ### Follow the sample notebook
 
-In the [azureml-examples github repo](https://github.com/Azure/azureml-examples/blob/e249562545b9653c4621f2091748edb32abc84bf/sdk/python/endpoints/online/llm/semantic-kernel/1_semantic_http_server.ipynb), fill in the sample notebook with your AzureML resources. Executing the notebook deploys a sample Semantic Kernel app to an Online Endpoint in your AzureML Workspace. The sample uses a custom container to deploy a Flask web server which exposes the Semantic Kernel app's API endpoints for inferencing. 
+In the [azureml-examples github repo](https://github.com/Azure/azureml-examples/blob/main/sdk/python/endpoints/online/llm/semantic-kernel/1_semantic_http_server.ipynb), fill in the sample notebook with your AzureML resources. Executing the notebook deploys a sample Semantic Kernel app to an Online Endpoint in your AzureML Workspace. The sample uses a custom container to deploy a Flask web server which exposes the Semantic Kernel app's API endpoints for inferencing. 
 
 ## Take the next step
 >Learn [how to make changes to your Semantic Kernel web app](./publish-changes-to-azure.md), such as adding new skills.
