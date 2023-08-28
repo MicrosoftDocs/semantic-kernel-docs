@@ -14,9 +14,7 @@ ms.service: semantic-kernel
 In this how-to guide we will provide steps to deploy Semantic Kernel to Azure as a web app service. 
 Deploying Semantic Kernel as web service to Azure provides a great pathway for developers to take advantage of Azure compute and other services such as Azure Cognitive Services for responsible AI and vectorized databases.  
 
-You can use one of the deployment options to deploy based on your use case and preference.
-
-## Configure authentication in Chat Copilot
+## Prerequisites
 
 Chat Copilot deployments use Azure Active Directory to authenticate users and secure access to the backend web service. These steps will walk you through the configuration needed to ensure smooth access to your deployment.
 
@@ -61,6 +59,8 @@ In the frontend app registration:
     - Select the `access_as_user` permission
 
 ## Considerations
+You can use one of the deployment options to deploy based on your use case and preference. Below are some considerations to keep in mind when choosing a deployment option.
+
 1. Azure currently limits the number of Azure OpenAI resources per region per subscription to 3. Azure OpenAI is not available in every region.
 (Refer to this [availability map](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?products=cognitive-services)) Bearing this in mind, you might want to use the same Azure OpenAI instance for multiple deployments of Semantic Kernel to Azure.
 
@@ -167,6 +167,29 @@ check that you have correctly entered the values for the following settings:
 
 AIService:Endpoint is ignored for OpenAI instances from [openai.com](https://openai.com) but MUST be properly populated when using Azure OpenAI instances.
 
+
+## Deploy the Chat Copilot frontend
+
+The Chat Copilot frontend is a React web application that provides a user interface for interacting with the Semantic Kernel via chat. You can deploy this application as an Azure Static Web App using the commands below.
+
+### Install Azure's Static Web Apps CLI
+
+```bash
+npm install -g @azure/static-web-apps-cli
+```
+
+### PowerShell
+
+```powershell
+
+./deploy-webapp.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -ResourceGroupName rg-{YOUR_DEPLOYMENT_NAME} -DeploymentName {YOUR_DEPLOYMENT_NAME} -FrontendClientId {YOUR_FRONTEND_CLIENT_ID}
+```
+
+### Bash
+
+```bash
+./deploy-webapp.sh --subscription {YOUR_SUBSCRIPTION_ID} --resource-group rg-{YOUR_DEPLOYMENT_NAME} --deployment-name {YOUR_DEPLOYMENT_NAME} --client-id {YOUR_FRONTEND_CLIENT_ID}
+```
 
 ## How to clean up resources
 When you want to clean up the resources from this deployment, use the Azure portal or run the following [Azure CLI](/cli/azure/) command:
