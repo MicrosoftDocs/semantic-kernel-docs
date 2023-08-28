@@ -20,9 +20,7 @@ Chat Copilot deployments use Azure Active Directory to authenticate users and se
 
 ### App registrations (identity)
 
-You will need two Azure Active Directory (AAD) application registrations -- one for the frontend web app and one for the backend API.
-
-> For details on creating an application registration, go [here](https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
+You will need two Azure Active Directory (AAD) [application registrations](/azure/active-directory/develop/quickstart-register-app) -- one for the frontend web app and one for the backend API.
 
 > NOTE: Other account types can be used to allow multitenant and personal Microsoft accounts to use your application if you desire. Doing so may result in more users and therefore higher costs.
 
