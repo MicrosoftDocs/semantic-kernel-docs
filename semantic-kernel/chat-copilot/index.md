@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-Chat Copilot provides a reference application for building a chat experience using Semantic Kernel with an AI agent. The Semantic Kernel team built this application so that you could see how the different concepts of the platform come together to create a single conversational experience. These include leveraging [plugins](../ai-orchestration/plugins.md), [planners](../ai-orchestration/plugins.md), and AI [memories](../memories/index.md).
+Chat Copilot provides a reference application for building a chat experience using Semantic Kernel with an AI agent. The Semantic Kernel team built this application so that you could see how the different concepts of the platform come together to create a single conversational experience. These include leveraging [plugins](../ai-orchestration/plugins/index.md), [planners](../ai-orchestration/plugins/planner.md), and AI [memories](../memories/index.md).
 
 :::image type="content" source="../media/chat-copilot-in-action.gif" alt-text="Chat Copilot in action":::
 

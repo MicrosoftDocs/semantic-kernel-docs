@@ -1,16 +1,6 @@
-- name: Overview
-  href: index.md
-- name: Understanding AI plugins
-  href: plugins.md
-- name: Creating semantic functions
-  href: semantic-functions.md
-- name: Creating native functions
-  href: native-functions.md
-- name: Chaining functions together
-  href: chaining-functions.md
-- name: Auto create plans with planner
-  href: planner.md
-- name: Create and run a ChatGPT plugin
-  href: chatgpt-plugins.md
-- name: Out-of-the-box plugins
-  href: out-of-the-box-plugins.md
+- name: Initializing the kernel
+  href: kernel/TOC.yml
+  expanded: true
+- name: Creating and using AI plugins
+  href: plugins/TOC.yml
+  expanded: true

@@ -37,6 +37,12 @@
       "url": "https://github.com/Microsoft/templates.docs.msft.pdf",
       "branch": "main",
       "branch_mapping": {}
+    },
+    {
+      "path_to_root": "semantic-kernel-samples",
+      "url": "https://github.com/microsoft/semantic-kernel",
+      "branch": "main",
+      "branch_mapping": {}
     }
   ],
   "branch_target_mapping": {
