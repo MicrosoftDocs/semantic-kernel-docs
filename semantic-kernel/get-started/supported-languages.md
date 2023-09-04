@@ -74,9 +74,9 @@ Today, not all features are available in all languages. The following tables sho
 |-----------------------------------|:----:|:------:|:----:|-------|
 | Plan Object Model                 | ✅ | ✅ | 🔄 | |
 | BasicPlanner                      | ❌ | ✅ | ❌ | |
-| ActionPlanner                     | ✅ | 🔄 | 🔄 | In development|
-| SequentialPlanner                 | ✅ | 🔄 | 🔄 | In development|
-| StepwisePlanner                   | ✅ | ❌ | ❌ | |
+| ActionPlanner                     | ✅ | ✅ | 🔄 | In development|
+| SequentialPlanner                 | ✅ | ✅ | 🔄 | In development|
+| StepwisePlanner                   | ✅ | ✅ | ❌ | |
 
 ### Connectors
 
