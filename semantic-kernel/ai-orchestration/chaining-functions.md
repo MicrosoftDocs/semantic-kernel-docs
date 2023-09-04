@@ -290,10 +290,10 @@ After making these changes, you should be able to run the code again and see the
 ## Starting a pipeline with additional context variables
 So far, we've only passed in a string to the `RunAsync` method. However, you can also pass in a context object to start the pipeline with additional information. This can be useful to pass additional information to any of the functions in the pipeline.
 
-It's _also_ useful in persisting the initial `$input` variable across all functions in the pipeline without it being overwritten. For example, in our current pipeline, the user's original request is overwritten by the output of the `GetNumbers` function. This makes it difficult to retrieve the original request later in the pipeline to create a natural sounding response. By storying the original request as another variable, we can retrieve it later in the pipeline.
+It's _also_ useful in persisting the initial `$input` variable across all functions in the pipeline without it being overwritten. For example, in our current pipeline, the user's original request is overwritten by the output of the `GetNumbers` function. This makes it difficult to retrieve the original request later in the pipeline to create a natural sounding response. By storing the original request as another variable, we can retrieve it later in the pipeline.
 
 ### Passing a context object to `RunAsync`
-To pass a context object to `RunAsync`, you can create a new context object and pass it as the first parameter. This will start the pipeline with the variables in the context object. We'll be creating a new variable called `original_input` to store the original request. Later, we'll show where to add this code in the `RouteRequest` function.
+To pass a context object to `RunAsync`, you can create a new context object and pass it as the first parameter. This will start the pipeline with the variables in the context object. We'll be creating a new variable called `original_request` to store the original request. Later, we'll show where to add this code in the `RouteRequest` function.
 
 # [C#](#tab/Csharp)
 ```csharp
