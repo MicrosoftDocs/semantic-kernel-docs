@@ -4,17 +4,16 @@
   href: get-started/TOC.yml
 - name: Orchestrating AI plugins
   href: ai-orchestration/TOC.yml
+  expanded: true
 - name: Prompt engineering
   href: prompt-engineering/TOC.yml
 - name: Giving your AI memories
   href: memories/TOC.yml
-- name: Chat Copilot
-  href: chat-copilot/TOC.yml
-- name: Running sample apps
-  href: samples-and-solutions/TOC.yml
-- name: Visual Studio Code tools
-  href: vs-code-tools/index.md
-- name: Getting Support
-  href: support/TOC.yml
 - name: Using AI responsibly
   href: when-to-use-AI/TOC.yml
+- name: Visual Studio Code tools
+  href: vs-code-tools/index.md
+- name: Chat Copilot
+  href: chat-copilot/TOC.yml
+- name: Getting Support
+  href: support/TOC.yml

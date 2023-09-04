@@ -216,6 +216,11 @@
             "redirect_document_id": true
         },
         {
+            "source_path": "semantic-kernel/ai-orchestration/native-functions.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/native-functions/using-the-SKFunction-decorator",
+            "redirect_document_id": true
+        },
+        {
             "source_path": "semantic-kernel/create-chains/planner.md",
             "redirect_url": "/semantic-kernel/ai-orchestration/planner",
             "redirect_document_id": true
@@ -263,6 +268,41 @@
         {
             "source_path": "semantic-kernel/deploy/publish-changes-to-azure.md",
             "redirect_url": "/semantic-kernel/chat-copilot/publish-changes-to-azure",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/chaining-functions.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/chaining-functions",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/chatgpt-plugins.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/chatgpt-plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/index.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/kernel/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/out-of-the-box-plugins.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/out-of-the-box-plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planner.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/planner",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/semantic-functions.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/semantic-functions/inline-semantic-functions",
             "redirect_document_id": true
         }
     ]

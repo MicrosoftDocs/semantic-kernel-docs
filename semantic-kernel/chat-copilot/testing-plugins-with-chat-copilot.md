@@ -19,7 +19,7 @@ Before you can import your own OpenAI plugins, you'll first need to have a Chat 
 Additionally, you will need to make sure that the CORS settings for your ChatGPT plugins are configured to allow requests from your Chat Copilot instance. For example, if you are running Chat Copilot locally, you will need to make sure that your ChatGPT plugins are configured to allow requests from _http://localhost:3000_.
 
 ## Why test your ChatGPT plugins with Chat Copilot?
-As mentioned in the [plugin](../ai-orchestration/plugins.md) article, plugins are the combination of logic (either expressed as native functions or semantic functions) _and_ their semantic descriptions. Without appropriate semantic descriptions, the planner will not be able to use your plugin.
+As mentioned in the [plugin](../ai-orchestration/plugins/index.md) article, plugins are the combination of logic (either expressed as native functions or semantic functions) _and_ their semantic descriptions. Without appropriate semantic descriptions, the planner will not be able to use your plugin.
 
 With Chat Copilot, you can test the effectiveness of your semantic descriptions by seeing how well either the action planner or sequential planner can use your plugin. This will allow you to iterate on your semantic descriptions until you are satisfied with the results. 
 

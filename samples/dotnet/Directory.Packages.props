@@ -1,0 +1,30 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable central package management -->
+    <!-- https://learn.microsoft.com/en-us/nuget/consume-packages/Central-Package-Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <!-- Microsoft.Extensions.Logging -->
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+    <!-- Newtonsoft.Json -->
+    <PackageVersion Include="Newtonsoft.Json" Version="[13.0.3, )" />
+    <!-- Microsoft.SemanticKernel -->
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="0.21.230828.2-preview" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Skills.OpenAPI" Version="0.21.230828.2-preview" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Planning.StepwisePlanner" Version="0.21.230828.2-preview" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Skills.Core" Version="0.21.230828.2-preview" />
+    <!-- Microsoft.Azure -->
+    <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
+    <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.10.0"/>
+    <PackageVersion Include="Microsoft.Azure.Functions.Worker" Version="1.18.0" />
+    <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="2.0.0-preview2" />
+    <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="2.0.0-preview2" TreatAsUsed="true" />
+    <!-- Microsoft.CodeAnalysis -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.6.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
+  </ItemGroup>
+</Project>
