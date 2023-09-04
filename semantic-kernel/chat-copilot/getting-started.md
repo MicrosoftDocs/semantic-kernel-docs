@@ -28,8 +28,6 @@ You will need the following items to run the sample:
 > * [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) _(via Setup script)_
 > * [Node.js](https://nodejs.org/en/download) _(via Setup script)_
 > * [Yarn](https://classic.yarnpkg.com/docs/install) _(via Setup script)_
-> * [Azure account](https://azure.microsoft.com/free)
-> * [Azure AD Tenant](/azure/active-directory/develop/quickstart-create-new-tenant)
 > * AI Service:
 
 | AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -38,17 +36,7 @@ You will need the following items to run the sample:
 | OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)                    
 
 ## Instructions
-1) Register an application.
-
-    To register an application, follow [these instructions](/azure/active-directory/develop/quickstart-register-app) and use the settings below:
-
-   - `Supported account types`: "_Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)_" 
-   - `Redirect URI (optional)`: _Single-page application (SPA)_ and use _http://localhost:3000_.
-    
-    > [!NOTE]
-    > Take note of your application's _Application (client) ID_. Chat Copilot will use this ID for authentication.
-
-2) Install .NET 7.0 SDK, Node.js, and Yarn on your machine.
+1) Install .NET 7.0 SDK, Node.js, and Yarn on your machine.
 
     # [Windows](#tab/Windows)
     Open a PowerShell terminal as an administrator and navigate to the _\scripts_ directory in the Chat Copilot project.
@@ -91,26 +79,19 @@ You will need the following items to run the sample:
     ```
     ---
 
-3) Configure Chat Copilot.
+2) Configure Chat Copilot.
 
     # [PowerShell](#tab/Powershell)
 
     Replace the values in brackets below before running the command:
 
     ```powershell
-    .\Configure.ps1 -AIService {AI_SERVICE} -APIKey {API_KEY} -Endpoint {AZURE_OPENAI_ENDPOINT} -ClientId {AZURE_APPLICATION_ID} 
+    .\Configure.ps1 -AIService {AI_SERVICE} -APIKey {API_KEY} -Endpoint {AZURE_OPENAI_ENDPOINT}
     ```
 
     - `AI_SERVICE`: `AzureOpenAI` or `OpenAI`.
     - `API_KEY`: The _API key_ for Azure OpenAI or for OpenAI.
     - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource _Endpoint_ address. Omit `-Endpoint` if using OpenAI.
-    - `AZURE_APPLICATION_ID`: The _Application (client) ID_ associated with the registered application.
-
-    - (Optional): To set a specific Tenant Id for the web application, use the parameter:
-
-        ```powershell
-        -TenantId {TENANT_ID}
-        ```
 
     > [!IMPORTANT]
     > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters:
@@ -130,19 +111,12 @@ You will need the following items to run the sample:
     Replace the values in brackets below before running the command:
 
     ```bash
-    ./Configure.sh --aiservice {AI_SERVICE} --apikey {API_KEY} --endpoint {AZURE_OPENAI_ENDPOINT} --clientid {AZURE_APPLICATION_ID} 
+    ./Configure.sh --aiservice {AI_SERVICE} --apikey {API_KEY} --endpoint {AZURE_OPENAI_ENDPOINT}
     ```
 
     - `AI_SERVICE`: `AzureOpenAI` or `OpenAI`.
     - `API_KEY`: The _API key_ for Azure OpenAI or for OpenAI.
     - `AZURE_OPENAI_ENDPOINT`: The Azure OpenAI resource _Endpoint_ address. Omit `--endpoint` if using OpenAI.
-    - `AZURE_APPLICATION_ID`: The _Application (client) ID_ associated with the registered application.
-
-    - (Optional): To set a specific Tenant Id, use the parameter:
-
-        ```bash
-        --tenantid {TENANT_ID}
-        ```
 
     > [!IMPORTANT]
     > For **Azure OpenAI**, if you deployed models `gpt-35-turbo` and `text-embedding-ada-002` with custom names (instead of each own's given name), also use the parameters: 
@@ -153,7 +127,7 @@ You will need the following items to run the sample:
 
     ---
 
-4) Run the start script.
+3) Run the start script.
     
     # [PowerShell](#tab/Powershell)
 
