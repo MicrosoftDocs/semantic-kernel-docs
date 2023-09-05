@@ -11,9 +11,9 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../../includes/pat_large.md)]
 
-In previous articles, we showed how you could invoke a Semantic Kernel function (whether semantic or native) individually. Oftentimes, however, you may want to string multiple functions together into a single pipeline to simplify your code.
+In previous articles, we showed how you could invoke a Semantic Kernel function (whether semantic or native) individually. Oftentimes, however, you may want to string multiple functions together into a single pipeline to simplify your code. [In this article](./chaining-functions.md#passing-more-than-just-input-with-native-functions), we'll put this knowledge to use by demonstrating how you could refactor the code from the [calling nested functions](./native-functions/calling-nested-functions.md) article to make it more readable and maintainable.
 
-[Later in this article](./chaining-functions.md#passing-more-than-just-input-with-native-functions), we'll put this knowledge to use by demonstrating how you could refactor the code from the [calling nested functions](./native-functions/calling-nested-functions.md) article to make it more readable and maintainable. If you want to see the final solution, you can check out the following samples in the public documentation repository.
+If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to final solution |
 | --- | --- |
@@ -75,8 +75,6 @@ The menu reads in enumerated form:
 Run the functions sequentially. Notice how all of the functions share the same context.
 
 ```python
-
-
 my_joke_function = kernel.create_semantic_function(myJokePrompt, max_tokens=500)
 my_poem_function = kernel.create_semantic_function(myPoemPrompt, max_tokens=500)
 my_menu_function = kernel.create_semantic_function(myMenuPrompt, max_tokens=500)
@@ -102,7 +100,7 @@ Which would result in something like:
 ```
 
 ### Using the `RunAsync` method to simplify your code
-Running each function individually can be very verbose, so Semantic Kernel also provides the `RunAsync` method in C# or `run_async` method in Python that automatically calls a series of functions sequentially, all with the same context object.
+Running each function individually can be very verbose, so Semantic Kernel also provides the `RunAsync` method in C# or `run_async` method in Python that automatically calls a series of functions sequentially, all with the same context object. 
 
 # [C#](#tab/Csharp)
 ```csharp
@@ -132,10 +130,12 @@ print(myOutput)
 ## Passing more than just `input` with native functions
 In the previous articles, we've already seen how you can update and retrieve additional properties from the context object within native functions. We can use this same technique to pass additional data between functions within a pipeline.
 
-We'll demonstrate this by updating the code written in the [calling nested functions](./native-functions/calling-nested-functions.md) article to use the `RunAsync` method with multiple functions.
+We'll demonstrate this by updating the code written in the [calling nested functions](./native-functions/calling-nested-functions.md) article to use the `RunAsync` method with multiple functions. Use the link to the previous completed solution at the top of the page if you want to follow along.
 
-### Adding a function that changes variables in the context
-In the previous example, we used the `RouteRequest` function to individually call each of the Semantic Kernel functions, and in between calls, we updated the context object with the new data. We can simplify this code by creating a new native function that performs the same context update operations. We'll call this function `ExtractNumbersFromJson` and it will take the JSON string from the `input` variable and extract the numbers from it.
+### Adding a function that changes variables during runtime
+In the previous example, we used the `RouteRequest` function to individually call each of the Semantic Kernel functions, and in between calls, we manually updated the variables before running the next function.
+
+We can simplify this code by creating a new native function that performs the same context update operations as part of a chain. We'll call this function `ExtractNumbersFromJson` and it will take the JSON string from the `input` variable and extract the numbers from it into the context object.
 
 Add the following code to your `OrchestratorPlugin` class.
 
@@ -148,10 +148,10 @@ Add the following code to your `OrchestratorPlugin` class.
 ---
 
 ### Using the `RunAsync` method to chain our functions
-Now that we have a function that can extracts numbers, we can update our `RouteRequest` function to use the `RunAsync` method to call the functions in a pipeline. Update the `RouteRequest` function to the following:
+Now that we have a function that can extracts numbers, we can update our `RouteRequest` function to use the `RunAsync` method to call the functions in a pipeline. Update the `RouteRequest` function to the following. Notice how we can now call all of our functions in a single call to `RunAsync`.
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="20-62,77-78" highlight="35-41":::
+:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="20-62,77-78" highlight="36-42":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="13-58,73" highlight="40-45":::
@@ -161,9 +161,9 @@ Now that we have a function that can extracts numbers, we can update our `RouteR
 After making these changes, you should be able to run the code again and see the same results as before. Only now, the `RouteRequest` is easier to read and you've created a new native function that can be reused in other pipelines.
 
 ## Starting a pipeline with additional context variables
-So far, we've only passed in a string to the `RunAsync` method. However, you can also pass in a context object to start the pipeline with additional information. This can be useful to pass additional information to any of the functions in the pipeline.
+So far, we've only passed in a string to the `RunAsync` method. You can, however, also pass in a context object to start the pipeline with additional information.
 
-It's _also_ useful in persisting the initial `$input` variable across all functions in the pipeline without it being overwritten. For example, in our current pipeline, the user's original request is overwritten by the output of the `GetNumbers` function. This makes it difficult to retrieve the original request later in the pipeline to create a natural sounding response. By storing the original request as another variable, we can retrieve it later in the pipeline.
+This is helpful because it can allow us to persist the initial `$input` variable across all functions in the pipeline without it being overwritten. For example, in our current pipeline, the user's original request is overwritten by the output of the `GetNumbers` function. This makes it difficult to retrieve the original request later in the pipeline to create a natural sounding response. By storing the original request as another variable, we can retrieve it later in the pipeline.
 
 
 ### Passing a context object to `RunAsync`
@@ -209,7 +209,7 @@ Now that we've updated the pipeline, we can test it out. Run the following code 
 :::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/program.cs" range="4-7,16-21,24-42":::
 
 # [Python](#tab/python)
-:::code language="python" source="~/../samples/python/10-Chaining-Functions/main.py" range="1-4,6-13,15-47":::
+:::code language="python" source="~/../samples/python/10-Chaining-Functions/main.py" range="1-4,6-13,15-53":::
 
 ---
 

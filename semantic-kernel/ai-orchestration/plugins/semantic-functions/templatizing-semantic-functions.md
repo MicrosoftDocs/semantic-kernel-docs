@@ -12,11 +12,11 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
-In the previous articles where we created [semantic functions inline](./inline-semantic-functions.md) and by [using files](./serializing-semantic-functions.md), we created a semantic function that could be used to get the intent of the user. This function, however, is not very reusable. For example, if we wanted to run specific code based on the user intent, it would be difficult to use the output of the `GetIntent` function to choose which code to actually run.
+In the [previous article](./serializing-semantic-functions.md) we created a semantic function that could be used to get the intent of the user. This function, however, is not very reusable. For example, if we wanted to run specific code based on the user intent, it would be difficult to use the output of the `GetIntent` function to choose which code to actually run.
 
-We need to find a way to constrain the output of our function so that we can use the output in a switch statement.
+We need to find a way to _constrain_ the output of our function so that we can later use the output in a switch statement inside of a native function.
 
-By following this example, you'll learn how to templatize a semantic function. If you want to see the final solution, you can check out the following samples in the public documentation repository.
+By following this example, you'll learn how to templatize a semantic function. If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
@@ -36,7 +36,7 @@ To begin, open the _skprompt.txt_ file in the _GetIntent_ folder from the previo
    :::column span="2":::
       The new prompt uses the `options` variable to provide a list of options for the LLM to choose from. We've also added a `history` variable to the prompt so that the previous conversation is included.
       
-      By including these variables, we are able to help the LLM choose the correct intent by allowing it to leverage variables within the Semantic Kernel context variables object.
+      By including these variables, we are able to help the LLM choose the correct intent by providing it with more context and a constrained list of options to choose from.
    :::column-end:::
    :::column span="3":::
       ![Consuming context variables within a semantic function](../../../media/using-context-in-templates.png)
@@ -52,11 +52,11 @@ When you add a new variable to the prompt, you must also update the _config.json
 
 You can now update your _Program.cs_ file to provide a list of options to the `GetIntent` function. To do this, you'll need to complete the following steps:
 
-1. Create a [ContextVariables](/dotnet/api/microsoft.semantickernel.orchestration.contextvariables) object,
+1. Create a [ContextVariables](/dotnet/api/microsoft.semantickernel.orchestration.contextvariables) object that will store the variables,
 2. Set the `input`, `history`, and `options` variables,
-3. And then pass the object into the kernel's `RunAsync` function.
+3. And finally pass the object into the kernel's `RunAsync` function.
 
-You can see how to do this in the code snippets.
+You can see how to do this in the code snippets below.
 
 # [C#](#tab/Csharp)
 
@@ -93,7 +93,7 @@ Call your main function.
 
 ---
 
-Now, instead of getting an output like `Send congratulatory email`, we'll get an output like `SendEmail`. This output could then be used within a switch statement in native code to run the correct function.
+Now, instead of getting an output like `Send congratulatory email`, we'll get an output like `SendEmail`. This output could then be used within a switch statement in native code to execute the next appropriate step.
 
 ## Take the next step
 Now that you can templatize your semantic function, you can now learn how to call functions from within

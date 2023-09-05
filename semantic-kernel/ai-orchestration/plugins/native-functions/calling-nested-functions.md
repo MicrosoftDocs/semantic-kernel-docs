@@ -14,7 +14,7 @@ ms.service: semantic-kernel
 
 In the [previous tutorials](./multiple-parameters.md), we demonstrated how to create functions with one or more input parameters. In this tutorial, we'll demonstrate how to call other functions _within_ a native function. This will allow you to build more complex functions that consist of both native and semantic functions.
 
-If you want to see the final solution to this article, you can check out the following samples in the public documentation repository.
+If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ Plugins
 ### Accessing the kernel within a native function
 We can now create the class for our orchestrator plugin where all its native functions will live.
 
-Since this plugin will run other functions, we'll need to pass the kernel to the plugin during initialization so it can access its plugins. Add the following code to your `Orchestrator` class to get started.
+Since this plugin will run other functions, we'll need to pass the kernel to the plugin during initialization. Add the following code to your `Orchestrator` class to get started.
 
 
 # [C#](#tab/Csharp)
@@ -98,16 +98,34 @@ Add the following code to your `Orchestrator` class to get started creating the 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="11-29,36-38,43-44,51-52":::
+:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="11-29,38-40,47-48,58-59":::
 
 ---
 
-Notice how we're able to use the readonly `kernel` property to run the `GetIntent` function. Later, we can also use the `kernel` property to run the `Sqrt` and `Multiply` functions.
+Notice how we're able to use the readonly `kernel` property of our Orchestrator class to run the `GetIntent` function. Later, we can also use this kernel to run the `Sqrt` and `Multiply` functions.
 
 Unfortunately, however, we have a challenge. Despite knowing the user's intent, we don't know which numbers to pass to the `Sqrt` or `Multiply` functions. We'll need to add _another_ semantic function to the orchestrator plugin to extract the necessary numbers from the user's input.
 
 ### Using semantic functions to extract data for native functions
 To pull the numbers from the user's input, we'll create a semantic function called `GetNumbers`. Create a new folder under the _OrchestratorPlugin_ folder named _GetNumbers_. Then create a _skprompt.txt_ and _config.json_ file with the following content.
+
+```directory
+Plugins
+│
+└─── OrchestratorPlugin
+|    │
+|    └─── GetIntent
+|    │    └─── skprompt.txt
+|    │    └─── config.json
+|    └─── GetNumbers
+|    │    └─── skprompt.txt
+|    │    └─── config.json
+|    └─── OrchestratorPlugin.cs
+|
+└─── MathPlugin
+     │
+     └─── Math.cs
+```
 
 Add the following to the _skprompt.txt_ file:
 
@@ -120,14 +138,14 @@ Add the following code to the _config.json_ file:
 This semantic function uses few-shot learning to demonstrate to the LLM how to correctly extract the numbers from the user's request and output them in JSON format. This will allow us to easily pass the numbers to the `Sqrt` and `Multiply` functions.
 
 ### Putting it all together
-We can now call the `GetNumbers` function from the `RouteRequest` function. Replace the `switch` statement in the `RouteRequest` function with the following code.
+We can now call the `GetNumbers` function from the `RouteRequest` function. Replace the `switch` statement in the `RouteRequest` function with the following code to run the `GetNumbers` function and extract the numbers from the JSON output.
 
 # [C#](#tab/Csharp)
 
 :::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="34-57":::
 
 # [Python](#tab/python)
-:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="30-52":::
+:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="30-58":::
 
 ---
 
@@ -137,14 +155,14 @@ Finally, you can invoke the `RouteRequest` function from your main file using th
 
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/Program.cs" range="3-6,14-20,23-41":::
+:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/Program.cs" range="3-6,14-20,23-41"  highlight="22":::
 
 # [Python](#tab/python)
-:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/main.py" range="1-4,6-13,15-49":::
+:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/main.py" range="1-4,6-13,15-49" highlight="25":::
 
 ---
 
-Notice how in the main file we load the kernel with _all_ the functions that are needed by the `RouteRequest` function. If we do not appropriately load the `GetIntent`, `GetNumbers`, `Sqrt`, and `Multiply` functions, the `RouteRequest` function will fail when it tries to call them.
+Also notice how in the main file we load the kernel with _all_ the functions that are needed by the `RouteRequest` function. If we do not appropriately load the `GetIntent`, `GetNumbers`, `Sqrt`, and `Multiply` functions, the `RouteRequest` function will fail when it tries to call them.
 
 ## Take the next step
 You now have the skills necessary to create both semantic and native functions to create custom plugins, but up until now, we've only called one function at a time. In the next section, you'll learn how to chain multiple functions together.

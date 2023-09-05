@@ -17,7 +17,7 @@ The Simple Chat Summary sample allows you to see the power of [functions](../pro
 > Each function will call OpenAI which will use tokens that you will be billed for. 
 
 ### Walkthrough video
-> [!VIDEO https://aka.ms/SK-Samples-SimChat-Video]
+> [!VIDEO https://learn-video.azurefd.net/vod/player?id=6608ac4e-bc45-4a67-bb23-88c0d889260b]
 
 ## Requirements to run this app
 

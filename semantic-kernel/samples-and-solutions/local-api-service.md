@@ -18,7 +18,7 @@ This service API is written in C# against Azure Function Runtime v4 and exposes 
 
 ### Walkthrough video
 
->[!Video https://aka.ms/SK-Local-API-Setup]
+>[!Video https://learn-video.azurefd.net/vod/player?id=a7be2947-cc94-4a2d-9932-162977ed35ce]
 
 ## Requirements to run the local service
 

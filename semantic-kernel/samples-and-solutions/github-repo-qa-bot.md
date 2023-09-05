@@ -19,7 +19,7 @@ The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those f
 
 ### Walkthrough video
 
->[!Video https://aka.ms/SK-GitHub-QA-Bot-Video]
+>[!Video https://learn-video.azurefd.net/vod/player?id=bf404e89-42c9-433d-bdca-7cdf2d33689c]
 
 
 ## Requirements to run this app

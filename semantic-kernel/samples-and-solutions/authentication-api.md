@@ -15,7 +15,7 @@ The Authenticated API’s sample allows you to use authentication to connect to 
 
 ### Walkthrough video
 
-> [!VIDEO https://aka.ms/SK-Samples-AuthAPI-Video]
+> [!VIDEO https://learn-video.azurefd.net/vod/player?id=1f1b52a2-9241-46bf-83f7-0d68b4d1071b]
 
 ## Requirements to run this app
 
