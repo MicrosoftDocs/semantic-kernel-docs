@@ -71,7 +71,7 @@ To setup the guides, follow the steps below.
    > If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
 
    If you have trouble cloning or forking the repo, you can watch the video below.
-   > [!VIDEO https://aka.ms/SK-Local-Setup]
+   > [!VIDEO https://learn-video.azurefd.net/vod/player?id=5a410eae-b131-4227-a8e5-8e24e0cefd8e]
 
 3. While the repository is open in VS Code, navigate to the `/dotnet/notebooks` or `/python/notebooks` folder.
 
@@ -81,7 +81,7 @@ To setup the guides, follow the steps below.
 6. Activate each code snippet with the "play" button on the left hand side.
 
    If you need help running the _00-getting-started.ipynb_ notebook, you can watch the video below.
-   > [!VIDEO https://aka.ms/SK-Getting-Started-Notebook] 
+   > [!VIDEO https://learn-video.azurefd.net/vod/player?id=fc3c792e-3b4d-4009-900c-588ee35ee426] 
 
 7. Repeat for the remaining notebooks.
     

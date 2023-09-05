@@ -81,7 +81,7 @@ public class Orchestrator
     {
         JObject numbers = JObject.Parse(context.Variables["input"]);
 
-        // otherwise, loop through numbers and add them to the context
+        // Loop through numbers and add them to the context
         foreach (var number in numbers)
         {
             if (number.Key == "number1")

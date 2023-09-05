@@ -26,7 +26,7 @@ To drive alignment across the industry, we've adopted the [OpenAI plugin specifi
         ![Semantic Kernel can orchestrate AI plugins from any provider](../../media/cross-platform-plugins.png)
    :::column-end:::
    :::column span="1":::
-      For developers using Semantic Kernel, this means any plugins you build will be usable in ChatGPT, Bing, and Microsoft 365, allowing you to increase the reach of your AI capabilities without rewriting your code. It also means that plugins built for ChatGPT, Bing, and Microsoft 365 can integrate with Semantic Kernel.
+      For developers using Semantic Kernel, this means any plugins you build can be exported so they are usable in ChatGPT, Bing, and Microsoft 365. This allows you to increase the reach of your AI capabilities without rewriting code. It also means that plugins built for ChatGPT, Bing, and Microsoft 365 can be imported into Semantic Kernel seamlessly.
    :::column-end:::
 :::row-end:::
 
@@ -39,9 +39,9 @@ _Just_ providing functions, however, is not enough to make a plugin. To power au
 
 :::row:::
    :::column span="1":::
-      For example, in the [`WriterSkill` plugin](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/WriterSkill), each function has a semantic description that describes what the function does. Planner can then use this description to choose the best function to call based on a user's ask.
+      For example, in the [`WriterSkill` plugin](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/WriterSkill), each function has a semantic description that describes what the function does. A planner can then use these descriptions to choose the best functions to call to fulfill a user's ask.
       
-      In the picture on the right, planner would likely use the `ShortPoem` and `StoryGen` functions to satisfy the users ask thanks to the provided semantic descriptions.
+      In the picture on the right, a planner would likely use the `ShortPoem` and `StoryGen` functions to satisfy the users ask thanks to the provided semantic descriptions.
    :::column-end:::
    :::column span="3":::
         ![Semantic description within the WriterSkill plugin](../../media/writer-plugin-example.png)
@@ -49,7 +49,7 @@ _Just_ providing functions, however, is not enough to make a plugin. To power au
 :::row-end:::
 
 ## Adding functions to plugins
-Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: semantic functions and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating semantic functions](./semantic-functions/inline-semantic-functions.md) and [Creating native functions](./native-functions/using-the-SKFunction-decorator.md) articles.
+Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: semantic functions and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating semantic functions](./semantic-functions/inline-semantic-functions.md) and [Creating native functions](./native-functions/using-the-SKFunction-decorator.md) sections.
 
 :::row:::
    :::column span="2":::
@@ -141,7 +141,7 @@ def add(self, initial_value_text: str, context: SKContext) -> str:
 You can learn more about creating native functions in the [Creating native functions](./native-functions/using-the-SKFunction-decorator.md) section. In this article you'll learn the best practices for the following:
 > [!div class="checklist"]
 > * How to [create simple native functions](./native-functions/using-the-SKFunction-decorator.md) with the `SKFunction` decorator
-> * Using multiple [input and output parameters](./native-functions/multiple-parameters.md) with native functions
+> * Using [multiple input parameters](./native-functions/multiple-parameters.md) with native functions
 > * Calling [nested functions](./native-functions/calling-nested-functions.md) from within native functions
 
 ## Take the next step

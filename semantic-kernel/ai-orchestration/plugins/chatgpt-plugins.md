@@ -8,7 +8,7 @@ ms.date: 07/8/2023
 ms.service: semantic-kernel
 ---
 
-# Create and run ChatGPT plugins using Semantic Kernel
+# Export and import OpenAI plugins with Semantic Kernel
 
 [!INCLUDE [pat_large.md](../../includes/pat_large.md)]
 

@@ -14,14 +14,14 @@ async def main():
     # Import the MathPlugin.
     math_plugin = kernel.import_skill(Math(), skill_name="MathPlugin")
 
-    context = kernel.create_new_context()
-    context["input"] = "12.34"
-    context["number2"] = "56.78"
+    variables = sk.ContextVariables()
+    variables["input"] = "12.34"
+    variables["number2"] = "56.78"
 
     # Run the Multiply function with the context.
     result = await kernel.run_async(
         math_plugin["Multiply"],
-        input_context=context,
+        input_vars=variables,
     )
 
     print(result)

@@ -28,15 +28,21 @@ async def main():
     )
 
     # Make a request that runs the Sqrt function
-    result1 = await orchestrator_plugin["route_request"].invoke_async(
-        "What is the square root of 524?"
-    )
-    print(result1["input"])
+    result1 = (
+        await kernel.run_async(
+            orchestrator_plugin["route_request"],
+            input_str="What is the square root of 524?",
+        )
+    ).result
+    print(result1)
 
     # Make a request that runs the Add function
-    result2 = await orchestrator_plugin["route_request"].invoke_async(
-        "How many square feet would the room be if its length was 12.25 feet and its width was 17.33 feet?"
-    )
+    result2 = (
+        await kernel.run_async(
+            orchestrator_plugin["route_request"],
+            input_str="How many square feet would the room be if its length was 12.25 feet and its width was 17.33 feet?",
+        )
+    ).result
     print(result2["input"])
 
 

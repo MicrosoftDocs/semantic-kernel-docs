@@ -12,11 +12,11 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
-In the [how to create semantic functions](../semantic-functions/inline-semantic-functions.md) section, we showed how you could create a semantic function that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to an email service to complete the request.
+In the [how to create semantic functions](../semantic-functions/inline-semantic-functions.md) section, we showed how you could create a semantic function that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
 
-Automating tasks like these are the primary purpose of AI apps. In this section, we'll show how you can create a simple native function that can perform a task LLMs cannot do easily on their own: perform arithmetic. In a [subsequent tutorial](./calling-nested-functions.md) we'll demonstrate how to combine native functions with semantic functions to correctly answer word problems like `What is the square root of 634?` and `What is 42 plus 1513?`
+Automating tasks like these are the primary purpose of AI apps. In this section, we'll show how you can create a simple native function that can perform a task LLMs cannot do easily on their own: arithmetic. In a [subsequent tutorial](./calling-nested-functions.md) we'll demonstrate how to combine native functions with semantic functions to correctly answer word problems like `What is the square root of 634?` and `What is 42 plus 1513?`
 
-If you want to see the final solution to this article, you can check out the following samples in the public documentation repository.
+If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
@@ -49,7 +49,7 @@ To solve this problem, we'll demonstrate how to create native functions that can
 | Math Plugin | Sqrt | Native | Takes the square root of a number |
 | Math Plugin | Multiple | Native | Multiplies two numbers together |
 
-In this article, we'll start with a simple example and demonstrate how to create the `Sqrt` function. In the [Using multiple inputs and outputs](./multiple-parameters.md) article, we'll show how to create the `Multiply` function, and in the [Calling nested functions](./calling-nested-functions.md) article, we'll show how to create the `RouteRequest` and `GetNumbers` functions.
+In this article, we'll start with a simple example by demonstrating how to create a `Sqrt` function. In the [Using multiple inputs and outputs](./multiple-parameters.md) article, we'll then show how to create functions that require multiple inputs (like the `Multiply` function). Finally, in the [Calling nested functions](./calling-nested-functions.md) article, we'll show how to create the `RouteRequest` and `GetNumbers` functions which combine native and semantic functions together.
 
 ## Finding a home for your native functions
 
@@ -69,7 +69,8 @@ MyPluginsDirectory
      └─── MyPlugin.cs
 ```
 
-It's ok if you have a plugin folder with both native and semantic functions. The kernel will load both functions into the same plugin namespace. What's important is that you don't have two functions with the same name within the same plugin namespace. If you do, the last function loaded will overwrite the previous function.
+> [!Tip]
+> It's ok if you have a plugin folder with both native and semantic functions. The kernel will load both functions into the same plugin namespace. What's important is that you don't have two functions with the same name within the same plugin namespace. If you do, the last function loaded will take precedence.
 
 ### Creating the folder for the Math plugin
 
@@ -138,9 +139,7 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 
 ---
 
-Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with semantic functions.
-
-While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
+Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with semantic functions. While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
 
 Also notice how we've added a description to each function with the `Description` attribute. This description will be used in the future by the [planner](../planner.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
@@ -149,11 +148,11 @@ Now that you've created your first native function, you can import it and run it
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/07-Simple-Native-Functions/program.cs" range="3-5,14-19,22-29":::
+:::code language="csharp" source="~/../samples/dotnet/07-Simple-Native-Functions/program.cs" range="3-5,14-19,22-29" highlight="16":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/07-Simple-Native-Functions/main.py" range="1-2,4-11,13-30":::
+:::code language="python" source="~/../samples/python/07-Simple-Native-Functions/main.py" range="1-2,4-11,13-30" highlight="16-19":::
 
 ---
 

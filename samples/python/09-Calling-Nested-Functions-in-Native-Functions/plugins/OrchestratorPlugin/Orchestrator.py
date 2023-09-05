@@ -27,25 +27,32 @@ class Orchestrator:
             await self._kernel.run_async(get_intent, input_vars=variables)
         ).result.strip()
 
-        GetNumbers = self._kernel.skills.get_function(
+        get_numbers = self._kernel.skills.get_function(
             "OrchestratorPlugin", "GetNumbers"
         )
-        getNumberContext = GetNumbers(request)
+        getNumberContext = (
+            await self._kernel.run_async(get_numbers, input_str=request)
+        ).result
         numbers = json.loads(getNumberContext["input"])
 
         # Call the appropriate function
         if intent == "Sqrt":
             # Call the Sqrt function with the first number
             square_root = self._kernel.skills.get_function("MathPlugin", "Sqrt")
-            sqrt_results = await square_root.invoke_async(numbers["number1"])
+            sqrt_results = await self._kernel.run_async(
+                square_root, input_str=numbers["number1"]
+            )
 
             return sqrt_results["input"]
         elif intent == "Multiply":
             # Call the Multiply function with both numbers
             multiply = self._kernel.skills.get_function("MathPlugin", "Multiply")
-            context["input"] = numbers["number1"]
-            context["number2"] = numbers["number2"]
-            multiply_results = await multiply.invoke_async(context=context)
+            variables = ContextVariables()
+            variables["input"] = numbers["number1"]
+            variables["number2"] = numbers["number2"]
+            multiply_results = await self._kernel.run_async(
+                multiply, input_vars=variables
+            )
 
             return multiply_results["input"]
         else:

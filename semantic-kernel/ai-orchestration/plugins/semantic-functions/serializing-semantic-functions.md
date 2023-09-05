@@ -16,7 +16,7 @@ In previous articles, we demonstrated [how to load a semantic function inline](.
 
 In this article, we'll demonstrate how to create the files necessary for a semantic function so you can easily import them into Semantic Kernel. As an example in this article, we will build on the [previous tutorial](./inline-semantic-functions.md) by showing how to create a semantic function that gathers the intent of the user. This semantic function will be called `GetIntent` and will be part of a plugin called `OrchestratorPlugin`.
 
-If you want to see the final solution, you can check out the following samples in the public documentation repository.
+If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
@@ -47,9 +47,9 @@ Plugins
 To see a more complete example of a plugins directory, check out the [Semantic Kernel sample plugins](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills) folder in the GitHub repository.
 
 ## Creating the files for your semantic function
-Once inside of a semantic functions folder, you'll need to create two files: _skprompt.txt_ and _config.json_. The _skprompt.txt_ file contains the prompt that will be sent to the AI service and the _config.json_ file contains the configuration along with semantic descriptions used by planner.
+Once inside of a semantic functions folder, you'll need to create two new files: _skprompt.txt_ and _config.json_. The _skprompt.txt_ file contains the prompt that will be sent to the AI service and the _config.json_ file contains the configuration along with semantic descriptions that can be used by planners.
 
-Go ahead and create these two files in the _GetIntent_ folder. In the following sections, we'll walk through how to configure them.
+Go ahead and create these two files in the _GetIntent_ folder.
 
 ```directory
 Plugins

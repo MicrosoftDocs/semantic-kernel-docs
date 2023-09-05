@@ -57,9 +57,9 @@ class Orchestrator:
         )
 
         # Create a new context object with the original request
-        pipelineContext = self._kernel.create_new_context()
-        pipelineContext["original_request"] = request
-        pipelineContext["input"] = request
+        pipelineVariables = ContextVariables()
+        pipelineVariables["original_request"] = request
+        pipelineVariables["input"] = request
 
         # Run the functions in a pipeline with create_response
         output = await self._kernel.run_async(
@@ -67,7 +67,7 @@ class Orchestrator:
             extract_numbers_from_json,
             math_function,
             create_response,
-            input_context=pipelineContext,
+            input_vars=pipelineVariables,
         )
 
         return output["input"]

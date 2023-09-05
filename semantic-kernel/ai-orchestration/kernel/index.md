@@ -12,12 +12,9 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../../includes/pat_large.md)]
 
-
-> _Kernel_: "The core, center, or essence of an object or system." —[Wiktionary](/semantic-kernel/support/bibliography#kernel)
-
 Similar to operating system, the kernel is responsible for managing resources that are necessary to run "code" in an AI application. This includes managing the configuration, services, and plugins that are necessary for both native code and AI services to run together.
 
-If you want to see the code demonstrated in this article run in a complete solution, you can check out the following samples in the public documentation repository.
+If you want to see the code demonstrated in this article in a complete solution, check out the following samples in the public documentation repository.
 
 | Language  | Link to final solution |
 | --- | --- |
@@ -25,13 +22,16 @@ If you want to see the code demonstrated in this article run in a complete solut
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/01-Kernel-Intro) |
 
 ## Using native and AI services together
-Semantic Kernel makes it easy to run AI services alongside native code by treating calls to AI services as first-class citizens called "semantic functions."
+Semantic Kernel makes it easy to run AI services alongside native code by treating calls to AI services as their own first-class citizens called "semantic functions."
 
-Semantic functions are discussed more deeply in their [own section](../plugins/semantic-functions/inline-semantic-functions.md), but for now, it is important to understand that both native and semantic functions behave the _same way_ within Semantic Kernel. This is thanks to the fact that both are expressed as [SKFunction](/dotnet/api/microsoft.semantickernel.skilldefinition.skfunction) objects. Because of this, they can each be triggered the same way by the kernel. This is important because it allows the kernel to run both types of functions indiscriminately.
+Semantic functions are discussed more deeply in their [own section](../plugins/semantic-functions/inline-semantic-functions.md), but for now, it is important to understand that both native and semantic functions behave the _same way_ within Semantic Kernel. This is thanks to the fact that both are expressed as [SKFunction](/dotnet/api/microsoft.semantickernel.skilldefinition.skfunction) objects. Because of this, they can each be triggered the same way by the kernel.
+
+This is important because it means both semantic and native functions behave the same way within the kernel to maximize interoperability.
+
+For example, you can see in the image below how the kernel is able to run both native and semantic functions together in a single pipeline. This allows the developer to use Semantic Kernel to 1) get the current time, 2) generate a poem about the time, before finally 3) translating it into a different language.
 
 ![SKFunctions run inside the kernel](../../media/kernel-with-skfunctions.png)
 
-In the example above, you can see the kernel is able to run a native function to get the current time and then run a semantic function to generate a poem about the time in a different language.
 
 ### Running functions using the kernel
 To run `SKFunction` objects, Semantic Kernel provides the [RunAsync](/dotnet/api/microsoft.semantickernel.kernel.runasync) method within the [Kernel](/dotnet/api/microsoft.semantickernel.kernel) class. This method takes one or more `SKFunction` objects and executes them sequentially. For example, the following code runs a single native function from the [Time plugin](../plugins/out-of-the-box-plugins.md) and returns back the result:
@@ -61,31 +61,31 @@ By investigating the [constructor](/dotnet/api/microsoft.semantickernel.kernel.-
 - The default [AI service](/dotnet/api/microsoft.semantickernel.services.iaiserviceprovider) that will power your semantic functions.
 - The [template engine](/dotnet/api/microsoft.semantickernel.templateengine.iprompttemplateengine) used to render prompt templates.
 - The [logger](/dotnet/api/microsoft.extensions.logging.ilogger) used to log messages from functions.
-- The [plugins](/dotnet/api/microsoft.semantickernel.skilldefinition.iskillcollection) that are available to be executed.
+- The [plugins](/dotnet/api/microsoft.semantickernel.skilldefinition.iskillcollection) available to be executed by the kernel
 - Additional configuration used by the kernel via the [KernelConfig](/dotnet/api/microsoft.semantickernel.kernelconfig) class.
 
 ### Configuring the kernel
-Depending on your language of choice, you can configure the kernel in different ways. For example, in C#, you can use the `Kernel.Builder` class to create a kernel, whereas with Python, you can iteratively add properties to the `Kernel` object.
+Depending on your language of choice, you can configure the kernel in different ways. For example, in C#, you can use the `Kernel.Builder` class to create a kernel, whereas with Python, you can iteratively add properties to the `Kernel` object directly.
 
 In the following examples, you can see how to add a chat completion service and a logger to the kernel.
 
 # [C#](#tab/Csharp)
 If you are using a Azure OpenAI, you can use the [WithAzureChatCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withazurechatcompletionservice) method.
 
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="34-41":::
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="34-41" highlight="3":::
 
 If you are using OpenAI, you can use the [WithOpenAIChatCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withopenaichatcompletionservice) method.
 
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="65-72":::
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="65-72" highlight="3":::
 
 # [Python](#tab/python)
 If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
 
-:::code language="csharp" source="~/../samples/python/01-Kernel-Intro/main.py" range="24-32":::
+:::code language="csharp" source="~/../samples/python/01-Kernel-Intro/main.py" range="24-32" highlight="4":::
 
 If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
-:::code language="csharp" source="~/../samples/python/01-Kernel-Intro/main.py" range="34-42":::
+:::code language="csharp" source="~/../samples/python/01-Kernel-Intro/main.py" range="34-42" highlight="4":::
 
 ---
 

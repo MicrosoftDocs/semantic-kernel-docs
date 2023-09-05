@@ -28,7 +28,7 @@ At its core, a semantic function is just a prompt that is sent to an AI service 
 ### Defining the prompt
 The first step is to define the prompt. The [prompt engineering](../../../prompt-engineering/index.md) section of the documentation provides a detailed overview of how to write successful prompts, but at a high level, prompts are requests written in natural language that are sent to an AI service like OpenAI.
 
-In most cases, you'll send your prompt to a text or chat completion service which will return back a response that attempts to complete the prompt. For example, if you sent the prompt `I want to go to the `, the AI service might return back `beach`. This is a very simple example, but it demonstrates the basic idea of how completion prompts work.
+In most cases, you'll send your prompt to a text or chat completion service which will return back a response that attempts to complete the prompt. For example, if you sent the prompt `"I want to go to the "`, the AI service might return back `"beach"` to complete the sentence. This is a very simple example, but it demonstrates the basic idea of how completion prompts work.
 
 In the following sample, we'll demonstrate how you could create a simple function called `GetIntent` that takes a user request and returns back the intent of the user. This is useful for scenarios where you want to understand the intent of a user's input and then take some action based on that intent.
 
@@ -68,35 +68,38 @@ The following sample shows how you could define the settings for the `GetIntent`
 
 ---
 
-### Testing the semantic function
-Now that you have a prompt and its settings, you can test the function by running it with the kernel.
-
-The following sample shows how you could run the `GetIntent` function with the input "I want to send an email to the marketing team celebrating their recent milestone."
+### Importing the semantic function into the kernel
+Now that you have a prompt and its settings, you can import it into a kernel. The following code demonstrates how to register the `GetIntent` function with a new kernel.
 
 # [C#](#tab/Csharp)
 To register the function with the kernel, you first need to create a [SemanticFunctionConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.semanticfunctionconfig) object. 
 
 :::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="51-57, 60-68":::
 
-Afters, you can pass it into the kernel using the [RegisterSemanticFunction](/dotnet/api/microsoft.semantickernel.kernel.registersemanticfunction) method. The first parameter is the name of the plugin it belongs to, the second is the name of the function, and the last is the configuration object.
+Afterwards, you can pass it into the kernel using the [RegisterSemanticFunction](/dotnet/api/microsoft.semantickernel.kernel.registersemanticfunction) method. The first parameter is the name of the plugin it belongs to, the second is the name of the function, and the last is the configuration object.
 
 :::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="70-71":::
-
-Finally, you can run the function by calling it from the kernel.
-
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="73-79":::
 
 # [Python](#tab/python)
 To register the function with the kernel, you first need to create a [SemanticFunctionConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.semanticfunctionconfig) object. 
 
 :::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="29-33,35-42":::
 
-Afters, you can pass it into the kernel using the `register_semantic_function`` method. The first parameter is the name of the plugin it belongs to, the second is the name of the function, and the last is the configuration object.
+Afterwards, you can pass it into the kernel using the `register_semantic_function` method. The first parameter is the name of the plugin it belongs to, the second is the name of the function, and the last is the configuration object.
 
 :::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="45-49":::
 
-Finally, you can run the function by calling it from the kernel.
+---
 
+### Testing the semantic function
+Now that you have a prompt and its settings, you can test the function by running it with the kernel.
+
+The following sample shows how you could run the `GetIntent` function with the input "I want to send an email to the marketing team celebrating their recent milestone."
+
+# [C#](#tab/Csharp)
+:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="73-79":::
+
+# [Python](#tab/python)
 :::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="52-57":::
 
 ---

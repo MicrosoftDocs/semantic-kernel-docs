@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 In the [previous tutorial](./using-the-SKFunction-decorator.md), we demonstrated how to use the `SKFunction` decorator to create a native function that performs a square root operation. For other mathematical operations, however, we'll need to use _multiple_ inputs, so in this tutorial, we'll demonstrate how to use and consume `ContextVariables` objects within native functions.
 
-If you want to see the final solution to this article, you can check out the following samples in the public documentation repository.
+If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
@@ -26,7 +26,7 @@ If you want to see the final solution to this article, you can check out the fol
 ## Using context parameters to pass multiple inputs
 Adding numbers together requires multiple numbers as input. To achieve this, we'll need to use context parameters.
 
-Update your `Math` class so that it also includes a function that multiplies two numbers together. Instead of accepting a string as an input, we'll accept an `SKContext` object that contains multiple inputs.
+Update your `Math` class so that it also includes a function that multiplies two numbers together. Instead of accepting a string as an input, we'll create a method signature that accepts an `SKContext` object as an input. This object contains all of the inputs passed into the function.
 
 # [C#](#tab/Csharp)
 
@@ -37,21 +37,21 @@ TODO: Add python
 
 ---
 
-To access the multiple inputs, we can use the `Variables` property of the `SKContext` object. This property is a dictionary that contains all of the inputs passed into the function. We can then use these inputs to perform the multiplication. 
+To access the multiple inputs within the `SKContext` object, we can use the `Variables` property. This property is a dictionary that contains all of the inputs passed into the function. We can then use these inputs to perform the multiplication. 
 
 Also notice how we are now using the `SKParameter` decorator to define the two inputs of the function. The first parameter is the name of the parameter and the second is the description of the parameter. Both are used by the [planner](../planner.md) to automatically provide inputs to this function.
 
 
 ### Running your native functions
-You can now run your functions using the code below. Notice how we pass in the multiple numbers required for the `Multiply` function into the kernel a `ContextVariables` object. This object is what populates the `Variables` property of the `SKContext` object.
+You can now run your functions using the code below. Notice how we pass in the multiple numbers required for the `Multiply` function into the kernel using a `ContextVariables` object. This object is what populates the `Variables` property of the `SKContext` object.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Native-Functions-with-Context/program.cs" range="3-6,14-19,22-36":::
+:::code language="csharp" source="~/../samples/dotnet/08-Native-Functions-with-Context/program.cs" range="3-6,14-19,22-36" highlight="17-22":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/08-Native-Functions-with-Context/main.py" range="1-2,4-11,13-34":::
+:::code language="python" source="~/../samples/python/08-Native-Functions-with-Context/main.py" range="1-2,4-11,13-34" highlight="15-17":::
 
 ---
 

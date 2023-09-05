@@ -18,7 +18,7 @@ The Book creator sample allows you to enter in a topic then the [Planner](/seman
 
 ### Walkthrough video
 
->[!Video https://aka.ms/SK-Samples-CreateBook-Video]
+>[!Video https://learn-video.azurefd.net/vod/player?id=81f734f6-49f4-4489-b902-f769df673e32]
 
 ## Requirements to run this app
 
