@@ -93,7 +93,7 @@ Bug reports and fixes are welcome!
 
 To learn more and get started:
 
-- Read the [documentation](https://learn.microsoft.com/en-us/semantic-kernel/)
+- Read the [documentation](https://learn.microsoft.com/semantic-kernel/)
 - Join the [Discord community](https://aka.ms/SKDiscord)
 - [Contribute](CONTRIBUTING.md) to the project
 - Follow the team on our [blog](https://aka.ms/sk/blog)
