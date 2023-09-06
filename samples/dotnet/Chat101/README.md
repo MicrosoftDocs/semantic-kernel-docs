@@ -1,19 +1,19 @@
-# Chat101: A basic console chat application 
+# Chat101: A console chat application 
 
-This sample runs a basic chat experience with a large language model (LLM). The code demonstrates basic usage of the Semantic Kernel SDK and the importance of context in prompts.
+This sample runs a simple chat experience with a large language model (LLM). The code demonstrates basic usage of the Semantic Kernel SDK and the importance of context in prompts.
 
 > **IMPORTANT:** This sample is for educational purposes only and is not recommended for production deployments.
 
 > **IMPORTANT:** Each chat interaction will call Azure OpenAI/OpenAI which will use tokens that you may be billed for.
 
-![Fix this ... image here of console experience](https://learn.microsoft.com/semantic-kernel/media/chat-copilot-in-action.gif)
+![A chat application experience with an LLM](Chat101-context.gif)
 
 # Requirements
 
 You will need the following items to run the sample:
 
-- [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) _(via Setup install.* script)_
-- AI Service
+- [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
+- AI Service: See requirements below.
 
 | AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -29,14 +29,15 @@ You will need the following items to run the sample:
     **Windows:**
 
     ```powershell
-    cd <path to Chat101>
-    cp appsettings.Development.json appsettings.json
+    cd <path to \Chat101\>
+    cp .\appsettings.Development.json .\appsettings.json
     ```
 
     **Linux/macOS:**
 
     ```bash
-
+    cd <path to /Chat101/>
+    cp appsettings.Development.json appsettings.json
     ```
 
 2. Open  `appsettings.json` and update the service fields:  
@@ -54,20 +55,24 @@ You will need the following items to run the sample:
     }
     ```
 
-3. Run the conosle application:
+3. Run the application.
 
-    - Visual Studio: Open Chat101.csproj and press F5
-    - VS Code: Open Chat101/ as its own workspace. Press F5 for debugging.
-        OR
-    - VA Code: Within Chat101/, run `dotnet run` from the command line
+    - **Visual Studio:** 
+      - Open `Chat101.sln`. 
+      - Press `F5`.
+    - **VS Code:** 
+      - Open `Chat101/` as its own workspace. 
+      - Press `F5`.
+    - **Command line:** 
+      - Enter `Chat101/`. 
+      - Run `dotnet run`.
 
 4. Interact with the chatbot!
-   
-  [image here of console experience]
 
 5. Try a chat experience with no context. What happens?
 
-   - Open `appsettings.json` and set `UseContext` to `false`
+   - Open `appsettings.json`.
+   - Set `UseContext` to `false`.
    - Run the application.
 
 # Check out our other repos!
