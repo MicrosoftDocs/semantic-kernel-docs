@@ -307,7 +307,7 @@
         },
         {
             "source_path": "semantic-kernel/ai-orchestration/plugins/planner.md",
-            "redirect_url": "semantic-kernel/ai-orchestration/planners",
+            "redirect_url": "/semantic-kernel/ai-orchestration/planners/index",
             "redirect_document_id": true
         }
     ]
