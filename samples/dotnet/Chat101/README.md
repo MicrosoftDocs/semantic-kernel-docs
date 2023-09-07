@@ -1,12 +1,12 @@
-# Chat101: A console chat application 
+# Chat101: A begginer's chat app
 
 This sample runs a simple chat experience with a large language model (LLM). The code demonstrates basic usage of the Semantic Kernel SDK and the importance of context in prompts.
+
+![A chat application experience with an LLM](Chat101-context.gif)
 
 > **IMPORTANT:** This sample is for educational purposes only and is not recommended for production deployments.
 
 > **IMPORTANT:** Each chat interaction will call Azure OpenAI/OpenAI which will use tokens that you may be billed for.
-
-![A chat application experience with an LLM](Chat101-context.gif)
 
 # Requirements
 
@@ -17,63 +17,126 @@ You will need the following items to run the sample:
 
 | AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Deployed chat model](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) (`gpt-35-turbo`)<br>- [API key](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [Endpoint](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
+| Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Deployed chat model](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model)<br>- [API key](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [Endpoint](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
 | OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 # Instructions
 
-## Configure the application
+1. Configure the application.
 
-1. Copy the development settings file:
+   - **Option 1: .NET Secret Manager (default)**
+  
+        This is the default option to set AI Service settings. If you want to customize the settings for individual samples, use the **`appsettings.json`** option below.
 
-    **Windows:**
+        <details><summary><i>Instructions</i></summary>
+        <p>
 
-    ```powershell
-    cd <path to \Chat101\>
-    cp .\appsettings.Development.json .\appsettings.json
-    ```
+        Run the following commands for your AI Service:
 
-    **Linux/macOS:**
+        - Azure OpenAI: 
 
-    ```bash
-    cd <path to /Chat101/>
-    cp appsettings.Development.json appsettings.json
-    ```
+            ```powershell
+            dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
+            dotnet user-secrets set "AzureOpenAI:DeploymentType" "chat-completion"
+            dotnet user-secrets set "AzureOpenAI:ChatCompletionDeploymentName" "... your chat model's deployment name ..."
+            dotnet user-secrets set "AzureOpenAI:Endpoint" "... your Azure OpenAI endpoint ..."
+            dotnet user-secrets set "AzureOpenAI:ApiKey" "... your Azure OpenAI API key ..."
+            ```
 
-2. Open  `appsettings.json` and update the service fields:  
+        - OpenAI:
+            
+            ```powershell
+            dotnet user-secrets set "Global:LlmService" "OpenAI"
+            dotnet user-secrets set "OpenAI:ModelType" "chat-completion"
+            dotnet user-secrets set "OpenAI:ChatCompletionModelId" "gpt-3.5-turbo"
+            dotnet user-secrets set "OpenAI:ApiKey" "... your OpenAI API key ..."
+            dotnet user-secrets set "OpenAI:OrgId" "... your org ID ..."
+            ```
+
+        See .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) for more information.
+        </p>
+        </details>
+
+    - **Option 2: `appsettings.json`**
+
+        This option is available to customize the AI Service settings per sample. If you want to use the same settings for all samples, use the **.NET Secret Manager** default above.
+
+        <details><summary><i>Instructions</i></summary>
+        <p>
+
+        1. Copy `appsettings.Development.json`.
+
+            **Windows**
+
+            ```powershell
+            cd <path to \Chat101\>
+            cp .\appsettings.Development.json .\appsettings.json
+            ```
+
+            **Linux/macOS**
+
+            ```bash
+            cd <path to /Chat101/>
+            cp appsettings.Development.json appsettings.json
+            ```
+
+        2. Open  `appsettings.json` and update the `Service` fields.
+
+            ```json
+            "Service":
+            {
+                // To use instead of `dotnet secrets`, uncomment below and fill-in.
+                "AIService": "AzureOpenAI | OpenAI",
+                "ChatModelName": "<AzureOpenAI-deployment-name> | <OpenAI-model-name>",
+                "APIKey": "<API-key>", // It is recommended to use .NET Secret Manager instead of hard-coding.
+                "AzureOpenAIEndpoint": "<https:// ...fill-in... .openai.azure.com/>"
+            },
+            ```
+        </p>
+        </details>
+
+2. Run the application.
+
+   - Run the default application (with context).
+        - **Visual Studio:** 
+          - Open `Chat101.sln`. 
+          - Press `F5`.
+        - **VS Code:** 
+          - Open `Chat101/` as its own workspace. 
+          - Press `F5`.
+        - **Command line:** 
+          - Enter `Chat101/`. 
+          - Run `dotnet run`.
+
+   - Run the application without context.
    
-    ```json
-    {
-        "Service":
-        {
-            "AIService": "<AzureOpenAI | OpenAI>",
-            "ChatModelName": "<AzureOpenAI deployment name | OpenAI model name>",
-            "APIKey": "<AzureOpenAI API key | OpenAI API key>",
-            "AzureOpenAIEndpoint": "<AzureOpenAI ONLY: https:// ...fill-in... .openai.azure.com/>"
-        },
-        ...
-    }
-    ```
+       1. Copy `appsettings.Development.json` (if not done previously).
 
-3. Run the application.
+           **Windows**
 
-    - **Visual Studio:** 
-      - Open `Chat101.sln`. 
-      - Press `F5`.
-    - **VS Code:** 
-      - Open `Chat101/` as its own workspace. 
-      - Press `F5`.
-    - **Command line:** 
-      - Enter `Chat101/`. 
-      - Run `dotnet run`.
+           ```powershell
+           cd <path to \Chat101\>
+           cp .\appsettings.Development.json .\appsettings.json
+           ```
 
-4. Interact with the chatbot!
+           **Linux/macOS**
 
-5. Try a chat experience with no context. What happens?
+           ```bash
+           cd <path to /Chat101/>
+           cp appsettings.Development.json appsettings.json
+           ```
 
-   - Open `appsettings.json`.
-   - Set `UseContext` to `false`.
-   - Run the application.
+       2. Open `appsettings.json`.
+      
+            - Set `UseContext` to `false`.
+
+                ```json
+                "Application":
+                {
+                    "UseContext": false
+                }
+                ```
+            - Run the application.
 
 # Check out our other repos!
 
