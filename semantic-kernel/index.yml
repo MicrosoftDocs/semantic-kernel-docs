@@ -53,7 +53,7 @@ productDirectory:
         - url: /semantic-kernel/create-chains/connectors
           text: Getting data with connectors   
         - url: /semantic-kernel/create-chains/planner
-          text: Auto create chains with Planner   
+          text: Auto create chains with planners   
     - title: Building and deploying plugins
       imageSrc: /semantic-kernel/media/concept.png
       links:
