@@ -8,7 +8,7 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-# Evaluate plugins with Prompt flow
+# Create a Prmopt flow with Semantic Kernel
 
 [!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
