@@ -44,7 +44,7 @@ To begin, open the _skprompt.txt_ file in the _GetIntent_ folder from the previo
 :::row-end:::
 
 
-When you add a new variable to the prompt, you must also update the _config.json_ file to include the new variables and their descriptions. While these properties aren't used now, it's good to get into the practice of adding them so they can be used by the [planner](../planner.md) later. The following configuration adds the `options` and `history` variable to the `input` section of the configuration.
+When you add a new variable to the prompt, you must also update the _config.json_ file to include the new variables and their descriptions. While these properties aren't used now, it's good to get into the practice of adding them so they can be used by the [planner](../../planners/index.md) later. The following configuration adds the `options` and `history` variable to the `input` section of the configuration.
 
 :::code language="json" source="~/../samples/dotnet/05-Templatizing-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/config.json":::
 

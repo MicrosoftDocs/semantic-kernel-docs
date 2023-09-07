@@ -21,7 +21,7 @@ Once we're done, you'll have an Azure Function that exposes each of your plugin'
 
 | Language  | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/12-Create-ChatGPT-Plugin) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/13-Create-ChatGPT-Plugin) |
 | Python | _Coming soon_ |
 
 ## Prerequisites

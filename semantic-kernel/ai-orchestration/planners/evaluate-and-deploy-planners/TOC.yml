@@ -1,0 +1,8 @@
+- name: Using Prompt flow with Semantic Kernel
+  href: index.md
+- name: Creating a Prompt flow with Semantic Kernel
+  href: create-a-prompt-flow-with-semantic-kernel.md
+- name: Running batches with Prompt flow
+  href: running-batches-with-prompt-flow.md
+- name: Evaluating plugins and planners
+  href: evaluating-plugins-and-planners-with-prompt-flow.md

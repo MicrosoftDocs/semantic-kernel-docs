@@ -39,7 +39,7 @@ TODO: Add python
 
 To access the multiple inputs within the `SKContext` object, we can use the `Variables` property. This property is a dictionary that contains all of the inputs passed into the function. We can then use these inputs to perform the multiplication. 
 
-Also notice how we are now using the `SKParameter` decorator to define the two inputs of the function. The first parameter is the name of the parameter and the second is the description of the parameter. Both are used by the [planner](../planner.md) to automatically provide inputs to this function.
+Also notice how we are now using the `SKParameter` decorator to define the two inputs of the function. The first parameter is the name of the parameter and the second is the description of the parameter. Both are used by the [planner](../../planners/index.md) to automatically provide inputs to this function.
 
 
 ### Running your native functions

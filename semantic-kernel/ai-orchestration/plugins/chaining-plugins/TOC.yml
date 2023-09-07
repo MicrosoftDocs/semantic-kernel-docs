@@ -2,5 +2,5 @@
 #   href: index.md
 # - name: Passing context through chains
 #   href: context-in-chains.md
-# - name: Using Prompt flow to chain plugins
-#   href: prompt-flow.md
+# - name: Using Prompt flow to chain functions
+#   href: using-prompt-flow-in-semantic-kernel.md

@@ -16,7 +16,7 @@ In just a few steps, you can start running  the getting started guides for Seman
 - Run AI prompts from the kernel
 - Make AI prompts dynamic with variables
 - Create a simple AI agent
-- Automatically combine functions together with planner
+- Automatically combine functions together with planners
 - Store and retrieve memory with embeddings
 
 
@@ -97,7 +97,7 @@ The guides are designed to be run in order to build on the concepts learned in t
 | _02-running-prompts-from-file.ipynb_ |  [Open guide](./running-prompts-from-files.md) | Learn how to run prompts from a file |
 | _03-semantic-function-inline.ipynb_ | [Open guide](./semantic-function-inline.md) | Configure and run prompts directly in code | 
 | _04-context-variables-chat.ipynb_ | [Open guide](./context-variables-chat.md) | Use variables to make prompts dynamic |
-| _05-using-the-planner.ipynb_ | [Open guide](./using-the-planner.md) | Dynamically create prompt chains with planner |
+| _05-using-the-planner.ipynb_ | [Open guide](./using-the-planner.md) | Dynamically create prompt chains with planners |
 | _06-memory-and-embeddings.ipynb_ | [Open guide](./memory-and-embeddings.md) | Store and retrieve memory with embeddings |
 
 
