@@ -304,6 +304,11 @@
             "source_path": "semantic-kernel/ai-orchestration/semantic-functions.md",
             "redirect_url": "/semantic-kernel/ai-orchestration/plugins/semantic-functions/inline-semantic-functions",
             "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/planner.md",
+            "redirect_url": "semantic-kernel/ai-orchestration/planners/index",
+            "redirect_document_id": true
         }
     ]
 }

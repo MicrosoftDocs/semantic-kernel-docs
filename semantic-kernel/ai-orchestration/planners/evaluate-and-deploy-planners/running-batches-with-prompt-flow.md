@@ -160,7 +160,7 @@ If you don't know the name of your run, you can also use the Prompt flow VS Code
 
 5. Afterwards, you'll get the same visualization that you'd see if you had run `pf run visualize -n perform_math` in your terminal.
 
-    :::image type="content" source="../../../media/prompt-flow-visualize-batch-run.png" alt-text="Location of the batch run history":::
+    :::image type="content" source="../../../media/prompt-flow-visualize-batch-run.png" alt-text="The visual of the run":::
 
 
 ### View the logs

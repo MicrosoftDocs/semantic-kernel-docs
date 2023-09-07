@@ -224,4 +224,4 @@ The room would be approximately 212.2925 square feet.
 You are now becoming familiar with orchestrating both semantic and non-semantic functions. Up until now, however, you've had to manually orchestrate the functions. In the next section, you'll learn how to use planner to orchestrate functions automatically.
 
 > [!div class="nextstepaction"]
-> [Automatically create chains with planner](./planner.md)
+> [Automatically create chains with planner](../planners/index.md)
