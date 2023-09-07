@@ -33,9 +33,9 @@ To drive alignment across the industry, we've adopted the [OpenAI plugin specifi
 To show how to make interoperable plugins, we've created an in-depth walkthrough on how to export a Semantic Kernel plugin as an OpenAI plugin using OpenAI's specification. You can find the walkthrough in the [Create and run ChatGPT plugins](./chatgpt-plugins.md) section.
 
 ### What does a plugin look like?
-At a high-level, a plugin is a group of functions that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions either manually (see [chaining functions](./chaining-functions.md)) or automatically with a [planner](./planner.md).
+At a high-level, a plugin is a group of functions that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions either manually (see [chaining functions](./chaining-functions.md)) or automatically with a [planner](../planners/index.md).
 
-_Just_ providing functions, however, is not enough to make a plugin. To power automatic orchestration with a [planner](./planner.md), plugins _also_ need to provide details that semantically describe how they behave. Everything from the function's input, output, and side effects need to be described in a way that the AI can understand, otherwise, the planner will provide unexpected results.
+_Just_ providing functions, however, is not enough to make a plugin. To power automatic orchestration with a [planner](../planners/index.md), plugins _also_ need to provide details that semantically describe how they behave. Everything from the function's input, output, and side effects need to be described in a way that the AI can understand, otherwise, the planner will provide unexpected results.
 
 :::row:::
    :::column span="1":::
@@ -74,7 +74,7 @@ To semantically describe this function (as well as define the configuration for 
 :::code language="json" source="~/../semantic-kernel-samples/samples/skills/SummarizeSkill/Summarize/config.json":::
 
 
-Both `description` fields are used by [planner](./planner.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.
+Both `description` fields are used by [planner](../planners/index.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.
 
 You can learn more about creating semantic functions in the [Creating semantic functions](./semantic-functions/inline-semantic-functions.md) section. In this section you'll learn the best practices for the following:
 > [!div class="checklist"]

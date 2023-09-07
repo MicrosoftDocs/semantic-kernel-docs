@@ -1,13 +1,11 @@
 - name: Understanding plugins
   href: index.md
-- name: Creating semantic functions
+- name: Create semantic functions
   href: semantic-functions/TOC.yml
-- name: Creating native functions
+- name: Create native functions
   href: native-functions/TOC.yml
-- name: Chaining plugins together
+- name: Chain plugins together
   href: chaining-functions.md
-- name: Auto create plans with planner
-  href: planner.md
 - name: Export plugins as OpenAI plugins
   href: chatgpt-plugins.md
 - name: Out-of-the-box plugins
