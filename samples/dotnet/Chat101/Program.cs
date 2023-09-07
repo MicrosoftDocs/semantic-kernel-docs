@@ -75,6 +75,7 @@ class Program
         };
 
         // Register the semantic function with your semantic kernel.
+        // (NOTE: This is not the standard approach.)
         var chatPromptTemplate = new PromptTemplate(chatFunctionPrompt, chatFunctionPromptConfig, kernel);
         var chatFunctionConfig = new SemanticFunctionConfig(chatFunctionPromptConfig, chatPromptTemplate);
         var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctionConfig);
