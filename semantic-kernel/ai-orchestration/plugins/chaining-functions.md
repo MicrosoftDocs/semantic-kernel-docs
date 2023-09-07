@@ -15,10 +15,10 @@ In previous articles, we showed how you could invoke a Semantic Kernel function 
 
 If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
-| Language  | Link to final solution |
+| Language  | Link to previous solution | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/10-Chaining-Functions) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/10-Chaining-Functions) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions)  | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/10-Chaining-Functions) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/09-Calling-Nested-Functions-in-Native-Functions)  |  [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/10-Chaining-Functions) |
 
 
 ## Passing data to semantic functions with `input`

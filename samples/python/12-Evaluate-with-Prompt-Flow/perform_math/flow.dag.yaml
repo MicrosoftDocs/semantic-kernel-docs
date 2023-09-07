@@ -1,0 +1,20 @@
+id: template_standard_flow
+name: Template Standard Flow
+environment:
+  python_requirements_txt: requirements.txt
+inputs:
+  text:
+    type: string
+    default: What is 5+3
+outputs:
+  result:
+    type: string
+    reference: ${math_planner.output}
+nodes:
+- name: math_planner
+  type: python
+  source:
+    type: code
+    path: math_planner.py
+  inputs:
+    input1: ${inputs.text}

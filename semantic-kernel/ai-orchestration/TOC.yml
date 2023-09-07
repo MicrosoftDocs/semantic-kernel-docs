@@ -1,6 +1,8 @@
-- name: Initializing the kernel
+- name: Initialize the kernel
   href: kernel/TOC.yml
   expanded: true
-- name: Creating and using AI plugins
+- name: Create and use AI plugins
   href: plugins/TOC.yml
   expanded: true
+- name: Automate plugins with planners
+  href: planners/TOC.yml
