@@ -27,16 +27,16 @@ class Program
             .Build()
             .Get<Configuration>()!;
 
-        bool useContext = config.Application.UseContext; 
+        bool useContext = config.Application.UseContext;
         
         var aIServiceType = config.Service.Type;
         switch(aIServiceType)
         {
             case AIService.AzureOpenAI:
 
-                var model = config.Service.AzureOpenAI.ChatModelDeploymentName;
+                var model = config.Service.AzureOpenAI!.ChatModelDeploymentName;
                 var endpoint = config.Service.AzureOpenAI.Endpoint;
-                var aPIKey = config.AzureOpenAI_APIKey; // From UserSecrets
+                var aPIKey = config.Service.AzureOpenAI.APIKey; // From UserSecrets
 
                 // Build your semantic kernel.
                 kernel = new KernelBuilder()
@@ -49,8 +49,8 @@ class Program
                 break;
             case AIService.OpenAI:
 
-                model = config.Service.OpenAI.ChatModelName;
-                aPIKey = config.OpenAI_APIKey; // From UserSecrets
+                model = config.Service.OpenAI!.ChatModelName;
+                aPIKey = config.Service.OpenAI.APIKey; // From UserSecrets
 
                 // Build your semantic kernel.
                 kernel = new KernelBuilder()
@@ -108,7 +108,7 @@ class Program
         string history = string.Empty;
         string userInput = string.Empty;
 
-        // Important: As history context grows in size, so does the token count usage. 
+        // Important: As history context grows in size, so does the token count usage.
         //            Chat will not function correctly once token limit reached.
         //            By default, history context is sent in prompts.
         if (useContext) 
@@ -129,7 +129,7 @@ class Program
             Console.WriteLine(PromptStringChatBot + chatCompletion);
             Console.Write(PromptStringUser);
 
-            // Important: As history context grows in size, so does the token count usage. 
+            // Important: As history context grows in size, so does the token count usage.
             //            Chat will not function correctly once token limit reached.
             //            By default, update history context and send in prompts.
             if (useContext)
