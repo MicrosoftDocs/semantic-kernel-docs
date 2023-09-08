@@ -66,7 +66,7 @@ class Program
         }
 
         // Create an inline semantic function: context variables, prompt, prompt configuration.
-        // (NOTE: This is not the standard approach.)
+        // (NOTE: This is not the standard approach. Used here for simplicity.)
 
         // Initialize the context variables that will be used.
         var chatFunctionVariables = new ContextVariables
@@ -93,7 +93,7 @@ class Program
         };
 
         // Register the semantic function with your semantic kernel.
-        // (NOTE: This is not the standard approach.)
+        // (NOTE: This is not the standard approach. Used here for simplicity.)
         var chatPromptTemplate = new PromptTemplate(chatFunctionPrompt, chatFunctionPromptConfig, kernel);
         var chatFunctionConfig = new SemanticFunctionConfig(chatFunctionPromptConfig, chatPromptTemplate);
         var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctionConfig);
