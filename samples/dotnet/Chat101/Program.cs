@@ -67,17 +67,10 @@ class Program
                 return 1;
         }
 
-        // Create an inline semantic function: context variables, prompt, prompt configuration.
+        // Create an inline semantic function: prompt string + prompt configuration.
         // (NOTE: This is not the standard approach. Used here for simplicity.)
 
-        // Initialize the context variables that will be used.
-        var chatFunctionVariables = new ContextVariables
-        {
-            [ContextVariableKeyHistory] = string.Empty,
-            [ContextVariableKeyUserInput] = string.Empty,
-        };
-
-        // Initialize the prompt.
+        // Initialize the prompt string.
         string chatFunctionPrompt = 
             @$"{{{{${ContextVariableKeyHistory}}}}}
             {PromptStringUser} {{{{${ContextVariableKeyUserInput}}}}}
@@ -92,6 +85,13 @@ class Program
                 Temperature = 0.7,
                 TopP = 0.5,
             }
+        };
+
+        // Initialize the context variables (semantic function input).
+        var chatFunctionVariables = new ContextVariables
+        {
+            [ContextVariableKeyHistory] = string.Empty,
+            [ContextVariableKeyUserInput] = string.Empty,
         };
 
         // Register the semantic function with your semantic kernel.
