@@ -27,7 +27,7 @@ You will need the following items to run the sample:
 1. Open `appsettings.json`.
 2. Update the `Service` fields:
 
-    **AzureOpenAI**
+    **Azure OpenAI**
 
     ```json
     "Service":
@@ -56,7 +56,7 @@ You will need the following items to run the sample:
 
 3. On the command line, set your API Key:
 
-    **AzureOpenAI**
+    **Azure OpenAI**
 
     ```powershell
     dotnet user-secrets set "Service:AzureOpenAI:APIKey" "<my-azureopenai-apikey>"
