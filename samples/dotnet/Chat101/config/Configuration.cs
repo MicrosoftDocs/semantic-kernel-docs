@@ -1,5 +1,4 @@
 // Copyright (c) Microsoft. All rights reserved.
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Chat101;
 

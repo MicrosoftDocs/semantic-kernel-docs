@@ -7,6 +7,7 @@ Available models are listed below. Please note their sample validation status.
 
 | Service      | Model type      | Model name       | Model version | Validated |
 | ------------ | --------------- | ---------------- | ------------- | --------- |
+| OpenAI       | Chat Completion | gpt-35-turbo     |             1 | ❌        |
 | OpenAI       | Chat Completion | gpt-35-turbo     |          0301 | ✅        |
 | OpenAI       | Chat Completion | gpt-35-turbo     |          0613 | ❌        |
 | OpenAI       | Chat Completion | gpt-35-turbo-16k |          0613 | ❌        |

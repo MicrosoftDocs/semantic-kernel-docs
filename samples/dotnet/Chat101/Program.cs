@@ -109,7 +109,7 @@ class Program
         string userInput = string.Empty;
 
         // Important: As history context grows in size, so does the token count usage.
-        //            Chat will not function correctly once token limit reached.
+        //            Chat will not function correctly once token limit is reached.
         //            By default, history context is sent in prompts.
         if (useContext) 
         {
@@ -130,7 +130,7 @@ class Program
             Console.Write(PromptStringUser);
 
             // Important: As history context grows in size, so does the token count usage.
-            //            Chat will not function correctly once token limit reached.
+            //            Chat will not function correctly once token limit is reached.
             //            By default, update history context and send in prompts.
             if (useContext)
             {

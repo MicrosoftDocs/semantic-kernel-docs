@@ -107,7 +107,7 @@ dotnet user-secrets set "Service:OpenAI:APIKey" "<my-openai-apikey>"
      - Open `Chat101/` as its own workspace. 
      - Press `F5`.
    - **Command line:** 
-     - Enter `Chat101/`. 
+     - Navigate to `Chat101/`. 
      - Run `dotnet run`.
 
 - Run the application without context.
@@ -130,6 +130,7 @@ If you would like to learn more about Semantic Kernel and AI, you may also be in
 
 | Repo                                                                              | Description                                                                                      |
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [Chat Copilot](https://github.com/microsoft/chat-copilot)                         | A reference application that demonstrates how to build a chatbot with Semantic Kernel.        |
 | [Semantic Kernel](https://github.com/microsoft/semantic-kernel)                   | A lightweight SDK that integrates cutting-edge LLM technology quickly and easily into your apps. |
 | [Semantic Kernel Docs](https://github.com/MicrosoftDocs/semantic-kernel-docs)     | The home for Semantic Kernel documentation that appears on the Microsoft learn site.             |
 | [Semantic Kernel Starters](https://github.com/microsoft/semantic-kernel-starters) | Starter projects for Semantic Kernel to make it easier to get started.                           |
@@ -142,9 +143,10 @@ Bug reports and fixes are welcome!
 
 To learn more and get started:
 
-- Read the [documentation](https://learn.microsoft.com/semantic-kernel/)
+- Read the [documentation](https://aka.ms/sk/learn)
+- Learn how to [contribute](https://learn.microsoft.com/semantic-kernel/get-started/contributing) to the project
 - Join the [Discord community](https://aka.ms/SKDiscord)
-- [Contribute](CONTRIBUTING.md) to the project
+- Attend [regular office hours and SK community events](COMMUNITY.md)
 - Follow the team on our [blog](https://aka.ms/sk/blog)
 
 ## Code of Conduct
