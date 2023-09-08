@@ -18,34 +18,52 @@ class Program
 
     static async Task<int> Main(string[] args)
     {
+        IKernel kernel;
+
         // Configure application.
         Configuration config = new ConfigurationBuilder()
+            .AddUserSecrets(Assembly.GetExecutingAssembly(), false)
             .AddJsonFile("appsettings.json", true)
-            .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
             .Build()
             .Get<Configuration>()!;
 
-        var aIService = config!.Service!.AIService;
-        var model = config!.Service!.ChatModelName;
-        var endpoint = config!.Service!.AzureOpenAIEndpoint;
-        var aPIKey = config!.Service!.APIKey;
-        bool useContext = config!.Application!.UseContext!; 
-
-        // Build your semantic kernel to use a chat LLM.
-        var builder = new KernelBuilder();
-        switch(aIService)
+        bool useContext = config.Application.UseContext; 
+        
+        var aIServiceType = config.Service.Type;
+        switch(aIServiceType)
         {
             case AIService.AzureOpenAI:
-                builder.WithAzureChatCompletionService(model, endpoint, aPIKey);
+
+                var model = config.Service.AzureOpenAI.ChatModelDeploymentName;
+                var endpoint = config.Service.AzureOpenAI.Endpoint;
+                var aPIKey = config.AzureOpenAI_APIKey; // From UserSecrets
+
+                // Build your semantic kernel.
+                kernel = new KernelBuilder()
+                    .WithAzureChatCompletionService(model, endpoint, aPIKey)
+                    .Build();
+
+                Console.WriteLine($"Service: {aIServiceType}");
+                Console.WriteLine($"ChatModelDeploymentName: {model}");
+                Console.WriteLine($"Endpoint: {endpoint}\r\n");
                 break;
             case AIService.OpenAI:
-                builder.WithOpenAIChatCompletionService(model, aPIKey);
+
+                model = config.Service.OpenAI.ChatModelName;
+                aPIKey = config.OpenAI_APIKey; // From UserSecrets
+
+                // Build your semantic kernel.
+                kernel = new KernelBuilder()
+                    .WithOpenAIChatCompletionService(model, aPIKey)
+                    .Build();
+
+                Console.WriteLine($"Service: {aIServiceType}");
+                Console.WriteLine($"ChatModelName: {model}\r\n");
                 break;
             default:
                 Console.WriteLine("Invalid AI Service provided.");
                 return 1;
         }
-        IKernel kernel = builder.Build();
 
         // Create an inline semantic function: context variables, prompt, prompt configuration.
         // (NOTE: This is not the standard approach.)
@@ -123,7 +141,6 @@ class Program
                 chatFunctionVariables.Set(ContextVariableKeyHistory, history);
             }
         }
-
         return 0;
     }
 }

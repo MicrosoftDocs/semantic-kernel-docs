@@ -5,15 +5,20 @@ namespace Chat101;
 
 internal record Configuration
 {
-    public Configuration(Service? service, Application? application)
+    public Configuration(Service? service = null, Application? application = null)
     {
         Service = service ?? throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(service)}'");
-        Application = application ?? throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(application)}'"); ;
+        Application = application ?? throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(application)}'");
     }
 
     public Service Service { get; }
 
     public Application Application { get; }
+
+    public string? AzureOpenAI_APIKey { get; set; } // From user secrets
+
+    public string? OpenAI_APIKey { get; set; } // From user secrets
+    
 }
 
 public enum AIService
@@ -25,18 +30,27 @@ public enum AIService
 
 internal record Service
 {
-    public Service(AIService? aIService, string? chatModelName, string? aPIKey, string? endpoint)
+    public Service(AIService? type, AzureOpenAI? azureOpenAI = null, OpenAI? openAI = null)
     {
-        AIService = aIService ?? throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(aIService)}'");
+        Type = type ?? throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(type)}'");
+        AzureOpenAI = azureOpenAI ?? throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(azureOpenAI)}'");
+        OpenAI = openAI ?? throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(openAI)}'");
+    }
 
-        if (string.IsNullOrWhiteSpace( chatModelName ) )
-        {
-            throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(chatModelName)}'");
-        }
+    public AIService Type { get; }
 
-        if (string.IsNullOrWhiteSpace(aPIKey))
+    public AzureOpenAI AzureOpenAI { get; }
+    
+    public OpenAI OpenAI { get; }
+}
+
+internal record AzureOpenAI
+{
+    public AzureOpenAI(string? chatModelDeploymentName, string? endpoint)
+    {
+        if (string.IsNullOrWhiteSpace(chatModelDeploymentName))
         {
-            throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(aPIKey)}'");
+            throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(chatModelDeploymentName)}'");
         }
 
         if (string.IsNullOrWhiteSpace(endpoint))
@@ -44,19 +58,36 @@ internal record Service
             throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(endpoint)}'");
         }
 
-        ChatModelName = chatModelName;
-        APIKey = aPIKey;
-        AzureOpenAIEndpoint = endpoint;
+        ChatModelDeploymentName = chatModelDeploymentName;
+        Endpoint = endpoint;
     }
 
-    public AIService AIService { get; }
+    public string ChatModelDeploymentName { get; }
+
+    public string Endpoint { get; }
+
+    public string? APIKey { get; }
+}
+
+internal record OpenAI
+{
+    public OpenAI(string? chatModelName)
+    {
+        if (string.IsNullOrWhiteSpace(chatModelName))
+        {
+            throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(chatModelName)}'");
+        }
+
+        ChatModelName = chatModelName;
+    }
 
     public string ChatModelName { get; }
 
-    public string APIKey { get; }
-
-    public string AzureOpenAIEndpoint { get; }
+    public string? APIKey { get; }
 }
+
+
+
 
 internal record Application
 {

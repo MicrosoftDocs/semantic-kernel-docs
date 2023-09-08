@@ -1,25 +1,59 @@
-# Chat101: A begginer's chat app
+# Chat101: A begginer's chatbot
 
-This sample runs a simple chat experience with a large language model (LLM). The code demonstrates basic usage of the Semantic Kernel SDK and the importance of context in prompts.
+This sample runs a 101 level chat application with a large language model (LLM). The code demonstrates basic usage of the Semantic Kernel SDK and the importance of context in prompts.
 
 ![A chat application experience with an LLM](Chat101-context.gif)
-
-> **IMPORTANT:** This sample is for educational purposes only and is not recommended for production deployments.
-
-> **IMPORTANT:** Each chat interaction will call Azure OpenAI/OpenAI which will use tokens that you may be billed for.
 
 # Requirements
 
 You will need the following items to run the sample:
 
 - [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
-- AI Service: See requirements below.
+- AI service:
 
-| AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Deployed chat model](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model)<br>- [API key](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [Endpoint](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
-| OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+    | AI Service   | Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Endpoint](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [API key](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint) |
+    | OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)                                                                                               
+    |         
 
+- Chat model:
+
+    You will need to specify a chat model, dependent on your AI Service.
+
+    **Azure OpenAI**
+
+    Azure OpenAI will use the user-defined deployment name of a [deployed chat  model](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model).
+
+    | Service      | Model type      | Model name       | Model version | Validated |
+    | ------------ | --------------- | ---------------- | ------------- | --------- |
+    | Azure OpenAI | Chat Completion | gpt-35-turbo     |          0301 | ✅        |
+    | Azure OpenAI | Chat Completion | gpt-35-turbo     |          0613 | ❌        |
+    | Azure OpenAI | Chat Completion | gpt-35-turbo-16k |          0613 | ❌        |
+
+    **OpenAI**
+
+    OpenAI will use the model name.
+
+    | Service      | Model type      | Model name             | Validated |
+    | ------------ | --------------- | ---------------------- | --------- |
+    | OpenAI       | Chat Completion | gpt-3.5-turbo          | ❌        |
+    | OpenAI       | Chat Completion | gpt-3.5-turbo-0301     | ✅        |
+    | OpenAI       | Chat Completion | gpt-3.5-turbo-0613     | ❌        |
+    | OpenAI       | Chat Completion | gpt-3.5-turbo-16k      | ❌        |
+    | OpenAI       | Chat Completion | gpt-3.5-turbo-16k-0613 | ❌        |
+    | OpenAI       | Chat Completion | gpt-3.5-turbo-instruct | ❌        |
+    | OpenAI       | Chat Completion | gpt-4                  | ✅        |
+    | OpenAI       | Chat Completion | gpt-4-0314             | ✅        |
+    | OpenAI       | Chat Completion | gpt-4-0613             | ✅        |
+
+
+
+
+> **IMPORTANT:** This sample is for educational purposes only and is not recommended for production deployments.
+
+> **IMPORTANT:** Each chat interaction will call Azure OpenAI/OpenAI which will use tokens that you may be billed for.
+                                    
 # Instructions
 
 1. Configure the application.
