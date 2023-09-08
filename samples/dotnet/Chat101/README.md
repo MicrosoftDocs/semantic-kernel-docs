@@ -101,15 +101,17 @@ dotnet user-secrets set "Service:OpenAI:APIKey" "<my-openai-apikey>"
 - Run the default application (with context).
    
    - **Visual Studio:** 
-     - Open `Chat101.sln`. 
+     - Open `Chat101.csproj`. 
+     - Set `Chat101` as the startup project.
      - Press `F5`.
    - **VS Code:** 
      - Open `Chat101/` as its own workspace. 
      - Press `F5`.
+     - Open the Terminal window.
    - **Command line:** 
      - Navigate to `Chat101/`. 
      - Run `dotnet run`.
-
+     
 - Run the application without context.
   
   1. Open `appsettings.json`.

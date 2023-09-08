@@ -57,10 +57,6 @@ internal record AzureOpenAI
         {
             throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(AzureOpenAI)}:{nameof(Endpoint)}'");
         }
-        if (string.IsNullOrWhiteSpace(aPIKey))
-        {
-            throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(AzureOpenAI)}:{nameof(APIKey)}'");
-        }
 
         ChatModelDeploymentName = chatModelDeploymentName;
         Endpoint = endpoint;
@@ -71,7 +67,7 @@ internal record AzureOpenAI
 
     public string Endpoint { get; }
 
-    public string APIKey { get; }
+    public string? APIKey { get; }
 }
 
 internal record OpenAI
@@ -82,10 +78,6 @@ internal record OpenAI
         {
             throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(OpenAI)}:{nameof(chatModelName)}'");
         }
-        if (string.IsNullOrWhiteSpace(aPIKey))
-        {
-            throw new ArgumentOutOfRangeException($"The configuration is missing required values for section: '{nameof(OpenAI)}:{nameof(APIKey)}'");
-        }
 
         ChatModelName = chatModelName;
         APIKey = aPIKey;
@@ -93,7 +85,7 @@ internal record OpenAI
 
     public string ChatModelName { get; }
 
-    public string APIKey { get; }
+    public string? APIKey { get; }
 }
 
 internal record Application

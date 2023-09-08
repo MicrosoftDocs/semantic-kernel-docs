@@ -36,7 +36,7 @@ class Program
 
                 var model = config.Service.AzureOpenAI!.ChatModelDeploymentName;
                 var endpoint = config.Service.AzureOpenAI.Endpoint;
-                var aPIKey = config.Service.AzureOpenAI.APIKey; // From UserSecrets
+                var aPIKey = config.Service.AzureOpenAI.APIKey ?? throw new ArgumentOutOfRangeException($"The configuration is missing the AzureOpenAI:APIKey");
 
                 // Build your semantic kernel.
                 kernel = new KernelBuilder()
@@ -50,7 +50,7 @@ class Program
             case AIService.OpenAI:
 
                 model = config.Service.OpenAI!.ChatModelName;
-                aPIKey = config.Service.OpenAI.APIKey; // From UserSecrets
+                aPIKey = config.Service.OpenAI.APIKey ?? throw new ArgumentOutOfRangeException($"The configuration is missing the OpenAI:APIKey"); // From UserSecrets
 
                 // Build your semantic kernel.
                 kernel = new KernelBuilder()
