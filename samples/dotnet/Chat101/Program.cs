@@ -36,7 +36,8 @@ class Program
 
                 var model = config.Service.AzureOpenAI!.ChatModelDeploymentName;
                 var endpoint = config.Service.AzureOpenAI.Endpoint;
-                var aPIKey = config.Service.AzureOpenAI.APIKey ?? throw new ArgumentOutOfRangeException($"The configuration is missing the AzureOpenAI:APIKey");
+                var aPIKey = config.Service.AzureOpenAI.APIKey ?? throw new ArgumentOutOfRangeException(
+                    $"The configuration is missing the AzureOpenAI:APIKey"); // From UserSecrets
 
                 // Build your semantic kernel.
                 kernel = new KernelBuilder()
@@ -50,7 +51,8 @@ class Program
             case AIService.OpenAI:
 
                 model = config.Service.OpenAI!.ChatModelName;
-                aPIKey = config.Service.OpenAI.APIKey ?? throw new ArgumentOutOfRangeException($"The configuration is missing the OpenAI:APIKey"); // From UserSecrets
+                aPIKey = config.Service.OpenAI.APIKey ?? throw new ArgumentOutOfRangeException(
+                    $"The configuration is missing the OpenAI:APIKey"); // From UserSecrets
 
                 // Build your semantic kernel.
                 kernel = new KernelBuilder()
@@ -99,7 +101,8 @@ class Program
         var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctionConfig);
 
         // Chat!
-        // Send initial prompt (run semantic function) using context variables (input) and receive chat completion (output).
+        // Send initial prompt (run semantic function) using context variables (input) and receive 
+        // chat completion (output).
         var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
         Console.WriteLine("To finish the chat session, press only <Enter>.\r\n");
         Console.WriteLine(PromptStringChatBot + chatCompletion);
