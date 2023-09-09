@@ -48,6 +48,7 @@ In the Chat101 sample, each prompt includes the history of the conversation, the
         
 ```csharp
 // Initialize the prompt.
+// (NOTE: This is not the standard approach. Used here for simplicity.)
 string chatFunctionPrompt = 
     @$"{{{{${ContextVariableKeyHistory}}}}}
     {PromptStringUser} {{{{${ContextVariableKeyUserInput}}}}}
@@ -58,6 +59,7 @@ After dereferencing the `const string`s, this becomes:
         
 ```csharp
 // Initialize the prompt.
+// (NOTE: This is not the standard approach. Used here for simplicity.)
 string chatFunctionPrompt = 
     @"{{$history}}
     User: {{$userInput}}
