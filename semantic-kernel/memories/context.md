@@ -8,7 +8,7 @@ ms.date: 09/01/2023
 ms.service: semantic-kernel
 ---
 
-# Introduction
+# Introduction to Context
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 

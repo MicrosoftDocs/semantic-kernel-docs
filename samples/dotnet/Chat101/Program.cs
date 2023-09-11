@@ -26,6 +26,7 @@ class Program
             .Get<Configuration>()!;
 
         bool useContext = config.Application.UseContext;
+        Console.WriteLine($"useContext: {useContext}");
         
         // Build your semantic kernel.
         kernel = new KernelBuilder()

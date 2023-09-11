@@ -2,7 +2,7 @@
 
 This sample runs a 101 level chat application with a large language model (LLM). The code demonstrates basic usage of the Semantic Kernel SDK and the importance of context in prompts.
 
-![A chat application experience with an LLM](Chat101-context.gif)
+It is referenced by the [Introduction to Context](tbd) article on Microsoft Learn.
 
 # Requirements
 
@@ -13,8 +13,20 @@ You will need the following items to run the sample:
 
     | AI Service   | Requirement |
     | ------------ | ------------------------------------------------------------------------------ |
-    | Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Endpoint](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [API key](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [Deployment name](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) of a [validated chat model](../ChatModels.md)<br> |
-    | OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)<br>- Model name of a [validated chat model](../ChatModels.md)<br> |
+    | Azure OpenAI | - [Access](https://aka.ms/oai/access)<br>- [Resource](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)<br>- [Endpoint](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [API key](https://learn.microsoft.com/azure/ai-services/openai/tutorials/embeddings?tabs=command-line#retrieve-key-and-endpoint)<br>- [Deployment name](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) of a [supported chat model](#supported-models)<br> |
+    | OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)<br>- Model name of a [supported chat model](#supported-models)<br> |
+
+ ## Supported Models
+ This sample has been tested with the following models:
+
+| Service      | Model type      | Model            | Model version | Supported |
+| ------------ | --------------- | ---------------- | ------------: | --------- |
+| OpenAI       | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
+| OpenAI       | Chat Completion | gpt-4            |             1 | ✅        |
+| OpenAI       | Chat Completion | gpt-4            |          0314 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-35-turbo     |             1 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-35-turbo     |          0301 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-4            |          0314 | ✅        |
 
 > **IMPORTANT:** This sample is for educational purposes only and is not recommended for production deployments.
 
@@ -24,77 +36,33 @@ You will need the following items to run the sample:
 
 ## Configure the application
 
-1. Open `appsettings.json`.
-2. Update the `Service` fields:
+Use .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) to set the service variables.
 
-    **Azure OpenAI**
+   - **Azure OpenAI**
 
-    ```json
-    "Service":
-    {
-        "Type": "AzureOpenAI",
-        "AzureOpenAI":
-        {
-            "ChatModelDeploymentName": "<chat-model-deployment-name>",
-            "Endpoint": "https://<fill-in>.openai.azure.com/"
-        }
-    }
-    ```
+       ```powershell
+       cd 02-Adding-AI-Services
 
-    **OpenAI**
+       dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 
-    ```json
-    "Service":
-    {
-        "Type": "OpenAI",
-        "OpenAI":
-        {
-            "ChatModelName": "<chat-model-name>"
-        }
-    }
-    ```
+       dotnet user-secrets set "AzureOpenAI:DeploymentType" "chat-completion"
+       dotnet user-secrets set "AzureOpenAI:ChatCompletionDeploymentName" "... your chat model deployment name ..."
+       dotnet user-secrets set "AzureOpenAI:Endpoint" "... your Azure OpenAI endpoint ..."
+       dotnet user-secrets set "AzureOpenAI:ApiKey" "... your Azure OpenAI key ..."
+       ```
 
-3. On the command line, set your API Key:
+   - **OpenAI**
 
-    **Azure OpenAI**
+       ```powershell
+       cd 02-Adding-AI-Services
 
-    ```powershell
-    dotnet user-secrets set "Service:AzureOpenAI:APIKey" "<my-azureopenai-apikey>"
-    ```
+       dotnet user-secrets set "Global:LlmService" "OpenAI"
 
-    **OpenAI**
-    ```powershell
-    dotnet user-secrets set "Service:OpenAI:APIKey" "<my-openai-apikey>"
-    ```
-
-
-### (OPTIONAL) .NET Secret Manager to run all samples
-If you would like to run all the samples using one configuration, you can use the .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets).
-
-<details><summary><i>Instructions</i></summary>
-<p>
-
-On the command line, run:
-
-**AzureOpenAI** 
-
-```powershell
-dotnet user-secrets set "Service:Type" "AzureOpenAI"
-dotnet user-secrets set "Service:AzureOpenAI:ChatModelDeploymentName" "<chat-model-deployment-name>"
-dotnet user-secrets set "Service:AzureOpenAI:Endpoint" "https://<fill-in>.openai.azure.com/"
-dotnet user-secrets set "Service:AzureOpenAI:APIKey" "<my-azureopenai-apikey>"
-```
-
-**OpenAI**
-    
-```powershell
-dotnet user-secrets set "Service:Type" "OpenAI"
-dotnet user-secrets set "Service:OpenAI:ChatModelName" "<chat-model-name>"
-dotnet user-secrets set "Service:OpenAI:APIKey" "<my-openai-apikey>"
-```
-</p>
-</details>
-
+       dotnet user-secrets set "OpenAI:ModelType" "chat-completion"
+       dotnet user-secrets set "OpenAI:ChatCompletionModelId" "gpt-3.5-turbo-0301"
+       dotnet user-secrets set "OpenAI:ApiKey" "... your OpenAI key ..."
+       dotnet user-secrets set "OpenAI:OrgId" "... your org ID ..."
+       ```
 
 ## Run the application
 
@@ -137,29 +105,3 @@ If you would like to learn more about Semantic Kernel and AI, you may also be in
 | [Semantic Kernel Docs](https://github.com/MicrosoftDocs/semantic-kernel-docs)     | The home for Semantic Kernel documentation that appears on the Microsoft learn site.             |
 | [Semantic Kernel Starters](https://github.com/microsoft/semantic-kernel-starters) | Starter projects for Semantic Kernel to make it easier to get started.                           |
 | [Semantic Memory](https://github.com/microsoft/semantic-memory)                   | A service that allows you to create pipelines for ingesting, storing, and querying knowledge.    |
-
-## Join the community
-
-We welcome your contributions! One of the easiest ways to participate is to engage in discussions in the GitHub repository.
-Bug reports and fixes are welcome!
-
-To learn more and get started:
-
-- Read the [documentation](https://aka.ms/sk/learn)
-- Learn how to [contribute](https://learn.microsoft.com/semantic-kernel/get-started/contributing) to the project
-- Join the [Discord community](https://aka.ms/SKDiscord)
-- Attend [regular office hours and SK community events](COMMUNITY.md)
-- Follow the team on our [blog](https://aka.ms/sk/blog)
-
-## Code of Conduct
-
-This project has adopted the
-[Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the
-[Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
-or contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
-with any additional questions or comments.
-
-## License
-
-Copyright (c) Microsoft Corporation. All rights reserved.
