@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SemanticFunctions;
-using System.Reflection;
 
 namespace Chat101;
 
@@ -22,50 +21,16 @@ class Program
 
         // Configure application.
         Configuration config = new ConfigurationBuilder()
-            .AddUserSecrets(Assembly.GetExecutingAssembly(), false)
             .AddJsonFile("appsettings.json", true)
             .Build()
             .Get<Configuration>()!;
 
         bool useContext = config.Application.UseContext;
         
-        var aIServiceType = config.Service.Type;
-        switch(aIServiceType)
-        {
-            case AIService.AzureOpenAI:
-
-                var model = config.Service.AzureOpenAI!.ChatModelDeploymentName;
-                var endpoint = config.Service.AzureOpenAI.Endpoint;
-                var aPIKey = config.Service.AzureOpenAI.APIKey ?? throw new ArgumentOutOfRangeException(
-                    $"The configuration is missing the AzureOpenAI:APIKey"); // From UserSecrets
-
-                // Build your semantic kernel.
-                kernel = new KernelBuilder()
-                    .WithAzureChatCompletionService(model, endpoint, aPIKey)
-                    .Build();
-
-                Console.WriteLine($"Service: {aIServiceType}");
-                Console.WriteLine($"ChatModelDeploymentName: {model}");
-                Console.WriteLine($"Endpoint: {endpoint}\r\n");
-                break;
-            case AIService.OpenAI:
-
-                model = config.Service.OpenAI!.ChatModelName;
-                aPIKey = config.Service.OpenAI.APIKey ?? throw new ArgumentOutOfRangeException(
-                    $"The configuration is missing the OpenAI:APIKey"); // From UserSecrets
-
-                // Build your semantic kernel.
-                kernel = new KernelBuilder()
-                    .WithOpenAIChatCompletionService(model, aPIKey)
-                    .Build();
-
-                Console.WriteLine($"Service: {aIServiceType}");
-                Console.WriteLine($"ChatModelName: {model}\r\n");
-                break;
-            default:
-                Console.WriteLine("Invalid AI Service provided.");
-                return 1;
-        }
+        // Build your semantic kernel.
+        kernel = new KernelBuilder()
+            .WithCompletionService()
+            .Build();
 
         // Create an inline semantic function: prompt string + prompt configuration.
         // (NOTE: This is not the standard approach. Used here for simplicity.)
