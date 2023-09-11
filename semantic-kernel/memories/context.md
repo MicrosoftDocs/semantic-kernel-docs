@@ -1,7 +1,7 @@
 ---
 title: Introduction to Context
 description: Run a simple a chat application to learn about context using the Semantic Kernel.
-author: molliemunoz
+author: momuno
 ms.topic: sample
 ms.author: momuno
 ms.date: 09/01/2023
