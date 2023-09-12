@@ -61,7 +61,7 @@ With the VS Code extension, you'll be able to view your Prompt flow in a visual 
 ### Use the CLI to create a new Prompt flow
 Prompt flow has three different types of flows: standard, chat, and evaluation. We'll first create a flow that will run the math plugin we created in the previous tutorial using the standard flow type. This will allow us to test the flow and make sure it's working as expected.
 
-To create an evaluation flow, navigate to the root of the previously completed solution and run the following command in your terminal. If you haven't completed the previous tutorial, you can use the link at the top of this article to download the completed previous solution.
+To create a standard flow, navigate to the root of the previously completed solution and run the following command in your terminal. If you haven't completed the previous tutorial, you can use the link at the top of this article to download the completed previous solution.
 
 ```bash
 pf flow init --flow perform_math
