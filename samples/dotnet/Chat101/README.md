@@ -9,7 +9,7 @@ It is referenced by the [Introduction to Context](tbd) article on Microsoft Lear
 You will need the following items to run the sample:
 
 - [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
-- AI service:
+- AI Service:
 
     | AI Service   | Requirement |
     | ------------ | ------------------------------------------------------------------------------ |
