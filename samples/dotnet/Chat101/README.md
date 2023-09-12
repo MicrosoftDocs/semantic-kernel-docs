@@ -19,31 +19,31 @@ You will need the following items to run the sample:
  ## Supported Models
  This sample has been tested for the following models:
 
-<details><summary><i>Azure OpenAI Models: </i></summary>
+<details><summary><i>Azure OpenAI Chat Models: </i></summary>
 <p>
 
-| Model type      | Model Name             | Model             | Model version | Supported |
-| --------------- | ---------------------- | ----------------- | ------------- | --------- |
-| Chat Completion | gpt-35-turbo           | gpt-3.5-turbo     |          0301 | ✅        |
-| Chat Completion | gpt-35-turbo           | gpt-3.5-turbo     |          0613 | ✅        |
-| Chat Completion | gpt-35-turbo-16k       | gpt-3.5-turbo-16k |          0613 | ✅        |
+| Service      | Model type      | Model name             | Model             | Model version | Supported |
+| ------------ | --------------- | ---------------------- | ----------------- | ------------- | --------- |
+| Azure OpenAI | Chat Completion | gpt-35-turbo           | gpt-3.5-turbo     |          0301 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-35-turbo           | gpt-3.5-turbo     |          0613 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-35-turbo-16k       | gpt-3.5-turbo-16k |          0613 | ✅        |
 
 </p>
 </details>
 
-<details><summary><i>OpenAI Models: </i></summary>
+<details><summary><i>OpenAI Chat Models: </i></summary>
 <p>
 
-| Model type      | Model Name             | Model             | Model version | Supported |
-| --------------- | ---------------------- | ----------------- | ------------- | --------- |
-| Chat Completion | gpt-3.5-turbo          | gpt-3.5-turbo     |             1 | ❌        |
-| Chat Completion | gpt-3.5-turbo-0301     | gpt-3.5-turbo     |          0301 | ✅        |
-| Chat Completion | gpt-3.5-turbo-0613     | gpt-3.5-turbo     |          0613 | ✅        |
-| Chat Completion | gpt-3.5-turbo-16k      | gpt-3.5-turbo-16k |             1 | ✅        |
-| Chat Completion | gpt-3.5-turbo-16k-0613 | gpt-3.5-turbo-16k |          0613 | ✅        |
-| Chat Completion | gpt-4                  | gpt-4             |             1 | ✅        |
-| Chat Completion | gpt-4-0314             | gpt-4             |          0314 | ✅        |
-| Chat Completion | gpt-4-0613             | gpt-4             |          0613 | ❌        |
+| Service | Model type      | Model name             | Model             | Model version | Supported |
+| ------- | --------------- | ---------------------- | ----------------- | ------------- | --------- |
+| OpenAI  | Chat Completion | gpt-3.5-turbo          | gpt-3.5-turbo     |             1 | ❌        |
+| OpenAI  | Chat Completion | gpt-3.5-turbo-0301     | gpt-3.5-turbo     |          0301 | ✅        |
+| OpenAI  | Chat Completion | gpt-3.5-turbo-0613     | gpt-3.5-turbo     |          0613 | ✅        |
+| OpenAI  | Chat Completion | gpt-3.5-turbo-16k      | gpt-3.5-turbo-16k |             1 | ✅        |
+| OpenAI  | Chat Completion | gpt-3.5-turbo-16k-0613 | gpt-3.5-turbo-16k |          0613 | ✅        |
+| OpenAI  | Chat Completion | gpt-4                  | gpt-4             |             1 | ✅        |
+| OpenAI  | Chat Completion | gpt-4-0314             | gpt-4             |          0314 | ✅        |
+| OpenAI  | Chat Completion | gpt-4-0613             | gpt-4             |          0613 | ❌        |
 
 </p>
 </details>
