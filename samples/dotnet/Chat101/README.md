@@ -17,16 +17,21 @@ You will need the following items to run the sample:
     | OpenAI       | - [Account](https://platform.openai.com)<br>- [API key](https://platform.openai.com/account/api-keys)<br>- Model name of a [supported chat model](#supported-models)<br> |
 
  ## Supported Models
- This sample has been tested with the following models:
+ This sample has been validated for the following models:
 
-| Service      | Model type      | Model            | Model version | Supported |
-| ------------ | --------------- | ---------------- | ------------: | --------- |
-| OpenAI       | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
-| OpenAI       | Chat Completion | gpt-4            |             1 | ✅        |
-| OpenAI       | Chat Completion | gpt-4            |          0314 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-35-turbo     |             1 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-35-turbo     |          0301 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-4            |          0314 | ✅        |
+| Service      | Model type      | Model Name             | Model version | Supported |
+| ------------ | --------------- | ---------------------- | ------------: | --------- |
+| OpenAI       | Chat Completion | gpt-3.5-turbo          |             1 | ❌        |
+| OpenAI       | Chat Completion | gpt-3.5-turbo-0301     |          0301 | ✅        |
+| OpenAI       | Chat Completion | gpt-3.5-turbo-16k      |             1 | ✅        |
+| OpenAI       | Chat Completion | gpt-3.5-turbo-0613     |          0613 | ✅        |
+| OpenAI       | Chat Completion | gpt-3.5-turbo-16k-0613 |          0613 | ✅        |
+| OpenAI       | Chat Completion | gpt-4                  |             1 | ✅        |
+| OpenAI       | Chat Completion | gpt-4-0314             |          0314 | ✅        |
+| OpenAI       | Chat Completion | gpt-4-0613             |          0613 | ❌        |
+| Azure OpenAI | Chat Completion | gpt-35-turbo           |          0301 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-35-turbo           |          0613 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-35-turbo-16k       |          0613 | ✅        |
 
 > **IMPORTANT:** This sample is for educational purposes only and is not recommended for production deployments.
 
@@ -41,7 +46,7 @@ Use .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security
    - **Azure OpenAI**
 
        ```powershell
-       cd 02-Adding-AI-Services
+       cd <path to Chat101/>
 
        dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 
@@ -54,7 +59,7 @@ Use .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security
    - **OpenAI**
 
        ```powershell
-       cd 02-Adding-AI-Services
+       cd <path to Chat101/>
 
        dotnet user-secrets set "Global:LlmService" "OpenAI"
 
