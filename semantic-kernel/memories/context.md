@@ -14,7 +14,7 @@ ms.service: semantic-kernel
 
 This article will introduce you to context and its importance in LLM prompts. You will run a simple chat application and learn how to implement context with the Semantic Kernel SDK. 
 
-# What is context?
+## What is context?
 
 **Context** is information that helps clarify meaning, oftentimes relating to the surrounding circumstances.
 
@@ -24,7 +24,7 @@ An LLM also needs **context** to more clearly understand what you are telling it
 
 To demonstrate, let's look at a simple chat application.
 
-# Chat sample application
+## Chat sample application
 Clone the GitHub sample code below in your preferred language. Follow the instructions in the sample README to run the chat console app.
 
 | Language  | Sample Chat Application |
@@ -34,7 +34,7 @@ Clone the GitHub sample code below in your preferred language. Follow the instru
 
 When the default application is run, the conversation history is included in each prompt. This is the added context. You can also run the application without this context. Try it and see what happens!
 
-# Context with the Semantic Kernel SDK
+## Context with the Semantic Kernel SDK
 
 The Semantic Kernel (SK) includes context in a prompt via `ContextVariables` and `semantic functions`. Ultimately, you will send your ptompt (run your semantic function) using context variables (input) and receive the chat completion (output). 
 
@@ -132,5 +132,5 @@ chatFunctionVariables.Set("userInput", userInput);
 chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
 ```
 
-# API Documentation
+## API Documentation
 - dotnet: https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.orchestration?view=semantic-kernel-dotnet
