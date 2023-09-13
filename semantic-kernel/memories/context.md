@@ -24,26 +24,28 @@ An LLM also needs **context** to more clearly understand what you are telling it
 
 To demonstrate, let's look at a simple chat application.
 
-## Chat sample application
+## Chat sample app using context
 Clone the GitHub sample code below in your preferred language. Follow the instructions in the sample README to run the chat console app.
-
-| Language  | Sample Chat Application |
-| --- | --- |
-| C# | [Open solution in GitHub](tbd) |
-| Python | [Open solution in GitHub](tbd) |
 
 When the default application is run, the conversation history is included in each prompt. This is the added context. You can also run the application without this context. Try it and see what happens!
 
+| Language  | Sample Chat Application |
+| --------- | ----------------------- |
+| C#        | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/Chat101) |
+| Python    | <Coming in the future> |
+
 ## Context with the Semantic Kernel SDK
 
-The Semantic Kernel (SK) includes context in a prompt via `ContextVariables` and `semantic functions`. Ultimately, you will send your ptompt (run your semantic function) using context variables (input) and receive the chat completion (output). 
+The Semantic Kernel (SK) chat sample app uses `ContextVariables` and *semantic functions* to include context in each prompt. This section will walk you through how to build this, step-by-step. Ultimately, the function call that sends the prompt (with context) to the LLM is the following:
 
-```csharp
-var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
-```
+# [C#](#tab/Csharp)
 
-Let's begin with the prompt.
+:::code language="csharp" source="~/../samples/dotnet/Chat101/Program.cs" range="73":::
 
+Let's begin by building the prompt.
+
+
+-----
 In the Chat101 sample, each prompt includes the history of the conversation, the user's input, and placement for the LLM's completion. This prompt is stored directly in a `string` called `chatFunctionPrompt`.  
         
 ```csharp
