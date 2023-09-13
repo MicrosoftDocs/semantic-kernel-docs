@@ -32,7 +32,7 @@ When the default application is run, the conversation history is included in eac
 | Language  | Sample Chat Application |
 | --------- | ----------------------- |
 | C#        | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/Chat101) |
-| Python    | <Coming in the future> |
+| Python    | Coming in the future |
 
 ## Context with the Semantic Kernel SDK
 
@@ -40,7 +40,18 @@ The Semantic Kernel (SK) chat sample app uses `ContextVariables` and *semantic f
 
 # [C#](#tab/Csharp)
 
+```csharp
+public Task<SKContext> RunAsync(ISKFunction skFunction, ContextVariables? variables = null, CancellationToken cancellationToken = default)
+```
+
+[API reference: IKernel.RunAsync Method](https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.ikernel.runasync?view=semantic-kernel-dotnet#microsoft-semantickernel-ikernel-runasync(microsoft-semantickernel-skilldefinition-iskfunction-microsoft-semantickernel-orchestration-contextvariables-system-threading-cancellationtoken))
+
+
+
 :::code language="csharp" source="~/../samples/dotnet/Chat101/Program.cs" range="73":::
+
+
+
 
 Let's begin by building the prompt.
 
