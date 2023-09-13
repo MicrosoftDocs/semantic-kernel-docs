@@ -16,6 +16,7 @@
     <PackageVersion Include="Microsoft.SemanticKernel" Version="0.21.230828.2-preview" />
     <PackageVersion Include="Microsoft.SemanticKernel.Skills.OpenAPI" Version="0.21.230828.2-preview" />
     <PackageVersion Include="Microsoft.SemanticKernel.Planning.StepwisePlanner" Version="0.21.230828.2-preview" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Planning.SequentialPlanner" Version="0.21.230828.2-preview" />
     <PackageVersion Include="Microsoft.SemanticKernel.Skills.Core" Version="0.21.230828.2-preview" />
     <!-- Microsoft.Azure -->
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
