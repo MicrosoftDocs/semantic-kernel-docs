@@ -12,8 +12,8 @@ class Program
     private const string ContextVariableKeyHistory = "history";
     private const string ContextVariableKeyUserInput = "userInput";
     private const string FunctionNameChat = "Chat";
-    private const string PromptStringUser = "User: ";
-    private const string PromptStringChatBot = "ChatBot: ";
+    private const string PromptCueUser = "User: ";
+    private const string PromptCueChatBot = "ChatBot: ";
 
     static async Task<int> Main(string[] args)
     {
@@ -34,14 +34,21 @@ class Program
             .WithCompletionService()
             .Build();
 
+        // Initialize the context variables (semantic function input).
+        var chatFunctionVariables = new ContextVariables
+        {
+            [ContextVariableKeyHistory] = string.Empty,
+            [ContextVariableKeyUserInput] = string.Empty,
+        };
+
         // Create an inline semantic function: prompt string + prompt configuration.
         // (NOTE: This is not the standard approach. Used here for simplicity.)
 
         // Initialize the prompt string.
         string chatFunctionPrompt = 
             @$"{{{{${ContextVariableKeyHistory}}}}}
-            {PromptStringUser} {{{{${ContextVariableKeyUserInput}}}}}
-            {PromptStringChatBot}";
+            {PromptCueUser} {{{{${ContextVariableKeyUserInput}}}}}
+            {PromptCueChatBot}";
 
         // Initialize the prompt configuration.
         var chatFunctionPromptConfig = new PromptTemplateConfig
@@ -52,13 +59,6 @@ class Program
                 Temperature = 0.7,
                 TopP = 0.5,
             }
-        };
-
-        // Initialize the context variables (semantic function input).
-        var chatFunctionVariables = new ContextVariables
-        {
-            [ContextVariableKeyHistory] = string.Empty,
-            [ContextVariableKeyUserInput] = string.Empty,
         };
 
         // Register the semantic function with your semantic kernel.
@@ -72,8 +72,8 @@ class Program
         // chat completion (output).
         var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
         Console.WriteLine("To finish the chat session, press only <Enter>.\r\n");
-        Console.WriteLine(PromptStringChatBot + chatCompletion);
-        Console.Write(PromptStringUser);
+        Console.WriteLine(PromptCueChatBot + chatCompletion);
+        Console.Write(PromptCueUser);
 
         string history = string.Empty;
         string userInput = string.Empty;
@@ -84,8 +84,8 @@ class Program
         if (useContext) 
         {
             history += 
-                @$"{PromptStringUser}{userInput}
-                {PromptStringChatBot}{chatCompletion}
+                @$"{PromptCueUser}{userInput}
+                {PromptCueChatBot}{chatCompletion}
                 ";
             chatFunctionVariables.Set(ContextVariableKeyHistory, history);
         }
@@ -96,8 +96,8 @@ class Program
             // Include user input in prompts and receive model completions.
             chatFunctionVariables.Set(ContextVariableKeyUserInput, userInput);
             chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
-            Console.WriteLine(PromptStringChatBot + chatCompletion);
-            Console.Write(PromptStringUser);
+            Console.WriteLine(PromptCueChatBot + chatCompletion);
+            Console.Write(PromptCueUser);
 
             // Important: As history context grows in size, so does the token count usage.
             //            Chat will not function correctly once token limit is reached.
@@ -105,8 +105,8 @@ class Program
             if (useContext)
             {
                 history += 
-                    @$"{PromptStringUser}{userInput}
-                    {PromptStringChatBot}{chatCompletion}
+                    @$"{PromptCueUser}{userInput}
+                    {PromptCueChatBot}{chatCompletion}
                     ";
                 chatFunctionVariables.Set(ContextVariableKeyHistory, history);
             }

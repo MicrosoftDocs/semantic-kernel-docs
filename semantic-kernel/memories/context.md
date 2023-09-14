@@ -36,53 +36,31 @@ When the default application is run, the conversation history is included in eac
 
 ## Context with the Semantic Kernel SDK
 
-The Semantic Kernel (SK) chat sample app uses `ContextVariables` and *semantic functions* to include context in each prompt. This section will walk you through how to build this, step-by-step. Ultimately, the function call that sends the prompt (with context) to the LLM is the following:
+The Semantic Kernel (SK) chat sample app above uses *context variables* and *semantic functions* to include context in each prompt. This section will explain the code so you can implement it in your own app. Ultimately, the SK function you will call to send off your completed prompt is: 
 
 # [C#](#tab/Csharp)
+
+[IKernel.RunAsync](https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.ikernel.runasync?view=semantic-kernel-dotnet#microsoft-semantickernel-ikernel-runasync(microsoft-semantickernel-skilldefinition-iskfunction-microsoft-semantickernel-orchestration-contextvariables-system-threading-cancellationtoken))
 
 ```csharp
 public Task<SKContext> RunAsync(ISKFunction skFunction, ContextVariables? variables = null, CancellationToken cancellationToken = default)
 ```
 
-[API reference: IKernel.RunAsync Method](https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.ikernel.runasync?view=semantic-kernel-dotnet#microsoft-semantickernel-ikernel-runasync(microsoft-semantickernel-skilldefinition-iskfunction-microsoft-semantickernel-orchestration-contextvariables-system-threading-cancellationtoken))
+In the sample, this looks like:
 
-
-
-:::code language="csharp" source="~/../samples/dotnet/Chat101/Program.cs" range="73":::
-
-
-
-
-Let's begin by building the prompt.
-
-
+```csharp
+var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
+```
 -----
-In the Chat101 sample, each prompt includes the history of the conversation, the user's input, and placement for the LLM's completion. This prompt is stored directly in a `string` called `chatFunctionPrompt`.  
-        
-```csharp
-// Initialize the prompt.
-// (NOTE: This is not the standard approach. Used here for simplicity.)
-string chatFunctionPrompt = 
-    @$"{{{{${ContextVariableKeyHistory}}}}}
-    {PromptStringUser} {{{{${ContextVariableKeyUserInput}}}}}
-    {PromptStringChatBot}";
-```
 
-After dereferencing the `const string`s, this becomes:
-        
-```csharp
-// Initialize the prompt.
-// (NOTE: This is not the standard approach. Used here for simplicity.)
-string chatFunctionPrompt = 
-    @"{{$history}}
-    User: {{$userInput}}
-    ChatBot: ";
-```
+To begin, let's build the prompt.
 
-The `$history` and `$userInput` are context variables, represented as key-value pairs and stored in a Dictionary called `Context ariables`. In the sample, the `ContextVariables` Dictionary is initialized and called `chatFunctionVariables`.
+In a chat, a prompt to the LLM will ideally contain the conversation history (the added context) as well as the user's new input. These two parts should be mutable so we will define them as *context variables*. A *context variable* is a key-value pair whose mapping is stored in a Dictionary called `ContextVariables`. In the sample, the `ContextVariables` Dictionary is initialized and called `chatFunctionVariables`, the keys are `"history"` and `"userInput"`, and their values are initialized as empty strings.
+
+# [C#](#tab/Csharp)
 
 ```csharp
-// Initialize the context variables that will be used.
+// Initialize the context variables (semantic function input).
 var chatFunctionVariables = new ContextVariables
 {
     [ContextVariableKeyHistory] = string.Empty,
@@ -93,7 +71,7 @@ var chatFunctionVariables = new ContextVariables
 After dereferencing the `const string`s, this becomes:
         
 ```csharp
-// Initialize the context variables that will be used.
+// Initialize the context variables (semantic function input).
 var chatFunctionVariables = new ContextVariables
 {
     ["history"] = string.Empty,
@@ -101,9 +79,50 @@ var chatFunctionVariables = new ContextVariables
 };
 ```
 
-`chatFunctionVariables` will need to be updated and injected into the prompt string each time the Semantic Kernel sends the prompt to the LLM. To accomplish this, SK uses `Semantic Functions`.
+When we construct the prompt string, we will include these *context variables* in a way so they can later be rendered as their values by the kernel (e.g., `{{$history}}` and `{{$userInput}}`). In the sample code, the prompt is stored directly in a `string` called `chatFunctionPrompt`.
 
-A `Semantic Function` is simply a prompt string (above) and a prompt configuration json (not shown here). The input to the semantic function is the `ContextVariables` Dictionary (above), and the output from the `Semantic Function` is the LLM completion. Once the semantic function is registered to your semantic kernel (so it knows about it), you will have a complete function that you can run!
+# [C#](#tab/Csharp)
+
+```csharp
+// Initialize the prompt string.
+string chatFunctionPrompt = 
+    @$"{{{{${ContextVariableKeyHistory}}}}}
+    {PromptCueUser} {{{{${ContextVariableKeyUserInput}}}}}
+    {PromptCueChatBot}";
+```
+
+After dereferencing the `const string`s, this becomes:
+        
+```csharp
+// Initialize the prompt string.
+string chatFunctionPrompt = 
+    @"{{$history}}
+    User: {{$userInput}}
+    ChatBot: ";
+```
+-----
+
+When the prompt is sent to the AI Service, however, the LLM needs a bit more information to generate the completion. So we must also define a prompt configuration. 
+
+# [C#](#tab/Csharp)
+
+```csharp
+// Initialize the prompt configuration.
+var chatFunctionPromptConfig = new PromptTemplateConfig
+{
+    Completion = 
+    {
+        MaxTokens = 2000,
+        Temperature = 0.7,
+        TopP = 0.5,
+    }
+};
+```
+-----
+
+With both the prompt and the prompt configuration now defined, we can register the prompt as a *semantic function* with the initialized kernel. By registering it, the kernel will know about the function and can use it. 
+
+# [C#](#tab/Csharp)
 
 ```csharp
 // Register the semantic function with your semantic kernel.
@@ -113,18 +132,27 @@ var chatFunctionConfig = new SemanticFunctionConfig(chatFunctionPromptConfig, ch
 var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctionConfig);
 ```
 
-You can send the prompt (run the semantic function `chatFunction`) using context variables (the input `chatFunctionVariables`) and receive the LLM chat completion (output). Use the following:
+-----
+
+At this point, you have a *semantic function* called `chatFunction` (composed of a prompt and a prompt config) and *context variables* defined by `chatFunctionVariables`. To inject the values of the *context variables* into your prompt and send it off to the LLM, the kernel will run the semantic function.
+
+# [C#](#tab/Csharp)
 
 ```csharp
 var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
 ```
+-----
 
-The last step is to update your context variables before sending off the prompt again. Otherwise, the same prompt will be sent over and over! To do this, history is updated with the latest prompt sent, and userInput is updated with what was read from the console.
+This signature calls the *semantic function* `chatFunction` with the input `chatFunctionVariables` and returns the output `chatCompletion`.
+
+To have a complete chat experience, however, the *context variables* need to be updated in between each prompt submission to the LLM. Otherwise, the same prompt will be sent over and over! To do this, value for the key `"history"` is updated with the latest prompt sent, and the value for the key `"userInput"` is updated with what was read from the console.
+
+# [C#](#tab/Csharp)
 
 ```csharp
 history += 
-    @$"{PromptStringUser}{userInput}
-    {PromptStringChatBot}{chatCompletion}
+    @$"{PromptCueUser}{userInput}
+    {PromptCueChatBot}{chatCompletion}
     ";
 chatFunctionVariables.Set(ContextVariableKeyHistory, history);
 chatFunctionVariables.Set(ContextVariableKeyUserInput, userInput);
@@ -144,6 +172,4 @@ chatFunctionVariables.Set("userInput", userInput);
 
 chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
 ```
-
-## API Documentation
-- dotnet: https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.orchestration?view=semantic-kernel-dotnet
+-----
