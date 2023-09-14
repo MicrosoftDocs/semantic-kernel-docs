@@ -2,7 +2,7 @@
 
 This sample runs a 101 level chat application with a large language model (LLM). The code demonstrates basic usage of the Semantic Kernel SDK and the importance of context in prompts.
 
-It is referenced by the [Introduction to Context](tbd) article on Microsoft Learn.
+It is referenced by the [Introduction to Context](https://learn.microsoft.com/semantic-kernel/memories/context) article on Microsoft Learn.
 
 # Requirements
 
