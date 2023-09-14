@@ -29,7 +29,8 @@ class Program
         Console.WriteLine($"useContext: {useContext}");
         
         // Build your semantic kernel.
-        // (NOTE: `WithCompletionSerice()` is a custom function found in ./config/KernelBuilderExtensions.cs.)
+        // (NOTE: `WithCompletionSerice()` is a custom function found in 
+        //        ./config/KernelBuilderExtensions.cs.)
         kernel = new KernelBuilder()
             .WithCompletionService()
             .Build();
