@@ -7,7 +7,7 @@ pf_client = PFClient()
 
 # Define the inputs of the flow
 inputs = {
-    "text": "What would you have left if you spent $3 when you only had $2 to begin with"
+    "text": "What is 2 plus 3?",
 }
 
 # Run the flow

@@ -34,7 +34,7 @@ def my_python_tool(input1: str) -> str:
 
     for index, step in enumerate(plan._steps):
         print("Function: " + step.skill_name + "." + step._function.name)
-        print("Input vars: " + str(step._parameters._variables))
+        print("Input vars: " + str(step.parameters.variables))
         print("Output vars: " + str(step._outputs))
     print("Result: " + str(result))
 
