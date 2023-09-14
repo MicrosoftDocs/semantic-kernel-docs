@@ -40,7 +40,7 @@ The Semantic Kernel (SK) chat sample app above uses *context variables* and *sem
 
 # [C#](#tab/Csharp)
 
-IKernel.RunAsync Method, specifically [RunAsync(ISKFunction, ContextVariables, CancellationToken)](/dotnet/api/microsoft.semantickernel.ikernel.runasync#microsoft-semantickernel-ikernel-runasync):
+IKernel.RunAsync Method, specifically [RunAsync(ISKFunction, ContextVariables, CancellationToken)](/dotnet/api/microsoft.semantickernel.ikernel.runasync#microsoft-semantickernel-ikernel-runasync(microsoft-semantickernel-skilldefinition-iskfunction-microsoft-semantickernel-orchestration-contextvariables-system-threading-cancellationtoken));
 
 ```csharp
 public Task<SKContext> RunAsync(ISKFunction skFunction, ContextVariables? variables = null, CancellationToken cancellationToken = default)
