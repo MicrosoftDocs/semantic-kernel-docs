@@ -154,11 +154,3 @@ var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
 This code calls the *semantic function* `chatFunction` with the input `chatFunctionVariables` and returns the output `chatCompletion`.
 
 To have a complete chat experience, however, the *context variables* should be updated in between each prompt submission to the LLM. Otherwise, the same prompt will be sent over and over! To do this, the value for the key `"history"` is updated with the latest prompt sent, and the value for the key `"userInput"` is updated with what was entered from the console. Please view the sample code for this implementation detail.
-
-## Take the next step
-You may have noticed a new problem arise. In our simple chat application, as the history context grows in size, so does the token count usage. The chat will no longer function correctly once this token limit is reached.
-
-To address this issue and its limitations around context size, we will next introduce the concept of *context curation*. In other words, how to present the most relevant information in the most effective way to the LLM.
-
-> [!div class="nextstepaction"]
-> [Coming in the future]
