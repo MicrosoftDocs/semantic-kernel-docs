@@ -40,7 +40,7 @@ The Semantic Kernel (SK) chat sample app above uses *context variables* and *sem
 
 # [C#](#tab/Csharp)
 
-IKernel.RunAsync Method, specifically [RunAsync(ISKFunction, ContextVariables, CancellationToken)](/dotnet/api/microsoft.semantickernel.ikernel.runasync?view=semantic-kernel-dotnet#microsoft-semantickernel-ikernel-runasync):
+IKernel.RunAsync Method, specifically [RunAsync(ISKFunction, ContextVariables, CancellationToken)](/dotnet/api/microsoft.semantickernel.ikernel.runasync#microsoft-semantickernel-ikernel-runasync):
 
 ```csharp
 public Task<SKContext> RunAsync(ISKFunction skFunction, ContextVariables? variables = null, CancellationToken cancellationToken = default)
@@ -108,7 +108,7 @@ string chatFunctionPrompt =
 
 ---
 
-When the prompt is sent to the AI Service, however, the LLM needs a bit more information to generate the completion. So we must also define a prompt configuration. You can learn more about the `PromptTemplateConfig`` and its properties [here](/dotnet/api/microsoft.semantickernel.semanticfunctions.prompttemplateconfig?view=semantic-kernel-dotnet).
+When the prompt is sent to the AI Service, however, the LLM needs a bit more information to generate the completion. So we must also define a prompt configuration. You can learn more about the `PromptTemplateConfig` and its properties [here](/dotnet/api/microsoft.semantickernel.semanticfunctions.prompttemplateconfig).
 
 # [C#](#tab/Csharp)
 
