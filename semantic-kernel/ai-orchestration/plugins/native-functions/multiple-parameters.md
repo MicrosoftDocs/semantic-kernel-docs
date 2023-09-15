@@ -33,7 +33,7 @@ Update your `Math` class so that it also includes a function that multiplies two
 :::code language="csharp" source="~/../samples/dotnet/08-Native-Functions-with-Context/plugins/MathPlugin/Math.cs" range="3-28" highlight="19":::
 
 # [Python](#tab/python)
-TODO: Add python
+:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/MathPlugin/Math.py" range="1-61" highlight="60":::
 
 ---
 

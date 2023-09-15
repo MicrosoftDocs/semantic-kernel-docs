@@ -216,11 +216,11 @@ ChatBot can have a conversation with you about any topic.
 It can give explicit instructions or say 'I don't know' if it does not have an answer.
 
 Information about me, from previous conversations:
-- {{$fact1}} {{recall $fact1}}
-- {{$fact2}} {{recall $fact2}}
-- {{$fact3}} {{recall $fact3}}
-- {{$fact4}} {{recall $fact4}}
-- {{$fact5}} {{recall $fact5}}
+- {{$fact1}} {{textmemoryskill.recall $fact1}}
+- {{$fact2}} {{textmemoryskill.recall $fact2}}
+- {{$fact3}} {{textmemoryskill.recall $fact3}}
+- {{$fact4}} {{textmemoryskill.recall $fact4}}
+- {{$fact5}} {{textmemoryskill.recall $fact5}}
 
 Chat:
 {{$history}}
@@ -254,11 +254,11 @@ async def setup_chat_with_memory(
     it does not have an answer.
 
     Information about me, from previous conversations:
-    - {{$fact1}} {{recall $fact1}}
-    - {{$fact2}} {{recall $fact2}}
-    - {{$fact3}} {{recall $fact3}}
-    - {{$fact4}} {{recall $fact4}}
-    - {{$fact5}} {{recall $fact5}}
+    - {{$fact1}} {{textmemoryskill.recall $fact1}}
+    - {{$fact2}} {{textmemoryskill.recall $fact2}}
+    - {{$fact3}} {{textmemoryskill.recall $fact3}}
+    - {{$fact4}} {{textmemoryskill.recall $fact4}}
+    - {{$fact5}} {{textmemoryskill.recall $fact5}}
 
     Chat:
     {{$chat_history}}
