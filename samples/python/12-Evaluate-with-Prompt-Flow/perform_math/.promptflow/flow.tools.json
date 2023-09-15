@@ -28,9 +28,24 @@
     "math_planner.py": {
       "type": "python",
       "inputs": {
-        "input1": {
+        "input": {
           "type": [
             "string"
+          ]
+        },
+        "deployment_type": {
+          "type": [
+            "string"
+          ]
+        },
+        "deployment_name": {
+          "type": [
+            "string"
+          ]
+        },
+        "AzureOpenAIConnection": {
+          "type": [
+            "AzureOpenAIConnection"
           ]
         }
       },
