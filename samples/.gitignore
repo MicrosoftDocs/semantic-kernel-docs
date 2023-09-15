@@ -5,3 +5,6 @@ obj
 *.cache
 *.log
 *.tmp
+
+**/__pycache__/**
+**/poetry.lock

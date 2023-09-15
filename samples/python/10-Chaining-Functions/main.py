@@ -43,7 +43,7 @@ async def main():
             input_str="How many square feet would the room be if its length was 12.25 feet and its width was 17.33 feet?",
         )
     ).result
-    print(result2["input"])
+    print(result2)
 
 
 # Run the main function

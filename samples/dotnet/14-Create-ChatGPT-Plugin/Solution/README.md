@@ -1,6 +1,6 @@
 # Creating and using a ChatGPT plugin
 
-The `13-Create-ChatGPT-Plugin` console application shows the final solution to the [ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/chatgpt-plugins) doc article.
+The `14-Create-ChatGPT-Plugin` console application shows the final solution to the [ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/chatgpt-plugins) doc article.
 
 ## Prerequisites
 
@@ -36,7 +36,7 @@ Only the GPT-4 models are "smart" enough to call the `GetLogicalValue` function.
 Configure an OpenAI endpoint
 
 ```powershell
-cd 13-Create-ChatGPT-Plugin/Solution
+cd 14-Create-ChatGPT-Plugin/Solution
 
 dotnet user-secrets set "Global:LlmService" "OpenAI"
 
@@ -49,7 +49,7 @@ dotnet user-secrets set "OpenAI:OrgId" "... your ord ID ..."
 Configure an Azure OpenAI endpoint
 
 ```powershell
-cd 13-Create-ChatGPT-Plugin/Solution
+cd 14-Create-ChatGPT-Plugin/Solution
 
 dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 

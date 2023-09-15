@@ -31,7 +31,7 @@ When the default chat application is run, the conversation history is included i
 
 | Language  | Sample Chat Application |
 | --------- | ----------------------- |
-| C#        | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/Chat101) |
+| C#        | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/15-Using-Context-for-Chat) |
 | Python    | Coming in the future |
 
 ## Context with the Semantic Kernel SDK
