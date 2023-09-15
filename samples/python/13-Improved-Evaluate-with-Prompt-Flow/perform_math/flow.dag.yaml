@@ -5,7 +5,6 @@ environment:
 inputs:
   text:
     type: string
-    default: What is 5+3
 outputs:
   result:
     type: string

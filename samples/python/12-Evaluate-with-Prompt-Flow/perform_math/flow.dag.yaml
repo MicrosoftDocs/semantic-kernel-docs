@@ -5,7 +5,12 @@ environment:
 inputs:
   text:
     type: string
-    default: What is 5+3
+  deployment_type:
+    type: string
+    default: chat-completion
+  deployment_name:
+    type: string
+    default: gpt-35-turbo
 outputs:
   result:
     type: string
@@ -17,4 +22,7 @@ nodes:
     type: code
     path: math_planner.py
   inputs:
-    input1: ${inputs.text}
+    input: ${inputs.text}
+    deployment_type: ${inputs.deployment_type}
+    deployment_name: ${inputs.deployment_name}
+    AzureOpenAIConnection: AzureOpenAIConnection

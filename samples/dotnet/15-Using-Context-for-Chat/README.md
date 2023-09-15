@@ -89,15 +89,15 @@ Use .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security
 - Run the default application (with context).
    
    - **Visual Studio:** 
-     1. Open `Chat101.csproj`. 
-     2. Set `Chat101` as the startup project.
+     1. Open `15-Using-Context-for-Chat.csproj`. 
+     2. Set `15-Using-Context-for-Chat` as the startup project.
      3. Press `F5`.
    - **VS Code:** 
-     1. Open `Chat101/` as its own workspace. 
+     1. Open `15-Using-Context-for-Chat/` as its own workspace. 
      2. Press `F5`.
      3. Open the Terminal window.
    - **Command line:** 
-     1. Navigate to `Chat101/`. 
+     1. Navigate to `15-Using-Context-for-Chat/`. 
      2. Run `dotnet run`.
      
 - Run the application without context.

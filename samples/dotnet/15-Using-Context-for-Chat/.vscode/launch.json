@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net7.0/Chat101.dll",
+            "program": "${workspaceFolder}/bin/Debug/net7.0/15-Using-Context-for-Chat.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",

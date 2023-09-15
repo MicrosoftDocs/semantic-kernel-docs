@@ -33,7 +33,7 @@ class Orchestrator:
         getNumberContext = (
             await self._kernel.run_async(get_numbers, input_str=request)
         ).result
-        numbers = json.loads(getNumberContext["input"])
+        numbers = json.loads(getNumberContext)
 
         # Call the appropriate function
         if intent == "Sqrt":

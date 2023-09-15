@@ -1,7 +1,7 @@
 {
   "flow_runs": [
     {
-      "run_id": "c9682ffe-224b-402d-8a44-d71c017bd6b5_0",
+      "run_id": "1ff81390-285b-4e4e-a7d2-18dac1604370_0",
       "status": "Completed",
       "error": null,
       "inputs": {
@@ -12,12 +12,12 @@
       },
       "metrics": null,
       "request": null,
-      "parent_run_id": "c9682ffe-224b-402d-8a44-d71c017bd6b5",
-      "root_run_id": "c9682ffe-224b-402d-8a44-d71c017bd6b5",
+      "parent_run_id": "1ff81390-285b-4e4e-a7d2-18dac1604370",
+      "root_run_id": "1ff81390-285b-4e4e-a7d2-18dac1604370",
       "source_run_id": null,
       "flow_id": "template_standard_flow",
-      "start_time": "2023-09-05T19:48:10.022763Z",
-      "end_time": "2023-09-05T19:48:14.674664Z",
+      "start_time": "2023-09-15T15:04:03.542811Z",
+      "end_time": "2023-09-15T15:04:06.450753Z",
       "index": 0,
       "api_calls": [
         {
@@ -27,8 +27,8 @@
             "input1": "What is 5+3"
           },
           "output": "8.0",
-          "start_time": 1693939690.023247,
-          "end_time": 1693939694.673557,
+          "start_time": 1694786643.545395,
+          "end_time": 1694786646.449702,
           "error": null,
           "children": null,
           "node_name": "math_planner"
@@ -39,7 +39,7 @@
       "description": "",
       "tags": null,
       "system_metrics": {
-        "duration": 4.651901,
+        "duration": 2.907942,
         "total_tokens": 0
       },
       "result": {
@@ -51,8 +51,8 @@
   "node_runs": [
     {
       "node": "math_planner",
-      "flow_run_id": "c9682ffe-224b-402d-8a44-d71c017bd6b5",
-      "run_id": "c9682ffe-224b-402d-8a44-d71c017bd6b5_math_planner_0",
+      "flow_run_id": "1ff81390-285b-4e4e-a7d2-18dac1604370",
+      "run_id": "1ff81390-285b-4e4e-a7d2-18dac1604370_math_planner_0",
       "status": "Completed",
       "inputs": {
         "input1": "What is 5+3"
@@ -60,9 +60,9 @@
       "output": "8.0",
       "metrics": null,
       "error": null,
-      "parent_run_id": "c9682ffe-224b-402d-8a44-d71c017bd6b5_0",
-      "start_time": "2023-09-05T19:48:10.023216Z",
-      "end_time": "2023-09-05T19:48:14.673795Z",
+      "parent_run_id": "1ff81390-285b-4e4e-a7d2-18dac1604370_0",
+      "start_time": "2023-09-15T15:04:03.545217Z",
+      "end_time": "2023-09-15T15:04:06.449939Z",
       "index": 0,
       "api_calls": [
         {
@@ -72,8 +72,8 @@
             "input1": "What is 5+3"
           },
           "output": "8.0",
-          "start_time": 1693939690.023247,
-          "end_time": 1693939694.673557,
+          "start_time": 1694786643.545395,
+          "end_time": 1694786646.449702,
           "error": null,
           "children": null,
           "node_name": "math_planner"
@@ -83,11 +83,11 @@
       "cached_run_id": null,
       "cached_flow_run_id": null,
       "logs": {
-        "stdout": "[2023-09-05T19:48:14+0000] Function: MathPlugin.Add\n[2023-09-05T19:48:14+0000] Input vars: {'input': '5', 'input2': '3'}\n[2023-09-05T19:48:14+0000] Output vars: ['RESULT__FINAL_ANSWER']\n[2023-09-05T19:48:14+0000] Result: 8.0\n",
+        "stdout": "[2023-09-15T15:04:06+0000] Function: MathPlugin.Add\n[2023-09-15T15:04:06+0000] Input vars: {'input': '5', 'input2': '3'}\n[2023-09-15T15:04:06+0000] Output vars: ['RESULT__FINAL_ANSWER']\n[2023-09-15T15:04:06+0000] Result: 8.0\n",
         "stderr": ""
       },
       "system_metrics": {
-        "duration": 4.650579
+        "duration": 2.904722
       },
       "result": "8.0"
     }

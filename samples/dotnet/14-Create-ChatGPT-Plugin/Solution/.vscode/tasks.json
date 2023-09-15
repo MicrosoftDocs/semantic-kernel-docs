@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Chat101.sln",
+                "${workspaceFolder}/14-Create-ChatGPT-Plugin.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Chat101.sln",
+                "${workspaceFolder}/14-Create-ChatGPT-Plugin.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/Chat101.sln"
+                "${workspaceFolder}/14-Create-ChatGPT-Plugin.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
