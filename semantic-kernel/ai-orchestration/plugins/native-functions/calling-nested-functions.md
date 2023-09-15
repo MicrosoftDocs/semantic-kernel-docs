@@ -49,7 +49,7 @@ Plugins
 ```
 
 # [Python](#tab/python)
-To start, create a new file called _OrchestratorPlugin.cs_ in the same directory as your semantic functions for `OrchestratorPlugin`.
+To start, create a new file called _OrchestratorPlugin.py_ in the same directory as your semantic functions for `OrchestratorPlugin`.
 
 ```directory
 Plugins
