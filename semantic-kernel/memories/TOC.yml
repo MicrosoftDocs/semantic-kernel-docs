@@ -1,5 +1,7 @@
 - name: Overview
   href: index.md
+- name: Introduction to context
+  href: context.md
 - name: Understanding embeddings
   href: embeddings.md
 - name: Store context in vector databases
