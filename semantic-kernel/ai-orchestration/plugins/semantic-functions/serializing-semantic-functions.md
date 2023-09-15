@@ -81,7 +81,7 @@ For the `GetIntent` function, we can use the same configuration [as before](./in
 :::code language="json" source="~/../samples/dotnet/04-Serializing-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/config.json":::
 
 ### Testing your semantic function
-At this point, you can import and test your function with the kernel by updating your _Program.cs_ file to the following.
+At this point, you can import and test your function with the kernel by updating your _Program.cs_ or _main.py_ file to the following.
 
 # [C#](#tab/Csharp)
 :::code language="csharp" source="~/../samples/dotnet/04-Serializing-Semantic-Functions/Program.cs" range="3-5,14-19,22-36":::

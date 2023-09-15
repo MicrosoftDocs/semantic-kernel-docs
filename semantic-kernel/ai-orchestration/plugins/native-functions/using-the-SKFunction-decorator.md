@@ -113,7 +113,7 @@ Plugins
 Open up the _Math.cs_ or _Math.py_ file you created earlier and follow the instructions below to create the `Sqrt` function. This function will take a single number as an input and return the square root of that number.
 
 ### Defining the class for your plugin
-All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your _Math.cs_ or _Math.py file. 
+All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your _Math.cs_ or _Math.py_ file. 
 
 # [C#](#tab/Csharp)
 
