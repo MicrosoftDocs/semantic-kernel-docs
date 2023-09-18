@@ -62,8 +62,8 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 https://github.com/microsoft/chat-copilot  
 
 Link the plugin by adding it to the custom plugin as demonstrated here
-
-![Alt text](image.png)
+ 
+![Alt text](image1.png)
 
 After it's linked and Enabled, you can pose questions to it
 ```
