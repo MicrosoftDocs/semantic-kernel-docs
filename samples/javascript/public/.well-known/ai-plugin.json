@@ -1,0 +1,19 @@
+{ 
+  "schema_version": "v1",
+  "name_for_model": "MathPlugin",
+  "name_for_human": "Math Plugin",
+  "description_for_human": "Used to perform math operations",
+  "description_for_model": "Used to perform math operations (i.e., add, subtract, multiple, divide)",
+  "auth": {
+      "type": "none"
+  },
+  "api": {
+      "type": "openapi",
+      "url": "http://localhost:9080/swagger.json",
+      "has_user_authentication": false
+  },
+  "logo_url": "http://localhost:9080/logo.png",
+  "contact_email": "support@example.com",
+  "legal_info_url": "http://www.example.com/legal" 
+} 
+
