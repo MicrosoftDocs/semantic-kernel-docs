@@ -16,11 +16,11 @@
     <!-- Newtonsoft.Json -->
     <PackageVersion Include="Newtonsoft.Json" Version="[13.0.3, )" />
     <!-- Microsoft.SemanticKernel -->
-    <PackageVersion Include="Microsoft.SemanticKernel" Version="0.24.230918.1-preview" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Skills.OpenAPI" Version="0.24.230918.1-preview" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Planning.StepwisePlanner" Version="0.24.230918.1-preview" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Planning.SequentialPlanner" Version="0.24.230918.1-preview" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Skills.Core" Version="0.24.230918.1-preview" />
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="0.24.230914.1-nightly" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Skills.OpenAPI" Version="0.24.230914.1-nightly" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Planning.StepwisePlanner" Version="0.24.230914.1-nightly" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Planning.SequentialPlanner" Version="0.24.230914.1-nightly" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Skills.Core" Version="0.24.230914.1-nightly" />
     <!-- Microsoft.Azure -->
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.10.0"/>
