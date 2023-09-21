@@ -36,11 +36,10 @@ def add_completion_service(self):
                 ),
             )
     else:
-        model_id = config.get("AZURE_OPEN_AI__MODEL_ID", None)
+        model_id = config.get("OPEN_AI__MODEL_TYPE", None)
 
         if model_id == "chat-completion":
-            kernel = sk.Kernel()
-            kernel.add_text_completion_service(
+            self.add_chat_service(
                 "chat_completion",
                 OpenAIChatCompletion(
                     config.get("OPEN_AI__CHAT_COMPLETION_MODEL_ID", None),
@@ -49,8 +48,7 @@ def add_completion_service(self):
                 ),
             )
         else:
-            kernel = sk.Kernel()
-            kernel.add_text_completion_service(
+            self.add_text_completion_service(
                 "text_completion",
                 OpenAITextCompletion(
                     config.get("OPEN_AI__TEXT_COMPLETION_MODEL_ID", None),
@@ -58,6 +56,5 @@ def add_completion_service(self):
                     config.get("OPEN_AI__ORG_ID", None),
                 ),
             )
-
 
 Kernel.add_completion_service = add_completion_service
