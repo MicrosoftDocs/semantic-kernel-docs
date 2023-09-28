@@ -1,13 +1,13 @@
 ---
-title: How to write semantic functions in Semantic Kernel
-description: How to write semantic functions in Semantic Kernel
+title: How to write prompts in Semantic Kernel
+description: How to write prompts in Semantic Kernel
 author: johnmaeda
 ms.topic: creating-chains
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
-# It all starts with an ask
+# Writing prompts in Semantic Kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
@@ -119,7 +119,7 @@ This plugin can do one of two things by calling one of its two functions:
 * `TestPlugin.SloganMaker()` generates a slogan for a specific kind of shop in NYC
 * `TestPlugin.SummmarizeBlurb()` creates a short summary of a specific blurb
 
-Next, we'll show you how to make a more powerful plugin by introducing Semantic Kernel prompt templates. But before we do so, you may have noticed the `config.json` file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
+Next, we'll show you how to make a more powerful plugin by introducing Semantic Kernel prompt templates. But before we do so, you may have noticed the _config.json_ file. That's a special file for customizing how you want the function to run so that its performance can be tuned. If you're eager to know what's inside that file you can go [here](/semantic-kernel/howto/configuringfunctions) but no worries — you'll be running in no time. So let's keep going!
 
 ## Writing a more powerful "templated" prompt
 
@@ -136,7 +136,7 @@ Such "templated" prompts include variables and function calls that can dynamical
 
 In a templated prompt, the double `{{` curly braces `}}` signify to Semantic Kernel that there's something special for it to notice within the LLM AI prompt. To pass an input to a prompt, we refer to the default input variable `$INPUT` — and by the same token if we have other variables to work with, they will start with a dollar sign `$` as well. 
 
-Our other plain prompt for summarizing text into two sentences can take an `input` by simply replacing the existing body of text and replacing it with `{{$INPUT}}` as follows:
+Our other plain prompt for summarizing text into two sentences can take an `input` by simply replacing the existing body of text and replacing it with `$input` as follows:
 
 ```SummarizeBlurbFlex/skprompt.txt
 Summarize the following text in two sentences or less. 
@@ -191,7 +191,7 @@ First off, you'll want to create an instance of the kernel and configure it to r
 ```csharp
 using Microsoft.SemanticKernel;
 
-var myKernel = Kernel.Builder.Build();
+var kernel = Kernel.Builder.Build();
 
 kernel.Config.AddAzureOpenAITextCompletion(
     "Azure_davinci",                        // LLM AI model alias
@@ -206,7 +206,7 @@ If you're using regular OpenAI:
 ```csharp
 using Microsoft.SemanticKernel;
 
-var myKernel = Kernel.Builder.Build();
+var kernel = Kernel.Builder.Build();
 
 kernel.Config.AddOpenAITextCompletion(
     "OpenAI_davinci",                       // LLM AI model alias
@@ -245,23 +245,23 @@ When running the kernel in C# you will:
 3. Set the corresponding context variables with `<your context variables>.Set`
 4. Select the semantic function to run within the plugin by selecting a function
 
-In code, and assuming you've already instantiated and configured your kernel as `myKernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
+In code, and assuming you've already instantiated and configured your kernel as `kernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
 
 ```csharp
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.KernelExtensions;
 using Microsoft.SemanticKernel.Orchestration;
 
-// ... instantiate a kernel as myKernel
+// ... instantiate a kernel as kernel
 
-var myPlugin = myKernel.ImportSemanticSkillFromDirectory("MyPluginsDirectory", "TestPluginFlex");
+var myPlugin = kernel.ImportSemanticSkillFromDirectory("MyPluginsDirectory", "TestPluginFlex");
 
 var myContext = new ContextVariables(); 
 myContext.Set("BUSINESS", "Basketweaving Service"); 
 myContext.Set("CITY", "Seattle"); 
 myContext.Set("SPECIALTY","ribbons"); 
 
-var myResult = await myKernel.RunAsync(myContext,myPlugin["SloganMakerFlex"]);
+var myResult = await kernel.RunAsync(myContext,myPlugin["SloganMakerFlex"]);
 
 Console.WriteLine(myResult);
 ```
@@ -281,13 +281,13 @@ Summarize the following text in two sentences or less.
 ---End Text---
 ```
 
-and define the function inline in C# — assuming you've already instantiated and configured your kernel as `myKernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
+and define the function inline in C# — assuming you've already instantiated and configured your kernel as `kernel` as described [above](/semantic-kernel/howto/semanticfunctions#get-your-kernel-ready):
 
 ```csharp
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.SemanticFunctions;
 
-// ... instantiate a kernel as myKernel
+// ... instantiate a kernel as kernel
 
 string summarizeBlurbFlex = """
 Summarize the following text in two sentences or less. 
@@ -310,23 +310,23 @@ var myPromptConfig = new PromptTemplateConfig
 var myPromptTemplate = new PromptTemplate(
     summarizeBlurbFlex, 
     myPromptConfig, 
-    myKernel
+    kernel
 );
 
 var myFunctionConfig = new SemanticFunctionConfig(myPromptConfig, myPromptTemplate);
 
-var myFunction = myKernel.RegisterSemanticFunction(
+var myFunction = kernel.RegisterSemanticFunction(
     "TestPluginFlex", 
     "summarizeBlurbFlex",
     myFunctionConfig);
 
-var myOutput = await myKernel.RunAsync("This is my input that will get summarized for me. And when I go off on a tangent it will make it harder. But it will figure out that the only thing to summarize is that this is a text to be summarized. You think?", 
+var myOutput = await kernel.RunAsync("This is my input that will get summarized for me. And when I go off on a tangent it will make it harder. But it will figure out that the only thing to summarize is that this is a text to be summarized. You think?", 
     myFunction);
 
 Console.WriteLine(myOutput);
 ```
 
-Note that the configuration was given inline to the kernel with a `PromptTemplateConfig` object instead of a `config.json` file with the maximum number of tokens to use `MaxTokens`, the variability of words it will use as `TopP`, and the amount of randomness to consider in its response with `Temperature`. Keep in mind that when using C# these parameters will be _PascalCased_ (each word is explicitly capitalized in a string) to be consistent with C# conventions, but in the `config.json` the parameters are _lowercase._  To learn more about these function parameters read how to [configure functions](/semantic-kernel/howto/configuringfunctions).
+Note that the configuration was given inline to the kernel with a `PromptTemplateConfig` object instead of a _config.json_ file with the maximum number of tokens to use `MaxTokens`, the variability of words it will use as `TopP`, and the amount of randomness to consider in its response with `Temperature`. Keep in mind that when using C# these parameters will be _PascalCased_ (each word is explicitly capitalized in a string) to be consistent with C# conventions, but in the _config.json_ the parameters are _lowercase._  To learn more about these function parameters read how to [configure functions](/semantic-kernel/howto/configuringfunctions).
 
 A more succinct way to make this happen is with default settings across the board:
 
@@ -335,7 +335,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.KernelExtensions;
 using Microsoft.SemanticKernel.Orchestration;
 
-// ... instantiate a kernel as myKernel
+// ... instantiate a kernel as kernel
 
 string summarizeBlurbFlex = """
 Summarize the following text in two sentences or less. 
@@ -344,9 +344,9 @@ Summarize the following text in two sentences or less.
 ---End Text---
 """;
 
-var mySummarizeFunction = myKernel.CreateSemanticFunction(summarizeBlurbFlex, maxTokens: 1000);
+var mySummarizeFunction = kernel.CreateSemanticFunction(summarizeBlurbFlex, maxTokens: 1000);
 
-var myOutput = await myKernel.RunAsync(
+var myOutput = await kernel.RunAsync(
     new ContextVariables("This is my input that will get summarized for me. And when I go off on a tangent it will make it harder But it will figure out that the only thing to summarize is that this is a text to be summarized. You think?"),
     mySummarizeFunction);
 

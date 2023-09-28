@@ -5,7 +5,7 @@ author: smonroe
 ms.topic: vs-code-tools
 ms.author: smonroe
 ms.date: 05/12/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Visual Code Studio Semantic Kernel Extension
 

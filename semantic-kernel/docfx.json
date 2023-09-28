@@ -25,7 +25,8 @@
       {
         "files": [
           "**/*.png",
-          "**/*.jpg"
+          "**/*.jpg",
+          "**/*.gif"
         ],
         "exclude": [
           "**/obj/**",
@@ -40,8 +41,8 @@
     "overwrite": [],
     "externalReference": [],
     "globalMetadata": {
-      "breadcrumb_path": "/semantic-kernel/breadcrumb/toc.json",
       "uhfHeaderId": "MSDocsHeader-SemanticKernel",
+      "breadcrumb_path": "/semantic-kernel/breadcrumb/toc.json",
       "feedback_system": "None"
     },
     "fileMetadata": {},

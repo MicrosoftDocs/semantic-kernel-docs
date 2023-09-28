@@ -33,7 +33,7 @@
         {
             "source_path": "semantic-kernel/concepts-sk/kernel.md",
             "redirect_url": "/semantic-kernel/create-chains/kernel",
-            "redirect_document_id": true
+            "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/howto/nativefunctions.md",
@@ -181,14 +181,134 @@
             "redirect_document_id": true
         },
         {
-            "source_path": "semantic-kernel/howto/semantickerneltools",
+            "source_path": "semantic-kernel/howto/semantickerneltools.md",
             "redirect_url": "/semantic-kernel/vs-code-tools/get-started",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/create-chains/connectors.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/connectors",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/connectors.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/out-of-the-box-plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/create-chains/index.md",
+            "redirect_url": "/semantic-kernel/create-chains/kernel",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/create-chains/kernel.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/kernel",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/kernel.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/create-chains/native-functions.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/native-functions",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/native-functions.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/native-functions/using-the-SKFunction-decorator",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/create-chains/planner.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/planner",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/create-plugins/azure-ai.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/create-plugins/index.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/create-plugins/open-ai.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/create-plugins/out-of-the-box-plugins.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/out-of-the-box-plugins",
             "redirect_document_id": true
         },
         {
             "source_path": "semantic-kernel/get-started.md",
             "redirect_url": "/semantic-kernel/get-started/index",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/index.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide/index?toc=/semantic-kernel/toc.json",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/copilot-chat.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/deploy/deploy-to-azure.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/deploy-to-azure",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/deploy/publish-changes-to-azure.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/publish-changes-to-azure",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/chaining-functions.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/chaining-functions",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/chatgpt-plugins.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/chatgpt-plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/index.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/kernel/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/out-of-the-box-plugins.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/out-of-the-box-plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planner.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/planner",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/semantic-functions.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/plugins/semantic-functions/inline-semantic-functions",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/planner.md",
+            "redirect_url": "/semantic-kernel/ai-orchestration/planners/index",
+            "redirect_document_id": true
         }
     ]
 }

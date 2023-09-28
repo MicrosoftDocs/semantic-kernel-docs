@@ -5,7 +5,8 @@ author: johnmaeda
 ms.topic: samples
 ms.author: johnmaeda
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
+ms.custom: build-2023, build-2023-dataai
 ---
 # Overview of sample apps 
 
@@ -27,10 +28,9 @@ Multiple learning samples are provided in the [Semantic Kernel GitHub repository
 | Sample App | Illustrates |
 |---|---|
 | [Simple chat summary](../samples-and-solutions/simple-chat-summary.md) | Use ready-to-use [plugins](../create-plugins/out-of-the-box-plugins.md) and get those plugins into **your** app easily. _Be sure that the [local API service](../samples-and-solutions/local-api-service.md) is running for this sample to work._ |
-| [Book creator](../samples-and-solutions/book-creator.md) | Use [planner](../create-chains/planner.md) to deconstruct a complex goal and envision using the planner in **your** app. _Be sure that the [local API service](../samples-and-solutions/local-api-service.md) is running for this sample to work._ |
-| [Authentication and APIs](../samples-and-solutions/authentication-api.md) | Use a basic [connector](../create-chains/connectors.md) pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI. _Be sure that the [local API service](../samples-and-solutions/local-api-service.md) is running for this sample to work._ |
+| [Book creator](../samples-and-solutions/book-creator.md) | Use [planner](../create-chains/planner.md) to deconstruct a complex goal and envision using planner in **your** app. _Be sure that the [local API service](../samples-and-solutions/local-api-service.md) is running for this sample to work._ |
+| [Authentication and APIs](../samples-and-solutions/authentication-api.md) | Use a basic plugin pattern to authenticate and connect to an API and imagine integrating external data into **your** app's LLM AI. _Be sure that the [local API service](../samples-and-solutions/local-api-service.md) is running for this sample to work._ |
 | [GitHub Repo Q&A Bot](../samples-and-solutions/github-repo-qa-bot.md) | Use [embeddings](../memories/index.md) to store local data and functions to question the embedded data. _Be sure that the [local API service](../samples-and-solutions/local-api-service.md) is running for this sample to work._ |
-| [Copilot Chat Sample App](../samples-and-solutions/copilot-chat.md) | Build your own chatbot based on the Semantic Kernel. |
 
 ## Next step
 

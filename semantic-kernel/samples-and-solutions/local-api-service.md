@@ -5,7 +5,7 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
 ---
 # Local API service for app samples
 
@@ -18,7 +18,7 @@ This service API is written in C# against Azure Function Runtime v4 and exposes 
 
 ### Walkthrough video
 
->[!Video https://aka.ms/SK-Local-API-Setup]
+>[!Video https://learn-video.azurefd.net/vod/player?id=a7be2947-cc94-4a2d-9932-162977ed35ce]
 
 ## Requirements to run the local service
 
@@ -27,7 +27,7 @@ This service API is written in C# against Azure Function Runtime v4 and exposes 
 
 ## Running the service API locally
 
-The [local API service](https://aka.ms/sk/repo/api-azure-function) is located in the Semantic Kernel GitHub repository.
+The [local API service](https://github.com/microsoft/semantic-kernel/tree/main/samples/dotnet/KernelHttpServer) is located in the Semantic Kernel GitHub repository.
 
 **Run** `func start --csharp` from the command line. This will run the service API locally at `http://localhost:7071`.
 

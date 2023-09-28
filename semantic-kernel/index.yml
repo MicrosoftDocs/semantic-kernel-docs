@@ -53,7 +53,7 @@ productDirectory:
         - url: /semantic-kernel/create-chains/connectors
           text: Getting data with connectors   
         - url: /semantic-kernel/create-chains/planner
-          text: Auto create chains with Planner   
+          text: Auto create chains with planners   
     - title: Building and deploying plugins
       imageSrc: /semantic-kernel/media/concept.png
       links:
@@ -61,8 +61,6 @@ productDirectory:
            text: Overview
          - url: /semantic-kernel/create-plugins/out-of-the-box-plugins
            text: Out-of-the-box plugins
-         - url: /semantic-kernel/create-plugins/deploy-plugins
-           text: Deploy plugins to Azure
     - title: App samples
       imageSrc: /semantic-kernel/media/get-started-blue.png
       links:
@@ -81,5 +79,5 @@ productDirectory:
       links:
         - url: https://aka.ms/sk/discord
           text: Join the community on Discord
-        - url: https://aka.ms/sk/repo
+        - url: https://github.com/microsoft/semantic-kernel
           text: Visit the GitHub repo

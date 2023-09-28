@@ -5,7 +5,8 @@ author: evchaki
 ms.topic: samples
 ms.author: evchaki
 ms.date: 02/07/2023
-ms.service: mssearch
+ms.service: semantic-kernel
+ms.custom: build-2023, build-2023-dataai
 ---
 # GitHub Repo Q&A Bot sample app
 
@@ -18,7 +19,7 @@ The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those f
 
 ### Walkthrough video
 
->[!Video https://aka.ms/SK-GitHub-QA-Bot-Video]
+>[!Video https://learn-video.azurefd.net/vod/player?id=bf404e89-42c9-433d-bdca-7cdf2d33689c]
 
 
 ## Requirements to run this app
@@ -28,7 +29,7 @@ The GitHub Repo Q&A Bot sample allows you to enter in a GitHub repo then those f
 > * [Yarn](https://yarnpkg.com/getting-started/install) - used for installing the app's dependencies
 
 ## Running the app
-The [GitHub Repo Q&A Bot sample app](https://aka.ms/sk/repo/samples/github-repo-qa-bot) is located in the Semantic Kernel GitHub repository.
+The [GitHub Repo Q&A Bot sample app](https://github.com/microsoft/semantic-kernel/tree/main/samples/apps/github-qna-webapp-react) is located in the Semantic Kernel GitHub repository.
 
 1) Follow the [Setup](/semantic-kernel/get-started) instructions if you do not already have a clone of Semantic Kernel locally.
 2) Start the [local API service](/semantic-kernel/samples/localapiservice).
@@ -50,8 +51,7 @@ By default the Markdown files are stored as embeddings.  You can ask questions i
 
 ## Next step
 
-Run the Copilot Chat sample app!
+Run the Chat Copilot reference app!
 
 > [!div class="nextstepaction"]
-> [Run the Copilot Chat Sample App](/semantic-kernel/samples/copilotchat)
-
+> [Run the Chat Copilot reference app](/semantic-kernel/samples/copilotchat)

@@ -1,14 +1,13 @@
 ---
-title: Hackathon Materials for Semantic Kernel
-description: Hackathon Materials for Semantic Kernel
-author: evchaki
-ms.topic: samples
-ms.author: evchaki
-ms.date: 04/04/2023
-ms.service: mssearch 
+title: Hackathon materials for Semantic Kernel
+description: Host your own Semantic Kernel hackathon with these materials.
+author: matthewbolanos
+ms.topic: sample
+ms.author: mabolan
+ms.date: 07/11/2023
+ms.service: semantic-kernel 
 ---
-# Hackathon Materials for Semantic Kernel
-
+# Hackathon materials for Semantic Kernel
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
@@ -46,7 +45,7 @@ You should also familiarize yourself with the available documentation and tutori
 - [What is Semantic Kernel?](../overview/index.md)
 - [Semantic Kernel recipes](../get-started/tutorials.md)
 - [Semantic kernel recipes videos](https://devblogs.microsoft.com/semantic-kernel/recipes/)
-- [Semantic Kernel LinkedIn training video](https://aka.ms/sk/li/introducing-semantic-kernel)
+- [Semantic Kernel LinkedIn training video](https://www.linkedin.com/learning/introducing-semantic-kernel-building-ai-based-apps/introducing-semantic-kernel)
 
 Additionally, you can check out the available sample AI plugins and apps that demonstrate how Semantic Kernel can be used for various scenarios. You can use them as inspiration and even modify them for your own projects during the hackathon. You can find them here:
 
@@ -73,7 +72,7 @@ We hope you enjoyed running a Semantic Kernel Hackathon and the overall experien
 If you want to continue developing your AI plugins or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
 - [Semantic Kernel Discord community](https://aka.ms/sk/discord)
-- [Semantic Kernel blog](https://aka.ms/sk/blog)
-- [Semantic Kernel GitHub repo](https://aka.ms/sk/repo)
+- [Semantic Kernel blog](https://devblogs.microsoft.com/semantic-kernel/)
+- [Semantic Kernel GitHub repo](https://github.com/microsoft/semantic-kernel)
 
 Thank you for your engagement and creativity during the hackathon. We look forward to seeing what you create next with Semantic Kernel!

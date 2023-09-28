@@ -1,0 +1,12 @@
+- name: Understanding plugins
+  href: index.md
+- name: Create semantic functions
+  href: semantic-functions/TOC.yml
+- name: Create native functions
+  href: native-functions/TOC.yml
+- name: Chain plugins together
+  href: chaining-functions.md
+- name: Export plugins as OpenAI plugins
+  href: chatgpt-plugins.md
+- name: Out-of-the-box plugins
+  href: out-of-the-box-plugins.md
