@@ -87,7 +87,7 @@ You can learn more about creating semantic functions in the [Creating semantic f
 
 :::row:::
    :::column span="2":::
-      With native functions, you can have the kernel call C# or Python code directly so you can manipulate data or perform other operations. In this way, native functions are like the hands of your AI app. They can be used to save data, retrieve data, and perform any other operation that you can do in code that is ill-suited for LLMs (e.g., performing calculations).
+      With native functions, you can have the kernel call C#, Java, or Python code directly so you can manipulate data or perform other operations. In this way, native functions are like the hands of your AI app. They can be used to save data, retrieve data, and perform any other operation that you can do in code that is ill-suited for LLMs (e.g., performing calculations).
    :::column-end:::
    :::column span="3":::
         ![Semantic functions are the hands of your app](../../media/native-function-explainer.png)
@@ -95,7 +95,7 @@ You can learn more about creating semantic functions in the [Creating semantic f
 :::row-end:::
 
 
-Instead of providing a separate configuration file with semantic descriptions, planners are able to use annotations in the code to understand how the function behaves. Below are examples of the annotations used by planner in both C# and Python for out-of-the-box native functions.
+Instead of providing a separate configuration file with semantic descriptions, planners are able to use annotations in the code to understand how the function behaves. Below are examples of the annotations used by planner in both C#, Java, and Python for out-of-the-box native functions.
 
 # [C#](#tab/Csharp)
 The following code is an excerpt from the `DocumentSkill` plugin, which can be found in the [document plugin](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Document) folder in the GitHub repository. It demonstrates how you can use the `SKFunction` and `SKFunctionInput` attributes to describe the function's input and output to planner.
@@ -110,7 +110,21 @@ public async Task<string> ReadTextAsync(string filePath, SKContext context)
     return this._documentConnector.ReadText(stream);
 }
 ```
+# [Java](#tab/java)
+The following code is an excerpt from the `MathSkill` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/experimental-java/java/plugins/semantickernel-plugin-core) folder in the GitHub repository. It demonstrates how you can use the `DefineSKFunction`, `SKFunctionInputAttribute`, and `SKFunctionParameters` attributes to describe the function's input and output to planner.
 
+```java
+@DefineSKFunction(description = "Adds amount to a value", name = "add")
+public String add(
+      @SKFunctionInputAttribute(description = "The value to add to") String input,
+      @SKFunctionParameters(name = "amount", description = "The amount to be added to value.") String amount) 
+{
+
+   BigDecimal bValue = new BigDecimal(input);
+
+   return bValue.add(new BigDecimal(amount)).toString();
+}
+```
 # [Python](#tab/python)
 
 The following code is an excerpt from the `MathSkill` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `sk_function` and `sk_function_context_parameter` decorators to describe the function's input and output to planner.

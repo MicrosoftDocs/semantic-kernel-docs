@@ -21,6 +21,7 @@ If you want to see the final solution to this article, you can check out the fol
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
 | C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/06-Nested-Functions-In-Semantic-Functions) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/07-Simple-Native-Functions) |
+| Java | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/java/07-Simple-Native-Functions) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/06-Nested-Functions-In-Semantic-Functions) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Simple-Native-Functions) |
 
 
@@ -74,7 +75,7 @@ MyPluginsDirectory
 
 ### Creating the folder for the Math plugin
 
-Since we're giving our kernel the ability to perform math, we'll create a new plugin called `MathPlugin`. To do this, we'll create a _MathPlugin_ folder along with a file to store all its native functions. Depending on the language you're using, you'll create either a C# or Python file.
+Since we're giving our kernel the ability to perform math, we'll create a new plugin called `MathPlugin`. To do this, we'll create a _MathPlugin_ folder along with a file to store all its native functions. Depending on the language you're using, you'll create either a C#, Java, or Python file.
 
 # [C#](#tab/Csharp)
 
@@ -90,6 +91,32 @@ Plugins
 └─── MathPlugin
      │
      └─── Math.cs
+```
+
+# [Java](#tab/java)
+> Java directories follow the [Maven Standard Layout](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html).
+
+```directory
+src
+|
+└─── main
+     |
+     └─── java
+          |
+          └─── resources
+          |    |
+          |    └─── Plugins
+          |         │
+          |         └─── OrchestratorPlugin
+          |              │
+          |              └─── GetIntent
+          |                   └─── skprompt.txt
+          |                   └─── config.json
+          └─── plugins
+               |
+               └─── mathplugin
+                    │
+                    └─── Math.java
 ```
 
 # [Python](#tab/python)
@@ -110,14 +137,19 @@ Plugins
 ---
 
 ## Creating your native functions
-Open up the _Math.cs_ or _Math.py_ file you created earlier and follow the instructions below to create the `Sqrt` function. This function will take a single number as an input and return the square root of that number.
+Open up the _Math.cs_, _Math.java_, or _Math.py_ file you created earlier and follow the instructions below to create the `Sqrt` function. This function will take a single number as an input and return the square root of that number.
 
 ### Defining the class for your plugin
-All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your _Math.cs_ or _Math.py_ file. 
+All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your _Math.cs_,
+_Math.java_, or _Math.py_ file. 
 
 # [C#](#tab/Csharp)
 
 :::code language="csharp" source="~/../samples/dotnet/07-Simple-Native-Functions/plugins/MathPlugin/Math.cs" range="3-10,16" highlight="7":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../samples/java/07-Simple-Native-Functions/src/main/java/plugins/mathplugin/Math.java" range="3-9,15"  highlight="8":::
 
 # [Python](#tab/python)
 
@@ -132,6 +164,11 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 # [C#](#tab/Csharp)
 
 :::code language="csharp" source="~/../samples/dotnet/07-Simple-Native-Functions/plugins/MathPlugin/Math.cs" range="3-16"  highlight="9":::
+
+# [Java](#tab/java)
+> In Java, we use the `DefineSKFunction` annotation.
+
+:::code language="java" source="~/../samples/java/07-Simple-Native-Functions/src/main/java/plugins/mathplugin/Math.java" range="3-15"  highlight="10-13":::
 
 # [Python](#tab/python)
 
@@ -149,6 +186,10 @@ Now that you've created your first native function, you can import it and run it
 # [C#](#tab/Csharp)
 
 :::code language="csharp" source="~/../samples/dotnet/07-Simple-Native-Functions/program.cs" range="3-5,14-19,22-29" highlight="16":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../samples/java/07-Simple-Native-Functions/src/main/java/Main.java" range="3-17"  highlight="13":::
 
 # [Python](#tab/python)
 
