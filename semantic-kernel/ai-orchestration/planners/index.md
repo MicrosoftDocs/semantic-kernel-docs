@@ -270,7 +270,7 @@ print(result)
 After running this code, you should get the correct answer of `2615.1829` back, but how?
 
 ## How does planner work?
-Behind the scenes, planner uses an LLM prompt to generate a plan. You can see the prompt that is used by `SequentialPlanner` by navigating to the [_skprompt.txt_ file](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Extensions/Planning.SequentialPlanner/skprompt.txt) in the Semantic Kernel repository. You can also view the prompt used by the [basic planner](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/planning/basic_planner.py) in Python.
+Behind the scenes, planner uses an LLM prompt to generate a plan. You can see the prompt that is used by `SequentialPlanner` by navigating to the [_skprompt.txt_ file](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Planners/Planners.Core/Sequential/skprompt.txt) in the Semantic Kernel repository. You can also view the prompt used by the [basic planner](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/planning/basic_planner.py) in Python.
 
 ### Understanding the prompt powering planner
 
