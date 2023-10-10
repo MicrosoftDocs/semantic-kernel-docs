@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" />
-    <PackageReference Include="Microsoft.SemanticKernel.Planning.SequentialPlanner" />
+    <PackageReference Include="Microsoft.SemanticKernel.Planners.Core" />
   </ItemGroup>
 
   <ItemGroup>

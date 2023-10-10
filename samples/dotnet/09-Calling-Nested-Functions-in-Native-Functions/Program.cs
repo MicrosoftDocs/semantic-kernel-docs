@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Skills.Core;
+using Microsoft.SemanticKernel.Plugins.Core;
 using Plugins.OrchestratorPlugin;
 
 using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
@@ -29,9 +29,9 @@ var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "
 kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
 
 // Import the native functions
-var mathPlugin = kernel.ImportSkill(new Plugins.MathPlugin.Math(), "MathPlugin");
-var orchestratorPlugin = kernel.ImportSkill(new Orchestrator(kernel), "OrchestratorPlugin");
-var conversationSummaryPlugin = kernel.ImportSkill(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
+var mathPlugin = kernel.ImportFunctions(new Plugins.MathPlugin.Math(), "MathPlugin");
+var orchestratorPlugin = kernel.ImportFunctions(new Orchestrator(kernel), "OrchestratorPlugin");
+var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
 
 // Make a request that runs the Sqrt function
 var result1 = await kernel.RunAsync("What is the square root of 634?", orchestratorPlugin["RouteRequest"]);

@@ -76,4 +76,4 @@ var result = await kernel.RunAsync(
     getIntentFunction
 );
 
-Console.WriteLine(result);
+Console.WriteLine(result.GetValue<string>());

@@ -22,7 +22,7 @@ IKernel kernel = new KernelBuilder()
     .Build();
 
 // Import the Math Plugin
-var mathPlugin = kernel.ImportSkill(new Plugins.MathPlugin.Math(), "MathPlugin");
+var mathPlugin = kernel.ImportFunctions(new Plugins.MathPlugin.Math(), "MathPlugin");
 
 // Create the context variables for the Multiply function
 var contextVariables = new ContextVariables
@@ -33,4 +33,4 @@ var contextVariables = new ContextVariables
 
 // Make a request that runs the Multiply function
 var result = await kernel.RunAsync(contextVariables, mathPlugin["Multiply"]);
-Console.WriteLine(result);
+Console.WriteLine(result.GetValue<string>());

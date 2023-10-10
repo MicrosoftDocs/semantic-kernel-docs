@@ -3,7 +3,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.Skills.Core;
+using Microsoft.SemanticKernel.Plugins.Core;
 
 using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
 {
@@ -27,7 +27,7 @@ var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "
 
 // Import the OrchestratorPlugin and ConversationSummarySkill into the kernel.
 var orchestrationPlugin = kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
-var conversationSummaryPlugin = kernel.ImportSkill(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
+var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
 
 // Create a new context and set the input, history, and options variables.
 var variables = new ContextVariables
@@ -50,4 +50,4 @@ Bot: Would you like to write one for you?",
 // Run the GetIntent function with the context.
 var result = (await kernel.RunAsync(variables, orchestrationPlugin["GetIntent"])).Result;
 
-Console.WriteLine(result);
+Console.WriteLine(result.GetValue<string>());

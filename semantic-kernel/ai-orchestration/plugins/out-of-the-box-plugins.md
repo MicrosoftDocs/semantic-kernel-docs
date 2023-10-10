@@ -47,7 +47,7 @@ using Microsoft.SemanticKernel.CoreSkills;
 
 // ... instantiate a kernel and configure it first
 
-kernel.ImportSkill(new TimeSkill(), "time");
+kernel.ImportFunctions(new TimeSkill(), "time");
 
 const string ThePromptTemplate = @"
 Today is: {{time.Date}}
@@ -114,7 +114,7 @@ using Microsoft.SemanticKernel.CoreSkills;
 
 var kernel = Kernel.Builder.Build();
 
-var myText = kernel.ImportSkill(new TextSkill());
+var myText = kernel.ImportFunctions(new TextSkill());
 
 SKContext myOutput = await kernel.RunAsync(
     "    i n f i n i t e     s p a c e     ",

@@ -4,14 +4,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Skills.Core;
+using Microsoft.SemanticKernel.Plugins.Core;
 
 var kernel = Kernel.Builder
     .Build();
-var time = kernel.ImportSkill(new TimeSkill());
+var time = kernel.ImportFunctions(new TimePlugin());
 var result = await kernel.RunAsync(time["Today"]);
 
-Console.WriteLine(result);
+Console.WriteLine(result.GetValue<string>());
 
 
 var LlmService = Env.Var("Global:LlmService")!;
@@ -45,7 +45,7 @@ if (LlmService == "AzureOpenAI")
          .ImportSemanticSkillFromDirectory(pluginsDirectory, "WriterPlugin");
 
     result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
-    Console.WriteLine(result);
+    Console.WriteLine(result.GetValue<string>());
 }
 else
 {
@@ -76,7 +76,7 @@ else
          .ImportSemanticSkillFromDirectory(pluginsDirectory, "WriterPlugin");
 
     result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
-    Console.WriteLine(result);
+    Console.WriteLine(result.GetValue<string>());
 }
 
 

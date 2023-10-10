@@ -3,7 +3,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Planning;
-using Microsoft.SemanticKernel.Skills.OpenAPI.Extensions;
+using Microsoft.SemanticKernel.Functions.OpenAPI.Extensions;
 
 // Create a logger
 using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>

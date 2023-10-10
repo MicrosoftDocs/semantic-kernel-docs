@@ -33,4 +33,4 @@ var result = await Kernel.RunAsync(
     orchestratorPlugin["GetIntent"]
 );
 
-Console.WriteLine(result);
+Console.WriteLine(result.GetValue<string>());

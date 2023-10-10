@@ -205,7 +205,7 @@ using Plugins;
 // ... instantiate your kernel
 
 // Add the math plugin
-var mathPlugin = kernel.ImportSkill(new MathPlugin(), "MathPlugin");
+var mathPlugin = kernel.ImportFunctions(new MathPlugin(), "MathPlugin");
 
 // Create planner
 var planner = new SequentialPlanner(kernel);

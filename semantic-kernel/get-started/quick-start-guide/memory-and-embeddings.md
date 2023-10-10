@@ -209,7 +209,7 @@ We will achieve this by using the `TextMemorySkill` plugin which exposes the `re
 using Microsoft.SemanticKernel.CoreSkills;
 
 // TextMemorySkill provides the "recall" function
-kernel.ImportSkill(new TextMemorySkill());
+kernel.ImportFunctions(new TextMemorySkill());
 
 const string skPrompt = @"
 ChatBot can have a conversation with you about any topic.

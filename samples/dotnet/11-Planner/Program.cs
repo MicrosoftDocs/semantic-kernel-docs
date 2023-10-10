@@ -24,7 +24,7 @@ IKernel kernel = new KernelBuilder()
     .Build();
 
 // Add the math plugin
-var mathPlugin = kernel.ImportSkill(new Plugins.MathPlugin.Math(), "MathPlugin");
+var mathPlugin = kernel.ImportFunctions(new Plugins.MathPlugin.Math(), "MathPlugin");
 
 // Create a planner
 var planner = new SequentialPlanner(kernel);
