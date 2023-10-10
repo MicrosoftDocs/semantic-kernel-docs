@@ -97,8 +97,8 @@ To provide planner with plugins, we'll need to first import the plugins into the
 
 ```csharp
 var skillsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "skills");
-kernel.ImportSemanticSkillFromDirectory(skillsDirectory, "SummarizeSkill");
-kernel.ImportSemanticSkillFromDirectory(skillsDirectory, "WriterSkill");
+kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "SummarizeSkill");
+kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "WriterSkill");
 ```
 
 

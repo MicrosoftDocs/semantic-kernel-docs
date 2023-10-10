@@ -152,7 +152,7 @@ Now that you understand the structure of a plugin, let's see how to load a plugi
 // note: using skills from the repo
 var skillsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "skills");
 
-var funSkillFunctions = kernel.ImportSemanticSkillFromDirectory(skillsDirectory, "FunSkill");
+var funSkillFunctions = kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "FunSkill");
 ```
 
 

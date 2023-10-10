@@ -155,7 +155,7 @@ Finally, you can load and run your first plugin. The following code snippets sho
 var skillsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "skills");
 
 // Load the FunSkill from the Plugins Directory
-var funSkillFunctions = kernel.ImportSemanticSkillFromDirectory(skillsDirectory, "FunSkill");
+var funSkillFunctions = kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "FunSkill");
 
 // Run the Function called Joke
 var result = await funSkillFunctions["Joke"].InvokeAsync("time travel to dinosaur age");

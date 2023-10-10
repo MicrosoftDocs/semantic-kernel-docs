@@ -254,7 +254,7 @@ using Microsoft.SemanticKernel.Orchestration;
 
 // ... instantiate a kernel as kernel
 
-var myPlugin = kernel.ImportSemanticSkillFromDirectory("MyPluginsDirectory", "TestPluginFlex");
+var myPlugin = kernel.ImportSemanticFunctionsFromDirectory("MyPluginsDirectory", "TestPluginFlex");
 
 var myContext = new ContextVariables(); 
 myContext.Set("BUSINESS", "Basketweaving Service"); 

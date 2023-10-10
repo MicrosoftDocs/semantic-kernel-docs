@@ -26,7 +26,7 @@ IKernel kernel = new KernelBuilder()
 var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
 
 // Import the OrchestratorPlugin and ConversationSummarySkill into the kernel.
-var orchestrationPlugin = kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
+var orchestrationPlugin = kernel.ImportSemanticFunctionsFromDirectory(pluginsDirectory, "OrchestratorPlugin");
 var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
 
 // Create a new context and set the input, history, and options variables.
