@@ -2,7 +2,7 @@
 title: Simple chat summary sample app
 description: Simple chat summary sample app
 author: evchaki
-ms.topic: samples
+ms.topic: conceptual
 ms.author: evchaki
 ms.date: 02/07/2023
 ms.service: semantic-kernel
