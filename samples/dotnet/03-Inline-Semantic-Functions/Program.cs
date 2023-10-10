@@ -17,22 +17,24 @@ The intent of the user in 5 words or less: ";
 var promptConfig = new PromptTemplateConfig
 {
     Schema = 1,
-    Type = "completion",
     Description = "Gets the intent of the user.",
-    Completion =
+    ModelSettings =
     {
-        MaxTokens = 500,
-        Temperature = 0.0,
-        TopP = 0.0,
-        PresencePenalty = 0.0,
-        FrequencyPenalty = 0.0
-     },
+        new() {
+            ExtensionData = {
+                {"MaxTokens", 500},
+                {"Temperature", 0.0},
+                {"TopP", 0.0},
+                {"PresencePenalty", 0.0},
+                {"FrequencyPenalty", 0.0}
+            }
+        }
+    },
     Input =
      {
         Parameters = new List<InputParameter>
         {
-            new InputParameter
-            {
+            new() {
                 Name = "input",
                 Description = "The user's request.",
                 DefaultValue = ""
