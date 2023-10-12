@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-semantic-kernel = "^0.3.12.dev0"
+semantic-kernel = "^0.3.13.dev0"
 python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]

@@ -16,22 +16,38 @@ internal static class KernelBuilderExtensions
             case "AzureOpenAI":
                 if (Env.Var("AzureOpenAI:DeploymentType")! == "text-completion")
                 {
-                    kernelBuilder.WithAzureTextCompletionService(deploymentName: Env.Var("AzureOpenAI:TextCompletionDeploymentName")!, endpoint: Env.Var("AzureOpenAI:Endpoint")!, apiKey: Env.Var("AzureOpenAI:ApiKey")!);
+                    kernelBuilder.WithAzureTextCompletionService(
+                        deploymentName: Env.Var("AzureOpenAI:TextCompletionDeploymentName")!,
+                        endpoint: Env.Var("AzureOpenAI:Endpoint")!,
+                        apiKey: Env.Var("AzureOpenAI:ApiKey")!
+                    );
                 }
                 else if (Env.Var("AzureOpenAI:DeploymentType")! == "chat-completion")
                 {
-                    kernelBuilder.WithAzureChatCompletionService(deploymentName: Env.Var("AzureOpenAI:ChatCompletionDeploymentName")!, endpoint: Env.Var("AzureOpenAI:Endpoint")!, apiKey: Env.Var("AzureOpenAI:ApiKey")!);
+                    kernelBuilder.WithAzureChatCompletionService(
+                        deploymentName: Env.Var("AzureOpenAI:ChatCompletionDeploymentName")!,
+                        endpoint: Env.Var("AzureOpenAI:Endpoint")!,
+                        apiKey: Env.Var("AzureOpenAI:ApiKey")!
+                    );
                 }
                 break;
 
             case "OpenAI":
                 if (Env.Var("OpenAI:ModelType")! == "text-completion")
                 {
-                    kernelBuilder.WithOpenAITextCompletionService(modelId: Env.Var("OpenAI:TextCompletionModelId")!, apiKey: Env.Var("OpenAI:ApiKey")!, orgId: Env.Var("OpenAI:OrgId"));
+                    kernelBuilder.WithOpenAITextCompletionService(
+                        modelId: Env.Var("OpenAI:TextCompletionModelId")!,
+                        apiKey: Env.Var("OpenAI:ApiKey")!,
+                        orgId: Env.Var("OpenAI:OrgId")
+                    );
                 }
                 else if (Env.Var("OpenAI:ModelType")! == "chat-completion")
                 {
-                    kernelBuilder.WithOpenAIChatCompletionService(modelId: Env.Var("OpenAI:ChatCompletionModelId")!, apiKey: Env.Var("OpenAI:ApiKey")!, orgId: Env.Var("OpenAI:OrgId"));
+                    kernelBuilder.WithOpenAIChatCompletionService(
+                        modelId: Env.Var("OpenAI:ChatCompletionModelId")!,
+                        apiKey: Env.Var("OpenAI:ApiKey")!,
+                        orgId: Env.Var("OpenAI:OrgId")
+                    );
                 }
                 break;
 

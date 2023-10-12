@@ -50,7 +50,7 @@ When you add a new variable to the prompt, you must also update the _config.json
 
 ## Passing in context variables
 
-You can now update your _Program.cs_ file to provide a list of options to the `GetIntent` function. To do this, you'll need to complete the following steps:
+You can now update your _Program.cs_ or _main.py_ file to provide a list of options to the `GetIntent` function. To do this, you'll need to complete the following steps:
 
 1. Create a [ContextVariables](/dotnet/api/microsoft.semantickernel.orchestration.contextvariables) object that will store the variables,
 2. Set the `input`, `history`, and `options` variables,
