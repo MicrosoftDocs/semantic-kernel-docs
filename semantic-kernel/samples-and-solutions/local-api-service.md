@@ -2,7 +2,7 @@
 title: Local API Service for samples
 description: Local API Service app samples
 author: evchaki
-ms.topic: samples
+ms.topic: conceptual
 ms.author: evchaki
 ms.date: 02/07/2023
 ms.service: semantic-kernel
