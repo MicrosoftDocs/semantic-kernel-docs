@@ -2,7 +2,7 @@
 title: List of all sample apps
 description: List of all sample apps
 author: johnmaeda
-ms.topic: samples
+ms.topic: conceptual
 ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: semantic-kernel

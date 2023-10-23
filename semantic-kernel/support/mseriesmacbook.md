@@ -2,7 +2,7 @@
 title: Support for Semantic Kernel on M-series Macbooks
 description: Support for Semantic Kernel on M-series Macbooks
 author: johnmaeda
-ms.topic: samples
+ms.topic: conceptual
 ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: semantic-kernel
