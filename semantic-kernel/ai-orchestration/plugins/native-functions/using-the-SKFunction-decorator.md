@@ -133,15 +133,19 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 
 :::code language="csharp" source="~/../samples/dotnet/07-Simple-Native-Functions/plugins/MathPlugin/Math.cs" range="3-16"  highlight="9":::
 
+
+Notice how we've added a description to the function and each of its parameters with the `Description` attribute. This description will be used in the future by the [planner](../../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
+
 # [Python](#tab/python)
 
 :::code language="python" source="~/../samples/python/07-Simple-Native-Functions/plugins/MathPlugin/Math.py" range="1-12" highlight="6-10":::
 
----
-
 Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with semantic functions. While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
 
 Also notice how we've added a description to each function with the `Description` attribute. This description will be used in the future by the [planner](../../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
+
+---
+
 
 ### Running your native function
 Now that you've created your first native function, you can import it and run it using the following code. Notice how calling a native function is the same as calling a semantic function. This is one of the benefits of using the kernel, both semantic and native functions are treated identically.
