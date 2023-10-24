@@ -46,7 +46,7 @@ The _config.json_ file for the `SloganMaker` function would look like this:
     "top_p": 0.0,
     "presence_penalty": 0.0,
     "frequency_penalty": 0.0
-  }
+  },
   "input": {
     "parameters": [
       {
