@@ -75,7 +75,7 @@ Now that you have a prompt and its settings, you can import it into a kernel. Th
 :::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="35-40, 43-46":::
 
 # [Python](#tab/python)
-To register the function with the kernel, you first need to create a [SemanticFunctionConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.semanticfunctionconfig) object. 
+To register the function with the kernel, you first need to create a SemanticFunctionConfig object. 
 
 :::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="29-33,35-42":::
 
