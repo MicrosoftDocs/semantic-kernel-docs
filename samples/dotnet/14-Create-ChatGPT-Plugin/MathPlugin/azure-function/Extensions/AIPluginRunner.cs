@@ -5,7 +5,6 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.SkillDefinition;
 using Models;
 
 namespace Extensions;
@@ -34,8 +33,8 @@ public class AIPluginRunner : IAIPluginRunner
 
             var appSettings = AppSettings.LoadSettings();
 
-            if (!this._kernel.Skills.TryGetFunction(
-                skillName: appSettings.AIPlugin.NameForModel,
+            if (!this._kernel.Functions.TryGetFunction(
+                pluginName: appSettings.AIPlugin.NameForModel,
                 functionName: operationId,
                 out ISKFunction? function))
             {
@@ -48,7 +47,7 @@ public class AIPluginRunner : IAIPluginRunner
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain;charset=utf-8");
-            await response.WriteStringAsync(result.Result).ConfigureAwait(false);
+            await response.WriteStringAsync(result.GetValue<string>()!).ConfigureAwait(false);
             return response;
         }
 #pragma warning disable CA1031

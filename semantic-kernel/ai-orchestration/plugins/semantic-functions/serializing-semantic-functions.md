@@ -24,10 +24,6 @@ If you want to see the final solution, you can check out the following samples i
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/03-Inline-Semantic-Functions) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Serializing-Semantic-Functions) |
 
 
-> [!Note]
-> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
-
-
 > [!TIP]
 > We recommend using the [Semantic Kernel Tools](../../../vs-code-tools/index.md) extension for Visual Studio Code to help you create semantic functions. This extension provides an easy way to create and test functions directly from within VS Code.
 
@@ -44,7 +40,7 @@ Plugins
      └─── GetIntent
 ```
 
-To see a more complete example of a plugins directory, check out the [Semantic Kernel sample plugins](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills) folder in the GitHub repository.
+To see a more complete example of a plugins directory, check out the [Semantic Kernel sample plugins](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins) folder in the GitHub repository.
 
 ## Creating the files for your semantic function
 Once inside of a semantic functions folder, you'll need to create two new files: _skprompt.txt_ and _config.json_. The _skprompt.txt_ file contains the prompt that will be sent to the AI service and the _config.json_ file contains the configuration along with semantic descriptions that can be used by planners.
@@ -69,7 +65,7 @@ The _skprompt.txt_ file contains the request that will be sent to the AI service
 
 
 ### Configuring the function in the _config.json_ file
-Next, we need to define the configuration for the `GetIntent` function. As a reminder, a semantic function's configuration is defined using a [PromptTemplateConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.prompttemplateconfig) object. When serializing the configuration, all you need to do is define the same properties in a JSON file:
+Next, we need to define the configuration for the `GetIntent` function. When serializing the configuration, all you need to do is define the same properties in a JSON file:
 
 - `type` – The type of prompt. In this case, we're using the `completion` type.
 - `description` – A description of what the prompt does. This is used by planner to automatically orchestrate plans with the function.

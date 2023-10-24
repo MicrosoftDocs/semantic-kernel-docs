@@ -3,7 +3,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.Skills.Core;
+using Microsoft.SemanticKernel.Plugins.Core;
 
 using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
 {
@@ -23,11 +23,11 @@ IKernel kernel = new KernelBuilder()
     .WithLoggerFactory(loggerFactory)
     .Build();
 
-var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
+var pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "plugins");
 
-// Import the OrchestratorPlugin and ConversationSummarySkill into the kernel.
-var orchestrationPlugin = kernel.ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
-var conversationSummaryPlugin = kernel.ImportSkill(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
+// Import the OrchestratorPlugin and ConversationSummaryPlugin into the kernel.
+var orchestrationPlugin = kernel.ImportSemanticFunctionsFromDirectory(pluginsDirectory, "OrchestratorPlugin");
+var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummaryPlugin(kernel), "ConversationSummaryPlugin");
 
 // Create a new context and set the input, history, and options variables.
 var variables = new ContextVariables
@@ -48,6 +48,6 @@ Bot: Would you like to write one for you?",
 };
 
 // Run the GetIntent function with the context.
-var result = (await kernel.RunAsync(variables, orchestrationPlugin["GetIntent"])).Result;
+var result = await kernel.RunAsync(variables, orchestrationPlugin["GetIntent"]);
 
 Console.WriteLine(result);

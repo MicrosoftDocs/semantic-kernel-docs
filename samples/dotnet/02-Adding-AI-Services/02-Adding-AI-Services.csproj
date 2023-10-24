@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" />
-    <PackageReference Include="Microsoft.SemanticKernel.Skills.Core" />
+    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" />
   </ItemGroup>
 
   <ItemGroup>

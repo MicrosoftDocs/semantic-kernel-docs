@@ -133,7 +133,6 @@ Now that you have your starter, it's time to add your native functions to the pl
             }
         }
     }
-
     ```
 5. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
 
@@ -335,38 +334,46 @@ To test the plugin in Semantic Kernel, follow these steps:
 2. Add the necessary Semantic Kernel NuGet packages:
     ```bash
     dotnet add package Microsoft.SemanticKernel
-    dotnet add package Microsoft.SemanticKernel.Planning.StepwisePlanner
-    dotnet add package Microsoft.SemanticKernel.Skills.OpenAPI
+    dotnet add package Microsoft.SemanticKernel.Planners.Core
+    dotnet add package Microsoft.SemanticKernel.Functions.OpenAPI
     ```
 3. Paste the following code into your _program.cs_ file:
     ```csharp
+    // Copyright (c) Microsoft. All rights reserved.
+
     using Microsoft.Extensions.Logging;
     using Microsoft.SemanticKernel;
     using Microsoft.SemanticKernel.Planning;
+    using Microsoft.SemanticKernel.Functions.OpenAPI.Extensions;
+    using Microsoft.SemanticKernel.Planners;
 
-    // ... create a new Semantic Kernel instance here
+    // Create a kernel here...
 
     // Add the math plugin using the plugin manifest URL
     const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
-    var mathPlugin = await kernel.ImportChatGptPluginSkillFromUrlAsync("MathPlugin", new Uri(pluginManifestUrl));
+    var mathPlugin = await kernel.ImportPluginFunctionsAsync("MathPlugin", new Uri(pluginManifestUrl));
 
     // Create a stepwise planner and invoke it
     var planner = new StepwisePlanner(kernel);
-    var question = "I have $2130.23. How much would I have after it grew by 24% and after I spent $5 on a latte?";
-    var plan = planner.CreatePlan(question);
-    var result = await plan.InvokeAsync(kernel.CreateNewContext());
+    var ask = "If my investment of 2130.23 dollars increased by 23%, how much would I have after I spent $5 on a latte?";
+    var plan = planner.CreatePlan(ask);
+    var result = await kernel.RunAsync(plan);
 
     // Print the results
     Console.WriteLine("Result: " + result);
 
     // Print details about the plan
-    if (result.Variables.TryGetValue("stepCount", out string? stepCount))
+    if (result.FunctionResults.First().TryGetMetadataValue("stepCount", out string? stepCount))
     {
         Console.WriteLine("Steps Taken: " + stepCount);
     }
-    if (result.Variables.TryGetValue("skillCount", out string? skillCount))
+    if (result.FunctionResults.First().TryGetMetadataValue("functionCount", out string? functionCount))
     {
-        Console.WriteLine("Skills Used: " + skillCount);
+        Console.WriteLine("Functions Used: " + functionCount);
+    }
+    if (result.FunctionResults.First().TryGetMetadataValue("iterations", out string? iterations))
+    {
+        Console.WriteLine("Iterations: " + iterations);
     }
     ```
 

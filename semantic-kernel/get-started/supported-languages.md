@@ -12,9 +12,6 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-> [!Note]
-> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
-
 Semantic Kernel plans on providing support to the following languages:
 > [!div class="checklist"]
 > * C#
@@ -59,14 +56,14 @@ Today, not all features are available in all languages. The following tables sho
 
 | Plugins                           |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| TextMemorySkill                   | ✅ | ✅ | 🔄 | |
-| ConversationSummarySkill          | ✅ | ✅ | ✅ | |
-| FileIOSkill                       | ✅ | ✅ | ✅ | |
-| HttpSkill                         | ✅ | ✅ | ✅ | |
-| MathSkill                         | ✅ | ✅ | ✅ | |
-| TextSkill                         | ✅ | ✅ | ✅ | |
-| TimeSkill                         | ✅ | ✅ | ✅ | |
-| WaitSkill                         | ✅ | ✅ | ✅ | |
+| TextMemoryPlugin                   | ✅ | ✅ | 🔄 | |
+| ConversationSummaryPlugin          | ✅ | ✅ | ✅ | |
+| FileIOPlugin                       | ✅ | ✅ | ✅ | |
+| HttpPlugin                         | ✅ | ✅ | ✅ | |
+| MathPlugin                         | ✅ | ✅ | ✅ | |
+| TextPlugin                         | ✅ | ✅ | ✅ | |
+| TimePlugin                         | ✅ | ✅ | ✅ | |
+| WaitPlugin                         | ✅ | ✅ | ✅ | |
 
 ### Planners
 

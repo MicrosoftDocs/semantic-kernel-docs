@@ -18,10 +18,6 @@ To write an LLM AI prompt that Semantic Kernel is uniquely fit for, all you need
 Congratulations! You have imagined a delicious ask for Semantic Kernel to run to completion. This ask can be given to the Planner to get decomposed into steps. Although to make the Planner work reliably, you'll need to use the most advanced model available to you. So let's start from writing basic prompts to begin with.
 
 
-
-> [!Note]
-> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
-
 > [!TIP]
 > Want to easily follow along as you write your first prompts? Download the [Semantic Kernel VS Code Extension](../vs-code-tools/index.md) which allows you to easily create and run prompts from within VS Code.
 > [:::image type="content" source="../media/semantic-kernel-tools-install.png" alt-text="Semantic Kernel Tools Extension":::](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel)
@@ -254,7 +250,7 @@ using Microsoft.SemanticKernel.Orchestration;
 
 // ... instantiate a kernel as kernel
 
-var myPlugin = kernel.ImportSemanticSkillFromDirectory("MyPluginsDirectory", "TestPluginFlex");
+var myPlugin = kernel.ImportSemanticFunctionsFromDirectory("MyPluginsDirectory", "TestPluginFlex");
 
 var myContext = new ContextVariables(); 
 myContext.Set("BUSINESS", "Basketweaving Service"); 

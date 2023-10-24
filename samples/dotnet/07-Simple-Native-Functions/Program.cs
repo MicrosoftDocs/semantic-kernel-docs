@@ -22,8 +22,8 @@ IKernel kernel = new KernelBuilder()
     .Build();
 
 // Import the Math Plugin
-var mathPlugin = kernel.ImportSkill(new Plugins.MathPlugin.Math(), "MathPlugin");
+var mathPlugin = kernel.ImportFunctions(new Plugins.MathPlugin.Math(), "MathPlugin");
 
 // Make a request that runs the Sqrt function
 var result = await kernel.RunAsync("12", mathPlugin["Sqrt"]);
-Console.WriteLine(result);
+Console.WriteLine(result.GetValue<double>());

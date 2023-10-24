@@ -11,10 +11,6 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../../includes/pat_large.md)]
 
-
-> [!Note]
-> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
-
 To provide a degree of standardization across Semantic Kernel implementations, the GitHub repo has several plugins available out-of-the-box depending on the language you are using. These plugins are often referred to as **Core plugins**. Additionally, each library also includes a handful of other plugins that you can use. The following section covers each set of plugins in more detail.
 
 ## Core plugins
@@ -22,21 +18,21 @@ The core plugins are planned to be available in all languages since they are cor
 
 | Plugin | Description | C# | Python | Java |
 | --- | --- | :------:|:----: | :----: |
-| `ConversationSummarySkill` | To summarize a conversation | ✅ | ✅ | * |
-| `FileIOSkill` | To read and write to the filesystem | ✅ | ✅ | ❌ |
-| `HttpSkill` | To call APIs | ✅ | ✅ | ❌ |
-| `MathSkill` | To perform mathematical operations | ✅ | ✅ | ❌ |
-| `TextMemorySkill` | To store and retrieve text in memory | ✅ | ✅ | ❌ |
-| `TextSkill` | To deterministically manipulating text strings | ✅ | ✅ | * |
-| `TimeSkill` | To acquire the time of day and any other temporal information | ✅ | ✅ | * |
-| `WaitSkill` | To pause execution for a specified amount of time | ✅ | ❌ | ❌ |
+| `ConversationSummaryPlugin` | To summarize a conversation | ✅ | ✅ | * |
+| `FileIOPlugin` | To read and write to the filesystem | ✅ | ✅ | ❌ |
+| `HttpPlugin` | To call APIs | ✅ | ✅ | ❌ |
+| `MathPlugin` | To perform mathematical operations | ✅ | ✅ | ❌ |
+| `TextMemoryPlugin` | To store and retrieve text in memory | ✅ | ✅ | ❌ |
+| `TextPlugin` | To deterministically manipulating text strings | ✅ | ✅ | * |
+| `TimePlugin` | To acquire the time of day and any other temporal information | ✅ | ✅ | * |
+| `WaitPlugin` | To pause execution for a specified amount of time | ✅ | ❌ | ❌ |
 
 You can find the full list of core plugins for each language by following the links below:
 - [C# core plugins](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Core)
 - [Python core plugins](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills)
 
 ### Using core plugins in Semantic Kernel
-If you want to use one of the core plugins, you can easily import them into your project. For example, if you want to use the `TimeSkill` in either C# or Python, you can import it as follows.
+If you want to use one of the core plugins, you can easily import them into your project. For example, if you want to use the `TimePlugin` in either C# or Python, you can import it as follows.
 
 # [C#](#tab/Csharp)
 
@@ -47,7 +43,7 @@ using Microsoft.SemanticKernel.CoreSkills;
 
 // ... instantiate a kernel and configure it first
 
-kernel.ImportSkill(new TimeSkill(), "time");
+kernel.ImportFunctions(new TimePlugin(), "time");
 
 const string ThePromptTemplate = @"
 Today is: {{time.Date}}
@@ -67,11 +63,11 @@ Console.WriteLine(myOutput);
 # [Python](#tab/python)
 
 ```python
-from semantic_kernel.core_skills.time_skill import TimeSkill
+from semantic_kernel.core_skills.time_skill import TimePlugin
 
 # ... instantiate a kernel and configure it first
 
-kernel.import_skill(TimeSkill(), "time")
+kernel.import_skill(TimePlugin(), "time")
 
 ThePromptTemplate = """
 Today is: {{time.Date}}
@@ -102,7 +98,7 @@ The output should be similar to the following:
 ```
 
 ### Chaining core plugins together in Semantic Kernel
-Most of the core plugins were built so that they can be easily chained together. For example, the `TextSkill` can be used to trim whitespace from a string, convert it to uppercase, and then convert it to lowercase.
+Most of the core plugins were built so that they can be easily chained together. For example, the `TextPlugin` can be used to trim whitespace from a string, convert it to uppercase, and then convert it to lowercase.
 
 
 # [C#](#tab/Csharp)
@@ -114,7 +110,7 @@ using Microsoft.SemanticKernel.CoreSkills;
 
 var kernel = Kernel.Builder.Build();
 
-var myText = kernel.ImportSkill(new TextSkill());
+var myText = kernel.ImportFunctions(new TextPlugin());
 
 SKContext myOutput = await kernel.RunAsync(
     "    i n f i n i t e     s p a c e     ",
@@ -130,9 +126,9 @@ Console.WriteLine(myOutput);
 
 ```python
 import semantic_kernel as sk
-from semantic_kernel.core_skills.text_skill import TextSkill
+from semantic_kernel.core_skills.text_skill import TextPlugin
 
-my_text = kernel.import_skill(TextSkill(), "time")
+my_text = kernel.import_skill(TextPlugin(), "time")
 
 myOutput = await kernel.run_async(
     my_text["trim_start"],
@@ -148,7 +144,7 @@ print(myOutput)
 
 Note how the input streams through a pipeline of three functions executed serially. Expressed sequentially as in a chain of functions:
 
-| "   i n f i n i t e    s p a c e    " → | TextSkill.TrimStart → | TextSkill.TrimEnd → | TextSkill.Uppercase → |
+| "   i n f i n i t e    s p a c e    " → | TextPlugin.TrimStart → | TextPlugin.TrimEnd → | TextPlugin.Uppercase → |
 |---|---|---|---|
 
 The output reads as:

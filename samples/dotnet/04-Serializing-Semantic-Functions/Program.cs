@@ -25,7 +25,7 @@ var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "
 
 // Import the OrchestratorPlugin from the plugins directory.
 var orchestratorPlugin = Kernel
-     .ImportSemanticSkillFromDirectory(pluginsDirectory, "OrchestratorPlugin");
+     .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "OrchestratorPlugin");
 
 // Get the GetIntent function from the OrchestratorPlugin and run it
 var result = await Kernel.RunAsync(

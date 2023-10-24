@@ -2,27 +2,24 @@
 
 using System.ComponentModel;
 using System.Globalization;
-using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel;
 
 namespace Plugins.MathPlugin;
 
 public class Math
 {
     [SKFunction, Description("Take the square root of a number")]
-    public string Sqrt(string number)
+    public static string Sqrt(string number)
     {
         return System.Math.Sqrt(Convert.ToDouble(number, CultureInfo.InvariantCulture)).ToString(CultureInfo.InvariantCulture);
     }
 
     [SKFunction, Description("Multiply two numbers")]
-    [SKParameter("input", "The first number to multiply")]
-    [SKParameter("number2", "The second number to multiply")]
-    public string Multiply(SKContext context)
+    public static double Multiply(
+        [Description("The first number to multiply")] double input,
+        [Description("The second number to multiply")] double number2
+    )
     {
-        return (
-            Convert.ToDouble(context.Variables["input"], CultureInfo.InvariantCulture) *
-            Convert.ToDouble(context.Variables["number2"], CultureInfo.InvariantCulture)
-        ).ToString(CultureInfo.InvariantCulture);
+        return input * number2;
     }
 }

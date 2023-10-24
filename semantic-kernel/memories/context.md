@@ -108,7 +108,7 @@ string chatFunctionPrompt =
 
 ---
 
-When the prompt is sent to the AI Service, however, the LLM needs a bit more information to generate the completion. So we must also define a prompt configuration. You can learn more about the `PromptTemplateConfig` and its properties [here](/dotnet/api/microsoft.semantickernel.semanticfunctions.prompttemplateconfig).
+When the prompt is sent to the AI Service, however, the LLM needs a bit more information to generate the completion. So we must also define a prompt configuration. 
 
 # [C#](#tab/Csharp)
 
