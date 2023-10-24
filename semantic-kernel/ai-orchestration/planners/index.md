@@ -55,62 +55,54 @@ Before we use planner, let's add a few more functions to our `MathPlugin` class 
 
 # [C#](#tab/Csharp)
 ```csharp
-using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.SkillDefinition;
+using System.ComponentModel;
+using Microsoft.SemanticKernel;
 
-namespace Plugins;
+namespace Plugins.MathPlugin;
 
-public class MathPlugin
+public class Math
 {
-  [SKFunction, Description("Take the square root of a number")]
-  public string Sqrt(string input)
-  {
-      return Math.Sqrt(Convert.ToDouble(input, CultureInfo.InvariantCulture)).ToString(CultureInfo.InvariantCulture);
-  }
+    [SKFunction, Description("Take the square root of a number")]
+    public static double Sqrt(double input)
+    {
+        return System.Math.Sqrt(input);
+    }
 
-  [SKFunction, Description("Add two numbers")]
-  [SKParameter("input", "The first number to add")]
-  [SKParameter("number2", "The second number to add")]
-  public string Add(SKContext context)
-  {
-      return (
-          Convert.ToDouble(context["input"], CultureInfo.InvariantCulture) +
-          Convert.ToDouble(context["number2"], CultureInfo.InvariantCulture)
-      ).ToString(CultureInfo.InvariantCulture);
-  }
+    [SKFunction, Description("Add two numbers")]
+    public static double Add(
+        [Description("The first number to add")] double input,
+        [Description("The second number to add")] double number2
+    )
+    {
+        return input * number2;
+    }
 
-  [SKFunction, Description("Subtract two numbers")]
-  [SKParameter("input", "The first number to subtract from")]
-  [SKParameter("number2", "The second number to subtract away")]
-  public string Subtract(SKContext context)
-  {
-      return (
-          Convert.ToDouble(context["input"], CultureInfo.InvariantCulture) -
-          Convert.ToDouble(context["number2"], CultureInfo.InvariantCulture)
-      ).ToString(CultureInfo.InvariantCulture);
-  }
+    [SKFunction, Description("Subtract two numbers")]
+    public static double Subtract(
+        [Description("The first number to subtract from")] double input,
+        [Description("The second number to subtract away")] double number2
+    )
+    {
+        return input - number2;
+    }
 
-  [SKFunction, Description("Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage.")]
-  [SKParameter("input", "The first number to multiply")]
-  [SKParameter("number2", "The second number to multiply")]
-  public string Multiply(SKContext context)
-  {
-      return (
-          Convert.ToDouble(context["input"], CultureInfo.InvariantCulture) *
-          Convert.ToDouble(context["number2"], CultureInfo.InvariantCulture)
-      ).ToString(CultureInfo.InvariantCulture);
-  }
+    [SKFunction, Description("Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage.")]
+    public static double Multiply(
+        [Description("The first number to multiply")] double input,
+        [Description("The second number to multiply")] double number2
+    )
+    {
+        return input * number2;
+    }
 
-  [SKFunction, Description("Divide two numbers")]
-  [SKParameter("input", "The first number to divide from")]
-  [SKParameter("number2", "The second number to divide by")]
-  public string Divide(SKContext context)
-  {
-      return (
-          Convert.ToDouble(context["input"], CultureInfo.InvariantCulture) /
-          Convert.ToDouble(context["number2"], CultureInfo.InvariantCulture)
-      ).ToString(CultureInfo.InvariantCulture);
-  }
+    [SKFunction, Description("Divide two numbers")]
+    public static double Divide(
+        [Description("The first number to divide from")] double input,
+        [Description("The second number to divide by")] double number2
+    )
+    {
+        return input / number2;
+    }
 }
 ```
 # [Python](#tab/python)
@@ -205,7 +197,7 @@ using Plugins;
 // ... instantiate your kernel
 
 // Add the math plugin
-var mathPlugin = kernel.ImportFunctions(new MathPlugin(), "MathPlugin");
+var mathPlugin = kernel.ImportFunctions(new Plugins.MathPlugin.Math(), "MathPlugin");
 
 // Create planner
 var planner = new SequentialPlanner(kernel);
@@ -241,15 +233,17 @@ Now that we have planner, we can use it to create a plan for a user's ask and th
 
 # [C#](#tab/Csharp)
 ```csharp
-// Create a plan for the ask
 var ask = "If my investment of 2130.23 dollars increased by 23%, how much would I have after I spent $5 on a latte?";
 var plan = await planner.CreatePlanAsync(ask);
 
+Console.WriteLine("Plan:\n");
+Console.WriteLine(JsonSerializer.Serialize(plan, new JsonSerializerOptions { WriteIndented = true }));
+
 // Execute the plan
-var result = await plan.InvokeAsync();
+var result = await kernel.RunAsync(plan);
 
 Console.WriteLine("Plan results:");
-Console.WriteLine(result.Result);
+Console.WriteLine(result.GetValue<string>()!.Trim());
 ```
 
 # [Python](#tab/python)
