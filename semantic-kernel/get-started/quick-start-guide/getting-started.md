@@ -146,7 +146,7 @@ kernel.add_text_completion_service("dv", AzureTextCompletion(deployment, endpoin
 ---
 
 ## 5) Load and run your first plugin
-Finally, you can load and run your first plugin. The following code snippets show how to load and run the `FunSkill` plugin from the `/skills` folder so that you can run the `Joke` function.
+Finally, you can load and run your first plugin. The following code snippets show how to load and run the `FunPlugin` plugin from the `/skills` folder so that you can run the `Joke` function.
 
 # [C#](#tab/Csharp)
 
@@ -154,11 +154,11 @@ Finally, you can load and run your first plugin. The following code snippets sho
 // Load the Plugins Directory
 var skillsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "skills");
 
-// Load the FunSkill from the Plugins Directory
-var funSkillFunctions = kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "FunSkill");
+// Load the FunPlugin from the Plugins Directory
+var FunPluginFunctions = kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "FunPlugin");
 
 // Run the Function called Joke
-var result = await funSkillFunctions["Joke"].InvokeAsync("time travel to dinosaur age");
+var result = await FunPluginFunctions["Joke"].InvokeAsync("time travel to dinosaur age");
 
 // Return the result to the Notebook
 Console.WriteLine(result);
@@ -167,7 +167,7 @@ Console.WriteLine(result);
 # [Python](#tab/python)
 
 ```python
-skill = kernel.import_semantic_skill_from_directory("../../skills", "FunSkill")
+skill = kernel.import_semantic_skill_from_directory("../../skills", "FunPlugin")
 joke_function = skill["Joke"]
 
 print(joke_function("time travel to dinosaur age"))

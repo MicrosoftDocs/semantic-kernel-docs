@@ -82,7 +82,7 @@ A plugin is a collection of semantic functions (i.e., prompts) that can be loade
     └───skprompt.txt
 ```
 
-Inside each semantic function folder there is a _config.json_ file that describes the configuration of the semantic function and a `skprompt.txt` file that contains a prompt template. The following code snippets show what the _config.json_ and `skprompt.txt` files look like for the `Joke` function in the `FunSkill` plugin.
+Inside each semantic function folder there is a _config.json_ file that describes the configuration of the semantic function and a `skprompt.txt` file that contains a prompt template. The following code snippets show what the _config.json_ and `skprompt.txt` files look like for the `Joke` function in the `FunPlugin` plugin.
 
 ```config.json
 {
@@ -126,24 +126,24 @@ BE CREATIVE AND FUNNY. I WANT TO LAUGH.
 
 Note the special `input` token within the `skprompt.txt` file, commonly referred to as a "function parameter," this token allows you as the developer to pass inputs when invoking the function. We'll explore later how functions can accept multiple variables in the [context variables guide](./context-variables-chat.md).
 
-If you want to see other examples of plugins, check out the [sample plugins folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills) in the GitHub repo. This folder includes the following sample plugins:
+If you want to see other examples of plugins, check out the [sample plugins folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins) in the GitHub repo. This folder includes the following sample plugins:
 
 - `CalendarSkill` - A plugin that allows you to create calendar events
 - `ChatSkill` - A plugin that allows you to chat with the AI
 - `ChildrensBookSkill` - A plugin that allows you to generate children's stories
 - `ClassificationSkill` - A plugin that allows you to classify text
 - `CodingSkill` - A plugin that allows you to generate code
-- `FunSkill` - A plugin that allows you to generate jokes
+- `FunPlugin` - A plugin that allows you to generate jokes
 - `IntentDetectionSkill` - A plugin that allows you to detect intents
 - `MiscSkill` - A plugin that provides miscellaneous functions
 - `QASkill` - A plugin that allows you to answer questions
-- `SummarizeSkill` - A plugin that allows you to summarize text
-- `WriterSkill` - A plugin that allows you to generate text
+- `SummarizePlugin` - A plugin that allows you to summarize text
+- `WriterPlugin` - A plugin that allows you to generate text
 
 
 ## 3) Load a plugin into the kernel
 
-Now that you understand the structure of a plugin, let's see how to load a plugin into the kernel. The following code snippets show how to load the `FunSkill` plugin into the kernel along with all of its semantic functions.
+Now that you understand the structure of a plugin, let's see how to load a plugin into the kernel. The following code snippets show how to load the `FunPlugin` plugin into the kernel along with all of its semantic functions.
 
 
 # [C#](#tab/Csharp)
@@ -152,7 +152,7 @@ Now that you understand the structure of a plugin, let's see how to load a plugi
 // note: using skills from the repo
 var skillsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "skills");
 
-var funSkillFunctions = kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "FunSkill");
+var FunPluginFunctions = kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "FunPlugin");
 ```
 
 
@@ -162,7 +162,7 @@ var funSkillFunctions = kernel.ImportSemanticFunctionsFromDirectory(skillsDirect
 # note: using skills from the samples folder
 skills_directory = "../../skills"
 
-funFunctions = kernel.import_semantic_skill_from_directory(skills_directory, "FunSkill")
+funFunctions = kernel.import_semantic_skill_from_directory(skills_directory, "FunPlugin")
 
 jokeFunction = funFunctions["Joke"]
 ```
@@ -170,12 +170,12 @@ jokeFunction = funFunctions["Joke"]
 ---
 
 ## 4) Run a semantic function within a plugin
-Once the plugin is loaded into the kernel, you can invoke any of its semantic functions. The following code snippets show how to invoke the `Joke` function within the `FunSkill` plugin.
+Once the plugin is loaded into the kernel, you can invoke any of its semantic functions. The following code snippets show how to invoke the `Joke` function within the `FunPlugin` plugin.
 
 # [C#](#tab/Csharp)
 
 ```csharp
-var result = await funSkillFunctions["Joke"].InvokeAsync("time travel to dinosaur age");
+var result = await FunPluginFunctions["Joke"].InvokeAsync("time travel to dinosaur age");
 
 Console.WriteLine(result);
 ```

@@ -40,9 +40,9 @@ if (result.FunctionResults.First().TryGetMetadataValue("stepCount", out string? 
 }
 if (result.FunctionResults.First().TryGetMetadataValue("functionCount", out string? functionCount))
 {
-    Console.WriteLine("Skills Used: " + functionCount);
+    Console.WriteLine("Functions Used: " + functionCount);
 }
 if (result.FunctionResults.First().TryGetMetadataValue("iterations", out string? iterations))
 {
-    Console.WriteLine("Skills Used: " + iterations);
+    Console.WriteLine("Iterations: " + iterations);
 }

@@ -74,7 +74,7 @@ With planners, you can dynamically create chains of functions to satisfy a given
 # [C#](#tab/Csharp)
 
 ```csharp
-// Load native skill into the kernel registry, sharing its functions with prompt templates
+// Load native function into the kernel registry, sharing its functions with prompt templates
 var planner = new SequentialPlanner(kernel);
 ```
 
@@ -89,28 +89,28 @@ planner = BasicPlanner()
 ---
 
 ## 3) Provide plugins to planner
-Before you can use planner, you'll need to provide it with plugins. Plugins are the basic building blocks used by planner to create a plan. In this example, we'll be using the `SummarizeSkill` and `WriterSkill` sample plugins.
+Before you can use planner, you'll need to provide it with plugins. Plugins are the basic building blocks used by planner to create a plan. In this example, we'll be using the `SummarizePlugin` and `WriterPlugin` sample plugins.
 
 To provide planner with plugins, we'll need to first import the plugins into the kernel so that they can be provided to planner.
 
 # [C#](#tab/Csharp)
 
 ```csharp
-var skillsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "skills");
-kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "SummarizeSkill");
-kernel.ImportSemanticFunctionsFromDirectory(skillsDirectory, "WriterSkill");
+var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "plugins");
+kernel.ImportSemanticFunctionsFromDirectory(pluginsDirectory, "SummarizePlugin");
+kernel.ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
 ```
 
 
 # [Python](#tab/python)
 
 ```python
-from semantic_kernel.core_skills.text_skill import TextSkill
+from semantic_kernel.core_skills.text_skill import TextPlugin
 
 skills_directory = "../../skills/"
-summarize_skill = kernel.import_semantic_skill_from_directory(skills_directory, "SummarizeSkill")
-writer_skill = kernel.import_semantic_skill_from_directory(skills_directory, "WriterSkill")
-text_skill = kernel.import_skill(TextSkill(), "TextSkill")
+summarize_skill = kernel.import_semantic_skill_from_directory(skills_directory, "SummarizePlugin")
+writer_skill = kernel.import_semantic_skill_from_directory(skills_directory, "WriterPlugin")
+text_skill = kernel.import_skill(TextPlugin(), "TextPlugin")
 ```
 
 ---
@@ -174,7 +174,7 @@ After running the code above, you should a JSON output that looks something like
       ],
       "next_step_index": 0,
       "name": "Brainstorm",
-      "skill_name": "WriterSkill",
+      "skill_name": "WriterPlugin",
       "description": "Given a goal or topic description generate a list of ideas"
     },
     {
@@ -196,7 +196,7 @@ After running the code above, you should a JSON output that looks something like
       ],
       "next_step_index": 0,
       "name": "EmailGen",
-      "skill_name": "WriterSkill",
+      "skill_name": "WriterPlugin",
       "description": "Write an email from the given bullet points"
     }
   ],
@@ -222,9 +222,9 @@ In this example, we can see that planner has created a plan with two steps. The 
 {
   "input": "Valentine's Day Date Ideas",
   "subtasks": [
-    {"function": "WriterSkill.Brainstorm"},
-    {"function": "WriterSkill.Translate", "args": {"language": "French"}},
-    {"function": "TextSkill.uppercase"}
+    {"function": "WriterPlugin.Brainstorm"},
+    {"function": "WriterPlugin.Translate", "args": {"language": "French"}},
+    {"function": "TextPlugin.uppercase"}
   ]
 }
 ```
@@ -247,7 +247,7 @@ string skPrompt = """
 
 Rewrite the above in the style of Shakespeare.
 """;
-var shakespeareFunction = kernel.CreateSemanticFunction(skPrompt, "shakespeare", "ShakespeareSkill", maxTokens: 2000, temperature: 0.2, topP: 0.5);
+var shakespeareFunction = kernel.CreateSemanticFunction(skPrompt, "shakespeare", "ShakespearePlugin", maxTokens: 2000, temperature: 0.2, topP: 0.5);
 
 var ask = @"Tomorrow is Valentine's day. I need to come up with a few date ideas.
 She likes Shakespeare so write using his style. E-mail these ideas to my significant other";
@@ -267,7 +267,7 @@ sk_prompt = """
 
 Rewrite the above in the style of Shakespeare.
 """
-shakespeareFunction = kernel.create_semantic_function(sk_prompt, "shakespeare", "ShakespeareSkill",
+shakespeareFunction = kernel.create_semantic_function(sk_prompt, "shakespeare", "ShakespearePlugin",
                                                       max_tokens=2000, temperature=0.8)
 
 ask = """

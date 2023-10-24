@@ -384,7 +384,7 @@ var githubFiles = new Dictionary<string, string>()
         = "Jupyter notebook describing how to pass prompts from a file to a semantic skill or function",
     ["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/00-getting-started.ipynb"]
         = "Jupyter notebook describing how to get started with the Semantic Kernel",
-    ["https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/ChatSkill/ChatGPT"]
+    ["https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/ChatSkill/ChatGPT"]
         = "Sample demonstrating how to create a chat skill interfacing with ChatGPT",
     ["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel/Memory/Volatile/VolatileMemoryStore.cs"]
         = "C# class that defines a volatile embedding store",
@@ -461,7 +461,7 @@ github_files["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/note
     "Jupyter notebook describing how to pass prompts from a file to a semantic skill or function"
 github_files["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/notebooks/00-getting-started.ipynb"] = \
     "Jupyter notebook describing how to get started with the Semantic Kernel"
-github_files["https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/ChatSkill/ChatGPT"] = \
+github_files["https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/ChatSkill/ChatGPT"] = \
     "Sample demonstrating how to create a chat skill interfacing with ChatGPT"
 github_files["https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel/Memory/Volatile/VolatileMemoryStore.cs"] = \
     "C# class that defines a volatile embedding store"

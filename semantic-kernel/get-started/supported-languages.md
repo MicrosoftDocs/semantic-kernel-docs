@@ -12,9 +12,6 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-> [!Note]
-> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
-
 Semantic Kernel plans on providing support to the following languages:
 > [!div class="checklist"]
 > * C#
