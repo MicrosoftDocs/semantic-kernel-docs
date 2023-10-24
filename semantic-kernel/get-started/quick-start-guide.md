@@ -9,7 +9,7 @@ ms.service: semantic-kernel
 ---
 # Start learning how to use Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 In just a few steps, you can start running  the getting started guides for Semantic Kernel in either C# or Python. After completing the guides, you'll know how to...
 - Configure your local machine to run Semantic Kernel
@@ -84,17 +84,6 @@ To setup the guides, follow the steps below.
    > [!VIDEO https://learn-video.azurefd.net/vod/player?id=fc3c792e-3b4d-4009-900c-588ee35ee426] 
 
 7. Repeat for the remaining notebooks.
-
-| File | Link | Description |
-| --- | --- | --- |
-| _00-getting-started.ipynb_| [Open guide](./getting-started.md) | Run your first prompt  |
-| _01-basic-loading-the-kernel.ipynb_ | [Open guide](./loading-the-kernel.md) | Changing the configuration of the kernel |
-| _02-running-prompts-from-file.ipynb_ |  [Open guide](./running-prompts-from-files.md) | Learn how to run prompts from a file |
-| _03-semantic-function-inline.ipynb_ | [Open guide](./semantic-function-inline.md) | Configure and run prompts directly in code | 
-| _04-context-variables-chat.ipynb_ | [Open guide](./context-variables-chat.md) | Use variables to make prompts dynamic |
-| _05-using-the-planner.ipynb_ | [Open guide](./using-the-planner.md) | Dynamically create prompt chains with planners |
-| _06-memory-and-embeddings.ipynb_ | [Open guide](./memory-and-embeddings.md) | Store and retrieve memory with embeddings |
-
 
 > [!div class="nextstepaction"]
 > [Start the first guide](./getting-started.md)
