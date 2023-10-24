@@ -1,4 +1,4 @@
-{{ConversationSummaryPlugin.SummarizeConversation $history}}
+{{ConversationSummarySkill.SummarizeConversation $history}}
 User: {{$input}}
 
 ---------------------------------------------

@@ -1,5 +1,5 @@
 import semantic_kernel as sk
-from semantic_kernel.core_skills import ConversationSummaryPlugin
+from semantic_kernel.core_skills import ConversationSummarySkill
 import config.add_completion_service
 
 
@@ -18,7 +18,7 @@ async def main():
         plugins_directory, "OrchestratorPlugin"
     )
     conversation_summary_plugin = kernel.import_skill(
-        ConversationSummaryPlugin(kernel=kernel), skill_name="ConversationSummaryPlugin"
+        ConversationSummarySkill(kernel=kernel), skill_name="ConversationSummarySkill"
     )
 
     # Create a new context and set the input, history, and options variables.
