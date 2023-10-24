@@ -2,7 +2,7 @@
 title: See Semantic Kernel working end-to-end with Chat Copilot
 description: Use the Chat Copilot reference app to learn how to build a custom conversational agent and to test your plugins.
 author: matthewbolanos
-ms.topic: samples
+ms.topic: conceptual
 ms.author: mabolan
 ms.date: 04/07/2023
 ms.service: semantic-kernel

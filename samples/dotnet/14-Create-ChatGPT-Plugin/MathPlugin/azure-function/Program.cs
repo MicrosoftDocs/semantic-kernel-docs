@@ -8,7 +8,7 @@ using Microsoft.SemanticKernel;
 using Models;
 
 const string DefaultSemanticFunctionsFolder = "Prompts";
-string semanticFunctionsFolder = Environment.GetEnvironmentVariable("SEMANTIC_SKILLS_FOLDER") ?? DefaultSemanticFunctionsFolder;
+string semanticFunctionsFolder = Environment.GetEnvironmentVariable("SEMANTIC_PLUGINS_FOLDER") ?? DefaultSemanticFunctionsFolder;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()

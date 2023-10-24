@@ -3,7 +3,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.SemanticFunctions;
+using Microsoft.SemanticKernel.TemplateEngine;
 
 namespace Chat101;
 
@@ -54,19 +54,20 @@ class Program
         // Initialize the prompt configuration.
         var chatFunctionPromptConfig = new PromptTemplateConfig
         {
-            Completion = 
-            {
-                MaxTokens = 2000,
-                Temperature = 0.7,
-                TopP = 0.5,
+            ModelSettings =  new (){
+                new () {
+                    ExtensionData = new () {
+                        {"MaxTokens", 2000},
+                        {"Temperature", 0.7},
+                        {"TopP", 0.5}
+                    }
+                }
             }
         };
 
         // Register the semantic function with your semantic kernel.
-        // (NOTE: This is not the standard approach. Used here for simplicity.)
         var chatPromptTemplate = new PromptTemplate(chatFunctionPrompt, chatFunctionPromptConfig, kernel);
-        var chatFunctionConfig = new SemanticFunctionConfig(chatFunctionPromptConfig, chatPromptTemplate);
-        var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctionConfig);
+        var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctionPromptConfig, chatPromptTemplate);
 
         // Chat!
         // Send initial prompt (run semantic function) using context variables (input) and receive 

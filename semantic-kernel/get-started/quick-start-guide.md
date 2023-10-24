@@ -9,7 +9,7 @@ ms.service: semantic-kernel
 ---
 # Start learning how to use Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 In just a few steps, you can start running  the getting started guides for Semantic Kernel in either C# or Python. After completing the guides, you'll know how to...
 - Configure your local machine to run Semantic Kernel
@@ -84,42 +84,22 @@ To setup the guides, follow the steps below.
    > [!VIDEO https://learn-video.azurefd.net/vod/player?id=fc3c792e-3b4d-4009-900c-588ee35ee426] 
 
 7. Repeat for the remaining notebooks.
-    
-
-## Navigating the guides
-The guides are designed to be run in order to build on the concepts learned in the previous notebook. If you are interested in learning a particular concept, however, you can jump to the notebook that covers that concept. Below are the available guides; each one can also be opened within the docs website by clicking on the **Open guide** link.
-
-
-| File | Link | Description |
-| --- | --- | --- |
-| _00-getting-started.ipynb_| [Open guide](./getting-started.md) | Run your first prompt  |
-| _01-basic-loading-the-kernel.ipynb_ | [Open guide](./loading-the-kernel.md) | Changing the configuration of the kernel |
-| _02-running-prompts-from-file.ipynb_ |  [Open guide](./running-prompts-from-files.md) | Learn how to run prompts from a file |
-| _03-semantic-function-inline.ipynb_ | [Open guide](./semantic-function-inline.md) | Configure and run prompts directly in code | 
-| _04-context-variables-chat.ipynb_ | [Open guide](./context-variables-chat.md) | Use variables to make prompts dynamic |
-| _05-using-the-planner.ipynb_ | [Open guide](./using-the-planner.md) | Dynamically create prompt chains with planners |
-| _06-memory-and-embeddings.ipynb_ | [Open guide](./memory-and-embeddings.md) | Store and retrieve memory with embeddings |
-
-
-> [!div class="nextstepaction"]
-> [Start the first guide](./getting-started.md)
 
 
 ## Like what you see?
 If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support. 
 
-:::image type="content" source="../../media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
+:::image type="content" source="../media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
 
 ## Keep learning
 The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. Based on your experience level, you can jump to the section that best fits your needs.
 
 | Experience level     | Next step     |
 |--------------|-----------|
-| For beginners who are just starting to learn about AI | [Learn prompt engineering](../../prompt-engineering/index.md) |
-| For people who are well versed in prompt engineering | [Orchestrate AI plugins](../../ai-orchestration/index.md) |
-| For people familiar with using AI plugins |  [Store and retrieve memory ](../../memories/index.md) |
-| For those who want to see how it all works together |  [Run the sample apps](../../samples-and-solutions/index.md) |
+| For beginners who are just starting to learn about AI | [Learn prompt engineering](../prompt-engineering/index.md) |
+| For people who are well versed in prompt engineering | [Orchestrate AI plugins](../ai-orchestration/index.md) |
+| For people familiar with using AI plugins |  [Store and retrieve memory ](../memories/index.md) |
 
 
 > [!div class="nextstepaction"]
-> [Learn how to Orchestrate AI](../../ai-orchestration/index.md)
+> [Learn how to Orchestrate AI](../ai-orchestration/index.md)

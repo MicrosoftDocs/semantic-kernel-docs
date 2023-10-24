@@ -24,26 +24,30 @@ If you want to see the final solution to this article, you can check out the fol
 
 
 ## Using context parameters to pass multiple inputs
-Adding numbers together requires multiple numbers as input. To achieve this, we'll need to use context parameters.
-
-Update your `Math` class so that it also includes a function that multiplies two numbers together. Instead of accepting a string as an input, we'll create a method signature that accepts an `SKContext` object as an input. This object contains all of the inputs passed into the function.
+Adding numbers together requires multiple numbers as input. To achieve this, we can simply provide multiple input parameters. Update your `Math` class so that it also includes a function that multiplies two numbers together. 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Native-Functions-with-Context/plugins/MathPlugin/Math.cs" range="3-28" highlight="19":::
+:::code language="csharp" source="~/../samples/dotnet/08-Native-Functions-with-Context/plugins/MathPlugin/Math.cs" range="3-25" highlight="17,18":::
+
+Notice how we are now using the `Description` decorator to define the two inputs of the function. This information is used by the [planner](../../planners/index.md) to automatically provide inputs to this function.
 
 # [Python](#tab/python)
-:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/MathPlugin/Math.py" range="1-61" highlight="60":::
+Instead of accepting a string as an input, we'll create a method signature that accepts an `SKContext` object as an input. This object contains all of the inputs passed into the function.
 
----
+:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/MathPlugin/Math.py" range="1-61" highlight="60":::
 
 To access the multiple inputs within the `SKContext` object, we can use the `Variables` property. This property is a dictionary that contains all of the inputs passed into the function. We can then use these inputs to perform the multiplication. 
 
 Also notice how we are now using the `SKParameter` decorator to define the two inputs of the function. The first parameter is the name of the parameter and the second is the description of the parameter. Both are used by the [planner](../../planners/index.md) to automatically provide inputs to this function.
 
 
+---
+
+
+
 ### Running your native functions
-You can now run your functions using the code below. Notice how we pass in the multiple numbers required for the `Multiply` function into the kernel using a `ContextVariables` object. This object is what populates the `Variables` property of the `SKContext` object.
+You can now run your functions using the code below. Notice how we pass in the multiple numbers required for the `Multiply` function into the kernel using a `ContextVariables` object. This object is what populates the `Variables` of your functions.
 
 # [C#](#tab/Csharp)
 

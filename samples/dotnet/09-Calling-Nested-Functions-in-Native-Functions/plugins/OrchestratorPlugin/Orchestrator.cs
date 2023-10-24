@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.ComponentModel;
 using System.Text.Json.Nodes;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.SkillDefinition;
-
 namespace Plugins.OrchestratorPlugin;
 
 public class Orchestrator
@@ -17,41 +16,46 @@ public class Orchestrator
     }
 
     [SKFunction]
-    public async Task<string> RouteRequestAsync(SKContext context)
+    public async Task<string> RouteRequestAsync(
+        [Description("The user request")] string input
+    )
     {
         // Save the original user request
-        string request = context.Variables["input"];
+        string request = input;
 
         // Retrieve the intent from the user request
-        var getIntent = this._kernel.Skills.GetFunction("OrchestratorPlugin", "GetIntent");
+        var getIntent = this._kernel.Functions.GetFunction("OrchestratorPlugin", "GetIntent");
         var getIntentVariables = new ContextVariables
         {
-            ["input"] = context.Variables["input"],
+            ["input"] = input,
             ["options"] = "Sqrt, Multiply"
         };
-        string intent = (await this._kernel.RunAsync(getIntentVariables, getIntent)).Result.Trim();
+        string intent = (await this._kernel.RunAsync(getIntentVariables, getIntent)).GetValue<string>()!.Trim();
 
         // Retrieve the numbers from the user request
-        var getNumbers = this._kernel.Skills.GetFunction("OrchestratorPlugin", "GetNumbers");
-        string numbersJson = (await this._kernel.RunAsync(request, getNumbers)).Result;
+        var getNumbers = this._kernel.Functions.GetFunction("OrchestratorPlugin", "GetNumbers");
+        string numbersJson = (await this._kernel.RunAsync(request, getNumbers)).GetValue<string>()!;
         JsonObject numbers = JsonObject.Parse(numbersJson)!.AsObject();
 
         // Call the appropriate function
+        KernelResult result;
         switch (intent)
         {
             case "Sqrt":
                 // Call the Sqrt function with the first number
-                var sqrt = _kernel.Skills.GetFunction("MathPlugin", "Sqrt");
-                return (await _kernel.RunAsync(numbers["number1"]!.ToString(), sqrt)).Result;
+                var sqrt = _kernel.Functions.GetFunction("MathPlugin", "Sqrt");
+                result = await _kernel.RunAsync(numbers["number1"]!.ToString(), sqrt);
+                return result.GetValue<string>()!.ToString();
             case "Multiply":
                 // Call the Multiply function with both numbers
-                var multiply = _kernel.Skills.GetFunction("MathPlugin", "Multiply");
+                var multiply = _kernel.Functions.GetFunction("MathPlugin", "Multiply");
                 var multiplyVariables = new ContextVariables
                 {
                     ["input"] = numbers["number1"]!.ToString(),
                     ["number2"] = numbers["number2"]!.ToString()
                 };
-                return (await _kernel.RunAsync(multiplyVariables, multiply)).Result;
+                result = await _kernel.RunAsync(multiplyVariables, multiply);
+                return result.GetValue<double>()!.ToString();
             default:
                 return "I'm sorry, I don't understand.";
         }

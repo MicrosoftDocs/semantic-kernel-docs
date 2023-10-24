@@ -26,7 +26,7 @@ if (LlmService == "AzureOpenAI")
 
         var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
         var writerPlugin = kernelWithConfiguration
-             .ImportSemanticSkillFromDirectory(pluginsDirectory, "WriterPlugin");
+             .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
 
         var result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
         Console.WriteLine(result);
@@ -49,7 +49,7 @@ if (LlmService == "AzureOpenAI")
 
         var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
         var writerPlugin = kernelWithConfiguration
-             .ImportSemanticSkillFromDirectory(pluginsDirectory, "WriterPlugin");
+             .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
 
         var result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
         Console.WriteLine(result);
@@ -77,7 +77,7 @@ else
 
         var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
         var writerPlugin = kernelWithConfiguration
-            .ImportSemanticSkillFromDirectory(pluginsDirectory, "WriterPlugin");
+            .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
 
         var result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
         Console.WriteLine(result);
@@ -100,7 +100,7 @@ else
 
         var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
         var writerPlugin = kernelWithConfiguration
-            .ImportSemanticSkillFromDirectory(pluginsDirectory, "WriterPlugin");
+            .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
 
         var result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
         Console.WriteLine(result);

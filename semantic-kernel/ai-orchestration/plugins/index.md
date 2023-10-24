@@ -15,9 +15,6 @@ ms.service: semantic-kernel
 Plugins are the fundamental building blocks of Semantic Kernel and can interoperate with plugins in ChatGPT, Bing, and Microsoft 365.
 With plugins, you can encapsulate capabilities into a single unit of functionality that can then be run by the kernel. Plugins can consist of both native code and requests to AI services via semantic functions. 
 
-> [!Note]
-> Skills are currently being renamed to plugins. This article has been updated to reflect the latest terminology, but some images and code samples may still refer to skills.
-
 ## What is a plugin?
 To drive alignment across the industry, we've adopted the [OpenAI plugin specification](https://platform.openai.com/docs/plugins/getting-started/) as the standard for plugins. This will help create an ecosystem of interoperable plugins that can be used across all of the major AI apps and services like ChatGPT, Bing, and Microsoft 365.
 
@@ -39,12 +36,12 @@ _Just_ providing functions, however, is not enough to make a plugin. To power au
 
 :::row:::
    :::column span="1":::
-      For example, in the [`WriterSkill` plugin](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/WriterSkill), each function has a semantic description that describes what the function does. A planner can then use these descriptions to choose the best functions to call to fulfill a user's ask.
+      For example, in the [`WriterPlugin` plugin](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/WriterPlugin), each function has a semantic description that describes what the function does. A planner can then use these descriptions to choose the best functions to call to fulfill a user's ask.
       
       In the picture on the right, a planner would likely use the `ShortPoem` and `StoryGen` functions to satisfy the users ask thanks to the provided semantic descriptions.
    :::column-end:::
    :::column span="3":::
-        ![Semantic description within the WriterSkill plugin](../../media/writer-plugin-example.png)
+        ![Semantic description within the WriterPlugin plugin](../../media/writer-plugin-example.png)
    :::column-end:::
 :::row-end:::
 
@@ -64,14 +61,14 @@ Now that you know what a plugin is, let's take a look at how to create one. With
    :::column-end:::
 :::row-end:::
 
-Below is an sample called `Summarize` that can be found in the [samples folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Summarize) in the GitHub repository.
+Below is an sample called `Summarize` that can be found in the [samples folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/SummarizePlugin/Summarize) in the GitHub repository.
 
-:::code language="txt" source="~/../semantic-kernel-samples/samples/skills/SummarizeSkill/Summarize/skprompt.txt":::
+:::code language="txt" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/skprompt.txt":::
 
 To semantically describe this function (as well as define the configuration for the AI service), you must also create a _config.json_ file in the same folder as the prompt. This file describes the function's input parameters and description. Below is the _config.json_ file for the `Summarize` function.
 
 
-:::code language="json" source="~/../semantic-kernel-samples/samples/skills/SummarizeSkill/Summarize/config.json":::
+:::code language="json" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/config.json":::
 
 
 Both `description` fields are used by [planner](../planners/index.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.
@@ -102,18 +99,19 @@ The following code is an excerpt from the `DocumentSkill` plugin, which can be f
 
 ```csharp
 [SKFunction, Description("Read all text from a document")]
-[SKFunctionInput(Description = "Path to the file to read")]
-public async Task<string> ReadTextAsync(string filePath, SKContext context)
+public async Task<string> ReadTextAsync(
+   [Description("Path to the file to read")] string filePath
+)
 {
     this._logger.LogInformation("Reading text from {0}", filePath);
-    using var stream = await this._fileSystemConnector.GetFileContentStreamAsync(filePath, context.CancellationToken).ConfigureAwait(false);
+    using var stream = await this._fileSystemConnector.GetFileContentStreamAsync(filePath).ConfigureAwait(false);
     return this._documentConnector.ReadText(stream);
 }
 ```
 
 # [Python](#tab/python)
 
-The following code is an excerpt from the `MathSkill` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `sk_function` and `sk_function_context_parameter` decorators to describe the function's input and output to planner.
+The following code is an excerpt from the `MathPlugin` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `sk_function` and `sk_function_context_parameter` decorators to describe the function's input and output to planner.
 
 ```python
 @sk_function(
@@ -133,7 +131,7 @@ def add(self, initial_value_text: str, context: SKContext) -> str:
     :param context: Contains the context to get the numbers from
     :return: The resulting sum as a string
     """
-    return MathSkill.add_or_subtract(initial_value_text, context, add=True)
+    return MathPlugin.add_or_subtract(initial_value_text, context, add=True)
 ```
 
 ---

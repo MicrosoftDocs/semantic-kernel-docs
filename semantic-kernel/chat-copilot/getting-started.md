@@ -2,7 +2,7 @@
 title: Get started using Chat Copilot locally
 description: Run Chat Copilot locally to see how it works.
 author: matthewbolanos
-ms.topic: samples
+ms.topic: conceptual
 ms.author: mabolan
 ms.date: 08/03/2023
 ms.service: semantic-kernel
