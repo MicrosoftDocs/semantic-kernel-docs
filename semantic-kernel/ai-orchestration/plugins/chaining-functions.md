@@ -140,7 +140,7 @@ We can simplify this code by creating a new native function that performs the sa
 Add the following code to your `OrchestratorPlugin` class.
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="79-96":::
+:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="80-97":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="75-91":::
@@ -151,7 +151,7 @@ Add the following code to your `OrchestratorPlugin` class.
 Now that we have a function that can extracts numbers, we can update our `RouteRequest` function to use the `RunAsync` method to call the functions in a pipeline. Update the `RouteRequest` function to the following. Notice how we can now call all of our functions in a single call to `RunAsync`.
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="20-62,77-78" highlight="36-42":::
+:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="19-62,77-78" highlight="36-42":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="13-58,73" highlight="40-45":::
@@ -170,7 +170,7 @@ This is helpful because it can allow us to persist the initial `$input` variable
 To pass a context object to `RunAsync`, you can create a new context object and pass it as the first parameter. This will start the pipeline with the variables in the context object. We'll be creating a new variable called `original_request` to store the original request. Later, we'll show where to add this code in the `RouteRequest` function.
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="63-65":::
+:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="65-66":::
 
 
 # [Python](#tab/python)
@@ -195,7 +195,7 @@ You can now update the `RouteRequest` function to include the `CreateResponse` f
 
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="20-53,63-66,55,69-77":::
+:::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="19-53,63-66,55,69-78":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="13-50,59-73":::

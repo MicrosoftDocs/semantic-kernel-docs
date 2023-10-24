@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.ComponentModel;
 using System.Text.Json.Nodes;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
@@ -15,16 +16,18 @@ public class Orchestrator
     }
 
     [SKFunction]
-    public async Task<string> RouteRequestAsync(SKContext context)
+    public async Task<string> RouteRequestAsync(
+        [Description("The user request")] string input
+    )
     {
         // Save the original user request
-        string request = context.Variables["input"];
+        string request = input;
 
         // Retrieve the intent from the user request
         var getIntent = this._kernel.Functions.GetFunction("OrchestratorPlugin", "GetIntent");
         var getIntentVariables = new ContextVariables
         {
-            ["input"] = context.Variables["input"],
+            ["input"] = input,
             ["options"] = "Sqrt, Multiply"
         };
         string intent = (await this._kernel.RunAsync(getIntentVariables, getIntent)).GetValue<string>()!.Trim();

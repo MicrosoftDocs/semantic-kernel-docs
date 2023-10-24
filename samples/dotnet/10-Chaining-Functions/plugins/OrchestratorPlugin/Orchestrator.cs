@@ -17,16 +17,18 @@ public class Orchestrator
     }
 
     [SKFunction, Description("Routes the request to the appropriate function.")]
-    public async Task<string> RouteRequestAsync(SKContext context)
+    public async Task<string> RouteRequestAsync(
+        [Description("The user request")] string input
+    )
     {
         // Save the original user request
-        string request = context.Variables["input"];
+        string request = input;
 
         // Retrieve the intent from the user request
         var getIntent = _kernel.Functions.GetFunction("OrchestratorPlugin", "GetIntent");
         var getIntentVariables = new ContextVariables
         {
-            ["input"] = context.Variables["input"],
+            ["input"] = input,
             ["options"] = "Sqrt, Multiply"
         };
         string intent = (await _kernel.RunAsync(getIntentVariables, getIntent)).GetValue<string>()!.Trim();

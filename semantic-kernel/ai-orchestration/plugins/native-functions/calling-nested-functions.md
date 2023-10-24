@@ -76,12 +76,12 @@ Since this plugin will run other functions, we'll need to pass the kernel to the
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="3-17,59":::
+:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="3-15,60":::
 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="1-9":::
+:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="17-9":::
 
 ---
 
@@ -94,7 +94,7 @@ Add the following code to your `Orchestrator` class to get started creating the 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="19-33,39-43,46-47,55-58":::
+:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="18-33,40-45,49-50,59-62":::
 
 # [Python](#tab/python)
 
@@ -142,7 +142,7 @@ We can now call the `GetNumbers` function from the `RouteRequest` function. Repl
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="34-57":::
+:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="35-61":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="30-58":::
