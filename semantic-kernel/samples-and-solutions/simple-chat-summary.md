@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 [!INCLUDE [subheader.md](../includes/pat_large.md)]
 
-The Simple Chat Summary sample allows you to see the power of [functions](../prompt-engineering/your-first-prompt.md) used in a chat sample app.  The sample highlights the [Summarize](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Summarize), [Topics](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Topics) and [Action Items](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Skills/Skills.Core/ConversationSummarySkill.cs) functions in the [Summarize Plugin](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill).  Each function calls OpenAI to review the information in the chat window and produces insights.   
+The Simple Chat Summary sample allows you to see the power of [functions](../prompt-engineering/your-first-prompt.md) used in a chat sample app.  The sample highlights the [Summarize](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Summarize), [Topics](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Topics) and [Action Items](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Skills/Skills.Core/ConversationSummaryPlugin.cs) functions in the [Summarize Plugin](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill).  Each function calls OpenAI to review the information in the chat window and produces insights.   
 
 > [!IMPORTANT]
 > Each function will call OpenAI which will use tokens that you will be billed for. 
@@ -47,7 +47,7 @@ A preloaded chat conversation is avaialble.  You can add additional items in the
 Three semantic functions are called on this screen
 1) [Summarize](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Summarize)
 2) [Topics](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills/SummarizeSkill/Topics) 
-3) [Action Items](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Skills/Skills.Core/ConversationSummarySkill.cs) 
+3) [Action Items](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Skills/Skills.Core/ConversationSummaryPlugin.cs) 
 
 ## Next step
 

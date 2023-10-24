@@ -31,7 +31,7 @@ kernel.ImportSemanticFunctionsFromDirectory(pluginsDirectory, "OrchestratorPlugi
 // Import the native functions
 var mathPlugin = kernel.ImportFunctions(new Plugins.MathPlugin.Math(), "MathPlugin");
 var orchestratorPlugin = kernel.ImportFunctions(new Orchestrator(kernel), "OrchestratorPlugin");
-var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
+var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummaryPlugin(kernel), "ConversationSummaryPlugin");
 
 // Make a request that runs the Sqrt function
 var result1 = await kernel.RunAsync("What is the square root of 524?", orchestratorPlugin["RouteRequest"]);

@@ -1,7 +1,7 @@
 import semantic_kernel as sk
 from plugins.MathPlugin.Math import Math
 from plugins.OrchestratorPlugin.Orchestrator import Orchestrator
-from semantic_kernel.core_skills import ConversationSummarySkill
+from semantic_kernel.core_skills import ConversationSummaryPlugin
 import config.add_completion_service
 
 
@@ -18,7 +18,7 @@ async def main():
     # Import the semantic functions
     kernel.import_semantic_skill_from_directory(plugins_directory, "OrchestratorPlugin")
     kernel.import_skill(
-        ConversationSummarySkill(kernel=kernel), skill_name="ConversationSummarySkill"
+        ConversationSummaryPlugin(kernel=kernel), skill_name="ConversationSummaryPlugin"
     )
 
     # Import the native functions.

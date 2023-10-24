@@ -23,9 +23,9 @@ If you want to see the final solution, you can check out the following samples i
 ## Calling a nested function
 In the [previous example](./templatizing-semantic-functions.md), we created a semantic function called `GetIntent`. This function uses the previous conversation history to determine the intent of the user.
 
-Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummarySkill` plugin that's part of the [core plugins package](../out-of-the-box-plugins.md).
+Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummaryPlugin` plugin that's part of the [core plugins package](../out-of-the-box-plugins.md).
 
-Below, we show how we can update our original prompt in the _skprompt.txt_ file to use the `SummarizeConversationAsync` function in the `ConversationSummarySkill` plugin to summarize the conversation history before asking for the intent.
+Below, we show how we can update our original prompt in the _skprompt.txt_ file to use the `SummarizeConversationAsync` function in the `ConversationSummaryPlugin` plugin to summarize the conversation history before asking for the intent.
 
 :::code language="txt" source="~/../samples/dotnet/06-Calling-Nested-Functions-In-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/skprompt.txt" highlight="1":::
 

@@ -59,14 +59,14 @@ Today, not all features are available in all languages. The following tables sho
 
 | Plugins                           |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| TextMemorySkill                   | ✅ | ✅ | 🔄 | |
-| ConversationSummarySkill          | ✅ | ✅ | ✅ | |
-| FileIOSkill                       | ✅ | ✅ | ✅ | |
-| HttpSkill                         | ✅ | ✅ | ✅ | |
-| MathSkill                         | ✅ | ✅ | ✅ | |
-| TextSkill                         | ✅ | ✅ | ✅ | |
-| TimeSkill                         | ✅ | ✅ | ✅ | |
-| WaitSkill                         | ✅ | ✅ | ✅ | |
+| TextMemoryPlugin                   | ✅ | ✅ | 🔄 | |
+| ConversationSummaryPlugin          | ✅ | ✅ | ✅ | |
+| FileIOPlugin                       | ✅ | ✅ | ✅ | |
+| HttpPlugin                         | ✅ | ✅ | ✅ | |
+| MathPlugin                         | ✅ | ✅ | ✅ | |
+| TextPlugin                         | ✅ | ✅ | ✅ | |
+| TimePlugin                         | ✅ | ✅ | ✅ | |
+| WaitPlugin                         | ✅ | ✅ | ✅ | |
 
 ### Planners
 

@@ -3,7 +3,6 @@
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.SkillDefinition;
 using Newtonsoft.Json.Linq;
 
 namespace Plugins.OrchestratorPlugin;
@@ -24,32 +23,32 @@ public class Orchestrator
         string request = context.Variables["input"];
 
         // Retrieve the intent from the user request
-        var getIntent = _kernel.Skills.GetFunction("OrchestratorPlugin", "GetIntent");
+        var getIntent = _kernel.Functions.GetFunction("OrchestratorPlugin", "GetIntent");
         var getIntentVariables = new ContextVariables
         {
             ["input"] = context.Variables["input"],
             ["options"] = "Sqrt, Multiply"
         };
-        string intent = (await _kernel.RunAsync(getIntentVariables, getIntent)).Result.Trim();
+        string intent = (await _kernel.RunAsync(getIntentVariables, getIntent)).GetValue<string>()!.Trim();
 
         // Call the appropriate function
         ISKFunction MathFunction;
         switch (intent)
         {
             case "Sqrt":
-                MathFunction = this._kernel.Skills.GetFunction("MathPlugin", "Sqrt");
+                MathFunction = this._kernel.Functions.GetFunction("MathPlugin", "Sqrt");
                 break;
             case "Multiply":
-                MathFunction = this._kernel.Skills.GetFunction("MathPlugin", "Multiply");
+                MathFunction = this._kernel.Functions.GetFunction("MathPlugin", "Multiply");
                 break;
             default:
                 return "I'm sorry, I don't understand.";
         }
 
         // Get remaining functions
-        var createResponse = this._kernel.Skills.GetFunction("OrchestratorPlugin", "CreateResponse");
-        var getNumbers = this._kernel.Skills.GetFunction("OrchestratorPlugin", "GetNumbers");
-        var extractNumbersFromJson = this._kernel.Skills.GetFunction("OrchestratorPlugin", "ExtractNumbersFromJson");
+        var createResponse = this._kernel.Functions.GetFunction("OrchestratorPlugin", "CreateResponse");
+        var getNumbers = this._kernel.Functions.GetFunction("OrchestratorPlugin", "GetNumbers");
+        var extractNumbersFromJson = this._kernel.Functions.GetFunction("OrchestratorPlugin", "ExtractNumbersFromJson");
 
         // Run the pipeline
         var output = await this._kernel.RunAsync(
@@ -73,11 +72,11 @@ public class Orchestrator
             createResponse
         );
 
-        return output.Variables["input"];
+        return output.GetValue<string>()!;
     }
 
     [SKFunction, Description("Extracts numbers from JSON")]
-    public SKContext ExtractNumbersFromJson(SKContext context)
+    public static SKContext ExtractNumbersFromJson(SKContext context)
     {
         JObject numbers = JObject.Parse(context.Variables["input"]);
 

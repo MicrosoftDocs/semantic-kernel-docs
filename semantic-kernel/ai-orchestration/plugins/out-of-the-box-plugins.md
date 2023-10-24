@@ -22,7 +22,7 @@ The core plugins are planned to be available in all languages since they are cor
 
 | Plugin | Description | C# | Python | Java |
 | --- | --- | :------:|:----: | :----: |
-| `ConversationSummarySkill` | To summarize a conversation | ✅ | ✅ | * |
+| `ConversationSummaryPlugin` | To summarize a conversation | ✅ | ✅ | * |
 | `FileIOSkill` | To read and write to the filesystem | ✅ | ✅ | ❌ |
 | `HttpSkill` | To call APIs | ✅ | ✅ | ❌ |
 | `MathSkill` | To perform mathematical operations | ✅ | ✅ | ❌ |
