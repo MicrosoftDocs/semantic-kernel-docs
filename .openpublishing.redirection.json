@@ -251,11 +251,6 @@
             "redirect_document_id": false
         },
         {
-            "source_path": "semantic-kernel/get-started/index.md",
-            "redirect_url": "/semantic-kernel/get-started/quick-start-guide/index?toc=/semantic-kernel/toc.json",
-            "redirect_document_id": true
-        },
-        {
             "source_path": "semantic-kernel/samples-and-solutions/copilot-chat.md",
             "redirect_url": "/semantic-kernel/chat-copilot/index",
             "redirect_document_id": true
@@ -309,6 +304,76 @@
             "source_path": "semantic-kernel/ai-orchestration/plugins/planner.md",
             "redirect_url": "/semantic-kernel/ai-orchestration/planners/index",
             "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/getting-started.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/context-variables-chat.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/index.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/loading-the-kernel.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/memory-and-embeddings.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/running-prompts-from-files.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/semantic-function-inline.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/quick-start-guide/using-the-planner.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/authentication-api.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/book-creator.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/github-repo-qa-bot.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/index.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/local-api-service.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/samples-and-solutions/simple-chat-summary.md",
+            "redirect_url": "/semantic-kernel/chat-copilot/index",
+            "redirect_document_id": false
         }
     ]
 }

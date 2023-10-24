@@ -63,12 +63,12 @@ Now that you know what a plugin is, let's take a look at how to create one. With
 
 Below is an sample called `Summarize` that can be found in the [samples folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/SummarizePlugin/Summarize) in the GitHub repository.
 
-:::code language="txt" source="~/../semantic-kernel-samples/samples/skills/SummarizePlugin/Summarize/skprompt.txt":::
+:::code language="txt" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/skprompt.txt":::
 
 To semantically describe this function (as well as define the configuration for the AI service), you must also create a _config.json_ file in the same folder as the prompt. This file describes the function's input parameters and description. Below is the _config.json_ file for the `Summarize` function.
 
 
-:::code language="json" source="~/../semantic-kernel-samples/samples/skills/SummarizePlugin/Summarize/config.json":::
+:::code language="json" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/config.json":::
 
 
 Both `description` fields are used by [planner](../planners/index.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.

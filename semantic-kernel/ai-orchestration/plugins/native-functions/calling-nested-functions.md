@@ -76,7 +76,7 @@ Since this plugin will run other functions, we'll need to pass the kernel to the
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="3-15,60":::
+:::code language="csharp" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="3-16,63":::
 
 
 # [Python](#tab/python)
