@@ -21,7 +21,7 @@ IKernel kernel = new KernelBuilder()
     .Build();
 
 // Add the math plugin using the plugin manifest URL
-const string pluginManifestUrl = "http://mathplugin.azurewebsites.net/.well-known/ai-plugin.json";
+const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
 var mathPlugin = await kernel.ImportPluginFunctionsAsync("MathPlugin", new Uri(pluginManifestUrl));
 
 // Create a stepwise planner and invoke it
