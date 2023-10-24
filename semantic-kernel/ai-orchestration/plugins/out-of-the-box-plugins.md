@@ -19,20 +19,20 @@ The core plugins are planned to be available in all languages since they are cor
 | Plugin | Description | C# | Python | Java |
 | --- | --- | :------:|:----: | :----: |
 | `ConversationSummaryPlugin` | To summarize a conversation | ✅ | ✅ | * |
-| `FileIOSkill` | To read and write to the filesystem | ✅ | ✅ | ❌ |
-| `HttpSkill` | To call APIs | ✅ | ✅ | ❌ |
-| `MathSkill` | To perform mathematical operations | ✅ | ✅ | ❌ |
-| `TextMemorySkill` | To store and retrieve text in memory | ✅ | ✅ | ❌ |
+| `FileIOPlugin` | To read and write to the filesystem | ✅ | ✅ | ❌ |
+| `HttpPlugin` | To call APIs | ✅ | ✅ | ❌ |
+| `MathPlugin` | To perform mathematical operations | ✅ | ✅ | ❌ |
+| `TextMemoryPlugin` | To store and retrieve text in memory | ✅ | ✅ | ❌ |
 | `TextPlugin` | To deterministically manipulating text strings | ✅ | ✅ | * |
-| `TimeSkill` | To acquire the time of day and any other temporal information | ✅ | ✅ | * |
-| `WaitSkill` | To pause execution for a specified amount of time | ✅ | ❌ | ❌ |
+| `TimePlugin` | To acquire the time of day and any other temporal information | ✅ | ✅ | * |
+| `WaitPlugin` | To pause execution for a specified amount of time | ✅ | ❌ | ❌ |
 
 You can find the full list of core plugins for each language by following the links below:
 - [C# core plugins](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Core)
 - [Python core plugins](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills)
 
 ### Using core plugins in Semantic Kernel
-If you want to use one of the core plugins, you can easily import them into your project. For example, if you want to use the `TimeSkill` in either C# or Python, you can import it as follows.
+If you want to use one of the core plugins, you can easily import them into your project. For example, if you want to use the `TimePlugin` in either C# or Python, you can import it as follows.
 
 # [C#](#tab/Csharp)
 
@@ -43,7 +43,7 @@ using Microsoft.SemanticKernel.CoreSkills;
 
 // ... instantiate a kernel and configure it first
 
-kernel.ImportFunctions(new TimeSkill(), "time");
+kernel.ImportFunctions(new TimePlugin(), "time");
 
 const string ThePromptTemplate = @"
 Today is: {{time.Date}}
@@ -63,11 +63,11 @@ Console.WriteLine(myOutput);
 # [Python](#tab/python)
 
 ```python
-from semantic_kernel.core_skills.time_skill import TimeSkill
+from semantic_kernel.core_skills.time_skill import TimePlugin
 
 # ... instantiate a kernel and configure it first
 
-kernel.import_skill(TimeSkill(), "time")
+kernel.import_skill(TimePlugin(), "time")
 
 ThePromptTemplate = """
 Today is: {{time.Date}}

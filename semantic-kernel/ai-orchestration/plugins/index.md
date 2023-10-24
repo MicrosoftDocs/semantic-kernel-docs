@@ -111,7 +111,7 @@ public async Task<string> ReadTextAsync(
 
 # [Python](#tab/python)
 
-The following code is an excerpt from the `MathSkill` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `sk_function` and `sk_function_context_parameter` decorators to describe the function's input and output to planner.
+The following code is an excerpt from the `MathPlugin` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `sk_function` and `sk_function_context_parameter` decorators to describe the function's input and output to planner.
 
 ```python
 @sk_function(
@@ -131,7 +131,7 @@ def add(self, initial_value_text: str, context: SKContext) -> str:
     :param context: Contains the context to get the numbers from
     :return: The resulting sum as a string
     """
-    return MathSkill.add_or_subtract(initial_value_text, context, add=True)
+    return MathPlugin.add_or_subtract(initial_value_text, context, add=True)
 ```
 
 ---
