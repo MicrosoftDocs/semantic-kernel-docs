@@ -36,7 +36,7 @@ The following code shows how you could define the prompt for the `GetIntent` fun
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="9-14":::
+:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="8-13":::
 
 # [Python](#tab/python)
 
@@ -59,7 +59,7 @@ The following sample shows how you could define the settings for the `GetIntent`
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="17-42":::
+:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="16-25":::
 
 # [Python](#tab/python)
 
@@ -72,13 +72,7 @@ The following sample shows how you could define the settings for the `GetIntent`
 Now that you have a prompt and its settings, you can import it into a kernel. The following code demonstrates how to register the `GetIntent` function with a new kernel.
 
 # [C#](#tab/Csharp)
-To register the function with the kernel, you first need to create a [SemanticFunctionConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.semanticfunctionconfig) object. 
-
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="51-57, 60-68":::
-
-Afterwards, you can pass it into the kernel using the [RegisterSemanticFunction](/dotnet/api/microsoft.semantickernel.kernel.registersemanticfunction) method. The first parameter is the name of the plugin it belongs to, the second is the name of the function, and the last is the configuration object.
-
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="70-71":::
+:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="35-40, 43-46":::
 
 # [Python](#tab/python)
 To register the function with the kernel, you first need to create a [SemanticFunctionConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.semanticfunctionconfig) object. 
@@ -97,7 +91,7 @@ Now that you have a prompt and its settings, you can test the function by runnin
 The following sample shows how you could run the `GetIntent` function with the input "I want to send an email to the marketing team celebrating their recent milestone."
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="73-79":::
+:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="49-54":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="52-57":::
