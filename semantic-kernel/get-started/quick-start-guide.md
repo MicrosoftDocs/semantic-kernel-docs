@@ -102,4 +102,4 @@ The guides are an easy way run sample code and learn how to use Semantic Kernel.
 
 
 > [!div class="nextstepaction"]
-> [Learn how to Orchestrate AI](../../ai-orchestration/index.md)
+> [Learn how to Orchestrate AI](../ai-orchestration/index.md)

@@ -81,7 +81,7 @@ Since this plugin will run other functions, we'll need to pass the kernel to the
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="17-9":::
+:::code language="python" source="~/../samples/python/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/Orchestrator.py" range="7-9":::
 
 ---
 

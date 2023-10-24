@@ -47,7 +47,7 @@ The following code shows how you could define the prompt for the `GetIntent` fun
 Notice that we're using a variable called `input` in the prompt. This variable is defined in the settings of the semantic function and is used to pass the user's input to the AI service.
 
 ### Configuring the function
-Now that you have a prompt, you need to define the settings necessary for your prompt to work correctly with your AI service. The [configuring prompts](../../../prompt-engineering/configure-prompts.md) article provides a detailed overview of how to configure semantic functions, but at a high level, they are configured using a [PromptTemplateConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.prompttemplateconfig) object that contains the following properties:
+Now that you have a prompt, you need to define the settings necessary for your prompt to work correctly with your AI service. The [configuring prompts](../../../prompt-engineering/configure-prompts.md) article provides a detailed overview of how to configure semantic functions, but at a high level, you need to provide the following information:
 
 - `type` – The type of prompt. In this case, we're using the `completion` type.
 - `description` – A description of what the prompt does. This is used by planner to automatically orchestrate plans with the function.

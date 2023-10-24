@@ -65,7 +65,7 @@ The _skprompt.txt_ file contains the request that will be sent to the AI service
 
 
 ### Configuring the function in the _config.json_ file
-Next, we need to define the configuration for the `GetIntent` function. As a reminder, a semantic function's configuration is defined using a [PromptTemplateConfig](/dotnet/api/microsoft.semantickernel.semanticfunctions.prompttemplateconfig) object. When serializing the configuration, all you need to do is define the same properties in a JSON file:
+Next, we need to define the configuration for the `GetIntent` function. When serializing the configuration, all you need to do is define the same properties in a JSON file:
 
 - `type` – The type of prompt. In this case, we're using the `completion` type.
 - `description` – A description of what the prompt does. This is used by planner to automatically orchestrate plans with the function.

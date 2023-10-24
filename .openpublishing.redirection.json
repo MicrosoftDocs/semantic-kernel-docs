@@ -76,8 +76,13 @@
             "redirect_document_id": true
         },
         {
+            "source_path": "/semantic-kernel/get-started/index.md",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
+            "redirect_document_id": true
+        },
+        {
             "source_path": "semantic-kernel/overview/get-started.md",
-            "redirect_url": "/semantic-kernel/get-started/index",
+            "redirect_url": "/semantic-kernel/get-started/quick-start-guide",
             "redirect_document_id": true
         },
         {
