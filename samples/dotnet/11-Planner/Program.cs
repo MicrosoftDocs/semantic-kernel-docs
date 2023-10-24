@@ -3,7 +3,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Planning;
+using Microsoft.SemanticKernel.Planners;
 
 using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
 {
@@ -35,7 +35,9 @@ var plan = await planner.CreatePlanAsync(ask);
 Console.WriteLine("Plan:\n");
 Console.WriteLine(JsonSerializer.Serialize(plan, new JsonSerializerOptions { WriteIndented = true }));
 
-var result = (await kernel.RunAsync(plan)).Result;
+var result = await kernel.RunAsync(plan);
+
+result.FunctionResults
 
 Console.WriteLine("Plan results:");
-Console.WriteLine(result.Trim());
+Console.WriteLine(result.GetValue<string>()!.Trim());

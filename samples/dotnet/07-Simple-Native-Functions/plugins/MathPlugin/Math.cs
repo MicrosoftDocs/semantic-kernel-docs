@@ -2,15 +2,15 @@
 
 using System.ComponentModel;
 using System.Globalization;
-using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel;
 
 namespace Plugins.MathPlugin;
 
 public class Math
 {
     [SKFunction, Description("Take the square root of a number")]
-    public string Sqrt(string number)
+    public double Sqrt([Description("The number to take a square root of")] double input)
     {
-        return System.Math.Sqrt(Convert.ToDouble(number, CultureInfo.InvariantCulture)).ToString(CultureInfo.InvariantCulture);
+        return System.Math.Sqrt(input);
     }
 }

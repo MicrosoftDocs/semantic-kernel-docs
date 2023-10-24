@@ -2,8 +2,9 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.TemplateEngine;
 using Microsoft.SemanticKernel.SemanticFunctions;
-using static Microsoft.SemanticKernel.SemanticFunctions.PromptTemplateConfig;
+using static Microsoft.SemanticKernel.TemplateEngine.PromptTemplateConfig;
 
 // Create the prompt for the semantic function
 string prompt = @"Bot: How can I help you?
@@ -78,4 +79,4 @@ var result = await kernel.RunAsync(
     getIntentFunction
 );
 
-Console.WriteLine(result.GetValue<string>());
+Console.WriteLine(result);

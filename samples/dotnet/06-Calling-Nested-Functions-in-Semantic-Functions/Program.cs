@@ -23,11 +23,11 @@ IKernel kernel = new KernelBuilder()
     .WithLoggerFactory(loggerFactory)
     .Build();
 
-var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
+var pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "plugins");
 
 // Import the OrchestratorPlugin and ConversationSummarySkill into the kernel.
 var orchestrationPlugin = kernel.ImportSemanticFunctionsFromDirectory(pluginsDirectory, "OrchestratorPlugin");
-var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummarySkill(kernel), "ConversationSummarySkill");
+var conversationSummaryPlugin = kernel.ImportFunctions(new ConversationSummaryPlugin(kernel), "ConversationSummarySkill");
 
 // Create a new context and set the input, history, and options variables.
 var variables = new ContextVariables
@@ -48,6 +48,6 @@ Bot: Would you like to write one for you?",
 };
 
 // Run the GetIntent function with the context.
-var result = (await kernel.RunAsync(variables, orchestrationPlugin["GetIntent"])).Result;
+var result = await kernel.RunAsync(variables, orchestrationPlugin["GetIntent"]);
 
-Console.WriteLine(result.GetValue<string>());
+Console.WriteLine(result);

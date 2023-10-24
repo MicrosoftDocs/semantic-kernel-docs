@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Planning;
 using Microsoft.SemanticKernel.Functions.OpenAPI.Extensions;
+using Microsoft.SemanticKernel.Planners;
 
 // Create a logger
 using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
@@ -20,8 +21,8 @@ IKernel kernel = new KernelBuilder()
     .Build();
 
 // Add the math plugin using the plugin manifest URL
-const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
-var mathPlugin = await kernel.ImportAIPluginAsync("MathPlugin", new Uri(pluginManifestUrl));
+const string pluginManifestUrl = "http://mathplugin.azurewebsites.net/.well-known/ai-plugin.json";
+var mathPlugin = await kernel.ImportPluginFunctionsAsync("MathPlugin", new Uri(pluginManifestUrl));
 
 // Create a stepwise planner and invoke it
 var planner = new StepwisePlanner(kernel);
@@ -33,11 +34,15 @@ var result = await kernel.RunAsync(plan);
 Console.WriteLine("Result: " + result);
 
 // Print details about the plan
-if (result.Variables.TryGetValue("stepCount", out string? stepCount))
+if (result.FunctionResults.First().TryGetMetadataValue("stepCount", out string? stepCount))
 {
     Console.WriteLine("Steps Taken: " + stepCount);
 }
-if (result.Variables.TryGetValue("skillCount", out string? skillCount))
+if (result.FunctionResults.First().TryGetMetadataValue("functionCount", out string? functionCount))
 {
-    Console.WriteLine("Skills Used: " + skillCount);
+    Console.WriteLine("Skills Used: " + functionCount);
+}
+if (result.FunctionResults.First().TryGetMetadataValue("iterations", out string? iterations))
+{
+    Console.WriteLine("Skills Used: " + iterations);
 }

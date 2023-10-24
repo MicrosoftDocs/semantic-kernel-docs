@@ -40,4 +40,4 @@ Bot:Would you like to send an email?",
 // Run the GetIntent function with the variables.
 var result = (await kernel.RunAsync(variables, orchestrationPlugin["GetIntent"])).Result;
 
-Console.WriteLine(result.GetValue<string>());
+Console.WriteLine(result);

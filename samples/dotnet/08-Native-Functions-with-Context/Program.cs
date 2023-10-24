@@ -33,4 +33,4 @@ var contextVariables = new ContextVariables
 
 // Make a request that runs the Multiply function
 var result = await kernel.RunAsync(contextVariables, mathPlugin["Multiply"]);
-Console.WriteLine(result.GetValue<string>());
+Console.WriteLine(result);

@@ -26,4 +26,4 @@ var mathPlugin = kernel.ImportFunctions(new Plugins.MathPlugin.Math(), "MathPlug
 
 // Make a request that runs the Sqrt function
 var result = await kernel.RunAsync("12", mathPlugin["Sqrt"]);
-Console.WriteLine(result.GetValue<string>());
+Console.WriteLine(result.GetValue<double>());

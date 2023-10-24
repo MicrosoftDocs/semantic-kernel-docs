@@ -11,7 +11,7 @@ var kernel = Kernel.Builder
 var time = kernel.ImportFunctions(new TimePlugin());
 var result = await kernel.RunAsync(time["Today"]);
 
-Console.WriteLine(result.GetValue<string>());
+Console.WriteLine(result);
 
 
 var LlmService = Env.Var("Global:LlmService")!;
@@ -45,7 +45,7 @@ if (LlmService == "AzureOpenAI")
          .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
 
     result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
-    Console.WriteLine(result.GetValue<string>());
+    Console.WriteLine(result);
 }
 else
 {
@@ -76,7 +76,7 @@ else
          .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
 
     result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
-    Console.WriteLine(result.GetValue<string>());
+    Console.WriteLine(result);
 }
 
 
