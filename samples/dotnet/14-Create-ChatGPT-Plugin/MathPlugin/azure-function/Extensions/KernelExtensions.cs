@@ -2,8 +2,7 @@
 
 using System.Diagnostics.Contracts;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.SemanticFunctions;
-using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel.TemplateEngine;
 
 namespace Extensions;
 
@@ -39,10 +38,7 @@ public static class KernelExtensions
             // Load prompt template
             var template = new PromptTemplate(File.ReadAllText(promptPath), config, kernel!.PromptTemplateEngine);
 
-            // Prepare lambda wrapping AI logic
-            var functionConfig = new SemanticFunctionConfig(config, template);
-
-            plugin[functionName] = kernel.RegisterSemanticFunction(pluginName, functionName, functionConfig);
+            plugin[functionName] = kernel.RegisterSemanticFunction(pluginName, functionName, config, template);
         }
 
         return plugin;

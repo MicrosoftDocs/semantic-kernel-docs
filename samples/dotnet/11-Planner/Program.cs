@@ -37,7 +37,5 @@ Console.WriteLine(JsonSerializer.Serialize(plan, new JsonSerializerOptions { Wri
 
 var result = await kernel.RunAsync(plan);
 
-result.FunctionResults
-
 Console.WriteLine("Plan results:");
 Console.WriteLine(result.GetValue<string>()!.Trim());
