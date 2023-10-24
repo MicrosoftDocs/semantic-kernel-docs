@@ -84,11 +84,6 @@ To setup the guides, follow the steps below.
    > [!VIDEO https://learn-video.azurefd.net/vod/player?id=fc3c792e-3b4d-4009-900c-588ee35ee426] 
 
 7. Repeat for the remaining notebooks.
-    
-
-## Navigating the guides
-The guides are designed to be run in order to build on the concepts learned in the previous notebook. If you are interested in learning a particular concept, however, you can jump to the notebook that covers that concept. Below are the available guides; each one can also be opened within the docs website by clicking on the **Open guide** link.
-
 
 | File | Link | Description |
 | --- | --- | --- |
