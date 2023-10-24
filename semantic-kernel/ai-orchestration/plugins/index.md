@@ -99,11 +99,12 @@ The following code is an excerpt from the `DocumentSkill` plugin, which can be f
 
 ```csharp
 [SKFunction, Description("Read all text from a document")]
-[SKFunctionInput(Description = "Path to the file to read")]
-public async Task<string> ReadTextAsync(string filePath, SKContext context)
+public async Task<string> ReadTextAsync(
+   [Description("Path to the file to read")] string filePath
+)
 {
     this._logger.LogInformation("Reading text from {0}", filePath);
-    using var stream = await this._fileSystemConnector.GetFileContentStreamAsync(filePath, context.CancellationToken).ConfigureAwait(false);
+    using var stream = await this._fileSystemConnector.GetFileContentStreamAsync(filePath).ConfigureAwait(false);
     return this._documentConnector.ReadText(stream);
 }
 ```
