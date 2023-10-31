@@ -148,7 +148,7 @@ Add the following code to your `OrchestratorPlugin` class.
 ---
 
 ### Using the `RunAsync` method to chain our functions
-Now that we have a function that can extracts numbers, we can update our `RouteRequest` function to use the `RunAsync` method to call the functions in a pipeline. Update the `RouteRequest` function to the following. Notice how we can now call all of our functions in a single call to `RunAsync`.
+Now that we have a function that can extract numbers, we can update our `RouteRequest` function to use the `RunAsync` method to call the functions in a pipeline. Update the `RouteRequest` function to the following. Notice how we can now call all of our functions in a single call to `RunAsync`.
 
 # [C#](#tab/Csharp)
 :::code language="csharp" source="~/../samples/dotnet/10-Chaining-Functions/plugins/OrchestratorPlugin/Orchestrator.cs" range="19-62,77-78" highlight="38-44":::
