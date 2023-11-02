@@ -151,7 +151,7 @@ Advance your Semantic Kernel app by deploying to an AzureML Online Endpoint whic
 
 ### Prerequisites
 
-* An Azure Machine Learning Workspace - [Create a new one](/azure/machine-learning/concept-workspace?view=azureml-api-2#create-a-workspace)
+* An Azure Machine Learning Workspace - [Create a new one](/azure/machine-learning/concept-workspace#create-a-workspace)
 * Get an OpenAI API Key or create an [Azure OpenAI Deployment](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal)
 
 ### Follow the sample notebook
