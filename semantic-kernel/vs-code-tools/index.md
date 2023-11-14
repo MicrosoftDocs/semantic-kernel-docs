@@ -1,13 +1,13 @@
 ---
-title: How to use Semantic Kernel Tools Extension in Visual Code Studio
-description: How to use Semantic Kernel Tools Extension in Visual Code Studio
+title: How to use Semantic Kernel Tools Extension in Visual Studio Code
+description: How to use Semantic Kernel Tools Extension in Visual Studio Code
 author: smonroe
 ms.topic: vs-code-tools
 ms.author: smonroe
 ms.date: 05/12/2023
 ms.service: semantic-kernel
 ---
-# Visual Code Studio Semantic Kernel Extension
+# Visual Studio Code Semantic Kernel Extension
 
 The Semantic Kernel Tools help developers to write semantic functions for [Semantic Kernel](https://github.com/microsoft/semantic-kernel).
 
