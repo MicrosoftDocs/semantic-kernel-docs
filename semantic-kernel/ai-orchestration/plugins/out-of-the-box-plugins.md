@@ -28,7 +28,7 @@ The core plugins are planned to be available in all languages since they are cor
 | `WaitPlugin` | To pause execution for a specified amount of time | ✅ | ❌ | ❌ |
 
 You can find the full list of core plugins for each language by following the links below:
-- [C# core plugins](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Core)
+- [C# core plugins](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Plugins/Plugins.Core)
 - [Python core plugins](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills)
 
 ### Using core plugins in Semantic Kernel

@@ -81,37 +81,23 @@ Below are examples on how to run the PowerShell and bash scripts. Refer to each 
 
 * Creating new Azure OpenAI Resources
 ```powershell
-+.\deploy-azure.ps1 -DeploymentName YOUR_DEPLOYMENT_NAME -Subscription YOUR_SUBSCRIPTION_ID -BackendClientId YOUR_BACKEND_CLIENT_ID -TenantId YOUR_TENANT_ID -AIService AzureOpenAI
-```
-* Using existing Azure OpenAI Resources
-
-After entering the command below, you will be prompted to enter your Azure OpenAI API key. (You can also pass in the API key using the -AIApiKey parameter)
-
-```powershell
-.\deploy-azure.ps1 -DeploymentName YOUR_DEPLOYMENT_NAME -Subscription YOUR_SUBSCRIPTION_ID -BackendClientId YOUR_BACKEND_CLIENT_ID -TenantId YOUR_TENANT_ID -AIService AzureOpenAI -Endpoint "YOUR_AZURE_OPENAI_ENDPOINT"
+./deploy-azure.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -DeploymentName {YOUR_DEPLOYMENT_NAME} -AIService {AzureOpenAI or OpenAI} -AIApiKey {YOUR_AI_KEY} -AIEndpoint {YOUR_AZURE_OPENAI_ENDPOINT} -BackendClientId {YOUR_BACKEND_APPLICATION_ID} -FrontendClientId {YOUR_FRONTEND_APPLICATION_ID} -TenantId {YOUR_TENANT_ID}
 ```
 
-* Using existing OpenAI Resources
-
-After entering the command below, you will be prompted to enter your OpenAI API key. (You can also pass in the API key using the -AIApiKey parameter)
-
-```powershell
-.\deploy-azure.ps1 -DeploymentName YOUR_DEPLOYMENT_NAME -Subscription YOUR_SUBSCRIPTION_ID -BackendClientId YOUR_BACKEND_CLIENT_ID -TenantId YOUR_TENANT_ID -AIService OpenAI
-```
+- To use an existing Azure OpenAI resource, set `-AIService` to `AzureOpenAI` and include `-AIApiKey` and `-AIEndpoint`.
+- To deploy a new Azure OpenAI resource, set `-AIService` to `AzureOpenAI` and omit `-AIApiKey` and `-AIEndpoint`.
+- To use an an OpenAI account, set `-AIService` to `OpenAI` and include `-AIApiKey`.
 
 ### <b>Bash</b>
-* Creating new Azure OpenAI Resources
 ```bash
-./deploy-azure.sh -d YOUR_DEPLOYMENT_NAME -s YOUR_SUBSCRIPTION_ID -c YOUR_BACKEND_CLIENT_ID -t YOUR_TENANT_ID -ai AzureOpenAI
+chmod +x ./deploy-azure.sh
+./deploy-azure.sh --subscription {YOUR_SUBSCRIPTION_ID} --deployment-name {YOUR_DEPLOYMENT_NAME} --ai-service {AzureOpenAI or OpenAI} --ai-service-key {YOUR_AI_KEY} --ai-endpoint {YOUR_AZURE_OPENAI_ENDPOINT} --client-id {YOUR_BACKEND_APPLICATION_ID} --frontend-client-id {YOUR_FRONTEND_APPLICATION_ID} --tenant-id {YOUR_TENANT_ID}
 ```
-* Using existing Azure OpenAI Resources
-```bash
-./deploy-azure.sh -d YOUR_DEPLOYMENT_NAME -s YOUR_SUBSCRIPTION_ID -c YOUR_BACKEND_CLIENT_ID -t YOUR_TENANT_ID -ai AzureOpenAI -aiend YOUR_AZURE_OPENAI_ENDPOINT -aikey YOUR_AZURE_OPENAI_API_KEY
-```
-* Using existing OpenAI Resources
-```bash
-./deploy-azure.sh -d YOUR_DEPLOYMENT_NAME -s YOUR_SUBSCRIPTION_ID -o YOUR_OPENAI_API_KEY -c YOUR_BACKEND_CLIENT_ID -t YOUR_TENANT_ID -ai OpenAI
-```
+
+- To use an existing Azure OpenAI resource, set `--ai-service` to `AzureOpenAI` and include `--ai-service-key` and `--ai-endpoint`.
+- To deploy a new Azure OpenAI resource, set `--ai-service` to `AzureOpenAI` and omit `--ai-service-key` and `--ai-endpoint`.
+- To use an an OpenAI account, set `--ai-service` to `OpenAI` and include `--ai-service-key`.
+
 ### Azure Portal Template
 If you choose to use Azure Portal as your deployment method, you will need to review and update the template form to create the resources. Below is a list of items you will need to review and update.
 1. Subscription: decide which Azure subscription you want to use. This will house the resource group for the Semantic Kernel web application.
@@ -127,7 +113,6 @@ If you choose to use Azure Portal as your deployment method, you will need to re
 1. Azure AD Tenant ID: The Azure AD tenant against which to authenticate users. For single tenant applications (recommended), this will match the tenant ID of your backend app registration.
 1. Azure AD Instance: This is the Azure cloud instance to use for authenticating users. The default is https://login.microsoftonline.com/. If you are using a sovereign cloud, you will need to update this value.
 1. CosmosDB: whether to deploy a CosmosDB resource to store chats. Otherwise, volatile memory will be used.
-1. Qdrant: whether to deploy a Qdrant database to store embeddings. Otherwise, volatile memory will be used.
 1. Speech Services: whether to deploy an instance of the Azure Speech service to provide speech-to-text for input.
 
 ## What resources are deployed?
@@ -142,51 +127,17 @@ Below is a list of the key resources created within the resource group when you 
 
 To make sure your web app service is running, go to <!-- markdown-link-check-disable -->https://YOUR_INSTANCE_NAME.azurewebsites.net/healthz<!-- markdown-link-check-enable-->
 
-To get your instance's URL, go to your deployment's resource group (by clicking on the "Go to resource group" button seen at the conclusion of your deployment if you use the "Deploy to Azure" button). Then click on the resource whose name ends with "-skweb".
+To get your instance's URL, go to your deployment's resource group (by clicking on the "Go to resource group" button seen at the conclusion of your deployment if you use the "Deploy to Azure" button). Then click on the resource whose name ends with "-webapi".
 
 This will bring you to the Overview page on your web service. Your instance's URL is the value that appears next to the "Default domain" field.
 
-## Changing your configuration, monitoring your deployment and troubleshooting
+## Changing your configuration and monitoring your deployment
 
 After your deployment is complete, you can change your configuration in the Azure Portal by clicking on the "Configuration" item in the "Settings" section of the left pane found in the Semantic Kernel web app service page.
 
 Scrolling down in that same pane to the "Monitoring" section gives you access to a multitude of ways to monitor your deployment.
 
 In addition to this, the "Diagnose and solve problems" item near the top of the pane can yield crucial insight into some problems your deployment may be experiencing.
-
-If the service itself is functioning properly but you keep getting errors (perhaps reported as 400 HTTP errors) when making calls to the Semantic Kernel, 
-check that you have correctly entered the values for the following settings:
-- AIService:AzureOpenAI
-- AIService:Endpoint
-- AIService:Models:Completion
-- AIService:Models:Embedding
-- AIService:Models:Planner
-
-AIService:Endpoint is ignored for OpenAI instances from [openai.com](https://openai.com) but MUST be properly populated when using Azure OpenAI instances.
-
-
-## Deploy the Chat Copilot frontend
-
-The Chat Copilot frontend is a React web application that provides a user interface for interacting with the Semantic Kernel via chat. You can deploy this application as an Azure Static Web App using the commands below.
-
-### Install Azure's Static Web Apps CLI
-
-```bash
-npm install -g @azure/static-web-apps-cli
-```
-
-### PowerShell
-
-```powershell
-
-./deploy-webapp.ps1 -Subscription {YOUR_SUBSCRIPTION_ID} -ResourceGroupName rg-{YOUR_DEPLOYMENT_NAME} -DeploymentName {YOUR_DEPLOYMENT_NAME} -FrontendClientId {YOUR_FRONTEND_CLIENT_ID}
-```
-
-### Bash
-
-```bash
-./deploy-webapp.sh --subscription {YOUR_SUBSCRIPTION_ID} --resource-group rg-{YOUR_DEPLOYMENT_NAME} --deployment-name {YOUR_DEPLOYMENT_NAME} --client-id {YOUR_FRONTEND_CLIENT_ID}
-```
 
 ## How to clean up resources
 When you want to clean up the resources from this deployment, use the Azure portal or run the following [Azure CLI](/cli/azure/) command:
@@ -200,7 +151,7 @@ Advance your Semantic Kernel app by deploying to an AzureML Online Endpoint whic
 
 ### Prerequisites
 
-* An Azure Machine Learning Workspace - [Create a new one](/azure/machine-learning/concept-workspace?view=azureml-api-2#create-a-workspace)
+* An Azure Machine Learning Workspace - [Create a new one](/azure/machine-learning/concept-workspace#create-a-workspace)
 * Get an OpenAI API Key or create an [Azure OpenAI Deployment](/azure/ai-services/openai/how-to/create-resource?pivots=web-portal)
 
 ### Follow the sample notebook

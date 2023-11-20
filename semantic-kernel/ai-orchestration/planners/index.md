@@ -264,7 +264,7 @@ print(result)
 After running this code, you should get the correct answer of `2615.1829` back, but how?
 
 ## How does planner work?
-Behind the scenes, planner uses an LLM prompt to generate a plan. You can see the prompt that is used by `SequentialPlanner` by navigating to the [_skprompt.txt_ file](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Extensions/Planning.SequentialPlanner/skprompt.txt) in the Semantic Kernel repository. You can also view the prompt used by the [basic planner](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/planning/basic_planner.py) in Python.
+Behind the scenes, planner uses an LLM prompt to generate a plan. You can see the prompt that is used by `SequentialPlanner` by navigating to the [_skprompt.txt_ file](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Planners/Planners.Core/Sequential/skprompt.txt) in the Semantic Kernel repository. You can also view the prompt used by the [basic planner](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/planning/basic_planner.py) in Python.
 
 ### Understanding the prompt powering planner
 
@@ -432,7 +432,7 @@ print(plan.generated_plan)
 Notice how in the example, planner can string together functions and pass parameters to them. This effectively allows us to deprecate the `OrchestratorPlugin` we created previously because we no longer need the `RouteRequest` native function or the `GetNumbers` semantic function. Planner does both.
 
 ## When to use planner?
-As demonstrated by this example, planner is extremely powerful because it can automatically recombine functions you have already defined, and as AI models improve and as the community developers better planners, you will be able to rely on them to achieve increasingly more sophisticated user scenarios.
+As demonstrated by this example, planner is extremely powerful because it can automatically recombine functions you have already defined, and as AI models improve and as the community develops better planners, you will be able to rely on them to achieve increasingly more sophisticated user scenarios.
 
 There are, however, considerations you should make before using a planner. The following table describes the top considerations you should make along with mitigations you can take to reduce their impact.
 

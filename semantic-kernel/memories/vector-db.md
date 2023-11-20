@@ -45,6 +45,7 @@ Today, we have several connectors to vector databases that you can use to store 
 
 | Service                  | C# | Python |
 |--------------------------|:----:|:------:|
+| Azure Cosmos DB for MongoDB vCore | | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb) |
 | Azure Cognitive Search   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCognitiveSearch) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cognitive_search) |
 | Azure PostgreSQL Server  | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Postgres) |
 | Chroma                   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Chroma) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/chroma) |
