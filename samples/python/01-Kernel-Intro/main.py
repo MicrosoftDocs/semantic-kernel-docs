@@ -21,7 +21,6 @@ async def main():
 
     # Configure AI service used by the kernel. Load settings from the .env file.
     if llm_service == "AzureOpenAI":
-        kernel = sk.Kernel(log=sk.NullLogger())
         kernel.add_chat_service(
             "chat_completion",
             AzureChatCompletion(
@@ -31,7 +30,6 @@ async def main():
             ),
         )
     else:
-        kernel = sk.Kernel(log=sk.NullLogger())
         kernel.add_chat_service(
             "chat_completion",
             OpenAIChatCompletion(
