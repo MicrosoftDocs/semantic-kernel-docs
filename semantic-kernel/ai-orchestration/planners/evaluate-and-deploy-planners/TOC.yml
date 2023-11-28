@@ -6,3 +6,5 @@
   href: running-batches-with-prompt-flow.md
 - name: Evaluating plugins and planners
   href: evaluating-plugins-and-planners-with-prompt-flow.md
+- name: Deploy Semantic Kernel with Prompt flow
+  href: deploying-prompt-flows-with-semantic-kernel.md
