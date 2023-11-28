@@ -225,3 +225,8 @@ You can also use the Prompt flow VS Code extension to compare and contrast multi
 
     :::image type="content" source="../../../media/prompt-flow-batch-run-history-compare-results.png" alt-text="Comparing two batch runs in the Prompt flow VS Code extension":::
 
+## Next steps
+Now that you've learned how to evaluate your plugins and planners, you can start to iterate on your descriptions and hints to improve your results. You can also learn how to [deploy your Prompt flow](./deploying-prompt-flows-with-semantic-kernel.md) to an endpoint.
+
+> [!div class="nextstepaction"]
+> [Deploy your Prompt flow](./deploying-prompt-flows-with-semantic-kernel.md)
