@@ -24,7 +24,7 @@ public class SemanticFunctionGenerator : ISourceGenerator
     {
         var rootNamespace = context.GetRootNamespace();
 
-        if (string.IsNullOrEmpty(rootNamespace))
+        if (String.IsNullOrEmpty(rootNamespace))
         {
             rootNamespace = DefaultFunctionNamespace;
         }
@@ -63,8 +63,8 @@ public class SemanticFunctionGenerator : ISourceGenerator
         foreach (var functionGroup in folderGroup)
         {
             // Get the "skprompt.txt" and "config.json" files for this function
-            AdditionalText? configFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionConfigFilename, StringComparison.Ordinal));
-            AdditionalText? promptFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionPromptFilename, StringComparison.Ordinal));
+            AdditionalText? configFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionConfigFilename, StringComparison.InvariantCultureIgnoreCase));
+            AdditionalText? promptFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionPromptFilename, StringComparison.InvariantCultureIgnoreCase));
             if (promptFile != default && configFile != default)
             {
                 functionsCode.AppendLine(GenerateFunctionSource(promptFile, configFile) ?? string.Empty);
@@ -80,9 +80,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Extensions;
-
-#pragma warning disable VSTHRD200
+using AIPlugins.AzureFunctions.Extensions;
 
 namespace {rootNamespace};
 
@@ -121,10 +119,10 @@ public class {folderName}
         string parameterAttributes = GenerateParameterAttributesSource(config.Input?.Parameters);
 
         return $@"
-    [OpenApiOperation(operationId: ""{functionName}"", tags: new[] {{ ""ExecuteFunction"" }}{descriptionProperty})]{parameterAttributes}
+    [OpenApiOperation(operationId: ""{functionName}"", tags: new[] {{ ""{functionName}"" }}{descriptionProperty})]{parameterAttributes}
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: ""text/plain"", bodyType: typeof(string), Description = ""The OK response"")]
     [Function(""{functionName}"")]
-    public Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, ""post"")] HttpRequestData req)
+    public Task<HttpResponseData> {functionName}([HttpTrigger(AuthorizationLevel.Anonymous, ""post"")] HttpRequestData req)
     {{
         this._logger.LogInformation(""HTTP trigger processed a request for function {functionName}."");
         return this._pluginRunner.RunAIPluginOperationAsync(req, ""{functionName}"");
@@ -141,7 +139,7 @@ public class {folderName}
         {
             foreach (var parameter in parameters)
             {
-                if (parameter.Name.Equals("input", StringComparison.Ordinal))
+                if (parameter.Name.Equals("input", StringComparison.InvariantCultureIgnoreCase))
                 {
                     // "input" is a special parameter that is handled differently. It must be added as
                     // the body attribute.

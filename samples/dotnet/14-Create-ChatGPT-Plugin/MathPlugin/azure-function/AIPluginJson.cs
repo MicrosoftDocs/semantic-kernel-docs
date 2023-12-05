@@ -1,22 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.Net;
+﻿using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Models;
-
-#pragma warning disable CA1822
 
 public class AIPluginJson
 {
     [Function("GetAIPluginJson")]
     public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = ".well-known/ai-plugin.json")] HttpRequestData req)
     {
-        if (req is null)
-        {
-            throw new System.ArgumentNullException(nameof(req));
-        }
-
         var currentDomain = $"{req.Url.Scheme}://{req.Url.Host}:{req.Url.Port}";
 
         HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
