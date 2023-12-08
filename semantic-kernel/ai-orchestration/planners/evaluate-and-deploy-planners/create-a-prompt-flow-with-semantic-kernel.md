@@ -141,7 +141,7 @@ Now that we have our nodes wired up, we can add the code to call the math plugin
 
 When creating a node for Prompt flow, it's important to use the `@tool` decorator to indicate that the function is a tool that can be called by Prompt flow. 
 
-:::code language="python" source="~/../samples/python/12-Evaluate-with-Prompt-Flow/perform_math/math_planner.py" range="1-6,9-17,19-38" highlight="9":::
+:::code language="python" source="~/../samples/python/12-Evaluate-with-Prompt-Flow/perform_math/math_planner.py"  highlight="16":::
 
 You'll also need to copy and paste your _plugins_ folder from the previous tutorial into the flow folder so that the math plugin is available to the flow. Below is the updated directory structure for the flow.
 
