@@ -79,7 +79,7 @@ Today, not all features are available in all languages. The following tables sho
 
 | Memory Connectors        |  C#  | Python | Java | Notes |
 |--------------------------|:----:|:------:|:----:|-------|
-| Azure Cognitive Search   | ✅ | ✅ | ✅ | |
+| Azure AI Search   | ✅ | ✅ | ✅ | |
 | Chroma                   | ✅ | ✅ | ❌ | |
 | DuckDB                   | ✅ | ❌ | ❌ | |
 | Milvus                   | 🔄 | ✅ | ❌ | |

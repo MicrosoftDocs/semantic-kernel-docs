@@ -13,7 +13,6 @@ from semantic_kernel.connectors.ai.open_ai import (
     AzureTextCompletion,
 )
 
-
 @tool
 def my_python_tool(
     input: str,
