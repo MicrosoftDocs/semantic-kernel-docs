@@ -7,7 +7,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using Models;
 
-namespace Extensions;
+namespace AIPlugins.AzureFunctions.Extensions;
 
 public class AIPluginRunner : IAIPluginRunner
 {
@@ -27,37 +27,28 @@ public class AIPluginRunner : IAIPluginRunner
     /// <param name="operationId"></param>
     public async Task<HttpResponseData> RunAIPluginOperationAsync(HttpRequestData req, string operationId)
     {
-        try
+        ContextVariables contextVariables = LoadContextVariablesFromRequest(req);
+
+        var appSettings = AppSettings.LoadSettings();
+        var pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(),"Prompts");
+        var func = this._kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, pluginsDirectory);
+
+        var result = await this._kernel.RunAsync(contextVariables, func[operationId]);
+        if (result.FunctionResults.Last() == null)
         {
-            ContextVariables contextVariables = LoadContextVariablesFromRequest(req);
-
-            var appSettings = AppSettings.LoadSettings();
-
-            if (!this._kernel.Functions.TryGetFunction(
-                pluginName: appSettings.AIPlugin.NameForModel,
-                functionName: operationId,
-                out ISKFunction? function))
+           HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            string? message = result?.FunctionResults.Last()?.ToString();
+        if (message != null)
             {
-                HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.NotFound);
-                await errorResponse.WriteStringAsync($"Function {operationId} not found").ConfigureAwait(false);
-                return errorResponse;
+                await errorResponse.WriteStringAsync(message);  
             }
-
-            var result = await this._kernel.RunAsync(contextVariables, function).ConfigureAwait(false);
-
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain;charset=utf-8");
-            await response.WriteStringAsync(result.GetValue<string>()!).ConfigureAwait(false);
-            return response;
-        }
-#pragma warning disable CA1031
-        catch (System.Exception ex)
-#pragma warning restore CA1031
-        {
-            HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-            await errorResponse.WriteStringAsync(ex.Message).ConfigureAwait(false);
             return errorResponse;
         }
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        response.Headers.Add("Content-Type", "text/plain;charset=utf-8");
+        await response.WriteStringAsync(result.GetValue<string>());
+        return response;
     }
 
     /// <summary>
@@ -66,12 +57,7 @@ public class AIPluginRunner : IAIPluginRunner
     /// <param name="req"></param>
     protected static ContextVariables LoadContextVariablesFromRequest(HttpRequestData req)
     {
-        if (req is null)
-        {
-            throw new System.ArgumentNullException(nameof(req));
-        }
-
-        ContextVariables contextVariables = new();
+        ContextVariables contextVariables = new ContextVariables();
         foreach (string? key in req.Query.AllKeys)
         {
             if (!string.IsNullOrEmpty(key))

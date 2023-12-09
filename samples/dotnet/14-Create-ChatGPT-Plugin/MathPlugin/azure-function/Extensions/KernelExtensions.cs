@@ -1,18 +1,17 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System.Diagnostics.Contracts;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.TemplateEngine;
+using Microsoft.SemanticKernel.TemplateEngine.Basic;
 
-namespace Extensions;
+
+namespace AIPlugins.AzureFunctions.Extensions;
 
 public static class KernelExtensions
 {
     public static IDictionary<string, ISKFunction> ImportPromptsFromDirectory(
         this IKernel kernel, string pluginName, string promptDirectory)
     {
-        Contract.Requires(kernel != null);
-
         const string CONFIG_FILE = "config.json";
         const string PROMPT_FILE = "skprompt.txt";
 
@@ -36,8 +35,10 @@ public static class KernelExtensions
             }
 
             // Load prompt template
-            var template = new PromptTemplate(File.ReadAllText(promptPath), config, kernel!.PromptTemplateEngine);
+            var template = new BasicPromptTemplate(File.ReadAllText(promptPath), config);
 
+            // Prepare lambda wrapping AI logic
+            kernel.LoggerFactory.CreateLogger($"Registering function {pluginName}.{functionName} loaded from {dir}");
             plugin[functionName] = kernel.RegisterSemanticFunction(pluginName, functionName, config, template);
         }
 
