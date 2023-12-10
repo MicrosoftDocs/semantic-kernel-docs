@@ -20,9 +20,14 @@ If you want to see the code demonstrated in this article in a complete solution,
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/01-Kernel-Intro) |
 
 ## The kernel is at center of _everything_
-Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is at the center of everything in Semantic Kernel. This means that if run any prompt or code in Semantic Kernel, it will always go through a kernel.
+Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is used by nearly every component within the Semantic Kernel SDK. This means that if run any prompt or code in Semantic Kernel, it will always go through a kernel.
 
-This is extremely powerful, because it means you as a developer have a single place where you can configure, and most importantly monitor, your AI application. Take for example, when you invoke a prompt from the kernel. When you do so, the kernel will 1) select the best AI service, 2) build your prompt template, 3) send the prompt to the AI service, 4) receive the response, and 5) return the response to you.
+This is extremely powerful, because it means you as a developer have a single place where you can configure, and most importantly monitor, your AI application. Take for example, when you invoke a prompt from the kernel. When you do so, the kernel will...
+1. Select the best AI service to run the prompt.
+2. Build the prompt using the provided prompt template.
+3. Send the prompt to the AI service.
+4. Receive and parse the response.
+5. Before finally returning the response to your application.
 
 ![The kernel is at the center of everything in Semantic Kernel](../../media/the-kernel-is-at-the-center-of-everything.png)
 
@@ -69,6 +74,15 @@ Run the `GetCurrentUtcTime` function from `TimePlugin`:
 
 Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
 :::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="39-42":::
+
+This should return a response similar to the following (except specific to your current time):
+```
+There once was a sun in the sky
+That shone so bright, it caught the eye
+But on December tenth
+It decided to vent
+And took a break, said "Bye bye!"
+```
 
 
 # [Python](#tab/python)
