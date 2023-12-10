@@ -68,7 +68,7 @@ var host = new HostBuilder()
                     .WithLoggerFactory(providers.GetRequiredService<ILoggerFactory>())
                     .Build();
 
-                // Load your semantic functions...
+                // Load your prompts...
                 kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, semanticFunctionsFolder);
 
                 return kernel;

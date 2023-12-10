@@ -268,7 +268,7 @@ The output will read similar to:
 
 ## Invoking a semantic function inline from C#
 
-It's possible to bypass the need to package your semantic functions explicitly in `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. Let's take `summarizeBlurbFlex`:
+It's possible to bypass the need to package your prompts explicitly in `skprompt.txt` files by choosing to create them on-the-fly as inline code at runtime. Let's take `summarizeBlurbFlex`:
 
 ```summarizeBlurbFlex
 Summarize the following text in two sentences or less. 

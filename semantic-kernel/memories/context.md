@@ -36,7 +36,7 @@ When the default chat application is run, the conversation history is included i
 
 ## Context with the Semantic Kernel SDK
 
-The Semantic Kernel (SK) chat sample app above uses *context variables* and *semantic functions* to include context in each prompt. This section will explain the code so you can implement it in your own app. Ultimately, the SK function you will call to send off your completed prompt (with context) is: 
+The Semantic Kernel (SK) chat sample app above uses *context variables* and *prompts* to include context in each prompt. This section will explain the code so you can implement it in your own app. Ultimately, the SK function you will call to send off your completed prompt (with context) is: 
 
 # [C#](#tab/Csharp)
 

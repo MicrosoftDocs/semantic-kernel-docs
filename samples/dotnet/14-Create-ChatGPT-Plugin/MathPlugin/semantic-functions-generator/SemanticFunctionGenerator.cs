@@ -54,7 +54,7 @@ public class SemanticFunctionGenerator : ISourceGenerator
         }
     }
 
-    // Generate the source code for a folder of semantic functions
+    // Generate the source code for a folder of prompts
     private static string GenerateClassSource(string rootNamespace, string folderName, IGrouping<string, IGrouping<string, AdditionalText>> folderGroup)
     {
         // Use a StringBuilder to build the class source

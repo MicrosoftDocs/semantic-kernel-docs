@@ -21,15 +21,15 @@ If you want to see the final solution to this article, you can check out the fol
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/09-Calling-Nested-Functions-in-Native-Functions)  |  [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/10-Chaining-Functions) |
 
 
-## Passing data to semantic functions with `input`
+## Passing data to prompts with `input`
 Semantic Kernel was designed in the spirit of UNIX's piping and filtering capabilities. To replicate this behavior, we've added a special variable called `input` into the kernel's context object that allows you to stream output from one semantic function to the next.
 
 ![Passing data with $input in Semantic Kernel](../../media/semantic-kernel-chains.png)
 
-For example we can make three inline semantic functions and string their outputs into the next by adding the `input` variable into each prompt.
+For example we can make three inline prompts and string their outputs into the next by adding the `input` variable into each prompt.
 
 # [C#](#tab/Csharp)
-Create and register the semantic functions.
+Create and register the prompts.
 
 ```csharp
 string myJokePrompt = """
@@ -62,7 +62,7 @@ Console.WriteLine(context);
 
 # [Python](#tab/python)
 
-Create and register the semantic functions.
+Create and register the prompts.
 
 ```python
 my_joke_prompt = """Tell a short joke about {{$INPUT}}."""
@@ -221,7 +221,7 @@ The room would be approximately 212.2925 square feet.
 ```
 
 ## Take the next step
-You are now becoming familiar with orchestrating both semantic and non-semantic functions. Up until now, however, you've had to manually orchestrate the functions. In the next section, you'll learn how to use planner to orchestrate functions automatically.
+You are now becoming familiar with orchestrating both semantic and non-prompts. Up until now, however, you've had to manually orchestrate the functions. In the next section, you'll learn how to use planner to orchestrate functions automatically.
 
 > [!div class="nextstepaction"]
 > [Automatically create chains with planners](../planners/index.md)

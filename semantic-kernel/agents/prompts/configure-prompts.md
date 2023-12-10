@@ -17,7 +17,7 @@ When creating a prompt, there are many parameters that can be set to control how
 
 Semantic Kernel allows a developer to have complete control over these parameters by using a _config.json_ file placed in the same directory as the `skprompt.txt` file.
 
-For example, if you were to create a plugin called `TestPlugin` with two semantic functions called `SloganMaker` and `OtherFunction`, the file structure would look like this:
+For example, if you were to create a plugin called `TestPlugin` with two prompts called `SloganMaker` and `OtherFunction`, the file structure would look like this:
 
 ```File-Structure-For-Semantic-Plugins
 TestPlugin

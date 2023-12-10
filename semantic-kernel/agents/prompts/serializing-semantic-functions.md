@@ -1,6 +1,6 @@
 ---
-title: Save your semantic functions
-description: Learn how to serialize your semantic functions in Semantic Kernel.
+title: Save your prompts
+description: Learn how to serialize your prompts in Semantic Kernel.
 author: matthewbolanos
 ms.topic: tutorial
 ms.author: mabolan
@@ -8,10 +8,10 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-# Serializing semantic functions
+# Serializing prompts
 
 
-In previous articles, we demonstrated [how to load a semantic function inline](./inline-semantic-functions.md). However, in most cases, you'll want to create your semantic functions in a separate file so you can easily import them into Semantic Kernel across multiple projects.
+In previous articles, we demonstrated [how to load a semantic function inline](./inline-semantic-functions.md). However, in most cases, you'll want to create your prompts in a separate file so you can easily import them into Semantic Kernel across multiple projects.
 
 In this article, we'll demonstrate how to create the files necessary for a semantic function so you can easily import them into Semantic Kernel. As an example in this article, we will build on the [previous tutorial](./inline-semantic-functions.md) by showing how to create a semantic function that gathers the intent of the user. This semantic function will be called `GetIntent` and will be part of a plugin called `OrchestratorPlugin`.
 
@@ -24,9 +24,9 @@ If you want to see the final solution, you can check out the following samples i
 
 
 > [!TIP]
-> We recommend using the [Semantic Kernel Tools](../../../vs-code-tools/index.md) extension for Visual Studio Code to help you create semantic functions. This extension provides an easy way to create and test functions directly from within VS Code.
+> We recommend using the [Semantic Kernel Tools](../../../vs-code-tools/index.md) extension for Visual Studio Code to help you create prompts. This extension provides an easy way to create and test functions directly from within VS Code.
 
-## Creating a home for your semantic functions
+## Creating a home for your prompts
 Before creating the files for the `GetIntent` function, you must first define a folder that will hold all of your plugins. This will make it easier to import them into Semantic Kernel later. We recommend putting this folder at the root of your project and calling it _plugins_.
 
 Within your _plugins_ folder, you can then create a folder called _OrchestratorPlugin_ for your plugin and a nested folder called _GetIntent_ for your function.
@@ -42,7 +42,7 @@ Plugins
 To see a more complete example of a plugins directory, check out the [Semantic Kernel sample plugins](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins) folder in the GitHub repository.
 
 ## Creating the files for your semantic function
-Once inside of a semantic functions folder, you'll need to create two new files: _skprompt.txt_ and _config.json_. The _skprompt.txt_ file contains the prompt that will be sent to the AI service and the _config.json_ file contains the configuration along with semantic descriptions that can be used by planners.
+Once inside of a prompts folder, you'll need to create two new files: _skprompt.txt_ and _config.json_. The _skprompt.txt_ file contains the prompt that will be sent to the AI service and the _config.json_ file contains the configuration along with semantic descriptions that can be used by planners.
 
 Go ahead and create these two files in the _GetIntent_ folder.
 

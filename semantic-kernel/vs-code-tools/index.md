@@ -9,15 +9,15 @@ ms.service: semantic-kernel
 ---
 # Visual Studio Code Semantic Kernel Extension
 
-The Semantic Kernel Tools help developers to write semantic functions for [Semantic Kernel](https://github.com/microsoft/semantic-kernel).
+The Semantic Kernel Tools help developers to write prompts for [Semantic Kernel](https://github.com/microsoft/semantic-kernel).
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 
 ## These tools simplify Semantic Kernel development
-With the Semantic Kernel Tools, you can easily create new semantic functions and test them without needing to write any code. Behind the scenes, the tools use the Semantic Kernel SDK so you can easily transition from using the tools to integrating your semantic functions into your own code.
+With the Semantic Kernel Tools, you can easily create new prompts and test them without needing to write any code. Behind the scenes, the tools use the Semantic Kernel SDK so you can easily transition from using the tools to integrating your prompts into your own code.
 
-In the following image you can see how a user can easily view all of their semantic functions, edit them, and run them from within Visual Studio Code using any of the supported AI endpoints.
+In the following image you can see how a user can easily view all of their prompts, edit them, and run them from within Visual Studio Code using any of the supported AI endpoints.
 
 ![Semantic Kernel Tools](../media/vs-code-extension.png)
 

@@ -1,6 +1,6 @@
 ---
 title: Add inputs and outputs to prompts
-description: Learn how to templatize semantic functions in Semantic Kernel.
+description: Learn how to templatize prompts in Semantic Kernel.
 author: matthewbolanos
 ms.topic: tutorial
 ms.author: mabolan
@@ -8,7 +8,7 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-# Templatizing your semantic functions
+# Templatizing your prompts
 
 
 In the [previous article](./serializing-semantic-functions.md) we created a semantic function that could be used to get the intent of the user. This function, however, is not very reusable. For example, if we wanted to run specific code based on the user intent, it would be difficult to use the output of the `GetIntent` function to choose which code to actually run.

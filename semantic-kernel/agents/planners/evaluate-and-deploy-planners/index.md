@@ -19,7 +19,7 @@ In the [overview](./index.md) and [planner](../index.md) articles, we demonstrat
 ## What is Prompt flow?
 [Prompt flow](/azure/machine-learning/prompt-flow/overview-what-is-prompt-flow) is a development tool designed to streamline the creation of LLM applications. It does so by providing tooling that simplifies the process of prototyping, experimenting, iterating, and deploying LLM applications.
 
-Most notably, Prompt flow allows you to author chains of native and semantic functions and visualize them as a graph. This allows you and the rest of your team to easily create and test AI powered capabilities in both Azure Machine Learning Studio and locally with VS Code.
+Most notably, Prompt flow allows you to author chains of native and prompts and visualize them as a graph. This allows you and the rest of your team to easily create and test AI powered capabilities in both Azure Machine Learning Studio and locally with VS Code.
 
 :::image type="content" source="../../../media/prompt-flow-in-vs-code.png" alt-text="A graph of a Prompt flow":::
 

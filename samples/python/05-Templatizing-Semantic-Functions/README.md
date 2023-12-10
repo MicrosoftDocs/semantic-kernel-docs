@@ -1,6 +1,6 @@
-# Creating semantic functions
+# Creating prompts
 
-This console application demonstrates the final solution to the [templatizing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/templatizing-semantic-functions) doc article.
+This console application demonstrates the final solution to the [templatizing prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/templatizing-semantic-functions) doc article.
 
 ## Prerequisites
 

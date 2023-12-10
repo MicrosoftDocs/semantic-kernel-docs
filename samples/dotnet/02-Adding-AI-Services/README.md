@@ -1,4 +1,4 @@
-# Creating semantic functions
+# Creating prompts
 
 The `02-Adding-AI-Services` console application shows the final solution to the [adding AI services](https://learn.microsoft.com/en-us/semantic-kernel/agents/kernel/adding-services) doc article.
 

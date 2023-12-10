@@ -15,7 +15,7 @@ async def main():
 
     plugins_directory = "./plugins"
 
-    # Import the semantic functions
+    # Import the prompts
     kernel.import_semantic_skill_from_directory(plugins_directory, "OrchestratorPlugin")
     kernel.import_skill(
         ConversationSummarySkill(kernel=kernel), skill_name="ConversationSummarySkill"

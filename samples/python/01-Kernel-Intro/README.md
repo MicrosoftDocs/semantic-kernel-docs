@@ -1,4 +1,4 @@
-# Creating semantic functions
+# Creating prompts
 
 This console application demonstrates the final solution to the [Understanding the kernel](https://learn.microsoft.com/en-us/semantic-kernel/agents/kernel) doc article.
 

@@ -25,7 +25,7 @@ IKernel kernel = new KernelBuilder()
 
 var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
 
-// Import the semantic functions
+// Import the prompts
 kernel.ImportSemanticFunctionsFromDirectory(pluginsDirectory, "OrchestratorPlugin");
 
 // Import the native functions

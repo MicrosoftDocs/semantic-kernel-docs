@@ -13,7 +13,7 @@ ms.service: semantic-kernel
 
 
 Plugins are the fundamental building blocks of Semantic Kernel and can interoperate with plugins in ChatGPT, Bing, and Microsoft 365.
-With plugins, you can encapsulate capabilities into a single unit of functionality that can then be run by the kernel. Plugins can consist of both native code and requests to AI services via semantic functions. 
+With plugins, you can encapsulate capabilities into a single unit of functionality that can then be run by the kernel. Plugins can consist of both native code and requests to AI services via prompts. 
 
 ## What is a plugin?
 To drive alignment across the industry, we've adopted the [OpenAI plugin specification](https://platform.openai.com/docs/plugins/getting-started/) as the standard for plugins. This will help create an ecosystem of interoperable plugins that can be used across all of the major AI apps and services like ChatGPT, Bing, and Microsoft 365.
@@ -46,39 +46,7 @@ _Just_ providing functions, however, is not enough to make a plugin. To power au
 :::row-end:::
 
 ## Adding functions to plugins
-Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: semantic functions and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating semantic functions](./semantic-functions/inline-semantic-functions.md) and [Creating native functions](./native-functions/using-the-SKFunction-decorator.md) sections.
-
-:::row:::
-   :::column span="2":::
-      ### Semantic functions
-
-      If plugins represent the "[body](../../overview/index.md#semantic-kernel-makes-ai-development-extensible)" of your AI app, then semantic functions would represent the ears and mouth of your AI. They allow your AI app to listen to users asks and respond back with a natural language response.
-      
-      To connect the ears and the mouth to the "brain," Semantic Kernel uses connectors. This allows you to easily swap out the AI services without rewriting code.
-   :::column-end:::
-   :::column span="3":::
-        ![Semantic functions are the ears and mouth of your AI apps](../../media/semantic-function-explainer.png)
-   :::column-end:::
-:::row-end:::
-
-Below is an sample called `Summarize` that can be found in the [samples folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/SummarizePlugin/Summarize) in the GitHub repository.
-
-:::code language="txt" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/skprompt.txt":::
-
-To semantically describe this function (as well as define the configuration for the AI service), you must also create a _config.json_ file in the same folder as the prompt. This file describes the function's input parameters and description. Below is the _config.json_ file for the `Summarize` function.
-
-
-:::code language="json" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/config.json":::
-
-
-Both `description` fields are used by [planner](../planners/index.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.
-
-You can learn more about creating semantic functions in the [Creating semantic functions](./semantic-functions/inline-semantic-functions.md) section. In this section you'll learn the best practices for the following:
-> [!div class="checklist"]
-> * How to [create semantic functions](./semantic-functions/inline-semantic-functions.md)
-> * How to [create files](./semantic-functions/serializing-semantic-functions.md) for your semantic functions
-> * Adding input parameters with [prompt templates](./semantic-functions/templatizing-semantic-functions.md)
-> * Calling [nested functions](./semantic-functions/calling-nested-functions.md) in semantic functions
+Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: prompts and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating prompts](./semantic-functions/inline-semantic-functions.md) and [Creating native functions](./native-functions/using-the-SKFunction-decorator.md) sections.
 
 ### Native functions
 
@@ -87,7 +55,7 @@ You can learn more about creating semantic functions in the [Creating semantic f
       With native functions, you can have the kernel call C# or Python code directly so you can manipulate data or perform other operations. In this way, native functions are like the hands of your AI app. They can be used to save data, retrieve data, and perform any other operation that you can do in code that is ill-suited for LLMs (e.g., performing calculations).
    :::column-end:::
    :::column span="3":::
-        ![Semantic functions are the hands of your app](../../media/native-function-explainer.png)
+        ![Prompts are the hands of your app](../../media/native-function-explainer.png)
    :::column-end:::
 :::row-end:::
 
@@ -141,6 +109,38 @@ You can learn more about creating native functions in the [Creating native funct
 > * How to [create simple native functions](./native-functions/using-the-SKFunction-decorator.md) with the `SKFunction` decorator
 > * Using [multiple input parameters](./native-functions/multiple-parameters.md) with native functions
 > * Calling [nested functions](./native-functions/calling-nested-functions.md) from within native functions
+
+:::row:::
+   :::column span="2":::
+      ### Prompts
+
+      If plugins represent the "[body](../../overview/index.md#semantic-kernel-makes-ai-development-extensible)" of your AI app, then prompts would represent the ears and mouth of your AI. They allow your AI app to listen to users asks and respond back with a natural language response.
+      
+      To connect the ears and the mouth to the "brain," Semantic Kernel uses connectors. This allows you to easily swap out the AI services without rewriting code.
+   :::column-end:::
+   :::column span="3":::
+        ![Prompts are the ears and mouth of your AI apps](../../media/semantic-function-explainer.png)
+   :::column-end:::
+:::row-end:::
+
+Below is an sample called `Summarize` that can be found in the [samples folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/SummarizePlugin/Summarize) in the GitHub repository.
+
+:::code language="txt" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/skprompt.txt":::
+
+To semantically describe this function (as well as define the configuration for the AI service), you must also create a _config.json_ file in the same folder as the prompt. This file describes the function's input parameters and description. Below is the _config.json_ file for the `Summarize` function.
+
+
+:::code language="json" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/config.json":::
+
+
+Both `description` fields are used by [planner](../planners/index.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.
+
+You can learn more about creating prompts in the [Creating prompts](./semantic-functions/inline-semantic-functions.md) section. In this section you'll learn the best practices for the following:
+> [!div class="checklist"]
+> * How to [create prompts](./semantic-functions/inline-semantic-functions.md)
+> * How to [create files](./semantic-functions/serializing-semantic-functions.md) for your prompts
+> * Adding input parameters with [prompt templates](./semantic-functions/templatizing-semantic-functions.md)
+> * Calling [nested functions](./semantic-functions/calling-nested-functions.md) in prompts
 
 ## Take the next step
 Now that you understand the basics of plugins, you can now go deeper into the details of creating semantic and native functions for your plugin.

@@ -137,7 +137,7 @@ Now that you have your starter, it's time to add your native functions to the pl
 5. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
 
 ### Adding a semantic function to the Azure Function project
-Our current plugin only has native functions, but we can also add semantic functions to the plugin to show the full power of the ChatGPT starter. To do this, we'll use the code generator that is included in the starter project.
+Our current plugin only has native functions, but we can also add prompts to the plugin to show the full power of the ChatGPT starter. To do this, we'll use the code generator that is included in the starter project.
 
 First, we need to configure the settings of our _azure-functions_ project so it can call either Azure OpenAI or OpenAI models. To do this, follow these steps:
 1. Open the _appsettings.json_ file.
@@ -153,7 +153,7 @@ Next, we need to provide the key that will be used to call the API. To do this, 
 4. Replace the placeholder value for `apiKey` with your API key from Azure OpenAI or OpenAI.
 
 Finally, we need to add the semantic function to the plugin. In this example, we'll create a semantic function that can make up a number for a missing value in an equation. We'll call this function `GenerateValue`. To do this, follow these steps:
-1. Open the _/Prompts folder. This is where all of your semantic functions will be stored.
+1. Open the _/Prompts folder. This is where all of your prompts will be stored.
 2. Create a new folder called _GenerateValue_.
 3. Create an empty _config.json_ and skprompt.txt file in the _GenerateValue_ folder.
 4. Open the _config.json_ file and paste the following JSON in it:

@@ -1,6 +1,6 @@
 ---
 title: Calling functions within a native function
-description: Leverage native and semantic functions within a Semantic Kernel native function.
+description: Leverage native and prompts within a Semantic Kernel native function.
 author: matthewbolanos
 ms.topic: tutorial
 ms.author: mabolan
@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # Calling functions within a native function
 
 
-In the [previous tutorials](./multiple-parameters.md), we demonstrated how to create functions with one or more input parameters. In this tutorial, we'll demonstrate how to call other functions _within_ a native function. This will allow you to build more complex functions that consist of both native and semantic functions.
+In the [previous tutorials](./multiple-parameters.md), we demonstrated how to create functions with one or more input parameters. In this tutorial, we'll demonstrate how to call other functions _within_ a native function. This will allow you to build more complex functions that consist of both native and prompts.
 
 If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
@@ -21,16 +21,16 @@ If you want to see the final solution to this article, you can check out the fol
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/08-Native-Functions-with-Context) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/09-Calling-Nested-Functions-in-Native-Functions) |
 
 > [!Important]
-> This article uses the `GetIntent` from the [semantic functions](../semantic-functions/calling-nested-functions.md#calling-a-nested-function) section. We recommend using the final solution from the [previous tutorial](./multiple-parameters.md) as a starting point for this tutorial so you can follow along.
+> This article uses the `GetIntent` from the [prompts](../semantic-functions/calling-nested-functions.md#calling-a-nested-function) section. We recommend using the final solution from the [previous tutorial](./multiple-parameters.md) as a starting point for this tutorial so you can follow along.
 
-## Using native and semantic functions together
-Typically, you'll want to use semantic functions to extract data from the user's request and native functions to perform the actual work. [Previously](../semantic-functions/calling-nested-functions.md#calling-a-nested-function), we created a `GetIntent` semantic function that extracts the user's intent from their request. In this tutorial, we'll leverage this semantic function in a new native function called `RouteRequest` that will call the appropriate function based on the user's intent.
+## Using native and prompts together
+Typically, you'll want to use prompts to extract data from the user's request and native functions to perform the actual work. [Previously](../semantic-functions/calling-nested-functions.md#calling-a-nested-function), we created a `GetIntent` semantic function that extracts the user's intent from their request. In this tutorial, we'll leverage this semantic function in a new native function called `RouteRequest` that will call the appropriate function based on the user's intent.
 
 ### Finding a home for the `RouteRequest` function
 Since the `RouteRequest` function helps with orchestration, we can add it to the `OrchestratorPlugin` plugin we created in the [semantic function](../semantic-functions/serializing-semantic-functions.md) section.
 
 # [C#](#tab/Csharp)
- To start, create a new file called _OrchestratorPlugin.cs_ in the same directory as your semantic functions for `OrchestratorPlugin`.
+ To start, create a new file called _OrchestratorPlugin.cs_ in the same directory as your prompts for `OrchestratorPlugin`.
 
 ```directory
 Plugins
@@ -48,7 +48,7 @@ Plugins
 ```
 
 # [Python](#tab/python)
-To start, create a new file called _OrchestratorPlugin.py_ in the same directory as your semantic functions for `OrchestratorPlugin`.
+To start, create a new file called _OrchestratorPlugin.py_ in the same directory as your prompts for `OrchestratorPlugin`.
 
 ```directory
 Plugins
@@ -105,7 +105,7 @@ Notice how we're able to use the readonly `kernel` property of our Orchestrator 
 
 Unfortunately, however, we have a challenge. Despite knowing the user's intent, we don't know which numbers to pass to the `Sqrt` or `Multiply` functions. We'll need to add _another_ semantic function to the orchestrator plugin to extract the necessary numbers from the user's input.
 
-### Using semantic functions to extract data for native functions
+### Using prompts to extract data for native functions
 To pull the numbers from the user's input, we'll create a semantic function called `GetNumbers`. Create a new folder under the _OrchestratorPlugin_ folder named _GetNumbers_. Then create a _skprompt.txt_ and _config.json_ file with the following content.
 
 ```directory

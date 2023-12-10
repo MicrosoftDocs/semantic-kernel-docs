@@ -11,9 +11,9 @@ ms.service: semantic-kernel
 # Run native code with Semantic Kernel
 
 
-In the [how to create semantic functions](../semantic-functions/inline-semantic-functions.md) section, we showed how you could create a semantic function that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
+In the [how to create prompts](../semantic-functions/inline-semantic-functions.md) section, we showed how you could create a semantic function that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
 
-Automating tasks like these are the primary purpose of AI apps. In this section, we'll show how you can create a simple native function that can perform a task LLMs cannot do easily on their own: arithmetic. In a [subsequent tutorial](./calling-nested-functions.md) we'll demonstrate how to combine native functions with semantic functions to correctly answer word problems like `What is the square root of 634?` and `What is 42 plus 1513?`
+Automating tasks like these are the primary purpose of AI apps. In this section, we'll show how you can create a simple native function that can perform a task LLMs cannot do easily on their own: arithmetic. In a [subsequent tutorial](./calling-nested-functions.md) we'll demonstrate how to combine native functions with prompts to correctly answer word problems like `What is the square root of 634?` and `What is 42 plus 1513?`
 
 If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
@@ -48,11 +48,11 @@ To solve this problem, we'll demonstrate how to create native functions that can
 | Math Plugin | Sqrt | Native | Takes the square root of a number |
 | Math Plugin | Multiple | Native | Multiplies two numbers together |
 
-In this article, we'll start with a simple example by demonstrating how to create a `Sqrt` function. In the [Using multiple inputs and outputs](./multiple-parameters.md) article, we'll then show how to create functions that require multiple inputs (like the `Multiply` function). Finally, in the [Calling nested functions](./calling-nested-functions.md) article, we'll show how to create the `RouteRequest` and `GetNumbers` functions which combine native and semantic functions together.
+In this article, we'll start with a simple example by demonstrating how to create a `Sqrt` function. In the [Using multiple inputs and outputs](./multiple-parameters.md) article, we'll then show how to create functions that require multiple inputs (like the `Multiply` function). Finally, in the [Calling nested functions](./calling-nested-functions.md) article, we'll show how to create the `RouteRequest` and `GetNumbers` functions which combine native and prompts together.
 
 ## Finding a home for your native functions
 
-You can place native functions in the same plugin directory as your semantic functions. For example, to create native functions for a plugin called `MyPlugin`, you can create a new file called _MyPlugin.cs_ in the same directory as your semantic functions.
+You can place native functions in the same plugin directory as your prompts. For example, to create native functions for a plugin called `MyPlugin`, you can create a new file called _MyPlugin.cs_ in the same directory as your prompts.
 
 ```directory
 MyPluginsDirectory
@@ -69,7 +69,7 @@ MyPluginsDirectory
 ```
 
 > [!Tip]
-> It's ok if you have a plugin folder with both native and semantic functions. The kernel will load both functions into the same plugin namespace. What's important is that you don't have two functions with the same name within the same plugin namespace. If you do, the last function loaded will take precedence.
+> It's ok if you have a plugin folder with both native and prompts. The kernel will load both functions into the same plugin namespace. What's important is that you don't have two functions with the same name within the same plugin namespace. If you do, the last function loaded will take precedence.
 
 ### Creating the folder for the Math plugin
 
@@ -139,7 +139,7 @@ Notice how we've added a description to the function and each of its parameters 
 
 :::code language="python" source="~/../samples/python/07-Simple-Native-Functions/plugins/MathPlugin/Math.py" range="1-12" highlight="6-10":::
 
-Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with semantic functions. While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
+Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with prompts. While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
 
 Also notice how we've added a description to each function with the `Description` attribute. This description will be used in the future by the [planner](../../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 

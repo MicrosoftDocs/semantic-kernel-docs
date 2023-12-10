@@ -1,6 +1,6 @@
-# Creating semantic functions
+# Creating prompts
 
-The `04-Serializing-Semantic-Functions` console application shows the final solution to the [serializing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/serializing-semantic-functions) doc article.
+The `04-Serializing-Semantic-Functions` console application shows the final solution to the [serializing prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/serializing-semantic-functions) doc article.
 
 ## Prerequisites
 
