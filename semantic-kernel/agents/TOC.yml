@@ -1,4 +1,4 @@
-- name: Understanding agents
+- name: Creating your first agent
   href: index.md
   expanded: true
 - name: Initialize the kernel
