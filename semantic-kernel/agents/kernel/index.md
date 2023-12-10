@@ -24,23 +24,20 @@ Because the kernel has all of the services and plugins necessary to run both nat
 
 This is extremely powerful, because it means you as a developer have a single place where you can configure, and most importantly monitor, your AI application. Take for example, when you invoke a prompt from the kernel. When you do so, the kernel will 1) select the best AI service, 2) build your prompt template, 3) send the prompt to the AI service, 4) receive the response, and 5) return the response to you.
 
-![The kernel is at the center of everything in Semantic Kernel](../media/the-kernel-is-at-the-center-of-everything.png)
+![The kernel is at the center of everything in Semantic Kernel](../../media/the-kernel-is-at-the-center-of-everything.png)
 
 Throughout this entire process, you can create events and middleware that are triggered at each of these steps. This means you can perform actions like logging, provide status updates to users, and most importantly responsible AI. All from a single place.
 
 ## Building a kernel
 Before building a kernel, you should first understand the two types of components that exist within a kernel: services and plugins. Services consist of both AI services and other services that are necessary to run your application (e.g., logging, telemetry, etc.). Plugins, meanwhile, are _any_ code you want AI to call or leverage within a prompt.
 
-### Configuring the kernel
-Depending on your language of choice, you can configure the kernel in different ways. For example, in C#, you can use the `KernelBuilder` class to create a kernel using dependency injection. Whereas with Python, you can iteratively add properties to the `Kernel` object directly.
-
-In the following examples, you can see how to add a chat completion service, logger, and plugin to the kernel.
+In the following examples, you can see how to add a logger, chat completion service, and plugin to the kernel.
 
 # [C#](#tab/Csharp)
 With C#, Semantic Kernel natively supports dependency injection. This means you can add a kernel to your application's dependency injection container and use any of your application's services within the kernel by adding them as a service to the kernel.
 
 Import the necessary packages:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="1-5":::
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="5-8":::
 
 If you are using a Azure OpenAI, you can use the `AddAzureOpenAIChatCompletion` method.
 
@@ -48,7 +45,7 @@ If you are using a Azure OpenAI, you can use the `AddAzureOpenAIChatCompletion` 
 
 If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method.
 
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="49-59" highlight="3":::
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="52-62" highlight="3":::
 
 # [Python](#tab/python)
 If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
@@ -61,17 +58,17 @@ If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
 ---
 
-## Invoking native code and prompts from the kernel
-Semantic Kernel makes it easy to run prompts alongside native code because they are both expressed as `KernelFunction` objects. This means you can invoke them in  exactly same way.
+## Invoking plugins from the kernel
+Semantic Kernel makes it easy to run prompts alongside native code because they are both expressed as `KernelFunction`s. This means you can invoke them in exactly same way.
 
-To run `KernelFunction` objects, Semantic Kernel provides the `InvokeAsync` method. Simply pass in the function you want to run, its arguments, and the kernel will handle the rest.
+To run `KernelFunction`s, Semantic Kernel provides the `InvokeAsync` method. Simply pass in the function you want to run, its arguments, and the kernel will handle the rest.
 
 # [C#](#tab/Csharp)
 Run the `GetCurrentUtcTime` function from `TimePlugin`:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="35":::
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="35-36":::
 
 Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="38":::
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="39-42":::
 
 
 # [Python](#tab/python)

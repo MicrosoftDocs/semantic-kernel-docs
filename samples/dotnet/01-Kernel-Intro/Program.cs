@@ -33,9 +33,12 @@ if (LlmService == "AzureOpenAI")
 
     // Get the current time
     var currentTime = await kernel.InvokeAsync("TimePlugin", "GetCurrentUtcTime");
+    Console.WriteLine(currentTime);
 
     // Write a poem with the WriterPlugin.ShortPoem function using the current time as input
-    var poemResult = await kernel.InvokeAsync("WriterPlugin", "ShortPoem", new() { { "input", currentTime } });
+    var poemResult = await kernel.InvokeAsync("WriterPlugin", "ShortPoem", new() {
+        { "input", currentTime }
+    });
     Console.WriteLine(poemResult);
 }
 else
@@ -60,9 +63,12 @@ else
 
     // Get the current time
     var currentTime = await kernel.InvokeAsync("TimePlugin", "GetCurrentUtcTime");
+    Console.WriteLine(currentTime);
 
     // Write a poem with the WriterPlugin.ShortPoem function using the current time as input
-    var poemResult = await kernel.InvokeAsync("WriterPlugin", "ShortPoem", new() { { "input", currentTime } });
-    Console.WriteLine(poemResult);
+    var poem = await kernel.InvokeAsync("WriterPlugin", "ShortPoem", new() {
+        { "input", currentTime }
+    });
+    Console.WriteLine(poem);
 }
 
