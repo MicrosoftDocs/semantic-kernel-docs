@@ -87,7 +87,7 @@ public class AuthorEmailPlanner
             { "recipients", recipients }
         });
 
-        // Return the result
+        // Return the plan back to the agent
         return result.ToString();
     }
 }
@@ -314,3 +314,17 @@ Email sent!
 The email has been sent to Sarah. If there's anything else you need assistance with,
 feel free to ask!
 ```
+
+## Next steps
+Now that you've built your first agent, you can now deep dive into the different components of Semantic Kernel.
+
+| Component | Description |
+|:-|:-|
+| [The kernel](./kernel/index.md) | The kernel is the core of Semantic Kernel. It is responsible holding all of the information necessary to orchestrate your code with AI. Read this section to learn how to initialize the kernel with your plugins, AI services, and more. |
+| [Prompts](./prompts/index.md) | Prompts are core to eliciting the correct responses from AI models. Read this section to learn how to craft and run prompts with Semantic Kernel. |
+| [Plugins](./plugins/index.md) | Plugins give you agents skills to manipulate the real world.  Read this section to learn how to create plugins and how to use them with your agent. |
+| [Planners](./planners/index.md) | Planners are prompts that allow you to generate plans to complete a task. Read this section to learn more about the out-of-the-box planners provided by Semantic Kernel. |
+| [Personas](./personas/index.md) | Personas are prompts that allow you to influence how your agent responds to stimuli. Read this section to learn how to create personas and they can be used to influence your agents behavior, personality, and memory. |
+
+> [!div class="nextstepaction"]
+> [Initialize a kernel](./kernel/index.md)
