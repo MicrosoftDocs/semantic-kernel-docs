@@ -174,31 +174,31 @@ while (true)
 ## Trying out your agent
 Now that we've completed our program, we can give it a test run. Below is a sample conversation with our agent while using gpt-4 model.
 
-```
-User > Can you help me write an email for my boss?
+```User
+Can you help me write an email for my boss?
 ```
 
-```
-Assistant > Of course, I'd be happy to help you write an email to your boss. Could you please provide me with more details? Specifically, I need to know:
+```Assistant
+Of course, I'd be happy to help you write an email to your boss. Could you please provide me with more details? Specifically, I need to know:
 
 1. The topic or purpose of the email.
 2. Your boss's email address.
 ```
 
-```
-User > I want to give her an update on last months sales. We broke a bunch of records that I want to share with her, but we did have a challenge selling the X4321 model.
-```
-
-```
-Assistant > That sounds like a great topic for an email. Could you please provide me with your boss's email address so I can assist you further?
+```User
+I want to give her an update on last months sales. We broke a bunch of records that I want to share with her, but we did have a challenge selling the X4321 model.
 ```
 
-```
-User > Sure! It's sarah@contoso.com
+```Assistant
+That sounds like a great topic for an email. Could you please provide me with your boss's email address so I can assist you further?
 ```
 
+```User
+Sure! It's sarah@contoso.com
 ```
-Assistant > Great! Here's a plan for your email:
+
+```Assistant
+Great! Here's a plan for your email:
 
 1. **Start with a Clear Subject Line and Greeting**: The subject line should be concise and informative, such as "Update on Last Month's Sales & X4321 Model Challenges". Start the email with a professional greeting, like "Dear Sarah,".
 
@@ -211,12 +211,12 @@ Remember to proofread the email for any grammatical errors or unclear statements
 Would you like me to draft the email for you based on these steps?
 ```
 
-```
-User > Yes please!
+```User
+Yes please!
 ```
 
-```
-Assistant > Sure, here's a draft based on the steps we discussed:
+```Assistant
+Sure, here's a draft based on the steps we discussed:
 
 Subject: Update on Last Month's Sales & X4321 Model Challenges
 
@@ -240,12 +240,12 @@ Best regards,
 Please review this draft and let me know if you would like to make any changes before I send it.
 ```
 
-```
-User > Can you add that we increased our revenue by 20%? You can also share that the X4321 didn't sell as well since most customers upgraded to the Y5000 model, but this isn't too bad since it's what helped increase our revenue.
+```User
+Can you add that we increased our revenue by 20%? You can also share that the X4321 didn't sell as well since most customers upgraded to the Y5000 model, but this isn't too bad since it's what helped increase our revenue.
 ```
 
-```
-Assistant > Absolutely, here's the updated draft:
+```Assistant
+Absolutely, here's the updated draft:
 
 Subject: Update on Last Month's Sales & X4321 Model Challenges
 
@@ -267,14 +267,14 @@ Best regards,
 Please review this updated draft and let me know if you would like to make any changes before I send it.
 ```
 
-```
-User > Please sign it with Stephen and then you can go ahead and send it to Sarah
+```User
+Please sign it with Stephen and then you can go ahead and send it to Sarah
 ```
 
-```
+```Function
 Email sent!
 ```
 
-```
-Assistant > The email has been sent to Sarah. If there's anything else you need assistance with, feel free to ask!
+```Assistant
+The email has been sent to Sarah. If there's anything else you need assistance with, feel free to ask!
 ```
