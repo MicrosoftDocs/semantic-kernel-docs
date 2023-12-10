@@ -32,7 +32,7 @@ Take for example, a copilot that helps a user write and send an email. After get
 5. Review the email with the user
 6. Send the email
 
-#### Plugins
+### Plugins
 To generate this plan, the copilot would first need the capabilities necessary to perform these steps. This is where plugins come in. Plugins allow you to give your agent skills via code. For example, you could create a plugin that sends emails, retrieves information from a database, asks for help, or even saves and retrieves memories from previous conversations.
 
 In our example, we can build a simple plugin that sends emails. This plugin would have a single function, `SendEmail`, that takes in the email address, subject, and body of the email. It would then use this information to send the email.
@@ -58,7 +58,7 @@ public class EmailPlugin
 
 There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can create automatically create a plugin using its OpenAPI specification. To learn more about other ways to author plugins, see the [plugins](./plugins/index.md) section.
 
-#### Planners
+### Planners
 To actually use this plugin (and to wire them up with other steps), the copilot would need to first generate a plan. This is where planners come in. Planners are special prompts that allow an agent generate a plan to complete a task. The simplest planners are just a single prompt that helps the agent use function calling to complete a task.
 
 Often, you'll create your planners as specialized plugins that are highly tuned to a specific task. For example, you may create an `AuthorEmailPlanner` that asks the agent to "brainstorm the steps necessary to write an email before calling the necessary functions."  As part of the planning prompt, you could even recommend specific steps that the agent can take.
@@ -95,7 +95,7 @@ public class AuthorEmailPlanner
 
 In more advanced planners, you can ask an LLM to generate code that can be executed to complete a task. This is what we call a "code-based" planner and it serves as the basis of our Handlebars planner. To learn more about this planner, see the [Handlebars planner](./planners/handlebars-planner.md) article.
 
-#### Persona
+### Persona
 Finally, as a software developer, you want to influence how your agent interacts with users. This is where the persona comes in. Often called a "meta prompt" or "instruction", the persona is a prompt that is used to influence how the agent responds to stimuli.
 
 In the simplest cases, you can use the persona to change its personality. Is the agent friendly? Is it sarcastic? Is it helpful? More importantly, however, you can also use the persona to influence how the agent responds to certain situations. For example, you can use the persona to tell the agent to ask for help if it doesn't know what to do. Or to be more verbose when it is explaining something to a user.
