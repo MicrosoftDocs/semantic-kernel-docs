@@ -20,9 +20,6 @@ A copilot is a special type of agent that is meant to work side-by-side with a u
 When you start your journey with Semantic Kernel, we recommend that you start with building a copilot. This is because copilots are easier to build and safer to deploy because the user is always in control. Once you have a copilot, you can then turn it into a fully automated agent by removing the need for user input.
 
 ## Building your first agent
-As we'll see, building an agent with Semantic Kernel is extremely easy, but before we begin, let's first understand the core building blocks of an agent.
-
-### The building blocks of an agent
 An agent is made up of three core building blocks: [plugins](./plugins/index.md), [planners](./planners/index.md), and its persona. These building blocks are what allow an agent to retrieve information from the user or other systems, plan how to use that information, and use that information to respond to a user or perform an action.
 
 ![Plugins, planners, and persona](../media/plugins-planners-personas.png)
@@ -37,8 +34,6 @@ Take for example, a copilot that helps a user write and send an email. After get
 
 #### Plugins
 To generate this plan, the copilot would first need the capabilities necessary to perform these steps. This is where plugins come in. Plugins allow you to give your agent skills via code. For example, you could create a plugin that sends emails, retrieves information from a database, asks for help, or even saves and retrieves memories from previous conversations.
-
-![Plugin types](../media/plugin-composition.png)
 
 In our example, we can build a simple plugin that sends emails. This plugin would have a single function, `SendEmail`, that takes in the email address, subject, and body of the email. It would then use this information to send the email.
 
@@ -66,7 +61,7 @@ There are other ways to create plugins. For example, if you have a RestAPI that 
 #### Planners
 To actually use this plugin (and to wire them up with other steps), the copilot would need to first generate a plan. This is where planners come in. Planners are special prompts that allow an agent generate a plan to complete a task. The simplest planners are just a single prompt that helps the agent use function calling to complete a task.
 
-Often, you'll create your planners as specialized plugin that is highly tuned to a specific task. For example, you may create an `AuthorEmailPlanner` that asks the agent to "brainstorm the steps necessary to write an email before calling the necessary functions."  As part of the planning prompt, you could even recommend specific steps that the agent can take.
+Often, you'll create your planners as specialized plugins that are highly tuned to a specific task. For example, you may create an `AuthorEmailPlanner` that asks the agent to "brainstorm the steps necessary to write an email before calling the necessary functions."  As part of the planning prompt, you could even recommend specific steps that the agent can take.
 
 In this planner, we'll pass in the email topic and who the email is for so the planner can generate a plan to write an email.
 
@@ -98,7 +93,7 @@ public class AuthorEmailPlanner
 }
 ```
 
-In more advanced planners, you can ask an LLM to generate code that can be executed to complete a task. This is what we call a "code generation" planner and it serves as the basis of our Handlebars planner. To learn more about this planner, see the [Handlebars planner](./planners/handlebars-planner.md) article.
+In more advanced planners, you can ask an LLM to generate code that can be executed to complete a task. This is what we call a "code-based" planner and it serves as the basis of our Handlebars planner. To learn more about this planner, see the [Handlebars planner](./planners/handlebars-planner.md) article.
 
 #### Persona
 Finally, as a software developer, you want to influence how your agent interacts with users. This is where the persona comes in. Often called a "meta prompt" or "instruction", the persona is a prompt that is used to influence how the agent responds to stimuli.
