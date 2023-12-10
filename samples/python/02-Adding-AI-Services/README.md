@@ -1,6 +1,6 @@
 # Creating semantic functions
 
-This console application demonstrates the final solution to the [adding AI services](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/kernel/adding-services) doc article.
+This console application demonstrates the final solution to the [adding AI services](https://learn.microsoft.com/en-us/semantic-kernel/agents/kernel/adding-services) doc article.
 
 ## Prerequisites
 

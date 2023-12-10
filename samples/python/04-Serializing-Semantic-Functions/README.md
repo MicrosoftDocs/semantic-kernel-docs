@@ -1,6 +1,6 @@
 # Creating semantic functions
 
-This console application demonstrates the final solution to the [serializing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/semantic-functions/serializing-semantic-functions) doc article.
+This console application demonstrates the final solution to the [serializing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/serializing-semantic-functions) doc article.
 
 ## Prerequisites
 

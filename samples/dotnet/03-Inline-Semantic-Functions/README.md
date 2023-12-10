@@ -1,6 +1,6 @@
 # Creating semantic functions
 
-The `03-Inline-Semantic-Functions` console application shows the final solution to the [inline semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/semantic-functions/inline-semantic-functions) doc article.
+The `03-Inline-Semantic-Functions` console application shows the final solution to the [inline semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/inline-semantic-functions) doc article.
 
 ## Prerequisites
 

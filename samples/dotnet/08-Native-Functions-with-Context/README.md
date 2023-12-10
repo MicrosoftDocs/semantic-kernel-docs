@@ -1,6 +1,6 @@
 # Creating native functions
 
-The `08-Native-Functions-with-Context` console application shows the final solution to the [Using multiple inputs in native functions](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/native-functions/multiple-parameters) doc article.
+The `08-Native-Functions-with-Context` console application shows the final solution to the [Using multiple inputs in native functions](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/native-functions/multiple-parameters) doc article.
 
 ## Prerequisites
 

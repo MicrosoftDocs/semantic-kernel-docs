@@ -6,7 +6,7 @@ This project provides starter code to create a ChatGPT plugin. It includes the f
 - A generator that automatically converts prompts into semantic function endpoints
 - The ability to add additional native functions as endpoints to the plugin
 
-To learn more about using this starter, see the Semantic Kernel documentation that describes how to [create a ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/chatgpt-plugins).
+To learn more about using this starter, see the Semantic Kernel documentation that describes how to [create a ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/agents/chatgpt-plugins).
 
 ## Prerequisites
 

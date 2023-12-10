@@ -1,6 +1,6 @@
 # Chaining functions together
 
-The `10-Chaining-Functions` console application shows the final solution to the [Chaining functions together](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/chaining-functions) doc article.
+The `10-Chaining-Functions` console application shows the final solution to the [Chaining functions together](https://learn.microsoft.com/en-us/semantic-kernel/agents/chaining-functions) doc article.
 
 ## Prerequisites
 

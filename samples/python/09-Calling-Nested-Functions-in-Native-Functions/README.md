@@ -1,6 +1,6 @@
 # Creating native functions
 
-This console application demonstrates the final solution to the [Calling functions within a native function](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/native-functions/calling-nested-functions) doc article.
+This console application demonstrates the final solution to the [Calling functions within a native function](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/native-functions/calling-nested-functions) doc article.
 
 ## Prerequisites
 

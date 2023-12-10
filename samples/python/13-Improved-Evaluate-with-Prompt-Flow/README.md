@@ -1,6 +1,6 @@
 # Evaluate your plugins and planners with Prompt flow
 
-This console application demonstrates the final solution to the [evaluating your plugins and planners with Prompt flow](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/planners/evaluate-and-deploy-planners/evaluating-plugins-and-planners-with-prompt-flow) doc article.
+This console application demonstrates the final solution to the [evaluating your plugins and planners with Prompt flow](https://learn.microsoft.com/en-us/semantic-kernel/agents/planners/evaluate-and-deploy-planners/evaluating-plugins-and-planners-with-prompt-flow) doc article.
 
 ## Prerequisites
 

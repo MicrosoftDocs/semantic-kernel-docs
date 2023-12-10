@@ -1,6 +1,6 @@
 # Using planner
 
-The `11-Planner` console application shows the final solution to the [Planner](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/planner) doc article.
+The `11-Planner` console application shows the final solution to the [Planner](https://learn.microsoft.com/en-us/semantic-kernel/agents/planner) doc article.
 
 ## Prerequisites
 

@@ -1,6 +1,6 @@
 # Creating semantic functions
 
-This console application demonstrates the final solution to the [calling functions in semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/semantic-functions/calling-nested-functions) doc article.
+This console application demonstrates the final solution to the [calling functions in semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/agents/semantic-functions/calling-nested-functions) doc article.
 
 ## Prerequisites
 

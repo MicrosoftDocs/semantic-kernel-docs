@@ -9,11 +9,12 @@ ms.service: semantic-kernel
 ms.custom: build-2023, build-2023-dataai
 ---
 
-# What is an agent
+# What is an agent?
 
 An agent is an artificial intelligence that can answer questions and automate processes for users. There's a wide spectrum of agents that can be built, ranging from simple chat bots to fully automated AI assistants. With Semantic Kernel, we provide you with the tools to build increasingly more sophisticated agents that don't require you to be an AI expert.
 
-### What is a copilot and how is it different from an agent?
+![Types of agents](../media/types-of-agents.png)
+
 A copilot is a special type of agent that is meant to work side-by-side with a user. Unlike an agent, a copilot is _not_ meant to be fully automated. Instead, it is meant to help a user complete a task by providing suggestions and recommendations. For example, a copilot could be used to help a user write an email by providing suggestions for what to write next. The user can then choose to accept or reject the suggestion.
 
 When you start your journey with Semantic Kernel, we recommend that you start with building a copilot. This is because copilots are easier to build and safer to deploy because the user is always in control. Once you have a copilot, you can then turn it into a fully automated agent by removing the need for user input.

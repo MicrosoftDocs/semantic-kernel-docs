@@ -3,7 +3,7 @@
 - name: Getting started
   href: get-started/TOC.yml
 - name: Creating AI agents
-  href: creating-agents/TOC.yml
+  href: agents/TOC.yml
   expanded: true
 - name: Prompt engineering
   href: prompt-engineering/TOC.yml
