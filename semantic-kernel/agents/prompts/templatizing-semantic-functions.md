@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Templatizing your semantic functions
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 In the [previous article](./serializing-semantic-functions.md) we created a semantic function that could be used to get the intent of the user. This function, however, is not very reusable. For example, if we wanted to run specific code based on the user intent, it would be difficult to use the output of the `GetIntent` function to choose which code to actually run.
 

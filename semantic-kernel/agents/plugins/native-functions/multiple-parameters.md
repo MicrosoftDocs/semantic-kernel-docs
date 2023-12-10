@@ -11,7 +11,6 @@ ms.service: semantic-kernel
 # Using multiple inputs in native functions
 
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 In the [previous tutorial](./using-the-SKFunction-decorator.md), we demonstrated how to use the `SKFunction` decorator to create a native function that performs a square root operation. For other mathematical operations, however, we'll need to use _multiple_ inputs, so in this tutorial, we'll demonstrate how to use and consume `ContextVariables` objects within native functions.
 

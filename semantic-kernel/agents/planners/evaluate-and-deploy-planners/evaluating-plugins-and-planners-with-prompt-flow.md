@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Evaluate your plugins and planners with Prompt flow
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 With the minimal amount of data we provided, we can easily view the results and see that there are some errors. If you have a large amount of data, however, it can be difficult to evaluate the results. This is where Prompt flow's evaluation feature comes in handy.
 

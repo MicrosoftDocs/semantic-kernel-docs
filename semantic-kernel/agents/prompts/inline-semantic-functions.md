@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Creating semantic functions inline
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 The simplest way to create a semantic function is to create it inline within your application. This is useful for prototyping and testing. Later, you can [serialize it](./serializing-semantic-functions.md) so that its more easily reusable.
 

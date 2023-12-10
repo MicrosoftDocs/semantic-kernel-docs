@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Run native code with Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 In the [how to create semantic functions](../semantic-functions/inline-semantic-functions.md) section, we showed how you could create a semantic function that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
 

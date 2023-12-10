@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Calling functions within a native function
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 In the [previous tutorials](./multiple-parameters.md), we demonstrated how to create functions with one or more input parameters. In this tutorial, we'll demonstrate how to call other functions _within_ a native function. This will allow you to build more complex functions that consist of both native and semantic functions.
 

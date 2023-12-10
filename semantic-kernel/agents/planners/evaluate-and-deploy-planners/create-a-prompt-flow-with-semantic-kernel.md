@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Create a Prompt flow with Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 In the [planner](../index.md) article, we demonstrated how you can use the sequential planner to automatically use the math plugin to answer word problems provided by the user. If you began testing your planner with additional inputs, however, you may have noticed that it doesn't always produce the desired results. In this article, we'll show you how you can create a [Prompt flow](/azure/machine-learning/prompt-flow/overview-what-is-prompt-flow) that runs your plugins and planners so that you can easily [test](./running-batches-with-prompt-flow.md), [evaluate](evaluating-plugins-and-planners-with-prompt-flow.md), and deploy them in following articles.
 

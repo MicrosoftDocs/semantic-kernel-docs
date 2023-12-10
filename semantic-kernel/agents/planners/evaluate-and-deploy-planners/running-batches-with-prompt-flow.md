@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Running batches with Prompt flow
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 If you want to test your flow with multiple inputs, you can use the batch run feature. This allows you to run your flow with a list of inputs from either a csv, tsv, JSON line file. Afterwards, all of the outputs will be saved to another JSON line file. In the [next article](./evaluating-plugins-and-planners-with-prompt-flow.md) you can then use the output file to evaluate your flow.
 

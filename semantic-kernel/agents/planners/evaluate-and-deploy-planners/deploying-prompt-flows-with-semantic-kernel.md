@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Deploy Prompt flows with Semantic Kernel to Azure AI Studio
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 Once you've created a Prompt flow, you can deploy it to Azure ML. This has several benefits:
 > [!div class="checklist"]

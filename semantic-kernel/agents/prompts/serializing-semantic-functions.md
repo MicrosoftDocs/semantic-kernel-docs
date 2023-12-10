@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Serializing semantic functions
 
-[!INCLUDE [pat_large.md](../../../includes/pat_large.md)]
 
 In previous articles, we demonstrated [how to load a semantic function inline](./inline-semantic-functions.md). However, in most cases, you'll want to create your semantic functions in a separate file so you can easily import them into Semantic Kernel across multiple projects.
 
