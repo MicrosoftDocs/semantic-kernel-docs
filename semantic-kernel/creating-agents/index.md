@@ -24,9 +24,9 @@ As we'll see, building an agent with Semantic Kernel is extremely easy, but befo
 ### The building blocks of an agent
 An agent is made up of three core building blocks: [plugins](./plugins/index.md), [planners](./planners/index.md), and its persona. These building blocks are what allow an agent to retrieve information from the user or other systems, plan how to use that information, and use that information to respond to a user or perform an action.
 
-TODO: Add image of agent building blocks
+![Plugins, planners, and persona](../media/plugins-planners-personas.png)
 
-Take for example, a copilot that helps a user write and send an email. After getting instructions from a user, the copilot would need to generate a plan to complete the task. This plan would include steps like...
+Take for example, a copilot that helps a user write and send an email. After getting instructions from a user, the copilot would need to generate a plan using the available plugins to complete the task. This plan would include steps like...
 1. Get the user's email address and name
 2. Get the email address of the recipient
 3. Get the topic of the email
@@ -37,7 +37,7 @@ Take for example, a copilot that helps a user write and send an email. After get
 #### Plugins
 To generate this plan, the copilot would first need the capabilities necessary to perform these steps. This is where plugins come in. Plugins allow you to give your agent skills via code. For example, you could create a plugin that sends emails, retrieves information from a database, asks for help, or even saves and retrieves memories from previous conversations.
 
-// TODO: Add image of plugin
+![Plugin types](../media/plugin-composition.png)
 
 In our example, we can build a simple plugin that sends emails. This plugin would have a single function, `SendEmail`, that takes in the email address, subject, and body of the email. It would then use this information to send the email.
 
@@ -54,6 +54,7 @@ public class EmailPlugin
     )
     {
         // Add logic to send an email using the recipientEmails, subject, and body
+        // For now, we'll just print out a success message to the console
         Console.WriteLine("Email sent!");
     }
 }
@@ -80,6 +81,7 @@ public class AuthorEmailPlanner
         [Description("A description of the recipients")] string recipients
     )
     {
+        // Prompt the LLM to generate a list of steps to complete the task
         var result = await kernel.InvokePromptAsync($"""
         I'm going to write an email to {recipients} about {topic} on behalf of a user.
         Before I do that, can you succinctly recommend the top 3 steps I should take in a numbered list?
@@ -89,6 +91,7 @@ public class AuthorEmailPlanner
             { "recipients", recipients }
         });
 
+        // Return the result
         return result.ToString();
     }
 }
@@ -101,16 +104,16 @@ Finally, as a software developer, you want to influence how your agent interacts
 
 In the simplest cases, you can use the persona to change its personality. Is the agent friendly? Is it sarcastic? Is it helpful? More importantly, however, you can also use the persona to influence how the agent responds to certain situations. For example, you can use the persona to tell the agent to ask for help if it doesn't know what to do. Or to be more verbose when it is explaining something to a user.
 
-In our example, we can use the persona to make the agent more curious about the audience of the email. This would encourage the persona to ask more questions about the audience of the email so that it can generate a more personalized email.
+In our example, we can use the persona to make sure the agent retrieves all the information it needs before completing a task. This would encourage the persona to ask more questions so it can generate a better email.
 
-We'll do this by passing in a system prompt into a `ChatHistory` object that contains the persona. This `ChatHistory` object will then be used whenever we make a request to the agent.
+We'll do this by passing in a system prompt into a `ChatHistory` object that contains the persona. This `ChatHistory` object will then be used whenever we make a request to the agent so that the agent is aware of its persona and all the previous conversations it has had with the user.
 
 ```csharp
 ChatHistory chatMessages = new ChatHistory("""
-You are a friendly assistant who likes to follow the rules. You will complete required steps and
-request approval before taking any consequential actions. If the user doesn't provide enough information
-for you to complete a task, you will keep asking questions until you have enough information to complete
-the task.
+You are a friendly assistant who likes to follow the rules. You will complete required steps
+and request approval before taking any consequential actions. If the user doesn't provide
+enough information for you to complete a task, you will keep asking questions until you have
+enough information to complete the task.
 """);
 ```
 
@@ -126,13 +129,15 @@ builder.Plugins.AddFromType<AuthorEmailPlanner>();
 builder.Plugins.AddFromType<EmailPlugin>();
 Kernel kernel = builder.Build();
 
-// Create the chat history
+// Retrieve the chat completion service from the kernel
 IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+
+// Create the chat history
 ChatHistory chatMessages = new ChatHistory("""
-You are a friendly assistant who likes to follow the rules. You will complete required steps and
-request approval before taking any consequential actions. If the user doesn't provide enough information
-for you to complete a task, you will keep asking questions until you have enough information to complete
-the task.
+You are a friendly assistant who likes to follow the rules. You will complete required steps
+and request approval before taking any consequential actions. If the user doesn't provide
+enough information for you to complete a task, you will keep asking questions until you have
+enough information to complete the task.
 """);
 
 // Start the conversation
