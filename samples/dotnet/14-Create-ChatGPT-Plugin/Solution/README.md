@@ -1,6 +1,6 @@
 # Creating and using a ChatGPT plugin
 
-The `14-Create-ChatGPT-Plugin` console application shows the final solution to the [ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/chatgpt-plugins) doc article.
+The `14-Create-ChatGPT-Plugin` console application shows the final solution to the [ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/chatgpt-plugins) doc article.
 
 ## Prerequisites
 

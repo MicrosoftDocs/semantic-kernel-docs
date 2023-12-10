@@ -1,6 +1,6 @@
 # Creating semantic functions
 
-The `05-Templatizing-Semantic-Functions` console application shows the final solution to the [templatizing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/plugins/semantic-functions/templatizing-semantic-functions) doc article.
+The `05-Templatizing-Semantic-Functions` console application shows the final solution to the [templatizing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/semantic-functions/templatizing-semantic-functions) doc article.
 
 ## Prerequisites
 

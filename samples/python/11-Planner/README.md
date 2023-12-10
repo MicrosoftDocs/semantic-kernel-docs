@@ -1,6 +1,6 @@
 # Using planner
 
-This console application demonstrates the final solution to the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planner) doc article.
+This console application demonstrates the final solution to the [planner](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/planner) doc article.
 
 ## Prerequisites
 

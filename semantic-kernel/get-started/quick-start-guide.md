@@ -97,9 +97,9 @@ The guides are an easy way run sample code and learn how to use Semantic Kernel.
 | Experience level     | Next step     |
 |--------------|-----------|
 | For beginners who are just starting to learn about AI | [Learn prompt engineering](../prompt-engineering/index.md) |
-| For people who are well versed in prompt engineering | [Orchestrate AI plugins](../ai-orchestration/index.md) |
+| For people who are well versed in prompt engineering | [Orchestrate AI plugins](../creating-agents/index.md) |
 | For people familiar with using AI plugins |  [Store and retrieve memory ](../memories/index.md) |
 
 
 > [!div class="nextstepaction"]
-> [Learn how to Orchestrate AI](../ai-orchestration/index.md)
+> [Learn how to Orchestrate AI](../creating-agents/index.md)

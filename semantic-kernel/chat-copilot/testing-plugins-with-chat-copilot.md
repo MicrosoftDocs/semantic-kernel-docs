@@ -19,7 +19,7 @@ Before you can import your own OpenAI plugins, you'll first need to have a Chat 
 Additionally, you will need to make sure that the CORS settings for your ChatGPT plugins are configured to allow requests from your Chat Copilot instance. For example, if you are running Chat Copilot locally, you will need to make sure that your ChatGPT plugins are configured to allow requests from _http://localhost:3000_.
 
 ## Why test your ChatGPT plugins with Chat Copilot?
-As mentioned in the [plugin](../ai-orchestration/plugins/index.md) article, plugins are the combination of logic (either expressed as native functions or semantic functions) _and_ their semantic descriptions. Without appropriate semantic descriptions, the planner will not be able to use your plugin.
+As mentioned in the [plugin](../creating-agents/plugins/index.md) article, plugins are the combination of logic (either expressed as native functions or semantic functions) _and_ their semantic descriptions. Without appropriate semantic descriptions, the planner will not be able to use your plugin.
 
 With Chat Copilot, you can test the effectiveness of your semantic descriptions by seeing how well either the action planner or sequential planner can use your plugin. This will allow you to iterate on your semantic descriptions until you are satisfied with the results. 
 
@@ -39,7 +39,7 @@ Once you have a Chat Copilot instance running, you can import your ChatGPT plugi
 6. Congrats! You can now use your plugin in a conversation with the Chat Copilot agent.
 
 ## Testing your ChatGPT plugins
-Once you have imported and enabled your ChatGPT plugins, you can now test them out. To do this, simply make a request to your Chat Copilot instance that should trigger the use of your plugin. For example, if you have built and deployed the Math plugin in the [ChatGPT plugin article](../ai-orchestration/chatgpt-plugins.md), you can follow the steps below to test it out.
+Once you have imported and enabled your ChatGPT plugins, you can now test them out. To do this, simply make a request to your Chat Copilot instance that should trigger the use of your plugin. For example, if you have built and deployed the Math plugin in the [ChatGPT plugin article](../creating-agents/chatgpt-plugins.md), you can follow the steps below to test it out.
 
 1. Ensure that the Math plugin has been imported and enabled in your Chat Copilot instance using the steps outlined in the [importing your ChatGPT plugins](#importing-your-chatgpt-plugins) section of this article.
 2. Create a new chat by selecting the **+** button in the top left corner.

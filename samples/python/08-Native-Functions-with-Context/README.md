@@ -1,6 +1,6 @@
 # Creating native functions
 
-This console application demonstrates the final solution to the [Using multiple inputs in native functions](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/plugins/native-functions/multiple-parameters) doc article.
+This console application demonstrates the final solution to the [Using multiple inputs in native functions](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/native-functions/multiple-parameters) doc article.
 
 ## Prerequisites
 

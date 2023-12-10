@@ -1,6 +1,6 @@
 # Creating semantic functions
 
-The `04-Serializing-Semantic-Functions` console application shows the final solution to the [serializing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/plugins/semantic-functions/serializing-semantic-functions) doc article.
+The `04-Serializing-Semantic-Functions` console application shows the final solution to the [serializing semantic functions](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/semantic-functions/serializing-semantic-functions) doc article.
 
 ## Prerequisites
 

@@ -1,3 +1,6 @@
+- name: Understanding agents
+  href: index.md
+  expanded: true
 - name: Initialize the kernel
   href: kernel/TOC.yml
   expanded: true

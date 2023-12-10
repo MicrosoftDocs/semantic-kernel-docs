@@ -1,6 +1,6 @@
 # Creating native functions
 
-This console application demonstrates the final solution to the [Run native code with Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/plugins/native-functions/using-the-skfunction-decorator) doc article.
+This console application demonstrates the final solution to the [Run native code with Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/plugins/native-functions/using-the-skfunction-decorator) doc article.
 
 ## Prerequisites
 

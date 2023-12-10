@@ -1,6 +1,6 @@
 # Creating native functions
 
-This console application demonstrates the final solution to the [Chaining functions together](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/chaining-functions) doc article.
+This console application demonstrates the final solution to the [Chaining functions together](https://learn.microsoft.com/en-us/semantic-kernel/creating-agents/chaining-functions) doc article.
 
 ## Prerequisites
 
