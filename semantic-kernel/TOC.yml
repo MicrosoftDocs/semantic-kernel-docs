@@ -11,8 +11,6 @@
   href: memories/TOC.yml
 - name: Using AI responsibly
   href: when-to-use-AI/TOC.yml
-- name: Visual Studio Code tools
-  href: vs-code-tools/index.md
 - name: Chat Copilot
   href: chat-copilot/TOC.yml
 - name: Getting Support

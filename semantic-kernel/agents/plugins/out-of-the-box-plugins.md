@@ -9,8 +9,6 @@ ms.service: semantic-kernel
 ---
 # Use the out-of-the-box plugins in the kernel
 
-
-
 To provide a degree of standardization across Semantic Kernel implementations, the GitHub repo has several plugins available out-of-the-box depending on the language you are using. These plugins are often referred to as **Core plugins**. Additionally, each library also includes a handful of other plugins that you can use. The following section covers each set of plugins in more detail.
 
 ## Core plugins
@@ -96,61 +94,6 @@ The output should be similar to the following:
   "weekend": "not weekend"
 }
 ```
-
-### Chaining core plugins together in Semantic Kernel
-Most of the core plugins were built so that they can be easily chained together. For example, the `TextPlugin` can be used to trim whitespace from a string, convert it to uppercase, and then convert it to lowercase.
-
-
-# [C#](#tab/Csharp)
-
-```csharp
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.CoreSkills;
-
-var kernel = Kernel.Builder.Build();
-
-var myText = kernel.ImportFunctions(new TextPlugin());
-
-SKContext myOutput = await kernel.RunAsync(
-    "    i n f i n i t e     s p a c e     ",
-    myText["TrimStart"],
-    myText["TrimEnd"],
-    myText["Uppercase"]);
-
-Console.WriteLine(myOutput);
-```
-
-
-# [Python](#tab/python)
-
-```python
-import semantic_kernel as sk
-from semantic_kernel.core_skills.text_skill import TextPlugin
-
-my_text = kernel.import_skill(TextPlugin(), "time")
-
-myOutput = await kernel.run_async(
-    my_text["trim_start"],
-    my_text["trim_end"],
-    my_text["uppercase"],
-    input_str="    i n f i n i t e     s p a c e     ",
-)
-
-print(myOutput)
-```
----
-
-
-Note how the input streams through a pipeline of three functions executed serially. Expressed sequentially as in a chain of functions:
-
-| "   i n f i n i t e    s p a c e    " → | TextPlugin.TrimStart → | TextPlugin.TrimEnd → | TextPlugin.Uppercase → |
-|---|---|---|---|
-
-The output reads as:
-
-`I N F I N I T E     S P A C E`
-
 
 ### Take the next step
 

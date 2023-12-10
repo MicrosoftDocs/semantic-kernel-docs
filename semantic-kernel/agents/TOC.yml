@@ -3,9 +3,13 @@
   expanded: true
 - name: Initialize the kernel
   href: kernel/TOC.yml
+- name: Prompting AI models
+  href: prompts/TOC.yml
   expanded: true
-- name: Create and use AI plugins
+- name: Give your agent AI plugins
   href: plugins/TOC.yml
   expanded: true
-- name: Automate plugins with planners
+- name: Improve automation with planners
   href: planners/TOC.yml
+- name: Adjust behavior with personas
+  href: personas/TOC.yml

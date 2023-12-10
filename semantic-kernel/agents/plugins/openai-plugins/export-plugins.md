@@ -8,7 +8,7 @@ ms.date: 07/8/2023
 ms.service: semantic-kernel
 ---
 
-# Export and import OpenAI plugins with Semantic Kernel
+# Export plugins written for Semantic Kernel as an OpenAI plugin
 
 
 

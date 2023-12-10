@@ -1,6 +1,6 @@
-# - name: The OpenAI plugin schema
-#   href: index.md
-# - name: Export plugins using the OpenAI schema
-#   href: export-plugins.md
-# - name: Import OpenAI plugins into Semantic Kernel
-#   href: import-plugins.md
+- name: Understanding OpenAI plugins
+  href: index.md
+- name: Export plugins using the OpenAI schema
+  href: export-plugins.md
+- name: Import OpenAI plugins into Semantic Kernel
+  href: import-plugins.md
