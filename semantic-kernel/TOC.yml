@@ -2,7 +2,10 @@
   href: overview/index.md
 - name: Getting started
   href: get-started/TOC.yml
-- name: Creating AI agents with Semantic Kernel
+- name: Prompting AI models
+  href: prompts/TOC.yml
+  expanded: true
+- name: Creating AI agents
   href: agents/TOC.yml
   expanded: true
 - name: Prompt engineering

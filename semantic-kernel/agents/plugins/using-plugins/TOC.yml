@@ -1,0 +1,10 @@
+- name: Invoke plugin functions
+  href: index.md
+- name: Manually chain functions
+  href: chaining-functions.md
+- name: Auto invoke functions with function calling
+  href: context-in-chains.md
+- name: Add memory with plugins
+  href: memory-plugins.md
+- name: Out-of-the-box plugins
+  href: out-of-the-box-plugins.md

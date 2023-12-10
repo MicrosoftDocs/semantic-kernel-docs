@@ -1,0 +1,4 @@
+- name: Add native code to a plugin
+  href: using-the-SKFunction-decorator.md
+- name: Add a prompt to a plugin
+  href: using-the-SKFunction-decorator.md

@@ -9,4 +9,4 @@
 - name: Serializing prompts
   href: serializing-semantic-functions.md
 - name: Configuring prompts
-  href: calling-nested-functions.md
+  href: configure-prompts.md
