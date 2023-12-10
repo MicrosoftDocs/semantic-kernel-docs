@@ -9,7 +9,7 @@ ms.service: semantic-kernel
 ---
 # Use the out-of-the-box plugins in the kernel
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+
 
 To provide a degree of standardization across Semantic Kernel implementations, the GitHub repo has several plugins available out-of-the-box depending on the language you are using. These plugins are often referred to as **Core plugins**. Additionally, each library also includes a handful of other plugins that you can use. The following section covers each set of plugins in more detail.
 

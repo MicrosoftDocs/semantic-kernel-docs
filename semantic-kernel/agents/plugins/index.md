@@ -10,7 +10,7 @@ ms.service: semantic-kernel
 
 # Understanding AI plugins in Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+
 
 Plugins are the fundamental building blocks of Semantic Kernel and can interoperate with plugins in ChatGPT, Bing, and Microsoft 365.
 With plugins, you can encapsulate capabilities into a single unit of functionality that can then be run by the kernel. Plugins can consist of both native code and requests to AI services via semantic functions. 

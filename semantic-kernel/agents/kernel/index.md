@@ -10,9 +10,7 @@ ms.service: semantic-kernel
 
 # Understanding the kernel in Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
-
-Similar to operating system, the kernel is responsible for managing resources that are necessary to run "code" in an AI application. This includes managing the configuration, services, and plugins that are necessary for both native code and AI services to run together.
+Similar to operating system, the kernel is responsible for managing resources that are necessary to run "code" in an AI application. This includes managing the AI models, services, and plugins that are necessary for both native code and AI services to run together.
 
 If you want to see the code demonstrated in this article in a complete solution, check out the following samples in the public documentation repository.
 
@@ -21,62 +19,36 @@ If you want to see the code demonstrated in this article in a complete solution,
 | C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/01-Kernel-Intro) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/01-Kernel-Intro) |
 
-## Using native and AI services together
-Semantic Kernel makes it easy to run AI services alongside native code by treating calls to AI services as their own first-class citizens called "semantic functions."
+## The kernel is at center of _everything_
+Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is at the center of everything in Semantic Kernel. This means that if run any prompt or code in Semantic Kernel, it will always go through a kernel.
 
-Semantic functions are discussed more deeply in their [own section](../plugins/semantic-functions/inline-semantic-functions.md), but for now, it is important to understand that both native and semantic functions behave the _same way_ within Semantic Kernel. This is thanks to the fact that both are expressed as [SKFunction](/dotnet/api/microsoft.semantickernel.skilldefinition.skfunction) objects. Because of this, they can each be triggered the same way by the kernel.
+This is extremely powerful, because it means you as a developer have a single place where you can configure, and most importantly monitor, your AI application. Take for example, when you invoke a prompt from the kernel. When you do so, the kernel will 1) select the best AI service, 2) build your prompt template, 3) send the prompt to the AI service, 4) receive the response, and 5) return the response to you.
 
-This is important because it means both semantic and native functions behave the same way within the kernel to maximize interoperability.
+![The kernel is at the center of everything in Semantic Kernel](../media/the-kernel-is-at-the-center-of-everything.png)
 
-For example, you can see in the image below how the kernel is able to run both native and semantic functions together in a single pipeline. This allows the developer to use Semantic Kernel to 1) get the current time, 2) generate a poem about the time, before finally 3) translating it into a different language.
+Throughout this entire process, you can create events and middleware that are triggered at each of these steps. This means you can perform actions like logging, provide status updates to users, and most importantly responsible AI. All from a single place.
 
-![SKFunctions run inside the kernel](../../media/kernel-with-skfunctions.png)
-
-
-### Running functions using the kernel
-To run `SKFunction` objects, Semantic Kernel provides the [RunAsync](/dotnet/api/microsoft.semantickernel.kernel.runasync) method within the [Kernel](/dotnet/api/microsoft.semantickernel.kernel) class. This method takes one or more `SKFunction` objects and executes them sequentially. For example, the following code runs a single native function from the [Time plugin](../plugins/out-of-the-box-plugins.md) and returns back the result:
-
-# [C#](#tab/Csharp)
-Import the necessary packages:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="6-7":::
-
-Run the today function from the time plugin:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="9-14" highlight="4":::
-# [Python](#tab/python)
-Import the necessary packages:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="2-3":::
-
-Run the today function from the time plugin:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="12-17" highlight="4":::
-
----
-
-After running this, you should see today's date printed to the console.
-
-## Creating the kernel runtime environment
-To run anything more complex than a simple native function, however, you must ensure the kernel's runtime is appropriately configured. This is particularly important for semantic functions that require access to AI services.
-
-### Runtime properties managed by the kernel
-By investigating the [constructor](/dotnet/api/microsoft.semantickernel.kernel.-ctor) of the `Kernel` class, you can see that you can configure multiple settings that are necessary to run both native and semantic functions. These include:
-- The default [AI service](/dotnet/api/microsoft.semantickernel.services.iaiserviceprovider) that will power your semantic functions.
-- The [template engine](/dotnet/api/microsoft.semantickernel.templateengine.iprompttemplateengine) used to render prompt templates.
-- The [logger](/dotnet/api/microsoft.extensions.logging.ilogger) used to log messages from functions.
-- The [plugins](/dotnet/api/microsoft.semantickernel.skilldefinition.iskillcollection) available to be executed by the kernel
-- Additional configuration used by the kernel via the [KernelConfig](/dotnet/api/microsoft.semantickernel.kernelconfig) class.
+## Building a kernel
+Before building a kernel, you should first understand the two types of components that exist within a kernel: services and plugins. Services consist of both AI services and other services that are necessary to run your application (e.g., logging, telemetry, etc.). Plugins, meanwhile, are _any_ code you want AI to call or leverage within a prompt.
 
 ### Configuring the kernel
-Depending on your language of choice, you can configure the kernel in different ways. For example, in C#, you can use the `Kernel.Builder` class to create a kernel, whereas with Python, you can iteratively add properties to the `Kernel` object directly.
+Depending on your language of choice, you can configure the kernel in different ways. For example, in C#, you can use the `KernelBuilder` class to create a kernel using dependency injection. Whereas with Python, you can iteratively add properties to the `Kernel` object directly.
 
-In the following examples, you can see how to add a chat completion service and a logger to the kernel.
+In the following examples, you can see how to add a chat completion service, logger, and plugin to the kernel.
 
 # [C#](#tab/Csharp)
-If you are using a Azure OpenAI, you can use the [WithAzureChatCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withazurechatcompletionservice) method.
+With C#, Semantic Kernel natively supports dependency injection. This means you can add a kernel to your application's dependency injection container and use any of your application's services within the kernel by adding them as a service to the kernel.
 
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="34-41" highlight="3":::
+Import the necessary packages:
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="1-5":::
 
-If you are using OpenAI, you can use the [WithOpenAIChatCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withopenaichatcompletionservice) method.
+If you are using a Azure OpenAI, you can use the `AddAzureOpenAIChatCompletion` method.
 
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="65-72" highlight="3":::
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="21-32" highlight="3":::
+
+If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method.
+
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="49-59" highlight="3":::
 
 # [Python](#tab/python)
 If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
@@ -89,16 +61,39 @@ If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
 ---
 
+## Invoking native code and prompts from the kernel
+Semantic Kernel makes it easy to run prompts alongside native code because they are both expressed as `KernelFunction` objects. This means you can invoke them in  exactly same way.
+
+To run `KernelFunction` objects, Semantic Kernel provides the `InvokeAsync` method. Simply pass in the function you want to run, its arguments, and the kernel will handle the rest.
+
+# [C#](#tab/Csharp)
+Run the `GetCurrentUtcTime` function from `TimePlugin`:
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="35":::
+
+Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
+:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="38":::
+
+
+# [Python](#tab/python)
+Import the necessary packages:
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="2-3":::
+
+Run the today function from the time plugin:
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="12-17" highlight="4":::
+
+---
+
+
 ### Going further with the kernel
 For more details on how to configure and leverage these properties, please refer to the following articles:
 
 | Article | Description |
 |---------|-------------|
-| [Adding services](./adding-services.md) | Learn how to add services from OpenAI, Azure OpenAI, Hugging Face, and more to the kernel. |
+| [Adding AI services](./adding-services.md) | Learn how to add additional AI services from OpenAI, Azure OpenAI, Hugging Face, and more to the kernel. |
 | [Adding telemetry and logs](https://devblogs.microsoft.com/semantic-kernel/unlock-the-power-of-telemetry-in-semantic-kernel-sdk/) | Gain visibility into what Semantic Kernel is doing by adding telemetry to the kernel. |
 
 ## Next steps
-Once you're done configuring the kernel, you can start creating custom functions by developing your own plugins.
+Once you're done configuring the kernel, you can learn how to create prompts to run AI services from the kernel.
 
 > [!div class="nextstepaction"]
-> [Create a plugin for Semantic Kernel](../plugins/index.md)
+> [Learn how to create prompt templates](../prompts/index.md)

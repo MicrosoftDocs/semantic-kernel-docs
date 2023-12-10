@@ -9,6 +9,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <!-- Microsoft.Extensions.Logging -->
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
@@ -16,10 +17,10 @@
     <!-- Newtonsoft.Json -->
     <PackageVersion Include="Newtonsoft.Json" Version="[13.0.3, )" />
     <!-- Microsoft.SemanticKernel -->
-    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.0.0-beta3" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Functions.OpenAPI" Version="1.0.0-beta3" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Planners.Core" Version="1.0.0-beta3" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.0.0-beta3" />
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.0.0-rc3" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Functions.OpenAPI" Version="1.0.0-rc3" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Planners.Core" Version="1.0.0-rc3" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.0.0-rc3" />
     <!-- Microsoft.Azure -->
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.10.0"/>

@@ -9,7 +9,7 @@ ms.service: semantic-kernel
 ---
 # Chaining functions together
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+
 
 In previous articles, we showed how you could invoke a Semantic Kernel function (whether semantic or native) individually. Oftentimes, however, you may want to string multiple functions together into a single pipeline to simplify your code. [In this article](./chaining-functions.md#passing-more-than-just-input-with-native-functions), we'll put this knowledge to use by demonstrating how you could refactor the code from the [calling nested functions](./native-functions/calling-nested-functions.md) article to make it more readable and maintainable.
 

@@ -10,7 +10,7 @@ ms.service: semantic-kernel
 
 # Adding AI services to Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+
 
 One of the main features of Semantic Kernel is its ability to add different AI services to the kernel. This allows you to easily swap out different AI services to compare their performance and to leverage the best model for your needs. In this article, we will provide sample code for adding different AI services to the kernel.
 

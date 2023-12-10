@@ -48,6 +48,7 @@ dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 
 dotnet user-secrets set "AzureOpenAI:DeploymentType" "chat-completion"
 dotnet user-secrets set "AzureOpenAI:ChatCompletionDeploymentName" "gpt-35-turbo"
+dotnet user-secrets set "AzureOpenAI:ChatCompletionModelId" "gpt-3.5-turbo"
 dotnet user-secrets set "AzureOpenAI:Endpoint" "... your Azure OpenAI endpoint ..."
 dotnet user-secrets set "AzureOpenAI:ApiKey" "... your Azure OpenAI key ..."
 ```

@@ -10,7 +10,7 @@ ms.service: semantic-kernel
 
 # Export and import OpenAI plugins with Semantic Kernel
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+
 
 In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin.
 

@@ -10,7 +10,7 @@ ms.service: semantic-kernel
 
 # Automatically orchestrate AI with planners
 
-[!INCLUDE [pat_large.md](../../includes/pat_large.md)]
+
 
 So far, we have manually orchestrated all of the functions on behalf of the user. This, however, is not a scalable solution because it would require the app developer to predict all possible requests that could be made by the user. So instead, we will learn how to automatically orchestrate functions on the fly using planner. If you want to see the final solution, you can check out the following samples in the public documentation repository.
 
