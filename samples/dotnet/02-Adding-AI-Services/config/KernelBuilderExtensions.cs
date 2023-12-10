@@ -16,16 +16,18 @@ internal static class KernelBuilderExtensions
             case "AzureOpenAI":
                 if (Env.Var("AzureOpenAI:DeploymentType")! == "text-completion")
                 {
-                    kernelBuilder.WithAzureTextCompletionService(
+                    kernelBuilder.Services.AddAzureOpenAIChatCompletion(
                         deploymentName: Env.Var("AzureOpenAI:TextCompletionDeploymentName")!,
+                        modelId: Env.Var("AzureOpenAI:TextCompletionModelId")!,
                         endpoint: Env.Var("AzureOpenAI:Endpoint")!,
                         apiKey: Env.Var("AzureOpenAI:ApiKey")!
                     );
                 }
                 else if (Env.Var("AzureOpenAI:DeploymentType")! == "chat-completion")
                 {
-                    kernelBuilder.WithAzureChatCompletionService(
+                    kernelBuilder.Services.AddAzureOpenAIChatCompletion(
                         deploymentName: Env.Var("AzureOpenAI:ChatCompletionDeploymentName")!,
+                        modelId: Env.Var("AzureOpenAI:TextCompletionModelId")!,
                         endpoint: Env.Var("AzureOpenAI:Endpoint")!,
                         apiKey: Env.Var("AzureOpenAI:ApiKey")!
                     );
@@ -35,7 +37,7 @@ internal static class KernelBuilderExtensions
             case "OpenAI":
                 if (Env.Var("OpenAI:ModelType")! == "text-completion")
                 {
-                    kernelBuilder.WithOpenAITextCompletionService(
+                    kernelBuilder.Services.AddOpenAITextGeneration(
                         modelId: Env.Var("OpenAI:TextCompletionModelId")!,
                         apiKey: Env.Var("OpenAI:ApiKey")!,
                         orgId: Env.Var("OpenAI:OrgId")
@@ -43,7 +45,7 @@ internal static class KernelBuilderExtensions
                 }
                 else if (Env.Var("OpenAI:ModelType")! == "chat-completion")
                 {
-                    kernelBuilder.WithOpenAIChatCompletionService(
+                    kernelBuilder.Services.AddOpenAIChatCompletion(
                         modelId: Env.Var("OpenAI:ChatCompletionModelId")!,
                         apiKey: Env.Var("OpenAI:ApiKey")!,
                         orgId: Env.Var("OpenAI:OrgId")

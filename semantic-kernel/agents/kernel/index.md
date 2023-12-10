@@ -29,9 +29,9 @@ This is extremely powerful, because it means you as a developer have a single pl
 4. Receive and parse the response.
 5. Before finally returning the response to your application.
 
-![The kernel is at the center of everything in Semantic Kernel](../../media/the-kernel-is-at-the-center-of-everything.png)
-
 Throughout this entire process, you can create events and middleware that are triggered at each of these steps. This means you can perform actions like logging, provide status updates to users, and most importantly responsible AI. All from a single place.
+
+![The kernel is at the center of everything in Semantic Kernel](../../media/the-kernel-is-at-the-center-of-everything.png)
 
 ## Building a kernel
 Before building a kernel, you should first understand the two types of components that exist within a kernel: services and plugins. Services consist of both AI services and other services that are necessary to run your application (e.g., logging, telemetry, etc.). Plugins, meanwhile, are _any_ code you want AI to call or leverage within a prompt.
