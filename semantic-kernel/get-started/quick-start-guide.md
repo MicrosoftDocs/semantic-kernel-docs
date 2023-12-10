@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # Start learning how to use Semantic Kernel
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 In just a few steps, you can start running  the getting started guides for Semantic Kernel in either C# or Python. After completing the guides, you'll know how to...
 - Configure your local machine to run Semantic Kernel

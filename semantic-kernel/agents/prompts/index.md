@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # What are Prompts?
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 Prompts play a crucial role in communicating and directing the behavior of Large Language Models (LLMs) AI. They serve as inputs or queries that users can provide to elicit specific responses from a model. 
 

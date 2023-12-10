@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # Writing prompts in Semantic Kernel
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 To write an LLM AI prompt that Semantic Kernel is uniquely fit for, all you need is a concrete goal in mind — something you would like an AI to get done for you. For example:
 

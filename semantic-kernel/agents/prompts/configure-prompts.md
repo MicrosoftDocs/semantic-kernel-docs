@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 # Configuring prompts
 
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 
 When creating a prompt, there are many parameters that can be set to control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is used by [planner](/semantic-kernel/concepts-sk/planner) and how it is run by an [LLM AI model](../prompt-engineering/llm-models.md).

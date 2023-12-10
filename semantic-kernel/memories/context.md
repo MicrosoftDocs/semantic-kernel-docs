@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Introduction to Context
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 This article will introduce you to context and its importance in LLM prompts. You will run a simple chat application and learn how to implement context with the Semantic Kernel SDK. 
 

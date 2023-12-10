@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # What are Embeddings?
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 > [!TIP]
 > Memory: Embeddings

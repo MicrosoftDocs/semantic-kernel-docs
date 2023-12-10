@@ -11,7 +11,6 @@ ms.service: semantic-kernel
 
 The Semantic Kernel Tools help developers to write prompts for [Semantic Kernel](https://github.com/microsoft/semantic-kernel).
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 
 ## These tools simplify Semantic Kernel development
