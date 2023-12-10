@@ -1,14 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using Models;
-
-namespace Extensions;
 
 internal static class KernelBuilderExtensions
 {
     /// <summary>
-    /// Adds a text completion service to the list. It can be either an OpenAI or Azure OpenAI backend service.
+    /// Adds a chat completion service to the list. It can be either an OpenAI or Azure OpenAI backend service.
     /// </summary>
     /// <param name="kernelBuilder"></param>
     /// <param name="kernelSettings"></param>
@@ -18,7 +14,7 @@ internal static class KernelBuilderExtensions
         switch (kernelSettings.ServiceType.ToUpperInvariant())
         {
             case ServiceTypes.AzureOpenAI:
-                kernelBuilder.WithAzureChatCompletionService(deploymentName: kernelSettings.DeploymentOrModelId, endpoint: kernelSettings.Endpoint, apiKey: kernelSettings.ApiKey, serviceId: kernelSettings.ServiceId);
+                kernelBuilder.WithAzureOpenAIChatCompletionService(deploymentName: kernelSettings.DeploymentOrModelId, endpoint: kernelSettings.Endpoint, apiKey: kernelSettings.ApiKey, serviceId: kernelSettings.ServiceId);
                 break;
 
             case ServiceTypes.OpenAI:

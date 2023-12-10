@@ -25,7 +25,7 @@ The core plugins are planned to be available in all languages since they are cor
 | `TextMemoryPlugin` | To store and retrieve text in memory | ✅ | ✅ | ❌ |
 | `TextPlugin` | To deterministically manipulating text strings | ✅ | ✅ | * |
 | `TimePlugin` | To acquire the time of day and any other temporal information | ✅ | ✅ | * |
-| `WaitPlugin` | To pause execution for a specified amount of time | ✅ | ❌ | ❌ |
+| `WaitPlugin` | To pause execution for a specified amount of time | ✅ | ✅ | ❌ |
 
 You can find the full list of core plugins for each language by following the links below:
 - [C# core plugins](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Plugins/Plugins.Core)

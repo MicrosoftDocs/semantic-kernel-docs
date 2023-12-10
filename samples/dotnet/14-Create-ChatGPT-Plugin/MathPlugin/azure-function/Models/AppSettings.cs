@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 
 namespace Models;
@@ -14,7 +16,7 @@ public class AppSettings
     public AIPluginSettings AIPlugin { get; set; }
 
     /// <summary>
-    /// Load the kernel settings from appsettings.json if the file exists and if not attempt to use user secrets.
+    /// Load the kernel settings from settings.json if the file exists and if not attempt to use user secrets.
     /// </summary>
     public static AppSettings LoadSettings()
     {
@@ -29,7 +31,7 @@ public class AppSettings
         {
             Console.Error.WriteLine(
                 "Unable to load app settings, please provide configuration settings using instructions in the README.\n" +
-                "Please refer to: https://github.com/microsoft/semantic-kernel-starters/blob/main/azure-function/README.md#configuring-the-starter"
+                "Please refer to: https://github.com/microsoft/semantic-kernel-starters/blob/main/sk-csharp-chatgpt-plugin/README.md#configuring-the-starter"
             );
             throw new InvalidOperationException(ide.Message);
         }
