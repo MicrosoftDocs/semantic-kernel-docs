@@ -4,14 +4,14 @@ The `07-Simple-Native-Functions` console application shows the final solution to
 
 ## Prerequisites
 
-- [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0) is required to run this sample.
+- [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0) is required to run this sample.
 - Install the recommended extensions
 - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 - [Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel) (optional)
 
 ## Prerequisites
 
-- [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0) is required to run this sample.
+- [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0) is required to run this sample.
 - Install the recommended extensions
 - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 - [Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel) (optional)

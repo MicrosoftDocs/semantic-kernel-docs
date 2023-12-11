@@ -9,7 +9,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <!-- Microsoft.Extensions.Logging -->
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
@@ -28,7 +28,7 @@
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="2.0.0-preview2" />
     <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="2.0.0-preview2" TreatAsUsed="true" />
     <!-- Microsoft.CodeAnalysis -->
-    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.6.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
   </ItemGroup>
 </Project>

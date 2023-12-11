@@ -1,33 +1,8 @@
 import semantic_kernel as sk
 import config.add_completion_service
-from semantic_kernel import PromptTemplateConfig, PromptTemplate, SemanticFunctionConfig
 
 
 async def main():
-    # Create the prompt for the prompt
-    prompt = """Bot: How can I help you?
-    User: {{$input}}
-
-    ---------------------------------------------
-
-    The intent of the user in 5 words or less: """
-
-    semantic_function = kernel.create_semantic_function(prompt)
-
-    # Create the configuration for the prompt
-    prompt_config = PromptTemplateConfig(
-        description="Gets the intent of the user.",
-        type="completion",
-        completion=PromptTemplateConfig.CompletionConfig(0.0, 0.0, 0.0, 0.0, 500),
-        input=PromptTemplateConfig.InputConfig(
-            parameters=[
-                PromptTemplateConfig.InputParameter(
-                    name="input", description="The user's request.", default_value=""
-                )
-            ]
-        ),
-    )
-
     # Initialize the kernel
     kernel = sk.Kernel()
     # Add a text or chat completion service using either:
@@ -35,28 +10,112 @@ async def main():
     # kernel.add_chat_service()
     kernel.add_completion_service()
 
-    # Create the SemanticFunctionConfig object
-    prompt_template = PromptTemplate(
-        template=prompt,
-        template_engine=kernel.prompt_template_engine,
-        prompt_config=prompt_config,
-    )
-    function_config = SemanticFunctionConfig(prompt_config, prompt_template)
+    request = input("Your request: ")
 
-    # Register the GetIntent function with the Kernel
-    get_intent = kernel.register_semantic_function(
-        skill_name="OrchestratorPlugin",
-        function_name="GetIntent",
-        function_config=function_config,
-    )
+    # 0.0 Initial prompt
+    prompt = f"What is the intent of this request? {request}"
+    print("0.0 Initial prompt")
+    semantic_function = kernel.create_semantic_function(prompt)
+    print(await kernel.run_async(semantic_function))
 
-    # Run the GetIntent function
-    result = await kernel.run_async(
-        get_intent,
-        input_str="I want to send an email to the marketing team celebrating their recent milestone.",
+    # 1.0 Make the prompt more specific
+    prompt = (
+        f"What is the intent of this request? {request}\n"
+        "You can choose between SendEmail, SendMessage, CompleteTask, CreateDocument."
     )
+    print("1.0 Make the prompt more specific")
+    semantic_function = kernel.create_semantic_function(prompt)
+    print(await kernel.run_async(semantic_function))
 
-    print(result)
+    # 2.0 Add structure to the output with formatting
+    prompt = (
+        f"Instructions: What is the intent of this request?\n"
+        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.\n"
+        f"User Input: {request}\n"
+        "Intent: "
+    )
+    print("2.0 Add structure to the output with formatting")
+    semantic_function = kernel.create_semantic_function(prompt)
+    print(await kernel.run_async(semantic_function))
+
+    # 2.1 Add structure to the output with formatting (using Markdown and JSON)
+    prompt = (
+        f"## Instructions\n"
+        "Provide the intent of the request using the following format:\n"
+        "```json\n"
+        "{\n"
+        '    "intent": {intent}\n'
+        "}\n"
+        "```\n\n"
+        "## Choices\n"
+        "You can choose between the following intents:\n"
+        "```json\n"
+        '["SendEmail", "SendMessage", "CompleteTask", "CreateDocument"]\n'
+        "```\n\n"
+        "## User Input\n"
+        "The user input is:\n"
+        "```json\n"
+        "{\n"
+        f'    "request": "{request}"\n'
+        "}\n"
+        "```\n\n"
+        "## Intent"
+    )
+    print("2.1 Add structure to the output with formatting (using Markdown and JSON)")
+    semantic_function = kernel.create_semantic_function(prompt)
+    print(await kernel.run_async(semantic_function))
+
+    # 3.0 Provide examples with few-shot prompting
+    prompt = (
+        f"Instructions: What is the intent of this request?\n"
+        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.\n\n"
+        "User Input: Can you send a very quick approval to the marketing team?\n"
+        "Intent: SendMessage\n\n"
+        "User Input: Can you send the full update to the marketing team?\n"
+        "Intent: SendEmail\n\n"
+        f"User Input: {request}\n"
+        "Intent: "
+    )
+    print("3.0 Provide examples with few-shot prompting")
+    semantic_function = kernel.create_semantic_function(prompt)
+    print(await kernel.run_async(semantic_function))
+
+    # 4.0 Tell the AI what to do to avoid doing something wrong
+    prompt = (
+        f"Instructions: What is the intent of this request?\n"
+        "If you don't know the intent, don't guess; instead respond with \"Unknown\".\n"
+        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown.\n\n"
+        "User Input: Can you send a very quick approval to the marketing team?\n"
+        "Intent: SendMessage\n\n"
+        "User Input: Can you send the full update to the marketing team?\n"
+        "Intent: SendEmail\n\n"
+        f"User Input: {request}\n"
+        "Intent: "
+    )
+    print("4.0 Tell the AI what to do to avoid doing something wrong")
+    semantic_function = kernel.create_semantic_function(prompt)
+    print(await kernel.run_async(semantic_function))
+
+    # 5.0 Provide context to the AI
+    history = (
+        "User input: I hate sending emails, no one ever reads them.\n"
+        "AI response: I'm sorry to hear that. Messages may be a better way to communicate."
+    )
+    prompt = (
+        f"Instructions: What is the intent of this request?\n"
+        "If you don't know the intent, don't guess; instead respond with \"Unknown\".\n"
+        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown.\n\n"
+        "User Input: Can you send a very quick approval to the marketing team?\n"
+        "Intent: SendMessage\n\n"
+        "User Input: Can you send the full update to the marketing team?\n"
+        "Intent: SendEmail\n\n"
+        f"{history}\n"
+        f"User Input: {request}\n"
+        "Intent: "
+    )
+    print("5.0 Provide context to the AI")
+    semantic_function = kernel.create_semantic_function(prompt)
+    print(await kernel.run_async(semantic_function))
 
 
 # Run the main function

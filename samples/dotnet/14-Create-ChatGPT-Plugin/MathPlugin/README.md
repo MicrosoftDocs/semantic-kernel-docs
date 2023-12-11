@@ -10,7 +10,7 @@ To learn more about using this starter, see the Semantic Kernel documentation th
 
 ## Prerequisites
 
-- [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0) is required to run this starter.
+- [.NET 6](https://dotnet.microsoft.com/download/dotnet/8.0) is required to run this starter.
 - [Azure Functions Core Tools](https://www.npmjs.com/package/azure-functions-core-tools) is required to run this starter.
 - Install the recommended extensions
 - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
@@ -51,6 +51,6 @@ To build and run the Azure Functions application from a terminal use the followi
 ```powershell
 cd azure-function
 dotnet build
-cd bin/Debug/net6.0
+cd bin/Debug/net8.0
 func host start
 ```

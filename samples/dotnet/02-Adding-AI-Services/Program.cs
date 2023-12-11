@@ -10,7 +10,7 @@ if (LlmService == "AzureOpenAI")
 
     if (AzureOpenAIDeploymentType == "chat-completion")
     {
-        // Create a kernel with a logger and Azure OpenAI chat completion service
+        // Create a kernel with an Azure OpenAI chat completion service
         //////////////////////////////////////////////////////////////////////////////////
         var AzureOpenAIDeploymentName = Env.Var("AzureOpenAI:ChatCompletionDeploymentName")!;
         var AzureOpenAIModelId = Env.Var("AzureOpenAI:ChatCompletionModelId")!;
@@ -35,7 +35,7 @@ if (LlmService == "AzureOpenAI")
     }
     else
     {
-        // Create a kernel with a logger and Azure OpenAI text generation service
+        // Create a kernel with an Azure OpenAI text generation service
         //////////////////////////////////////////////////////////////////////////////////
         var AzureOpenAIDeploymentName = Env.Var("AzureOpenAI:TextCompletionDeploymentName")!;
         var AzureOpenAIModelId = Env.Var("AzureOpenAI:ChatCompletionModelId")!;
@@ -65,7 +65,7 @@ else
 
     if (OpenAIModelType == "chat-completion")
     {
-        // Create a kernel with a logger and OpenAI chat completion service
+        // Create a kernel with an OpenAI chat completion service
         //////////////////////////////////////////////////////////////////////////////////
         var OpenAIModelId = Env.Var("OpenAI:ChatCompletionModelId")!;
         var OpenAIApiKey = Env.Var("OpenAI:ApiKey")!;
@@ -88,7 +88,7 @@ else
     }
     else
     {
-        // Create a kernel with a logger and OpenAI text generation service
+        // Create a kernel with an OpenAI text generation service
         //////////////////////////////////////////////////////////////////////////////////
         var OpenAIModelId = Env.Var("OpenAI:TextCompletionModelId")!;
         var OpenAIApiKey = Env.Var("OpenAI:ApiKey")!;

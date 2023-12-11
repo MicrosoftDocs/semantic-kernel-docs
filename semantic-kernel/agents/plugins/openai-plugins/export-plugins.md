@@ -27,7 +27,7 @@ Once we're done, you'll have an Azure Function that exposes each of your plugin'
 ## Prerequisites
 To complete this tutorial, you'll need the following:
 - [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools) version 4.x.
-- [.NET 6.0 SDK.](https://dotnet.microsoft.com/download)
+- [.NET 8.0 SDK.](https://dotnet.microsoft.com/download)
 
 To publish your plugin once you're complete, you'll also need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio) and one of the following tools for creating Azure resources:
 - [Azure CLI](/cli/azure/install-azure-cli) [version 2.4](/cli/azure/release-notes-azure-cli#april-21-2020) or later.

@@ -16,7 +16,7 @@ internal static class KernelBuilderExtensions
             case "AzureOpenAI":
                 if (Env.Var("AzureOpenAI:DeploymentType")! == "text-completion")
                 {
-                    kernelBuilder.Services.AddAzureOpenAIChatCompletion(
+                    kernelBuilder.Services.AddAzureOpenAITextGeneration(
                         deploymentName: Env.Var("AzureOpenAI:TextCompletionDeploymentName")!,
                         modelId: Env.Var("AzureOpenAI:TextCompletionModelId")!,
                         endpoint: Env.Var("AzureOpenAI:Endpoint")!,
