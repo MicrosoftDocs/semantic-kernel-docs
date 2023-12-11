@@ -24,7 +24,7 @@ var host = new HostBuilder()
             .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true);
         var builtConfig = config.Build();
     })
-    .ConfigureServices((context, services) =>
+    .ConfigureServices(services =>
     {
         services.Configure<JsonSerializerOptions>(options =>
         {
@@ -52,28 +52,28 @@ var host = new HostBuilder()
             return options;
         });
         services
-            .AddScoped<IKernel>((providers) =>
-            {
-                // This will be called each time a new Kernel is needed
+        .AddScoped<Kernel>(serviceProvider =>
+        {
+            // This will be called each time a new Kernel is needed
 
-                // Get a logger instance
-                ILogger<IKernel> logger = providers
-                    .GetRequiredService<ILoggerFactory>()
-                    .CreateLogger<IKernel>();
+            // Get a logger instance
+            ILogger<Kernel> logger = serviceProvider
+                .GetRequiredService<ILoggerFactory>()
+                .CreateLogger<Kernel>();
 
-                // Register your AI Providers...
-                var appSettings = AppSettings.LoadSettings();
-                IKernel kernel = new KernelBuilder()
-                    .WithChatCompletionService(appSettings.Kernel)
-                    .WithLoggerFactory(providers.GetRequiredService<ILoggerFactory>())
-                    .Build();
+            // Register your AI Providers...
+            var appSettings = AppSettings.LoadSettings();
+            Kernel kernel = new KernelBuilder()
+                .WithChatCompletionService(appSettings.Kernel)
+                // .Services.AddLogging(logger)
+                .Build();
 
-                // Load your semantic functions...
-                kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, semanticFunctionsFolder);
+            // Load your semantic functions...
+            kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, semanticFunctionsFolder);
 
-                return kernel;
-            })
-            .AddScoped<IAIPluginRunner, AIPluginRunner>();
+            return kernel;
+        })
+        .AddScoped<IAIPluginRunner, AIPluginRunner>();
     })
     .Build();
 
