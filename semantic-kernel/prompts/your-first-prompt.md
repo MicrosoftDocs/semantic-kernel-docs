@@ -222,5 +222,5 @@ Finally, research has shown that giving your AI words of encouragement can help 
 Now that you know how to write prompts, you can learn how to templatize them to make them more flexible and powerful.
 
 > [!div class="nextstepaction"]
-> [Learn how to templatize your prompts](./templatizing-semantic-functions.md)
+> [Learn how to templatize your prompts](./templatizing-prompts.md)
 

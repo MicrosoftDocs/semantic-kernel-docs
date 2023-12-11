@@ -29,7 +29,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="17-28":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="17-28" highlight="4,9-10":::
 
 ---
 
@@ -39,13 +39,13 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
       The new prompt uses the `options` variable to provide a list of options for the LLM to choose from. We've also added `input` and `history` variables to the prompt so the conversation can be included.
       
       By including these variables, we are able to help the LLM choose the correct intent by providing it with more context and a constrained list of options to choose from.
+
+      You can now run your template using named arguments.
    :::column-end:::
    :::column span="3":::
       ![Consuming context variables within a prompt](../media/using-context-in-templates.png)
    :::column-end:::
 :::row-end:::
-
-You can now run your template using named arguments.
 
 # [C#](#tab/Csharp)
 
@@ -53,7 +53,7 @@ You can now run your template using named arguments.
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="7-10, 12-16, 29-46":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="7-10, 12-16, 29-46" highlight="13-18,24":::
 
 ---
 
@@ -72,9 +72,9 @@ We can then create the example and chat history objects that will be used by the
 
 :::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="65-83":::
 
-Finally, you can run the prompt using the kernel.
+Finally, you can run the prompt using the kernel. Notice how we're using the `InvokeAsync` instead of `InvokePromptAsync` since we've already turned the prompt string into a function.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="111-120":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="114-123", highlight="1":::
 
 ## Take the next step
 Now that you can templatize your prompt, you can now learn how to call functions from within
