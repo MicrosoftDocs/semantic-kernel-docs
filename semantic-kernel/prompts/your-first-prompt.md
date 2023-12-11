@@ -17,8 +17,8 @@ If you want to see the final solution to this tutorial, you can check out the fo
 
 | Language  | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/03-Inline-Semantic-Functions) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/03-Inline-Semantic-Functions) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/03-Intro-to-Prompts) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/03-Intro-to-Prompts) |
 
 ## Creating a prompt that detects the intent of a user
 If you've ever used ChatGPT or Microsoft Copilot, you're already familiar with prompting. Given a request, an LLM will attempt to predict the most likely response. For example, if you sent the prompt `"I want to go to the "`, an AI service might return back `"beach"` to complete the sentence. This is a very simple example, but it demonstrates the basic idea of how text generation prompts work.
@@ -35,11 +35,11 @@ If we wanted an AI to detect the intent of a user's input, we could simply _ask_
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="3-6, 19-21, 24-25" highlight="8":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="3-6, 19-21, 24-25" highlight="8":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="13-14, 16":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="13-14, 16":::
 
 ---
 
@@ -47,11 +47,11 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="8-13, 15-16":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="8-13, 15-16":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="7-10":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="7-10":::
 
 ---
 
@@ -60,11 +60,11 @@ Finally, we can invoke our prompt using our new kernel.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="27":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="27":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="19":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="19":::
 
 ---
 
@@ -92,11 +92,11 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="32-33" highlight="2":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="32-33" highlight="2":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="22-25" highlight="3":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="22-25" highlight="3":::
 
 ---
 
@@ -114,11 +114,11 @@ To make the result more predictable, we can add structure to the prompt by using
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="40-43":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="40-43":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="31-36":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="31-36":::
 
 ---
 
@@ -131,11 +131,11 @@ For example, if you wanted the LLM to generate a JSON object, you could use the 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="50-75":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="50-75":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="42-63":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="42-63":::
 
 ---
 
@@ -155,11 +155,11 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="82-92" highlight="4-5,7-8":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="82-92" highlight="4-5,7-8":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="69-78" highlight="4-7":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="69-78" highlight="4-7":::
 
 ---
 
@@ -171,11 +171,11 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="99-110" highlight="2":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="99-110" highlight="2":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="84-94" highlight="3":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="84-94" highlight="3":::
 
 ---
 
@@ -197,11 +197,11 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="117-132" highlight="1-2,14":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="117-132" highlight="1-2,14":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Inline-Semantic-Functions/main.py" range="100-115" highlight="1-4,13":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="100-115" highlight="1-4,13":::
 
 ---
 
@@ -210,12 +210,12 @@ As your prompts become more complex, you may want to use message roles to help t
 
 In Semantic Kernel, a special syntax is used to define message roles. To define a message role, you simply wrap the message in `<message>` tag with the role name as an attribute. This is currently only available in the C# SDK.
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="138-155":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="138-155":::
 
 ### Give your AI words of encouragement
 Finally, research has shown that giving your AI words of encouragement can help it perform better. For example, offering bonuses or rewards for good results can yield better results. 
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="161-179" highlight="7":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="161-179" highlight="7":::
 
 
 ## Next steps

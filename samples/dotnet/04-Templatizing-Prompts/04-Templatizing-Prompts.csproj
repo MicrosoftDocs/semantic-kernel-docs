@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplate.Handlebars" />
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 # Creating prompts
 
-The `05-Templatizing-Semantic-Functions` console application shows the final solution to the [templatizing prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/templatizing-semantic-functions) doc article.
+The `04-Templatizing-Prompts` console application shows the final solution to the [templatizing prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/templatizing-semantic-functions) doc article.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ This sample has been tested with the following models:
 Configure an OpenAI endpoint
 
 ```powershell
-cd 05-Templatizing-Semantic-Functions
+cd 04-Templatizing-Prompts
 
 dotnet user-secrets set "Global:LlmService" "OpenAI"
 
@@ -44,7 +44,7 @@ dotnet user-secrets set "OpenAI:OrgId" "... your ord ID ..."
 Configure an Azure OpenAI endpoint
 
 ```powershell
-cd 05-Templatizing-Semantic-Functions
+cd 04-Templatizing-Prompts
 
 dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 

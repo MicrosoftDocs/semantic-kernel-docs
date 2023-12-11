@@ -1,6 +1,6 @@
 # Creating prompts
 
-The `03-Inline-Semantic-Functions` console application shows the final solution to the [inline prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/inline-semantic-functions) doc article.
+The `03-Intro-to-Prompts` console application shows the final solution to the [inline prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/semantic-functions/inline-semantic-functions) doc article.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ This sample has been tested with the following models:
 Configure an OpenAI endpoint
 
 ```powershell
-cd 03-Inline-Semantic-Functions
+cd 03-Intro-to-Prompts
 
 dotnet user-secrets set "Global:LlmService" "OpenAI"
 
@@ -44,7 +44,7 @@ dotnet user-secrets set "OpenAI:OrgId" "... your ord ID ..."
 Configure an Azure OpenAI endpoint
 
 ```powershell
-cd 03-Inline-Semantic-Functions
+cd 03-Intro-to-Prompts
 
 dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 

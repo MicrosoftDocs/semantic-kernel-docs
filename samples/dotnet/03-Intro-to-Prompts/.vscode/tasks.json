@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/05-Templatizing-Semantic-Functions.csproj",
+                "${workspaceFolder}/03-Intro-to-Prompts.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/05-Templatizing-Semantic-Functions.csproj",
+                "${workspaceFolder}/03-Intro-to-Prompts.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/05-Templatizing-Semantic-Functions.csproj"
+                "${workspaceFolder}/03-Intro-to-Prompts.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

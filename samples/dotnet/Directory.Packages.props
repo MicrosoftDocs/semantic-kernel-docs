@@ -14,6 +14,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel.PromptTemplate.Handlebars" Version="1.0.0-rc3" />
     <!-- Newtonsoft.Json -->
     <PackageVersion Include="Newtonsoft.Json" Version="[13.0.3, )" />
     <!-- Microsoft.SemanticKernel -->
@@ -23,7 +24,7 @@
     <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.0.0-rc3" />
     <!-- Microsoft.Azure -->
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
-    <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.10.0"/>
+    <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.10.0" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker" Version="1.18.0" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="2.0.0-preview2" />
     <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="2.0.0-preview2" TreatAsUsed="true" />
