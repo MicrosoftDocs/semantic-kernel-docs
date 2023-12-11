@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Orchestration;
 using Models;
 
 namespace AIPlugins.AzureFunctions.Extensions;
@@ -12,13 +13,14 @@ namespace AIPlugins.AzureFunctions.Extensions;
 public class AIPluginRunner : IAIPluginRunner
 {
     private readonly ILogger<AIPluginRunner> _logger;
-    private readonly IKernel _kernel;
+    private readonly Kernel _kernel;
 
-    public AIPluginRunner(IKernel kernel, ILoggerFactory loggerFactory)
+    public AIPluginRunner(Kernel kernel, ILoggerFactory loggerFactory)
     {
         this._kernel = kernel;
         this._logger = loggerFactory.CreateLogger<AIPluginRunner>();
     }
+
 
     /// <summary>
     /// Runs a semantic function using the operationID and returns back an HTTP response.
@@ -27,18 +29,18 @@ public class AIPluginRunner : IAIPluginRunner
     /// <param name="operationId"></param>
     public async Task<HttpResponseData> RunAIPluginOperationAsync(HttpRequestData req, string operationId)
     {
-        ContextVariables contextVariables = LoadContextVariablesFromRequest(req);
+        KernelArguments contextVariables = LoadContextVariablesFromRequest(req);
 
         var appSettings = AppSettings.LoadSettings();
         var pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(),"Prompts");
         var func = this._kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, pluginsDirectory);
 
-        var result = await this._kernel.RunAsync(contextVariables, func[operationId]);
-        if (result.FunctionResults.Last() == null)
+        var result = await this._kernel.InvokeAsync(func[operationId], contextVariables);
+        if (result == null)
         {
-           HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-            string? message = result?.FunctionResults.Last()?.ToString();
-        if (message != null)
+            HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            string? message = result?.ToString();
+            if (message != null)
             {
                 await errorResponse.WriteStringAsync(message);  
             }
@@ -55,14 +57,14 @@ public class AIPluginRunner : IAIPluginRunner
     /// Grabs the context variables to send to the semantic function from the original HTTP request.
     /// </summary>
     /// <param name="req"></param>
-    protected static ContextVariables LoadContextVariablesFromRequest(HttpRequestData req)
+    protected static KernelArguments LoadContextVariablesFromRequest(HttpRequestData req)
     {
-        ContextVariables contextVariables = new ContextVariables();
+        KernelArguments contextVariables = new KernelArguments();
         foreach (string? key in req.Query.AllKeys)
         {
             if (!string.IsNullOrEmpty(key))
             {
-                contextVariables.Set(key, req.Query[key]);
+                contextVariables.Add(key, req.Query[key]);
             }
         }
 
@@ -73,7 +75,7 @@ public class AIPluginRunner : IAIPluginRunner
             string? body = req.ReadAsString();
             if (!string.IsNullOrEmpty(body))
             {
-                contextVariables.Update(body);
+                contextVariables.Add("input", body);
             }
         }
 

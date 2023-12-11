@@ -1,21 +1,20 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.TemplateEngine;
-using Microsoft.SemanticKernel.TemplateEngine.Basic;
-
+using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
 
 namespace AIPlugins.AzureFunctions.Extensions;
 
 public static class KernelExtensions
 {
-    public static IDictionary<string, ISKFunction> ImportPromptsFromDirectory(
-        this IKernel kernel, string pluginName, string promptDirectory)
+    public static IDictionary<string, KernelFunction> ImportPromptsFromDirectory(
+        this Kernel kernel, string pluginName, string promptDirectory)
     {
         const string CONFIG_FILE = "config.json";
         const string PROMPT_FILE = "skprompt.txt";
 
-        var plugin = new Dictionary<string, ISKFunction>();
+        var plugin = new Dictionary<string, KernelFunction>();
 
         string[] directories = Directory.GetDirectories(promptDirectory);
         foreach (string dir in directories)
@@ -35,11 +34,13 @@ public static class KernelExtensions
             }
 
             // Load prompt template
-            var template = new BasicPromptTemplate(File.ReadAllText(promptPath), config);
+            var template = File.ReadAllText(promptPath);
 
             // Prepare lambda wrapping AI logic
-            kernel.LoggerFactory.CreateLogger($"Registering function {pluginName}.{functionName} loaded from {dir}");
-            plugin[functionName] = kernel.RegisterSemanticFunction(pluginName, functionName, config, template);
+            var fun = kernel.CreateFunctionFromPrompt(template, config.ExecutionSettings.FirstOrDefault());
+
+            // kernel.Logger.LogTrace("Registering function {0}.{1} loaded from {2}", pluginName, functionName, dir);
+            plugin[functionName] = fun;
         }
 
         return plugin;
