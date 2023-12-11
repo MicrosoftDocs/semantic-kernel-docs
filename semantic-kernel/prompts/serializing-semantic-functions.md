@@ -11,9 +11,9 @@ ms.service: semantic-kernel
 # Serializing prompts
 
 
-In previous articles, we demonstrated [how to load a semantic function inline](./inline-semantic-functions.md). However, in most cases, you'll want to create your prompts in a separate file so you can easily import them into Semantic Kernel across multiple projects.
+In previous articles, we demonstrated [how to load a prompt inline](./inline-semantic-functions.md). However, in most cases, you'll want to create your prompts in a separate file so you can easily import them into Semantic Kernel across multiple projects.
 
-In this article, we'll demonstrate how to create the files necessary for a semantic function so you can easily import them into Semantic Kernel. As an example in this article, we will build on the [previous tutorial](./inline-semantic-functions.md) by showing how to create a semantic function that gathers the intent of the user. This semantic function will be called `GetIntent` and will be part of a plugin called `OrchestratorPlugin`.
+In this article, we'll demonstrate how to create the files necessary for a prompt so you can easily import them into Semantic Kernel. As an example in this article, we will build on the [previous tutorial](./inline-semantic-functions.md) by showing how to create a prompt that gathers the intent of the user. This prompt will be called `GetIntent` and will be part of a plugin called `OrchestratorPlugin`.
 
 If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
@@ -41,7 +41,7 @@ Plugins
 
 To see a more complete example of a plugins directory, check out the [Semantic Kernel sample plugins](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins) folder in the GitHub repository.
 
-## Creating the files for your semantic function
+## Creating the files for your prompt
 Once inside of a prompts folder, you'll need to create two new files: _skprompt.txt_ and _config.json_. The _skprompt.txt_ file contains the prompt that will be sent to the AI service and the _config.json_ file contains the configuration along with semantic descriptions that can be used by planners.
 
 Go ahead and create these two files in the _GetIntent_ folder.
@@ -75,7 +75,7 @@ For the `GetIntent` function, we can use the same configuration [as before](./in
 
 :::code language="json" source="~/../samples/dotnet/04-Serializing-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/config.json":::
 
-### Testing your semantic function
+### Testing your prompt
 At this point, you can import and test your function with the kernel by updating your _Program.cs_ or _main.py_ file to the following.
 
 # [C#](#tab/Csharp)
@@ -95,8 +95,8 @@ Send congratulatory email.
 
 
 ## Take the next step
-Now that you can create a semantic function, you can now learn how to templatize your prompt so
+Now that you can create a prompt, you can now learn how to templatize your prompt so
 that it can be used for even more scenarios.
 
 > [!div class="nextstepaction"]
-> [Templatize your semantic function](./templatizing-semantic-functions.md)
+> [Templatize your prompt](./templatizing-semantic-functions.md)

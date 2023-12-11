@@ -24,10 +24,10 @@ If you want to see the final solution to this article, you can check out the fol
 > This article uses the `GetIntent` from the [prompts](../semantic-functions/calling-nested-functions.md#calling-a-nested-function) section. We recommend using the final solution from the [previous tutorial](./multiple-parameters.md) as a starting point for this tutorial so you can follow along.
 
 ## Using native and prompts together
-Typically, you'll want to use prompts to extract data from the user's request and native functions to perform the actual work. [Previously](../semantic-functions/calling-nested-functions.md#calling-a-nested-function), we created a `GetIntent` semantic function that extracts the user's intent from their request. In this tutorial, we'll leverage this semantic function in a new native function called `RouteRequest` that will call the appropriate function based on the user's intent.
+Typically, you'll want to use prompts to extract data from the user's request and native functions to perform the actual work. [Previously](../semantic-functions/calling-nested-functions.md#calling-a-nested-function), we created a `GetIntent` prompt that extracts the user's intent from their request. In this tutorial, we'll leverage this prompt in a new native function called `RouteRequest` that will call the appropriate function based on the user's intent.
 
 ### Finding a home for the `RouteRequest` function
-Since the `RouteRequest` function helps with orchestration, we can add it to the `OrchestratorPlugin` plugin we created in the [semantic function](../semantic-functions/serializing-semantic-functions.md) section.
+Since the `RouteRequest` function helps with orchestration, we can add it to the `OrchestratorPlugin` plugin we created in the [prompt](../semantic-functions/serializing-semantic-functions.md) section.
 
 # [C#](#tab/Csharp)
  To start, create a new file called _OrchestratorPlugin.cs_ in the same directory as your prompts for `OrchestratorPlugin`.
@@ -103,10 +103,10 @@ Add the following code to your `Orchestrator` class to get started creating the 
 
 Notice how we're able to use the readonly `kernel` property of our Orchestrator class to run the `GetIntent` function. Later, we can also use this kernel to run the `Sqrt` and `Multiply` functions.
 
-Unfortunately, however, we have a challenge. Despite knowing the user's intent, we don't know which numbers to pass to the `Sqrt` or `Multiply` functions. We'll need to add _another_ semantic function to the orchestrator plugin to extract the necessary numbers from the user's input.
+Unfortunately, however, we have a challenge. Despite knowing the user's intent, we don't know which numbers to pass to the `Sqrt` or `Multiply` functions. We'll need to add _another_ prompt to the orchestrator plugin to extract the necessary numbers from the user's input.
 
 ### Using prompts to extract data for native functions
-To pull the numbers from the user's input, we'll create a semantic function called `GetNumbers`. Create a new folder under the _OrchestratorPlugin_ folder named _GetNumbers_. Then create a _skprompt.txt_ and _config.json_ file with the following content.
+To pull the numbers from the user's input, we'll create a prompt called `GetNumbers`. Create a new folder under the _OrchestratorPlugin_ folder named _GetNumbers_. Then create a _skprompt.txt_ and _config.json_ file with the following content.
 
 ```directory
 Plugins
@@ -134,7 +134,7 @@ Add the following code to the _config.json_ file:
 
 :::code language="json" source="~/../samples/dotnet/09-Calling-Nested-Functions-in-Native-Functions/plugins/OrchestratorPlugin/GetNumbers/config.json":::
 
-This semantic function uses few-shot learning to demonstrate to the LLM how to correctly extract the numbers from the user's request and output them in JSON format. This will allow us to easily pass the numbers to the `Sqrt` and `Multiply` functions.
+This prompt uses few-shot learning to demonstrate to the LLM how to correctly extract the numbers from the user's request and output them in JSON format. This will allow us to easily pass the numbers to the `Sqrt` and `Multiply` functions.
 
 ### Putting it all together
 We can now call the `GetNumbers` function from the `RouteRequest` function. Replace the `switch` statement in the `RouteRequest` function with the following code to run the `GetNumbers` function and extract the numbers from the JSON output.

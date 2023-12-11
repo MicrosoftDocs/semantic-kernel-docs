@@ -35,14 +35,14 @@ class Program
             .WithCompletionService()
             .Build();
 
-        // Initialize the context variables (semantic function input).
+        // Initialize the context variables (prompt input).
         var chatFunctionVariables = new ContextVariables
         {
             [ContextVariableKeyHistory] = string.Empty,
             [ContextVariableKeyUserInput] = string.Empty,
         };
 
-        // Create an inline semantic function: prompt string + prompt configuration.
+        // Create an inline prompt: prompt string + prompt configuration.
         // (NOTE: This is not the standard approach. Used here for simplicity.)
 
         // Initialize the prompt string.
@@ -65,12 +65,12 @@ class Program
             }
         };
 
-        // Register the semantic function with your semantic kernel.
+        // Register the prompt with your semantic kernel.
         var chatPromptTemplate = new PromptTemplate(chatFunctionPrompt, chatFunctionPromptConfig, kernel);
         var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctionPromptConfig, chatPromptTemplate);
 
         // Chat!
-        // Send initial prompt (run semantic function) using context variables (input) and receive 
+        // Send initial prompt (run prompt) using context variables (input) and receive 
         // chat completion (output).
         var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
         Console.WriteLine("To finish the chat session, press only <Enter>.\r\n");

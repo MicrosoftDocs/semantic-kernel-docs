@@ -22,7 +22,7 @@ If you want to see the final solution to this article, you can check out the fol
 
 
 ## Passing data to prompts with `input`
-Semantic Kernel was designed in the spirit of UNIX's piping and filtering capabilities. To replicate this behavior, we've added a special variable called `input` into the kernel's context object that allows you to stream output from one semantic function to the next.
+Semantic Kernel was designed in the spirit of UNIX's piping and filtering capabilities. To replicate this behavior, we've added a special variable called `input` into the kernel's context object that allows you to stream output from one prompt to the next.
 
 ![Passing data with $input in Semantic Kernel](../../media/semantic-kernel-chains.png)
 
@@ -178,8 +178,8 @@ To pass a context object to `RunAsync`, you can create a new context object and 
 
 ---
 
-### Creating a semantic function that uses the new context variables
-Now that we have a variable with the original request, we can use it to create a more natural sounding response. We'll create a new semantic function called `CreateResponse` that will use the `original_request` variable to create a response in the `OrchestratorPlugin`.
+### Creating a prompt that uses the new context variables
+Now that we have a variable with the original request, we can use it to create a more natural sounding response. We'll create a new prompt called `CreateResponse` that will use the `original_request` variable to create a response in the `OrchestratorPlugin`.
 
 Start by creating a new folder called _CreateResponse_ in your _OrchestratorPlugin_ folder. Then create the _config.json_ and _skprompt.txt_ files and paste the following code into the _config.json_ file. Notice how we now have two input variables, `input` and `original_request`.
 

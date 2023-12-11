@@ -3,10 +3,12 @@
 - name: Authoring your first prompt
   href: your-first-prompt.md
 - name: Templatizing prompts
-  href: templatizing-semantic-functions.md
+  href: templatizing-prompts.md
 - name: Calling nested functions in prompts
   href: calling-nested-functions.md
 - name: Serializing prompts
   href: serializing-semantic-functions.md
 - name: Configuring prompts
   href: configure-prompts.md
+- name: Prompt template syntax
+  href: prompt-template-syntax.md

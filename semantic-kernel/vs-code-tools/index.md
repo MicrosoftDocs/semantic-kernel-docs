@@ -63,13 +63,13 @@ Open the Command Palette i.e., View -> Command Palette or Ctrl+Shift+P
 
 Once you have a AI endpoint configured proceed as follows:
 
-1. Select the semantic function you want to execute
+1. Select the prompt you want to execute
 2. Select the "Run Function" icon which is shown in the Functions view
-3. You will be prompted to enter any arguments the semantic function requires
+3. You will be prompted to enter any arguments the prompt requires
 4. The response will be displayed in the Output view in the "Semantic Kernel" section
 
 
-## Create a semantic function
+## Create a prompt
 
 1. Once you have installed the Semantic Kernel Tools extension you will see a new Semantic Kernel option in the activity bar
  - We recommend you clone the semantic-kernel repository and open this in your VS Code workspace
@@ -92,19 +92,19 @@ Once you have a AI endpoint configured proceed as follows:
   2. Type "Semantic Kernel"
   3. Select Semantic Kernel Tools -> Configuration
   4. Change the log level to “Trace”
-  5. Repeat the steps to execute a semantic function and this time you should see trace level debugging of the semantic kernel execution
+  5. Repeat the steps to execute a prompt and this time you should see trace level debugging of the semantic kernel execution
 
 Below is a list of possible errors you might receive and details on how to address them.
 
 Errors creating a Semantic Function
 - Unable to create function prompt file for &lt;name&gt;
- - An error occurred creating the skprompt.txt file for a new semantic function. Check you can create new folders and files in the location specified for the semantic function.
+ - An error occurred creating the skprompt.txt file for a new prompt. Check you can create new folders and files in the location specified for the prompt.
 - Function &lt;name&gt; already exists. Found function prompt file: &lt;file name&gt;
- - A skprompt.txt file already exists for the semantic function you are trying to create. Switch to the explorer view to find the conflicting file.
+ - A skprompt.txt file already exists for the prompt you are trying to create. Switch to the explorer view to find the conflicting file.
 - Unable to create function configuration file for &lt;file name&gt;
- - An error occurred creating the config.json file for a new semantic function. Check you can create new folders and files in the location specified for the semantic function.
+ - An error occurred creating the config.json file for a new prompt. Check you can create new folders and files in the location specified for the prompt.
 - Configuration file for &lt;file&gt; already exists. Found function config file: &lt;file name&gt;
- - A config.json file already exists for the semantic function you are trying to create. Switch to the explorer view to find the conflicting file.
+ - A config.json file already exists for the prompt you are trying to create. Switch to the explorer view to find the conflicting file.
 
 Errors configuring an AI Endpoint
 - Unable to find any subscriptions. Please log in with a user account that has access to a subscription where OpenAI resources have been deployed.

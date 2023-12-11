@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
 
-// Create the prompt for the semantic function
+// Create the prompt for the prompt
 string prompt = @"Bot: How can I help you?
 User: {{$input}}
 

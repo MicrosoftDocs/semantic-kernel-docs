@@ -55,7 +55,7 @@ There are three steps we must take to turn our existing `MathPlugin` into a Chat
 ## Download the ChatGPT plugin starter
 To make it easier to create ChatGPT plugins, we've created a [starter project](https://github.com/microsoft/semantic-kernel-starters/tree/main/sk-csharp-chatgpt-plugin) that you can use as a template. The starter project includes the following features:
 - An endpoint that serves up an ai-plugin.json file for ChatGPT to discover the plugin
-- A generator that automatically converts prompts into semantic function endpoints
+- A generator that automatically converts prompts into prompt endpoints
 - The ability to add additional native functions as endpoints to the plugin
 
 To easiest way to get started is to use the Semantic Kernel VS Code extension. Follow the steps to download the starter with VS Code:
@@ -73,7 +73,7 @@ If you don't want to use the VS Code extension, you can also download the starte
 ### Understand the starter project
 Once you've downloaded the starter project, you'll see two main projects:
 - **_azure-functions_** – This is the main project that contains the Azure Functions that will serve up the plugin manifest file and each of your functions.
-- **_semantic-functions-generator_** – This project contains a code generator that will automatically convert prompts into semantic function endpoints.
+- **_semantic-functions-generator_** – This project contains a code generator that will automatically convert prompts into prompt endpoints.
 
 For the remainder of this walkthrough, we'll be working in the _azure-functions_ project since that is where we'll be adding our native functions, prompts, and settings for the plugin manifest file.
 
@@ -136,7 +136,7 @@ Now that you have your starter, it's time to add your native functions to the pl
     ```
 5. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
 
-### Adding a semantic function to the Azure Function project
+### Adding a prompt to the Azure Function project
 Our current plugin only has native functions, but we can also add prompts to the plugin to show the full power of the ChatGPT starter. To do this, we'll use the code generator that is included in the starter project.
 
 First, we need to configure the settings of our _azure-functions_ project so it can call either Azure OpenAI or OpenAI models. To do this, follow these steps:
@@ -152,7 +152,7 @@ Next, we need to provide the key that will be used to call the API. To do this, 
 3. Open the _local.settings.json_ file.
 4. Replace the placeholder value for `apiKey` with your API key from Azure OpenAI or OpenAI.
 
-Finally, we need to add the semantic function to the plugin. In this example, we'll create a semantic function that can make up a number for a missing value in an equation. We'll call this function `GenerateValue`. To do this, follow these steps:
+Finally, we need to add the prompt to the plugin. In this example, we'll create a prompt that can make up a number for a missing value in an equation. We'll call this function `GenerateValue`. To do this, follow these steps:
 1. Open the _/Prompts folder. This is where all of your prompts will be stored.
 2. Create a new folder called _GenerateValue_.
 3. Create an empty _config.json_ and skprompt.txt file in the _GenerateValue_ folder.

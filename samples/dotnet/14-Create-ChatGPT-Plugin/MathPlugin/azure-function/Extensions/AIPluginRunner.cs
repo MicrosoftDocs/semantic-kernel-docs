@@ -21,7 +21,7 @@ public class AIPluginRunner : IAIPluginRunner
     }
 
     /// <summary>
-    /// Runs a semantic function using the operationID and returns back an HTTP response.
+    /// Runs a prompt using the operationID and returns back an HTTP response.
     /// </summary>
     /// <param name="req"></param>
     /// <param name="operationId"></param>
@@ -52,7 +52,7 @@ public class AIPluginRunner : IAIPluginRunner
     }
 
     /// <summary>
-    /// Grabs the context variables to send to the semantic function from the original HTTP request.
+    /// Grabs the context variables to send to the prompt from the original HTTP request.
     /// </summary>
     /// <param name="req"></param>
     protected static ContextVariables LoadContextVariablesFromRequest(HttpRequestData req)

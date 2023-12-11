@@ -60,7 +60,7 @@ In a chat, a prompt to the LLM will ideally contain the conversation history (th
 # [C#](#tab/Csharp)
 
 ```csharp
-// Initialize the context variables (semantic function input).
+// Initialize the context variables (prompt input).
 var chatFunctionVariables = new ContextVariables
 {
     [ContextVariableKeyHistory] = string.Empty,
@@ -71,7 +71,7 @@ var chatFunctionVariables = new ContextVariables
 After dereferencing the `const string`s, this becomes:
         
 ```csharp
-// Initialize the context variables (semantic function input).
+// Initialize the context variables (prompt input).
 var chatFunctionVariables = new ContextVariables
 {
     ["history"] = string.Empty,
@@ -126,12 +126,12 @@ var chatFunctionPromptConfig = new PromptTemplateConfig
 
 ---
 
-With both the prompt and the prompt configuration now defined, we can register the prompt as a *semantic function* with the kernel. By registering it, the kernel will know about the function and can use it. 
+With both the prompt and the prompt configuration now defined, we can register the prompt as a *prompt* with the kernel. By registering it, the kernel will know about the function and can use it. 
 
 # [C#](#tab/Csharp)
 
 ```csharp
-// Register the semantic function with your semantic kernel.
+// Register the prompt with your semantic kernel.
 // (NOTE: This is not the standard approach. Used here for simplicity.)
 var chatPromptTemplate = new PromptTemplate(chatFunctionPrompt, chatFunctionPromptConfig, kernel);
 var chatFunctionConfig = new SemanticFunctionConfig(chatFunctionPromptConfig, chatPromptTemplate);
@@ -140,7 +140,7 @@ var chatFunction = kernel.RegisterSemanticFunction(FunctionNameChat, chatFunctio
 
 ---
 
-At this point, you have a *semantic function* called `chatFunction` (composed of a prompt and a prompt config) and *context variables* defined by `chatFunctionVariables`. To inject the values of the *context variables* into your prompt and send it off to the LLM, the kernel will run the semantic function.
+At this point, you have a *prompt* called `chatFunction` (composed of a prompt and a prompt config) and *context variables* defined by `chatFunctionVariables`. To inject the values of the *context variables* into your prompt and send it off to the LLM, the kernel will run the prompt.
 
 # [C#](#tab/Csharp)
 
@@ -150,6 +150,6 @@ var chatCompletion = await kernel.RunAsync(chatFunction, chatFunctionVariables);
 
 ---
 
-This code calls the *semantic function* `chatFunction` with the input `chatFunctionVariables` and returns the output `chatCompletion`.
+This code calls the *prompt* `chatFunction` with the input `chatFunctionVariables` and returns the output `chatCompletion`.
 
 To have a complete chat experience, however, the *context variables* should be updated in between each prompt submission to the LLM. Otherwise, the same prompt will be sent over and over! To do this, the value for the key `"history"` is updated with the latest prompt sent, and the value for the key `"userInput"` is updated with what was entered from the console. Please view the sample code for this implementation detail.

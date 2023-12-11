@@ -4,7 +4,7 @@ from semantic_kernel import PromptTemplateConfig, PromptTemplate, SemanticFuncti
 
 
 async def main():
-    # Create the prompt for the semantic function
+    # Create the prompt for the prompt
     prompt = """Bot: How can I help you?
     User: {{$input}}
 
@@ -12,7 +12,9 @@ async def main():
 
     The intent of the user in 5 words or less: """
 
-    # Create the configuration for the semantic function
+    semantic_function = kernel.create_semantic_function(prompt)
+
+    # Create the configuration for the prompt
     prompt_config = PromptTemplateConfig(
         description="Gets the intent of the user.",
         type="completion",

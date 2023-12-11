@@ -8,8 +8,8 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-# Calling functions within a semantic function
-In the previous article we demonstrated how to [templatize a semantic function](./templatizing-semantic-functions.md) to make it more reusable. In this article, we'll show you how to call other functions _within_ a semantic function to help break up the prompt into smaller pieces. This helps
+# Calling functions within a prompt
+In the previous article we demonstrated how to [templatize a prompt](./templatizing-semantic-functions.md) to make it more reusable. In this article, we'll show you how to call other functions _within_ a prompt to help break up the prompt into smaller pieces. This helps
 keep LLMs focused on a single task, helps avoid hitting token limits, and allows you to add native code directly into your prompt.
 
 If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
@@ -21,7 +21,7 @@ If you want to see the final solution, you can check out the following samples i
 
 
 ## Calling a nested function
-In the [previous example](./templatizing-semantic-functions.md), we created a semantic function called `GetIntent`. This function uses the previous conversation history to determine the intent of the user.
+In the [previous example](./templatizing-semantic-functions.md), we created a prompt called `GetIntent`. This function uses the previous conversation history to determine the intent of the user.
 
 Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummaryPlugin` plugin that's part of the [core plugins package](../out-of-the-box-plugins.md).
 
@@ -34,7 +34,7 @@ Since we're not changing the behavior of the `GetIntent` function or the require
 :::code language="json" source="~/../samples/dotnet/06-Calling-Nested-Functions-In-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/config.json":::
 
 
-## Testing the updated semantic function
+## Testing the updated prompt
 After adding the nested function, you must ensure that you load the plugin with the required function into the kernel.
 
 # [C#](#tab/Csharp)
@@ -71,7 +71,7 @@ INTENT:
 ```
 
 ## Take the next step
-Now that you can create a semantic function, you can now learn how to [create a native function](../native-functions/using-the-SKFunction-decorator.md).
+Now that you can create a prompt, you can now learn how to [create a native function](../native-functions/using-the-SKFunction-decorator.md).
 
 > [!div class="nextstepaction"]
 > [Create a native function](../native-functions/using-the-SKFunction-decorator.md)

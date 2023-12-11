@@ -3,7 +3,7 @@
 This project provides starter code to create a ChatGPT plugin. It includes the following components:
 
 - An endpoint that serves up an ai-plugin.json file for ChatGPT to discover the plugin
-- A generator that automatically converts prompts into semantic function endpoints
+- A generator that automatically converts prompts into prompt endpoints
 - The ability to add additional native functions as endpoints to the plugin
 
 To learn more about using this starter, see the Semantic Kernel documentation that describes how to [create a ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/agents/chatgpt-plugins).

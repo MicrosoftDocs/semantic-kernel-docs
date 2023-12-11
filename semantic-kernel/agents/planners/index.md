@@ -429,7 +429,7 @@ print(plan.generated_plan)
 
 ---
 
-Notice how in the example, planner can string together functions and pass parameters to them. This effectively allows us to deprecate the `OrchestratorPlugin` we created previously because we no longer need the `RouteRequest` native function or the `GetNumbers` semantic function. Planner does both.
+Notice how in the example, planner can string together functions and pass parameters to them. This effectively allows us to deprecate the `OrchestratorPlugin` we created previously because we no longer need the `RouteRequest` native function or the `GetNumbers` prompt. Planner does both.
 
 ## When to use planner?
 As demonstrated by this example, planner is extremely powerful because it can automatically recombine functions you have already defined, and as AI models improve and as the community develops better planners, you will be able to rely on them to achieve increasingly more sophisticated user scenarios.

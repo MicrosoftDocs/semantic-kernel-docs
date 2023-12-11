@@ -146,5 +146,5 @@ You can learn more about creating prompts in the [Creating prompts](./semantic-f
 Now that you understand the basics of plugins, you can now go deeper into the details of creating semantic and native functions for your plugin.
 
 > [!div class="nextstepaction"]
-> [Create a semantic function](./semantic-functions/inline-semantic-functions.md)
+> [Create a prompt](./semantic-functions/inline-semantic-functions.md)
 

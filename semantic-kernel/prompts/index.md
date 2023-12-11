@@ -7,8 +7,7 @@ ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: semantic-kernel
 ---
-# What are Prompts?
-
+# What are prompts?
 
 Prompts play a crucial role in communicating and directing the behavior of Large Language Models (LLMs) AI. They serve as inputs or queries that users can provide to elicit specific responses from a model. 
 

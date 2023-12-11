@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # Run native code with Semantic Kernel
 
 
-In the [how to create prompts](../semantic-functions/inline-semantic-functions.md) section, we showed how you could create a semantic function that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
+In the [how to create prompts](../semantic-functions/inline-semantic-functions.md) section, we showed how you could create a prompt that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
 
 Automating tasks like these are the primary purpose of AI apps. In this section, we'll show how you can create a simple native function that can perform a task LLMs cannot do easily on their own: arithmetic. In a [subsequent tutorial](./calling-nested-functions.md) we'll demonstrate how to combine native functions with prompts to correctly answer word problems like `What is the square root of 634?` and `What is 42 plus 1513?`
 
@@ -147,7 +147,7 @@ Also notice how we've added a description to each function with the `Description
 
 
 ### Running your native function
-Now that you've created your first native function, you can import it and run it using the following code. Notice how calling a native function is the same as calling a semantic function. This is one of the benefits of using the kernel, both semantic and native functions are treated identically.
+Now that you've created your first native function, you can import it and run it using the following code. Notice how calling a native function is the same as calling a prompt. This is one of the benefits of using the kernel, both semantic and native functions are treated identically.
 
 # [C#](#tab/Csharp)
 
