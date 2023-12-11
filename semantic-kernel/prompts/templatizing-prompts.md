@@ -25,11 +25,11 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6, 8, 33-45" highlight="1":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6, 8, 33-45" highlight="6, 14-15":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="17-28":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="17-28":::
 
 ---
 
@@ -49,11 +49,11 @@ You can now run your template using named arguments.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="17-22, 26-27, 30-32, 47-60" highlight="17-19":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="17-22, 26-27, 30-32, 47-60" highlight="20-22":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="7-10, 12-16, 29-46":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="7-10, 12-16, 29-46":::
 
 ---
 
@@ -66,7 +66,7 @@ dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars
 
 Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFactory`. Because Handlebars supports loops, we can use it to loop over the examples and chat history.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-7, 86-108" highlight="17-19":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-8, 86-108" highlight="12-16,18-20,29":::
 
 We can then create the example and chat history objects that will be used by the template.
 

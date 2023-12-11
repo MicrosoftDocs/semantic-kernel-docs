@@ -105,7 +105,10 @@ var promptConfig = new PromptTemplateConfig()
     TemplateFormat = "handlebars"
 };
 
-var promptFunction = kernel.CreateFunctionFromPrompt(promptConfig, new HandlebarsPromptTemplateFactory());
+var promptFunction = kernel.CreateFunctionFromPrompt(
+    promptConfig,
+    new HandlebarsPromptTemplateFactory()
+);
 
 // Invoke prompt
 var handleBarsResult = await kernel.InvokeAsync(
