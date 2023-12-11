@@ -47,7 +47,7 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="8-13, 15-17":::
+:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="8-13, 15-16":::
 
 # [Python](#tab/python)
 
@@ -155,7 +155,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="82-92" highlight="3-4,6-7":::
+:::code language="csharp" source="~/../samples/dotnet/03-Inline-Semantic-Functions/Program.cs" range="82-92" highlight="4-5,7-8":::
 
 # [Python](#tab/python)
 
