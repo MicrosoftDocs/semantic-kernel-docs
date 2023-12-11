@@ -74,7 +74,7 @@ We can then create the example and chat history objects that will be used by the
 
 Finally, you can run the prompt using the kernel. Notice how we're using the `InvokeAsync` instead of `InvokePromptAsync` since we've already turned the prompt string into a function.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="114-123", highlight="1":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="114-123" highlight="1":::
 
 ## Take the next step
 Now that you can templatize your prompt, you can now learn how to call functions from within
