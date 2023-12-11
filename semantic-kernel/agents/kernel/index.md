@@ -95,7 +95,7 @@ Run the today function from the time plugin:
 ---
 
 
-### Going further with the kernel
+## Going further with the kernel
 For more details on how to configure and leverage these properties, please refer to the following articles:
 
 | Article | Description |

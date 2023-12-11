@@ -13,7 +13,23 @@ ms.custom: build-2023, build-2023-dataai
 
 Semantic Kernel is an open-source SDK that lets you easily build agents that can call your existing code. As a highly extensible SDK, you can use Semantic Kernel with models from [OpenAI](https://platform.openai.com/docs/), [Azure OpenAI](https://azure.microsoft.com/products/cognitive-services/openai-service/), [Hugging Face](https://huggingface.co/), and more! By combining your existing C#, Python, and Java code with these models, you can build agents that answer questions and automate processes.
 
-### Why use an SDK like Semantic Kernel?
+## Semantic Kernel is at the center of the agent stack
+
+:::row:::
+   :::column span="":::
+        ![Copilot stack with the orchestration layer in the middle](../media/copilot-stack.png)
+   :::column-end:::
+   :::column span="":::
+      During Kevin Scott's talk [The era of the AI Copilot](https://build.microsoft.com/sessions/bb8f9d99-0c47-404f-8212-a85fffd3a59d?source=/speakers/ef864919-5fd1-4215-b611-61035a19db6b), he demonstrated how Microsoft powers its [Copilot system](https://www.youtube.com/watch?v=E5g20qmeKpg) with a stack consisting of of AI models and plugins. At the center of this stack is an AI orchestration layer that allows Microsoft to combine AI models and plugins together to create brand new experiences for users.
+
+      To help developers build their _own_ Copilot experiences on top of AI plugins, we have released Semantic Kernel, a lightweight open-source SDK that allows you to orchestrate plugins (i.e., your existing code) with AI. With Semantic Kernel, you can leverage the _same_ AI orchestration patterns that power Microsoft's Copilots in your _own_ apps.
+   :::column-end:::
+:::row-end:::
+
+> [!TIP]
+> If you are interested in seeing a sample of the copilot stack in action (with Semantic Kernel at the center of it), check out [Project Miyagi](https://github.com/Azure-Samples/miyagi). Project Miyagi reimagines the design, development, and deployment of intelligent applications on top of Azure with all of the latest AI services and tools.
+
+## Why use an SDK like Semantic Kernel?
 Today's AI models can easily generate messages and images for users. While this is helpful when building a simple chat app, it is not enough to build fully automated AI agents that can automate business processes and empower users to achieve more. To do so, you would need a framework that can take the responses from these models and use them to call existing code to _actually_ do something productive.
 
 With Semantic Kernel, we've done just that. We've created an SDK that allows you to easily describe your existing code to AI models so they can request that they be called. Afterwards, Semantic Kernel does the heavy lifting of translating the model's response into a call to your code.
@@ -104,22 +120,6 @@ Assistant > I have turned on the lights for you.
 
 While this is just a simple example of how you can use Semantic Kernel, it quickly shows the power of the SDK and just how easy it is to use to automate tasks. To recreate a similar experience with other AI SDKs, you would easily need to write twice as much code.
 
-## Semantic Kernel is at the center of the agent stack
-
-:::row:::
-   :::column span="":::
-        ![Copilot stack with the orchestration layer in the middle](../media/copilot-stack.png)
-   :::column-end:::
-   :::column span="":::
-      During Kevin Scott's talk [The era of the AI Copilot](https://build.microsoft.com/sessions/bb8f9d99-0c47-404f-8212-a85fffd3a59d?source=/speakers/ef864919-5fd1-4215-b611-61035a19db6b), he demonstrated how Microsoft powers its [Copilot system](https://www.youtube.com/watch?v=E5g20qmeKpg) with a stack consisting of of AI models and plugins. At the center of this stack is an AI orchestration layer that allows Microsoft to combine AI models and plugins together to create brand new experiences for users.
-
-      To help developers build their _own_ Copilot experiences on top of AI plugins, we have released Semantic Kernel, a lightweight open-source SDK that allows you to orchestrate plugins (i.e., your existing code) with AI. With Semantic Kernel, you can leverage the _same_ AI orchestration patterns that power Microsoft's Copilots in your _own_ apps.
-   :::column-end:::
-:::row-end:::
-
-> [!TIP]
-> If you are interested in seeing a sample of the copilot stack in action (with Semantic Kernel at the center of it), check out [Project Miyagi](https://github.com/Azure-Samples/miyagi). Project Miyagi reimagines the design, development, and deployment of intelligent applications on top of Azure with all of the latest AI services and tools.
-
 ### Semantic Kernel makes AI development extensible
 :::row:::
    :::column span="2":::
@@ -136,14 +136,6 @@ While this is just a simple example of how you can use Semantic Kernel, it quick
 :::row-end:::
 
 As a developer, you can use the different components of Semantic Kernel separately. For example, if you _just_ need an abstraction over OpenAI and Azure OpenAI services, you could just use the SDK to run handcrafted prompts, but the _real_ power of Semantic Kernel comes from combining these components together.
-
-### Contribute to Semantic Kernel
-We welcome contributions and suggestions from the Semantic Kernel community! One of the easiest ways to participate is to engage in discussions in the [GitHub repository](https://github.com/microsoft/semantic-kernel). Bug reports and fixes are welcome!
-
-For new features, components, or extensions, please [open an issue](../get-started/contributing.md#reporting-issues) and discuss with us before sending a PR. This will help avoid rejections since it will allow us to discuss the impact to the larger ecosystem.
-
-> [!div class="nextstepaction"]
-> [Learn more about contributing](../get-started/contributing.md)
 
 ## Get started using the Semantic Kernel SDK
 Now that you know what Semantic Kernel is, follow the [get started](../get-started/index.md) link to try it out. Within minutes you can create prompts and chain them with out-of-the-box plugins and native code. Soon afterwards, you can give your apps memories with embeddings and summon even more power from external APIs.

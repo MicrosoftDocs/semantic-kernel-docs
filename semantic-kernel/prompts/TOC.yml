@@ -1,10 +1,10 @@
 - name: Understanding prompts
   href: index.md
-- name: Your first prompt
+- name: Authoring your first prompt
   href: your-first-prompt.md
 - name: Templatizing prompts
   href: templatizing-semantic-functions.md
-- name: Calling nested functions
+- name: Calling nested functions in prompts
   href: calling-nested-functions.md
 - name: Serializing prompts
   href: serializing-semantic-functions.md
