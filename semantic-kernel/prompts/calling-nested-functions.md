@@ -9,15 +9,15 @@ ms.service: semantic-kernel
 ---
 
 # Calling functions within a prompt
-In the previous article we demonstrated how to [templatize a prompt](./templatizing-semantic-functions.md) to make it more reusable. In this article, we'll show you how to call other functions _within_ a prompt to help break up the prompt into smaller pieces. This helps
+In the previous article we demonstrated how to [templatize a prompt](./templatizing-promtps.md) to make it more reusable. In this article, we'll show you how to call other functions _within_ a prompt to help break up the prompt into smaller pieces. This helps
 keep LLMs focused on a single task, helps avoid hitting token limits, and allows you to add native code directly into your prompt.
 
 If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/04-Templatizing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/06-Nested-Functions-In-Semantic-Functions) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/06-Nested-Functions-In-Semantic-Functions) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/04-Templatizing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/05-Nested-Functions-In-Prompts) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/05-Nested-Functions-In-Prompts) |
 
 
 ## Calling a nested function
@@ -27,11 +27,11 @@ Putting the entire history into a single prompt, however, may result in using to
 
 Below, we show how we can update our original prompt in the _skprompt.txt_ file to use the `SummarizeConversationAsync` function in the `ConversationSummaryPlugin` plugin to summarize the conversation history before asking for the intent.
 
-:::code language="txt" source="~/../samples/dotnet/06-Calling-Nested-Functions-In-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/skprompt.txt" highlight="1":::
+:::code language="txt" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/plugins/OrchestratorPlugin/GetIntent/skprompt.txt" highlight="1":::
 
 Since we're not changing the behavior of the `GetIntent` function or the required inputs, we don't need to update the _config.json_ file. For completeness, however, we've included the _config.json_ file below.
 
-:::code language="json" source="~/../samples/dotnet/06-Calling-Nested-Functions-In-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/config.json":::
+:::code language="json" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/plugins/OrchestratorPlugin/GetIntent/config.json":::
 
 
 ## Testing the updated prompt
@@ -39,11 +39,11 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/06-Calling-Nested-Functions-In-Semantic-Functions/program.cs" range="4-7,16-21,24-53" highlight="17":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="4-7,16-21,24-53" highlight="17":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/06-Calling-Nested-Functions-In-Semantic-Functions/main.py" range="1-2,4-11,13-55" highlight="18-20":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="1-2,4-11,13-55" highlight="18-20":::
 
 ---
 

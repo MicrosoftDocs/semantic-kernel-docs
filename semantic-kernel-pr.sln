@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{D502
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet", "dotnet", "{50F4184D-4621-405B-AF6A-0F3E93F198A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "06-Calling-Nested-Functions-In-Semantic-Functions", "samples\dotnet\06-Calling-Nested-Functions-in-Semantic-Functions\06-Calling-Nested-Functions-In-Semantic-Functions.csproj", "{D3F29788-75FE-410E-A858-9D26963E0DB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "05-Nested-Functions-In-Prompts", "samples\dotnet\05-Nested-Functions-In-Prompts\05-Nested-Functions-In-Prompts.csproj", "{D3F29788-75FE-410E-A858-9D26963E0DB4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "04-Serializing-Semantic-Functions", "samples\dotnet\04-Serializing-Semantic-Functions\04-Serializing-Semantic-Functions.csproj", "{7A4EF630-44F2-4D00-96E4-2B0C98152FB8}"
 EndProject

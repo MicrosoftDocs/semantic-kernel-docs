@@ -1,6 +1,6 @@
 # Creating prompts
 
-The `06-Calling-Nested-Functions-In-Semantic-Functions` console application shows the final solution to the [calling functions in prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/semantic-functions/calling-nested-functions) doc article.
+The `05-Nested-Functions-In-Prompts` console application shows the final solution to the [calling functions in prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/semantic-functions/calling-nested-functions) doc article.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ This sample has been tested with the following models:
 Configure an OpenAI endpoint
 
 ```powershell
-cd 06-Calling-Nested-Functions-In-Semantic-Functions
+cd 05-Nested-Functions-In-Prompts
 
 dotnet user-secrets set "Global:LlmService" "OpenAI"
 
@@ -44,7 +44,7 @@ dotnet user-secrets set "OpenAI:OrgId" "... your ord ID ..."
 Configure an Azure OpenAI endpoint
 
 ```powershell
-cd 06-Calling-Nested-Functions-In-Semantic-Functions
+cd 05-Nested-Functions-In-Prompts
 
 dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 

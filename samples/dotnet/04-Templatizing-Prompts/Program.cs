@@ -53,7 +53,7 @@ var result = await kernel.InvokePromptAsync(
     prompt,
     new() {
         { "request", request },
-        { "choices", new[] { "SendEmail", "SendMessage", "CompleteTask", "CreateDocument", "Unknown" } },
+        { "choices", "SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown" },
         { "history", history }
     }
 );
@@ -115,7 +115,7 @@ var handleBarsResult = await kernel.InvokeAsync(
     promptFunction,
     new() {
         { "request", request },
-        { "choices", new[] { "SendEmail", "SendMessage", "CompleteTask", "CreateDocument", "Unknown" } },
+        { "choices", "SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown" },
         { "history", history },
         { "fewShotExamples", fewShotExamples }
     }
