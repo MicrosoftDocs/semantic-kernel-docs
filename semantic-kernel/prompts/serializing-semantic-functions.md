@@ -11,79 +11,70 @@ ms.service: semantic-kernel
 # Serializing prompts
 
 
-In previous articles, we demonstrated [how to load a prompt inline](./inline-semantic-functions.md). However, in most cases, you'll want to create your prompts in a separate file so you can easily import them into Semantic Kernel across multiple projects.
+In previous articles, we demonstrated [create and run prompts inline](./templatizing-prompts.md). However, in most cases, you'll want to create your prompts in a separate file so you can easily import them into Semantic Kernel across multiple projects.
 
-In this article, we'll demonstrate how to create the files necessary for a prompt so you can easily import them into Semantic Kernel. As an example in this article, we will build on the [previous tutorial](./inline-semantic-functions.md) by showing how to create a prompt that gathers the intent of the user. This prompt will be called `GetIntent` and will be part of a plugin called `OrchestratorPlugin`.
+In this article, we'll demonstrate how to create the files necessary for a prompt so you can easily import them into Semantic Kernel. As an example in this article, we will build on the [previous tutorial](./templatizing-prompts.md) by showing how to create a prompt that gathers the intent of the user. This prompt will be called `getIntent`.
 
 If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/03-Intro-to-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/04-Serializing-Semantic-Functions) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/03-Intro-to-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Serializing-Semantic-Functions) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/05-Nested-Functions-In-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/06-Serializing-Prompts) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/05-Nested-Functions-In-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/06-Serializing-Prompts) |
 
-
-> [!TIP]
-> We recommend using the [Semantic Kernel Tools](../../../vs-code-tools/index.md) extension for Visual Studio Code to help you create prompts. This extension provides an easy way to create and test functions directly from within VS Code.
 
 ## Creating a home for your prompts
-Before creating the files for the `GetIntent` function, you must first define a folder that will hold all of your plugins. This will make it easier to import them into Semantic Kernel later. We recommend putting this folder at the root of your project and calling it _plugins_.
+Before creating the files for the `getIntent` function, you must first define a folder that will hold all of your plugins. This will make it easier to import them into Semantic Kernel later. We recommend putting this folder at the root of your project and calling it _prompts_.
 
-Within your _plugins_ folder, you can then create a folder called _OrchestratorPlugin_ for your plugin and a nested folder called _GetIntent_ for your function.
+Within your _prompts_ folder, you can create a nested folder called _getIntent_ for your function.
 
 ```directory
-Plugins
+Prompts
 │
-└─── OrchestratorPlugin
-     |
-     └─── GetIntent
+└─── getIntent
 ```
-
-To see a more complete example of a plugins directory, check out the [Semantic Kernel sample plugins](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins) folder in the GitHub repository.
 
 ## Creating the files for your prompt
 Once inside of a prompts folder, you'll need to create two new files: _skprompt.txt_ and _config.json_. The _skprompt.txt_ file contains the prompt that will be sent to the AI service and the _config.json_ file contains the configuration along with semantic descriptions that can be used by planners.
 
-Go ahead and create these two files in the _GetIntent_ folder.
+Go ahead and create these two files in the _getIntent_ folder.
 
 ```directory
 Plugins
 │
-└─── OrchestratorPlugin
+└─── getIntent
      |
-     └─── GetIntent
-          |
-          └─── config.json
-          └─── skprompt.txt
+     └─── config.json
+     └─── skprompt.txt
 ```
 
 ### Writing a prompt in the _skprompt.txt_ file
 The _skprompt.txt_ file contains the request that will be sent to the AI service. Since we've already written the prompt in the [previous tutorial](./inline-semantic-functions.md#defining-the-prompt), we can simply copy it over to the _skprompt.txt_ file.
 
-:::code language="txt" source="~/../samples/dotnet/04-Serializing-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/skprompt.txt":::
+:::code language="txt" source="~/../samples/dotnet/06-Serializing-Prompts/plugins/OrchestratorPlugin/getIntent/skprompt.txt":::
 
 
 ### Configuring the function in the _config.json_ file
-Next, we need to define the configuration for the `GetIntent` function. When serializing the configuration, all you need to do is define the same properties in a JSON file:
+Next, we need to define the configuration for the `getIntent` function. When serializing the configuration, all you need to do is define the same properties in a JSON file:
 
 - `type` – The type of prompt. In this case, we're using the `completion` type.
 - `description` – A description of what the prompt does. This is used by planner to automatically orchestrate plans with the function.
 - `completion` – The settings for completion models. For OpenAI models, this includes the `max_tokens` and `temperature` properties.
 - `input` – Defines the variables that are used inside of the prompt (e.g., `input`).
 
-For the `GetIntent` function, we can use the same configuration [as before](./inline-semantic-functions.md#configuring-the-function).
+For the `getIntent` function, we can use the same configuration [as before](./inline-semantic-functions.md#configuring-the-function).
 
-:::code language="json" source="~/../samples/dotnet/04-Serializing-Semantic-Functions/plugins/OrchestratorPlugin/GetIntent/config.json":::
+:::code language="json" source="~/../samples/dotnet/06-Serializing-Prompts/plugins/OrchestratorPlugin/getIntent/config.json":::
 
 ### Testing your prompt
 At this point, you can import and test your function with the kernel by updating your _Program.cs_ or _main.py_ file to the following.
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/04-Serializing-Semantic-Functions/Program.cs" range="3-5,14-19,22-36":::
+:::code language="csharp" source="~/../samples/dotnet/06-Serializing-Prompts/Program.cs" range="3-5,14-19,22-36":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Serializing-Semantic-Functions/main.py" range="1,3-10,12-33":::
+:::code language="python" source="~/../samples/python/06-Serializing-Prompts/main.py" range="1,3-10,12-33":::
 
 ---
 

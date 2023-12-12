@@ -11,56 +11,45 @@ async def main():
     # kernel.add_chat_service()
     kernel.add_completion_service()
 
+    # Import the ConversationSummaryPlugin
     kernel.import_skill(
         ConversationSummarySkill(kernel=kernel), skill_name="ConversationSummaryPlugin"
     )
 
-    # Create a new context and set the input, history, and options variables.
-    variables = sk.ContextVariables()
-    variables["input"] = input("User > ")
-    variables[
-        "history"
-    ] = """Bot: How can I help you?
-    User: What's the weather like today?
-    Bot: Where are you located?
-    User: I'm in Seattle.
-    Bot: It's 70 degrees and sunny in Seattle today.
-    User: Thanks! I'll wear shorts.
-    Bot: You're welcome.
-    User: Could you remind me what I have on my calendar today?
-    Bot: You have a meeting with your team at 2:00 PM.
-    User: Oh right! My team just hit a major milestone; I should send them an email to congratulate them."""
-    variables["lastMessage"] = "Bot: Would you like to write one for you?"
-    variables[
-        "options"
-    ] = "SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown"
+    # Create the history
+    history = []
 
-    prompt = """Instructions: What is the intent of this request?
-    Choices: {{$choices}}.
+    # Create the prompt with the ConversationSummaryPlugin
+    prompt = """{{ConversationSummaryPlugin.SummarizeConversation $history}}
+    User: {{$request}}
+    Assistant:  """
 
-    Prior conversation summary: The marketing team needs an update on the new product.
-    AI response: What do you want to tell them?
-    User Input: Can you send a very quick approval to the marketing team?
-    Intent: SendMessage
+    while True:
+        request = input("User > ")
 
-    Prior conversation summary: The AI offered to send an email to the marketing team.
-    AI response: Do you want me to send an email to the marketing team?
-    User Input: Yes, please.
-    Intent: SendEmail
+        variables = sk.ContextVariables()
+        variables["request"] = request
+        variables["history"] = "\n".join(history)
 
-    Prior conversation summary: {{ConversationSummaryPlugin.SummarizeConversation $history}}
-    {{$lastMessage}}
-    User Input: {{$request}}
-    Intent: """
+        # Run the prompt
+        semantic_function = kernel.create_semantic_function(prompt)
+        result = await kernel.run_async(
+            semantic_function,
+            input_vars=variables,
+        )
 
-    # Run the GetIntent function with the context.
-    semantic_function = kernel.create_semantic_function(prompt)
-    result = await kernel.run_async(
-        semantic_function,
-        input_vars=variables,
-    )
+        # Add the request to the history
+        history.append("User: " + request)
+        history.append("Assistant" + result.result)
 
-    print(result)
+        print("Assistant > " + result.result)
+
+
+# Run the main function
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
 
 
 # Run the main function

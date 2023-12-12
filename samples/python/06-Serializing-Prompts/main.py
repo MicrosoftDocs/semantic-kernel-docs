@@ -1,4 +1,5 @@
 import semantic_kernel as sk
+from semantic_kernel.core_skills import ConversationSummarySkill
 import config.add_completion_service
 
 
@@ -10,12 +11,16 @@ async def main():
     # kernel.add_chat_service()
     kernel.add_completion_service()
 
+    # Import the ConversationSummaryPlugin
+    kernel.import_skill(
+        ConversationSummarySkill(kernel=kernel), skill_name="ConversationSummaryPlugin"
+    )
+
+    # Import the OrchestratorPlugin from the plugins directory.
+    prompts = kernel.import_semantic_skill_from_directory(".", "prompts")
+
     # Create the history
     history = []
-
-    prompt = """{{$history}}
-    User: {{$request}}
-    Assistant:  """
 
     while True:
         request = input("User > ")
@@ -25,9 +30,8 @@ async def main():
         variables["history"] = "\n".join(history)
 
         # Run the prompt
-        semantic_function = kernel.create_semantic_function(prompt)
         result = await kernel.run_async(
-            semantic_function,
+            prompts["chat"],
             input_vars=variables,
         )
 
@@ -35,7 +39,7 @@ async def main():
         history.append("User: " + request)
         history.append("Assistant" + result.result)
 
-        print("Assistant > " + result)
+        print("Assistant > " + result.result)
 
 
 # Run the main function

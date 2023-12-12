@@ -21,10 +21,10 @@ If you want to see the final solution to this article, you can check out the fol
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/08-Native-Functions-with-Context) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/09-Calling-Nested-Functions-in-Native-Functions) |
 
 > [!Important]
-> This article uses the `GetIntent` from the [prompts](../semantic-functions/calling-nested-functions.md#calling-a-nested-function) section. We recommend using the final solution from the [previous tutorial](./multiple-parameters.md) as a starting point for this tutorial so you can follow along.
+> This article uses the `getIntent` from the [prompts](../semantic-functions/calling-nested-functions.md#calling-a-nested-function) section. We recommend using the final solution from the [previous tutorial](./multiple-parameters.md) as a starting point for this tutorial so you can follow along.
 
 ## Using native and prompts together
-Typically, you'll want to use prompts to extract data from the user's request and native functions to perform the actual work. [Previously](../semantic-functions/calling-nested-functions.md#calling-a-nested-function), we created a `GetIntent` prompt that extracts the user's intent from their request. In this tutorial, we'll leverage this prompt in a new native function called `RouteRequest` that will call the appropriate function based on the user's intent.
+Typically, you'll want to use prompts to extract data from the user's request and native functions to perform the actual work. [Previously](../semantic-functions/calling-nested-functions.md#calling-a-nested-function), we created a `getIntent` prompt that extracts the user's intent from their request. In this tutorial, we'll leverage this prompt in a new native function called `RouteRequest` that will call the appropriate function based on the user's intent.
 
 ### Finding a home for the `RouteRequest` function
 Since the `RouteRequest` function helps with orchestration, we can add it to the `OrchestratorPlugin` plugin we created in the [prompt](../semantic-functions/serializing-semantic-functions.md) section.
@@ -37,7 +37,7 @@ Plugins
 │
 └─── OrchestratorPlugin
 |    │
-|    └─── GetIntent
+|    └─── getIntent
 |    │    └─── skprompt.txt
 |    │    └─── config.json
 |    └─── OrchestratorPlugin.cs
@@ -55,7 +55,7 @@ Plugins
 │
 └─── OrchestratorPlugin
 |    │
-|    └─── GetIntent
+|    └─── getIntent
 |    │    └─── skprompt.txt
 |    │    └─── config.json
 |    └─── OrchestratorPlugin.py
@@ -101,7 +101,7 @@ Add the following code to your `Orchestrator` class to get started creating the 
 
 ---
 
-Notice how we're able to use the readonly `kernel` property of our Orchestrator class to run the `GetIntent` function. Later, we can also use this kernel to run the `Sqrt` and `Multiply` functions.
+Notice how we're able to use the readonly `kernel` property of our Orchestrator class to run the `getIntent` function. Later, we can also use this kernel to run the `Sqrt` and `Multiply` functions.
 
 Unfortunately, however, we have a challenge. Despite knowing the user's intent, we don't know which numbers to pass to the `Sqrt` or `Multiply` functions. We'll need to add _another_ prompt to the orchestrator plugin to extract the necessary numbers from the user's input.
 
@@ -113,7 +113,7 @@ Plugins
 │
 └─── OrchestratorPlugin
 |    │
-|    └─── GetIntent
+|    └─── getIntent
 |    │    └─── skprompt.txt
 |    │    └─── config.json
 |    └─── GetNumbers
@@ -150,7 +150,7 @@ We can now call the `GetNumbers` function from the `RouteRequest` function. Repl
 
 ### Running the `RouteRequest` function
 
-Finally, you can invoke the `RouteRequest` function from your main file using the code below. Notice how we're passing in the kernel to the `Orchestrator` object when we instantiate it. This will allow the `Orchestrator` object to access the kernel so it can run the `GetIntent`, `GetNumbers`, `Sqrt`, and `Multiply` functions.
+Finally, you can invoke the `RouteRequest` function from your main file using the code below. Notice how we're passing in the kernel to the `Orchestrator` object when we instantiate it. This will allow the `Orchestrator` object to access the kernel so it can run the `getIntent`, `GetNumbers`, `Sqrt`, and `Multiply` functions.
 
 
 # [C#](#tab/Csharp)
@@ -161,7 +161,7 @@ Finally, you can invoke the `RouteRequest` function from your main file using th
 
 ---
 
-Also notice how in the main file we load the kernel with _all_ the functions that are needed by the `RouteRequest` function. If we do not appropriately load the `GetIntent`, `GetNumbers`, `Sqrt`, and `Multiply` functions, the `RouteRequest` function will fail when it tries to call them.
+Also notice how in the main file we load the kernel with _all_ the functions that are needed by the `RouteRequest` function. If we do not appropriately load the `getIntent`, `GetNumbers`, `Sqrt`, and `Multiply` functions, the `RouteRequest` function will fail when it tries to call them.
 
 ## Take the next step
 You now have the skills necessary to create both semantic and native functions to create custom plugins, but up until now, we've only called one function at a time. In the next section, you'll learn how to chain multiple functions together.

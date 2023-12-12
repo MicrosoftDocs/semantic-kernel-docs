@@ -25,7 +25,7 @@ public class Orchestrator
         string request = input;
 
         // Retrieve the intent from the user request
-        var getIntent = _kernel.Functions.GetFunction("OrchestratorPlugin", "GetIntent");
+        var getIntent = _kernel.Functions.GetFunction("OrchestratorPlugin", "getIntent");
         var getIntentVariables = new ContextVariables
         {
             ["input"] = input,

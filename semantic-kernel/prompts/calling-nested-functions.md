@@ -68,7 +68,7 @@ After running the code, you should see the following output after inputting `Yes
 SendEmail
 ```
 
-If you inspect the rendered prompt for the `GetIntent` function, you can see that the entire history is not sent to the LLM. Instead, the `SummarizeConversationAsync` function is called to summarize the conversation history before asking for the intent.
+If you inspect the rendered prompt for the `getIntent` function, you can see that the entire history is not sent to the LLM. Instead, the `SummarizeConversationAsync` function is called to summarize the conversation history before asking for the intent.
 
 ```output
 Instructions: What is the intent of this request?

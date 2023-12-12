@@ -5,7 +5,7 @@
      "execution_settings": [
        {
          "max_tokens": 1000,
-         "temperature": 0.3,
+         "temperature": 0,
          "top_p": 0.0,
          "presence_penalty": 0.0,
          "frequency_penalty": 0.0
@@ -15,17 +15,17 @@
           {
                "name": "request",
                "description": "The user's request.",
-               "defaultValue": ""
+               "required": true
           },
           {
                "name": "history",
                "description": "The history of the conversation.",
-               "defaultValue": ""
+               "required": true
           },
           {
-               "name": "options",
+               "name": "choices",
                "description": "The options to choose from.",
-               "defaultValue": ""
+               "default": "Continue, Stop"
           }
      ]
 }

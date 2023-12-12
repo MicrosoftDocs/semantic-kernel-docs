@@ -6,7 +6,7 @@
   href: templatizing-prompts.md
 - name: Calling nested functions in prompts
   href: calling-nested-functions.md
-- name: Serializing prompts
+- name: Saving your prompts as files
   href: serializing-semantic-functions.md
 - name: Configuring prompts
   href: configure-prompts.md

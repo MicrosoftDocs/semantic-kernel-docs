@@ -42,7 +42,7 @@ To solve this problem, we'll demonstrate how to create native functions that can
 
 | Plugin | Function | Type | Description |
 | --- | --- | --- | --- |
-| Orchestrator Plugin | GetIntent | Semantic | Gets the intent of the user |
+| Orchestrator Plugin | getIntent | Semantic | Gets the intent of the user |
 | Orchestrator Plugin | GetNumbers | Semantic | Gets the numbers from a user's request |
 | Orchestrator Plugin | RouteRequest | Native | Routes the request to the appropriate function |
 | Math Plugin | Sqrt | Native | Takes the square root of a number |
@@ -82,7 +82,7 @@ Plugins
 │
 └─── OrchestratorPlugin
 |    │
-|    └─── GetIntent
+|    └─── getIntent
 |         └─── skprompt.txt
 |         └─── config.json
 |
@@ -98,7 +98,7 @@ Plugins
 │
 └─── OrchestratorPlugin
 |    │
-|    └─── GetIntent
+|    └─── getIntent
 |         └─── skprompt.txt
 |         └─── config.json
 |

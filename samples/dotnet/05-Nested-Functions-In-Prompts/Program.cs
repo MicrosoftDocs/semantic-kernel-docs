@@ -3,10 +3,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Plugins.Core;
+using Microsoft.SemanticKernel.PromptTemplate.Handlebars;
 
 // Create kernel
-var builder = new KernelBuilder();
+var builder = Kernel.CreateBuilder();
 // Add a text or chat completion service using either:
 // builder.Services.AddAzureOpenAIChatCompletion()
 // builder.Services.AddAzureOpenAIChatCompletion()
@@ -18,49 +20,99 @@ builder.Plugins.AddFromType<ConversationSummaryPlugin>();
 
 var kernel = builder.Build();
 
-string history = @"AI response: How can I help you?
-User Input: What's the weather like today?
-AI response: Where are you located?
-User Input: I'm in Seattle.
-AI response: It's 70 degrees and sunny in Seattle today.
-User Input: Thanks! I'll wear shorts.
-AI response: You're welcome.
-User Input: Could you remind me what I have on my calendar today?
-AI response: You have a meeting with your team at 2:00 PM.
-User Input: Oh right! My team just hit a major milestone; I should send them an email to congratulate them.";
+// Create chat history and choices
+ChatHistory history = [];
+List<string> choices = ["ContinueConversation", "EndConversation"];
 
-string lastMessage = "AI response: Would you like to write one for you?";
+// Create few-shot examples
+List<ChatHistory> fewShotExamples = [
+    [
+        new ChatMessageContent(AuthorRole.User, "Can you send a very quick approval to the marketing team?"),
+        new ChatMessageContent(AuthorRole.System, "Intent:"),
+        new ChatMessageContent(AuthorRole.Assistant, "ContinueConversation")
+    ],
+    [
+        new ChatMessageContent(AuthorRole.User, "Can you send the full update to the marketing team?"),
+        new ChatMessageContent(AuthorRole.System, "Intent:"),
+        new ChatMessageContent(AuthorRole.Assistant, "EndConversation")
+    ]
+];
 
-string prompt = @"Instructions: What is the intent of this request?
-Choices: {{$choices}}.
+// Create handlebars template for intent
+var getIntent = kernel.CreateFunctionFromPrompt(
+    new()
+    {
+        Template = @"
+        <message role=""system"">Instructions: What is the intent of this request?
+        If you don't know the intent, don't guess; instead respond with ""Unknown"".
+        Choices: {{choices}}.</message>
 
-Prior conversation summary: The marketing team needs an update on the new product.
-AI response: What do you want to tell them?
-User Input: Can you send a very quick approval to the marketing team?
-Intent: SendMessage
+        {{#each fewShotExamples}}
+            {{#each this}}
+                <message role=""{{role}}"">{{content}}</message>
+            {{/each}}
+        {{/each}}
 
-Prior conversation summary: The AI offered to send an email to the marketing team.
-AI response: Do you want me to send an email to the marketing team?
-User Input: Yes, please.
-Intent: SendEmail
+        // TODO: add function here
 
-Prior conversation summary: {{ConversationSummaryPlugin.SummarizeConversation $history}}
-{{$lastMessage}}
-User Input: {{$request}}
-Intent: ";
-
-// Get user input
-Console.Write("User > ");
-var request = Console.ReadLine();
-
-// Invoke prompt
-var result = await kernel.InvokePromptAsync(
-    prompt,
-    new() {
-        { "request", request },
-        { "choices", "SendEmail, SendMessage, CompleteTask, CreateDocument" },
-        { "history", history },
-        { "lastMessage", lastMessage }
-    }
+        <message role=""user"">{{request}}</message>
+        <message role=""system"">Intent:</message>",
+        TemplateFormat = "handlebars"
+    },
+    new HandlebarsPromptTemplateFactory()
 );
-Console.WriteLine(result);
+
+// Create a Semantic Kernel template for chat
+var chat = kernel.CreateFunctionFromPrompt(
+    @"{{ConversationSummaryPlugin.SummarizeConversation $history}}
+    User: {{$request}}
+    Assistant: "
+);
+
+// Start the chat loop
+while (true)
+{
+    // Get user input
+    Console.Write("User > ");
+    var request = Console.ReadLine();
+
+    // Invoke handlebars prompt
+    var intent = await kernel.InvokeAsync(
+        getIntent,
+        new() {
+            { "request", request },
+            { "choices", choices },
+            { "history", string.Join("\n", history.Select(x => x.Role + ": " + x.Content)) },
+            { "fewShotExamples", fewShotExamples }
+        }
+    );
+
+    // End the chat if the intent is "Stop"
+    if (intent.ToString() == "EndConversation")
+    {
+        break;
+    }
+
+    // Get chat response
+    var chatResult = kernel.InvokeStreamingAsync<StreamingChatMessageContent>(
+        chat,
+        new() {
+            { "request", request },
+            { "history", string.Join("\n", history.Select(x => x.Role + ": " + x.Content)) }
+        }
+    );
+
+    string message = "";
+    await foreach (var chunk in chatResult)
+    {
+        if (chunk.Role.HasValue) Console.Write(chunk.Role + " > ");
+        message += chunk;
+        Console.Write(chunk);
+    }
+    Console.WriteLine();
+
+    // Append to history
+    history.AddUserMessage(request!);
+    history.AddAssistantMessage(message);
+}
+

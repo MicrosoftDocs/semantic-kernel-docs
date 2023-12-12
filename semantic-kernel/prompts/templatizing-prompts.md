@@ -10,50 +10,37 @@ ms.service: semantic-kernel
 
 # Templatizing your prompts
 
-
 In the [previous article](./your-first-prompt.md) we created a prompt that could be used to get the intent of the user. This function, however, is not very reusable. Because the options are hard coded in. We could dynamically create the prompts string, but there's a better way: prompt templates. function.
 
 By following this example, you'll learn how to templatize a prompt. If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/04-Serializing-Semantic-Functions) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/04-Templatizing-Prompts) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Serializing-Semantic-Functions) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) |
+| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/06-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/04-Templatizing-Prompts) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/06-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) |
 
 ## Adding variables to the prompt
-With Semantic Kernel's templating language, we can add tokens that will be automatically replaced with input parameters. To begin, let's update our prompt from the previous article so it has tokens for the input, options, and history. In Semantic Kernel, tokens are surrounded by double curly braces and a dollar sign `{{$...}}`.
+With Semantic Kernel's templating language, we can add tokens that will be automatically replaced with input parameters. To begin, let's build a super simple prompt that uses the Semantic Kernel template syntax language to include enough information for an agent to respond back to the user.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6, 8, 33-45" highlight="6, 14-15":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="73-77" :::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="17-29" highlight="3,11-12":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="16-18":::
 
 ---
 
-
-:::row:::
-   :::column span="2":::
-      The new prompt uses the `options` variable to provide a list of options for the LLM to choose from. We've also added `input` and `history` variables to the prompt so the conversation can be included.
-      
-      By including these variables, we are able to help the LLM choose the correct intent by providing it with more context and a constrained list of options to choose from.
-
-      You can now run your template using named arguments.
-   :::column-end:::
-   :::column span="3":::
-      ![Consuming context variables within a prompt](../media/using-context-in-templates.png)
-   :::column-end:::
-:::row-end:::
+The new prompt uses the `request` and `history` variables so that we can include these values when we run our prompt. To test our prompt, we can create a new kernel and a chat loop so we can begin talking back-and-forth with our agent. When we invoke the prompt, we can pass in the `request` and `history` variables as arguments.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="17-22, 26-27, 30-32, 47-60" highlight="20-22":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6,15-22,25-29,78-85,103-124" highlight="20-22":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="6-10, 12-16, 30-47" highlight="13-18,24":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="6-15, 20-38" highlight="13-18,24":::
 
 ---
 
@@ -61,20 +48,20 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 In addition to the core template syntax, Semantic Kernel also comes with support for the Handlebars templating language in the C# SDK. To use Handlebars, you'll first want to add the Handlebars package to your project.
 
 ```console
-dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars
+dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelease
 ```
 
-Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFactory`. Because Handlebars supports loops, we can use it to loop over the examples and chat history.
+Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFactory`. Because Handlebars supports loops, we can use it to loop over elements like examples and chat history. This makes it a great fit for the `getIntent` prompt we created in the [previous article](./your-first-prompt.md).
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-8, 86-108" highlight="12-16,18-20,29":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="47-70" highlight="12-16,18-20,29":::
 
-We can then create the example and chat history objects that will be used by the template.
+We can then create the choice and example objects that will be used by the template. In this example, we can use our prompt to end the conversation once it's over. To do this, we'll just provide two valid intents: `ContinueConversation` and `EndConversation`.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="65-83":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="30, 31-44":::
 
-Finally, you can run the prompt using the kernel. Notice how we're using the `InvokeAsync` instead of `InvokePromptAsync` since we've already turned the prompt string into a function.
+Finally, you can run the prompt using the kernel. Add the following code within your main chat loop so that it can terminate the loop once the intent is `EndConversation`.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="114-123" highlight="1":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="87-101":::
 
 ## Take the next step
 Now that you can templatize your prompt, you can now learn how to call functions from within

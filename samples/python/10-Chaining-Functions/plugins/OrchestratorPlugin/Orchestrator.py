@@ -24,7 +24,7 @@ class Orchestrator:
         variables["options"] = "Sqrt, Multiply"
 
         # Retrieve the intent from the user request
-        get_intent = self._kernel.skills.get_function("OrchestratorPlugin", "GetIntent")
+        get_intent = self._kernel.skills.get_function("OrchestratorPlugin", "getIntent")
         intent = (
             await self._kernel.run_async(get_intent, input_vars=variables)
         ).result.strip()

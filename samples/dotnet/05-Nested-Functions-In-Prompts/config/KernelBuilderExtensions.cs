@@ -9,7 +9,7 @@ internal static class KernelBuilderExtensions
     /// </summary>
     /// <param name="kernelBuilder"></param>
     /// <exception cref="ArgumentException"></exception>
-    internal static KernelBuilder WithCompletionService(this KernelBuilder kernelBuilder)
+    internal static IKernelBuilder WithCompletionService(this IKernelBuilder kernelBuilder)
     {
         switch (Env.Var("Global:LlmService")!)
         {
