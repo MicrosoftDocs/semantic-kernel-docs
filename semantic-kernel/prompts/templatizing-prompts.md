@@ -24,7 +24,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="73-77" :::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="74-79" :::
 
 # [Python](#tab/python)
 
@@ -36,7 +36,7 @@ The new prompt uses the `request` and `history` variables so that we can include
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6,15-22,25-29,78-85,103-124" highlight="28-29":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6,15-22,25-29,81-87,105-127" highlight="28-29":::
 
 # [Python](#tab/python)
 
@@ -57,15 +57,15 @@ Then import the Handlebars template engine package.
 
 Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFactory`. Because Handlebars supports loops, we can use it to loop over elements like examples and chat history. This makes it a great fit for the `getIntent` prompt we created in the [previous article](./your-first-prompt.md).
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="47-70" highlight="9-13,15-17":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="48-72" highlight="9-13,15-17":::
 
 We can then create the choice and example objects that will be used by the template. In this example, we can use our prompt to end the conversation once it's over. To do this, we'll just provide two valid intents: `ContinueConversation` and `EndConversation`.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="30, 31-44":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="31-46":::
 
 Finally, you can run the prompt using the kernel. Add the following code within your main chat loop so that it can terminate the loop once the intent is `EndConversation`.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="87-101":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="88-103":::
 
 ## Take the next step
 Now that you can templatize your prompt, you can now learn how to call functions from within

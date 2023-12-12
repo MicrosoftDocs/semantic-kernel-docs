@@ -25,8 +25,10 @@ builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Informati
 
 var kernel = builder.Build();
 
-// Create chat history and choices
+// Create chat history
 ChatHistory history = [];
+
+// Create choices
 List<string> choices = ["ContinueConversation", "EndConversation"];
 
 // Create few-shot examples
@@ -109,6 +111,7 @@ while (true)
         }
     );
 
+    // Stream the response
     string message = "";
     await foreach (var chunk in chatResult)
     {

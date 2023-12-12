@@ -54,7 +54,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="23-24, 71-78, 95-117":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="23-24, 71-78, 95-118":::
 
 
 # [Python](#tab/python)
@@ -75,4 +75,4 @@ Similar to the previous example, we can use the `SummarizeConversation` function
 Now that you can call nested functions, you can now learn how to [serialize your templates](./serializing-semantic-functions.md).
 
 > [!div class="nextstepaction"]
-> [Serialize your templates](./serializing-semantic-functions.md)
+> [Configure your prompts](./configure-prompts.md)

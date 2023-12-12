@@ -20,7 +20,7 @@ builder.Plugins.AddFromType<ConversationSummaryPlugin>();
 
 var kernel = builder.Build();
 
-// Create chat history and choices
+// Create chat history
 ChatHistory history = [];
 List<string> choices = ["ContinueConversation", "EndConversation"];
 
@@ -102,6 +102,7 @@ while (true)
         }
     );
 
+    // Stream the response
     string message = "";
     await foreach (var chunk in chatResult)
     {

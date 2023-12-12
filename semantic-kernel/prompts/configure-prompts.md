@@ -16,20 +16,20 @@ For example, you could add settings to the chat prompt from the previous article
 # [C#](#tab/Csharp)
 
 In C#, you can define the following properties of a prompt:
-- Name - the name of the prompt
-- Description - a description of what the prompt does
-- Template format - the format of the prompt template (e.g., `semantic-kernel`, `Handlebars`)
-- Input variables - the variables that are used inside of the prompt (e.g., `request`)
-- Execution settings - the settings for different models that can be used to execute the prompt
+- **Name** - the name of the prompt
+- **Description** - a description of what the prompt does
+- **Template format** - the format of the prompt template (e.g., `semantic-kernel`, `Handlebars`)
+- **Input variables** - the variables that are used inside of the prompt (e.g., `request`)
+- **Execution settings** - the settings for different models that can be used to execute the prompt
 
 :::code language="csharp" source="~/../samples/dotnet/06-Configuring-Prompts/program.cs" range="23-62":::
 
 # [Python](#tab/python)
 
-In C#, you can define the following properties of a prompt:
-- Name - the name of the prompt
-- Description - a description of what the prompt does
-- Execution settings - the settings used to execute the prompt (e.g., `max_tokens`, `temperature`)
+In Python, you can define the following properties of a prompt:
+- **Name** - the name of the prompt
+- **Description** - a description of what the prompt does
+- **Execution settings** - the settings used to execute the prompt (e.g., `max_tokens`, `temperature`)
 
 :::code language="python" source="~/../samples/python/06-Configuring-Prompts/main.py" range="34-40":::
 
@@ -61,7 +61,7 @@ The following table describes the many of the commonly available settings for mo
 To learn more about the various parameters available for OpenAI and Azure OpenAI models, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference).
 
 ### Default setting for OpenAI and Azure OpenAI
-If you do not provide completion parameters, Semantic Kernel will use the default parameters for the OpenAI API. Learn more about the current defaults by reading the [Azure OpenAI API reference](/azure/cognitive-services/openai/reference).
+If you do not provide completion parameters, Semantic Kernel will use the default parameters for the OpenAI API. Learn more about the current defaults by reading the [Azure OpenAI API reference](/azure/cognitive-services/openai/reference) article.
 
 ## Take the next step
 > [!div class="nextstepaction"]

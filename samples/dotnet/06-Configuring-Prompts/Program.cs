@@ -80,6 +80,7 @@ while (true)
         }
     );
 
+    // Stream the response
     string message = "";
     await foreach (var chunk in chatResult)
     {
