@@ -46,9 +46,7 @@ When writing `description` and `input_variables`, we recommend using the followi
 - If you have trouble getting planner to use a function, try adding recommendations or examples for when to use the function.
 
 ## Execution settings used by AI models
-In addition to providing parameters for planner, the execution settings also allows you to control how a function is run by an [AI model](../prompt-engineering/llm-models.md). 
-
-The following table describes the many of the commonly available settings for models:
+In addition to providing parameters for planner, the execution settings also allows you to control how a function is run by an [AI model](../prompt-engineering/llm-models.md). The following table describes the many of the commonly available settings for models:
 
 | Completion Parameter | Type | Required? | Default | Description |
 |---|---|---|---|
@@ -58,12 +56,12 @@ The following table describes the many of the commonly available settings for mo
 | `presence_penalty` | number	| Optional	| 0	| Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. |
 | `frequency_penalty` |	number	| Optional	|0 |	Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. |
 
-To learn more about the various parameters available for OpenAI and Azure OpenAI models, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference).
+To learn more about the various parameters available for OpenAI and Azure OpenAI models, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference) article.
 
 ### Default setting for OpenAI and Azure OpenAI
 If you do not provide completion parameters, Semantic Kernel will use the default parameters for the OpenAI API. Learn more about the current defaults by reading the [Azure OpenAI API reference](/azure/cognitive-services/openai/reference) article.
 
 ## Take the next step
 > [!div class="nextstepaction"]
-> [Understanding tokens](./tokens.md)
+> [Saving your prompts as files](./saving-prompts-as-files.md)
 

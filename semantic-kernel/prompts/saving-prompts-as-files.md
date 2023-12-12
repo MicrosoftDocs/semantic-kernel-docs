@@ -10,7 +10,7 @@ ms.service: semantic-kernel
 
 # Saving and sharing prompts
 
-In previous articles, we demonstrated [create and run prompts inline](./templatizing-prompts.md). However, in most cases, you'll want to create your prompts in a separate file so you can easily import them into Semantic Kernel across multiple projects and share them with others.
+In previous articles, we demonstrated how to [create and run prompts inline](./templatizing-prompts.md). However, in most cases, you'll want to create your prompts in a separate file so you can easily import them into Semantic Kernel across multiple projects and share them with others.
 
 In this article, we'll demonstrate how to create the files necessary for a prompt so you can easily import them into Semantic Kernel. As an example in this article, we will build on the [previous tutorial](./templatizing-prompts.md) by showing how to serialize the chat prompt. This prompt will be called `chat`.
 
@@ -50,7 +50,7 @@ Prompts
 ### Writing a prompt in the _skprompt.txt_ file
 The _skprompt.txt_ file contains the request that will be sent to the AI service. Since we've already written the prompt in the [previous tutorial](./templatizing-prompts.md), we can simply copy it over to the _skprompt.txt_ file.
 
-:::code language="txt" source="~/../samples/dotnet/07-Serializing-Prompts/plugins/OrchestratorPlugin/chat/skprompt.txt":::
+:::code language="txt" source="~/../samples/dotnet/07-Serializing-Prompts/prompts/chat/skprompt.txt":::
 
 
 ### Configuring the function in the _config.json_ file
@@ -89,42 +89,44 @@ At this point, you can import and test your function with the kernel by updating
 ## Using YAML to serialize your prompt
 In addition to the _skprompt.txt_ and _config.json_ files, you can also serialize your prompt using a single YAML file while using the C# SDK. This is useful if you want to use a single file to define your prompt. Additionally, this is the same format that is used by Azure AI Studio, making it easier to share prompts between the two platforms.
 
-Let's try creating a YAML serialization file for the `getIntent` prompt.
+Let's try creating a YAML serialization file for the `getIntent` prompt. To get started, you first need to install the necessary packages.
 
-1. To get started, you first need to install the necessary packages.
+```console
+dotnet add package Microsoft.SemanticKernel.Yaml--prerelease
+```
 
-     ```console
-     dotnet add package Microsoft.SemanticKernel.Yaml--prerelease
-     ```
-
-2. This walkthrough also uses the Handlebars template engine, so you'll need to install the Handlebars package as well.
+This walkthrough also uses the Handlebars template engine, so you'll need to install the Handlebars package as well.
 
      ```console
      dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelease
      ```
 
-3. Next, create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
+Next, create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
 
-     :::code language="yaml" source="~/../samples/python/07-Serializing-Prompts/prompts/getIntent.prompt.yaml":::
+:::code language="yaml" source="~/../samples/python/07-Serializing-Prompts/prompts/getIntent.prompt.yaml":::
 
-     You should notice that all of the same properties that were defined in the _config.json_ file are now defined in the YAML file. Additionally, the `template` property is used to define the prompt template.
+You should notice that all of the same properties that were defined in the _config.json_ file are now defined in the YAML file. Additionally, the `template` property is used to define the prompt template.
 
-4. As a best practice, we recommend adding your prompts as an embedded resource. To do this, you'll need to update your _csproj_ file to include the following:
+As a best practice, we recommend adding your prompts as an embedded resource. To do this, you'll need to update your _csproj_ file to include the following:
 
-     ```xml
-     <ItemGroup>
-          <EmbeddedResource Include="Prompts\**\*.yaml" />
-     </ItemGroup>
-     ```
+```xml
+<ItemGroup>
+     <EmbeddedResource Include="Prompts\**\*.yaml" />
+</ItemGroup>
+```
 
-5. Finally, you can import your prompt in the _Program.cs_ file.
+Finally, you can import your prompt in the _Program.cs_ file.
 
-     :::code language="csharp" source="~/../samples/dotnet/07-Serializing-Prompts/Program.cs" range="26-31":::
+:::code language="csharp" source="~/../samples/dotnet/07-Serializing-Prompts/Program.cs" range="26-31":::
+
+To call the prompt, you can use the following code:
+
+:::code language="csharp" source="~/../samples/dotnet/07-Serializing-Prompts/Program.cs" range="60-69":::
+
 
 
 ## Take the next step
-Now that you can create a prompt, you can now learn how to templatize your prompt so
-that it can be used for even more scenarios.
+Now that you know how to save your prompts, you can begin learning how to create an agent.
 
 > [!div class="nextstepaction"]
-> [Templatize your prompt](./templatizing-semantic-functions.md)
+> [Create your first agent](../agents/index.md)
