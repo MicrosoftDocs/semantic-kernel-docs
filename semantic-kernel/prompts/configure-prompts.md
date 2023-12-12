@@ -22,7 +22,7 @@ In C#, you can define the following properties of a prompt:
 - Input variables - the variables that are used inside of the prompt (e.g., `request`)
 - Execution settings - the settings for different models that can be used to execute the prompt
 
-:::code language="csharp" source="~/../samples/dotnet/06-Configure-Prompts/program.cs" range="24-63":::
+:::code language="csharp" source="~/../samples/dotnet/06-Configure-Prompts/program.cs" range="23-62":::
 
 # [Python](#tab/python)
 

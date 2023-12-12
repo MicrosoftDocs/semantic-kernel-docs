@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Plugins.Core;
-using Microsoft.SemanticKernel.PromptTemplate.Handlebars;
 
 // Create kernel
 var builder = Kernel.CreateBuilder();
@@ -51,7 +50,7 @@ var chat = kernel.CreateFunctionFromPrompt(
                 }
             },
             new() {
-                // Settings for gpt-4
+                // Settings for gpt-4-1106-preview
                 ModelId = "gpt-4-1106-preview",
                 ExtensionData = new() {
                     { "MaxTokens", 8000 },
@@ -94,4 +93,3 @@ while (true)
     history.AddUserMessage(request!);
     history.AddAssistantMessage(message);
 }
-
