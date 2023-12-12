@@ -29,11 +29,11 @@ Below, we show how we can update our original prompt to use the `SummarizeConver
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="34-50" highlight="13":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="34-50" highlight="14":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="38-54" highlight="13":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="38-54" highlight="14":::
 
 ---
 

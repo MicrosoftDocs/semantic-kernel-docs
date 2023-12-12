@@ -47,7 +47,7 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="8-13, 15-16":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="7-13, 15-16":::
 
 # [Python](#tab/python)
 
@@ -96,7 +96,7 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="22-25" highlight="3":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="22-23" highlight="3":::
 
 ---
 
@@ -118,7 +118,7 @@ To make the result more predictable, we can add structure to the prompt by using
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="31-36":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="29-32":::
 
 ---
 
@@ -135,7 +135,7 @@ For example, if you wanted the LLM to generate a JSON object, you could use the 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="42-63":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="38-60":::
 
 ---
 
@@ -159,7 +159,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="69-78" highlight="4-7":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="66-76" highlight="4-7":::
 
 ---
 
@@ -175,7 +175,7 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="84-94" highlight="3":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="82-93" highlight="3":::
 
 ---
 
@@ -201,7 +201,7 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="100-115" highlight="1-4,13":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="99-115" highlight="1-4,13":::
 
 ---
 

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 
-
+// Create a kernel
 var builder = new KernelBuilder();
 // Add a text or chat completion service using either:
 // builder.Services.AddAzureOpenAIChatCompletion()

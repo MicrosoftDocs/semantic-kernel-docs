@@ -19,79 +19,78 @@ async def main():
     print(await kernel.run_async(semantic_function))
 
     # 1.0 Make the prompt more specific
-    prompt = (
-        f"What is the intent of this request? {request}\n"
-        "You can choose between SendEmail, SendMessage, CompleteTask, CreateDocument."
-    )
+    prompt = f"""What is the intent of this request? {request}
+        You can choose between SendEmail, SendMessage, CompleteTask, CreateDocument."""
     print("1.0 Make the prompt more specific")
     semantic_function = kernel.create_semantic_function(prompt)
     print(await kernel.run_async(semantic_function))
 
     # 2.0 Add structure to the output with formatting
-    prompt = (
-        f"Instructions: What is the intent of this request?\n"
-        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.\n"
-        f"User Input: {request}\n"
-        "Intent: "
-    )
+    prompt = f"""Instructions: What is the intent of this request?
+        Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.
+        User Input: {request}
+        Intent: """
     print("2.0 Add structure to the output with formatting")
     semantic_function = kernel.create_semantic_function(prompt)
     print(await kernel.run_async(semantic_function))
 
     # 2.1 Add structure to the output with formatting (using Markdown and JSON)
-    prompt = (
-        f"## Instructions\n"
-        "Provide the intent of the request using the following format:\n"
-        "```json\n"
-        "{\n"
-        '    "intent": {intent}\n'
-        "}\n"
-        "```\n\n"
-        "## Choices\n"
-        "You can choose between the following intents:\n"
-        "```json\n"
-        '["SendEmail", "SendMessage", "CompleteTask", "CreateDocument"]\n'
-        "```\n\n"
-        "## User Input\n"
-        "The user input is:\n"
-        "```json\n"
-        "{\n"
-        f'    "request": "{request}"\n'
-        "}\n"
-        "```\n\n"
-        "## Intent"
-    )
+    prompt = f"""## Instructions
+        Provide the intent of the request using the following format:
+        ```json
+        {{
+            "intent": {{intent}}
+        }}
+        ```
+
+        ## Choices
+        You can choose between the following intents:
+        ```json
+        ["SendEmail", "SendMessage", "CompleteTask", "CreateDocument"]
+        ```
+
+        ## User Input
+        The user input is:
+        ```json
+        {{
+            "request": "{request}"\n'
+        }}
+        ```
+
+        ## Intent"""
     print("2.1 Add structure to the output with formatting (using Markdown and JSON)")
     semantic_function = kernel.create_semantic_function(prompt)
     print(await kernel.run_async(semantic_function))
 
     # 3.0 Provide examples with few-shot prompting
-    prompt = (
-        f"Instructions: What is the intent of this request?\n"
-        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.\n\n"
-        "User Input: Can you send a very quick approval to the marketing team?\n"
-        "Intent: SendMessage\n\n"
-        "User Input: Can you send the full update to the marketing team?\n"
-        "Intent: SendEmail\n\n"
-        f"User Input: {request}\n"
-        "Intent: "
-    )
+    prompt = f"""Instructions: What is the intent of this request?
+        Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.
+
+        User Input: Can you send a very quick approval to the marketing team?
+        Intent: SendMessage
+
+        User Input: Can you send the full update to the marketing team?
+        Intent: SendEmail
+        
+        User Input: {request}
+        Intent: """
     print("3.0 Provide examples with few-shot prompting")
     semantic_function = kernel.create_semantic_function(prompt)
     print(await kernel.run_async(semantic_function))
 
     # 4.0 Tell the AI what to do to avoid doing something wrong
-    prompt = (
-        f"Instructions: What is the intent of this request?\n"
-        "If you don't know the intent, don't guess; instead respond with \"Unknown\".\n"
-        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown.\n\n"
-        "User Input: Can you send a very quick approval to the marketing team?\n"
-        "Intent: SendMessage\n\n"
-        "User Input: Can you send the full update to the marketing team?\n"
-        "Intent: SendEmail\n\n"
-        f"User Input: {request}\n"
-        "Intent: "
-    )
+    prompt = f"""Instructions: What is the intent of this request?
+        If you don't know the intent, don't guess; instead respond with "Unknown".
+        Choices: SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown.
+
+        User Input: Can you send a very quick approval to the marketing team?
+        Intent: SendMessage
+
+        User Input: Can you send the full update to the marketing team?
+        Intent: SendEmail
+        
+        User Input: {request}
+        Intent: """
     print("4.0 Tell the AI what to do to avoid doing something wrong")
     semantic_function = kernel.create_semantic_function(prompt)
     print(await kernel.run_async(semantic_function))
@@ -101,18 +100,19 @@ async def main():
         "User input: I hate sending emails, no one ever reads them.\n"
         "AI response: I'm sorry to hear that. Messages may be a better way to communicate."
     )
-    prompt = (
-        f"Instructions: What is the intent of this request?\n"
-        "If you don't know the intent, don't guess; instead respond with \"Unknown\".\n"
-        "Choices: SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown.\n\n"
-        "User Input: Can you send a very quick approval to the marketing team?\n"
-        "Intent: SendMessage\n\n"
-        "User Input: Can you send the full update to the marketing team?\n"
-        "Intent: SendEmail\n\n"
-        f"{history}\n"
-        f"User Input: {request}\n"
-        "Intent: "
-    )
+    prompt = f"""Instructions: What is the intent of this request?\n"
+        If you don't know the intent, don't guess; instead respond with "Unknown".
+        Choices: SendEmail, SendMessage, CompleteTask, CreateDocument, Unknown.
+
+        User Input: Can you send a very quick approval to the marketing team?
+        Intent: SendMessage
+
+        User Input: Can you send the full update to the marketing team?
+        Intent: SendEmail
+
+        {history}
+        User Input: {request}
+        Intent: """
     print("5.0 Provide context to the AI")
     semantic_function = kernel.create_semantic_function(prompt)
     print(await kernel.run_async(semantic_function))
