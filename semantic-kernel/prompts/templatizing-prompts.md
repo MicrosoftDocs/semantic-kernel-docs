@@ -1,5 +1,5 @@
 ---
-title: Add inputs and outputs to prompts
+title: Making your prompts reusable
 description: Learn how to templatize prompts in Semantic Kernel.
 author: matthewbolanos
 ms.topic: tutorial

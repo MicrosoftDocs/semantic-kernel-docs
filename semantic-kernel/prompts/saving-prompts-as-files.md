@@ -1,5 +1,5 @@
 ---
-title: Save your prompts
+title: Saving your prompts as files
 description: Learn how to serialize your prompts in Semantic Kernel.
 author: matthewbolanos
 ms.topic: tutorial

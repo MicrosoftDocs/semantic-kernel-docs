@@ -1,6 +1,6 @@
 ---
-title: How to quickly run prompts in Semantic Kernel
-description: Learn how to create and run prompts in code using Semantic Kernel.
+title: Quickly create your first prompt in Semantic Kernel
+description: Learn how to create and run prompts using Semantic Kernel.
 description: 
 author: johnmaeda
 ms.topic: creating-chains

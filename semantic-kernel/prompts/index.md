@@ -1,6 +1,6 @@
 ---
-title: Prompt engineering overview
-description: Understanding the importance of prompts in directing the behavior of Large Language Models (LLM) AI
+title: Prompt engineering with Semantic Kernel
+description: Understanding the importance of prompts in directing the behavior of AIs
 author: johnmaeda
 ms.topic: prompt-engineering
 ms.author: johnmaeda

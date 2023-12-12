@@ -1,7 +1,7 @@
 - name: Understanding plugins
   href: index.md
-- name: Add functions to plugins
-  href: native-functions/TOC.yml
+- name: Adding functions to plugins
+  href: functions/TOC.yml
 - name: Using plugins in Semantic Kernel
   href: using-plugins/TOC.yml
 - name: Export and import OpenAI plugins

@@ -1,5 +1,5 @@
 ---
-title: Call nested functions in prompts
+title: Call nested functions within prompts
 description: Learn how to call functions within a Semantic Kernel prompt.
 author: matthewbolanos
 ms.topic: conceptual

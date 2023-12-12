@@ -1,6 +1,6 @@
 ---
-title: How to use prompt template language in Semantic Kernel
-description: How to use prompt template language in Semantic Kernel
+title: Using the out-of-the-box prompt template language 
+description: Learn how to use the Semantic Kernel prompt template language.
 author: johnmaeda
 ms.topic: prompt-engineering
 ms.author: johnmaeda

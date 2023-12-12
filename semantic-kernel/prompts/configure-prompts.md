@@ -1,5 +1,5 @@
 ---
-title: Configure prompts 
+title: Configure prompts within Semantic Kernel
 description: Learn how to configure prompts for your functions in Semantic Kernel
 author: johnmaeda
 ms.topic: prompt-engineering
