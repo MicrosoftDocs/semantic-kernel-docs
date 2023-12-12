@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet", "dotnet", "{50F418
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "05-Nested-Functions-In-Prompts", "samples\dotnet\05-Nested-Functions-In-Prompts\05-Nested-Functions-In-Prompts.csproj", "{D3F29788-75FE-410E-A858-9D26963E0DB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "06-Serializing-Prompts", "samples\dotnet\06-Serializing-Prompts\06-Serializing-Prompts.csproj", "{7A4EF630-44F2-4D00-96E4-2B0C98152FB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "07-Serializing-Prompts", "samples\dotnet\07-Serializing-Prompts\07-Serializing-Prompts.csproj", "{7A4EF630-44F2-4D00-96E4-2B0C98152FB8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "01-Kernel-Intro", "samples\dotnet\01-Kernel-Intro\01-Kernel-Intro.csproj", "{27ABE625-D6D3-46B9-A45E-968AC7A4C3A1}"
 EndProject

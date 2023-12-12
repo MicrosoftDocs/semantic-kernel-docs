@@ -1,9 +1,8 @@
-import semantic_kernel as sk
-from semantic_kernel.core_skills import ConversationSummarySkill
-import config.add_completion_service
-
-
 async def main():
+    import semantic_kernel as sk
+    from semantic_kernel.core_skills import ConversationSummarySkill
+    import config.add_completion_service
+
     # Initialize the kernel
     kernel = sk.Kernel()
     # Add a text or chat completion service using either:

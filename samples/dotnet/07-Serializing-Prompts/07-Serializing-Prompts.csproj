@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>5ee045b0-aea3-4f08-8d31-32d1a6f8fed0</UserSecretsId>
+    <NoWarn>SKEXP0050</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,13 +17,15 @@
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
-  <!--
-    To run this sample using Semantic Kernel's nuget package, uncomment the following lines and
-    comment the ProjectReference lines for Connectors.AI.OpenAI and SemanticKernel
-  -->
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" />
+    <!-- <PackageReference Include="Microsoft.SemanticKernel" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplate.Handlebars" />
+    <PackageReference Include="Microsoft.SemanticKernel.Yaml" />-->
+
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/SemanticKernel.MetaPackage/SemanticKernel.MetaPackage.csproj" />
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/Extensions/PromptTemplate.Handlebars/PromptTemplate.Handlebars.csproj" />
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/Functions/Functions.Yaml/Functions.Yaml.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +35,10 @@
     <None Update="plugins\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="prompts\**\*.yaml" />
   </ItemGroup>
 
 </Project>

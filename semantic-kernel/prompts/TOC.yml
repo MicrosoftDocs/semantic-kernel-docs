@@ -9,6 +9,6 @@
 - name: Configuring prompts
   href: configure-prompts.md
 - name: Saving your prompts as files
-  href: serializing-semantic-functions.md
+  href: saving-prompts-as-files.md
 - name: Prompt template syntax
   href: prompt-template-syntax.md

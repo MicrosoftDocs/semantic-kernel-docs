@@ -44,7 +44,7 @@ var getIntent = kernel.CreateFunctionFromPrompt(
     {
         Template = @"
         <message role=""system"">Instructions: What is the intent of this request?
-        If you don't know the intent, don't guess; instead respond with ""Unknown"".
+        Do not explain the reasoning, just reply back with the intent. If you are unsure, reply with {{choices[0]}}.
         Choices: {{choices}}.</message>
 
         {{#each fewShotExamples}}
@@ -82,7 +82,7 @@ while (true)
         new() {
             { "request", request },
             { "choices", choices },
-            { "history", string.Join("\n", history.Select(x => x.Role + ": " + x.Content)) },
+            { "history", history },
             { "fewShotExamples", fewShotExamples }
         }
     );

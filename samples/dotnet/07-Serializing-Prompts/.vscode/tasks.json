@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/06-Serializing-Prompts.csproj",
+                "${workspaceFolder}/07-Serializing-Prompts.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/06-Serializing-Prompts.csproj",
+                "${workspaceFolder}/07-Serializing-Prompts.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/06-Serializing-Prompts.csproj"
+                "${workspaceFolder}/07-Serializing-Prompts.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
