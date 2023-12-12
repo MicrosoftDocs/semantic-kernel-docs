@@ -14,18 +14,19 @@ async def main():
         "User input: I hate sending emails, no one ever reads them.\n"
         "AI response: I'm sorry to hear that. Messages may be a better way to communicate."
     )
-    prompt = (
-        "Instructions: What is the intent of this request?\n"
-        "If you don't know the intent, don't guess; instead respond with \"Unknown\".\n"
-        "Choices: {{$options}}\n\n"
-        "User Input: Can you send a very quick approval to the marketing team?\n"
-        "Intent: SendMessage\n\n"
-        "User Input: Can you send the full update to the marketing team?\n"
-        "Intent: SendEmail\n\n"
-        "{{$history}}\n"
-        "User Input: {{$request}}\n"
-        "Intent: "
-    )
+    prompt = """Instructions: What is the intent of this request?
+        If you don't know the intent, don't guess; instead respond with "Unknown".
+        Choices: {{$options}}
+
+        User Input: Can you send a very quick approval to the marketing team?
+        Intent: SendMessage
+
+        User Input: Can you send the full update to the marketing team?
+        Intent: SendEmail
+        
+        {{$history}}
+        User Input: {{$request}}
+        Intent: """
 
     request = input("Your request: ")
 

@@ -29,7 +29,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="17-28" highlight="4,9-10":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="17-29" highlight="3,11-12":::
 
 ---
 
@@ -53,7 +53,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="7-10, 12-16, 29-46" highlight="13-18,24":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="6-10, 12-16, 30-47" highlight="13-18,24":::
 
 ---
 
