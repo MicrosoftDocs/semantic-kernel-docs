@@ -78,15 +78,15 @@ The intent of this request is to seek guidance or clarification on how to effect
 While this prompt "works", it's not very usable since you cannot use the result to predictably trigger automation. Every time you run the prompt, you may get a very different response.
 
 To make the result more predictable, we can perform the following improvements:
-1. Make the prompt more specific.
-2. Add structure to the output with formatting.
-3. Provide examples with few-shot prompting.
-4. Tell the AI what to do to avoid doing something wrong.
-5. Provide context to the AI.
-6. Using message roles in chat completion prompts.
-7. Give your AI words of encouragement.
+1. [Make the prompt more specific](#1-make-the-prompt-more-specific)
+2. [Add structure to the output with formatting](#2-add-structure-to-the-output-with-formatting)
+3. [Provide examples with few-shot prompting](#3-provide-examples-with-few-shot-prompting)
+4. [Tell the AI what to do to avoid doing something wrong](#4-tell-the-ai-what-to-do-to-avoid-doing-something-wrong)
+5. [Provide context to the AI](#5-provide-context-to-the-ai)
+6. [Using message roles in chat completion prompts](#6-using-message-roles-in-chat-completion-prompts)
+7. [Give your AI words of encouragement](#7-give-your-ai-words-of-encouragement)
 
-### Make the prompt more specific
+### 1) Make the prompt more specific
 The first thing we can do is be more specific with our prompt. Instead of just asking "What is the intent of this request?", we can provide the AI with a list of intents to choose from. This will make the prompt more predictable since the AI will only be able to choose from the list of intents we provide.
 
 
@@ -106,7 +106,7 @@ Now when you run the prompt with the same input, you should get a more usable re
 The intent of the request is to send an email. Therefore, the appropriate action would be to use the SendEmail function.
 ```
 
-### Add structure to the output with formatting
+### 2) Add structure to the output with formatting
 While the result is more predictable, there's a chance that the LLM responds in such a way that you cannot easily parse the result. For example, if the LLM responded with "The intent is SendEmail", you may have a hard time extracting the intent since it's not in a predictable location.
 
 To make the result more predictable, we can add structure to the prompt by using formatting. In this case, we can define the different parts of our prompt like so:
@@ -147,7 +147,7 @@ This would result in the following output:
 }
 ```
 
-### Provide examples with few-shot prompting
+### 3) Provide examples with few-shot prompting
 So far, we've been using zero-shot prompting, which means we're not providing any examples to the AI. While this is ok for getting started, it's not recommended for more complex scenarios since the AI may not have enough training data to generate the correct result.
 
 To add examples, we can use few-shot prompting. With few-shot prompting, we provide the AI with a few examples of what we want it to do.  For example, we could provide the following examples to help the AI distinguish between sending an email and sending an instant message.
@@ -163,7 +163,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 ---
 
-### Tell the AI what to do to avoid doing something wrong
+### 4) Tell the AI what to do to avoid doing something wrong
 Often when an AI starts responding incorrectly, it's tempting to simply tell the AI to stop doing something. Unfortunately, this can often lead to the AI doing something even worse. For example, if you told the AI to stop returning back a hallucinated intent, it may start returning back an intent that is completely unrelated to the user's request.
 
 Instead, it's recommended that you tell the AI what it should do _instead_. For example, if you wanted to tell the AI to stop returning back a hallucinated intent, you might write the following prompt.
@@ -179,7 +179,7 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 ---
 
-### Provide context to the AI
+### 5) Provide context to the AI
 In some cases, you may want to provide the AI with context so it can better understand the user's request. This is particularly important for long running chat scenarios where the intent of the user may require context from previous messages.
 
 Take for example, the following conversation:
@@ -205,14 +205,14 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 ---
 
-### Using message roles in chat completion prompts
+### 6) Using message roles in chat completion prompts
 As your prompts become more complex, you may want to use message roles to help the AI differentiate between system instructions, user input, and AI responses. This is particularly important as we start to add the chat history to the prompt. The AI should know that some of the previous messages were sent by itself and not the user.
 
 In Semantic Kernel, a special syntax is used to define message roles. To define a message role, you simply wrap the message in `<message>` tag with the role name as an attribute. This is currently only available in the C# SDK.
 
 :::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="138-155":::
 
-### Give your AI words of encouragement
+### 7) Give your AI words of encouragement
 Finally, research has shown that giving your AI words of encouragement can help it perform better. For example, offering bonuses or rewards for good results can yield better results. 
 
 :::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="161-179" highlight="7":::
