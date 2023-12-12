@@ -28,9 +28,9 @@ This way, you can easily integrate AI into your apps with minimal effort and
 maximum flexibility.
 
 > [!TIP]
-> If you need more power, we also support the [Handlebars](https://handlebarsjs.com/)
+> If you need more capabilities, we also support the [Handlebars](https://handlebarsjs.com/)
 > template engine, which allows you to use loops, conditionals, and other advanced
-> features. See how to use the [Handlebars template engine here](./templatizing-prompts.md#using-the-handlebars-template-engine)
+> features. See how to use the [Handlebars template engine here](./templatizing-prompts.md#using-the-handlebars-template-engine).
 
 ## Variables
 
