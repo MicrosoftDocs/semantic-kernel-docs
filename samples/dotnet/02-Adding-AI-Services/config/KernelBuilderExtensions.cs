@@ -9,12 +9,12 @@ internal static class KernelBuilderExtensions
     /// </summary>
     /// <param name="kernelBuilder"></param>
     /// <exception cref="ArgumentException"></exception>
-    internal static KernelBuilder WithCompletionService(this KernelBuilder kernelBuilder)
+    internal static IKernelBuilder WithCompletionService(this IKernelBuilder kernelBuilder)
     {
         switch (Env.Var("Global:LlmService")!)
         {
             case "AzureOpenAI":
-                if (Env.Var("AzureOpenAI:DeploymentType")! == "text-completion")
+                if (Env.Var("AzureOpenAI:DeploymentType") == "text-completion")
                 {
                     kernelBuilder.Services.AddAzureOpenAITextGeneration(
                         deploymentName: Env.Var("AzureOpenAI:TextCompletionDeploymentName")!,
@@ -23,11 +23,11 @@ internal static class KernelBuilderExtensions
                         apiKey: Env.Var("AzureOpenAI:ApiKey")!
                     );
                 }
-                else if (Env.Var("AzureOpenAI:DeploymentType")! == "chat-completion")
+                else if (Env.Var("AzureOpenAI:DeploymentType") == "chat-completion")
                 {
                     kernelBuilder.Services.AddAzureOpenAIChatCompletion(
                         deploymentName: Env.Var("AzureOpenAI:ChatCompletionDeploymentName")!,
-                        modelId: Env.Var("AzureOpenAI:TextCompletionModelId")!,
+                        modelId: Env.Var("AzureOpenAI:ChatCompletionModelId")!,
                         endpoint: Env.Var("AzureOpenAI:Endpoint")!,
                         apiKey: Env.Var("AzureOpenAI:ApiKey")!
                     );
@@ -35,7 +35,7 @@ internal static class KernelBuilderExtensions
                 break;
 
             case "OpenAI":
-                if (Env.Var("OpenAI:ModelType")! == "text-completion")
+                if (Env.Var("OpenAI:ModelType") == "text-completion")
                 {
                     kernelBuilder.Services.AddOpenAITextGeneration(
                         modelId: Env.Var("OpenAI:TextCompletionModelId")!,
@@ -43,7 +43,7 @@ internal static class KernelBuilderExtensions
                         orgId: Env.Var("OpenAI:OrgId")
                     );
                 }
-                else if (Env.Var("OpenAI:ModelType")! == "chat-completion")
+                else if (Env.Var("OpenAI:ModelType") == "chat-completion")
                 {
                     kernelBuilder.Services.AddOpenAIChatCompletion(
                         modelId: Env.Var("OpenAI:ChatCompletionModelId")!,

@@ -1,6 +1,6 @@
 # Creating prompts
 
-The `01-Kernel-Intro` console application shows the final solution to the [Understanding the kernel](https://learn.microsoft.com/en-us/semantic-kernel/agents/kernel) doc article.
+The `06-Configuring-Prompts` console application shows the final solution to the [calling functions in prompts](https://learn.microsoft.com/en-us/semantic-kernel/agents/semantic-functions/calling-nested-functions) doc article.
 
 ## Prerequisites
 
@@ -17,19 +17,21 @@ This sample has been tested with the following models:
 
 | Service      | Model type      | Model            | Model version | Supported |
 | ------------ | --------------- | ---------------- | ------------: | --------- |
+| OpenAI       | Text Completion | text-davinci-003 |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-3.5-turbo    |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
 | OpenAI       | Chat Completion | gpt-4            |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-4            |          0314 | ✅        |
+| Azure OpenAI | Text Completion | text-davinci-003 |             1 | ✅        |
 | Azure OpenAI | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-4            |          0314 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-4       |          0314 | ✅        |
 
 ### Using .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 
 Configure an OpenAI endpoint
 
 ```powershell
-cd 01-Kernel-Intro
+cd 06-Configuring-Prompts
 
 dotnet user-secrets set "Global:LlmService" "OpenAI"
 
@@ -42,13 +44,12 @@ dotnet user-secrets set "OpenAI:OrgId" "... your ord ID ..."
 Configure an Azure OpenAI endpoint
 
 ```powershell
-cd 01-Kernel-Intro
+cd 06-Configuring-Prompts
 
 dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 
 dotnet user-secrets set "AzureOpenAI:DeploymentType" "chat-completion"
 dotnet user-secrets set "AzureOpenAI:ChatCompletionDeploymentName" "gpt-35-turbo"
-dotnet user-secrets set "AzureOpenAI:ChatCompletionModelId" "gpt-3.5-turbo"
 dotnet user-secrets set "AzureOpenAI:Endpoint" "... your Azure OpenAI endpoint ..."
 dotnet user-secrets set "AzureOpenAI:ApiKey" "... your Azure OpenAI key ..."
 ```

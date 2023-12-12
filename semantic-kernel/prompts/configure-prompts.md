@@ -9,57 +9,31 @@ ms.service: semantic-kernel
 ---
 # Configuring prompts
 
+When creating a prompt, you can adjust parameters that control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is run by an [LLM AI model](../prompt-engineering/llm-models.md) and how it used by function calling and [planners](../agents/planners/index.md).
 
+For example, you could add settings to the chat prompt from the previous article with the following code
 
+# [C#](#tab/Csharp)
 
-When creating a prompt, there are many parameters that can be set to control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is used by [planner](/semantic-kernel/concepts-sk/planner) and how it is run by an [LLM AI model](../prompt-engineering/llm-models.md).
+In C#, you can define the following properties of a prompt:
+- Name - the name of the prompt
+- Description - a description of what the prompt does
+- Template format - the format of the prompt template (e.g., `semantic-kernel`, `Handlebars`)
+- Input variables - the variables that are used inside of the prompt (e.g., `request`)
+- Execution settings - the settings for different models that can be used to execute the prompt
 
-Semantic Kernel allows a developer to have complete control over these parameters by using a _config.json_ file placed in the same directory as the `skprompt.txt` file.
+:::code language="csharp" source="~/../samples/dotnet/06-Configure-Prompts/program.cs" range="24-63":::
 
-For example, if you were to create a plugin called `TestPlugin` with two prompts called `SloganMaker` and `OtherFunction`, the file structure would look like this:
+# [Python](#tab/python)
 
-```File-Structure-For-Semantic-Plugins
-TestPlugin
-│
-└─── SloganMaker
-|    |
-│    └─── skprompt.txt
-│    └─── config.json
-│   
-└─── OtherFunction
-     |
-     └─── skprompt.txt
-     └─── config.json
-```
+In C#, you can define the following properties of a prompt:
+- Name - the name of the prompt
+- Description - a description of what the prompt does
+- Execution settings - the settings used to execute the prompt (e.g., `max_tokens`, `temperature`)
 
-The _config.json_ file for the `SloganMaker` function would look like this:
+:::code language="python" source="~/../samples/python/06-Configure-Prompts/main.py" range="34-40":::
 
-```config.json-example
-{
-  "schema": 1,
-  "type": "completion",
-  "description": "a function that generates marketing slogans",
-  "completion": {
-    "max_tokens": 1000,
-    "temperature": 0.0,
-    "top_p": 0.0,
-    "presence_penalty": 0.0,
-    "frequency_penalty": 0.0
-  },
-  "input": {
-    "parameters": [
-      {
-        "name": "input",
-        "description": "The product to generate a slogan for",
-        "defaultValue": ""
-      }
-    ]
-  }
-}
-```
-
-> [!NOTE]
-> The _config.json_ file is currently optional, but if you wish to exercise precise control of a function's behavior be sure to include it inside each function directory. 
+---
 
 ## Parameters used by planner
 The `description` field in the root object and `input` object are used by [planner](/semantic-kernel/concepts-sk/planner) to determine how to use a function. The root `description` tells planner what the function does, and the input `description` tells planner how to populate the input parameters.
@@ -72,9 +46,9 @@ When writing `description` and `input`, we recommend using the following guideli
 - If you have trouble getting planner to use a function, try adding recommendations or examples for when to use the function.
 
 ## Completion parameters in config.json
-In addition to providing parameters for planner, the _config.json_ file also allows you to control how a function is run by an [LLM AI model](../prompt-engineering/llm-models.md). The `completion` object in the root object of the _config.json_ file allows you to set the parameters used by the model.
+In addition to providing parameters for planner, the execution settings also allows you to control how a function is run by an [LLM AI model](../prompt-engineering/llm-models.md). 
 
-The following table describes the parameters available for use in the `completion` object for the OpenAI and Azure OpenAI APIs:
+The following table describes the many of the commonly available settings for models:
 
 | Completion Parameter | Type | Required? | Default | Description |
 |---|---|---|---|
@@ -84,10 +58,10 @@ The following table describes the parameters available for use in the `completio
 | `presence_penalty` | number	| Optional	| 0	| Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. |
 | `frequency_penalty` |	number	| Optional	|0 |	Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. |
 
-To learn more about the various parameters available for tuning how a function works, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference).
+To learn more about the various parameters available for OpenAI and Azure OpenAI models, visit the [Azure OpenAI reference](/azure/cognitive-services/openai/reference).
 
 ### Default setting for OpenAI and Azure OpenAI
-If you do not provide completion parameters in the _config.json_ file, Semantic Kernel will use the default parameters for the OpenAI API. Learn more about the current defaults by reading the [Azure OpenAI API reference](/azure/cognitive-services/openai/reference).
+If you do not provide completion parameters, Semantic Kernel will use the default parameters for the OpenAI API. Learn more about the current defaults by reading the [Azure OpenAI API reference](/azure/cognitive-services/openai/reference).
 
 ## Take the next step
 > [!div class="nextstepaction"]
