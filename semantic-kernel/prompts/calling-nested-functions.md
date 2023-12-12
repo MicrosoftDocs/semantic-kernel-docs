@@ -54,7 +54,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="23-24, 71-78, 95-117"":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="23-24, 71-78, 95-117":::
 
 
 # [Python](#tab/python)
