@@ -53,13 +53,16 @@ If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method
 :::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="52-62" highlight="3":::
 
 # [Python](#tab/python)
+Import the necessary packages:
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="3,5-8":::
+
 If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
 
-:::code language="csharp" source="~/../samples/python/01-Kernel-Intro/main.py" range="24-32" highlight="4":::
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="18-24" highlight="4":::
 
 If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
-:::code language="csharp" source="~/../samples/python/01-Kernel-Intro/main.py" range="34-42" highlight="4":::
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="27-34" highlight="4":::
 
 ---
 
@@ -87,10 +90,13 @@ And took a break, said "Bye bye!"
 
 # [Python](#tab/python)
 Import the necessary packages:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="2-3":::
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="4":::
 
 Run the today function from the time plugin:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="12-17" highlight="4":::
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="36-38,45-47" highlight="4":::
+
+Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
+:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="39-44,49-53" highlight="4":::
 
 ---
 
