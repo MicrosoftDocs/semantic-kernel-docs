@@ -39,7 +39,7 @@ If we wanted an AI to detect the intent of a user's input, we could simply _ask_
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="13-14, 16":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="13-14, 3":::
 
 ---
 
@@ -96,7 +96,7 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="22-23" highlight="3":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="22-23" highlight="2":::
 
 ---
 
@@ -159,7 +159,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="66-76" highlight="4-7":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="66-76" highlight="4-5,7-8":::
 
 ---
 
@@ -175,7 +175,7 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="82-93" highlight="3":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="82-93" highlight="2":::
 
 ---
 
@@ -201,7 +201,7 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="99-115" highlight="1-4,13":::
+:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="99-115" highlight="1-4,15":::
 
 ---
 
