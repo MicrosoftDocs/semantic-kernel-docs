@@ -8,9 +8,9 @@ using Microsoft.SemanticKernel;
 var builder = new KernelBuilder();
 // Add a text or chat completion service using either:
 // builder.Services.AddAzureOpenAIChatCompletion()
-// builder.Services.AddAzureOpenAIChatCompletion()
-// builder.Services.AddAzureOpenAIChatCompletion()
-// builder.Services.AddAzureOpenAIChatCompletion()
+// builder.Services.AddAzureOpenAITextGeneration()
+// builder.Services.AddOpenAIChatCompletion()
+// builder.Services.AddOpenAITextGeneration()
 builder.WithCompletionService();
 builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Information));
 

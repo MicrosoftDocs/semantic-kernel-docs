@@ -36,11 +36,11 @@ The new prompt uses the `request` and `history` variables so that we can include
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6,15-22,25-29,78-85,103-124" highlight="20-22":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="5-6,15-22,25-29,78-85,103-124" highlight="28-29":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="5-14, 19-37" highlight="13-18,24":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="5-14, 19-37" highlight="14-16,22":::
 
 ---
 
@@ -57,7 +57,7 @@ Then import the Handlebars template engine package.
 
 Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFactory`. Because Handlebars supports loops, we can use it to loop over elements like examples and chat history. This makes it a great fit for the `getIntent` prompt we created in the [previous article](./your-first-prompt.md).
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="47-70" highlight="12-16,18-20,29":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="47-70" highlight="9-13,15-17":::
 
 We can then create the choice and example objects that will be used by the template. In this example, we can use our prompt to end the conversation once it's over. To do this, we'll just provide two valid intents: `ContinueConversation` and `EndConversation`.
 

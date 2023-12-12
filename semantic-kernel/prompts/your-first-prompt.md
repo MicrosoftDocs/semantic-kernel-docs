@@ -47,7 +47,7 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="3-11, 15-16":::
+:::code language="csharp" source="~/../samples/dotnet/03-Intro-to-Prompts/Program.cs" range="3-13":::
 
 # [Python](#tab/python)
 

@@ -42,32 +42,34 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="5-7, 9-24, 71-78, 95-117" highlight="13":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="5-7, 9-16, 19-21":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="2-3,5-16" highlight="8":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="2-3,5-16":::
 
 ---
 
-Afterwards, we can test the prompt by populating the prompt template with the following variables. In this example, the chat history is relatively tame, but you could imagine it being too large for the context window.
+Afterwards, we can test the prompt by creating a chat loop that makes the history progressively longer.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="21-33, 52-66":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="23-24, 71-78, 95-117"":::
+
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="18-44, 56-63":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="26-44":::
 
 ---
+
 
 ## Calling nested functions in Handlebars
 In the previous article, we showed how to use the Handlebars template engine to create the `getIntent` prompt. In this article, we'll show you how to update this prompt with the same nested function.
 
 Similar to the previous example, we can use the `SummarizeConversation` function to summarize the conversation history before asking for the intent. The only difference is that we'll need to use the Handlebars syntax to call the function which requires us to use an `_` between the plugin name and function name instead of a `.`.
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="42-63":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="42-63" highlight="15":::
 
 ## Take the next step
 Now that you can call nested functions, you can now learn how to [serialize your templates](./serializing-semantic-functions.md).
