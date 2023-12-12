@@ -28,7 +28,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="16-18":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="15-17":::
 
 ---
 
@@ -40,7 +40,7 @@ The new prompt uses the `request` and `history` variables so that we can include
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="6-15, 20-38" highlight="13-18,24":::
+:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="5-14, 19-37" highlight="13-18,24":::
 
 ---
 
@@ -50,6 +50,10 @@ In addition to the core template syntax, Semantic Kernel also comes with support
 ```console
 dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelease
 ```
+
+Then import the Handlebars template engine package.
+
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="8":::
 
 Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFactory`. Because Handlebars supports loops, we can use it to loop over elements like examples and chat history. This makes it a great fit for the `getIntent` prompt we created in the [previous article](./your-first-prompt.md).
 

@@ -21,7 +21,7 @@ If you want to see the final solution, you can check out the following samples i
 
 
 ## Calling a nested function
-In the [previous example](./templatizing-prompts.md), we created a prompt that gets the user's intent. This function used the previous conversation history to determine the intent of the user.
+In the [previous example](./templatizing-prompts.md), we created a prompt that chats with the user. This function used the previous conversation history to determine what the agent should say next.
 
 Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummaryPlugin` that's part of the [core plugins package](../agents/plugins/using-plugins/out-of-the-box-plugins.md).
 
@@ -29,11 +29,11 @@ Below, we show how we can update our original prompt to use the `SummarizeConver
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="34-50" highlight="14":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="66-70" highlight="2":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="38-54" highlight="14":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="22-24" highlight="1":::
 
 ---
 
@@ -42,11 +42,11 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="3-14, 17-20" highlight="13":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="5-7, 9-24, 71-78, 95-117" highlight="13":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="8-17" highlight="8":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="2-3,5-16" highlight="8":::
 
 ---
 
@@ -58,37 +58,16 @@ Afterwards, we can test the prompt by populating the prompt template with the fo
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="19-37, 56-63":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="18-44, 56-63":::
 
 ---
 
-After running the code, you should see the following output after inputting `Yes`:
+## Calling nested functions in Handlebars
+In the previous article, we showed how to use the Handlebars template engine to create the `getIntent` prompt. In this article, we'll show you how to update this prompt with the same nested function.
 
-```output
-SendEmail
-```
+Similar to the previous example, we can use the `SummarizeConversation` function to summarize the conversation history before asking for the intent. The only difference is that we'll need to use the Handlebars syntax to call the function which requires us to use an `_` between the plugin name and function name instead of a `.`.
 
-If you inspect the rendered prompt for the `getIntent` function, you can see that the entire history is not sent to the LLM. Instead, the `SummarizeConversationAsync` function is called to summarize the conversation history before asking for the intent.
-
-```output
-Instructions: What is the intent of this request?
-Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.
-
-Prior conversation summary: The marketing team needs an update on the new product.
-AI response: What do you want to tell them?
-User Input: Can you send a very quick approval to the marketing team?
-Intent: SendMessage
-
-Prior conversation summary: The AI offered to send an email to the marketing team.
-AI response: Do you want me to send an email to the marketing team?
-User Input: Yes, please.
-Intent: SendEmail
-
-Prior conversation summary: The user asked the AI about the weather in Seattle and was informed that it was 70 degrees and sunny. The user then asked the AI to remind them about their calendar and was informed that they had a meeting with their team at 2:00 PM. The user then decided to send an email to their team to congratulate them on hitting a major milestone.
-AI response: Would you like to write one for you?
-User Input: Yes
-Intent: 
-```
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="42-63":::
 
 ## Take the next step
 Now that you can call nested functions, you can now learn how to [serialize your templates](./serializing-semantic-functions.md).
