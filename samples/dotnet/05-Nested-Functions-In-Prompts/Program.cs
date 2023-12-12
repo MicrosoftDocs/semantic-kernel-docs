@@ -5,13 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
 
-using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-{
-    builder
-        .SetMinimumLevel(0)
-        .AddDebug();
-});
-
 // Create kernel
 var builder = new KernelBuilder();
 // Add a text or chat completion service using either:
@@ -24,11 +17,6 @@ builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Informati
 builder.Plugins.AddFromType<ConversationSummaryPlugin>();
 
 var kernel = builder.Build();
-
-kernel.PromptRendered += (sender, args) =>
-{
-    Console.WriteLine(args.RenderedPrompt);
-};
 
 string history = @"AI response: How can I help you?
 User Input: What's the weather like today?
@@ -61,12 +49,9 @@ Prior conversation summary: {{ConversationSummaryPlugin.SummarizeConversation $h
 User Input: {{$request}}
 Intent: ";
 
-
 // Get user input
 Console.Write("User > ");
 var request = Console.ReadLine();
-
-var test = history.Split("\n").Last();
 
 // Invoke prompt
 var result = await kernel.InvokePromptAsync(

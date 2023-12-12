@@ -21,33 +21,48 @@ If you want to see the final solution, you can check out the following samples i
 
 
 ## Calling a nested function
-In the [previous example](./templatizing-semantic-functions.md), we created a prompt called `GetIntent`. This function uses the previous conversation history to determine the intent of the user.
+In the [previous example](./templatizing-prompts.md), we created a prompt that gets the user's intent. This function used the previous conversation history to determine the intent of the user.
 
-Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummaryPlugin` plugin that's part of the [core plugins package](../out-of-the-box-plugins.md).
+Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummaryPlugin` that's part of the [core plugins package](../agents/plugins/using-plugins/out-of-the-box-plugins.md).
 
-Below, we show how we can update our original prompt in the _skprompt.txt_ file to use the `SummarizeConversationAsync` function in the `ConversationSummaryPlugin` plugin to summarize the conversation history before asking for the intent.
+Below, we show how we can update our original prompt to use the `SummarizeConversation` function in the `ConversationSummaryPlugin` to summarize the conversation history before asking for the intent.
 
-:::code language="txt" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/plugins/OrchestratorPlugin/GetIntent/skprompt.txt" highlight="1":::
+# [C#](#tab/Csharp)
 
-Since we're not changing the behavior of the `GetIntent` function or the required inputs, we don't need to update the _config.json_ file. For completeness, however, we've included the _config.json_ file below.
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="34-50" highlight="13":::
 
-:::code language="json" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/plugins/OrchestratorPlugin/GetIntent/config.json":::
+# [Python](#tab/python)
 
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="38-54" highlight="13":::
+
+---
 
 ## Testing the updated prompt
 After adding the nested function, you must ensure that you load the plugin with the required function into the kernel.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="4-7,16-21,24-53" highlight="17":::
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="3-14, 17-20" highlight="13":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="1-2,4-11,13-55" highlight="18-20":::
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="8-17" highlight="8":::
 
 ---
 
-After running the code, you should see the following output:
+Afterwards, we can test the prompt by populating the prompt template with the following variables. In this example, the chat history is relatively tame, but you could imagine it being too large for the context window.
+
+# [C#](#tab/Csharp)
+
+:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="21-33, 52-66":::
+
+# [Python](#tab/python)
+
+:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="19-37, 56-63":::
+
+---
+
+After running the code, you should see the following output after inputting `Yes`:
 
 ```output
 SendEmail
@@ -56,22 +71,27 @@ SendEmail
 If you inspect the rendered prompt for the `GetIntent` function, you can see that the entire history is not sent to the LLM. Instead, the `SummarizeConversationAsync` function is called to summarize the conversation history before asking for the intent.
 
 ```output
-The user asked about the weather in Seattle, and the bot informed them that
-it was 70 degrees and sunny. The user also asked about their calendar, and
-the bot reminded them of a 2:00 PM team meeting. The user mentioned their
-team's recent milestone and considered sending a congratulatory email.
-User: Yes
+Instructions: What is the intent of this request?
+Choices: SendEmail, SendMessage, CompleteTask, CreateDocument.
 
----------------------------------------------
+Prior conversation summary: The marketing team needs an update on the new product.
+AI response: What do you want to tell them?
+User Input: Can you send a very quick approval to the marketing team?
+Intent: SendMessage
 
-Provide the intent of the user. The intent should be one of the following:
-SendEmail, ReadEmail, SendMeeting, RsvpToMeeting, SendChat
+Prior conversation summary: The AI offered to send an email to the marketing team.
+AI response: Do you want me to send an email to the marketing team?
+User Input: Yes, please.
+Intent: SendEmail
 
-INTENT: 
+Prior conversation summary: The user asked the AI about the weather in Seattle and was informed that it was 70 degrees and sunny. The user then asked the AI to remind them about their calendar and was informed that they had a meeting with their team at 2:00 PM. The user then decided to send an email to their team to congratulate them on hitting a major milestone.
+AI response: Would you like to write one for you?
+User Input: Yes
+Intent: 
 ```
 
 ## Take the next step
-Now that you can create a prompt, you can now learn how to [create a native function](../native-functions/using-the-SKFunction-decorator.md).
+Now that you can call nested functions, you can now learn how to [serialize your templates](./serializing-semantic-functions.md).
 
 > [!div class="nextstepaction"]
-> [Create a native function](../native-functions/using-the-SKFunction-decorator.md)
+> [Serialize your templates](./serializing-semantic-functions.md)
