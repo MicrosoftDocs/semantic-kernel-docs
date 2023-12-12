@@ -9,7 +9,7 @@ ms.service: semantic-kernel
 ---
 # Configuring prompts
 
-When creating a prompt, you can adjust parameters that control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is run by an [LLM AI model](../prompt-engineering/llm-models.md) and how it used by function calling and [planners](../agents/planners/index.md).
+When creating a prompt, you can adjust parameters that control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is run by an [AI model](../prompt-engineering/llm-models.md) and how it used by function calling and [planners](../agents/planners/index.md).
 
 For example, you could add settings to the chat prompt from the previous article with the following code
 
@@ -22,7 +22,7 @@ In C#, you can define the following properties of a prompt:
 - Input variables - the variables that are used inside of the prompt (e.g., `request`)
 - Execution settings - the settings for different models that can be used to execute the prompt
 
-:::code language="csharp" source="~/../samples/dotnet/06-Configure-Prompts/program.cs" range="23-62":::
+:::code language="csharp" source="~/../samples/dotnet/06-Configuring-Prompts/program.cs" range="23-62":::
 
 # [Python](#tab/python)
 
@@ -31,22 +31,22 @@ In C#, you can define the following properties of a prompt:
 - Description - a description of what the prompt does
 - Execution settings - the settings used to execute the prompt (e.g., `max_tokens`, `temperature`)
 
-:::code language="python" source="~/../samples/python/06-Configure-Prompts/main.py" range="34-40":::
+:::code language="python" source="~/../samples/python/06-Configuring-Prompts/main.py" range="34-40":::
 
 ---
 
 ## Parameters used by planner
-The `description` field in the root object and `input` object are used by [planner](/semantic-kernel/concepts-sk/planner) to determine how to use a function. The root `description` tells planner what the function does, and the input `description` tells planner how to populate the input parameters.
+The `description` field `input_variables` array are leveraged by [planners](/semantic-kernel/concepts-sk/planner) to determine how to use a function. The `description` tells planner what the function does, and the `input_variables` tells planner how to populate the input parameters.
 
-Because these parameters impact the behavior of planner, we recommend running tests on the values you provide to ensure  they are used by planner correctly.
+Because these parameters impact the behavior of planner, we recommend running tests on the values you provide to ensure they are used by planner correctly.
 
-When writing `description` and `input`, we recommend using the following guidelines:
-- The `description` fields should be short and concise so that it does not consume too many tokens when used in planner prompt.
+When writing `description` and `input_variables`, we recommend using the following guidelines:
+- The `description` fields should be short and concise so that it does not consume too many tokens when used in planner prompt (but not so short that it is not descriptive enough).
 - Consider the `description`s of other functions in the same plugin to ensure that they are sufficiently unique. If they are not, planner may not be able to distinguish between them.
 - If you have trouble getting planner to use a function, try adding recommendations or examples for when to use the function.
 
-## Completion parameters in config.json
-In addition to providing parameters for planner, the execution settings also allows you to control how a function is run by an [LLM AI model](../prompt-engineering/llm-models.md). 
+## Execution settings used by AI models
+In addition to providing parameters for planner, the execution settings also allows you to control how a function is run by an [AI model](../prompt-engineering/llm-models.md). 
 
 The following table describes the many of the commonly available settings for models:
 

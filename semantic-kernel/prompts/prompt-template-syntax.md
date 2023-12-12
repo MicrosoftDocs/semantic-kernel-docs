@@ -12,14 +12,14 @@ ms.service: semantic-kernel
 
 [!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
-The Semantic Kernel prompt template language is a simple and powerful way to
-define and compose AI functions **using plain text**.
+The Semantic Kernel prompt template language is a simple way to
+define and compose AI functions using plain text.
 You can use it to create natural language prompts, generate responses, extract
-information, **invoke other prompts** or perform any other task that can be
+information, invoke other prompts or perform any other task that can be
 expressed with text.
 
-The language supports three basic features that allow you to (**#1**) include
-variables, (**#2**) call external functions, and (**#3**) pass parameters to functions.
+The language supports three basic features that allow you to 1) include
+variables, 2) call external functions, and 3) pass parameters to functions.
 
 You don't need to write any code or import any external libraries, just use the
 curly braces `{{...}}` to embed expressions in your prompts.
@@ -27,9 +27,14 @@ Semantic Kernel will parse your template and execute the logic behind it.
 This way, you can easily integrate AI into your apps with minimal effort and
 maximum flexibility.
 
+> [!TIP]
+> If you need more power, we also support the [Handlebars](https://handlebarsjs.com/)
+> template engine, which allows you to use loops, conditionals, and other advanced
+> features. See how to use the [Handlebars template engine here](./templatizing-prompts.md#using-the-handlebars-template-engine)
+
 ## Variables
 
-To include a variable value in your text, use the `{{$variableName}}` syntax.
+To include a variable value in your prompt, use the `{{$variableName}}` syntax.
 For example, if you have a variable called `name` that holds the user's name,
 you can write:
 
@@ -43,7 +48,7 @@ Spaces are ignored, so if you find it more readable, you can also write:
 
 ## Function calls
 
-To call an external function and embed the result in your text, use the
+To call an external function and embed the result in your prompt, use the
 `{{namespace.functionName}}` syntax.
 For example, if you have a function called `weather.getForecast` that returns
 the weather forecast for a given location, you can write:
@@ -72,78 +77,8 @@ The weather today in Schio is {{weather.getForecast "Schio"}}.
 ```
 
 This will produce two sentences with the weather forecast for two different
-locations, using the city stored in the `city` **variable** and the _"Schio"_
-
-location **value** hardcoded in the prompt template.
-
-## Design Principles
-
-The template language is designed to be simple and fast to render, allowing
-to create functions with a simple text editor, using natural language, reducing
-special syntax to a minimum, and minimizing edge cases.
-
-The template language uses the **«`$`»** symbol on purpose, to clearly distinguish
-between function calls that retrieve content executing some code, from variables,
-which are replaced with data from the local temporary memory.
-
-Branching features such as _"if"_, _"for"_, and code blocks are not part of SK's
-template language. This reflects SK's design principle of using natural language
-as much as possible, with a clear separation from traditional programming code.
-
-By using a simple language, the kernel can also avoid complex parsing and
-external dependencies, resulting in a fast and memory efficient processing.
-
-## Semantic function example
-
-A Semantic Function is a function written in a natural language in a text file (i.e., "skprompt.txt") using SK's Prompt Template language. The following is a  simple example of a semantic function defined with a prompt template, using the syntax described.
-
-`== File: skprompt.txt ==`
-
-```
-My name: {{msgraph.GetMyName}}
-My email: {{msgraph.GetMyEmailAddress}}
-My hobbies: {{memory.recall "my hobbies"}}
-Recipient: {{$recipient}}
-Email to reply to:
-=========
-{{$sourceEmail}}
-=========
-Generate a response to the email, to say: {{$input}}
-
-Include the original email quoted after the response.
-```
-
-If we were to write that function in C#, it would look something like:
-
-```csharp
-async Task<string> GenResponseToEmailAsync(
-    string whatToSay,
-    string recipient,
-    string sourceEmail)
-{
-    try {
-        string name = await this._msgraph.GetMyName();
-    } catch {
-        ...
-    }
-
-    try {
-        string email = await this._msgraph.GetMyEmailAddress();
-    } catch {
-        ...
-    }
-
-    try {
-        // Use AI to generate an email using the 5 given variables
-        // Take care of retry logic, tracking AI costs, etc.
-        string response = await ...
-
-        return response;
-    } catch {
-        ...
-    }
-}
-```
+locations, using the city stored in the `city` variable and the _"Schio"_
+location value hardcoded in the prompt template.
 
 ## Notes about special chars
 
