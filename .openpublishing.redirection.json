@@ -449,6 +449,66 @@
             "source_path": "semantic-kernel/ai-orchestration/plugins/native-functions/using-the-SKFunction-decorator.md",
             "redirect_url": "/semantic-kernel/agents/plugins/using-the-KernelFunction-decorator",
             "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/out-of-the-box-plugins.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/out-of-the-box-plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/semantic-functions/calling-nested-functions.md",
+            "redirect_url": "/semantic-kernel/prompts/calling-nested-functions",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/semantic-functions/inline-semantic-functions.md",
+            "redirect_url": "/semantic-kernel/prompts/your-first-prompt",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/semantic-functions/serializing-semantic-functions.md",
+            "redirect_url": "/semantic-kernel/prompts/saving-prompts-as-files",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/semantic-functions/templatizing-semantic-functions.md",
+            "redirect_url": "/semantic-kernel/prompts/templatizing-prompts",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/memories/context.md",
+            "redirect_url": "/semantic-kernel/memories/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompt-engineering/configure-prompts.md",
+            "redirect_url": "/semantic-kernel/prompts/configure-prompts",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/prompt-engineering/index.md",
+            "redirect_url": "/semantic-kernel/prompts/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/prompt-engineering/llm-models.md",
+            "redirect_url": "/semantic-kernel/prompts/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompt-engineering/prompt-template-syntax.md",
+            "redirect_url": "/semantic-kernel/prompts/prompt-template-syntax",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/prompt-engineering/tokens.md",
+            "redirect_url": "/semantic-kernel/prompts/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompt-engineering/your-first-prompt.md",
+            "redirect_url": "/semantic-kernel/prompts/your-first-prompt",
+            "redirect_document_id": false
         }
     ]
 }

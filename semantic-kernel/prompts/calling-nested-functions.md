@@ -9,7 +9,7 @@ ms.service: semantic-kernel
 ---
 
 # Calling functions within a prompt
-In the previous article we demonstrated how to [templatize a prompt](./templatizing-promtps.md) to make it more reusable. In this article, we'll show you how to call other functions _within_ a prompt to help break up the prompt into smaller pieces. This helps
+In the previous article we demonstrated how to [templatize a prompt](./templatizing-prompts.md) to make it more reusable. In this article, we'll show you how to call other functions _within_ a prompt to help break up the prompt into smaller pieces. This helps
 keep LLMs focused on a single task, helps avoid hitting token limits, and allows you to add native code directly into your prompt.
 
 If you want to see the final solution, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
@@ -23,7 +23,7 @@ If you want to see the final solution, you can check out the following samples i
 ## Calling a nested function
 In the [previous example](./templatizing-prompts.md), we created a prompt that chats with the user. This function used the previous conversation history to determine what the agent should say next.
 
-Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummaryPlugin` that's part of the [core plugins package](../agents/plugins/using-plugins/out-of-the-box-plugins.md).
+Putting the entire history into a single prompt, however, may result in using too many tokens. To avoid this, we can summarize the conversation history before asking for the intent. To do this, we can leverage the `ConversationSummaryPlugin` that's part of the [core plugins package](../agents/plugins/out-of-the-box-plugins.md).
 
 Below, we show how we can update our original prompt to use the `SummarizeConversation` function in the `ConversationSummaryPlugin` to summarize the conversation history before asking for the intent.
 
@@ -72,7 +72,7 @@ Similar to the previous example, we can use the `SummarizeConversation` function
 :::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="42-63" highlight="15":::
 
 ## Take the next step
-Now that you can call nested functions, you can now learn how to [serialize your templates](./serializing-semantic-functions.md).
+Now that you can call nested functions, you can now learn how to [configure your prompts](./configure-prompts.md).
 
 > [!div class="nextstepaction"]
 > [Configure your prompts](./configure-prompts.md)

@@ -72,7 +72,7 @@ While this is just a simple example of how you can use Semantic Kernel, it quick
 
       Semantic Kernel has been engineered to easy to add your existing code to your AI agents with [plugins](../create-plugins/index.md). With plugins, you can give your agents the ability to interact with the real-world by calling your existing apps and services. In this way, plugins are like the "arms and hands" of your AI app.
 
-      Additionally, Semantic Kernel's interfaces allow it to flexibly integrate any AI service.  This is done with a set of connectors that make it easy to add [memories](../memories/index.md) and [AI models](../prompt-engineering/llm-models.md). In this way, Semantic Kernel is able to add a simulated "brain" to your app that you can easily swap out as newer and better AI models become available.
+      Additionally, Semantic Kernel's interfaces allow it to flexibly integrate any AI service.  This is done with a set of connectors that make it easy to add [memories](../memories/index.md) and AI models. In this way, Semantic Kernel is able to add a simulated "brain" to your app that you can easily swap out as newer and better AI models become available.
 
       Because of the extensibility Semantic Kernel provides with connectors and [plugins](../create-plugins/index.md), you can use it to orchestrate nearly any of your existing code without being locked into a specific AI model provider. For example, if you built a bunch of plugins for OpenAI's ChatGPT, you could use Semantic Kernel to orchestrate them with models from other providers like Azure or Hugging Face.
    :::column-end:::

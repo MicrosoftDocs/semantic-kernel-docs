@@ -9,7 +9,7 @@ ms.service: semantic-kernel
 ---
 # Configuring prompts
 
-When creating a prompt, you can adjust parameters that control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is run by an [AI model](../prompt-engineering/llm-models.md) and how it used by function calling and [planners](../agents/planners/index.md).
+When creating a prompt, you can adjust parameters that control how the prompt behaves. In Semantic Kernel, these parameters both control how a function is run by an AI model and how it used by function calling and [planners](../agents/planners/index.md).
 
 For example, you could add settings to the chat prompt from the previous article with the following code
 
@@ -46,7 +46,7 @@ When writing `description` and `input_variables`, we recommend using the followi
 - If you have trouble getting planner to use a function, try adding recommendations or examples for when to use the function.
 
 ## Execution settings used by AI models
-In addition to providing parameters for planner, the execution settings also allows you to control how a function is run by an [AI model](../prompt-engineering/llm-models.md). The following table describes the many of the commonly available settings for models:
+In addition to providing parameters for planner, the execution settings also allows you to control how a function is run by an AI model. The following table describes the many of the commonly available settings for models:
 
 | Completion Parameter | Type | Required? | Default | Description |
 |---|---|---|---|

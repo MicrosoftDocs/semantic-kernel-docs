@@ -53,7 +53,7 @@ dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelea
 
 Then import the Handlebars template engine package.
 
-:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="8":::
+:::code language="csharp" source="~/../samples/dotnet/04-Templatizing-Prompts/Program.cs" range="7":::
 
 Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFactory`. Because Handlebars supports loops, we can use it to loop over elements like examples and chat history. This makes it a great fit for the `getIntent` prompt we created in the [previous article](./your-first-prompt.md).
 

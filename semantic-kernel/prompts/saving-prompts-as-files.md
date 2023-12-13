@@ -103,7 +103,7 @@ dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelea
 
 Next, create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
 
-:::code language="yaml" source="~/../samples/python/07-Serializing-Prompts/prompts/getIntent.prompt.yaml":::
+:::code language="yaml" source="~/../samples/dotnet/07-Serializing-Prompts/prompts/getIntent.prompt.yaml":::
 
 You should notice that all of the same properties that were defined in the _config.json_ file are now defined in the YAML file. Additionally, the `template` property is used to define the prompt template.
 
