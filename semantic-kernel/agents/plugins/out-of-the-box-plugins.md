@@ -39,11 +39,11 @@ When using a core plugin, be sure to include a `using Microsoft.SemanticKernel.C
 ```csharp
 using Microsoft.SemanticKernel.CoreSkills;
 
-// ... instantiate a kernel and configure it first
+// Instantiate a kernel and configure it
 
-kernel.ImportFunctions(new TimePlugin(), "time");
+kernel.AddFromType<TimePlugin>();
 
-const string ThePromptTemplate = @"
+const string promptTemplate = @"
 Today is: {{time.Date}}
 Current time is: {{time.Time}}
 
@@ -51,10 +51,8 @@ Answer to the following questions using JSON syntax, including the data used.
 Is it morning, afternoon, evening, or night (morning/afternoon/evening/night)?
 Is it weekend time (weekend/not weekend)?";
 
-var myKindOfDay = kernel.CreateSemanticFunction(ThePromptTemplate, maxTokens: 150);
-
-var myOutput = await myKindOfDay.InvokeAsync();
-Console.WriteLine(myOutput);
+var results = await myKindOfDay.InvokePromptAsync(promptTemplate);
+Console.WriteLine(results);
 ```
 
 

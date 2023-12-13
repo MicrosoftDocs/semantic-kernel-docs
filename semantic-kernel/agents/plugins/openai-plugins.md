@@ -93,7 +93,7 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     ```
 2. Open a browser and navigate to _http://localhost:7071/swagger/ui_. You should see the Swagger UI page load.
 
-    :::image type="content" source="../../../media/swagger-ui.png" alt-text="Swagger UI":::
+    :::image type="content" source="../../media/swagger-ui.png" alt-text="Swagger UI":::
 
 3. Test each of the endpoints by clicking the __Try it out__ button and by providing input values.
 
