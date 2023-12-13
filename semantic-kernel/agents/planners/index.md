@@ -108,6 +108,7 @@ Output:
   {{~/if}}
   {{~#if ReturnParameter.Description}} - {{ReturnParameter.Description}}{{/if}}
 {{/if}}
+{{/each}}
 ```
 
 The "function manual" describes al of the function that are available for the LLM to create a plan with.
