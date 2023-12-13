@@ -126,7 +126,7 @@ Inputs:
   - number2 double - The second number to add (required)
 Output: double
 
-### `{{MathPlugin.Divide}}`:
+### `{{MathPlugin.Divide}}`
 Description: Divide two numbers
 Inputs:
   - number1: double - The first number to divide from (required)
