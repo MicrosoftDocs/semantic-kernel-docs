@@ -41,9 +41,9 @@ you can use a vector database to store the latest information about that topic a
 
 ## Vector database in Azure
 The following Azure services can help you meet your vector database needs: 
-- [Azure Cosmos DB Vector Database Extension](https://learn.microsoft.com/en-us/azure/cosmos-db/vector-database)
-- [Azure PostgreSQL Server pgvector Extension](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/how-to-use-pgvector)
-- [Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search)
+- [Azure Cosmos DB Vector Database Extension](https://learn.microsoft.com/azure/cosmos-db/vector-database)
+- [Azure PostgreSQL Server pgvector Extension](https://learn.microsoft.com/azure/postgresql/flexible-server/how-to-use-pgvector)
+- [Azure AI Search](https://learn.microsoft.com/azure/search/search-what-is-azure-search)
 
 ## Available connectors to vector databases
 Today, Semantic Kernel offers several connectors to vector databases that you can use to store and retrieve information. These include:
