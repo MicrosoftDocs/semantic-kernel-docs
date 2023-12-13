@@ -97,9 +97,9 @@ dotnet add package Microsoft.SemanticKernel.Yaml--prerelease
 
 This walkthrough also uses the Handlebars template engine, so you'll need to install the Handlebars package as well.
 
-     ```console
-     dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelease
-     ```
+```console
+dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelease
+```
 
 Next, create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
 
