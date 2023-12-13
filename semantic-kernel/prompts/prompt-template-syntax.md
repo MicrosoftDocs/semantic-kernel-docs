@@ -10,8 +10,6 @@ ms.service: semantic-kernel
 # Prompt template syntax
 
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
-
 The Semantic Kernel prompt template language is a simple way to
 define and compose AI functions using plain text.
 You can use it to create natural language prompts, generate responses, extract
