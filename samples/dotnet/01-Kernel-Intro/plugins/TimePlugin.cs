@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
+﻿
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.AI.ChatCompletion;
 
 namespace Plugins;
 

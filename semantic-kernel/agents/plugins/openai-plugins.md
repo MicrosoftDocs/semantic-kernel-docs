@@ -171,9 +171,9 @@ To test the plugin in Semantic Kernel, follow these steps:
 1. Create a new C# project.
 2. Add the necessary Semantic Kernel NuGet packages:
     ```bash
-    dotnet add package Microsoft.SemanticKernel
-    dotnet add package Microsoft.SemanticKernel.Planners.Core
-    dotnet add package Microsoft.SemanticKernel.Functions.OpenAPI
+    dotnet add package Microsoft.SemanticKernel --prerelease
+    dotnet add package Microsoft.SemanticKernel.Planners.Core --prerelease
+    dotnet add package Microsoft.SemanticKernel.Functions.OpenAPI --prerelease
     ```
 3. Paste the following code into your _program.cs_ file:
     :::code language="csharp" source="~/../samples/dotnet/14-Create-ChatGPT-Plugin/Solution/Program.cs" range="5-16,19-61" :::

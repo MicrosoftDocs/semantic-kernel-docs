@@ -18,12 +18,12 @@ if (LlmService == "AzureOpenAI")
         var AzureOpenAIApiKey = Env.Var("AzureOpenAI:ApiKey")!;
         var pluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), "plugins", "WriterPlugin");
 
-        var builder = new KernelBuilder();
+        var builder = Kernel.CreateBuilder();
         builder.Services.AddAzureOpenAIChatCompletion(
             AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "gpt-35-turbo")
-            AzureOpenAIModelId,         // The model ID of your Azure OpenAI service
             AzureOpenAIEndpoint,        // The endpoint of your Azure OpenAI service
-            AzureOpenAIApiKey           // The API key of your Azure OpenAI service
+            AzureOpenAIApiKey,           // The API key of your Azure OpenAI service
+            modelId: AzureOpenAIModelId         // The model ID of your Azure OpenAI service
         );
         builder.Plugins.AddFromPromptDirectory(pluginDirectory);
         var kernel = builder.Build();
@@ -43,7 +43,7 @@ if (LlmService == "AzureOpenAI")
         var AzureOpenAIApiKey = Env.Var("AzureOpenAI:ApiKey")!;
         var pluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), "plugins", "WriterPlugin");
 
-        var builder = new KernelBuilder();
+        var builder = Kernel.CreateBuilder();
         builder.Services.AddAzureOpenAITextGeneration(
             AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "text-davinci-003")
             AzureOpenAIModelId,         // The model ID of your Azure OpenAI service
@@ -72,7 +72,7 @@ else
         var OpenAIOrgId = Env.Var("OpenAI:OrgId")!;
         var pluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), "plugins", "WriterPlugin");
 
-        var builder = new KernelBuilder();
+        var builder = Kernel.CreateBuilder();
         builder.Services.AddOpenAIChatCompletion(
             OpenAIModelId,              // The name of your deployment (e.g., "gpt-3.5-turbo")
             OpenAIApiKey,               // The API key of your Azure OpenAI service
@@ -95,7 +95,7 @@ else
         var OpenAIOrgId = Env.Var("OpenAI:OrgId")!;
         var pluginDirectory = Path.Combine(Directory.GetCurrentDirectory(), "plugins", "WriterPlugin");
 
-        var builder = new KernelBuilder();
+        var builder = Kernel.CreateBuilder();
         builder.Services.AddOpenAITextGeneration(
             OpenAIModelId,              // The name of your deployment (e.g., "gpt-3.5-turbo")
             OpenAIApiKey,               // The API key of your Azure OpenAI service

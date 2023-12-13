@@ -18,11 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- <PackageReference Include="Microsoft.SemanticKernel" />
-    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplate.Handlebars" /> -->
+    <!-- <PackageReference Include="Microsoft.SemanticKernel" /> -->
 
     <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/SemanticKernel.MetaPackage/SemanticKernel.MetaPackage.csproj" />
-    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/Extensions/PromptTemplate.Handlebars/PromptTemplate.Handlebars.csproj" />
   </ItemGroup>
 
   <ItemGroup>

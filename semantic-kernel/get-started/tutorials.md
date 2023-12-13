@@ -53,15 +53,5 @@ Want to learn more about Semantic Kernel? Check out these in-depth tutorials and
 :::row-end:::
 
 
-
-<!---
-
-### Create your own AI plugin for ChatGPT and Microsoft 365 Copilot
-
-// TODO: add content
-
---->
-
-
 ## More tutorials coming soon
 If you have a tutorial you would like to share, please let us know on our [Discord server](https://aka.ms/sk/discord). We would love to highlight your content with the community here!

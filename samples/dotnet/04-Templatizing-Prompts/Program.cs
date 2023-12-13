@@ -3,8 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.AI.ChatCompletion;
-using Microsoft.SemanticKernel.PromptTemplate.Handlebars;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 
 using ILoggerFactory loggerFactory = LoggerFactory.Create(Builder =>
 {
@@ -14,7 +14,7 @@ using ILoggerFactory loggerFactory = LoggerFactory.Create(Builder =>
 });
 
 // Create kernel
-var builder = new KernelBuilder();
+var builder = Kernel.CreateBuilder();
 // Add a text or chat completion service using either:
 // builder.Services.AddAzureOpenAIChatCompletion()
 // builder.Services.AddAzureOpenAITextGeneration()

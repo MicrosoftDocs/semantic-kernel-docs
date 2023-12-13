@@ -92,7 +92,7 @@ In addition to the _skprompt.txt_ and _config.json_ files, you can also serializ
 Let's try creating a YAML serialization file for the `getIntent` prompt. To get started, you first need to install the necessary packages.
 
 ```console
-dotnet add package Microsoft.SemanticKernel.Yaml--prerelease
+dotnet add package Microsoft.SemanticKernel.Yaml --prerelease
 ```
 
 This walkthrough also uses the Handlebars template engine, so you'll need to install the Handlebars package as well.

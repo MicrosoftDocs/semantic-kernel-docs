@@ -11,7 +11,7 @@ template: |
       {{/each}}
   {{/each}}
 
-  // TODO: add function here
+  {{ConversationSummaryPlugin.SummarizeConversation history}}
 
   <message role="user">{{request}}</message>
   <message role="system">Intent:</message>
