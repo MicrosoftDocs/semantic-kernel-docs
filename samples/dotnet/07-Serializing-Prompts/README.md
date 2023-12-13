@@ -17,14 +17,17 @@ This sample has been tested with the following models:
 
 | Service      | Model type      | Model            | Model version | Supported |
 | ------------ | --------------- | ---------------- | ------------: | --------- |
-| OpenAI       | Text Completion | text-davinci-003 |             1 | ✅        |
+| OpenAI       | Text Completion | text-davinci-003 |             1 | ❌        |
 | OpenAI       | Chat Completion | gpt-3.5-turbo    |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-3.5-turbo    |          0613 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-3.5-turbo    |          1106 | ✅        |
 | OpenAI       | Chat Completion | gpt-4            |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-4            |          0314 | ✅        |
-| Azure OpenAI | Text Completion | text-davinci-003 |             1 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-4       |          0314 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-4            |          0613 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-4            |          1106 | ✅        |
+
+This sample requires a chat completion model.
 
 ### Using .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 
@@ -50,6 +53,7 @@ dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 
 dotnet user-secrets set "AzureOpenAI:DeploymentType" "chat-completion"
 dotnet user-secrets set "AzureOpenAI:ChatCompletionDeploymentName" "gpt-35-turbo"
+dotnet user-secrets set "AzureOpenAI:ChatCompletionModelId" "gpt-3.5-turbo-0613"
 dotnet user-secrets set "AzureOpenAI:Endpoint" "... your Azure OpenAI endpoint ..."
 dotnet user-secrets set "AzureOpenAI:ApiKey" "... your Azure OpenAI key ..."
 ```
