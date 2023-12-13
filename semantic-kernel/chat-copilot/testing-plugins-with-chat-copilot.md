@@ -41,7 +41,7 @@ Once you have a Chat Copilot instance running, you can import your OpenAI plugin
 ## Testing your OpenAI plugins
 Once you have imported and enabled your OpenAI plugins, you can now test them out. To do this, simply make a request to your Chat Copilot instance that should trigger the use of your plugin. For example, if you have built and deployed the Math plugin in the [OpenAI plugin article](../agents/plugins/openai-plugins.md), you can follow the steps below to test it out.
 
-1. Ensure that the Math plugin has been imported and enabled in your Chat Copilot instance using the steps outlined in the [importing your OpenAI plugins](#importing-your-chatgpt-plugins) section of this article.
+1. Ensure that the Math plugin has been imported and enabled in your Chat Copilot instance using the steps outlined in the [importing your OpenAI plugins](#importing-your-openai-plugins) section of this article.
 2. Create a new chat by selecting the **+** button in the top left corner.
 3. Ask the agent in the new chat to "multiply 154.243 and 832.123".
 4. Afterwards, the agent should reply back with a plan to complete the task.
