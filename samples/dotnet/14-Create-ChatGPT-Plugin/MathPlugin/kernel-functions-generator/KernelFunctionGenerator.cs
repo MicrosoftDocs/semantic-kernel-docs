@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Plugins.AzureFunctions.Generator;
 
 [Generator]
-public class SemanticFunctionGenerator : ISourceGenerator
+public class KernelFunctionGenerator : ISourceGenerator
 {
     public void Execute(GeneratorExecutionContext context)
     {
