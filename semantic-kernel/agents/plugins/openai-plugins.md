@@ -1,5 +1,5 @@
 ---
-title: Create and run a ChatGPT plugin with Semantic Kernel
+title: Create and run a OpenAI plugin with Semantic Kernel
 description: Learn how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions.
 author: matthewbolanos
 ms.topic: conceptual
@@ -12,9 +12,9 @@ ms.service: semantic-kernel
 
 
 
-In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin.
+In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a OpenAI plugin.
 
-At the [end of this article](#running-the-plugin-with-semantic-kernel), you'll also learn how to load a ChatGPT plugin into Semantic Kernel and use it with a planner.
+At the [end of this article](#running-the-plugin-with-semantic-kernel), you'll also learn how to load a OpenAI plugin into Semantic Kernel and use it with a planner.
 
 Once we're done, you'll have an Azure Function that exposes each of your plugin's native functions as HTTP endpoints so they can be used by Semantic Kernel _or_ ChatGPT. If you want to see the final solution, you can check out the sample in the public documentation repository.
 
@@ -36,24 +36,24 @@ To publish your plugin once you're complete, you'll also need an Azure account w
 You do **_not_** need to have access to OpenAI's plugin preview to complete this tutorial. If you do have access, however, you can upload your final plugin to OpenAI and use it in ChatGPT at the very end.
 
 
-## What are ChatGPT plugins?
-In the [plugin article](./index.md#what-is-a-plugin) we described how all plugins are moving towards the common standard defined by OpenAI. This standard, which is called a ChatGPT plugin in this article, uses a plugin manifest file that points to an accompanying [OpenAPI specification](https://swagger.io/resources/open-api/). Plugins defined in this way can then be used by any application that supports the OpenAI specification, including Semantic Kernel and ChatGPT.
+## What are OpenAI plugins?
+In the [plugin article](./index.md#what-is-a-plugin) we described how all plugins are moving towards the common standard defined by OpenAI. This standard, which is called a OpenAI plugin in this article, uses a plugin manifest file that points to an accompanying [OpenAPI specification](https://swagger.io/resources/open-api/). Plugins defined in this way can then be used by any application that supports the OpenAI specification, including Semantic Kernel and ChatGPT.
 
 > [!Important]
 > OpenAPI is different than OpenAI. OpenAPI is a specification for describing REST APIs, while OpenAI is a company that develops AI models and APIs. While the two are not related, OpenAI has adopted the OpenAPI specification for describing plugin APIs.
 
-### Transforming our `MathPlugin` into a ChatGPT plugin
+### Transforming our `MathPlugin` into a OpenAI plugin
 So far, however, we've only shown how to create plugins that are _natively_ loaded into Semantic Kernel instead of being exposed through an OpenAPI specification. This has helped us demonstrate the core concepts of plugins without adding the additional complexity of standing up an HTTP endpoint. With minimal changes, however, we can take the plugins we've already created and expose them to ChatGPT.
 
 ![The Math plugin, before and after ](../../media/plugin-before-and-after.png)
 
-There are three steps we must take to turn our existing `MathPlugin` into a ChatGPT plugin:
+There are three steps we must take to turn our existing `MathPlugin` into a OpenAI plugin:
 1. Create HTTP endpoints for each native function.
 2. Create an OpenAPI specification and plugin manifest file that describes our plugin.
 3. Test the plugin in either Semantic Kernel or ChatGPT.
 
-## Download the ChatGPT plugin starter
-To make it easier to create ChatGPT plugins, we've created a [starter project](https://github.com/microsoft/semantic-kernel-starters/tree/main/sk-csharp-chatgpt-plugin) that you can use as a template. The starter project includes the following features:
+## Download the OpenAI plugin starter
+To make it easier to create OpenAI plugins, we've created a [starter project](https://github.com/microsoft/semantic-kernel-starters/tree/main/sk-csharp-chatgpt-plugin) that you can use as a template. The starter project includes the following features:
 - An endpoint that serves up an ai-plugin.json file for ChatGPT to discover the plugin
 - A generator that automatically converts native functions into endpoints
 
@@ -64,7 +64,7 @@ To easiest way to get started is to use the Semantic Kernel VS Code extension. F
 4. Once the extension is installed, you'll see a welcome message. Select __Create a new app__.
     > [!Note]
     > If you've already installed the extension, you can also create a new app by pressing __Ctrl+Shift+P__ and typing "Semantic Kernel: Create Project".
-5. Select __C# ChatGPT Plugin__ to create a new ChatGPT plugin project.
+5. Select __C# OpenAI plugin__ to create a new OpenAI plugin project.
 6. Finally, Select where you want your new project to be saved.
 
 If you don't want to use the VS Code extension, you can also download the starter project [directly from GitHub](https://github.com/microsoft/semantic-kernel-starters/tree/main/sk-csharp-chatgpt-plugin).

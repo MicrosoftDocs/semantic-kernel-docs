@@ -108,7 +108,7 @@ Below are the default prompts for Chat Copilot.
 ```
 
 ## Next step
-Now that you've customized Chat Copilot for your needs, you can now use it to test plugins you have authored using the ChatGPT plugin standard.
+Now that you've customized Chat Copilot for your needs, you can now use it to test plugins you have authored using the OpenAI plugin standard.
 
 > [!div class="nextstepaction"]
-> [Testing ChatGPT plugins](./testing-plugins-with-chat-copilot.md)
+> [Testing OpenAI plugins](./testing-plugins-with-chat-copilot.md)

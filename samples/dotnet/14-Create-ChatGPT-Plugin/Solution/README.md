@@ -1,6 +1,6 @@
-# Creating and using a ChatGPT plugin
+# Creating and using a OpenAI plugin
 
-The `14-Create-ChatGPT-Plugin` console application shows the final solution to the [ChatGPT plugin](https://learn.microsoft.com/en-us/semantic-kernel/agents/chatgpt-plugins) doc article.
+The `14-Create-ChatGPT-Plugin` console application shows the final solution to the [OpenAI plugin](https://learn.microsoft.com/en-us/semantic-kernel/agents/chatgpt-plugins) doc article.
 
 ## Prerequisites
 

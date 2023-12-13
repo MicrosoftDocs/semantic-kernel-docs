@@ -27,7 +27,7 @@ To drive alignment across the industry, we've adopted the [OpenAI plugin specifi
    :::column-end:::
 :::row-end:::
 
-To show how to make interoperable plugins, we've created an in-depth walkthrough on how to export a Semantic Kernel plugin as an OpenAI plugin using OpenAI's specification. You can find the walkthrough in the [Create and run ChatGPT plugins](./openai-plugins.md) section.
+To show how to make interoperable plugins, we've created an in-depth walkthrough on how to export a Semantic Kernel plugin as an OpenAI plugin using OpenAI's specification. You can find the walkthrough in the [Create and run OpenAI plugins](./openai-plugins.md) section.
 
 ### What does a plugin look like?
 At a high-level, a plugin is a group of functions that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions either manually or automatically with function calling or [planners](../planners/index.md).
