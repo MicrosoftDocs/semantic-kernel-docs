@@ -56,7 +56,7 @@ var host = new HostBuilder()
             .AddTransient((providers) =>
             {
                 var appSettings = AppSettings.LoadSettings();
-                var builder = new KernelBuilder();
+                var builder = Kernel.CreateBuilder();
                 builder.Services.WithChatCompletionService(appSettings.Kernel);
                 builder.Services.AddLogging(loggingBuilder =>
                 {

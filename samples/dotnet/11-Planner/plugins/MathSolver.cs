@@ -26,6 +26,7 @@ public class MathSolver
     )
     {
         var kernelWithMath = kernel.Clone();
+        kernelWithMath.Plugins.Remove(kernelWithMath.Plugins["MathSolver"]);
         kernelWithMath.Plugins.AddFromType<MathPlugin>();
 
         var planner = new HandlebarsPlanner(new HandlebarsPlannerOptions() { AllowLoops = true });

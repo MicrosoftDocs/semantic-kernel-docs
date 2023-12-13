@@ -172,7 +172,6 @@ To test the plugin in Semantic Kernel, follow these steps:
 2. Add the necessary Semantic Kernel NuGet packages:
     ```bash
     dotnet add package Microsoft.SemanticKernel --prerelease
-    dotnet add package Microsoft.SemanticKernel.Planners.Core --prerelease
     dotnet add package Microsoft.SemanticKernel.Functions.OpenAPI --prerelease
     ```
 3. Paste the following code into your _program.cs_ file:

@@ -37,12 +37,12 @@ var chat = kernel.CreateFunctionFromPrompt(
         ExecutionSettings = {
             { "default", new OpenAIPromptExecutionSettings() {
                 MaxTokens = 1000,
-                Temperature = 2
+                Temperature = 0
             } },
             { "gpt-3.5-turbo", new OpenAIPromptExecutionSettings() {
                 ModelId = "gpt-3.5-turbo-0613",
                 MaxTokens = 4000,
-                Temperature = 2
+                Temperature = 0.2
             } },
             { "gpt-4-1106-preview", new OpenAIPromptExecutionSettings() {
                 ModelId = "gpt-4-1106-preview",
