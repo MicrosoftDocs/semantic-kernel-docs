@@ -379,6 +379,76 @@
             "source_path": "semantic-kernel/samples-and-solutions/simple-chat-summary.md",
             "redirect_url": "/semantic-kernel/chat-copilot/index",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/kernel/adding-services.md",
+            "redirect_url": "/semantic-kernel/agents/kernel/adding-services",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/kernel/index.md",
+            "redirect_url": "/semantic-kernel/agents/kernel/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planners/evaluate-and-deploy-planners/create-a-prompt-flow-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/create-a-prompt-flow-with-semantic-kernel",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planners/evaluate-and-deploy-planners/deploying-prompt-flows-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/deploying-prompt-flows-with-semantic-kernel",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planners/evaluate-and-deploy-planners/evaluating-plugins-and-planners-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/evaluating-plugins-and-planners-with-prompt-flow",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planners/evaluate-and-deploy-planners/index.md",
+            "redirect_url": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planners/evaluate-and-deploy-planners/running-batches-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/running-batches-with-prompt-flow",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/planners/index.md",
+            "redirect_url": "/semantic-kernel/agents/planners/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/chaining-functions.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/chatgpt-plugins.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/openai-plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/index.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/native-functions/calling-nested-functions.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/native-functions/multiple-parameters.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/ai-orchestration/plugins/native-functions/using-the-SKFunction-decorator.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/using-the-KernelFunction-decorator",
+            "redirect_document_id": true
         }
     ]
 }

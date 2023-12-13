@@ -30,7 +30,7 @@ To drive alignment across the industry, we've adopted the [OpenAI plugin specifi
 To show how to make interoperable plugins, we've created an in-depth walkthrough on how to export a Semantic Kernel plugin as an OpenAI plugin using OpenAI's specification. You can find the walkthrough in the [Create and run ChatGPT plugins](./openai-plugins.md) section.
 
 ### What does a plugin look like?
-At a high-level, a plugin is a group of functions that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions either manually (see [chaining functions](./chaining-functions.md)) or automatically with a [planner](../planners/index.md).
+At a high-level, a plugin is a group of functions that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions either manually or automatically with function calling or [planners](../planners/index.md).
 
 _Just_ providing functions, however, is not enough to make a plugin. To power automatic orchestration with a [planner](../planners/index.md), plugins _also_ need to provide details that semantically describe how they behave. Everything from the function's input, output, and side effects need to be described in a way that the AI can understand, otherwise, the planner will provide unexpected results.
 
@@ -46,7 +46,7 @@ _Just_ providing functions, however, is not enough to make a plugin. To power au
 :::row-end:::
 
 ## Adding functions to plugins
-Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: prompts and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating prompts](../../prompts/index) and [Creating native functions](./using-the-KernelFunction-decorator.md) sections.
+Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: prompts and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating prompts](../../prompts/index.md) and [Creating native functions](./using-the-KernelFunction-decorator.md) sections.
 
 ### Native functions
 

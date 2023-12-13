@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # Creating native functions for AI to call
 
 
-In the [how to create prompts](../../../prompts/index.md) section, we showed how you could create a prompt that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
+In the [how to create prompts](../../prompts/index.md) section, we showed how you could create a prompt that retrieves a user's intent, but what do you do once you have the intent? In _most_ cases, you want to perform some sort of task based on the intent. For example, if the user wants to send an email, you'll need to make the necessary API calls to actually send an email.
 
 Automating tasks like these are the primary purpose of AI apps. In this section, we'll show how you can create a simple native function that can perform a task LLMs cannot do easily on their own: arithmetic.
 
@@ -76,11 +76,11 @@ All native functions must be defined as public methods of a class that represent
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/plugins/MathPlugin/Math.cs" range="3-9,53":::
+:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/plugins/MathPlugin.cs" range="3-9,53":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/plugins/MathPlugin/Math.py" range="1-9" highlight="5":::
+:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/plugins/MathPlugin.py" range="1-9" highlight="5":::
 
 ---
 
@@ -90,17 +90,17 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/plugins/MathPlugin/Math.cs" range="10-16"  highlight="1":::
+:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/plugins/MathPlugin.cs" range="10-16"  highlight="1":::
 
-Notice how we've added a description to the function and each of its parameters with the `Description` attribute. This description will be used by function calling and by [planners](../../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
+Notice how we've added a description to the function and each of its parameters with the `Description` attribute. This description will be used by function calling and by [planners](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/plugins/MathPlugin/Math.py" range="10-16" highlight="6-10":::
+:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/plugins/MathPlugin.py" range="10-16" highlight="6-10":::
 
 Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with prompts. While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
 
-Also notice how we've added a description to each function with the `Description` attribute. This description will be used in the future by the [planner](../../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
+Also notice how we've added a description to each function with the `Description` attribute. This description will be used in the future by the [planner](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
 ---
 
@@ -147,4 +147,4 @@ Now that you can create a simple native function, you can now learn how to creat
 This will be helpful to create functions like addition, multiplication, subtraction, and division which all require multiple inputs.
 
 > [!div class="nextstepaction"]
-> [Passing multiple parameters into native functions](./multiple-parameters.md)
+> [Using OpenAI plugins](./openai-plugins.md)
