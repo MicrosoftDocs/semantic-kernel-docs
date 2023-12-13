@@ -40,7 +40,7 @@ To instantiate a planner, all you need to do is pass in a configuration object.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="31" :::
+:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="32" :::
 
 # [Python](#tab/python)
 In Python, you currently need to pass in the kernel as well.
@@ -55,7 +55,7 @@ Now that we have planner, we can use it to create a plan for a user's ask and th
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="33-39" :::
+:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="34-40" :::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/11-Planner/main.py" range="21-29":::

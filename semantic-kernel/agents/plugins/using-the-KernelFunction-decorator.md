@@ -123,7 +123,7 @@ Now that you've created your first native function, you can import it and run it
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/program.cs" range="5-16,19-21,28-35" highlight="16":::
+:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/program.cs" range="5-16,19-21,28-35" highlight="17":::
 
 # [Python](#tab/python)
 
