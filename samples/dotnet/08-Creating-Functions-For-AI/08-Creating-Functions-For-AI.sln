@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "07-Simple-Native-Functions", "07-Simple-Native-Functions.csproj", "{C6C0B288-CBC9-4C4A-AE46-25022EA75352}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "08-Creating-Functions-For-AI", "08-Creating-Functions-For-AI.csproj", "{C6C0B288-CBC9-4C4A-AE46-25022EA75352}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

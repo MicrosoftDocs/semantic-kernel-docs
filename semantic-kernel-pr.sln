@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "03-Intro-to-Prompts", "samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "15-Using-Context-for-Chat", "samples\dotnet\15-Using-Context-for-Chat\15-Using-Context-for-Chat.csproj", "{0EAABCC5-FD3E-42C6-8BF6-BE267393547C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "07-Simple-Native-Functions", "samples\dotnet\07-Simple-Native-Functions\07-Simple-Native-Functions.csproj", "{88F66583-45B2-4B10-8D02-35C9808C643F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "08-Creating-Functions-For-AI", "samples\dotnet\08-Creating-Functions-For-AI\08-Creating-Functions-For-AI.csproj", "{88F66583-45B2-4B10-8D02-35C9808C643F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "09-Calling-Nested-Functions-in-Native-Functions", "samples\dotnet\09-Calling-Nested-Functions-in-Native-Functions\09-Calling-Nested-Functions-in-Native-Functions.csproj", "{2A531F4E-244C-4D9A-BC8B-009B0F77840C}"
 EndProject

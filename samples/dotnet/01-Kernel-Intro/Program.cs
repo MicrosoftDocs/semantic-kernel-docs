@@ -19,7 +19,7 @@ if (LlmService == "AzureOpenAI")
     var AzureOpenAIApiKey = Env.Var("AzureOpenAI:ApiKey")!;
 
     KernelBuilder builder = new();
-    builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Information));
+    builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
     builder.Services.AddAzureOpenAIChatCompletion(
         AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "gpt-35-turbo")
         AzureOpenAIModelId,         // The model ID of your Azure OpenAI service
@@ -50,7 +50,7 @@ else
     var OpenAIOrgId = Env.Var("OpenAI:OrgId")!;
 
     KernelBuilder builder = new();
-    builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Information));
+    builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
     builder.Services.AddOpenAIChatCompletion(
         OpenAIModelId,       // The model ID of your OpenAI service
         OpenAIApiKey,        // The API key of your OpenAI service

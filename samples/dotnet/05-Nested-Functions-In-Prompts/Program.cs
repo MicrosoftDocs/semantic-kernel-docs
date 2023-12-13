@@ -15,7 +15,7 @@ var builder = Kernel.CreateBuilder();
 // builder.Services.AddOpenAIChatCompletion()
 // builder.Services.AddOpenAITextGeneration()
 builder.WithCompletionService();
-builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Information));
+builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
 builder.Plugins.AddFromType<ConversationSummaryPlugin>();
 
 var kernel = builder.Build();

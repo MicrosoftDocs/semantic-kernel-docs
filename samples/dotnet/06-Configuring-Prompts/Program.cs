@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Plugins.Core;
 
 // Create kernel
@@ -34,28 +35,22 @@ var chat = kernel.CreateFunctionFromPrompt(
             new() { Name = "request", Description = "The user's request.", IsRequired = true }
         ],
         ExecutionSettings = [
-            new() {
-                // Default settings for all models
-                ExtensionData = new() {
-                    { "MaxTokens", 1000 },
-                    { "Temperature", 0 }
-                }
+            // Default settings for all models
+            new OpenAIPromptExecutionSettings() {
+                MaxTokens = 1000,
+                Temperature = 0
             },
-            new() {
-                // Settings for gpt-3.5-turbo
+            // Settings for gpt-3.5-turbo
+            new OpenAIPromptExecutionSettings() {
                 ModelId = "gpt-3.5-turbo",
-                ExtensionData = new() {
-                    { "MaxTokens", 4000 },
-                    { "Temperature", 0.1 }
-                }
+                MaxTokens = 4000,
+                Temperature = 0.1
             },
-            new() {
-                // Settings for gpt-4-1106-preview
+            // Settings for gpt-4-1106-preview
+            new OpenAIPromptExecutionSettings() {
                 ModelId = "gpt-4-1106-preview",
-                ExtensionData = new() {
-                    { "MaxTokens", 8000 },
-                    { "Temperature", 0.3 }
-                }
+                MaxTokens = 8000,
+                Temperature = 0.3
             }
         ]
     }

@@ -12,7 +12,7 @@ var builder = new KernelBuilder();
 // builder.Services.AddOpenAIChatCompletion()
 // builder.Services.AddOpenAITextGeneration()
 builder.WithCompletionService();
-builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Information));
+builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
 
 var kernel = builder.Build();
 

@@ -1,6 +1,6 @@
 # Creating native functions
 
-The `07-Simple-Native-Functions` console application shows the final solution to the [Run native code with Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/native-functions/using-the-skfunction-decorator) doc article.
+The `08-Creating-Functions-For-AI` console application shows the final solution to the [Run native code with Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/agents/plugins/native-functions/using-the-skfunction-decorator) doc article.
 
 ## Prerequisites
 
@@ -38,7 +38,7 @@ This sample has been tested with the following models:
 Configure an OpenAI endpoint
 
 ```powershell
-cd 07-Simple-Native-Functions
+cd 08-Creating-Functions-For-AI
 
 dotnet user-secrets set "Global:LlmService" "OpenAI"
 
@@ -51,7 +51,7 @@ dotnet user-secrets set "OpenAI:OrgId" "... your ord ID ..."
 Configure an Azure OpenAI endpoint
 
 ```powershell
-cd 07-Simple-Native-Functions
+cd 08-Creating-Functions-For-AI
 
 dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 

@@ -1,5 +1,5 @@
 import semantic_kernel as sk
-from plugins.MathPlugin.Math import Math
+from plugins import MathPlugin
 import config.add_completion_service
 
 
@@ -12,7 +12,7 @@ async def main():
     kernel.add_completion_service()
 
     # Import the MathPlugin.
-    math_plugin = kernel.import_skill(Math(), skill_name="MathPlugin")
+    math_plugin = kernel.import_skill(MathPlugin(), skill_name="MathPlugin")
 
     # Run the Sqrt function with the context.
     result = await kernel.run_async(
