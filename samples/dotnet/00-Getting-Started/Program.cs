@@ -16,7 +16,7 @@ var builder = Kernel.CreateBuilder();
 // builder.Services.AddOpenAITextGeneration()
 builder.WithCompletionService();
 builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
-builder.Plugins.AddFromType<MathPlugin>();
+builder.Plugins.AddFromType<LightPlugin>();
 var kernel = builder.Build();
 
 // Create chat history
@@ -24,15 +24,6 @@ ChatHistory history = [];
 
 // Get chat completion service
 var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
-
-// Test the math plugin
-double answer = await kernel.InvokeAsync<double>(
-"MathPlugin", "Sqrt",
-    new() {
-        { "number1", 12 }
-    }
-);
-Console.WriteLine($"The square root of 12 is {answer}.");
 
 // Start the conversation
 while (true)
@@ -48,26 +39,14 @@ while (true)
     };
 
     // Get the response from the AI
-    var result = chatCompletionService.GetStreamingChatMessageContentsAsync(
+    var result = await chatCompletionService.GetChatMessageContentAsync(
         history,
         executionSettings: openAIPromptExecutionSettings,
         kernel: kernel);
 
-    // Stream the results
-    string fullMessage = "";
-    var first = true;
-    await foreach (var content in result)
-    {
-        if (content.Role.HasValue && first)
-        {
-            Console.Write("Assistant > ");
-            first = false;
-        }
-        Console.Write(content.Content);
-        fullMessage += content.Content;
-    }
-    Console.WriteLine();
+    // Print the results
+    Console.WriteLine("Assistant > " + result);
 
     // Add the message from the agent to the chat history
-    history.AddAssistantMessage(fullMessage);
+    history.AddMessage(result);
 }

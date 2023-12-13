@@ -41,72 +41,18 @@ Let's say you wanted an AI agent to be able to turn on and off a lightbulb. In a
 
 First, you need code that can change the state of the lightbulb. This is fairly simple to do with a few lines of C# code. Below we create our `LightPlugin` class that has two methods, `GetState` and `ChangeState`.
 
-```csharp
-using System.ComponentModel;
-using Microsoft.SemanticKernel;
-
-public class LightPlugin
-{
-    public bool IsOn { get; set; } = false;
-
-    [KernelFunction]
-    [Description("Gets the state of the light.")]
-    public string GetState() => this.IsOn ? "on" : "off";
-
-    [KernelFunction]
-    [Description("Changes the state of the light.'")]
-    public string ChangeState(bool newState)
-    {
-        this.IsOn = newState;
-        var state = this.GetState();
-
-        // Print the state to the console
-        Console.ForegroundColor = ConsoleColor.DarkBlue;
-        Console.WriteLine($"[Light is now {state}]");
-        Console.ResetColor();
-
-        return state;
-    }
-}
-```
+:::code language="csharp" source="~/../samples/dotnet/00-Getting-Started/plugins/LightPlugin.cs":::
 
 Notice that we've added a few attributes to the methods, `[KernelFunction]` and `[Description]`. Whenever you want an AI to call your code, you need to first describe it to the AI so it knows how to _actually_ use it. In this case, we've described two functions, `GetState` and `ChangeState`, so the AI can request that they be called.
 
 Now that we have our code, we now need to provide it to the AI. This is where Semantic Kernel comes in. With Semantic Kernel, we can create a single `Kernel` object that has all the information necessary to orchestrate our code with AI. To do so, we'll create a new `Kernel` object and pass it our `LightPlugin` class and the model we want to use:
 
-```csharp
-KernelBuilder builder = new();
-builder.Services.AddAzureOpenAIChatCompletion(/* your chat completion deployment settings */);
-builder.Plugins.AddFromType<LightPlugin>();
 
-Kernel kernel = builder.Build();
-```
+:::code language="csharp" source="~/../samples/dotnet/00-Getting-Started/Program.cs" range="5-16,19-20":::
 
 Now that we have a kernel, we can use it to create an agent that will call our code whenever its prompted to do so. Let's simulate a back-and-forth chat with a `while` loop:
 
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
-
-while (true)
-{
-   // Get user input
-   System.Console.Write("User > ");
-
-   // Set the execution settings to auto invoke kernel functions
-   OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
-   {
-      FunctionCallBehavior = FunctionCallBehavior.AutoInvokeKernelFunctions
-   };
-
-   // Invoke the model with the user input
-   var result = await kernel.InvokePromptAsync(Console.ReadLine()!, new(openAIPromptExecutionSettings));
-
-   // Print the result
-   Console.WriteLine("Assistant > " + result);
-}
-```
+:::code language="csharp" source="~/../samples/dotnet/00-Getting-Started/Program.cs" range="22-52":::
 
 After running these _few_ lines of code, you should be able to have a conversation with your AI agent:
 

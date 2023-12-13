@@ -48,9 +48,14 @@ while (true)
 
     // Stream the results
     string fullMessage = "";
+    var first = true;
     await foreach (var content in result)
     {
-        if (content.Role.HasValue) Console.Write("Assistant > ");
+        if (content.Role.HasValue && first)
+        {
+            Console.Write("Assistant > ");
+            first = false;
+        }
         Console.Write(content.Content);
         fullMessage += content.Content;
     }

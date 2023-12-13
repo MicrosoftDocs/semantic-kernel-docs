@@ -118,7 +118,7 @@ Now that we understand the core building blocks of an agent, we can now combine 
 
 ```csharp
 // Create the kernel
-KernelBuilder builder = new();
+var builder = Kernel.CreateBuilder();
 builder.Services.AddLogging(c => c.SetMinimumLevel(LogLevel.Trace).AddDebug());
 builder.Services.AddChatCompletionService(kernelSettings);
 builder.Plugins.AddFromType<AuthorEmailPlanner>();
