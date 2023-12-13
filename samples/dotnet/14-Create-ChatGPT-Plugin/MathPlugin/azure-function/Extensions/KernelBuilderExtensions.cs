@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 using Models;
 
 internal static class KernelBuilderExtensions
@@ -9,16 +10,16 @@ internal static class KernelBuilderExtensions
     /// <param name="kernelBuilder"></param>
     /// <param name="kernelSettings"></param>
     /// <exception cref="ArgumentException"></exception>
-    internal static KernelBuilder WithChatCompletionService(this KernelBuilder kernelBuilder, KernelSettings kernelSettings)
+    internal static IServiceCollection WithChatCompletionService(this IServiceCollection kernelBuilder, KernelSettings kernelSettings)
     {
         switch (kernelSettings.ServiceType.ToUpperInvariant())
         {
             case ServiceTypes.AzureOpenAI:
-                kernelBuilder.WithAzureOpenAIChatCompletionService(deploymentName: kernelSettings.DeploymentOrModelId, endpoint: kernelSettings.Endpoint, apiKey: kernelSettings.ApiKey, serviceId: kernelSettings.ServiceId);
+                kernelBuilder.AddAzureOpenAIChatCompletion(deploymentName: kernelSettings.DeploymentOrModelId, modelId: kernelSettings.DeploymentOrModelId, endpoint: kernelSettings.Endpoint, apiKey: kernelSettings.ApiKey, serviceId: kernelSettings.ServiceId);
                 break;
 
             case ServiceTypes.OpenAI:
-                kernelBuilder.WithOpenAIChatCompletionService(modelId: kernelSettings.DeploymentOrModelId, apiKey: kernelSettings.ApiKey, orgId: kernelSettings.OrgId, serviceId: kernelSettings.ServiceId);
+                kernelBuilder.AddOpenAIChatCompletion(modelId: kernelSettings.DeploymentOrModelId, apiKey: kernelSettings.ApiKey, orgId: kernelSettings.OrgId, serviceId: kernelSettings.ServiceId);
                 break;
 
             default:

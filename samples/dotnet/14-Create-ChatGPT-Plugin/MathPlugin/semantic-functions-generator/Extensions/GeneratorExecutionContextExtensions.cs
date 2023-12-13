@@ -2,7 +2,7 @@
 
 using Microsoft.CodeAnalysis;
 
-namespace AIPlugins.AzureFunctions.Generator.Extensions;
+namespace Plugins.AzureFunctions.Generator.Extensions;
 
 internal static class GeneratorExecutionContextExtensions
 {

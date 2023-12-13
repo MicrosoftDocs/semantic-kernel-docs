@@ -1,48 +1,61 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Planning;
-using Microsoft.SemanticKernel.Functions.OpenAPI.Extensions;
-using Microsoft.SemanticKernel.Planners;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.Plugins.OpenApi;
 
-// Create a logger
-using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-{
-    builder
-        .SetMinimumLevel(0)
-        .AddDebug();
-});
-
-// Create a kernel
-IKernel kernel = new KernelBuilder()
-    .WithCompletionService()
-    .WithLoggerFactory(loggerFactory)
-    .Build();
+// Create kernel
+var builder = Kernel.CreateBuilder();
+// Add a text or chat completion service using either:
+// builder.Services.AddAzureOpenAIChatCompletion()
+// builder.Services.AddAzureOpenAITextGeneration()
+// builder.Services.AddOpenAIChatCompletion()
+// builder.Services.AddOpenAITextGeneration()
+builder.WithCompletionService();
+builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
+var kernel = builder.Build();
 
 // Add the math plugin using the plugin manifest URL
-const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
-var mathPlugin = await kernel.ImportPluginFunctionsAsync("MathPlugin", new Uri(pluginManifestUrl));
+await kernel.ImportPluginFromOpenApiAsync("MathPlugin", new Uri("http://localhost:7071/swagger.json"));
 
-// Create a stepwise planner and invoke it
-var planner = new StepwisePlanner(kernel);
-var ask = "If my investment of 2130.23 dollars increased by 23%, how much would I have after I spent $5 on a latte?";
-var plan = planner.CreatePlan(ask);
-var result = await kernel.RunAsync(plan);
+// Create chat history
+ChatHistory history = [];
 
-// Print the results
-Console.WriteLine("Result: " + result);
+// Get chat completion service
+var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
-// Print details about the plan
-if (result.FunctionResults.First().TryGetMetadataValue("stepCount", out string? stepCount))
+// Start the conversation
+while (true)
 {
-    Console.WriteLine("Steps Taken: " + stepCount);
-}
-if (result.FunctionResults.First().TryGetMetadataValue("functionCount", out string? functionCount))
-{
-    Console.WriteLine("Functions Used: " + functionCount);
-}
-if (result.FunctionResults.First().TryGetMetadataValue("iterations", out string? iterations))
-{
-    Console.WriteLine("Iterations: " + iterations);
+    // Get user input
+    Console.Write("User > ");
+    history.AddUserMessage(Console.ReadLine()!);
+
+    // Enable auto function calling
+    OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
+    {
+        ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    };
+
+    // Get the response from the AI
+    var result = chatCompletionService.GetStreamingChatMessageContentsAsync(
+        history,
+        executionSettings: openAIPromptExecutionSettings,
+        kernel: kernel);
+
+    // Stream the results
+    string fullMessage = "";
+    await foreach (var content in result)
+    {
+        if (content.Role.HasValue) Console.Write("Assistant > ");
+        Console.Write(content.Content);
+        fullMessage += content.Content;
+    }
+    Console.WriteLine();
+
+    // Add the message from the agent to the chat history
+    history.AddAssistantMessage(fullMessage);
 }

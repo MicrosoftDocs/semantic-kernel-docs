@@ -1,177 +1,199 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using AIPlugins.AzureFunctions.Generator.Extensions;
-using AIPlugins.AzureFunctions.Generator.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
-using Newtonsoft.Json;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AIPlugins.AzureFunctions.Generator;
+namespace Plugins.AzureFunctions.Generator;
 
 [Generator]
 public class SemanticFunctionGenerator : ISourceGenerator
 {
-    private const string DefaultFunctionNamespace = "AIPlugins";
-    private const string FunctionConfigFilename = "config.json";
-    private const string FunctionPromptFilename = "skprompt.txt";
-
     public void Execute(GeneratorExecutionContext context)
     {
-        var rootNamespace = context.GetRootNamespace();
+        var functionDetailsByPlugin = new Dictionary<string, List<FunctionDetails>>();
 
-        if (String.IsNullOrEmpty(rootNamespace))
+        foreach (var syntaxTree in context.Compilation.SyntaxTrees)
         {
-            rootNamespace = DefaultFunctionNamespace;
-        }
+            var semanticModel = context.Compilation.GetSemanticModel(syntaxTree);
+            var root = syntaxTree.GetRoot();
 
-        // Get the additional files that represent the functions and functions
-        var functionFiles = context.AdditionalFiles.Where(f =>
-            f.Path.Contains(FunctionConfigFilename) ||
-            f.Path.Contains(FunctionPromptFilename));
+            var configureServicesCalls = root.DescendantNodes()
+                .OfType<InvocationExpressionSyntax>()
+                .Where(ies => ies.Expression is MemberAccessExpressionSyntax maes && maes.Name.ToString() == "AddTransient");
 
-        // Group first by function name, then by parent folder
-        var fnFileGroup = functionFiles.GroupBy(f => Path.GetDirectoryName(f.Path));
-
-        // Group the files by parent folder name
-        var folderGroups = fnFileGroup.GroupBy(f => Path.GetFileName(Path.GetDirectoryName(f.Key)));
-
-        // Generate a class for each folder
-        foreach (var folderGroup in folderGroups)
-        {
-            string? folderName = folderGroup.Key;
-            if (string.IsNullOrWhiteSpace(folderName))
+            foreach (var configureServicesCall in configureServicesCalls)
             {
-                continue;
-            }
+                // Analyze within ConfigureServices
+                foreach (var invocation in configureServicesCall.DescendantNodes().OfType<InvocationExpressionSyntax>())
+                {
+                    var symbol = semanticModel.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
+                    if (symbol?.ContainingType.ToString() == "Microsoft.SemanticKernel.KernelExtensions")
+                    {
+                        INamedTypeSymbol pluginTypeArgument = null;
+                        if (symbol.Name == "AddFromType")
+                        {
+                            pluginTypeArgument = symbol.TypeArguments.FirstOrDefault() as INamedTypeSymbol;
+                        }
+                        else if (symbol.Name == "AddFromObject")
+                        {
+                            var objectCreationExpression = invocation.ArgumentList.Arguments.FirstOrDefault()?.Expression as ObjectCreationExpressionSyntax;
+                            if (objectCreationExpression != null)
+                            {
+                                var typeInfo = semanticModel.GetTypeInfo(objectCreationExpression);
+                                pluginTypeArgument = typeInfo.Type as INamedTypeSymbol;
+                            }
+                        }
 
-            string classSource = GenerateClassSource(rootNamespace!, folderName, folderGroup);
-            context.AddSource(folderName, SourceText.From(classSource, Encoding.UTF8));
+                        if (pluginTypeArgument != null && configureServicesCall.Expression is MemberAccessExpressionSyntax maes)
+                        {
+                            var pluginName = pluginTypeArgument.Name;
+                            var functionDetails = ExtractFunctionDetails(context, pluginTypeArgument);
+                            functionDetailsByPlugin[pluginName] = functionDetails;
+                        }
+                    }
+                }
+            }
         }
+
+        // Generate source for each plugin
+        foreach (var pluginEntry in functionDetailsByPlugin)
+        {
+            var sourceCode = GenerateClassSource("AzureFunctionPlugins", pluginEntry.Key, pluginEntry.Value);
+            context.AddSource($"{pluginEntry.Key}.g.cs", sourceCode);
+        }
+    }
+
+    private List<FunctionDetails> ExtractFunctionDetails(GeneratorExecutionContext context, INamedTypeSymbol pluginClass)
+    {
+        var functionDetailsList = new List<FunctionDetails>();
+
+        foreach (var member in pluginClass.GetMembers())
+        {
+            if (member is IMethodSymbol methodSymbol && methodSymbol.GetAttributes().Any(attr => attr.AttributeClass.Name == "KernelFunctionAttribute"))
+            {
+                var functionDetails = new FunctionDetails
+                {
+                    Name = methodSymbol.Name,
+                    Description = methodSymbol.GetAttributes().FirstOrDefault(a => a.AttributeClass.Name == "DescriptionAttribute")?.ConstructorArguments.FirstOrDefault().Value.ToString(),
+                    Parameters = new List<ParameterDetails>()
+                };
+
+                foreach (var parameter in methodSymbol.Parameters)
+                {
+                    var parameterDetails = new ParameterDetails
+                    {
+                        Name = parameter.Name,
+                        Type = parameter.Type.ToString(),
+                        Description = parameter.GetAttributes().FirstOrDefault(a => a.AttributeClass.Name == "DescriptionAttribute")?.ConstructorArguments.FirstOrDefault().Value.ToString()
+                    };
+
+                    functionDetails.Parameters.Add(parameterDetails);
+                }
+
+                functionDetailsList.Add(functionDetails);
+            }
+        }
+
+        return functionDetailsList;
     }
 
     // Generate the source code for a folder of prompts
-    private static string GenerateClassSource(string rootNamespace, string folderName, IGrouping<string, IGrouping<string, AdditionalText>> folderGroup)
+    private static string GenerateClassSource(string rootNamespace, string pluginName, List<FunctionDetails> functions)
     {
-        // Use a StringBuilder to build the class source
-        StringBuilder functionsCode = new();
+        StringBuilder functionsCode = new StringBuilder();
 
-        foreach (var functionGroup in folderGroup)
+        foreach (var function in functions)
         {
-            // Get the "skprompt.txt" and "config.json" files for this function
-            AdditionalText? configFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionConfigFilename, StringComparison.InvariantCultureIgnoreCase));
-            AdditionalText? promptFile = functionGroup.FirstOrDefault(f => Path.GetFileName(f.Path).Equals(FunctionPromptFilename, StringComparison.InvariantCultureIgnoreCase));
-            if (promptFile != default && configFile != default)
-            {
-                functionsCode.AppendLine(GenerateFunctionSource(promptFile, configFile) ?? string.Empty);
-            }
+            functionsCode.AppendLine(GenerateFunctionSource(pluginName, function) ?? string.Empty);
         }
 
         return $@"/* ### GENERATED CODE - Do not modify. Edits will be lost on build. ### */
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using AIPlugins.AzureFunctions.Extensions;
+    using System;
+    using System.Net;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
+    using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.OpenApi.Models;
+    using Microsoft.SemanticKernel;
+    using Plugins.AzureFunctions.Extensions;
 
-namespace {rootNamespace};
+    namespace {rootNamespace};
 
-public class {folderName}
-{{
-    private readonly ILogger _logger;
-    private readonly IAIPluginRunner _pluginRunner;
-
-    public {folderName}(IAIPluginRunner pluginRunner, ILoggerFactory loggerFactory)
+    public class {pluginName}
     {{
-        this._pluginRunner = pluginRunner;
-        this._logger = loggerFactory.CreateLogger<{folderName}>();
-    }}
+        private readonly ILogger _logger;
+        private readonly AIPluginRunner _pluginRunner;
 
-    {functionsCode}
-}}";
-    }
+        public {pluginName}(AIPluginRunner pluginRunner, ILoggerFactory loggerFactory)
+        {{
+            _pluginRunner = pluginRunner;
+            _logger = loggerFactory.CreateLogger<{pluginName}>();
+        }}
 
-    private static string? GenerateFunctionSource(AdditionalText promptFile, AdditionalText configFile)
-    {
-        // Get the function name from the directory name
-        string? functionName = Path.GetFileName(Path.GetDirectoryName(promptFile.Path));
-        if (string.IsNullOrWhiteSpace(functionName)) { return null; }
-
-        string? metadataJson = configFile.GetText()?.ToString();
-        if (string.IsNullOrWhiteSpace(metadataJson)) { return null; }
-
-        // Get the function description from the config file
-        PromptConfig? config = JsonConvert.DeserializeObject<PromptConfig>(metadataJson!);
-        if (config == null) { return null; }
-
-        string descriptionProperty = string.IsNullOrWhiteSpace(config.Description)
-            ? string.Empty
-            : $@", Description = ""{config.Description}""";
-
-        string parameterAttributes = GenerateParameterAttributesSource(config.Input?.Parameters);
-
-        return $@"
-    [OpenApiOperation(operationId: ""{functionName}"", tags: new[] {{ ""{functionName}"" }}{descriptionProperty})]{parameterAttributes}
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: ""text/plain"", bodyType: typeof(string), Description = ""The OK response"")]
-    [Function(""{functionName}"")]
-    public Task<HttpResponseData> {functionName}([HttpTrigger(AuthorizationLevel.Anonymous, ""post"")] HttpRequestData req)
-    {{
-        this._logger.LogInformation(""HTTP trigger processed a request for function {functionName}."");
-        return this._pluginRunner.RunAIPluginOperationAsync(req, ""{functionName}"");
+        {functionsCode}
     }}";
     }
 
-    private static string GenerateParameterAttributesSource(
-        List<PromptConfig.ParameterConfig>? parameters)
+    private static string? GenerateFunctionSource(string pluginName, FunctionDetails functionDetails)
     {
-        string inputDescription = string.Empty;
-        StringBuilder parameterStringBuilder = new();
+        string modelClassName = $"{functionDetails.Name}Model"; // Name of the model class
+        string parameterAttributes = GenerateModelClassSource(modelClassName, functionDetails.Parameters);
 
-        if (parameters != null)
+        return $@"
+        {parameterAttributes}
+
+        [OpenApiOperation(operationId: ""{functionDetails.Name}"", tags: new[] {{ ""{functionDetails.Name}"" }})]
+        [OpenApiRequestBody(contentType: ""application/json"", bodyType: typeof({modelClassName}), Required = true, Description = ""JSON request body"")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: ""application/json"", bodyType: typeof(string), Description = ""The OK response"")]
+        [Function(""{functionDetails.Name}"")]
+        public async Task<HttpResponseData> {functionDetails.Name}([HttpTrigger(AuthorizationLevel.Anonymous, ""post"")] HttpRequestData req)
+        {{
+            _logger.LogInformation(""HTTP trigger processed a request for function {pluginName}-{functionDetails.Name}."");
+            return await _pluginRunner.RunAIPluginOperationAsync<{modelClassName}>(req, ""{pluginName}"", ""{functionDetails.Name}"");
+        }}";
+    }
+
+
+    private static string GenerateModelClassSource(string modelClassName, List<ParameterDetails> parameters)
+    {
+        StringBuilder modelClassBuilder = new StringBuilder();
+
+        modelClassBuilder.AppendLine($"public class {modelClassName}");
+        modelClassBuilder.AppendLine("{");
+
+        foreach (var parameter in parameters)
         {
-            foreach (var parameter in parameters)
-            {
-                if (parameter.Name.Equals("input", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // "input" is a special parameter that is handled differently. It must be added as
-                    // the body attribute.
-                    if (!string.IsNullOrWhiteSpace(parameter.Description))
-                    {
-                        inputDescription = $@", Description = ""{parameter.Description}""";
-                    }
-
-                    continue;
-                }
-
-                parameterStringBuilder.AppendLine(); // Start with a newline
-                parameterStringBuilder.Append($@"    [OpenApiParameter(name: ""{parameter.Name}""");
-
-                if (!string.IsNullOrWhiteSpace(parameter.Description))
-                {
-                    parameterStringBuilder.Append($@", Description = ""{parameter.Description}""");
-                }
-
-                parameterStringBuilder.Append(", In = ParameterLocation.Query");
-                parameterStringBuilder.Append(", Type = typeof(string))]");
-            }
+            modelClassBuilder.AppendLine($"    public {parameter.Type} {parameter.Name} {{ get; set; }}");
         }
 
-        parameterStringBuilder.AppendLine();
-        parameterStringBuilder.Append($@"    [OpenApiRequestBody(""text/plain"", typeof(string){inputDescription})]");
+        modelClassBuilder.AppendLine("}");
 
-        return parameterStringBuilder.ToString();
+        return modelClassBuilder.ToString();
     }
+
 
     public void Initialize(GeneratorInitializationContext context)
     {
         // No initialization required
     }
+}
+
+public class FunctionDetails
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public List<ParameterDetails> Parameters { get; set; }
+}
+
+public class ParameterDetails
+{
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public string Description { get; set; }
 }
