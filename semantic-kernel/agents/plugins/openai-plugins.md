@@ -55,8 +55,7 @@ There are three steps we must take to turn our existing `MathPlugin` into a Chat
 ## Download the ChatGPT plugin starter
 To make it easier to create ChatGPT plugins, we've created a [starter project](https://github.com/microsoft/semantic-kernel-starters/tree/main/sk-csharp-chatgpt-plugin) that you can use as a template. The starter project includes the following features:
 - An endpoint that serves up an ai-plugin.json file for ChatGPT to discover the plugin
-- A generator that automatically converts prompts into prompt endpoints
-- The ability to add additional native functions as endpoints to the plugin
+- A generator that automatically converts native functions into endpoints
 
 To easiest way to get started is to use the Semantic Kernel VS Code extension. Follow the steps to download the starter with VS Code:
 1. If you don't have VS Code installed, you can download it [here](https://code.visualstudio.com/).
@@ -73,137 +72,20 @@ If you don't want to use the VS Code extension, you can also download the starte
 ### Understand the starter project
 Once you've downloaded the starter project, you'll see two main projects:
 - **_azure-functions_** – This is the main project that contains the Azure Functions that will serve up the plugin manifest file and each of your functions.
-- **_semantic-functions-generator_** – This project contains a code generator that will automatically convert prompts into prompt endpoints.
+- **_kernel-functions-generator_** – This project contains a code generator that will automatically convert native functions into endpoints.
 
-For the remainder of this walkthrough, we'll be working in the _azure-functions_ project since that is where we'll be adding our native functions, prompts, and settings for the plugin manifest file.
+For the remainder of this walkthrough, we'll be working in the _azure-functions_ project since that is where we'll be adding our native functions and settings for the plugin manifest file.
 
 ## Provide HTTP endpoints for each function
 Now that we have validated our starter, we now need to create HTTP endpoints for each of our functions. This will allow us to call our functions from any other service.
 
 ### Add the math native functions to the Azure Function project
-Now that you have your starter, it's time to add your native functions to the plugin. To do this, we'll use Azure Functions to create HTTP endpoints for each function.
+Now that you have your starter, it's time to add your native functions to the plugin. To do this, simply copy and paste the plugin into your project and reference it in the Program.cs file.
 
-1. Navigate into the _MathPlugin/azure-function_ directory.
-2. Create a new empty file called _Add.cs_:
-3. Open the _Add.cs_ file.
-4. Paste in the following code:
-    ```csharp
-    using System.Net;
-    using Microsoft.Azure.Functions.Worker;
-    using Microsoft.Azure.Functions.Worker.Http;
-    using Microsoft.Extensions.Logging;
-    using System.Globalization;
-
-    namespace MathPlugin
-    {
-        public class Add
-        {
-            private readonly ILogger _logger;
-
-            public Add(ILoggerFactory loggerFactory)
-            {
-                _logger = loggerFactory.CreateLogger<Add>();
-            }
-
-            [Function("Add")]
-            public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
-            {
-                bool result1 = double.TryParse(req.Query["number1"], out double number1);
-                bool result2 = double.TryParse(req.Query["number2"], out double number2);
-
-                if (result1 && result2)
-                {
-                    HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-                    response.Headers.Add("Content-Type", "text/plain");
-                    double sum = number1 + number2;
-                    response.WriteString(sum.ToString(CultureInfo.CurrentCulture));
-
-                    _logger.LogInformation($"Add function processed a request. Sum: {sum}");
-
-                    return response;
-                }
-                else
-                {
-                    HttpResponseData response = req.CreateResponse(HttpStatusCode.BadRequest);
-                    response.Headers.Add("Content-Type", "application/json");
-                    response.WriteString("Please pass two numbers on the query string or in the request body");
-
-                    return response;
-                }
-            }
-        }
-    }
-    ```
-5. Repeat the previous steps to create HTTP endpoints for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When replacing the `Run` function, be sure to update the function name and logic for each function accordingly.
-
-### Adding a prompt to the Azure Function project
-Our current plugin only has native functions, but we can also add prompts to the plugin to show the full power of the ChatGPT starter. To do this, we'll use the code generator that is included in the starter project.
-
-First, we need to configure the settings of our _azure-functions_ project so it can call either Azure OpenAI or OpenAI models. To do this, follow these steps:
-1. Open the _appsettings.json_ file.
-2. Copy and paste the relevant sample from _/config-samples_ into the _appsettings.json_ file.
-    - If you are using Azure OpenAI, copy the contents of _appsettings.json.azure-example.
-    - If you are using OpenAI models, copy the contents of _appsettings.json.openai-example_.
-3. Replace the placeholder values with your model ID and endpoint URL (if applicable).
-
-Next, we need to provide the key that will be used to call the API. To do this, follow these steps:
-1. Copy the _local.settings.json.example_ file.
-2. Rename the copied file to _local.settings.json_.
-3. Open the _local.settings.json_ file.
-4. Replace the placeholder value for `apiKey` with your API key from Azure OpenAI or OpenAI.
-
-Finally, we need to add the prompt to the plugin. In this example, we'll create a prompt that can make up a number for a missing value in an equation. We'll call this function `GenerateValue`. To do this, follow these steps:
-1. Open the _/Prompts folder. This is where all of your prompts will be stored.
-2. Create a new folder called _GenerateValue_.
-3. Create an empty _config.json_ and skprompt.txt file in the _GenerateValue_ folder.
-4. Open the _config.json_ file and paste the following JSON in it:
-    ```json
-    {
-        "schema": 1,
-        "description": "Do not make up any values or you'll get a wrong value; use this action instead to get the correct value of a missing parameter in a word problem.",
-        "type": "completion",
-        "completion": {
-            "max_tokens": 1000,
-            "temperature": 0.9,
-            "top_p": 0.0,
-            "presence_penalty": 0.0,
-            "frequency_penalty": 0.0
-        },
-        "input": {
-            "parameters": [
-            {
-                "name": "input",
-                "description": "A detailed description (2-3 sentences) of the missing value; provide all the context the user provided to get the best results.",
-                "defaultValue": ""
-            },
-            {
-                "name": "units",
-                "description": "The units used to measure the value (e.g., 'meters', 'seconds', 'dollars', etc.). (required)",
-                "defaultValue": ""
-            }
-            ]
-        }
-    }
-    ```
-5. Open the _skprompt.txt_ file and paste the following prompt:
-    ```
-    INSTURCTIONS:
-    Provide a realistic value for the missing parameter. If you don't know the answer, provide a best guess using the limited information provided.
-
-    MISSING PARAMETER DESCRIPTION:
-    {{$input}}
-
-    PARAMETER UNITS:
-    {{$units}}
-
-    ANSWER:
-
-    ```
-
-    Once you've added the prompt, the code generator will automatically create an HTTP endpoint for the `GenerateValue` function. You can validate the function in the next section.
+:::code language="csharp" source="~/../samples/dotnet/14-Create-ChatGPT-Plugin/MathPlugin/azure-function/Program.cs" range="55-68"  highlight="12":::
 
 ### Validate the HTTP endpoints
-At this point, you should have six HTTP endpoints in your Azure Function project. You can test them by following these steps:
+At this point, you should have five HTTP endpoints in your Azure Function project. You can test them by following these steps:
 
 1. Run the following command in your terminal:
     ```bash
@@ -216,56 +98,12 @@ At this point, you should have six HTTP endpoints in your Azure Function project
 3. Test each of the endpoints by clicking the __Try it out__ button and by providing input values.
 
 ## Create the manifest files
-Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating an OpenAPI specification and plugin manifest file.
-
-### Add an OpenAPI spec to your Azure Function project
-An OpenAPI specification describes the HTTP endpoints that are available in your plugin. Instead of manually creating an OpenAPI specification, you can use NuGet packages provided by Azure Functions to automatically create and serve up these files.
-
-The starter already has the necessary nuget packages, but if you wanted to add them to your own project, run the following commands.
-
-1. Run the following commands in your Azure Function project directory:
-    ```bash
-    dotnet add package Microsoft.Azure.WebJobs.Extensions.OpenApi --version 1.5.1
-    dotnet add package Microsoft.Azure.Functions.Worker.Extensions.OpenApi --version 1.5.1
-    ```
-
-We can now use these packages to automatically generate an OpenAPI specification for our plugin. To do this, follow these steps:
-
-1. Open the _Add.cs_ file.
-2. Add the following `using` statements:
-    ```csharp
-    using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
-    using Microsoft.OpenApi.Models;
-    ```
-3. Add the following attributes to the `Run` function:
-    ```csharp
-    [OpenApiOperation(operationId: "Add", tags: new[] { "ExecuteFunction" }, Description = "Adds two numbers.")]
-    [OpenApiParameter(name: "number1", Description = "The first number to add", Required = true, In = ParameterLocation.Query)]
-    [OpenApiParameter(name: "number2", Description = "The second number to add", Required = true, In = ParameterLocation.Query)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns the sum of the two numbers.")]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]  
-    ```
-4. Repeat the previous steps for the `Subtract`, `Multiply`, `Divide`, and `Sqrt` functions. When adding the attributes, update the operation and parameter descriptions accordingly.
-
-    > [!Important]
-    > The `Description` fields for both the operation and the parameters are the most important attributes because they will be used by the planner to determine which function to call. We recommend reusing the same description values from the previous walkthroughs.
-
-    | Function | Description | Number 1 | Number 2 |
-    | --- | --- |
-    | Add | Add two numbers. | The first number to add | The second number to add | 
-    | Subtract | Subtract two numbers. | The first number to subtract from | The second number to subtract away |
-    | Multiply | Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage. |
-    | Divide | Divide two numbers. | The first number to divide from | The second number to divide by |
-    | Sqrt | Take the square root of a number. | The number to calculate the square root of | N/A |
+Now that we have HTTP endpoints for each of our native functions, we need to create the files that will tell ChatGPT and other applications how to call them. We'll do this by creating and validating an OpenAPI specification and plugin manifest file.
 
 ### Validate the OpenAPI spec
-You can then test the OpenAPI document by following these steps:
+You then test the OpenAPI document by navigating to _http://localhost:7071/swagger.json_. This will allow you to download the OpenAPI specification.
 
-1. Run the following command in your terminal:
-    ```bash
-    func start
-    ```
-2. Navigating to _http://localhost:7071/swagger.json_ will allow you to download the OpenAPI specification.
+There's also a link you can select within the Swagger UI to open the _swagger.json_ file. It is located directly underneath the name of your plugin.
 
 ### Add the plugin manifest file
 The last step is to serve up the plugin manifest file. Based on the OpenAI specification, the manifest file is always served up from the _/.well-known/ai-plugin.json_ file and contains the following information:
@@ -338,52 +176,10 @@ To test the plugin in Semantic Kernel, follow these steps:
     dotnet add package Microsoft.SemanticKernel.Functions.OpenAPI
     ```
 3. Paste the following code into your _program.cs_ file:
-    ```csharp
-    // Copyright (c) Microsoft. All rights reserved.
+    :::code language="csharp" source="~/../samples/dotnet/14-Create-ChatGPT-Plugin/Solution/Program.cs" range="5-16,19-61" :::
 
-    using Microsoft.Extensions.Logging;
-    using Microsoft.SemanticKernel;
-    using Microsoft.SemanticKernel.Planning;
-    using Microsoft.SemanticKernel.Functions.OpenAPI.Extensions;
-    using Microsoft.SemanticKernel.Planners;
+4. After running the code, you should be able to chat with the agent and get math answers back.
 
-    // Create a kernel here...
-
-    // Add the math plugin using the plugin manifest URL
-    const string pluginManifestUrl = "http://localhost:7071/.well-known/ai-plugin.json";
-    var mathPlugin = await kernel.ImportPluginFunctionsAsync("MathPlugin", new Uri(pluginManifestUrl));
-
-    // Create a stepwise planner and invoke it
-    var planner = new StepwisePlanner(kernel);
-    var ask = "If my investment of 2130.23 dollars increased by 23%, how much would I have after I spent $5 on a latte?";
-    var plan = planner.CreatePlan(ask);
-    var result = await kernel.RunAsync(plan);
-
-    // Print the results
-    Console.WriteLine("Result: " + result);
-
-    // Print details about the plan
-    if (result.FunctionResults.First().TryGetMetadataValue("stepCount", out string? stepCount))
-    {
-        Console.WriteLine("Steps Taken: " + stepCount);
-    }
-    if (result.FunctionResults.First().TryGetMetadataValue("functionCount", out string? functionCount))
-    {
-        Console.WriteLine("Functions Used: " + functionCount);
-    }
-    if (result.FunctionResults.First().TryGetMetadataValue("iterations", out string? iterations))
-    {
-        Console.WriteLine("Iterations: " + iterations);
-    }
-    ```
-
-4. After running the code, you should see the following output:
-
-    ```output
-    Result: After the amount grew by 24% and $5 was spent on a latte, you would have $2636.4852 remaining.
-    Steps Taken: 3
-    Skills Used: 2 (MathPlugin.Multiply(1), MathPlugin.Subtract(1))
-    ```
 
 ### Running the plugin in ChatGPT
 If you would like to test your plugin in ChatGPT, you can do so by following these steps:

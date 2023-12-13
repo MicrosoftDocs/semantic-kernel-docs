@@ -1,8 +1,4 @@
 - name: Understanding planners
   href: index.md
-- name: Handlebars planner
-  href: handlebars-planner.md
-- name: Stepwise planner
-  href: stepwise-planner.md
 - name: Evaluate with Prompt flow
   href: evaluate-and-deploy-planners/TOC.yml

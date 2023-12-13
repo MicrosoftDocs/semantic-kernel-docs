@@ -8,5 +8,3 @@
   expanded: true
 - name: Improve automation with planners
   href: planners/TOC.yml
-- name: Define your agent's persona
-  href: personas/TOC.yml
