@@ -27,9 +27,10 @@ internal static class KernelBuilderExtensions
                 {
                     kernelBuilder.Services.AddAzureOpenAIChatCompletion(
                         deploymentName: Env.Var("AzureOpenAI:ChatCompletionDeploymentName")!,
-                        modelId: Env.Var("AzureOpenAI:ChatCompletionModelId")!,
                         endpoint: Env.Var("AzureOpenAI:Endpoint")!,
-                        apiKey: Env.Var("AzureOpenAI:ApiKey")!
+                        apiKey: Env.Var("AzureOpenAI:ApiKey")!,
+                        serviceId: "gpt-3.5-turbo",
+                        modelId: "gpt-3.5-turbo-0613"
                     );
                 }
                 break;

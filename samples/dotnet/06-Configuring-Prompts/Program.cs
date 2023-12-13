@@ -34,25 +34,22 @@ var chat = kernel.CreateFunctionFromPrompt(
             new() { Name = "history", Description = "The history of the conversation.", IsRequired = false, Default = "" },
             new() { Name = "request", Description = "The user's request.", IsRequired = true }
         ],
-        ExecutionSettings = [
-            // Default settings for all models
-            new OpenAIPromptExecutionSettings() {
+        ExecutionSettings = {
+            { "default", new OpenAIPromptExecutionSettings() {
                 MaxTokens = 1000,
-                Temperature = 0
-            },
-            // Settings for gpt-3.5-turbo
-            new OpenAIPromptExecutionSettings() {
-                ModelId = "gpt-3.5-turbo",
+                Temperature = 2
+            } },
+            { "gpt-3.5-turbo", new OpenAIPromptExecutionSettings() {
+                ModelId = "gpt-3.5-turbo-0613",
                 MaxTokens = 4000,
-                Temperature = 0.1
-            },
-            // Settings for gpt-4-1106-preview
-            new OpenAIPromptExecutionSettings() {
+                Temperature = 2
+            } },
+            { "gpt-4-1106-preview", new OpenAIPromptExecutionSettings() {
                 ModelId = "gpt-4-1106-preview",
                 MaxTokens = 8000,
                 Temperature = 0.3
-            }
-        ]
+            } }
+        }
     }
 );
 

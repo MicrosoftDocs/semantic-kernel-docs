@@ -27,14 +27,14 @@ input_variables:
     description:   The user's request
     is_required:   true
 execution_settings:
-  # Default settings for all models
-  - max_tokens:   10
+  default:
+    max_tokens:   10
     temperature:  0
-  # Override settings for gpt-3.5-turbo
-  - model_id:     gpt-3.5-turbo
+  gpt-3.5-turbo:
+    model_id:     gpt-3.5-turbo
     max_tokens:   10
     temperature:  0.2
-  # Override settings for gpt-4
-  - model_id:     gpt-4
+  gpt-4:
+    model_id:     gpt-4
     max_tokens:   10
     temperature:  0.2

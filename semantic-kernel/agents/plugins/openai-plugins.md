@@ -176,7 +176,7 @@ To test the plugin in Semantic Kernel, follow these steps:
     dotnet add package Microsoft.SemanticKernel.Functions.OpenAPI --prerelease
     ```
 3. Paste the following code into your _program.cs_ file:
-    :::code language="csharp" source="~/../samples/dotnet/14-Create-ChatGPT-Plugin/Solution/Program.cs" range="5-16,19-61" :::
+    :::code language="csharp" source="~/../samples/dotnet/14-Create-ChatGPT-Plugin/Solution/Program.cs" range="5-16,19-66" :::
 
 4. After running the code, you should be able to chat with the agent and get math answers back.
 
