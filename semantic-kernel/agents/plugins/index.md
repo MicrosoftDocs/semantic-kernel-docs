@@ -27,7 +27,7 @@ To drive alignment across the industry, we've adopted the [OpenAI plugin specifi
    :::column-end:::
 :::row-end:::
 
-To show how to make interoperable plugins, we've created an in-depth walkthrough on how to export a Semantic Kernel plugin as an OpenAI plugin using OpenAI's specification. You can find the walkthrough in the [Create and run ChatGPT plugins](./chatgpt-plugins.md) section.
+To show how to make interoperable plugins, we've created an in-depth walkthrough on how to export a Semantic Kernel plugin as an OpenAI plugin using OpenAI's specification. You can find the walkthrough in the [Create and run ChatGPT plugins](./openai-plugins.md) section.
 
 ### What does a plugin look like?
 At a high-level, a plugin is a group of functions that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions either manually (see [chaining functions](./chaining-functions.md)) or automatically with a [planner](../planners/index.md).
@@ -46,7 +46,7 @@ _Just_ providing functions, however, is not enough to make a plugin. To power au
 :::row-end:::
 
 ## Adding functions to plugins
-Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: prompts and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating prompts](./semantic-functions/inline-semantic-functions.md) and [Creating native functions](./native-functions/using-the-SKFunction-decorator.md) sections.
+Now that you know what a plugin is, let's take a look at how to create one. Within a plugin, you can create two types of functions: prompts and native functions. The following sections describe how to create each type. For further details, please refer to the [Creating prompts](../../prompts/index) and [Creating native functions](./using-the-KernelFunction-decorator.md) sections.
 
 ### Native functions
 
@@ -104,11 +104,11 @@ def add(self, initial_value_text: str, context: SKContext) -> str:
 
 ---
 
-You can learn more about creating native functions in the [Creating native functions](./native-functions/using-the-SKFunction-decorator.md) section. In this article you'll learn the best practices for the following:
+You can learn more about creating native functions in the [Creating native functions](./using-the-KernelFunction-decorator.md) section. In this article you'll learn the best practices for the following:
 > [!div class="checklist"]
-> * How to [create simple native functions](./native-functions/using-the-SKFunction-decorator.md) with the `SKFunction` decorator
-> * Using [multiple input parameters](./native-functions/multiple-parameters.md) with native functions
-> * Calling [nested functions](./native-functions/calling-nested-functions.md) from within native functions
+> * How to create simple native functions with the `SKFunction` decorator
+> * Using multiple input parameters with native functions
+> * Calling nested functions from within native functions
 
 :::row:::
    :::column span="2":::
@@ -135,16 +135,16 @@ To semantically describe this function (as well as define the configuration for 
 
 Both `description` fields are used by [planner](../planners/index.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.
 
-You can learn more about creating prompts in the [Creating prompts](./semantic-functions/inline-semantic-functions.md) section. In this section you'll learn the best practices for the following:
+You can learn more about creating prompts in the [Creating prompts](../../prompts/index.md) section. In this section you'll learn the best practices for the following:
 > [!div class="checklist"]
-> * How to [create prompts](./semantic-functions/inline-semantic-functions.md)
-> * How to [create files](./semantic-functions/serializing-semantic-functions.md) for your prompts
-> * Adding input parameters with [prompt templates](./semantic-functions/templatizing-semantic-functions.md)
-> * Calling [nested functions](./semantic-functions/calling-nested-functions.md) in prompts
+> * How to create prompts
+> * Adding input parameters with prompt templates
+> * Calling nested functions in prompts
+> * How to create files for your prompts
 
 ## Take the next step
 Now that you understand the basics of plugins, you can now go deeper into the details of creating semantic and native functions for your plugin.
 
 > [!div class="nextstepaction"]
-> [Create a prompt](./semantic-functions/inline-semantic-functions.md)
+> [Create a plugin with native functions](./using-the-KernelFunction-decorator.md)
 

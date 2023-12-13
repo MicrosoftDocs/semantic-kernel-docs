@@ -14,7 +14,7 @@ ms.service: semantic-kernel
 
 In this article, we'll show you how to take a Semantic Kernel plugin and expose it to ChatGPT with Azure Functions. As an example, we'll demonstrate how to transform the `MathPlugin` we created in previous articles into a ChatGPT plugin.
 
-At the [end of this article](./chatgpt-plugins.md#running-the-plugin-with-semantic-kernel), you'll also learn how to load a ChatGPT plugin into Semantic Kernel and use it with a planner.
+At the [end of this article](#running-the-plugin-with-semantic-kernel), you'll also learn how to load a ChatGPT plugin into Semantic Kernel and use it with a planner.
 
 Once we're done, you'll have an Azure Function that exposes each of your plugin's native functions as HTTP endpoints so they can be used by Semantic Kernel _or_ ChatGPT. If you want to see the final solution, you can check out the sample in the public documentation repository.
 
@@ -93,7 +93,7 @@ At this point, you should have five HTTP endpoints in your Azure Function projec
     ```
 2. Open a browser and navigate to _http://localhost:7071/swagger/ui_. You should see the Swagger UI page load.
 
-    :::image type="content" source="../../media/swagger-ui.png" alt-text="Swagger UI":::
+    :::image type="content" source="../../../media/swagger-ui.png" alt-text="Swagger UI":::
 
 3. Test each of the endpoints by clicking the __Try it out__ button and by providing input values.
 

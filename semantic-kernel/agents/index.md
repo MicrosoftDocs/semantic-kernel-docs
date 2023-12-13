@@ -93,7 +93,7 @@ public class AuthorEmailPlanner
 }
 ```
 
-In more advanced planners, you can ask an LLM to generate code that can be executed to complete a task. This is what we call a "code-based" planner and it serves as the basis of our Handlebars planner. To learn more about this planner, see the [Handlebars planner](./planners/handlebars-planner.md) article.
+In more advanced planners, you can ask an LLM to generate code that can be executed to complete a task. This is what we call a "code-based" planner and it serves as the basis of our Handlebars planner. To learn more about this planner, see the [Handlebars planner](./planners/index.md) article.
 
 ### Persona: giving your agent a personality
 Finally, as a software developer, you want to influence how your agent interacts with users. This is where the persona comes in. Often called a "meta prompt" or "instruction", the persona is a prompt that is used to influence how the agent responds to stimuli.
@@ -321,10 +321,9 @@ Now that you've built your first agent, you can now deep dive into the different
 | Component | Description |
 |:-|:-|
 | [The kernel](./kernel/index.md) | The kernel is the core of Semantic Kernel. It is responsible holding all of the information necessary to orchestrate your code with AI. Read this section to learn how to initialize the kernel with your plugins, AI services, and more. |
-| [Prompts](./prompts/index.md) | Prompts are core to eliciting the correct responses from AI models. Read this section to learn how to craft and run prompts with Semantic Kernel. |
+| [Prompts](../prompts/index.md) | Prompts are core to eliciting the correct responses from AI models. Read this section to learn how to craft and run prompts with Semantic Kernel. |
 | [Plugins](./plugins/index.md) | Plugins give you agents skills to manipulate the real world.  Read this section to learn how to create plugins and how to use them with your agent. |
 | [Planners](./planners/index.md) | Planners are prompts that allow you to generate plans to complete a task. Read this section to learn more about the out-of-the-box planners provided by Semantic Kernel. |
-| [Personas](./personas/index.md) | Personas are prompts that allow you to influence how your agent responds to stimuli. Read this section to learn how to create personas and they can be used to influence your agents behavior, personality, and memory. |
 
 > [!div class="nextstepaction"]
 > [Initialize a kernel](./kernel/index.md)

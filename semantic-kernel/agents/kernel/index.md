@@ -113,4 +113,4 @@ For more details on how to configure and leverage these properties, please refer
 Once you're done configuring the kernel, you can learn how to create prompts to run AI services from the kernel.
 
 > [!div class="nextstepaction"]
-> [Learn how to create prompt templates](../prompts/index.md)
+> [Learn about plugins](../plugins/index.md)
