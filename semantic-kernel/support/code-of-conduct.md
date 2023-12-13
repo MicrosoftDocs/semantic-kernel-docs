@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Contributor Covenant Code of Conduct
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 ## Our Pledge
 

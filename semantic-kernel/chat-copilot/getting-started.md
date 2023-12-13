@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # Getting started with Chat Copilot
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 Chat Copilot is an AI chat application sample created for educational purposes. It is built on Microsoft Semantic Kernel and has two components:
 - A frontend [React web app](https://github.com/microsoft/chat-copilot/tree/main/webapp) that provides a user interface for interacting with the Semantic Kernel.

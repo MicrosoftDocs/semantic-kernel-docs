@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # Bibliography
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 > [!IMPORTANT]
 > These items link to sites outside of this learning resource.

@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Additional learning for Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 Want to learn more about Semantic Kernel? Check out these in-depth tutorials and videos. We will add more content over time from our team and community, so check back often! 
 

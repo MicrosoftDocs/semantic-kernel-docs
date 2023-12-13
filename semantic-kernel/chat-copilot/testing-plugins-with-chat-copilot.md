@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 
 # Test your OpenAI plugins with Chat Copilot
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 Chat Copilot allows you to import your own OpenAI plugins and test them in a safe environment. This article will walk you through the process of importing and testing your own OpenAI plugins.
 

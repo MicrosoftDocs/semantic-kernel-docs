@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 
 # Customize Chat Copilot for your use case
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 Most of the customization for Chat Copilot is done in the app settings file. This file is located in the _webapi_ folder and is named [_appsettings.json_](https://github.com/microsoft/chat-copilot/blob/main/webapi/appsettings.json). Most of the configurable settings have been commented to help you understand what they do, in this article we will go over the most important ones.
 
