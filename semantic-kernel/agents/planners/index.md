@@ -119,14 +119,14 @@ When you render the prompt, one of the main things you might notice is that all 
 ```txt
 [AVAILABLE FUNCTIONS]
 
-### `{{MathPlugin-Add}}``
+### `{{MathPlugin-Add}}`
 Description: Add two numbers
 Inputs:
   - number1 double - The first number to add (required)
   - number2 double - The second number to add (required)
 Output: double
 
-### `{{MathPlugin.Divide}}``:
+### `{{MathPlugin.Divide}}`:
 Description: Divide two numbers
 Inputs:
   - number1: double - The first number to divide from (required)
