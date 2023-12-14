@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace></RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -18,9 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" />
-    <PackageReference Include="Microsoft.SemanticKernel.Functions.OpenAPI" />
-    <PackageReference Include="Microsoft.SemanticKernel.Planners.Core" />
+    <!-- <PackageReference Include="Microsoft.SemanticKernel" />
+    <PackageReference Include="Microsoft.SemanticKernel.Functions.OpenAPI" /> -->
+
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/SemanticKernel.MetaPackage/SemanticKernel.MetaPackage.csproj" />
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/Functions/Functions.OpenAPI/Functions.OpenApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

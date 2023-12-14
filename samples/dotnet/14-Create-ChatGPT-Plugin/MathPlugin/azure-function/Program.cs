@@ -1,41 +1,72 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Extensions;
+using System.Text.Json;
+using Plugins.AzureFunctions.Extensions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
 using Models;
+using Plugins;
 
 const string DefaultSemanticFunctionsFolder = "Prompts";
-string semanticFunctionsFolder = Environment.GetEnvironmentVariable("SEMANTIC_PLUGINS_FOLDER") ?? DefaultSemanticFunctionsFolder;
+string semanticFunctionsFolder = Environment.GetEnvironmentVariable("SEMANTIC_SKILLS_FOLDER") ?? DefaultSemanticFunctionsFolder;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
-    .ConfigureServices(services =>
+    .ConfigureAppConfiguration(configuration =>
     {
-        services
-            .AddScoped<IKernel>((providers) =>
+        var config = configuration.SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true);
+        var builtConfig = config.Build();
+    })
+    .ConfigureServices((context, services) =>
+    {
+        services.Configure<JsonSerializerOptions>(options =>
+        {
+            // `ConfigureFunctionsWorkerDefaults` sets the default to ignore casing already.
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });
+
+        services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
+        {
+            var options = new OpenApiConfigurationOptions()
             {
-                // This will be called each time a new Kernel is needed
+                Info = new OpenApiInfo()
+                {
+                    Version = "1.0.0",
+                    Title = "My Plugin",
+                    Description = "This plugin does..."
+                },
+                Servers = DefaultOpenApiConfigurationOptions.GetHostNames(),
+                OpenApiVersion = OpenApiVersionType.V3,
+                //IncludeRequestingHostName = true,
+                ForceHttps = false,
+                ForceHttp = false,
+            };
 
-                // Get a logger instance
-                ILoggerFactory loggerFactory = providers
-                    .GetRequiredService<ILoggerFactory>();
-
-                // Register your AI Providers...
+            return options;
+        });
+        services
+            .AddTransient((providers) =>
+            {
                 var appSettings = AppSettings.LoadSettings();
-                IKernel kernel = new KernelBuilder()
-                    .WithChatCompletionService(appSettings.Kernel)
-                    .WithLoggerFactory(loggerFactory)
-                    .Build();
-
-                // Load your semantic functions...
-                kernel.ImportPromptsFromDirectory(appSettings.AIPlugin.NameForModel, semanticFunctionsFolder);
-
-                return kernel;
+                var builder = Kernel.CreateBuilder();
+                builder.Services.WithChatCompletionService(appSettings.Kernel);
+                builder.Services.AddLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddFilter(level => true);
+                    loggingBuilder.AddConsole();
+                });
+                builder.Plugins.AddFromType<MathPlugin>();
+                return builder.Build();
             })
-            .AddScoped<IAIPluginRunner, AIPluginRunner>();
+            .AddScoped<AIPluginRunner>();
     })
     .Build();
 

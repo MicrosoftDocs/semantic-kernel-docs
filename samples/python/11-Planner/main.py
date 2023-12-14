@@ -1,10 +1,9 @@
-import semantic_kernel as sk
-from plugins.MathPlugin.Math import Math
-from semantic_kernel.planning.basic_planner import BasicPlanner
-import config.add_completion_service
-
-
 async def main():
+    import semantic_kernel as sk
+    from plugins.MathPlugin.Math import Math
+    from semantic_kernel.planning.sequential_planner import SequentialPlanner
+    import config.add_completion_service
+
     # Initialize the kernel
     kernel = sk.Kernel()
     # Add a text or chat completion service using either:
@@ -12,17 +11,18 @@ async def main():
     # kernel.add_chat_service()
     kernel.add_completion_service()
 
-    planner = BasicPlanner()
-
     # Import the native functions
     math_plugin = kernel.import_skill(Math(), "MathPlugin")
 
+    planner = SequentialPlanner(kernel)
+
     ask = "If my investment of 2130.23 dollars increased by 23%, how much would I have after I spent $5 on a latte?"
-    plan = await planner.create_plan_async(ask, kernel)
+
+    # Create a plan
+    plan = await planner.create_plan_async(ask)
 
     # Execute the plan
-    result = await planner.execute_plan_async(plan, kernel)
-
+    result = await plan.invoke_async()
     print("Plan results:")
     print(result)
 

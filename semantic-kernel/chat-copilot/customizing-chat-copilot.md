@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 
 # Customize Chat Copilot for your use case
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 Most of the customization for Chat Copilot is done in the app settings file. This file is located in the _webapi_ folder and is named [_appsettings.json_](https://github.com/microsoft/chat-copilot/blob/main/webapi/appsettings.json). Most of the configurable settings have been commented to help you understand what they do, in this article we will go over the most important ones.
 
@@ -108,7 +107,7 @@ Below are the default prompts for Chat Copilot.
 ```
 
 ## Next step
-Now that you've customized Chat Copilot for your needs, you can now use it to test plugins you have authored using the ChatGPT plugin standard.
+Now that you've customized Chat Copilot for your needs, you can now use it to test plugins you have authored using the OpenAI plugin standard.
 
 > [!div class="nextstepaction"]
-> [Testing ChatGPT plugins](./testing-plugins-with-chat-copilot.md)
+> [Testing OpenAI plugins](./testing-plugins-with-chat-copilot.md)

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "07-Serializing-Prompts", "07-Serializing-Prompts.csproj", "{700F29A0-4E7A-4D7F-A88F-9B893899B368}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{700F29A0-4E7A-4D7F-A88F-9B893899B368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{700F29A0-4E7A-4D7F-A88F-9B893899B368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{700F29A0-4E7A-4D7F-A88F-9B893899B368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{700F29A0-4E7A-4D7F-A88F-9B893899B368}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50F6FC72-C2CB-4438-9097-5268B68F8867}
+	EndGlobalSection
+EndGlobal

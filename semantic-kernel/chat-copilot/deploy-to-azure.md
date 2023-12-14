@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 
 # Deploy Chat Copilot to Azure as a web app service
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 In this how-to guide we will provide steps to deploy Semantic Kernel to Azure as a web app service. 
 Deploying Semantic Kernel as web service to Azure provides a great pathway for developers to take advantage of Azure compute and other services such as Azure Cognitive Services for responsible AI and vectorized databases.  

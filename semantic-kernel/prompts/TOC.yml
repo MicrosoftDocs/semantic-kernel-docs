@@ -1,0 +1,14 @@
+- name: Understanding prompts
+  href: index.md
+- name: Authoring your first prompt
+  href: your-first-prompt.md
+- name: Templatizing prompts
+  href: templatizing-prompts.md
+- name: Calling nested functions in prompts
+  href: calling-nested-functions.md
+- name: Configuring prompts
+  href: configure-prompts.md
+- name: Saving your prompts as files
+  href: saving-prompts-as-files.md
+- name: Prompt template syntax
+  href: prompt-template-syntax.md

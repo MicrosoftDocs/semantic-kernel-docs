@@ -1,8 +1,0 @@
-- name: Inline semantic functions
-  href: inline-semantic-functions.md
-- name: Serializing semantic functions
-  href: serializing-semantic-functions.md
-- name: Templatizing semantic functions
-  href: templatizing-semantic-functions.md
-- name: Calling nested functions
-  href: calling-nested-functions.md

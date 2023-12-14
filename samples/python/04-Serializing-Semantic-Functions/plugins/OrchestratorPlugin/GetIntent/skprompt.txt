@@ -1,6 +1,0 @@
-Bot: How can I help you?
-User: {{$input}}
-
----------------------------------------------
-
-The intent of the user in 5 words or less: 

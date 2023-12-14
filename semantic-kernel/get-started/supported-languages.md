@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Supported Semantic Kernel languages
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 Semantic Kernel plans on providing support to the following languages:
 > [!div class="checklist"]
