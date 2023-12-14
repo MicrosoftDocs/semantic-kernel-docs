@@ -138,7 +138,7 @@ Now that you've created your first native function, you can now allow the AI to 
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/program.cs" range="22-24,37-68" highlight="16":::
+:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/program.cs" range="22-24,37-68" highlight="14":::
 
 When you run this code, you'll be able to ask the AI to perform math for you. For example, you can ask the AI to `Take the square root of 12` and it will return back the correct answer.
 
