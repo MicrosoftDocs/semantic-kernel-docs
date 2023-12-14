@@ -9,16 +9,14 @@ ms.service: semantic-kernel
 ---
 # Chat Copilot: A reference application for Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
-
-Chat Copilot provides a reference application for building a chat experience using Semantic Kernel with an AI agent. The Semantic Kernel team built this application so that you could see how the different concepts of the platform come together to create a single conversational experience. These include leveraging [plugins](../ai-orchestration/plugins/index.md), [planners](../ai-orchestration/planners/index.md), and AI [memories](../memories/index.md).
+Chat Copilot provides a reference application for building a chat experience using Semantic Kernel with an AI agent. The Semantic Kernel team built this application so that you could see how the different concepts of the platform come together to create a single conversational experience. These include leveraging [plugins](../agents/plugins/index.md), [planners](../agents/planners/index.md), and AI [memories](../memories/index.md).
 
 :::image type="content" source="../media/chat-copilot-in-action.gif" alt-text="Chat Copilot in action":::
 
 To access the app, check it out on its [GitHub repo: Chat Copilot](https://github.com/microsoft/chat-copilot).
 
 ## Exploring the app
-With Chat Copilot, you'll have access to an experience that is similar to the paid version of ChatGPT. You can create new conversations with an agent and ask it to perform requests using [ChatGPT plugins](../ai-orchestration/chatgpt-plugins.md).
+With Chat Copilot, you'll have access to an experience that is similar to the paid version of ChatGPT. You can create new conversations with an agent and ask it to perform requests using [OpenAI plugins](../agents/plugins/openai-plugins.md).
 
 ![Chat Copilot reference app](../media/chat-copilot.png)
 

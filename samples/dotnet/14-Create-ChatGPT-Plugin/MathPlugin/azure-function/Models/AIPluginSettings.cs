@@ -6,7 +6,7 @@ namespace Models;
 #pragma warning disable CA1056
 #pragma warning disable CA1034
 
-public class AIPluginSettings
+public class Pluginsettings
 {
     [JsonPropertyName("schema_version")]
     public string SchemaVersion { get; set; } = "v1";

@@ -1,6 +1,6 @@
 # Create a Prompt flow with Semantic Kernel
 
-This console application demonstrates the final solution to the [creating prompt flow](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/evaluate-and-deploy-planners/create-a-prompt-flow-with-semantic-kernel) doc article.
+This console application demonstrates the final solution to the [creating prompt flow](https://learn.microsoft.com/en-us/semantic-kernel/agents/planners/evaluate-and-deploy-planners/create-a-prompt-flow-with-semantic-kernel) doc article.
 
 ## Prerequisites
 

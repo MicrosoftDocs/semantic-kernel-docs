@@ -2,17 +2,10 @@
 
 // Create a default kernel
 //////////////////////////////////////////////////////////////////////////////////
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Plugins.Core;
-
-var kernel = Kernel.Builder
-    .Build();
-var time = kernel.ImportFunctions(new TimePlugin());
-var result = await kernel.RunAsync(time["Today"]);
-
-Console.WriteLine(result);
-
+using Plugins;
 
 var LlmService = Env.Var("Global:LlmService")!;
 
@@ -21,31 +14,32 @@ if (LlmService == "AzureOpenAI")
     // Create a kernel with a logger and Azure OpenAI chat completion service
     //////////////////////////////////////////////////////////////////////////////////
     var AzureOpenAIDeploymentName = Env.Var("AzureOpenAI:ChatCompletionDeploymentName")!;
+    var AzureOpenAIModelId = Env.Var("AzureOpenAI:ChatCompletionModelId")!;
     var AzureOpenAIEndpoint = Env.Var("AzureOpenAI:Endpoint")!;
     var AzureOpenAIApiKey = Env.Var("AzureOpenAI:ApiKey")!;
 
-    using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-    {
-        builder
-            .SetMinimumLevel(0)
-            .AddDebug();
+    var builder = Kernel.CreateBuilder(); ;
+    builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
+    builder.Services.AddAzureOpenAIChatCompletion(
+        AzureOpenAIDeploymentName,   // The name of your deployment (e.g., "gpt-35-turbo")
+        AzureOpenAIEndpoint,         // The endpoint of your Azure OpenAI service
+        AzureOpenAIApiKey,           // The API key of your Azure OpenAI service
+        modelId: AzureOpenAIModelId  // The model ID of your Azure OpenAI service
+    );
+    builder.Plugins.AddFromType<TimePlugin>();
+    builder.Plugins.AddFromPromptDirectory("./plugins/WriterPlugin");
+
+    var kernel = builder.Build();
+
+    // Get the current time
+    var currentTime = await kernel.InvokeAsync("TimePlugin", "GetCurrentUtcTime");
+    Console.WriteLine(currentTime);
+
+    // Write a poem with the WriterPlugin.ShortPoem function using the current time as input
+    var poemResult = await kernel.InvokeAsync("WriterPlugin", "ShortPoem", new() {
+        { "input", currentTime }
     });
-
-    var kernelWithConfiguration = Kernel.Builder
-        .WithLoggerFactory(loggerFactory)
-        .WithAzureChatCompletionService(
-            AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "gpt-35-turbo")
-            AzureOpenAIEndpoint,        // The endpoint of your Azure OpenAI service
-            AzureOpenAIApiKey           // The API key of your Azure OpenAI service
-        )
-        .Build();
-
-    var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
-    var writerPlugin = kernelWithConfiguration
-         .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
-
-    result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
-    Console.WriteLine(result);
+    Console.WriteLine(poemResult);
 }
 else
 {
@@ -55,29 +49,26 @@ else
     var OpenAIApiKey = Env.Var("OpenAI:ApiKey")!;
     var OpenAIOrgId = Env.Var("OpenAI:OrgId")!;
 
-    using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-    {
-        builder
-            .SetMinimumLevel(0)
-            .AddDebug();
+    var builder = Kernel.CreateBuilder();
+    builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
+    builder.Services.AddOpenAIChatCompletion(
+        OpenAIModelId,       // The model ID of your OpenAI service
+        OpenAIApiKey,        // The API key of your OpenAI service
+        OpenAIOrgId          // The organization ID of your OpenAI service
+    );
+    builder.Plugins.AddFromType<TimePlugin>();
+    builder.Plugins.AddFromPromptDirectory("./plugins/WriterPlugin");
+
+    var kernel = builder.Build();
+
+    // Get the current time
+    var currentTime = await kernel.InvokeAsync("TimePlugin", "GetCurrentUtcTime");
+    Console.WriteLine(currentTime);
+
+    // Write a poem with the WriterPlugin.ShortPoem function using the current time as input
+    var poem = await kernel.InvokeAsync("WriterPlugin", "ShortPoem", new() {
+        { "input", currentTime }
     });
-
-    var kernelWithConfiguration = Kernel.Builder
-        .WithLoggerFactory(loggerFactory)
-        .WithOpenAIChatCompletionService(
-            OpenAIModelId,              // The name of your deployment (e.g., "gpt-35-turbo")
-            OpenAIApiKey,               // The API key of your Azure OpenAI service
-            OpenAIOrgId                 // The endpoint of your Azure OpenAI service
-        )
-        .Build();
-
-    var pluginsDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "plugins");
-    var writerPlugin = kernelWithConfiguration
-         .ImportSemanticFunctionsFromDirectory(pluginsDirectory, "WriterPlugin");
-
-    result = await kernelWithConfiguration.RunAsync("Hello world", writerPlugin["ShortPoem"]);
-    Console.WriteLine(result);
+    Console.WriteLine(poem);
 }
-
-
 

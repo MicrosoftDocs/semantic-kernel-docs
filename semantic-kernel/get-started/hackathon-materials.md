@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # Hackathon materials for Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 With these materials you can run your own Semantic Kernel Hackathon, a hands-on event where you can learn and create AI solutions using Semantic Kernel tools and resources. 
 

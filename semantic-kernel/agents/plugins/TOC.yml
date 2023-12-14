@@ -1,0 +1,8 @@
+- name: Understanding plugins
+  href: index.md
+- name: Native functions
+  href: using-the-KernelFunction-decorator.md
+- name: OpenAI plugins
+  href: openai-plugins.md
+- name: Out-of-the-box plugins
+  href: out-of-the-box-plugins.md

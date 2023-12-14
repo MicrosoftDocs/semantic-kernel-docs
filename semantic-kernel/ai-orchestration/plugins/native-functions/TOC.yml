@@ -1,6 +1,0 @@
-- name: Run native code with Semantic Kernel
-  href: using-the-SKFunction-decorator.md
-- name: Passing in multiple parameters
-  href: multiple-parameters.md
-- name: Calling nested functions
-  href: calling-nested-functions.md

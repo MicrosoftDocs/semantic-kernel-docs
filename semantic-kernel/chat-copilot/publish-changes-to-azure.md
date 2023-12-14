@@ -37,7 +37,7 @@ dotnet publish CopilotChatApi.csproj --configuration Release --arch x64 --os win
 This will create a directory which contains all the files needed for a deployment:
 <Br>
 ```cmd
-../webapi/bin/Release/net6.0/win-x64/publish'
+../webapi/bin/Release/net8.0/win-x64/publish'
 ```
 </br>
 

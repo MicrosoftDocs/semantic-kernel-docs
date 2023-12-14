@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # Support for Semantic Kernel
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 👋 Welcome! There are a variety of ways to get supported in the Semantic Kernel (SK) world. 
 

@@ -13,7 +13,7 @@ public class AppSettings
     public const string DefaultConfigFile = "appsettings.json";
 
     public KernelSettings Kernel { get; set; }
-    public AIPluginSettings AIPlugin { get; set; }
+    public Pluginsettings AIPlugin { get; set; }
 
     /// <summary>
     /// Load the kernel settings from settings.json if the file exists and if not attempt to use user secrets.

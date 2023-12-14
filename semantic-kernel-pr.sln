@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{D502
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet", "dotnet", "{50F4184D-4621-405B-AF6A-0F3E93F198A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "06-Calling-Nested-Functions-In-Semantic-Functions", "samples\dotnet\06-Calling-Nested-Functions-in-Semantic-Functions\06-Calling-Nested-Functions-In-Semantic-Functions.csproj", "{D3F29788-75FE-410E-A858-9D26963E0DB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "05-Nested-Functions-In-Prompts", "samples\dotnet\05-Nested-Functions-In-Prompts\05-Nested-Functions-In-Prompts.csproj", "{D3F29788-75FE-410E-A858-9D26963E0DB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "04-Serializing-Semantic-Functions", "samples\dotnet\04-Serializing-Semantic-Functions\04-Serializing-Semantic-Functions.csproj", "{7A4EF630-44F2-4D00-96E4-2B0C98152FB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "07-Serializing-Prompts", "samples\dotnet\07-Serializing-Prompts\07-Serializing-Prompts.csproj", "{7A4EF630-44F2-4D00-96E4-2B0C98152FB8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "01-Kernel-Intro", "samples\dotnet\01-Kernel-Intro\01-Kernel-Intro.csproj", "{27ABE625-D6D3-46B9-A45E-968AC7A4C3A1}"
 EndProject
@@ -21,15 +21,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "02-Adding-AI-Services", "sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "10-Chaining-Functions", "samples\dotnet\10-Chaining-Functions\10-Chaining-Functions.csproj", "{65AC95D1-65EC-46A2-AC90-4A45BD11B88B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "03-Inline-Semantic-Functions", "samples\dotnet\03-Inline-Semantic-Functions\03-Inline-Semantic-Functions.csproj", "{A866A455-2A72-4BB6-9572-0424B73DCD99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "03-Intro-to-Prompts", "samples\dotnet\03-Intro-to-Prompts\03-Intro-to-Prompts.csproj", "{A866A455-2A72-4BB6-9572-0424B73DCD99}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "15-Using-Context-for-Chat", "samples\dotnet\15-Using-Context-for-Chat\15-Using-Context-for-Chat.csproj", "{0EAABCC5-FD3E-42C6-8BF6-BE267393547C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "07-Simple-Native-Functions", "samples\dotnet\07-Simple-Native-Functions\07-Simple-Native-Functions.csproj", "{88F66583-45B2-4B10-8D02-35C9808C643F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "08-Creating-Functions-For-AI", "samples\dotnet\08-Creating-Functions-For-AI\08-Creating-Functions-For-AI.csproj", "{88F66583-45B2-4B10-8D02-35C9808C643F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "09-Calling-Nested-Functions-in-Native-Functions", "samples\dotnet\09-Calling-Nested-Functions-in-Native-Functions\09-Calling-Nested-Functions-in-Native-Functions.csproj", "{2A531F4E-244C-4D9A-BC8B-009B0F77840C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "05-Templatizing-Semantic-Functions", "samples\dotnet\05-Templatizing-Semantic-Functions\05-Templatizing-Semantic-Functions.csproj", "{CE17D957-04F6-4813-8CB1-33ECF2D0CAD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "04-Templatizing-Prompts", "samples\dotnet\04-Templatizing-Prompts\04-Templatizing-Prompts.csproj", "{CE17D957-04F6-4813-8CB1-33ECF2D0CAD7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "14-Create-ChatGPT-Plugin", "14-Create-ChatGPT-Plugin", "{0460D6D8-48F3-4FC6-A2C5-FE498154DA43}"
 EndProject

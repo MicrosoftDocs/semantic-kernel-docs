@@ -9,7 +9,6 @@ ms.service: semantic-kernel
 ---
 # Start learning how to use Semantic Kernel
 
-[!INCLUDE [pat_large.md](../includes/pat_large.md)]
 
 In just a few steps, you can start running  the getting started guides for Semantic Kernel in either C# or Python. After completing the guides, you'll know how to...
 - Configure your local machine to run Semantic Kernel
@@ -96,10 +95,10 @@ The guides are an easy way run sample code and learn how to use Semantic Kernel.
 
 | Experience level     | Next step     |
 |--------------|-----------|
-| For beginners who are just starting to learn about AI | [Learn prompt engineering](../prompt-engineering/index.md) |
-| For people who are well versed in prompt engineering | [Orchestrate AI plugins](../ai-orchestration/index.md) |
+| For beginners who are just starting to learn about AI | [Learn prompt engineering](../prompts/index.md) |
+| For people who are well versed in prompt engineering | [Orchestrate AI plugins](../agents/index.md) |
 | For people familiar with using AI plugins |  [Store and retrieve memory ](../memories/index.md) |
 
 
 > [!div class="nextstepaction"]
-> [Learn how to Orchestrate AI](../ai-orchestration/index.md)
+> [Learn how to Orchestrate AI](../agents/index.md)

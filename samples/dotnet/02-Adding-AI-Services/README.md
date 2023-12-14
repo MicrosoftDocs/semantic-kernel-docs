@@ -1,10 +1,10 @@
-# Creating semantic functions
+# Creating prompts
 
-The `02-Adding-AI-Services` console application shows the final solution to the [adding AI services](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/kernel/adding-services) doc article.
+The `02-Adding-AI-Services` console application shows the final solution to the [adding AI services](https://learn.microsoft.com/en-us/semantic-kernel/agents/kernel/adding-services) doc article.
 
 ## Prerequisites
 
-- [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0) is required to run this sample.
+- [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0) is required to run this sample.
 - Install the recommended extensions
 - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 - [Semantic Kernel Tools](https://marketplace.visualstudio.com/items?itemName=ms-semantic-kernel.semantic-kernel) (optional)
@@ -20,11 +20,12 @@ This sample has been tested with the following models:
 | OpenAI       | Text Completion | text-davinci-003 |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-3.5-turbo    |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-3.5-turbo    |          0613 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-3.5-turbo    |          1106 | ✅        |
 | OpenAI       | Chat Completion | gpt-4            |             1 | ✅        |
 | OpenAI       | Chat Completion | gpt-4            |          0314 | ✅        |
-| Azure OpenAI | Text Completion | text-davinci-003 |             1 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-3.5-turbo    |          0301 | ✅        |
-| Azure OpenAI | Chat Completion | gpt-4       |          0314 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-4            |          0613 | ✅        |
+| Azure OpenAI | Chat Completion | gpt-4            |          1106 | ✅        |
 
 ### Using .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 
@@ -50,6 +51,7 @@ dotnet user-secrets set "Global:LlmService" "AzureOpenAI"
 
 dotnet user-secrets set "AzureOpenAI:DeploymentType" "chat-completion"
 dotnet user-secrets set "AzureOpenAI:ChatCompletionDeploymentName" "gpt-35-turbo"
+dotnet user-secrets set "AzureOpenAI:ChatCompletionModelId" "gpt-3.5-turbo-0613"
 dotnet user-secrets set "AzureOpenAI:Endpoint" "... your Azure OpenAI endpoint ..."
 dotnet user-secrets set "AzureOpenAI:ApiKey" "... your Azure OpenAI key ..."
 ```

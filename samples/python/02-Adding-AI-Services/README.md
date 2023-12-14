@@ -1,6 +1,6 @@
-# Creating semantic functions
+# Creating prompts
 
-This console application demonstrates the final solution to the [adding AI services](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/kernel/adding-services) doc article.
+This console application demonstrates the final solution to the [adding AI services](https://learn.microsoft.com/en-us/semantic-kernel/agents/kernel/adding-services) doc article.
 
 ## Prerequisites
 

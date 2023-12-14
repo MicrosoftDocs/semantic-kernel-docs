@@ -17,25 +17,29 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup>
+      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+      <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    
+  </PropertyGroup>
+  
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="3.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.12.0" OutputItemType="Analyzer" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.18.0" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="2.0.0-preview2" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="2.0.0-preview2" TreatAsUsed="true" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.0.0-beta8" />
-    <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.0.0-beta8" />
-    <PackageReference Include="Microsoft.SemanticKernel.TemplateEngine.Handlebars" Version="1.0.0-beta8" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform"  />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets"/>
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk"  OutputItemType="Analyzer" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker"  />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi"  />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi"  TreatAsUsed="true" />
+    <PackageReference Include="Microsoft.SemanticKernel"  />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars"  />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\semantic-functions-generator\semantic-functions-generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\kernel-functions-generator\kernel-functions-generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(IntDir).generated\semantic-functions-generator\semantic-functions-generator.SemanticSkillGenerator\**">
+    <None Include="$(IntDir).generated\kernel-functions-generator\kernel-functions-generator.SemanticSkillGenerator\**">
       <Link>.generated\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </None>
     <None Include="shared\PluginShared.csproj" />

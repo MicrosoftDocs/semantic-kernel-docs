@@ -1,20 +1,14 @@
-from dotenv import dotenv_values
-import semantic_kernel as sk
-from semantic_kernel.core_skills import TimeSkill
-from semantic_kernel.connectors.ai.open_ai import (
-    OpenAIChatCompletion,
-    AzureChatCompletion,
-)
-
-
 async def main():
+    from dotenv import dotenv_values
+    import semantic_kernel as sk
+    from semantic_kernel.core_skills import TimeSkill
+    from semantic_kernel.connectors.ai.open_ai import (
+        OpenAIChatCompletion,
+        AzureChatCompletion,
+    )
+
     # Initialize the kernel
     kernel = sk.Kernel()
-
-    time = kernel.import_skill(TimeSkill())
-    result = await kernel.run_async(time["today"])
-
-    print(result)
 
     config = dotenv_values(".env")
     llm_service = config.get("GLOBAL__LLM_SERVICE", None)
@@ -39,17 +33,24 @@ async def main():
             ),
         )
 
-    plugins_directory = "./plugins"
+    # Import the TimeSkill
+    time = kernel.import_skill(TimeSkill())
 
     # Import the WriterPlugin from the plugins directory.
+    plugins_directory = "./plugins"
     writer_plugin = kernel.import_semantic_skill_from_directory(
         plugins_directory, "WriterPlugin"
     )
 
-    # Run the ShortPoem function with the context.
-    result = await kernel.run_async(writer_plugin["ShortPoem"], input_str="Hello world")
+    # Run the current time function
+    currentTime = await kernel.run_async(time["today"])
+    print(currentTime)
 
-    print(result)
+    # Run the short poem function
+    poemResult = await kernel.run_async(
+        writer_plugin["ShortPoem"], input_str=str(currentTime)
+    )
+    print(poemResult)
 
 
 # Run the main function

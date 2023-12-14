@@ -1,14 +1,13 @@
-from dotenv import dotenv_values
-import semantic_kernel as sk
-from semantic_kernel.connectors.ai.open_ai import (
-    OpenAIChatCompletion,
-    AzureChatCompletion,
-    OpenAITextCompletion,
-    AzureTextCompletion,
-)
-
-
 async def main():
+    from dotenv import dotenv_values
+    import semantic_kernel as sk
+    from semantic_kernel.connectors.ai.open_ai import (
+        OpenAIChatCompletion,
+        AzureChatCompletion,
+        OpenAITextCompletion,
+        AzureTextCompletion,
+    )
+
     config = dotenv_values(".env")
     llm_service = config.get("GLOBAL__LLM_SERVICE", None)
 

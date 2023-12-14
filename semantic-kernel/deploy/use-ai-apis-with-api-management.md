@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 
 # Protect your Azure OpenAI API keys with Azure API Management
 
-[!INCLUDE [subheader.md](../includes/pat_large.md)]
 
 With [Azure API Management](/azure/api-management/api-management-key-concepts), you can protect your AI API keys and manage access to your AI APIs. This is helpful if you want to give your users or developers access to  Azure OpenAPI APIs without giving them direct access to your keys or to manage access to your AI APIs directly from Azure.
 
