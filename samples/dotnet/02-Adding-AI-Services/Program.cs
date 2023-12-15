@@ -20,10 +20,10 @@ if (LlmService == "AzureOpenAI")
 
         var builder = Kernel.CreateBuilder();
         builder.Services.AddAzureOpenAIChatCompletion(
-            AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "gpt-35-turbo")
-            AzureOpenAIEndpoint,        // The endpoint of your Azure OpenAI service
-            AzureOpenAIApiKey,           // The API key of your Azure OpenAI service
-            modelId: AzureOpenAIModelId         // The model ID of your Azure OpenAI service
+            deploymentName: AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "gpt-35-turbo")
+            endpoint: AzureOpenAIEndpoint,              // The endpoint of your Azure OpenAI service
+            apiKey: AzureOpenAIApiKey,                  // The API key of your Azure OpenAI service
+            modelId: AzureOpenAIModelId                 // The model ID of your Azure OpenAI service
         );
         builder.Plugins.AddFromPromptDirectory(pluginDirectory);
         var kernel = builder.Build();
@@ -45,10 +45,10 @@ if (LlmService == "AzureOpenAI")
 
         var builder = Kernel.CreateBuilder();
         builder.Services.AddAzureOpenAITextGeneration(
-            AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "text-davinci-003")
-            AzureOpenAIModelId,         // The model ID of your Azure OpenAI service
-            AzureOpenAIEndpoint,        // The endpoint of your Azure OpenAI service
-            AzureOpenAIApiKey           // The API key of your Azure OpenAI service
+            deploymentName: AzureOpenAIDeploymentName,  // The name of your deployment (e.g., "text-davinci-003")
+            endpoint: AzureOpenAIEndpoint,              // The endpoint of your Azure OpenAI service
+            apiKey: AzureOpenAIApiKey,                  // The API key of your Azure OpenAI service
+            modelId: AzureOpenAIModelId                 // The model ID of your Azure OpenAI service
         );
         builder.Plugins.AddFromPromptDirectory(pluginDirectory);
         var kernel = builder.Build();
@@ -74,9 +74,9 @@ else
 
         var builder = Kernel.CreateBuilder();
         builder.Services.AddOpenAIChatCompletion(
-            OpenAIModelId,              // The name of your deployment (e.g., "gpt-3.5-turbo")
-            OpenAIApiKey,               // The API key of your Azure OpenAI service
-            OpenAIOrgId                 // The endpoint of your Azure OpenAI service
+            modelId: OpenAIModelId,              // The name of your deployment (e.g., "gpt-3.5-turbo")
+            apiKey: OpenAIApiKey,                // The API key of your Azure OpenAI service
+            orgId: OpenAIOrgId                   // The endpoint of your Azure OpenAI service
         );
         builder.Plugins.AddFromPromptDirectory(pluginDirectory);
         var kernel = builder.Build();
@@ -97,9 +97,9 @@ else
 
         var builder = Kernel.CreateBuilder();
         builder.Services.AddOpenAITextGeneration(
-            OpenAIModelId,              // The name of your deployment (e.g., "gpt-3.5-turbo")
-            OpenAIApiKey,               // The API key of your Azure OpenAI service
-            OpenAIOrgId                 // The endpoint of your Azure OpenAI service
+            modelId: OpenAIModelId,              // The name of your deployment (e.g., "gpt-3.5-turbo")
+            apiKey: OpenAIApiKey,                // The API key of your Azure OpenAI service
+            orgId: OpenAIOrgId                   // The endpoint of your Azure OpenAI service
         );
         builder.Plugins.AddFromPromptDirectory(pluginDirectory);
         var kernel = builder.Build();
