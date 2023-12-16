@@ -67,7 +67,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 ## Calling nested functions in Handlebars
 In the previous article, we showed how to use the Handlebars template engine to create the `getIntent` prompt. In this article, we'll show you how to update this prompt with the same nested function.
 
-Similar to the previous example, we can use the `SummarizeConversation` function to summarize the conversation history before asking for the intent. The only difference is that we'll need to use the Handlebars syntax to call the function which requires us to use an `_` between the plugin name and function name instead of a `.`.
+Similar to the previous example, we can use the `SummarizeConversation` function to summarize the conversation history before asking for the intent. The only difference is that we'll need to use the Handlebars syntax to call the function which requires us to use an `-` between the plugin name and function name instead of a `.`.
 
 :::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="42-63" highlight="15":::
 
