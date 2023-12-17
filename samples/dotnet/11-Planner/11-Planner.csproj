@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" />
-    <PackageReference Include="Microsoft.SemanticKernel.Planners.Handlebars" />
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/SemanticKernel.MetaPackage/SemanticKernel.MetaPackage.csproj" />
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/Planners/Planners.Handlebars/Planners.Handlebars.csproj" />
   </ItemGroup>
 
   <ItemGroup>

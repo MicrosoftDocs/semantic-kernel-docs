@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" />
+    <!-- <PackageReference Include="Microsoft.SemanticKernel" /> -->
+
+    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/SemanticKernel.MetaPackage/SemanticKernel.MetaPackage.csproj" />
   </ItemGroup>
 
   <ItemGroup>
