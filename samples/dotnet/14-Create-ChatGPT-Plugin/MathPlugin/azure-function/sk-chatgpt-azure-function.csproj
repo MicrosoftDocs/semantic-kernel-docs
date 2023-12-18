@@ -38,11 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\semantic-functions-generator\semantic-functions-generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\kernel-functions-generator\kernel-functions-generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(IntDir).generated\semantic-functions-generator\semantic-functions-generator.SemanticSkillGenerator\**">
+    <None Include="$(IntDir).generated\kernel-functions-generator\kernel-functions-generator.SemanticSkillGenerator\**">
       <Link>.generated\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </None>
     <None Include="shared\PluginShared.csproj" />

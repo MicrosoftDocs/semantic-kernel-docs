@@ -8,7 +8,7 @@
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll": true
+      "source.fixAll": "explicit"
     },
     "[csharp]": {
       "editor.defaultFormatter": "ms-dotnettools.csharp"
@@ -74,5 +74,11 @@
     },
     "cSpell.words": [
       "Partitioner"
-    ]
+    ],
+    "[typescript][typescriptreact]": {
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+      }
+    }
   }
