@@ -24,6 +24,9 @@ Once we're done, you'll have an Azure Function that exposes each of your plugin'
 | C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/14-Create-ChatGPT-Plugin) |
 | Python | _Coming soon_ |
 
+> [!Important]
+> Importing OpenAI plugins is currently marked experimental in the C# SDK until we finalize the API surface. If you would like to use this feature, add `<NoWarn>SKEXP0042</NoWarn>` in your _.csproj_ file. Alternatively, you can add `#pragma warning disable SKEXP0042` in the file that imports an OpenAI plugin.
+
 ## Prerequisites
 To complete this tutorial, you'll need the following:
 - [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools) version 4.x.

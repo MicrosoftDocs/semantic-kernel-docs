@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
-using Json.More;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Planning.Handlebars;
@@ -26,7 +25,11 @@ public class MathSolver
     )
     {
         var kernelWithMath = kernel.Clone();
+
+        // Remove the math solver plugin so that we don't get into an infinite loop
         kernelWithMath.Plugins.Remove(kernelWithMath.Plugins["MathSolver"]);
+
+        // Add the math plugin so the LLM can solve the problem
         kernelWithMath.Plugins.AddFromType<MathPlugin>();
 
         var planner = new HandlebarsPlanner(new HandlebarsPlannerOptions() { AllowLoops = true });

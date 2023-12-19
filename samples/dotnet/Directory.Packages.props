@@ -15,16 +15,15 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.0.0-rc4" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Yaml" Version="1.0.0-rc4" />
     <!-- Newtonsoft.Json -->
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <!-- Microsoft.SemanticKernel -->
-    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.0.0-rc4" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Functions.OpenAPI" Version="1.0.0-rc4" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Planners.Core" Version="1.0.0-rc4" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.0.0-rc4" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Planners.Handlebars" Version="1.0.0-rc4" />
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.0.1" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Plugins.OpenApi" Version="1.0.1-alpha" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.0.1-alpha" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Planners.Handlebars" Version="1.0.1-preview" />
+    <PackageVersion Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.0.1" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Yaml" Version="1.0.1" />
     <!-- Microsoft.Azure -->
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.12.0" />
