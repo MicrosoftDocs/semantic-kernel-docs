@@ -48,5 +48,5 @@ while (true)
     Console.WriteLine("Assistant > " + result);
 
     // Add the message from the agent to the chat history
-    history.AddMessage(result);
+    history.AddMessage(result.Role, result.Content);
 }

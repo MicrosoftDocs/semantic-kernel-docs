@@ -21,6 +21,12 @@ If you want to see the final solution, you can check out the following samples i
 | C# |  [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/10-Chaining-Functions)  | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/11-Planner) |
 | Python |  [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/10-Chaining-Functions) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/11-Planner) |
 
+> [!Tip]
+> If you previously used the Action, Sequential, or Stepwise planners, please upgrade to the latest planners: Handlebars and Function calling stepwise planner. You can follow the migration guide on our blog to learn how to make the move.
+
+> [!Important]
+> All planners are currently marked experimental in the C# SDK until we finalize the API surface. If you would like to use them, add `<NoWarn>SKEXP0060</NoWarn>` in your _.csproj_ file for the Handlebars planner or `<NoWarn>SKEXP0061</NoWarn>` in your _.csproj_ file for the stepwise planner. Alternatively, you can add `#pragma warning disable SKEXP0060` or `#pragma warning disable SKEXP0061` in the file that uses the planners.
+
 ## What is a planner?
 Planner is a function that takes a user's ask and returns back a plan on how to accomplish the request. It does so by using AI to mix-and-match the plugins registered in the kernel so that it can recombine them into a series of steps that complete a goal.
 
@@ -40,7 +46,7 @@ To instantiate a planner, all you need to do is pass in a configuration object.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="32" :::
+:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="35" :::
 
 # [Python](#tab/python)
 In Python, you currently need to pass in the kernel as well.
@@ -55,7 +61,7 @@ Now that we have planner, we can use it to create a plan for a user's ask and th
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="34-40" :::
+:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="37-43" :::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../samples/python/11-Planner/main.py" range="21-29":::
