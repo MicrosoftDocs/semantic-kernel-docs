@@ -30,11 +30,8 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker"  />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi"  />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi"  TreatAsUsed="true" />
-    <!-- <PackageReference Include="Microsoft.SemanticKernel"  />
-    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplate.Handlebars"  /> -->
-
-    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/SemanticKernel.MetaPackage/SemanticKernel.MetaPackage.csproj" />
-    <ProjectReference Include="/Users/matthewbolanos/semantic-kernel/dotnet/src/Extensions/PromptTemplates.Handlebars/PromptTemplates.Handlebars.csproj" />
+    <PackageReference Include="Microsoft.SemanticKernel"  />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars"  />
   </ItemGroup>
 
   <ItemGroup>
