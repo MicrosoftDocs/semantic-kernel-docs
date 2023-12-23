@@ -53,7 +53,7 @@ var getIntent = kernel.CreateFunctionFromPrompt(
             {{/each}}
         {{/each}}
 
-        {{ConversationSummaryPlugin.SummarizeConversation history}}
+        {{ConversationSummaryPlugin-SummarizeConversation history}}
 
         <message role=""user"">{{request}}</message>
         <message role=""system"">Intent:</message>",
