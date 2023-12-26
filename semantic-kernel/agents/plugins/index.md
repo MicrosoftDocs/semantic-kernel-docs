@@ -63,16 +63,15 @@ Now that you know what a plugin is, let's take a look at how to create one. With
 Instead of providing a separate configuration file with semantic descriptions, planners are able to use annotations in the code to understand how the function behaves. Below are examples of the annotations used by planner in both C# and Python for out-of-the-box native functions.
 
 # [C#](#tab/Csharp)
-The following code is an excerpt from the `DocumentSkill` plugin, which can be found in the [document plugin](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Document) folder in the GitHub repository. It demonstrates how you can use the `SKFunction` and `SKFunctionInput` attributes to describe the function's input and output to planner.
+The following code is an excerpt from the `DocumentPlugin` plugin, which can be found in the [document plugin](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Plugins/Plugins.Document) folder in the GitHub repository. It demonstrates how you can use the `KernelFunction` and `Description` attributes to describe the function's input and output to planner.
 
 ```csharp
-[SKFunction, Description("Read all text from a document")]
 public async Task<string> ReadTextAsync(
-   [Description("Path to the file to read")] string filePath
-)
+        [Description("Path to the file to read")] string filePath,
+        CancellationToken cancellationToken = default)
 {
-    this._logger.LogInformation("Reading text from {0}", filePath);
-    using var stream = await this._fileSystemConnector.GetFileContentStreamAsync(filePath).ConfigureAwait(false);
+    this._logger.LogDebug("Reading text from {0}", filePath);
+    using var stream = await this._fileSystemConnector.GetFileContentStreamAsync(filePath, cancellationToken).ConfigureAwait(false);
     return this._documentConnector.ReadText(stream);
 }
 ```
@@ -106,7 +105,7 @@ def add(self, initial_value_text: str, context: SKContext) -> str:
 
 You can learn more about creating native functions in the [Creating native functions](./using-the-KernelFunction-decorator.md) section. In this article you'll learn the best practices for the following:
 > [!div class="checklist"]
-> * How to create simple native functions with the `SKFunction` decorator
+> * How to create simple native functions with the `KernelFunction` decorator
 > * Using multiple input parameters with native functions
 > * Calling nested functions from within native functions
 
