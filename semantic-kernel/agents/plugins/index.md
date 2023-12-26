@@ -66,6 +66,7 @@ Instead of providing a separate configuration file with semantic descriptions, p
 The following code is an excerpt from the `DocumentPlugin` plugin, which can be found in the [document plugin](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Plugins/Plugins.Document) folder in the GitHub repository. It demonstrates how you can use the `KernelFunction` and `Description` attributes to describe the function's input and output to planner.
 
 ```csharp
+[KernelFunction, Description("Read all text from a document")]
 public async Task<string> ReadTextAsync(
         [Description("Path to the file to read")] string filePath,
         CancellationToken cancellationToken = default)
