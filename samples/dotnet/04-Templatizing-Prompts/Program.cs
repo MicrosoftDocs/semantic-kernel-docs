@@ -60,7 +60,7 @@ var getIntent = kernel.CreateFunctionFromPrompt(
             {{/each}}
         {{/each}}
 
-        {{#each chatHistory}}
+        {{#each history}}
             <message role=""{{role}}"">{{content}}</message>
         {{/each}}
 
