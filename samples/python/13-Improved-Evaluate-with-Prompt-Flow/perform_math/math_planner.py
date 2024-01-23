@@ -25,8 +25,8 @@ def my_python_tool(
             "chat_completion",
             AzureChatCompletion(
                 deployment_name,
-                AzureOpenAIConnection.api_base,
-                AzureOpenAIConnection.api_key,
+                endpoint=AzureOpenAIConnection.api_base,
+                api_key=AzureOpenAIConnection.api_key,
             ),
         )
     elif deployment_type == "text-completion":
@@ -34,8 +34,8 @@ def my_python_tool(
             "text_completion",
             AzureTextCompletion(
                 deployment_name,
-                AzureOpenAIConnection.api_base,
-                AzureOpenAIConnection.api_key,
+                endpoint=AzureOpenAIConnection.api_base,
+                api_key=AzureOpenAIConnection.api_key,
             ),
         )
 
