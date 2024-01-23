@@ -29,8 +29,8 @@ def my_python_tool(
             "chat_completion",
             AzureChatCompletion(
                 deployment_name,
-                AzureOpenAIConnection.api_base,
-                AzureOpenAIConnection.api_key,
+                endpoint=AzureOpenAIConnection.api_base,
+                api_key=AzureOpenAIConnection.api_key,
             ),
         )
     elif deployment_type == "text-completion":
@@ -38,15 +38,15 @@ def my_python_tool(
             "text_completion",
             AzureTextCompletion(
                 deployment_name,
-                AzureOpenAIConnection.api_base,
-                AzureOpenAIConnection.api_key,
+                endpoint=AzureOpenAIConnection.api_base,
+                api_key=AzureOpenAIConnection.api_key,
             ),
         )
 
     planner = SequentialPlanner(kernel=kernel)
 
     # Import the native functions
-    math_plugin = kernel.import_skill(Math(), "MathPlugin")
+    math_plugin = kernel.import_plugin(Math(), "MathPlugin")
 
     ask = "Use the available math functions to solve this word problem: " + input
 
@@ -56,7 +56,7 @@ def my_python_tool(
     result = asyncio.run(kernel.run_async(plan)).result
 
     for index, step in enumerate(plan._steps):
-        print("Function: " + step.skill_name + "." + step._function.name)
+        print("Function: " + step.plugin_name + "." + step._function.name)
         print("Input vars: " + str(step.parameters.variables))
         print("Output vars: " + str(step._outputs))
     print("Result: " + str(result))
