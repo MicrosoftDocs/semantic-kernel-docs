@@ -1,6 +1,6 @@
 async def main():
     import semantic_kernel as sk
-    from semantic_kernel.core_skills import ConversationSummarySkill
+    from semantic_kernel.core_plugins import ConversationSummaryPlugin
     import config.add_completion_service
 
     # Initialize the kernel
@@ -11,8 +11,8 @@ async def main():
     kernel.add_completion_service()
 
     # Import the ConversationSummaryPlugin
-    kernel.import_skill(
-        ConversationSummarySkill(kernel=kernel), skill_name="ConversationSummaryPlugin"
+    kernel.import_plugin(
+        ConversationSummaryPlugin(kernel=kernel), plugin_name="ConversationSummaryPlugin"
     )
 
     # Create the history

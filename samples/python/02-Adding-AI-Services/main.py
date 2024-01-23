@@ -62,7 +62,7 @@ async def main():
     plugins_directory = "./plugins"
 
     # Import the WriterPlugin from the plugins directory.
-    writer_plugin = kernel.import_semantic_skill_from_directory(
+    writer_plugin = kernel.import_semantic_plugin_from_directory(
         plugins_directory, "WriterPlugin"
     )
 

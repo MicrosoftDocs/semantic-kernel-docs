@@ -1,7 +1,7 @@
 async def main():
     from dotenv import dotenv_values
     import semantic_kernel as sk
-    from semantic_kernel.core_skills import TimeSkill
+    from semantic_kernel.core_plugins import TimePlugin
     from semantic_kernel.connectors.ai.open_ai import (
         OpenAIChatCompletion,
         AzureChatCompletion,
@@ -33,12 +33,12 @@ async def main():
             ),
         )
 
-    # Import the TimeSkill
-    time = kernel.import_skill(TimeSkill())
+    # Import the TimePlugin
+    time = kernel.import_plugin(TimePlugin())
 
     # Import the WriterPlugin from the plugins directory.
     plugins_directory = "./plugins"
-    writer_plugin = kernel.import_semantic_skill_from_directory(
+    writer_plugin = kernel.import_semantic_plugin_from_directory(
         plugins_directory, "WriterPlugin"
     )
 

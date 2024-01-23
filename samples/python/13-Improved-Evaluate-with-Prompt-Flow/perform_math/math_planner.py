@@ -42,7 +42,7 @@ def my_python_tool(
     planner = SequentialPlanner(kernel=kernel)
 
     # Import the native functions
-    math_plugin = kernel.import_skill(Math(), "MathPlugin")
+    math_plugin = kernel.import_plugin(Math(), "MathPlugin")
 
     ask = "Use the available math functions to solve this word problem: " + input
     ask += "\n\n"
@@ -55,7 +55,7 @@ def my_python_tool(
     result = asyncio.run(kernel.run_async(plan)).result
 
     for index, step in enumerate(plan._steps):
-        print("Function: " + step.skill_name + "." + step._function.name)
+        print("Function: " + step.plugin_name + "." + step._function.name)
         print("Input vars: " + str(step.parameters.variables))
         print("Output vars: " + str(step._outputs))
     print("Result: " + str(result))

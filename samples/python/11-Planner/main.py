@@ -12,7 +12,7 @@ async def main():
     kernel.add_completion_service()
 
     # Import the native functions
-    math_plugin = kernel.import_skill(Math(), "MathPlugin")
+    math_plugin = kernel.import_plugin(Math(), "MathPlugin")
 
     planner = SequentialPlanner(kernel)
 
