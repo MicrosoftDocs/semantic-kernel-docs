@@ -50,7 +50,7 @@ To build and run the Azure Functions application from a terminal use the followi
 
 ```powershell
 cd azure-function
-dotnet build
+dotnet build dotnet build sk-chatgpt-azure-function.csproj
 cd bin/Debug/net8.0
 func host start
 ```
