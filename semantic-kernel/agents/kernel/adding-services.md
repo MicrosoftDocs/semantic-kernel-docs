@@ -38,7 +38,7 @@ The following table shows which service you should use for each model.
 ### Chat completion deployments
 
 # [C#](#tab/Csharp)
-To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to use the [WithAzureChatCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withazurechatcompletionservice) method.
+To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to use the AddAzureChatCompletionService method.
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="TypicalKernelCreation":::
 
@@ -52,7 +52,7 @@ To add an Azure OpenAI chat completion service to your Semantic Kernel project, 
 ### Text generation deployments (deprecated)
 
 # [C#](#tab/Csharp)
-To add an Azure OpenAI text generation service to your Semantic Kernel project, you will need to use the [WithAzureTextCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withazuretextcompletionservice) method.
+To add an Azure OpenAI text generation service to your Semantic Kernel project, you will need to use the AddAzureTextCompletionService method.
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="TextCompletionKernelCreation":::
 
@@ -82,7 +82,7 @@ The following table shows which service you should use for each model.
 ### Chat completion models
 
 # [C#](#tab/Csharp)
-To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the [WithOpenAIChatCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withopenaichatcompletionservice) method.
+To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the AddOpenAIChatCompletionService method.
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="OpenAIKernelCreation":::
 
@@ -96,7 +96,7 @@ To add an OpenAI text generation service to your Semantic Kernel project, you wi
 ### Text generation models (deprecated)
 
 # [C#](#tab/Csharp)
-To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the [WithOpenAITextCompletionService](/dotnet/api/microsoft.semantickernel.openaikernelbuilderextensions.withopenaitextcompletionservice) method.
+To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the AddOpenAITextCompletionService method.
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="OpenAITextCompletionKernelCreation":::
 

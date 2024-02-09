@@ -123,7 +123,7 @@ Now that you've created your first native function, you can import it and run it
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/CreatingFunctions" range="4-7,34,36-47" highlight="12":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/CreatingFunctions.cs" range="4-7,34,36-47" highlight="12":::
 
 # [Python](#tab/python)
 
@@ -138,7 +138,7 @@ Now that you've created your first native function, you can now allow the AI to 
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/CreatingFunctions" range="50-51,57-97" highlight="14":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
 
 When you run this code, you'll be able to ask the AI to perform math for you. For example, you can ask the AI to `Take the square root of 12` and it will return back the correct answer.
 
