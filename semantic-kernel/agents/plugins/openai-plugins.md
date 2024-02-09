@@ -85,7 +85,7 @@ Now that we have validated our starter, we now need to create HTTP endpoints for
 ### Add the math native functions to the Azure Function project
 Now that you have your starter, it's time to add your native functions to the plugin. To do this, simply copy and paste the plugin into your project and reference it in the Program.cs file.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/CreateChatGptPlugin/MathPlugin/azure-function/Program.cs" range="55-68"  highlight="12":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/CreateChatGptPlugin/MathPlugin/azure-function/Program.cs" range="55-68"  highlight="12":::
 
 ### Validate the HTTP endpoints
 At this point, you should have five HTTP endpoints in your Azure Function project. You can test them by following these steps:
@@ -178,7 +178,7 @@ To test the plugin in Semantic Kernel, follow these steps:
     dotnet add package Microsoft.SemanticKernel.Functions.OpenAPI --prerelease
     ```
 3. Paste the following code into your _program.cs_ file:
-    :::code language="csharp" source="~/../semantic-kernel-samples/samples/CreateChatGptPlugin/Solution/Program.cs":::
+    :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/CreateChatGptPlugin/Solution/Program.cs":::
 
 4. After running the code, you should be able to chat with the agent and get math answers back.
 

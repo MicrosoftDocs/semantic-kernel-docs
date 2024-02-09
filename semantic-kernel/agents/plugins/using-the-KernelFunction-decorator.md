@@ -76,7 +76,7 @@ All native functions must be defined as public methods of a class that represent
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="4-10":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="4-10":::
 
 # [Python](#tab/python)
 
@@ -90,7 +90,7 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="11-17" highlight="1":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="11-17" highlight="1":::
 
 Notice how we've added a description to the function and each of its parameters with the `Description` attribute. This description will be used by function calling and by [planners](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
@@ -110,7 +110,7 @@ Now that you've created the `Sqrt` function, you can create the remaining math f
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Plugins/MathPlugin.cs":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs":::
 
 # [Python](#tab/python)
 
@@ -123,7 +123,7 @@ Now that you've created your first native function, you can import it and run it
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Plugins/CreatingFunctions" range="4-7,34,36-47" highlight="12":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/CreatingFunctions" range="4-7,34,36-47" highlight="12":::
 
 # [Python](#tab/python)
 
@@ -138,7 +138,7 @@ Now that you've created your first native function, you can now allow the AI to 
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Plugins/CreatingFunctions" range="50-51,57-97" highlight="14":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/CreatingFunctions" range="50-51,57-97" highlight="14":::
 
 When you run this code, you'll be able to ask the AI to perform math for you. For example, you can ask the AI to `Take the square root of 12` and it will return back the correct answer.
 

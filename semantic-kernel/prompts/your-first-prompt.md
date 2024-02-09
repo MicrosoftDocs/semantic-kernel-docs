@@ -34,7 +34,7 @@ If we wanted an AI to detect the intent of a user's input, we could simply _ask_
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="InitialPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="InitialPrompt":::
 
 # [Python](#tab/python)
 
@@ -46,7 +46,7 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="KernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="KernelCreation":::
 
 # [Python](#tab/python)
 
@@ -58,7 +58,7 @@ Finally, we can invoke our prompt using our new kernel.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="InvokeInitialPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="InvokeInitialPrompt":::
 
 # [Python](#tab/python)
 
@@ -90,7 +90,7 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="MoreSpecificPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="MoreSpecificPrompt":::
 
 # [Python](#tab/python)
 
@@ -111,7 +111,7 @@ To make the result more predictable, we can add structure to the prompt by using
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="StructuredPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="StructuredPrompt":::
 
 # [Python](#tab/python)
 
@@ -127,7 +127,7 @@ For example, if you wanted the LLM to generate a JSON object, you could use the 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="FormattedPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="FormattedPrompt":::
 
 # [Python](#tab/python)
 
@@ -151,7 +151,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="FewShotPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="FewShotPrompt":::
 
 # [Python](#tab/python)
 
@@ -166,7 +166,7 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="AvoidPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="AvoidPrompt":::
 
 # [Python](#tab/python)
 
@@ -191,7 +191,7 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="ContextPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="ContextPrompt":::
 
 # [Python](#tab/python)
 
@@ -204,12 +204,12 @@ As your prompts become more complex, you may want to use message roles to help t
 
 In Semantic Kernel, a special syntax is used to define message roles. To define a message role, you simply wrap the message in `<message>` tag with the role name as an attribute. This is currently only available in the C# SDK.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="RolePrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="RolePrompt":::
 
 ### 7) Give your AI words of encouragement
 Finally, research has shown that giving your AI words of encouragement can help it perform better. For example, offering bonuses or rewards for good results can yield better results. 
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/Prompts.cs" id="BonusPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="BonusPrompt":::
 
 
 ## Next steps

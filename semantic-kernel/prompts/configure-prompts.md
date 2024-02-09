@@ -22,7 +22,7 @@ In C#, you can define the following properties of a prompt:
 - **Input variables** - the variables that are used inside of the prompt (e.g., `request`)
 - **Execution settings** - the settings for different models that can be used to execute the prompt
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/ConfiguringPrompts.cs" id="FunctionFromPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/ConfiguringPrompts.cs" id="FunctionFromPrompt":::
 
 # [Python](#tab/python)
 

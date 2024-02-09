@@ -42,11 +42,11 @@ In the following examples, you can see how to add a logger, chat completion serv
 With C#, Semantic Kernel natively supports dependency injection. This means you can add a kernel to your application's dependency injection container and use any of your application's services within the kernel by adding them as a service to the kernel.
 
 Import the necessary packages:
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/UsingTheKernel.cs" id="NecessaryPackages":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="NecessaryPackages":::
 
 If you are using a Azure OpenAI, you can use the `AddAzureOpenAIChatCompletion` method.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/UsingTheKernel.cs" id="KernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="KernelCreation":::
 
 If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method instead.
 
@@ -71,10 +71,10 @@ To run `KernelFunction`s, Semantic Kernel provides the `InvokeAsync` method. Sim
 
 # [C#](#tab/Csharp)
 Run the `UtcNow` function from `TimePlugin`:
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeUtcNow":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeUtcNow":::
 
 Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
-:::code language="csharp" source="~/../semantic-kernel-samples/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeShortPoem":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeShortPoem":::
 
 This should return a response similar to the following (except specific to your current time):
 ```
