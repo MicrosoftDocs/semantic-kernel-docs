@@ -8,13 +8,18 @@ ms.date: 02/15/2024
 ms.service: semantic-kernel
 ---
 
+> [!NOTE]
+> This document is not final and will get increasingly better!
+
 # Semantic Kernel - .Net V1 Migration Guide
 
 This guide is intended to help you upgrade from a pre-v1 version of the .NET Semantic Kernel SDK to v1+. The pre-v1 version used as a reference was the
 
 ## Package Changes
 
-.. = Microsoft.SemanticKernel
+We did many changes in the upcoming months prior to the V1 release. Those were mainly simplifying the namespace depth as well as merging and removing some packages. The table below shows the changes in the package names and the previous name.
+
+All names with `..` prefix are truncated from `Microsoft.SemanticKernel` for brevity.
 
 | Previous Name                            | V1 Name                                     |
 | ---------------------------------------- | ------------------------------------------- |
@@ -84,13 +89,21 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 
 ## Convention name changes
 
-| Previous Name     | V1 Name         |
-| ----------------- | --------------- |
-| Semantic Function | Prompt Function |
-| Native Function   | Method Function |
-| Context Variable  | Kernel Argument |
+Many of our internal naming conventions were changed to better reflect how the AI community names things. As OpenAI started the massive shift and terms like Prompt, Plugins, Models, RAG were taking shape it was clear that we needed to align with those terms to make it easier for the community to understand use the SDK.
+
+| Previous Name     | V1 Name                   |
+| ----------------- | ------------------------- |
+| Semantic Function | Prompt Function           |
+| Native Function   | Method Function           |
+| Context Variable  | Kernel Argument           |
+| Request Settings  | Prompt Execution Settings |
+| Text Completion   | Text Generation           |
+| Image Generation  | Text to Image             |
+| Skill             | Plugin                    |
 
 ## Code name changes
+
+Following the convetion name changes, many of the code names were also changed to better reflect the new naming conventions. Abbreaviations were also removed to make the code more readable.
 
 | Previous Name                               | V1 Name                                |
 | ------------------------------------------- | -------------------------------------- |
@@ -113,18 +126,25 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 | SKPluginCollection                          | KernelPluginCollection                 |
 | SKReturnParameterMetadata                   | KernelReturnParameterMetadata          |
 | SemanticFunction                            | PromptFunction                         |
+| SKContext                                   | FunctionResult (output)                |
 
 ## Namespace Simplifications
 
-| Previous Name                          | V1 Name                  |
-| -------------------------------------- | ------------------------ |
-| Microsoft.SemanticKernel.Orchestration | Microsoft.SemanticKernel |
+Most of the namespaces before had a deep hierarchy matching 1:1 the directory names in the solution, although this being a common practice it pollute very much the `sk developer` code base, majority of this clean up targets the simplification and shallowing of those references. The table below shows some of the changes in the namespaces.
 
-## New Concepts
-
-- **Plugin Entity**: Before V1 there was no concept of a plugin centric entity. This changed in V1 and for any function you add to a Kernel you will get a Plugin that it belongs to.
+| Previous Name                                         | V1 Name                                         |
+| ----------------------------------------------------- | ----------------------------------------------- |
+| Microsoft.SemanticKernel.Orchestration                | Microsoft.SemanticKernel                        |
+| Microsoft.SemanticKernel.Connectors.AI.\*             | Microsoft.SemanticKernel.Connectors.\*          |
+| Microsoft.SemanticKernel.SemanticFunctions            | Microsoft.SemanticKernel                        |
+| Microsoft.SemanticKernel.Events                       | Microsoft.SemanticKernel                        |
+| Microsoft.SemanticKernel.AI.\*                        | Microsoft.SemanticKernel.\*                     |
+| Microsoft.SemanticKernel.Connectors.AI.OpenAI.\*      | Microsoft.SemanticKernel.Connectors.OpenAI      |
+| Microsoft.SemanticKernel.Connectors.AI.HuggingFace.\* | Microsoft.SemanticKernel.Connectors.HuggingFace |
 
 ## Kernel
+
+We did some good changes how Kernel is created and used. The kernel now is a class that concentrates
 
 - `IKernel` interface was changed to `Kernel` class.
 
@@ -226,7 +246,11 @@ arguments["day"] = DateTimeOffset.Now.ToString("dddd", CultureInfo.CurrentCultur
 
 ## Kernel Builder
 
+Many changes were made to our KernelBuilder to make it more intuitive and easier to use, as well as to make it simpler and more aligned with the .NET builders approach.
+
 - Creating a `KernelBuilder` can now be only created using the `Kernel.CreateBuilder()` method.
+
+  This change make it simpler and easier to use the KernelBuilder in any code-base ensureing one main way of using the builder instead of multiple ways that adds complexity and maintenance overhead.
 
   ```csharp
   // Before
@@ -236,7 +260,10 @@ arguments["day"] = DateTimeOffset.Now.ToString("dddd", CultureInfo.CurrentCultur
   var builder = Kernel.CreateBuilder().Build();
   ```
 
-- `KernelBuilder.WithOpenAIChatCompletionService` was renamed to `KernelBuilder.AddOpenAIChatCompletion`
+- `KernelBuilder.With...` was renamed to `KernelBuilder.Add...`
+
+  - `WithOpenAIChatCompletionService` was renamed to `AddOpenAIChatCompletionService`
+  - `WithAIService<ITextCompletion>`
 
 - `KernelBuilder.WithLoggerFactory` is not more used, instead use dependency injection approach to add the logger factory.
 
@@ -245,16 +272,132 @@ arguments["day"] = DateTimeOffset.Now.ToString("dddd", CultureInfo.CurrentCultur
   builder.Services.AddLogging(c => c.AddConsole().SetMinimumLevel(LogLevel.Information));
   ```
 
+- `WithAIService<T>` Dependency Injection
+
+  Previously the `KernelBuilder` had a method `WithAIService<T>` that was removed and a new `ServiceCollection Services` property is exposed to allow the developer to add services to the dependency injection container. i.e.:
+
+  ```csharp
+  builder.Services.AddSingleton<ITextGenerationService>()
+  ```
+
 ## Kernel Result
 
-There is no more specific `KernelResult`, use the `FunctionResult` instead.
+As the Kernel became just a container for the plugins and now executes just one function there was not more need to have a `KernelResult` entity and all function invocations from Kernel now return a `FunctionResult`.
 
 ## SKContext
 
-SKContext has been replaced in all of the method signatures that required it as an input parameter with your Kernel instance.
+After a lot of discussions and feedback internally and from the community, to simplify the API and make it more intuitive, the `SKContext` concept was dilluted in different entities: `KernelArguments` for function inputs and `FunctionResult` for function outputs.
+
+With the important decision to make `Kernel` a required argument of a function calling, the `SKContext` was removed and the `KernelArguments` and `FunctionResult` were introduced.
+
+`KernelArguments` is a dictionary that holds the input arguments for the function invocation that were previously held in the `SKContext.Variables` property.
+
+`FunctionResult` is the output of the `Kernel.InvokeAsync` method and holds the result of the function invocation that was previously held in the `SKContext.Result` property.
+
+## New Plugin Abstractions
+
+- **KernelPlugin Entity**: Before V1 there was no concept of a plugin centric entity. This changed in V1 and for any function you add to a Kernel you will get a Plugin that it belongs to.
+
+### Plugins Immutability
+
+Plugins are created by default as immutable by our out-of-the-box `DefaultKernelPlugin` implementation, which means that they cannot be modified or changed after creation.
+
+Also attempting to import the plugins that share the same name in the kernel will give you a key violation exception.
+
+The addition of the `KernelPlugin` abstraction allows dynamic implementations that may support mutability and we provided an example on how to implement a mutable plugin in the [Example 69](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/KernelSyntaxExamples/Example69_MutableKernelPlugin.cs).
+
+### Combining multiple plugins into one
+
+Attempting to create a plugin from directory and adding Method functions afterwards for the same plugin will not work unless you use another approach like creating both plugins separately and then combining them into a single plugin iterating over its functions to aggregate into the final plugin using `kernel.ImportPluginFromFunctions("myAggregatePlugin", myAggregatedFunctions)` extension.
 
 ## Usage of Experimental Attribute Feature.
 
 This features was introduced to mark some functionalities in V1 that we can possibly change or completely remove.
 
 For mode details one the list of current released experimental features [check here](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/docs/EXPERIMENTS.md).
+
+## Prompt Configuration Files
+
+Major changes were introduced to the Prompt Configuration files including default and multiple service/model configurations.
+
+Other naming changes to note:
+
+- `completion` was renamed to `execution_settings`
+- `input` was renamed to `input_variables`
+- `defaultValue` was renamed to `default`
+- `parameters` was renamed to `input_variables`
+- Each property name in the `execution_settings` once matched to the `service_id` will be used to configure the service/model execution settings. i.e.:
+  ```csharp
+  // The "service1" execution settings will be used to configure the OpenAIChatCompletion service
+  Kernel kernel = Kernel.CreateBuilder()
+      .AddOpenAIChatCompletion(serviceId: "service1", modelId: "gpt-4")
+  ```
+
+Before
+
+```json
+{
+  "schema": 1,
+  "description": "Given a text input, continue it with additional text.",
+  "type": "completion",
+  "completion": {
+    "max_tokens": 4000,
+    "temperature": 0.3,
+    "top_p": 0.5,
+    "presence_penalty": 0.0,
+    "frequency_penalty": 0.0
+  },
+  "input": {
+    "parameters": [
+      {
+        "name": "input",
+        "description": "The text to continue.",
+        "defaultValue": ""
+      }
+    ]
+  }
+}
+```
+
+After
+
+```json
+{
+  "schema": 1,
+  "description": "Given a text input, continue it with additional text.",
+  "execution_settings": {
+    "default": {
+      "max_tokens": 4000,
+      "temperature": 0.3,
+      "top_p": 0.5,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0
+    },
+    "service1": {
+      "model_id": "gpt-4",
+      "max_tokens": 200,
+      "temperature": 0.2,
+      "top_p": 0.0,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0,
+      "stop_sequences": ["Human", "AI"]
+    },
+    "service2": {
+      "model_id": "gpt-3.5_turbo",
+      "max_tokens": 256,
+      "temperature": 0.3,
+      "top_p": 0.0,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0,
+      "stop_sequences": ["Human", "AI"]
+    }
+  },
+  "input_variables": [
+    {
+      "name": "input",
+      "description": "The text to continue.",
+      "default": ""
+    }
+  ]
+}
+```
