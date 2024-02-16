@@ -13,55 +13,37 @@ ms.service: semantic-kernel
 
 # Semantic Kernel - .Net V1 Migration Guide
 
-This guide is intended to help you upgrade from a pre-v1 version of the .NET Semantic Kernel SDK to v1+. The pre-v1 version used as a reference was the
+This guide is intended to help you upgrade from a pre-v1 version of the .NET Semantic Kernel SDK to v1+.
+The pre-v1 version used as a reference for this document was the `0.26.231009` version which was the last version before the first beta release where the majority of the changes started to happen.
 
 ## Package Changes
 
-We did many changes in the upcoming months prior to the V1 release. Those were mainly simplifying the namespace depth as well as merging and removing some packages. The table below shows the changes in the package names and the previous name.
+As a result of many packages being redefined, removed and renamed, also considering that we did a good cleanup and namespace deeph simplification many of our old packages needed to be renamed, deprecated and removed. The table below shows the changes in our packages.
 
-All names with `..` prefix are truncated from `Microsoft.SemanticKernel` for brevity.
+All packages that start with `Microsoft.SemanticKernel` were truncated with a `..` prefix for brevity.
 
-| Previous Name                            | V1 Name                                     |
-| ---------------------------------------- | ------------------------------------------- |
+| Previous Name                            | V1 Name                                     | Reason                                |
+| ---------------------------------------- | ------------------------------------------- | ------------------------------------- |
 | ..Connectors.AI.HuggingFace              | ..Connectors.HuggingFace                    |
 | ..Connectors.AI.OpenAI                   | ..Connectors.OpenAI                         |
-| ..Connectors.AI.Oobabooga                | MyIA.SemanticKernel.Connectors.AI.Oobabooga |
+| ..Connectors.AI.Oobabooga                | MyIA.SemanticKernel.Connectors.AI.Oobabooga | Community driven connector            |
 | ..Connectors.Memory.Kusto                | ..Connectors.Kusto                          |
 | ..Connectors.Memory.DuckDB               | ..Connectors.DuckDB                         |
 | ..Connectors.Memory.Pinecone             | ..Connectors.Pinecone                       |
 | ..Connectors.Memory.Redis                | ..Connectors.Redis                          |
 | ..Connectors.Memory.Qdrant               | ..Connectors.Qdrant                         |
 | ..Connectors.Memory.AzureCognitiveSearch | ..Connectors.Memory.AzureAISearch           |
-| ..Functions.Semantic                     | - Removed -                                 |
-| ..Reliability.Basic                      | - Removed -                                 |
-| ..Reliability.Polly                      | - Removed -                                 |
-| ..TemplateEngine.Basic                   | Merged in Core                              |
+| ..Functions.Semantic                     | - Removed -                                 | Merged in Core                        |
+| ..Reliability.Basic                      | - Removed -                                 | Replaced by .net dependency injection |
+| ..Reliability.Polly                      | - Removed -                                 | Replaced by .net dependency injection |
+| ..TemplateEngine.Basic                   | - Removed -                                 | Merged in Core                        |
 | ..Planners.Core                          | ..Planners.OpenAI<br>Planners.Handlebars    |
 | --                                       | ..Experimental.Agents                       |
 | --                                       | ..Experimental.Orchestration.Flow           |
 
-## Package Removal and Changes needed
+### Reliability Packages - Replaced by .net dependency injection
 
-Ensure that if you use any of the packages bellow you match the latest version that V1 uses:
-
-| Package Name                                            | Version |
-| ------------------------------------------------------- | ------- |
-| Microsoft.Extensions.Configuration                      | 8.0.0   |
-| Microsoft.Extensions.Configuration.Binder               | 8.0.0   |
-| Microsoft.Extensions.Configuration.EnvironmentVariables | 8.0.0   |
-| Microsoft.Extensions.Configuration.Json                 | 8.0.0   |
-| Microsoft.Extensions.Configuration.UserSecrets          | 8.0.0   |
-| Microsoft.Extensions.DependencyInjection                | 8.0.0   |
-| Microsoft.Extensions.DependencyInjection.Abstractions   | 8.0.0   |
-| Microsoft.Extensions.Http                               | 8.0.0   |
-| Microsoft.Extensions.Http.Resilience                    | 8.0.0   |
-| Microsoft.Extensions.Logging                            | 8.0.0   |
-| Microsoft.Extensions.Logging.Abstractions               | 8.0.0   |
-| Microsoft.Extensions.Logging.Console                    | 8.0.0   |
-
-### Reliability.Basic Package
-
-The Reliability Basic package was removed and the same functionality can be achieved using the .net dependency injection `ConfigureHttpClientDefaults` service collection extension to inject the desired resiliency policies to the `HttpClient` instances.
+The Reliability Basic and Polly packages now can be achieved using the .net dependency injection `ConfigureHttpClientDefaults` service collection extension to inject the desired resiliency policies to the `HttpClient` instances.
 
 ```csharp
 // Before
@@ -86,6 +68,25 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 });
 
 ```
+
+## Package Removal and Changes needed
+
+Ensure that if you use any of the packages bellow you match the latest version that V1 uses:
+
+| Package Name                                            | Version |
+| ------------------------------------------------------- | ------- |
+| Microsoft.Extensions.Configuration                      | 8.0.0   |
+| Microsoft.Extensions.Configuration.Binder               | 8.0.0   |
+| Microsoft.Extensions.Configuration.EnvironmentVariables | 8.0.0   |
+| Microsoft.Extensions.Configuration.Json                 | 8.0.0   |
+| Microsoft.Extensions.Configuration.UserSecrets          | 8.0.0   |
+| Microsoft.Extensions.DependencyInjection                | 8.0.0   |
+| Microsoft.Extensions.DependencyInjection.Abstractions   | 8.0.0   |
+| Microsoft.Extensions.Http                               | 8.0.0   |
+| Microsoft.Extensions.Http.Resilience                    | 8.0.0   |
+| Microsoft.Extensions.Logging                            | 8.0.0   |
+| Microsoft.Extensions.Logging.Abstractions               | 8.0.0   |
+| Microsoft.Extensions.Logging.Console                    | 8.0.0   |
 
 ## Convention name changes
 
