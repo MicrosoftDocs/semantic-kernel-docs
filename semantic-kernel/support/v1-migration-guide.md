@@ -8,10 +8,10 @@ ms.date: 02/15/2024
 ms.service: semantic-kernel
 ---
 
+# Semantic Kernel - .Net V1 Migration Guide
+
 > [!NOTE]
 > This document is not final and will get increasingly better!
-
-# Semantic Kernel - .Net V1 Migration Guide
 
 This guide is intended to help you upgrade from a pre-v1 version of the .NET Semantic Kernel SDK to v1+.
 The pre-v1 version used as a reference for this document was the `0.26.231009` version which was the last version before the first beta release where the majority of the changes started to happen.
@@ -145,7 +145,7 @@ Most of the namespaces before had a deep hierarchy matching 1:1 the directory na
 
 ## Kernel
 
-We did some good changes how Kernel is created and used. The kernel now is a class that concentrates
+The kernel is now considered as a property bag and is passed to the function invocations. This changed the concept and moved the responsibility of running functions to the functions entities only, simplifying the `Kernel` responsibilities including `SKContext` and all the other APIs.
 
 - `IKernel` interface was changed to `Kernel` class.
 
