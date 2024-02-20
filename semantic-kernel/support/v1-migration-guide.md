@@ -18,30 +18,31 @@ The pre-v1 version used as a reference for this document was the `0.26.231009` v
 
 ## Package Changes
 
-As a result of many packages being redefined, removed and renamed, also considering that we did a good cleanup and namespace deeph simplification many of our old packages needed to be renamed, deprecated and removed. The table below shows the changes in our packages.
+As a result of many packages being redefined, removed and renamed, also considering that we did a good cleanup and namespace simplification many of our old packages needed to be renamed, deprecated and removed. The table below shows the changes in our packages.
 
 All packages that start with `Microsoft.SemanticKernel` were truncated with a `..` prefix for brevity.
 
-| Previous Name                            | V1 Name                                     | Reason                                |
-| ---------------------------------------- | ------------------------------------------- | ------------------------------------- |
-| ..Connectors.AI.HuggingFace              | ..Connectors.HuggingFace                    |
-| ..Connectors.AI.OpenAI                   | ..Connectors.OpenAI                         |
-| ..Connectors.AI.Oobabooga                | MyIA.SemanticKernel.Connectors.AI.Oobabooga | Community driven connector            |
-| ..Connectors.Memory.Kusto                | ..Connectors.Kusto                          |
-| ..Connectors.Memory.DuckDB               | ..Connectors.DuckDB                         |
-| ..Connectors.Memory.Pinecone             | ..Connectors.Pinecone                       |
-| ..Connectors.Memory.Redis                | ..Connectors.Redis                          |
-| ..Connectors.Memory.Qdrant               | ..Connectors.Qdrant                         |
-| ..Connectors.Memory.AzureCognitiveSearch | ..Connectors.Memory.AzureAISearch           |
-| ..Functions.Semantic                     | - Removed -                                 | Merged in Core                        |
-| ..Reliability.Basic                      | - Removed -                                 | Replaced by .net dependency injection |
-| ..Reliability.Polly                      | - Removed -                                 | Replaced by .net dependency injection |
-| ..TemplateEngine.Basic                   | - Removed -                                 | Merged in Core                        |
-| ..Planners.Core                          | ..Planners.OpenAI<br>Planners.Handlebars    |
-| --                                       | ..Experimental.Agents                       |
-| --                                       | ..Experimental.Orchestration.Flow           |
+| Previous Name                            | V1 Name                                     | Version | Reason                                                    |
+| ---------------------------------------- | ------------------------------------------- | ------- | --------------------------------------------------------- |
+| ..Connectors.AI.HuggingFace              | ..Connectors.HuggingFace                    | preview |                                                           |
+| ..Connectors.AI.OpenAI                   | ..Connectors.OpenAI                         | v1      |                                                           |
+| ..Connectors.AI.Oobabooga                | MyIA.SemanticKernel.Connectors.AI.Oobabooga | alpha   | Community driven connector <br/> ⚠️ Not ready for v1+ yet |
+| ..Connectors.Memory.Kusto                | ..Connectors.Kusto                          | alpha   |                                                           |
+| ..Connectors.Memory.DuckDB               | ..Connectors.DuckDB                         | alpha   |                                                           |
+| ..Connectors.Memory.Pinecone             | ..Connectors.Pinecone                       | alpha   |                                                           |
+| ..Connectors.Memory.Redis                | ..Connectors.Redis                          | alpha   |                                                           |
+| ..Connectors.Memory.Qdrant               | ..Connectors.Qdrant                         | alpha   |                                                           |
+| --                                       | ..Connectors.Postgres                       | alpha   |                                                           |
+| ..Connectors.Memory.AzureCognitiveSearch | ..Connectors.Memory.AzureAISearch           | alpha   |                                                           |
+| ..Functions.Semantic                     | - Removed -                                 |         | Merged in Core                                            |
+| ..Reliability.Basic                      | - Removed -                                 |         | Replaced by .NET Dependency Injection                     |
+| ..Reliability.Polly                      | - Removed -                                 |         | Replaced by .NET Dependency Injection                     |
+| ..TemplateEngine.Basic                   | - Removed -                                 |         | Merged in Core                                            |
+| ..Planners.Core                          | ..Planners.OpenAI<br>Planners.Handlebars    | preview |                                                           |
+| --                                       | ..Experimental.Agents                       | alpha   |                                                           |
+| --                                       | ..Experimental.Orchestration.Flow           | v1      |                                                           |
 
-### Reliability Packages - Replaced by .net dependency injection
+### Reliability Packages - Replaced by .NET Dependency Injection
 
 The Reliability Basic and Polly packages now can be achieved using the .net dependency injection `ConfigureHttpClientDefaults` service collection extension to inject the desired resiliency policies to the `HttpClient` instances.
 
@@ -69,9 +70,9 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 
 ```
 
-## Package Removal and Changes needed
+## Package Removal and Changes Needed
 
-Ensure that if you use any of the packages bellow you match the latest version that V1 uses:
+Ensure that if you use any of the packages below you match the latest version that V1 uses:
 
 | Package Name                                            | Version |
 | ------------------------------------------------------- | ------- |
@@ -88,7 +89,7 @@ Ensure that if you use any of the packages bellow you match the latest version t
 | Microsoft.Extensions.Logging.Abstractions               | 8.0.0   |
 | Microsoft.Extensions.Logging.Console                    | 8.0.0   |
 
-## Convention name changes
+## Convention Name Changes
 
 Many of our internal naming conventions were changed to better reflect how the AI community names things. As OpenAI started the massive shift and terms like Prompt, Plugins, Models, RAG were taking shape it was clear that we needed to align with those terms to make it easier for the community to understand use the SDK.
 
@@ -102,7 +103,7 @@ Many of our internal naming conventions were changed to better reflect how the A
 | Image Generation  | Text to Image             |
 | Skill             | Plugin                    |
 
-## Code name changes
+## Code Name Changes
 
 Following the convetion name changes, many of the code names were also changed to better reflect the new naming conventions. Abbreaviations were also removed to make the code more readable.
 
@@ -131,7 +132,7 @@ Following the convetion name changes, many of the code names were also changed t
 
 ## Namespace Simplifications
 
-Most of the namespaces before had a deep hierarchy matching 1:1 the directory names in the solution, although this being a common practice it pollute very much the `sk developer` code base, majority of this clean up targets the simplification and shallowing of those references. The table below shows some of the changes in the namespaces.
+The old namespaces before had a deep hierarchy matching 1:1 the directory names in the projects. This is a common practice but did mean that consumers of the Semantic Kernel packages had to add a lot of different `using`'s in their code. We decided to reduce the number of namespaces in the Semantic Kernel packages so the majority of the functionality is in the main `Microsoft.SemanticKernel` namespace. See below for more details.
 
 | Previous Name                                         | V1 Name                                         |
 | ----------------------------------------------------- | ----------------------------------------------- |
@@ -145,7 +146,7 @@ Most of the namespaces before had a deep hierarchy matching 1:1 the directory na
 
 ## Kernel
 
-The kernel is now considered as a property bag and is passed to the function invocations. This changed the concept and moved the responsibility of running functions to the functions entities only, simplifying the `Kernel` responsibilities including `SKContext` and all the other APIs.
+The code to create and use a `Kernel` instance has been simplified. The `IKernel` interface has been eliminated as developers should not need to create their own `Kernel` implementation. The `Kernel` class represents a collection of services and plugins. The current `Kernel` instance is available everywhere which is consistent with the design philosophy behind the Semantic Kernel.
 
 - `IKernel` interface was changed to `Kernel` class.
 
