@@ -13,6 +13,7 @@ metadata:
   author: johnmaeda
   ms.manager: johnmaeda
   hide_bc: true
+
 productDirectory:
     items:
     - title: About Semantic Kernel
