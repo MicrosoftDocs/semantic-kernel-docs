@@ -16,7 +16,7 @@ If you want to see the final solution, you can check out the following samples i
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/04-Templatizing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/05-Nested-Functions-In-Prompts) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Templates.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/05-Nested-Functions-In-Prompts) |
 
 
@@ -29,7 +29,7 @@ Below, we show how we can update our original prompt to use the `SummarizeConver
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="66-70" highlight="2":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="FunctionFromPrompt":::
 
 # [Python](#tab/python)
 
@@ -42,7 +42,7 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="5-7, 9-16, 19-21":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="KernelCreation":::
 
 # [Python](#tab/python)
 
@@ -54,7 +54,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="23-24, 71-78, 95-118":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="Chat":::
 
 
 # [Python](#tab/python)
@@ -69,7 +69,7 @@ In the previous article, we showed how to use the Handlebars template engine to 
 
 Similar to the previous example, we can use the `SummarizeConversation` function to summarize the conversation history before asking for the intent. The only difference is that we'll need to use the Handlebars syntax to call the function which requires us to use an `-` between the plugin name and function name instead of a `.`.
 
-:::code language="csharp" source="~/../samples/dotnet/05-Nested-Functions-In-Prompts/program.cs" range="42-63" highlight="15":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="IntentFunction":::
 
 ## Take the next step
 Now that you can call nested functions, you can now learn how to [configure your prompts](./configure-prompts.md).

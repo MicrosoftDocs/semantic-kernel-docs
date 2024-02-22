@@ -18,7 +18,7 @@ If you want to see the final solution, you can check out the following samples i
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/05-Nested-Functions-In-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/07-Serializing-Prompts) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs) | [Open solution in GitHub](Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/SerializingPrompts.cs) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/05-Nested-Functions-In-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) |
 
 
@@ -50,7 +50,7 @@ Prompts
 ### Writing a prompt in the _skprompt.txt_ file
 The _skprompt.txt_ file contains the request that will be sent to the AI service. Since we've already written the prompt in the [previous tutorial](./templatizing-prompts.md), we can simply copy it over to the _skprompt.txt_ file.
 
-:::code language="txt" source="~/../samples/dotnet/07-Serializing-Prompts/prompts/chat/skprompt.txt":::
+:::code language="txt" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/Prompts/chat/skprompt.txt":::
 
 
 ### Configuring the function in the _config.json_ file
@@ -65,7 +65,7 @@ For the `chat` function, we can use the same configuration [as before](./configu
 
 
 # [C#](#tab/Csharp)
-:::code language="json" source="~/../samples/dotnet/07-Serializing-Prompts/prompts/chat/config.json":::
+:::code language="json" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/Prompts/chat/config.json":::
 
 # [Python](#tab/python)
 
@@ -78,7 +78,7 @@ For the `chat` function, we can use the same configuration [as before](./configu
 At this point, you can import and test your function with the kernel by updating your _Program.cs_ or _main.py_ file to the following.
 
 # [C#](#tab/Csharp)
-:::code language="csharp" source="~/../samples/dotnet/07-Serializing-Prompts/Program.cs" range="6-8,10-17,20-25,33-35, 53-59,77-99":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" range="8-10,38-46,74-81,99-129":::
 
 # [Python](#tab/python)
 
@@ -103,7 +103,7 @@ dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelea
 
 Next, create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
 
-:::code language="yaml" source="~/../samples/dotnet/07-Serializing-Prompts/prompts/getIntent.prompt.yaml":::
+:::code language="yaml" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Resources/getIntent.prompt.yaml":::
 
 You should notice that all of the same properties that were defined in the _config.json_ file are now defined in the YAML file. Additionally, the `template` property is used to define the prompt template.
 
@@ -117,11 +117,11 @@ As a best practice, we recommend adding your prompts as an embedded resource. To
 
 Finally, you can import your prompt in the _Program.cs_ file.
 
-:::code language="csharp" source="~/../samples/dotnet/07-Serializing-Prompts/Program.cs" range="26-31":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" range="47-52":::
 
 To call the prompt, you can use the following code:
 
-:::code language="csharp" source="~/../samples/dotnet/07-Serializing-Prompts/Program.cs" range="60-69":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" range="82-92":::
 
 
 

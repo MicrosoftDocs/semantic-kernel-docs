@@ -16,10 +16,10 @@ If you want to see the code demonstrated in this article in a complete solution,
 
 | Language  | Link to final solution |
 | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/01-Kernel-Intro) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Plugin.cs) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/01-Kernel-Intro) |
 
-## The kernel is at center of _everything_
+## The kernel is at the center of _everything_
 Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is used by nearly every component within the Semantic Kernel SDK. This means that if you run any prompt or code in Semantic Kernel, it will always go through a kernel.
 
 This is extremely powerful, because it means you as a developer have a single place where you can configure, and most importantly monitor, your AI application. Take for example, when you invoke a prompt from the kernel. When you do so, the kernel will...
@@ -42,15 +42,13 @@ In the following examples, you can see how to add a logger, chat completion serv
 With C#, Semantic Kernel natively supports dependency injection. This means you can add a kernel to your application's dependency injection container and use any of your application's services within the kernel by adding them as a service to the kernel.
 
 Import the necessary packages:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="5-8":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="NecessaryPackages":::
 
 If you are using a Azure OpenAI, you can use the `AddAzureOpenAIChatCompletion` method.
 
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="21-32" highlight="3":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="KernelCreation":::
 
-If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method.
-
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="52-62" highlight="3":::
+If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method instead.
 
 # [Python](#tab/python)
 Import the necessary packages:
@@ -72,11 +70,11 @@ Semantic Kernel makes it easy to run prompts alongside native code because they 
 To run `KernelFunction`s, Semantic Kernel provides the `InvokeAsync` method. Simply pass in the function you want to run, its arguments, and the kernel will handle the rest.
 
 # [C#](#tab/Csharp)
-Run the `GetCurrentUtcTime` function from `TimePlugin`:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="35-36":::
+Run the `UtcNow` function from `TimePlugin`:
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeUtcNow":::
 
 Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
-:::code language="csharp" source="~/../samples/dotnet/01-Kernel-Intro/Program.cs" range="39-42":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeShortPoem":::
 
 This should return a response similar to the following (except specific to your current time):
 ```
