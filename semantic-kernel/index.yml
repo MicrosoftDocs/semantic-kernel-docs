@@ -7,7 +7,8 @@ metadata:
   description: Semantic Kernel documentation.
   ms.topic: hub-page
   ms.date: 02/22/2023
-  ms.author: johnmaeda
+  searchScope: []
+  titleSuffix: ""  ms.author: johnmaeda
   author: johnmaeda
   ms.manager: johnmaeda
   hide_bc: true
