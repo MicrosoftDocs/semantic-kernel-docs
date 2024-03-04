@@ -54,7 +54,7 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 3. Add the service to the kernel.
 
-    :::code language="python" source~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
 
 4. Import the plugin and add it to the kernel.
     :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/functions_within_prompts.py" range="34-37":::

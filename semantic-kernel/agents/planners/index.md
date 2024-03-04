@@ -58,7 +58,7 @@ In Python, you currently need to pass in the kernel as well.
     :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="13" :::
 
 3. Add the service to the kernel.
-    :::code language="python" source~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
 
 4. Create the planner.
   :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="23-26":::

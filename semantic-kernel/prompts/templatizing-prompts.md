@@ -54,7 +54,7 @@ In the Python template, we just need to provide the value for the `history` vari
 
 3. Add the service to the kernel.
 
-    :::code language="python" source~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
 
 4. Run the prompt in a chat loop.
 

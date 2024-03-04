@@ -64,8 +64,7 @@ If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
 
 If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46" highlight="4":::
-.py" range="48-55" highlight="4":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="48-55" highlight="4":::
 
 ---
 
