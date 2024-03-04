@@ -58,7 +58,7 @@ In the Python template, we just need to provide the value for the `history` vari
 
 4. Run the prompt in a chat loop.
 
-    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="51-77" highlight="14-16,22":::
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="51-77" highlight="19-23":::
 
 ---
 

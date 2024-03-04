@@ -205,7 +205,7 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="138-150" highlight="1-4,15":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="134-150" highlight="1-4,15":::
 
 ---
 

@@ -96,7 +96,7 @@ Notice how we've added a description to the function and each of its parameters 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="48-56" highlight="6-10":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="48-56" highlight="1-4":::
 
 Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with prompts. While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
 
@@ -127,7 +127,7 @@ Now that you've created your first native function, you can import it and run it
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/creating_functions.py"  highlight="16-19":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/creating_functions.py"  highlight="24-28":::
 
 ---
 
