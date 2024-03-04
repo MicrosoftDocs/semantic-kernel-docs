@@ -16,10 +16,10 @@ With planners, however, you can use alternative strategies to optimize the numbe
 
 If you want to see the final solution, you can check out the following samples in the public documentation repository.
 
-| Language | Link to previous solution | Link to final solution |
-| --- | --- |
-| C# |  [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/10-Chaining-Functions)  | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/11-Planner) |
-| Python |  [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/10-Chaining-Functions) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/11-Planner) |
+| Language | Link to final solution |
+| --- |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Planner.cs) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/11-Planner) |
 
 > [!Tip]
 > If you previously used the Action, Sequential, or Stepwise planners, please upgrade to the latest planners: Handlebars and Function calling stepwise planner. You can follow the migration guide on our blog to learn how to make the move.
@@ -46,12 +46,22 @@ To instantiate a planner, all you need to do is pass in a configuration object.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="35" :::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathSolver.cs" range="36":::
 
 # [Python](#tab/python)
 In Python, you currently need to pass in the kernel as well.
 
-:::code language="python" source="~/../samples/python/11-Planner/main.py" range="2-4,6-11,13-17":::
+1. Import Semantic Kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="7-8" :::
+
+2. Create the kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="13" :::
+
+3. Add the service to the kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+
+4. Create the planner.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="23-26":::
 
 ---
 
@@ -61,10 +71,10 @@ Now that we have planner, we can use it to create a plan for a user's ask and th
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/11-Planner/plugins/MathSolver.cs" range="37-43" :::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathSolver.cs" range="38-44":::
 
 # [Python](#tab/python)
-:::code language="python" source="~/../samples/python/11-Planner/main.py" range="21-29":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="28-34":::
 
 ---
 

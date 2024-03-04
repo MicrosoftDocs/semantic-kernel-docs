@@ -22,7 +22,7 @@ In C#, you can define the following properties of a prompt:
 - **Input variables** - the variables that are used inside of the prompt (e.g., `request`)
 - **Execution settings** - the settings for different models that can be used to execute the prompt
 
-:::code language="csharp" source="~/../samples/dotnet/06-Configuring-Prompts/program.cs" range="23-54":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/ConfiguringPrompts.cs" id="FunctionFromPrompt":::
 
 # [Python](#tab/python)
 
@@ -31,7 +31,7 @@ In Python, you can define the following properties of a prompt:
 - **Description** - a description of what the prompt does
 - **Execution settings** - the settings used to execute the prompt (e.g., `max_tokens`, `temperature`)
 
-:::code language="python" source="~/../samples/python/06-Configuring-Prompts/main.py" range="34-40":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/configuring_prompts.py" range="43-67":::
 
 ---
 

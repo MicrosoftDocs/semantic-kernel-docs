@@ -19,7 +19,7 @@ If you want to see the final solution to this article, you can check out the fol
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
-| C# | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/dotnet/08-Creating-Functions-For-AI) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/SerializingPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/CreatingFunctons.cs) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/08-Creating-Functions-For-AI) |
 
 ## Why should you create functions for your AI?
@@ -69,18 +69,18 @@ Plugins
 ---
 
 ## Creating your native functions
-Open up the _Math.cs_ or _Math.py_ file you created earlier and follow the instructions below to create the `Sqrt` function. This function will take a single number as an input and return the square root of that number.
+Open up the _MathPlugin.cs_ or _Math.py_ file you created earlier and follow the instructions below to create the `Sqrt` function. This function will take a single number as an input and return the square root of that number.
 
 ### Defining the class for your plugin
-All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your _Math.cs_ or _Math.py_ file. 
+All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your _MathPlugin.cs_ or _Math.py_ file. 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/plugins/MathPlugin.cs" range="3-9,53":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="4-10":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/plugins/MathPlugin.py" range="1-9" highlight="5":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="1-12":::
 
 ---
 
@@ -90,13 +90,13 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/plugins/MathPlugin.cs" range="10-16"  highlight="1":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="11-17" highlight="1":::
 
 Notice how we've added a description to the function and each of its parameters with the `Description` attribute. This description will be used by function calling and by [planners](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/plugins/MathPlugin.py" range="10-16" highlight="6-10":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="48-56" highlight="1-4":::
 
 Notice that the input and and return types are strings. This is because the kernel passes all parameters as strings so they can work seamlessly with prompts. While inside of a function, you can convert the input to any type you want. In our case, we convert the string into a number so we can perform math on it before converting it back to a string.
 
@@ -110,11 +110,11 @@ Now that you've created the `Sqrt` function, you can create the remaining math f
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/plugins/MathPlugin.cs":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/plugins/MathPlugin.py":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py":::
 
 ---
 
@@ -123,11 +123,11 @@ Now that you've created your first native function, you can import it and run it
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/program.cs" range="5-16,19-21,28-35" highlight="17":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="4-7,34,36-47" highlight="12":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/08-Creating-Functions-For-AI/main.py" range="1-2,4-11,13-30" highlight="16-19":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/creating_functions.py"  highlight="24-28":::
 
 ---
 
@@ -138,7 +138,7 @@ Now that you've created your first native function, you can now allow the AI to 
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
-:::code language="csharp" source="~/../samples/dotnet/08-Creating-Functions-For-AI/program.cs" range="22-24,37-68" highlight="14":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
 
 When you run this code, you'll be able to ask the AI to perform math for you. For example, you can ask the AI to `Take the square root of 12` and it will return back the correct answer.
 
