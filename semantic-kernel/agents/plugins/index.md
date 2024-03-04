@@ -79,27 +79,16 @@ public async Task<string> ReadTextAsync(
 
 # [Python](#tab/python)
 
-The following code is an excerpt from the `MathPlugin` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `sk_function` and `sk_function_context_parameter` decorators to describe the function's input and output to planner.
+The following code is an excerpt from the `MathPlugin` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `kernel_function` and `Annotated` decorators to describe the function's input and output to planner.
 
 ```python
-@sk_function(
-    description="Adds value to a value",
-    name="Add",
-    input_description="The value to add",
-)
-@sk_function_context_parameter(
-    name="Amount",
-    description="Amount to add",
-)
-def add(self, initial_value_text: str, context: SKContext) -> str:
-    """
-    Returns the Addition result of initial and amount values provided.
-
-    :param initial_value_text: Initial value as string to add the specified amount
-    :param context: Contains the context to get the numbers from
-    :return: The resulting sum as a string
-    """
-    return MathPlugin.add_or_subtract(initial_value_text, context, add=True)
+@kernel_function(name="Add")
+def add(
+   self,
+   number1: Annotated[float, "the first number to add"],
+   number2: Annotated[float, "the second number to add"],
+) -> Annotated[float, "the output is a float"]:
+   return float(number1) + float(number2)
 ```
 
 ---

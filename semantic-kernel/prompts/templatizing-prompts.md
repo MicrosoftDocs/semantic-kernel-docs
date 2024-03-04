@@ -28,7 +28,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="15-17":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="28-49":::
 
 ---
 
@@ -38,11 +38,27 @@ When we invoke the prompt, we can pass in the `request` and `history` variables 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="6-7,35-38,91-100,119-146" highlight="22-23":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="6-7":::
+
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="35-38,91-100,119-146" highlight="20-21":::
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/04-Templatizing-Prompts/main.py" range="5-14, 19-37" highlight="14-16,22":::
+In the Python template, we just need to provide the value for the `history` variable.
+
+1. Import Semantic Kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="7-10" :::
+
+2. Create the kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="15" :::
+
+3. Add the service to the kernel.
+
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+
+4. Run the prompt in a chat loop.
+
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="51-77" highlight="19-23":::
 
 ---
 

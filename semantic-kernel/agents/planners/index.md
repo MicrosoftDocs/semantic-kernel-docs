@@ -51,7 +51,17 @@ To instantiate a planner, all you need to do is pass in a configuration object.
 # [Python](#tab/python)
 In Python, you currently need to pass in the kernel as well.
 
-:::code language="python" source="~/../samples/python/11-Planner/main.py" range="2-4,6-11,13-17":::
+1. Import Semantic Kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="7-8" :::
+
+2. Create the kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="13" :::
+
+3. Add the service to the kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+
+4. Create the planner.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="23-26":::
 
 ---
 
@@ -64,7 +74,7 @@ Now that we have planner, we can use it to create a plan for a user's ask and th
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathSolver.cs" range="38-44":::
 
 # [Python](#tab/python)
-:::code language="python" source="~/../samples/python/11-Planner/main.py" range="21-29":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="28-34":::
 
 ---
 
