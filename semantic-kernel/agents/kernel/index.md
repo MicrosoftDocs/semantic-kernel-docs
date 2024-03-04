@@ -52,15 +52,20 @@ If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method
 
 # [Python](#tab/python)
 Import the necessary packages:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="3,5-8":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="5-7,9,11":::
+
+Create a kernel.
+
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/using_the_kernel.py" range="14" :::
 
 If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
 
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="18-24" highlight="4":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46" highlight="4":::
 
 If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="27-34" highlight="4":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46" highlight="4":::
+.py" range="48-55" highlight="4":::
 
 ---
 
@@ -88,13 +93,13 @@ And took a break, said "Bye bye!"
 
 # [Python](#tab/python)
 Import the necessary packages:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="4":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/using_the_kernel.py" range="9":::
 
 Run the today function from the time plugin:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="36-38,45-47" highlight="4":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/using_the_kernel.py" range="20-22,31-33" highlight="4":::
 
 Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
-:::code language="python" source="~/../samples/python/01-Kernel-Intro/main.py" range="39-44,49-53" highlight="4":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/using_the_kernel.py" range="23-30, 35-37" highlight="4":::
 
 ---
 

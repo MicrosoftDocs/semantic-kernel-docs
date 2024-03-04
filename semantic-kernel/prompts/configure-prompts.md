@@ -31,7 +31,7 @@ In Python, you can define the following properties of a prompt:
 - **Description** - a description of what the prompt does
 - **Execution settings** - the settings used to execute the prompt (e.g., `max_tokens`, `temperature`)
 
-:::code language="python" source="~/../samples/python/06-Configuring-Prompts/main.py" range="34-40":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/configuring_prompts.py" range="43-67":::
 
 ---
 

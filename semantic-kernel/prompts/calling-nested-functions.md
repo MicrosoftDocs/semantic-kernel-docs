@@ -33,7 +33,7 @@ Below, we show how we can update our original prompt to use the `SummarizeConver
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="22-24" highlight="1":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/functions_within_prompts.py" range="43-65" highlight="1":::
 
 ---
 
@@ -46,7 +46,18 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="2-3,5-16":::
+1. Import Semantic Kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/functions_within_prompts.py" range="7-12" :::
+
+2. Create the kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/functions_within_prompts.py" range="17" :::
+
+3. Add the service to the kernel.
+
+    :::code language="python" source~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+
+4. Import the plugin and add it to the kernel.
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/functions_within_prompts.py" range="34-37":::
 
 ---
 
@@ -59,7 +70,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/05-Nested-Functions-In-Prompts/main.py" range="26-44":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/functions_within_prompts.py" range="67-91":::
 
 ---
 
