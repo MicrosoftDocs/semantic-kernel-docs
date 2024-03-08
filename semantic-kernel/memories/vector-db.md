@@ -40,7 +40,7 @@ you can use a vector database to store the latest information about that topic a
 
 ## Vector database in Azure
 The following Azure services can help you meet your vector database needs: 
-- [Azure Cosmos DB](/azure/cosmos-db/introduction) Vector Database Extension
+- [Azure Cosmos DB Vector Database](/azure/cosmos-db/mongodb/vcore/vector-search)
 - [Azure PostgreSQL Server pgvector Extension](/azure/postgresql/flexible-server/how-to-use-pgvector)
 - [Azure AI Search](/azure/search/search-what-is-azure-search)
 
