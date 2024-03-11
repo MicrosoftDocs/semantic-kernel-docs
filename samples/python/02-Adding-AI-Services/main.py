@@ -21,8 +21,8 @@ async def main():
                 "chat_completion",
                 AzureChatCompletion(
                     config.get("AZURE_OPEN_AI__CHAT_COMPLETION_DEPLOYMENT_NAME", None),
-                    config.get("AZURE_OPEN_AI__ENDPOINT", None),
-                    config.get("AZURE_OPEN_AI__API_KEY", None),
+                    endpoint=config.get("AZURE_OPEN_AI__ENDPOINT", None),
+                    api_key=config.get("AZURE_OPEN_AI__API_KEY", None),
                 ),
             )
         else:
@@ -31,8 +31,8 @@ async def main():
                 "text_completion",
                 AzureTextCompletion(
                     config.get("AZURE_OPEN_AI__TEXT_COMPLETION_DEPLOYMENT_NAME", None),
-                    config.get("AZURE_OPEN_AI__ENDPOINT", None),
-                    config.get("AZURE_OPEN_AI__API_KEY", None),
+                    endpoint=config.get("AZURE_OPEN_AI__ENDPOINT", None),
+                    api_key=config.get("AZURE_OPEN_AI__API_KEY", None),
                 ),
             )
     else:
@@ -44,8 +44,8 @@ async def main():
                 "chat_completion",
                 OpenAIChatCompletion(
                     config.get("OPEN_AI__CHAT_COMPLETION_MODEL_ID", None),
-                    config.get("OPEN_AI__API_KEY", None),
-                    config.get("OPEN_AI__ORG_ID", None),
+                    api_key=config.get("OPEN_AI__API_KEY", None),
+                    org_id=config.get("OPEN_AI__ORG_ID", None),
                 ),
             )
         else:
@@ -54,15 +54,15 @@ async def main():
                 "text_completion",
                 OpenAITextCompletion(
                     config.get("OPEN_AI__TEXT_COMPLETION_MODEL_ID", None),
-                    config.get("OPEN_AI__API_KEY", None),
-                    config.get("OPEN_AI__ORG_ID", None),
+                    api_key=config.get("OPEN_AI__API_KEY", None),
+                    org_id=config.get("OPEN_AI__ORG_ID", None),
                 ),
             )
 
     plugins_directory = "./plugins"
 
     # Import the WriterPlugin from the plugins directory.
-    writer_plugin = kernel.import_semantic_skill_from_directory(
+    writer_plugin = kernel.import_semantic_plugin_from_directory(
         plugins_directory, "WriterPlugin"
     )
 
