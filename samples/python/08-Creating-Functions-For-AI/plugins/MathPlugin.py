@@ -1,5 +1,5 @@
 import math
-from semantic_kernel.skill_definition import (
+from semantic_kernel.plugin_definition import (
     sk_function,
     sk_function_context_parameter,
 )

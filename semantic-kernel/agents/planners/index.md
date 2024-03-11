@@ -127,7 +127,7 @@ Output:
 {{/each}}
 ```
 
-The "function manual" describes al of the function that are available for the LLM to create a plan with.
+The "function manual" describes all of the function that are available for the LLM to create a plan with.
 
 ## Giving planner the _best_ data
 When you render the prompt, one of the main things you might notice is that all of the descriptions we provided for our functions are included in the prompt. For example, the description for `MathPlugin.Add` is included in the prompt as `Add two numbers`.
