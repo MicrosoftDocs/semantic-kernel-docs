@@ -27,21 +27,22 @@ The core plugins are planned to be available in all languages since they are cor
 
 You can find the full list of core plugins for each language by following the links below:
 - [C# core plugins](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Plugins/Plugins.Core)
-- [Python core plugins](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills)
+- [Python core plugins](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_plugins)
 
 ### Using core plugins in Semantic Kernel
 If you want to use one of the core plugins, you can easily import them into your project. For example, if you want to use the `TimePlugin` in either C# or Python, you can import it as follows.
 
 # [C#](#tab/Csharp)
 
-When using a core plugin, be sure to include a `using Microsoft.SemanticKernel.CoreSkills`:
+When using a core plugin, be sure to install the [Microsoft.SemanticKernel.Plugins.Core](https://www.nuget.org/packages/Microsoft.SemanticKernel.Plugins.Core/) nuget package, and include a `using Microsoft.SemanticKernel.Plugins.Core`:
 
 ```csharp
-using Microsoft.SemanticKernel.CoreSkills;
+using Microsoft.SemanticKernel.Plugins.Core;
 
-// Instantiate a kernel and configure it
+// Instantiate a kernelBuilder and configure it
 
-kernel.AddFromType<TimePlugin>();
+kernelBuilder.Plugins.AddFromType<TimePlugin>();
+var kernel = kernelBuilder.Build();
 
 const string promptTemplate = @"
 Today is: {{time.Date}}
@@ -51,7 +52,7 @@ Answer to the following questions using JSON syntax, including the data used.
 Is it morning, afternoon, evening, or night (morning/afternoon/evening/night)?
 Is it weekend time (weekend/not weekend)?";
 
-var results = await myKindOfDay.InvokePromptAsync(promptTemplate);
+var results = await kernel.InvokePromptAsync(promptTemplate);
 Console.WriteLine(results);
 ```
 
