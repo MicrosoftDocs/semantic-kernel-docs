@@ -38,7 +38,7 @@ If we wanted an AI to detect the intent of a user's input, we could simply _ask_
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="12-13,15":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="18,21":::
 
 ---
 
@@ -50,7 +50,17 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="2,5-9":::
+1. Import Semantic Kernel.
+
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="7":::
+
+2. Create the kernel.
+
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="12":::
+
+3. Add the service to the kernel.
+
+    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
 
 ---
 
@@ -62,7 +72,7 @@ Finally, we can invoke our prompt using our new kernel.
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="17-18":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="24-28":::
 
 ---
 
@@ -94,7 +104,7 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="21-22" highlight="2":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="32-33" highlight="2":::
 
 ---
 
@@ -115,7 +125,7 @@ To make the result more predictable, we can add structure to the prompt by using
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="28-31":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="44-47":::
 
 ---
 
@@ -131,7 +141,7 @@ For example, if you wanted the LLM to generate a JSON object, you could use the 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="37-59":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="58-64":::
 
 ---
 
@@ -155,7 +165,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="65-75" highlight="4-5,7-8":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="91-101" highlight="4-5,7-8":::
 
 ---
 
@@ -170,7 +180,7 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="81-92" highlight="2":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="112-123" highlight="2":::
 
 ---
 
@@ -195,7 +205,7 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [Python](#tab/python)
 
-:::code language="python" source="~/../samples/python/03-Intro-to-Prompts/main.py" range="98-114" highlight="1-4,15":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="134-150" highlight="1-4,15":::
 
 ---
 
