@@ -41,6 +41,7 @@ you can use a vector database to store the latest information about that topic a
 ## Vector database in Azure
 The following Azure services can help you meet your vector database needs: 
 - [Azure Cosmos DB](/azure/cosmos-db/introduction) Vector Database Extension
+- [Azure SQL Database](../../../azure-sql/database/ai-artificial-intelligence-intelligent-applications.md?view=azuresql&preserve-view=true#vector-search)
 - [Azure PostgreSQL Server pgvector Extension](/azure/postgresql/flexible-server/how-to-use-pgvector)
 - [Azure AI Search](/azure/search/search-what-is-azure-search)
 
@@ -53,6 +54,7 @@ Today, Semantic Kernel offers several connectors to vector databases that you ca
 | Vector Database in Azure Cosmos DB for MongoDB vCore | | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb) |
 | Azure AI Search   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCognitiveSearch) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cognitive_search) |
 | Azure PostgreSQL Server  | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Postgres) |
+| Azure SQL Database       | [C#](https://github.com/kbeaugrand/SemanticKernel.Connectors.Memory.SqlServer) |
 | Chroma                   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Chroma) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/chroma) |
 | DuckDB                   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.DuckDB) |  |
 | Milvus                   |  | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/milvus) |
