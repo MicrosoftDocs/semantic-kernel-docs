@@ -17,6 +17,7 @@ If you want to see the final solution, you can check out the following samples i
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Templates.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs) |
+| Java | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/05-Nested-Functions-In-Prompts) |
 
 
