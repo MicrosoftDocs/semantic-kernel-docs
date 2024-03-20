@@ -17,7 +17,7 @@ If you want to see any of these samples in a complete solution, you can check th
 | Language  | Link to final solution |
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/AIServices.cs) |
-| Java | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/dsgrieve/learn-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java) |
+| Java | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/02-Adding-AI-Services) |
 
 ## Azure OpenAI

@@ -43,12 +43,6 @@
       "url": "https://github.com/microsoft/semantic-kernel",
       "branch": "main",
       "branch_mapping": {}
-    },
-    {
-      "path_to_root": "semantic-kernel-samples/java",
-      "url": "https://github.com/microsoft/semantic-kernel",
-      "branch": "java-v1-learn-samples",
-      "branch_mapping": {}
     }
   ],
   "branch_target_mapping": {
