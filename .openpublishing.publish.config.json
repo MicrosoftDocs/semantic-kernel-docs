@@ -46,8 +46,8 @@
     },
     {
       "path_to_root": "semantic-kernel-samples/java",
-      "url": "https://github.com/microsoft/semantic-kernel",
-      "branch": "java-v1-learn-samples",
+      "url": "https://github.com/johnoliver/semantic-kernel",
+      "branch": "chathistory",
       "branch_mapping": {}
     }
   ],
