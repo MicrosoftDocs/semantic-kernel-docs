@@ -33,7 +33,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [Java](#tab/java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="create_chat":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="create_chat":::
 
 ---
 
