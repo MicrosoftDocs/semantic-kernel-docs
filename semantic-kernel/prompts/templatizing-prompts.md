@@ -67,7 +67,7 @@ In the Python template, we just need to provide the value for the `history` vari
 
 # [Java](#tab/java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
 
 ---
 
@@ -100,7 +100,7 @@ Finally, you can run the prompt using the kernel. Add the following code within 
 
 Functions can be created from handlebars templates:
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_prompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_prompt":::
 
 This template requires the following variables:
 - `choices` -  A list containing `[ContinueConversation, EndConversation]` that are the possible intents of a users request.
@@ -110,13 +110,13 @@ This template requires the following variables:
 
 These can be added to the arguments as:
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_1":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_1":::
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_2":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_2":::
 
 The function can then be invoked as normal:
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_invoke":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_invoke":::
 
 ---
 
