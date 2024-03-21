@@ -45,7 +45,7 @@
       "branch_mapping": {}
     },
     {
-      "path_to_root": "semantic-kernel-samples/java",
+      "path_to_root": "semantic-kernel-samples-java",
       "url": "https://github.com/johnoliver/semantic-kernel",
       "branch": "chathistory",
       "branch_mapping": {}
