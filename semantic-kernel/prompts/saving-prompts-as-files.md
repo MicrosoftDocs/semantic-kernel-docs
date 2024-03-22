@@ -74,7 +74,7 @@ For the `chat` function, we can use the same configuration [as before](./configu
 
 # [Java](#tab/Java)
 
-:::code language="json" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/Prompts/chat/config.json":::
+:::code language="json" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/Prompts/chat/config.json":::
 
 ---
 
@@ -91,7 +91,7 @@ At this point, you can import and test your function with the kernel by updating
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokeSerializedPrompts":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokeSerializedPrompts":::
 
 ---
 
@@ -140,17 +140,17 @@ To call the prompt, you can use the following code:
 
 Create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
 
-:::code language="yaml" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/resources/Plugins/getIntent.prompt.yaml":::
+:::code language="yaml" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/resources/Plugins/getIntent.prompt.yaml":::
 
 As a best practice, we recommend adding your prompts as an embedded resource.
 
 Finally, you can import your prompt in the Java file.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="LoadPromptFromYaml":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="LoadPromptFromYaml":::
 
 To call the prompt, you can use the following code:
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokePromptFromYaml":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokePromptFromYaml":::
 
 ---
 

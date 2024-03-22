@@ -93,7 +93,7 @@ All native functions must be defined as public methods of a class that represent
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelPlugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelPlugin":::
 
 ---
 
@@ -117,7 +117,7 @@ Also notice how we've added a description to each function with the `Description
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelFunction":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelFunction":::
 
 ---
 
@@ -135,7 +135,7 @@ Now that you've created the `Sqrt` function, you can create the remaining math f
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java":::
 
 ---
 
@@ -152,7 +152,7 @@ Now that you've created your first native function, you can import it and run it
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="RunNativeFunction":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="RunNativeFunction":::
 
 ---
 
@@ -173,7 +173,7 @@ While in the chat loop, we'll configure the OpenAI connection to automatically c
 
 ---
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="Conversation" highlight="7-12":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="Conversation" highlight="7-12":::
 
 
 When you run this code, you'll be able to ask the AI to perform math for you. For example, you can ask the AI to `Take the square root of 12` and it will return back the correct answer.
