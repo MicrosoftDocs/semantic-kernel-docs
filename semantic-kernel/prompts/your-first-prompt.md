@@ -18,6 +18,7 @@ If you want to see the final solution to this tutorial, you can check out the fo
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Prompts.cs) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/03-Intro-to-Prompts) |
+| Java | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java) |
 
 ## Creating a prompt that detects the intent of a user
 If you've ever used ChatGPT or Microsoft Copilot, you're already familiar with prompting. Given a request, an LLM will attempt to predict the most likely response. For example, if you sent the prompt `"I want to go to the "`, an AI service might return back `"beach"` to complete the sentence. This is a very simple example, but it demonstrates the basic idea of how text generation prompts work.
@@ -40,6 +41,10 @@ If we wanted an AI to detect the intent of a user's input, we could simply _ask_
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="18,21":::
 
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="InitialPrompt":::
+
 ---
 
 To run this prompt, we now need to create a kernel with an AI service.
@@ -60,7 +65,9 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 3. Add the service to the kernel.
 
-    :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46":::
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="KernelCreation":::
 
 ---
 
@@ -73,6 +80,10 @@ Finally, we can invoke our prompt using our new kernel.
 # [Python](#tab/python)
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="24-28":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="InvokeInitialPrompt":::
 
 ---
 
@@ -106,6 +117,10 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="32-33" highlight="2":::
 
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="MoreSpecificPrompt":::
+
 ---
 
 Now when you run the prompt with the same input, you should get a more usable result, but it's still not perfect since the AI responds with additional information.
@@ -127,6 +142,10 @@ To make the result more predictable, we can add structure to the prompt by using
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="44-47":::
 
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="StructuredPrompt":::
+
 ---
 
 By using this formatting, the AI is less likely to respond with a result that is more than just the intent.
@@ -142,6 +161,10 @@ For example, if you wanted the LLM to generate a JSON object, you could use the 
 # [Python](#tab/python)
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="58-64":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="FormattedPrompt":::
 
 ---
 
@@ -167,6 +190,10 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="91-101" highlight="4-5,7-8":::
 
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="FewShotPrompt":::
+
 ---
 
 ### 4) Tell the AI what to do to avoid doing something wrong
@@ -181,6 +208,10 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 # [Python](#tab/python)
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="112-123" highlight="2":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="AvoidPrompt":::
 
 ---
 
@@ -207,19 +238,35 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/prompts.py" range="134-150" highlight="1-4,15":::
 
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="ContextPrompt":::
+
 ---
 
 ### 6) Using message roles in chat completion prompts
 As your prompts become more complex, you may want to use message roles to help the AI differentiate between system instructions, user input, and AI responses. This is particularly important as we start to add the chat history to the prompt. The AI should know that some of the previous messages were sent by itself and not the user.
 
-In Semantic Kernel, a special syntax is used to define message roles. To define a message role, you simply wrap the message in `<message>` tag with the role name as an attribute. This is currently only available in the C# SDK.
+In Semantic Kernel, a special syntax is used to define message roles. To define a message role, you simply wrap the message in `<message>` tag with the role name as an attribute. This is currently only available in the C# and Java SDKs.
+
+# [C#](#tab/Csharp)
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="RolePrompt":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="RolePrompt":::
 
 ### 7) Give your AI words of encouragement
 Finally, research has shown that giving your AI words of encouragement can help it perform better. For example, offering bonuses or rewards for good results can yield better results. 
 
+# [C#](#tab/Csharp)
+
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="BonusPrompt":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="BonusPrompt":::
 
 
 ## Next steps

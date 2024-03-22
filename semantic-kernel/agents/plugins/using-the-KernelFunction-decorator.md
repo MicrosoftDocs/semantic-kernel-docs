@@ -21,6 +21,7 @@ If you want to see the final solution to this article, you can check out the fol
 | --- | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/SerializingPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/CreatingFunctons.cs) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/08-Creating-Functions-For-AI) |
+| Java | - | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java) |
 
 ## Why should you create functions for your AI?
 Large language models are great at generating text, but there are several tasks they cannot perform on their own. These include, but are not limited to:
@@ -49,7 +50,7 @@ To solve this problem, we'll demonstrate how to create native functions that can
 
 We recommend that you create a new folder for your plugins at the root of your project. We recommend putting this folder at the root of your project and calling it _Plugins_.
 
-Since we're giving our kernel the ability to perform math, we'll create a new plugin called `MathPlugin`. To do this, we'll create a _MathPlugin_ folder along with a file to store all its native functions. Depending on the language you're using, you'll create either a C# or Python file.
+Since we're giving our kernel the ability to perform math, we'll create a new plugin called `MathPlugin`. To do this, we'll create a _MathPlugin_ folder along with a file to store all its native functions. Depending on the language you're using, you'll create either a C#, Python or Java file.
 
 # [C#](#tab/Csharp)
 
@@ -66,13 +67,21 @@ Plugins
 │
 └─── Math.py
 ```
+
+# [Java](#tab/Java)
+
+```directory
+Plugins
+│
+└─── MathPlugin.java
+```
 ---
 
 ## Creating your native functions
-Open up the _MathPlugin.cs_ or _Math.py_ file you created earlier and follow the instructions below to create the `Sqrt` function. This function will take a single number as an input and return the square root of that number.
+Open up the _MathPlugin.cs_, _Math.py_ or _MathPlugin.java_ file you created earlier and follow the instructions below to create the `Sqrt` function. This function will take a single number as an input and return the square root of that number.
 
 ### Defining the class for your plugin
-All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your _MathPlugin.cs_ or _Math.py_ file. 
+All native functions must be defined as public methods of a class that represents your plugin. To begin, create a class called `Math` in your math plugin file. 
 
 # [C#](#tab/Csharp)
 
@@ -81,6 +90,10 @@ All native functions must be defined as public methods of a class that represent
 # [Python](#tab/python)
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="1-12":::
+
+# [Java](#tab/Java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelPlugin":::
 
 ---
 
@@ -102,6 +115,10 @@ Notice that the input and and return types are strings. This is because the kern
 
 Also notice how we've added a description to each function with the `Description` attribute. This description will be used in the future by the [planner](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
+# [Java](#tab/Java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelFunction":::
+
 ---
 
 ### Creating the remaining math functions
@@ -116,6 +133,10 @@ Now that you've created the `Sqrt` function, you can create the remaining math f
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py":::
 
+# [Java](#tab/Java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java":::
+
 ---
 
 ## Running your native function
@@ -129,16 +150,31 @@ Now that you've created your first native function, you can import it and run it
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/creating_functions.py"  highlight="24-28":::
 
+# [Java](#tab/Java)
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="RunNativeFunction":::
+
 ---
 
 The code should output `3.4641016151377544` since it's the square root of `12`.
 
 ### Allow the AI to automatically call your function
-Now that you've created your first native function, you can now allow the AI to automatically call it within the C# version of the SDK. To do this, let's go ahead and create a chat loop that will allow us to talk back-and-forth with our agent.
+Now that you've created your first native function, you can now allow the AI to automatically call it within the C# or Java version of the SDK. To do this, let's go ahead and create a chat loop that will allow us to talk back-and-forth with our agent.
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
+# [C#](#tab/Csharp)
+
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
+
+# [Java](#tab/Java)
+
+While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll call `withToolCallBehavior` in the `InvocationContext` builder with `ToolCallBehavior.allowAllKernelFunctions(true)`, `true` meaning the function auto-invocation is on for all kernel functions.
+
+---
+
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="Conversation" highlight="7-12":::
+
 
 When you run this code, you'll be able to ask the AI to perform math for you. For example, you can ask the AI to `Take the square root of 12` and it will return back the correct answer.
 

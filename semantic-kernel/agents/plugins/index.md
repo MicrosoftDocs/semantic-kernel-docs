@@ -91,6 +91,18 @@ def add(
    return float(number1) + float(number2)
 ```
 
+# [Java](#tab/Java)
+The following code is an excerpt from the `MathPlugin` plugin, which can be found in the [examples](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java) folder in the GitHub repository. It demonstrates how you can use the `kernel_function` and `Annotated` decorators to describe the function's input and output to planner.
+
+```java
+@DefineKernelFunction(name = "add", description = "Add two numbers")
+public static double add(
+      @KernelFunctionParameter(name = "number1", description = "The first number to add", type = double.class) double number1,
+      @KernelFunctionParameter(name = "number2", description = "The second number to add", type = double.class) double number2) {
+   return number1 + number2;
+}
+```
+
 ---
 
 You can learn more about creating native functions in the [Creating native functions](./using-the-KernelFunction-decorator.md) section. In this article you'll learn the best practices for the following:
