@@ -34,7 +34,7 @@ Below, we show how we can update our original prompt to use the `SummarizeConver
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" range="105-112":::
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="CreateFunctionFromPrompt":::
 
 # [Python](#tab/python)
 
@@ -51,7 +51,7 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" range="58-61":::
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="CreateKernel":::
 
 # [Python](#tab/python)
 
@@ -78,7 +78,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" range="115-162":::
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="ChatLoop":::
 
 # [Python](#tab/python)
 
@@ -98,7 +98,7 @@ Similar to the previous example, we can use the `SummarizeConversation` function
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" range="83-102":::
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="IntentFunction":::
 
 ## Take the next step
 Now that you can call nested functions, you can now learn how to [configure your prompts](./configure-prompts.md).

@@ -35,7 +35,7 @@ In Java, you can define the following properties of a prompt:
 - **Output variable** - the type of value that returned by the prompt (e.g., `java.lang.String`)
 - **Execution settings** - the settings for different models that can be used to execute the prompt
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/ConfiguringPrompts.java" range="58-93":::
+:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/ConfiguringPrompts.java" id="CreateFromPrompt":::
 
 # [Python](#tab/python)
 
