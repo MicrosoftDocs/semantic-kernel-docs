@@ -257,6 +257,8 @@ In Semantic Kernel, a special syntax is used to define message roles. To define 
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="RolePrompt":::
 
+---
+
 ### 7) Give your AI words of encouragement
 Finally, research has shown that giving your AI words of encouragement can help it perform better. For example, offering bonuses or rewards for good results can yield better results. 
 
@@ -267,6 +269,8 @@ Finally, research has shown that giving your AI words of encouragement can help 
 # [Java](#tab/java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="BonusPrompt":::
+
+---
 
 
 ## Next steps
