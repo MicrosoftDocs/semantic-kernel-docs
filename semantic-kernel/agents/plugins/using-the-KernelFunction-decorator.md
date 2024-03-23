@@ -167,9 +167,14 @@ While in the chat loop, we'll configure the OpenAI connection to automatically c
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
 
+# [Python](#tab/Python)
+
+<!-- empty for now -->
+
 # [Java](#tab/Java)
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll call `withToolCallBehavior` in the `InvocationContext` builder with `ToolCallBehavior.allowAllKernelFunctions(true)`, `true` meaning the function auto-invocation is on for all kernel functions.
+
 
 ---
 

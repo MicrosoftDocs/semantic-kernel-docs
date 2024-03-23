@@ -253,6 +253,10 @@ In Semantic Kernel, a special syntax is used to define message roles. To define 
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="RolePrompt":::
 
+# [Python](#tab/Python)
+
+<!-- empty for now -->
+
 # [Java](#tab/java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="RolePrompt":::
@@ -265,6 +269,10 @@ Finally, research has shown that giving your AI words of encouragement can help 
 # [C#](#tab/Csharp)
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="BonusPrompt":::
+
+# [Python](#tab/Python)
+
+<!-- empty for now -->
 
 # [Java](#tab/java)
 

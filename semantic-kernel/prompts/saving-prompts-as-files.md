@@ -134,7 +134,12 @@ Finally, you can import your prompt in the _Program.cs_ file.
 
 To call the prompt, you can use the following code:
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" range="82-92":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" 
+range="82-92":::
+
+# [Python](#tab/Python)
+
+<!-- empty for now -->
 
 # [Java](#tab/Java)
 
