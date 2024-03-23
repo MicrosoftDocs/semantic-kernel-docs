@@ -137,7 +137,7 @@ To call the prompt, you can use the following code:
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" 
 range="82-92":::
 
-# [Python](#tab/Python)
+# [Python](#tab/python)
 
 <!-- empty for now -->
 

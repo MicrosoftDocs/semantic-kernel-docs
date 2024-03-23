@@ -253,7 +253,7 @@ In Semantic Kernel, a special syntax is used to define message roles. To define 
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="RolePrompt":::
 
-# [Python](#tab/Python)
+# [Python](#tab/python)
 
 <!-- empty for now -->
 
@@ -270,7 +270,7 @@ Finally, research has shown that giving your AI words of encouragement can help 
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="BonusPrompt":::
 
-# [Python](#tab/Python)
+# [Python](#tab/python)
 
 <!-- empty for now -->
 
