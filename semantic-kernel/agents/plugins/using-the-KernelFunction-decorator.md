@@ -161,9 +161,9 @@ The code should output `3.4641016151377544` since it's the square root of `12`.
 ### Allow the AI to automatically call your function
 Now that you've created your first native function, you can now allow the AI to automatically call it within the C# or Java version of the SDK. To do this, let's go ahead and create a chat loop that will allow us to talk back-and-forth with our agent.
 
-While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
-
 # [C#](#tab/Csharp)
+
+While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
 
@@ -173,7 +173,7 @@ While in the chat loop, we'll configure the OpenAI connection to automatically c
 
 # [Java](#tab/Java)
 
-While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll call `withToolCallBehavior` in the `InvocationContext` builder with `ToolCallBehavior.allowAllKernelFunctions(true)`, `true` meaning the function auto-invocation is on for all kernel functions.
+While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll build an `InvocationContext` with `ToolCallBehavior.allowAllKernelFunctions(true)`, `true` meaning the function auto-invocation is on for all kernel functions.
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="Conversation" highlight="11-14":::
 
