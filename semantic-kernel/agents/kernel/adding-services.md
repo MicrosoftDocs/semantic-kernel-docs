@@ -46,11 +46,11 @@ To add an Azure OpenAI chat completion service to your Semantic Kernel project, 
 # [Java](#tab/Java)
 To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to create a `ChatCompletionService`.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateChatCompletionService":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateChatCompletionService":::
 
 Then use the `withAIService` method of the `Kernel.Builder` to add the service to the kernel.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
 
 # [Python](#tab/python)
 To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to use the `AzureChatCompletion` class.
@@ -70,11 +70,11 @@ To add an Azure OpenAI text generation service to your Semantic Kernel project, 
  
 To add an Azure OpenAI text generation service to your Semantic Kernel project, you will need to create a `TextGenerationService`.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateTextGenerationService":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateTextGenerationService":::
 
 Then use the `withAIService` method of the `Kernel.Builder` to add the service to the kernel.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
 
 # [Python](#tab/python)
 To add an Azure OpenAI text generation service to your Semantic Kernel project, you will need to use the `AzureTextCompletion` class.
@@ -109,11 +109,11 @@ To add an OpenAI text generation service to your Semantic Kernel project, you wi
 # [Java](#tab/Java)
 To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to create a `ChatCompletionService`.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateChatCompletionService":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateChatCompletionService":::
 
 Then use the `withAIService` method of the `Kernel.Builder` to add the service to the kernel.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
 
 # [Python](#tab/python)
 To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the `OpenAIChatCompletion` class.
@@ -133,11 +133,11 @@ To add an OpenAI text generation service to your Semantic Kernel project, you wi
  
 To add an Azure OpenAI text generation service to your Semantic Kernel project, you will need to create a `TextGenerationService`.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateTextGenerationService":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateTextGenerationService":::
 
 Then use the `withAIService` method of the `Kernel.Builder` to add the service to the kernel.
 
-:::code language="java" source="~/../semantic-kernel-samples/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java" id="CreateKernel":::
 
 # [Python](#tab/python)
 To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the `OpenAITextCompletion` class.
