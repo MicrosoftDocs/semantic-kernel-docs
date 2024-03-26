@@ -18,6 +18,7 @@ By following this example, you'll learn how to templatize a prompt. If you want 
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Templates.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/KernelSyntaxExamples/Example31_SerializingPrompts.cs) |
 | Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) |
+| Java |  | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java) |
 
 ## Adding variables to the prompt
 With Semantic Kernel's templating language, we can add tokens that will be automatically replaced with input parameters. To begin, let's build a super simple prompt that uses the Semantic Kernel template syntax language to include enough information for an agent to respond back to the user.
@@ -29,6 +30,10 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 # [Python](#tab/python)
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="28-49":::
+
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="create_chat":::
 
 ---
 
@@ -60,10 +65,16 @@ In the Python template, we just need to provide the value for the `history` vari
 
     :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="51-77" highlight="19-23":::
 
+# [Java](#tab/java)
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
+
 ---
 
 ## Using the Handlebars template engine
-In addition to the core template syntax, Semantic Kernel also comes with support for the Handlebars templating language in the C# SDK. To use Handlebars, you'll first want to add the Handlebars package to your project.
+In addition to the core template syntax, Semantic Kernel also comes with support for the Handlebars templating language in the C# and Java SDK. To use Handlebars, you'll first want to add the Handlebars package to your project.
+
+# [C#](#tab/Csharp)
 
 ```console
 dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelease
@@ -84,6 +95,30 @@ We can then create the choice and example objects that will be used by the templ
 Finally, you can run the prompt using the kernel. Add the following code within your main chat loop so the loop can be terminated once the intent is `EndConversation`.
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="101-117" highlight="14":::
+
+# [Java](#tab/java)
+
+Functions can be created from handlebars templates:
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_prompt":::
+
+This template requires the following variables:
+- `choices` -  A list containing `[ContinueConversation, EndConversation]` that are the possible intents of a users request.
+- `fewShotExamples` - A list of examples demonstraiting how the AI should classify a statement.
+- `history` - The conversation the AI and user has had so far.
+- `request` - The users current request
+
+These can be added to the arguments as:
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_1":::
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_2":::
+
+The function can then be invoked as normal:
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_invoke":::
+
+---
 
 ## Take the next step
 Now that you can templatize your prompt, you can now learn how to call functions from within
