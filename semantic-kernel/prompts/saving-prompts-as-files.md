@@ -19,8 +19,8 @@ If you want to see the final solution, you can check out the following samples i
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/SerializingPrompts.cs) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/05-Nested-Functions-In-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) |
 | Java | - | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/05-Nested-Functions-In-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) |
 
 
 ## Creating a home for your prompts
@@ -64,38 +64,40 @@ Next, we need to define the configuration for the `chat` function. When serializ
 
 For the `chat` function, we can use the same configuration [as before](./configure-prompts.md).
 
-
 # [C#](#tab/Csharp)
+
 :::code language="json" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/Prompts/chat/config.json":::
-
-# [Python](#tab/python)
-
-:::code language="json" source="~/../samples/python/07-Serializing-Prompts/prompts/chat/config.json":::
 
 # [Java](#tab/Java)
 
 :::code language="json" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/resources/Plugins/Prompts/chat/config.json":::
 
+# [Python](#tab/python)
+
+:::code language="json" source="~/../samples/python/07-Serializing-Prompts/prompts/chat/config.json":::
+
 ---
 
-
 ### Testing your prompt
+
 At this point, you can import and test your function with the kernel by updating your _Program.cs_, _main.py_ or _Main.java_ file to the following.
 
 # [C#](#tab/Csharp)
+
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" range="8-10,38-46,74-81,99-129":::
-
-# [Python](#tab/python)
-
-:::code language="python" source="~/../samples/python/07-Serializing-Prompts/main.py" range="2-3,5-10,12-41":::
 
 # [Java](#tab/Java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokeSerializedPrompts":::
 
+# [Python](#tab/python)
+
+:::code language="python" source="~/../samples/python/07-Serializing-Prompts/main.py" range="2-3,5-10,12-41":::
+
 ---
 
 ## Using YAML to serialize your prompt
+
 In addition to the _skprompt.txt_ and _config.json_ files, you can also serialize your prompt using a single YAML file while using the C# or Java SDK. This is useful if you want to use a single file to define your prompt. Additionally, this is the same format that is used by Azure AI Studio, making it easier to share prompts between the two platforms.
 
 Let's try creating a YAML serialization file for the `getIntent` prompt.
@@ -116,7 +118,7 @@ dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelea
 
 Next, create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
 
-:::code language="yaml" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Resources/getIntent.prompt.yaml":::
+:::code language="yaml" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Resources/Prompts/getIntent.prompt.yaml":::
 
 You should notice that all of the same properties that were defined in the _config.json_ file are now defined in the YAML file. Additionally, the `template` property is used to define the prompt template.
 
@@ -136,10 +138,6 @@ To call the prompt, you can use the following code:
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/SerializingPrompts.cs" range="82-92":::
 
-# [Python](#tab/python)
-
-<!-- empty for now -->
-
 # [Java](#tab/Java)
 
 Create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
@@ -156,11 +154,14 @@ To call the prompt, you can use the following code:
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokePromptFromYaml":::
 
+# [Python](#tab/python)
+
+<!-- empty for now -->
+
 ---
 
-
-
 ## Take the next step
+
 Now that you know how to save your prompts, you can begin learning how to create an agent.
 
 > [!div class="nextstepaction"]

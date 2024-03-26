@@ -29,16 +29,7 @@ Instructions for accessing the `SemanticKernel` Nuget feed is available [here](h
 #r "nuget: Microsoft.SemanticKernel, *-*"
 ```
 
-# [Python](#tab/python)
-
-Instructions for accessing the `SemanticKernel` Python package is available [here](https://pypi.org/project/semantic-kernel/). It's as easy as:
-
-```PyPI
-pip install semantic-kernel
-```
-
-
-# [Java](#tab/java)
+# [Java](#tab/Java)
 
 The `SemanticKernel` bom is available [here](https://repo1.maven.org/maven2/com/microsoft/semantic-kernel/semantickernel-bom/). Using the package is as easy as:
 
@@ -59,6 +50,14 @@ The `SemanticKernel` bom is available [here](https://repo1.maven.org/maven2/com/
         <groupId>com.microsoft.semantic-kernel</groupId>
         <artifactId>semantickernel-api</artifactId>
     </dependency>
+```
+
+# [Python](#tab/python)
+
+Instructions for accessing the `SemanticKernel` Python package is available [here](https://pypi.org/project/semantic-kernel/). It's as easy as:
+
+```PyPI
+pip install semantic-kernel
 ```
 
 ---

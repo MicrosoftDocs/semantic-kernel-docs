@@ -20,8 +20,8 @@ If you want to see the final solution to this article, you can check out the fol
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/SerializingPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/CreatingFunctons.cs) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/08-Creating-Functions-For-AI) |
 | Java | - | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/08-Creating-Functions-For-AI) |
 
 ## Why should you create functions for your AI?
 Large language models are great at generating text, but there are several tasks they cannot perform on their own. These include, but are not limited to:
@@ -60,6 +60,14 @@ Plugins
 └─── MathPlugin.cs
 ```
 
+# [Java](#tab/Java)
+
+```directory
+Plugins
+│
+└─── MathPlugin.java
+```
+
 # [Python](#tab/python)
 
 ```directory
@@ -68,13 +76,6 @@ Plugins
 └─── Math.py
 ```
 
-# [Java](#tab/Java)
-
-```directory
-Plugins
-│
-└─── MathPlugin.java
-```
 ---
 
 ## Creating your native functions
@@ -87,13 +88,13 @@ All native functions must be defined as public methods of a class that represent
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="4-10":::
 
-# [Python](#tab/python)
-
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="1-12":::
-
 # [Java](#tab/Java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelPlugin":::
+
+# [Python](#tab/python)
+
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="1-12":::
 
 ---
 
@@ -107,6 +108,10 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 
 Notice how we've added a description to the function and each of its parameters with the `Description` attribute. This description will be used by function calling and by [planners](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
+# [Java](#tab/Java)
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelFunction":::
+
 # [Python](#tab/python)
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/plugins/MathPlugin/native_function.py" range="48-56" highlight="1-4":::
@@ -115,15 +120,10 @@ Notice that the input and and return types are strings. This is because the kern
 
 Also notice how we've added a description to each function with the `Description` attribute. This description will be used in the future by the [planner](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
-# [Java](#tab/Java)
-
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins/MathPlugin.java" id="KernelFunction":::
-
 ---
 
 ### Creating the remaining math functions
 Now that you've created the `Sqrt` function, you can create the remaining math functions. To do this, you can copy the `Sqrt` function and update the code to perform the correct math operation. Below is the entire `MathPlugin` class with all the functions implemented.
-
 
 # [C#](#tab/Csharp)
 
@@ -146,13 +146,13 @@ Now that you've created your first native function, you can import it and run it
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="4-7,34,36-47" highlight="12":::
 
-# [Python](#tab/python)
-
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/creating_functions.py"  highlight="24-28":::
-
 # [Java](#tab/Java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="RunNativeFunction":::
+
+# [Python](#tab/python)
+
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/creating_functions.py"  highlight="24-28":::
 
 ---
 
@@ -167,15 +167,15 @@ While in the chat loop, we'll configure the OpenAI connection to automatically c
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
 
-# [Python](#tab/python)
-
-<!-- empty for now -->
-
 # [Java](#tab/Java)
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll build an `InvocationContext` with `ToolCallBehavior.allowAllKernelFunctions(true)`, `true` meaning the function auto-invocation is on for all kernel functions.
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="Conversation" highlight="11-14":::
+
+# [Python](#tab/python)
+
+<!-- empty for now -->
 
 ---
 
