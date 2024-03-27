@@ -17,8 +17,8 @@ By following this example, you'll learn how to templatize a prompt. If you want 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Templates.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/KernelSyntaxExamples/Example31_SerializingPrompts.cs) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) |
 | Java |  | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java) |
+| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/07-Serializing-Prompts) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/04-Templatizing-Prompts) |
 
 ## Adding variables to the prompt
 With Semantic Kernel's templating language, we can add tokens that will be automatically replaced with input parameters. To begin, let's build a super simple prompt that uses the Semantic Kernel template syntax language to include enough information for an agent to respond back to the user.
@@ -27,13 +27,13 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="40-44":::
 
-# [Python](#tab/python)
-
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="28-49":::
-
 # [Java](#tab/Java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="create_chat":::
+
+# [Python](#tab/python)
+
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="28-49":::
 
 ---
 
@@ -46,6 +46,10 @@ When we invoke the prompt, we can pass in the `request` and `history` variables 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="6-7":::
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="35-38,91-100,119-146" highlight="20-21":::
+
+# [Java](#tab/Java)
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
 
 # [Python](#tab/python)
 
@@ -64,10 +68,6 @@ In the Python template, we just need to provide the value for the `history` vari
 4. Run the prompt in a chat loop.
 
     :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="51-77" highlight="19-23":::
-
-# [Java](#tab/Java)
-
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
 
 ---
 
@@ -117,6 +117,10 @@ These can be added to the arguments as:
 The function can then be invoked as normal:
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_invoke":::
+
+# [Python](#tab/python)
+
+<!-- empty for now -->
 
 ---
 
