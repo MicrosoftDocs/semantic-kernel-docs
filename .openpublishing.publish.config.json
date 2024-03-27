@@ -46,8 +46,8 @@
     },
     {
       "path_to_root": "semantic-kernel-samples-java",
-      "url": "https://github.com/milderhc/semantic-kernel",
-      "branch": "documentation",
+      "url": "https://github.com/microsoft/semantic-kernel",
+      "branch": "java-v1",
       "branch_mapping": {}
     }
   ],
