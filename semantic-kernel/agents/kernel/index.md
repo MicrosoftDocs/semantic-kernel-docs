@@ -58,13 +58,27 @@ Create a kernel.
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/using_the_kernel.py" range="14" :::
 
-If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
+If you are integrating Azure OpenAI services into your application, you should select the appropriate class based on the model you are utilizing:
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46" highlight="2":::
+**For Chat Models with Azure**: If you are utilizing the Chat model, employ the `AzureChatCompletion` class. This class is specifically designed for interacting with chat-based models, offering a structured way to manage chat sessions.
 
-If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-47" highlight="2":::
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="48-55" highlight="2":::
+**For Completion Models with Azure**: If you are working with the Completion model, use the `AzureTextCompletion` class. This class is tailored for generating text completions, ideal for a variety of applications ranging from content creation to code generation.
+
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="48-56" highlight="2":::
+
+Similarly, when utilizing OpenAI's API:
+
+**For Chat Models with OpenAI**: When using chat models such as gpt-4, gpt-4-turbo-preview, or gpt-3.5-turbo, the `OpenAIChatCompletion` class should be your go-to. This class facilitates interaction with the AI in a conversational format, supporting nuanced dialogues and responses.
+
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="57-67" highlight="2":::
+
+**For Completion Models with OpenAI**: For working with completion models like gpt-3.5-turbo-instruct, babbage-002, or davinci-002, opt for the `OpenAITextCompletion` class. This class is adept at generating text based on a prompt, suitable for diverse applications including automated responses and content generation.
+
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="68-76" highlight="2":::
+
+For further understanding of the distinctions between Chat Completions and Completions models, please refer to: [Chat Completions vs. Completions](https://platform.openai.com/docs/guides/text-generation/completions-api).
 
 ---
 
