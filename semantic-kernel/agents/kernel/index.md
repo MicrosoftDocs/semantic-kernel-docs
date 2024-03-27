@@ -67,7 +67,7 @@ If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="48-55" highlight="2":::
 
-# [Java](#tab/java)
+# [Java](#tab/Java)
 
 To build a kernel that uses OpenAI for chat completion, it can be created as follows.
 
@@ -109,7 +109,7 @@ Run the today function from the time plugin:
 Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/using_the_kernel.py" range="23-30, 35-37" highlight="10":::
 
-# [Java](#tab/java)
+# [Java](#tab/Java)
 
 Run the native plugin `MathPlugin`
 

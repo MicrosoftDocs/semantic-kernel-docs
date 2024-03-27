@@ -100,6 +100,10 @@ Similar to the previous example, we can use the `SummarizeConversation` function
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="IntentFunction":::
 
+# [Python](#tab/python)
+
+<!-- empty for now -->
+
 ## Take the next step
 Now that you can call nested functions, you can now learn how to [configure your prompts](./configure-prompts.md).
 

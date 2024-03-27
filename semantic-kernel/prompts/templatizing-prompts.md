@@ -31,7 +31,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="28-49":::
 
-# [Java](#tab/java)
+# [Java](#tab/Java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="create_chat":::
 
@@ -65,7 +65,7 @@ In the Python template, we just need to provide the value for the `history` vari
 
     :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/templates.py" range="51-77" highlight="19-23":::
 
-# [Java](#tab/java)
+# [Java](#tab/Java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
 
@@ -96,7 +96,7 @@ Finally, you can run the prompt using the kernel. Add the following code within 
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Templates.cs" range="101-117" highlight="14":::
 
-# [Java](#tab/java)
+# [Java](#tab/Java)
 
 Functions can be created from handlebars templates:
 
