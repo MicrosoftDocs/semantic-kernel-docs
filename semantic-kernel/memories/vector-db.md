@@ -38,9 +38,9 @@ For example,
 if you want to write a blog post about the latest trends in AI,
 you can use a vector database to store the latest information about that topic and pass the information along with the ask to a LLM in order to generate a blog post that leverages the latest information.
 
-## Vector database in Azure
-The following Azure services can help you meet your vector database needs: 
-- [Azure Cosmos DB](/azure/cosmos-db/introduction) Vector Database
+## Vector database solutions
+The following Microsoft services can help you meet your vector database needs: 
+- [Azure Cosmos DB for MongoDB](/azure/cosmos-db/mongodb/vcore/vector-search) Integrated Vector Database
 - [Azure SQL Database](/azure/azure-sql/database/ai-artificial-intelligence-intelligent-applications?&preserve-view=true#vector-search)
 - [Azure PostgreSQL Server pgvector Extension](/azure/postgresql/flexible-server/how-to-use-pgvector)
 - [Azure AI Search](/azure/search/search-what-is-azure-search)
