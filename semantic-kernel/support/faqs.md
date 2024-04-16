@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 
 
 ## Why is the Kernel only in C# and Python?
-Both C# and Python are popular coding language and we're actively adding additional languages based on community feedback. Both [Java](https://github.com/microsoft/semantic-kernel/tree/experimental-java) and [Typescript](https://github.com/microsoft/semantic-kernel/tree/experimental-typescript) are on our roadmap and being actively developed in experimental branches.
+Both C# and Python are popular coding language and we're actively adding additional languages based on community feedback. [Java](https://github.com/microsoft/semantic-kernel/tree/experimental-java) is on our roadmap and being actively developed in experimental branches.
 
 ## Where are the sample plugins?
 We have [sample apps](/semantic-kernel/samples) and plugins you can try out so you can quickly learn the concepts of Semantic Kernel.

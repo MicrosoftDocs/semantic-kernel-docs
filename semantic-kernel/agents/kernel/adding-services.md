@@ -18,7 +18,7 @@ If you want to see any of these samples in a complete solution, you can check th
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/AIServices.cs) |
 | Java | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/02-Adding-AI-Services) |
+| Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/service_configurator.py) |
 
 ## Azure OpenAI
 With Azure OpenAI, you can deploy most of the OpenAI models to the cloud and use them in your Semantic Kernel project. Depending on the model that you want to use, however, you will either need to add the model as a text generation service or as a chat completion service.
@@ -55,7 +55,7 @@ Then use the `withAIService` method of the `Kernel.Builder` to add the service t
 # [Python](#tab/python)
 To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to use the `AzureChatCompletion` class.
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46" highlight="2":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="48-55" highlight="2":::
 
 ---
 
@@ -79,7 +79,7 @@ Then use the `withAIService` method of the `Kernel.Builder` to add the service t
 # [Python](#tab/python)
 To add an Azure OpenAI text generation service to your Semantic Kernel project, you will need to use the `AzureTextCompletion` class.
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="48-55" highlight="2":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="57-64" highlight="2":::
 
 ---
 
@@ -118,7 +118,7 @@ Then use the `withAIService` method of the `Kernel.Builder` to add the service t
 # [Python](#tab/python)
 To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the `OpenAIChatCompletion` class.
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="59-66" highlight="2":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="77-84" highlight="2":::
 
 ---
 
@@ -142,7 +142,7 @@ Then use the `withAIService` method of the `Kernel.Builder` to add the service t
 # [Python](#tab/python)
 To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the `OpenAITextCompletion` class.
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="68-75" highlight="2":::
+:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="86-93" highlight="2":::
 
 ---
 

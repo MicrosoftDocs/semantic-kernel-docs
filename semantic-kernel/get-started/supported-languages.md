@@ -15,7 +15,7 @@ Semantic Kernel plans on providing support to the following languages:
 > [!div class="checklist"]
 > * C#
 > * Python
-> * Java ([available here](https://github.com/microsoft/semantic-kernel/tree/experimental-java))
+> * Java ([available here](https://github.com/microsoft/semantic-kernel/blob/java-v1))
 
 While the overall architecture of the kernel is consistent across all languages, we made sure the SDK for each language follows common paradigms and styles in each language to make it feel native and easy to use.
 

@@ -91,7 +91,7 @@ public static double add(
 
 # [Python](#tab/python)
 
-The following code is an excerpt from the `MathPlugin` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_skills) folder in the GitHub repository. It demonstrates how you can use the `kernel_function` and `Annotated` decorators to describe the function's input and output to planner.
+The following code is an excerpt from the `MathPlugin` plugin, which can be found in the [core skills](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_plugins) folder in the GitHub repository. It demonstrates how you can use the `kernel_function` and `Annotated` decorators to describe the function's input and output to planner.
 
 ```python
 @kernel_function(name="Add")
