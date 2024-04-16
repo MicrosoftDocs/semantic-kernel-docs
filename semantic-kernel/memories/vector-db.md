@@ -41,13 +41,15 @@ For example, if you want to write a blog post about the latest trends in AI, you
 - [Azure AI Search](/azure/search/search-what-is-azure-search)
 - [Open-source vector databases](/azure/cosmos-db/mongodb/vcore/vector-search-ai)
 
+:::image type="content" source="../media/decision-guide-databases-and-ai-search.png" lightbox="../media/decision-guide-databases-and-ai-search.png" alt-text="Vector indexing service decision guide":::
+
 ## Available connectors to vector databases
 Today, Semantic Kernel offers several connectors to vector databases that you can use to store and retrieve information. These include:
 
 
 | Service                  | C# | Python |
 |--------------------------|:----:|:------:|
-| Vector Database in Azure Cosmos DB for MongoDB vCore | | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb) |
+| Vector Database in Azure Cosmos DB for MongoDB (vCore) | | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb) |
 | Azure AI Search   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureAISearch) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cognitive_search) |
 | Azure PostgreSQL Server  | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Postgres) |
 | Azure SQL Database       | [C#](https://github.com/kbeaugrand/SemanticKernel.Connectors.Memory.SqlServer) |
