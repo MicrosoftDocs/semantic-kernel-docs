@@ -25,7 +25,7 @@ This article uses the completed solution from the [preview article](./create-a-p
 | Language | Link to completed solution |
 | --- | --- |
 | C# | Not available |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/12-Evaluate-with-Prompt-Flow) |
+| Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/evaluate_with_prompt_flow.py) |
 
 ## Create benchmark data for your Prompt flow
 All benchmark data can be found in the _data.jsonl_ file. This file contains a list of JSON objects that contains the input and the correct ground truth. Let's update the _data.jsonl_ file with data that we can use to evaluate our plugin.
