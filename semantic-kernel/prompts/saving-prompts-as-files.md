@@ -154,9 +154,6 @@ To call the prompt, you can use the following code:
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokePromptFromYaml":::
 
-# [Python](#tab/python)
-
-<!-- empty for now -->
 
 ---
 
