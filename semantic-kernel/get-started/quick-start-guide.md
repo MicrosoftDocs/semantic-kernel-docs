@@ -29,6 +29,29 @@ Instructions for accessing the `SemanticKernel` Nuget feed is available [here](h
 #r "nuget: Microsoft.SemanticKernel, *-*"
 ```
 
+# [Java](#tab/Java)
+
+The `SemanticKernel` bom is available [here](https://repo1.maven.org/maven2/com/microsoft/semantic-kernel/semantickernel-bom/). Using the package is as easy as:
+
+```xml
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.microsoft.semantic-kernel</groupId>
+                <artifactId>semantickernel-bom</artifactId>
+                <version>${semantickernel.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependency>
+        <groupId>com.microsoft.semantic-kernel</groupId>
+        <artifactId>semantickernel-api</artifactId>
+    </dependency>
+```
+
 # [Python](#tab/python)
 
 Instructions for accessing the `SemanticKernel` Python package is available [here](https://pypi.org/project/semantic-kernel/). It's as easy as:
@@ -45,8 +68,8 @@ pip install semantic-kernel
 Before running the guides in C#, make sure you have the following installed on your local machine.
 
 > [!div class="checklist"]
-> * `git` or the [GitHub app](https://desktop.github.com/) 
-> * [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/) 
+> * `git` or the [GitHub app](https://desktop.github.com/)
+> * [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/)
 > * An OpenAI key via either [Azure OpenAI Service](/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio) or [OpenAI](https://openai.com/api/)
 > * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for C# notebook guides
 > * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook guides
@@ -60,7 +83,7 @@ To setup the guides, follow the steps below.
 > Have your OpenAI or Azure OpenAI keys ready to enter when prompted by the Jupyter notebook.
 
 
-1. Use your web browser to visit [aka.ms/sk/repo](https://github.com/microsoft/semantic-kernel) on GitHub. 
+1. Use your web browser to visit [aka.ms/sk/repo](https://github.com/microsoft/semantic-kernel) on GitHub.
 
 2. Clone or fork the repo to your local machine.
 
@@ -84,9 +107,17 @@ To setup the guides, follow the steps below.
 
 7. Repeat for the remaining notebooks.
 
+### Run Java Samples
+Details of running the Java samples can be found [here] (https://github.com/microsoft/semantic-kernel/tree/java-v1/java/samples/sample-code).
+
+```shell
+AZURE_CLIENT_KEY="my-key" \
+CLIENT_ENDPOINT="https://<MY_INSTANCE>.openai.azure.com/" \
+../../mvnw exec:java -Dsample=Example13_ConversationSummaryPlugin -Dexec.cleanupDaemonThreads=false
+```
 
 ## Like what you see?
-If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support. 
+If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support.
 
 :::image type="content" source="../media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
 

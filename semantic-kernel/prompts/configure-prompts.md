@@ -24,6 +24,19 @@ In C#, you can define the following properties of a prompt:
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/ConfiguringPrompts.cs" id="FunctionFromPrompt":::
 
+# [Java](#tab/Java)
+
+In Java, you can define the following properties of a prompt:
+- **Name** - the name of the prompt
+- **Description** - a description of what the prompt does
+- **Template format** - the format of the prompt template (e.g., `semantic-kernel`, `handlebars`)
+- **Input variables** - the variables that are used inside of the prompt (e.g., `request`)
+- **Input variables** - the variables that are used inside of the prompt (e.g., `request`)
+- **Output variable** - the type of value that returned by the prompt (e.g., `java.lang.String`)
+- **Execution settings** - the settings for different models that can be used to execute the prompt
+
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/ConfiguringPrompts.java" id="CreateFromPrompt":::
+
 # [Python](#tab/python)
 
 In Python, you can define the following properties of a prompt:
