@@ -25,6 +25,7 @@ This article uses the completed solution from the [preview article](./create-a-p
 | Language | Link to completed solution |
 | --- | --- |
 | C# | Not available |
+| Java | Not available |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/evaluate_with_prompt_flow.py) |
 
 ## Create benchmark data for your Prompt flow

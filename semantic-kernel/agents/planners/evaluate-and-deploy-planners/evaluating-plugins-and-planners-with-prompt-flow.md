@@ -25,6 +25,7 @@ This article uses the completed solution from the [preview article](./create-a-p
 | Language | Link to previous solution | Link to completed solution |
 | --- | --- |
 | C# | N/A |  Not available |
+| Java | N/A | Not available |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/evaluate_with_prompt_flow.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/improved_evaluate_with_prompt_flow.py) |
 
 

@@ -8,7 +8,6 @@ ms.date: 02/07/2023
 ms.service: semantic-kernel
 ---
 # Schillace Laws of Semantic AI
-[!INCLUDE [pat_large.md](../includes/pat_small.md)]
 
 ## Consider the future of this decidedly "semantic" AI
 

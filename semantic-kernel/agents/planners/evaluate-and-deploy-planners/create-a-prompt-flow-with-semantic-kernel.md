@@ -25,6 +25,7 @@ If you want to see the final solution to this article, you can check out the fol
 | Language | Link to previous solution | Link to final solution |
 | --- | --- |
 | C# |  Not applicable | Not available |
+| Java |  Not applicable | Not available |
 | Python |  [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/planner.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/evaluate_with_prompt_flow.py) |
 
 ## Create a new Prompt flow
