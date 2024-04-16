@@ -27,10 +27,11 @@ The core plugins are planned to be available in all languages since they are cor
 
 You can find the full list of core plugins for each language by following the links below:
 - [C# core plugins](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Plugins/Plugins.Core)
+- [Java sample plugins](https://github.com/microsoft/semantic-kernel/tree/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/plugins)
 - [Python core plugins](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/core_plugins)
 
 ### Using core plugins in Semantic Kernel
-If you want to use one of the core plugins, you can easily import them into your project. For example, if you want to use the `TimePlugin` in either C# or Python, you can import it as follows.
+If you want to use one of the core plugins, you can easily import them into your project. For example, if you want to use the `TimePlugin` in C#, Java or Python, you can import it as follows.
 
 # [C#](#tab/Csharp)
 
@@ -56,6 +57,35 @@ var results = await kernel.InvokePromptAsync(promptTemplate);
 Console.WriteLine(results);
 ```
 
+# [Java](#tab/Java)
+
+Semantic Kernel for Java does not provide a core plugin library. There are a number of examples of plugins and their use in the [sample code](https://github.com/microsoft/semantic-kernel/tree/java-v1/java/samples/sample-code/).
+
+```java
+import com.microsoft.semantickernel.samples.plugins.TimePlugin;
+
+// Add the TimePlugin to the Kernel using Kernel.Builder
+Kernel kernel = Kernel.builder()
+  .withAIService(ChatCompletionService.class, ChatCompletionService.builder()
+    .withModelId("gpt-3.5-turbo")
+    .withOpenAIAsyncClient(client)
+    .build())
+  .withPlugin(KernelPluginFactory.createFromObject(new TimePlugin(), "time"))
+  .build();
+
+String promptTemplate = 
+"""
+Today is: {{time.Date}}
+Current time is: {{time.Time}}
+
+Answer to the following questions using JSON syntax, including the data used.
+Is it morning, afternoon, evening, or night (morning/afternoon/evening/night)?
+Is it weekend time (weekend/not weekend)
+""";
+
+FunctionResult<String> result = kernel.invokePromptAsync(promptTemplate).block();
+System.out.println(result.getValue());
+```
 
 # [Python](#tab/python)
 

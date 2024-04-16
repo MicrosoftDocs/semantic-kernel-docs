@@ -19,7 +19,7 @@ If you want to see the final solution, you can check out the following samples i
 | Language | Link to final solution |
 | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Planner.cs) |
-| Python | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/11-Planner) |
+| Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/planner.py) |
 
 > [!Tip]
 > If you previously used the Action, Sequential, or Stepwise planners, please upgrade to the latest planners: Handlebars and Function calling stepwise planner. You can follow the migration guide on our blog to learn how to make the move.
@@ -46,7 +46,7 @@ To instantiate a planner, all you need to do is pass in a configuration object.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathSolver.cs" range="36":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathSolver.cs" range="31":::
 
 # [Python](#tab/python)
 In Python, you currently need to pass in the kernel as well.

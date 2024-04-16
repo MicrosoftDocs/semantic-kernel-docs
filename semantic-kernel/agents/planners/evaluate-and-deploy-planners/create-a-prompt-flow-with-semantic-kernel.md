@@ -25,7 +25,8 @@ If you want to see the final solution to this article, you can check out the fol
 | Language | Link to previous solution | Link to final solution |
 | --- | --- |
 | C# |  Not applicable | Not available |
-| Python |  [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/11-Planner) | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/samples/python/12-Evaluate-with-Prompt-Flow) |
+| Java |  Not applicable | Not available |
+| Python |  [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/planner.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/evaluate_with_prompt_flow.py) |
 
 ## Create a new Prompt flow
 In this tutorial, we'll be creating a flow that uses the math plugin we created in the [pervious tutorial](../index.md). We'll use the code-first approach to creating a Prompt flow. If you want full documentation on how to use the code-first approach, please refer to [Prompt flow's open source documentation](https://microsoft.github.io/promptflow/index.html).
