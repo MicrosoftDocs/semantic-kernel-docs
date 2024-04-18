@@ -26,7 +26,3 @@ ms.service: semantic-kernel
 * [Hackathon Materials](/semantic-kernel/support/hackathon) 
 * [Code of Conduct](/semantic-kernel/support/CodeofConduct)
 
-## Next step
-
-> [!div class="nextstepaction"]
-> [Run the samples](../samples-and-solutions/index.md)
