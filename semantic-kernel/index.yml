@@ -76,7 +76,5 @@ productDirectory:
     - title: Community
       imageSrc: /semantic-kernel/media/i_best-practices.png
       links:
-        - url: https://aka.ms/sk/discord
-          text: Join the community on Discord
         - url: https://github.com/microsoft/semantic-kernel
           text: Visit the GitHub repo
