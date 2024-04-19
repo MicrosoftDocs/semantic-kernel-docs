@@ -56,7 +56,7 @@ public class EmailPlugin
 }
 ```
 
-There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can create automatically create a plugin using its OpenAPI specification. To learn more about other ways to author plugins, see the [plugins](./plugins/index.md) section.
+There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can automatically create a plugin using its OpenAPI specification. To learn more about other ways to author plugins, see the [plugins](./plugins/index.md) section.
 
 ### Planners: giving guidance to your agent
 To actually use this plugin (and to wire them up with other steps), the copilot would need to first generate a plan. This is where planners come in. Planners are special prompts that allow an agent generate a plan to complete a task. The simplest planners are just a single prompt that helps the agent use function calling to complete a task.
