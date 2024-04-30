@@ -47,10 +47,10 @@ The hackathon will consist of six main phases: welcome, overview, brainstorming,
 
 Here is an approximate agenda and structure for each phase but feel free to modify this based on your team:
 
-| Day 1                         |
 Length (Minutes)  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
 | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 15  | Welcome/Introductions  | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. |
+| Day 1
+ 15  | Welcome/Introductions  | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. |
 | 30  | Overview of Semantic Kernel  | The facilitator will guide you through a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. You will also see demos of how Semantic Kernel can be used for different scenarios.                           |
 | 5   | Choose your Track | Review slides in the deck for the specific track you’ll pick for the hackathon. |
 | 120 | Brainstorming | The facilitator will help you form teams based on your interests or skill levels. You will then brainstorm ideas for your own AI plugins or apps using design thinking techniques. |     
