@@ -30,7 +30,7 @@ Below, we show how we can update our original prompt to use the `SummarizeConver
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="FunctionFromPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.cs" id="FunctionFromPrompt":::
 
 # [Java](#tab/Java)
 
@@ -47,7 +47,7 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="KernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.cs" id="KernelCreation":::
 
 # [Java](#tab/Java)
 
@@ -74,7 +74,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="Chat":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.cs" id="Chat":::
 
 # [Java](#tab/Java)
 
@@ -94,7 +94,7 @@ Similar to the previous example, we can use the `SummarizeConversation` function
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/FunctionsWithinPrompts.cs" id="IntentFunction":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.cs" id="IntentFunction":::
 
 # [Java](#tab/Java)
 

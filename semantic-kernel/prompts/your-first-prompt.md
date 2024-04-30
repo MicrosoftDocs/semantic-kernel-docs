@@ -36,7 +36,7 @@ If we wanted an AI to detect the intent of a user's input, we could simply _ask_
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="InitialPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="InitialPrompt":::
 
 # [Java](#tab/Java)
 
@@ -52,7 +52,7 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="KernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="KernelCreation":::
 
 # [Java](#tab/Java)
 
@@ -76,7 +76,7 @@ Finally, we can invoke our prompt using our new kernel.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="InvokeInitialPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="InvokeInitialPrompt":::
 
 # [Java](#tab/Java)
 
@@ -115,7 +115,7 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="MoreSpecificPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="MoreSpecificPrompt":::
 
 # [Java](#tab/Java)
 
@@ -141,7 +141,7 @@ To make the result more predictable, we can add structure to the prompt by using
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="StructuredPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="StructuredPrompt":::
 
 # [Java](#tab/Java)
 
@@ -161,7 +161,7 @@ For example, if you wanted the LLM to generate a JSON object, you could use the 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="FormattedPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="FormattedPrompt":::
 
 # [Java](#tab/Java)
 
@@ -190,7 +190,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="FewShotPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="FewShotPrompt":::
 
 # [Java](#tab/Java)
 
@@ -210,7 +210,7 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="AvoidPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="AvoidPrompt":::
 
 # [Java](#tab/Java)
 
@@ -240,7 +240,7 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="ContextPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="ContextPrompt":::
 
 # [Java](#tab/Java)
 
@@ -260,7 +260,7 @@ In Semantic Kernel, a special syntax is used to define message roles. To define 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="RolePrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="RolePrompt":::
 
 # [Java](#tab/Java)
 
@@ -278,7 +278,7 @@ Finally, research has shown that giving your AI words of encouragement can help 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Prompts.cs" id="BonusPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs" id="BonusPrompt":::
 
 # [Java](#tab/Java)
 
