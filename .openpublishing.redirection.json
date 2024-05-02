@@ -519,7 +519,7 @@
         },
 
         {
-            "source_path": "semantic-kernel/prompt-engineering/index.md",
+            "source_path": "semantic-kernel/prompt-engineering/templatizing-prompts.md",
             "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
             "redirect_document_id": false
         },
