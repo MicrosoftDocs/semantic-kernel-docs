@@ -4,7 +4,7 @@
   href: faqs.md
 - name: Migrating to v1+
   href: v1-migration-guide.md
-- name: Join our Discord
-  href: https://aka.ms/sk/discord
 - name: Code of Conduct
   href: code-of-conduct.md
+- name: Glossary
+  href: glossary.md

@@ -20,7 +20,7 @@ Semantic Kernel is an open-source SDK that lets you easily build agents that can
         ![Copilot stack with the orchestration layer in the middle](../media/copilot-stack.png)
    :::column-end:::
    :::column span="":::
-      During Kevin Scott's talk [The era of the AI Copilot](https://build.microsoft.com/sessions/bb8f9d99-0c47-404f-8212-a85fffd3a59d?source=/speakers/ef864919-5fd1-4215-b611-61035a19db6b), he demonstrated how Microsoft powers its [Copilot system](https://www.youtube.com/watch?v=E5g20qmeKpg) with a stack consisting of of AI models and plugins. At the center of this stack is an AI orchestration layer that allows Microsoft to combine AI models and plugins together to create brand new experiences for users.
+      During Kevin Scott's talk The era of the AI Copilot, he demonstrated how Microsoft powers its [Copilot system](https://www.youtube.com/watch?v=E5g20qmeKpg) with a stack consisting of of AI models and plugins. At the center of this stack is an AI orchestration layer that allows Microsoft to combine AI models and plugins together to create brand new experiences for users.
 
       To help developers build their _own_ Copilot experiences on top of AI plugins, we have released Semantic Kernel, a lightweight open-source SDK that allows you to orchestrate plugins (i.e., your existing code) with AI. With Semantic Kernel, you can leverage the _same_ AI orchestration patterns that power Microsoft's Copilots in your _own_ apps.
    :::column-end:::
@@ -43,7 +43,7 @@ First, you need code that can change the state of the lightbulb. This is fairly 
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugin.cs" id="LightPlugin":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" id="LightPlugin":::
 
 Notice that we've added a few attributes to the methods, `[KernelFunction]` and `[Description]`. Whenever you want an AI to call your code, you need to first describe it to the AI so it knows how to _actually_ use it. In this case, we've described two functions, `GetState` and `ChangeState`, so the AI can request that they be called.
 
@@ -59,7 +59,7 @@ Now that we have our code, we now need to provide it to the AI. This is where Se
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugin.cs" id="KernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" id="KernelCreation":::
 
 # [Java](#tab/Java)
 
@@ -71,7 +71,7 @@ Now that we have a kernel, we can use it to create an agent that will call our c
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugin.cs" id="Chat":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" id="Chat":::
 
 # [Java](#tab/Java)
 
