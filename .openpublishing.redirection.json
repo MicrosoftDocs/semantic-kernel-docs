@@ -561,6 +561,49 @@
             "source_path": "/semantic-kernel/chat-copilot/deploy-to-azure.md",
             "redirect_url": "/semantic-kernel/introduction",
             "redirect_document_id": false
+        },
+
+        {
+            "source_path": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners.md/",
+            "redirect_url": "/semantic-kernel/tutorials/promptflow",
+            "redirect_document_id": false
+        },
+
+        {
+            "source_path": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/create-a-prompt-flow-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/tutorials/promptflow",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/running-batches-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/tutorials/promptflow",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/evaluating-plugins-and-planners-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/tutorials/promptflow",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/agents/planners/evaluate-and-deploy-planners/deploying-prompt-flows-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/tutorials/promptflow",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/agents/#persona-giving-your-agent-a-personality.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/agents",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/agents/kernel.md/",
+            "redirect_url": "/semantic-kernel/conceptual-docs/kernel",
+            "redirect_document_id": false
+        },
+        
+        {
+            "source_path": "/semantic-kernel/agents/kernel/adding-services.md/",
+            "redirect_url": "/semantic-kernel/conceptual-docs/kernel",
+            "redirect_document_id": false
         }
     ]
 }

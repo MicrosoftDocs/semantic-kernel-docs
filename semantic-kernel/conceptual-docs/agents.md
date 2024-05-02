@@ -1,9 +1,9 @@
 ---
-title: Building agents and copilots with Semantic Kernel
-description: Learn the difference between agents and copilots and how to build them with Semantic Kernel.
-author: matthewbolanos
+title: Building Agents with Semantic Kernel
+description: Learn about agents and how to build them with Semantic Kernel.
+author: sophialagerkranspandey
 ms.topic: overview
-ms.author: mabolan
+ms.author: sopand
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ms.custom: build-2023, build-2023-dataai
@@ -317,13 +317,3 @@ feel free to ask!
 
 ## Next steps
 Now that you've built your first agent, you can now deep dive into the different components of Semantic Kernel.
-
-| Component | Description |
-|:-|:-|
-| [The kernel](./kernel/index.md) | The kernel is the core of Semantic Kernel. It is responsible holding all of the information necessary to orchestrate your code with AI. Read this section to learn how to initialize the kernel with your plugins, AI services, and more. |
-| [Prompts](../prompts/index.md) | Prompts are core to eliciting the correct responses from AI models. Read this section to learn how to craft and run prompts with Semantic Kernel. |
-| [Plugins](./plugins/index.md) | Plugins give you agents skills to manipulate the real world.  Read this section to learn how to create plugins and how to use them with your agent. |
-| [Planners](./planners/index.md) | Planners are prompts that allow you to generate plans to complete a task. Read this section to learn more about the out-of-the-box planners provided by Semantic Kernel. |
-
-> [!div class="nextstepaction"]
-> [Initialize a kernel](./kernel/index.md)

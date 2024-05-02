@@ -1,14 +1,14 @@
 ---
-title: In-depth Semantic Kernel tutorials
-description: Go deeper with additional tutorials and videos to learn how to use Semantic Kernel. 
-author: matthewbolanos
+title: In-depth Semantic Kernel Demos
+description: Go deeper with additional Demos to learn how to use Semantic Kernel. 
+author: sophialagerkranspandey          
 ms.topic: tutorial
-ms.author: mabolan
+ms.author: sopand
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
 
-# Additional learning for Semantic Kernel
+# Demos of Semantic Kernel
 
 
 Want to learn more about Semantic Kernel? Check out these in-depth tutorials and videos. We will add more content over time from our team and community, so check back often! 
@@ -51,6 +51,3 @@ Want to learn more about Semantic Kernel? Check out these in-depth tutorials and
    :::column-end:::
 :::row-end:::
 
-
-## More tutorials coming soon
-If you have a tutorial you would like to share, please let us know on our [Discord server](https://aka.ms/sk/discord). We would love to highlight your content with the community here!
