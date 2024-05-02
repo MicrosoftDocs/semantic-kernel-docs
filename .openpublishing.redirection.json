@@ -505,9 +505,28 @@
             "redirect_url": "/semantic-kernel/prompts/index",
             "redirect_document_id": false
         },
+       
         {
             "source_path": "semantic-kernel/prompt-engineering/your-first-prompt.md",
-            "redirect_url": "/semantic-kernel/prompts/your-first-prompt",
+            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_document_id": false
+        },
+     
+        {
+            "source_path": "semantic-kernel/prompt-engineering/index.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_document_id": false
+        },
+
+        {
+            "source_path": "semantic-kernel/prompt-engineering/index.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_document_id": false
+        },
+        
+        {
+            "source_path": "semantic-kernel/chat-copilot/index.md",
+            "redirect_url": "/semantic-kernel/prompts/index",
             "redirect_document_id": false
         }
     ]
