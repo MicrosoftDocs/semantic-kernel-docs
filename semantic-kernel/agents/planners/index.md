@@ -71,7 +71,7 @@ Now that we have planner, we can use it to create a plan for a user's ask and th
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathSolver.cs" range="38-44":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathSolver.cs" range="32-38":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="28-34":::

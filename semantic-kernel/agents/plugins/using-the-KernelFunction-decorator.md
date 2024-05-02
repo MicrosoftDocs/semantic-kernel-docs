@@ -86,7 +86,7 @@ All native functions must be defined as public methods of a class that represent
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathPlugin.cs" range="4-10":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathPlugin.cs" range="3-4,8,9,152":::
 
 # [Java](#tab/Java)
 
@@ -165,7 +165,7 @@ Now that you've created your first native function, you can now allow the AI to 
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/CreatingFunctions.cs" range="33-36,52-94" :::
 
 # [Java](#tab/Java)
 

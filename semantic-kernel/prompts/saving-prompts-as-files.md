@@ -84,7 +84,7 @@ At this point, you can import and test your function with the kernel by updating
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs" range="8-10,38-46,74-81,99-129":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs" range="35-123":::
 
 # [Java](#tab/Java)
 
