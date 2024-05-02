@@ -507,26 +507,32 @@
         },
        
         {
-            "source_path": "semantic-kernel/prompt-engineering/your-first-prompt.md",
+            "source_path": "semantic-kernel/prompts/your-first-prompt.md",
             "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
             "redirect_document_id": false
         },
      
         {
-            "source_path": "semantic-kernel/prompt-engineering/index.md",
+            "source_path": "semantic-kernel/prompts/index.md",
             "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
             "redirect_document_id": false
         },
 
         {
-            "source_path": "semantic-kernel/prompt-engineering/templatizing-prompts.md",
+            "source_path": "semantic-kernel/prompts/templatizing-prompts.md",
             "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
             "redirect_document_id": false
         },
         
         {
             "source_path": "semantic-kernel/chat-copilot/index.md",
-            "redirect_url": "/semantic-kernel/prompts/index",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+
+        {
+            "source_path": "/semantic-kernel/overview/index.md",
+            "redirect_url": "/semantic-kernel/introduction",
             "redirect_document_id": false
         }
     ]
