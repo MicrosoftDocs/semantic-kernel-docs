@@ -1,6 +1,6 @@
 ### YamlMime:Hub
 title: Semantic Kernel documentation
-summary: Learn how to easily add powerful LLM AI capabilities to your app with Semantic Kernel.
+summary: Learn to build robust, future-proof AI solutions that evolve with technological advancements.
 brand: semantic-kernel
 metadata:
   title: Semantic Kernel documentation
@@ -9,72 +9,45 @@ metadata:
   ms.date: 02/22/2023
   searchScope: []
   titleSuffix: ""
-  ms.author: johnmaeda
-  author: johnmaeda
-  ms.manager: johnmaeda
+  ms.author: sopand
+  author: sophialagerkranspandey
+  ms.manager: sopand
   hide_bc: true
 
 productDirectory:
     items:
-    - title: About Semantic Kernel
-      imageSrc: /semantic-kernel/media/learn.png
+    - title: Getting Started
+      imageSrc: /semantic-kernel/media/Getting-started.png
       links:
-        - url: /semantic-kernel/overview
-          text: Overview
-        - url: /semantic-kernel/get-started
-          text: Quick start guide
-        - url: /semantic-kernel/get-started/hackathon-materials
-          text: Hackathon materials
-        - url: /semantic-kernel/get-started/tutorials
-          text: In-depth tutorials
-    - title: Prompt engineering 101
-      imageSrc: /semantic-kernel/media/openbook.png
+        - url: /semantic-kernel/introduction
+          text: Introduction to Semantic Kernel
+    - title: Concepts
+      imageSrc: /semantic-kernel/media/Concepts.png
       links:
-        - url: /semantic-kernel/prompt-engineering/
-          text: Overview
-        - url: /semantic-kernel/prompt-engineering/your-first-prompt
-          text: Writing your first prompt
-        - url: /semantic-kernel/prompt-engineering/llm-models
-          text: About LLM Models
-        - url: /semantic-kernel/prompt-engineering/configure-prompts
-          text: Configuring prompts
-        - url: /semantic-kernel/prompt-engineering/tokens
-          text: Understanding tokens   
-    - title: Creating chains in Semantic Kernel
-      imageSrc: /semantic-kernel/media/connector-blue.png
+        - url: /semantic-kernel/conceptual-docs/
+          text:Key Concepts to Learn
+    - title: Quick Start
+      imageSrc: /semantic-kernel/media/Quick-start.png
       links:
-        - url: /semantic-kernel/create-chains/
-          text: Overview
-        - url: /semantic-kernel/create-chains/kernel
-          text: Orchestrating with the kernel
-        - url: /semantic-kernel/create-chains/native-functions
-          text: Chaining native functions
-        - url: /semantic-kernel/create-chains/connectors
-          text: Getting data with connectors   
-        - url: /semantic-kernel/create-chains/planner
-          text: Auto create chains with planners   
-    - title: Building and deploying plugins
-      imageSrc: /semantic-kernel/media/concept.png
+        - url: /semantic-kernel/get-started/quick-start-guide
+          text: Learn how to use Semantic Kernel
+    - title: Tutorials
+      imageSrc: /semantic-kernel/media/Tutorials.png
       links:
-         - url: /semantic-kernel/create-plugins/
-           text: Overview
-         - url: /semantic-kernel/create-plugins/out-of-the-box-plugins
-           text: Out-of-the-box plugins
-    - title: App samples
-      imageSrc: /semantic-kernel/media/get-started-blue.png
+         - url: /semantic-kernel/tutorials/
+           text: In-depth tutorials
+    - title: Integrations
+      imageSrc: /semantic-kernel/media/Integrations.png
       links:
-        - url: /semantic-kernel/samples/
-          text: Overview
-        - url: /semantic-kernel/samples/localapiservice
-          text: Local API Service
-        - url: /semantic-kernel/samples/simplechatsummary
-          text: Simple Chat Summary
-        - url: /semantic-kernel/samples/bookcreator
-          text: Book Creator
-        - url: /semantic-kernel/samples/authapi
-          text: Authentication and API  
-    - title: Community
-      imageSrc: /semantic-kernel/media/i_best-practices.png
+        - url: /semantic-kernel/integrations/
+          text: Browse available features by language
+    - title: Security
+      imageSrc: /semantic-kernel/media/Security.png
       links:
-        - url: https://github.com/microsoft/semantic-kernel
-          text: Visit the GitHub repo
+        - url: /semantic-kernel/security/
+          text: Key measures to ensure security
+ - title: What's New
+      imageSrc: /semantic-kernel/media/whats-new.png
+      links:
+        - url: https://github.com/microsoft/semantic-kernel/discussions
+          text: Get in touch with the community 

@@ -534,6 +534,33 @@
             "source_path": "/semantic-kernel/overview/index.md",
             "redirect_url": "/semantic-kernel/introduction",
             "redirect_document_id": false
+        },
+
+        {
+            "source_path": "/semantic-kernel/chat-copilot/gettingstarted.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+
+        {
+            "source_path": "/semantic-kernel/chat-copilot/customizing-chat-copilot.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/chat-copilot/publishing-changes-to-azure.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/chat-copilot/testing-plugins-with-chat-copilot.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "/semantic-kernel/chat-copilot/deploy-to-azure.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
         }
     ]
 }

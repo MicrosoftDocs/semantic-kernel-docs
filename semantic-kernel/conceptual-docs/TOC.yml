@@ -1,8 +1,12 @@
-- name: Prompts
-  href: prompts.md
 - name: Plugins
   href: prompts.md
 - name: Planners
   href: prompts.md
 - name: Personas
+  href: prompts.md
+- name: Agents
+  href: prompts.md
+- name: Prompts
+  href: prompts.md
+- name: Enterprise Readiness
   href: prompts.md

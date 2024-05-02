@@ -6,10 +6,14 @@
 - name: Conceptual Docs
   href: conceptual-docs/TOC.yml
   expanded: true
-- name: Creating AI agents
-  href: agents/TOC.yml
-- name: Giving your AI memories
-  href: memories/TOC.yml
+- name: Security
+  href: security/TOC.yml
+- name: Integrations
+  href: integrations/TOC.yml
+- name: Tutorials
+  href: tutorials/TOC.yml  
+- name: Use Cases
+  href: use-cases/TOC.yml  
 - name: Using AI responsibly
   href: when-to-use-AI/TOC.yml
 - name: Getting Support
