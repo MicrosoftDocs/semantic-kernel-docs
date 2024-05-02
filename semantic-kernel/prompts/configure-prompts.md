@@ -22,7 +22,7 @@ In C#, you can define the following properties of a prompt:
 - **Input variables** - the variables that are used inside of the prompt (e.g., `request`)
 - **Execution settings** - the settings for different models that can be used to execute the prompt
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/ConfiguringPrompts.cs" id="FunctionFromPrompt":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/ConfiguringPrompts.cs" id="FunctionFromPrompt":::
 
 # [Java](#tab/Java)
 
@@ -35,7 +35,7 @@ In Java, you can define the following properties of a prompt:
 - **Output variable** - the type of value that returned by the prompt (e.g., `java.lang.String`)
 - **Execution settings** - the settings for different models that can be used to execute the prompt
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/ConfiguringPrompts.java" id="CreateFromPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/ConfiguringPrompts.java" id="CreateFromPrompt":::
 
 # [Python](#tab/python)
 

@@ -19,8 +19,8 @@ If you want to see the final solution to this article, you can check out the fol
 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
-| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/SerializingPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/CreatingFunctons.cs) |
-| Java | - | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/CreatingFunctons.cs) |
+| Java | - | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/serializing_prompts.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/creating_functions.py) |
 
 ## Why should you create functions for your AI?
@@ -86,7 +86,7 @@ All native functions must be defined as public methods of a class that represent
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="4-10":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathPlugin.cs" range="4-10":::
 
 # [Java](#tab/Java)
 
@@ -104,7 +104,7 @@ Now that you have a class for your plugin, you can add the `Sqrt` function. To m
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs" range="11-17" highlight="1":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathPlugin.cs" range="11-17" highlight="1":::
 
 Notice how we've added a description to the function and each of its parameters with the `Description` attribute. This description will be used by function calling and by [planners](../planners/index.md) to automatically create a plan using these functions. In our case, we're telling planner that this function can `Take the square root of a number`.
 
@@ -127,7 +127,7 @@ Now that you've created the `Sqrt` function, you can create the remaining math f
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/Plugins/MathPlugin.cs":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathPlugin.cs":::
 
 # [Python](#tab/python)
 
@@ -144,11 +144,11 @@ Now that you've created your first native function, you can import it and run it
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="4-7,34,36-47" highlight="12":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/CreatingFunctions.cs" range="4-7,34,36-47" highlight="12":::
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="RunNativeFunction":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/CreatingFunctions.java" id="RunNativeFunction":::
 
 # [Python](#tab/python)
 
@@ -165,13 +165,13 @@ Now that you've created your first native function, you can now allow the AI to 
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll set the `ToolCallBehavior` property to `ToolCallBehavior.AutoInvokeKernelFunctions` on the `OpenAIPromptExecutionSettings` object.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/CreatingFunctions.cs" range="50-51,57-97" highlight="14":::
 
 # [Java](#tab/Java)
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll build an `InvocationContext` with `ToolCallBehavior.allowAllKernelFunctions(true)`, `true` meaning the function auto-invocation is on for all kernel functions.
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="Conversation" highlight="11-14":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/CreatingFunctions.java" id="Conversation" highlight="11-14":::
 
 # [Python](#tab/python)
 

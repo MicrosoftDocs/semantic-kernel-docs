@@ -16,9 +16,9 @@ If you want to see the code demonstrated in this article in a complete solution,
 
 | Language  | Link to final solution |
 | --- | --- |
-| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Plugin.cs) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/using_the_kernel.py) |
-| Java | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Plugin.java) |
+| Java | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Plugin.java) |
 
 ## The kernel is at the center of _everything_
 Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is used by nearly every component within the Semantic Kernel SDK. This means that if you run any prompt or code in Semantic Kernel, it will always go through a kernel.
@@ -43,11 +43,11 @@ In the following examples, you can see how to add a logger, chat completion serv
 With C#, Semantic Kernel natively supports dependency injection. This means you can add a kernel to your application's dependency injection container and use any of your application's services within the kernel by adding them as a service to the kernel.
 
 Import the necessary packages:
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="NecessaryPackages":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/UsingTheKernel.cs" id="NecessaryPackages":::
 
 If you are using a Azure OpenAI, you can use the `AddAzureOpenAIChatCompletion` method.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="KernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/UsingTheKernel.cs" id="KernelCreation":::
 
 If you are using OpenAI, you can use the `AddOpenAIChatCompletionService` method instead.
 
@@ -71,9 +71,9 @@ If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
 To build a kernel that uses OpenAI for chat completion, it can be created as follows.
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="build_client":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="build_client":::
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="build_kernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="build_kernel":::
 
 ---
 
@@ -84,10 +84,10 @@ To run `KernelFunction`s, Semantic Kernel provides the `InvokeAsync` method. Sim
 
 # [C#](#tab/Csharp)
 Run the `UtcNow` function from `TimePlugin`:
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeUtcNow":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/UsingTheKernel.cs" id="InvokeUtcNow":::
 
 Run the `ShortPoem` function from `WriterPlugin` while using the current time as an argument:
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/UsingTheKernel.cs" id="InvokeShortPoem":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/UsingTheKernel.cs" id="InvokeShortPoem":::
 
 This should return a response similar to the following (except specific to your current time):
 ```
@@ -113,11 +113,11 @@ Run the `ShortPoem` function from `WriterPlugin` while using the current time as
 
 Run the native plugin `MathPlugin`
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="run_math":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="run_math":::
 
 Run the poem plugin defined by a prompt `PoemPlugin`
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="run_poem":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="run_poem":::
 
 ---
 
