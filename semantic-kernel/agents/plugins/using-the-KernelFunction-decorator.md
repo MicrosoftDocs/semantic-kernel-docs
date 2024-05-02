@@ -20,7 +20,7 @@ If you want to see the final solution to this article, you can check out the fol
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/CreatingFunctons.cs) |
-| Java | - | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java) |
+| Java | - | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/serializing_prompts.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/creating_functions.py) |
 
 ## Why should you create functions for your AI?
@@ -148,7 +148,7 @@ Now that you've created your first native function, you can import it and run it
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/CreatingFunctions.java" id="RunNativeFunction":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="RunNativeFunction":::
 
 # [Python](#tab/python)
 
@@ -171,7 +171,7 @@ While in the chat loop, we'll configure the OpenAI connection to automatically c
 
 While in the chat loop, we'll configure the OpenAI connection to automatically call any functions that are registered with the kernel. To do this, we'll build an `InvocationContext` with `ToolCallBehavior.allowAllKernelFunctions(true)`, `true` meaning the function auto-invocation is on for all kernel functions.
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/CreatingFunctions.java" id="Conversation" highlight="11-14":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/CreatingFunctions.java" id="Conversation" highlight="11-14":::
 
 # [Python](#tab/python)
 

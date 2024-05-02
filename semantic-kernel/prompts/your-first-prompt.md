@@ -17,7 +17,7 @@ If you want to see the final solution to this tutorial, you can check out the fo
 | Language  | Link to final solution |
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/Prompts.cs) |
-| Java | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java) |
+| Java | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/prompts.py) |
 
 ## Creating a prompt that detects the intent of a user
@@ -40,7 +40,7 @@ If we wanted an AI to detect the intent of a user's input, we could simply _ask_
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="InitialPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="InitialPrompt":::
 
 # [Python](#tab/python)
 
@@ -56,7 +56,7 @@ To run this prompt, we now need to create a kernel with an AI service.
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="KernelCreation":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="KernelCreation":::
 
 # [Python](#tab/python)
 
@@ -80,7 +80,7 @@ Finally, we can invoke our prompt using our new kernel.
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="InvokeInitialPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="InvokeInitialPrompt":::
 
 # [Python](#tab/python)
 
@@ -119,7 +119,7 @@ The first thing we can do is be more specific with our prompt. Instead of just a
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="MoreSpecificPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="MoreSpecificPrompt":::
 
 # [Python](#tab/python)
 
@@ -145,7 +145,7 @@ To make the result more predictable, we can add structure to the prompt by using
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="StructuredPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="StructuredPrompt":::
 
 # [Python](#tab/python)
 
@@ -165,7 +165,7 @@ For example, if you wanted the LLM to generate a JSON object, you could use the 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="FormattedPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="FormattedPrompt":::
 
 # [Python](#tab/python)
 
@@ -194,7 +194,7 @@ To add examples, we can use few-shot prompting. With few-shot prompting, we prov
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="FewShotPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="FewShotPrompt":::
 
 # [Python](#tab/python)
 
@@ -214,7 +214,7 @@ Instead, it's recommended that you tell the AI what it should do _instead_. For 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="AvoidPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="AvoidPrompt":::
 
 # [Python](#tab/python)
 
@@ -244,7 +244,7 @@ To provide this context, we can simply add the previous messages to the prompt. 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="ContextPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="ContextPrompt":::
 
 # [Python](#tab/python)
 
@@ -264,7 +264,7 @@ In Semantic Kernel, a special syntax is used to define message roles. To define 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="RolePrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="RolePrompt":::
 
 # [Python](#tab/python)
 
@@ -282,7 +282,7 @@ Finally, research has shown that giving your AI words of encouragement can help 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Prompts.java" id="BonusPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Prompts.java" id="BonusPrompt":::
 
 # [Python](#tab/python)
 

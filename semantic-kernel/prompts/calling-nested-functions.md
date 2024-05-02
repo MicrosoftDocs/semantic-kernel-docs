@@ -17,7 +17,7 @@ If you want to see the final solution, you can check out the following samples i
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/Templates.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.cs) |
-| Java | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.java) |
+| Java | [Open solution in GitHub](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/templates.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/functions_within_prompts.py) |
 
 
@@ -34,7 +34,7 @@ Below, we show how we can update our original prompt to use the `SummarizeConver
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.java" id="CreateFunctionFromPrompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="CreateFunctionFromPrompt":::
 
 # [Python](#tab/python)
 
@@ -51,7 +51,7 @@ After adding the nested function, you must ensure that you load the plugin with 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.java" id="CreateKernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="CreateKernel":::
 
 # [Python](#tab/python)
 
@@ -78,7 +78,7 @@ Afterwards, we can test the prompt by creating a chat loop that makes the histor
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.java" id="ChatLoop":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="ChatLoop":::
 
 # [Python](#tab/python)
 
@@ -98,7 +98,7 @@ Similar to the previous example, we can use the `SummarizeConversation` function
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.java" id="IntentFunction":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/FunctionsWithinPrompts.java" id="IntentFunction":::
 
 # [Python](#tab/python)
 

@@ -19,7 +19,7 @@ If you want to see the final solution, you can check out the following samples i
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/FunctionsWithinPrompts.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs) |
-| Java | - | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/SerializingPrompts.java) |
+| Java | - | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/functions_within_prompts.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/serializing_prompts.py) |
 
 
@@ -88,7 +88,7 @@ At this point, you can import and test your function with the kernel by updating
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/SerializingPrompts.java" id="InvokeSerializedPrompts":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokeSerializedPrompts":::
 
 # [Python](#tab/python)
 
@@ -148,11 +148,11 @@ As a best practice, we recommend adding your prompts as an embedded resource.
 
 Finally, you can import your prompt in the Java file.
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/SerializingPrompts.java" id="LoadPromptFromYaml":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="LoadPromptFromYaml":::
 
 To call the prompt, you can use the following code:
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/SerializingPrompts.java" id="InvokePromptFromYaml":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/SerializingPrompts.java" id="InvokePromptFromYaml":::
 
 
 ---

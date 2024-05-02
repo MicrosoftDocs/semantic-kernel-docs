@@ -17,7 +17,7 @@ By following this example, you'll learn how to templatize a prompt. If you want 
 | Language  | Link to previous solution | Link to final solution |
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/Templates.cs) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/KernelSyntaxExamples/Example31_SerializingPrompts.cs) |
-| Java |  | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Templates.java) |
+| Java |  | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/serializing_prompts.py) | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/templates.py) |
 
 ## Adding variables to the prompt
@@ -29,7 +29,7 @@ With Semantic Kernel's templating language, we can add tokens that will be autom
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Templates.java" id="create_chat":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="create_chat":::
 
 # [Python](#tab/python)
 
@@ -49,7 +49,7 @@ When we invoke the prompt, we can pass in the `request` and `history` variables 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Templates.java" id="use_chat":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
 
 # [Python](#tab/python)
 
@@ -100,7 +100,7 @@ Finally, you can run the prompt using the kernel. Add the following code within 
 
 Functions can be created from handlebars templates:
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Templates.java" id="handlebars_prompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_prompt":::
 
 This template requires the following variables:
 - `choices` -  A list containing `[ContinueConversation, EndConversation]` that are the possible intents of a users request.
@@ -110,13 +110,13 @@ This template requires the following variables:
 
 These can be added to the arguments as:
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Templates.java" id="handlebars_add_variables_1":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_1":::
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Templates.java" id="handlebars_add_variables_2":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_add_variables_2":::
 
 The function can then be invoked as normal:
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Templates.java" id="handlebars_invoke":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="handlebars_invoke":::
 
 # [Python](#tab/python)
 

@@ -49,7 +49,7 @@ Notice that we've added a few attributes to the methods, `[KernelFunction]` and 
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Plugin.java" id="LightPlugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Plugin.java" id="LightPlugin":::
 
 Notice that we've added a few annotations to the methods, `[DefineKernelFunction]` and `[KernelFunctionParameter]`. Whenever you want an AI to call your code, you need to first describe it to the AI so it knows how to _actually_ use it. In this case, we've described two functions, `GetState` and `ChangeState`, so the AI can request that they be called.
 
@@ -63,7 +63,7 @@ Now that we have our code, we now need to provide it to the AI. This is where Se
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Plugin.java" id="KernelCreation":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Plugin.java" id="KernelCreation":::
 
 ---
 
@@ -75,7 +75,7 @@ Now that we have a kernel, we can use it to create an agent that will call our c
 
 # [Java](#tab/Java)
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Plugin.java" id="Chat":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Plugin.java" id="Chat":::
 
 ---
 

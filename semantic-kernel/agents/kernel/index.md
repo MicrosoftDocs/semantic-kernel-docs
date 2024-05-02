@@ -18,7 +18,7 @@ If you want to see the code demonstrated in this article in a complete solution,
 | --- | --- |
 | C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/using_the_kernel.py) |
-| Java | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/Plugin.java) |
+| Java | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Plugin.java) |
 
 ## The kernel is at the center of _everything_
 Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is used by nearly every component within the Semantic Kernel SDK. This means that if you run any prompt or code in Semantic Kernel, it will always go through a kernel.
@@ -71,9 +71,9 @@ If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
 
 To build a kernel that uses OpenAI for chat completion, it can be created as follows.
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="build_client":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="build_client":::
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="build_kernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="build_kernel":::
 
 ---
 
@@ -113,11 +113,11 @@ Run the `ShortPoem` function from `WriterPlugin` while using the current time as
 
 Run the native plugin `MathPlugin`
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="run_math":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="run_math":::
 
 Run the poem plugin defined by a prompt `PoemPlugin`
 
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/LearnResources/MicrosoftLearn/UsingTheKernel.java" id="run_poem":::
+:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="run_poem":::
 
 ---
 
