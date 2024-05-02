@@ -46,7 +46,7 @@ To instantiate a planner, all you need to do is pass in a configuration object.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathSolver.cs" range="31":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathSolver.cs" range="30":::
 
 # [Python](#tab/python)
 In Python, you currently need to pass in the kernel as well.
