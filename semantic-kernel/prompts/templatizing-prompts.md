@@ -45,8 +45,6 @@ When we invoke the prompt, we can pass in the `request` and `history` variables 
 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Templates.cs" range="88-96,115-142":::
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Templates.cs" range="35-38,91-100,119-146" highlight="20-21":::
-
 # [Java](#tab/Java)
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Templates.java" id="use_chat":::
@@ -90,7 +88,7 @@ Afterwards, you can create a new prompt using the `HandlebarsPromptTemplateFacto
 
 We can then create the choice and example objects that will be used by the template. In this example, we can use our prompt to end the conversation once it's over. To do this, we'll just provide two valid intents: `ContinueConversation` and `EndConversation`.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Templates.cs" range="43-49":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Templates.cs" range="43-59":::
 
 Finally, you can run the prompt using the kernel. Add the following code within your main chat loop so the loop can be terminated once the intent is `EndConversation`.
 

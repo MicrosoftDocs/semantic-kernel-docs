@@ -132,11 +132,11 @@ As a best practice, we recommend adding your prompts as an embedded resource. To
 
 Finally, you can import your prompt in the _Program.cs_ file.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs" range="47-52":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs" range="43-48":::
 
 To call the prompt, you can use the following code:
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs" range="82-92":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/SerializingPrompts.cs" range="76-86":::
 
 # [Java](#tab/Java)
 
