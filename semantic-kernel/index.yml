@@ -25,7 +25,7 @@ productDirectory:
       imageSrc: /semantic-kernel/media/Concepts.png
       links:
         - url: /semantic-kernel/conceptual-docs/
-          text:Key Concepts to Learn
+          text: Key Concepts to Learn
     - title: Quick Start
       imageSrc: /semantic-kernel/media/Quick-start.png
       links:
