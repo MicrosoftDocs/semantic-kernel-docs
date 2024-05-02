@@ -16,7 +16,7 @@ If you want to see any of these samples in a complete solution, you can check th
 
 | Language  | Link to final solution |
 | --- | --- |
-| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/AIServices.cs) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/AIServices.cs) |
 | Java | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/AIServices.java) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/service_configurator.py) |
 
@@ -41,7 +41,7 @@ The following table shows which service you should use for each model.
 # [C#](#tab/Csharp)
 To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to use the AddAzureChatCompletionService method.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="TypicalKernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/AIServices.cs" id="TypicalKernelCreation":::
 
 # [Java](#tab/Java)
 To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to create a `ChatCompletionService`.
@@ -64,7 +64,7 @@ To add an Azure OpenAI chat completion service to your Semantic Kernel project, 
 # [C#](#tab/Csharp)
 To add an Azure OpenAI text generation service to your Semantic Kernel project, you will need to use the AddAzureTextCompletionService method.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="TextCompletionKernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/AIServices.cs" id="TextCompletionKernelCreation":::
 
 # [Java](#tab/Java)
  
@@ -104,7 +104,7 @@ The following table shows which service you should use for each model.
 # [C#](#tab/Csharp)
 To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the AddOpenAIChatCompletionService method.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="OpenAIKernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/AIServices.cs" id="OpenAIKernelCreation":::
 
 # [Java](#tab/Java)
 To add an Azure OpenAI chat completion service to your Semantic Kernel project, you will need to create a `ChatCompletionService`.
@@ -127,7 +127,7 @@ To add an OpenAI text generation service to your Semantic Kernel project, you wi
 # [C#](#tab/Csharp)
 To add an OpenAI text generation service to your Semantic Kernel project, you will need to use the AddOpenAITextCompletionService method.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/DocumentationExamples/AIServices.cs" id="OpenAITextCompletionKernelCreation":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/AIServices.cs" id="OpenAITextCompletionKernelCreation":::
 
 # [Java](#tab/Java)
  
