@@ -118,7 +118,7 @@ dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelea
 
 Next, create a new file called _getIntent.prompt.yaml_ in the _Prompts_ folder and copy the following YAML into the file.
 
-:::code language="yaml" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Resources/getIntent.prompt.yaml":::
+:::code language="yaml" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Resources/getIntent.prompt.yaml":::
 
 You should notice that all of the same properties that were defined in the _config.json_ file are now defined in the YAML file. Additionally, the `template` property is used to define the prompt template.
 
