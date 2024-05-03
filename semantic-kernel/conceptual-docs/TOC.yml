@@ -1,12 +1,14 @@
+- name: Kernel
+  href: kernel.md
 - name: Plugins
-  href: prompts.md
+  href: plugin.md
 - name: Planners
-  href: prompts.md
+  href: planners.md
 - name: Personas
-  href: prompts.md
+  href: personas.md
 - name: Agents
-  href: prompts.md
+  href: agents.md
 - name: Prompts
   href: prompts.md
 - name: Enterprise Readiness
-  href: prompts.md
+  href: enterprise-readiness.md
