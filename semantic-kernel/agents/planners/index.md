@@ -18,7 +18,7 @@ If you want to see the final solution, you can check out the following samples i
 
 | Language | Link to final solution |
 | --- |
-| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Planner.cs) |
+| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/MicrosoftLearn/Planner.cs) |
 | Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/planner.py) |
 
 > [!Tip]
@@ -46,7 +46,8 @@ To instantiate a planner, all you need to do is pass in a configuration object.
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugins/MathSolver.cs" range="31":::
+
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathSolver.cs" range="30":::
 
 # [Python](#tab/python)
 In Python, you currently need to pass in the kernel as well.
@@ -71,7 +72,7 @@ Now that we have planner, we can use it to create a plan for a user's ask and th
 
 # [C#](#tab/Csharp)
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugins/MathSolver.cs" range="38-44":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/Plugins/MathSolver.cs" range="32-38":::
 
 # [Python](#tab/python)
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/planner.py" range="28-34":::
