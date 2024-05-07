@@ -99,8 +99,3 @@ Today, not all features are available in all languages. The following tables sho
 | Text chunkers                     | 🔄 | 🔄 | ❌ | |
 
 
-## Notes about the Python SDK
-
-During the initial development phase, many Python best practices have been ignored in the interest of velocity and feature parity. The project is now going through a refactoring exercise to increase code quality.
-
-To make the Kernel as lightweight as possible, the core pip package should have a minimal set of external dependencies. On the other hand, the SDK should not reinvent mature solutions already available, unless of major concerns.
