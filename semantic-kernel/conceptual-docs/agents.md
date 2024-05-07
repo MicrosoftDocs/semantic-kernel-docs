@@ -20,7 +20,7 @@ A copilot is a special type of agent that is meant to work side-by-side with a u
 When you start your journey with Semantic Kernel, we recommend that you start with building a copilot. This is because copilots are easier to build and safer to deploy because the user is always in control. Once you have a copilot, you can then turn it into a fully automated agent by removing the need for user input.
 
 ## Building your first agent
-An agent is made up of three core building blocks: [plugins](./plugins/index.md), [planners](./planners/index.md), and its persona. These building blocks are what allow an agent to retrieve information from the user or other systems, plan how to use that information, and use that information to respond to a user or perform an action.
+An agent is made up of three core building blocks: plugins, planners, and its persona. These building blocks are what allow an agent to retrieve information from the user or other systems, plan how to use that information, and use that information to respond to a user or perform an action.
 
 ![Plugins, planners, and persona](../media/plugins-planners-personas.png)
 
@@ -56,7 +56,7 @@ public class EmailPlugin
 }
 ```
 
-There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can create automatically create a plugin using its OpenAPI specification. To learn more about other ways to author plugins, see the [plugins](./plugins/index.md) section.
+There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can create automatically create a plugin using its OpenAPI specification. To learn more about other ways to author plugins, see the plugins section.
 
 ### Planners: giving guidance to your agent
 To actually use this plugin (and to wire them up with other steps), the copilot would need to first generate a plan. This is where planners come in. Planners are special prompts that allow an agent generate a plan to complete a task. The simplest planners are just a single prompt that helps the agent use function calling to complete a task.

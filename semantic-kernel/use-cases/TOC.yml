@@ -1,2 +1,8 @@
-- name: Tutorials
-  href: security.md
+- name: Call Center - Audio to Text
+  href: audiiototext.md
+- name: Defect Detection - Image to Text
+  href: imagetotext.md
+- name: HR Copilot 
+  href: hrcopilot.md
+- name: Collaboration - Supply Chain Optimization of a System
+  href: ragsample.md

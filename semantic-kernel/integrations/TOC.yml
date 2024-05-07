@@ -1,8 +1,2 @@
-- name: AI Models
-  href: security.md
-- name: Vector DBs
-  href: security.md
-- name: Plugins
-  href: security.md
-- name: Connectors
-  href: security.md
+- name: Integrations
+  href: index.md

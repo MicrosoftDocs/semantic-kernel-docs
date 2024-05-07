@@ -1,4 +1,6 @@
-- name: Tutorials
-  href: security.md
+- name: Semantic Kernel Fundamental Topics
+  href: fundamentals.md
+- name: Tutorials Lesson 1
+  href: lesson1.md
 - name: Prompt Flow Tutorials
   href: promptflow.md

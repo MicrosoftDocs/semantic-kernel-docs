@@ -21,7 +21,7 @@ Previously, we demonstrated the importance of providing descriptions for your pl
 
 Most notably, Prompt flow allows you to author chains of native and prompts and visualize them as a graph. This allows you and the rest of your team to easily create and test AI powered capabilities in both Azure Machine Learning Studio and locally with VS Code.
 
-:::image type="content" source="../../../media/prompt-flow-in-vs-code.png" alt-text="A graph of a Prompt flow":::
+:::image type="content" source="../media/prompt-flow-in-vs-code.png" alt-text="A graph of a Prompt flow":::
 
 Additionally, as part of the Azure Machine Learning Service, Prompt flow makes it easy to deploy real-time endpoints that allows you to integrate your flows into your existing applications _and_ it provides a robust set of tools to perform evaluations and A/B tests for any new flows.
 
@@ -48,7 +48,7 @@ With Semantic Kernel you can build autonomous AI applications with the aid of pl
 
    :::column-end:::
    :::column span="1":::
-        ![Semantic Kernel running inside of Prompt flow](/../media/semantic-kernel-in-prompt-flow.png)
+        ![Semantic Kernel running inside of Prompt flow](../media/semantic-kernel-in-prompt-flow.png)
    :::column-end:::
 :::row-end:::
 
@@ -81,7 +81,7 @@ In the planner section, we demonstrated how you can use the sequential planner t
 
 At the end of this article, you'll have a Prompt flow that can answer questions to math problems using Semantic Kernel.
 
-![Semantic Kernel running inside of Prompt flow](../../../media/prompt-flow-end-result.png)
+![Semantic Kernel running inside of Prompt flow](../media/prompt-flow-end-result.png)
 
 If you want to see the final solution to this article, you can check out the following samples in the public documentation repository. Use the link to the previous solution if you want to follow along.
 
@@ -122,7 +122,7 @@ We also recommend installing the Prompt flow VS Code extension to help you creat
 
 With the VS Code extension, you'll be able to view your Prompt flow in a visual editor, as well as test your Prompt flow directly from within VS Code.
 
-:::image type="content" source="../../../media/prompt-flow-in-vs-code.png" alt-text="A graph of a Prompt flow":::
+:::image type="content" source="../media/prompt-flow-in-vs-code.png" alt-text="A graph of a Prompt flow":::
 
 ### Use the CLI to create a new Prompt flow
 Prompt flow has three different types of flows: standard, chat, and evaluation. We'll first create a flow that will run the math plugin we created in the previous tutorial using the standard flow type. This will allow us to test the flow and make sure it's working as expected.
@@ -176,7 +176,7 @@ To do this, follow these steps:
 
 After completing these steps, you should see that the error icon has disappeared and the nodes are now connected.
 
-:::image type="content" source="../../../media/wired-up-flow.png" alt-text="A valid graph of a Prompt flow":::
+:::image type="content" source="../media/wired-up-flow.png" alt-text="A valid graph of a Prompt flow":::
 
 If you want, you can also edit the flow directly in the _flow.dag.yaml_ file. The following code shows the updated _flow.dag.yaml_ file. If you are running into issues with the visual editor, you can copy and paste this code into your _flow.dag.yaml_ file.
 
@@ -253,7 +253,7 @@ Now that you have a flow that can run your plugin, you can start to test where i
 
 If you want to test your flow with multiple inputs, you can use the batch run feature. This allows you to run your flow with a list of inputs from either a csv, tsv, JSON line file. Afterwards, all of the outputs will be saved to another JSON line file. In the [next article](./evaluating-plugins-and-planners-with-prompt-flow.md) you can then use the output file to evaluate your flow.
 
-![Running a batch with Prompt flow](../../../media/using-batch-runs-with-prompt-flow.png)
+![Running a batch with Prompt flow](../media/using-batch-runs-with-prompt-flow.png)
 
 To get started, you must first create a JSON lines file that contains sample inputs and the correct ground truth. The following sections will walk you through how to do this.
 

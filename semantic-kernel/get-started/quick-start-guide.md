@@ -115,6 +115,10 @@ AZURE_CLIENT_KEY="my-key" \
 CLIENT_ENDPOINT="https://<MY_INSTANCE>.openai.azure.com/" \
 ../../mvnw exec:java -Dsample=Example13_ConversationSummaryPlugin -Dexec.cleanupDaemonThreads=false
 ```
+# Getting Started Guide for .NET
+
+To dive in and get quickly set up using the following guide:
+[Getting Started with .NET](https://learn.microsoft.com/en-us/dotnet/ai/quickstarts/quickstart-openai-summarize-text?pivots=semantic-kernel/) to proceed.
 
 ## Like what you see?
 If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support.
@@ -122,14 +126,4 @@ If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show 
 :::image type="content" source="../media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
 
 ## Keep learning
-The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. Based on your experience level, you can jump to the section that best fits your needs.
-
-| Experience level     | Next step     |
-|--------------|-----------|
-| For beginners who are just starting to learn about AI | [Learn prompt engineering](../prompts/index.md) |
-| For people who are well versed in prompt engineering | [Orchestrate AI plugins](../agents/index.md) |
-| For people familiar with using AI plugins |  [Store and retrieve memory ](../memories/index.md) |
-
-
-> [!div class="nextstepaction"]
-> [Learn how to Orchestrate AI](../agents/index.md)
+The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. 
