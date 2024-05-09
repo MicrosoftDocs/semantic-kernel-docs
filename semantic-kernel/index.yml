@@ -46,7 +46,7 @@ productDirectory:
       links:
         - url: /semantic-kernel/security/
           text: Key measures to ensure security
- - title: Community
+    - title: Community
       imageSrc: /semantic-kernel/media/whats-new.png
       links:
         - url: https://github.com/microsoft/semantic-kernel/discussions
