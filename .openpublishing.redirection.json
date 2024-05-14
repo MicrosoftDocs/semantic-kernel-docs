@@ -644,6 +644,76 @@
             "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/index.md",
             "redirect_url": "/semantic-kernel/introduction",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/running-batches-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/index.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/planners",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/plugins/index.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/plugins/out-of-the-box-plugins.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/plugins/using-the-KernelFunction-decorator.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/plugins",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/customizing-chat-copilot.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+           {
+            "source_path": "semantic-kernel/chat-copilot/deploy-to-azure.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/getting-started.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/publish-changes-to-azure.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/testing-plugins-with-chat-copilot.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/saving-prompts-as-files.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/prompt-template-syntax.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/configure-prompts.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/calling-nested-functions.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_document_id": false
         }
 
     ]
