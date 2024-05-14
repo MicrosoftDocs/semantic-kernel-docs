@@ -610,5 +610,8 @@
             "redirect_url": "/semantic-kernel/agents/plugins/index",
             "redirect_document_id": false
         }
+
+
+   
     ]
 }
