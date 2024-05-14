@@ -609,9 +609,42 @@
             "source_path": "semantic-kernel/agents/plugins/openai-plugins.md",
             "redirect_url": "/semantic-kernel/agents/plugins/index",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/index.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/agents",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/kernel/adding-services.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/kernel/index.md",
+            "redirect_url": "/semantic-kernel/conceptual-docs/agents",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/create-a-prompt-flow-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/deploying-prompt-flows-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/evaluating-plugins-and-planners-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/index.md",
+            "redirect_url": "/semantic-kernel/introduction",
+            "redirect_document_id": false
         }
 
-
-   
     ]
 }
