@@ -36,7 +36,7 @@ _Just_ providing functions, however, is not enough to make a plugin. To power au
 
 :::row:::
    :::column span="1":::
-      For example, in the [`WriterPlugin` plugin](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/WriterPlugin), each function has a semantic description that describes what the function does. A planner can then use these descriptions to choose the best functions to call to fulfill a user's ask.
+      For example, in the [`WriterPlugin` plugin](https://github.com/microsoft/semantic-kernel/tree/main/prompt_template_samples/pluginsWriterPlugin), each function has a semantic description that describes what the function does. A planner can then use these descriptions to choose the best functions to call to fulfill a user's ask.
       
       In the picture on the right, a planner would likely use the `ShortPoem` and `StoryGen` functions to satisfy the users ask thanks to the provided semantic descriptions.
    :::column-end:::
@@ -112,14 +112,14 @@ You can learn more about creating native functions in the [Creating native funct
    :::column-end:::
 :::row-end:::
 
-Below is an sample called `Summarize` that can be found in the [samples folder](https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins/SummarizePlugin/Summarize) in the GitHub repository.
+Below is an sample called `Summarize` that can be found in the [samples folder](https://github.com/microsoft/semantic-kernel/tree/main/prompt_template_samples/pluginsSummarizePlugin/Summarize) in the GitHub repository.
 
-:::code language="txt" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/skprompt.txt":::
+:::code language="txt" source="~/../semantic-kernel-samples/prompt_template_samples/pluginsSummarizePlugin/Summarize/skprompt.txt":::
 
 To semantically describe this function (as well as define the configuration for the AI service), you must also create a _config.json_ file in the same folder as the prompt. This file describes the function's input parameters and description. Below is the _config.json_ file for the `Summarize` function.
 
 
-:::code language="json" source="~/../semantic-kernel-samples/samples/plugins/SummarizePlugin/Summarize/config.json":::
+:::code language="json" source="~/../semantic-kernel-samples/prompt_template_samples/pluginsSummarizePlugin/Summarize/config.json":::
 
 
 Both `description` fields are used by [planner](../planners/index.md), so it's important to provide a detailed, yet concise, description so the planner can make the best decision when orchestrating functions together. We recommend testing multiple descriptions to see which one works best for the widest range of scenarios.
