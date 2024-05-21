@@ -66,7 +66,7 @@ In the Python template, we just need to provide the value for the `history` vari
 In addition to the core template syntax, Semantic Kernel also comes with support for the Handlebars templating language in the C# SDK. To use Handlebars, you'll first want to add the Handlebars package to your project.
 
 ```console
-dotnet add package Microsoft.SemanticKernel.PromptTemplate.Handlebars --prerelease
+dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars --prerelease
 ```
 
 Then import the Handlebars template engine package.
