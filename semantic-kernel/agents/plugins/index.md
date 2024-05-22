@@ -66,7 +66,7 @@ Instead of providing a separate configuration file with semantic descriptions, p
 The following code is an excerpt from the `DocumentSkill` plugin, which can be found in the [document plugin](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Skills/Skills.Document) folder in the GitHub repository. It demonstrates how you can use the `SKFunction` and `SKFunctionInput` attributes to describe the function's input and output to planner.
 
 ```csharp
-[SKFunction, Description("Read all text from a document")]
+[KernelFunction, Description("Read all text from a document")]
 public async Task<string> ReadTextAsync(
    [Description("Path to the file to read")] string filePath
 )
