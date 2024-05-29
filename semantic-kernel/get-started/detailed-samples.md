@@ -16,7 +16,7 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 :::row:::
 
    :::column span="3":::
-        Each of the SDKs (Python, C#, and Java) have their own set of samples that walk through the SDK. Each sample is modelled as a test case within our main repo, so you're always guaranteed that the sample will work with the latest nightly version of the SDK.
+        Each of the SDKs (Python, C#, and Java) have their own set of samples that walk through the SDK. Each sample is modelled as a test case within our main repo, so you're always guaranteed that the sample will work with the latest nightly version of the SDK!
 
         > [!div class="nextstepaction"]
         > [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts)
@@ -29,6 +29,22 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
    :::column-end:::
    :::column span="2":::
         :::image type="content" source="../media/tutorials/kernel-syntax-examples.png" alt-text="Leverage the kernel syntax examples on GitHub":::
+   :::column-end:::
+:::row-end:::
+
+
+:::row:::
+   :::column":::
+        > [!div class="nextstepaction"]
+        > [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts)
+   :::column-end:::
+   :::column:::
+        > [!div class="nextstepaction"]
+        > [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/Concepts)
+   :::column-end:::
+   :::column:::
+        > [!div class="nextstepaction"]
+        > [Java](https://github.com/microsoft/semantic-kernel/tree/java-development/java/samples/semantickernel-concepts)
    :::column-end:::
 :::row-end:::
 
