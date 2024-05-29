@@ -53,3 +53,6 @@ With Semantic Kernel, you'll be equipped to build future-proof solutions that ev
 ## Get started
 
 Now that you know what Semantic Kernel is, try it out using the quick start guide. Within minutes you’ll be able to build an agent that can automatically call functions to perform actions for the user.
+
+> [!div class="nextstepaction"]
+> [Quickly get started](../get-started/quick-start-guide.md)
