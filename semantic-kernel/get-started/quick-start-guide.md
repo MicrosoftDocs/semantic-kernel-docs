@@ -153,7 +153,7 @@ Once you've implemented these steps, you're final code should look like the foll
 
 In the previous section, you saw how to create a simple conversation with an AI agent. The challenge with this code, however, is that the AI agent can only respond with information baked into its model. With plugins, however, you can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions.
 
-> [!Note]
+> [!Tip]
 > Behind the scenes, Semantic Kernel leverages Function Calling, a native feature of most of the latest LLMs. With Function Calling, LLMs can request (or call) a particular function. Semantic Kernel can then marshal the request to the appropriate function in your codebase and return the results back to the LLM so the LLM can generate a final response.
 
 To allow our AI to call our native code, we'll 1) create a plugin with the code you want the AI to invoke, 2) add the plugin to the kernel so the AI can access it, before finally 3) invoking the AI with the plugin.
