@@ -8,39 +8,24 @@ ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
 
-# Samples for Semantic Kernel
+# Deep dive into Semantic Kernel
 
-Want to learn more about Semantic Kernel? Check out these in-depth tutorials and videos. We will add more content over time from our team and community, so check back often! 
-
-
-:::row:::
-   :::column span="3":::
-        ## Cook with Semantic Kernel
-
-        Learn how to supercharge your problem-solving creativity with Semantic Kernel running on your own machine just like your own “Easy Bake Oven.” We’ll use plenty of cooking analogies to land the core ideas of LLM AI running on Semantic Kernel so be prepared to get hungry!
-
-        > [!div class="nextstepaction"]
-        > [Start the tutorial](https://devblogs.microsoft.com/semantic-kernel/recipes/)
-   :::column-end:::
-   :::column span="2":::
-
-        ### &nbsp;
-
-        :::image type="content" source="../media/tutorials/recipes.png" alt-text="Watch the Ready to cook tutorials":::
-
-   :::column-end:::
-:::row-end:::
+If you want to dive into deeper into Semantic Kernel and learn how to use more advanced functionality not explicitly covered in our Learn documentation, we recommend that you check out our concepts samples that individually demonstrate how to use specific features within the SDK.
 
 
 :::row:::
 
    :::column span="3":::
-        ## Kernel syntax examples
-        
-        This project contains a collection of .NET examples for various scenarios using Semantic Kernel components. There are already 40 examples that show how to achieve basic tasks like creating a chain, adding a plugin, and running a chain. There are also more advanced examples that show how to use the Semantic Kernel API to create a custom plugin, stream data, and more.
+        Each of the SDKs (Python, C#, and Java) have their own set of samples that walk through the SDK. Each sample is modelled as a test case within our main repo, so you're always guaranteed that the sample will work with the latest nightly version of the SDK.
 
         > [!div class="nextstepaction"]
-        > [Start the tutorial](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/KernelSyntaxExamples)
+        > [Python examples](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts)
+
+        > [!div class="nextstepaction"]
+        > [C# examples](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/Concepts)
+
+        > [!div class="nextstepaction"]
+        > [Python examples](https://github.com/microsoft/semantic-kernel/tree/java-development/java/samples/semantickernel-concepts)
    :::column-end:::
    :::column span="2":::
 
