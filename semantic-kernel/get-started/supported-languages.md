@@ -10,12 +10,11 @@ ms.service: semantic-kernel
 
 # Supported Semantic Kernel languages
 
-
 Semantic Kernel plans on providing support to the following languages:
 > [!div class="checklist"]
 > * C#
 > * Python
-> * Java ([available here](https://github.com/microsoft/semantic-kernel/blob/java-v1))
+> * Java
 
 While the overall architecture of the kernel is consistent across all languages, we made sure the SDK for each language follows common paradigms and styles in each language to make it feel native and easy to use.
 
@@ -28,53 +27,24 @@ Today, not all features are available in all languages. The following tables sho
 
 | Services                          |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| TextGeneration                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
-| TextEmbeddings                    | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
-| ChatCompletion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
-| Image Generation                  | ✅ | ❌ | ❌ | Example: Dall-E |
+| Text Generation                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
+| Chat Completion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
+| Text Embeddings (Experimental)                   | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
+| Text to Image (Experimental)                 | ✅ | ❌ | ❌ | Example: Dall-E |
+| Image to Text (Experimental)                 | ✅ | ❌ | ❌ | Example: Pix2Struct |
+| Text to Audio (Experimental)                 | ✅ | ❌ | ❌ | Example: Text-to-speech |
+| Audio to Text (Experimental)                 | ✅ | ❌ | ❌ | Example: Whisper |
 
 ### AI service endpoints
 
 | Endpoints                         |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
 | OpenAI                            | ✅ | ✅ | ✅ | |
-| AzureOpenAI                       | ✅ | ✅ | ✅ | |
+| Azure OpenAI                      | ✅ | ✅ | ✅ | |
+| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes Ollama, LLM Studio, Azure Model-as-a-service, etc. |
 | Hugging Face Inference API        | 🔄 | ❌ | ❌ | Coming soon to Python, not all scenarios are covered for .NET |
-| Hugging Face Local                | ❌ | ✅ | ❌ | |
-| Custom                            | ✅ | 🔄 | ❌ | Requires the user to define the service schema in their application |
 
-### Tokenizers
-
-| Tokenizers                        |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| GPT2                              | ✅ | ✅ | ✅ | |
-| GPT3                              | ✅ | ❌ | ❌ | |
-| tiktoken                          | 🔄 | ❌ | ❌ | Coming soon to Python and C#. Can be manually added to Python via `pip install tiktoken` |
-
-### Core plugins
-
-| Plugins                           |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| TextMemoryPlugin                   | ✅ | ✅ | 🔄 | |
-| ConversationSummaryPlugin          | ✅ | ✅ | ✅ | |
-| FileIOPlugin                       | ✅ | ✅ | ✅ | |
-| HttpPlugin                         | ✅ | ✅ | ✅ | |
-| MathPlugin                         | ✅ | ✅ | ✅ | |
-| TextPlugin                         | ✅ | ✅ | ✅ | |
-| TimePlugin                         | ✅ | ✅ | ✅ | |
-| WaitPlugin                         | ✅ | ✅ | ✅ | |
-
-### Planners
-
-| Planners                          |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| Plan Object Model                 | ✅ | ✅ | 🔄 | |
-| BasicPlanner                      | ❌ | ✅ | ❌ | |
-| ActionPlanner                     | ✅ | ✅ | 🔄 | In development|
-| SequentialPlanner                 | ✅ | ✅ | 🔄 | In development|
-| StepwisePlanner                   | ✅ | ✅ | ❌ | |
-
-### Connectors
+### Memory Connectors
 
 | Memory Connectors        |  C#  | Python | Java | Notes |
 |--------------------------|:----:|:------:|:----:|-------|
@@ -88,14 +58,4 @@ Today, not all features are available in all languages. The following tables sho
 | Redis                    | ✅ | 🔄 | ❌ | Vector optimization requires [RediSearch](https://redis.io/docs/stack/search) |
 | Sqlite                   | ✅ | ❌ | 🔄 | Vector optimization requires [sqlite-vss](https://github.com/asg017/sqlite-vss) |
 | Weaviate                 | ✅ | ✅ | ❌ | Currently supported on Python 3.9+, 3.8 coming soon |
-
-### Plugins
-| Plugins                           |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| MsGraph                           | ✅ | ❌ | ❌ | Contains plugins for OneDrive, Outlook, ToDos, and Organization Hierarchies |
-| Document and data loading plugins (i.e. pdf, csv, docx, pptx)  | ✅ | ❌ | ❌ | Currently only supports Word documents |
-| OpenAPI                           | ✅ | ❌ | ❌ | |
-| Web search plugins (i.e. Bing, Google) | ✅ | ✅ | ❌ | |
-| Text chunkers                     | 🔄 | 🔄 | ❌ | |
-
 
