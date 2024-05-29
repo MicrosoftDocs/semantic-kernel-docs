@@ -41,6 +41,7 @@
     "overwrite": [],
     "externalReference": [],
     "globalMetadata": {
+      "zone_pivot_group_filename:": "zone_pivot_group.json",
       "uhfHeaderId": "MSDocsHeader-SemanticKernel",
       "breadcrumb_path": "/semantic-kernel/breadcrumb/toc.json",
       "feedback_system": "None"
