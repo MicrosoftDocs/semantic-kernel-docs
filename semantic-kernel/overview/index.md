@@ -8,7 +8,7 @@ ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
 
-# What is Semantic Kernel?
+# Semantic Kernel: the enterprise AI SDK
 
 :::row:::
    :::column span="":::
