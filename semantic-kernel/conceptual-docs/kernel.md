@@ -1,6 +1,7 @@
 ---
 title: Understanding the kernel in Semantic Kernel
-description: Learn about the central component of Semantic Kernel and how it works.
+description: Learn about the central component of Semantic Kernel and how it works
+zone_pivot_groups: programming-languages
 author: matthewbolanos
 ms.topic: conceptual
 ms.author: mabolan
@@ -8,17 +9,9 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-# Understanding the kernel in Semantic Kernel
+# Understanding the kernel
 
-Similar to operating system, the kernel is responsible for managing resources that are necessary to run "code" in an AI application. This includes managing the AI models, services, and plugins that are necessary for both native code and AI services to run together.
-
-If you want to see the code demonstrated in this article in a complete solution, check out the following samples in the public documentation repository.
-
-| Language  | Link to final solution |
-| --- | --- |
-| C# | [Open example in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/DocumentationExamples/Plugin.cs) |
-| Python | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/documentation_examples/using_the_kernel.py) |
-| Java | [Open solution in GitHub](https://github.com/microsoft/semantic-kernel/blob/java-v1/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/Plugin.java) |
+The kernel is the central component of Semantic Kernel. At its simplest, the kernel is a Dependency Injection container that manages all of the services and plugins necessary to run your AI application. If you provide all of your services and plugins to the kernel, they will then be seamlessly used by the AI as needed.
 
 ## The kernel is at the center of _everything_
 Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is used by nearly every component within the Semantic Kernel SDK. This means that if you run any prompt or code in Semantic Kernel, it will always go through a kernel.
@@ -39,7 +32,7 @@ Before building a kernel, you should first understand the two types of component
 
 In the following examples, you can see how to add a logger, chat completion service, and plugin to the kernel.
 
-# [C#](#tab/Csharp)
+::: zone pivot="programming-language-csharp"
 With C#, Semantic Kernel natively supports dependency injection. This means you can add a kernel to your application's dependency injection container and use any of your application's services within the kernel by adding them as a service to the kernel.
 
 Import the necessary packages:
