@@ -7,7 +7,7 @@ ms.author: mabolan
 ms.date: 07/11/2023
 ms.service: semantic-kernel 
 ---
-# Hackathon materials for Semantic Kernel
+# Running your own Hackathon
 
 
 With these materials you can run your own Semantic Kernel Hackathon, a hands-on event where you can learn and create AI solutions using Semantic Kernel tools and resources. 
