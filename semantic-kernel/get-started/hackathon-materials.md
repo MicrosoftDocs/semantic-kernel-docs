@@ -49,7 +49,7 @@ Here is an approximate agenda and structure for each phase but feel free to modi
 
 Length (Minutes)  | Phase       | Description                                                                                                                                                                                                                                                                                                                                                                              |
 | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Day 1
+| **Day 1** |
  15  | Welcome/Introductions  | The hackathon facilitator will welcome the participants, introduce the goals and rules of the hackathon, and answer any questions. |
 | 30  | Overview of Semantic Kernel  | The facilitator will guide you through a live presentation that will give you an overview of AI and why it is important for solving problems in today's world. You will also see demos of how Semantic Kernel can be used for different scenarios.                           |
 | 5   | Choose your Track | Review slides in the deck for the specific track you’ll pick for the hackathon. |
@@ -57,7 +57,7 @@ Length (Minutes)  | Phase       | Description                                   
 | 20 | Responsible AI | Spend some time reviewing Responsible AI principles and ensure your proposal follows these principles. |
 | 60 | Break/Lunch    | Lunch or Break |
 | 360+ | Development/Hack | You will use Semantic Kernel SDKs tools, and resources to develop, test, and deploy your projects. This could be for the rest of the day or over multiple days based on the time available and problem to be solved. |
-| Day 2 |
+| **Day 2** |
 |5 | Welcome Back | Reconnect for Day 2 of the Semantic Kernel Hackathon |
 | 20 | What did you learn? | Review what you’ve learned so far in Day 1 of the Hackathon. |   
 | 120 | Hack | You will use Semantic Kernel SDKs tools, and resources to develop, test, and deploy your projects. This could be for the rest of the day or over multiple days based on the time available and problem to be solved. |     
