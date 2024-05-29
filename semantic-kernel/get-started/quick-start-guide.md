@@ -7,50 +7,28 @@ ms.author: mabolan
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
-# Start learning how to use Semantic Kernel
+# Getting started with Semantic Kernel
 
 
-In just a few steps, you can start running  the getting started guides for Semantic Kernel in either C# or Python. After completing the guides, you'll know how to...
-- Configure your local machine to run Semantic Kernel
-- Run AI prompts from the kernel
-- Make AI prompts dynamic with variables
-- Create a simple AI agent
-- Automatically combine functions together with planners
-- Store and retrieve memory with embeddings
+In just a few steps, you can build your first AI agent with Semantic Kernel in either Python, .NET, or Java. This guid will show you how to...
+- Install the necessary packages
+- Create a back-and-forth conversation with an AI
+- Give an AI agent the ability to run your code
+- Watch the AI create plans on the fly
 
-
-If you are an experienced developer, you can skip the guides and directly access the packages from the Nuget feed or PyPI.
+## Installing the SDK
 
 # [C#](#tab/Csharp)
 
-Instructions for accessing the `SemanticKernel` Nuget feed is available [here](https://www.nuget.org/packages/Microsoft.SemanticKernel/). It's as easy as:
+Semantic Kernel has several NuGet packages available. For most scenarios, however, you typically only need `Microsoft.SemanticKernel`. This includes the base abstractions in `Microsoft.SemanticKernel.Abstractions` as well as the connectors for Azure OpenAI and Azure OpenAI.
 
-```Nuget
-#r "nuget: Microsoft.SemanticKernel, *-*"
+You can install it using the following command:
+
+```bash
+dotnet add package Microsoft.SemanticKernel
 ```
 
-# [Java](#tab/Java)
-
-The `SemanticKernel` bom is available [here](https://repo1.maven.org/maven2/com/microsoft/semantic-kernel/semantickernel-bom/). Using the package is as easy as:
-
-```xml
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.microsoft.semantic-kernel</groupId>
-                <artifactId>semantickernel-bom</artifactId>
-                <version>${semantickernel.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependency>
-        <groupId>com.microsoft.semantic-kernel</groupId>
-        <artifactId>semantickernel-api</artifactId>
-    </dependency>
-```
+For the full list of Nuget packages, please refer to the [supported languages article](./supported-languages.md).
 
 # [Python](#tab/python)
 
@@ -60,70 +38,88 @@ Instructions for accessing the `SemanticKernel` Python package is available [her
 pip install semantic-kernel
 ```
 
+# [Java](#tab/Java)
+
+The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/com/microsoft/semantic-kernel/semantickernel-bom/). Using the package is as easy as adding the following to your _pom.xml_ file:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-bom</artifactId>
+            <version>${semantickernel.version}</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-api</artifactId>
+</dependency>
+```
+
 ---
 
 
+## Create a simple turn-based conversation
 
-## Requirements to run the guides
-Before running the guides in C#, make sure you have the following installed on your local machine.
+Now that you have the SDK installed in your preferred language, you can create a simple conversation with an AI agent. Using Semantic Kernel always starts with following these steps:
 
-> [!div class="checklist"]
-> * `git` or the [GitHub app](https://desktop.github.com/)
-> * [VSCode](https://code.visualstudio.com/Download) or [Visual Studio](https://visualstudio.microsoft.com/downloads/)
-> * An OpenAI key via either [Azure OpenAI Service](/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio) or [OpenAI](https://openai.com/api/)
-> * [.Net 7 SDK](https://dotnet.microsoft.com/download) - for C# notebook guides
-> * In VS Code the [Polyglot Notebook](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode) - for notebook guides
+1. Create a kernel with your AI services.
+2. Create a chat history object to store the conversation.
+3. Collect the user's input and add it to the chat history.
+4. Pass the chat history to the AI services to generate a response.
+5. Print the response and add it to the chat history.
 
-If you are using the Python guides, you just need `git` and `python`. These guides have been tested on python versions 3.8-3.11.
-
-## Download and run the guides
-To setup the guides, follow the steps below.
-
-> [!TIP]
-> Have your OpenAI or Azure OpenAI keys ready to enter when prompted by the Jupyter notebook.
+Below is an example of how you can implement these steps.
 
 
-1. Use your web browser to visit [aka.ms/sk/repo](https://github.com/microsoft/semantic-kernel) on GitHub.
+# [C#](#tab/Csharp)
 
-2. Clone or fork the repo to your local machine.
+1. Create a kernel with your AI services. In this example, we'll use Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md).
 
-   > [!NOTE]
-   > If you are new to using GitHub and have never cloned a repo to your local machine, please review [this guide](https://docs.github.com/repositories/creating-and-managing-repositories/cloning-a-repository).
-   > [!NOTE]
-   > If you are a new contributor to open source, please [fork the repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to start your journey.
+    :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-38,40,47-49":::
 
-   If you have trouble cloning or forking the repo, you can watch the video below.
-   > [!VIDEO https://learn-video.azurefd.net/vod/player?id=5a410eae-b131-4227-a8e5-8e24e0cefd8e]
+2. Create a chat history object to store the conversation.
 
-3. While the repository is open in VS Code, navigate to the `/dotnet/notebooks` or `/python/notebooks` folder.
+    :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="45-46":::
 
-4. Choose either the `dotnet` or `python` folder based on your preferred programming language.
+3. Collect the user's input and add it to the chat history.
 
-5. Open the _00-getting-started.ipynb_ notebook.
-6. Activate each code snippet with the "play" button on the left hand side.
+    :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="51-57,76-79" highlight="7":::
 
-   If you need help running the _00-getting-started.ipynb_ notebook, you can watch the video below.
-   > [!VIDEO https://learn-video.azurefd.net/vod/player?id=fc3c792e-3b4d-4009-900c-588ee35ee426] 
+4. Pass the chat history to the AI services to generate a response.
 
-7. Repeat for the remaining notebooks.
+    :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="65-67,69":::
 
-### Run Java Samples
-Details of running the Java samples can be found [here] (https://github.com/microsoft/semantic-kernel/tree/java-v1/java/samples/sample-code).
+5. Print the response and add it to the chat history.
 
-```shell
-AZURE_CLIENT_KEY="my-key" \
-CLIENT_ENDPOINT="https://<MY_INSTANCE>.openai.azure.com/" \
-../../mvnw exec:java -Dsample=Example13_ConversationSummaryPlugin -Dexec.cleanupDaemonThreads=false
-```
-# Getting Started Guide for .NET
+    :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="71-75":::
 
-To dive in and get quickly set up using the following guide:
-[Getting Started with .NET](https://learn.microsoft.com/en-us/dotnet/ai/quickstarts/quickstart-openai-summarize-text?pivots=semantic-kernel/) to proceed.
+# [Python](#tab/python)
 
-## Like what you see?
-If you are a fan of Semantic Kernel, please give the repo a ⭐️ star to show your support.
 
-:::image type="content" source="../media/pleasestarrepo.png" alt-text="Starring the repo for SK to show support":::
 
-## Keep learning
-The guides are an easy way run sample code and learn how to use Semantic Kernel. If you want to learn more about the concepts behind Semantic Kernel, keep reading the docs. 
+# [Java](#tab/Java)
+
+
+---
+
+> [!Note]
+> For a simple scenario like the one above, use of the `Kernel` is not entirely necessary, but in the next section, you'll see how encapsulating your services and plugins in a single `Kernel` object can make your code more modular and easier to maintain.
+
+
+## Giving your agent the ability to invoke your native code
+
+In the previous section, you saw how to create a simple conversation with an AI agent. The challenge with this code, however, is that the AI agent can only respond with information baked into its model. With plugins, however, you can give your AI agent the ability to run your code to retrieve additional information from external sources and perform actions.
+
+To do this, we'll first need to create a plugin with the code you want the AI to invoke. Afterwards, we'll add the plugin to the kernel so the AI can access it.
+
+# [C#](#tab/Csharp)
+
+1. Create a plugin with the code you want the AI to invoke.
+
+    :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="1-33":::

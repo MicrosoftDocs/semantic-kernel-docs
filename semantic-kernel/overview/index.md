@@ -11,28 +11,30 @@ ms.service: semantic-kernel
 # Semantic Kernel: the enterprise AI SDK
 
 :::row:::
-   :::column span="":::
-        Semantic Kernel is an open-source SDK that lets you easily build agents that call your existing code. As a highly extensible framework, it can be used with models from OpenAI, Azure OpenAI, Hugging Face, and more! By combining your existing C#, Python, and Java code with these models, you can build agents that answer questions and automate processes.
+   :::column span="2":::
+        Semantic Kernel is an open-source SDK that lets you easily build agents that can call your existing code. What makes Semantic Kernel unique is its focus on enterprise scenarios. As an SDK that used by Microsoft and Fortune 500 companies alike, Semantic Kernel prioritizes the specific needs of enterprise developers with features like Open Telemetry support, hooks/filters, and non-breaking version updates across all SDKs.
+
+        As a lightweight framework, Semantic Kernel can easily plug into your existing codebase and connect it to AI models from OpenAI, Azure OpenAI, Hugging Face, and more. With SDKs available in C#, Python, and Java, you can also use the same SDK across your AI researchers and enterprise app developers to quickly take prototypes and deploy them to your customers.
    :::column-end:::
    :::column span="":::
     ![Intro Image](../media/Introduction-to-Semantic-Kernel.png)
    :::column-end:::
 :::row-end:::
 
-## The AI SDK for automating business processes
+## Automating business processes with AI
 
 :::row:::
    :::column span="":::
-        Today's AI models can easily generate messages and images. While this is helpful for building chat apps, it’s not enough to build enterprise solutions that fully automate business processes. To do so, you need an SDK that can combine prompts with existing APIs to perform real work in the real world. <u>Semantic Kernel does just that</y>. With Semantic Kernel, you can easily describe your existing code to AI models so they can invoke them to address user needs. Whenever an LLM asks for a function to be invoked, Semantic Kernel then does the heavy lifting of translating the model's request into an actual function call and subsequently passes the results back to the LLM.
-   :::column-end:::
-   :::column span="":::
     ![Framework beyond chat](../media/an-sdk-beyond-chat.png)
+   :::column-end:::
+   :::column span="2":::
+        Today's AI models can easily generate messages and images. While this is helpful for building chat apps, it’s not enough to build enterprise solutions that fully automate business processes. To do so, you need an SDK that can combine prompts with existing APIs to perform real work in the real world. <u>Semantic Kernel does just that</u>. With Semantic Kernel, you can easily describe your existing code to AI models so they can invoke them to address user needs. Whenever an LLM asks for a function to be invoked, Semantic Kernel then does the heavy lifting of translating the model's request into an actual function call and subsequently passes the results back to the LLM.
    :::column-end:::
 :::row-end:::
 
 ## Semantic Kernel is enterprise first
 
-As the AI SDK used by Microsoft and Fortune 500 companies, Semantic Kernel is designed to be scalable, observable, and safe. With features like Open Telemetry support, you can easily monitor your agents in production. And with hooks/filters, you can ensure that you always have control over what your agents do.
+To support the needs of enterprise app developers, Semantic Kernel is designed to be scalable, observable, and safe. With features like Open Telemetry support, you can easily monitor your agents in production, and with hooks/filters, you can ensure that you always have control over what your agents do. This is different than other SDK that prioritize research and experimentation over production readiness.
 
 Unlike other other AI SDKs, Semantic Kernel is also _extremely_ lightweight. This means that you can easily integrate it into your existing codebase without layers of overly opinionated implementations of AI that will become obsolete in a few months. As a principle, Semantic Kernel is designed to be a thin layer that connects your code directly to AI models without getting in they way. As models evolve, you can easily swap them out without having to rewrite your entire codebase.
 
