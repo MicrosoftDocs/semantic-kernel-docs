@@ -8,7 +8,7 @@ ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
 
-# Introduction to Semantic Kernel
+# What is Semantic Kernel?
 
 :::row:::
    :::column span="":::
