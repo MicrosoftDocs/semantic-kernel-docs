@@ -107,7 +107,7 @@ Below is an example of how you can implement these steps.
 
 Once you've implemented these steps, you're final code should look like the following:
     
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35, 37-40, 44-79":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35, 37,38,40, 44-57,64-67,69-79":::
 
 ::: zone-end
 

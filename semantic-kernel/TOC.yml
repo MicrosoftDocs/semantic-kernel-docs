@@ -3,11 +3,9 @@
 - name: Getting started
   href: get-started/TOC.yml
   expanded: true
-- name: Conceptual Docs
+- name: Conceptual
   href: conceptual-docs/TOC.yml
   expanded: true
-- name: Security
-  href: security/TOC.yml
 - name: Integrations
   href: integrations/TOC.yml
 - name: Tutorials
