@@ -168,7 +168,7 @@ To define which functions the AI can invoke, you'll add annotations to the funct
 Once you've created your plugin, you can add it to the kernel so the AI can access it. We can alter the `Kernel` object to include the plugin within its plugin collection by adding an additional line of code to the builder.
 
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-40":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-40" highlight="3":::
 ::: zone-end
 
 ### 8. Invoke the AI with your plugin
@@ -176,10 +176,10 @@ Once you've created your plugin, you can add it to the kernel so the AI can acce
 Finally, we can alter the request to the LLM so that it automatically uses the plugin to satisfy the user's request.
 
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="65-69":::
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="59-69":::
 ::: zone-end
 
-### Final code for a simple turn-based conversation with a plugin
+### Final code for a turn-based conversation with a plugin
 
 Once you've implemented these steps, you're final code should look like the following:
 
