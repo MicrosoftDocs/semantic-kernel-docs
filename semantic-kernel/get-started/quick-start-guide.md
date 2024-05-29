@@ -74,18 +74,26 @@ The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/
 
 Now that you have the SDK installed in your preferred language, you can create a simple conversation with an AI agent. Using Semantic Kernel always starts with following these steps:
 
-1. Create a kernel with your AI services.
-2. Create a chat history object to store the conversation.
-3. Collect the user's input and add it to the chat history.
-4. Pass the chat history to the AI services to generate a response.
-5. Print the response and add it to the chat history.
+1. Import the necessary packages
+2. Create a kernel with your AI services.
+3. Create a chat history object to store the conversation.
+4. Collect the user's input and add it to the chat history.
+5. Pass the chat history to the AI services to generate a response.
+6. Print the response and add it to the chat history.
 
 Below is an example of how you can implement these steps.
 
 > [!Note]
 > In this example, we'll use Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md).
 
-### 1) Create a kernel with your AI services
+### 1) Import the necessary packages
+For this package, you'll want to import the following packages at the top of your file:
+
+::: zone pivot="programming-language-csharp"
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="3-6":::
+::: zone-end
+
+### 2) Create a kernel with your AI services
 
 At its core, a `Kernel` is simply a Dependency Injection container that holds all the services you need to run your AI agent. In this example, we'll create a `Kernel` object and add a chat completion service to it.
 
@@ -96,7 +104,7 @@ At its core, a `Kernel` is simply a Dependency Injection container that holds al
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-38,40,47-49":::
 ::: zone-end
 
-### 2) Create a chat history object to store messages
+### 3) Create a chat history object to store messages
 
 A chat history object is a simple list that stores the conversation between the user and the AI agent using Chat Message contents. By creating a chat history object that is sent to the LLM, you can provide the LLM with _all_ the context of the back-and-forth conversation so that the LLM can refer to previous messages when generating a response.
 
@@ -104,7 +112,7 @@ A chat history object is a simple list that stores the conversation between the 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="45-46":::
 ::: zone-end
 
-### 3) Collect the user's input and add to the history
+### 4) Collect the user's input and add to the history
 
 Just like any other application, you'll want to collect input from the user so the AI agent can respond accordingly. Adding the user's input to the chat history object is as simple as creating a new Chat Message content object and adding it to the chat history list. A helper method is provided to make this process easier for new user messages.
 
@@ -112,7 +120,7 @@ Just like any other application, you'll want to collect input from the user so t
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="51-57,76-79" highlight="7":::
 ::: zone-end
 
-### 4. Ask the AI service to generate a response
+### 5. Ask the AI service to generate a response
 
 Once you've prepared the chat history object, you can then pass it to the AI services to generate a response. The final message from the AI is returned back as a result so you can use it later.
 
@@ -120,7 +128,7 @@ Once you've prepared the chat history object, you can then pass it to the AI ser
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="65-67,69":::
 ::: zone-end
 
-### 5. Print the response and add it back to the history
+### 6. Print the response and add it back to the history
 
 Finally, you'll take the results of the LLM model and print it to the screen. To support multi-turn scenarios, you'll also want to add it to the chat history object so the AI can refer to it in future responses.
 
@@ -151,7 +159,7 @@ In the previous section, you saw how to create a simple conversation with an AI 
 To allow our AI to call our native code, we'll 1) create a plugin with the code you want the AI to invoke, 2) add the plugin to the kernel so the AI can access it, before finally 3) invoking the AI with the plugin.
 
 
-### 6. Create a plugin
+### 7. Create a plugin
 
 Below, you can see that creating a native plugin is as simple as creating a new class.
 
@@ -163,7 +171,7 @@ To define which functions the AI can invoke, you'll add annotations to the funct
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" id="LightPlugin":::
 ::: zone-end
 
-### 7. Add the plugin to the kernel
+### 8. Add the plugin to the kernel
 
 Once you've created your plugin, you can add it to the kernel so the AI can access it. We can alter the `Kernel` object to include the plugin within its plugin collection by adding an additional line of code to the builder.
 
@@ -171,7 +179,7 @@ Once you've created your plugin, you can add it to the kernel so the AI can acce
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-40" highlight="3":::
 ::: zone-end
 
-### 8. Invoke the AI with your plugin
+### 9. Invoke the AI with your plugin
 
 Finally, we can alter the request to the LLM so that it automatically uses the plugin to satisfy the user's request.
 

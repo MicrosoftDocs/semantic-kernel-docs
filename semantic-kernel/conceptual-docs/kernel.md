@@ -30,10 +30,9 @@ Throughout this entire process, you can create events and middleware that are tr
 ## Building a kernel
 Before building a kernel, you should first understand the two types of components that exist within a kernel: services and plugins. Services consist of both AI services and other services that are necessary to run your application (e.g., logging, telemetry, etc.). Plugins, meanwhile, are _any_ code you want AI to call or leverage within a prompt.
 
-In the following examples, you can see how to add a logger, chat completion service, and plugin to the kernel.
 
 ::: zone pivot="programming-language-csharp"
-With C#, Semantic Kernel natively supports dependency injection. This means you can add a kernel to your application's dependency injection container and use any of your application's services within the kernel by adding them as a service to the kernel.
+In the following examples, you can see how to add a logger, chat completion service, and plugin to the kernel.
 
 Import the necessary packages:
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/UsingTheKernel.cs" id="NecessaryPackages":::
