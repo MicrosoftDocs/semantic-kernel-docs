@@ -1,6 +1,7 @@
 ---
 title: How to quickly start with Semantic Kernel
 description: Follow along with Semantic Kernel's guides to quickly learn how to use the SDK.
+zone_pivot_groups: programming-languages
 author: matthewbolanos
 ms.topic: quickstart
 ms.author: mabolan
@@ -18,9 +19,9 @@ In just a few steps, you can build your first AI agent with Semantic Kernel in e
 
 ## Installing the SDK
 
-# [C#](#tab/Csharp)
+::: zone pivot="programming-language-csharp"
 
-Semantic Kernel has several NuGet packages available. For most scenarios, however, you typically only need `Microsoft.SemanticKernel`. This includes the base abstractions in `Microsoft.SemanticKernel.Abstractions` as well as the connectors for Azure OpenAI and Azure OpenAI.
+Semantic Kernel has several NuGet packages available. For most scenarios, however, you typically only need `Microsoft.SemanticKernel`.
 
 You can install it using the following command:
 
@@ -30,7 +31,10 @@ dotnet add package Microsoft.SemanticKernel
 
 For the full list of Nuget packages, please refer to the [supported languages article](./supported-languages.md).
 
-# [Python](#tab/python)
+::: zone-end  
+
+
+:::zone pivot="programming-language-python"
 
 Instructions for accessing the `SemanticKernel` Python package is available [here](https://pypi.org/project/semantic-kernel/). It's as easy as:
 
@@ -38,7 +42,9 @@ Instructions for accessing the `SemanticKernel` Python package is available [her
 pip install semantic-kernel
 ```
 
-# [Java](#tab/Java)
+::: zone-end
+
+::: zone pivot="programming-language-java"
 
 The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/com/microsoft/semantic-kernel/semantickernel-bom/). Using the package is as easy as adding the following to your _pom.xml_ file:
 
@@ -61,7 +67,7 @@ The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/
 </dependency>
 ```
 
----
+::: zone-end
 
 
 ## Create a simple turn-based conversation
@@ -77,7 +83,7 @@ Now that you have the SDK installed in your preferred language, you can create a
 Below is an example of how you can implement these steps.
 
 
-# [C#](#tab/Csharp)
+::: zone pivot="programming-language-csharp"
 
 1. Create a kernel with your AI services. In this example, we'll use Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md).
 
@@ -99,14 +105,22 @@ Below is an example of how you can implement these steps.
 
     :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="71-75":::
 
-# [Python](#tab/python)
+Once you've implemented these steps, you're final code should look like the following:
+    
+:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35, 37-40, 44-79":::
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+::: zone-end
 
 
 
-# [Java](#tab/Java)
+::: zone pivot="programming-language-csharp"
 
+::: zone-end
 
----
 
 > [!Note]
 > For a simple scenario like the one above, use of the `Kernel` is not entirely necessary, but in the next section, you'll see how encapsulating your services and plugins in a single `Kernel` object can make your code more modular and easier to maintain.
