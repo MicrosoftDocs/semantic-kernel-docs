@@ -8,8 +8,7 @@ ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
 
-# Demos of Semantic Kernel
-
+# Samples for Semantic Kernel
 
 Want to learn more about Semantic Kernel? Check out these in-depth tutorials and videos. We will add more content over time from our team and community, so check back often! 
 

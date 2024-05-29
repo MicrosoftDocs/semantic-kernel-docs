@@ -1,7 +1,7 @@
 - name: Quick start guide
   href: quick-start-guide.md
-- name: In-depth demos
-  href: detailed-demos.md
+- name: In-depth samples
+  href: detailed-samples.md
 - name: Supported languages
   href: supported-languages.md
 - name: Contributing to Semantic Kernel
