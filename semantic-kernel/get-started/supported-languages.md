@@ -18,9 +18,9 @@ Semantic Kernel plans on providing support to the following languages:
 
 While the overall architecture of the kernel is consistent across all languages, we made sure the SDK for each language follows common paradigms and styles in each language to make it feel native and easy to use.
 
-## Available packages
+## Available SDK packages
 
-### C#
+### C# packages
 
 In C#, there are several packages to help ensure that you only need to import the functionality that you need for your project. The following table shows the available packages in C#.
 
@@ -48,7 +48,7 @@ To install any of these packages, you can use the following command:
 dotnet add package <package-name>
 ```
 
-### Python
+### Python packages
 
 In Python, there's a single package that includes everything you need to get started with Semantic Kernel. To install the package, you can use the following command:
 
@@ -56,7 +56,7 @@ In Python, there's a single package that includes everything you need to get sta
 pip install semantic-kernel
 ```
 
-### Java
+### Java packages
 
 For Java, Semantic Kernel has the following packages; all are under the group Id `com.microsoft.semantic-kernel`, and can be imported
 from maven.
