@@ -42,6 +42,52 @@ When picking out a chat completion model, you will need to consider the followin
 > Of all the above questions, the most important is whether the model supports function calling. If it does not, you will not be able to use the model to call your existing code. Most of the latest models from OpenAI, Google, Mistral, and Amazon all support function calling. Support from small language models, however, is still limited.
 
 ::: zone pivot="programming-language-csharp"
+
+### Installing the necessary packages
+Before adding chat completion to your kernel, you will need to install the necessary packages. Below are the packages you will need to install for each AI service provider.
+
+
+# [Azure OpenAI](#tab/AzureOpenAI)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
+```
+
+# [OpenAI](#tab/OpenAI)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
+```
+
+# [Mistral](#tab/Mistral)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
+```
+
+# [Google](#tab/Google)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.Google
+```
+
+# [Hugging Face](#tab/HuggingFace)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
+```
+
+# [Other](#tab/other)
+For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the OpenAI chat completion connector.
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
+```
+
+---
+
+
+### Adding directly to the kernel
 To add a chat completion service, you can use the following code to add it to the kernel's inner service provider.
 
 # [Azure OpenAI](#tab/AzureOpenAI)
@@ -67,10 +113,6 @@ Kernel kernel = kernelBuilder.Build();
 
 # [OpenAI](#tab/OpenAI)
 
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
-
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -89,10 +131,6 @@ Kernel kernel = kernelBuilder.Build();
 
 > [!IMPORTANT]
 > The Mistral chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -113,10 +151,6 @@ Kernel kernel = kernelBuilder.Build();
 
 > [!IMPORTANT]
 > The Google chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Google
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -139,10 +173,6 @@ Kernel kernel = kernelBuilder.Build();
 > [!IMPORTANT]
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
-```
-
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -164,10 +194,6 @@ For other AI service providers that support the OpenAI chat completion API (e.g.
 > [!IMPORTANT]
 > Using custom endpoints with the OpenAI connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0010`.
 
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
-
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -185,13 +211,10 @@ Kernel kernel = kernelBuilder.Build();
 
 ---
 
+### Adding with dependency injection
 If you're using dependency injection, you'll likely want to add your AI services directly to the service provider. This is helpful if you want to create singletons of your AI services and reuse them in transient kernels.
 
 # [Azure OpenAI](#tab/AzureOpenAI)
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -212,10 +235,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 ```
 
 # [OpenAI](#tab/OpenAI)
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -238,10 +257,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 > [!IMPORTANT]
 > The Mistral chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -266,10 +281,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 > [!IMPORTANT]
 > The Google chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Google
-```
-
 ```csharp
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Google;
@@ -293,10 +304,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 > [!IMPORTANT]
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -323,10 +330,6 @@ For other AI service providers that support the OpenAI chat completion API (e.g.
 > [!IMPORTANT]
 > Using custom endpoints with the OpenAI connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0010`.
 
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
-
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -348,13 +351,10 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ---
 
+### Creating standalone instances
 Lastly, you can create instances of the service directly so that you can either add them to a kernel later or use them directly in your code without ever injecting them into the kernel or in a service provider.
 
 # [Azure OpenAI](#tab/AzureOpenAI)
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -369,10 +369,6 @@ AzureOpenAIChatCompletionService chatCompletionService = new (
 ```
 
 # [OpenAI](#tab/OpenAI)
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -389,10 +385,6 @@ OpenAIChatCompletionService chatCompletionService = new (
 
 > [!IMPORTANT]
 > The Mistral chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.MistralAI;
@@ -411,10 +403,6 @@ MistralAIChatCompletionService chatCompletionService = new (
 > [!IMPORTANT]
 > The Google chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Google
-```
-
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Google;
 
@@ -432,10 +420,6 @@ GoogleAIGeminiChatCompletionService chatCompletionService = new (
 > [!IMPORTANT]
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
-```
-
 ```csharp
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
@@ -452,10 +436,6 @@ For other AI service providers that support the OpenAI chat completion API (e.g.
 
 > [!IMPORTANT]
 > Using custom endpoints with the OpenAI connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0010`.
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.OpenAI;
