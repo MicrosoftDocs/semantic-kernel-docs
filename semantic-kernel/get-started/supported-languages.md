@@ -84,19 +84,13 @@ A BOM is provided that can be used to define the versions of all Semantic Kernel
     </dependencyManagement>
 ```
 
-`semantickernel-bom`
-: A Maven project BOM that can be used to define the versions of all Semantic Kernel packages.
-
-`semantickernel-api`
-: Package that defines the core public API for the Semantic Kernel for a Maven project.
-
-`semantickernel-aiservices-openai`
-: Provides a connector that can be used to interact with the OpenAI API.
+- `semantickernel-bom` – A Maven project BOM that can be used to define the versions of all Semantic Kernel packages.
+- `semantickernel-api` – Package that defines the core public API for the Semantic Kernel for a Maven project.
+- `semantickernel-aiservices-openai` –Provides a connector that can be used to interact with the OpenAI API.
 
 Below is an example POM XML for a simple project that uses OpenAI.
 
 ```xml
-
 <project>
     <dependencyManagement>
         <dependencies>

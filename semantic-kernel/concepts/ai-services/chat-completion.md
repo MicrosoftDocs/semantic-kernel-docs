@@ -321,6 +321,14 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ---
 
+## Retrieving the service from the kernel
+
+If you've added the service to the kernel, you can retrieve it from the kernel's service provider. This is helpful if you want to use the service directly in your code.
+
+```csharp
+IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
+```
+
 ## Creating standalone instances
 Lastly, you can create instances of the service directly so that you can either add them to a kernel later or use them directly in your code without ever injecting them into the kernel or in a service provider.
 
@@ -466,3 +474,47 @@ To add a chat completion service, you can use the following code to add it to th
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 ::: zone-end
+
+## Using the chat completion service
+
+Once you've created an instance of the chat completion service, you can use it to generate the next response in a conversation. Before invoking the service, you will need to create a chat history object to store the conversation.
+
+### Creating a chat history object
+
+```csharp
+```
+
+Afterwards, you can send the chat history object to the LLM to generate the next response from the AI. When generating the next response, you have access to both non-streaming and streaming methods for generating responses.
+
+> [!TIP]
+> We recommend that you always use the streaming methods when possible. This is because the streaming methods provide user's with a faster initial response time, which reduces the perceived latency of the AI.
+
+### Non-streaming completion
+
+```csharp
+```
+
+### Streaming completion
+
+```csharp
+```
+
+## Function calling with chat completion
+
+The most powerful feature of chat completion is the ability to call functions from the model. This allows you to create a chat bot that can interact with your existing code, making it possible to automate business processes, create code snippets, and more.
+
+The following sample demonstrates how to add a plugin to the kernel that can be called by the chat completion service.
+
+```csharp
+```
+
+For a more detailed explanation of how to use function calling with chat completion, refer to the [planning article](./planning.md).
+
+## Multi-modal chat completion
+
+Some chat completion models support modalities other than text. OpenAI's GPT-4o, for example, supports images as input within a chat message. This mimics how humans can attach images to their messages in chat apps.
+
+With this additional input, the LLM can answer questions about the image or generate captions for the image. Below is an example of how to create a chat completion service that supports multi-modal input.
+
+```csharp
+```

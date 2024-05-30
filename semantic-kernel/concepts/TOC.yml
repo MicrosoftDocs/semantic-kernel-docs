@@ -1,7 +1,7 @@
 - name: Kernel
   href: kernel.md
 - name: AI Services
-  href: ai-services.md
+  href: ai-services/TOC.yml
 - name: Plugins
   href: plugin.md
 - name: Planners
