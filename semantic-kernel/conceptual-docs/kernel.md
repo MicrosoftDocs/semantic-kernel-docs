@@ -56,7 +56,6 @@ Finally, you can add the necessary services and plugins. Below is an example of 
 
 ::: zone pivot="programming-language-java"
 
-
 To build a kernel that uses OpenAI for chat completion, it can be created as follows.
 
 :::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="build_client":::

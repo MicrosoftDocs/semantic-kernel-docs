@@ -798,7 +798,7 @@ Lastly, you can create instances of the service directly so that you can either 
 
 ::: zone-end
 
-::: zone pivot="programming-language-csharp,programming-language-python
+::: zone pivot="programming-language-csharp,programming-language-python"
 
 ## Embedding generation
 
