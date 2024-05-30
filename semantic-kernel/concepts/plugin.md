@@ -38,35 +38,40 @@ Just providing functions, however, is not enough to make a plugin. To power auto
       In the picture on the right, an LLM would likely call the `ShortPoem` and `StoryGen` functions to satisfy the users ask thanks to the provided semantic descriptions.
    :::column-end:::
    :::column span="3":::
-        ![Semantic description within the WriterPlugin plugin](../../media/writer-plugin-example.png)
+        ![Semantic description within the WriterPlugin plugin](../media/writer-plugin-example.png)
    :::column-end:::
 :::row-end:::
 
 ## Types of plugin functions
 Most plugin functions fall into one of two categories:
-1. **Data retrieval**: These functions are used to retrieve data from a database or external API so that an AI can gather additional context to generate a response. This is also known as Retrieval Augmented Generation (RAG). Examples include:
 
-  | Plugin | Description |
-  |--------|-------------|
-  | Web search | Allows an AI to search the web for current information that might not exist in its training data. |
-  | Time | Gives an AI the ability to see the current time so it can provide time-sensitive information. |
-  | CRM | Allows an AI to retrieve information about customers. |
-  | Inventory | Gives an AI the ability to see what is in stock so it can give recommendations to employees and customers alike. |
-  | Semantic search | Allows an AI to search for information within a specific domain (e.g., internal legal documents); typically powered by a vector DB like Azure AI Search. |
+### Data retrieval
 
-  > [!Tip]
-  > When developing plugins for Retrieval Augmented Generation (RAG), it’s important to note that you don't always need a vector DB. Often your existing APIs can be used by an AI to retrieve the necessary information. We recommend starting with your existing APIs and then moving to a vector DB for semantic search if necessary.
+These functions are used to retrieve data from a database or external API so that an AI can gather additional context to generate a response. This is also known as Retrieval Augmented Generation (RAG). Examples include:
 
-2. **Task automation**: These functions are used to perform actions on behalf of a user. Examples include:
+| Plugin | Description |
+|--------|-------------|
+| Web search | Allows an AI to search the web for current information that might not exist in its training data. |
+| Time | Gives an AI the ability to see the current time so it can provide time-sensitive information. |
+| CRM | Allows an AI to retrieve information about customers. |
+| Inventory | Gives an AI the ability to see what is in stock so it can give recommendations to employees and customers alike. |
+| Semantic search | Allows an AI to search for information within a specific domain (e.g., internal legal documents); typically powered by a vector DB like Azure AI Search. |
 
-  | Plugin | Description |
-  |--------|-------------|
-  | Email | Allows an AI to send and receive emails on behalf of a user. |
-  | Microsoft 365 | Allows an AI to use Microsoft 365 applications, such as Microsoft Word so that it can edit documents on behalf of a user. |
-  | Home automation | Allows an AI to control smart home devices like lights, thermostats, and security cameras. |
-  | Inventory | Allows an AI to update inventory levels based on sales or new shipments. |
+> [!Tip]
+> When developing plugins for Retrieval Augmented Generation (RAG), it’s important to note that you don't always need a vector DB. Often your existing APIs can be used by an AI to retrieve the necessary information. We recommend starting with your existing APIs and then moving to a vector DB for semantic search if necessary.
 
-  > [!Tip]
-  > When developing plugins for task automation, it’s important to ensure that you have the necessary safeguards in place to ensure the AI cannot perform actions without user consent.
+### Task automation
+
+These functions are used to perform actions on behalf of a user. Examples include:
+
+| Plugin | Description |
+|--------|-------------|
+| Email | Allows an AI to send and receive emails on behalf of a user. |
+| Microsoft 365 | Allows an AI to use Microsoft 365 applications, such as Microsoft Word so that it can edit documents on behalf of a user. |
+| Home automation | Allows an AI to control smart home devices like lights, thermostats, and security cameras. |
+| Inventory | Allows an AI to update inventory levels based on sales or new shipments. |
+
+> [!Tip]
+> When developing plugins for task automation, it’s important to ensure that you have the necessary safeguards in place to ensure the AI cannot perform actions without user consent.
 
 ## Using plugins with Semantic Kernel

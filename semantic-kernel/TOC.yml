@@ -4,7 +4,7 @@
   href: get-started/TOC.yml
   expanded: true
 - name: Concepts
-  href: conceptual-docs/TOC.yml
+  href: concepts/TOC.yml
   expanded: true
 - name: Integrations
   href: integrations/TOC.yml

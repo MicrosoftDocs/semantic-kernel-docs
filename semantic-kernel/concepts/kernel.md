@@ -16,6 +16,8 @@ The kernel is the central component of Semantic Kernel. At its simplest, the ker
 ## The kernel is at the center of _everything_
 Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is used by nearly every component within the Semantic Kernel SDK. This means that if you run any prompt or code in Semantic Kernel, the kernel will always be available to retrieve the necessary services and plugins.
 
+![The kernel is at the center of everything in Semantic Kernel](../media/the-kernel-is-at-the-center-of-everything.png)
+
 This is extremely powerful, because it means you as a developer have a single place where you can configure, and most importantly monitor, your AI application. Take for example, when you invoke a prompt from the kernel. When you do so, the kernel will...
 1. Select the best AI service to run the prompt.
 2. Build the prompt using the provided prompt template.
@@ -24,8 +26,6 @@ This is extremely powerful, because it means you as a developer have a single pl
 5. And finally return the response from the LLM to your application.
 
 Throughout this entire process, you can create events and middleware that are triggered at each of these steps. This means you can perform actions like logging, provide status updates to users, and most importantly responsible AI. All from a single place.
-
-![The kernel is at the center of everything in Semantic Kernel](../media/the-kernel-is-at-the-center-of-everything.png)
 
 ## Build a kernel with services and plugins
 Before building a kernel, you should first understand the two types of components that exist within a kernel:
@@ -113,4 +113,4 @@ builder.Services.AddTransient((serviceProvider)=> {
 Now that you understand the kernel, you can learn about all the different AI services that you can add to it.
 
 > [!div class="nextstepaction"]
-> [Learn about AI services](./ai-services.md)
+> [Learn about AI services](./ai-services/index.md)

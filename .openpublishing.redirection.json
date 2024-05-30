@@ -508,19 +508,19 @@
        
         {
             "source_path": "semantic-kernel/prompts/your-first-prompt.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_url": "/semantic-kernel/concepts/prompts",
             "redirect_document_id": false
         },
      
         {
             "source_path": "semantic-kernel/prompts/index.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_url": "/semantic-kernel/concepts/prompts",
             "redirect_document_id": false
         },
 
         {
             "source_path": "semantic-kernel/prompts/templatizing-prompts.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_url": "/semantic-kernel/concepts/prompts",
             "redirect_document_id": false
         },
         
@@ -591,18 +591,18 @@
         },
         {
             "source_path": "/semantic-kernel/agents/#persona-giving-your-agent-a-personality.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/agents",
+            "redirect_url": "/semantic-kernel/concepts/agents",
             "redirect_document_id": false
         },
         {
             "source_path": "/semantic-kernel/agents/kernel.md/",
-            "redirect_url": "/semantic-kernel/conceptual-docs/kernel",
+            "redirect_url": "/semantic-kernel/concepts/kernel",
             "redirect_document_id": false
         },
         
         {
             "source_path": "/semantic-kernel/agents/kernel/adding-services.md/",
-            "redirect_url": "/semantic-kernel/conceptual-docs/kernel",
+            "redirect_url": "/semantic-kernel/concepts/kernel",
             "redirect_document_id": false
         },
         {
@@ -612,7 +612,7 @@
         },
         {
             "source_path": "semantic-kernel/agents/index.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/agents",
+            "redirect_url": "/semantic-kernel/concepts/agents",
             "redirect_document_id": false
         },
         {
@@ -622,7 +622,7 @@
         },
         {
             "source_path": "semantic-kernel/agents/kernel/index.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/agents",
+            "redirect_url": "/semantic-kernel/concepts/agents",
             "redirect_document_id": false
         },
         {
@@ -652,22 +652,22 @@
         },
         {
             "source_path": "semantic-kernel/agents/planners/index.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/planners",
+            "redirect_url": "/semantic-kernel/concepts/planners",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/agents/plugins/index.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/plugins",
+            "redirect_url": "/semantic-kernel/concepts/plugins",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/agents/plugins/out-of-the-box-plugins.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/plugins",
+            "redirect_url": "/semantic-kernel/concepts/plugins",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/agents/plugins/using-the-KernelFunction-decorator.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/plugins",
+            "redirect_url": "/semantic-kernel/concepts/plugins",
             "redirect_document_id": false
         },
         {
@@ -697,22 +697,22 @@
         },
         {
             "source_path": "semantic-kernel/prompts/saving-prompts-as-files.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_url": "/semantic-kernel/concepts/prompts",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/prompts/prompt-template-syntax.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_url": "/semantic-kernel/concepts/prompts",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/prompts/configure-prompts.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_url": "/semantic-kernel/concepts/prompts",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/prompts/calling-nested-functions.md",
-            "redirect_url": "/semantic-kernel/conceptual-docs/prompts",
+            "redirect_url": "/semantic-kernel/concepts/prompts",
             "redirect_document_id": false
         }
 

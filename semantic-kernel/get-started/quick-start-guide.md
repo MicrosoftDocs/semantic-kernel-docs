@@ -96,7 +96,7 @@ For this package, you'll want to import the following packages at the top of you
 ### 2) Create a kernel with your AI services
 
 > [!Tip]
-> If you need help creating a service, refer to the [AI services article](../conceptual-docs/ai-services.md). There, you'll find guidance on how to use OpenAI or Azure OpenAI models as services.
+> If you need help creating a service, refer to the [AI services article](../concepts/ai-services.md). There, you'll find guidance on how to use OpenAI or Azure OpenAI models as services.
 
 ::: zone pivot="programming-language-csharp"
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-38,40,47-49":::

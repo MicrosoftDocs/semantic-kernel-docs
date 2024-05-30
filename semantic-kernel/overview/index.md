@@ -43,7 +43,9 @@ Lastly, with version 1.0+ support across C#, Python, and Java, you can also be c
    :::column span="":::
       With Semantic Kernel, you'll be equipped to build future-proof solutions that evolve with your needs. Easily add your existing code through plugins to maximize your investment and innovation potential and flexibly integrate new and exiting AI services through a set of out-of-the-box connectors. 
 
-      Together, with plugins and AI services, you can begin automating business process for you company and your customers. For example, if you built plugins to interact with a CRM system, you could use Semantic Kernel to orchestrate calls to get customers, email customers, and complete sales with models from Azure OpenAI, OpenAI, Mistral or Gemini. Because Semantic Kernel uses the same plugin manifests used by ChatGPT and Microsoft 365 Copilot, you can also easily share the extensions you build for Semantic Kernel with other developers (whether pro-dev or citizen-dev) within your company.
+      Together, with plugins and AI services, you can begin automating business process for you company and your customers. For example, if you built plugins to interact with a CRM system, you could use Semantic Kernel to orchestrate calls to get customers, email customers, and complete sales with models from Azure OpenAI, OpenAI, Mistral or Gemini.
+      
+      Because Semantic Kernel uses OpenAPI specifications (just like Microsoft 365 Copilot), you can also easily share the extensions you build for Semantic Kernel with other developers (whether pro-dev or citizen-dev) within your company.
    :::column-end:::
    :::column span="":::
     ![Modular Extensibility](../media/Designed-for-modular-extensibility.png)
