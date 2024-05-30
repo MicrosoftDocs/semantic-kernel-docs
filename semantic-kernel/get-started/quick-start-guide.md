@@ -114,7 +114,7 @@ For this package, you'll want to import the following packages at the top of you
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="51-57,76-79" highlight="7":::
 ::: zone-end
 
-### 5. Ask the AI service to generate a response
+### 5) Ask the AI service to generate a response
 
 Once you've prepared the chat history object, you can then pass it to the AI services to generate a response. The final message from the AI is returned back as a result so you can use it later.
 
@@ -122,7 +122,7 @@ Once you've prepared the chat history object, you can then pass it to the AI ser
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="65-67,69":::
 ::: zone-end
 
-### 6. Print the response and add it back to the history
+### 6) Print the response and add it back to the history
 
 Finally, you'll take the results of the LLM model and print it to the screen. To support multi-turn scenarios, you'll also want to add it to the chat history object so the AI can refer to it in future responses.
 
@@ -145,10 +145,12 @@ In the previous section, you saw how to create a simple conversation with an AI 
 > [!Tip]
 > Behind the scenes, Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs. With function calling, LLMs can request (or call) a particular function. Semantic Kernel can then marshal the request to the appropriate function in your codebase and return the results back to the LLM so the LLM can generate a final response.
 
-To allow our AI to call our native code, we'll 1) create a plugin with the code you want the AI to invoke, 2) add the plugin to the kernel so the AI can access it, before finally 3) invoking the AI with the plugin.
+To allow our AI to call our native code, we'll complete the following:
+7. [Create a plugin with the code you want the AI to invoke](#7-create-a-plugin)
+8. [Add the plugin to the kernel so the AI can access it](#8-add-the-plugin-to-the-kernel)
+9. [Invoke the AI with the plugin](#9-invoke-the-ai-with-your-plugin)
 
-
-### 7. Create a plugin
+### 7) Create a plugin
 
 Below, you can see that creating a native plugin is as simple as creating a new class.
 
@@ -158,7 +160,7 @@ In this example, we've created a plugin that can manipulate a light bulb. While 
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="85-88,90-92,94-107":::
 ::: zone-end
 
-### 8. Add the plugin to the kernel
+### 8) Add the plugin to the kernel
 
 Once you've created your plugin, you can add it to the kernel so the AI can access it. We can alter the `Kernel` object to include the plugin within its plugin collection by adding an additional line of code to the builder.
 
@@ -166,7 +168,7 @@ Once you've created your plugin, you can add it to the kernel so the AI can acce
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-40" highlight="4":::
 ::: zone-end
 
-### 9. Invoke the AI with your plugin
+### 9) Invoke the AI with your plugin
 
 Finally, we can alter the request to the LLM so that it automatically uses the plugin to satisfy the user's request.
 
