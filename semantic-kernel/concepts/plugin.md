@@ -31,9 +31,11 @@ At a high-level, a plugin is a group of [functions](#types-of-plugin-functions) 
 
 Just providing functions, however, is not enough to make a plugin. To power automatic orchestration with function calling, plugins also need to provide details that semantically describe how they behave. Everything from the function's input, output, and side effects need to be described in a way that the AI can understand, otherwise, the AI will not correctly call the function.
 
+
+For example, the sample `WriterPlugin` plugin on the right has functions with semantic descriptions that describe what each function does. An LLM can then use these descriptions to choose the best functions to call to fulfill a user's ask.
+
 :::row:::
    :::column span="1":::
-      For example, the sample `WriterPlugin` plugin on the right has functions with semantic descriptions that describe what each function does. An LLM can then use these descriptions to choose the best functions to call to fulfill a user's ask.
       
       In the picture on the right, an LLM would likely call the `ShortPoem` and `StoryGen` functions to satisfy the users ask thanks to the provided semantic descriptions.
    :::column-end:::
@@ -44,10 +46,12 @@ Just providing functions, however, is not enough to make a plugin. To power auto
 
 ## Types of plugin functions
 Most plugin functions fall into one of two categories:
+1. [Data retrieval](#data-retrieval) (for RAG)
+2. [Task automation](#task-automation)
 
 ### Data retrieval
 
-These functions are used to retrieve data from a database or external API so that an AI can gather additional context to generate a response. This is also known as Retrieval Augmented Generation (RAG). Examples include:
+These functions are used to retrieve data from a database or external API so that an AI can gather additional context to generate a response. This is also known as Retrieval Augmented Generation (RAG). Examples include the following.
 
 | Plugin | Description |
 |--------|-------------|
@@ -62,7 +66,8 @@ These functions are used to retrieve data from a database or external API so tha
 
 ### Task automation
 
-These functions are used to perform actions on behalf of a user. Examples include:
+These functions are used to perform actions on behalf of a user. These are helpful when you want to automate business processes with AI.
+Examples include the following.
 
 | Plugin | Description |
 |--------|-------------|
@@ -72,6 +77,6 @@ These functions are used to perform actions on behalf of a user. Examples includ
 | Inventory | Allows an AI to update inventory levels based on sales or new shipments. |
 
 > [!Tip]
-> When developing plugins for task automation, it’s important to ensure that you have the necessary safeguards in place to ensure the AI cannot perform actions without user consent.
+> When developing plugins for task automation, it’s important to ensure that you have the necessary safeguards in place to ensure the AI cannot perform actions without user consent. To learn more about building approval workflows, refer to the [hooks and filters article](./hooks-and-filters.md) article.
 
 ## Using plugins with Semantic Kernel

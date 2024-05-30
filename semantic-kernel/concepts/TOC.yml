@@ -12,5 +12,7 @@
   href: agents.md
 - name: Prompts
   href: prompts.md
-- name: Enterprise Readiness
-  href: enterprise-readiness.md
+- name: Telemetry
+  href: telemetry.md
+- name: Hooks and filters
+  href: hooks-and-filters.md
