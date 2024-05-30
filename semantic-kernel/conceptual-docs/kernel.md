@@ -67,6 +67,49 @@ To build a kernel that uses OpenAI for chat completion, it can be created as fol
 
 To learn more about the different AI services that you can add to a kernel, please refer to the [AI services article](./ai-services.md). If instead, you want to know of the various ways to add plugins to a kernel, refer to the [plugins article](./plugins.md).
 
+
+::: zone pivot="programming-language-csharp"
+## Creating a kernel using Dependency Injection
+
+In C#, you can use Dependency Injection to create a kernel. This is done by creating a `ServiceCollection` and adding services and plugins to it. Below is an example of how you can create a kernel using Dependency Injection.
+
+> [!TIP]
+> We recommend that you create a kernel as a transient service so that it is disposed of after each use because the plugin collection is mutable. The kernel is extremely lightweight (since it's just a container for services and plugins), so creating a new kernel for each use is not a performance concern.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+// Add the OpenAI chat completion service as a singleton
+builder.Services.AddOpenAIChatCompletion(
+    modelId: "gpt-4",
+    apiKey: "YOUR_API_KEY",
+    orgId: "YOUR_ORG_ID", // Optional; for OpenAI deployment
+    serviceId: "YOUR_SERVICE_ID" // Optional; for targeting specific services within Semantic Kernel
+);
+
+// Create singletons of your plugins
+builder.Services.AddSingleton(() => new LightPlugin());
+builder.Services.AddSingleton(() => new SpeakerPlugin());
+
+// Create the plugin collection (using the KernelPluginFactory to create plugins from objects)
+builder.Services.AddSingleton<KernelPluginCollection>((serviceProvider) => 
+    [
+        KernelPluginFactory.CreateFromObject(serviceProvider.GetRequiredService<LightPlugin>()),
+        KernelPluginFactory.CreateFromObject(serviceProvider.GetRequiredService<SpeakerPlugin>())
+    ]
+);
+
+// Finally, create the Kernel service with the service provider and plugin collection
+builder.Services.AddTransient((serviceProvider)=> {
+    KernelPluginCollection pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>();
+
+    return new Kernel(serviceProvider, pluginCollection);
+});
+```
+::: zone-end
+
 ## Next steps
 Now that you understand the kernel, you can learn about all the different AI services that you can add to it.
 
