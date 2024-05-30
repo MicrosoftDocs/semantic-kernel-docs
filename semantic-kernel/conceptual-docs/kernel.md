@@ -23,15 +23,18 @@ This is extremely powerful, because it means you as a developer have a single pl
 4. Receive and parse the response.
 5. And finally return the response from the LLM to your application.
 
-![The kernel is at the center of everything in Semantic Kernel](../media/the-kernel-is-at-the-center-of-everything.png)
-
 Throughout this entire process, you can create events and middleware that are triggered at each of these steps. This means you can perform actions like logging, provide status updates to users, and most importantly responsible AI. All from a single place.
 
+![The kernel is at the center of everything in Semantic Kernel](../media/the-kernel-is-at-the-center-of-everything.png)
+
 ## Build a kernel with services and plugins
-Before building a kernel, you should first understand the two types of components that exist within a kernel: services and plugins. Services consist of both AI services (e.g., chat completion) and other services (e.g., logging and HTTP clients) that are necessary to run your application. Plugins, on the other hand, consist of _any_ code you want your prompt templates or AI to leverage.
+Before building a kernel, you should first understand the two types of components that exist within a kernel:
+1. Services – These consist of both AI services (e.g., chat completion) and other services (e.g., logging and HTTP clients) that are necessary to run your application. This was modelled after the Service Provider pattern in .NET so that we could support dependency ingestion across all languages.
+2. Plugins – These are the components that are used by your AI services and prompt templates to perform work. AI services, for example, can use plugins to retrieve data from a database or call an external API to perform actions.
 
 ::: zone pivot="programming-language-csharp"
-To start creating a kernel, import the necessary packages:
+To start creating a kernel, import the necessary packages at the top of your file:
+
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/UsingTheKernel.cs" id="NecessaryPackages":::
 
 Next, you can add services and plugins. Below is an example of how you can add an Azure OpenAI chat completion, a logger, and a time plugin.
@@ -40,21 +43,13 @@ Next, you can add services and plugins. Below is an example of how you can add a
 
 ::: zone-end
 
-::: zone pivot="programming-language-csharp"
+::: zone pivot="programming-language-python"
 Import the necessary packages:
 :::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="5-7,9,11" highlight="3,4,5":::
 
-Create a kernel.
+Next, you can create a kernel.
 
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/using_the_kernel.py" range="14" :::
-
-If you are using a Azure OpenAI, you can use the `AzureChatCompletion` class.
-
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="39-46" highlight="2":::
-
-If you are using OpenAI, you can use the `OpenAIChatCompletion` class.
-
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="48-55" highlight="2":::
+Finally, you can add the necessary services and plugins. Below is an example of how you can add an Azure OpenAI chat completion, a logger, and a time plugin.
 
 ::: zone-end
 
@@ -72,3 +67,8 @@ To build a kernel that uses OpenAI for chat completion, it can be created as fol
 
 To learn more about the different AI services that you can add to a kernel, please refer to the [AI services article](./ai-services.md). If instead, you want to know of the various ways to add plugins to a kernel, refer to the [plugins article](./plugins.md).
 
+## Next steps
+Now that you understand the kernel, you can learn about all the different AI services that you can add to it.
+
+> [!div class="nextstepaction"]
+> [Learn about AI services](./ai-services.md)

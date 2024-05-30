@@ -1,5 +1,7 @@
 - name: Kernel
   href: kernel.md
+- name: AI Services
+  href: ai-services.md
 - name: Plugins
   href: plugin.md
 - name: Planners
