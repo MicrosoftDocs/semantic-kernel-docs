@@ -13,34 +13,19 @@ ms.service: semantic-kernel
 
 One of the main features of Semantic Kernel is its ability to add different AI services to the kernel. This allows you to easily swap out different AI services to compare their performance and to leverage the best model for your needs. In this article, we will provide sample code for adding different AI services to the kernel.
 
-::: zone pivot="programming-language-csharp"
 Within Semantic Kernel, there are interfaces for the most popular AI tasks. These include:
-- [Chat completion](#chat-completion)
-- [Text generation](#text-generation)
-- [Text-to-image](#text-to-image) (Experimental)
-- [Image-to-text](#image-to-text) (Experimental)
-- [Text-to-audio](#text-to-audio) (Experimental)
-- [Audio-to-text](#audio-to-text) (Experimental)
-- [Embedding generation](#embedding-generation) (Experimental)
+| Services                          |  C#  | Python | Java | Notes |
+|-----------------------------------|:----:|:------:|:----:|-------|
+| [Chat completion](#chat-completion)                    | ✅ | ✅ | ✅ |
+| [Text generation](#text-generation)                    | ✅ | ✅ | ✅ |
+| [Embedding generation](#embedding-generation) (Experimental)     | ✅ | ✅ | ✅ |
+| [Text-to-image](#text-to-image)  (Experimental)       | ✅ | ❌ | ❌ |
+| [Image-to-text](#image-to-text) (Experimental)       | ✅ | ❌ | ❌ |
+| [Text-to-audio](#text-to-audio) (Experimental)       | ✅ | ❌ | ❌ | 
+| [Audio-to-text](#audio-to-text) (Experimental)       | ✅ | ❌ | ❌ | 
 
-::: zone-end
-
-::: zone pivot="programming-language-python"
-Within Semantic Kernel, there are interfaces for the most popular AI tasks. These include:
-- [Chat completion](#chat-completion)
-- [Text generation](#text-generation)
-- [Embedding generation](#embedding-generation) (Experimental)
-
-::: zone-end
-
-::: zone pivot="programming-language-java"
-Within Semantic Kernel, there are interfaces for the most popular AI tasks. These include:
-- [Chat completion](#chat-completion)
-- [Text generation](#text-generation)
-
-::: zone-end
-
-In most scenarios, you will only need to add chat completion to your kernel, but to support multi-modal AI, you can add any of the above services to your kernel.
+> [!TIP]
+> In most scenarios, you will only need to add chat completion to your kernel, but to support multi-modal AI, you can add any of the above services to your kernel.
 
 The rest of this article will describe what each interface does and how to add them from different AI providers.
 
