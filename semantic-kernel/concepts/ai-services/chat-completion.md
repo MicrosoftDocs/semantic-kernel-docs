@@ -16,7 +16,6 @@ When picking out a chat completion model, you will need to consider the followin
 ## Installing the necessary packages
 Before adding chat completion to your kernel, you will need to install the necessary packages. Below are the packages you will need to install for each AI service provider.
 
-
 # [Azure OpenAI](#tab/AzureOpenAI)
 
 ```bash
@@ -56,8 +55,9 @@ dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
 
 ---
 
+## Creating chat completion services
 
-## Adding directly to the kernel
+### Adding directly to the kernel
 To add a chat completion service, you can use the following code to add it to the kernel's inner service provider.
 
 # [Azure OpenAI](#tab/AzureOpenAI)
@@ -181,7 +181,7 @@ Kernel kernel = kernelBuilder.Build();
 
 ---
 
-## Adding with dependency injection
+### Using dependency injection
 If you're using dependency injection, you'll likely want to add your AI services directly to the service provider. This is helpful if you want to create singletons of your AI services and reuse them in transient kernels.
 
 # [Azure OpenAI](#tab/AzureOpenAI)
@@ -321,15 +321,8 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ---
 
-## Retrieving the service from the kernel
 
-If you've added the service to the kernel, you can retrieve it from the kernel's service provider. This is helpful if you want to use the service directly in your code.
-
-```csharp
-IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
-```
-
-## Creating standalone instances
+### Creating standalone instances
 Lastly, you can create instances of the service directly so that you can either add them to a kernel later or use them directly in your code without ever injecting them into the kernel or in a service provider.
 
 # [Azure OpenAI](#tab/AzureOpenAI)
@@ -484,10 +477,18 @@ Once you've created an instance of the chat completion service, you can use it t
 ```csharp
 ```
 
-Afterwards, you can send the chat history object to the LLM to generate the next response from the AI. When generating the next response, you have access to both non-streaming and streaming methods for generating responses.
+Afterwards, you can send the chat history object to the LLM to generate the next response from the AI. When generating the next response, you have access to both non-streaming and streaming methods for generating responses from the `IChatCompletion` interface.
 
 > [!TIP]
 > We recommend that you always use the streaming methods when possible. This is because the streaming methods provide user's with a faster initial response time, which reduces the perceived latency of the AI.
+
+### Retrieving the service from the kernel
+
+To use either the non-streaming or streaming methods, you'll first need access to the actual service. If you've added the service to the kernel, you can retrieve it from the kernel's service provider.
+
+```csharp
+IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
+```
 
 ### Non-streaming completion
 
