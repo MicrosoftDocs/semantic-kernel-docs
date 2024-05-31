@@ -178,11 +178,13 @@ Now that we've completed our program, we can give it a test run. Below is a samp
 ## Next steps
 Now that you've built your first agent, you can now deep dive into the different components of Semantic Kernel.
 
-- [Kernel](./kernel.md)
-- [AI Services](./ai-services/index.md)
-- [Plugins](./plugins/index.md)
-- [Planners](./planning.md)
-- [Personas](./personas.md)
-- [Telemetry](./telemetry.md)
-- [Hooks and filters](./hooks-and-filters.md)
-- [Prompts](./prompts.md)
+| Section                                     | Description                                                |
+| ------------------------------------------- | ---------------------------------------------------------- |
+| [Kernel](./kernel.md)                       | Setting up and using the core Kernel object                |
+| [AI Services](./ai-services/index.md)       | Integration and usage of various AI services               |
+| [Plugins](./plugins/index.md)               | Integrate native code and APIs with Semantic Kernel        |
+| [Planners](./planning.md)                   | Enabling your AI agents to complete multi-step tasks       |
+| [Personas](./personas.md)                   | Customize your AI agents to better collaborate with others |
+| [Telemetry](./telemetry.md)                 | Monitoring and logging for performance and usage metrics   |
+| [Hooks and filters](./hooks-and-filters.md) | Middleware components for extending functionality          |
+| [Prompts](./prompts.md)                     | Templates and examples for creating effective prompts      |
