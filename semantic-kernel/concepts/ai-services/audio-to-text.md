@@ -1,7 +1,17 @@
+---
+title: Convert audio to text in Semantic Kernel
+description: Use models from Azure OpenAI, OpenAI, and Hugging Face to convert audio to text in Semantic Kernel.
+zone_pivot_groups: programming-languages
+author: matthewbolanos
+ms.topic: conceptual
+ms.author: mabolan
+ms.date: 07/12/2023
+ms.service: semantic-kernel
+---
 
 ::: zone pivot="programming-language-csharp"
 
-# Audio-to-text
+# Audio-to-text (Experimental)
 
 Audio-to-text is the process of generating text from an audio prompt. Today's chat completion models currently do not support audio-to-text. To recreate the experience in ChatGPT, you can generate text from a user's audio input using a dedicated audio-to-text model and then pass that text to the chat completion model.
 

@@ -1,3 +1,14 @@
+---
+title: Generate embeddings in Semantic Kernel
+description: Learn how to generate embeddings in Semantic Kernel using Azure OpenAI, OpenAI, and Hugging Face.
+zone_pivot_groups: programming-languages
+author: matthewbolanos
+ms.topic: conceptual
+ms.author: mabolan
+ms.date: 07/12/2023
+ms.service: semantic-kernel
+---
+
 
 ::: zone pivot="programming-language-csharp,programming-language-python"
 

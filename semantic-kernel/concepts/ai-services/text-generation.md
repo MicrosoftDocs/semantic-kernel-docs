@@ -1,3 +1,14 @@
+---
+title: Generate text in Semantic Kernel
+description: Learn to use text generation to autocomplete text in Semantic Kernel.
+zone_pivot_groups: programming-languages
+author: matthewbolanos
+ms.topic: conceptual
+ms.author: mabolan
+ms.date: 07/12/2023
+ms.service: semantic-kernel
+---
+
 
 # Text generation
 
