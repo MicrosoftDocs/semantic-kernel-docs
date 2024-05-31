@@ -61,8 +61,7 @@ These functions are used to retrieve data from a database or external API so tha
 | Inventory | Gives an AI the ability to see what is in stock so it can give recommendations to employees and customers alike. |
 | Semantic search | Allows an AI to search for information within a specific domain (e.g., internal legal documents); typically powered by a vector DB like Azure AI Search. |
 
-> [!Tip]
-> When developing plugins for Retrieval Augmented Generation (RAG), it’s important to note that you don't always need a vector DB. Often your existing APIs can be used by an AI to retrieve the necessary information. We recommend starting with your existing APIs and then moving to a vector DB for semantic search if necessary.
+When developing plugins for Retrieval Augmented Generation (RAG), it’s important to note that you don't always need a vector DB. Often your existing APIs can be used by an AI to retrieve the necessary information. We recommend starting with your existing APIs and then moving to a vector DB for semantic search if necessary.
 
 ### Task automation
 
@@ -76,7 +75,11 @@ Examples include the following.
 | Home automation | Allows an AI to control smart home devices like lights, thermostats, and security cameras. |
 | Inventory | Allows an AI to update inventory levels based on sales or new shipments. |
 
-> [!Tip]
-> When developing plugins for task automation, it’s important to ensure that you have the necessary safeguards in place to ensure the AI cannot perform actions without user consent. To learn more about building approval workflows, refer to the [hooks and filters article](./hooks-and-filters.md) article.
+When developing plugins for task automation, it’s important to ensure that you have the necessary safeguards in place to ensure the AI cannot perform actions without user consent. To learn more about building approval workflows, refer to the [hooks and filters article](./hooks-and-filters.md) article.
 
 ## Using plugins with Semantic Kernel
+
+Semantic Kernel provides multiple ways to import plugins depending on if you have native code or an API described by an OpenAPI specification.
+
+### Importing native code
+
