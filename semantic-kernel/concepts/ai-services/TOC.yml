@@ -1,7 +1,7 @@
 - name: Overview
   href: index.md
 - name: Chat completion
-  href: chat-completion.md
+  href: chat-completion/TOC.yml
 - name: Text generation
   href: text-generation.md
 - name: Embedding generation
