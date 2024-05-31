@@ -1,3 +1,5 @@
+- name: Agents
+  href: agents.md
 - name: Kernel
   href: kernel.md
 - name: AI Services
@@ -8,8 +10,6 @@
   href: planning.md
 - name: Personas
   href: personas.md
-- name: Agents
-  href: agents.md
 - name: Prompts
   href: prompts.md
 - name: Telemetry

@@ -8,7 +8,7 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-### Get data from plugins for Retrieval Augmented Generation (RAG)
+# Using plugins for Retrieval Augmented Generation (RAG)
 
 These functions are used to retrieve data from a database or external API so that an AI can gather additional context to generate a response. This is also known as Retrieval Augmented Generation (RAG). Examples include the following.
 

@@ -8,4 +8,4 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-### Task automation with agents
+# Task automation with agents

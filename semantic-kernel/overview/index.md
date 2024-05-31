@@ -15,12 +15,11 @@ Semantic Kernel is a lightweight, open-source SDK that lets you easily build AI 
 
 ## Semantic Kernel is enterprise first
 
-
 :::row:::
    :::column span="2":::
-      Microsoft and other Fortune 500 companies already leverage the power of Semantic Kernel because of its scalable, observable, and security enhancing capabilities like open telemetry support, non-breaking version updates, and hooks and filters. You’ll always be in control and that’s what makes Semantic Kernel stand out from other SDKs on the market.
+      Microsoft and other Fortune 500 companies already leverage the power of Semantic Kernel because of its scalable, observable, and security enhancing capabilities like open telemetry support, non-breaking version updates, and hooks and filters. You’ll always be in control and that’s what makes Semantic Kernel stand out from other agent SDKs on the market.
 
-      Semantic Kernel was designed to be future proof, easily connecting your code to leverage the latest AI models. So as technology evolves, you’ll simply swap AI models without needing to rewrite your entire codebase.
+      Semantic Kernel was designed to be future proof, easily connecting your code to leverage the latest AI models. So as technology evolves, you’ll simply swap AI models for your agents without needing to rewrite your entire codebase.
    :::column-end:::
    :::column span="":::
     ![Intro Image](../media/Introduction-to-Semantic-Kernel.png)
@@ -29,9 +28,9 @@ Semantic Kernel is a lightweight, open-source SDK that lets you easily build AI 
 
 With version 1.0+ support across C#, Python, and Java, you’ll be supported for years to come without breaking changes. As AIs begin to support additional modalities like voice and video, Semantic Kernel will be able to easily support these new modalities as simple extensions to the existing chat-based APIs.
 
-## Automating business processes with AI
+## Automating business processes with AI agents
 
-To fully automate business processes, Semantic Kernel combines [prompts](../concepts/prompts.md) with [existing APIs](../concepts/plugins.md) to get work done. By describing your existing code to AI models, they’ll invoke and address your needs whatever that may be. When an LLM asks for a function to be invoked, Semantic Kernel does the heavy lifting of translating the model's request into a function call and passes the results back to the LLM.
+To fully automate business processes, Semantic Kernel combines [prompts](../concepts/prompts.md) with [existing APIs](../concepts/plugins.md) to allow agents to get real work done. By describing your existing code to AI agents, they’ll be able to invoke and address your needs (whatever they may be). When an agent asks for a function to be invoked, Semantic Kernel does the heavy lifting of translating the model's request into a function call and passes the results back to the agent so it can decide what to do next.
 
 :::row:::
    :::column span="3":::
