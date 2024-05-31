@@ -193,7 +193,7 @@ The following back-and-forth chat should be similar to what you see in the conso
 | --- | ----------------------------- | ----------------------------- |
 | 🔵 | **User**                      | Please toggle the light       |
 | 🔴 | **Assistant (function call)** | LightPlugin.GetState          |
-| 🟢 | **Tool**                      | The light is currently off    |
+| 🟢 | **Tool**                      | off                           |
 | 🔴 | **Assistant (function call)** | LightPlugin.ChangeState(true) |
-| 🟢 | **Tool**                      | The light is currently on     |
+| 🟢 | **Tool**                      | on                            |
 | 🔴 | **Assistant**                 | The light is now on           |
