@@ -23,7 +23,7 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
      ::: zone pivot="programming-language-csharp"
      > [!div class="nextstepaction"]
      > [View all C# concept samples on GitHub](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/Concepts)
-     ::: end-zone
+     ::: zone-end
 
    :::column-end:::
    :::column span="2":::

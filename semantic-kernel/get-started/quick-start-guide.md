@@ -189,11 +189,11 @@ Once you've implemented these steps, you're final code should look like the foll
 
 The following back-and-forth chat should be similar to what you see in the console. The function calls have been added below to demonstrate how the AI leverages the plugin behind the scenes.
 
-|     | Role                          | Message                       |
-| --- | ----------------------------- | ----------------------------- |
-| 🔵 | **User**                      | Please toggle the light       |
-| 🔴 | **Assistant (function call)** | LightPlugin.GetState          |
-| 🟢 | **Tool**                      | off                           |
-| 🔴 | **Assistant (function call)** | LightPlugin.ChangeState(true) |
-| 🟢 | **Tool**                      | on                            |
-| 🔴 | **Assistant**                 | The light is now on           |
+| Role                          | Message                       |
+| ----------------------------- | ----------------------------- |
+| 🔵 **User**                      | Please toggle the light       |
+| 🔴 **Assistant (function call)** | LightPlugin.GetState          |
+| 🟢 **Tool**                      | off                           |
+| 🔴 **Assistant (function call)** | LightPlugin.ChangeState(true) |
+| 🟢 **Tool**                      | on                            |
+| 🔴 **Assistant**                 | The light is now on           |

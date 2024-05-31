@@ -64,12 +64,12 @@ To learn more about the different types of plugin functions, refer to the follow
 - [Data retrieval functions](./using-data-retrieval-functions-for-rag.md)
 - [Task automation functions](./using-task-automation-functions.md)
 
-## Getting started with plugins in Semantic Kernel
+## Getting started with plugins
 
 Using plugins within Semantic Kernel is always a three step process:
-1. Define your plugin
-2. Add the plugin to your kernel
-3. And then either invoke the plugin's functions in either a prompt with function calling
+1. [Define your plugin](#1-define-your-plugin)
+2. [Add the plugin to your kernel](#2-add-the-plugin-to-your-kernel)
+3. [And then either invoke the plugin's functions in either a prompt with function calling](#3-invoke-the-plugins-functions)
 
 Below we'll provide a high-level example of how to use a plugin within Semantic Kernel. Refer to the links above for more detailed information on how to create and use plugins.
 
@@ -177,39 +177,16 @@ Finally, you can have the AI invoke your plugin's functions by using function ca
 ```
 
 With the above code, you should get a response that looks like the following:
-```user
-Please turn on the lamp
-```
 
-```function_call
-Lights.get_lights
-```
+| Role                          | Message                                           |
+| ----------------------------- | ------------------------------------------------- |
+| 🔵 **User**                      | Please turn on the lamp                           |
+| 🔴 **Assistant (function call)** | Lights.get_lights                                 |
+| 🟢 **Tool**                      | [{ "id": 1, "name": "Table Lamp", "isOn": false, "brightness": 100, "hex": "FF0000" }, { "id": 2, "name": "Porch light", "isOn": false, "brightness": 50, "hex": "00FF00" }, { "id": 3, "name": "Chandelier", "isOn": true, "brightness": 75, "hex": "0000FF" }] |
+| 🔴 **Assistant (function call)** | Lights.change_state(1, { "isOn": true })          |
+| 🟢 **Tool**                      | { "id": 1, "name": "Table Lamp", "isOn": true, "brightness": 100, "hex": "FF0000" } |
+| 🔴 **Assistant**                 | The lamp is now on                                |
 
-```tool
-[
-   { "id": 1, "name": "Table Lamp", "isOn": true, "brightness": 100, "hex": "FF0000" },
-   { "id": 2, "name": "Porch light", "isOn": false, "brightness": 50, "hex": "00FF00" },
-   { "id": 3, "name": "Chandelier", "isOn": true, "brightness": 75, "hex": "0000FF" }
-]
-```
-
-```function_call
-Lights.change_state(1, { "isOn": true })
-```
-
-```tool
-{
-   "id": 1,
-   "name": "Table Lamp",
-   "isOn": true,
-   "brightness": 100,
-   "hex": "FF0000"
-}
-```
-
-```assistant
-The lamp is now on
-```
 
 > [!Tip]
 > While you can invoke a plugin function directly, this is not advised because the AI should be the one deciding which functions to call. If you need explicit control over which functions are called, consider using standard methods in your codebase instead of plugins.
