@@ -3,7 +3,7 @@
 - name: AI Services
   href: ai-services/TOC.yml
 - name: Plugins
-  href: plugins.md
+  href: plugins/TOC.yml
 - name: Planning
   href: planning.md
 - name: Personas

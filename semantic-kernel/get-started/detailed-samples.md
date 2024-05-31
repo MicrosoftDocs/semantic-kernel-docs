@@ -26,7 +26,7 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 
 ::: zone pivot="programming-language-csharp"
 
-## Agents - Different ways of using [`Agents`](./Agents/README.md)
+## Agents
 
 - [ComplexChat_NestedShopper](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ComplexChat_NestedShopper.cs)
 - [Legacy_AgentAuthoring](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/Legacy_AgentAuthoring.cs)
@@ -41,20 +41,20 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 - [OpenAIAssistant_CodeInterpreter](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/OpenAIAssistant_CodeInterpreter.cs)
 - [OpenAIAssistant_Retrieval](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/OpenAIAssistant_Retrieval.cs)
 
-## AudioToText - Different ways of using [`AudioToText`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/AudioToText/IAudioToTextService.cs) services to extract text from audio
+## Audio to text
 
 - [OpenAI_AudioToText](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/AudioToText/OpenAI_AudioToText.cs)
 
-## AutoFunctionCalling - Examples on `Auto Function Calling` with function call capable models
+## Automatic function calling
 
 - [Gemini_FunctionCalling](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/AutoFunctionCalling/Gemini_FunctionCalling.cs)
 - [OpenAI_FunctionCalling](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/AutoFunctionCalling/OpenAI_FunctionCalling.cs)
 
-## Caching - Examples of caching implementations
+## Semantic caching
 
 - [SemanticCachingWithFilters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Caching/SemanticCachingWithFilters.cs)
 
-## ChatCompletion - Examples using [`ChatCompletion`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/IChatCompletionService.cs) messaging capable service with models
+## Chat completion
 
 - [AzureOpenAIWithData_ChatCompletion](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/ChatCompletion/AzureOpenAIWithData_ChatCompletion.cs)
 - [ChatHistoryAuthorName](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/ChatCompletion/ChatHistoryAuthorName.cs)
@@ -78,14 +78,14 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 - [MistralAI_FunctionCalling](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/ChatCompletion/MistralAI_FunctionCalling.cs)
 - [MistralAI_StreamingFunctionCalling](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/ChatCompletion/MistralAI_StreamingFunctionCalling.cs)
 
-## DependencyInjection - Examples on using `DI Container`
+## Dependency injection
 
 - [HttpClient_Registration](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/DependencyInjection/HttpClient_Registration.cs)
 - [HttpClient_Resiliency](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/DependencyInjection/HttpClient_Resiliency.cs)
 - [Kernel_Building](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/DependencyInjection/Kernel_Building.cs)
 - [Kernel_Injecting](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/DependencyInjection/Kernel_Injecting.cs)
 
-## Filtering - Different ways of filtering
+## Filtering
 
 - [AutoFunctionInvocationFiltering](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/AutoFunctionInvocationFiltering.cs)
 - [FunctionInvocationFiltering](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/FunctionInvocationFiltering.cs)
@@ -94,7 +94,7 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 - [RetryWithFilters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/RetryWithFilters.cs)
 - [PIIDetectionWithFilters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PIIDetectionWithFilters.cs)
 
-## Functions - Invoking [`Method`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Core/Functions/KernelFunctionFromMethod.cs) or [`Prompt`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Core/Functions/KernelFunctionFromPrompt.cs) functions with [`Kernel`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/Kernel.cs)
+## Plugin functions
 
 - [Arguments](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Functions/Arguments.cs)
 - [FunctionResult_Metadata](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Functions/FunctionResult_Metadata.cs)
@@ -105,16 +105,16 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 - [PromptFunctions_Inline](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Functions/PromptFunctions_Inline.cs)
 - [PromptFunctions_MultipleArguments](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Functions/PromptFunctions_MultipleArguments.cs)
 
-## ImageToText - Using [`ImageToText`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ImageToText/IImageToTextService.cs) services to describe images
+## Image to text
 
 - [HuggingFace_ImageToText](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/ImageToText/HuggingFace_ImageToText.cs)
 
-## LocalModels - Running models locally
+## Local models
 
 - [HuggingFace_ChatCompletionWithTGI](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/LocalModels/HuggingFace_ChatCompletionWithTGI.cs)
 - [MultipleProviders_ChatCompletion](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/LocalModels/MultipleProviders_ChatCompletion.cs)
 
-## Memory - Using AI [`Memory`](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/SemanticKernel.Abstractions/Memory) concepts
+## Memory
 
 - [HuggingFace_EmbeddingGeneration](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/HuggingFace_EmbeddingGeneration.cs)
 - [MemoryStore_CustomReadOnly](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/MemoryStore_CustomReadOnly.cs)
@@ -124,12 +124,12 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 - [TextMemoryPlugin_GeminiEmbeddingGeneration](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/TextMemoryPlugin_GeminiEmbeddingGeneration.cs)
 - [TextMemoryPlugin_MultipleMemoryStore](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/TextMemoryPlugin_MultipleMemoryStore.cs)
 
-## Planners - Examples on using `Planners`
+## Planning
 
 - [FunctionCallStepwisePlanning](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Planners/FunctionCallStepwisePlanning.cs)
 - [HandlebarsPlanning](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Planners/HandlebarsPlanning.cs)
 
-## Plugins - Different ways of creating and using [`Plugins`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/Functions/KernelPlugin.cs)
+## Plugins
 
 - [ApiManifestBasedPlugins](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Plugins/ApiManifestBasedPlugins.cs)
 - [ConversationSummaryPlugin](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Plugins/ConversationSummaryPlugin.cs)
@@ -142,7 +142,7 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 - [ImportPluginFromGrpc](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Plugins/ImportPluginFromGrpc.cs)
 - [OpenAIPlugins](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Plugins/OpenAIPlugins.cs)
 
-## PromptTemplates - Using [`Templates`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/PromptTemplate/IPromptTemplate.cs) with parametrization for `Prompt` rendering
+## Prompt templates
 
 - [ChatCompletionPrompts](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/PromptTemplates/ChatCompletionPrompts.cs)
 - [ChatWithPrompts](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/PromptTemplates/ChatWithPrompts.cs)
@@ -152,28 +152,28 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 - [TemplateLanguage](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/PromptTemplates/TemplateLanguage.cs)
 - [PromptyFunction](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/PromptYemplates/PromptyFunction.cs)
 
-## RAG - Retrieval-Augmented Generation
+## Retrieval augmented generation (RAG)
 
 - [WithFunctionCallingStepwisePlanner](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/RAG/WithFunctionCallingStepwisePlanner.cs)
 - [WithPlugins](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/RAG/WithPlugins.cs)
 
-## Search - Search services information
+## Search
 
 - [BingAndGooglePlugins](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Search/BingAndGooglePlugins.cs)
 - [MyAzureAISearchPlugin](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Search/MyAzureAISearchPlugin.cs)
 - [WebSearchQueriesPlugin](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Search/WebSearchQueriesPlugin.cs)
 
-## TextGeneration - [`TextGeneration`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/TextGeneration/ITextGenerationService.cs) capable service with models
+## Text generation
 
 - [Custom_TextGenerationService](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextGeneration/Custom_TextGenerationService.cs)
 - [HuggingFace_TextGeneration](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextGeneration/HuggingFace_TextGeneration.cs)
 - [OpenAI_TextGenerationStreaming](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextGeneration/OpenAI_TextGenerationStreaming.cs)
 
-## TextToAudio - Using [`TextToAudio`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/TextToAudio/ITextToAudioService.cs) services to generate audio
+## Text to audio
 
 - [OpenAI_TextToAudio](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextToAudio/OpenAI_TextToAudio.cs)
 
-## TextToImage - Using [`TextToImage`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/TextToImage/ITextToImageService.cs) services to generate images
+## Text to image
 
 - [OpenAI_TextToImage](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextToImage/OpenAI_TextToImageDalle3.cs)
 

@@ -1,0 +1,10 @@
+- name: Overview
+  href: index.md
+- name: Adding native plugins
+  href: adding-native-plugins.md
+- name: Adding OpenAPI plugins
+  href: adding-openapi-plugins.md
+- name: Using data retrieval plugins for RAG
+  href: using-data-retrieval-plugins-for-rag.md
+- name: Using task automation plugins
+  href: using-task-automation-plugins.md

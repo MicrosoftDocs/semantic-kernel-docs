@@ -107,6 +107,10 @@ builder.Services.AddTransient((serviceProvider)=> {
     return new Kernel(serviceProvider, pluginCollection);
 });
 ```
+
+> [!TIP]
+> For more samples on how to use dependency injection in C#, refer to the [concept samples](../get-started/detailed-samples.md#dependency-injection).
+
 ::: zone-end
 
 ## Next steps
