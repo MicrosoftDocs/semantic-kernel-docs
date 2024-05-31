@@ -9,8 +9,6 @@
 - name: Integrations
   href: integrations/index.md
 - name: Use Cases
-  href: use-cases/TOC.yml  
-- name: Using AI responsibly
-  href: when-to-use-AI/TOC.yml
+  href: use-cases/TOC.yml
 - name: Getting Support
   href: support/TOC.yml
