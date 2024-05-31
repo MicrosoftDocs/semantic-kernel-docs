@@ -7,9 +7,7 @@
   href: concepts/TOC.yml
   expanded: true
 - name: Integrations
-  href: integrations/TOC.yml
-- name: Tutorials
-  href: tutorials/TOC.yml  
+  href: integrations/index.md
 - name: Use Cases
   href: use-cases/TOC.yml  
 - name: Using AI responsibly

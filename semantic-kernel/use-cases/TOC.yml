@@ -1,8 +1,8 @@
-- name: Call Center - Audio to Text
-  href: audiiototext.md
-- name: Defect Detection - Image to Text
-  href: imagetotext.md
-- name: HR Copilot 
-  href: hrcopilot.md
-- name: Collaboration - Supply Chain Optimization of a System
-  href: ragsample.md
+- name: Optimize call centers
+  href: call-center.md
+- name: Detect defects in manufacturing
+  href: defect-detection.md
+- name: Answer HR questions 
+  href: hr-support.md
+- name: Assign tasks to team members
+  href: task-automation.md
