@@ -13,7 +13,7 @@ ms.service: semantic-kernel
 
 # Audio-to-text (Experimental)
 
-Audio-to-text is the process of generating text from an audio prompt. Today's chat completion models currently do not support audio-to-text. To recreate the experience in ChatGPT, you can generate text from a user's audio input using a dedicated audio-to-text model and then pass that text to the chat completion model.
+Audio-to-text is the process of generating text from an audio prompt. Today's chat completion models currently do not support audio-to-text. To allow user's to speak to AI agents, you can generate text from a user's audio input using a dedicated audio-to-text model and then pass that text to the chat completion model.
 
 > [!NOTE] There are several different types of audio-to-text models, including those that transcribe speech, music, and more. In future versions of Semantic Kernel, we plan on making this interface more specific to the type of audio you want to transcribe to make it easier to request the right model through dependency injection.
 

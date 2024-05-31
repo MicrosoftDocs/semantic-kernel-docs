@@ -13,7 +13,7 @@ ms.service: semantic-kernel
 ::: zone pivot="programming-language-csharp"
 # Text-to-image (Experimental)
 
-Text-to-image is the process of generating an image from a text prompt. This is useful for generating images for chat bots, creating images for reports, and more. Today's chat completion models currently do not support text-to-image. To recreate the experience in ChatGPT, you can wrap a text-to-image model in a plugin so that the chat completion model can call it.
+Text-to-image is the process of generating an image from a text prompt. This is useful for generating images from AI agents, creating images for reports, and more. Today's chat completion models currently do not support text-to-image. To recreate the Dall-e experiences in ChatGPT, you can wrap a text-to-image model in a plugin so that the chat completion model can call it.
 
 
 To add a text-to-image service, you can use the following code to add it to the kernel's inner service provider.

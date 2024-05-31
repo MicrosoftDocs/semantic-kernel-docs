@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 Text generation is the process of predicting the next set of words from an initial sentence.
 
 > [!TIP]
-> In _most_ cases, you will likely use a chat completion models instead of a text generation model because they're better suited to generating discrete responses. If you have autocomplete scenarios, however, text generation models can be useful.
+> In _most_ cases, you will likely use a chat completion models instead of a text generation model because they're better suited to generating discrete responses from AI agents. If you have autocomplete scenarios, however, text generation models can be useful.
 
 ::: zone pivot="programming-language-csharp"
 To add a text generation service, you can use the following code to add it to the kernel's inner service provider.

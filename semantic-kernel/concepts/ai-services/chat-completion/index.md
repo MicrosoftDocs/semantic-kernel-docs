@@ -1,6 +1,6 @@
 
 # Chat completion
-With chat completion, you can simulate a back-and-forth conversation with an AI. This is of course useful for creating chat bots, but it can also be used for automating business processes, creating code snippets, and more. As the primary model type provided by OpenAI, Google, Mistral, Facebook, and others, chat completion is the most common AI service that you will add to your Semantic Kernel project.
+With chat completion, you can simulate a back-and-forth conversation with an AI agent. This is of course useful for creating chat bots, but it can also be used for creating autonomous agents that can complete business processes, generate code, and more. As the primary model type provided by OpenAI, Google, Mistral, Facebook, and others, chat completion is the most common AI service that you will add to your Semantic Kernel project.
 
 When picking out a chat completion model, you will need to consider the following:
 - What modalities does the model support (e.g., text, image, audio, etc.)?
@@ -496,26 +496,6 @@ IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletio
 ```
 
 ### Streaming completion
-
-```csharp
-```
-
-## Function calling with chat completion
-
-The most powerful feature of chat completion is the ability to call functions from the model. This allows you to create a chat bot that can interact with your existing code, making it possible to automate business processes, create code snippets, and more.
-
-The following sample demonstrates how to add a plugin to the kernel that can be called by the chat completion service.
-
-```csharp
-```
-
-For a more detailed explanation of how to use function calling with chat completion, refer to the [planning article](./planning.md).
-
-## Multi-modal chat completion
-
-Some chat completion models support modalities other than text. OpenAI's GPT-4o, for example, supports images as input within a chat message. This mimics how humans can attach images to their messages in chat apps.
-
-With this additional input, the LLM can answer questions about the image or generate captions for the image. Below is an example of how to create a chat completion service that supports multi-modal input.
 
 ```csharp
 ```

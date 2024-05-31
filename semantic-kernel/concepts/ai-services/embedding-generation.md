@@ -14,7 +14,7 @@ ms.service: semantic-kernel
 
 # Embedding generation
 
-Embedding generation is the process of generating a vector representation of a text prompt. This is useful for retrieving text from memory stores.
+Embedding generation is the process of generating a vector representation of a text prompt. This is useful for retrieving cached information from memory stores so that AI agents can use it to generate responses.
 
 > [!NOTE] As part of the enhancements coming to Semantic Kernel's memory connectors, we plan on making the embedding interface more generic to support additional embedding models.
 
