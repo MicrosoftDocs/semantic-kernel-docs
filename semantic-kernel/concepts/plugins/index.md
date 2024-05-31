@@ -21,8 +21,7 @@ ms.service: semantic-kernel
    :::column-end:::
 :::row-end:::
 
-> [!Note]
-> Not all AI SDKs have an analogous concept to plugins (most just have functions or tools). In enterprise scenarios, however, plugins are valuable because they encapsulate a set of functionality that mirrors how enterprise developers already develop services and APIs. Plugins also play nicely with dependency injection. Within a plugin's constructor, you can inject services that are necessary to perform the work of the plugin (e.g., database connections, HTTP clients, etc.). This is difficult to accomplish with other SDKs that lack plugins.
+Not all AI SDKs have an analogous concept to plugins (most just have functions or tools). In enterprise scenarios, however, plugins are valuable because they encapsulate a set of functionality that mirrors how enterprise developers already develop services and APIs. Plugins also play nicely with dependency injection. Within a plugin's constructor, you can inject services that are necessary to perform the work of the plugin (e.g., database connections, HTTP clients, etc.). This is difficult to accomplish with other SDKs that lack plugins.
 
 ## Anatomy of a plugin
 At a high-level, a plugin is a group of [functions](#types-of-plugin-functions) that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions automatically with function calling.
@@ -180,12 +179,12 @@ With the above code, you should get a response that looks like the following:
 
 | Role                          | Message                                           |
 | ----------------------------- | ------------------------------------------------- |
-| 🔵 **User**                      | Please turn on the lamp                           |
-| 🔴 **Assistant (function call)** | Lights.get_lights                                 |
-| 🟢 **Tool**                      | [{ "id": 1, "name": "Table Lamp", "isOn": false, "brightness": 100, "hex": "FF0000" }, { "id": 2, "name": "Porch light", "isOn": false, "brightness": 50, "hex": "00FF00" }, { "id": 3, "name": "Chandelier", "isOn": true, "brightness": 75, "hex": "0000FF" }] |
-| 🔴 **Assistant (function call)** | Lights.change_state(1, { "isOn": true })          |
-| 🟢 **Tool**                      | { "id": 1, "name": "Table Lamp", "isOn": true, "brightness": 100, "hex": "FF0000" } |
-| 🔴 **Assistant**                 | The lamp is now on                                |
+| 🔵&nbsp;**User**                      | Please turn on the lamp                           |
+| 🔴&nbsp;**Assistant (function call)** | Lights.get_lights                                 |
+| 🟢&nbsp;**Tool**                      | [{ "id": 1, "name": "Table Lamp", "isOn": false, "brightness": 100, "hex": "FF0000" }, { "id": 2, "name": "Porch light", "isOn": false, "brightness": 50, "hex": "00FF00" }, { "id": 3, "name": "Chandelier", "isOn": true, "brightness": 75, "hex": "0000FF" }] |
+| 🔴&nbsp;**Assistant (function call)** | Lights.change_state(1, { "isOn": true })          |
+| 🟢&nbsp;**Tool**                      | { "id": 1, "name": "Table Lamp", "isOn": true, "brightness": 100, "hex": "FF0000" } |
+| 🔴&nbsp;**Assistant**                 | The lamp is now on                                |
 
 
 > [!Tip]
