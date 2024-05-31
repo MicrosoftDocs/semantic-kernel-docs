@@ -25,22 +25,26 @@ When authoring a plugin, you need to provide the AI agent with the right informa
 
 The value of Semantic Kernel is that it can automatically generate most of this information from the code itself. As a developer, this just means that you must provide the semantic descriptions of the functions and parameters so the AI agent can understand them. If you properly comment and annotate your code, however, you likely already have this information on hand.
 
-## Authoring a native plugin
-
-Below, we'll walk through the different ways of providing your AI agent with native code.
-
-1. 
+Below, we'll walk through the two different ways of providing your AI agent with native code and how to provide this semantic information.
 
 ### Defining a plugin using a class
 
-The easiest way to create a native plugin is to start with a class and then add methods annotated with the `PluginFunction` attribute.
+The easiest way to create a native plugin is to start with a class and then add methods annotated with the `KernelFunction` attribute. It is also recommended to liberally use the `Description` annotation to provide the AI agent with the necessary information to understand the function.
 
 ```csharp
 ```
 
 Notice above that we've provided a constructor for out plugin class. This is one of the main benefits of the plugin abstraction in Semantic Kernel. By providing a constructor, you can inject dependencies into your plugin, making it easier to reuse common services and components across your plugin functions.
 
+If your function has a complex object as an input variable, Semantic Kernel will also generate a schema for that object and pass it to the AI agent. Similar to functions, you should provide `Description` annotations for properties that are non-obvious to the AI. Below is the definition for the `LightState` class.
+
+```csharp
+```
+
 Once you're done authoring your plugin class, you can add it to the kernel using the `AddFromType<>` or `AddFromObject` methods.
+
+> [!TIP]
+> When creating a function, always ask yourself "how can I give the AI additional help to use this function?" This can include using specific input types (avoid strings where possible), providing descriptions, examples, and even when _not_ to use the function.
 
 #### Adding a plugin using the `AddFromType<>` method
 
@@ -56,7 +60,7 @@ The `AddFromObject` method allows you to add an instance of the plugin class dir
 ```csharp
 ```
 
-## Defining a plugin using a collection of functions
+### Defining a plugin using a collection of functions
 
 Less common but still useful is defining a plugin using a collection of functions. This is particularly useful if you need to dynamically create a plugin from a set of functions at runtime.
 
@@ -65,11 +69,11 @@ Using this process requires you to use the function factory to create individual
 ```csharp
 ```
 
-## Additional strategies for adding native code with Dependency Injection
+### Additional strategies for adding native code with Dependency Injection
 
-If you're working with Dependency Injection, there are additional ways to create and add plugins to the kernel. Below are some examples of how you can add a plugin using Dependency Injection.
+If you're working with Dependency Injection, there are additional strategies you can take to create and add plugins to the kernel. Below are some examples of how you can add a plugin using Dependency Injection.
 
-### Inject a plugin collection
+#### Inject a plugin collection
 
 > [!TIP]
 > We recommend making your plugin collection a transient service so that it is disposed of after each use since the plugin collection is mutable. Creating a new plugin collection for each use is cheap, so it should not be a performance concern.
@@ -77,7 +81,7 @@ If you're working with Dependency Injection, there are additional ways to create
 ```csharp
 ```
 
-### Generate your plugins as singletons
+#### Generate your plugins as singletons
 
 Plugins are not mutable, so its typically safe to create them as singletons. This can be done by using the plugin factory and adding the resulting plugin to your service collection.
 
