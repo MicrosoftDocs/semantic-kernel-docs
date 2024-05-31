@@ -1,0 +1,6 @@
+- name: Overview
+  href: index.md
+- name: Function calling
+  href: function-calling.md
+- name: Multi-modal chat completion
+  href: multi-modal.md
