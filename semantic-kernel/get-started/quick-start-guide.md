@@ -104,6 +104,9 @@ For this package, you'll want to import the following packages at the top of you
 
 ### 3) Create a chat history object to store messages
 
+> [!Tip]
+> For more information on the chat history object, refer to the [chat history section](../concepts/ai-services/chat-completion.md#creating-a-chat-history-object) in the chat completion service article.
+
 ::: zone pivot="programming-language-csharp"
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="45-46":::
 ::: zone-end
@@ -116,7 +119,7 @@ For this package, you'll want to import the following packages at the top of you
 
 ### 5) Ask the AI service to generate a response
 
-Once you've prepared the chat history object, you can then pass it to the AI services to generate a response. The final message from the AI is returned back as a result so you can use it later.
+Once you've prepared the chat history object, you can then pass it to the AI services to generate a response. The final message from the AI is returned back as a result so you can use it later. The following code demonstrates how to generate a [non-streaming response](../concepts/ai-services/chat-completion.md#non-streaming-completion), but you can also generate a [streaming response](../concepts/ai-services/chat-completion.md#streaming-completion) by using the `GetStreamingChatMessageContentAsync` method.
 
 ::: zone pivot="programming-language-csharp"
 :::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="65-67,69":::
@@ -140,10 +143,10 @@ Once you've implemented these steps, you're final code should look like the foll
 
 ## Allowing your AI to invoke your native code
 
-In the previous section, you saw how to create a simple conversation with an AI agent. The challenge with this code, however, is that the AI agent can only respond with information baked into its model. With plugins, however, you can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions.
+In the previous section, you saw how to create a simple conversation with an AI agent. The challenge with this code, however, is that the AI agent can only respond with information baked into its model. With [plugins](../concepts/plugins.md), however, you can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions.
 
 > [!Tip]
-> Behind the scenes, Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs. With function calling, LLMs can request (or call) a particular function. Semantic Kernel can then marshal the request to the appropriate function in your codebase and return the results back to the LLM so the LLM can generate a final response.
+> Behind the scenes, Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs, to provide [planning](../concepts/planners.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the LLM can generate a final response.
 
 To allow our AI to call our native code, we'll complete the following:
 7. [Create a plugin with the code you want the AI to invoke](#7-create-a-plugin)
@@ -186,10 +189,18 @@ Once you've implemented these steps, you're final code should look like the foll
 
 The following back-and-forth chat should be similar to what you see in the console. The function calls have been added below to demonstrate how the AI leverages the plugin behind the scenes.
 
-```plaintext
-User > Please toggle the light
-Function call > LightPlugin.GetState
-Function call > LightPlugin.ChangeState(true)
-[Light is now on]
-Assistant > The light is now on
+```User
+Please toggle the light
+```
+
+```Function call
+LightPlugin.GetState
+```
+
+```Function call
+LightPlugin.ChangeState(true)
+```
+
+```Assistant
+The light is now on
 ```

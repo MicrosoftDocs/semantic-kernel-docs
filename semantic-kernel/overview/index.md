@@ -31,7 +31,7 @@ With version 1.0+ support across C#, Python, and Java, you’ll be supported for
 
 ## Automating business processes with AI
 
-To fully automate business processes, Semantic Kernel combines prompts with existing APIs to get work done. By describing your existing code to AI models, they’ll invoke and address your needs whatever that may be. When an LLM asks for a function to be invoked, Semantic Kernel does the heavy lifting of translating the model's request into a function call and passes the results back to the LLM.
+To fully automate business processes, Semantic Kernel combines [prompts](../concepts/prompts.md) with [existing APIs](../concepts/plugins.md) to get work done. By describing your existing code to AI models, they’ll invoke and address your needs whatever that may be. When an LLM asks for a function to be invoked, Semantic Kernel does the heavy lifting of translating the model's request into a function call and passes the results back to the LLM.
 
 
 ## Designed for modular extensibility
@@ -40,7 +40,9 @@ To fully automate business processes, Semantic Kernel combines prompts with exis
 
 :::row:::
    :::column span="":::
-      With Semantic Kernel, you'll be equipped to build future-proof solutions that evolve with your needs. By adding your existing code as a plugin, you’ll maximize your investment by flexibly integrating AI services through a set of out-of-the-box connectors. Semantic Kernel uses OpenAPI specifications (like Microsoft 365 Copilot) so you can share any extensions with other pro or low-code developers in your company.
+      With Semantic Kernel, you'll be equipped to build future-proof solutions that evolve with your needs. By adding your existing code as [plugins](../concepts/plugins.md), you’ll maximize your investment by flexibly integrating AI services through a set of [out-of-the-box AI connectors](../concepts/ai-services/index.md).
+      
+      Additionally, Semantic Kernel uses OpenAPI specifications (like Microsoft 365 Copilot) so you can share any extensions with other pro or low-code developers in your company, no matter which language they use.
    :::column-end:::
    :::column span="":::
     ![Modular Extensibility](../media/Designed-for-modular-extensibility.png)

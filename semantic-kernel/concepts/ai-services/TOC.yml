@@ -6,11 +6,11 @@
   href: text-generation.md
 - name: Embedding generation
   href: embedding-generation.md
-- name: Text-to-image
+- name: Text to image
   href: text-to-image.md
-- name: Image-to-text
+- name: Image to text
   href: image-to-text.md
-- name: Text-to-audio
+- name: Text to audio
   href: text-to-audio.md
-- name: Audio-to-text
+- name: Audio to text
   href: audio-to-text.md
