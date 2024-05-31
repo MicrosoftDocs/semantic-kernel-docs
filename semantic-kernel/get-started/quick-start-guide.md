@@ -189,6 +189,8 @@ Once you've implemented these steps, you're final code should look like the foll
 
 The following back-and-forth chat should be similar to what you see in the console. The function calls have been added below to demonstrate how the AI leverages the plugin behind the scenes.
 
+| Role | Message |
+| --- | --- |
 | <span style="color:blue">**User**</span> | Please toggle the light |
 | **Function Call** | LightPlugin.GetState |
 | **Tool** | The light is currently off |
