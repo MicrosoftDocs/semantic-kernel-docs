@@ -74,20 +74,20 @@ The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/
 ## Creating a simple turn-based conversation
 To make it easier to get started, we've created a series of "maps" that guide you through the process of creating a kernel and using it to interact with AI services. These maps are available in Python, .NET, and Java.
 
-// TODO: add maps
+![Semantic Kernel map](../media/map.png)
 
 We recommend printing out these maps on at least 11x17 paper so you can easily follow along with the steps, not _all_ you need to following to build your first AI agent. In the following sections, we'll walk through steps **1**, **2**, **3**, **4**, **6**, **9**, and **10**. Everything you need to build a simple agent that is powered by an AI service and can run your code.
 
-1. [Import packages](#1-import-the-necessary-packages)
-2. [Add AI services](#2-create-a-kernel-with-your-ai-services)
-3. [Enterprise components](#3-create-a-chat-history-object-to-store-messages)
-4. [Build the kernel](#4-collect-the-users-input-and-add-to-the-history)
+1. [Import packages](#1-import-packages)
+2. [Add AI services](#2-add-ai-services)
+3. [Enterprise components](#3-add-enterprise-services)
+4. [Build the kernel](#4-build-the-kernel)
 5. Add memory (skipped)
-6. [Add plugins](#5-as-the-ai-to-generate-a-response)
+6. [Add plugins](#6-add-plugins)
 7. Create kernel arguments (skipped)
 8. Create prompts (skipped)
-9. [Planning](#6-print-the-response-and-add-it-back-to-the-history)
-10. [Invoke]()
+9. [Planning](#9-planning)
+10. [Invoke](#10-invoke)
 
 Once we show you how to implement these steps, we then show you how to [put it all together](#putting-it-all-together) to create a simple turn-based conversation.
 
@@ -317,11 +317,11 @@ do {
 
 The following back-and-forth chat should be similar to what you see in the console. The function calls have been added below to demonstrate how the AI leverages the plugin behind the scenes.
 
-| Role                          | Message                       |
-| ----------------------------- | ----------------------------- |
-| 🔵&nbsp;**User**                      | Please toggle the light       |
+| Role                                             | Message                       |
+| ------------------------------------------------ | ----------------------------- |
+| 🔵&nbsp;**User**                                | Please toggle the light       |
 | 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | LightPlugin.GetState          |
-| 🟢&nbsp;**Tool**                      | off                           |
+| 🟢&nbsp;**Tool**                                | off                           |
 | 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | LightPlugin.ChangeState(true) |
-| 🟢&nbsp;**Tool**                      | on                            |
-| 🔴&nbsp;**Assistant**                 | The light is now on           |
+| 🟢&nbsp;**Tool**                                | on                            |
+| 🔴&nbsp;**Assistant**                           | The light is now on           |
