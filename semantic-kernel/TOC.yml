@@ -12,3 +12,5 @@
   href: use-cases/TOC.yml
 - name: Getting Support
   href: support/TOC.yml
+- name: API Reference
+  href: api-docs/TOC.yml
