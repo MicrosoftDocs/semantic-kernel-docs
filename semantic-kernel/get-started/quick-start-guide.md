@@ -124,7 +124,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 ::: zone-end
 
-### 2) Add AI services <img src="../media/map-step-2.png" alt="Add services" height=35" style="margin-bottom:-8px; margin-left:2px;"/>
+### 2) Add AI services :::image type="icon" source="../media/map-step-2.png":::
 The most important part of creating a kernel is adding the AI services that you want to use. In this example, we'll add an Azure OpenAI chat completion service to a kernel builder.
 
 
