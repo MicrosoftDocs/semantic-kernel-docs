@@ -31,7 +31,7 @@ Each lesson will have a separate project in the Semantic-Kernel-101.sln. If you 
 - What is required to build a basic Chat Bot with Semantic Kernel?
   
 ## Why is this important?
-It's important to understand why a framework is needed for AI based solutions and what are the fundemental building blocks needed for a basic Semantic Kernel Chat Bot.  Once you understand this basics, you are start to leverage the more complex features.
+It's important to understand why an SDK is needed for AI based solutions and what are the fundemental building blocks needed for a basic Semantic Kernel Chat Bot.  Once you understand this basics, you are start to leverage the more complex features.
 
 ## What is needed to build our first App?
 
@@ -112,7 +112,7 @@ It's important to understand why a framework is needed for AI based solutions an
 # Homework - Lesson 1
 Your homework for Lesson 1 is a follows:
 
-- [Read the overview on Semantic Kernel and understand why a framework is needed](https://learn.microsoft.com/en-us/semantic-kernel/overview/) 
+- [Read the overview on Semantic Kernel and understand why an SDK is needed](https://learn.microsoft.com/en-us/semantic-kernel/overview/) 
 
 - In the latest version of Semantic Kernel is there such a thing as skills? Do some research to see if you can figuer out the answer before looking at the answer.
    <details>
