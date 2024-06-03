@@ -168,7 +168,12 @@ Before adding a plugin, however, you first need to _create_ a plugin.
 
 Below, you can see that creating a native plugin is as simple as creating a new class.
 
-In this example, we've created a plugin that can manipulate a light bulb. While this is a simple example, this plugin quickly demonstrates how you can support 1) Retrieval Augmented Generation (RAG) by providing the AI agent with the state of the light bulb and 2) task automation by allowing the AI agent to turn the light bulb on or off. In your own code, you can create a plugin that interacts with any external service or API to achieve similar results.
+In this example, we've created a plugin that can manipulate a light bulb. While this is a simple example, this plugin quickly demonstrates how you can support both...
+
+1. [Retrieval Augmented Generation (RAG)](../concepts/plugins/using-data-retrieval-functions-for-rag.md) by providing the AI agent with the state of the light bulb
+2. And [task automation](../concepts/plugins/using-task-automation-functions.md) by allowing the AI agent to turn the light bulb on or off.
+
+In your own code, you can create a plugin that interacts with any external service or API to achieve similar results.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -236,7 +241,7 @@ kernel.Plugins.AddFromType<LightsPlugin>();
 
 ### 9) Planning
 
-Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs, to provide [planning](../concepts/planners.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
+Semantic Kernel leverages [function calling](../concepts/ai-services/chat-completion/function-calling.md), a native feature of most of the latest LLMs, to provide [planning](../concepts/planners.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
 
 To enable automatic function calling, you'll first need to create the appropriate execution settings.
 
