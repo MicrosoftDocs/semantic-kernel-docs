@@ -15,6 +15,7 @@ Often, your AI agents must retrieve data from external sources to generate groun
 When considering plugins for Retrieval Augmented Generation (RAG), you should ask yourself two questions:
 1. How will you (or your AI agent) "search" for the required data? Do you need [semantic search](#semantic-search) or [classic search](#classic-search)?
 2. Do you already know the data the AI agent needs ahead of time ([pre-fetched data](#pre-fetched-data-retrieval)), or does the AI agent need to retrieve the data [dynamically](#dynamic-data-retrieval)?
+3. How will you keep your data secure and [prevent oversharing of sensitive information](#keeping-data-secure)?
 
 ## Semantic vs classic search
 
@@ -195,6 +196,16 @@ chatHistory.AddUserMessage("What is the weather like today?");
 IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 var result = await chatCompletionService.GetChatMessageContentAsync(chatHistory);
 ```
+
+## Keeping data secure
+
+When retrieving data from external sources, it is important to ensure that the data is secure and that sensitive information is not exposed. To prevent oversharing of sensitive information, you can use the following strategies:
+
+| Strategy              | Description |
+| --------------------- | ----------- |
+| **Use the user's auth token** | Avoid creating service principals used by the AI agent to retrieve information for users. Doing so makes it difficult to verify that a user has access to the retrieved information. |
+| **Avoid recreating search services** | Before creating a new search service with a vector DB, check if one already exists for the service that has the required data. By reusing existing services, you can avoid duplicating sensitive content, leverage existing access controls, and use existing filtering mechanisms that only return data the user has access to. |
+| **Store reference in vector DBs instead of content** | Instead of duplicating sensitive content to vector DBs, you can store references to the actual data. For a user to access this information, their auth token must first be used to retrieve the real data. |
 
 ## Next steps
 Now that you now how to ground your AI agents with data from external sources, you can now learn how to use AI agents to automate business processes. To learn more, see [using task automation functions](./using-task-automation-functions.md).
