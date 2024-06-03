@@ -12,7 +12,7 @@ ms.custom: build-2023, build-2023-dataai
 # What are agents?
 
 :::row:::
-    :::column span="3":::
+    :::column span="2":::
         Agents are software based entities that leverage AI models to do works for you. They are built to perform a wide range of tasks and called different names based on the jobs they do.
  
         For example, an agent built to answer questions is referred to as a chatbot due to it’s chat-based experience. These agents are typically grounded in your own data, like company documents.
