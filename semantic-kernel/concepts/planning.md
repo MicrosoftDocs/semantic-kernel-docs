@@ -40,10 +40,11 @@ For example, a user may ask the AI to "toggle" a light bulb. The AI would first 
 | 🔵&nbsp;**User** | Please toggle all the lights |
 | 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `Lights.get_lights()` |
 | 🟢&nbsp;**Tool** | `{ "lights": [ { "id": 1, "name": "Table Lamp", "isOn": true, "brightness": 100, "hex": "FF0000" }, { "id": 2, "name": "Ceiling Light", "isOn": false, "brightness": 0, "hex": "FFFFFF" } ] }` |
-| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `Lights.change_state(1, { "isOn": false})` `Lights.change_state(2,  { "isOn": true} |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `Lights.change_state(1, { "isOn": false })` `Lights.change_state(2, { "isOn": true })` |
 | 🟢&nbsp;**Tool** | `{ "id": 1, "name": "Table Lamp", "isOn": false, "brightness": 0, "hex": "FFFFFF" }` |
 | 🟢&nbsp;**Tool** | `{ "id": 2, "name": "Ceiling Light", "isOn": true, "brightness": 100, "hex": "FF0000" }` |
 | 🔴&nbsp;**Assistant** | The lights have been toggled |
+
 
 > [!NOTE]
 > In this example, you also saw parallel function calling. This is where the AI can call multiple functions at the same time. This is a powerful feature that can help the AI solve complex tasks more quickly. It was added to the OpenAI models in 1106.

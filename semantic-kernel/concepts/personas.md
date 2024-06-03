@@ -12,15 +12,15 @@ ms.service: semantic-kernel
 
 
 :::row:::
-   :::column span="2":::
-        ![Semantic Kernel Persona](../media/personas.png)
-   :::column-end:::
    :::column span="3":::
      Often called a "meta prompt" or "instruction", the persona is a prompt that is used to influence how the agent responds to stimuli. This allows you to influence how your agents plan tasks, generate responses, and interact with users. For example, you can use the persona to explicitly tell the agent to ask for help if it doesn't know what to do, or to be more verbose when it is explaining something.
 
      In Semantic Kernel, we often describe these prompts as "personas" because they're very similar to persona in user experience design. Just like how designers and UX researchers create personas to represent different types of users and the jobs-to-be-done they have, you can create personas to represent different types of agents and the tasks they are responsible for.
 
      By doing so, you can create agents that are more consistent, more reliable, and more predictable. This is especially important when you're building agents that are responsible for critical tasks or that interact with users in sensitive situations.
+   :::column-end:::
+   :::column span="2":::
+        ![Semantic Kernel Persona](../media/personas.png)
    :::column-end:::
 :::row-end:::
 
