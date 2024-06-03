@@ -12,9 +12,9 @@ ms.service: semantic-kernel
 
 Often, your AI agents must retrieve data from external sources to generate grounded responses. Without this additional context, your AI agents may hallucinate or provide incorrect information. To address this, you can use plugins to retrieve data from external sources.
 
-When considering plugins for Retrieval Augmented Generation (RAG), you must ask two questions:
-1. How will you (or your AI agent) "search" for the required data? Do you need semantic search or classic search?
-2. Do you already know the data the AI agent needs ahead of time (pre-fetched data), or does the AI agent need to retrieve the data dynamically?
+When considering plugins for Retrieval Augmented Generation (RAG), you should ask yourself two questions:
+1. How will you (or your AI agent) "search" for the required data? Do you need [semantic search](#semantic-search) or [classic search](#classic-search)?
+2. Do you already know the data the AI agent needs ahead of time ([pre-fetched data](#pre-fetched-data-retrieval)), or does the AI agent need to retrieve the data [dynamically](#dynamic-data-retrieval)?
 
 ## Semantic vs classic search
 
@@ -25,9 +25,7 @@ Semantic search utilizes vector databases to understand and retrieve information
 
 Semantic search excels in environments where user queries are complex, open-ended, or require a deeper understanding of the content. For example, searching for "best smartphones for photography" would yield results that consider the context of photography features in smartphones, rather than just matching the words "best," "smartphones," and "photography."
 
-When providing an LLM with a semantic search function, you typically only need to define a function with a single search query. The LLM will then use this function to retrieve the necessary information.
-
-Below is an example of a semantic search function that uses Azure AI Search to find documents similar to a given query.
+When providing an LLM with a semantic search function, you typically only need to define a function with a single search query. The LLM will then use this function to retrieve the necessary information. Below is an example of a semantic search function that uses Azure AI Search to find documents similar to a given query.
 
 ```csharp
 using System.ComponentModel;
@@ -97,7 +95,7 @@ For example, if a user wants to find all orders placed by a particular customer 
 > [!TIP]
 > In most cases, your existing services already support classic search. Before implementing a semantic search, consider whether your existing services can provide the necessary context for your AI agents.
 
-Take for example, a plugin that retrieves customer information from a CRM system using classic search.
+Take for example, a plugin that retrieves customer information from a CRM system using classic search. Here, the AI simply needs to call the `GetCustomerInfoAsync` function with a customer ID to retrieve the necessary information. 
 
 ```csharp
 using System.ComponentModel;
@@ -120,6 +118,8 @@ public class CRMPlugin
     }
 }
 ```
+
+Achieving the same search functionality with semantic search would likely be impossible or impractical due to the non-deterministic nature of semantic queries.
 
 ### When to Use Each
 Choosing between semantic and classic search depends on the nature of the query. It is ideal for content-heavy environments like knowledge bases and customer support where users might ask questions or look for products using natural language. Classic search, on the other hand, should be employed when precision and exact matches are important.
