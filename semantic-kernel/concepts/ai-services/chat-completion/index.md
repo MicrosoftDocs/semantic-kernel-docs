@@ -1,3 +1,14 @@
+---
+title: Add chat completion services to Semantic Kernel
+description: Learn how to add gpt-4, Mistral, Google, and other chat completion services to your Semantic Kernel project.
+zone_pivot_groups: programming-languages
+author: matthewbolanos
+ms.topic: conceptual
+ms.author: mabolan
+ms.date: 07/12/2023
+ms.service: semantic-kernel
+---
+
 
 # Chat completion
 With chat completion, you can simulate a back-and-forth conversation with an AI agent. This is of course useful for creating chat bots, but it can also be used for creating autonomous agents that can complete business processes, generate code, and more. As the primary model type provided by OpenAI, Google, Mistral, Facebook, and others, chat completion is the most common AI service that you will add to your Semantic Kernel project.
