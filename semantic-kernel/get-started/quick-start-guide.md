@@ -172,7 +172,7 @@ In this example, we've created a plugin that can manipulate a light bulb. While 
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
-public class Lights
+public class LightsPlugin
 {
    // Mock data for the lights
    private readonly List<LightModel> lights = new()
@@ -183,7 +183,7 @@ public class Lights
    };
 
    [KernelFunction("get_lights")]
-   [Description("Gets a comma-separated list of light IDs")]
+   [Description("Gets a list of lights and their current state")]
    [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
@@ -230,7 +230,7 @@ Once you've created your plugin, you can add it to the kernel so the AI agent ca
 ::: zone pivot="programming-language-csharp"
 ```csharp
 // Add the plugin to the kernel
-kernel.Plugins.AddFromType<LightPlugin>();
+kernel.Plugins.AddFromType<LightsPlugin>();
 ```
 ::: zone-end
 
@@ -290,7 +290,7 @@ Kernel kernel = builder.Build();
 var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
 // 6. Add plugins
-kernel.Plugins.AddFromType<LightPlugin>();
+kernel.Plugins.AddFromType<LightsPlugin>();
 
 // 9. Planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
@@ -329,8 +329,8 @@ The following back-and-forth chat should be similar to what you see in the conso
 | Role                                             | Message                       |
 | ------------------------------------------------ | ----------------------------- |
 | 🔵&nbsp;**User**                                | Please toggle the light       |
-| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `LightPlugin.GetState()`          |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `LightsPlugin.GetState()`          |
 | 🟢&nbsp;**Tool**                                | `off`                           |
-| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `LightPlugin.ChangeState(true)` |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `LightsPlugin.ChangeState(true)` |
 | 🟢&nbsp;**Tool**                                | `on`                            |
 | 🔴&nbsp;**Assistant**                           | The light is now on           |

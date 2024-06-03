@@ -39,7 +39,14 @@ To start creating a kernel, import the necessary packages at the top of your fil
 
 Next, you can add services and plugins. Below is an example of how you can add an Azure OpenAI chat completion, a logger, and a time plugin.
 
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/UsingTheKernel.cs" range="34,36-39,41":::
+```csharp
+// Create a kernel with a logger and Azure OpenAI chat completion service
+var builder = Kernel.CreateBuilder();
+builder.AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
+builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
+builder.Plugins.AddFromType<TimePlugin>();
+Kernel kernel = builder.Build();
+``` 
 
 ::: zone-end
 
@@ -89,13 +96,13 @@ builder.Services.AddOpenAIChatCompletion(
 );
 
 // Create singletons of your plugins
-builder.Services.AddSingleton(() => new LightPlugin());
+builder.Services.AddSingleton(() => new LightsPlugin());
 builder.Services.AddSingleton(() => new SpeakerPlugin());
 
 // Create the plugin collection (using the KernelPluginFactory to create plugins from objects)
 builder.Services.AddSingleton<KernelPluginCollection>((serviceProvider) => 
     [
-        KernelPluginFactory.CreateFromObject(serviceProvider.GetRequiredService<LightPlugin>()),
+        KernelPluginFactory.CreateFromObject(serviceProvider.GetRequiredService<LightsPlugin>()),
         KernelPluginFactory.CreateFromObject(serviceProvider.GetRequiredService<SpeakerPlugin>())
     ]
 );

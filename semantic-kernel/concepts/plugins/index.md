@@ -95,7 +95,7 @@ public class Lights
    };
 
    [KernelFunction("get_lights")]
-   [Description("Gets a comma-separated list of light IDs")]
+   [Description("Gets a list of lights and their current state")]
    [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
@@ -163,9 +163,9 @@ Once you've defined your plugin, you can add it to your kernel by creating a new
 This example demonstrates the easiest way of adding a class as a plugin with the `AddFromType` method. To learn about other ways of adding plugins, refer to the [adding native plugins](./adding-native-plugins.md) article.
 
 ```csharp
-var kernel = new KernelBuilder()
-   .AddFromType<LightPlugin>()
-   .Build();
+var builder = new KernelBuilder();
+builder.Plugins.AddFromType<LightsPlugin>()
+Kernel kernel = builder.Build();
 ```
 
 ### 3) Invoke the plugin's functions
