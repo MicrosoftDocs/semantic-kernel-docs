@@ -70,7 +70,7 @@ The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/
 
 
 ::: zone pivot="programming-language-python,programming-language-csharp"
-## Quickly get started with our notebooks
+## Quickly get started with notebooks
 If you're a Python or C# developer, you can quickly get started with our notebooks. These notebooks provide step-by-step guides on how to use Semantic Kernel to build AI agents.
 
 ![Semantic Kernel notebooks](../media/notebook-image.png)
