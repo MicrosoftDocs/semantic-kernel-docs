@@ -72,22 +72,25 @@ The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/
 ::: zone pivot="programming-language-python,programming-language-csharp"
 ## Quickly get started with our notebooks
 If you're a Python or C# developer, you can quickly get started with our notebooks. These notebooks provide step-by-step guides on how to use Semantic Kernel to build AI agents.
+::: zone-end
 
+::: zone pivot="programming-language-python"
 To get started, follow these steps:
 1. Clone the [Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
 2. Open the repo in Visual Studio Code
-::: zone-end
-::: zone pivot="programming-language-python"
 3. Navigate to [_/python/samples/getting_started](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/getting_started)
-::: zone-end
-::: zone pivot="programming-language-csharp"
-3. Navigate to [_/dotnet/notebooks](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/notebooks)
-::: zone-end
-::: zone pivot="programming-language-python,programming-language-csharp"
 4. Open _00-getting-started.ipynb_ to get started setting your environment and creating your first AI agent!
 ::: zone-end
 
-## Writing your first console app with Semantic Kernel
+::: zone pivot="programming-language-python"
+To get started, follow these steps:
+1. Clone the [Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
+2. Open the repo in Visual Studio Code
+3. Navigate to [_/dotnet/notebooks](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/notebooks)
+4. Open _00-getting-started.ipynb_ to get started setting your environment and creating your first AI agent!
+::: zone-end
+
+## Writing your first console app
 To make it easier to get started building enterprise apps with Semantic Kernel, we've created a series of "maps" that guide you through the process of creating a kernel and using it to interact with AI services. These maps are available in Python, .NET, and Java.
 
 ![Semantic Kernel map](../media/map.png)
@@ -121,7 +124,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 ::: zone-end
 
-### 2) Add AI services ![Add services](../media/map-step-2.png)
+### 2) Add AI services <img src="../media/map-step-2.png" alt="Add services" height=35" style="margin-bottom:-8px; margin-left:2px;"/>
 The most important part of creating a kernel is adding the AI services that you want to use. In this example, we'll add an Azure OpenAI chat completion service to a kernel builder.
 
 
