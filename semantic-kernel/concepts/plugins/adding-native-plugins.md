@@ -266,3 +266,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ## Next steps
 Now that you know how to create a plugin, you can now learn how to use them with your AI agent. Depending on the type of functions you've added to your plugins, there are different patterns you should follow. For retrieval functions, refer to the [using retrieval functions](./using-data-retrieval-functions-for-rag.md) article. For task automation functions, refer to the [using task automation functions](./using-task-automation-functions.md) article.
+
+> [!div class="nextstepaction"]
+> [Learn about using retrieval functions](./using-data-retrieval-functions-for-rag.md)
