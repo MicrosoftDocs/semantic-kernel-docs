@@ -14,3 +14,4 @@
   href: support/TOC.yml
 - name: API Reference
   href: api-docs/TOC.yml
+  expanded: true
