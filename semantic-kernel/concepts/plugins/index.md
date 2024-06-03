@@ -180,9 +180,9 @@ With the above code, you should get a response that looks like the following:
 | Role                          | Message                                           |
 | ----------------------------- | ------------------------------------------------- |
 | 🔵&nbsp;**User**                      | Please turn on the lamp                           |
-| 🔴&nbsp;**Assistant (function call)** | Lights.get_lights                                 |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | Lights.get_lights                                 |
 | 🟢&nbsp;**Tool**                      | [{ "id": 1, "name": "Table Lamp", "isOn": false, "brightness": 100, "hex": "FF0000" }, { "id": 2, "name": "Porch light", "isOn": false, "brightness": 50, "hex": "00FF00" }, { "id": 3, "name": "Chandelier", "isOn": true, "brightness": 75, "hex": "0000FF" }] |
-| 🔴&nbsp;**Assistant (function call)** | Lights.change_state(1, { "isOn": true })          |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | Lights.change_state(1, { "isOn": true })          |
 | 🟢&nbsp;**Tool**                      | { "id": 1, "name": "Table Lamp", "isOn": true, "brightness": 100, "hex": "FF0000" } |
 | 🔴&nbsp;**Assistant**                 | The lamp is now on                                |
 

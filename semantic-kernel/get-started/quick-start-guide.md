@@ -66,125 +66,253 @@ The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/
     <artifactId>semantickernel-api</artifactId>
 </dependency>
 ```
-
 ::: zone-end
 
+## Using the Semantic Kernel notebooks
 
-## Create a simple turn-based conversation
 
-Now that you have the SDK installed in your preferred language, you can create a simple conversation with an AI agent. Using Semantic Kernel always starts with following these steps:
+## Creating a simple turn-based conversation
+To make it easier to get started, we've created a series of "maps" that guide you through the process of creating a kernel and using it to interact with AI services. These maps are available in Python, .NET, and Java.
 
-1. [Import the necessary packages](#1-import-the-necessary-packages)
-2. [Create a kernel with your AI services](#2-create-a-kernel-with-your-ai-services)
-3. [Create a chat history object to store the conversation](#3-create-a-chat-history-object-to-store-messages)
-4. [Collect the user's input and add it to the chat history](#4-collect-the-users-input-and-add-to-the-history)
-5. [Pass the chat history to the AI services to generate a response](#5-as-the-ai-to-generate-a-response)
-6. [Print the response and add it to the chat history](#6-print-the-response-and-add-it-back-to-the-history)
+// TODO: add maps
 
-Below is an example of how you can implement these steps.
+We recommend printing out these maps on at least 11x17 paper so you can easily follow along with the steps, not _all_ you need to following to build your first AI agent. In the following sections, we'll walk through steps **1**, **2**, **3**, **4**, **6**, **9**, and **10**. Everything you need to build a simple agent that is powered by an AI service and can run your code.
+
+1. [Import packages](#1-import-the-necessary-packages)
+2. [Add AI services](#2-create-a-kernel-with-your-ai-services)
+3. [Enterprise components](#3-create-a-chat-history-object-to-store-messages)
+4. [Build the kernel](#4-collect-the-users-input-and-add-to-the-history)
+5. Add memory (skipped)
+6. [Add plugins](#5-as-the-ai-to-generate-a-response)
+7. Create kernel arguments (skipped)
+8. Create prompts (skipped)
+9. [Planning](#6-print-the-response-and-add-it-back-to-the-history)
+10. [Invoke]()
+
+Once we show you how to implement these steps, we then show you how to [put it all together](#putting-it-all-together) to create a simple turn-based conversation.
 
 > [!Note]
 > In this example, we'll use Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md).
 
-### 1) Import the necessary packages
+### 1) Import packages
 For this package, you'll want to import the following packages at the top of your file:
 
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="3-6":::
+
+```csharp
+using System.ComponentModel;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+```
+
 ::: zone-end
 
-### 2) Create a kernel with your AI services
+### 2) Add AI services
+The most important part of creating a kernel is adding the AI services that you want to use. In this example, we'll add an Azure OpenAI chat completion service to a kernel builder.
 
 > [!Tip]
 > If you need help creating a service, refer to the [AI services article](../concepts/ai-services.md). There, you'll find guidance on how to use OpenAI or Azure OpenAI models as services.
 
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-38,40,47-49":::
+```csharp
+// Create kernel
+var builder = Kernel.CreateBuilder()
+builder.AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
+```
 ::: zone-end
 
-### 3) Create a chat history object to store messages
+### 3) Add enterprise services
+One of the main benefits of using Semantic Kernel is that it supports enterprise-grade services. For example, you can add logging services to your kernel to help you debug your AI agent.
 
-> [!Tip]
-> For more information on the chat history object, refer to the [chat history section](../concepts/ai-services/chat-completion.md#creating-a-chat-history-object) in the chat completion service article.
+```csharp
+builder.Services.AddLogging(services => services.AddConsole().SetMinimumLevel(LogLevel.Trace)); 
+```
 
-::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="45-46":::
-::: zone-end
+### 4) Build the kernel
+Once you've added the services you need, you can build the kernel.
 
-### 4) Collect the user's input and add to the history
+```csharp
+Kernel kernel = builder.Build();
 
-::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="51-57,76-79" highlight="7":::
-::: zone-end
+// Retrieve the chat completion service
+var chatCompletionService = kernel.Services.GetRequiredService<IChatCompletionService>();
+```
 
-### 5) Ask the AI service to generate a response
+### 5) Add memory (skipped)
+To learn more about adding memories to your agents, refer to the [memory article](../concepts/memories.md).
 
-Once you've prepared the chat history object, you can then pass it to the AI services to generate a response. The final message from the AI agent is returned back as a result so you can use it later. The following code demonstrates how to generate a [non-streaming response](../concepts/ai-services/chat-completion.md#non-streaming-completion), but you can also generate a [streaming response](../concepts/ai-services/chat-completion.md#streaming-completion) by using the `GetStreamingChatMessageContentAsync` method.
+### 6) Add plugins
+With plugins, can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions.
 
-::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="65-67,69":::
-::: zone-end
+Before adding a plugin, however, you first need to _create_ a plugin.
 
-### 6) Print the response and add it back to the history
-
-Finally, you'll take the results of the LLM agent and print it to the screen. To support multi-turn scenarios, you'll also want to add it to the chat history object so the AI agent can refer to it in future responses.
-
-::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="71-75":::
-::: zone-end
-
-### Final code for a simple turn-based conversation
-
-Once you've implemented these steps, you're final code should look like the following:
-    
-::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35, 37,38,40, 44-57,64-67,69-79":::
-::: zone-end
-
-## Allowing your AI agent to invoke your native code
-
-In the previous section, you saw how to create a simple conversation with an AI agent. The challenge with this code, however, is that the AI agent can only respond with information baked into its model. With [plugins](../concepts/plugins.md), however, you can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions.
-
-> [!Tip]
-> Behind the scenes, Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs, to provide [planning](../concepts/planners.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
-
-To allow our AI to call our native code, we'll complete the following:
-7. [Create a plugin with the code you want the AI to invoke](#7-create-a-plugin)
-8. [Add the plugin to the kernel so the AI can access it](#8-add-the-plugin-to-the-kernel)
-9. [Invoke the AI with the plugin](#9-invoke-the-ai-with-your-plugin)
-
-### 7) Create a plugin
+#### Create a native plugin
 
 Below, you can see that creating a native plugin is as simple as creating a new class.
 
 In this example, we've created a plugin that can manipulate a light bulb. While this is a simple example, this plugin quickly demonstrates how you can support 1) Retrieval Augmented Generation (RAG) by providing the AI agent with the state of the light bulb and 2) task automation by allowing the AI agent to turn the light bulb on or off. In your own code, you can create a plugin that interacts with any external service or API to achieve similar results.
 
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="85-88,90-92,94-107":::
+```csharp
+public class Lights
+{
+   // Mock data for the lights
+   private readonly List<LightModel> lights = new()
+   {
+      new LightModel { Id = 1, Name = "Table Lamp", IsOn = false },
+      new LightModel { Id = 2, Name = "Porch light", IsOn = false },
+      new LightModel { Id = 3, Name = "Chandelier", IsOn = true }
+   };
+
+   [KernelFunction("get_lights")]
+   [Description("Gets a comma-separated list of light IDs")]
+   [return: Description("An array of lights")]
+   public async Task<List<LightModel>> GetLightsAsync()
+   {
+      return lights
+   }
+
+   [KernelFunction("change_state")]
+   [Description("Changes the state of the light")]
+   [return: Description("The updated state of the light; will return null if the light does not exist")]
+   public async Task<LightModel?> ChangeStateAsync(int id, bool isOn)
+   {
+      var light = lights.FirstOrDefault(light => light.Id == id);
+
+      if (light == null)
+      {
+         return null;
+      }
+
+      // Update the light with the new state
+      light.IsOn = isOn;
+
+      return light;
+   }
+}
+
+public class LightModel
+{
+   [JsonPropertyName("id")]
+   public int Id { get; set; }
+
+   [JsonPropertyName("name")]
+   public string Name { get; set; }
+
+   [JsonPropertyName("is_on")]
+   public bool? IsOn { get; set; }
+}
+```
 ::: zone-end
 
-### 8) Add the plugin to the kernel
+#### Add the plugin to the kernel
 
 Once you've created your plugin, you can add it to the kernel so the AI agent can access it. We can alter the `Kernel` object to include the plugin within its plugin collection by adding an additional line of code to the builder.
 
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35,37-40" highlight="4":::
+```csharp
+// Add the plugin to the kernel
+kernel.Plugins.AddFromType<LightPlugin>();
+```
 ::: zone-end
 
-### 9) Invoke the AI with your plugin
+### 7) Create kernel arguments (skipped)
 
-Finally, we can alter the request to the LLM so that it automatically uses the plugin to satisfy the user's request.
+To learn more about creating kernel arguments, refer to the [kernel arguments article](../concepts/kernel-arguments.md).
+
+### 8) Create prompts (skipped)
+
+To learn more about creating prompts, refer to the [prompts article](../concepts/prompts.md).
+
+### 9) Planning
+
+Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs, to provide [planning](../concepts/planners.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
+
+To enable automatic function calling, you'll first need to create the appropriate execution settings.
 
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="59-69" highlight="10":::
+```csharp
+OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
+{
+    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+};
+```
 ::: zone-end
 
-### Final code for a turn-based conversation with plugins
+### 10) Invoke
+
+Finally, you can invoke the AI agent with the plugin. The following code demonstrates how to generate a [non-streaming response](../concepts/ai-services/chat-completion.md#non-streaming-completion), but you can also generate a [streaming response](../concepts/ai-services/chat-completion.md#streaming-completion) by using the `GetStreamingChatMessageContentAsync` method.
+
+::: zone pivot="programming-language-csharp"
+```csharp
+// Create chat history
+var history = new ChatHistory();
+
+// Get the response from the AI
+var result = await chatCompletionService.GetChatMessageContentAsync(
+    history,
+    executionSettings: openAIPromptExecutionSettings,
+    kernel: kernel
+);
+```
+::: zone-end  
+
+### Final code for a simple turn-based conversation
 
 Once you've implemented these steps, you're final code should look like the following:
-
+    
 ::: zone pivot="programming-language-csharp"
-:::code language="csharp" source="~/../semantic-kernel-samples/dotnet/samples/LearnResources/MicrosoftLearn/Plugin.cs" range="35, 37,38,40, 44-79":::
+```csharp
+// 1. Import packages
+using System.ComponentModel;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+
+// 2. Create kernel with Azure OpenAI chat completion
+var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
+
+// 3. Add enterprise components
+builder.Services.AddLogging(services => services.AddConsole().SetMinimumLevel(LogLevel.Trace));
+
+// 4. Build the kernel
+Kernel kernel = builder.Build();
+var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+
+// 6. Add plugins
+kernel.Plugins.AddFromType<LightPlugin>();
+
+// 9. Planning
+OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
+{
+    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+};
+
+// 10. Invoke
+var history = new ChatHistory();
+
+string? userInput;
+do {
+    // Collect user input
+    Console.Write("User > ");
+    userInput = Console.ReadLine();
+
+    // Add user input
+    history.AddUserMessage(userInput);
+
+    // Get the response from the AI
+    var result = await chatCompletionService.GetChatMessageContentAsync(
+        history,
+        kernel: kernel);
+
+    // Print the results
+    Console.WriteLine("Assistant > " + result);
+
+    // Add the message from the agent to the chat history
+    history.AddMessage(result.Role, result.Content ?? string.Empty);
+} while (userInput is not null)
+```
 ::: zone-end
 
 The following back-and-forth chat should be similar to what you see in the console. The function calls have been added below to demonstrate how the AI leverages the plugin behind the scenes.
@@ -192,8 +320,8 @@ The following back-and-forth chat should be similar to what you see in the conso
 | Role                          | Message                       |
 | ----------------------------- | ----------------------------- |
 | 🔵&nbsp;**User**                      | Please toggle the light       |
-| 🔴&nbsp;**Assistant (function call)** | LightPlugin.GetState          |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | LightPlugin.GetState          |
 | 🟢&nbsp;**Tool**                      | off                           |
-| 🔴&nbsp;**Assistant (function call)** | LightPlugin.ChangeState(true) |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | LightPlugin.ChangeState(true) |
 | 🟢&nbsp;**Tool**                      | on                            |
 | 🔴&nbsp;**Assistant**                 | The light is now on           |
