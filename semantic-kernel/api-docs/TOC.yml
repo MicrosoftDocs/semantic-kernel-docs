@@ -1,4 +1,4 @@
-- name: C# API reference
+- name: C# reference
   href: /dotnet/api/microsoft.semantickernel
-- name: Python API reference
+- name: Python reference
   href: /python/api/semantic-kernel/semantic_kernel.kernel.kernel
