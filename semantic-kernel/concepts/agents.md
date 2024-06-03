@@ -24,12 +24,8 @@ Semantic Kernel provides you with the infrastructure to build any kind of agent 
 ## Building your first agent
 An agent is made up of three core building blocks that harmoniously work together to complete tasks for you. Let’s take a closer look by building a copilot that helps you write and send an email.
  
-## A copilot to write and send emails
+### A copilot to write and send emails
 To create this copilot you’ll need to create a plugin that can send emails, a planner that generates a plan to write an email, and a persona that interacts with you to get the information needed to send the email.
-
-### A real-world example: writing an email
-
-Let's take a common scenario, building a copilot that helps a user write and send an email. After getting instructions from a user, the copilot would need to generate a plan using the available plugins to complete the task. This plan would include steps like...
 
 | Step | Description                           |
 |------|---------------------------------------|
@@ -80,7 +76,29 @@ In the past, special prompts were created by AI app developers to guide the AI i
 
 As a result, planning with AIs with Semantic Kernel is now as easy as invoking a chat completion service with auto function calling enabled.
 
-// TODO: Add example of planning with LLMs
+```csharp
+// Create kernel with an email plugin
+var builder = Kernel.CreateBuilder();
+builder.Plugins.AddFromType<EmailPlugin>();
+Kernel kernel = builder.Build();
+
+// Create chat completion service
+AzureOpenAIChatCompletionService chatCompletionService = new (
+    deploymentName: "gpt-4",
+    apiKey: "YOUR_API_KEY",
+    endpoint: "YOUR_AZURE_ENDPOINT"
+);
+
+// Create chat history
+var history = new ChatHistory();
+
+// Get the response from the AI
+var result = await chatCompletionService.GetChatMessageContentAsync(
+    history,
+    executionSettings: openAIPromptExecutionSettings,
+    kernel: kernel
+);
+```
 
 To learn more about planning with Semantic Kernel, see the [planning article](./planning.md).
 
@@ -93,7 +111,22 @@ For enterprise scenarios, however, you may want to provide more detailed instruc
 
 To provide a persona to your agent, simply pre-pend a system message to the chat history that describes the persona. The AI will then use this persona to guide its interactions with the user.
 
-// TODO: Add example of providing a persona to an agent
+```csharp
+// Create chat history
+ChatHistory chatMessages = new ChatHistory("""
+    You are a friendly assistant who likes to follow the rules. You will complete required steps
+    and request approval before taking any consequential actions. If the user doesn't provide
+    enough information for you to complete a task, you will keep asking questions until you have
+    enough information to complete the task.
+    """);
+
+// Get the response from the AI
+var result = await chatCompletionService.GetChatMessageContentAsync(
+    history,
+    executionSettings: openAIPromptExecutionSettings,
+    kernel: kernel
+);
+```
 
 To learn more about authoring effective personas, refer to the [personas article](./personas.md).
 
@@ -114,11 +147,11 @@ IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCo
 
 // Create the chat history
 ChatHistory chatMessages = new ChatHistory("""
-You are a friendly assistant who likes to follow the rules. You will complete required steps
-and request approval before taking any consequential actions. If the user doesn't provide
-enough information for you to complete a task, you will keep asking questions until you have
-enough information to complete the task.
-""");
+    You are a friendly assistant who likes to follow the rules. You will complete required steps
+    and request approval before taking any consequential actions. If the user doesn't provide
+    enough information for you to complete a task, you will keep asking questions until you have
+    enough information to complete the task.
+    """);
 
 // Start the conversation
 while (true)
