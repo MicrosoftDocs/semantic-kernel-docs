@@ -272,7 +272,7 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
 ```
 ::: zone-end  
 
-### Final code for a simple turn-based conversation
+## Final code for a simple turn-based conversation
 
 Once you've implemented these steps, you're final code should look like the following:
     
