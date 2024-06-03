@@ -69,7 +69,7 @@ public class EmailPlugin
 
 There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can automatically create a plugin using its [OpenAPI specification](./plugins/adding-openapi-plugins.md). To learn more about other ways to author plugins, see the [plugins section](./plugins/index.md).
 
-### Planners: giving guidance to your agent
+### Planning: completing multi-step tasks
 To actually use this plugin (and to wire them up with other steps), the copilot would then need to generate a plan. This is where planning comes in. Planning comes from the built-in ability of LLMs to determine how to iteratively complete a task.
 
 In the past, special prompts were created by AI app developers to guide the AI in generating a plan that could be consumed by an SDK like Semantic Kernel. However, with the advent of LLMs, AIs can now generate plans directly from a conversation with a user with the aid of function calling.

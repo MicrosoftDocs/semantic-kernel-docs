@@ -75,7 +75,7 @@ To learn more about the different AI services that you can add to a kernel, plea
 
 
 ::: zone pivot="programming-language-csharp"
-## Creating a kernel using Dependency Injection
+## Using Dependency Injection
 
 In C#, you can use Dependency Injection to create a kernel. This is done by creating a `ServiceCollection` and adding services and plugins to it. Below is an example of how you can create a kernel using Dependency Injection.
 

@@ -10,83 +10,53 @@ ms.service: semantic-kernel
 
 # Integrations for Semantic Kernel 
 
-## Available features
+Semantic Kernel provides a wide range of integrations to help you build powerful AI agents. These integrations include AI services, memory connectors. Additionally, Semantic Kernel integrates with other Microsoft services to provide additional functionality via plugins.
 
-Today, not all features are available in all languages. The following tables show which features are available in each language. The 🔄 symbol indicates that the feature is partially implemented, please see the associated note column for more details. The ❌ symbol indicates that the feature is not yet available in that language; if you would like to see a feature implemented in a language, please consider [contributing to the project](./contributing.md) or [opening an issue](./contributing.md#reporting-issues).
+## Out-of-the-box integrations
 
+With the available AI and memory connectors, developers can easily build AI agents with swappable components. This allows you to experiment with different AI services and memory connectors to find the best combination for your use case.
 
 ### AI Services
 
 | Services                          |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| TextGeneration                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
-| TextEmbeddings                    | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
-| ChatCompletion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
-| Image Generation                  | ✅ | ❌ | ❌ | Example: Dall-E |
+| Text Generation                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
+| Chat Completion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
+| Text Embeddings (Experimental)     | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
+| Text to Image (Experimental)       | ✅ | ❌ | ❌ | Example: Dall-E |
+| Image to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Pix2Struct |
+| Text to Audio (Experimental)       | ✅ | ❌ | ❌ | Example: Text-to-speech |
+| Audio to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Whisper |
 
-### AI service endpoints
 
-| Endpoints                         |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| OpenAI                            | ✅ | ✅ | ✅ | |
-| AzureOpenAI                       | ✅ | ✅ | ✅ | |
-| Hugging Face Inference API        | 🔄 | ❌ | ❌ | Coming soon to Python, not all scenarios are covered for .NET |
-| Hugging Face Local                | ❌ | ✅ | ❌ | |
-| Custom                            | ✅ | 🔄 | ❌ | Requires the user to define the service schema in their application |
+### Memory Connectors (Experimental)
 
-### Tokenizers
+> [!IMPORTANT]
+> All of the existing memory connectors are currently experimental and are undergoing active development to improve the experience of using them. To provide feedback on the latest proposal, please refer to the active [Search](https://github.com/microsoft/semantic-kernel/pull/6012) and [Memory Connector](https://github.com/microsoft/semantic-kernel/pull/6364) ADRs.
 
-| Tokenizers                        |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| GPT2                              | ✅ | ✅ | ✅ | |
-| GPT3                              | ✅ | ❌ | ❌ | |
-| tiktoken                          | 🔄 | ❌ | ❌ | Coming soon to Python and C#. Can be manually added to Python via `pip install tiktoken` |
-
-### Core plugins
-
-| Plugins                           |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| TextMemoryPlugin                   | ✅ | ✅ | 🔄 | |
-| ConversationSummaryPlugin          | ✅ | ✅ | ✅ | |
-| FileIOPlugin                       | ✅ | ✅ | ✅ | |
-| HttpPlugin                         | ✅ | ✅ | ✅ | |
-| MathPlugin                         | ✅ | ✅ | ✅ | |
-| TextPlugin                         | ✅ | ✅ | ✅ | |
-| TimePlugin                         | ✅ | ✅ | ✅ | |
-| WaitPlugin                         | ✅ | ✅ | ✅ | |
-
-### Planners
-
-| Planners                          |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| Plan Object Model                 | ✅ | ✅ | 🔄 | |
-| BasicPlanner                      | ❌ | ✅ | ❌ | |
-| ActionPlanner                     | ✅ | ✅ | 🔄 | In development|
-| SequentialPlanner                 | ✅ | ✅ | 🔄 | In development|
-| StepwisePlanner                   | ✅ | ✅ | ❌ | |
-
-### Connectors
 
 | Memory Connectors        |  C#  | Python | Java | Notes |
 |--------------------------|:----:|:------:|:----:|-------|
-| Azure AI Search   | ✅ | ✅ | ✅ | |
+| Azure AI Search          | ✅ | ✅ | ✅ | |
 | Chroma                   | ✅ | ✅ | ❌ | |
 | DuckDB                   | ✅ | ❌ | ❌ | |
 | Milvus                   | 🔄 | ✅ | ❌ | |
 | Pinecone                 | ✅ | ✅ | ❌ | |
-| Postgres                 | ✅ | ✅ | ❌ | Vector optimization requires [pgvector](https://github.com/pgvector/pgvector) |
-| Qdrant                   | ✅ | 🔄 | ❌ | In feature branch for review |
-| Redis                    | ✅ | 🔄 | ❌ | Vector optimization requires [RediSearch](https://redis.io/docs/stack/search) |
-| Sqlite                   | ✅ | ❌ | 🔄 | Vector optimization requires [sqlite-vss](https://github.com/asg017/sqlite-vss) |
-| Weaviate                 | ✅ | ✅ | ❌ | Currently supported on Python 3.9+, 3.8 coming soon |
-
-### Plugins
-| Plugins                           |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| MsGraph                           | ✅ | ❌ | ❌ | Contains plugins for OneDrive, Outlook, ToDos, and Organization Hierarchies |
-| Document and data loading plugins (i.e. pdf, csv, docx, pptx)  | ✅ | ❌ | ❌ | Currently only supports Word documents |
-| OpenAPI                           | ✅ | ❌ | ❌ | |
-| Web search plugins (i.e. Bing, Google) | ✅ | ✅ | ❌ | |
-| Text chunkers                     | 🔄 | 🔄 | ❌ | |
+| Postgres                 | ✅ | ✅ | ❌ | |
+| Qdrant                   | ✅ | 🔄 | ❌ | |
+| Redis                    | ✅ | 🔄 | ❌ | |
+| Sqlite                   | ✅ | ❌ | 🔄 | |
+| Weaviate                 | ✅ | ✅ | ❌ | |
 
 
+## Additional plugins
+
+If you want to extend the functionality of your AI agent, you can use plugins to integrate with other Microsoft services. Here are some of the plugins that are available for Semantic Kernel:
+
+| Plugin     | C#  | Python | Java | Description |
+| ---------- | :-: | :----: | :--: | ----------- |
+| Logic Apps | ✅  |   ✅   |  ✅  | Build workflows within Logic Apps using its available connectors and import them as plugins in Semantic Kernel. [Learn more](../concepts/plugins/adding-logic-apps-as-plugins.md). |
+| Azure Container Apps Dynamic Sessions | ✅  |   ✅   |  ✅  | With dynamic sessions, you can recreate the Code Interpreter experience from the Assistants API by effortlessly spinning up Python containers where AI agents can execute Python code. [Learn more](https://learn.microsoft.com/en-us/azure/container-apps/sessions). |
+
+## Next steps
+Curious how to use these integrations in your AI agent? Check out the [use cases section](../use-cases/index.md) to see how other customers are leveraging Semantic Kernel to optimize their companies' workflows. 
