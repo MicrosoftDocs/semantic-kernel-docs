@@ -107,9 +107,6 @@ We recommend printing out these maps on at least 11x17 paper so you can easily f
 
 Once we show you how to implement these steps, we then show you how to [put it all together](#putting-it-all-together) to create a simple turn-based conversation.
 
-> [!Note]
-> In this example, we'll use Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md).
-
 ### 1) Import packages
 For this package, you'll want to import the following packages at the top of your file:
 
@@ -124,11 +121,12 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 ::: zone-end
 
-### 2) Add AI services
+### 2) Add AI services ![Add services](../media/map-step-2.png)
 The most important part of creating a kernel is adding the AI services that you want to use. In this example, we'll add an Azure OpenAI chat completion service to a kernel builder.
 
-> [!Tip]
-> If you need help creating a service, refer to the [AI services article](../concepts/ai-services.md). There, you'll find guidance on how to use OpenAI or Azure OpenAI models as services.
+
+> [!Note]
+> In this example, we'll use Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md). If you need help creating a different service, refer to the [AI services article](../concepts/ai-services.md). There, you'll find guidance on how to use OpenAI or Azure OpenAI models as services.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -138,7 +136,7 @@ builder.AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
 ```
 ::: zone-end
 
-### 3) Add enterprise services
+### 3) Add enterprise services ![Enterprise services](../media/map-step-3.png)
 One of the main benefits of using Semantic Kernel is that it supports enterprise-grade services. For example, you can add logging services to your kernel to help you debug your AI agent.
 
 ```csharp
@@ -155,10 +153,7 @@ Kernel kernel = builder.Build();
 var chatCompletionService = kernel.Services.GetRequiredService<IChatCompletionService>();
 ```
 
-### 5) Add memory (skipped)
-To learn more about adding memories to your agents, refer to the [memory article](../concepts/memories.md).
-
-### 6) Add plugins
+### 6) Add plugins ![Add plugins](../media/map-step-6.png)
 With plugins, can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions.
 
 Before adding a plugin, however, you first need to _create_ a plugin.
@@ -233,15 +228,7 @@ kernel.Plugins.AddFromType<LightPlugin>();
 ```
 ::: zone-end
 
-### 7) Create kernel arguments (skipped)
-
-To learn more about creating kernel arguments, refer to the [kernel arguments article](../concepts/kernel-arguments.md).
-
-### 8) Create prompts (skipped)
-
-To learn more about creating prompts, refer to the [prompts article](../concepts/prompts.md).
-
-### 9) Planning
+### 9) Planning ![Planning](../media/map-step-9.png)
 
 Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs, to provide [planning](../concepts/planners.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
 
