@@ -329,8 +329,8 @@ The following back-and-forth chat should be similar to what you see in the conso
 | Role                                             | Message                       |
 | ------------------------------------------------ | ----------------------------- |
 | 🔵&nbsp;**User**                                | Please toggle the light       |
-| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | LightPlugin.GetState          |
-| 🟢&nbsp;**Tool**                                | off                           |
-| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | LightPlugin.ChangeState(true) |
-| 🟢&nbsp;**Tool**                                | on                            |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `LightPlugin.GetState()`          |
+| 🟢&nbsp;**Tool**                                | `off`                           |
+| 🔴&nbsp;**Assistant&nbsp;(function&nbsp;call)** | `LightPlugin.ChangeState(true)` |
+| 🟢&nbsp;**Tool**                                | `on`                            |
 | 🔴&nbsp;**Assistant**                           | The light is now on           |
