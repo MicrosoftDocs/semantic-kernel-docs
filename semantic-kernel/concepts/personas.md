@@ -30,20 +30,14 @@ The rest of this article will provide tips and best practices when creating pers
 
 Creating effective personas involves careful consideration of the agent's intended role, the target audience, and the specific tasks the agent will perform. Here are some best practices to keep in mind:
 
-### 1. Define clear objectives
-Before creating a persona, clearly define the objectives you want the agent to achieve. This includes understanding the tasks the agent will perform and the type of interactions you expect it to have users.
+| **Step**                    | Description                                                                                                                                                     |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **1. Define clear objectives**       | Before creating a persona, clearly define the objectives you want the agent to achieve. This includes understanding the tasks the agent will perform and the type of interactions you expect it to have with users. |
+| **2. Reference specific roles or public figures** | A well-defined persona should include specific details about the agent's behavior, tone, and style. Avoid vague descriptions by referencing specific roles or public figures so that the LLM can better mimic their behavior.     |
+| **3. Provide examples and scenarios**     | To help the agent understand its role better, provide examples and scenarios that illustrate the persona in action. This can include sample conversations, user stories, or use cases that demonstrate how the agent should respond in different situations. |
+| **4. Include fallback instructions**     | Provide instructions on what the agent should do when it encounters an unknown situation or is unable to provide a response. This can include asking for help, providing alternative solutions, or simply acknowledging that it doesn't have an answer.       |
+| **5. Iterate and Refine**     | Personas are not static. Continuously test and refine your personas based on user feedback and performance data. This helps in improving the agent's effectiveness over time.                               |
 
-### 2. Reference specific roles or public figures
-A well-defined persona should include specific details about the agent's behavior, tone, and style. Avoid vague descriptions by referencing specific roles or public figures so that the LLM can better mimic their behavior.
-
-### 3. Provide examples and scenarios
-To help the agent understand its role better, provide examples and scenarios that illustrate the persona in action. This can include sample conversations, user stories, or use cases that demonstrate how the agent should respond in different situations.
-
-### 4. Include fallback instructions
-Provide instructions on what the agent should do when it encounters an unknown situation or is unable to provide a response. This can include asking for help, providing alternative solutions, or simply acknowledging that it doesn't have an answer.
-
-### 5. Iterate and Refine
-Personas are not static. Continuously test and refine your personas based on user feedback and performance data. This helps in improving the agent's effectiveness over time.
 
 ## Using system messages to set personas
 
