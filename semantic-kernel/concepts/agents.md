@@ -11,21 +11,21 @@ ms.custom: build-2023, build-2023-dataai
 
 # What are agents?
 
-An agent is an artificial intelligence that can answer questions and automate processes for users. There's a wide spectrum of agents that can be built, ranging from simple chat bots to fully automated AI assistants. With Semantic Kernel, we provide you with the tools to build increasingly more sophisticated agents that don't require you to be an AI expert.
-
-![Types of agents](../media/types-of-agents.png)
-
-A copilot is a special type of agent that is meant to work side-by-side with a user. Unlike an agent, a copilot is _not_ meant to be fully automated. Instead, it is meant to help a user complete a task by providing suggestions and recommendations. For example, a copilot could be used to help a user write an email by providing suggestions for what to write next. The user can then choose to accept or reject the suggestion.
-
-As you build more sophisticated agents, you can turn your copilot into a fully automated agent. A fully automated agent is an agent that can respond to system events to perform actions without explicit user input. Even autonomous agents should be designed to work alongside users though to ensure that they safely and effectively complete tasks on behalf of the user.
-
-> [!TIP] 
-> When you start your journey with Semantic Kernel, we recommend building a copilot first. This is because copilots are easier to build and safer to deploy because the user is always in control. Once you have a copilot, you can then turn it into a fully automated agent by removing the need for user input.
-
+Agents are software based entities that leverage AI models to do works for you. They are built to perform a wide range of tasks and called different names based on the jobs they do.
+ 
+For example, an agent built to answer questions is referred to as a chatbot due to it’s chat-based experience. These agents are typically grounded in your own data, like company documents.
+ 
+An agent built to work along side you is typically called a copilot. These agents help you complete tasks like writing emails or creating other office artifacts by providing recommendations that you choose to either accept or reject.
+ 
+An agent built to handle repetitive tasks are usually labeled as fully autonomous. They respond to events and perform actions without needing intervention. This is different from a copilot in that it’s doing work for you instead of alongside you.
+ 
+Semantic Kernel provides you with the infrastructure to build any kind of agent you need without being an expert in AI.
+ 
 ## Building your first agent
-An agent is made up of three core building blocks: plugins, planners, and its persona. These building blocks are what allow an agent to retrieve information from the user or other systems, plan how to use that information, and use that information to respond to a user or perform an action.
-
-![Plugins, planners, and persona](../media/plugins-planners-personas.png)
+An agent is made up of three core building blocks that harmoniously work together to complete tasks for you. Let’s take a closer look by building a copilot that helps you write and send an email.
+ 
+## A copilot to write and send emails
+To create this copilot you’ll need to create a plugin that can send emails, a planner that generates a plan to write an email, and a persona that interacts with you to get the information needed to send the email.
 
 ### A real-world example: writing an email
 
