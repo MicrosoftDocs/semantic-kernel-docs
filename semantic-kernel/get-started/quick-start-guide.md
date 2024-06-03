@@ -318,6 +318,7 @@ do {
     // Get the response from the AI
     var result = await chatCompletionService.GetChatMessageContentAsync(
         history,
+        executionSettings: openAIPromptExecutionSettings,
         kernel: kernel);
 
     // Print the results
