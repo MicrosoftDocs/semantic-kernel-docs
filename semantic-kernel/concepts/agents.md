@@ -20,7 +20,7 @@ Agents are software based entities that leverage AI models to do works for you. 
         An agent built to handle repetitive tasks are usually labeled as fully autonomous. They respond to events and perform actions without needing intervention. This is different from a copilot in that it’s doing work for you instead of alongside you.
     :::column-end:::
     :::column span="2":::
-        ![Semantic Kernel Persona](../media/WhatAreAgents.png.png)
+        ![3 kinds of agents: Chatbot Copilot and Fully autonomous](../media/WhatAreAgents.png)
     :::column-end:::
 :::row-end:::
 
