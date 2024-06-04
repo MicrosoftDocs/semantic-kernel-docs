@@ -14,6 +14,6 @@ Filters enhance security by providing control and visibility over how and when f
  
 For example, filters are leveraged to validate permissions before an approval flow begins. The IFunctionInvocationFilter is run to check the permissions of the person that’s looking to submit an approval. This means that only a select group of people will be able to kick off the process.
  
-
+ ![Semantic Kernel Filters](../media/WhatAreFilters.png)
 
 Data validation is done asynchronously which means you’ll need to provide all required information in the right format to continue. This prevents malicious actors from getting through because if the data they input doesn’t match the records on file, they are instantly stopped.
