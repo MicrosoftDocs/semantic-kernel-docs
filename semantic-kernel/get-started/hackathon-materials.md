@@ -63,10 +63,10 @@ Length (Minutes)  | Phase       | Description                                   
 | 120 | Hack | You will use Semantic Kernel SDKs tools, and resources to develop, test, and deploy your projects. This could be for the rest of the day or over multiple days based on the time available and problem to be solved. |     
 | 120 | Demo | Each team will present their results using a PowerPoint template provided. You will have about 15 minutes per team to showcase your project, demonstrate how it works, and explain how it solves a problem with AI. You will also receive feedback from other participants. |     
  5 | Thank you   | The hackathon facilitator will close the hackathon.  |
-| 30 | Feedback   | Each team can share their feedback on the hackathon and Semantic Kernel with the group and fill out the [Hackathon Exit Survey](https://forms.office.com/r/DjSXwCrKWR). |         
+| 30 | Feedback   | Each team can share their feedback on the hackathon and Semantic Kernel with the group and fill out the [Hackathon Exit Survey](https://forms.office.com/r/01d2pi2g4r). |         
 
 ## Following up after the hackathon
-We hope you enjoyed running a Semantic Kernel Hackathon and the overall experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future content. Please take a few minutes to fill out the [hackathon facilitator survey](https://forms.office.com/r/DjSXwCrKWR) and share your feedback and suggestions with us.
+We hope you enjoyed running a Semantic Kernel Hackathon and the overall experience! We would love to hear from you about what worked well, what didn't, and what we can improve for future content. Please take a few minutes to fill out the [hackathon facilitator survey](https://forms.office.com/r/01d2pi2g4r) and share your feedback and suggestions with us.
 
 If you want to continue developing your AI plugins or projects after the hackathon, you can find more resources and support for Semantic Kernel.
  
