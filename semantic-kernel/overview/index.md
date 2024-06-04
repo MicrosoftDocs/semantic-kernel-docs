@@ -30,10 +30,10 @@ Semantic Kernel combines [prompts](../concepts/prompts.md) with [existing APIs](
 
 ## Modular and extensible
 :::row:::
-    :::column span="3":::
+    :::column span="2":::
 By adding your existing code as a plugin, you’ll maximize your investment by flexibly integrating AI services through a set of out-of-the-box connectors. Semantic Kernel uses OpenAPI specifications (like Microsoft 365 Copilot) so you can share any extensions with other pro or low-code developers in your company.
  :::column-end:::
-    :::column span="1":::
+    :::column span="2":::
     ![Modular Extensibility](../media/Designed-for-modular-extensibility.png)
     :::column-end:::
 :::row-end:::
