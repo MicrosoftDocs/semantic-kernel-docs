@@ -96,7 +96,17 @@ To get started, follow these steps:
 ## Writing your first console app
 To make it easier to get started building enterprise apps with Semantic Kernel, we've created a series of "maps" that guide you through the process of creating a kernel and using it to interact with AI services. These maps are available in Python, .NET, and Java.
 
-![Semantic Kernel map](../media/map.png)
+::: zone pivot="programming-language-python"
+![Semantic Kernel Python map](../media/PythonMap.png)
+::: zone-end
+
+::: zone pivot="programming-language-java"
+![Semantic Kernel Java map](../media/JavaMap.png)
+::: zone-end
+
+::: zone pivot="programming-language-csharp"
+![Semantic Kernel DotNET map](../media/DotNetMap.png)
+::: zone-end
 
 We recommend printing out these maps on at least 11x17 paper so you can easily follow along with the steps, not _all_ you need to following to build your first AI agent. In the following sections, we'll walk through steps **1**, **2**, **3**, **4**, **6**, **9**, and **10**. Everything you need to build a simple agent that is powered by an AI service and can run your code.
 
