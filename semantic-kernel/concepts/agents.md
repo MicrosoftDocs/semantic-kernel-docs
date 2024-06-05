@@ -10,9 +10,10 @@ ms.custom: build-2023, build-2023-dataai
 ---
 
 # What are agents?
-Agents are software based entities that leverage AI models to do works for you. They are built to perform a wide range of tasks and called different names based on the jobs they do. 
 :::row:::
     :::column span="3"::: 
+        Agents are software based entities that leverage AI models to do works for you. They are built to perform a wide range of tasks and called different names based on the jobs they do. 
+
         For example, an agent built to answer questions is referred to as a chatbot due to it’s chat-based experience. These agents are typically grounded in your own data, like company documents.
         
         An agent built to work along side you is typically called a copilot. These agents help you complete tasks like writing emails or creating other office artifacts by providing recommendations that you choose to either accept or reject.
@@ -22,14 +23,22 @@ Agents are software based entities that leverage AI models to do works for you. 
         Semantic Kernel provides you with the infrastructure to build any kind of agent you need without being an expert in AI.
     :::column-end:::
     :::column span="1":::
-        ![3 kinds of agents: Chatbot Copilot and Fully autonomous](../media/WhatAreAgents.png)
+        ![3 kinds of agents: Chatbot Copilot and Fully autonomous](../media/what-are-agents.png)
     :::column-end:::
 :::row-end:::
  
 ## Building your first agent
-An agent is made up of three core building blocks that harmoniously work together to complete tasks for you. Let’s take a closer look by building a copilot that helps you write and send an email.
 
-![Building Blocks of an Agent](../media/building-blocks.png)
+:::row:::
+    :::column span="3"::: 
+        An agent is made up of three core building blocks that harmoniously work together to complete tasks for you. Let’s take a closer look by building a copilot that helps you write and send an email.
+    :::column-end:::
+    :::column span="3":::
+        ![Building Blocks of an Agent](../media/building-blocks.png)
+    :::column-end:::
+:::row-end:::
+
+
  
 ### A copilot to write and send emails
 To create this copilot you’ll need to create a plugin that can send emails, a planner that generates a plan to write an email, and a persona that interacts with you to get the information needed to send the email.
