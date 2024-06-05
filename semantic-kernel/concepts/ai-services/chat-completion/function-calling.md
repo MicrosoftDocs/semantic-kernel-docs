@@ -13,12 +13,12 @@ When you make a request to a model with function calling enabled, Semantic Kerne
 
 | | Step | Description |
 |---|---|---|
-| 1 | **Serialize functions** | All of the available functions (and its input parameters) in the kernel are serialized using JSON schema. |
-| 2 | **Send the messages and functions to the model** | The serialized functions (and the current chat history) are sent to the model as part of the input. |
-| 3 | **Model processes the input** | The model processes the input and generates a response. The response can either be a chat message or a function call |
-| 4 | **Handle the response** | If the response is a chat message, it is returned to the developer to print the response to the screen. If the response is a function call, however, Semantic Kernel extracts the function name and its parameters. |
-| 5 | **Invoke the function** | The extracted function name and parameters are used to invoke the function in the kernel. |
-| 6 | **Return the function result** | The result of the function is then sent back to the model as part of the chat history. Steps 2-6 are then repeated until the model sends a termination signal |
+| 1 | [**Serialize functions**](#1-serializing-the-functions) | All of the available functions (and its input parameters) in the kernel are serialized using JSON schema. |
+| 2 | [**Send the messages and functions to the model**](#2-sending-the-messages-and-functions-to-the-model) | The serialized functions (and the current chat history) are sent to the model as part of the input. |
+| 3 | [**Model processes the input**](#3-model-processes-the-input) | The model processes the input and generates a response. The response can either be a chat message or a function call |
+| 4 | [**Handle the response**](#4-handle-the-response) | If the response is a chat message, it is returned to the developer to print the response to the screen. If the response is a function call, however, Semantic Kernel extracts the function name and its parameters. |
+| 5 | [**Invoke the function**](#5-invoke-the-function) | The extracted function name and parameters are used to invoke the function in the kernel. |
+| 6 | [**Return the function result**](#6-return-the-function-result) | The result of the function is then sent back to the model as part of the chat history. Steps 2-6 are then repeated until the model sends a termination signal |
 
 The following diagram illustrates the process of function calling:
 
