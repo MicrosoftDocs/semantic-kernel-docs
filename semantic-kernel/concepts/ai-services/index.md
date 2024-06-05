@@ -17,13 +17,13 @@ Within Semantic Kernel, there are interfaces for the most popular AI tasks. In t
 
 | Services                          |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
-| [Chat completion](#chat-completion)                    | ✅ | ✅ | ✅ |
-| [Text generation](#text-generation)                    | ✅ | ✅ | ✅ |
-| [Embedding generation](#embedding-generation) (Experimental)     | ✅ | ✅ | ✅ |
-| [Text-to-image](#text-to-image)  (Experimental)       | ✅ | ❌ | ❌ |
-| [Image-to-text](#image-to-text) (Experimental)       | ✅ | ❌ | ❌ |
-| [Text-to-audio](#text-to-audio) (Experimental)       | ✅ | ❌ | ❌ | 
-| [Audio-to-text](#audio-to-text) (Experimental)       | ✅ | ❌ | ❌ | 
+| [Chat completion](./chat-completion/index.md)                    | ✅ | ✅ | ✅ |
+| [Text generation](./text-generation.md)                    | ✅ | ✅ | ✅ |
+| [Embedding generation](./embedding-generation.md) (Experimental)     | ✅ | ✅ | ✅ |
+| [Text-to-image](./text-to-image.md)  (Experimental)       | ✅ | ❌ | ❌ |
+| [Image-to-text](./image-to-text.md) (Experimental)       | ✅ | ❌ | ❌ |
+| [Text-to-audio](./text-to-audio.md) (Experimental)       | ✅ | ❌ | ❌ | 
+| [Audio-to-text](./audio-to-text.md) (Experimental)       | ✅ | ❌ | ❌ | 
 
 > [!TIP]
 > In most scenarios, you will only need to add chat completion to your kernel, but to support multi-modal AI, you can add any of the above services to your kernel.
