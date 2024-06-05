@@ -56,9 +56,6 @@ To create this copilot you’ll need to create a plugin that can send emails, a 
 To enable this scenario, we would need to create a plugin that can send emails, a planner that can generate a plan to write an email, and a persona that can interact with the user to get the necessary information.
 
 The following sections will walk you through the conceptual building blocks and how to put them together to build your first agent. Afterwards, you can refer to the specific guides for each building block to learn more about how to build them.
-- [Plugins](./plugins/index.md)
-- [Planners](./planning.md)
-- [Personas](./personas.md)
 
 ### Plugins: giving your agent skills
 To generate the above plan, the copilot first needs the capabilities necessary to perform these steps. This is where plugins come in. Plugins allow you to give your agent skills via code. For example, you could create a plugin that sends emails, retrieves information from a database, asks for help, or even saves and retrieves memories from previous conversations.
