@@ -483,47 +483,19 @@ For other AI service providers that support the OpenAI chat completion API (e.g.
 
 Once you've created an instance of the chat completion service, you can use it to generate the next response in a conversation. Before invoking the service, you will need to create a chat history object to store the conversation.
 
-### Creating a chat history object
-
 ```csharp
 // Create a chat history object
 ChatHistory chatHistory = [];
 
-// Add system message
-chatHistory.Add(
-    new() {
-        Role = AuthorRole.System,
-        Content = "You are a helpful assistant"
-    }
-);
-
-// Add user message
-chatHistory.Add(
-    new() {
-        Role = AuthorRole.User,
-        AuthorName = "Laimonis Dumins",
-        Content = "What's available to order"
-    }
-);
-
-// Add assistant message
-chatHistory.Add(
-    new() {
-        Role = AuthorRole.Assistant,
-        AuthorName = "Restaurant Assistant",
-        Content = "We have pizza, pasta, and salad available to order. What would you like to order?"
-    }
-);
-
-// Add additional message from a different user
-chatHistory.Add(
-    new() {
-        Role = AuthorRole.User,
-        AuthorName = "Ema Vargova",
-        Content = "I'd like to have the first option, please."
-    }
-);
+// Add message
+chatHistory.AddSystemMessage("You are a helpful assistant.");
+chatHistory.AddUserMessage("What's available to order?");
+chatHistory.AddAssistantMessage("We have pizza, pasta, and salad available to order. What would you like to order?");
+chatHistory.AddUserMessage("I'd like to have the first option, please.");
 ```
+
+> [!NOTE]
+> To learn more about creating chat history objects, refer to the [chat history article](./chat-history.md).
 
 Afterwards, you can send the chat history object to the LLM to generate the next response from the AI. When generating the next response, you have access to both non-streaming and streaming methods for generating responses from the `IChatCompletion` interface.
 
