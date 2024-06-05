@@ -1,0 +1,12 @@
+# YamlMime:ZonePivotGroups
+groups:
+- id: programming-languages
+  title: Programming languages
+  prompt: Choose a programming language
+  pivots:
+  - id: programming-language-csharp
+    title: C#
+  - id: programming-language-java
+    title: Java
+  - id: programming-language-python
+    title: Python

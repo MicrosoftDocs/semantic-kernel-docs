@@ -2,17 +2,16 @@
   href: overview/index.md
 - name: Getting started
   href: get-started/TOC.yml
-- name: Prompt engineering
-  href: prompts/TOC.yml
   expanded: true
-- name: Creating AI agents
-  href: agents/TOC.yml
+- name: Concepts
+  href: concepts/TOC.yml
   expanded: true
-- name: Giving your AI memories
-  href: memories/TOC.yml
-- name: Using AI responsibly
-  href: when-to-use-AI/TOC.yml
-- name: Chat Copilot
-  href: chat-copilot/TOC.yml
+- name: Integrations
+  href: integrations/index.md
+- name: Use Cases
+  href: use-cases/TOC.yml
 - name: Getting Support
   href: support/TOC.yml
+- name: API Reference
+  href: api-docs/TOC.yml
+  expanded: true
