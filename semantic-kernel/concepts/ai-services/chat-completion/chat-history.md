@@ -27,7 +27,7 @@ chatHistory.AddAssistantMessage("We have pizza, pasta, and salad available to or
 chatHistory.AddUserMessage("I'd like to have the first option, please.");
 ```
 
-## Adding messages to a chat history object
+## Adding richer messages to a chat history
 
 The easiest way to add messages to a chat history object is to use the methods above. However, you can also add messages manually by creating a new `ChatMessage` object. This allows you to provide additional information, like names and images content.
 
@@ -179,4 +179,4 @@ chatHistory.Add(results);
 Now that you know how to create and manage a chat history object, you can learn more about function calling in the [Function calling](./function-calling.md) topic.
 
 > [!div class="nextstepaction"]
-> [Function calling](./function-calling.md)
+> [Learn how function calling works](./function-calling.md)

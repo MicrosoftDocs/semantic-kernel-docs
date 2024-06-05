@@ -229,46 +229,46 @@ For the above plugin, the serialized functions would look like this:
 
 There's a few things to note here which can impact both the performance and the quality of the chat completion:
 
-#### Verbosity of function schema
+- Verbosity of function schema
 
-Serializing functions for the model to use doesn't come for free. The more verbose the schema, the more tokens the model has to process, which can slow down the response time and increase costs.
+    Serializing functions for the model to use doesn't come for free. The more verbose the schema, the more tokens the model has to process, which can slow down the response time and increase costs.
 
-> [!TIP]
-> Keep your functions as simple as possible. In the above example, you'll notice that not _all_ functions have descriptions where the function name is self-explanatory. This is intentional to reduce the number of tokens. The parameters are also kept simple; anything the model shouldn't need to know (like the `cartId` or `paymentId`) are kept hidden. This information is instead provided by internal services.
+    > [!TIP]
+    > Keep your functions as simple as possible. In the above example, you'll notice that not _all_ functions have descriptions where the function name is self-explanatory. This is intentional to reduce the number of tokens. The parameters are also kept simple; anything the model shouldn't need to know (like the `cartId` or `paymentId`) are kept hidden. This information is instead provided by internal services.
 
-> [!NOTE]
-> The one thing you don't need to worry about is the complexity of the return types. You'll notice that the return types are not serialized in the schema. This is because the model doesn't need to know the return type to generate a response. In the step 6, however, we'll see how overly verbose return types can impact the quality of the chat completion.
+    > [!NOTE]
+    > The one thing you don't need to worry about is the complexity of the return types. You'll notice that the return types are not serialized in the schema. This is because the model doesn't need to know the return type to generate a response. In the step 6, however, we'll see how overly verbose return types can impact the quality of the chat completion.
 
-#### Parameter types
+-   Parameter types
 
-With the schema, you can specify the type of each parameter. This is important for the model to understand the expected input. In the above example, the `size` parameter is an enum, and the `toppings` parameter is an array of enums. This helps the model generate more accurate responses.
+    With the schema, you can specify the type of each parameter. This is important for the model to understand the expected input. In the above example, the `size` parameter is an enum, and the `toppings` parameter is an array of enums. This helps the model generate more accurate responses.
 
-> [!TIP]
-> Avoid, where possible, using `string` as a parameter type. The model can't infer the type of string, which can lead to ambiguous responses. Instead, use enums or other types (e.g., `int`, `float`, and complex types) where possible.
+    > [!TIP]
+    > Avoid, where possible, using `string` as a parameter type. The model can't infer the type of string, which can lead to ambiguous responses. Instead, use enums or other types (e.g., `int`, `float`, and complex types) where possible.
 
-#### Required parameters
+- Required parameters
 
-You can also specify which parameters are required. This is important for the model to understand which parameters are _actually_ necessary for the function to work. Later on in step 3, the model will use this information to provide as minimal information as necessary to call the function.
+    You can also specify which parameters are required. This is important for the model to understand which parameters are _actually_ necessary for the function to work. Later on in step 3, the model will use this information to provide as minimal information as necessary to call the function.
 
-> [!TIP]
-> Only mark parameters as required if they are _actually_ required. This helps the model call functions more quickly and accurately.
+    > [!TIP]
+    > Only mark parameters as required if they are _actually_ required. This helps the model call functions more quickly and accurately.
 
-#### Function descriptions
+- Function descriptions
 
-Function descriptions are optional but can help the model generate more accurate responses. In particular, descriptions can tell the model what to expect from the response since the return type is not serialized in the schema.
+    Function descriptions are optional but can help the model generate more accurate responses. In particular, descriptions can tell the model what to expect from the response since the return type is not serialized in the schema.
 
-If the model is using functions improperly, you can also add descriptions to provide examples and guidance. For example, in the `get_pizza_from_cart` function, the description tells the user to use this function instead of relying on previous messages. This is important because the cart may have changed since the last message.
+    If the model is using functions improperly, you can also add descriptions to provide examples and guidance. For example, in the `get_pizza_from_cart` function, the description tells the user to use this function instead of relying on previous messages. This is important because the cart may have changed since the last message.
 
-> [!TIP]
-> Before adding a description, ask yourself if the model _needs_ this information to generate a response. If not, consider leaving it out to reduce verbosity. You can always add descriptions later if the model is struggling to use the function properly.
+    > [!TIP]
+    > Before adding a description, ask yourself if the model _needs_ this information to generate a response. If not, consider leaving it out to reduce verbosity. You can always add descriptions later if the model is struggling to use the function properly.
 
-#### Plugin name
-As you can see in the serialized functions, each function has a `name` property. Semantic Kernel uses the plugin name to namespace the functions. This is important because it allows you to have multiple plugins with functions of the same name. For example, you may have plugins for multiple search services, each with their own `search` function. By namespacing the functions, you can avoid conflicts and make it easier for the model to understand which function to call.
+- Plugin name
+    As you can see in the serialized functions, each function has a `name` property. Semantic Kernel uses the plugin name to namespace the functions. This is important because it allows you to have multiple plugins with functions of the same name. For example, you may have plugins for multiple search services, each with their own `search` function. By namespacing the functions, you can avoid conflicts and make it easier for the model to understand which function to call.
 
-Knowing this, you should choose a plugin name that is unique and descriptive. In the above example, the plugin name is `OrderPizza`. This makes it clear that the functions are related to ordering pizza.
+    Knowing this, you should choose a plugin name that is unique and descriptive. In the above example, the plugin name is `OrderPizza`. This makes it clear that the functions are related to ordering pizza.
 
-> [!TIP]
-> When choosing a plugin name, we recommend removing superfluous words like "plugin" or "service". This helps reduce verbosity and makes the plugin name easier to understand for the model.
+    > [!TIP]
+    > When choosing a plugin name, we recommend removing superfluous words like "plugin" or "service". This helps reduce verbosity and makes the plugin name easier to understand for the model.
 
 ### 2. Sending the messages and functions to the model
 
@@ -401,7 +401,7 @@ Notice that the result is a JSON string that the model then needs to process. As
 > [!TIP]
 > Be as succinct as possible with your returns. Where possible, only return the information the model needs or summarize the information using another LLM prompt before returning it.
 
-### 7. Repeat steps 2-6
+### Repeat steps 2-6
 
 After the result is returned to the model, the process repeats. The model processes the latest chat history and generates a response. In this case, the model might ask the user if they want to add another pizza to their cart or if they want to check out.
 
@@ -410,16 +410,6 @@ After the result is returned to the model, the process repeats. The model proces
 In the above example, we demonstrated how an LLM can call a single function. Often this can be slow if you need to call multiple functions in sequence. To speed up the process, several LLMs support parallel function calls. This allows the LLM to call multiple functions at once, speeding up the process.
 
 For example, if a user wants to order multiple pizzas, the LLM can call the `add_pizza_to_cart` function for each pizza at the same time. This can significantly reduce the number of round trips to the LLM and speed up the ordering process.
-
-## Frequently asked questions
-
-As a relatively new feature, function calling can be complex to understand. Here are some frequently asked questions to help you get started:
-
-| Question | Answer |
-|---|---|
-| **How do I know when to use function calling?** | Function calling is best used you need the AI agent to decide which function to invoke to address a user's need. Avoid using function calling (or use [simulated function calling](./chat-history.md#simulating-function-calls)) if you already know what function should be invoked |
-| **Does this require multiple round trips to the LLM? Isn't this slow and expensive?** | Yes, function calling does require a round trip to the LLM for each function call. While this was previously slow, advancements in LLMs have made this process much faster. It's still important to keep the schema and responses as simple as possible to reduce the number of tokens required. We also recommend providing user feedback to indicate that a function is being called to set expectations. |
-| **Can I use function calling with other AI services?** | Yes, you can use function calling with any AI service that supports it. Most large models (e.g., OpenAI, Gemini, Mistral, and Claude) all support function calling. Support for local models, however, is limited due to their reduced planning capabilities. Check the documentation for the specific AI service to see if it supports function calling. | 
 
 ## Next steps
 

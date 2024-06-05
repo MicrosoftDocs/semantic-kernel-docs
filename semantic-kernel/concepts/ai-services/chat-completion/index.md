@@ -68,6 +68,8 @@ dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
 
 ## Creating chat completion services
 
+Now that you've installed the necessary packages, you can create chat completion services. Below are the several ways you can create chat completion services using Semantic Kernel.
+
 ### Adding directly to the kernel
 To add a chat completion service, you can use the following code to add it to the kernel's inner service provider.
 
