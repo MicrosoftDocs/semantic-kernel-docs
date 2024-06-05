@@ -63,7 +63,10 @@ Supporting function calling without Semantic Kernel is relatively complex. You w
 
 In Semantic Kernel, we make it easy to use function calling by automating this loop for you. This allows you to focus on building the plugins needed to solve your user's needs.
 
-## Using automatic function calling in Semantic Kernel
+> [!NOTE]
+> Understanding how the function calling loop works is essential for building performant and reliable AI agents. For an in-depth look at how the loop works, see the [function calling](./ai-services/chat-completion/function-calling.md) article.
+
+## Using automatic function calling
 
 To use automatic function calling in Semantic Kernel, you need to do the following:
 1. Register the plugin with the kernel
@@ -116,11 +119,14 @@ do {
 
 When you use automatic function calling, all of the steps in the automatic planning loop are handled for you and added to the `ChatHistory` object. After the function calling loop is complete, you can inspect the `ChatHistory` object to see all of the function calls made and results provided by Semantic Kernel.
 
-## What about the Stepwise and Handlebars planners?
+## What about the Function Calling Stepwise and Handlebars planners?
 
 The Stepwise and Handlebars planners are still available in Semantic Kernel. However, we recommend using function calling for most tasks as it is more powerful and easier to use. Both the Stepwise and Handlebars planners will be deprecated in a future release of Semantic Kernel.
 
 Before we deprecate these planners, we will provide guidance on how to migrate your existing planners to function calling. If you have any questions about this process, please reach out to us on the [discussions board](https://github.com/microsoft/semantic-kernel/discussions) in the Semantic Kernel GitHub repository.
+
+> [!CAUTION]
+> If you are building a new AI agent, we recommend that you _not_ use the Stepwise or Handlebars planners. Instead, use function calling as it is more powerful and easier to use.
 
 ## Next steps
 Now that you understand how planners work in Semantic Kernel, you can learn more about how influence your AI agent so that they best plan and execute tasks on behalf of your users.

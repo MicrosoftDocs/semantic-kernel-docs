@@ -404,7 +404,7 @@ For example, if a user wants to order multiple pizzas, the LLM can call the `add
 
 ## Next steps
 
-Now that you understand how function calling works, you can learn more about how you can use it to enable [planning](../../planning.md) in your AI agents.
+Now that you understand how function calling works, you can now learn how to actually use function calling in Semantic Kernel by referring to the [planning article](../../planning.md)
 
 > [!div class="nextstepaction"]
 > [Learn more about planning](../../planning.md)
