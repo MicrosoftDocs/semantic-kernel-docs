@@ -116,7 +116,7 @@ kernelBuilder.Plugins.AddFromType<OrderPizzaPlugin>("OrderPizza");
 Kernel kernel = kernelBuilder.Build();
 ```
 
-### 1. Serializing the functions
+### 1) Serializing the functions
 
 When you create a kernel with the `OrderPizzaPlugin`, the kernel will automatically serialize the functions and their parameters. This is necessary so that the model can understand the functions and their inputs.
 
@@ -261,7 +261,7 @@ There's a few things to note here which can impact both the performance and the 
     > [!TIP]
     > When choosing a plugin name, we recommend removing superfluous words like "plugin" or "service". This helps reduce verbosity and makes the plugin name easier to understand for the model.
 
-### 2. Sending the messages and functions to the model
+### 2) Sending the messages and functions to the model
 
 Once the functions are serialized, they are sent to the model along with the current chat history. This allows the model to understand the context of the conversation and the available functions.
 
@@ -282,7 +282,7 @@ ChatResponse response = await chatCompletion.GetChatMessageContentAsync(
     kernel: kernel)
 ```
 
-### 3. Model processes the input
+### 3) Model processes the input
 
 With both the chat history and the serialized functions, the model can determine the best way to respond. In this case, the model recognizes that the user wants to order a pizza. The model would likely _want_ to call the `add_pizza_to_cart` function, but because we specified the size and toppings as required parameters, the model will ask the user for this information:
 
@@ -328,7 +328,7 @@ Now that the model has the necessary information, it can now call the `add_pizza
 > [!IMPORTANT]
 > This step is what makes function calling so powerful. Previously, AI app developers had to create separate processes to extract intent and slot fill functions. With function calling, the model can decide _when_ to call a function and _what_ information to provide. 
 
-### 4. Handle the response
+### 4) Handle the response
 
 When Semantic Kernel receives the response from the model, it checks if the response is a function call. If it is, Semantic Kernel extracts the function name and its parameters. In this case, the function name is `OrderPizzaPlugin-add_pizza_to_cart`, and the arguments are the size and toppings of the pizza.
 
@@ -356,7 +356,7 @@ chatHistory.Add(
 );
 ```
 
-### 5. Invoke the function
+### 5) Invoke the function
 
 Once Semantic Kernel has the correct types, it can finally invoke the `add_pizza_to_cart` function. Because the plugin uses dependency injection, the function can interact with external services like `pizzaService` and `userContext` to add the pizza to the user's cart.
 
@@ -365,7 +365,7 @@ Not all functions will succeed, however. If the function fails, Semantic Kernel 
 > [!TIP]
 > To ensure a model can self-correct, it's important to provide error messages that clearly communicate what went wrong and how to fix it. This can help the model retry the function call with the correct information.
 
-### 6. Return the function result
+### 6) Return the function result
 
 After the function has been invoked, the function result is sent back to the model as part of the chat history. This allows the model to understand the context of the conversation and generate a subsequent response.
 
