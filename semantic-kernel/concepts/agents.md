@@ -30,7 +30,7 @@ ms.custom: build-2023, build-2023-dataai
 ## Building your first agent
 
 :::row:::
-    :::column span="3"::: 
+    :::column span="1"::: 
         An agent is made up of three core building blocks that harmoniously work together to complete tasks for you.
     :::column-end:::
     :::column span="3":::
