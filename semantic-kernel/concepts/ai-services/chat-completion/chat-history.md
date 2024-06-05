@@ -74,11 +74,13 @@ chatHistory.Add(
 );
 ```
 
+## Simulating function calls
+
 In addition to user, assistant, and system roles, you can also add messages from the tool role to simulate function calls. This is useful for teaching the AI how to use plugins and to provide additional context to the conversation.
 
 For example, to inject information about the current user in the chat history without requiring the user to provide the information or having the LLM waste time asking for it, you can use the tool role to provide the information directly.
 
-Below is an example of how we're able to provide user allergies to the assistant by simulating a function call to the `UserPlugin` plugin.
+Below is an example of how we're able to provide user allergies to the assistant by simulating a function call to the `User` plugin.
 
 > [!TIP]
 > Simulated function calls is particularly helpful for providing details about the current user(s). Today's LLMs have been trained to be particularly sensitive to user information. Even if you provide user details in a system message, the LLM may still choose to ignore it. If you provide it via a user message, or tool message, the LLM is more likely to use it.
@@ -91,13 +93,13 @@ chatHistory.Add(
         Items = [
             new FunctionCallContent(
                 functionName: "get_user_allergies",
-                pluginName: "UserPlugin",
+                pluginName: "User",
                 id: "0001",
                 arguments: new () { {"username", "laimonisdumins"} }
-            )
+            ),
             new FunctionCallContent(
                 functionName: "get_user_allergies",
-                pluginName: "UserPlugin",
+                pluginName: "User",
                 id: "0002",
                 arguments: new () { {"username", "emavargova"} }
             )
@@ -112,7 +114,7 @@ chatHistory.Add(
         Items = [
             new FunctionResultContent(
                 functionName: "get_user_allergies",
-                pluginName: "UserPlugin",
+                pluginName: "User",
                 id: "0001",
                 result: "{ \"allergies\": [\"peanuts\", \"gluten\"] }"
             )
@@ -125,7 +127,7 @@ chatHistory.Add(
         Items = [
             new FunctionResultContent(
                 functionName: "get_user_allergies",
-                pluginName: "UserPlugin",
+                pluginName: "User",
                 id: "0002",
                 result: "{ \"allergies\": [\"dairy\", \"soy\"] }"
             )
@@ -155,7 +157,10 @@ ChatHistory chatHistory = [
 int currentChatHistoryLength = chatHistory.Count;
 
 // Get the chat message content
-ChatMessageContent results = await chatCompletionService.GetChatMessageContentAsync(chatHistory, kernel: kernel);
+ChatMessageContent results = await chatCompletionService.GetChatMessageContentAsync(
+    chatHistory,
+    kernel: kernel
+);
 
 // Get the new messages added to the chat history object
 for (int i = currentChatHistoryLength; i < chatHistory.Count; i++)
