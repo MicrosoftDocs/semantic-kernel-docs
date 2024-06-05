@@ -28,7 +28,7 @@ This is extremely powerful, because it means you as a developer have a single pl
 Throughout this entire process, you can create events and middleware that are triggered at each of these steps. This means you can perform actions like logging, provide status updates to users, and most importantly responsible AI. All from a single place.
 
 ## Build a kernel with services and plugins
-Before building a kernel, you should first understand the two types of components that exist within a kernel:
+Before building a kernel, you should first understand the two types of components that exist:
 
 | | Components | Description |
 |---|---|---|
