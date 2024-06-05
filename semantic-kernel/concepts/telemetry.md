@@ -1,5 +1,5 @@
 ---
-title: Semantic Kernel Enterprise Readiness
+title: Semantic Kernel Telemetry
 description: Learn about enterprise readiness in Semantic Kernel.
 author: sophialagerkranspandey
 ms.topic: conceptual
@@ -8,6 +8,6 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-# Enterprise Readiness
+# What is Telemetry?
 
 When using Semantic Kernel in your enterprise, there are key 
