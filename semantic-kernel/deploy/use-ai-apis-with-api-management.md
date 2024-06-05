@@ -75,7 +75,7 @@ You've now created and initially setup your Azure OpenAI API with Azure API Mana
 ## Configure authentication for your new API
 By default, your new Azure API Management service uses subscriptions to control access to your APIs, but this would be functionally equivalent to giving your users direct access to your API keys. So instead, we'll demonstrate how to setup OAuth 2.0 to control access to your Azure OpenAI APIs.
 
-2. Configure OAuth 2.0 by folloing the steps in the [protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](/azure/api-management/api-management-howto-protect-backend-with-aad#register-an-application-in-azure-ad-to-represent-the-api) article. Once you're done with these steps you'll have an Azure AD application with the necessary scopes.
+2. Configure OAuth 2.0 by following the steps in the [protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](/azure/api-management/api-management-howto-protect-backend-with-aad#register-an-application-in-azure-ad-to-represent-the-api) article. Once you're done with these steps you'll have an Azure AD application with the necessary scopes.
 
 3. Next, [configure a JWT validation policy to pre-authorize requests](/azure/api-management/api-management-howto-protect-backend-with-aad#configure-a-jwt-validation-policy-to-pre-authorize-requests). This will ensure that only users with the correct permissions can access your API and underlying Azure OpenAI API. 
 
