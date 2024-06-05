@@ -31,13 +31,14 @@ ms.custom: build-2023, build-2023-dataai
 
 :::row:::
     :::column span="3"::: 
-        An agent is made up of three core building blocks that harmoniously work together to complete tasks for you. Let’s take a closer look by building a copilot that helps you write and send an email.
+        An agent is made up of three core building blocks that harmoniously work together to complete tasks for you.
     :::column-end:::
     :::column span="3":::
         ![Building Blocks of an Agent](../media/building-blocks.png)
     :::column-end:::
 :::row-end:::
 
+Let’s take a closer look by building a copilot that helps you write and send an email.
 
  
 ### A copilot to write and send emails
