@@ -13,6 +13,8 @@ ms.service: semantic-kernel
 Filters enhance security by providing control and visibility over how and when functions run. This is needed to instill responsible AI principles into your work so that you feel confident your solution is enterprise ready.
  
 For example, filters are leveraged to validate permissions before an approval flow begins. The IFunctionInvocationFilter is run to check the permissions of the person that’s looking to submit an approval. This means that only a select group of people will be able to kick off the process.
+
+A good example of filters is provided [here](https://devblogs.microsoft.com/semantic-kernel/filters-in-semantic-kernel/) in our detailed Semantic Kernel blog post on Filters.
  
  ![Semantic Kernel Filters](../media/WhatAreFilters.png)
 
