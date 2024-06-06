@@ -60,8 +60,9 @@ builder.AddOpenTelemetry(options =>
 builder.AddFilter("Microsoft", LogLevel.Warning);
 builder.AddFilter("Microsoft.SemanticKernel", LogLevel.Critical);
 builder.AddFilter("Microsoft.SemanticKernel.Reliability", LogLevel.Information);
-Read more at: https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/logs/customizing-the-sdk/README.md
 ```
+
+Read more at: https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/logs/customizing-the-sdk/README.md
 
 # Metering
 Metering is implemented with Meter class from System.Diagnostics.Metrics namespace.
@@ -87,7 +88,6 @@ Measurements will be associated with tags that will allow data to be categorized
 TagList tags = new() { { "semantic_kernel.function.name", this.Name } };
 s_invocationDuration.Record(duration.TotalSeconds, in tags);
 ```
-Examples
 Depending on monitoring tool, there are different ways how to subscribe to available meters. Following example shows how to subscribe to available meters and export metrics to Application Insights using OpenTelemetry.Sdk:
 
 ```csharp
@@ -105,8 +105,8 @@ Tracing is implemented with Activity class from System.Diagnostics namespace.
 
 Available activity sources:
 
-Microsoft.SemanticKernel.Planning - creates activities for all planners.
-Microsoft.SemanticKernel - creates activities for KernelFunction as well as requests to models.
+- Microsoft.SemanticKernel.Planning - creates activities for all planners. 
+- Microsoft.SemanticKernel - creates activities for KernelFunction as well as requests to models.
 
 Examples
 
@@ -117,8 +117,8 @@ using var traceProvider = Sdk.CreateTracerProviderBuilder()
   .AddSource("Microsoft.SemanticKernel*")
   .AddAzureMonitorTraceExporter(options => options.ConnectionString = connectionString)
   .Build();
+  ```
 Read more at: https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/trace/customizing-the-sdk/README.md
-```
 
 # Additional Learning
 For more information, please refer to the following articles:
@@ -132,7 +132,7 @@ For more information, please refer to the following articles:
 7. [Customizing OpenTelemetry .NET SDK for Logs](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/logs/customizing-the-sdk/README.md)
 
 # Open Telemetry
-Semantic Kernel is also committed to provide the best developer experience while complying with the industry standards for observability. For more information, please review ADR.
+Semantic Kernel is also committed to provide the best developer experience while complying with the industry standards for observability. For more information, please review [ADR](https://github.com/microsoft/semantic-kernel/blob/main/docs/decisions/0044-OTel-semantic-convention.md).
 
 The OTel GenAI semantic conventions are experimental. There are two options to enable the feature:
 
@@ -143,6 +143,7 @@ The OTel GenAI semantic conventions are experimental. There are two options to e
 2. Environment variable
     - SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS
     - SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE
+
 Enabling the collection of sensitive data including prompts and responses will implicitly enable the feature.
 
 # Enterprise Readiness
