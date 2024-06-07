@@ -46,7 +46,7 @@ var kernel = new KernelBuilder().WithLoggerFactory(loggerFactory);
 ```
 All kernel functions and planners will be instrumented. It includes logs, metering and tracing.
 
-# Log Filtering Configuration
+## Log filtering configuration
 Log filtering configuration has been refined to strike a balance between visibility and relevance:
 
 ```csharp
@@ -64,7 +64,7 @@ builder.AddFilter("Microsoft.SemanticKernel.Reliability", LogLevel.Information);
 
 Read more at: https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/logs/customizing-the-sdk/README.md
 
-# Metering
+## Metering
 Metering is implemented with Meter class from System.Diagnostics.Metrics namespace.
 
 Available meters:
@@ -100,7 +100,7 @@ Read more at: [https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentel
 
 Read more at: [https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/metrics/customizing-the-sdk/README.md](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/metrics/customizing-the-sdk/README.md)
 
-# Tracing
+## Tracing
 Tracing is implemented with Activity class from System.Diagnostics namespace.
 
 Available activity sources:
@@ -120,7 +120,7 @@ using var traceProvider = Sdk.CreateTracerProviderBuilder()
   ```
 Read more at: https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/trace/customizing-the-sdk/README.md
 
-# Additional Learning
+## Additional Learning
 For more information, please refer to the following articles:
 
 1. [Observability](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel)
@@ -131,7 +131,7 @@ For more information, please refer to the following articles:
 6. [Customizing OpenTelemetry .NET SDK for Metrics](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/metrics/customizing-the-sdk/README.md)
 7. [Customizing OpenTelemetry .NET SDK for Logs](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/logs/customizing-the-sdk/README.md)
 
-# Open Telemetry
+## Open Telemetry
 Semantic Kernel is also committed to provide the best developer experience while complying with the industry standards for observability. For more information, please review [ADR](https://github.com/microsoft/semantic-kernel/blob/main/docs/decisions/0044-OTel-semantic-convention.md).
 
 The OTel GenAI semantic conventions are experimental. There are two options to enable the feature:
@@ -146,5 +146,5 @@ The OTel GenAI semantic conventions are experimental. There are two options to e
 
 Enabling the collection of sensitive data including prompts and responses will implicitly enable the feature.
 
-# Enterprise Readiness
+## Enterprise Readiness
 When using Semantic Kernel telemetry in your enterprise, ensure that the data you're using is adhering to proper data storage. 
