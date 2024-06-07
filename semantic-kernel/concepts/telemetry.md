@@ -14,9 +14,9 @@ Telemetry in Semantic Kernel (SK) .NET implementation includes logging, metering
 Code example using Application Insights can be found [here](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Demos/TelemetryWithAppInsights).
 
 # Logging
-The logging mechanism in this project relies on the ILogger interface from the Microsoft.Extensions.Logging namespace. Recent updates have introduced enhancements to the logger creation process. Instead of directly using the ILogger interface, instances of ILogger are now recommended to be created through an ILoggerFactory provided to components using the WithLoggerFactory method.
+The logging mechanism in this project relies on the ILogger interface from the Microsoft.Extensions.Logging namespace. Recent updates have introduced enhancements to the logger creation process. Instead of directly using the ILogger interface, instances of ILogger are now recommended to be created through an ILoggerFactory configured through a ServiceCollection.
 
-By employing the WithLoggerFactory approach, logger instances are generated with precise type information, facilitating more accurate logging and streamlined control over log filtering across various classes.
+By employing the ILoggerFactory approach, logger instances are generated with precise type information, facilitating more accurate logging and streamlined control over log filtering across various classes.
 
 Log levels used in SK:
 
