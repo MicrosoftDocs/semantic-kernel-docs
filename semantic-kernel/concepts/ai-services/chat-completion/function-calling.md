@@ -22,7 +22,7 @@ When you make a request to a model with function calling enabled, Semantic Kerne
 
 The following diagram illustrates the process of function calling:
 
-// TODO: Add diagram
+![Semantic Kernel function calling](../../../media/FunctionCalling.png)
 
 The following section will use a concrete example to illustrate how function calling works in practice.
 
