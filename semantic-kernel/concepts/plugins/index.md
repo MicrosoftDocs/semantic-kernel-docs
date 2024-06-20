@@ -17,7 +17,7 @@ ms.service: semantic-kernel
     Behind the scenes, Semantic Kernel leverages [function calling](https://platform.openai.com/docs/guides/function-calling), a native feature of most of the latest LLMs to allow LLMs, to perform [planning](./planning.md) and to invoke your APIs. With function calling, LLMs can request (i.e., call) a particular function. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the LLM can generate a final response.
    :::column-end:::
    :::column span="1":::
-        ![Semantic Kernel Plugin](../../media/Designed-for-modular-extensibility.png)
+        ![Semantic Kernel Plugin](../../media/designed-for-modular-extensibility-vertical.png)
    :::column-end:::
 :::row-end:::
 
