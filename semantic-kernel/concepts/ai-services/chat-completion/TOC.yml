@@ -1,0 +1,6 @@
+- name: Overview
+  href: index.md
+- name: Chat history
+  href: chat-history.md
+- name: Function calling
+  href: function-calling.md
