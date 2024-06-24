@@ -559,6 +559,7 @@ from semantic_kernel.connectors.ai.chat_completion_client_base import ChatComple
 
 chat_completion_service = kernel.get_service(type=ChatCompletionClientBase)
 ```
+::: zone-end
 
 ## Next steps
 

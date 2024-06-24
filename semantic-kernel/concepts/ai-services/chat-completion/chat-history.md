@@ -51,9 +51,6 @@ chat_history.add_user_message("I'd like to have the first option, please.")
 
 The easiest way to add messages to a chat history object is to use the methods above. However, you can also add messages manually by creating a new `ChatMessage` object. This allows you to provide additional information, like names and images content.
 
-> [!NOTE]
-> For more details about sending multi-modal messages to the AI, see the [Multi-modal messages](./multi-modal-messages.md) topic.
-
 ::: zone pivot="programming-language-csharp"
 ```csharp
 using Microsoft.SemanticKernel.ChatCompletion;

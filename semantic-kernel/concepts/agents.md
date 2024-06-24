@@ -417,6 +417,3 @@ Now that you've built your first agent, you can now deep dive into the different
 | [Plugins](./plugins/index.md)               | Integrate native code and APIs with Semantic Kernel        |
 | [Planners](./planning.md)                   | Enabling your AI agents to complete multi-step tasks       |
 | [Personas](./personas.md)                   | Customize your AI agents to better collaborate with others |
-| [Telemetry](./telemetry.md)                 | Monitoring and logging for performance and usage metrics   |
-| [Hooks and filters](./hooks-and-filters.md) | Middleware components for extending functionality          |
-| [Prompts](./prompts.md)                     | Templates and examples for creating effective prompts      |
