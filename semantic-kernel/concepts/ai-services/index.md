@@ -31,4 +31,4 @@ Within Semantic Kernel, there are interfaces for the most popular AI tasks. In t
 To learn more about each of the services, please refer to the specific articles for each service type. In each of the articles we provide sample code for adding the service to the kernel across multiple AI service providers.
 
 > [!div class="nextstepaction"]
-> [Learn about chat completion](./chat-completion.md)
+> [Learn about chat completion](./chat-completion/index.md)

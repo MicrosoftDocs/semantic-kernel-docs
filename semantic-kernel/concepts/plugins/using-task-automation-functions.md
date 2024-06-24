@@ -57,8 +57,6 @@ Now, whenever the AI agent tries to create an order using the `DynamicsPlugin`, 
 > [!TIP]
 > Whenever a function is cancelled or fails, you should provide the AI agent with a meaningful error message so it can respond appropriately. For example, if we didn't let the AI agent know that the order creation was not approved, it would assume that the order failed due to a technical issue and would try to create the order again.
 
-To learn more about hooks and filters, see the [hooks and filters article](../hooks-and-filters.md).
-
 ## Next steps
 
 Now that you've learned how to allow agents to automate tasks, you can learn how to allow agents to automatically create plans to address user needs.

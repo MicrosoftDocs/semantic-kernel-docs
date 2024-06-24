@@ -23,7 +23,7 @@ Take for example the Logic Apps workflows used by the Semantic Kernel team to an
 - **Get build and test failures** – to retrieve the build and test failures for a given GitHub action run
 - **Get log file** – to retrieve the log file for a given GitHub action run
 
-Leveraging Logic Apps for Semantic Kernel plugins is also a great way to take advantage of the over [1,400 connectors available in Logic Apps](https://learn.microsoft.com/en-us/connectors/connector-reference/connector-reference-logicapps-connectors). This means you can easily connect to a wide variety of services and systems without writing any code.
+Leveraging Logic Apps for Semantic Kernel plugins is also a great way to take advantage of the over [1,400 connectors available in Logic Apps](/connectors/connector-reference/connector-reference-logicapps-connectors). This means you can easily connect to a wide variety of services and systems without writing any code.
 
 > [!IMPORTANT]
 > Today, you can only add standard Logic Apps (also known as single-tenant Logic Apps) as plugins. Consumption Logic Apps are coming soon.

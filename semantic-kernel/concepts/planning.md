@@ -2,6 +2,7 @@
 title: What are Planners in Semantic Kernel
 description: Learn what a planner is in Semantic Kernel.
 author: sophialagerkranspandey
+zone_pivot_groups: programming-languages
 ms.topic: conceptual
 ms.author: sopand
 ms.date: 07/12/2023
