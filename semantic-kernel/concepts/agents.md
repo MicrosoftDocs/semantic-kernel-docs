@@ -2,6 +2,7 @@
 title: Building Agents with Semantic Kernel
 description: Learn about agents and how to build them with Semantic Kernel.
 author: sophialagerkranspandey
+zone_pivot_groups: programming-languages
 ms.topic: overview
 ms.author: sopand
 ms.date: 07/11/2023
@@ -60,7 +61,11 @@ To generate the above plan, the copilot first needs the capabilities necessary t
 
 In our example, we can build a simple plugin that sends emails using [native code](./plugins/adding-native-plugins.md). Our plugin just has a single function, `send_email`, that takes in the email address, subject, and body of the email. It would then use this information to send the email.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
+using System.ComponentModel;
+using Microsoft.SemanticKernel;
+
 public class EmailPlugin
 {
     [KernelFunction("send_email")]
@@ -78,17 +83,40 @@ public class EmailPlugin
     }
 }
 ```
+::: zone-end
+
+:: zone pivot="programming-language-python"
+```python
+from semantic_kernel.functions import kernel_function
+
+class EmailPlugin:
+    @kernel_function(
+        name="send_email",
+        description="Sends an email to a recipient."
+    )
+    async def send_email(self, recipient_emails: List[str], subject: str, body: str):
+        # Add logic to send an email using the recipient_emails, subject, and body
+        # For now, we'll just print out a success message to the console
+        print("Email sent!")
+```
+::: zone-end
 
 There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can automatically create a plugin using its [OpenAPI specification](./plugins/adding-openapi-plugins.md). To learn more about other ways to author plugins, see the [plugins section](./plugins/index.md).
 
 ### Planning: completing multi-step tasks
 To actually use this plugin (and to wire them up with other steps), the copilot would then need to generate a plan. This is where planning comes in. Planning comes from the built-in ability of LLMs to determine how to iteratively complete a task.
 
-In the past, special prompts were created by AI app developers to guide the AI in generating a plan that could be consumed by an SDK like Semantic Kernel. However, with the advent of LLMs, AIs can now generate plans directly from a conversation with a user with the aid of function calling.
+> [!NOTE]
+> In the past, special prompts were created by AI app developers to guide the AI in generating a plan that could be consumed by an SDK like Semantic Kernel. However, with the advent of LLMs, AIs can now generate plans directly from a conversation with a user with the aid of function calling.
 
-As a result, planning with AIs with Semantic Kernel is now as easy as invoking a chat completion service with auto function calling enabled.
+With built-in planning support form LLMs, using Semantic Kernel is now as easy as invoking a chat completion service with auto function calling enabled.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+
 // Create kernel with an email plugin
 var builder = Kernel.CreateBuilder();
 builder.Plugins.AddFromType<EmailPlugin>();
@@ -101,8 +129,15 @@ AzureOpenAIChatCompletionService chatCompletionService = new (
     endpoint: "YOUR_AZURE_ENDPOINT"
 );
 
+// Enable planning
+OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
+{
+    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+};
+
 // Create chat history
 var history = new ChatHistory();
+history.AddUserMessage("Can you help me write an email for my boss?");
 
 // Get the response from the AI
 var result = await chatCompletionService.GetChatMessageContentAsync(
@@ -111,6 +146,70 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
     kernel: kernel
 );
 ```
+::: zone-end
+
+:: zone pivot="programming-language-python"
+```python
+import asyncio
+
+from semantic_kernel import Kernel
+from semantic_kernel.functions import kernel_function
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+
+from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
+    AzureChatPromptExecutionSettings,
+)
+
+async def main():
+    # Initialize the kernel
+    kernel = Kernel()
+
+    # Add Azure OpenAI chat completion
+    kernel.add_service(AzureChatCompletion(
+        deployment_name="your_models_deployment_name",
+        api_key="your_api_key",
+        base_url="your_base_url",
+    ))
+
+    # Set the logging level for  semantic_kernel.kernel to DEBUG.
+    logging.basicConfig(
+        format="[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    logging.getLogger("kernel").setLevel(logging.DEBUG)
+
+    # Add a plugin (the LightsPlugin class is defined below)
+    kernel.add_plugin(
+        LightsPlugin(),
+        plugin_name="LightsPlugin",
+    )
+
+    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
+
+    # Enable planning
+    execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
+    execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
+
+    # Create a history of the conversation
+    history = ChatHistory()
+    history.add_user_message("Can you help me write an email for my boss?")
+    
+    result = (await chat_completion.get_chat_message_contents(
+        chat_history=history,
+        settings=execution_settings,
+        kernel=kernel,
+        arguments=KernelArguments(),
+    ))[0]
+
+# Run the main function
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+::: zone-end
 
 To learn more about planning with Semantic Kernel, see the [planning article](./planning.md).
 
@@ -123,6 +222,7 @@ For enterprise scenarios, however, you may want to provide more detailed instruc
 
 To provide a persona to your agent, simply pre-pend a system message to the chat history that describes the persona. The AI will then use this persona to guide its interactions with the user.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 // Create chat history
 ChatHistory chatMessages = new ChatHistory("""
@@ -131,6 +231,7 @@ ChatHistory chatMessages = new ChatHistory("""
     enough information for you to complete a task, you will keep asking questions until you have
     enough information to complete the task.
     """);
+chatMessages.AddUserMessage("Can you help me write an email for my boss?");
 
 // Get the response from the AI
 var result = await chatCompletionService.GetChatMessageContentAsync(
@@ -139,18 +240,39 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
     kernel: kernel
 );
 ```
+::: zone-end
+
+:: zone pivot="programming-language-python"
+```python
+# Create a history of the conversation
+history = ChatHistory("""
+    You are a friendly assistant who likes to follow the rules. You will complete required steps
+    and request approval before taking any consequential actions. If the user doesn't provide
+    enough information for you to complete a task, you will keep asking questions until you have
+    enough information to complete the task.
+    """)
+history.add_user_message("Can you help me write an email for my boss?")
+
+# Get the response from the AI
+result = (await chat_completion.get_chat_message_contents(
+    chat_history=history,
+    settings=execution_settings,
+    kernel=kernel,
+    arguments=KernelArguments(),
+))[0]
+```
 
 To learn more about authoring effective personas, refer to the [personas article](./personas.md).
 
 ## Putting the pieces together
 Now that we understand the core building blocks of an agent, we can now combine them together to build our first agent. To do so, we'll initialize our `Kernel` object with our plugins, planners, and persona. Afterwards, we'll use the `Kernel` object to generate a plan and then execute that plan.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 // Create the kernel
 var builder = Kernel.CreateBuilder();
 builder.Services.AddLogging(c => c.SetMinimumLevel(LogLevel.Trace).AddDebug());
 builder.Services.AddChatCompletionService(kernelSettings);
-builder.Plugins.AddFromType<AuthorEmailPlanner>();
 builder.Plugins.AddFromType<EmailPlugin>();
 Kernel kernel = builder.Build();
 
@@ -199,6 +321,70 @@ while (true)
     chatMessages.AddAssistantMessage(fullMessage);
 }
 ```
+::: zone-end
+
+:: zone pivot="programming-language-python"
+```python
+import asyncio
+
+from semantic_kernel import Kernel
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
+    AzureChatPromptExecutionSettings,
+)
+
+async def main():
+    # Initialize the kernel
+    kernel = Kernel()
+
+    # Add Azure OpenAI chat completion
+    kernel.add_service(AzureChatCompletion(
+        deployment_name="your_models_deployment_name",
+        api_key="your_api_key",
+        base_url="your_base_url",
+    ))
+
+    # Add a plugin (the LightsPlugin class is defined below)
+    kernel.add_plugin(
+        LightsPlugin(),
+        plugin_name="LightsPlugin",
+    )
+
+    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
+
+    # Enable planning
+    execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
+    execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
+
+    # Create a history of the conversation
+    history = ChatHistory()
+    
+    # Start the conversation
+    while True:
+        # Get user input
+        user_input = input("User > ")
+        history.add_user_message(user_input)
+
+        # Get the response from the AI
+        result = (await chat_completion.get_chat_message_contents(
+            chat_history=history,
+            settings=execution_settings,
+            kernel=kernel,
+            arguments=KernelArguments(),
+        ))[0]
+
+        # Print the response
+        print("Assistant > " + result)
+        history.add_assistant_message(result)
+
+# Run the main function
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+::: zone-end
 
 ## Trying out your agent
 Now that we've completed our program, we can give it a test run. Below is a sample conversation with our agent while using gpt-4 model.

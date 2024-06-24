@@ -152,6 +152,8 @@ do {
 
 ::: zone pivot="programming-language-python"
 ```python
+import asyncio
+
 from semantic_kernel import Kernel
 from semantic_kernel.functions import kernel_function
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
@@ -278,7 +280,6 @@ For this sample, we first started by importing the following packages:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using System.ComponentModel;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
