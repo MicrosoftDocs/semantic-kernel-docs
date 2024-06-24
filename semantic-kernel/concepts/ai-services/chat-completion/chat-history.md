@@ -17,7 +17,11 @@ The chat history object is used to maintain a record of messages in a chat sessi
 
 A chat history object is a list under the hood, making it easy to create and add messages to.
 
+::: zone pivot="programming-language-csharp"
+
 ```csharp
+using Microsoft.SemanticKernel.ChatCompletion;
+
 // Create a chat history object
 ChatHistory chatHistory = [];
 
@@ -27,6 +31,22 @@ chatHistory.AddAssistantMessage("We have pizza, pasta, and salad available to or
 chatHistory.AddUserMessage("I'd like to have the first option, please.");
 ```
 
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+```python
+# Create a chat history object
+chat_history = ChatHistory()
+
+chat_history.add_system_message("You are a helpful assistant.")
+chat_history.add_user_message("What's available to order?")
+chat_history.add_assistant_message("We have pizza, pasta, and salad available to order. What would you like to order?")
+chat_history.add_user_message("I'd like to have the first option, please.")
+```
+
+::: zone-end
+
 ## Adding richer messages to a chat history
 
 The easiest way to add messages to a chat history object is to use the methods above. However, you can also add messages manually by creating a new `ChatMessage` object. This allows you to provide additional information, like names and images content.
@@ -34,7 +54,10 @@ The easiest way to add messages to a chat history object is to use the methods a
 > [!NOTE]
 > For more details about sending multi-modal messages to the AI, see the [Multi-modal messages](./multi-modal-messages.md) topic.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
+using Microsoft.SemanticKernel.ChatCompletion;
+
 // Add system message
 chatHistory.Add(
     new() {
@@ -73,6 +96,53 @@ chatHistory.Add(
     }
 );
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.contents import ChatMessageContent, TextContent, ImageContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+
+# Add system message
+chat_history.add_message(
+    ChatMessage(
+        role=AuthorRole.System,
+        content="You are a helpful assistant"
+    )
+)
+
+# Add user message with an image
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.USER,
+        name="Laimonis Dumins",
+        items=[
+            TextContent(text="What available on this menu"),
+            ImageContent(uri="https://example.com/menu.jpg")
+        ]
+    )
+)
+
+# Add assistant message
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.ASSISTANT,
+        name="Restaurant Assistant",
+        content="We have pizza, pasta, and salad available to order. What would you like to order?"
+    )
+)
+
+# Add additional message from a different user
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.USER,
+        name="Ema Vargova",
+        content="I'd like to have the first option, please."
+    )
+)
+```
+::: zone-end
 
 ## Simulating function calls
 
@@ -85,6 +155,7 @@ Below is an example of how we're able to provide user allergies to the assistant
 > [!TIP]
 > Simulated function calls is particularly helpful for providing details about the current user(s). Today's LLMs have been trained to be particularly sensitive to user information. Even if you provide user details in a system message, the LLM may still choose to ignore it. If you provide it via a user message, or tool message, the LLM is more likely to use it.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 // Add a simulated function call from the assistant
 chatHistory.Add(
@@ -135,6 +206,59 @@ chatHistory.Add(
     }
 );
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from semantic_kernel.contents import ChatMessageContent, FunctionCallContent, FunctionResultContent
+
+# Add a simulated function call from the assistant
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.ASSISTANT,
+        items=[
+            FunctionCallContent(
+                name="get_user_allergies-User",
+                id="0001",
+                arguments=str({"username": "laimonisdumins"})
+            ),
+            FunctionCallContent(
+                name="get_user_allergies-User",
+                id="0002",
+                arguments=str({"username": "emavargova"})
+            )
+        ]
+    )
+)
+
+# Add a simulated function results from the tool role
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.TOOL,
+        items=[
+            FunctionResultContent(
+                name="get_user_allergies-User",
+                id="0001",
+                result="{ \"allergies\": [\"peanuts\", \"gluten\"] }"
+            )
+        ]
+    )
+)
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.TOOL,
+        items=[
+            FunctionResultContent(
+                name="get_user_allergies-User",
+                id="0002",
+                result="{ \"allergies\": [\"dairy\", \"gluten\"] }"
+            )
+        ]
+    )
+)
+```
+::: zone-end
+
 
 > [!IMPORTANT]
 > When simulating tool results, you must always provide the `id` of the function call that the result corresponds to. This is important for the AI to understand the context of the result. Some LLMs, like OpenAI, will throw an error if the `id` is missing or if the `id` does not correspond to a function call.
@@ -145,7 +269,10 @@ Whenever you pass a chat history object to a chat completion service with auto f
 
 You must still, however, add the final messages to the chat history object. Below is an example of how you can inspect the chat history object to see the function calls and results.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
+using Microsoft.SemanticKernel.ChatCompletion;
+
 ChatHistory chatHistory = [
     new() {
         Role = AuthorRole.User,
@@ -174,6 +301,41 @@ Console.WriteLine(results);
 // Add the final message to the chat history object
 chatHistory.Add(results);
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from semantic_kernel.contents import ChatMessageContent
+
+chat_history = ChatHistory([
+    ChatMessageContent(
+        role=AuthorRole.USER,
+        content="Please order me a pizza"
+    )
+])
+
+# Get the current length of the chat history object
+current_chat_history_length = len(chat_history)
+
+# Get the chat message content
+results = (await chat_completion.get_chat_message_contents(
+    chat_history=history,
+    settings=execution_settings,
+    kernel=kernel,
+    arguments=KernelArguments(),
+))[0]
+
+# Get the new messages added to the chat history object
+for i in range(current_chat_history_length, len(chat_history)):
+    print(chat_history[i])
+
+# Print the final message
+print(results)
+
+# Add the final message to the chat history object
+chat_history.add_message(results)
+```
+::: zone-end
 
 ## Next steps
 Now that you know how to create and manage a chat history object, you can learn more about function calling in the [Function calling](./function-calling.md) topic.
