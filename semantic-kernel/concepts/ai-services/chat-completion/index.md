@@ -561,6 +561,77 @@ chat_completion_service = kernel.get_service(type=ChatCompletionClientBase)
 ```
 ::: zone-end
 
+## Using chat completion services
+
+Now that you have a chat completion service, you can use it to generate responses from an AI agent. There are two main ways to use a chat completion service:
+- Non-streaming: You wait for the service to generate an entire response before returning it to the user.
+- Streaming: Individual chunks of the response are generated and returned to the user as they are created.
+
+Below are the two ways you can use a chat completion service to generate responses.
+
+### Non-streaming chat completion
+
+To use non-streaming chat completion, you can use the following code to generate a response from the AI agent.
+
+::: zone pivot="programming-language-csharp"
+```csharp
+ChatHistory history = [];
+history.AddUserMessage("Hello, how are you?");
+
+var response = await chatCompletionService.GetChatMessageContentAsync(
+    history,
+    kernel: kernel
+);
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+chat_history = ChatHistory()
+chat_history.add_user_message("Hello, how are you?")
+
+response = (await chat_completion.get_chat_message_contents(
+    chat_history=history,
+    kernel=kernel,
+))[0]
+```
+::: zone-end
+
+### Streaming chat completion
+
+To use streaming chat completion, you can use the following code to generate a response from the AI agent.
+
+::: zone pivot="programming-language-csharp"
+```csharp
+ChatHistory history = [];
+history.AddUserMessage("Hello, how are you?");
+
+var response = chatCompletionService.GetStreamingChatMessageContentsAsync(
+    chatHistory: history,
+    kernel: kernel
+);
+
+await foreach (var chunk in response)
+{
+    Console.Write(chunk);
+}
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+chat_history = ChatHistory()
+chat_history.add_user_message("Hello, how are you?")
+
+response = chat_completion.get_streaming_chat_message_contents(
+    chat_history=history,
+    kernel=kernel,
+)
+
+async for chunk in response:
+    print(chunk)
+```
+
 ## Next steps
 
 Now that you've added chat completion services to your Semantic Kernel project, you can start creating conversations with your AI agent. To learn more about using a chat completion service, check out the following articles:

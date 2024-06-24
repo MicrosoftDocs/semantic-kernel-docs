@@ -654,6 +654,36 @@
             "source_path": "semantic-kernel/prompts/templatizing-prompts.md",
             "redirect_url": "/semantic-kernel/overview/index",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/your-first-prompt.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/bibliography.md",
+            "redirect_url": "/semantic-kernel/support/glossary",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/code-of-conduct.md",
+            "redirect_url": "/semantic-kernel/get-started/contributing",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/faqs.md",
+            "redirect_url": "/semantic-kernel/support/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/mseriesmacbook.md",
+            "redirect_url": "/semantic-kernel/support/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/requirements.md",
+            "redirect_url": "/semantic-kernel/support/index",
+            "redirect_document_id": false
         }
     ]
 }

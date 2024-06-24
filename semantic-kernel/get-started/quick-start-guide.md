@@ -43,30 +43,6 @@ pip install semantic-kernel
 
 ::: zone-end
 
-::: zone pivot="programming-language-java"
-
-The `SemanticKernel` bom can be found on [maven](https://repo1.maven.org/maven2/com/microsoft/semantic-kernel/semantickernel-bom/). Using the package is as easy as adding the following to your _pom.xml_ file:
-
-```xml
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>com.microsoft.semantic-kernel</groupId>
-            <artifactId>semantickernel-bom</artifactId>
-            <version>${semantickernel.version}</version>
-            <scope>import</scope>
-            <type>pom</type>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-
-<dependency>
-    <groupId>com.microsoft.semantic-kernel</groupId>
-    <artifactId>semantickernel-api</artifactId>
-</dependency>
-```
-::: zone-end
-
 
 ::: zone pivot="programming-language-python,programming-language-csharp"
 ## Quickly get started with notebooks
@@ -253,10 +229,6 @@ To make it easier to get started building enterprise apps with Semantic Kernel, 
 ![Semantic Kernel Python map](../media/PythonMap.png)
 ::: zone-end
 
-::: zone pivot="programming-language-java"
-![Semantic Kernel Java map](../media/JavaMap.png)
-::: zone-end
-
 ::: zone pivot="programming-language-csharp"
 ![Semantic Kernel DotNET map](../media/DotNetMap.png)
 ::: zone-end
@@ -311,7 +283,7 @@ Afterwards, we add the most important part of a kernel: the AI services that you
 
 
 > [!Note]
-> In this example, we used Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md). If you need help creating a different service, refer to the [AI services article](../concepts/ai-services.md). There, you'll find guidance on how to use OpenAI or Azure OpenAI models as services.
+> In this example, we used Azure OpenAI, but you can use any other chat completion service. To see the full list of supported services, refer to the [supported languages article](./supported-languages.md). If you need help creating a different service, refer to the [AI services article](../concepts/ai-services/index.md). There, you'll find guidance on how to use OpenAI or Azure OpenAI models as services.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -515,7 +487,7 @@ kernel.add_plugin(
 
 ### 9) Planning
 
-Semantic Kernel leverages [function calling](../concepts/ai-services/chat-completion/function-calling.md)–a native feature of most  LLMs–to provide [planning](../concepts/planners.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
+Semantic Kernel leverages [function calling](../concepts/ai-services/chat-completion/function-calling.md)–a native feature of most  LLMs–to provide [planning](../concepts/planning.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
 
 To enable automatic function calling, we first need to create the appropriate execution settings so that Semantic Kernel knows to automatically invoke the functions in the kernel when the AI agent requests them.
 
@@ -537,7 +509,7 @@ execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions
 
 ### 10) Invoke
 
-Finally, we invoke the AI agent with the plugin. The sample code demonstrates how to generate a [non-streaming response](../concepts/ai-services/chat-completion.md#non-streaming-completion), but you can also generate a [streaming response](../concepts/ai-services/chat-completion.md#streaming-completion) by using the `GetStreamingChatMessageContentAsync` method.
+Finally, we invoke the AI agent with the plugin. The sample code demonstrates how to generate a [non-streaming response](../concepts/ai-services/chat-completion/index.md#non-streaming-chat-completion), but you can also generate a [streaming response](../concepts/ai-services/chat-completion/index.md#streaming-chat-completion) by using the `GetStreamingChatMessageContentAsync` method.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
