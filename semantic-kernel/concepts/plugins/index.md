@@ -244,6 +244,7 @@ kernel.add_plugin(
    plugin_name="Lights",
 )
 ```
+::: zone-end
 
 ### 3) Invoke the plugin's functions
 
