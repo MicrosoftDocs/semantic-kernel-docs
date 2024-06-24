@@ -34,7 +34,7 @@ For the full list of Nuget packages, please refer to the [supported languages ar
 ::: zone-end  
 
 
-:::zone pivot="programming-language-python"
+::: zone pivot="programming-language-python"
 
 Instructions for accessing the `SemanticKernel` Python package is available [here](https://pypi.org/project/semantic-kernel/). It's as easy as:
 
@@ -489,6 +489,7 @@ class LightsPlugin:
                 return light
         return None
 ```
+::: zone-end
 
 #### Add the plugin to the kernel
 
@@ -509,6 +510,7 @@ kernel.add_plugin(
     plugin_name="LightsPlugin",
 )
 ```
+::: zone-end
 
 ### 9) Planning
 
@@ -530,6 +532,7 @@ OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
 execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
 ```
+::: zone-end
 
 ### 10) Invoke
 
@@ -562,6 +565,7 @@ result = (await chat_completion.get_chat_message_contents(
     arguments=KernelArguments(),
 ))[0]
 ```
+::: zone-end
 
 ## Next steps
 
