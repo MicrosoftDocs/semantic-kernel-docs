@@ -1,0 +1,12 @@
+- name: Overview
+  href: index.md
+- name: Adding native plugins
+  href: adding-native-plugins.md
+- name: Adding OpenAPI plugins
+  href: adding-openapi-plugins.md
+- name: Adding Logic Apps as plugins
+  href: adding-logic-apps-as-plugins.md
+- name: Using data retrieval functions for RAG
+  href: using-data-retrieval-functions-for-rag.md
+- name: Using task automation functions
+  href: using-task-automation-functions.md
