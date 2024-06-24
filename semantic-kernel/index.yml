@@ -17,37 +17,37 @@ metadata:
 productDirectory:
     items:
     - title: Getting Started
-      imageSrc: /semantic-kernel/media/Getting-started.png
+      imageSrc: /semantic-kernel/media/Getting-started.svg
       links:
         - url: /semantic-kernel/introduction
           text: Introduction to Semantic Kernel
     - title: Concepts
-      imageSrc: /semantic-kernel/media/Concepts.png
+      imageSrc: /semantic-kernel/media/Concepts.svg
       links:
         - url: /semantic-kernel/concepts/
           text: Key Concepts to Learn
     - title: Quick Start
-      imageSrc: /semantic-kernel/media/Quick-start.png
+      imageSrc: /semantic-kernel/media/Quick-start.svg
       links:
         - url: /semantic-kernel/get-started/quick-start-guide
           text: Learn how to use Semantic Kernel
     - title: Tutorials
-      imageSrc: /semantic-kernel/media/Tutorials.png
+      imageSrc: /semantic-kernel/media/Tutorials.svg
       links:
          - url: /semantic-kernel/tutorials/
            text: In-depth tutorials
     - title: Integrations
-      imageSrc: /semantic-kernel/media/Integrations.png
+      imageSrc: /semantic-kernel/media/Integrations.svg
       links:
         - url: /semantic-kernel/integrations/
           text: Browse available features by language
     - title: Security
-      imageSrc: /semantic-kernel/media/Security.png
+      imageSrc: /semantic-kernel/media/Security.svg
       links:
         - url: /semantic-kernel/security/
           text: Key measures to ensure security
     - title: Community
-      imageSrc: /semantic-kernel/media/whats-new.png
+      imageSrc: /semantic-kernel/media/whats-new.svg
       links:
         - url: https://github.com/microsoft/semantic-kernel/discussions
           text: Get in touch with the community 

@@ -518,7 +518,7 @@
         {
             "source_path": "semantic-kernel/agents/index.md",
             "redirect_url": "/semantic-kernel/concepts/agents.md",
-            "redirect_document_id": true
+            "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/agents/kernel/adding-services.md",
