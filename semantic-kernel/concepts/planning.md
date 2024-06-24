@@ -73,6 +73,7 @@ To use automatic function calling in Semantic Kernel, you need to do the followi
 2. Create an execution settings object that tells the AI to automatically call functions
 3. Invoke the chat completion service with the chat history and the kernel
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
@@ -116,6 +117,77 @@ do {
     history.AddMessage(result.Role, result.Content ?? string.Empty);
 } while (userInput is not null)
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+import asyncio
+
+from semantic_kernel import Kernel
+from semantic_kernel.functions import kernel_function
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+
+from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
+    AzureChatPromptExecutionSettings,
+)
+
+async def main():
+    # 1. Create the kernel with the Lights plugin
+    kernel = Kernel()
+    kernel.add_service(AzureChatCompletion(
+        deployment_name="your_models_deployment_name",
+        api_key="your_api_key",
+        base_url="your_base_url",
+    ))
+    kernel.add_plugin(
+        LightsPlugin(),
+        plugin_name="Lights",
+    )
+
+    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
+
+    # 2. Enable automatic function calling
+    execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
+    execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
+
+    # Create a history of the conversation
+    history = ChatHistory()
+
+    userInput = None
+    while True:
+        # Collect user input
+        userInput = input("User > ")
+
+        # Terminate the loop if the user says "exit"
+        if userInput == "exit":
+            break
+
+        # Add user input to the history
+        history.add_user_message(userInput)
+
+        # 3. Get the response from the AI with automatic function calling
+        result = (await chat_completion.get_chat_message_contents(
+            chat_history=history,
+            settings=execution_settings,
+            kernel=kernel,
+            arguments=KernelArguments(),
+        ))[0]
+
+        # Print the results
+        print("Assistant > " + str(result))
+
+        # Add the message from the agent to the chat history
+        history.add_message(result)
+
+# Run the main function
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+::: zone-end
 
 When you use automatic function calling, all of the steps in the automatic planning loop are handled for you and added to the `ChatHistory` object. After the function calling loop is complete, you can inspect the `ChatHistory` object to see all of the function calls made and results provided by Semantic Kernel.
 
