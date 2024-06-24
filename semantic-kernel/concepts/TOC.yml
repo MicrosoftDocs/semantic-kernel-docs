@@ -10,9 +10,3 @@
   href: planning.md
 - name: Personas
   href: personas.md
-- name: Prompts
-  href: prompts.md
-- name: Telemetry
-  href: telemetry.md
-- name: Hooks and filters
-  href: hooks-and-filters.md
