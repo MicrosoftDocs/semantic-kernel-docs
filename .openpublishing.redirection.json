@@ -1,8 +1,4 @@
-{
-    "redirections": [
-        {
-            "source_path": "semantic-kernel/whatissk.md",
-            "redirect_url": "/semantic-kernel/overview/index",
+iew/index",
             "redirect_document_id": false
         },
         {
@@ -505,28 +501,14 @@
             "redirect_url": "/semantic-kernel/prompts/index",
             "redirect_document_id": false
         },
-       
         {
-            "source_path": "semantic-kernel/prompts/your-first-prompt.md",
-            "redirect_url": "/semantic-kernel/concepts/prompts",
+            "source_path": "semantic-kernel/prompt-engineering/your-first-prompt.md",
+            "redirect_url": "/semantic-kernel/prompts/your-first-prompt",
             "redirect_document_id": false
         },
-     
         {
-            "source_path": "semantic-kernel/prompts/index.md",
-            "redirect_url": "/semantic-kernel/concepts/prompts",
-            "redirect_document_id": false
-        },
-
-        {
-            "source_path": "semantic-kernel/prompts/templatizing-prompts.md",
-            "redirect_url": "/semantic-kernel/concepts/prompts",
-            "redirect_document_id": false
-        },
-        
-        {
-            "source_path": "semantic-kernel/chat-copilot/index.md",
-            "redirect_url": "/semantic-kernel/overview/index",
+            "source_path": "semantic-kernel/agents/plugins/openai-plugins.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/index",
             "redirect_document_id": false
         }
     ]
