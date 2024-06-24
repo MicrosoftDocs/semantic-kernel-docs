@@ -1,6 +1,7 @@
 ---
 title: Provide native code to your agents
 description: Learn how to add and invoke native code as plugins in Semantic Kernel.
+zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
 ms.topic: conceptual
 ms.author: sopand

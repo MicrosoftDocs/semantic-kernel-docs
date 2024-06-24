@@ -1,6 +1,7 @@
 ---
 title: Give agents access to OpenAPI APIs
 description: Learn how to add plugins from OpenAPI specifications to your agents in Semantic Kernel.
+zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
 ms.topic: conceptual
 ms.author: sopand
@@ -176,9 +177,10 @@ Since the AI agent can understand this specification, you can add it as a plugin
 
 With a few lines of code, you can add the OpenAPI plugin to your agent. The following code snippet shows how to add the light plugin from the OpenAPI specification above:
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 await kernel.ImportPluginFromOpenApiAsync(
-   pluginName: "light",
+   pluginName: "lights",
    uri: new Uri("https://example.com/v1/swagger.json"),
    executionParameters: new OpenApiFunctionExecutionParameters()
    {
@@ -189,6 +191,22 @@ await kernel.ImportPluginFromOpenApiAsync(
    }
 );
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+await kernel.add_plugin_from_openapi(
+   plugin_name="lights",
+   openapi_document_path="https://example.com/v1/swagger.json",
+   execution_settings=OpenAPIFunctionExecutionParameters(
+         # Determines whether payload parameter names are augmented with namespaces.
+         # Namespaces prevent naming conflicts by adding the parent parameter name
+         # as a prefix, separated by dots
+         enable_payload_namespacing=True,
+   ),
+)
+```
+::: zone-end
 
 Afterwards, you can use the plugin in your agent as if it were a native plugin.
 
