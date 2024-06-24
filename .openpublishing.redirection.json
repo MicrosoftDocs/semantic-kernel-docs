@@ -1,4 +1,8 @@
-iew/index",
+{
+    "redirections": [
+        {
+            "source_path": "semantic-kernel/whatissk.md",
+            "redirect_url": "/semantic-kernel/overview/index",
             "redirect_document_id": false
         },
         {
