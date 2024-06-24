@@ -542,3 +542,27 @@ chat_completion_service = OpenAIChatCompletion(
 ---
 
 ::: zone-end
+
+## Retrieving chat completion services
+
+Once you've added chat completion services to your kernel, you can retrieve them using the get service method. Below is an example of how you can retrieve a chat completion service from the kernel.
+
+::: zone pivot="programming-language-csharp"
+```csharp
+var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+
+chat_completion_service = kernel.get_service(type=ChatCompletionClientBase)
+```
+
+## Next steps
+
+Now that you've added chat completion services to your Semantic Kernel project, you can start creating conversations with your AI agent. To learn more about using a chat completion service, check out the following articles:
+
+- [Using the chat history object](./chat-history.md)
+- [Optimizing function calling with chat completion](./function-calling.md)

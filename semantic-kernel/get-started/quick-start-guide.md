@@ -266,7 +266,7 @@ In the following sections, we'll unpack the above sample by walking through step
 1. [Import packages](#1-import-packages)
 2. [Add AI services](#2-add-ai-services)
 3. [Enterprise components](#3-add-enterprise-services)
-4. [Build the kernel](#4-build-the-kernel)
+4. [Build the kernel](#4-build-the-kernel-and-retrieve-services)
 5. Add memory (skipped)
 6. [Add plugins](#6-add-plugins)
 7. Create kernel arguments (skipped)
@@ -328,7 +328,7 @@ kernel = Kernel()
 
 # Add Azure OpenAI chat completion
 kernel.add_service(AzureChatCompletion(
-    deployment_name="your_models_deployment
+    deployment_name="your_models_deployment_name",
     api_key="your_api_key",
     base_url="your_base_url",
 ))
@@ -358,7 +358,7 @@ logging.getLogger("kernel").setLevel(logging.DEBUG)
 ```
 ::: zone-end
 
-### 4) Build the kernel
+### 4) Build the kernel and retrieve services
 
 ::: zone pivot="programming-language-csharp"
 Once the services have been added, we then build the kernel and retrieve the chat completion service for later use.
@@ -374,15 +374,16 @@ var chatCompletionService = kernel.Services.GetRequiredService<IChatCompletionSe
 ::: zone pivot="programming-language-python"
 Once the kernel has been configured, we then retrieve the chat completion service for later use.
 
+> [!Note]
+> In Python, you don't need to explicitly build the kernel. Instead, you can access the services directly from the kernel object.
+
 ```python
 chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 ```
 ::: zone-end
 
 ### 6) Add plugins
-With plugins, can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions.
-
-In the above example, we added a plugin that allows the AI agent to interact with a light bulb. Below, we'll show you how to create this plugin.
+With plugins, can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions. In the above example, we added a plugin that allows the AI agent to interact with a light bulb. Below, we'll show you how to create this plugin.
 
 #### Create a native plugin
 
