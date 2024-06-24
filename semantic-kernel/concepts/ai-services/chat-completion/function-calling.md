@@ -203,6 +203,7 @@ kernel.add_service(AzureChatCompletion(model_id, endpoint, api_key))
 # Add the plugin to the kernel
 kernel.add_plugin(OrderPizzaPlugin(pizza_service, user_context, payment_service), plugin_name="OrderPizza")
 ```
+::: zone-end
 
 ### 1) Serializing the functions
 

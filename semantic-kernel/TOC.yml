@@ -8,8 +8,6 @@
   expanded: true
 - name: Integrations
   href: integrations/index.md
-- name: Use Cases
-  href: use-cases/TOC.yml
 - name: Getting Support
   href: support/TOC.yml
 - name: API Reference
