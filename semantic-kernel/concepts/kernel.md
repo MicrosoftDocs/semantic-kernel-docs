@@ -57,8 +57,8 @@ Kernel kernel = builder.Build();
 Import the necessary packages:
 
 ```python
-from microsoft_semantic_kernel import Kernel
-from microsoft_semantic_kernel.services import AzureOpenAIChatCompletion
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.core_plugins.time_plugin import TimePlugin
 ```
 
@@ -73,7 +73,7 @@ Finally, you can add the necessary services and plugins. Below is an example of 
 
 ```python
 # Add the Azure OpenAI chat completion service
-kernel.add_service(AzureOpenAIChatCompletion(model_id, endpoint, api_key))
+kernel.add_service(AzureChatCompletion(model_id, endpoint, api_key))
 
 # Add a plugin (the LightsPlugin class is defined below)
 kernel.add_plugin(

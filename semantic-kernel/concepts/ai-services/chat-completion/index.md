@@ -27,37 +27,37 @@ When picking out a chat completion model, you will need to consider the followin
 ## Installing the necessary packages
 Before adding chat completion to your kernel, you will need to install the necessary packages. Below are the packages you will need to install for each AI service provider.
 
-# [Azure OpenAI](#tab/AzureOpenAI)
+# [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
 ```
 
-# [OpenAI](#tab/OpenAI)
+# [OpenAI](#tab/csharp-OpenAI)
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
 ```
 
-# [Mistral](#tab/Mistral)
+# [Mistral](#tab/csharp-Mistral)
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
 ```
 
-# [Google](#tab/Google)
+# [Google](#tab/csharp-Google)
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.Google
 ```
 
-# [Hugging Face](#tab/HuggingFace)
+# [Hugging Face](#tab/csharp-HuggingFace)
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
 ```
 
-# [Other](#tab/other)
+# [Other](#tab/csharp-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the OpenAI chat completion connector.
 
 ```bash
@@ -73,7 +73,7 @@ Now that you've installed the necessary packages, you can create chat completion
 ### Adding directly to the kernel
 To add a chat completion service, you can use the following code to add it to the kernel's inner service provider.
 
-# [Azure OpenAI](#tab/AzureOpenAI)
+# [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
@@ -94,7 +94,7 @@ kernelBuilder.AddAzureOpenAIChatCompletion(
 Kernel kernel = kernelBuilder.Build();
 ```
 
-# [OpenAI](#tab/OpenAI)
+# [OpenAI](#tab/csharp-OpenAI)
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -110,7 +110,7 @@ kernelBuilder.AddOpenAIChatCompletion(
 Kernel kernel = kernelBuilder.Build();
 ```
 
-# [Mistral](#tab/Mistral)
+# [Mistral](#tab/csharp-Mistral)
 
 > [!IMPORTANT]
 > The Mistral chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -130,7 +130,7 @@ kernelBuilder.AddMistralChatCompletion(
 Kernel kernel = kernelBuilder.Build();
 ```
 
-# [Google](#tab/Google)
+# [Google](#tab/csharp-Google)
 
 > [!IMPORTANT]
 > The Google chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -151,7 +151,7 @@ kernelBuilder.AddGoogleAIGeminiChatCompletion(
 Kernel kernel = kernelBuilder.Build();
 ```
 
-# [Hugging Face](#tab/HuggingFace)
+# [Hugging Face](#tab/csharp-HuggingFace)
 
 > [!IMPORTANT]
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -171,7 +171,7 @@ kernelBuilder.AddHuggingFaceChatCompletion(
 Kernel kernel = kernelBuilder.Build();
 ```
 
-# [Other](#tab/other)
+# [Other](#tab/csharp-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 > [!IMPORTANT]
@@ -197,7 +197,7 @@ Kernel kernel = kernelBuilder.Build();
 ### Using dependency injection
 If you're using dependency injection, you'll likely want to add your AI services directly to the service provider. This is helpful if you want to create singletons of your AI services and reuse them in transient kernels.
 
-# [Azure OpenAI](#tab/AzureOpenAI)
+# [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -217,7 +217,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
-# [OpenAI](#tab/OpenAI)
+# [OpenAI](#tab/csharp-OpenAI)
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -236,7 +236,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
-# [Mistral](#tab/Mistral)
+# [Mistral](#tab/csharp-Mistral)
 
 > [!IMPORTANT]
 > The Mistral chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -259,7 +259,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
-# [Google](#tab/Google)
+# [Google](#tab/csharp-Google)
 
 > [!IMPORTANT]
 > The Google chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -283,7 +283,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
-# [Hugging Face](#tab/HuggingFace)
+# [Hugging Face](#tab/csharp-HuggingFace)
 
 > [!IMPORTANT]
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -307,7 +307,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
-# [Other](#tab/other)
+# [Other](#tab/csharp-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 > [!IMPORTANT]
@@ -338,7 +338,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 ### Creating standalone instances
 Lastly, you can create instances of the service directly so that you can either add them to a kernel later or use them directly in your code without ever injecting them into the kernel or in a service provider.
 
-# [Azure OpenAI](#tab/AzureOpenAI)
+# [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -352,7 +352,7 @@ AzureOpenAIChatCompletionService chatCompletionService = new (
 );
 ```
 
-# [OpenAI](#tab/OpenAI)
+# [OpenAI](#tab/csharp-OpenAI)
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -365,7 +365,7 @@ OpenAIChatCompletionService chatCompletionService = new (
 );
 ```
 
-# [Mistral](#tab/Mistral)
+# [Mistral](#tab/csharp-Mistral)
 
 > [!IMPORTANT]
 > The Mistral chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -382,7 +382,7 @@ MistralAIChatCompletionService chatCompletionService = new (
 );
 ```
 
-# [Google](#tab/Google)
+# [Google](#tab/csharp-Google)
 
 > [!IMPORTANT]
 > The Google chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -399,7 +399,7 @@ GoogleAIGeminiChatCompletionService chatCompletionService = new (
 );
 ```
 
-# [Hugging Face](#tab/HuggingFace)
+# [Hugging Face](#tab/csharp-HuggingFace)
 
 > [!IMPORTANT]
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
@@ -415,7 +415,7 @@ OpenAIChatCompletionService chatCompletionService = new (
 );
 ```
 
-# [Other](#tab/other)
+# [Other](#tab/csharp-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 > [!IMPORTANT]
@@ -441,98 +441,104 @@ OpenAIChatCompletionService chatCompletionService = new (
 ::: zone pivot="programming-language-python"
 To add a chat completion service, you can use the following code to add it to the kernel.
 
-# [Azure OpenAI](#tab/AzureOpenAI)
+# [Azure OpenAI](#tab/python-AzureOpenAI)
 
-# [OpenAI](#tab/OpenAI)
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 
-# [Hugging Face](#tab/HuggingFace)
+# Initialize the kernel
+kernel = Kernel()
 
-# [Other](#tab/other)
+# Add the Azure OpenAI chat completion service
+kernel.add_service(AzureChatCompletion(
+    deployment_name="my-deployment",
+    api_key="my-api-key",
+    base_url="https://my-deployment.azurewebsites.net", # Used to point to your service
+    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
+))
+```
+
+# [OpenAI](#tab/python-OpenAI)
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+
+# Initialize the kernel
+kernel = Kernel()
+
+# Add the Azure OpenAI chat completion service
+kernel.add_service(OpenAIChatCompletion(
+    ai_model_id="my-deployment",
+    api_key="my-api-key",
+    org_id="my-org-id", # Optional
+    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
+))
+```
+
+# [Other](#tab/python-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
+```python
+from semantic_kernel import Kernel
 
+# Initialize the kernel
+kernel = Kernel()
+
+# Add the Azure OpenAI chat completion service
+kernel.add_service(OpenAIChatCompletion(
+    ai_model_id="my-deployment",
+    api_key="my-api-key",
+    org_id="my-org-id", # Optional
+    base_url="https://my-custom-deployment.net", # Used to point to your service
+    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
+))
+```
 ---
 
 You can also create instances of the service directly so that you can either add them to a kernel later or use them directly in your code without injecting them into the kernel.
 
-# [Azure OpenAI](#tab/AzureOpenAI)
+# [Azure OpenAI](#tab/python-AzureOpenAI)
+```python
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 
-# [OpenAI](#tab/OpenAI)
+chat_completion_service = AzureChatCompletion(
+    deployment_name="my-deployment",
+    api_key="my-api-key",
+    base_url="https://my-deployment.azurewebsites.net", # Used to point to your service
+    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
+)
+```
 
-# [Hugging Face](#tab/HuggingFace)
+# [OpenAI](#tab/python-OpenAI)
 
-# [Other](#tab/other)
+```python
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+
+chat_completion_service = OpenAIChatCompletion(
+    ai_model_id="my-deployment",
+    api_key="my-api-key",
+    org_id="my-org-id", # Optional
+    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
+)
+```
+
+# [Other](#tab/python-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
+
+```python
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+
+chat_completion_service = OpenAIChatCompletion(
+    ai_model_id="my-deployment",
+    api_key="my-api-key",
+    org_id="my-org-id", # Optional
+    base_url="https://my-custom-deployment.net", # Used to point to your service
+    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
+)
+```
 
 ---
 
 ::: zone-end
-
-::: zone pivot="programming-language-java"
-
-To add a chat completion service, you can use the following code to add it to the kernel.
-
-# [Azure OpenAI](#tab/AzureOpenAI)
-
-# [OpenAI](#tab/OpenAI)
-
-# [Other](#tab/other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
-
-::: zone-end
-
-## Using the chat completion service
-
-Once you've created an instance of the chat completion service, you can use it to generate the next response in a conversation. Before invoking the service, you will need to create a chat history object to store the conversation.
-
-```csharp
-// Create a chat history object
-ChatHistory chatHistory = [];
-
-// Add message
-chatHistory.AddSystemMessage("You are a helpful assistant.");
-chatHistory.AddUserMessage("What's available to order?");
-chatHistory.AddAssistantMessage("We have pizza, pasta, and salad available to order. What would you like to order?");
-chatHistory.AddUserMessage("I'd like to have the first option, please.");
-```
-
-> [!NOTE]
-> To learn more about creating chat history objects, refer to the [chat history article](./chat-history.md).
-
-Afterwards, you can send the chat history object to the LLM to generate the next response from the AI. When generating the next response, you have access to both non-streaming and streaming methods for generating responses from the `IChatCompletion` interface.
-
-> [!TIP]
-> We recommend that you always use the streaming methods when possible. This is because the streaming methods provide user's with a faster initial response time, which reduces the perceived latency of the AI.
-
-### Retrieving the service from the kernel
-
-To use either the non-streaming or streaming methods, you'll first need access to the actual service. If you've added the service to the kernel, you can retrieve it from the kernel's service provider.
-
-```csharp
-IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
-```
-
-### Non-streaming completion
-
-```csharp
-ChatMessageContent results = await chatCompletionService.GetChatMessageContentAsync(chatHistory, kernel: kernel);
-
-// Print the results
-Console.WriteLine("Restaurant Assistant > " + results);
-```
-
-### Streaming completion
-
-When using the streaming method, you can use the `IAsyncEnumerable<string>` interface to stream the results as they come in.
-
-```csharp
-var results = chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory, kernel: kernel);
-
-// Print the streamed chunks
-Console.Write("Restaurant Assistant > ");
-await foreach (var chunk in results)
-{
-    Console.Write(chunk);
-}
-Console.WriteLine();
-```
