@@ -85,7 +85,7 @@ public class EmailPlugin
 ```
 ::: zone-end
 
-:: zone pivot="programming-language-python"
+::: zone pivot="programming-language-python"
 ```python
 from semantic_kernel.functions import kernel_function
 
@@ -148,7 +148,7 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
 ```
 ::: zone-end
 
-:: zone pivot="programming-language-python"
+::: zone pivot="programming-language-python"
 ```python
 import asyncio
 
@@ -242,7 +242,7 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
 ```
 ::: zone-end
 
-:: zone pivot="programming-language-python"
+::: zone pivot="programming-language-python"
 ```python
 # Create a history of the conversation
 history = ChatHistory("""
@@ -323,7 +323,7 @@ while (true)
 ```
 ::: zone-end
 
-:: zone pivot="programming-language-python"
+::: zone pivot="programming-language-python"
 ```python
 import asyncio
 
