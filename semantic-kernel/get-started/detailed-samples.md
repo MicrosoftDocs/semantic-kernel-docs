@@ -25,6 +25,11 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
      > [View all C# concept samples on GitHub](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/Concepts)
      ::: zone-end
 
+     ::: zone pivot="programming-language-python"
+     > [!div class="nextstepaction"]
+     > [View all Python concept samples on GitHub](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts)
+     ::: zone-end
+
    :::column-end:::
    :::column span="2":::
         :::image type="content" source="../media/tutorials/kernel-syntax-examples.png" alt-text="Leverage the kernel syntax examples on GitHub":::
@@ -128,5 +133,27 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 |                                | OpenAI_TextGenerationStreaming                | [Link](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextGeneration/OpenAI_TextGenerationStreaming.cs)                |
 | **Text to audio**                  | OpenAI_TextToAudio                            | [Link](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextToAudio/OpenAI_TextToAudio.cs)                               |
 | **Text to image**                  | OpenAI_TextToImage                            | [Link](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/TextToImage/OpenAI_TextToImageDalle3.cs)                         |
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+| Features | Description | Link |
+| -------- | ----------- | ---- |
+| AutoFunctionCalling | Using `Auto Function Calling` to allow function call capable models to invoke Kernel Functions automatically | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/auto_function_calling) |
+| ChatCompletion | Using `ChatCompletion` messaging capable service with models  | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/chat_completion) |
+| Filtering | Creating and using Filters | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/filtering) |
+| Functions | Invoking `Method` or `Prompt` functions with `Kernel` | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/functions) |
+| Grounding | An example of how to perform LLM grounding | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/grounding) |
+| Logging | Showing how to set up logging | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/logging) |
+| Memory | Using `Memory` AI concepts | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/memory) |
+| On Your Data | Examples of using AzureOpenAI `On Your Data` | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/on_your_data) |
+| Planners | Showing the uses of `Planners` | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/planners) |
+| Plugins | Different ways of creating and using `Plugins` | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/plugins) |
+| PromptTemplates | Using `Templates` with parametrization for `Prompt` rendering  | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/prompt_templates) |
+| RAG | Different ways of `RAG` (Retrieval-Augmented Generation) | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/rag) |
+| Search | Using search services information | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/search) |
+| Service Selector | Shows how to create and use a custom service selector class. | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/service_selector) |
+| Setup | How to setup environment variables for Semantic Kernel | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/setup) |
+| TextGeneration | Using [`TextGeneration`](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/connectors/ai/text_completion_client_base.py) capable service with models  | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/text_generation) |
 
 ::: zone-end
