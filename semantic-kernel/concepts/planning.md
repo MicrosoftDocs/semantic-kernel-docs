@@ -81,7 +81,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 // 1. Create the kernel with the Lights plugin
 var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
-builder.Plugins.AddFromType<LightsPlugin>();
+builder.Plugins.AddFromType<LightsPlugin>("Lights");
 Kernel kernel = builder.Build();
 
 var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();

@@ -113,7 +113,7 @@ Kernel kernel = builder.Build();
 var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
 // Add a plugin (the LightsPlugin class is defined below)
-kernel.Plugins.AddFromType<LightsPlugin>();
+kernel.Plugins.AddFromType<LightsPlugin>("Lights");
 
 // Enable planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
@@ -187,7 +187,7 @@ async def main():
     # Add a plugin (the LightsPlugin class is defined below)
     kernel.add_plugin(
         LightsPlugin(),
-        plugin_name="LightsPlugin",
+        plugin_name="Lights",
     )
 
     chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
@@ -498,7 +498,7 @@ Once you've created your plugin, you can add it to the kernel so the AI agent ca
 ::: zone pivot="programming-language-csharp"
 ```csharp
 // Add the plugin to the kernel
-kernel.Plugins.AddFromType<LightsPlugin>();
+kernel.Plugins.AddFromType<LightsPlugin>("Lights");
 ```
 ::: zone-end
 
@@ -507,7 +507,7 @@ kernel.Plugins.AddFromType<LightsPlugin>();
 # Add the plugin to the kernel
 kernel.add_plugin(
     LightsPlugin(),
-    plugin_name="LightsPlugin",
+    plugin_name="Lights",
 )
 ```
 ::: zone-end

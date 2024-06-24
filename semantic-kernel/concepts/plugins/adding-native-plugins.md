@@ -183,7 +183,7 @@ builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConsole().SetMin
 builder.Services.AddSingleton<LightService>();
 
 // Add the plugin to the kernel
-builder.Plugins.AddFromType<LightsPlugin>();
+builder.Plugins.AddFromType<LightsPlugin>("Lights");
 
 // Build the kernel
 Kernel kernel = builder.Build();
@@ -226,7 +226,7 @@ var builder = Host.CreateApplicationBuilder(args);
 // Create native plugin collection
 builder.Services.AddTransient((serviceProvider)=>{
    KernelPluginCollection pluginCollection = [];
-   pluginCollection.AddFromType<LightsPlugin>();
+   pluginCollection.AddFromType<LightsPlugin>("Lights");
 
    return pluginCollection;
 });

@@ -185,7 +185,7 @@ async def main():
     # Add a plugin (the LightsPlugin class is defined below)
     kernel.add_plugin(
         LightsPlugin(),
-        plugin_name="LightsPlugin",
+        plugin_name="Lights",
     )
 
     chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
@@ -350,7 +350,7 @@ async def main():
     # Add a plugin (the LightsPlugin class is defined below)
     kernel.add_plugin(
         LightsPlugin(),
-        plugin_name="LightsPlugin",
+        plugin_name="Lights",
     )
 
     chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)

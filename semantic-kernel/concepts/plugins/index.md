@@ -1,6 +1,7 @@
 ---
 title: Plugins in Semantic Kernel
 description: Learn how to use AI plugins in Semantic Kernel
+zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
 ms.topic: conceptual
 ms.author: sopand
@@ -83,8 +84,12 @@ Below, we'll create a plugin that can retrieve the state of lights and alter its
 > [!Tip]
 > Since most LLM have been trained with Python for function calling, its recommended to use snake case for function names and property names even if you're using the C# or Java SDK.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
-public class Lights
+using System.ComponentModel;
+using Microsoft.SemanticKernel;
+
+public class LightsPlugin
 {
    // Mock data for the lights
    private readonly List<LightModel> lights = new()
@@ -150,6 +155,67 @@ public class LightModel
    public string? Hex { get; set; }
 }
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from typing import List, Optional, TypedDict, Annotated
+
+class LightModel(TypedDict):
+   id: int
+   name: str
+   is_on: Optional[bool]
+   brightness: Optional[int]
+   hex: Optional[str]
+
+class LightsPlugin:
+   lights: List[LightModel] = [
+      {"id": 1, "name": "Table Lamp", "is_on": False, "brightness": 100, "hex": "FF0000"},
+      {"id": 2, "name": "Porch light", "is_on": False, "brightness": 50, "hex": "00FF00"},
+      {"id": 3, "name": "Chandelier", "is_on": True, "brightness": 75, "hex": "0000FF"},
+   ]
+
+   @kernel_function(
+      name="get_lights",
+      description="Gets a list of lights and their current state",
+   )
+   async def get_lights(self) -> Annotated[List[LightModel], "An array of lights"]:
+      """Gets a list of lights and their current state."""
+      return self.lights
+
+   @kernel_function(
+      name="get_state",
+      description="Gets the state of a particular light",
+   )
+   async def get_state(
+      self,
+      id: Annotated[int, "The ID of the light"]
+   ) -> Annotated[Optional[LightModel], "The state of the light"]:
+      """Gets the state of a particular light."""
+      for light in self.lights:
+         if light["id"] == id:
+               return light
+      return None
+
+   @kernel_function(
+      name="change_state",
+      description="Changes the state of the light",
+   )
+   async def change_state(
+      self,
+      id: Annotated[int, "The ID of the light"],
+      new_state: LightModel
+   ) -> Annotated[Optional[LightModel], "The updated state of the light; will return null if the light does not exist"]:
+      """Changes the state of the light."""
+      for light in self.lights:
+         if light["id"] == id:
+               light["is_on"] = new_state.get("is_on", light["is_on"])
+               light["brightness"] = new_state.get("brightness", light["brightness"])
+               light["hex"] = new_state.get("hex", light["hex"])
+               return light
+      return None
+```
+::: zone-end
 
 Notice that we provide descriptions for the function, return value, and parameters. This is important for the AI to understand what the function does and how to use it.
 
@@ -162,18 +228,129 @@ Once you've defined your plugin, you can add it to your kernel by creating a new
 
 This example demonstrates the easiest way of adding a class as a plugin with the `AddFromType` method. To learn about other ways of adding plugins, refer to the [adding native plugins](./adding-native-plugins.md) article.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 var builder = new KernelBuilder();
-builder.Plugins.AddFromType<LightsPlugin>()
+builder.Plugins.AddFromType<LightsPlugin>("Lights")
 Kernel kernel = builder.Build();
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+kernel = Kernel()
+kernel.add_plugin(
+   LightsPlugin(),
+   plugin_name="Lights",
+)
 ```
 
 ### 3) Invoke the plugin's functions
 
 Finally, you can have the AI invoke your plugin's functions by using function calling. Below is an example that demonstrates how to coax the AI to call the `get_lights` function from the `Lights` plugin before calling the `change_state` function to turn on a light. 
 
+::: zone pivot="programming-language-csharp"
 ```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+
+// Create a kernel with Azure OpenAI chat completion
+var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
+
+// Build the kernel
+Kernel kernel = builder.Build();
+var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+
+// Add a plugin (the LightsPlugin class is defined below)
+kernel.Plugins.AddFromType<LightsPlugin>("Lights");
+
+// Enable planning
+OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
+{
+    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+};
+
+// Create a history store the conversation
+var history = new ChatHistory();
+history.AddUserMessage("Please turn on the lamp");
+
+// Get the response from the AI
+var result = await chatCompletionService.GetChatMessageContentAsync(
+   history,
+   executionSettings: openAIPromptExecutionSettings,
+   kernel: kernel);
+
+// Print the results
+Console.WriteLine("Assistant > " + result);
+
+// Add the message from the agent to the chat history
+history.AddAssistantMessage(result);
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+import asyncio
+
+from semantic_kernel import Kernel
+from semantic_kernel.functions import kernel_function
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+
+from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
+    AzureChatPromptExecutionSettings,
+)
+
+async def main():
+   # Initialize the kernel
+   kernel = Kernel()
+
+   # Add Azure OpenAI chat completion
+   kernel.add_service(AzureChatCompletion(
+      deployment_name="your_models_deployment_name",
+      api_key="your_api_key",
+      base_url="your_base_url",
+   ))
+   
+   # Add a plugin (the LightsPlugin class is defined below)
+   kernel.add_plugin(
+      LightsPlugin(),
+      plugin_name="Lights",
+   )
+
+   chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
+
+   # Enable planning
+   execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
+   execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
+
+   # Create a history of the conversation
+   history = ChatHistory()
+   history.add_message("Please turn on the lamp")
+
+   # Get the response from the AI
+   result = (await chat_completion.get_chat_message_contents(
+      chat_history=history,
+      settings=execution_settings,
+      kernel=kernel,
+      arguments=KernelArguments(),
+   ))[0]
+
+   # Print the results
+   print("Assistant > " + str(result))
+
+   # Add the message from the agent to the chat history
+   history.add_message(result)
+
+# Run the main function
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+::: zone-end
 
 With the above code, you should get a response that looks like the following:
 
