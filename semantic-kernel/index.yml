@@ -21,23 +21,36 @@ productDirectory:
       links:
         - url: /semantic-kernel/overview/index
           text: Introduction to Semantic Kernel
-    - title: Concepts
-      imageSrc: /semantic-kernel/media/Concepts.svg
-      links:
-        - url: /semantic-kernel/concepts/agents
-          text: Key Concepts to Learn
+        - url: /semantic-kernel/get-started/contributing
+          text: Contributing to Semantic Kernel
     - title: Quick Start
       imageSrc: /semantic-kernel/media/Quick-start.svg
       links:
         - url: /semantic-kernel/get-started/quick-start-guide
           text: Learn how to use Semantic Kernel
+      links:
+        - url: /semantic-kernel/get-started/detailed-samples
+          text: Check out samples for Semantic Kernel
+    - title: Concepts
+      imageSrc: /semantic-kernel/media/Concepts.svg
+      links:
+        - url: /semantic-kernel/concepts/agents
+          text: Agents
+        - url: /semantic-kernel/concepts/plugins/index
+          text: Plugins
+        - url: /semantic-kernel/concepts/planning
+          text: Planning
+        - url: /semantic-kernel/concepts/personas
+          text: Personas
     - title: Integrations
       imageSrc: /semantic-kernel/media/Integrations.svg
       links:
         - url: /semantic-kernel/integrations/
           text: Browse available features by language
-    - title: Community
+    - title: Connect with us
       imageSrc: /semantic-kernel/media/whats-new.svg
       links:
+        - url: https://devblogs.microsoft.com/semantic-kernel
+          text: Read the Semantic Kernel blog
         - url: https://github.com/microsoft/semantic-kernel/discussions
           text: Get in touch with the community 
