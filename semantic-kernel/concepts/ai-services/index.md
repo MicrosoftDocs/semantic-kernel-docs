@@ -1,7 +1,6 @@
 ---
 title: Add AI services to Semantic Kernel
 description: Learn how to bring multiple AI services to your Semantic Kernel project.
-zone_pivot_groups: programming-languages
 author: matthewbolanos
 ms.topic: conceptual
 ms.author: mabolan

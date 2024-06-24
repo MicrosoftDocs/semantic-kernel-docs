@@ -2,15 +2,4 @@
   href: index.md
 - name: Chat completion
   href: chat-completion/TOC.yml
-- name: Text generation
-  href: text-generation.md
-- name: Embedding generation
-  href: embedding-generation.md
-- name: Text to image
-  href: text-to-image.md
-- name: Image to text
-  href: image-to-text.md
-- name: Text to audio
-  href: text-to-audio.md
-- name: Audio to text
-  href: audio-to-text.md
+  expanded: true
