@@ -55,27 +55,34 @@ Kernel kernel = builder.Build();
 
 ::: zone pivot="programming-language-python"
 Import the necessary packages:
-:::code language="python" source="~/../semantic-kernel-samples/python/samples/documentation_examples/service_configurator.py" range="5-7,9,11" highlight="3,4,5":::
+
+```python
+from microsoft_semantic_kernel import Kernel
+from microsoft_semantic_kernel.services import AzureOpenAIChatCompletion
+from semantic_kernel.core_plugins.time_plugin import TimePlugin
+```
 
 Next, you can create a kernel.
 
+```python
+# Initialize the kernel
+kernel = Kernel()
+```
+
 Finally, you can add the necessary services and plugins. Below is an example of how you can add an Azure OpenAI chat completion, a logger, and a time plugin.
 
+```python
+# Add the Azure OpenAI chat completion service
+kernel.add_service(AzureOpenAIChatCompletion(model_id, endpoint, api_key))
+
+# Add a plugin (the LightsPlugin class is defined below)
+kernel.add_plugin(
+    TimePlugin(),
+    plugin_name="TimePlugin",
+)
+```
+
 ::: zone-end
-
-
-::: zone pivot="programming-language-java"
-
-To build a kernel that uses OpenAI for chat completion, it can be created as follows.
-
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="build_client":::
-
-:::code language="java" source="~/../semantic-kernel-samples-java/java/samples/sample-code/src/main/java/com/microsoft/semantickernel/samples/documentationexamples/UsingTheKernel.java" id="build_kernel":::
-
-::: zone-end
-
-To learn more about the different AI services that you can add to a kernel, please refer to the [AI services article](./ai-services.md). If instead, you want to know of the various ways to add plugins to a kernel, refer to the [plugins article](./plugins.md).
-
 
 ::: zone pivot="programming-language-csharp"
 ## Using Dependency Injection
