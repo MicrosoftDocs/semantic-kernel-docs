@@ -10,7 +10,6 @@ ms.service: semantic-kernel
 ---
 # Getting started with Semantic Kernel
 
-
 In just a few steps, you can build your first AI agent with Semantic Kernel in either Python, .NET, or Java. This guide will show you how to...
 - Install the necessary packages
 - Create a back-and-forth conversation with an AI
@@ -244,7 +243,7 @@ The following back-and-forth chat should be similar to what you see in the conso
 
 If you're interested in understanding more about the code above, we'll break it down in the next section.
 
-# Understanding the code
+## Understanding the code
 
 To make it easier to get started building enterprise apps with Semantic Kernel, we've created a step-by-step that guides you through the process of creating a kernel and using it to interact with AI services. 
 
