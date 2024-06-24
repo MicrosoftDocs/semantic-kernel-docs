@@ -261,6 +261,7 @@ result = (await chat_completion.get_chat_message_contents(
     arguments=KernelArguments(),
 ))[0]
 ```
+::: zone-end
 
 To learn more about authoring effective personas, refer to the [personas article](./personas.md).
 
