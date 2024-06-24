@@ -91,12 +91,3 @@ chat_history.add_system_message("Remember to ask for help if you're unsure how t
 ::: zone-end
 
 By reminding the LLM of its personas in this way, you can ensure that your agent is consistent, reliable, and predictable in its interactions with users.
-
-## Next steps
-
-Now that you understand the importance of personas in Semantic Kernel, you can start creating your own personas to influence how your agents respond to stimuli.
-
-To learn more about creating effective prompts (both for personas and other purposes), check out the [prompts article](./prompts.md).
-
-> [!div class="nextstepaction"]
-> [Authoring prompts in Semantic Kernel](./prompts.md)

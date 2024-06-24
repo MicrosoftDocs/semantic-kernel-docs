@@ -78,7 +78,4 @@ If you want to extend the functionality of your AI agent, you can use plugins to
 | Plugin     | C#  | Python | Java | Description |
 | ---------- | :-: | :----: | :--: | ----------- |
 | Logic Apps | ✅  |   ✅   |  ✅  | Build workflows within Logic Apps using its available connectors and import them as plugins in Semantic Kernel. [Learn more](../concepts/plugins/adding-logic-apps-as-plugins.md). |
-| Azure Container Apps Dynamic Sessions | ✅  |   ✅   |  ❌  | With dynamic sessions, you can recreate the Code Interpreter experience from the Assistants API by effortlessly spinning up Python containers where AI agents can execute Python code. [Learn more](https://learn.microsoft.com/en-us/azure/container-apps/sessions). |
-
-## Next steps
-Curious how to use these integrations in your AI agent? Check out the [use cases section](../use-cases/index.md) to see how other customers are leveraging Semantic Kernel to optimize their companies' workflows. 
+| Azure Container Apps Dynamic Sessions | ✅  |   ✅   |  ❌  | With dynamic sessions, you can recreate the Code Interpreter experience from the Assistants API by effortlessly spinning up Python containers where AI agents can execute Python code. [Learn more](/azure/container-apps/sessions). |

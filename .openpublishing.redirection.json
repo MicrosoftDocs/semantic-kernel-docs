@@ -604,6 +604,56 @@
             "source_path": "semantic-kernel/chat-copilot/testing-plugins-with-chat-copilot.md",
             "redirect_url": "/semantic-kernel/get-started/detailed-samples",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/tutorials.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/memories/embeddings.md",
+            "redirect_url": "/semantic-kernel/concepts/ai-services/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/memories/index.md",
+            "redirect_url": "/semantic-kernel/integrations/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/memories/vector-db.md",
+            "redirect_url": "/semantic-kernel/integrations/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/calling-nested-functions.md",
+            "redirect_url": "/semantic-kernel/concepts/plugins/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/configure-prompts.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/index.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/prompt-template-syntax.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/saving-prompts-as-files.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/templatizing-prompts.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
         }
     ]
 }

@@ -26,7 +26,7 @@ Semantic Kernel was designed to be future proof, easily connecting your code to 
 :::row-end:::
 
 ## Automating business processes 
-Semantic Kernel combines [prompts](../concepts/prompts.md) with [existing APIs](../concepts/plugins.md) to perform actions. By describing your existing code to AI models, they’ll be called to address requests. When a request is made the model calls a function, and Semantic Kernel is the middleware translating the model's request to a function call and passes the results back to the model.
+Semantic Kernel combines prompts with [existing APIs](../concepts/plugins/index.md) to perform actions. By describing your existing code to AI models, they’ll be called to address requests. When a request is made the model calls a function, and Semantic Kernel is the middleware translating the model's request to a function call and passes the results back to the model.
 
 ## Modular and extensible
 :::row:::
