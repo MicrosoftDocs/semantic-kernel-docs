@@ -631,6 +631,7 @@ response = chat_completion.get_streaming_chat_message_contents(
 async for chunk in response:
     print(chunk)
 ```
+::: zone-end
 
 ## Next steps
 

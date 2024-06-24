@@ -684,6 +684,36 @@
             "source_path": "semantic-kernel/support/requirements.md",
             "redirect_url": "/semantic-kernel/support/index",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/deploy/use-ai-apis-with-api-management.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/vs-code-tools/features.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/vs-code-tools/get-started.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/vs-code-tools/index.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/when-to-use-ai/responsible-ai.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/when-to-use-ai/schillace-laws.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
         }
     ]
 }
