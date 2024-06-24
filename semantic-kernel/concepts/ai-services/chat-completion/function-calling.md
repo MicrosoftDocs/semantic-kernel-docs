@@ -36,6 +36,7 @@ Let's assume you have a plugin that allows a user to order a pizza. The plugin h
 4. `get_cart`: Returns the user's current cart
 5. `checkout`: Checks out the user's cart
 
+::: zone pivot="programming-language-csharp"
 In C#, the plugin might look like this:
 
 ```csharp
@@ -114,6 +115,82 @@ kernelBuilder..AddAzureOpenAIChatCompletion(
 );
 kernelBuilder.Plugins.AddFromType<OrderPizzaPlugin>("OrderPizza");
 Kernel kernel = kernelBuilder.Build();
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+In Python, the plugin might look like this:
+
+```python
+from semantic_kernel.functions import kernel_function
+
+class OrderPizzaPlugin:
+    def __init__(self, pizza_service, user_context, payment_service):
+        self.pizza_service = pizza_service
+        self.user_context = user_context
+        self.payment_service = payment_service
+
+    @kernel_function(name="get_pizza_menu")
+    async def get_pizza_menu(self):
+        return await self.pizza_service.get_menu()
+
+    @kernel_function(
+        name="add_pizza_to_cart",
+        description="Add a pizza to the user's cart; returns the new item and updated cart"
+    )
+    async def add_pizza_to_cart(self, size: PizzaSize, toppings: List[PizzaToppings], quantity: int = 1, special_instructions: str = ""):
+        cart_id = await self.user_context.get_cart_id()
+        return await self.pizza_service.add_pizza_to_cart(cart_id, size, toppings, quantity, special_instructions)
+
+    @kernel_function(
+        name="remove_pizza_from_cart",
+        description="Remove a pizza from the user's cart; returns the updated cart"
+    )
+    async def remove_pizza_from_cart(self, pizza_id: int):
+        cart_id = await self.user_context.get_cart_id()
+        return await self.pizza_service.remove_pizza_from_cart(cart_id, pizza_id)
+
+    @kernel_function(
+        name="get_pizza_from_cart",
+        description="Returns the specific details of a pizza in the user's cart; use this instead of relying on previous messages since the cart may have changed since then."
+    )
+    async def get_pizza_from_cart(self, pizza_id: int):
+        cart_id = await self.user_context.get_cart_id()
+        return await self.pizza_service.get_pizza_from_cart(cart_id, pizza_id)
+
+    @kernel_function(
+        name="get_cart",
+        description="Returns the user's current cart, including the total price and items in the cart."
+    )
+    async def get_cart(self):
+        cart_id = await self.user_context.get_cart_id()
+        return await self.pizza_service.get_cart(cart_id)
+
+    @kernel_function(
+        name="checkout",
+        description="Checkouts the user's cart; this function will retrieve the payment from the user and complete the order."
+    )
+    async def checkout(self):
+        cart_id = await self.user_context.get_cart_id()
+        payment_id = await self.payment_service.request_payment_from_user(cart_id)
+        return await self.pizza_service.checkout(cart_id, payment_id)
+```
+
+You would then add this plugin to the kernel like so:
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+
+kernel = Kernel()
+kernel.add_service(AzureChatCompletion(model_id, endpoint, api_key))
+
+# Create the services needed for the plugin: pizza_service, user_context, and payment_service
+# ...
+
+# Add the plugin to the kernel
+kernel.add_plugin(OrderPizzaPlugin(pizza_service, user_context, payment_service), plugin_name="OrderPizza")
 ```
 
 ### 1) Serializing the functions
@@ -267,38 +344,85 @@ Once the functions are serialized, they are sent to the model along with the cur
 
 In this scenario, we can imagine the user asking the assistant to add a pizza to their cart:
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 ChatHistory chatHistory = [];
 chatHistory.AddUserMessage("I'd like to order a pizza!");
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+chat_history = ChatHistory()
+chat_history.add_user_message("I'd like to order a pizza!")
+```
+::: zone-end
 
 We can then send this chat history and the serialized functions to the model. The model will use this information to determine the best way to respond.
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
 
+OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
+{
+    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+};
+
 ChatResponse response = await chatCompletion.GetChatMessageContentAsync(
     chatHistory,
+    executionSettings: openAIPromptExecutionSettings,
     kernel: kernel)
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+chat_completion = kernel.get_service(type=ChatCompletionClientBase)
+
+execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
+execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
+
+response = (await chat_completion.get_chat_message_contents(
+      chat_history=history,
+      settings=execution_settings,
+      kernel=kernel,
+      arguments=KernelArguments(),
+  ))[0]
+```
+::: zone-end
 
 ### 3) Model processes the input
 
 With both the chat history and the serialized functions, the model can determine the best way to respond. In this case, the model recognizes that the user wants to order a pizza. The model would likely _want_ to call the `add_pizza_to_cart` function, but because we specified the size and toppings as required parameters, the model will ask the user for this information:
 
+::: zone pivot="programming-language-csharp"
 ```csharp
-chatHistory.AddUserMessage(response);
 Console.WriteLine(response);
+chatHistory.AddAssistantMessage(response);
 
 // "Before I can add a pizza to your cart, I need to
 // know the size and toppings. What size pizza would
 // you like? Small, medium, or large?"
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+print(response)
+chat_history.add_assistant_message(response)
+
+# "Before I can add a pizza to your cart, I need to
+# know the size and toppings. What size pizza would
+# you like? Small, medium, or large?"
+```
+::: zone-end
 
 Since the model wants the user to respond next, a termination signal will be sent to Semantic Kernel to stop automatic function calling until the user responds.
 
 At this point, the user can respond with the size and toppings of the pizza they want to order:
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 chatHistory.AddUserMessage("I'd like a medium pizza with cheese and pepperoni, please.");
 
@@ -306,6 +430,20 @@ response = await chatCompletion.GetChatMessageContentAsync(
     chatHistory,
     kernel: kernel)
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+chat_history.add_user_message("I'd like a medium pizza with cheese and pepperoni, please.")
+
+response = (await chat_completion.get_chat_message_contents(
+    chat_history=history,
+    settings=execution_settings,
+    kernel=kernel,
+    arguments=KernelArguments(),
+))[0]
+```
+::: zone-end
 
 Now that the model has the necessary information, it can now call the `add_pizza_to_cart` function with the user's input. Behind the scenes, it adds a new message to the chat history that looks like this:
 
@@ -340,6 +478,7 @@ With this information, Semantic Kernel can marshal the inputs into the appropria
 
 After marshalling the inputs, Semantic Kernel can also add the function call to the chat history:
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 chatHistory.Add(
     new() {
@@ -355,6 +494,27 @@ chatHistory.Add(
     }
 );
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from semantic_kernel.contents import ChatMessageContent, FunctionCallContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.ASSISTANT,
+        items=[
+            FunctionCallContent(
+                name="OrderPizza-add_pizza_to_cart",
+                id="call_abc123",
+                arguments=str({"size": "Medium", "toppings": ["Cheese", "Pepperoni"]})
+            )
+        ]
+    )
+)
+```
+::: zone-end
 
 ### 5) Invoke the function
 
@@ -371,6 +531,7 @@ After the function has been invoked, the function result is sent back to the mod
 
 Behind the scenes, Semantic Kernel adds a new message to the chat history from the tool role that looks like this:
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 chatHistory.Add(
     new() {
@@ -386,6 +547,28 @@ chatHistory.Add(
     }
 );
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from semantic_kernel.contents import ChatMessageContent, FunctionResultContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+
+chat_history.add_message(
+    ChatMessageContent(
+        role=AuthorRole.TOOL,
+        items=[
+            FunctionResultContent(
+                name="OrderPizza-add_pizza_to_cart",
+                id="0001",
+                result="{ \"new_items\": [ { \"id\": 1, \"size\": \"Medium\", \"toppings\": [\"Cheese\",\"Pepperoni\"] } ] }"
+            )
+        ]
+    )
+)
+```
+::: zone-end
+
 
 Notice that the result is a JSON string that the model then needs to process. As before, the model will need to spend tokens consuming this information. This is why it's important to keep the return types as simple as possible. In this case, the return only includes the new items added to the cart, not the entire cart.
 
