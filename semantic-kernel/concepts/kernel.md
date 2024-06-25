@@ -75,7 +75,7 @@ Finally, you can add the necessary services and plugins. Below is an example of 
 # Add the Azure OpenAI chat completion service
 kernel.add_service(AzureChatCompletion(model_id, endpoint, api_key))
 
-# Add a plugin (the LightsPlugin class is defined below)
+# Add a plugin
 kernel.add_plugin(
     TimePlugin(),
     plugin_name="TimePlugin",
