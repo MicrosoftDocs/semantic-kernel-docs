@@ -245,7 +245,7 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
 ::: zone pivot="programming-language-python"
 ```python
 # Create a history of the conversation
-history = ChatHistory("""
+history = ChatHistory(system_message="""
     You are a friendly assistant who likes to follow the rules. You will complete required steps
     and request approval before taking any consequential actions. If the user doesn't provide
     enough information for you to complete a task, you will keep asking questions until you have
