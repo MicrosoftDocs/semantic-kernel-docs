@@ -40,6 +40,37 @@ Instructions for accessing the `SemanticKernel` Python package is available [her
 ```PyPI
 pip install semantic-kernel
 ```
+::: zone-end
+
+
+::: zone pivot="programming-language-java"
+
+Instructions for accessing the `SemanticKernel` Java package is available [here](https://github.com/microsoft/semantic-kernel-java/). It's as easy as:
+
+```xml
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.microsoft.semantic-kernel</groupId>
+                <artifactId>semantickernel-bom</artifactId>
+                <version>${sk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-aiservices-openai</artifactId>
+        </dependency>
+    </dependencies>
+```
 
 ::: zone-end
 
@@ -208,6 +239,12 @@ if __name__ == "__main__":
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="LightAppExample":::
+
+::: zone-end
+
 The following back-and-forth chat should be similar to what you see in the console. The function calls have been added below to demonstrate how the AI leverages the plugin behind the scenes.
 
 | Role                                             | Message                       |
@@ -233,18 +270,24 @@ To make it easier to get started building enterprise apps with Semantic Kernel, 
 ![Semantic Kernel DotNET map](../media/DotNetMap.png)
 ::: zone-end
 
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
 In the following sections, we'll unpack the above sample by walking through steps **1**, **2**, **3**, **4**, **6**, **9**, and **10**. Everything you need to build a simple agent that is powered by an AI service and can run your code.
 
-1. [Import packages](#1-import-packages)
-2. [Add AI services](#2-add-ai-services)
-3. [Enterprise components](#3-add-enterprise-services)
-4. [Build the kernel](#4-build-the-kernel-and-retrieve-services)
-5. Add memory (skipped)
-6. [Add plugins](#6-add-plugins)
-7. Create kernel arguments (skipped)
-8. Create prompts (skipped)
-9. [Planning](#9-planning)
-10. [Invoke](#10-invoke)
+- [Import packages](#1-import-packages)
+- [Add AI services](#2-add-ai-services)
+::: zone pivot="programming-language-csharp,programming-language-python"
+- [Enterprise components](#3-add-enterprise-services)
+::: zone-end
+- [Build the kernel](#4-build-the-kernel-and-retrieve-services)
+- Add memory (skipped)
+- [Add plugins](#6-add-plugins)
+- Create kernel arguments (skipped)
+- Create prompts (skipped)
+- [Planning](#9-planning)
+- [Invoke](#10-invoke)
 
 ### 1) Import packages
 For this sample, we first started by importing the following packages:
@@ -278,6 +321,27 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_
 
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+```java
+import com.microsoft.semantickernel.Kernel;
+import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
+import com.microsoft.semantickernel.contextvariables.ContextVariableTypeConverter;
+import com.microsoft.semantickernel.contextvariables.ContextVariableTypes;
+import com.microsoft.semantickernel.orchestration.InvocationContext;
+import com.microsoft.semantickernel.orchestration.InvocationReturnMode;
+import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
+import com.microsoft.semantickernel.plugin.KernelPlugin;
+import com.microsoft.semantickernel.plugin.KernelPluginFactory;
+import com.microsoft.semantickernel.services.chatcompletion.AuthorRole;
+import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
+import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
+import com.microsoft.semantickernel.services.chatcompletion.ChatMessageContent;
+```
+
+::: zone-end
+
+
 ### 2) Add AI services
 Afterwards, we add the most important part of a kernel: the AI services that you want to use. In this example, we added an Azure OpenAI chat completion service to the kernel builder.
 
@@ -307,9 +371,18 @@ kernel.add_service(AzureChatCompletion(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="createservice":::
+
+::: zone-end
+
+::: zone pivot="programming-language-csharp,programming-language-python"
 
 ### 3) Add enterprise services
 One of the main benefits of using Semantic Kernel is that it supports enterprise-grade services. In this sample, we added the logging service to the kernel to help debug the AI agent.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -329,6 +402,7 @@ logging.basicConfig(
 logging.getLogger("kernel").setLevel(logging.DEBUG)
 ```
 ::: zone-end
+
 
 ### 4) Build the kernel and retrieve services
 
@@ -353,6 +427,13 @@ Once the kernel has been configured, we then retrieve the chat completion servic
 chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 ```
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="buildkernel":::
+
+::: zone-end
+
 
 ### 6) Add plugins
 With plugins, can give your AI agent the ability to run your code to retrieve information from external sources or to perform actions. In the above example, we added a plugin that allows the AI agent to interact with a light bulb. Below, we'll show you how to create this plugin.
@@ -464,6 +545,12 @@ class LightsPlugin:
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsPlugin.java" id="plugin":::
+
+::: zone-end
+
 #### Add the plugin to the kernel
 
 Once you've created your plugin, you can add it to the kernel so the AI agent can access it. In the sample, we added the `LightsPlugin` class to the kernel.
@@ -483,6 +570,12 @@ kernel.add_plugin(
     plugin_name="Lights",
 )
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="importplugin":::
+
 ::: zone-end
 
 ### 9) Planning
@@ -506,6 +599,13 @@ execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
 execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
 ```
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="enableplanning":::
+
+::: zone-end
+
 
 ### 10) Invoke
 
@@ -538,6 +638,12 @@ result = (await chat_completion.get_chat_message_contents(
     arguments=KernelArguments(),
 ))[0]
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="prompt":::
+
 ::: zone-end
 
 ## Next steps

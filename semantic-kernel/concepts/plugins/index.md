@@ -217,6 +217,13 @@ class LightsPlugin:
 ```
 ::: zone-end
 
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsPlugin.java" id="plugin":::
+
+::: zone-end
+
 Notice that we provide descriptions for the function, return value, and parameters. This is important for the AI to understand what the function does and how to use it.
 
 > [!Tip]
@@ -245,6 +252,14 @@ kernel.add_plugin(
 )
 ```
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="importplugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="buildkernel":::
+
+::: zone-end
+
 
 ### 3) Invoke the plugin's functions
 
@@ -352,6 +367,13 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsAppNonInteractive.java" id="invoke":::
+
+::: zone-end
+
 
 With the above code, you should get a response that looks like the following:
 

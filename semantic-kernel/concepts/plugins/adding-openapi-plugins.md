@@ -208,6 +208,22 @@ await kernel.add_plugin_from_openapi(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+```java
+String yaml = EmbeddedResourceLoader.readFile("petstore.yaml", ExamplePetstoreImporter.class);
+
+KernelPlugin plugin = SemanticKernelOpenAPIImporter
+   .builder()
+   .withPluginName("petstore")
+   .withSchema(yaml)
+   .withServer("http://localhost:8090/api/v3")
+   .build();
+
+Kernel kernel = ExampleOpenAPIParent.kernelBuilder()
+   .withPlugin(plugin)
+   .build();
+```
+::: zone-end
 Afterwards, you can use the plugin in your agent as if it were a native plugin.
 
 ## Tips and tricks for adding OpenAPI plugins

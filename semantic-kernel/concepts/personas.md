@@ -76,6 +76,20 @@ chat_history = ChatHistory("""
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+```java
+        ChatHistory chatHistory = new ChatHistory("""
+                You are a technical support specialist for a software company.
+                Your primary task is to assist users with technical issues,
+                such as installation problems, software bugs, and feature
+                inquiries. Use technical jargon appropriately, but ensure that
+                explanations are easy to understand. If a problem is too complex,
+                suggest advanced troubleshooting steps or escalate to a higher-level
+                support team using the escalate tool.
+                """);
+```
+::: zone-end
+
 If you need greater control over the persona (for example, you want to change the instructions as the conversation progresses), you can use the `AddSystemMessage` method to add additional system messages to the chat history.
 
 ::: zone pivot="programming-language-csharp"
@@ -89,5 +103,12 @@ chatHistory.AddSystemMessage("Remember to ask for help if you're unsure how to p
 chat_history.add_system_message("Remember to ask for help if you're unsure how to proceed.")
 ```
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+```java
+chatHistory.addSystemMessage("Remember to ask for help if you're unsure how to proceed.");
+```
+::: zone-end
+
 
 By reminding the LLM of its personas in this way, you can ensure that your agent is consistent, reliable, and predictable in its interactions with users.
