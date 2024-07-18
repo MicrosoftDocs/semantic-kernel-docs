@@ -47,6 +47,22 @@ chat_history.add_user_message("I'd like to have the first option, please.")
 
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+```java
+import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
+
+// Create a chat history object
+ChatHistory chatHistory = new ChatHistory();
+
+chatHistory.addSystemMessage("You are a helpful assistant.");
+chatHistory.addUserMessage("What's available to order?");
+chatHistory.addAssistantMessage("We have pizza, pasta, and salad available to order. What would you like to order?");
+chatHistory.addUserMessage("I'd like to have the first option, please.");
+```
+
+::: zone-end
+
 ## Adding richer messages to a chat history
 
 The easiest way to add messages to a chat history object is to use the methods above. However, you can also add messages manually by creating a new `ChatMessage` object. This allows you to provide additional information, like names and images content.
@@ -139,6 +155,49 @@ chat_history.add_message(
     )
 )
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+```java
+import com.microsoft.semantickernel.services.chatcompletion.message.ChatMessageImageContent;
+import com.microsoft.semantickernel.services.chatcompletion.message.ChatMessageTextContent;
+
+// Add system message
+chatHistory.addMessage(
+    ChatMessageTextContent.systemMessage(
+        "You are a helpful assistant"
+    )
+);
+
+// Add user message with an image
+chatHistory.addMessage(
+    ChatMessageTextContent.userMessage(
+        "What available on this menu"
+    )
+);
+
+chatHistory.addMessage(
+    ChatMessageImageContent.builder()
+            .withImageUrl("https://example.com/menu.jpg")
+            .build()
+);
+
+// Add assistant message
+chatHistory.addMessage(
+    ChatMessageTextContent.assistantMessage(
+        "We have pizza, pasta, and salad available to order. What would you like to order?"
+    }
+);
+
+// Add additional message from a different user
+chatHistory.addMessage(
+    ChatMessageTextContent.userMessage(
+        "I'd like to have the first option, please."
+    }
+);
+```
+
 ::: zone-end
 
 ## Simulating function calls
@@ -256,6 +315,13 @@ chat_history.add_message(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+```java
+This functionality is not supported in the current version of Semantic Kernel for Java. 
+```
+
+::: zone-end
 
 > [!IMPORTANT]
 > When simulating tool results, you must always provide the `id` of the function call that the result corresponds to. This is important for the AI to understand the context of the result. Some LLMs, like OpenAI, will throw an error if the `id` is missing or if the `id` does not correspond to a function call.
@@ -332,6 +398,30 @@ print(results)
 # Add the final message to the chat history object
 chat_history.add_message(results)
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+```java
+import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
+
+ChatHistory chatHistory = new ChatHistory();
+chatHistory.addUserMessage("Please order me a pizza");
+
+// Get the chat message content
+List<ChatMessageContent> results = chatCompletionService.getChatMessageContentsAsync(
+    chatHistory,
+    kernel,
+    null
+).block();
+
+results.forEach(result -> System.out.println(result.getContent());
+
+// Get the new messages added to the chat history object. By default, 
+// the ChatCompletionService returns new messages only. 
+chatHistory.addAll(results);
+```
+
 ::: zone-end
 
 ## Next steps
