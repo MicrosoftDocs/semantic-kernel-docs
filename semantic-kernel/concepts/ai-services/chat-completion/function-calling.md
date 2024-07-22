@@ -274,7 +274,7 @@ public class OrderPizzaPlugin {
         @KernelFunctionParameter(name = "pizzaId", description = "Id of the pizza to get from the cart", type = Integer.class, required = true)
         int pizzaId)
     {
-        UUID cartId = await userContext.getCartId();
+        UUID cartId = userContext.getCartId();
         return pizzaService.getPizzaFromCart(cartId, pizzaId);
     }
 
@@ -285,7 +285,7 @@ public class OrderPizzaPlugin {
     public Mono<Cart> getCart()
     {
         UUID cartId = userContext.getCartId();
-        return await pizzaService.getCart(cartId);
+        return pizzaService.getCart(cartId);
     }
 
 
