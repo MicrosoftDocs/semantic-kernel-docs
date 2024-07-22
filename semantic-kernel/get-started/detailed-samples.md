@@ -164,7 +164,7 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 
 ::: zone-end
 
-::: zone pivot="programming-language-kava"
+::: zone pivot="programming-language-java"
 
 - [All Java concept samples] (https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples)
 - [Using Plugins] (https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/plugins)
