@@ -612,6 +612,7 @@ execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions
 Finally, we invoke the AI agent with the plugin. The sample code demonstrates how to generate a [non-streaming response](../concepts/ai-services/chat-completion/index.md#non-streaming-chat-completion), but you can also generate a [streaming response](../concepts/ai-services/chat-completion/index.md#streaming-chat-completion) by using the `GetStreamingChatMessageContentAsync` method.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 // Create chat history
 var history = new ChatHistory();
