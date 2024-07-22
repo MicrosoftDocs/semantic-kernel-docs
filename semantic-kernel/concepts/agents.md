@@ -103,7 +103,7 @@ class EmailPlugin:
 
 ::: zone pivot="programming-language-java"
 
-[!NOTE]
+> [!NOTE]
 > Agents are currently unavailable in Java.
 ::: zone-end
 
@@ -221,7 +221,7 @@ if __name__ == "__main__":
 
 ::: zone pivot="programming-language-java"
 
-[!NOTE]
+> [!NOTE]
 > Agents are currently unavailable in Java.
 ::: zone-end
 
@@ -280,7 +280,7 @@ result = (await chat_completion.get_chat_message_contents(
 
 ::: zone pivot="programming-language-java"
 
-[!NOTE]
+> [!NOTE]
 > Agents are currently unavailable in Java.
 ::: zone-end
 
@@ -411,7 +411,7 @@ if __name__ == "__main__":
 
 ::: zone pivot="programming-language-java"
 
-[!NOTE]
+> [!NOTE]
 > Agents are currently unavailable in Java.
 ::: zone-end
 
