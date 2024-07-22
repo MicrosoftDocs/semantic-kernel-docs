@@ -624,9 +624,11 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
     kernel: kernel
 );
 ```
+
 ::: zone-end  
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # Create a history of the conversation
 history = ChatHistory()
@@ -639,6 +641,7 @@ result = (await chat_completion.get_chat_message_contents(
     arguments=KernelArguments(),
 ))[0]
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
