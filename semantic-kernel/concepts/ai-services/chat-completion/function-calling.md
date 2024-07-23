@@ -274,7 +274,8 @@ public class OrderPizzaPlugin {
         @KernelFunctionParameter(name = "pizzaId", description = "Id of the pizza to get from the cart", type = Integer.class, required = true)
         int pizzaId)
     {
-        UUID cartId = await userContext.getCartIdAsync();
+
+        UUID cartId = userContext.getCartId();
         return pizzaService.getPizzaFromCart(cartId, pizzaId);
     }
 
@@ -282,10 +283,11 @@ public class OrderPizzaPlugin {
         name = "get_cart", 
         description = "Returns the user's current cart, including the total price and items in the cart.",
         returnType = "com.pizzashop.Cart")
-    public Mono<Cart> GetCart()
+
+    public Mono<Cart> getCart()
     {
-        Guid cartId = await userContext.GetCartIdAsync();
-        return await pizzaService.GetCart(cartId);
+        UUID cartId = userContext.getCartId();
+        return pizzaService.getCart(cartId);
     }
 
 
@@ -295,10 +297,9 @@ public class OrderPizzaPlugin {
         returnType = "com.pizzashop.CheckoutResponse")
     public Mono<CheckoutResponse> Checkout()
     {
-        UUID cartId = await userContext.GetCartIdAsync();
-        UUID paymentId = await paymentService.RequestPaymentFromUserAsync(cartId);
-
-        return pizzaService.Checkout(cartId, paymentId);
+        UUID cartId = userContext.getCartId();
+        return paymentService.requestPaymentFromUser(cartId)
+                .flatMap(paymentId -> pizzaService.checkout(cartId, paymentId));
     }
 }
 ```
@@ -539,12 +540,12 @@ response = (await chat_completion.get_chat_message_contents(
 ::: zone pivot="programming-language-java"
 
 ```java
-ChatCompletionService chatCompletion = kernel.getService(<I)ChatCompletionService.class);
+ChatCompletionService chatCompletion = kernel.getService(I)ChatCompletionService.class);
 
 InvocationContext invocationContext = InvocationContext.builder()
     .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(false));
 
-List<ChatResponse> responses = await chatCompletion.getChatMessageContentsAsync(
+List<ChatResponse> responses = chatCompletion.getChatMessageContentsAsync(
     chatHistory,
     kernel,
     invocationContext).block();
@@ -798,6 +799,7 @@ messages.stream()
 ```
 
 ::: zone-end
+
 
 Notice that the result is a JSON string that the model then needs to process. As before, the model will need to spend tokens consuming this information. This is why it's important to keep the return types as simple as possible. In this case, the return only includes the new items added to the cart, not the entire cart.
 
