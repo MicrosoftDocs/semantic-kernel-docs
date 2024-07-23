@@ -164,17 +164,13 @@ import com.microsoft.semantickernel.services.chatcompletion.message.ChatMessageI
 import com.microsoft.semantickernel.services.chatcompletion.message.ChatMessageTextContent;
 
 // Add system message
-chatHistory.addMessage(
-    ChatMessageTextContent.systemMessage(
-        "You are a helpful assistant"
-    )
+chatHistory.addSystemMessage(
+    "You are a helpful assistant"
 );
 
 // Add user message with an image
-chatHistory.addMessage(
-    ChatMessageTextContent.userMessage(
-        "What available on this menu"
-    )
+chatHistory.addUserMessage(
+    "What available on this menu"
 );
 
 chatHistory.addMessage(
@@ -184,17 +180,13 @@ chatHistory.addMessage(
 );
 
 // Add assistant message
-chatHistory.addMessage(
-    ChatMessageTextContent.assistantMessage(
-        "We have pizza, pasta, and salad available to order. What would you like to order?"
-    }
+chatHistory.addAssistantMessage(
+    "We have pizza, pasta, and salad available to order. What would you like to order?"
 );
 
 // Add additional message from a different user
-chatHistory.addMessage(
-    ChatMessageTextContent.userMessage(
-        "I'd like to have the first option, please."
-    }
+chatHistory.addUserMessage(
+    "I'd like to have the first option, please."
 );
 ```
 
