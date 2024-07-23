@@ -720,7 +720,8 @@ async for chunk in response:
 
 ::: zone pivot="programming-language-java"
 
-Semantic Kernel for Java does not support the streaming response model.
+> [!NOTE]
+> Semantic Kernel for Java does not support the streaming response model.
 
 ::: zone-end
 
