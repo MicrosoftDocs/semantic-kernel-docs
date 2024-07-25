@@ -246,7 +246,7 @@ if __name__ == "__main__":
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="LightAppExample":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="LightAppExample":::
 
 ::: zone-end
 
@@ -382,7 +382,7 @@ kernel.add_service(AzureChatCompletion(
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="createservice":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="createservice":::
 
 ::: zone-end
 
@@ -445,7 +445,7 @@ chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionCl
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="buildkernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="buildkernel":::
 
 ::: zone-end
 
@@ -566,7 +566,7 @@ class LightsPlugin:
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsPlugin.java" id="plugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsPlugin.java" id="plugin":::
 
 ::: zone-end
 
@@ -597,7 +597,7 @@ kernel.add_plugin(
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="importplugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="importplugin":::
 
 ::: zone-end
 
@@ -629,7 +629,7 @@ execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="enableplanning":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="enableplanning":::
 
 ::: zone-end
 
@@ -673,7 +673,7 @@ result = (await chat_completion.get_chat_message_contents(
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="prompt":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="prompt":::
 
 ::: zone-end
 

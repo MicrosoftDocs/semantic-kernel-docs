@@ -245,7 +245,7 @@ public class OrderPizzaPlugin {
         @KernelFunctionParameter(name = "quantity", description = "How many of this pizza to order", type = Integer.class, defaultValue = "1")
         int quantity,
         @KernelFunctionParameter(name = "specialInstructions", description = "Special instructions for the order",)
-        string specialInstructions
+        String specialInstructions
     )
     {
         UUID cartId = userContext.getCartId();
@@ -324,7 +324,7 @@ KernelPlugin plugin = KernelPluginFactory.createFromObject(
 Kernel kernel = Kernel.builder()
     .withAIService(ChatCompletionService.class, chat)
     .withPlugin(plugin)
-    .build();IKernelBuilder kernelBuilder = new KernelBuilder();
+    .build();
 ```
 
 ::: zone-end
@@ -496,7 +496,7 @@ chat_history.add_user_message("I'd like to order a pizza!")
 
 ::: zone pivot="programming-language-java"
 
-```csharp
+```java
 ChatHistory chatHistory = new ChatHistory();
 chatHistory.addUserMessage("I'd like to order a pizza!");
 ```

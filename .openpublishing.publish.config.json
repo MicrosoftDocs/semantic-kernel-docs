@@ -47,8 +47,8 @@
     },
     {
       "path_to_root": "semantic-kernel-samples-java",
-      "url": "https://github.com/johnoliver/semantic-kernel",
-      "branch": "docs",
+      "url": "https://github.com/microsoft/semantic-kernel-java",
+      "branch": "docs-java-1.2.0",
       "branch_mapping": {}
     }
   ],

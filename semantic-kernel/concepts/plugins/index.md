@@ -220,7 +220,7 @@ class LightsPlugin:
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsPlugin.java" id="plugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsPlugin.java" id="plugin":::
 
 ::: zone-end
 
@@ -255,8 +255,8 @@ kernel.add_plugin(
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="importplugin":::
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="buildkernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="importplugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsApp.java" id="buildkernel":::
 
 ::: zone-end
 
@@ -370,7 +370,7 @@ if __name__ == "__main__":
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/LightsAppNonInteractive.java" id="invoke":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsAppNonInteractive.java" id="invoke":::
 
 ::: zone-end
 

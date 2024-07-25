@@ -113,7 +113,7 @@ class LightsPlugin:
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/withbrightness/LightsPlugin.java" id="plugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightsPlugin.java" id="plugin":::
 
 ::: zone-end
 
@@ -170,7 +170,7 @@ class LightModel(TypedDict):
 
 ::: zone pivot="programming-language-java"
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/withbrightness/LightModel.java" id="model":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightModel.java" id="model":::
 
 ::: zone-end
 
@@ -361,11 +361,11 @@ kernel.add_plugin(lights_plugin)
 
 The `createFromObject` method allows you to build a kernel plugin from an Object with annotated methods.
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/withbrightness/LightsAppNonInteractive.java" id="importplugin":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightsAppNonInteractive.java" id="importplugin":::
 
 This plugin can then be added to a kernel.
 
-:::code language="java" source="~/../semantic-kernel-samples-java/samples/java/learnDocs/LightsApp/src/main/java/withbrightness/LightsAppNonInteractive.java" id="buildkernel":::
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightsAppNonInteractive.java" id="buildkernel":::
 
 ::: zone-end
 
