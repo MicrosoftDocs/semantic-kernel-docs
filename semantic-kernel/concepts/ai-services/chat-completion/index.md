@@ -543,6 +543,66 @@ chat_completion_service = OpenAIChatCompletion(
 
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+You can create instances of the chat completion service directly and either add them to
+a kernel or use them directly in your code without injecting them into the kernel. The
+following code shows how to create a a chat completion service and add it to the kernel.
+
+# [Azure OpenAI](#tab/java-AzureOpenAI)
+
+```java
+import com.azure.ai.openai.OpenAIAsyncClient;
+import com.azure.ai.openai.OpenAIClientBuilder;
+import com.microsoft.semantickernel.Kernel;
+import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
+
+// Create the client
+OpenAIAsyncClient client = new OpenAIClientBuilder()
+    .credential(azureOpenAIClientCredentials)
+    .endpoint(azureOpenAIClientEndpoint)
+    .buildAsyncClient();
+
+// Create the chat completion service
+ChatCompletionService openAIChatCompletion = OpenAIChatCompletion.builder()
+    .withOpenAIAsyncClient(client)
+    .withModelId(modelId)
+    .build();
+
+// Initialize the kernel
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, openAIChatCompletion)
+    .build();
+```
+
+# [OpenAI](#tab/java-OpenAI)
+
+```java
+import com.azure.ai.openai.OpenAIAsyncClient;
+import com.azure.ai.openai.OpenAIClientBuilder;
+import com.microsoft.semantickernel.Kernel;
+import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
+
+// Create the client
+OpenAIAsyncClient client = new OpenAIClientBuilder()
+    .credential(openAIClientCredentials)
+    .buildAsyncClient();
+
+// Create the chat completion service
+ChatCompletionService openAIChatCompletion = OpenAIChatCompletion.builder()
+    .withOpenAIAsyncClient(client)
+    .withModelId(modelId)
+    .build();
+
+// Initialize the kernel
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, openAIChatCompletion)
+    .build();
+```
+
+---
+
+::: zone-end
+
 ## Retrieving chat completion services
 
 Once you've added chat completion services to your kernel, you can retrieve them using the get service method. Below is an example of how you can retrieve a chat completion service from the kernel.
@@ -559,6 +619,14 @@ from semantic_kernel.connectors.ai.chat_completion_client_base import ChatComple
 
 chat_completion_service = kernel.get_service(type=ChatCompletionClientBase)
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+```java
+ChatCompletionService chatCompletionService = kernel.getService(ChatCompletionService.class);
+```
+
 ::: zone-end
 
 ## Using chat completion services
@@ -597,6 +665,23 @@ response = (await chat_completion.get_chat_message_contents(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+```java
+ChatHistory history = new ChatHistory();
+history.addUserMessage("Hello, how are you?");
+
+InvocationContext optionalInvocationContext = null;
+
+List<ChatMessageContent<?>> response = chatCompletionService.getChatMessageContentsAsync(
+    history,
+    kernel,
+    optionalInvocationContext
+);
+```
+
+::: zone-end
+
 ### Streaming chat completion
 
 To use streaming chat completion, you can use the following code to generate a response from the AI agent.
@@ -631,6 +716,13 @@ response = chat_completion.get_streaming_chat_message_contents(
 async for chunk in response:
     print(chunk)
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Semantic Kernel for Java does not support the streaming response model.
+
 ::: zone-end
 
 ## Next steps

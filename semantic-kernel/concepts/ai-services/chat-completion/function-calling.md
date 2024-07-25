@@ -205,6 +205,130 @@ kernel.add_plugin(OrderPizzaPlugin(pizza_service, user_context, payment_service)
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+In Java, the plugin might look like this:
+
+```java
+public class OrderPizzaPlugin {
+
+    private final PizzaService pizzaService;
+    private final HttpSession userContext;
+    private final PaymentService paymentService;
+
+    public OrderPizzaPlugin(
+        PizzaService pizzaService,
+        UserContext userContext,
+        PaymentService paymentService)
+    {
+      this.pizzaService = pizzaService;
+      this.userContext = userContext;
+      this.paymentService = paymentService;
+    }
+
+    @DefineKernelFunction(name = "get_pizza_menu", description = "Get the pizza menu.", returnType = "com.pizzashop.Menu")
+    public Mono<Menu> getPizzaMenuAsync()
+    {
+        return pizzaService.getMenu();
+    }
+
+    @DefineKernelFunction(
+        name = "add_pizza_to_cart", 
+        description = "Add a pizza to the user's cart",
+        returnDescription = "Returns the new item and updated cart", 
+        returnType = "com.pizzashop.CartDelta")
+    public Mono<CartDelta> addPizzaToCart(
+        @KernelFunctionParameter(name = "size", description = "The size of the pizza", type = com.pizzashopo.PizzaSize.class, required = true)
+        PizzaSize size,
+        @KernelFunctionParameter(name = "toppings", description = "The toppings to add to the the pizza", type = com.pizzashopo.PizzaToppings.class)
+        List<PizzaToppings> toppings,
+        @KernelFunctionParameter(name = "quantity", description = "How many of this pizza to order", type = Integer.class, defaultValue = "1")
+        int quantity,
+        @KernelFunctionParameter(name = "specialInstructions", description = "Special instructions for the order",)
+        String specialInstructions
+    )
+    {
+        UUID cartId = userContext.getCartId();
+        return pizzaService.addPizzaToCart(
+            cartId,
+            size,
+            toppings,
+            quantity,
+            specialInstructions);
+    }
+
+    @DefineKernelFunction(name = "remove_pizza_from_cart", description = "Remove a pizza from the cart.", returnType = "com.pizzashop.RemovePizzaResponse")
+    public Mono<RemovePizzaResponse> removePizzaFromCart(
+        @KernelFunctionParameter(name = "pizzaId", description = "Id of the pizza to remove from the cart", type = Integer.class, required = true)
+        int pizzaId)
+    {
+        UUID cartId = userContext.getCartId();
+        return pizzaService.removePizzaFromCart(cartId, pizzaId);
+    }
+
+    @DefineKernelFunction(
+        name = "get_pizza_from_cart", 
+        description = "Returns the specific details of a pizza in the user's cart; use this instead of relying on previous messages since the cart may have changed since then.",
+        returnType = "com.pizzashop.Pizza")
+    public Mono<Pizza> getPizzaFromCart(
+        @KernelFunctionParameter(name = "pizzaId", description = "Id of the pizza to get from the cart", type = Integer.class, required = true)
+        int pizzaId)
+    {
+
+        UUID cartId = userContext.getCartId();
+        return pizzaService.getPizzaFromCart(cartId, pizzaId);
+    }
+
+    @DefineKernelFunction(
+        name = "get_cart", 
+        description = "Returns the user's current cart, including the total price and items in the cart.",
+        returnType = "com.pizzashop.Cart")
+
+    public Mono<Cart> getCart()
+    {
+        UUID cartId = userContext.getCartId();
+        return pizzaService.getCart(cartId);
+    }
+
+
+    @DefineKernelFunction(
+        name = "checkout", 
+        description = "Checkouts the user's cart; this function will retrieve the payment from the user and complete the order.",
+        returnType = "com.pizzashop.CheckoutResponse")
+    public Mono<CheckoutResponse> Checkout()
+    {
+        UUID cartId = userContext.getCartId();
+        return paymentService.requestPaymentFromUser(cartId)
+                .flatMap(paymentId -> pizzaService.checkout(cartId, paymentId));
+    }
+}
+```
+
+You would then add this plugin to the kernel like so:
+
+```java
+OpenAIAsyncClient client = new OpenAIClientBuilder()
+  .credential(openAIClientCredentials)
+  .buildAsyncClient();
+
+ChatCompletionService chat = OpenAIChatCompletion.builder()
+  .withModelId(modelId)
+  .withOpenAIAsyncClient(client)
+  .build();
+
+KernelPlugin plugin = KernelPluginFactory.createFromObject(
+  new OrderPizzaPlugin(pizzaService, userContext, paymentService),
+  "OrderPizzaPlugin"
+);
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chat)
+    .withPlugin(plugin)
+    .build();
+```
+
+::: zone-end
+
 ### 1) Serializing the functions
 
 When you create a kernel with the `OrderPizzaPlugin`, the kernel will automatically serialize the functions and their parameters. This is necessary so that the model can understand the functions and their inputs.
@@ -370,6 +494,15 @@ chat_history.add_user_message("I'd like to order a pizza!")
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+```java
+ChatHistory chatHistory = new ChatHistory();
+chatHistory.addUserMessage("I'd like to order a pizza!");
+```
+
+::: zone-end
+
 We can then send this chat history and the serialized functions to the model. The model will use this information to determine the best way to respond.
 
 ::: zone pivot="programming-language-csharp"
@@ -404,6 +537,22 @@ response = (await chat_completion.get_chat_message_contents(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+```java
+ChatCompletionService chatCompletion = kernel.getService(I)ChatCompletionService.class);
+
+InvocationContext invocationContext = InvocationContext.builder()
+    .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(false));
+
+List<ChatResponse> responses = chatCompletion.getChatMessageContentsAsync(
+    chatHistory,
+    kernel,
+    invocationContext).block();
+```
+
+::: zone-end
+
 ### 3) Model processes the input
 
 With both the chat history and the serialized functions, the model can determine the best way to respond. In this case, the model recognizes that the user wants to order a pizza. The model would likely _want_ to call the `add_pizza_to_cart` function, but because we specified the size and toppings as required parameters, the model will ask the user for this information:
@@ -428,6 +577,19 @@ chat_history.add_assistant_message(response)
 # know the size and toppings. What size pizza would
 # you like? Small, medium, or large?"
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+```java
+responses.forEach(response -> System.out.printlin(response.getContent());
+chatHistory.addAll(responses);
+
+// "Before I can add a pizza to your cart, I need to
+// know the size and toppings. What size pizza would
+// you like? Small, medium, or large?"
+```
+
 ::: zone-end
 
 Since the model wants the user to respond next, a termination signal will be sent to Semantic Kernel to stop automatic function calling until the user responds.
@@ -455,6 +617,19 @@ response = (await chat_completion.get_chat_message_contents(
     arguments=KernelArguments(),
 ))[0]
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+```java
+chatHistory.addUserMessage("I'd like a medium pizza with cheese and pepperoni, please.");
+
+responses = chatCompletion.GetChatMessageContentAsync(
+    chatHistory,
+    kernel,
+    null).block();
+```
+
 ::: zone-end
 
 Now that the model has the necessary information, it can now call the `add_pizza_to_cart` function with the user's input. Behind the scenes, it adds a new message to the chat history that looks like this:
@@ -528,6 +703,16 @@ chat_history.add_message(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+Semantic Kernel for Java handles function calling differently than C# and Python when the
+auto-invoke tool call behavior is false. You do not add function call content to the chat
+history; rather, the application is made responsible for invoking the function calls.
+Skip to the next section, "Invoke the function", for an example of handling
+function calls in Java when auto-invoke is false.
+
+::: zone-end
+
 ### 5) Invoke the function
 
 Once Semantic Kernel has the correct types, it can finally invoke the `add_pizza_to_cart` function. Because the plugin uses dependency injection, the function can interact with external services like `pizzaService` and `userContext` to add the pizza to the user's cart.
@@ -581,6 +766,39 @@ chat_history.add_message(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+If auto-invoke is disabled in the tool call behavior, a Java application
+must invoke the function calls and add the function result as an `AuthorRole.TOOL` message
+to the chat history.
+
+```java
+messages.stream()
+    .filter (it -> it instanceof OpenAIChatMessageContent)
+        .map(it -> ((OpenAIChatMessageContent<?>) it).getToolCall())
+        .flatMap(List::stream)
+        .forEach(toolCall -> {
+            String content;
+            try {
+                // getFunction will throw an exception if the function is not found
+                var fn = kernel.getFunction(toolCall.getPluginName(),
+                        toolCall.getFunctionName());
+                FunctionResult<?> fnResult = fn
+                        .invokeAsync(kernel, toolCall.getArguments(), null, null).block();
+                content = (String) fnResult.getResult();
+            } catch (IllegalArgumentException e) {
+                content = "Unable to find function. Please try again!";
+            }
+
+            chatHistory.addMessage(
+                    AuthorRole.TOOL,
+                    content,
+                    StandardCharsets.UTF_8,
+                    FunctionResultMetadata.build(toolCall.getId()));
+        });
+```
+
+::: zone-end
 
 Notice that the result is a JSON string that the model then needs to process. As before, the model will need to spend tokens consuming this information. This is why it's important to keep the return types as simple as possible. In this case, the return only includes the new items added to the cart, not the entire cart.
 

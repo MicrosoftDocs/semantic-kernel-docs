@@ -30,6 +30,12 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
      > [View all Python concept samples on GitHub](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts)
      ::: zone-end
 
+     
+     ::: zone pivot="programming-language-java"
+     > [!div class="nextstepaction"]
+     > [View all Java concept samples on GitHub](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples)
+     ::: zone-end
+
    :::column-end:::
    :::column span="2":::
         :::image type="content" source="../media/tutorials/kernel-syntax-examples.png" alt-text="Leverage the kernel syntax examples on GitHub":::
@@ -157,3 +163,17 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 | TextGeneration | Using [`TextGeneration`](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/connectors/ai/text_completion_client_base.py) capable service with models  | [Link](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/text_generation) |
 
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+
+- [All Java concept samples](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples)
+- [Using Plugins](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/plugins)
+- [Lights sample planning app](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/demos/lights)
+- [Bing connector](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/connectors/web/bing/BingConnector.java)
+- [Booking agent](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-demos/booking-agent-m365)
+- [Spring starter](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-demos/semantickernel-spring-starter)
+- [Presidio integration sample](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-demos/sk-presidio-sample)
+- [Presidio example plugin](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-sample-plugins/semantickernel-presidio-plugin)
+- [OpenApi sample integration](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-sample-plugins/semantickernel-openapi-plugin)
+::: zone-end
+

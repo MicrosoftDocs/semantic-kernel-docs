@@ -111,6 +111,12 @@ class LightsPlugin:
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightsPlugin.java" id="plugin":::
+
+::: zone-end
+
 > [!TIP]
 > Because the LLMs are predominantly trained on Python code, it is recommended to use snake_case for function names and parameters (even if you're using C# or Java). This will help the AI agent better understand the function and its parameters.
 
@@ -160,6 +166,12 @@ class LightModel(TypedDict):
     brightness: Optional[int]
     hex: Optional[str]
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightModel.java" id="model":::
+
 ::: zone-end
 
 > [!NOTE]
@@ -340,6 +352,21 @@ lights_plugin = LightsPlugin(lights)
 # Add the plugin to the kernel
 kernel.add_plugin(lights_plugin)
 ```
+::: zone-end
+
+
+::: zone pivot="programming-language-java"
+
+#### Adding a plugin using the `createFromObject` method
+
+The `createFromObject` method allows you to build a kernel plugin from an Object with annotated methods.
+
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightsAppNonInteractive.java" id="importplugin":::
+
+This plugin can then be added to a kernel.
+
+:::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightsAppNonInteractive.java" id="buildkernel":::
+
 ::: zone-end
 
 ## Next steps

@@ -84,6 +84,22 @@ kernel.add_plugin(
 
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+## Build a kernel
+
+Kernels can be built using a `Kernel.builder()`. On this you can add required AI services and plugins.
+
+```java
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletionService)
+    .withPlugin(lightPlugin)
+    .build();
+```
+
+::: zone-end
+
+
 ::: zone pivot="programming-language-csharp"
 ## Using Dependency Injection
 
@@ -127,6 +143,10 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 > [!TIP]
 > For more samples on how to use dependency injection in C#, refer to the [concept samples](../get-started/detailed-samples.md).
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
 
 ::: zone-end
 
