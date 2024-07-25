@@ -101,6 +101,12 @@ class EmailPlugin:
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Agents are currently unavailable in Java.
+::: zone-end
+
 There are other ways to create plugins. For example, if you have a RestAPI that can send emails, you can automatically create a plugin using its [OpenAPI specification](./plugins/adding-openapi-plugins.md). To learn more about other ways to author plugins, see the [plugins section](./plugins/index.md).
 
 ### Planning: completing multi-step tasks
@@ -213,6 +219,13 @@ if __name__ == "__main__":
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Agents are currently unavailable in Java.
+::: zone-end
+
+
 To learn more about planning with Semantic Kernel, see the [planning article](./planning.md).
 
 ### Personas: giving your agent a job description
@@ -263,6 +276,12 @@ result = (await chat_completion.get_chat_message_contents(
     arguments=KernelArguments(),
 ))[0]
 ```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Agents are currently unavailable in Java.
 ::: zone-end
 
 To learn more about authoring effective personas, refer to the [personas article](./personas.md).
@@ -389,6 +408,13 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Agents are currently unavailable in Java.
+::: zone-end
+
 
 ## Trying out your agent
 Now that we've completed our program, we can give it a test run. Below is a sample conversation with our agent while using gpt-4 model.
