@@ -800,7 +800,6 @@ messages.stream()
 
 ::: zone-end
 
-
 Notice that the result is a JSON string that the model then needs to process. As before, the model will need to spend tokens consuming this information. This is why it's important to keep the return types as simple as possible. In this case, the return only includes the new items added to the cart, not the entire cart.
 
 > [!TIP]
