@@ -9,6 +9,7 @@
       "moniker_ranges": [],
       "open_to_public_contributors": false,
       "type_mapping": {
+        "ZonePivotGroups": "Toc",
         "Conceptual": "Content"
       },
       "build_entry_point": "docs",
@@ -42,6 +43,12 @@
       "path_to_root": "semantic-kernel-samples",
       "url": "https://github.com/microsoft/semantic-kernel",
       "branch": "main",
+      "branch_mapping": {}
+    },
+    {
+      "path_to_root": "semantic-kernel-samples-java",
+      "url": "https://github.com/microsoft/semantic-kernel-java",
+      "branch": "docs-java-1.2.0",
       "branch_mapping": {}
     }
   ],

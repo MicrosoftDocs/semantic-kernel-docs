@@ -1,3 +1,6 @@
 {
-    "python.terminal.activateEnvironment": true
+    "python.terminal.activateEnvironment": true,
+    "cSpell.words": [
+        "SKEXP"
+    ]
 }
