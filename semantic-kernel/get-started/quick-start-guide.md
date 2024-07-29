@@ -166,6 +166,7 @@ do {
 import asyncio
 
 from semantic_kernel import Kernel
+from semantic_kernel.utils.logging import setup_logging
 from semantic_kernel.functions import kernel_function
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
@@ -182,17 +183,15 @@ async def main():
     kernel = Kernel()
 
     # Add Azure OpenAI chat completion
-    kernel.add_service(AzureChatCompletion(
+    chat_completion = AzureChatCompletion(
         deployment_name="your_models_deployment_name",
         api_key="your_api_key",
         base_url="your_base_url",
-    ))
+    )
+    kernel.add_service(chat_completion)
 
     # Set the logging level for  semantic_kernel.kernel to DEBUG.
-    logging.basicConfig(
-        format="[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    setup_logging()
     logging.getLogger("kernel").setLevel(logging.DEBUG)
 
     # Add a plugin (the LightsPlugin class is defined below)
@@ -200,8 +199,6 @@ async def main():
         LightsPlugin(),
         plugin_name="Lights",
     )
-
-    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 
     # Enable planning
     execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
@@ -224,12 +221,11 @@ async def main():
         history.add_user_message(userInput)
 
         # Get the response from the AI
-        result = (await chat_completion.get_chat_message_contents(
+        result = await chat_completion.get_chat_message_content(
             chat_history=history,
             settings=execution_settings,
             kernel=kernel,
-            arguments=KernelArguments(),
-        ))[0]
+        )
 
         # Print the results
         print("Assistant > " + str(result))

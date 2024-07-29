@@ -56,6 +56,12 @@ In Python, there's a single package that includes everything you need to get sta
 pip install semantic-kernel
 ```
 
+On [PyPI](https://pypi.org/project/semantic-kernel/) under `Provides-Extra` the additional extras you can install are also listed and when used that will install the packages needed for using SK with that specific connector or service, you can install those with the square bracket syntax for instance:
+```bash
+pip install semantic-kernel[azure]
+```
+This will install Semantic Kernel, as well as specific tested versions of: `azure-ai-inference`, `azure-search-documents`, `azure-core`, `azure-identity`, `azure-cosmos` and `msgraph-sdk` (and any dependencies of those packages). Similarly the extra `hugging_face` will install `transformers` and `sentence-transformers`.
+
 ### Java packages
 
 For Java, Semantic Kernel has the following packages; all are under the group Id `com.microsoft.semantic-kernel`, and can be imported
