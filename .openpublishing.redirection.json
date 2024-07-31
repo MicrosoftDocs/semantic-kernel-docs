@@ -509,6 +509,211 @@
             "source_path": "semantic-kernel/prompt-engineering/your-first-prompt.md",
             "redirect_url": "/semantic-kernel/prompts/your-first-prompt",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/plugins/openai-plugins.md",
+            "redirect_url": "/semantic-kernel/agents/plugins/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/index.md",
+            "redirect_url": "/semantic-kernel/concepts/agents.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/kernel/adding-services.md",
+            "redirect_url": "/semantic-kernel/concepts/ai-services/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/agents/kernel/index.md",
+            "redirect_url": "/semantic-kernel/concepts/kernel",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/create-a-prompt-flow-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/concepts/planning",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/deploying-prompt-flows-with-semantic-kernel.md",
+            "redirect_url": "/semantic-kernel/concepts/planning",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/evaluating-plugins-and-planners-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/concepts/planning",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/index.md",
+            "redirect_url": "/semantic-kernel/concepts/planning",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/evaluate-and-deploy-planners/running-batches-with-prompt-flow.md",
+            "redirect_url": "/semantic-kernel/concepts/planning",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/planners/index.md",
+            "redirect_url": "/semantic-kernel/concepts/planning",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/agents/plugins/index.md",
+            "redirect_url": "/semantic-kernel/concepts/plugins/index",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/agents/plugins/out-of-the-box-plugins.md",
+            "redirect_url": "/semantic-kernel/concepts/plugins/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/agents/plugins/using-the-KernelFunction-decorator.md",
+            "redirect_url": "/semantic-kernel/concepts/plugins/adding-native-plugins",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/customizing-chat-copilot.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/deploy-to-azure.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/getting-started.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/index.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/publish-changes-to-azure.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/chat-copilot/testing-plugins-with-chat-copilot.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/tutorials.md",
+            "redirect_url": "/semantic-kernel/get-started/detailed-samples",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "semantic-kernel/memories/embeddings.md",
+            "redirect_url": "/semantic-kernel/concepts/ai-services/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/memories/index.md",
+            "redirect_url": "/semantic-kernel/integrations/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/memories/vector-db.md",
+            "redirect_url": "/semantic-kernel/integrations/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/calling-nested-functions.md",
+            "redirect_url": "/semantic-kernel/concepts/plugins/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/configure-prompts.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/index.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/prompt-template-syntax.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/saving-prompts-as-files.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/templatizing-prompts.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/prompts/your-first-prompt.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/bibliography.md",
+            "redirect_url": "/semantic-kernel/support/glossary",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/code-of-conduct.md",
+            "redirect_url": "/semantic-kernel/get-started/contributing",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/faqs.md",
+            "redirect_url": "/semantic-kernel/support/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/mseriesmacbook.md",
+            "redirect_url": "/semantic-kernel/support/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/support/requirements.md",
+            "redirect_url": "/semantic-kernel/support/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/deploy/use-ai-apis-with-api-management.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/vs-code-tools/features.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/vs-code-tools/get-started.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/vs-code-tools/index.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/when-to-use-ai/responsible-ai.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/when-to-use-ai/schillace-laws.md",
+            "redirect_url": "/semantic-kernel/overview/index",
+            "redirect_document_id": false
         }
     ]
 }

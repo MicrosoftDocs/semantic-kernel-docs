@@ -1,0 +1,12 @@
+- name: Agents
+  href: agents.md
+- name: Kernel
+  href: kernel.md
+- name: AI Services
+  href: ai-services/TOC.yml
+- name: Plugins
+  href: plugins/TOC.yml
+- name: Planning
+  href: planning.md
+- name: Personas
+  href: personas.md
