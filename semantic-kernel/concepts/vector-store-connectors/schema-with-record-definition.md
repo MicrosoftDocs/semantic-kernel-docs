@@ -13,7 +13,7 @@ ms.service: semantic-kernel
 ## Overview
 
 The Semantic Kernel Vector Store connectors use a model first approach to interacting with databases and allows annotating data
-models with information that helps creating indexes or mapping data to the database schema.
+models with information that is needed for creating indexes or mapping data to the database schema.
 
 Another way of providing this information is via record definitions, that can be defined and supplied separately to the data model.
 This can be useful in multiple scenarios:
@@ -41,6 +41,12 @@ var hotelDefinition = new VectorStoreRecordDefinition
 ```
 
 When creating a definition you always have to provide a name and type for each property in your schema, since this is required for index creation and data mapping.
+
+To use the definition, pass it to the GetCollection method.
+
+```csharp
+var collection = vectorStore.GetCollection<ulong, Glossary>("skglossary", hotelDefinition);
+```
 
 ## Record Property configuration classes
 
