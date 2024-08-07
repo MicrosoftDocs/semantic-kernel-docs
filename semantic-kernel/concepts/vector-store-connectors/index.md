@@ -1,3 +1,13 @@
+---
+title: What are Semantic Kernel Vector Store connectors? (Experimental)
+description: Describes what a Semantic Kernal Vector Store is, an provides a basic example of how to use one and how to get started.
+zone_pivot_groups: programming-languages
+author: westey-m
+ms.topic: conceptual
+ms.author: westey
+ms.date: 07/08/2024
+ms.service: semantic-kernel
+---
 # What are Semantic Kernel Vector Store connectors? (Experimental)
 
 Vector databases have many use cases across different domains and applications that involve natural language processing (NLP), computer vision (CV), recommendation systems (RS), and other areas that require semantic understanding and matching of data.

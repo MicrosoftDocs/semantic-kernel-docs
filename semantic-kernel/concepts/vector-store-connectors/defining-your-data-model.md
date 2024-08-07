@@ -1,3 +1,13 @@
+---
+title: Defining your Semantic Kernel Vector Store data model (Experimental)
+description: Describes how to create a data model with Semantic Kernel to use when writing to or reading from a Vector Store.
+zone_pivot_groups: programming-languages
+author: westey-m
+ms.topic: reference
+ms.author: westey
+ms.date: 07/08/2024
+ms.service: semantic-kernel
+---
 # Defining your data model (Experimental)
 
 ## Overview
