@@ -81,7 +81,7 @@ using Microsoft.SemanticKernel.Connectors.Qdrant;
 var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
 
 // Choose a collection from the database and specify the type of key and record stored in it via Generic parameters.
-var collection = vectorStore.GetCollection<ulong, Hotel>("skglossary");
+var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
 ```
 
 ::: zone-end

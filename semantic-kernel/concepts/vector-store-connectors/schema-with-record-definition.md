@@ -45,7 +45,7 @@ When creating a definition you always have to provide a name and type for each p
 To use the definition, pass it to the GetCollection method.
 
 ```csharp
-var collection = vectorStore.GetCollection<ulong, Glossary>("skglossary", hotelDefinition);
+var collection = vectorStore.GetCollection<ulong, Glossary>("skhotels", hotelDefinition);
 ```
 
 ## Record Property configuration classes
