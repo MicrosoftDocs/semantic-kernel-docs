@@ -21,6 +21,30 @@ The properties on these classes are decorated with attributes that indicate the 
 > [!TIP]
 > For an alternative to using attributes, refer to [definining your schema with a record definition](./schema-with-record-definition.md).
 
+Here is an example of a model that is decorated with these attributes.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+public class Hotel
+{
+    [VectorStoreRecordKey]
+    public ulong HotelId { get; set; }
+
+    [VectorStoreRecordData(IsFilterable = true)]
+    public string HotelName { get; set; }
+
+    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    public string Description { get; set; }
+
+    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
+
+    [VectorStoreRecordData(IsFilterable = true)]
+    public string[] Tags { get; set; }
+}
+```
+
 ## Attributes
 
 ### VectorStoreRecordKeyAttribute
