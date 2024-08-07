@@ -1,0 +1,13 @@
+# Out-of-the-box Vector Store connectors (Experimental)
+
+Semantic Kernel provides a number of out-of-the-box Vector Store integrations making it easy to get started with using Vector Stores. It also allows you to experiment with a free or locally hosted Vector Store and then easily switch to a service when scale requires it.
+
+## List of out-of-the-box connectors
+
+| Vector Store Connectors                             |  C#  | Python | Java | Using officially supported SDK |
+|-----------------------------------------------------|:----:|:------:|:----:|:------------------------------:|
+| [Azure AI Search](./azure-ai-search-connector.md)   | ✅  | ✅     | ❌   | ✅                            |
+| [Qdrant](./qdrant-connector.md)                     | ✅  | ✅     | ❌   | ✅                            |
+| [Redis](./redis-connector.md)                       | ✅  | ✅     | ❌   | ✅                            |
+| [Pinecone](./pinecone-connector.md)                 | ✅  | ❌     | ❌   | ❌                            |
+| [Volatile (In-Memory)](./volatile-connector.md)     | ✅  | ✅     | ❌   | N/A                            |
