@@ -97,7 +97,7 @@ var collection = vectorStore.GetCollection<ulong, Hotel>("skglossary");
 ::: zone-end
 
 > [!TIP]
-> For more information on what key and field types each Vector Store connector supports, refer to [the documentation for each connector](./out-of-the-box-connectors).
+> For more information on what key and field types each Vector Store connector supports, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
 ### Create the collection and add records
 

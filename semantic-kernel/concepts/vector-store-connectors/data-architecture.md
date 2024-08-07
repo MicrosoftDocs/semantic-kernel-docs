@@ -23,4 +23,4 @@ Most databases have a concept of a collection of records and there is a natural 
 Note that this concept may not always be referred to as a `collection` in the underlying database.
 
 > [!TIP]
-> For more information on what the underlying implementation of a collection is per connector, refer to [the documentation for each connector](./out-of-the-box-connectors).
+> For more information on what the underlying implementation of a collection is per connector, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
