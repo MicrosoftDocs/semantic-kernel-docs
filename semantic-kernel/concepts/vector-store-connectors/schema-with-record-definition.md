@@ -105,3 +105,6 @@ new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dim
 ```
 
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end

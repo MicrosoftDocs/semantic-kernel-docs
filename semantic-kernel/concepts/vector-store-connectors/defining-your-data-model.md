@@ -80,3 +80,6 @@ Individual Vector Store implementations may also use their own index kinds and d
 
 ::: zone pivot="programming-language-python"
 ::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end

@@ -57,6 +57,9 @@ public class Hotel
 
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+::: zone-end
+
 > [!TIP]
 > For more information on how to annotate your data model, refer to [definining your data model](./defining-your-data-model.md).
 > [!TIP]
@@ -90,8 +93,11 @@ var collection = vectorStore.GetCollection<ulong, Hotel>("skglossary");
 
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+::: zone-end
+
 > [!TIP]
-> For more information on what key and field types each Vector Store connector supports, refer to [the documentation for each connector](./out-of-the-box-connectors.md).
+> For more information on what key and field types each Vector Store connector supports, refer to [the documentation for each connector](./out-of-the-box-connectors).
 
 ### Create the collection and add records
 
@@ -123,6 +129,9 @@ var retrievedHotel = await collection.GetAsync(1);
 ```python
 ```
 
+::: zone-end
+
+::: zone pivot="programming-language-java"
 ::: zone-end
 
 ## Next steps
