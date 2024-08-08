@@ -157,7 +157,7 @@ await collection.GetAsync("myprefix_h1");
 
 ## Data mapping
 
-Redis supports two modes for storing data, JSON and Hashes. The Redis connector supports both storage types, and mapping differs depending on the chosen storage type.
+Redis supports two modes for storing data: JSON and Hashes. The Redis connector supports both storage types, and mapping differs depending on the chosen storage type.
 
 ### Data mapping when using the JSON storage type
 
@@ -219,9 +219,9 @@ This mapper will map each property to a field-value pair as supported by the Red
 For data properties and vector properties, you can provide override field names to use in storage that is different to the
 property names on the data model. This is not supported for keys, since keys cannot be named in Redis.
 ::: zone pivot="programming-language-csharp"
-This is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
+Property name overriding is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
 
-Here is an example of a data model with `StoragePropertyName` set on its attributes and how that set in Redis.
+Here is an example of a data model with `StoragePropertyName` set on its attributes and how these are set in Redis.
 
 ```csharp
 using Microsoft.SemanticKernel;
