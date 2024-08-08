@@ -120,3 +120,4 @@ var retrievedHotel = await collection.GetAsync(1);
 
 > [!div class="nextstepaction"]
 > [Learn about the Vector Store data architecture](./data-architecture.md)
+> [How to ingest data into a Vector Store](../../how-to/vector-store-connectors/vector-store-data-ingestion.md)

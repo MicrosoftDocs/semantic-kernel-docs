@@ -27,7 +27,7 @@ The connector has the following characteristics.
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | **When using Hashes:** Yes<br>**When using JSON:** No                                                                            |
+| StoragePropertyName supported?    | **When using Hashes:** Yes<br>**When using JSON:** No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
 
 ::: zone pivot="programming-language-csharp"
 

@@ -28,7 +28,7 @@ The connector has the following characteristics.
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | No                                                                                                                               |
+| StoragePropertyName supported?    | No, since storage is volatile and data reuse is therefore not possible, custom naming is not useful and not supported.           |
 
 ::: zone pivot="programming-language-csharp"
 

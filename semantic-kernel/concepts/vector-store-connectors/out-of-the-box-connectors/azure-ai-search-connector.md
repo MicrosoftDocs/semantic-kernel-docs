@@ -25,7 +25,7 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | No                                                                                                                               |
+| StoragePropertyName supported?    | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                |
 
 ::: zone pivot="programming-language-csharp"
 
