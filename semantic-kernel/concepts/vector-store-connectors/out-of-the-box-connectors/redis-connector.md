@@ -29,9 +29,9 @@ The connector has the following characteristics.
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | **When using Hashes:** Yes<br>**When using JSON:** No                                                                            |
 
-## Getting started
-
 ::: zone pivot="programming-language-csharp"
+
+## Getting started
 
 Add the Redis Vector Store connector nuget package to your project.
 
@@ -159,9 +159,10 @@ await collection.GetAsync("myprefix_h1");
 
 Redis supports two modes for storing data: JSON and Hashes. The Redis connector supports both storage types, and mapping differs depending on the chosen storage type.
 
+::: zone pivot="programming-language-csharp"
+
 ### Data mapping when using the JSON storage type
 
-::: zone pivot="programming-language-csharp"
 When using the JSON storage type, the Redis connector will use `System.Text.Json.JsonSerializer` to do mapping.
 Since Redis stores records with a separate key and value, the mapper will serialize all properties except for the key to a JSON object
 and use that as the value.
@@ -242,12 +243,12 @@ public class Hotel
 }
 ```
 
+```
+HSET skhotelshashes:h1 hotel_name "Hotel Happy" hotel_description 'A place where everyone can be happy.' hotel_description_embedding <vector_bytes>
+```
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
-
-```
-HSET skhotelshashes:h1 hotel_name "Hotel Happy" hotel_description 'A place where everyone can be happy.' hotel_description_embedding <vector_bytes>
-```

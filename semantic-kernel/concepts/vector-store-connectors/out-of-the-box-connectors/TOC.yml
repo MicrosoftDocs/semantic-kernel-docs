@@ -2,11 +2,11 @@
   href: index.md
 - name: Azure AI Search connector
   href: azure-ai-search-connector.md
+- name: Pinecone connector
+  href: pinecone-connector.md
 - name: Qdrant connector
   href: qdrant-connector.md
 - name: Redis connector
   href: redis-connector.md
-- name: Pinecone connector
-  href: pinecone-connector.md
 - name: Volatile (in-memory) connector
   href: volatile-connector.md

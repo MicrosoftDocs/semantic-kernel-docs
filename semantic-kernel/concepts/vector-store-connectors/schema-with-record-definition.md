@@ -104,13 +104,7 @@ new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dim
 | DistanceFunction          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                     |
 
 ::: zone-end
-
 ::: zone pivot="programming-language-python"
-
-```python
-```
-
 ::: zone-end
-
 ::: zone pivot="programming-language-java"
 ::: zone-end

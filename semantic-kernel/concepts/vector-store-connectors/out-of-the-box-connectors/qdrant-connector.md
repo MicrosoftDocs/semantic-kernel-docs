@@ -27,9 +27,9 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
 
-## Getting started
-
 ::: zone pivot="programming-language-csharp"
+
+## Getting started
 
 Add the Qdrant Vector Store connector nuget package to your project.
 
@@ -134,12 +134,6 @@ public class Hotel
 }
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
-::: zone pivot="programming-language-java"
-::: zone-end
-
 ```json
 {
     "id": 1,
@@ -149,6 +143,12 @@ public class Hotel
     }
 }
 ```
+
+::: zone-end
+::: zone pivot="programming-language-python"
+::: zone-end
+::: zone pivot="programming-language-java"
+::: zone-end
 
 ### Qdrant vector modes
 

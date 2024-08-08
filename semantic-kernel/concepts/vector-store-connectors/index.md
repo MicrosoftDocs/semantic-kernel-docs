@@ -49,14 +49,8 @@ public class Hotel
 ```
 
 ::: zone-end
-
 ::: zone pivot="programming-language-python"
-
-```python
-```
-
 ::: zone-end
-
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
@@ -85,23 +79,17 @@ var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
 ```
 
 ::: zone-end
-
 ::: zone pivot="programming-language-python"
-
-```python
-```
-
 ::: zone-end
-
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
 > [!TIP]
 > For more information on what key and field types each Vector Store connector supports, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
-### Create the collection and add records
-
 ::: zone pivot="programming-language-csharp"
+
+### Create the collection and add records
 
 ```csharp
 // Create the collection if it doesn't exist yet.
@@ -123,14 +111,8 @@ var retrievedHotel = await collection.GetAsync(1);
 ```
 
 ::: zone-end
-
 ::: zone pivot="programming-language-python"
-
-```python
-```
-
 ::: zone-end
-
 ::: zone pivot="programming-language-java"
 ::: zone-end
 

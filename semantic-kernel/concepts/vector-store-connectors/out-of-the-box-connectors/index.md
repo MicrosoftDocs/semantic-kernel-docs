@@ -16,7 +16,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | Vector Store Connectors                             |  C#  | Python | Java | Using officially supported SDK |
 |-----------------------------------------------------|:----:|:------:|:----:|:------------------------------:|
 | [Azure AI Search](./azure-ai-search-connector.md)   | ✅  | ✅     | ❌   | ✅                            |
+| [Pinecone](./pinecone-connector.md)                 | ✅  | ❌     | ❌   | ❌                            |
 | [Qdrant](./qdrant-connector.md)                     | ✅  | ✅     | ❌   | ✅                            |
 | [Redis](./redis-connector.md)                       | ✅  | ✅     | ❌   | ✅                            |
-| [Pinecone](./pinecone-connector.md)                 | ✅  | ❌     | ❌   | ❌                            |
 | [Volatile (In-Memory)](./volatile-connector.md)     | ✅  | ✅     | ❌   | N/A                            |

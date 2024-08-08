@@ -27,9 +27,9 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | No                                                                                                                               |
 
-## Getting started
-
 ::: zone pivot="programming-language-csharp"
+
+## Getting started
 
 Add the Azure AI Search Vector Store connector nuget package to your project.
 
@@ -108,9 +108,10 @@ var collection = new AzureAISearchVectorStoreRecordCollection<Hotel>(
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
+
 ## Data mapping
 
-::: zone pivot="programming-language-csharp"
 The default mapper used by the Azure AI Search connector when mapping data from the data model to storage is the one provided by the Azure AI Search SDK.
 
 This mapper does a direct conversion of the list of properties on the data model to the fields in Azure AI Search and uses JSON serialization
