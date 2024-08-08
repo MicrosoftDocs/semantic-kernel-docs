@@ -96,10 +96,12 @@ var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
 await collection.CreateCollectionIfNotExistsAsync();
 
 // Upsert a record.
-var descriptionText = "A place where everyone can be happy.";
+string descriptionText = "A place where everyone can be happy.";
+ulong hotelId = 1;
+
 await collection.UpsertAsync(new Hotel
 {
-    HotelId = 1,
+    HotelId = hotelId,
     HotelName = "Hotel Happy",
     Description = descriptionText,
     DescriptionEmbedding = await GenerateEmbeddingAsync(descriptionText),
@@ -107,7 +109,7 @@ await collection.UpsertAsync(new Hotel
 });
 
 // Retrieve the upserted record.
-var retrievedHotel = await collection.GetAsync(1);
+Hotel retrievedHotel = await collection.GetAsync(hotelId);
 ```
 
 ::: zone-end
