@@ -61,11 +61,17 @@ using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.Services.AddSingleton<SearchIndexClient>(sp => new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret)));
+kernelBuilder.Services.AddSingleton<SearchIndexClient>(
+    sp => new SearchIndexClient(
+        new Uri(azureAISearchUri),
+        new AzureKeyCredential(secret)));
 kernelBuilder.AddAzureAISearchVectorStore();
 
 // Using IServiceCollection.
-serviceCollection.AddSingleton<SearchIndexClient>(sp => new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret)));
+serviceCollection.AddSingleton<SearchIndexClient>(
+    sp => new SearchIndexClient(
+        new Uri(azureAISearchUri),
+        new AzureKeyCredential(secret)));
 serviceCollection.AddAzureAISearchVectorStore();
 ```
 
@@ -77,7 +83,10 @@ using Azure.Search.Documents.Indexes;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 
-var vectorStore = new AzureAISearchVectorStore(new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret));
+var vectorStore = new AzureAISearchVectorStore(
+    new SearchIndexClient(
+        new Uri(azureAISearchUri),
+        new AzureKeyCredential(secret));
 ```
 
 It is possible to construct a direct reference to a named collection.
@@ -114,7 +123,10 @@ must be passed to both the `SearchIndexClient` and the `AzureAISearchVectorStore
 ```csharp
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseUpper };
 var collection = new AzureAISearchVectorStoreRecordCollection<Hotel>(
-    new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret), new() { Serializer = new JsonObjectSerializer(jsonSerializerOptions) }),
+    new SearchIndexClient(
+        new Uri(azureAISearchUri),
+        new AzureKeyCredential(secret),
+        new() { Serializer = new JsonObjectSerializer(jsonSerializerOptions) }),
     "skhotels",
     new() { JsonSerializerOptions = jsonSerializerOptions });
 ```

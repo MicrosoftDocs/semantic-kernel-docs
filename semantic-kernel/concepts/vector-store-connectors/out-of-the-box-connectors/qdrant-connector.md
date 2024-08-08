@@ -98,8 +98,8 @@ var collection = new QdrantVectorStoreRecordCollection<Hotel>(
 ## Data mapping
 
 The Qdrant connector provides a default mapper when mapping data from the data model to storage.
-Qdrant requires properties to be divided into an id, payload and vector(s) groupings.
-The default mapper uses the model annotations of record definition to determine the type of each property on the data model and do this distribution.
+Qdrant requires properties to be mapped into id, payload and vector(s) groupings.
+The default mapper uses the model annotations or record definition to determine the type of each property and to do this mapping.
 
 - The data model property annotated as a key will be mapped to the Qdrant point id.
 - The data model properties annotated as data will be mapped to the Qdrant point payload object.
@@ -108,10 +108,10 @@ The default mapper uses the model annotations of record definition to determine 
 ### Property name override
 
 For data properties and vector properties (if using named vectors mode), you can provide override field names to use in storage that is different to the
-property names on the data model. This is not supported for keys, since a key has a fixed name in Qdrant. It is also not supported in single unnamed vector
-mode, since the vector is stored under a fixed name.
+property names on the data model. This is not supported for keys, since a key has a fixed name in Qdrant. It is also not supported for vectors in *single
+unnamed vector* mode, since the vector is stored under a fixed name.
 ::: zone pivot="programming-language-csharp"
-This is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
+The property name override is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
 
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Qdrant.
 
@@ -153,11 +153,12 @@ public class Hotel
 ### Qdrant vector modes
 
 Qdrant supports two modes for vector storage and the Qdrant Connector with default mapper supports both modes.
+The default mode is *single unnamed vector*.
 
 #### Single unnamed vector
 
-This is the default mode that the connector uses. It means that a collection may only contain a single vector and it will be unnamed in the storage model in Qdrant.
-The following object will be represented similar to this in Qdrant:
+With this option a collection may only contain a single vector and it will be unnamed in the storage model in Qdrant.
+Here is an example of how an object is represented in Qdrant when using *single unnamed vector* mode:
 
 ::: zone pivot="programming-language-csharp"
 
@@ -188,7 +189,7 @@ new Hotel
 #### Named vectors
 
 If using the named vectors mode, it means that each point in a collection may contain more than one vector, and each will be named.
-The following object will be represented similar to this in Qdrant:
+Here is an example of how an object is represented in Qdrant when using *named vectors* mode:
 
 ::: zone pivot="programming-language-csharp"
 
@@ -198,6 +199,7 @@ new Hotel
     HotelId = 1,
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
+    HotelNameEmbedding = new float[3] { 0.9f, 0.5f, 0.5f }
     DescriptionEmbedding = new float[3] { 0.9f, 0.1f, 0.1f }
 }
 ```
@@ -213,12 +215,14 @@ new Hotel
     "id": 1,
     "payload": { "HotelName": "Hotel Happy", "Description": "A place where everyone can be happy." },
     "vector": {
+        "HotelNameEmbedding": [0.9, 0.5, 0.5],
         "DescriptionEmbedding": [0.9, 0.1, 0.1],
     }
 }
 ```
 
-The enable named vectors mode, pass this as an option when constructing a Vector Store or collection.
+To enable named vectors mode, pass this as an option when constructing a Vector Store or collection.
+The same options can also be passed to any of the provided dependency injection container extensions methods.
 
 ::: zone pivot="programming-language-csharp"
 

@@ -118,6 +118,43 @@ var vectorStore = new RedisVectorStore(
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
+## Index prefixes
+
+Redis uses a system of key prefixing to associate a record with an index.
+When creating an index you can specify one or more prefixes to use with that index.
+If you want to associate a record with that index, you have to add the prefix to the key of that record.
+
+E.g. If you create a index called `skhotelsjson` with a prefix of `skhotelsjson:`, when setting a record
+with key `h1`, the record key will need to be prefixed like this `skhotelsjson:h1` to be added to the index.
+
+When creating a new collection using the Redis connector, the connector will create an index in redis with a
+prefix consisting of the collection name and a colon, like this `<collectionname>:`.
+By default, the connector will also prefix all keys with the this prefix when doing record operations like Get, Upsert, and Delete.
+
+If you didn't want to use a prefix consisting of the collection name and a colon, it is possible to switch
+off the prefixing behavior and pass in the fully prefixed key to the record operations.
+
+::: zone pivot="programming-language-csharp"
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Redis;
+using StackExchange.Redis;
+
+var collection = new RedisJsonVectorStoreRecordCollection<Hotel>(
+    ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
+    "skhotelsjson",
+    new() { PrefixCollectionNameToKeyNames = false });
+
+await collection.GetAsync("myprefix_h1");
+```
+
+::: zone-end
+::: zone pivot="programming-language-python"
+::: zone-end
+::: zone pivot="programming-language-java"
+::: zone-end
+
 ## Data mapping
 
 Redis supports two modes for storing data, JSON and Hashes. The Redis connector supports both storage types, and mapping differs depending on the chosen storage type.
