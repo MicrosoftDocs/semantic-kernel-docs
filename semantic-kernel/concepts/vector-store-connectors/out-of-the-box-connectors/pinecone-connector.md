@@ -1,6 +1,7 @@
 ---
 title: Using the Semantic Kernel Pinecone Vector Store connector (Experimental)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Pinecone.
+zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
 ms.author: westey
