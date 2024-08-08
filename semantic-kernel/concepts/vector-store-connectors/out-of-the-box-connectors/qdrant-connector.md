@@ -139,7 +139,7 @@ public class Hotel
     "id": 1,
     "payload": { "hotel_name": "Hotel Happy", "hotel_description": "A place where everyone can be happy." },
     "vector": {
-        "hotel_description_embedding": [0.9, 0.1, 0.1],
+        "hotel_description_embedding": [0.9, 0.1, 0.1, 0.1],
     }
 }
 ```
@@ -168,7 +168,7 @@ new Hotel
     HotelId = 1,
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
-    DescriptionEmbedding = new float[3] { 0.9f, 0.1f, 0.1f }
+    DescriptionEmbedding = new float[3] { 0.9f, 0.1f, 0.1f, 0.1f }
 }
 ```
 
@@ -182,7 +182,7 @@ new Hotel
 {
     "id": 1,
     "payload": { "HotelName": "Hotel Happy", "Description": "A place where everyone can be happy." },
-    "vector": [0.9, 0.1, 0.1]
+    "vector": [0.9, 0.1, 0.1, 0.1]
 }
 ```
 
@@ -199,8 +199,8 @@ new Hotel
     HotelId = 1,
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
-    HotelNameEmbedding = new float[3] { 0.9f, 0.5f, 0.5f }
-    DescriptionEmbedding = new float[3] { 0.9f, 0.1f, 0.1f }
+    HotelNameEmbedding = new float[3] { 0.9f, 0.5f, 0.5f, 0.5f }
+    DescriptionEmbedding = new float[3] { 0.9f, 0.1f, 0.1f, 0.1f }
 }
 ```
 
@@ -215,8 +215,8 @@ new Hotel
     "id": 1,
     "payload": { "HotelName": "Hotel Happy", "Description": "A place where everyone can be happy." },
     "vector": {
-        "HotelNameEmbedding": [0.9, 0.5, 0.5],
-        "DescriptionEmbedding": [0.9, 0.1, 0.1],
+        "HotelNameEmbedding": [0.9, 0.5, 0.5, 0.5],
+        "DescriptionEmbedding": [0.9, 0.1, 0.1, 0.1],
     }
 }
 ```
