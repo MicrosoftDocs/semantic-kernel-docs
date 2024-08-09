@@ -22,7 +22,7 @@ away the differences of each data store implementation.
 
 In some cases, the developer may want to replace the default mapper if e.g. they do not want their data model and storage schema to match, or they want
 to build an optimized mapper for their scenario.
-All Vector Store connector implementations allow you to provide a custom mapper that you can implement yourself.
+All Vector Store connector implementations allow you to provide a custom mapper.
 
 ## Differences by vector store type
 
@@ -47,7 +47,7 @@ If you want to do custom mapping, and you want to use multiple connector types, 
 Our first step is to create a data model. In this case we will not annotate the data model with attributes, since we will provide a separate record definition
 that describes what the database schema will look like.
 
-Note as well that this model is complex, with a seperate class to contain vectors and another for additional product info.
+Also note that this model is complex, with seperate classes for vectors and additional product info.
 
 ```csharp
 public class Product
@@ -166,7 +166,7 @@ public class ProductMapper : IVectorStoreRecordMapper<Product, PointStruct>
 To use the custom mapper that we have created, we need to pass it to the collection at construction time.
 We also need to pass the record definition that we created earlier, so that collections are created in the
 data store using the right schema.
-One more setting that we have to set, is to use Qdrant's named vectors mode, since we have more than one
+One more setting that is important here, is Qdrant's named vectors mode, since we have more than one
 vector. Without this mode switched on, only one vector is supported.
 
 ```csharp
@@ -178,7 +178,12 @@ var productMapper = new ProductMapper();
 var collection = new QdrantVectorStoreRecordCollection<Product>(
     new QdrantClient("localhost"),
     "skproducts",
-    new() { HasNamedVectors = true, PointStructCustomMapper = productMapper, VectorStoreRecordDefinition = productDefinition });
+    new()
+    {
+        HasNamedVectors = true,
+        PointStructCustomMapper = productMapper,
+        VectorStoreRecordDefinition = productDefinition
+    });
 ```
 
 ## Using a custom mapper with IVectorStore
@@ -190,7 +195,7 @@ to communicate with any vector store implementation.
 It is however possible to provide a factory when constructing a Vector Store implementation. This can be used to customize `IVectorStoreRecordCollection`
 instances as they are created.
 
-Here is an example of such a factory, which checks if the someone called `CreateCollection` with the product definition and data type, and if so
+Here is an example of such a factory, which checks if `CreateCollection` was called with the product definition and data type, and if so
 injects the custom mapper and switches on named vectors mode.
 
 ```csharp
@@ -246,6 +251,12 @@ var vectorStore = new QdrantVectorStore(
     {
         VectorStoreCollectionFactory = new QdrantCollectionFactory(productDefinition)
     });
+```
+
+Then just use the vector store as normal to get a collection.
+
+```csharp
+var collection = vectorStore.GetCollection<ulong, Product>("skproducts", productDefinition);
 ```
 
 ::: zone-end
