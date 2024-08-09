@@ -76,7 +76,7 @@ public class ProductVectors
 
 We need to create a record definition instance to define what the database schema will look like. Normally a connector will require this information to do
 mapping when using the default mapper. Since we are creating a custom mapper, this is not required for mapping, however, the connector will still require
-this information for creating collections.
+this information for creating collections in the data store.
 
 Note that the definition here is different to the data model above. To store `ProductInfo` we have a string property called `ProductInfoJson`, and
 the two vectors are defined at the same level as the `Id`, `Name` and `Description` fields.
@@ -164,8 +164,8 @@ public class ProductMapper : IVectorStoreRecordMapper<Product, PointStruct>
 ## Constructing the collection
 
 To use the custom mapper that we have created, we need to pass it to the collection at construction time.
-We also need to pass the record definition that we created earlier, so that collections are created using
-the right schema.
+We also need to pass the record definition that we created earlier, so that collections are created in the
+data store using the right schema.
 One more setting that we have to set, is to use Qdrant's named vectors mode, since we have more than one
 vector. Without this mode switched on, only one vector is supported.
 
@@ -182,6 +182,71 @@ var collection = new QdrantVectorStoreRecordCollection<Product>(
 ```
 
 ## Using a custom mapper with IVectorStore
+
+When using `IVectorStore` to get `IVectorStoreRecordCollection` object instances, it is not possible to provide a custom mapper directly to
+the `GetCollection` method. This is because custom mappers differ for each Vector Store type, and would make it impossible to use `IVectorStore`
+to communicate with any vector store implementation.
+
+It is however possible to provide a factory when constructing a Vector Store implementation. This can be used to customize `IVectorStoreRecordCollection`
+instances as they are created.
+
+Here is an example of such a factory, which checks if the someone called `CreateCollection` with the product definition and data type, and if so
+injects the custom mapper and switches on named vectors mode.
+
+```csharp
+public class QdrantCollectionFactory(VectorStoreRecordDefinition productDefinition) : IQdrantVectorStoreRecordCollectionFactory
+{
+    public IVectorStoreRecordCollection<TKey, TRecord> CreateVectorStoreRecordCollection<TKey, TRecord>(QdrantClient qdrantClient, string name, VectorStoreRecordDefinition? vectorStoreRecordDefinition)
+        where TKey : notnull
+        where TRecord : class
+    {
+        // If the record definition is the product definition and the record type is the product data model, inject the custom mapper into the collection options.
+        if (vectorStoreRecordDefinition == productDefinition && typeof(TRecord) == typeof(Product))
+        {
+            var customCollection = new QdrantVectorStoreRecordCollection<Product>(
+                qdrantClient,
+                name,
+                new()
+                {
+                    HasNamedVectors = true,
+                    PointStructCustomMapper = new ProductMapper(),
+                    VectorStoreRecordDefinition = vectorStoreRecordDefinition
+                }) as IVectorStoreRecordCollection<TKey, TRecord>;
+            return customCollection!;
+        }
+
+        // Otherwise, just create a standard collection with the default mapper.
+        var collection = new QdrantVectorStoreRecordCollection<TRecord>(
+            qdrantClient,
+            name,
+            new()
+            {
+                VectorStoreRecordDefinition = vectorStoreRecordDefinition
+            }) as IVectorStoreRecordCollection<TKey, TRecord>;
+        return collection!;
+    }
+}
+```
+
+To use the collection factory, pass it to the Vector Store when constructing it, or when registering it with the dependency injection container.
+
+```csharp
+// When registering with the dependency injection container on the kernel builder.
+kernelBuilder.AddQdrantVectorStore(
+    "localhost",
+    options: new()
+    {
+        VectorStoreCollectionFactory = new QdrantCollectionFactory(productDefinition)
+    });
+
+// When constructing the Vector Store instance directly.
+var vectorStore = new QdrantVectorStore(
+    new QdrantClient("localhost"),
+    new()
+    {
+        VectorStoreCollectionFactory = new QdrantCollectionFactory(productDefinition)
+    });
+```
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
