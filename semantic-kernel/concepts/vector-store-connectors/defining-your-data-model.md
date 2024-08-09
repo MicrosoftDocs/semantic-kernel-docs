@@ -110,3 +110,19 @@ Individual Vector Store implementations may also use their own index kinds and d
 > For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
 ::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
