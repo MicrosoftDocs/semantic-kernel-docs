@@ -1,7 +1,7 @@
 ---
 title: Defining your Semantic Kernel Vector Store data model (Experimental)
 description: Describes how to create a data model with Semantic Kernel to use when writing to or reading from a Vector Store.
-zone_pivot_groups: programming-languages
+zone_pivot_groups: programming-languages-csharp
 author: westey-m
 ms.topic: reference
 ms.author: westey
@@ -109,10 +109,4 @@ Individual Vector Store implementations may also use their own index kinds and d
 > [!TIP]
 > For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
-::: zone-end
-
-::: zone pivot="programming-language-python"
-::: zone-end
-
-::: zone pivot="programming-language-java"
 ::: zone-end

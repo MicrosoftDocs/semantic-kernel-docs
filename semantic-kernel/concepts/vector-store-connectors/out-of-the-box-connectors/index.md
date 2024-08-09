@@ -13,10 +13,12 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 
 ## List of out-of-the-box connectors
 
-| Vector Store Connectors                             |  C#  | Python | Java | Using officially supported SDK |
-|-----------------------------------------------------|:----:|:------:|:----:|:------------------------------:|
-| [Azure AI Search](./azure-ai-search-connector.md)   | ✅  | ✅     | ❌   | ✅                            |
-| [Pinecone](./pinecone-connector.md)                 | ✅  | ❌     | ❌   | ❌                            |
-| [Qdrant](./qdrant-connector.md)                     | ✅  | ✅     | ❌   | ✅                            |
-| [Redis](./redis-connector.md)                       | ✅  | ✅     | ❌   | ✅                            |
-| [Volatile (In-Memory)](./volatile-connector.md)     | ✅  | ✅     | ❌   | N/A                            |
+| Vector Store Connectors                             |  C#  | Python | Java | C# connector using officially supported SDK |
+|-----------------------------------------------------|:----:|:------:|:----:|:-------------------------------------------:|
+| [Azure AI Search](./azure-ai-search-connector.md)   | ✅  | ✅     | 🔄   | ✅                                         |
+| Cosmos DB No SQL                                    | 🔄  | 🔄     | 🔄   | ✅                                         |
+| Cosmos DB MongoDB                                   | 🔄  | 🔄     | 🔄   | ✅                                         |
+| [Pinecone](./pinecone-connector.md)                 | ✅  | 🔄     | 🔄   | ❌                                         |
+| [Qdrant](./qdrant-connector.md)                     | ✅  | ✅     | 🔄   | ✅                                         |
+| [Redis](./redis-connector.md)                       | ✅  | ✅     | 🔄   | ✅                                         |
+| [Volatile (In-Memory)](./volatile-connector.md)     | ✅  | ✅     | 🔄   | N/A                                         |
