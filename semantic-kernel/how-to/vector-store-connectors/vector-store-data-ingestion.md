@@ -172,7 +172,7 @@ internal class DocumentReader
 
 ## Generate embeddings and upload the data
 
-We will need some code to generate embeddings and upload the paragraphs to Redis. Let's do this is a separate class.
+We will need some code to generate embeddings and upload the paragraphs to Redis. Let's do this in a separate class.
 
 Add a new file called `DataUploader.cs` and add the following class to it.
 
@@ -254,7 +254,7 @@ await dataUploader.GenerateEmbeddingsAndUpload("sk-documentation", textParagraph
 
 ## See your data in Redis
 
-Navigate to the Redis stack browser, e.g. [http://localhost:8001/redis-stack/browser](http://localhost:8001/redis-stack/browser) where you should be able to now see
+Navigate to the Redis stack browser, e.g. [http://localhost:8001/redis-stack/browser](http://localhost:8001/redis-stack/browser) where you should now be able to see
 your uploaded paragraphs. Here is an example of what you should see for one of the uploaded paragraphs.
 
 ```json
