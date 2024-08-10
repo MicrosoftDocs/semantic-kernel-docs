@@ -138,7 +138,7 @@ public class LightModel
    public bool? IsOn { get; set; }
 
    [JsonPropertyName("brightness")]
-   public enum? Brightness { get; set; }
+   public Brightness? { get; set; }
 
    [JsonPropertyName("color")]
    [Description("The color of the light with a hex code (ensure you include the # symbol)")]
