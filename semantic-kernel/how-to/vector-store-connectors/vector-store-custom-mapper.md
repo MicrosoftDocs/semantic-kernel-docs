@@ -10,8 +10,9 @@ ms.service: semantic-kernel
 ---
 # How to create a custom mapper for a Vector Store connector (Experimental)
 
-In this how to, we will show how you can replace the default mapper with your own mapper, and how you can use a record definition to define a storage
-schema that does not resemble your data model. We will use Qdrant, but the concepts will be similar for other connectors.
+In this how to, we will show how you can replace the default mapper for a vector store record collection with your own mapper.
+
+We will use Qdrant to demonstrate this functionality, but the concepts will be similar for other connectors.
 
 ## Background
 
@@ -20,8 +21,11 @@ Some stores allow a lot of freedom with regards to how data is stored while othe
 to be added to a dictionary of vectors and all non-vector fields to a dictionary of data fields. Therefore, mapping is an important part of abstracting
 away the differences of each data store implementation.
 
-In some cases, the developer may want to replace the default mapper if e.g. they do not want their data model and storage schema to match, or they want
-to build an optimized mapper for their scenario.
+In some cases, the developer may want to replace the default mapper if e.g.
+
+1. they want to use a data model that differs from the storage scheam.
+2. they want to build a performance optimized mapper for their scenario.
+
 All Vector Store connector implementations allow you to provide a custom mapper.
 
 ## Differences by vector store type
@@ -165,9 +169,9 @@ public class ProductMapper : IVectorStoreRecordMapper<Product, PointStruct>
 }
 ```
 
-## Constructing the collection
+## Using your custom mapper with a record collection
 
-To use the custom mapper that we have created, we need to pass it to the collection at construction time.
+To use the custom mapper that we have created, we need to pass it to the record collection at construction time.
 We also need to pass the record definition that we created earlier, so that collections are created in the
 data store using the right schema.
 One more setting that is important here, is Qdrant's named vectors mode, since we have more than one
