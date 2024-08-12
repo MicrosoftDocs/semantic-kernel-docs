@@ -98,6 +98,10 @@ var productDefinition = new VectorStoreRecordDefinition
 };
 ```
 
+> [!IMPORTANT]
+> For this scenario, it would not be possible to use attributes instead of a record definition since the storage schema does
+> not resemble the data model.
+
 ## Creating the custom mapper
 
 All mappers implement the generic interface `Microsoft.SemanticKernel.Data.IVectorStoreRecordMapper<TRecordDataModel, TStorageModel>`.
