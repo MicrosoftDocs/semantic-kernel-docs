@@ -4,8 +4,8 @@ description: Learn how to migrate .Net OpenAI Connectors after 1.18.0.
 author: rogerbarreto
 ms.topic: tutorial
 ms.author: rbarreto
-ms.date: 2024-08-13
-ms.-service: semantic-kernel
+ms.date: 08/13/2024
+ms.service: semantic-kernel
 ----
 
 # OpenAI Connector Migration Guide
