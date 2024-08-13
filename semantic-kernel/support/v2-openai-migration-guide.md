@@ -6,7 +6,7 @@ ms.topic: tutorial
 ms.author: rbarreto
 ms.date: 08/13/2024
 ms.service: semantic-kernel
-----
+---
 
 # OpenAI Connector Migration Guide
 
