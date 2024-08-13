@@ -9,12 +9,15 @@ ms.service: semantic-kernel
 ---
 # The Semantic Kernel Vector Store data architecture (Experimental)
 
-Vector Store abstractions in Semantic Kernel are based on three main components: vector stores, collections and records.
-Records are contained by collections, and collections are contained by vector stores.
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
 
-- A vector store maps to an instance of a database
-- A collection is a collection of records including any index required to query or filter those records
-- A record is an individual data entry in the database
+Vector Store abstractions in Semantic Kernel are based on three main components: **vector stores**, **collections** and **records**.
+**Records** are contained by **collections**, and **collections** are contained by **vector stores**.
+
+- A **vector store** maps to an instance of a database
+- A **collection** is a collection of **records** including any index required to query or filter those **records**
+- A **record** is an individual data entry in the database
 
 ## Collections in different databases
 

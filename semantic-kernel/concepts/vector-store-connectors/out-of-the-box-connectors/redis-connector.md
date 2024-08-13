@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # Using the Redis connector (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 ## Overview
 
 The Redis Vector Store connector can be used to access and manage data in Redis. The connector supports both Hashes and JSON modes and which mode you pick will determine what other features are supported.
@@ -20,10 +23,10 @@ The connector has the following characteristics.
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Redis index with prefix set to `<collectionname>:`                                                                               |
 | Supported key property types      | string                                                                                                                           |
-| Supported data property types     | **When using Hashes:**<br>string<br>int<br>uint<br>long<br>ulong<br>double<br>float<br>bool<br><br>**When using JSON:**<br>Any types serializable to JSON|
-| Supported vector property types   | ReadOnlyMemory\<float\><br>ReadOnlyMemory\<double\>                                                                              |
-| Supported index types             | Hnsw<br>Flat                                                                                                                     |
-| Supported distance functions      | CosineSimilarity<br>DotProductSimilarity<br>EuclideanDistance                                                                    |
+| Supported data property types     | **When using Hashes:**<ul><li>string</li><li>int</li><li>uint</li><li>long</li><li>ulong</li><li>double</li><li>float</li><li>bool</li></ul>**When using JSON:**<br>Any types serializable to JSON|
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
+| Supported index types             | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                              |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
@@ -39,7 +42,7 @@ Add the Redis Vector Store connector nuget package to your project.
 dotnet add package Microsoft.SemanticKernel.Connectors.Redis --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extention methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -48,6 +51,10 @@ using Microsoft.SemanticKernel;
 var kernelBuilder = Kernel
     .CreateBuilder()
     .AddRedisVectorStore("localhost:6379");
+```
+
+```csharp
+using Microsoft.SemanticKernel;
 
 // Using IServiceCollection.
 serviceCollection.AddRedisVectorStore("localhost:6379");
@@ -64,6 +71,12 @@ using StackExchange.Redis;
 var kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.Services.AddSingleton<IDatabase>(sp => ConnectionMultiplexer.Connect("localhost:6379").GetDatabase());
 kernelBuilder.AddRedisVectorStore();
+```
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Redis;
+using StackExchange.Redis;
 
 // Using IServiceCollection.
 serviceCollection.AddSingleton<IDatabase>(sp => ConnectionMultiplexer.Connect("localhost:6379").GetDatabase());
@@ -92,6 +105,12 @@ using StackExchange.Redis;
 var hashesCollection = new RedisHashSetVectorStoreRecordCollection<Hotel>(
     ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
     "skhotelshashes");
+```
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Redis;
+using StackExchange.Redis;
 
 // Using JSON.
 var jsonCollection = new RedisJsonVectorStoreRecordCollection<Hotel>(

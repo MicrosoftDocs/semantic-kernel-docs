@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # Defining your data model (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 ## Overview
 
 The Semantic Kernel Vector Store connectors use a model first approach to interacting with databases.

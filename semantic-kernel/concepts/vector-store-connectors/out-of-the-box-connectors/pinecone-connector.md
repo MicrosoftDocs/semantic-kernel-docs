@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # Using the Pinecone connector (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 ::: zone pivot="programming-language-csharp"
 
 ## Overview
@@ -20,10 +23,10 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Pinecone serverless Index                                                                                                        |
 | Supported key property types      | string                                                                                                                           |
-| Supported data property types     | string<br>int<br>long<br>double<br>float<br>bool<br>decimal<br>*enumerables of type* string                                      |
+| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>decimal</li><li>*enumerables of type* string</li></ul> |
 | Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
 | Supported index types             | PGA (Pinecone Graph Algorithm)                                                                                                   |
-| Supported distance functions      | CosineSimilarity<br>DotProductSimilarity<br>EuclideanDistance                                                                    |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
 | Supports multiple vectors in a record | No                                                                                                                           |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | No                                                                                                                               |
@@ -37,16 +40,19 @@ Add the Pinecone Vector Store connector NuGet package to your project.
 dotnet add package Microsoft.SemanticKernel.Connectors.Pinecone --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extention methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Pinecone;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
     .CreateBuilder()
     .AddPineconeVectorStore(pineconeApiKey);
+```
+
+```csharp
+using Microsoft.SemanticKernel;
 
 // Using IServiceCollection.
 serviceCollection.AddPineconeVectorStore(pineconeApiKey);
@@ -64,6 +70,12 @@ var kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.Services.AddSingleton<PineconeClient>(
     sp => new PineconeClient(pineconeApiKey));
 kernelBuilder.AddPineconeVectorStore();
+```
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Pinecone;
+using Pinecone;
 
 // Using IServiceCollection.
 serviceCollection.AddSingleton<PineconeClient>(

@@ -10,16 +10,19 @@ ms.service: semantic-kernel
 ---
 # Using the Volatile (In-Memory) connector (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 ## Overview
 
 The Volatile Vector Store connector is a Vector Store implementation provided by Semantic Kernel that uses no external database and stores data in memory.
-This Vector Store is useful for prototyping scenarios or where high speed in memory operations are required.
+This Vector Store is useful for prototyping scenarios or where high-speed in-memory operations are required.
 
 The connector has the following characteristics.
 
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Collection maps to                | In memory dictionary                                                                                                             |
+| Collection maps to                | In-memory dictionary                                                                                                             |
 | Supported key property types      | Any type that can be compared                                                                                                    |
 | Supported data property types     | Any type                                                                                                                         |
 | Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
@@ -40,7 +43,7 @@ Add the Semantic Kernel Core nuget package to your project.
 dotnet add package Microsoft.SemanticKernel.Core
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extention methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -49,6 +52,10 @@ using Microsoft.SemanticKernel;
 var kernelBuilder = Kernel
     .CreateBuilder()
     .AddVolatileVectorStore();
+```
+
+```csharp
+using Microsoft.SemanticKernel;
 
 // Using IServiceCollection.
 serviceCollection.AddVolatileVectorStore();

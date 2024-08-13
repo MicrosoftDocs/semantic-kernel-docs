@@ -1,6 +1,6 @@
 ---
-title: How to create a custom mapper for a Semantic Kernel Vector Store connector (Experimental)
-description: Describes how to create a custom mapper for a Semantic Kernel Vector Store connector
+title: How to build a custom mapper for a Semantic Kernel Vector Store connector (Experimental)
+description: Describes how to build a custom mapper for a Semantic Kernel Vector Store connector
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -8,7 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# How to create a custom mapper for a Vector Store connector (Experimental)
+# How to build a custom mapper for a Vector Store connector (Experimental)
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
 
 In this how to, we will show how you can replace the default mapper for a vector store record collection with your own mapper.
 
@@ -23,8 +26,9 @@ away the differences of each data store implementation.
 
 In some cases, the developer may want to replace the default mapper if e.g.
 
-1. they want to use a data model that differs from the storage scheam.
+1. they want to use a data model that differs from the storage schema.
 2. they want to build a performance optimized mapper for their scenario.
+3. the default mapper doesn't support a storage structure that the developer requires.
 
 All Vector Store connector implementations allow you to provide a custom mapper.
 
@@ -213,7 +217,8 @@ public class QdrantCollectionFactory(VectorStoreRecordDefinition productDefiniti
         where TKey : notnull
         where TRecord : class
     {
-        // If the record definition is the product definition and the record type is the product data model, inject the custom mapper into the collection options.
+        // If the record definition is the product definition and the record type is the product data
+        // model, inject the custom mapper into the collection options.
         if (vectorStoreRecordDefinition == productDefinition && typeof(TRecord) == typeof(Product))
         {
             var customCollection = new QdrantVectorStoreRecordCollection<Product>(
@@ -251,7 +256,9 @@ kernelBuilder.AddQdrantVectorStore(
     {
         VectorStoreCollectionFactory = new QdrantCollectionFactory(productDefinition)
     });
+```
 
+```csharp
 // When constructing the Vector Store instance directly.
 var vectorStore = new QdrantVectorStore(
     new QdrantClient("localhost"),
@@ -261,7 +268,7 @@ var vectorStore = new QdrantVectorStore(
     });
 ```
 
-Then just use the vector store as normal to get a collection.
+Now you can use the vector store as normal to get a collection.
 
 ```csharp
 var collection = vectorStore.GetCollection<ulong, Product>("skproducts", productDefinition);

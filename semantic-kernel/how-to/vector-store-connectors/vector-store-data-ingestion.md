@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # How to ingest data into a Vector Store using Semantic Kernel (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 This article will demonstrate how to create an application to
 
 1. Take text from each paragraph in a Microsoft Word document
