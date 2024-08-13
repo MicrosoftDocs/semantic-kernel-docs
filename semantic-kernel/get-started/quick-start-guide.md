@@ -268,7 +268,7 @@ If you're interested in understanding more about the code above, we'll break it 
 To make it easier to get started building enterprise apps with Semantic Kernel, we've created a step-by-step that guides you through the process of creating a kernel and using it to interact with AI services.
 
 ::: zone pivot="programming-language-python"
-![Semantic Kernel Python map](../media/PythonMap.png)
+![Semantic Kernel Python map](../media/UpdatedPythonMap.png)
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
