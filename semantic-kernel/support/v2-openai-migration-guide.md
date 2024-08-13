@@ -1,5 +1,5 @@
 ---
-title: OpenAI Connector Migration Guide .Net Semantic Kernel SDK
+title: OpenAI Connector Migration Guide
 description: Learn how to migrate .Net OpenAI Connectors after 1.18.0.
 author: rogerbarreto
 ms.topic: tutorial
