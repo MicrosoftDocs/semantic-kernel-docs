@@ -152,19 +152,19 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | YAML                             | ✅ | ✅ | ✅ | |
 | Prompty                          | ❌ | ✅ | ❌ | |
 
-### AI Services
+### AI Services Modalities
 
 | Services                          |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
 | Text Generation                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
 | Chat Completion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
 | Text Embeddings (Experimental)     | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
-| Text to Image (Experimental)       | ✅ | ❌ | ❌ | Example: Dall-E |
-| Image to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Pix2Struct |
+| Text to Image (Experimental)       | ✅ | ✅ | ❌ | Example: Dall-E |
+| Image to Text (Experimental)       | ✅ | ✅  | ❌ | Example: Pix2Struct |
 | Text to Audio (Experimental)       | ✅ | ❌ | ❌ | Example: Text-to-speech |
 | Audio to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Whisper |
 
-### AI service endpoints
+### AI Service Connectors
 
 | Endpoints                                 |  C#  | Python | Java | Notes |
 |-------------------------------------------|:----:|:------:|:----:|-------|
