@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # Using the Pinecone connector (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 ::: zone pivot="programming-language-csharp"
 
 ## Overview
@@ -20,10 +23,10 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Pinecone serverless Index                                                                                                        |
 | Supported key property types      | string                                                                                                                           |
-| Supported data property types     | string<br>int<br>long<br>double<br>float<br>bool<br>decimal<br>*enumerables of type* string                                      |
+| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>decimal</li><li>*enumerables of type* string</li></ul> |
 | Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
 | Supported index types             | PGA (Pinecone Graph Algorithm)                                                                                                   |
-| Supported distance functions      | CosineSimilarity<br>DotProductSimilarity<br>EuclideanDistance                                                                    |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
 | Supports multiple vectors in a record | No                                                                                                                           |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | No                                                                                                                               |
@@ -37,46 +40,56 @@ Add the Pinecone Vector Store connector NuGet package to your project.
 dotnet add package Microsoft.SemanticKernel.Connectors.Pinecone --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extention methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Pinecone;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
     .CreateBuilder()
     .AddPineconeVectorStore(pineconeApiKey);
+```
 
-// Using IServiceCollection.
-serviceCollection.AddPineconeVectorStore(pineconeApiKey);
+```csharp
+using Microsoft.SemanticKernel;
+
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddPineconeVectorStore(pineconeApiKey);
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of the `PineconeClient` to be separately registered with the dependency injection container.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.Services.AddSingleton<PineconeClient>(
     sp => new PineconeClient(pineconeApiKey));
 kernelBuilder.AddPineconeVectorStore();
+```
 
-// Using IServiceCollection.
-serviceCollection.AddSingleton<PineconeClient>(
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
+using PineconeClient = Pinecone.PineconeClient;
+
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<PineconeClient>(
     sp => new PineconeClient(pineconeApiKey));
-serviceCollection.AddPineconeVectorStore();
+builder.Services.AddPineconeVectorStore();
 ```
 
 You can construct a Pinecone Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 var vectorStore = new PineconeVectorStore(
     new PineconeClient(pineconeApiKey));
@@ -85,9 +98,8 @@ var vectorStore = new PineconeVectorStore(
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 var collection = new PineconeVectorStoreRecordCollection<Hotel>(
     new PineconeClient(pineconeApiKey),
@@ -103,9 +115,8 @@ By default the Pinecone connector will pass null as the namespace for all operat
 Pinecone collection when constructing it and use this instead for all operations.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 var collection = new PineconeVectorStoreRecordCollection<Hotel>(
     new PineconeClient(pineconeApiKey),
@@ -133,20 +144,20 @@ The property name override is done by setting the `StoragePropertyName` option v
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Pinecone.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 
 public class Hotel
 {
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true) { StoragePropertyName = "hotel_name" }]
+    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true) { StoragePropertyName = "hotel_description" }]
+    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

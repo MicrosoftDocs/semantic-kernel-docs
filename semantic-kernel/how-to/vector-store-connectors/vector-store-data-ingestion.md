@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # How to ingest data into a Vector Store using Semantic Kernel (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 This article will demonstrate how to create an application to
 
 1. Take text from each paragraph in a Microsoft Word document
@@ -22,6 +25,7 @@ For this sample you will need
 
 1. An embedding generation model hosted in Azure or another provider of your choice.
 2. An instance of Redis or Docker Desktop so that you can run Redis locally.
+3. A Word document to parse and load. Here is a zip containing a sample Word document you can download and use: [vector-store-data-ingestion-input.zip](../../media/vector-store-data-ingestion-input.zip).
 
 ## Setup Redis
 
@@ -157,6 +161,10 @@ internal class DocumentReader
             var combinedText = textBuilder.ToString();
             if (!string.IsNullOrWhiteSpace(combinedText))
             {
+                Console.WriteLine("Found paragraph:");
+                Console.WriteLine(combinedText);
+                Console.WriteLine();
+
                 yield return new TextParagraph
                 {
                     Key = Guid.NewGuid().ToString(),
@@ -200,10 +208,14 @@ internal class DataUploader(IVectorStore vectorStore, ITextEmbeddingGenerationSe
         foreach (var paragraph in textParagraphs)
         {
             // Generate the text embedding.
+            Console.WriteLine($"Generating embedding for paragraph: {paragraph.ParagraphId}");
             paragraph.TextEmbedding = await textEmbeddingGenerationService.GenerateEmbeddingAsync(paragraph.Text);
 
             // Upload the text paragraph.
+            Console.WriteLine($"Upserting paragraph: {paragraph.ParagraphId}");
             await collection.UpsertAsync(paragraph);
+
+            Console.WriteLine();
         }
     }
 }
@@ -248,8 +260,15 @@ to generate the embeddings and upload the paragraphs.
 
 ```csharp
 // Load the data.
-var textParagraphs = DocumentReader.ReadParagraphs(new FileStream("C:\\test.docx", FileMode.Open), "file:///c:/test.docx");
-await dataUploader.GenerateEmbeddingsAndUpload("sk-documentation", textParagraphs);
+var textParagraphs = DocumentReader.ReadParagraphs(
+    new FileStream(
+        "vector-store-data-ingestion-input.docx",
+        FileMode.Open),
+    "file:///c:/vector-store-data-ingestion-input.docx");
+
+await dataUploader.GenerateEmbeddingsAndUpload(
+    "sk-documentation",
+    textParagraphs);
 ```
 
 ## See your data in Redis
@@ -259,7 +278,7 @@ your uploaded paragraphs. Here is an example of what you should see for one of t
 
 ```json
 {
-    "DocumentUri" : "file:///c:/test.docx",
+    "DocumentUri" : "file:///c:/vector-store-data-ingestion-input.docx",
     "ParagraphId" : "14CA7304",
     "Text" : "Version 1.0+ support across C#, Python, and Java means it’s reliable, committed to non breaking changes. Any existing chat-based APIs are easily expanded to support additional modalities like voice and video.",
     "TextEmbedding" : [...]

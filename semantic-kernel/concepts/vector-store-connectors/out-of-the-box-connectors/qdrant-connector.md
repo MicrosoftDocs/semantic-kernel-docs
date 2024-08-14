@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # Using the Qdrant connector (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+
 ## Overview
 
 The Qdrant Vector Store connector can be used to access and manage data in Qdrant. The connector has the following characteristics.
@@ -17,11 +20,11 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Qdrant collection with payload indices for filterable data fields                                                                |
-| Supported key property types      | ulong<br>Guid                                                                                                                    |
-| Supported data property types     | string<br>int<br>long<br>double<br>float<br>bool<br>*and enumerables of each of these types*                                     |
-| Supported vector property types   | ReadOnlyMemory\<float\><br>ReadOnlyMemory\<double\>                                                                              |
+| Supported key property types      | <ul><li>ulong</li><li>Guid</li></ul>                                                                                             |
+| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
 | Supported index types             | Hnsw                                                                                                                             |
-| Supported distance functions      | CosineSimilarity<br>DotProductSimilarity<br>EuclideanDistance<br>ManhattanDistance                                               |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>              |
 | Supports multiple vectors in a record | Yes (configurable)                                                                                                           |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
@@ -37,7 +40,7 @@ Add the Qdrant Vector Store connector NuGet package to your project.
 dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extention methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -46,14 +49,20 @@ using Microsoft.SemanticKernel;
 var kernelBuilder = Kernel
     .CreateBuilder()
     .AddQdrantVectorStore("localhost");
+```
 
-// Using IServiceCollection.
-serviceCollection.AddQdrantVectorStore("localhost");
+```csharp
+using Microsoft.SemanticKernel;
+
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddQdrantVectorStore("localhost");
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of the `Qdrant.Client.QdrantClient` class to be separately registered with the dependency injection container.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Qdrant.Client;
 
@@ -61,16 +70,22 @@ using Qdrant.Client;
 var kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.Services.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
 kernelBuilder.AddQdrantVectorStore();
+```
 
-// Using IServiceCollection.
-serviceCollection.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
-serviceCollection.AddQdrantVectorStore();
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
+using Qdrant.Client;
+
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
+builder.Services.AddQdrantVectorStore();
 ```
 
 You can construct a Qdrant Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
@@ -80,7 +95,6 @@ var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
@@ -123,13 +137,13 @@ public class Hotel
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true) { StoragePropertyName = "hotel_name" }]
+    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true) { StoragePropertyName = "hotel_description" }]
+    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance) { StoragePropertyName = "hotel_description_embedding" }]
+    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -169,7 +183,7 @@ new Hotel
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
     DescriptionEmbedding = new float[4] { 0.9f, 0.1f, 0.1f, 0.1f }
-}
+};
 ```
 
 ::: zone-end
@@ -201,7 +215,7 @@ new Hotel
     Description = "A place where everyone can be happy.",
     HotelNameEmbedding = new float[4] { 0.9f, 0.5f, 0.5f, 0.5f }
     DescriptionEmbedding = new float[4] { 0.9f, 0.1f, 0.1f, 0.1f }
-}
+};
 ```
 
 ::: zone-end
@@ -227,6 +241,9 @@ The same options can also be passed to any of the provided dependency injection 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.SemanticKernel.Connectors.Qdrant;
+using Qdrant.Client;
+
 var vectorStore = new QdrantVectorStore(
     new QdrantClient("localhost"),
     new() { HasNamedVectors = true });

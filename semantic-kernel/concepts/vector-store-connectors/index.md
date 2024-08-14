@@ -10,9 +10,12 @@ ms.service: semantic-kernel
 ---
 # What are Semantic Kernel Vector Store connectors? (Experimental)
 
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change. It still has significant gaps in functionality, e.g. Vector Search, which is currently in development and will be released soon.
+
 Vector databases have many use cases across different domains and applications that involve natural language processing (NLP), computer vision (CV), recommendation systems (RS), and other areas that require semantic understanding and matching of data.
 
-One use case for storing information in a vector database is to enable large language models (LLMs) to generate more relevant and coherent text. Large language models often face challenges such as generating inaccurate or irrelevant information; lacking factual consistency or common sense; repeating or contradicting themselves; being biased or offensive. To help overcome these challenges, you can use a vector database to store information about different topics, keywords, facts, opinions, and/or sources related to your desired domain or genre. The vector database allows you to efficiently find the subset of information related to a specific question or topic. You can then pass information from the vector database with your AI plugin to your large language model to generate more informative and engaging content that matches your intent and style.
+One use case for storing information in a vector database is to enable large language models (LLMs) to generate more relevant and coherent responses. Large language models often face challenges such as generating inaccurate or irrelevant information; lacking factual consistency or common sense; repeating or contradicting themselves; being biased or offensive. To help overcome these challenges, you can use a vector database to store information about different topics, keywords, facts, opinions, and/or sources related to your desired domain or genre. The vector database allows you to efficiently find the subset of information related to a specific question or topic. You can then pass information from the vector database with your prompt to your large language model to generate more accurate and relevant content.
 
 For example, if you want to write a blog post about the latest trends in AI, you can use a vector database to store the latest information about that topic and pass the information along with the ask to a LLM in order to generate a blog post that leverages the latest information.
 
@@ -27,7 +30,7 @@ The Semantic Kernel Vector Store connectors use a model first approach to intera
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 
 public class Hotel
 {
@@ -40,7 +43,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
     [VectorStoreRecordData(IsFilterable = true)]
@@ -70,6 +73,7 @@ In our case, the type of record will be the `Hotel` class we already defined, an
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Qdrant;
+using Qdrant.Client;
 
 // Create a Qdrant VectorStore object
 var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
@@ -109,7 +113,7 @@ await collection.UpsertAsync(new Hotel
 });
 
 // Retrieve the upserted record.
-Hotel retrievedHotel = await collection.GetAsync(hotelId);
+Hotel? retrievedHotel = await collection.GetAsync(hotelId);
 ```
 
 ::: zone-end
