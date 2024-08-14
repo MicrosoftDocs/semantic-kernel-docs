@@ -31,7 +31,7 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 
 ## Getting started
 
-Add the Pinecone Vector Store connector nuget package to your project.
+Add the Pinecone Vector Store connector NuGet package to your project.
 
 ```dotnetcli
 dotnet add package Microsoft.SemanticKernel.Connectors.Pinecone --prerelease
@@ -52,7 +52,7 @@ var kernelBuilder = Kernel
 serviceCollection.AddPineconeVectorStore(pineconeApiKey);
 ```
 
-Extension methods are also provided that take no parameters. These require an instance of the `PineconeClient` to be separately registered with the dependency injection container.
+Extension methods that take no parameters are also provided. These require an instance of the `PineconeClient` to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.SemanticKernel;

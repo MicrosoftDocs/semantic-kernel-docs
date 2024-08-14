@@ -31,13 +31,13 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 
 ## Getting started
 
-Add the Qdrant Vector Store connector nuget package to your project.
+Add the Qdrant Vector Store connector NuGet package to your project.
 
 ```dotnetcli
 dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extention methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extention methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -51,7 +51,7 @@ var kernelBuilder = Kernel
 serviceCollection.AddQdrantVectorStore("localhost");
 ```
 
-Extension methods are also provided that take no parameters. These require an instance of the `Qdrant.Client.QdrantClient` class to be separately registered with the dependency injection container.
+Extension methods that take no parameters are also provided. These require an instance of the `Qdrant.Client.QdrantClient` class to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -116,7 +116,7 @@ The property name override is done by setting the `StoragePropertyName` option v
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Qdrant.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 
 public class Hotel
 {
@@ -168,7 +168,7 @@ new Hotel
     HotelId = 1,
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
-    DescriptionEmbedding = new float[3] { 0.9f, 0.1f, 0.1f, 0.1f }
+    DescriptionEmbedding = new float[4] { 0.9f, 0.1f, 0.1f, 0.1f }
 }
 ```
 
@@ -199,8 +199,8 @@ new Hotel
     HotelId = 1,
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
-    HotelNameEmbedding = new float[3] { 0.9f, 0.5f, 0.5f, 0.5f }
-    DescriptionEmbedding = new float[3] { 0.9f, 0.1f, 0.1f, 0.1f }
+    HotelNameEmbedding = new float[4] { 0.9f, 0.5f, 0.5f, 0.5f }
+    DescriptionEmbedding = new float[4] { 0.9f, 0.1f, 0.1f, 0.1f }
 }
 ```
 
@@ -222,7 +222,7 @@ new Hotel
 ```
 
 To enable named vectors mode, pass this as an option when constructing a Vector Store or collection.
-The same options can also be passed to any of the provided dependency injection container extensions methods.
+The same options can also be passed to any of the provided dependency injection container extension methods.
 
 ::: zone pivot="programming-language-csharp"
 

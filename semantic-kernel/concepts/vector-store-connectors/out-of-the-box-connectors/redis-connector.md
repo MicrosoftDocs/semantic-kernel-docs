@@ -53,7 +53,7 @@ var kernelBuilder = Kernel
 serviceCollection.AddRedisVectorStore("localhost:6379");
 ```
 
-Extension methods are also provided that take no parameters. These require an instance of the Redis `IDatabase` to be separately registered with the dependency injection container.
+Extension methods that take no parameters are also provided. These require an instance of the Redis `IDatabase` to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.SemanticKernel;

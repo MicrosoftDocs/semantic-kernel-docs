@@ -31,7 +31,7 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 
 ## Getting started
 
-Add the Azure AI Search Vector Store connector nuget package to your project.
+Add the Azure AI Search Vector Store connector NuGet package to your project.
 
 ```dotnetcli
 dotnet add package Microsoft.SemanticKernel.Connectors.AzureAISearch --prerelease
@@ -52,7 +52,7 @@ var kernelBuilder = Kernel
 serviceCollection.AddAzureAISearchVectorStore(new Uri(azureAISearchUri), new AzureKeyCredential(secret));
 ```
 
-Extension methods are also provided that take no parameters. These require an instance of the Azure AI Search `SearchIndexClient` to be separately registered with the dependency injection container.
+Extension methods that take no parameters are also provided. These require an instance of the Azure AI Search `SearchIndexClient` to be separately registered with the dependency injection container.
 
 ```csharp
 using Azure;

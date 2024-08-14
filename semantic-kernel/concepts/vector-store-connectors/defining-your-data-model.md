@@ -16,7 +16,7 @@ The Semantic Kernel Vector Store connectors use a model first approach to intera
 
 ::: zone pivot="programming-language-csharp"
 All methods to upsert or get records use strongly typed model classes.
-The properties on these classes are decorated with attributes that indicate the pupose of each property.
+The properties on these classes are decorated with attributes that indicate the purpose of each property.
 
 > [!TIP]
 > For an alternative to using attributes, refer to [definining your schema with a record definition](./schema-with-record-definition.md).
@@ -24,7 +24,9 @@ The properties on these classes are decorated with attributes that indicate the 
 Here is an example of a model that is decorated with these attributes.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
+
+#pragma warning disable SKEXP0001
 
 public class Hotel
 {
@@ -90,7 +92,7 @@ public string HotelName { get; set; }
 Use this attribute to incidate that your property contains a vector.
 
 ```csharp
-[VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+[VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
 public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```
 
