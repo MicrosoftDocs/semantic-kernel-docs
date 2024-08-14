@@ -54,8 +54,9 @@ var kernelBuilder = Kernel
 ```csharp
 using Microsoft.SemanticKernel;
 
-// Using IServiceCollection.
-serviceCollection.AddPineconeVectorStore(pineconeApiKey);
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddPineconeVectorStore(pineconeApiKey);
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of the `PineconeClient` to be separately registered with the dependency injection container.
@@ -77,10 +78,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using PineconeClient = Pinecone.PineconeClient;
 
-// Using IServiceCollection.
-serviceCollection.AddSingleton<PineconeClient>(
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<PineconeClient>(
     sp => new PineconeClient(pineconeApiKey));
-serviceCollection.AddPineconeVectorStore();
+builder.Services.AddPineconeVectorStore();
 ```
 
 You can construct a Pinecone Vector Store instance directly.

@@ -54,8 +54,9 @@ var kernelBuilder = Kernel
 ```csharp
 using Microsoft.SemanticKernel;
 
-// Using IServiceCollection.
-serviceCollection.AddQdrantVectorStore("localhost");
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddQdrantVectorStore("localhost");
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of the `Qdrant.Client.QdrantClient` class to be separately registered with the dependency injection container.
@@ -76,9 +77,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Qdrant.Client;
 
-// Using IServiceCollection.
-serviceCollection.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
-serviceCollection.AddQdrantVectorStore();
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
+builder.Services.AddQdrantVectorStore();
 ```
 
 You can construct a Qdrant Vector Store instance directly.

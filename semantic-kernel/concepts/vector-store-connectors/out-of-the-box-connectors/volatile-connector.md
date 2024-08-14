@@ -57,8 +57,9 @@ var kernelBuilder = Kernel
 ```csharp
 using Microsoft.SemanticKernel;
 
-// Using IServiceCollection.
-serviceCollection.AddVolatileVectorStore();
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddVolatileVectorStore();
 ```
 
 You can construct a Volatile Vector Store instance directly.

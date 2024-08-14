@@ -56,8 +56,9 @@ var kernelBuilder = Kernel
 ```csharp
 using Microsoft.SemanticKernel;
 
-// Using IServiceCollection.
-serviceCollection.AddRedisVectorStore("localhost:6379");
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddRedisVectorStore("localhost:6379");
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of the Redis `IDatabase` to be separately registered with the dependency injection container.
@@ -78,9 +79,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using StackExchange.Redis;
 
-// Using IServiceCollection.
-serviceCollection.AddSingleton<IDatabase>(sp => ConnectionMultiplexer.Connect("localhost:6379").GetDatabase());
-serviceCollection.AddRedisVectorStore();
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<IDatabase>(sp => ConnectionMultiplexer.Connect("localhost:6379").GetDatabase());
+builder.Services.AddRedisVectorStore();
 ```
 
 You can construct a Redis Vector Store instance directly.
@@ -93,7 +95,7 @@ var vectorStore = new RedisVectorStore(ConnectionMultiplexer.Connect("localhost:
 ```
 
 It is possible to construct a direct reference to a named collection.
-When doing so, you have to choose between the JSON or Hashes instance depending on how you wish to store data in redis.
+When doing so, you have to choose between the JSON or Hashes instance depending on how you wish to store data in Redis.
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Redis;
@@ -142,7 +144,7 @@ If you want to associate a record with that index, you have to add the prefix to
 E.g. If you create a index called `skhotelsjson` with a prefix of `skhotelsjson:`, when setting a record
 with key `h1`, the record key will need to be prefixed like this `skhotelsjson:h1` to be added to the index.
 
-When creating a new collection using the Redis connector, the connector will create an index in redis with a
+When creating a new collection using the Redis connector, the connector will create an index in Redis with a
 prefix consisting of the collection name and a colon, like this `<collectionname>:`.
 By default, the connector will also prefix all keys with the this prefix when doing record operations like Get, Upsert, and Delete.
 

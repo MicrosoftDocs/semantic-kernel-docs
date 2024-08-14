@@ -64,8 +64,9 @@ var kernelBuilder = Kernel
 using Azure;
 using Microsoft.SemanticKernel;
 
-// Using IServiceCollection.
-serviceCollection.AddAzureAISearchVectorStore(new Uri(azureAISearchUri), new AzureKeyCredential(secret));
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAzureAISearchVectorStore(new Uri(azureAISearchUri), new AzureKeyCredential(secret));
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of the Azure AI Search `SearchIndexClient` to be separately registered with the dependency injection container.
@@ -91,12 +92,13 @@ using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
-// Using IServiceCollection.
-serviceCollection.AddSingleton<SearchIndexClient>(
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<SearchIndexClient>(
     sp => new SearchIndexClient(
         new Uri(azureAISearchUri),
         new AzureKeyCredential(secret)));
-serviceCollection.AddAzureAISearchVectorStore();
+builder.Services.AddAzureAISearchVectorStore();
 ```
 
 You can construct an Azure AI Search Vector Store instance directly.
