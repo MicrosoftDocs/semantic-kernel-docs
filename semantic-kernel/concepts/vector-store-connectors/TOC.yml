@@ -1,0 +1,10 @@
+- name: Overview
+  href: index.md
+- name: Data architecture
+  href: data-architecture.md
+- name: Defining your data model
+  href: defining-your-data-model.md
+- name: Defining your storage schema using a record definition
+  href: schema-with-record-definition.md
+- name: Out-of-the-box connectors
+  href: out-of-the-box-connectors/TOC.yml
