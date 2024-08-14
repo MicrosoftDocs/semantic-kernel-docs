@@ -30,7 +30,7 @@ The Semantic Kernel Vector Store connectors use a model first approach to intera
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 
 public class Hotel
 {
@@ -43,7 +43,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
     [VectorStoreRecordData(IsFilterable = true)]
@@ -73,6 +73,7 @@ In our case, the type of record will be the `Hotel` class we already defined, an
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Qdrant;
+using Qdrant.Client;
 
 // Create a Qdrant VectorStore object
 var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
@@ -112,7 +113,7 @@ await collection.UpsertAsync(new Hotel
 });
 
 // Retrieve the upserted record.
-Hotel retrievedHotel = await collection.GetAsync(hotelId);
+Hotel? retrievedHotel = await collection.GetAsync(hotelId);
 ```
 
 ::: zone-end

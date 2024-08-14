@@ -61,9 +61,9 @@ serviceCollection.AddPineconeVectorStore(pineconeApiKey);
 Extension methods that take no parameters are also provided. These require an instance of the `PineconeClient` to be separately registered with the dependency injection container.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
@@ -73,9 +73,9 @@ kernelBuilder.AddPineconeVectorStore();
 ```
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 // Using IServiceCollection.
 serviceCollection.AddSingleton<PineconeClient>(
@@ -86,9 +86,8 @@ serviceCollection.AddPineconeVectorStore();
 You can construct a Pinecone Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 var vectorStore = new PineconeVectorStore(
     new PineconeClient(pineconeApiKey));
@@ -97,9 +96,8 @@ var vectorStore = new PineconeVectorStore(
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 var collection = new PineconeVectorStoreRecordCollection<Hotel>(
     new PineconeClient(pineconeApiKey),
@@ -115,9 +113,8 @@ By default the Pinecone connector will pass null as the namespace for all operat
 Pinecone collection when constructing it and use this instead for all operations.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Pinecone;
-using Pinecone;
+using PineconeClient = Pinecone.PineconeClient;
 
 var collection = new PineconeVectorStoreRecordCollection<Hotel>(
     new PineconeClient(pineconeApiKey),
@@ -145,20 +142,20 @@ The property name override is done by setting the `StoragePropertyName` option v
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Pinecone.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 
 public class Hotel
 {
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true) { StoragePropertyName = "hotel_name" }]
+    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true) { StoragePropertyName = "hotel_description" }]
+    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

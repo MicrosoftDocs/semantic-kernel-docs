@@ -63,8 +63,8 @@ serviceCollection.AddRedisVectorStore("localhost:6379");
 Extension methods that take no parameters are also provided. These require an instance of the Redis `IDatabase` to be separately registered with the dependency injection container.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
 // Using Kernel Builder.
@@ -74,8 +74,8 @@ kernelBuilder.AddRedisVectorStore();
 ```
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
 // Using IServiceCollection.
@@ -86,7 +86,6 @@ serviceCollection.AddRedisVectorStore();
 You can construct a Redis Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
@@ -97,7 +96,6 @@ It is possible to construct a direct reference to a named collection.
 When doing so, you have to choose between the JSON or Hashes instance depending on how you wish to store data in redis.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
@@ -108,7 +106,6 @@ var hashesCollection = new RedisHashSetVectorStoreRecordCollection<Hotel>(
 ```
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
@@ -122,7 +119,6 @@ When constructing a `RedisVectorStore` or registering it with the dependency inj
 that configures the preferred storage type / mode used: Hashes or JSON. If not specified, the default is JSON.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
@@ -156,7 +152,6 @@ off the prefixing behavior and pass in the fully prefixed key to the record oper
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
@@ -202,7 +197,8 @@ Since a naming policy of snake case upper was chosen, here is an example of how 
 Also note the use of `JsonPropertyNameAttribute` on the `Description` property to further customize the storage naming.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using System.Text.Json.Serialization;
+using Microsoft.SemanticKernel.Data;
 
 public class Hotel
 {
@@ -212,16 +208,16 @@ public class Hotel
     [VectorStoreRecordData(IsFilterable = true)]
     public string HotelName { get; set; }
 
-    [JsonPropertyNameAttribute("HOTEL_DESCRIPTION")]
+    [JsonPropertyName("HOTEL_DESCRIPTION")]
     [VectorStoreRecordData(IsFullTextSearchable = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
-```
+```redis
 JSON.SET skhotelsjson:h1 $ '{ "HOTEL_NAME": "Hotel Happy", "HOTEL_DESCRIPTION": "A place where everyone can be happy.", "DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1] }'
 ```
 
@@ -244,25 +240,25 @@ Property name overriding is done by setting the `StoragePropertyName` option via
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how these are set in Redis.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 
 public class Hotel
 {
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true) { StoragePropertyName = "hotel_name" }]
+    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true) { StoragePropertyName = "hotel_description" }]
+    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance) { StoragePropertyName = "hotel_description_embedding" }]
+    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
-```
+```redis
 HSET skhotelshashes:h1 hotel_name "Hotel Happy" hotel_description 'A place where everyone can be happy.' hotel_description_embedding <vector_bytes>
 ```
 

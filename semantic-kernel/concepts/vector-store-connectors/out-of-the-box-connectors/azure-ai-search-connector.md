@@ -73,6 +73,7 @@ Extension methods that take no parameters are also provided. These require an in
 ```csharp
 using Azure;
 using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
@@ -87,6 +88,7 @@ kernelBuilder.AddAzureAISearchVectorStore();
 ```csharp
 using Azure;
 using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using IServiceCollection.
@@ -102,13 +104,12 @@ You can construct an Azure AI Search Vector Store instance directly.
 ```csharp
 using Azure;
 using Azure.Search.Documents.Indexes;
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 
 var vectorStore = new AzureAISearchVectorStore(
     new SearchIndexClient(
         new Uri(azureAISearchUri),
-        new AzureKeyCredential(secret));
+        new AzureKeyCredential(secret)));
 ```
 
 It is possible to construct a direct reference to a named collection.
@@ -116,11 +117,10 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using Azure;
 using Azure.Search.Documents.Indexes;
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 
 var collection = new AzureAISearchVectorStoreRecordCollection<Hotel>(
-    new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret),
+    new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret)),
     "skhotels");
 ```
 

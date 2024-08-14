@@ -61,6 +61,7 @@ serviceCollection.AddQdrantVectorStore("localhost");
 Extension methods that take no parameters are also provided. These require an instance of the `Qdrant.Client.QdrantClient` class to be separately registered with the dependency injection container.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Qdrant.Client;
 
@@ -71,6 +72,7 @@ kernelBuilder.AddQdrantVectorStore();
 ```
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Qdrant.Client;
 
@@ -82,7 +84,6 @@ serviceCollection.AddQdrantVectorStore();
 You can construct a Qdrant Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
@@ -92,7 +93,6 @@ var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
@@ -135,13 +135,13 @@ public class Hotel
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true) { StoragePropertyName = "hotel_name" }]
+    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true) { StoragePropertyName = "hotel_description" }]
+    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance) { StoragePropertyName = "hotel_description_embedding" }]
+    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -181,7 +181,7 @@ new Hotel
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
     DescriptionEmbedding = new float[4] { 0.9f, 0.1f, 0.1f, 0.1f }
-}
+};
 ```
 
 ::: zone-end
@@ -213,7 +213,7 @@ new Hotel
     Description = "A place where everyone can be happy.",
     HotelNameEmbedding = new float[4] { 0.9f, 0.5f, 0.5f, 0.5f }
     DescriptionEmbedding = new float[4] { 0.9f, 0.1f, 0.1f, 0.1f }
-}
+};
 ```
 
 ::: zone-end
@@ -239,6 +239,9 @@ The same options can also be passed to any of the provided dependency injection 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.SemanticKernel.Connectors.Qdrant;
+using Qdrant.Client;
+
 var vectorStore = new QdrantVectorStore(
     new QdrantClient("localhost"),
     new() { HasNamedVectors = true });
