@@ -25,7 +25,7 @@ For this sample you will need
 
 1. An embedding generation model hosted in Azure or another provider of your choice.
 2. An instance of Redis or Docker Desktop so that you can run Redis locally.
-3. A word document to parse and load. Here is a sample document you can download and use: [vector-store-data-ingestion-input.docx](../../media/vector-store-data-ingestion-input.docx).
+3. A Word document to parse and load. Here is a zip containing a sample Word document you can download and use: [vector-store-data-ingestion-input.zip](../../media/vector-store-data-ingestion-input.zip).
 
 ## Setup Redis
 
