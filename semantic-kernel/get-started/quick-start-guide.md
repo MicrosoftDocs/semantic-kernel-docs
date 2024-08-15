@@ -92,7 +92,7 @@ To get started, follow these steps:
 4. Open _00-getting-started.ipynb_ to get started setting your environment and creating your first AI agent!
    ::: zone-end
 
-::: zone pivot="programming-language-python"
+::: zone pivot="programming-language-csharp"
 To get started, follow these steps:
 1. Clone the [Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
 2. Open the repo in Visual Studio Code
