@@ -80,6 +80,39 @@ var collection = new VolatileVectorStoreRecordCollection<string, Hotel>("skhotel
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+## Getting started
+
+Install semantic kernel.
+
+```cli
+pip install semantic-kernel
+```
+
+You can then create a vector store instance using the `VolatileStore` class.
+
+```python
+
+from semantic_kernel.connectors.memory.volatile import VolatileStore
+
+vector_store = VolatileStore()
+```
+
+You can also create a collection directly.
+
+```python
+from semantic_kernel.connectors.memory.volatile import VolatileCollection
+
+collection = VolatileCollection(collection_name="skhotels", data_model_type=hotel)
+```
+
+## Serialization
+
+Since the Volatile connector has a simple dict as the internal storage mechanism it can store any data model that can be serialized to a dict.
+
+For more details on this concept see the [serialization documentation](./../serialization.md).
+
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end

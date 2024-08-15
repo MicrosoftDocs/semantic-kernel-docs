@@ -53,14 +53,36 @@ public class Hotel
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+```python
+from dataclasses import dataclass, field
+from typing import Annotated
+from semantic_kernel.data import (
+    DistanceFunction,
+    IndexKind,
+    VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
+    VectorStoreRecordKeyField,
+    VectorStoreRecordVectorField,
+    vectorstoremodel,
+)
+
+@vectorstoremodel
+@dataclass
+class Hotel:
+    hotel_id: Annotated[str, VectorStoreRecordKeyField()] = field(default_factory=lambda: str(uuid4()))
+    hotel_name: Annotated[str, VectorStoreRecordDataField(is_filterable=True)]
+    description: Annotated[str, VectorStoreRecordDataField(is_full_text_searchable=True)]
+    description_embedding: Annotated[list[float], VectorStoreRecordVectorField(dimensions=4, distance_function=DistanceFunction.COSINE, index_kind=IndexKind.HNSW)]
+    tags: Annotated[list[str], VectorStoreRecordDataField(is_filterable=True)]
+```
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
 > [!TIP]
-> For more information on how to annotate your data model, refer to [definining your data model](./defining-your-data-model.md).
+> For more information on how to annotate your data model, refer to [defining your data model](./defining-your-data-model.md).
 > [!TIP]
-> For an alternative to annotating your data model, refer to [definining your schema with a record definition](./schema-with-record-definition.md).
+> For an alternative to annotating your data model, refer to [defining your schema with a record definition](./schema-with-record-definition.md).
 
 ### Connect to your database and select a collection
 
@@ -84,6 +106,19 @@ var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+Since databases support many different types of keys and records, we allow you to specify the type of the key and record for your collection using generics.
+In our case, the type of record will be the `Hotel` class we already defined, and the type of key will be `str`, since the `HotelId` property is a `str` and Qdrant only supports `str` or `int` keys.
+
+```python
+from semantic_kernel.connectors.memory.qdrant import QdrantStore
+
+# Create a Qdrant VectorStore object, this will look in the environment for Qdrant related settings, and will fall back to the default, which is to run in-memory.
+vector_store = QdrantStore()
+
+# Choose a collection from the database and specify the type of key and record stored in it via Generic parameters.
+collection = vector_store.get_collection("skhotels", Hotel)
+```
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
@@ -118,6 +153,27 @@ Hotel? retrievedHotel = await collection.GetAsync(hotelId);
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+### Create the collection and add records
+
+```python
+# Create the collection if it doesn't exist yet.
+await collection.create_collection_if_not_exists()
+
+# Upsert a record.
+description = "A place where everyone can be happy."
+hotel_id = "1"
+
+await collection.upsert(Hotel(
+    hotel_id = hotel_id,
+    hotel_name = "Hotel Happy",
+    description = description,
+    description_embedding = await GenerateEmbeddingAsync(description),
+    tags = ["luxury", "pool"]
+))
+
+# Retrieve the upserted record.
+retrieved_hotel = await collection.get(hotel_id)
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end

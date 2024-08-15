@@ -92,7 +92,7 @@ public string HotelName { get; set; }
 
 ### VectorStoreRecordVectorAttribute
 
-Use this attribute to incidate that your property contains a vector.
+Use this attribute to indicate that your property contains a vector.
 
 ```csharp
 [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
@@ -118,9 +118,116 @@ Individual Vector Store implementations may also use their own index kinds and d
 
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+All methods to upsert or get records use a class and a vector store record definition.
 
-More info coming soon.
+This can be done by defining your own class with annotations for the fields, or by using a class/type in combination with a record definition. Two things need to be done for a class, the first is to add the annotations with the field types, the second is to decorate the class with the `vectorstoremodel` decorator.
+
+> [!TIP]
+> For the alternative approach using a record definition, refer to [definining your schema with a record definition](./schema-with-record-definition.md).
+
+Here is an example of a model that is decorated with these annotations.
+
+```python
+from dataclasses import dataclass, field
+from typing import Annotated
+from semantic_kernel.data import (
+    DistanceFunction,
+    IndexKind,
+    VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
+    VectorStoreRecordKeyField,
+    VectorStoreRecordVectorField,
+    vectorstoremodel,
+)
+
+@vectorstoremodel
+@dataclass
+class Hotel:
+    hotel_id: Annotated[str, VectorStoreRecordKeyField()] = field(default_factory=lambda: str(uuid4()))
+    hotel_name: Annotated[str, VectorStoreRecordDataField(is_filterable=True)]
+    description: Annotated[str, VectorStoreRecordDataField(is_full_text_searchable=True)]
+    description_embedding: Annotated[list[float], VectorStoreRecordVectorField(dimensions=4, distance_function=DistanceFunction.COSINE, index_kind=IndexKind.HNSW)]
+    tags: Annotated[list[str], VectorStoreRecordDataField(is_filterable=True)]
+```
+
+> [!TIP]
+> Defining a class with these annotations can be done in multiple ways, one of which is using the `dataclasses` module in Python, shown here. This [sample](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/memory/data_models.py) shows other approaches (using Pydantic BaseModels and vanilla python classes) as well.
+
+## Annotations
+
+There are three types of annotations to be used, and they have a common base class.
+
+### VectorStoreRecordField
+
+This is the base class for all annotations, it is not meant to be used directly.
+
+### VectorStoreRecordField parameters
+
+| Parameter                 | Required | Description                                                                                                                                                                                                     |
+|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name                      | No       | Can be added directly but will be set during parsing of the model. |
+| property_type       | No       | Should be a string, will also be derived during parsing. |
+
+> [!TIP]
+> The annotations are parsed by the `vectorstoremodel` decorator and one of the things it does is to create a record definition for the class, for that it is not even necessary to instantiate a field class, so when no parameters need to be set manually, the field can be created with just the name of the class:
+> ```python
+> hotel_id: Annotated[str, VectorStoreRecordKeyField]
+> ```
+
+### VectorStoreRecordKeyField
+
+Use this annotation to indicate that this attribute is the key of the record.
+
+```python
+VectorStoreRecordKeyField()
+```
+
+#### VectorStoreRecordKeyField parameters
+No other parameters outside of the base class are defined.
+
+
+### VectorStoreRecordDataField
+
+Use this annotation to indicate that your attribute contains general data that is not a key or a vector.
+
+```python
+VectorStoreRecordDataField(is_filterable=True)
+```
+
+#### VectorStoreRecordDataAttribute parameters
+
+| Parameter                 | Required | Description                                                                                                                                                                                                     |
+|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| has_embedding             | No       | Indicates whether the property has a embedding associated with it, default is None.                                                         |
+| embedding_property_name   | No       | The name of the property that contains the embedding, default is None.                                                                            |
+| is_filterable              | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.                                                         |
+| is_full_text_searchable      | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                                                                            |
+
+
+### VectorStoreRecordVectorField
+
+Use this annotation to indicate that your attribute contains a vector.
+
+```python
+VectorStoreRecordVectorField(dimensions=4, distance_function=DistanceFunction.COSINE, index_kind=IndexKind.HNSW)
+```
+
+#### VectorStoreRecordVectorAttribute parameters
+
+| Parameter                 | Required | Description                                                                                                                                                                                                     |
+|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
+| index_kind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
+| distance_function          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
+| local_embedding            | No       | Indicates whether the property has a local embedding associated with it, default is None.                                                         |
+| embedding_settings        | No       | The settings for the embedding, in the form of a dict with service_id as key and PromptExecutionSettings as value, default is None.                                                                            |
+| serialize_function        | No       | The function to use to serialize the vector, if the type is not a list[float | int] this function is needed, or the whole model needs to be serialized.                                                                            |
+| deserialize_function        | No       | The function to use to deserialize the vector, if the type is not a list[float | int] this function is needed, or the whole model needs to be deserialized.                                                                            |
+
+
+Common index kinds and distance function types are supplied as static values on the `semantic_kernel.data.IndexKind` and `semantic_kernel.data.DistanceFunction` classes.
+Individual Vector Store implementations may also use their own index kinds and distance functions, where the database supports unusual types.
+
 
 ::: zone-end
 
