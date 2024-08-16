@@ -344,7 +344,11 @@ In python the default value for `named_vectors` is True, but you can also disabl
 ```python
 from semantic_kernel.connectors.memory.qdrant import QdrantCollection
 
-collection = QdrantCollection(collection_name="skhotels", data_model_type=hotel, named_vectors=False)
+collection = QdrantCollection(
+    collection_name="skhotels", 
+    data_model_type=Hotel, 
+    named_vectors=False,
+)
 ```
 ::: zone-end
 ::: zone pivot="programming-language-java"

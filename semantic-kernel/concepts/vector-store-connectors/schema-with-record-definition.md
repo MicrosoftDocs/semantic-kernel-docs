@@ -122,7 +122,7 @@ new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dim
 Here is an example of how to create a record definition, for use with a [pandas DataFrame](https://pandas.pydata.org/docs/reference/frame.html).
 
 > [!Note]
-> Note the use of the same fields as in the [data model definition](./defining-your-data-model.md).
+> The same fields as in the [data model definition](./defining-your-data-model.md) are used here, for a datamodel they are added as annotations, here as a dict with the name.
 
 There are a couple of important things to note, other then the fields definitions themselves. The first is the `container_mode` parameter. When set to True, this indicates that the data model is a container type, like a DataFrame, and that the data model is therefore a container of records, instead of a single one, a container record can be used in the exact same way, the main difference is that `get` and `get_batch` will return the same data type, with a single record for a `get` and one or more for a `get_batch`. When you want to do a upsert, `upsert` and `upsert_batch` can be used interchangeably, in other words, passing a container to `upsert` will result in multiple upserts, instead of a single one.
 
@@ -156,7 +156,11 @@ When creating a definition you always have to provide a name (as the key in the 
 To use the definition, pass it to the GetCollection method or a collection constructor, together with the data model type.
 
 ```python
-collection = vector_store.get_collection(collection_name="skhotels", data_model_type=pd.DataFrame, data_model_definition=hotel_definition)
+collection = vector_store.get_collection(
+    collection_name="skhotels", 
+    data_model_type=pd.DataFrame, 
+    data_model_definition=hotel_definition,
+)
 ```
 
 ::: zone-end

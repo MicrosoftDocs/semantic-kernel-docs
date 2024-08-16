@@ -164,8 +164,8 @@ You can also create a collection directly, but there are two types of collection
 ```python
 from semantic_kernel.connectors.memory.redis import RedisHashsetCollection, RedisJsonCollection
 
-hash_collection = RedisHashsetCollection(collection_name="skhotels", data_model_type=hotel)
-json_collection = RedisJsonCollection(collection_name="skhotels", data_model_type=hotel)
+hash_collection = RedisHashsetCollection(collection_name="skhotels", data_model_type=Hotel)
+json_collection = RedisJsonCollection(collection_name="skhotels", data_model_type=Hotel)
 ```
 
 When creating a collection from the vector store, you can pass in the collection type, as a enum: `RedisCollectionTypes`, the default is a hash collection.
@@ -174,7 +174,11 @@ When creating a collection from the vector store, you can pass in the collection
 from semantic_kernel.connectors.memory.redis import RedisStore, RedisCollectionTypes
 
 vector_store = RedisStore()
-collection = vector_store.get_collection(collection_name="skhotels", data_model_type=hotel, collection_type=RedisCollectionTypes.JSON)
+collection = vector_store.get_collection(
+    collection_name="skhotels", 
+    data_model_type=Hotel, 
+    collection_type=RedisCollectionTypes.JSON,
+)
 
 ```
 

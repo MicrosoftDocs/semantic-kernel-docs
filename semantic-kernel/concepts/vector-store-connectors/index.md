@@ -117,7 +117,10 @@ from semantic_kernel.connectors.memory.qdrant import QdrantStore
 vector_store = QdrantStore()
 
 # Choose a collection from the database and specify the type of key and record stored in it via Generic parameters.
-collection = vector_store.get_collection("skhotels", Hotel)
+collection = vector_store.get_collection(
+    collection_name="skhotels", 
+    data_model_type=Hotel
+)
 ```
 ::: zone-end
 ::: zone pivot="programming-language-java"

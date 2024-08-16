@@ -103,7 +103,7 @@ You can also create a collection directly.
 ```python
 from semantic_kernel.connectors.memory.volatile import VolatileCollection
 
-collection = VolatileCollection(collection_name="skhotels", data_model_type=hotel)
+collection = VolatileCollection(collection_name="skhotels", data_model_type=Hotel)
 ```
 
 ## Serialization
