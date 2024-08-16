@@ -194,7 +194,7 @@ Use this annotation to indicate that your attribute contains general data that i
 VectorStoreRecordDataField(is_filterable=True)
 ```
 
-#### VectorStoreRecordDataAttribute parameters
+#### VectorStoreRecordDataField parameters
 
 | Parameter                 | Required | Description                                                                                                                                                                                                     |
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -212,7 +212,7 @@ Use this annotation to indicate that your attribute contains a vector.
 VectorStoreRecordVectorField(dimensions=4, distance_function=DistanceFunction.COSINE, index_kind=IndexKind.HNSW)
 ```
 
-#### VectorStoreRecordVectorAttribute parameters
+#### VectorStoreRecordVectorField parameters
 
 | Parameter                 | Required | Description       |
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
