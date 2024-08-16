@@ -22,7 +22,7 @@ All methods to upsert or get records use strongly typed model classes.
 The properties on these classes are decorated with attributes that indicate the purpose of each property.
 
 > [!TIP]
-> For an alternative to using attributes, refer to [definining your schema with a record definition](./schema-with-record-definition.md).
+> For an alternative to using attributes, refer to [defining your schema with a record definition](./schema-with-record-definition.md).
 
 Here is an example of a model that is decorated with these attributes.
 
@@ -54,7 +54,7 @@ public class Hotel
 
 ### VectorStoreRecordKeyAttribute
 
-Use this attribute to incidate that your property is the key of the record.
+Use this attribute to indicate that your property is the key of the record.
 
 ```csharp
 [VectorStoreRecordKey]
@@ -72,7 +72,7 @@ public ulong HotelId { get; set; }
 
 ### VectorStoreRecordDataAttribute
 
-Use this attribute to incidate that your property contains general data that is not a key or a vector.
+Use this attribute to indicate that your property contains general data that is not a key or a vector.
 
 ```csharp
 [VectorStoreRecordData(IsFilterable = true)]
@@ -169,7 +169,7 @@ This is the base class for all annotations, it is not meant to be used directly.
 | property_type       | No       | Should be a string, will also be derived during parsing. |
 
 > [!TIP]
-> The annotations are parsed by the `vectorstoremodel` decorator and one of the things it does is to create a record definition for the class, for that it is not even necessary to instantiate a field class, so when no parameters need to be set manually, the field can be created with just the name of the class:
+> The annotations are parsed by the `vectorstoremodel` decorator and one of the things it does is to create a record definition for the class, it is therefore not necessary to instantiate a field class when no parameters are set, the field can be annotated with just the class, like this:
 > ```python
 > hotel_id: Annotated[str, VectorStoreRecordKeyField]
 > ```
@@ -214,15 +214,15 @@ VectorStoreRecordVectorField(dimensions=4, distance_function=DistanceFunction.CO
 
 #### VectorStoreRecordVectorAttribute parameters
 
-| Parameter                 | Required | Description                                                                                                                                                                                                     |
+| Parameter                 | Required | Description       |
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
 | index_kind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
 | distance_function          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
 | local_embedding            | No       | Indicates whether the property has a local embedding associated with it, default is None.                                                         |
 | embedding_settings        | No       | The settings for the embedding, in the form of a dict with service_id as key and PromptExecutionSettings as value, default is None.                                                                            |
-| serialize_function        | No       | The function to use to serialize the vector, if the type is not a list[float | int] this function is needed, or the whole model needs to be serialized.                                                                            |
-| deserialize_function        | No       | The function to use to deserialize the vector, if the type is not a list[float | int] this function is needed, or the whole model needs to be deserialized.                                                                            |
+| serialize_function        | No       | The function to use to serialize the vector, if the type is not a list[float \| int] this function is needed, or the whole model needs to be serialized.                                                                            |
+| deserialize_function        | No       | The function to use to deserialize the vector, if the type is not a list[float \| int] this function is needed, or the whole model needs to be deserialized.                                                                            |
 
 
 Common index kinds and distance function types are supplied as static values on the `semantic_kernel.data.IndexKind` and `semantic_kernel.data.DistanceFunction` classes.

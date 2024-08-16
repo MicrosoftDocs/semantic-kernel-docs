@@ -293,7 +293,7 @@ This mapper will map each property to a field-value pair as supported by the Red
 
 For data properties and vector properties, you can provide override field names to use in storage that is different to the
 property names on the data model. This is not supported for keys, since keys cannot be named in Redis.
-::: zone pivot="programming-language-csharp"
+
 Property name overriding is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
 
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how these are set in Redis.

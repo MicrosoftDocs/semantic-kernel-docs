@@ -152,12 +152,12 @@ hotel_definition = VectorStoreRecordDefinition(
 )
 ```
 
-When creating a definition you always have to provide a name (optionally, otherwise the constructor of the definition will set the name with the key name of the `fields` dict) and type for each property in your schema, since this is required for index creation and data mapping.
+When creating a definition you always have to provide a name (as the key in the `fields` dict) and type for each property in your schema, since this is required for index creation and data mapping.
 
 To use the definition, pass it to the GetCollection method.
 
 ```python
-collection = vectorStore.get_collection("skhotels", pd.DataFrame, hotel_definition)
+collection = vector_store.get_collection(collection_name="skhotels", data_model_type=pd.DataFrame, data_model_definition=hotel_definition)
 ```
 
 ::: zone-end
