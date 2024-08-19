@@ -80,7 +80,7 @@ Instructions for accessing the `SemanticKernel` Java package is available [here]
 ## Quickly get started with notebooks
 If you're a Python or C# developer, you can quickly get started with our notebooks. These notebooks provide step-by-step guides on how to use Semantic Kernel to build AI agents.
 
-![Semantic Kernel notebooks](../media/notebook-image.png)
+![Semantic Kernel notebooks](../media/python_getting_started_notebooks.png)
 
 ::: zone-end
 
