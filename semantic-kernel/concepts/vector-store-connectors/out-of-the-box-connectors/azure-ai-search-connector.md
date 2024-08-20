@@ -128,6 +128,48 @@ var collection = new AzureAISearchVectorStoreRecordCollection<Hotel>(
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+## Getting started
+
+Install semantic kernel with the azure extras, which includes the Azure AI Search SDK.
+
+```cli
+pip install semantic-kernel[azure]
+```
+
+You can then create a vector store instance using the `AzureAISearchStore` class, this will use the environment variables `AZURE_AI_SEARCH_ENDPOINT` and `AZURE_AI_SEARCH_API_KEY` to connect to the Azure AI Search instance, those values can also be supplied directly. You can also supply azure credentials or token credentials instead of a API key.
+
+```python
+
+from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchStore
+
+vector_store = AzureAISearchStore()
+```
+
+You can also create the vector store with your own instance of the azure search client.
+
+```python
+from azure.search.documents.indexes import SearchIndexClient
+from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchStore
+
+search_client = SearchIndexClient(endpoint="https://<your-search-service-name>.search.windows.net", credential="<your-search-service-key>")
+vector_store = AzureAISearchStore(search_index_client=search_client)
+```
+
+You can also create a collection directly.
+
+```python
+from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchCollection
+
+collection = AzureAISearchCollection(collection_name="skhotels", data_model_type=hotel)
+```
+
+## Serialization
+
+Since the Azure AI Search connector needs a simple dict with the fields corresponding to the index as the input, the serialization is quite easy, just return a dict with the values with the keys corresponding to the index fields, the built-in step from dict to the the store model is a straight passthrough of the created dict.
+
+For more details on this concept see the [serialization documentation](./../serialization.md).
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end

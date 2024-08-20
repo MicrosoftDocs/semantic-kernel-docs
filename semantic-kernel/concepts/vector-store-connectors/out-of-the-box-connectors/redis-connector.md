@@ -131,6 +131,67 @@ var vectorStore = new RedisVectorStore(
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+## Getting started
+
+Install semantic kernel with the redis extras, which includes the redis client.
+
+```cli
+pip install semantic-kernel[redis]
+```
+
+You can then create a vector store instance using the `RedisStore` class, this will use the environment variables `REDIS_CONNECTION_STRING` to connect to a Redis instance, those values can also be supplied directly.
+
+```python
+
+from semantic_kernel.connectors.memory.redis import RedisStore
+
+vector_store = RedisStore()
+```
+
+You can also create the vector store with your own instance of the redis database client.
+
+```python
+from redis.asyncio.client import Redis
+from semantic_kernel.connectors.memory.redis import RedisStore
+
+redis_database = Redis.from_url(url="https://<your-redis-service-name>")
+vector_store = RedisStore(redis_database=redis_database)
+```
+
+You can also create a collection directly, but there are two types of collections, one for Hashes and one for JSON.
+
+```python
+from semantic_kernel.connectors.memory.redis import RedisHashsetCollection, RedisJsonCollection
+
+hash_collection = RedisHashsetCollection(collection_name="skhotels", data_model_type=Hotel)
+json_collection = RedisJsonCollection(collection_name="skhotels", data_model_type=Hotel)
+```
+
+When creating a collection from the vector store, you can pass in the collection type, as a enum: `RedisCollectionTypes`, the default is a hash collection.
+    
+```python
+from semantic_kernel.connectors.memory.redis import RedisStore, RedisCollectionTypes
+
+vector_store = RedisStore()
+collection = vector_store.get_collection(
+    collection_name="skhotels", 
+    data_model_type=Hotel, 
+    collection_type=RedisCollectionTypes.JSON,
+)
+
+```
+
+## Serialization
+
+The redis collections both use a dict as the data format when upserting, however the structure of the dicts are different between them. 
+
+For JSON collections see [redis docs](https://redis-py.readthedocs.io/en/stable/examples/search_json_examples.html) for a example.
+
+For Hashset collections, it uses the hset command with the key field as `name`, data fields as `mapping -> metadata` and vectors as `mapping -> [vector_field_name]` , see [here](https://redis-py.readthedocs.io/en/stable/commands.html#redis.commands.core.CoreCommands.hset) for more information.
+
+For more details on this concept see the [serialization documentation](./../serialization.md).
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
@@ -167,15 +228,21 @@ await collection.GetAsync("myprefix_h1");
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+```python
+from semantic_kernel.connectors.memory.redis import RedisJsonCollection
+
+collection = RedisJsonCollection(collection_name="skhotels", data_model_type=hotel, prefix_collection_name_to_key_names=False)
+
+await collection.get("myprefix_h1")
+```
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
 ## Data mapping
 
 Redis supports two modes for storing data: JSON and Hashes. The Redis connector supports both storage types, and mapping differs depending on the chosen storage type.
-
-::: zone pivot="programming-language-csharp"
 
 ### Data mapping when using the JSON storage type
 
@@ -223,12 +290,6 @@ public class Hotel
 JSON.SET skhotelsjson:h1 $ '{ "HOTEL_NAME": "Hotel Happy", "HOTEL_DESCRIPTION": "A place where everyone can be happy.", "DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1] }'
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
-::: zone pivot="programming-language-java"
-::: zone-end
-
 ### Data mapping when using the Hashes storage type
 
 When using the Hashes storage type, the Redis connector provides its own mapper to do mapping.
@@ -236,7 +297,7 @@ This mapper will map each property to a field-value pair as supported by the Red
 
 For data properties and vector properties, you can provide override field names to use in storage that is different to the
 property names on the data model. This is not supported for keys, since keys cannot be named in Redis.
-::: zone pivot="programming-language-csharp"
+
 Property name overriding is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
 
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how these are set in Redis.
@@ -264,8 +325,6 @@ public class Hotel
 HSET skhotelshashes:h1 hotel_name "Hotel Happy" hotel_description 'A place where everyone can be happy.' hotel_description_embedding <vector_bytes>
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end

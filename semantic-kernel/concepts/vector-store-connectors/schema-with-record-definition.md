@@ -23,6 +23,7 @@ This can be useful in multiple scenarios:
 
 - There may be a case where a developer wants to use the same data model with more than one configuration.
 - There may be a case where the developer wants to store data using a very different schema to the model and wants to supply a custom mapper for converting between the data model and storage schema.
+- There may be a case where a developer wants to use a built-in type, like a dict, or a optimized format like a dataframe and still wants to leverage the vector store functionality.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -118,9 +119,49 @@ new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dim
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+Here is an example of how to create a record definition, for use with a [pandas DataFrame](https://pandas.pydata.org/docs/reference/frame.html).
 
-More info coming soon.
+> [!Note]
+> The same fields as in the [data model definition](./defining-your-data-model.md) are used here, for a datamodel they are added as annotations, here as a dict with the name.
+
+There are a couple of important things to note, other then the fields definitions themselves. The first is the `container_mode` parameter. When set to True, this indicates that the data model is a container type, like a DataFrame, and that the data model is therefore a container of records, instead of a single one, a container record can be used in the exact same way, the main difference is that `get` and `get_batch` will return the same data type, with a single record for a `get` and one or more for a `get_batch`. When you want to do a upsert, `upsert` and `upsert_batch` can be used interchangeably, in other words, passing a container to `upsert` will result in multiple upserts, instead of a single one.
+
+The second is the addition of the `to_dict` and `from_dict` methods, which are used to convert between the data model and the storage schema. In this case, the `to_dict` method is used to convert the DataFrame to a list of records, and the `from_dict` method is used to convert a list of records to a DataFrame. There can also be a `serialize` and `deserialize` method (not shown in the example below), for details on the difference between those see the [serialization documentation](./serialization.md).
+
+```python
+from semantic_kernel.data import (
+    VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
+    VectorStoreRecordKeyField,
+    VectorStoreRecordVectorField,
+)
+
+hotel_definition = VectorStoreRecordDefinition(
+    fields={
+        "hotel_id": VectorStoreRecordKeyField(property_type="str"),
+        "hotel_name": VectorStoreRecordDataField(property_type="str", is_filterable=True),
+        "description": VectorStoreRecordDataField(
+            property_type="str", has_embedding=True, embedding_property_name="description_embedding"
+        ),
+        "description_embedding": VectorStoreRecordVectorField(property_type="list[float]"),
+    },
+    container_mode=True,
+    to_dict=lambda record, **_: record.to_dict(orient="records"),
+    from_dict=lambda records, **_: DataFrame(records),
+)
+```
+
+When creating a definition you always have to provide a name (as the key in the `fields` dict) and type for each property in your schema, since this is required for index creation and data mapping.
+
+To use the definition, pass it to the GetCollection method or a collection constructor, together with the data model type.
+
+```python
+collection = vector_store.get_collection(
+    collection_name="skhotels", 
+    data_model_type=pd.DataFrame, 
+    data_model_definition=hotel_definition,
+)
+```
 
 ::: zone-end
 ::: zone pivot="programming-language-java"

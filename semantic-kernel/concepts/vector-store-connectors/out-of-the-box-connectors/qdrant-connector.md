@@ -103,12 +103,6 @@ var collection = new QdrantVectorStoreRecordCollection<Hotel>(
     "skhotels");
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
-::: zone pivot="programming-language-java"
-::: zone-end
-
 ## Data mapping
 
 The Qdrant connector provides a default mapper when mapping data from the data model to storage.
@@ -124,7 +118,7 @@ The default mapper uses the model annotations or record definition to determine 
 For data properties and vector properties (if using named vectors mode), you can provide override field names to use in storage that is different to the
 property names on the data model. This is not supported for keys, since a key has a fixed name in Qdrant. It is also not supported for vectors in *single
 unnamed vector* mode, since the vector is stored under a fixed name.
-::: zone pivot="programming-language-csharp"
+
 The property name override is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
 
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Qdrant.
@@ -160,6 +154,50 @@ public class Hotel
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+## Getting started
+
+Install semantic kernel with the qdrant extras, which includes the [qdrant client](https://github.com/qdrant/qdrant-client).
+
+```cli
+pip install semantic-kernel[qdrant]
+```
+
+You can then create a vector store instance using the `QdrantStore` class, this will create a AsyncQdrantClient using the environment variables `QDRANT_URL`, `QDRANT_API_KEY`, `QDRANT_HOST`, `QDRANT_PORT`, `QDRANT_GRPC_PORT`, `QDRANT_PATH`, `QDRANT_LOCATION` and `QDRANT_PREFER_GRPS` to connect to the Qdrant instance, those values can also be supplied directly. If nothing is supplied it falls back to `location=:memory:`.
+
+```python
+
+from semantic_kernel.connectors.memory.qdrant import QdrantStore
+
+vector_store = QdrantStore()
+```
+
+You can also create the vector store with your own instance of the qdrant client.
+
+```python
+from qdrant_client.async_qdrant_client import AsyncQdrantClient
+from semantic_kernel.connectors.memory.qdrant import QdrantStore
+
+client = AsyncQdrantClient(host='localhost', port=6333)
+vector_store = QdrantStore(client=client)
+```
+
+You can also create a collection directly.
+
+```python
+from semantic_kernel.connectors.memory.qdrant import QdrantCollection
+
+collection = QdrantCollection(collection_name="skhotels", data_model_type=hotel)
+```
+
+## Serialization
+
+The Qdrant connector uses a model called `PointStruct` for reading and writing to the store. This can be imported from `from qdrant_client.models import PointStruct`. The serialization methods expects a output of a list of PointStruct objects, and the deserialization method recieves a list of PointStruct objects.
+
+There are some special considerations for this that have to do with named or unnamed vectors, see below.
+
+For more details on this concept see the [serialization documentation](./../serialization.md).
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
@@ -186,12 +224,6 @@ new Hotel
 };
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
-::: zone pivot="programming-language-java"
-::: zone-end
-
 ```json
 {
     "id": 1,
@@ -199,6 +231,32 @@ new Hotel
     "vector": [0.9, 0.1, 0.1, 0.1]
 }
 ```
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+Hotel(
+    hotel_id = 1,
+    hotel_name = "Hotel Happy",
+    description = "A place where everyone can be happy.",
+    description_embedding = [0.9f, 0.1f, 0.1f, 0.1f],
+)
+```
+
+```python
+from qdrant_client.models import PointStruct
+
+PointStruct(
+    id=1,
+    payload={ "hotel_name": "Hotel Happy", "description": "A place where everyone can be happy." },
+    vector=[0.9, 0.1, 0.1, 0.1],
+)
+```
+::: zone-end
+::: zone pivot="programming-language-java"
+::: zone-end
+
 
 #### Named vectors
 
@@ -218,12 +276,6 @@ new Hotel
 };
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
-::: zone pivot="programming-language-java"
-::: zone-end
-
 ```json
 {
     "id": 1,
@@ -234,6 +286,36 @@ new Hotel
     }
 }
 ```
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+Hotel(
+    hotel_id = 1,
+    hotel_name = "Hotel Happy",
+    description = "A place where everyone can be happy.",
+    hotel_name_embedding = [0.9f, 0.5f, 0.5f, 0.5f],
+    description_embedding = [0.9f, 0.1f, 0.1f, 0.1f],
+)
+```
+
+```python
+from qdrant_client.models import PointStruct
+
+PointStruct(
+    id=1,
+    payload={ "hotel_name": "Hotel Happy", "description": "A place where everyone can be happy." },
+    vector={
+        "hotel_name_embedding": [0.9, 0.5, 0.5, 0.5],
+        "description_embedding": [0.9, 0.1, 0.1, 0.1],
+    },
+)
+```
+
+::: zone-end
+::: zone pivot="programming-language-java"
+::: zone-end
 
 To enable named vectors mode, pass this as an option when constructing a Vector Store or collection.
 The same options can also be passed to any of the provided dependency injection container extension methods.
@@ -256,6 +338,18 @@ var collection = new QdrantVectorStoreRecordCollection<Hotel>(
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+In python the default value for `named_vectors` is True, but you can also disable this as shown below.
+
+```python
+from semantic_kernel.connectors.memory.qdrant import QdrantCollection
+
+collection = QdrantCollection(
+    collection_name="skhotels", 
+    data_model_type=Hotel, 
+    named_vectors=False,
+)
+```
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
