@@ -80,7 +80,7 @@ Instructions for accessing the `SemanticKernel` Java package is available [here]
 ## Quickly get started with notebooks
 If you're a Python or C# developer, you can quickly get started with our notebooks. These notebooks provide step-by-step guides on how to use Semantic Kernel to build AI agents.
 
-![Semantic Kernel notebooks](../media/notebook-image.png)
+![Semantic Kernel notebooks](../media/python_getting_started_notebooks.png)
 
 ::: zone-end
 
@@ -92,7 +92,7 @@ To get started, follow these steps:
 4. Open _00-getting-started.ipynb_ to get started setting your environment and creating your first AI agent!
    ::: zone-end
 
-::: zone pivot="programming-language-python"
+::: zone pivot="programming-language-csharp"
 To get started, follow these steps:
 1. Clone the [Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
 2. Open the repo in Visual Studio Code
@@ -268,7 +268,7 @@ If you're interested in understanding more about the code above, we'll break it 
 To make it easier to get started building enterprise apps with Semantic Kernel, we've created a step-by-step that guides you through the process of creating a kernel and using it to interact with AI services.
 
 ::: zone pivot="programming-language-python"
-![Semantic Kernel Python map](../media/PythonMap.png)
+![Semantic Kernel Python map](../media/UpdatedPythonMap.png)
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"

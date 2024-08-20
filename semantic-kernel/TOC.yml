@@ -6,6 +6,8 @@
 - name: Concepts
   href: concepts/TOC.yml
   expanded: true
+- name: How to
+  href: how-to/TOC.yml
 - name: Integrations
   href: integrations/index.md
 - name: Getting Support
