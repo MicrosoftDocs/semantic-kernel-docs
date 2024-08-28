@@ -62,7 +62,7 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Ollama
 dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
 ```
 
-# [Local Models](#tab/csharp-other)
+# [Other](#tab/csharp-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LM Studio, LocalAI), you can use the OpenAI chat completion connector with a custom endpoint.
 
 ```bash
@@ -196,7 +196,7 @@ Kernel kernel = kernelBuilder.Build();
 ```
 
 # [Other](#tab/csharp-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
+For other AI service providers that support the OpenAI chat completion API (e.g., LM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 > [!IMPORTANT]
 > Using custom endpoints with the OpenAI connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0010`.
@@ -332,7 +332,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 ```
 
 # [Other](#tab/csharp-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
+For other AI service providers that support the OpenAI chat completion API (e.g., LM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 > [!IMPORTANT]
 > Using custom endpoints with the OpenAI connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0010`.
@@ -440,7 +440,7 @@ OpenAIChatCompletionService chatCompletionService = new (
 ```
 
 # [Other](#tab/csharp-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
+For other AI service providers that support the OpenAI chat completion API (e.g., LM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 > [!IMPORTANT]
 > Using custom endpoints with the OpenAI connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0010`.
@@ -502,7 +502,7 @@ kernel.add_service(OpenAIChatCompletion(
 ```
 
 # [Other](#tab/python-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
+For other AI service providers that support the OpenAI chat completion API (e.g., LM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 ```python
 from semantic_kernel import Kernel
@@ -549,7 +549,7 @@ chat_completion_service = OpenAIChatCompletion(
 ```
 
 # [Other](#tab/python-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
+For other AI service providers that support the OpenAI chat completion API (e.g., LM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
 ```python
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
