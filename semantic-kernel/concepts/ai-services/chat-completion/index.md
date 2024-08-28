@@ -20,7 +20,7 @@ When picking out a chat completion model, you may also need to consider the foll
 - How much does each token cost?
 
 > [!IMPORTANT]
-> If the Model or the AI Connector does not support function calling you will not be able to use the model to with plugins to call your existing code. We are currently working to bring the function calling support to all connectors available in our repository.
+> If the Model or the AI Connector does not support function calling you will not be able to use the model with plugins to call your existing code. We are currently working to bring the function calling support to all connectors available in our repository.
 
 ::: zone pivot="programming-language-csharp"
 
