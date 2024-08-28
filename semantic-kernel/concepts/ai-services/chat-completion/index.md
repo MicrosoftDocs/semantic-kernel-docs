@@ -11,16 +11,16 @@ ms.service: semantic-kernel
 
 
 # Chat completion
-With chat completion, you can simulate a back-and-forth conversation with an AI agent. This is of course useful for creating chat bots, but it can also be used for creating autonomous agents that can complete business processes, generate code, and more. As the primary model type provided by OpenAI, Google, Mistral, Facebook, and others, chat completion is the most common AI service that you will add to your Semantic Kernel project.
+With chat completion, you can simulate a back-and-forth conversation with an AI model. This is one of the most useful modalities for creating chat bots, as well as for creating autonomous agents that can complete business processes, generate code, and more. The majority of the AI Model providers like OpenAI, Google, Mistral, Meta, and others primarily focus on chat completion models that you can target using AI service connector packages to your Semantic Kernel project.
 
-When picking out a chat completion model, you will need to consider the following:
-- What modalities does the model support (e.g., text, image, audio, etc.)?
+When picking out a chat completion model, you may also need to consider the following:
+- What sub modalities does the model support (e.g., images, audio, etc.)?
 - Does it support function calling?
 - How fast does it receive and generate tokens?
 - How much does each token cost?
 
 > [!IMPORTANT]
-> Of all the above questions, the most important is whether the model supports function calling. If it does not, you will not be able to use the model to call your existing code. Most of the latest models from OpenAI, Google, Mistral, and Amazon all support function calling. Support from small language models, however, is still limited.
+> If the Model or the AI Connector does not support function calling you will not be able to use the model to with plugins to call your existing code. We are currently working to bring the function calling support to all connectors available in our repository.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -50,6 +50,11 @@ dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.Google
 ```
+# [Ollama](#tab/csharp-Ollama)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.Ollama
+```
 
 # [Hugging Face](#tab/csharp-HuggingFace)
 
@@ -57,8 +62,8 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Google
 dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
 ```
 
-# [Other](#tab/csharp-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the OpenAI chat completion connector.
+# [Local Models](#tab/csharp-other)
+For other AI service providers that support the OpenAI chat completion API (e.g., LM Studio, LocalAI), you can use the OpenAI chat completion connector with a custom endpoint.
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
@@ -145,6 +150,25 @@ kernelBuilder.AddGoogleAIGeminiChatCompletion(
     modelId: "NAME_OF_MODEL",
     apiKey: "API_KEY",
     apiVersion: GoogleAIVersion.V1, // Optional
+    serviceId: "SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
+    httpClient: new HttpClient() // Optional; for customizing HTTP client
+);
+Kernel kernel = kernelBuilder.Build();
+```
+
+# [Ollama](#tab/csharp-Ollama)
+
+> [!IMPORTANT]
+> The Ollama chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+#pragma warning disable SKEXP0070
+IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
+kernelBuilder.AddOllamaChatCompletion(
+    modelId: "NAME_OF_MODEL",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional
     serviceId: "SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
     httpClient: new HttpClient() // Optional; for customizing HTTP client
 );
