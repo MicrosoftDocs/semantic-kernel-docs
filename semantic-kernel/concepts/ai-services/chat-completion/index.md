@@ -208,7 +208,6 @@ using Microsoft.SemanticKernel;
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.AddOpenAIChatCompletion(
     modelId: "NAME_OF_MODEL",
-    apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Used to point to your service
     serviceId: "SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
     httpClient: new HttpClient() // Optional; for customizing HTTP client
@@ -307,6 +306,28 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
+# [Ollama](#tab/csharp-Ollama)
+
+> [!IMPORTANT]
+> The Ollama chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddOllamaChatCompletion(
+    modelId: "NAME_OF_MODEL",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional
+    serviceId: "SERVICE_ID" // Optional; for targeting specific services within Semantic Kernel
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
 # [Hugging Face](#tab/csharp-HuggingFace)
 
 > [!IMPORTANT]
@@ -314,7 +335,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Google;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -344,8 +364,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 #pragma warning disable SKEXP0010
 builder.Services.AddOpenAIChatCompletion(
-    modelId: "NAME_OF_MODEL",
-    apiKey: "API_KEY",
+    modelId: "phi-3", // Or any other local model name deployed
     endpoint: new Uri("YOUR_ENDPOINT"), // Used to point to your service
     serviceId: "SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
     httpClient: new HttpClient() // Optional; for customizing HTTP client
@@ -423,18 +442,32 @@ GoogleAIGeminiChatCompletionService chatCompletionService = new (
 );
 ```
 
+# [Ollama](#tab/csharp-Ollama)
+
+> [!IMPORTANT]
+> The Ollama chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.Ollama;
+
+OllamaChatCompletionService chatCompletionService = new (
+    modelId: "MODEL_ID",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Used to point to your service
+    httpClient: new HttpClient() // Optional; if not provided, the HttpClient from the kernel will be used
+);
+```
+
 # [Hugging Face](#tab/csharp-HuggingFace)
 
 > [!IMPORTANT]
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.Connectors.HuggingFace;
 
-OpenAIChatCompletionService chatCompletionService = new (
-    modelId: "gpt-4",
-    apiKey: "YOUR_API_KEY",
-    organization: "YOUR_ORG_ID", // Optional
+HuggingFaceChatCompletionService chatCompletionService = new (
+    model: "PROVIDER_ID/MODEL_ID", 
+    apiKey: "YOUR_API_KEY", // Optional API key for accessing the HuggingFace service.
     httpClient: new HttpClient() // Optional; if not provided, the HttpClient from the kernel will be used
 );
 ```
@@ -450,9 +483,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 #pragma warning disable SKEXP0010
 OpenAIChatCompletionService chatCompletionService = new (
-    modelId: "gpt-4",
-    apiKey: "YOUR_API_KEY",
-    organization: "YOUR_ORG_ID", // Optional
+    modelId: "phi-3", // Or any other local model name deployed
     endpoint: new Uri("YOUR_ENDPOINT"), // Used to point to your service
     httpClient: new HttpClient() // Optional; if not provided, the HttpClient from the kernel will be used
 );
