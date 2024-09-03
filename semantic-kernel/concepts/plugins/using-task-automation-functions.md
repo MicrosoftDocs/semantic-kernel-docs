@@ -1,6 +1,7 @@
 ---
 title: Allow agents to automate tasks
 description: Learn how you safely allow agents to automate tasks on behalf of users in Semantic Kernel.
+zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
 ms.topic: conceptual
 ms.author: sopand
@@ -22,6 +23,7 @@ In Semantic Kernel, you can use the function invocation filter. This filter is a
 
 Here's an example of a function invocation filter that requires user consent:
 
+::: zone pivot="programming-language-csharp"
 ```csharp
 public class ApprovalFilterExample() : IFunctionInvocationFilter
 {
@@ -51,6 +53,32 @@ IKernelBuilder builder = Kernel.CreateBuilder();
 builder.Services.AddSingleton<IFunctionInvocationFilter, ApprovalFilterExample>();
 Kernel kernel = builder.Build();
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+from typing import Any, Coroutine
+from semantic_kernel.filters.filter_types import FilterTypes
+from semantic_kernel.filters.functions.function_invocation_context import FunctionInvocationContext
+from semantic_kernel.functions.function_result import FunctionResult
+
+# The `filter` decorator within kernel, creates and adds the filter in one go.
+@kernel.filter(filter_type=FilterTypes.FUNCTION_INVOCATION)
+async def approval_filter_example(
+    context: FunctionInvocationContext, next: Coroutine[FunctionInvocationContext, Any, None]
+):
+    if context.function.plugin_name == "DynamicsPlugin" and context.function.name == "create_order":
+        should_proceed = input("System > The agent wants to create an approval, do you want to proceed? (Y/N)")
+        if should_proceed.lower() != "y":
+            context.result = FunctionResult(
+                function=context.function.metadata, value="The order creation was not approved by the user"
+            )
+            return
+
+    await next(context)
+
+```
+::: zone-end
 
 Now, whenever the AI agent tries to create an order using the `DynamicsPlugin`, the user will be prompted to approve the action.
 
