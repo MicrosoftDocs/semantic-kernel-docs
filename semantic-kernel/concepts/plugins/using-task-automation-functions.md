@@ -80,6 +80,12 @@ async def approval_filter_example(
 ```
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+> Java sample is coming soon.
+
+::: zone-end
+
 Now, whenever the AI agent tries to create an order using the `DynamicsPlugin`, the user will be prompted to approve the action.
 
 > [!TIP]
