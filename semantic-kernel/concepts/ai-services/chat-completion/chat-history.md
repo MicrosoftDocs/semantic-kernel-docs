@@ -373,12 +373,11 @@ chat_history = ChatHistory([
 current_chat_history_length = len(chat_history)
 
 # Get the chat message content
-results = (await chat_completion.get_chat_message_contents(
+results = await chat_completion.get_chat_message_content(
     chat_history=history,
     settings=execution_settings,
     kernel=kernel,
-    arguments=KernelArguments(),
-))[0]
+)
 
 # Get the new messages added to the chat history object
 for i in range(current_chat_history_length, len(chat_history)):
