@@ -50,7 +50,7 @@ All services below now belong to the `Microsoft.SemanticKernel.Connectors.AzureO
 
 The latest `OpenAI` SDK does not support text generation modality, when migrating to their underlying SDK we had to drop support as well and remove `TextGeneration` specific services.
 
-If you were using any of the `OpenAITextGenerationService` or `AzureOpenAITextGenerationService` you will need to update your code to target a chat completion model instead, using `OpenAIChatCompletionService` or `AzureOpenAIChatCompletionService` instead.
+If you were using OpenAI's `gpt-3.5-turbo-instruct` legacy model with any of the `OpenAITextGenerationService` or `AzureOpenAITextGenerationService` you will need to update your code to target a chat completion model instead, using `OpenAIChatCompletionService` or `AzureOpenAIChatCompletionService` instead.
 
 > [!NOTE]
 > OpenAI and AzureOpenAI `ChatCompletion` services also implement the `ITextGenerationService` interface and that may not require any changes to your code if you were targeting the `ITextGenerationService` interface.
@@ -193,7 +193,11 @@ The `OpenAIClient` type previously was a Azure specific namespace type but now i
 
 When using Azure, you will need to update your code to use the new `AzureOpenAIClient` type.
 
-#### 9.10 Pipeline Configuration
+#### 9.10 OpenAIClientOptions
+
+The `OpenAIClientOptions` type previously was a Azure specific namespace type but now it is an `OpenAI` SDK namespace type, you will need to update your code to use the new `AzureOpenAIClientOptions` type if you are using the new `AzureOpenAIClient` with any of the specific options for the Azure client.
+
+#### 9.11 Pipeline Configuration
 
 The new `OpenAI` SDK uses a different pipeline configuration, and has a dependency on `System.ClientModel` package. You will need to update your code to use the new `HttpClientPipelineTransport` transport configuration where before you were using `HttpClientTransport` from `Azure.Core.Pipeline`.
 
@@ -204,8 +208,13 @@ var clientOptions = new OpenAIClientOptions
 {
 Before: From Azure.Core.Pipeline
 -    Transport = new HttpClientTransport(httpClient),
+-    RetryPolicy = new RetryPolicy(maxRetries: 0), // Disable Azure SDK retry policy if and only if a custom HttpClient is provided.
+-    Retry = { NetworkTimeout = Timeout.InfiniteTimeSpan } // Disable Azure SDK default timeout
+     
 
 After: From OpenAI SDK -> System.ClientModel
 +    Transport = new HttpClientPipelineTransport(httpClient),
++    RetryPolicy = new ClientRetryPolicy(maxRetries: 0); // Disable retry policy if and only if a custom HttpClient is provided.
++    NetworkTimeout = Timeout.InfiniteTimeSpan; // Disable default timeout
 };
 ```
