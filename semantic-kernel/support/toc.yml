@@ -1,5 +1,7 @@
 - name: Overview
   href: index.md
+- name: Migrating OpenAI to 1.18.0+
+  href: v2-openai-migration-guide.md
 - name: Migrating to v1+
   href: v1-migration-guide.md
 - name: Glossary
