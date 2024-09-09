@@ -658,10 +658,10 @@ var response = await chatCompletionService.GetChatMessageContentAsync(
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = (await chat_completion.get_chat_message_contents(
+response = await chat_completion.get_chat_message_content(
     chat_history=history,
     kernel=kernel,
-))[0]
+)
 ```
 ::: zone-end
 
@@ -708,7 +708,7 @@ await foreach (var chunk in response)
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = chat_completion.get_streaming_chat_message_contents(
+response = chat_completion.get_streaming_chat_message_content(
     chat_history=history,
     kernel=kernel,
 )
