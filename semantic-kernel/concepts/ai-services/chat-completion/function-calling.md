@@ -506,7 +506,7 @@ IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletio
 
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 ChatResponse response = await chatCompletion.GetChatMessageContentAsync(

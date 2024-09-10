@@ -127,7 +127,7 @@ kernel.Plugins.AddFromType<LightsPlugin>("Lights");
 // Enable planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 // Create a history store the conversation
@@ -608,7 +608,7 @@ To enable automatic function calling, we first need to create the appropriate ex
 ```csharp
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 ```
 

@@ -92,7 +92,7 @@ var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 // 2. Enable automatic function calling
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 var history = new ChatHistory();
