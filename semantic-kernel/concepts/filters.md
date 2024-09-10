@@ -1,9 +1,9 @@
 ---
 title: Semantic Kernel Filters
 description: Learn about filters in Semantic Kernel.
-author: sophialagerkranspandey, dmytrostruk
+author: dmytrostruk
 ms.topic: conceptual
-ms.author: sopand, dmytrostruk
+ms.author: sopand
 ms.date: 09/10/2024
 ms.service: semantic-kernel
 ---
