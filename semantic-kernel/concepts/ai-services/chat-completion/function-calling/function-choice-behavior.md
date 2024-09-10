@@ -1,6 +1,6 @@
 ---
 title: Function Choice Behavior
-description: Describes function choice behavior types SK supports.
+description: Describes function choice behavior types Semantic Kernel supports.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
@@ -11,23 +11,23 @@ ms.service: semantic-kernel
 
 # Overview
    
-The new function-calling model in SK is represented by the `FunctionChoiceBehavior` class. The class provides a set of static methods that return instances of the `FunctionChoiceBehavior` class, each representing a specific function choice behavior. As of today, there are three function choice behaviors available in SK:
+The new function-calling model in Semantic Kernel is represented by the `FunctionChoiceBehavior` class. The class provides a set of static methods that return instances of the `FunctionChoiceBehavior` class, each representing a specific function choice behavior. As of today, there are three function choice behaviors available in Semantic Kernel:
 - **Auto**: The AI model decides whether to call provided function(s) and, if so, which one to call.
 - **Required**: The AI model must call the provided function(s).
 - **None**: The AI model must not call any function(s).
 
-Each of the behaviors enable configuration of the following aspects of function calling that an SK caller might need to change according to the modeled scenario(s):
-- **Function advertising**: The process of advertising or sending of all SK functions or specified ones to the AI model.  
+Each of the behaviors enable configuration of the following aspects of function calling that a caller might need to change according to the modeled scenario(s):
+- **Function advertising**: The process of advertising or sending of all Semantic Kernel functions or specified ones to the AI model.  
 - **Function choice behavior**: The process of instructing the AI model on how to choose functions for calling.
 - **Function invocation**: Invocation of functions called by the AI model.
 
 > [!WARNING]
-> The function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The other function-calling model, based on the `TollCallBehavior` class, will be deprecated at the same time and is planned to be completely removed by the end of 2024.  
+> The function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The other function-calling model, based on the TollCallBehavior class, will be deprecated at the same time and is planned to be completely removed by the end of 2024.  
 
 > [!NOTE]
-The function-calling model is a general-purpose model that is not tied to any specific AI model. It can be used with any AI model that supports function calling. At the moment, it's supported by the `AzureOpenAI` and `OpenAI` connectors only, with plans to be supported by other connectors for Olama, Onix, and other function-calling-capable models in the future.
+> The function-calling model is a general-purpose model that is not tied to any specific AI model. It can be used with any AI model that supports function calling. At the moment, it's supported by the `AzureOpenAI` and `OpenAI` connectors only, with plans to be supported by other connectors for Olama, Onix, and other function-calling-capable models in the future.
 
-# Function Advertising
+## Function Advertising
 ::: zone pivot="programming-language-csharp"
 All three behaviors accept list of functions of `KernelFunction` type as a parameter. 
 By default, it is null, which means all kernel functions are provided to the AI model. 
@@ -76,8 +76,6 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
 ::: zone-end
-
-# Function Choice Behaviors
 
 ## Auto Function Choice Behavior
 The "Auto" function choice behavior instructs the AI model to decide whether to call provided function(s) and, if so, which one to call.
@@ -153,8 +151,27 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 
 await kernel.InvokePromptAsync("Specify which provided functions are needed to determine the color of the sky in Boston on a specified date.", new(settings))
 
-// Sample response: To determine the color of the sky in Boston on a specified date, first call the DateTimeUtils-GetCurrentUtcDateTime function to obtain the current date and time in UTC. Next, use the WeatherForecastUtils-GetWeatherForCity function, providing 'Boston' as the city name and the retrieved UTC date and time. These functions do not directly provide the sky's color, but the GetWeatherForCity function offers weather data, which can be used to infer the general sky condition (e.g., clear, cloudy, rainy).
+// Sample response: To determine the color of the sky in Boston on a specified date, first call the DateTimeUtils-GetCurrentUtcDateTime function to obtain the 
+// current date and time in UTC. Next, use the WeatherForecastUtils-GetWeatherForCity function, providing 'Boston' as the city name and the retrieved UTC date and time. 
+// These functions do not directly provide the sky's color, but the GetWeatherForCity function offers weather data, which can be used to infer the general sky condition (e.g., clear, cloudy, rainy).
 ```
 ::: zone-end
-# Function Invocation
+
+## Function Invocation
 Function invocation is a process of invoking functions by SK chosen or called by AI model. For more details on function invocation see [Function Invocation](./function-invocation.md).
+
+::: zone pivot="programming-language-python"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
