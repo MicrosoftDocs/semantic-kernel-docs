@@ -4,5 +4,7 @@
   href: v2-openai-migration-guide.md
 - name: Migrating to v1+
   href: v1-migration-guide.md
+- name: Function Calling Migration
+  href: function-calling-migration-guide.md
 - name: Glossary
   href: glossary.md
