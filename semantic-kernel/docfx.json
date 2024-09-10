@@ -27,7 +27,8 @@
           "**/*.svg",
           "**/*.png",
           "**/*.jpg",
-          "**/*.gif"
+          "**/*.gif",
+          "media/vector-store-data-ingestion-input.zip"
         ],
         "exclude": [
           "**/obj/**",

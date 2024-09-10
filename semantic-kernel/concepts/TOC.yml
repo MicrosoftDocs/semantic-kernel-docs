@@ -10,3 +10,7 @@
   href: planning.md
 - name: Personas
   href: personas.md
+- name: Filters
+  href: filters.md
+- name: Vector Store connectors (Experimental)
+  href: vector-store-connectors/TOC.yml
