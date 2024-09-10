@@ -141,12 +141,11 @@ class OrderPizzaPlugin:
         self.user_context = user_context
         self.payment_service = payment_service
 
-    @kernel_function(name="get_pizza_menu")
+    @kernel_function
     async def get_pizza_menu(self):
         return await self.pizza_service.get_menu()
 
     @kernel_function(
-        name="add_pizza_to_cart",
         description="Add a pizza to the user's cart; returns the new item and updated cart"
     )
     async def add_pizza_to_cart(self, size: PizzaSize, toppings: List[PizzaToppings], quantity: int = 1, special_instructions: str = ""):
@@ -154,7 +153,6 @@ class OrderPizzaPlugin:
         return await self.pizza_service.add_pizza_to_cart(cart_id, size, toppings, quantity, special_instructions)
 
     @kernel_function(
-        name="remove_pizza_from_cart",
         description="Remove a pizza from the user's cart; returns the updated cart"
     )
     async def remove_pizza_from_cart(self, pizza_id: int):
@@ -162,7 +160,6 @@ class OrderPizzaPlugin:
         return await self.pizza_service.remove_pizza_from_cart(cart_id, pizza_id)
 
     @kernel_function(
-        name="get_pizza_from_cart",
         description="Returns the specific details of a pizza in the user's cart; use this instead of relying on previous messages since the cart may have changed since then."
     )
     async def get_pizza_from_cart(self, pizza_id: int):
@@ -170,7 +167,6 @@ class OrderPizzaPlugin:
         return await self.pizza_service.get_pizza_from_cart(cart_id, pizza_id)
 
     @kernel_function(
-        name="get_cart",
         description="Returns the user's current cart, including the total price and items in the cart."
     )
     async def get_cart(self):
@@ -178,7 +174,6 @@ class OrderPizzaPlugin:
         return await self.pizza_service.get_cart(cart_id)
 
     @kernel_function(
-        name="checkout",
         description="Checkouts the user's cart; this function will retrieve the payment from the user and complete the order."
     )
     async def checkout(self):
