@@ -75,6 +75,7 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
+::: zone-end
 
 # Function Choice Behaviors
 

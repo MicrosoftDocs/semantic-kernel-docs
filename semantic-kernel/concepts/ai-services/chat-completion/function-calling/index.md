@@ -812,7 +812,7 @@ For example, if a user wants to order multiple pizzas, the LLM can call the `add
 
 ## Next steps
 
-Now that you understand how function calling works, you can now learn how to actually use function calling in Semantic Kernel by referring to the [planning article](../../planning.md)
+Now that you understand how function calling works, you can proceed to learn how to configure various aspects of function calling that better correspond to your specific scenarios by referring to the [function choice behavior article](./function-choice-behavior.md)
 
 > [!div class="nextstepaction"]
-> [Learn more about planning](../../planning.md)
+> [Function Choice Behavior](./function-choice-behavior.md)
