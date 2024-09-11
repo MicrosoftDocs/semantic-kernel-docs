@@ -27,3 +27,18 @@ Specifically, Semantic Kernel provides the following observability features:
 - **Logging**: Semantic Kernel logs meaningful events and errors from the kernel, kernel plugins and functions, as well as the AI connectors.
 - **Metrics**: Semantic Kernel emits metrics from kernel functions and AI connectors. You will be able to monitor metrics such as the kernel function execution time, the token consumption of AI connectors, etc.
 - **Tracing**: Semantic Kernel supports distributed tracing. You can track activities across different services and within Semantic Kernel.
+
+# [OpenTelemetry Semantic Convention](https://opentelemetry.io/docs/concepts/semantic-conventions/)
+
+Semantic Kernel follows the OpenTelemetry Semantic Convention for Observability. This means that the logs, metrics, and traces emitted by Semantic Kernel are structured and follow a common schema. This ensures that you can more effectively analyze the telemetry data emitted by Semantic Kernel.
+
+> Currently, the [Semantic Conventions for Generative AI](https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/README.md) are in experimental status. Semantic Kernel strives to follow the OpenTelemetry Semantic Convention as closely as possible, and provide a consistent and meaningful observability experience for AI solutions.
+
+# Output telemetry to the console
+TODO
+
+
+# Next steps
+Now that you have a basic understanding of observability in Semantic Kernel, and have seen the raw telemetry data outputted to the console, you can learn more about how to use APM tools to visualize and analyze the telemetry data:
+- [Application Insights](telemetry-with-app-insights.md)
+- [Aspire Dashboard](telemetry-with-aspire-dashboard.md)
