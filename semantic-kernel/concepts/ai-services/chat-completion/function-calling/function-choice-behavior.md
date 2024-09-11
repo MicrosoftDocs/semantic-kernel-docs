@@ -28,7 +28,7 @@ Each of the behaviors enable configuration of the following aspects of function 
 > [!NOTE]
 > The function-calling model is a general-purpose model that is not tied to any specific AI model. It can be used with any AI model that supports function calling. At the moment, it's supported by the `AzureOpenAI` and `OpenAI` connectors only, with plans to be supported by other connectors for Olama, Onix, and other function-calling-capable models in the future.
 
-## Configuring which functions to send to AI model
+## Providing AI model with functions
 All three behaviors accept list of functions of `KernelFunction` type as a parameter. 
 By default, it is null, which means all kernel functions are provided to the AI model. 
 
@@ -96,11 +96,11 @@ await kernel.InvokePromptAsync("Given the current time of day and weather, what 
 ```
 
 ## Using Required Function Choice Behavior
-The "Required"" behavior forces the model to call the provided functions. This is useful for scenarios when the AI model must call specific functions to obtain the required information from 
+The "Required" behavior forces the model to call the provided functions. This is useful for scenarios when the AI model must call specific functions to obtain the required information from 
 specified functions rather than from it's own knowledge.
 
 > [!NOTE]
-The behavior advertise functions in the first request to the AI model only and stops sending them in subsequent requests to prevent an infinite loop where the model keeps calling functions repeatedly.
+> The behavior advertise functions in the first request to the AI model only and stops sending them in subsequent requests to prevent an infinite loop where the model keeps calling functions repeatedly.
 
 Here, we specify that the AI model must call the `GetWeatherForCity` function to obtain the weather forecast for the city of Boston, rather than guessing it based on its own knowledge. 
 The model will first call the `GetWeatherForCity` function to retrieve the weather forecast. 
@@ -148,10 +148,10 @@ await kernel.InvokePromptAsync("Specify which provided functions are needed to d
 // current date and time in UTC. Next, use the WeatherForecastUtils-GetWeatherForCity function, providing 'Boston' as the city name and the retrieved UTC date and time. 
 // These functions do not directly provide the sky's color, but the GetWeatherForCity function offers weather data, which can be used to infer the general sky condition (e.g., clear, cloudy, rainy).
 ```
-::: zone-end
 
 ## Function Invocation
-Function invocation is a process of invoking functions by SK chosen or called by AI model. For more details on function invocation see [Function Invocation](./function-invocation.md).
+Function invocation is a process of invoking functions by Sematic Kernel chosen or called by AI model. For more details on function invocation see [Function Invocation](./function-invocation.md).
+::: zone-end
 
 ::: zone pivot="programming-language-python"
 ## Coming soon
