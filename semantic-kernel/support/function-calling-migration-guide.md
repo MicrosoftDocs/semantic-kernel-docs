@@ -59,10 +59,10 @@ var executionSettings = new OpenAIPromptExecutionSettings { FunctionChoiceBehavi
 ```
 
 ## Next steps
-Now after you have migrated your code to the new function calling model, you can proceed to learn how to configure various aspects of the model that might better correspond to your specific scenarios by referring to the [function choice behavior article](../concepts/ai-services/chat-completion/function-calling/function-choice-behavior.md)
+Now after you have migrated your code to the new function calling model, you can proceed to learn how to configure various aspects of the model that might better correspond to your specific scenarios by referring to the [function choice behaviors article](../concepts/ai-services/chat-completion/function-calling/function-choice-behavior.md)
 
 > [!div class="nextstepaction"]
-> [Function Choice Behavior](../concepts/ai-services/chat-completion/function-calling/function-choice-behavior.md)
+> [Function Choice Behaviors](../concepts/ai-services/chat-completion/function-calling/function-choice-behavior.md)
 
 
 ::: zone-end
