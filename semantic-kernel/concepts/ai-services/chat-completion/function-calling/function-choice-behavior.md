@@ -24,6 +24,7 @@ Each of the behaviors enable configuration of the following aspects of function 
 
 > [!WARNING]
 > The new function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The current function-calling model, based on the TollCallBehavior class, will be deprecated at the same time and is planned to be completely removed by the end of 2024.  
+> Please refer to the [migration guide](../../../../support/function-calling-migration-guide.md) to migrate your code to the new function-calling model.
 
 > [!NOTE]
 > The new function-calling model is not tied to any specific AI model, unlike the current model. It is designed for use with all Semantic Kernel connectors that work with function-calling-capable AI models.
@@ -151,7 +152,7 @@ await kernel.InvokePromptAsync("Specify which provided functions are needed to d
 ```
 
 ## Function Invocation
-Function invocation is a process of invoking functions by Sematic Kernel chosen or called by AI model. For more details on function invocation see [Function Invocation](./function-invocation.md).
+Function invocation is a process of invoking functions by Sematic Kernel chosen or called by AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
