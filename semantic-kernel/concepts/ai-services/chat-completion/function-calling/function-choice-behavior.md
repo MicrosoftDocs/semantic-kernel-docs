@@ -9,6 +9,7 @@ ms.date: 12/09/2024
 ms.service: semantic-kernel
 ---
 
+::: zone pivot="programming-language-csharp"
 # Overview
    
 The new function-calling model in Semantic Kernel is represented by the `FunctionChoiceBehavior` class. The class provides a set of static methods that return instances of the `FunctionChoiceBehavior` class, each representing a specific function choice behavior. As of today, there are three function choice behaviors available in Semantic Kernel:
@@ -27,8 +28,7 @@ Each of the behaviors enable configuration of the following aspects of function 
 > [!NOTE]
 > The function-calling model is a general-purpose model that is not tied to any specific AI model. It can be used with any AI model that supports function calling. At the moment, it's supported by the `AzureOpenAI` and `OpenAI` connectors only, with plans to be supported by other connectors for Olama, Onix, and other function-calling-capable models in the future.
 
-## Function Advertising - Configuring which functions to provide to the AI model
-::: zone pivot="programming-language-csharp"
+## Configuring which functions to send to AI model
 All three behaviors accept list of functions of `KernelFunction` type as a parameter. 
 By default, it is null, which means all kernel functions are provided to the AI model. 
 
@@ -128,7 +128,6 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 
 await kernel.InvokePromptAsync("Given that it is now the 10th of September 2024, 11:29 AM, what is the likely color of the sky in Boston?", new(settings));
 ```
-::: zone-end
 
 ## Using None Function Choice Behavior
 The "None" behavior instructs the AI model to use the provided functions without executing them to generate a response. This is useful for dry runs when the SK caller wants to see which functions the model would choose without actually invoking them.
