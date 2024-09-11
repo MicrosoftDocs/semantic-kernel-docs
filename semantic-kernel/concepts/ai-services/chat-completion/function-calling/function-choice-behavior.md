@@ -27,7 +27,7 @@ Each of the behaviors enable configuration of the following aspects of function 
 > [!NOTE]
 > The function-calling model is a general-purpose model that is not tied to any specific AI model. It can be used with any AI model that supports function calling. At the moment, it's supported by the `AzureOpenAI` and `OpenAI` connectors only, with plans to be supported by other connectors for Olama, Onix, and other function-calling-capable models in the future.
 
-## Function Advertising
+## Function Advertising - Configuring which functions to provide to the AI model
 ::: zone pivot="programming-language-csharp"
 All three behaviors accept list of functions of `KernelFunction` type as a parameter. 
 By default, it is null, which means all kernel functions are provided to the AI model. 
@@ -75,12 +75,9 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
-::: zone-end
-
-## Auto Function Choice Behavior
+## Using The Auto Function Choice Behavior
 The "Auto" function choice behavior instructs the AI model to decide whether to call provided function(s) and, if so, which one to call.
 
-::: zone pivot="programming-language-csharp"
 In this example, all the functions from the DateTimeUtils and WeatherForecastUtils plugins will be provided to the AI model alongside the prompt. 
 The model will first call `GetCurrentTime` to obtain the current date and time, as this information is needed as input for the `GetWeatherForCity` function. 
 Next, it will call `GetWeatherForCity` to get the weather forecast for the city of Boston using the obtained date and time. 
@@ -97,16 +94,14 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
-::: zone-end
 
-## Required Function Choice Behavior
+## Using Required Function Choice Behavior
 The "Required"" behavior forces the model to call the provided functions. This is useful for scenarios when the AI model must call specific functions to obtain the required information from 
 specified functions rather than from it's own knowledge.
 
 > [!NOTE]
 The behavior advertise functions in the first request to the AI model only and stops sending them in subsequent requests to prevent an infinite loop where the model keeps calling functions repeatedly.
 
-::: zone pivot="programming-language-csharp"
 Here, we specify that the AI model must call the `GetWeatherForCity` function to obtain the weather forecast for the city of Boston, rather than guessing it based on its own knowledge. 
 The model will first call the `GetWeatherForCity` function to retrieve the weather forecast. 
 With this information, the model can then determine the likely color of the sky in Boston using its own knowledge.
@@ -135,9 +130,8 @@ await kernel.InvokePromptAsync("Given that it is now the 10th of September 2024,
 ```
 ::: zone-end
 
-## None Function Choice Behavior
+## Using None Function Choice Behavior
 The "None" behavior instructs the AI model to use the provided functions without executing them to generate a response. This is useful for dry runs when the SK caller wants to see which functions the model would choose without actually invoking them.
-::: zone pivot="programming-language-csharp"
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -161,17 +155,10 @@ await kernel.InvokePromptAsync("Specify which provided functions are needed to d
 Function invocation is a process of invoking functions by SK chosen or called by AI model. For more details on function invocation see [Function Invocation](./function-invocation.md).
 
 ::: zone pivot="programming-language-python"
-
 ## Coming soon
-
 More info coming soon.
-
 ::: zone-end
-
 ::: zone pivot="programming-language-java"
-
 ## Coming soon
-
 More info coming soon.
-
 ::: zone-end
