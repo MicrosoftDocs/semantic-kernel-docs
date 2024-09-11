@@ -76,7 +76,7 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
-## Using The Auto Function Choice Behavior
+## Using Auto Function Choice Behavior
 The "Auto" function choice behavior instructs the AI model to decide whether to call provided function(s) and, if so, which one to call.
 
 In this example, all the functions from the DateTimeUtils and WeatherForecastUtils plugins will be provided to the AI model alongside the prompt. 

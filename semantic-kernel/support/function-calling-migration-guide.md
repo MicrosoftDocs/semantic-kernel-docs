@@ -14,7 +14,7 @@ The new model provides more flexibility and control over the function calling pr
 
 This guide is intended to help you to migrate your code to the new function calling model.
 
-## ToolCallBehavior.AutoInvokeKernelFunctions
+## Migrate ToolCallBehavior.AutoInvokeKernelFunctions behavior
 The `ToolCallBehavior.AutoInvokeKernelFunctions` behavior is equivalent to the `FunctionChoiceBehavior.Auto` behavior in the new model. 
 ```csharp
 // Before
@@ -24,7 +24,7 @@ var executionSettings = new OpenAIPromptExecutionSettings { ToolCallBehavior = T
 var executionSettings = new OpenAIPromptExecutionSettings { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
 ```
 
-## ToolCallBehavior.EnableKernelFunctions
+## Migrate ToolCallBehavior.EnableKernelFunctions behavior
 The `ToolCallBehavior.EnableKernelFunctions` behavior is equivalent to the `FunctionChoiceBehavior.Auto` behavior with disabled auto invocation. 
 ```csharp
 // Before
@@ -34,7 +34,7 @@ var executionSettings = new OpenAIPromptExecutionSettings { ToolCallBehavior = T
 var executionSettings = new OpenAIPromptExecutionSettings { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(autoInvoke: false) };
 ```
 
-## ToolCallBehavior.EnableFunctions
+## Migrate ToolCallBehavior.EnableFunctions behavior
 The `ToolCallBehavior.EnableFunctions` behavior is equivalent to the `FunctionChoiceBehavior.Auto` behavior that configured with list of functions with disabled auto invocation. 
 ```csharp
 var function = kernel.CreateFunctionFromMethod(() => DayOfWeek.Friday, "GetDayOfWeek", "Retunrs the current day of the week.");
@@ -46,7 +46,7 @@ var executionSettings = new OpenAIPromptExecutionSettings() { ToolCallBehavior =
 var executionSettings = new OpenAIPromptExecutionSettings { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(functions: [function], autoInvoke: false) };
 ```
 
-## ToolCallBehavior.RequireFunction
+## Migrate ToolCallBehavior.RequireFunction behavior
 The `ToolCallBehavior.RequireFunction` behavior is equivalent to the `FunctionChoiceBehavior.Required` behavior that configured with list of functions with disabled auto invocation.
 ```csharp
 var function = kernel.CreateFunctionFromMethod(() => DayOfWeek.Friday, "GetDayOfWeek", "Retunrs the current day of the week.");
