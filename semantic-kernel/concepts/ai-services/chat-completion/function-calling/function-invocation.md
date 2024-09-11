@@ -42,11 +42,11 @@ await kernel.InvokePromptAsync("Given the current time of day and weather, what 
 In cases when the caller wants to have more control over the function invocation process, manual function invocation can be used. 
 
 When manual function invocation is enabled, Semantic Kernel does not automatically invoke the functions chosen by the AI model. 
-Instead, it returns a list of functions to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on. 
+Instead, it returns a list of function calls to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on. 
 The function invocation results need to be added to the chat history and returned to the model, which reasons about them and decides whether to call more functions or generate the final response.
 The caller then adds the function results or exceptions to the chat history and returns it to the model, which reasons about it.
 
-In the example below, 
+The example below demonstrates how to use manual function invocation works.
 ```csharp
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -99,9 +99,7 @@ while (true)
 > [!NOTE]
 > The FunctionCallContent and FunctionResultContent classes are used to represent AI model function calls and Semantic Kernel function invocation results, respectively. 
 > They contain information about function calls, such as the function ID, name, and arguments, and function invocation results, such as function call ID and result.
-
 ::: zone-end
-
 ::: zone pivot="programming-language-python"
 ## Coming soon
 More info coming soon.

@@ -23,10 +23,11 @@ Each of the behaviors enable configuration of the following aspects of function 
 - **Function invocation**: Invocation of functions called by the AI model.
 
 > [!WARNING]
-> The function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The other function-calling model, based on the TollCallBehavior class, will be deprecated at the same time and is planned to be completely removed by the end of 2024.  
+> The new function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The current function-calling model, based on the TollCallBehavior class, will be deprecated at the same time and is planned to be completely removed by the end of 2024.  
 
 > [!NOTE]
-> The function-calling model is a general-purpose model that is not tied to any specific AI model. It can be used with any AI model that supports function calling. At the moment, it's supported by the `AzureOpenAI` and `OpenAI` connectors only, with plans to be supported by other connectors for Olama, Onix, and other function-calling-capable models in the future.
+> The new function-calling model is not tied to any specific AI model, unlike the current model. It is designed for use with all Semantic Kernel connectors that work with function-calling-capable AI models.
+> Currently, it's supported only by the `AzureOpenAI` and `OpenAI` connectors, with plans to extend support to other connectors for Olama, Onix, and other function-calling-capable models in the future.
 
 ## Providing AI model with functions
 All three behaviors accept list of functions of `KernelFunction` type as a parameter. 
