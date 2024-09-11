@@ -57,6 +57,12 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Google
 dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
 ```
 
+# [Azure AI Inference](#tab/csharp-AzureAIInference)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.AzureAIInference
+```
+
 # [Other](#tab/csharp-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the OpenAI chat completion connector.
 
@@ -162,6 +168,25 @@ using Microsoft.SemanticKernel;
 #pragma warning disable SKEXP0070
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.AddHuggingFaceChatCompletion(
+    model: "NAME_OF_MODEL",
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional
+    serviceId: "SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
+    httpClient: new HttpClient() // Optional; for customizing HTTP client
+);
+Kernel kernel = kernelBuilder.Build();
+```
+# [Azure AI Inference](#tab/csharp-AzureAIInference)
+
+> [!IMPORTANT]
+> The Azure AI Inference chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+#pragma warning disable SKEXP0070
+IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
+kernelBuilder.AddAzureAIInferenceChatCompletion(
     model: "NAME_OF_MODEL",
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional
@@ -307,6 +332,30 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
+# [Azure AI Inference](#tab/csharp-AzureAIInference)
+
+> [!IMPORTANT]
+> The Azure AI Inference chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.AzureAIInference;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddAzureAIInferenceChatCompletion(
+    model: "NAME_OF_MODEL",
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional
+    serviceId: "SERVICE_ID" // Optional; for targeting specific services within Semantic Kernel
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
 # [Other](#tab/csharp-other)
 For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
 
@@ -411,6 +460,22 @@ OpenAIChatCompletionService chatCompletionService = new (
     modelId: "gpt-4",
     apiKey: "YOUR_API_KEY",
     organization: "YOUR_ORG_ID", // Optional
+    httpClient: new HttpClient() // Optional; if not provided, the HttpClient from the kernel will be used
+);
+```
+
+# [Azure AI Inference](#tab/csharp-AzureAIInference)
+
+> [!IMPORTANT]
+> The Azure AI Inference chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.AzureAIInference;
+
+AzureAIInferenceChatCompletionService chatCompletionService = new (
+    modelId: "YOUR_MODEL_ID",
+    apiKey: "YOUR_API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Used to point to your service
     httpClient: new HttpClient() // Optional; if not provided, the HttpClient from the kernel will be used
 );
 ```
