@@ -599,7 +599,7 @@ kernel.add_plugin(
 
 ### 9) Planning
 
-Semantic Kernel leverages [function calling](../concepts/ai-services/chat-completion/function-calling.md)–a native feature of most  LLMs–to provide [planning](../concepts/planning.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
+Semantic Kernel leverages [function calling](../concepts/ai-services/chat-completion/function-calling/index.md)–a native feature of most  LLMs–to provide [planning](../concepts/planning.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
 
 To enable automatic function calling, we first need to create the appropriate execution settings so that Semantic Kernel knows to automatically invoke the functions in the kernel when the AI agent requests them.
 

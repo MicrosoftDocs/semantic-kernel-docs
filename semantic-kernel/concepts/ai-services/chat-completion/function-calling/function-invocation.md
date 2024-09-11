@@ -4,12 +4,11 @@ description: Describes function invocation types SK supports.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
-ms.author: SergeyMenshykh
-ms.date: 12/09/2024
+ms.author: semenshi
 ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
-# Overview
+# Function Invocation Types
 After AI model receives a prompt containing a list of functions, it may decide to call one or more of them to complete the prompt. When a function is called by the model, it needs be **invoked** by Semantic Kernel.
 
 Function calling model in Semantic Kernel has two types of function invocation: **auto** and **manual**. 

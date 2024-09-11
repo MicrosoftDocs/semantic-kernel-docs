@@ -4,12 +4,11 @@ description: Describes the steps for SK caller code to migrate from the current 
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
-ms.author: SergeyMenshykh
-ms.date: 12/09/2024
+ms.author: semenshi
 ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
-# Overview
+# Function Calling Model Migration Guide
 Semantic Kernel is gradually transitioning from the current function calling model, represented by the `ToolCallBehavior` class, to the new one, represented by the `FunctionChoiceBehavior` class. 
 The new model provides more flexibility and control over the function calling process and is expected to reach general availability (GA) by mid-November 2024. The current model will be deprecated at the same time and is planned to be completely removed by the end of 2024.
 

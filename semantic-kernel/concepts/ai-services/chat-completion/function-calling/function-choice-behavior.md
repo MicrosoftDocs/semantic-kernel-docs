@@ -4,13 +4,12 @@ description: Describes function choice behavior types Semantic Kernel supports.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
-ms.author: SergeyMenshykh
-ms.date: 12/09/2024
+ms.author: semenshi
 ms.service: semantic-kernel
 ---
 
 ::: zone pivot="programming-language-csharp"
-# Overview
+# Function Choice Behaviors
    
 The new function-calling model in Semantic Kernel is represented by the `FunctionChoiceBehavior` class. The class provides a set of static methods that return instances of the `FunctionChoiceBehavior` class, each representing a specific function choice behavior. As of today, there are three function choice behaviors available in Semantic Kernel:
 - **Auto**: The AI model decides whether to call provided function(s) and, if so, which one to call.
