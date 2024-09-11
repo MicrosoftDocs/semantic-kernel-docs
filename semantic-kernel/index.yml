@@ -48,10 +48,10 @@ productDirectory:
         - url: /semantic-kernel/integrations/
           text: Browse available features by language
     - title: Enterprise Readiness
-      imageSrc: /semantic-kernel/media/Integrations.svg
+      imageSrc: /semantic-kernel/media/Security.svg
       links:
-        - url: /semantic-kernel/enterprise-readiness/telemetry/index
-          text: Telemetry
+        - url: /semantic-kernel/enterprise-readiness/observability/index
+          text: Observability
     - title: Connect with us
       imageSrc: /semantic-kernel/media/whats-new.svg
       links:
