@@ -153,7 +153,8 @@ Function invocation is the process whereby Sematic Kernel invokes functions chos
 ::: zone-end
 
 ## Supported AI Connectors
-As of today, the following AI connectors in Semantic Kernel support the function calling model:  
+As of today, the following AI connectors in Semantic Kernel support the function calling model:
+
 | AI Connector           | FunctionChoiceBehavior | ToolCallBehavior |  
 |------------------------|------------------------|------------------|  
 | Anthropic              | Planned                | ❌               |  
