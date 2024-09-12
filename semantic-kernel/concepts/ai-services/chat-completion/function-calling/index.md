@@ -548,6 +548,11 @@ List<ChatResponse> responses = chatCompletion.getChatMessageContentsAsync(
 
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
+> [!NOTE]
+> This example uses the `FunctionChoiceBehavior.Auto()` behavior, one of the few available ones. For more information about other function choice behaviors, check out the [function choice behaviors article](./function-choice-behavior.md).
+::: zone-end
+
 ### 3) Model processes the input
 
 With both the chat history and the serialized functions, the model can determine the best way to respond. In this case, the model recognizes that the user wants to order a pizza. The model would likely _want_ to call the `add_pizza_to_cart` function, but because we specified the size and toppings as required parameters, the model will ask the user for this information:
@@ -716,6 +721,9 @@ Not all functions will succeed, however. If the function fails, Semantic Kernel 
 
 > [!TIP]
 > To ensure a model can self-correct, it's important to provide error messages that clearly communicate what went wrong and how to fix it. This can help the model retry the function call with the correct information.
+
+> [!NOTE]
+> Semantic Kernel automatically invokes functions by default. However, if you prefer to manage function invocation manually, you can enable manual function invocation mode. For more details on how to do this, please refer to the [function invocation article](./function-invocation.md).
 
 ### 6) Return the function result
 

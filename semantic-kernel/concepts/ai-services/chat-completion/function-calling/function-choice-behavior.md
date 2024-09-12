@@ -1,4 +1,4 @@
----
+﻿---
 title: Function Choice Behavior
 description: Describes function choice behavior types Semantic Kernel supports.
 zone_pivot_groups: programming-languages
@@ -10,28 +10,23 @@ ms.service: semantic-kernel
 
 ::: zone pivot="programming-language-csharp"
 # Function Choice Behaviors
-   
-The new function-calling model in Semantic Kernel is represented by the `FunctionChoiceBehavior` class. The class provides a set of static methods that return instances of the `FunctionChoiceBehavior` class, each representing a specific function choice behavior. As of today, there are three function choice behaviors available in Semantic Kernel:
-- **Auto**: The AI model decides whether to call provided function(s) and, if so, which one to call.
-- **Required**: The AI model must call the provided function(s).
-- **None**: The AI model must not call any function(s).
 
-Each of the behaviors enable configuration of the following aspects of function calling that a caller might need to change according to the modeled scenario(s):
-- **Function advertising**: The process of advertising or sending of all Semantic Kernel functions or specified ones to the AI model.  
-- **Function choice behavior**: The process of instructing the AI model on how to choose functions for calling.
-- **Function invocation**: Invocation of functions called by the AI model.
+Function choice behaviors are bits of configuration that allows a developer to configure which functions are advertised to AI models, how the models should choose them for invocation, and lastly how Semantic Kernel might invoke those functions.
+
+As of today, the function choice behaviors are represented by three static methods of the `FunctionChoiceBehavior` class:
+- **Auto**: Allows the AI model to decide to choose from zero or more of the provided function(s) for invocation.
+- **Required**: Forces the AI model to chose provided function(s).
+- **None**: Instructs the AI model not to chose any function(s).
 
 > [!WARNING]
-> The new function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The current function-calling model, based on the TollCallBehavior class, will be deprecated at the same time and is planned to be completely removed by the end of 2024.  
-> Please refer to the [migration guide](../../../../support/function-calling-migration-guide.md) to migrate your code to the new function-calling model.
+> The function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The other function-calling model, represented by the `TollCallBehavior` class, will be deprecated at the same time and is planned to be completely removed by the end of 2024.
+> Please refer to the [migration guide](../../../../support/function-calling-migration-guide.md) to migrate your code to the latest function-calling model.
 
 > [!NOTE]
-> The new function-calling model is not tied to any specific AI model, unlike the current model. It is designed for use with all Semantic Kernel connectors that work with function-calling-capable AI models.
-> Currently, it's supported only by the `AzureOpenAI` and `OpenAI` connectors, with plans to extend support to other connectors for Olama, Onix, and other function-calling-capable models in the future.
+> The function-calling model is only supported by a few AI connectors so far, see the "Supported AI Connectors" section below for more details.
 
-## Providing AI model with functions
-All three behaviors accept list of functions of `KernelFunction` type as a parameter. 
-By default, it is null, which means all kernel functions are provided to the AI model. 
+## Function Advertising
+Function advertising is the process of providing functions to AI models for further calling and invocation. All three function choice behaviors accept a list of functions to advertise as a `functions` parameter. By default, it is null, which means all functions from plugins registered on the Kernel are provided to the AI model.
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -77,11 +72,11 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
 ## Using Auto Function Choice Behavior
-The "Auto" function choice behavior instructs the AI model to decide whether to call provided function(s) and, if so, which one to call.
+The `Auto` function choice behavior instructs the AI model to decide to choose from zero or more of the provided function(s) for invocation.
 
-In this example, all the functions from the DateTimeUtils and WeatherForecastUtils plugins will be provided to the AI model alongside the prompt. 
-The model will first call `GetCurrentTime` to obtain the current date and time, as this information is needed as input for the `GetWeatherForCity` function. 
-Next, it will call `GetWeatherForCity` to get the weather forecast for the city of Boston using the obtained date and time. 
+In this example, all the functions from the `DateTimeUtils` and `WeatherForecastUtils` plugins will be provided to the AI model alongside the prompt. 
+The model will first chose `GetCurrentTime` function for invocation to obtain the current date and time, as this information is needed as input for the `GetWeatherForCity` function. 
+Next, it will chose `GetWeatherForCity` function for invocation to get the weather forecast for the city of Boston using the obtained date and time. 
 With this information, the model will be able to determine the likely color of the sky in Boston.
 ```csharp
 using Microsoft.SemanticKernel;
@@ -97,14 +92,14 @@ await kernel.InvokePromptAsync("Given the current time of day and weather, what 
 ```
 
 ## Using Required Function Choice Behavior
-The "Required" behavior forces the model to call the provided functions. This is useful for scenarios when the AI model must call specific functions to obtain the required information from 
-specified functions rather than from it's own knowledge.
+The `Required` behavior forces the model to chose the provided function(s) for for invocation. This is useful for scenarios when the AI model must obtain required information from the specified 
+functions rather than from it's own knowledge.
 
 > [!NOTE]
-> The behavior advertise functions in the first request to the AI model only and stops sending them in subsequent requests to prevent an infinite loop where the model keeps calling functions repeatedly.
+> The behavior advertises functions in the first request to the AI model only and stops sending them in subsequent requests to prevent an infinite loop where the model keeps choosing the same functions for invocation repeatedly.
 
-Here, we specify that the AI model must call the `GetWeatherForCity` function to obtain the weather forecast for the city of Boston, rather than guessing it based on its own knowledge. 
-The model will first call the `GetWeatherForCity` function to retrieve the weather forecast. 
+Here, we specify that the AI model must choose the `GetWeatherForCity` function for invocation to obtain the weather forecast for the city of Boston, rather than guessing it based on its own knowledge. 
+The model will first choose the `GetWeatherForCity` function for invocation to retrieve the weather forecast. 
 With this information, the model can then determine the likely color of the sky in Boston using its own knowledge.
 ```csharp
 using Microsoft.SemanticKernel;
@@ -131,7 +126,10 @@ await kernel.InvokePromptAsync("Given that it is now the 10th of September 2024,
 ```
 
 ## Using None Function Choice Behavior
-The "None" behavior instructs the AI model to use the provided functions without executing them to generate a response. This is useful for dry runs when the SK caller wants to see which functions the model would choose without actually invoking them.
+The `None` behavior instructs the AI model to use the provided function(s) without choosing any of them for invocation to generate a response. This is useful for dry runs when the caller may want to see which functions the model would choose without actually invoking them.
+
+Here, we advertise all functions from the `DateTimeUtils` and `WeatherForecastUtils` plugins to the AI model but instruct it not to choose any of them. 
+Instead, the model will provide a response describing which functions it would choose to determine the color of the sky in Boston on a specified date.
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -151,8 +149,23 @@ await kernel.InvokePromptAsync("Specify which provided functions are needed to d
 ```
 
 ## Function Invocation
-Function invocation is a process of invoking functions by Sematic Kernel chosen or called by AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
+Function invocation is the process whereby Sematic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
 ::: zone-end
+
+## Supported AI Connectors
+As of today, the following AI connectors in Semantic Kernel support the function calling model:
+
+| AI Connector           | FunctionChoiceBehavior | ToolCallBehavior |
+|------------------------|------------------------|------------------|
+| Anthropic              |		 Planned          |		❌	       |
+| AzureAIInference       |       Coming soon      |		❌          |
+| AzureOpenAI            |           ✔️           | 	✔️	        |
+| Gemini                 |       Planned          |		✔️	        |
+| HuggingFace            |       Planned          |		❌		   |
+| Mistral                |       Planned          |		✔️	        |
+| Ollama                 |       Coming soon      |		❌		   |
+| Onnx                   |       Coming soon      |		❌		   |
+| OpenAI                 |		     ✔️	          |		✔️	        |
 
 ::: zone pivot="programming-language-python"
 ## Coming soon

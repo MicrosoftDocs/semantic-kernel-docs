@@ -8,17 +8,17 @@ ms.author: semenshi
 ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
-# Function Invocation Types
-After AI model receives a prompt containing a list of functions, it may decide to call one or more of them to complete the prompt. When a function is called by the model, it needs be **invoked** by Semantic Kernel.
+# Function Invocation Modes
+When the AI model receives a prompt containing a list of functions, it may choose one or more of them for invocation to complete the prompt. When a function is chosen by the model, it needs be **invoked** by Semantic Kernel.
 
-Function calling model in Semantic Kernel has two types of function invocation: **auto** and **manual**. 
+The function calling subsystem in Semantic Kernel has two modes of function invocation: **auto** and **manual**. 
 
-Depending on the invocation type Semantic Kernel either do end-to-end function invocation or give the caller control over the function invocation process.
+Depending on the invocation mode, Semantic Kernel either does end-to-end function invocation or gives the caller control over the function invocation process.
 
 ## Auto Function Invocation
-The auto function invocation is the default behavior of the Semantic Kernel function-calling model. When the AI model decides to call one or more functions, Semantic Kernel automatically invokes the chosen functions. 
+Auto function invocation is the default mode of the Semantic Kernel function-calling subsystem. When the AI model chooses one or more functions, Semantic Kernel automatically invokes the chosen functions. 
 The results of these function invocations are added to the chat history and sent to the model automatically in subsequent requests. 
-The model then reasons about the chat history, calls functions again if needed, or generates the final response. 
+The model then reasons about the chat history, chooses additional functions if needed, or generates the final response. 
 This approach is fully automated and requires no manual intervention from the caller.
 
 This example demonstrates how to use the auto function invocation in Semantic Kernel. AI model decides which functions to call to complete the prompt and Semantic Kernel does the rest and invokes them automatically.
@@ -41,11 +41,10 @@ await kernel.InvokePromptAsync("Given the current time of day and weather, what 
 In cases when the caller wants to have more control over the function invocation process, manual function invocation can be used. 
 
 When manual function invocation is enabled, Semantic Kernel does not automatically invoke the functions chosen by the AI model. 
-Instead, it returns a list of function calls to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on. 
-The function invocation results need to be added to the chat history and returned to the model, which reasons about them and decides whether to call more functions or generate the final response.
-The caller then adds the function results or exceptions to the chat history and returns it to the model, which reasons about it.
+Instead, it returns a list of chosen functions to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on. 
+The function invocation results need to be added to the chat history and returned to the model, which reasons about them and decides whether to chose additional functions or generate the final response.
 
-The example below demonstrates how to use manual function invocation works.
+The example below demonstrates how to use manual function invocation.
 ```csharp
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -56,7 +55,7 @@ kernel.ImportPluginFromType<WeatherForecastUtils>();
 
 IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
-// Manual funciton invocation needs to be enabled explicitly by setting autoInvoke to false.
+// Manual function invocation needs to be enabled explicitly by setting autoInvoke to false.
 PromptExecutionSettings settings = new() { FunctionChoiceBehavior = Microsoft.SemanticKernel.FunctionChoiceBehavior.Auto(autoInvoke: false) };
 
 ChatHistory chatHistory = [];
@@ -75,17 +74,17 @@ while (true)
         break;
     }
 
-    // Adding AI model response containing function calls to chat history as it's required by the models to preserve the context.
+    // Adding AI model response containing chosen functions to chat history as it's required by the models to preserve the context.
     chatHistory.Add(result); 
 
-    // Check if the AI model has called any functions.
+    // Check if the AI model has chosen any function for invocation.
     IEnumerable<FunctionCallContent> functionCalls = FunctionCallContent.GetFunctionCalls(result);
     if (!functionCalls.Any())
     {
         break;
     }
 
-    // Sequentially iterating over each function call, invoke it, and add the result to the chat history.
+    // Sequentially iterating over each chosen function, invoke it, and add the result to the chat history.
     foreach (FunctionCallContent functionCall in functionCalls)
     {
         FunctionResultContent resultContent = await functionCall.InvokeAsync(kernel);
@@ -97,7 +96,7 @@ while (true)
 ```
 > [!NOTE]
 > The FunctionCallContent and FunctionResultContent classes are used to represent AI model function calls and Semantic Kernel function invocation results, respectively. 
-> They contain information about function calls, such as the function ID, name, and arguments, and function invocation results, such as function call ID and result.
+> They contain information about chosen function, such as the function ID, name, and arguments, and function invocation results, such as function call ID and result.
 ::: zone-end
 ::: zone pivot="programming-language-python"
 ## Coming soon
