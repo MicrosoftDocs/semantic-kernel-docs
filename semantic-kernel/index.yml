@@ -28,7 +28,6 @@ productDirectory:
       links:
         - url: /semantic-kernel/get-started/quick-start-guide
           text: Learn how to use Semantic Kernel
-      links:
         - url: /semantic-kernel/get-started/detailed-samples
           text: Check out samples for Semantic Kernel
     - title: Concepts
