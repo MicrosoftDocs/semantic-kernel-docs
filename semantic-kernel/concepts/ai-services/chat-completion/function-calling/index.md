@@ -550,7 +550,7 @@ List<ChatResponse> responses = chatCompletion.getChatMessageContentsAsync(
 
 ::: zone pivot="programming-language-csharp"
 > [!NOTE]
-> This example uses the `FunctionChoiceBehavior.Auto()` behavior, one of the few available ones. For more information about other function choice behaviors, check out the [function choice behaviors article](./function-choice-behavior.md).
+> This example uses the `FunctionChoiceBehavior.Auto()` behavior, one of the few available ones. For more information about other function choice behaviors, check out the [function choice behaviors article](./function-choice-behaviors.md).
 ::: zone-end
 
 ### 3) Model processes the input
@@ -820,7 +820,7 @@ For example, if a user wants to order multiple pizzas, the LLM can call the `add
 
 ## Next steps
 
-Now that you understand how function calling works, you can proceed to learn how to configure various aspects of function calling that better correspond to your specific scenarios by referring to the [function choice behavior article](./function-choice-behavior.md)
+Now that you understand how function calling works, you can proceed to learn how to configure various aspects of function calling that better correspond to your specific scenarios by referring to the [function choice behavior article](./function-choice-behaviors.md)
 
 > [!div class="nextstepaction"]
-> [Function Choice Behavior](./function-choice-behavior.md)
+> [Function Choice Behavior](./function-choice-behaviors.md)

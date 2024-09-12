@@ -1,6 +1,6 @@
 - name: Overview
   href: index.md
-- name: Function Choice Behavior
-  href: function-choice-behavior.md
+- name: Function Choice Behaviors
+  href: function-choice-behaviors.md
 - name: Function Invocation
   href: function-invocation.md
