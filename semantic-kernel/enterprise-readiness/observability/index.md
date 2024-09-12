@@ -30,7 +30,8 @@ Specifically, Semantic Kernel provides the following observability features:
 
 - **Logging**: Semantic Kernel logs meaningful events and errors from the kernel, kernel plugins and functions, as well as the AI connectors.
     ![Logs and events](../../media/telemetry-log-events-overview-app-insights.png)
-    > [!IMPORTANT] > [Traces in Application Insights](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete#trace) represent traditional log entries and [OpenTelemetry span events](https://opentelemetry.io/docs/concepts/signals/traces/#span-events). They are not the same as distributed traces.
+    > [!IMPORTANT]
+    > [Traces in Application Insights](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete#trace) represent traditional log entries and [OpenTelemetry span events](https://opentelemetry.io/docs/concepts/signals/traces/#span-events). They are not the same as distributed traces.
 - **Metrics**: Semantic Kernel emits metrics from kernel functions and AI connectors. You will be able to monitor metrics such as the kernel function execution time, the token consumption of AI connectors, etc.
     ![Metrics](../../media/telemetry-metrics-overview-app-insights.png)
 - **Tracing**: Semantic Kernel supports distributed tracing. You can track activities across different services and within Semantic Kernel.
@@ -48,8 +49,11 @@ Semantic Kernel follows the [OpenTelemetry Semantic Convention](https://opentele
 
 Now that you have a basic understanding of observability in Semantic Kernel, you can learn more about how to output telemetry data to the console or use APM tools to visualize and analyze telemetry data.
 
-> [!div class="nextstepaction"] > [Console](telemetry-with-console.md)
+> [!div class="nextstepaction"]
+> [Console](telemetry-with-console.md)
 
-> [!div class="nextstepaction"] > [Application Insights](telemetry-with-app-insights.md)
+> [!div class="nextstepaction"]
+> [Application Insights](telemetry-with-app-insights.md)
 
-> [!div class="nextstepaction"] > [Aspire Dashboard](telemetry-with-aspire-dashboard.md)
+> [!div class="nextstepaction"]
+> [Aspire Dashboard](telemetry-with-aspire-dashboard.md)
