@@ -25,9 +25,16 @@ Exporters are responsible for sending telemetry data to a destination. Read more
 
 ::: zone-end
 
-::: zone pivot="programming-language-csharp"
+::: zone pivot="programming-language-python"
 
 - [Python 3.10, 3.11, or 3.12](https://www.python.org/downloads/) installed on your machine.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Semantic Kernel Observability is not yet available for Java.
 
 ::: zone-end
 
@@ -56,6 +63,34 @@ Navigate to the newly created project directory after the command completes.
     dotnet add package OpenTelemetry.Exporter.Console
     ```
 
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+### Create a new Python virtual environment
+
+```console
+python -m venv telemetry-console-quickstart
+```
+
+Activate the virtual environment.
+```console
+telemetry-console-quickstart\Scripts\activate
+```
+
+### Install required packages
+
+```console
+pip install semantic-kernel opentelemetry-sdk opentelemetry-exporter-console
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Semantic Kernel Observability is not yet available for Java.
+ 
 ::: zone-end
 
 ## Run
