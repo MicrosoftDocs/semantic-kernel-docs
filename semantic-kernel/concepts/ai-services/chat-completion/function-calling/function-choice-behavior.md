@@ -23,7 +23,7 @@ As of today, the function choice behaviors are represented by three static metho
 > Please refer to the [migration guide](../../../../support/function-calling-migration-guide.md) to migrate your code to the latest function-calling model.
 
 > [!NOTE]
-> The function-calling model is only supported by a few AI connectors so far, see the [Supported AI Connectors](./function-choice-behaviour.md#supported-ai-connectors) section below for more details.
+> The function-calling model is only supported by a few AI connectors so far, see the [Supported AI Connectors](./function-choice-behavior.md#supported-ai-connectors) section below for more details.
 
 ## Function Advertising
 Function advertising is the process of providing functions to AI models for further calling and invocation. All three function choice behaviors accept a list of functions to advertise as a `functions` parameter. By default, it is null, which means all functions from plugins registered on the Kernel are provided to the AI model.
