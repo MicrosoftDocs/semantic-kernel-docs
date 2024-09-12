@@ -150,7 +150,6 @@ await kernel.InvokePromptAsync("Specify which provided functions are needed to d
 
 ## Function Invocation
 Function invocation is the process whereby Sematic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
-::: zone-end
 
 ## Supported AI Connectors
 As of today, the following AI connectors in Semantic Kernel support the function calling model:
@@ -166,6 +165,7 @@ As of today, the following AI connectors in Semantic Kernel support the function
 | Ollama                 | Coming soon            | ❌               |  
 | Onnx                   | Coming soon            | ❌               |  
 | OpenAI                 | ✔️                     | ✔️               |  
+::: zone-end
 
 ::: zone pivot="programming-language-python"
 ## Coming soon
