@@ -49,7 +49,7 @@ productDirectory:
     - title: Enterprise Readiness
       imageSrc: /semantic-kernel/media/Security.svg
       links:
-        - url: /semantic-kernel/enterprise-readiness/observability/index.md
+        - url: /semantic-kernel/enterprise-readiness/observability/index
           text: Observability
     - title: Connect with us
       imageSrc: /semantic-kernel/media/whats-new.svg
