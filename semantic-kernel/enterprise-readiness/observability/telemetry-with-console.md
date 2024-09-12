@@ -152,9 +152,9 @@ Finally Uncomment the line `// builder.Services.AddSingleton(loggerFactory);` to
 
 In the above code snippet, we first create a resource builder for building resource instances. A resource represents the entity that produces telemetry data. You can read more about resources [here](https://opentelemetry.io/docs/concepts/resources/). The resource builder to the providers is optional. If not provided, the default resource with default attributes is used.
 
-Next, we turn on the diagnostics with sensitive data. This is an experimental feature that allows you to enable diagnostics for the AI services in the Semantic Kernel. With this turned on, you will see additional telemetry data such as the prompts sent to the AI models and the responses received from the AI models, which are considered sensitive data. If you don't want to include sensitive data in your diagnostics, you can use another switch `Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnostics` to enable diagnostics with non-sensitive data, such as the model name, the operation name, and token usage, etc.
+Next, we turn on diagnostics with sensitive data. This is an experimental feature that allows you to enable diagnostics for the AI services in the Semantic Kernel. With this turned on, you will see additional telemetry data such as the prompts sent to and the responses received from the AI models, which are considered sensitive data. If you don't want to include sensitive data in your telemetry, you can use another switch `Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnostics` to enable diagnostics with non-sensitive data, such as the model name, the operation name, and token usage, etc.
 
-Then, we create a tracer provider builder and a meter provider builder. A provider is responsible for processing telemetry data and piping it to exporters. We subscribe to the `Microsoft.SemanticKernel*` source to receive telemetry data from Semantic Kernel namespaces. We add a console exporter to both the tracer provider and the meter provider. The console exporter sends telemetry data to the console.
+Then, we create a tracer provider builder and a meter provider builder. A provider is responsible for processing telemetry data and piping it to exporters. We subscribe to the `Microsoft.SemanticKernel*` source to receive telemetry data from the Semantic Kernel namespaces. We add a console exporter to both the tracer provider and the meter provider. The console exporter sends telemetry data to the console.
 
 Finally, we create a logger factory and add OpenTelemetry as a logging provider that sends log data to the console. We set the minimum log level to `Information` and include formatted messages and scopes in the log output. The logger factory is then added to the builder.
 
@@ -297,7 +297,7 @@ Resource associated with Activity:
 ```
 
 There are two parts to each activity:
-- The activity trace itself: contains the span ID and parent span ID that APM tools use to build the traces, the duration of the activity, and any tags and events associated with the activity.
+- The activity itself: contains the span ID and parent span ID that APM tools use to build the traces, the duration of the activity, and any tags and events associated with the activity.
 - The resource associated with the activity: contains information about the service, instance, and SDK used to generate the activity.
 
 > [!IMPORTANT]
@@ -332,3 +332,11 @@ Here you can see the name, the description, the unit, the time range, the type, 
 ::: zone-end
 
 ## Next steps
+
+Now that you have successfully output telemetry data to the console, you can learn more about how to use APM tools to visualize and analyze telemetry data.
+
+> [!div class="nextstepaction"]
+> [Application Insights](telemetry-with-app-insights.md)
+
+> [!div class="nextstepaction"]
+> [Aspire Dashboard](telemetry-with-aspire-dashboard.md)
