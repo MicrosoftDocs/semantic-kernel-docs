@@ -153,18 +153,18 @@ Function invocation is the process whereby Sematic Kernel invokes functions chos
 ::: zone-end
 
 ## Supported AI Connectors
-As of today, the following AI connectors in Semantic Kernel support the function calling model:
-| AI Connector           | FunctionChoiceBehavior | ToolCallBehavior |
-|------------------------|------------------------|------------------|
-| Anthropic              |		 Planned          |		❌	       |
-| AzureAIInference       |       Coming soon      |		❌          |
-| AzureOpenAI            |           ✔️           | 	✔️	        |
-| Gemini                 |       Planned          |		✔️	        |
-| HuggingFace            |       Planned          |		❌		   |
-| Mistral                |       Planned          |		✔️	        |
-| Ollama                 |       Coming soon      |		❌		   |
-| Onnx                   |       Coming soon      |		❌		   |
-| OpenAI                 |		     ✔️	          |		✔️	        |
+As of today, the following AI connectors in Semantic Kernel support the function calling model:  
+| AI Connector           | FunctionChoiceBehavior | ToolCallBehavior |  
+|------------------------|------------------------|------------------|  
+| Anthropic              | Planned                | ❌               |  
+| AzureAIInference       | Coming soon            | ❌               |  
+| AzureOpenAI            | ✔️                     | ✔️               |  
+| Gemini                 | Planned                | ✔️               |  
+| HuggingFace            | Planned                | ❌               |  
+| Mistral                | Planned                | ✔️               |  
+| Ollama                 | Coming soon            | ❌               |  
+| Onnx                   | Coming soon            | ❌               |  
+| OpenAI                 | ✔️                     | ✔️               |  
 
 ::: zone pivot="programming-language-python"
 ## Coming soon
