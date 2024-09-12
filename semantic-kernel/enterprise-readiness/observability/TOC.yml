@@ -1,5 +1,7 @@
 - name: Overview
   href: index.md
+- name: 'Example: Console'
+  href: telemetry-with-console.md
 - name: 'Example: Application Insights'
   href: telemetry-with-app-insights.md
 - name: 'Example: Aspire Dashboard'
