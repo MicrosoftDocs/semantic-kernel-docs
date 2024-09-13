@@ -179,7 +179,7 @@ telemetry-console-quickstart\Scripts\activate
 ### Install required packages
 
 ```console
-pip install semantic-kernel azure-monitor-opentelemetry-exporter
+pip install semantic-kernel
 ```
 
 ### Create a simple Python script with Semantic Kernel
@@ -322,11 +322,11 @@ def set_up_tracing():
 
 
 def set_up_metrics():
-    exporters = ConsoleMetricExporter()
+    exporter = ConsoleMetricExporter()
 
     # Initialize a metric provider for the application. This is a factory for creating meters.
     meter_provider = MeterProvider(
-        metric_readers=[PeriodicExportingMetricReader(exporters, export_interval_millis=5000)],
+        metric_readers=[PeriodicExportingMetricReader(exporter, export_interval_millis=5000)],
         resource=resource,
         views=[
             # Dropping all instrument names except for those starting with "semantic_kernel"
@@ -374,7 +374,7 @@ dotnet run
 Run the Python script with the following command:
 
 ```console
-python your_script.py
+python telemetry_console_quickstart.py
 ```
 
 ::: zone-end
