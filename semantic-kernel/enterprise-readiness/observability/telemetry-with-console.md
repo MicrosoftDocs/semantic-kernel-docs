@@ -186,13 +186,13 @@ pip install semantic-kernel
 
 Create a new Python script and open it with your favorite editor.
 
-# [Powershell](#tab/Powershell)
+# [Powershell](#tab/Powershell-CreateFile)
 
 ```PowerShell
 New-Item -Path telemetry_console_quickstart.py -ItemType file
 ```
 
-# [Bash](#tab/Bash)
+# [Bash](#tab/Bash-CreatFile)
 
 ```bash
 touch telemetry_console_quickstart.py
@@ -251,7 +251,7 @@ By default, the kernel doesn't emit spans for the AI connectors, because these s
 > [!IMPORTANT]
 > Prompts and completions are considered sensitive data. Semantic Kernel will not emit these data from the AI connectors unless the `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` environment variable is set to `true`. Setting `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS` to `true` will only emit non-sensitive data such as the model name, the operation name, and token usage.
 
-# [File](#tab/File)
+# [Environment fIel](#tab/EnvironmentFile)
 
 Create a new file named `.env` in the same directory as your script and add the following content:
 
@@ -259,7 +259,7 @@ Create a new file named `.env` in the same directory as your script and add the 
 SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE=true
 ```
 
-# [Powershell](#tab/Powershell)
+# [Powershell](#tab/Powershell-EnvironmentVariable)
 
 ```PowerShell
 $Env:SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE = 'true'
@@ -268,7 +268,7 @@ $Env:SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE = 'true
 > [!NOTE]
 > To remove the environment variable, run `Remove-Item Env:SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE`.
 
-# [Bash](#tab/Bash)
+# [Bash](#tab/Bash-EnvironmentVariable)
 
 ```bash
 export SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE=true

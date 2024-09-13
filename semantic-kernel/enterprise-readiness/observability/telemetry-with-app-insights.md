@@ -389,17 +389,21 @@ For this particular example, you should see two dependencies and multiple traces
 
 If you have the switch `Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
 
+![GenAI Sensitive Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes-sensitive.png)
+
+Click on them and you will see the prompt and the completion result under the custom properties section.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
 If you have the environment variable `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
 
-::: zone-end
-
 ![GenAI Sensitive Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes-sensitive.png)
 
 Click on them and you will see the prompt and the completion result under the custom properties section.
+
+::: zone-end
 
 ### Log analytics
 
