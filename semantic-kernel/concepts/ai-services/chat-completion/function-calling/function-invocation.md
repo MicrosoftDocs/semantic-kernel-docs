@@ -93,9 +93,21 @@ while (true)
     // Sequentially iterating over each chosen function, invoke it, and add the result to the chat history.
     foreach (FunctionCallContent functionCall in functionCalls)
     {
-        FunctionResultContent resultContent = await functionCall.InvokeAsync(kernel);
+        try
+        {
+            // Invoking the function
+            FunctionResultContent resultContent = await functionCall.InvokeAsync(kernel);
 
-        chatHistory.Add(resultContent.ToChatMessage());
+            // Adding the function result to the chat history
+            chatHistory.Add(resultContent.ToChatMessage());
+        }
+        catch (Exception ex)
+        {
+            // Adding function exception to the chat history.
+            chatHistory.Add(new FunctionResultContent(functionCall, ex).ToChatMessage());
+            // or
+            //chatHistory.Add(new FunctionResultContent(functionCall, "Error details that the AI model can reason about.").ToChatMessage());
+        }
     }
 }
 
