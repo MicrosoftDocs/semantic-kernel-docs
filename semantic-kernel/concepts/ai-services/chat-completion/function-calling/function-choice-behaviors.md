@@ -11,7 +11,10 @@ ms.service: semantic-kernel
 ::: zone pivot="programming-language-csharp"
 # Function Choice Behaviors
 
-Function choice behaviors are bits of configuration that allows a developer to configure which functions are advertised to AI models, how the models should choose them for invocation, and lastly how Semantic Kernel might invoke those functions.
+Function choice behaviors are bits of configuration that allows a developer to configure:
+1. Which functions are advertised to AI models.
+2. How the models should choose them for invocation.
+3. How Semantic Kernel might invoke those functions.
 
 As of today, the function choice behaviors are represented by three static methods of the `FunctionChoiceBehavior` class:
 - **Auto**: Allows the AI model to decide to choose from zero or more of the provided function(s) for invocation.
@@ -26,6 +29,7 @@ As of today, the function choice behaviors are represented by three static metho
 > The function-calling model is only supported by a few AI connectors so far, see the [Supported AI Connectors](./function-choice-behaviors.md#supported-ai-connectors) section below for more details.
 
 ## Function Advertising
+
 Function advertising is the process of providing functions to AI models for further calling and invocation. All three function choice behaviors accept a list of functions to advertise as a `functions` parameter. By default, it is null, which means all functions from plugins registered on the Kernel are provided to the AI model.
 
 ```csharp
@@ -81,6 +85,7 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
 ## Using Auto Function Choice Behavior
+
 The `Auto` function choice behavior instructs the AI model to decide to choose from zero or more of the provided function(s) for invocation.
 
 In this example, all the functions from the `DateTimeUtils` and `WeatherForecastUtils` plugins will be provided to the AI model alongside the prompt. 
@@ -129,6 +134,7 @@ Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 ```
 
 ## Using Required Function Choice Behavior
+
 The `Required` behavior forces the model to chose the provided function(s) for for invocation. This is useful for scenarios when the AI model must obtain required information from the specified 
 functions rather than from it's own knowledge.
 
@@ -137,7 +143,7 @@ functions rather than from it's own knowledge.
 
 Here, we specify that the AI model must choose the `GetWeatherForCity` function for invocation to obtain the weather forecast for the city of Boston, rather than guessing it based on its own knowledge. 
 The model will first choose the `GetWeatherForCity` function for invocation to retrieve the weather forecast. 
-With this information, the model can then determine the likely color of the sky in Boston using its own knowledge.
+With this information, the model can then determine the likely color of the sky in Boston using the response from the call to `GetWeatherForCity`.
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -180,7 +186,8 @@ KernelFunction promptFunction = KernelFunctionYaml.FromPromptYaml(promptTemplate
 Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 ```
 
-Alternatively, all functions registered in the kernel can be provided to the AI model as required:
+Alternatively, all functions registered in the kernel can be provided to the AI model as required. However, only the ones chosen by the AI model as a result of the first request will be invoked by the Semantic Kernel.
+The functions will not be sent to the AI model in subsequent requests to prevent an infinite loop, as mentioned above.
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -196,7 +203,9 @@ await kernel.InvokePromptAsync("Given that it is now the 10th of September 2024,
 ```
 
 ## Using None Function Choice Behavior
+
 The `None` behavior instructs the AI model to use the provided function(s) without choosing any of them for invocation to generate a response. This is useful for dry runs when the caller may want to see which functions the model would choose without actually invoking them.
+It is also useful when you want the AI model to extract information from a user ask e.g. in the sample below the AI model correctly worked out that Boston was the city name.
 
 Here, we advertise all functions from the `DateTimeUtils` and `WeatherForecastUtils` plugins to the AI model but instruct it not to choose any of them. 
 Instead, the model will provide a response describing which functions it would choose to determine the color of the sky in Boston on a specified date.
@@ -246,10 +255,12 @@ KernelFunction promptFunction = KernelFunctionYaml.FromPromptYaml(promptTemplate
 Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 ```
 
-## Function Invocation
+## Function 
+
 Function invocation is the process whereby Sematic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
 
 ## Supported AI Connectors
+
 As of today, the following AI connectors in Semantic Kernel support the function calling model:
 
 | AI Connector           | FunctionChoiceBehavior | ToolCallBehavior |  
