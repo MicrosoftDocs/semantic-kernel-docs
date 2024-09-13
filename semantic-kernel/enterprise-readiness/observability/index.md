@@ -19,6 +19,7 @@ Observability is typically achieved through logging, metrics, and tracing. They 
 Useful materials for further reading:
 
 - [Observability defined by Cloud Native Computing Foundation](https://glossary.cncf.io/observability/)
+- [Distributed tracing](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing)
 - [Observability in .Net](https://learn.microsoft.com/dotnet/core/diagnostics/observability-with-otel)
 - [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/)
 
@@ -36,6 +37,11 @@ Specifically, Semantic Kernel provides the following observability features:
     ![Metrics](../../media/telemetry-metrics-overview-app-insights.png)
 - **Tracing**: Semantic Kernel supports distributed tracing. You can track activities across different services and within Semantic Kernel.
     ![Complete end-to-end transaction of a request](../../media/telemetry-trace-overview-app-insights.png)
+
+
+## TODO: Add more details about the observability features in Semantic Kernel
+
+Like the logs, spans created, and metrics by languages.
 
 
 ## OpenTelemetry Semantic Convention

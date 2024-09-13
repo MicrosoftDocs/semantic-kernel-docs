@@ -158,7 +158,7 @@ Then, we create a tracer provider builder and a meter provider builder. A provid
 
 Finally, we create a logger factory and add OpenTelemetry as a logging provider that sends log data to the console. We set the minimum log level to `Information` and include formatted messages and scopes in the log output. The logger factory is then added to the builder.
 
-> [!NOTE]
+> [!IMPORTANT]
 > A provider should be a singleton and should be alive for the entire application lifetime. The provider should be disposed of when the application is shutting down.
 
 ::: zone-end
@@ -248,10 +248,10 @@ if __name__ == "__main__":
 
 By default, the kernel doesn't emit spans for the AI connectors, because these spans carry `gen_ai` attributes that are considered experimental. To enable the feature, set the environment variable `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS` or `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` to `true`.
 
-> [!NOTE]
+> [!IMPORTANT]
 > Prompts and completions are considered sensitive data. Semantic Kernel will not emit these data from the AI connectors unless the `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` environment variable is set to `true`. Setting `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS` to `true` will only emit non-sensitive data such as the model name, the operation name, and token usage.
 
-# [.env](#tab/.env)
+# [Environment File](#tab/dotenv)
 
 Create a new file named `.env` in the same directory as your script and add the following content:
 
@@ -573,6 +573,8 @@ You should see multiple spans in the console output. They look similar to the fo
 }
 ```
 
+Pay attention to the attributes that start with `gen_ai`. These are the attributes specified in the [GenAI Semantic Conventions](https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/README.md). They provide useful information about the requests sent to and the responses received from the AI models.
+
 ### Metrics
 
 You should see multiple metric records in the console output. They look similar to the following:
@@ -664,6 +666,8 @@ You should see multiple metric records in the console output. They look similar 
     ]
 }
 ```
+
+The measurement shown above is a histogram metric. For a full list of metric types, see [here](https://opentelemetry.io/docs/specs/otel/metrics/api/#general-operations).
 
 ::: zone-end
 
