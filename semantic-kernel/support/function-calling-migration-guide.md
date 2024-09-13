@@ -71,6 +71,12 @@ Moreover, considering that the current model will be deprecated soon, now is a g
 
 So, if you use [Manual Function Invocation](../concepts/ai-services/chat-completion/function-calling/function-invocation.md#manual-function-invocation) with the connector-specific function call classes like in this code snippet:
 ```csharp
+using System.Text.Json;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using OpenAI.Chat;
+
 var chatHistory = new ChatHistory();
 
 var settings = new OpenAIPromptExecutionSettings() { ToolCallBehavior = ToolCallBehavior.EnableKernelFunctions };
@@ -107,6 +113,9 @@ while (toolCalls.Count > 0)
 
 You can refactor it to use the connector-agnostic classes:
 ```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+
 var chatHistory = new ChatHistory();
 
 var settings = new PromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(autoInvoke: false) };

@@ -717,7 +717,7 @@
         },
         {
           "source_path": "semantic-kernel/concepts/ai-services/chat-completion/function-calling.md",
-          "redirect_url": "semantic-kernel/concepts/ai-services/chat-completion/function-calling/index.md",
+          "redirect_url": "/semantic-kernel/concepts/ai-services/chat-completion/function-calling/index.md",
           "redirect_document_id": false
         }
     ]
