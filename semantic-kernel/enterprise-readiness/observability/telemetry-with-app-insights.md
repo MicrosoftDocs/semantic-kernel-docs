@@ -120,6 +120,7 @@ namespace TelemetryApplicationInsightsQuickstart
 If you run the console app now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `// Telemetry setup code goes here` comment with the following code:
 
 ```csharp
+// Replace the connection string with your Application Insights connection string
 var connectionString = "your-application-insights-connection-string";
 
 var resourceBuilder = ResourceBuilder
@@ -257,6 +258,7 @@ Please refer to this [article](./telemetry-with-console.md#environment-variables
 If you run the script now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `# Telemetry setup code goes here` comment with the following code:
 
 ```python
+# Replace the connection string with your Application Insights connection string
 connection_string = "your-application-insights-connection-string"
 
 # Create a resource to represent the service/sample
@@ -376,34 +378,28 @@ Hit refresh to see the latest transactions. When results appear, click on one of
 
 Toggle between the **View all** and **View timeline** button to see all traces and dependencies of the transaction in different views.
 
-::: zone pivot="programming-language-csharp"
-
 > [!IMPORTANT]
 > [Traces](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete#trace) represent traditional log entries and [OpenTelemetry span events](https://opentelemetry.io/docs/concepts/signals/traces/#span-events). They are not the same as distributed traces. Dependencies represent the calls to (internal and external) components. Please refer to this [article](https://learn.microsoft.com/en-us/azure/azure-monitor/app/data-model-complete) for more information on the data model in Application Insights.
 
-For this particular example, you should see two dependencies and multiple traces. The first dependency is an internal one that represent a kernel function that is created from the prompt. The second dependency is an external one that represents the call to the Azure OpenAI chat completion model. When you expand the `chat.completion {your-deployment-name}` dependency, you should see the details of the call. A set of `gen_ai` attributes are attached to the dependency, which provides additional context about the call.
+For this particular example, you should see two dependencies and multiple traces. The first dependency represents a kernel function that is created from the prompt. The second dependency represents the call to the Azure OpenAI chat completion model. When you expand the `chat.completion {your-deployment-name}` dependency, you should see the details of the call. A set of `gen_ai` attributes are attached to the dependency, which provides additional context about the call.
 
 ![GenAI Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes.png)
 
+::: zone pivot="programming-language-csharp"
+
 If you have the switch `Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
-
-![GenAI Sensitive Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes-sensitive.png)
-
-Click on them and you will see the prompt and the completion result under the custom properties section.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
+If you have the environment variable `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
 
 ::: zone-end
 
-::: zone pivot="programming-language-java"
+![GenAI Sensitive Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes-sensitive.png)
 
-> [!NOTE]
-> Semantic Kernel Observability is not yet available for Java.
-
-::: zone-end
+Click on them and you will see the prompt and the completion result under the custom properties section.
 
 ### Log analytics
 

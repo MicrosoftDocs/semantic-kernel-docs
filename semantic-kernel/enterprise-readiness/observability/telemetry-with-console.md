@@ -251,7 +251,7 @@ By default, the kernel doesn't emit spans for the AI connectors, because these s
 > [!IMPORTANT]
 > Prompts and completions are considered sensitive data. Semantic Kernel will not emit these data from the AI connectors unless the `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` environment variable is set to `true`. Setting `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS` to `true` will only emit non-sensitive data such as the model name, the operation name, and token usage.
 
-# [Environment File](#tab/dotenv)
+# [File](#tab/File)
 
 Create a new file named `.env` in the same directory as your script and add the following content:
 
