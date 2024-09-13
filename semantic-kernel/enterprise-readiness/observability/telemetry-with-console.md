@@ -69,7 +69,7 @@ Navigate to the newly created project directory after the command completes.
 
 ### Create a simple application with Semantic Kernel
 
-From the project directory, open the `Program.cs` file with your favorite editor. We are going to create a simple application that uses Semantic Kernel to send a prompt to a chat completion model. Replace the exisitng content with the following code and fill in the required values for `deploymentName`, `endpoint`, and `apiKey`:
+From the project directory, open the `Program.cs` file with your favorite editor. We are going to create a simple application that uses Semantic Kernel to send a prompt to a chat completion model. Replace the existing content with the following code and fill in the required values for `deploymentName`, `endpoint`, and `apiKey`:
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -179,12 +179,174 @@ telemetry-console-quickstart\Scripts\activate
 ### Install required packages
 
 ```console
-pip install semantic-kernel opentelemetry-sdk opentelemetry-exporter-console
+pip install semantic-kernel azure-monitor-opentelemetry-exporter
 ```
 
 ### Create a simple Python script with Semantic Kernel
 
+Create a new Python script and open it with your favorite editor.
+
+# [Powershell](#tab/Powershell)
+
+```PowerShell
+New-Item -Path telemetry_console_quickstart.py -ItemType file
+```
+
+# [Bash](#tab/Bash)
+
+```bash
+touch telemetry_console_quickstart.py
+```
+
+---
+
+We are going to create a simple Python script that uses Semantic Kernel to send a prompt to a chat completion model. Replace the existing content with the following code and fill in the required values for `deployment_name`, `endpoint`, and `api_key`:
+
+```python
+import asyncio
+import logging
+
+from opentelemetry._logs import set_logger_provider
+from opentelemetry.metrics import set_meter_provider
+from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
+from opentelemetry.sdk._logs.export import BatchLogRecordProcessor, ConsoleLogExporter
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import ConsoleMetricExporter, PeriodicExportingMetricReader
+from opentelemetry.sdk.metrics.view import DropAggregation, View
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+from opentelemetry.semconv.resource import ResourceAttributes
+from opentelemetry.trace import set_tracer_provider
+
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+
+
+# Telemetry setup code goes here
+
+async def main():
+    # Create a kernel and add a service
+    kernel = Kernel()
+    kernel.add_service(AzureChatCompletion(
+        api_key="your-azure-openai-api-key",
+        endpoint="your-azure-openai-endpoint",
+        deployment_name="your-deployment-name"
+    ))
+
+    answer = await kernel.invoke_prompt("Why is the sky blue in one sentence?")
+    print(answer)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
 ### Add telemetry
+
+#### Environment variables
+
+By default, the kernel doesn't emit spans for the AI connectors, because these spans carry `gen_ai` attributes that are considered experimental. To enable the feature, set the environment variable `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS` or `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` to `true`.
+
+> [!NOTE]
+> Prompts and completions are considered sensitive data. Semantic Kernel will not emit these data from the AI connectors unless the `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` environment variable is set to `true`. Setting `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS` to `true` will only emit non-sensitive data such as the model name, the operation name, and token usage.
+
+# [.env](#tab/.env)
+
+Create a new file named `.env` in the same directory as your script and add the following content:
+
+```env
+SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE=true
+```
+
+# [Powershell](#tab/Powershell)
+
+```PowerShell
+$Env:SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE = 'true'
+```
+
+> [!NOTE]
+> To remove the environment variable, run `Remove-Item Env:SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE`.
+
+# [Bash](#tab/Bash)
+
+```bash
+export SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE=true
+```
+
+> [!NOTE]
+> To remove the environment variable, run `unset SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE`.
+
+---
+
+#### Code
+If you run the script now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `# Telemetry setup code goes here` comment with the following code:
+
+```python
+# Create a resource to represent the service/sample
+resource = Resource.create({ResourceAttributes.SERVICE_NAME: "telemetry-console-quickstart"})
+
+
+def set_up_logging():
+    exporter = ConsoleLogExporter()
+
+    # Create and set a global logger provider for the application.
+    logger_provider = LoggerProvider(resource=resource)
+    # Log processors are initialized with an exporter which is responsible
+    # for sending the telemetry data to a particular backend.
+    logger_provider.add_log_record_processor(BatchLogRecordProcessor(exporter))
+    # Sets the global default logger provider
+    set_logger_provider(logger_provider)
+
+    # Create a logging handler to write logging records, in OTLP format, to the exporter.
+    handler = LoggingHandler()
+    # Add filters to the handler to only process records from semantic_kernel.
+    handler.addFilter(logging.Filter("semantic_kernel"))
+    # Attach the handler to the root logger. `getLogger()` with no arguments returns the root logger.
+    # Events from all child loggers will be processed by this handler.
+    logger = logging.getLogger()
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
+
+def set_up_tracing():
+    exporter = ConsoleSpanExporter()
+
+    # Initialize a trace provider for the application. This is a factory for creating tracers.
+    tracer_provider = TracerProvider(resource=resource)
+    # Span processors are initialized with an exporter which is responsible
+    # for sending the telemetry data to a particular backend.
+    tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+    # Sets the global default tracer provider
+    set_tracer_provider(tracer_provider)
+
+
+def set_up_metrics():
+    exporters = ConsoleMetricExporter()
+
+    # Initialize a metric provider for the application. This is a factory for creating meters.
+    meter_provider = MeterProvider(
+        metric_readers=[PeriodicExportingMetricReader(exporters, export_interval_millis=5000)],
+        resource=resource,
+        views=[
+            # Dropping all instrument names except for those starting with "semantic_kernel"
+            View(instrument_name="*", aggregation=DropAggregation()),
+            View(instrument_name="semantic_kernel*"),
+        ],
+    )
+    # Sets the global default meter provider
+    set_meter_provider(meter_provider)
+
+
+# This must be done before any other telemetry calls
+set_up_logging()
+set_up_tracing()
+set_up_metrics()
+```
+
+In the above code snippet, we first create a resource to represent the service. A resource represents the entity that produces telemetry data. You can read more about resources [here](https://opentelemetry.io/docs/concepts/resources/). We then create three functions to set up logging, tracing, and metrics. Each function creates a provider for the respective telemetry data and adds a console exporter to the provider.
+
+Finally, we call the three functions to set up logging, tracing, and metrics. This must be done before any other telemetry calls.
 
 ::: zone-end
 
@@ -263,7 +425,7 @@ There are two parts to each log record:
 > [!NOTE]
 > Activities in .Net are similar to spans in OpenTelemetry. They are used to represent a unit of work in the application.
 
-You should see multiple activity traces in the console output. They look similar to the following:
+You should see multiple activities in the console output. They look similar to the following:
 
 ```console
 Activity.TraceId:            159d3f07664838f6abdad7af6a892cfa
@@ -321,6 +483,187 @@ Here you can see the name, the description, the unit, the time range, the type, 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+### Logs
+
+You should see multiple log records in the console output. They look similar to the following:
+
+```console
+{
+    "body": "Function SyVCcBjaULqEhItH invoking.",
+    "severity_number": "<SeverityNumber.INFO: 9>",
+    "severity_text": "INFO",
+    "attributes": {
+        "code.filepath": "C:\\tmp\\telemetry-console-quickstart\\Lib\\site-packages\\semantic_kernel\\functions\\kernel_function_log_messages.py",
+        "code.function": "log_function_invoking",
+        "code.lineno": 19
+    },
+    "dropped_attributes": 0,
+    "timestamp": "2024-09-13T17:55:45.504983Z",
+    "observed_timestamp": "2024-09-13T17:55:45.504983Z",
+    "trace_id": "0xe23e2c10785ea61ffc9f28be19482a80",
+    "span_id": "0x686bd592e27661d7",
+    "trace_flags": 1,
+    "resource": {
+        "attributes": {
+            "telemetry.sdk.language": "python",
+            "telemetry.sdk.name": "opentelemetry",
+            "telemetry.sdk.version": "1.27.0",
+            "service.name": "telemetry-console-quickstart"
+        },
+        "schema_url": ""
+    }
+}
+```
+
+### Spans
+
+You should see multiple spans in the console output. They look similar to the following:
+
+```console
+{
+    "name": "chat.completions gpt-4o",
+    "context": {
+        "trace_id": "0xe23e2c10785ea61ffc9f28be19482a80",
+        "span_id": "0x8b20e9655610c3c9",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": "0x686bd592e27661d7",
+    "start_time": "2024-09-13T17:55:45.515198Z",
+    "end_time": "2024-09-13T17:55:46.469471Z",
+    "status": {
+        "status_code": "UNSET"
+    },
+    "attributes": {
+        "gen_ai.operation.name": "chat.completions",
+        "gen_ai.system": "openai",
+        "gen_ai.request.model": "gpt-4o",
+        "gen_ai.response.id": "chatcmpl-A74oD7WGDjawnZ44SJZrj9fKrEv1B",
+        "gen_ai.response.finish_reason": "FinishReason.STOP",
+        "gen_ai.response.prompt_tokens": 16,
+        "gen_ai.response.completion_tokens": 29
+    },
+    "events": [
+        {
+            "name": "gen_ai.content.prompt",
+            "timestamp": "2024-09-13T17:55:45.515198Z",
+            "attributes": {
+                "gen_ai.prompt": "[{\"role\": \"user\", \"content\": \"Why is the sky blue in one sentence?\"}]"
+            }
+        },
+        {
+            "name": "gen_ai.content.completion",
+            "timestamp": "2024-09-13T17:55:46.469471Z",
+            "attributes": {
+                "gen_ai.completion": "[{\"role\": \"assistant\", \"content\": \"The sky appears blue because shorter blue wavelengths of sunlight are scattered in all directions by the molecules and particles in the atmosphere more effectively than other colors.\"}]"
+            }
+        }
+    ],
+    "links": [],
+    "resource": {
+        "attributes": {
+            "telemetry.sdk.language": "python",
+            "telemetry.sdk.name": "opentelemetry",
+            "telemetry.sdk.version": "1.27.0",
+            "service.name": "telemetry-console-quickstart"
+        },
+        "schema_url": ""
+    }
+}
+```
+
+### Metrics
+
+You should see multiple metric records in the console output. They look similar to the following:
+
+```console
+{
+    "resource_metrics": [
+        {
+            "resource": {
+                "attributes": {
+                    "telemetry.sdk.language": "python",
+                    "telemetry.sdk.name": "opentelemetry",
+                    "telemetry.sdk.version": "1.27.0",
+                    "service.name": "telemetry-console-quickstart"
+                },
+                "schema_url": ""
+            },
+            "scope_metrics": [
+                {
+                    "scope": {
+                        "name": "semantic_kernel.functions.kernel_function",
+                        "version": null,
+                        "schema_url": "",
+                        "attributes": null
+                    },
+                    "metrics": [
+                        {
+                            "name": "semantic_kernel.function.invocation.duration",
+                            "description": "Measures the duration of a function's execution",
+                            "unit": "s",
+                            "data": {
+                                "data_points": [
+                                    {
+                                        "attributes": {
+                                            "semantic_kernel.function.name": "SyVCcBjaULqEhItH"
+                                        },
+                                        "start_time_unix_nano": 1726250146470468300,
+                                        "time_unix_nano": 1726250146478526600,
+                                        "count": 1,
+                                        "sum": 0.9650602999900002,
+                                        "bucket_counts": [
+                                            0,
+                                            1,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0
+                                        ],
+                                        "explicit_bounds": [
+                                            0.0,
+                                            5.0,
+                                            10.0,
+                                            25.0,
+                                            50.0,
+                                            75.0,
+                                            100.0,
+                                            250.0,
+                                            500.0,
+                                            750.0,
+                                            1000.0,
+                                            2500.0,
+                                            5000.0,
+                                            7500.0,
+                                            10000.0
+                                        ],
+                                        "min": 0.9650602999900002,
+                                        "max": 0.9650602999900002
+                                    }
+                                ],
+                                "aggregation_temporality": 2
+                            }
+                        }
+                    ],
+                    "schema_url": ""
+                }
+            ],
+            "schema_url": ""
+        }
+    ]
+}
+```
 
 ::: zone-end
 
