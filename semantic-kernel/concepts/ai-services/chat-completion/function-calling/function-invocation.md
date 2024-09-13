@@ -25,9 +25,12 @@ This example demonstrates how to use the auto function invocation in Semantic Ke
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<DateTimeUtils>();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
 
 // By default, functions are set to be automatically invoked.  
 // If you want to explicitly enable this behavior, you can do so with the following code:  
@@ -49,9 +52,12 @@ The example below demonstrates how to use manual function invocation.
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<DateTimeUtils>();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
 
 IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 

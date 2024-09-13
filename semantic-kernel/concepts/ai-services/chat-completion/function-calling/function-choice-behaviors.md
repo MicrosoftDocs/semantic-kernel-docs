@@ -31,9 +31,12 @@ Function advertising is the process of providing functions to AI models for furt
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<DateTimeUtils>();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
 
 // All functions from the DateTimeUtils and WeatherForecastUtils plugins will be sent to AI model together with the prompt.
 PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() }; 
@@ -45,9 +48,12 @@ If a list of functions is provided, only those functions are sent to the AI mode
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<DateTimeUtils>();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
 
 KernelFunction getWeatherForCity = kernel.Plugins.GetFunction("WeatherForecastUtils", "GetWeatherForCity");
 KernelFunction getCurrentTime = kernel.Plugins.GetFunction("DateTimeUtils", "GetCurrentUtcDateTime");
@@ -62,9 +68,12 @@ An empty list of functions means no functions are provided to the AI model, whic
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<DateTimeUtils>();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
 
 // Disables function calling. Equivalent to var settings = new() { FunctionChoiceBehavior = null } or var settings = new() { }.
 PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(functions: []) }; 
@@ -81,14 +90,42 @@ With this information, the model will be able to determine the likely color of t
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<DateTimeUtils>();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
 
 // All functions from the DateTimeUtils and WeatherForecastUtils plugins will be provided to AI model alongside the prompt.
 PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() }; 
 
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
+```
+
+The same example can be easily modeled in a YAML prompt template configuration:
+```csharp
+using Microsoft.SemanticKernel;
+
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
+
+string promptTemplateConfig = """
+    template_format: semantic-kernel
+    template: Given the current time of day and weather, what is the likely color of the sky in Boston?
+    execution_settings:
+      default:
+        function_choice_behavior:
+          type: auto
+    """;
+
+KernelFunction promptFunction = KernelFunctionYaml.FromPromptYaml(promptTemplateConfig);
+
+Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 ```
 
 ## Using Required Function Choice Behavior
@@ -104,8 +141,11 @@ With this information, the model can then determine the likely color of the sky 
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+
+Kernel kernel = builder.Build();
 
 KernelFunction getWeatherForCity = kernel.Plugins.GetFunction("WeatherForecastUtils", "GetWeatherForCity");
 
@@ -113,12 +153,42 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 
 await kernel.InvokePromptAsync("Given that it is now the 10th of September 2024, 11:29 AM, what is the likely color of the sky in Boston?", new(settings));
 ```
+
+An identical example in a YAML template configuration:
+```csharp
+using Microsoft.SemanticKernel;
+
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+
+Kernel kernel = builder.Build();
+
+string promptTemplateConfig = """
+    template_format: semantic-kernel
+    template: Given that it is now the 10th of September 2024, 11:29 AM, what is the likely color of the sky in Boston?
+    execution_settings:
+      default:
+        function_choice_behavior:
+          type: auto
+          functions:
+            - WeatherForecastUtils.GetWeatherForCity
+    """;
+
+KernelFunction promptFunction = KernelFunctionYaml.FromPromptYaml(promptTemplateConfig);
+
+Console.WriteLine(await kernel.InvokeAsync(promptFunction));
+```
+
 Alternatively, all functions registered in the kernel can be provided to the AI model as required:
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+
+Kernel kernel = builder.Build();
 
 PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Required() };
 
@@ -133,9 +203,12 @@ Instead, the model will provide a response describing which functions it would c
 ```csharp
 using Microsoft.SemanticKernel;
 
-Kernel kernel = new Kernel();
-kernel.ImportPluginFromType<DateTimeUtils>();
-kernel.ImportPluginFromType<WeatherForecastUtils>();
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
 
 KernelFunction getWeatherForCity = kernel.Plugins.GetFunction("WeatherForecastUtils", "GetWeatherForCity");
 
@@ -146,6 +219,31 @@ await kernel.InvokePromptAsync("Specify which provided functions are needed to d
 // Sample response: To determine the color of the sky in Boston on a specified date, first call the DateTimeUtils-GetCurrentUtcDateTime function to obtain the 
 // current date and time in UTC. Next, use the WeatherForecastUtils-GetWeatherForCity function, providing 'Boston' as the city name and the retrieved UTC date and time. 
 // These functions do not directly provide the sky's color, but the GetWeatherForCity function offers weather data, which can be used to infer the general sky condition (e.g., clear, cloudy, rainy).
+```
+
+A corresponding example in a YAML prompt template configuration:
+```csharp
+using Microsoft.SemanticKernel;
+
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
+
+string promptTemplateConfig = """
+    template_format: semantic-kernel
+    template: Specify which provided functions are needed to determine the color of the sky in Boston on a specified date.
+    execution_settings:
+      default:
+        function_choice_behavior:
+          type: none
+    """;
+
+KernelFunction promptFunction = KernelFunctionYaml.FromPromptYaml(promptTemplateConfig);
+
+Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 ```
 
 ## Function Invocation
