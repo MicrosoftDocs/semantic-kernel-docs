@@ -414,6 +414,7 @@ Follow this [document](https://learn.microsoft.com/en-us/azure/azure-monitor/log
 Below are some sample queries you can use for this example:
 
 ```kusto
+// Retrieves the total number of completion and prompt tokens used for the model if you run the application multiple times.
 dependencies
 | where name startswith "chat"
 | project model = customDimensions["gen_ai.request.model"], completion_token = toint(customDimensions["gen_ai.response.completion_tokens"]), prompt_token = toint(customDimensions["gen_ai.response.prompt_tokens"])
@@ -422,9 +423,9 @@ dependencies
 | summarize total_completion_tokens = sum(completion_token), total_prompt_tokens = sum(prompt_token)
 ```
 
-This query retrieves the total number of completion and prompt tokens used for the model.
 
 ```kusto
+// Retrieves all the prompts and completions and their corresponding token usage.
 dependencies
 | where name startswith "chat"
 | project timestamp, operation_Id, name, completion_token = customDimensions["gen_ai.response.completion_tokens"], prompt_token = customDimensions["gen_ai.response.prompt_tokens"]
@@ -432,8 +433,6 @@ dependencies
 | where message startswith "gen_ai"
 |project timestamp, messages = customDimensions, token=iff(customDimensions contains "gen_ai.prompt", prompt_token, completion_token)
 ```
-
-This query retrieves all the prompts and completions and their corresponding token usage.
 
 ![Query Result](../../media/telemetry-app-insights-kusto-token-usage-per-message.png)
 
