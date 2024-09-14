@@ -383,13 +383,13 @@ Toggle between the **View all** and **View timeline** button to see all traces a
 
 For this particular example, you should see two dependencies and multiple traces. The first dependency represents a kernel function that is created from the prompt. The second dependency represents the call to the Azure OpenAI chat completion model. When you expand the `chat.completion {your-deployment-name}` dependency, you should see the details of the call. A set of `gen_ai` attributes are attached to the dependency, which provides additional context about the call.
 
-![GenAI Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes.png)
+![GenAI Attributes](../../media/telemetry-app-insights-gen-ai-attributes.png)
 
 ::: zone pivot="programming-language-csharp"
 
 If you have the switch `Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
 
-![GenAI Sensitive Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes-sensitive.png)
+![GenAI Sensitive Attributes](../../media/telemetry-app-insights-gen-ai-attributes-sensitive.png)
 
 Click on them and you will see the prompt and the completion result under the custom properties section.
 
@@ -399,12 +399,42 @@ Click on them and you will see the prompt and the completion result under the cu
 
 If you have the environment variable `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
 
-![GenAI Sensitive Attributes](../../media/telemetry-app-insights-dotnet-gen-ai-attributes-sensitive.png)
+![GenAI Sensitive Attributes](../../media/telemetry-app-insights-gen-ai-attributes-sensitive.png)
 
 Click on them and you will see the prompt and the completion result under the custom properties section.
 
 ::: zone-end
 
 ### Log analytics
+
+Transaction search is not the only way to inspect telemetry data. You can also use [**Log analytics**](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-overview) to query and analyze the data. Navigate to the **Logs** under **Monitoring** to start.
+
+Follow this [document](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-overview#log-analytics-interface) to start exploring the log analytics interface.
+
+Below are some sample queries you can use for this example:
+
+```kusto
+dependencies
+| where name startswith "chat"
+| project model = customDimensions["gen_ai.request.model"], completion_token = toint(customDimensions["gen_ai.response.completion_tokens"]), prompt_token = toint(customDimensions["gen_ai.response.prompt_tokens"])
+| where model == "gpt-4o"
+| project completion_token, prompt_token
+| summarize total_completion_tokens = sum(completion_token), total_prompt_tokens = sum(prompt_token)
+```
+
+This query retrieves the total number of completion and prompt tokens used for the model.
+
+```kusto
+dependencies
+| where name startswith "chat"
+| project timestamp, operation_Id, name, completion_token = customDimensions["gen_ai.response.completion_tokens"], prompt_token = customDimensions["gen_ai.response.prompt_tokens"]
+| join traces on operation_Id
+| where message startswith "gen_ai"
+|project timestamp, messages = customDimensions, token=iff(customDimensions contains "gen_ai.prompt", prompt_token, completion_token)
+```
+
+This query retrieves all the prompts and completions and their corresponding token usage.
+
+![Query Result](../../media/telemetry-app-insights-kusto-token-usage-per-message.png)
 
 ## More advanced scenarios
