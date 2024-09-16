@@ -45,7 +45,7 @@ In cases when the caller wants to have more control over the function invocation
 
 When manual function invocation is enabled, Semantic Kernel does not automatically invoke the functions chosen by the AI model. 
 Instead, it returns a list of chosen functions to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on. 
-The function invocation results need to be added to the chat history and returned to the model, which reasons about them and decides whether to chose additional functions or generate the final response.
+The function invocation results need to be added to the chat history and returned to the model, which reasons about them and decides whether to choose additional functions or generate the final response.
 
 The example below demonstrates how to use manual function invocation.
 ```csharp

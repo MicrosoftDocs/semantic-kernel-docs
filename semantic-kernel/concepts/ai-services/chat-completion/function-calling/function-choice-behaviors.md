@@ -18,8 +18,8 @@ Function choice behaviors are bits of configuration that allows a developer to c
 
 As of today, the function choice behaviors are represented by three static methods of the `FunctionChoiceBehavior` class:
 - **Auto**: Allows the AI model to decide to choose from zero or more of the provided function(s) for invocation.
-- **Required**: Forces the AI model to chose provided function(s).
-- **None**: Instructs the AI model not to chose any function(s).
+- **Required**: Forces the AI model to choose provided function(s).
+- **None**: Instructs the AI model not to choose any function(s).
 
 > [!WARNING]
 > The function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024, at which point the other function-calling model, represented by the TollCallBehavior class, will be deprecated.
@@ -89,8 +89,8 @@ await kernel.InvokePromptAsync("Given the current time of day and weather, what 
 The `Auto` function choice behavior instructs the AI model to decide to choose from zero or more of the provided function(s) for invocation.
 
 In this example, all the functions from the `DateTimeUtils` and `WeatherForecastUtils` plugins will be provided to the AI model alongside the prompt. 
-The model will first chose `GetCurrentTime` function for invocation to obtain the current date and time, as this information is needed as input for the `GetWeatherForCity` function. 
-Next, it will chose `GetWeatherForCity` function for invocation to get the weather forecast for the city of Boston using the obtained date and time. 
+The model will first choose `GetCurrentTime` function for invocation to obtain the current date and time, as this information is needed as input for the `GetWeatherForCity` function. 
+Next, it will choose `GetWeatherForCity` function for invocation to get the weather forecast for the city of Boston using the obtained date and time. 
 With this information, the model will be able to determine the likely color of the sky in Boston.
 ```csharp
 using Microsoft.SemanticKernel;
@@ -135,7 +135,7 @@ Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 
 ## Using Required Function Choice Behavior
 
-The `Required` behavior forces the model to chose the provided function(s) for for invocation. This is useful for scenarios when the AI model must obtain required information from the specified 
+The `Required` behavior forces the model to choose the provided function(s) for for invocation. This is useful for scenarios when the AI model must obtain required information from the specified 
 functions rather than from it's own knowledge.
 
 > [!NOTE]
