@@ -366,7 +366,7 @@ python telemetry_aspire_dashboard_quickstart.py
 After running the application, head over to the dashboard to inspect the telemetry data.
 
 > [!TIP]
-> Follow this [guide](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard.
+> Follow this [guide](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard interface.
 
 ### Traces
 
