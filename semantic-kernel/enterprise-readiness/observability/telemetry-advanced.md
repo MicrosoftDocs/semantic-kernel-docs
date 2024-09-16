@@ -466,10 +466,6 @@ This is the chat history that gets built up as the model and the kernel interact
 
 ::: zone pivot="programming-language-python"
 
-After running the application, head over to the dashboard to inspect the telemetry data.
-
-::: zone pivot="programming-language-csharp"
-
 Find the trace for the application in the **Traces** tab. You should five spans in the trace grouped under the `AutoFunctionInvocationLoop` span:
 
 ![TracesAdvancedScenarioPython](../../media/telemetry-advanced-scenarios-trace-detail-python.png)
