@@ -436,4 +436,9 @@ dependencies
 
 ![Query Result](../../media/telemetry-app-insights-kusto-token-usage-per-message.png)
 
-## More advanced scenarios
+## Next steps
+
+Now that you have successfully output telemetry data to Application Insights, you can explore more features of Semantic Kernel that can help you monitor and diagnose your application:
+
+> [!div class="nextstepaction"]
+> [Advanced telemetry with Semantic Kernel](./telemetry-advanced.md)
