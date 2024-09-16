@@ -478,7 +478,7 @@ Value: 16
 Here you can see the name, the description, the unit, the time range, the type, the value of the metric, and the meter that the metric belongs to.
 
 > [!NOTE]
-> The above metric is a Counter metric. For a full list of metric types, see [here](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/metrics-instrumentation#types-of-instruments). Depending on the type of metric, the output may vary.
+> The above metric is a Counter metric. For a full list of metric types, see [here](https://learn.microsoft.com/dotnet/core/diagnostics/metrics-instrumentation#types-of-instruments). Depending on the type of metric, the output may vary.
 
 ::: zone-end
 
