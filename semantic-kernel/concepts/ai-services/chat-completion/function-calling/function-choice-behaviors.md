@@ -22,7 +22,7 @@ As of today, the function choice behaviors are represented by three static metho
 - **None**: Instructs the AI model not to chose any function(s).
 
 > [!WARNING]
-> The function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024. The other function-calling model, represented by the TollCallBehavior class, will be deprecated at the same time.
+> The function-calling model is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024, at which point the other function-calling model, represented by the TollCallBehavior class, will be deprecated.
 > Please refer to the [migration guide](../../../../support/function-calling-migration-guide.md) to migrate your code to the latest function-calling model.
 
 > [!NOTE]
