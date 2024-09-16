@@ -118,6 +118,9 @@ namespace TelemetryAspireDashboardQuickstart
 If you run the console app now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `// Telemetry setup code goes here` comment with the following code:
 
 ```csharp
+// Endpoint to the Aspire Dashboard
+var endpoint = "http://localhost:4317";
+
 var resourceBuilder = ResourceBuilder
     .CreateDefault()
     .AddService("TelemetryAspireDashboardQuickstart");
@@ -128,13 +131,13 @@ AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiag
 using var traceProvider = Sdk.CreateTracerProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddSource("Microsoft.SemanticKernel*")
-    .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
+    .AddOtlpExporter(options => options.Endpoint = new Uri(endpoint))
     .Build();
 
 using var meterProvider = Sdk.CreateMeterProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddMeter("Microsoft.SemanticKernel*")
-    .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
+    .AddOtlpExporter(options => options.Endpoint = new Uri(endpoint))
     .Build();
 
 using var loggerFactory = LoggerFactory.Create(builder =>
@@ -143,7 +146,7 @@ using var loggerFactory = LoggerFactory.Create(builder =>
     builder.AddOpenTelemetry(options =>
     {
         options.SetResourceBuilder(resourceBuilder);
-        options..AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+        options.AddOtlpExporter(options => options.Endpoint = new Uri(endpoint));
         // Format log messages. This is default to false.
         options.IncludeFormattedMessage = true;
         options.IncludeScopes = true;
@@ -250,12 +253,15 @@ Please refer to this [article](./telemetry-with-console.md#environment-variables
 If you run the script now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `# Telemetry setup code goes here` comment with the following code:
 
 ```python
+# Endpoint to the Aspire Dashboard
+endpoint = "http://localhost:4317";
+
 # Create a resource to represent the service/sample
 resource = Resource.create({ResourceAttributes.SERVICE_NAME: "telemetry-aspire-dashboard-quickstart"})
 
 
 def set_up_logging():
-    exporter = OTLPLogExporter(endpoint="http://localhost:4317")
+    exporter = OTLPLogExporter(endpoint=endpoint)
 
     # Create and set a global logger provider for the application.
     logger_provider = LoggerProvider(resource=resource)
@@ -277,7 +283,7 @@ def set_up_logging():
 
 
 def set_up_tracing():
-    exporter = OTLPSpanExporter(endpoint="http://localhost:4317")
+    exporter = OTLPSpanExporter(endpoint=endpoint)
 
     # Initialize a trace provider for the application. This is a factory for creating tracers.
     tracer_provider = TracerProvider(resource=resource)
@@ -289,7 +295,7 @@ def set_up_tracing():
 
 
 def set_up_metrics():
-    exporter = OTLPMetricExporter(endpoint="http://localhost:4317")
+    exporter = OTLPMetricExporter(endpoint=endpoint)
 
     # Initialize a metric provider for the application. This is a factory for creating meters.
     meter_provider = MeterProvider(
@@ -356,6 +362,28 @@ python telemetry_aspire_dashboard_quickstart.py
 ::: zone-end
 
 ## Inspect telemetry data
+
+> [!TIP]
+> Follow this [guide](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard.
+
+After running the application, head over to the dashboard to inspect the telemetry data.
+
+### Traces
+
+If this is your first time running the application after starting the dashboard, you should see a one trace is the `Traces` tab. Click on the trace to view more details.
+
+![TracesOverview](../../media/telemetry-aspire-dashboard-traces-overview.png)
+
+In the trace details, you can see the span that represents the prompt function and the span that represents the chat completion model. Click on the chat completion span to see details about the request and response.
+
+> [!TIP]
+> You can filter the attributes of the spans to find the one you are interested in.
+
+![TracesDetails](../../media/telemetry-aspire-dashboard-trace-detail.png)
+
+### Logs
+
+Head over to the `Structured` tab to view the logs emitted by the application. Please refer to this [guide](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/explore#structured-logs-page) on how to work with structured logs in the dashboard.
 
 ## Next steps
 

@@ -6,3 +6,5 @@
   href: telemetry-with-app-insights.md
 - name: 'Example: Aspire Dashboard'
   href: telemetry-with-aspire-dashboard.md
+- name: 'Advanced telemetry with Semantic Kernel'
+  href: telemetry-advanced.md
