@@ -12,11 +12,11 @@ ms.service: semantic-kernel
 # More advanced scenarios for telemetry
 
 > [!NOTE]
-> This article will use [Aspire Dashboard](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) for illustration. If you prefer to use other tools, please refer to the documentation of the tool you are using.
+> This article will use [Aspire Dashboard](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) for illustration. If you prefer to use other tools, please refer to the documentation of the tool you are using on setup instructions.
 
 ## Auto Function Calling
 
-Auto Function Calling is a Semantic Kernel feature that allows the kernel to execute functions when the model responds with function calls, and provide the results back to the model. This feature is useful for scenarios where a query requires multiple iterations of function calls to get a final natural language response. For more details, please see these GitHub [samples](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/auto_function_calling).
+Auto Function Calling is a Semantic Kernel feature that allows the kernel to automatically execute functions when the model responds with function calls, and provide the results back to the model. This feature is useful for scenarios where a query requires multiple iterations of function calls to get a final natural language response. For more details, please see these GitHub [samples](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/auto_function_calling).
 
 > [!NOTE]
 > Function calling is not supported by all models.
@@ -181,7 +181,7 @@ namespace TelemetryAutoFunctionCallingQuickstart
 }
 ```
 
-In the code above, we first define a mock conference room booking system with two functions: `FindAvailableRoomsAsync` and `BookRoomAsync`. We then create a simple console application that registers the plugin to the kernel, and ask the kernel to automatically call the functions when needed.
+In the code above, we first define a mock conference room booking plugin with two functions: `FindAvailableRoomsAsync` and `BookRoomAsync`. We then create a simple console application that registers the plugin to the kernel, and ask the kernel to automatically call the functions when needed.
 
 ::: zone-end
 
@@ -359,7 +359,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-In the code above, we first define a mock conference room booking system with two functions: `find_available_rooms` and `book_room`. We then create a simple Python script that registers the plugin to the kernel, and ask the kernel to automatically call the functions when needed.
+In the code above, we first define a mock conference room booking plugin with two functions: `find_available_rooms` and `book_room`. We then create a simple Python script that registers the plugin to the kernel, and ask the kernel to automatically call the functions when needed.
 
 #### Environment variables
 
@@ -423,7 +423,7 @@ Find the trace for the application in the **Traces** tab. You should five spans 
 
 ![TracesAdvancedScenarioDotNet](../../media/telemetry-advanced-scenarios-trace-detail-dotnet.png)
 
-These 5 spans represent the internal operations of the kernel with auto function calling enabled. It first invokes the model, which requests a function call. Then the kernel automatically calls the function `FindAvailableRoomsAsync` and returns the result to the model. The model then requests another function call to make a reservation, and the kernel automatically calls the function `BookRoomAsync` and returns the result to the model. Finally, the model returns a natural language response to the user.
+These 5 spans represent the internal operations of the kernel with auto function calling enabled. It first invokes the model, which requests a function call. Then the kernel automatically executes the function `FindAvailableRoomsAsync` and returns the result to the model. The model then requests another function call to make a reservation, and the kernel automatically executes the function `BookRoomAsync` and returns the result to the model. Finally, the model returns a natural language response to the user.
 
 And if you click on the last span, and look for the prompt in the `gen_ai.content.prompt` event, you should see something similar to the following:
 
@@ -470,7 +470,7 @@ Find the trace for the application in the **Traces** tab. You should five spans 
 
 ![TracesAdvancedScenarioPython](../../media/telemetry-advanced-scenarios-trace-detail-python.png)
 
-These 5 spans represent the internal operations of the kernel with auto function calling enabled. It first invokes the model, which requests a function call. Then the kernel automatically calls the function `find_available_rooms` and returns the result to the model. The model then requests another function call to make a reservation, and the kernel automatically calls the function `book_room` and returns the result to the model. Finally, the model returns a natural language response to the user.
+These 5 spans represent the internal operations of the kernel with auto function calling enabled. It first invokes the model, which requests a function call. Then the kernel automatically executes the function `find_available_rooms` and returns the result to the model. The model then requests another function call to make a reservation, and the kernel automatically executes the function `book_room` and returns the result to the model. Finally, the model returns a natural language response to the user.
 
 And if you click on the last span, and look for the prompt in the `gen_ai.content.prompt` event, you should see something similar to the following:
 
@@ -529,12 +529,75 @@ This is the chat history that gets built up as the model and the kernel interact
 
 ## Error handling
 
+If an error occurs during the execution of a function, the kernel will automatically catch the error and return an error message to the model. The model can then use this error message to provide a natural language response to the user.
+
+::: zone pivot="programming-language-csharp"
+
+Modify the `BookRoomAsync` function in the C# code to simulate an error:
+
+```csharp
+[KernelFunction("BookRoom")]
+[Description("Books a conference room.")]
+public async Task<string> BookRoomAsync(string room)
+{
+    // Simulate a remote call to a booking system.
+    await Task.Delay(1000);
+
+    throw new Exception("Room is not available.");
+}
+```
+
+Run the application again and observe the trace in the dashboard. You should see the span representing the kernel function call with an error:
+
+![TracesAdvancedScenarioErrorDotNet](../../media/telemetry-advanced-scenarios-trace-detail-error-handling-dotnet.png)
+
+> [!NOTE]
+> It is very likely that the model responses to the error may vary each time you run the application, because the model is stochastic. You may see the model reserving all three rooms at the same time, or reserving one the first time then reserving the other two the second time, etc.
+
+::: zone-end
 
 
-## Next steps
+::: zone pivot="programming-language-python"
 
-Production scenarios:
+Modify the `book_room` function in the Python code to simulate an error:
 
-Further readings:
+```python
+@kernel_function(
+    name="book_room",
+    description="Book a conference room.",
+)
+async def book_room(self, room: str) -> Annotated[str, "A confirmation message."]:
+    # Simulate a remote call to a booking system
+    await asyncio.sleep(1)
+
+    raise Exception("Room is not available.")
+```
+
+Run the application again and observe the trace in the dashboard. You should see the span representing the kernel function call with an error and the stack trace:
+
+![TracesAdvancedScenarioErrorPython](../../media/telemetry-advanced-scenarios-trace-detail-error-handling-python.png)
+
+> [!NOTE]
+> It is very likely that the model responses to the error may vary each time you run the application, because the model is stochastic. You may see the model reserving all three rooms at the same time, or reserving one the first time then reserving the other two the second time, etc.
+
+::: zone-end
+
+
+::: zone pivot="programming-language-java"
+
+> [!NOTE]
+> Semantic Kernel Observability is not yet available for Java.
+
+::: zone-end
+
+## Next steps and further reading
+
+In production, your services may get a large number of requests. Semantic Kernel will generate a large amount of telemetry data. some of which may not be useful for your use case and will introduce unnecessary costs to store the data. You can use the [sampling](https://opentelemetry.io/docs/concepts/sampling/) feature to reduce the amount of telemetry data that is collected.
+
+Observability in Semantic Kernel is constantly improving. You can find the latest updates and new features in the [GitHub repository](https://github.com/microsoft/semantic-kernel).
+
+
+
+
 
 
