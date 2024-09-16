@@ -254,7 +254,7 @@ If you run the script now, you should expect to see a sentence explaining why th
 
 ```python
 # Endpoint to the Aspire Dashboard
-endpoint = "http://localhost:4317";
+endpoint = "http://localhost:4317"
 
 # Create a resource to represent the service/sample
 resource = Resource.create({ResourceAttributes.SERVICE_NAME: "telemetry-aspire-dashboard-quickstart"})
@@ -363,10 +363,10 @@ python telemetry_aspire_dashboard_quickstart.py
 
 ## Inspect telemetry data
 
+After running the application, head over to the dashboard to inspect the telemetry data.
+
 > [!TIP]
 > Follow this [guide](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard.
-
-After running the application, head over to the dashboard to inspect the telemetry data.
 
 ### Traces
 
