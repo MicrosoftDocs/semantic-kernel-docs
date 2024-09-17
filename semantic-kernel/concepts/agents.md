@@ -138,7 +138,7 @@ AzureOpenAIChatCompletionService chatCompletionService = new (
 // Enable planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 // Create chat history

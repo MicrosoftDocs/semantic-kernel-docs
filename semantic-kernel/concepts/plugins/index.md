@@ -275,7 +275,7 @@ kernel.Plugins.AddFromType<LightsPlugin>("Lights");
 // Enable planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 // Create a history store the conversation

@@ -33,7 +33,7 @@ When you make a request to a model with function calling enabled, Semantic Kerne
 
 The following diagram illustrates the process of function calling:
 
-![Semantic Kernel function calling](../../../media/FunctionCalling.png)
+![Semantic Kernel function calling](../../../../media/FunctionCalling.png)
 
 The following section will use a concrete example to illustrate how function calling works in practice.
 
@@ -506,7 +506,7 @@ IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletio
 
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 ChatResponse response = await chatCompletion.GetChatMessageContentAsync(
@@ -546,6 +546,11 @@ List<ChatResponse> responses = chatCompletion.getChatMessageContentsAsync(
     invocationContext).block();
 ```
 
+::: zone-end
+
+::: zone pivot="programming-language-csharp"
+> [!NOTE]
+> This example uses the `FunctionChoiceBehavior.Auto()` behavior, one of the few available ones. For more information about other function choice behaviors, check out the [function choice behaviors article](./function-choice-behaviors.md).
 ::: zone-end
 
 ### 3) Model processes the input
@@ -717,6 +722,9 @@ Not all functions will succeed, however. If the function fails, Semantic Kernel 
 > [!TIP]
 > To ensure a model can self-correct, it's important to provide error messages that clearly communicate what went wrong and how to fix it. This can help the model retry the function call with the correct information.
 
+> [!NOTE]
+> Semantic Kernel automatically invokes functions by default. However, if you prefer to manage function invocation manually, you can enable manual function invocation mode. For more details on how to do this, please refer to the [function invocation article](./function-invocation.md).
+
 ### 6) Return the function result
 
 After the function has been invoked, the function result is sent back to the model as part of the chat history. This allows the model to understand the context of the conversation and generate a subsequent response.
@@ -812,7 +820,7 @@ For example, if a user wants to order multiple pizzas, the LLM can call the `add
 
 ## Next steps
 
-Now that you understand how function calling works, you can now learn how to actually use function calling in Semantic Kernel by referring to the [planning article](../../planning.md)
+Now that you understand how function calling works, you can proceed to learn how to configure various aspects of function calling that better correspond to your specific scenarios by referring to the [function choice behavior article](./function-choice-behaviors.md)
 
 > [!div class="nextstepaction"]
-> [Learn more about planning](../../planning.md)
+> [Function Choice Behavior](./function-choice-behaviors.md)
