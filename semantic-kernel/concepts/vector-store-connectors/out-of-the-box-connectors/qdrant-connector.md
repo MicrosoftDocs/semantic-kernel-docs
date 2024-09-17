@@ -22,7 +22,7 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 | Collection maps to                | Qdrant collection with payload indices for filterable data fields                                                                |
 | Supported key property types      | <ul><li>ulong</li><li>Guid</li></ul>                                                                                             |
 | Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
+| Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
 | Supported index types             | Hnsw                                                                                                                             |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>              |
 | Supports multiple vectors in a record | Yes (configurable)                                                                                                           |
