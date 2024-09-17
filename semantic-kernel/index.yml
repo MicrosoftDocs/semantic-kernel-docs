@@ -28,7 +28,6 @@ productDirectory:
       links:
         - url: /semantic-kernel/get-started/quick-start-guide
           text: Learn how to use Semantic Kernel
-      links:
         - url: /semantic-kernel/get-started/detailed-samples
           text: Check out samples for Semantic Kernel
     - title: Concepts
@@ -47,6 +46,11 @@ productDirectory:
       links:
         - url: /semantic-kernel/integrations/
           text: Browse available features by language
+    - title: Enterprise Readiness
+      imageSrc: /semantic-kernel/media/Security.svg
+      links:
+        - url: /semantic-kernel/enterprise-readiness/observability/index
+          text: Observability
     - title: Connect with us
       imageSrc: /semantic-kernel/media/whats-new.svg
       links:
