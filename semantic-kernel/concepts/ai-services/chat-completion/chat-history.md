@@ -416,7 +416,7 @@ chatHistory.addAll(results);
 ::: zone-end
 
 ## Next steps
-Now that you know how to create and manage a chat history object, you can learn more about function calling in the [Function calling](./function-calling.md) topic.
+Now that you know how to create and manage a chat history object, you can learn more about function calling in the [Function calling](./function-calling/index.md) topic.
 
 > [!div class="nextstepaction"]
-> [Learn how function calling works](./function-calling.md)
+> [Learn how function calling works](./function-calling/index.md)
