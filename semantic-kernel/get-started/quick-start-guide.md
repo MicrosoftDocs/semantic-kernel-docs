@@ -119,7 +119,7 @@ dotnet add package Microsoft.Extensions.Logging
 dotnet add package Microsoft.Extensions.Logging.Console
 ```
 
-3. Copy the code below and paste it into the `Program.cs` file:
+3. Replace the content of the `Program.cs` file with this code:
 
 ```csharp
 // Import packages
