@@ -105,6 +105,14 @@ To get started, follow these steps:
 
 ::: zone pivot="programming-language-csharp"
 
+Create a new .NET Console project using this command:
+
+```csharp
+dotnet new console
+```
+
+Copy the code below and paste it into the `Program.cs` file:
+
 ```csharp
 // Import packages
 using Microsoft.SemanticKernel;
@@ -154,7 +162,7 @@ do {
 
     // Add the message from the agent to the chat history
     history.AddMessage(result.Role, result.Content ?? string.Empty);
-} while (userInput is not null)
+} while (userInput is not null);
 ```
 
 ::: zone-end
@@ -468,6 +476,7 @@ In your own code, you can create a plugin that interacts with any external servi
 
 ```csharp
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 using Microsoft.SemanticKernel;
 
 public class LightsPlugin
@@ -485,7 +494,7 @@ public class LightsPlugin
    [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
-      return lights
+      return lights;
    }
 
    [KernelFunction("change_state")]
