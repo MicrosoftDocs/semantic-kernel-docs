@@ -6,8 +6,12 @@
 - name: Concepts
   href: concepts/TOC.yml
   expanded: true
+- name: How to
+  href: how-to/TOC.yml
 - name: Integrations
   href: integrations/index.md
+- name: Enterprise Readiness
+  href: enterprise-readiness/TOC.yml
 - name: Getting Support
   href: support/TOC.yml
 - name: API Reference
