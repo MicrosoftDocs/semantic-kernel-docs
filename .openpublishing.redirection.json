@@ -714,6 +714,11 @@
             "source_path": "semantic-kernel/when-to-use-ai/schillace-laws.md",
             "redirect_url": "/semantic-kernel/overview/index",
             "redirect_document_id": false
+        },
+        {
+          "source_path": "semantic-kernel/concepts/ai-services/chat-completion/function-calling.md",
+          "redirect_url": "/semantic-kernel/concepts/ai-services/chat-completion/function-calling/index.md",
+          "redirect_document_id": false
         }
     ]
 }
