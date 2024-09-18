@@ -255,7 +255,7 @@ KernelFunction promptFunction = KernelFunctionYaml.FromPromptYaml(promptTemplate
 Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 ```
 
-## Function 
+## Function Invocation
 
 Function invocation is the process whereby Sematic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
 
