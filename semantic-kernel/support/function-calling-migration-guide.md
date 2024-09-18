@@ -1,6 +1,6 @@
 ---
-title: Migrating to the new Function Calling model
-description: Describes the steps for SK caller code to migrate from the current function calling model, represented by the `ToolCallBehavior` class, to the new one represented by the `FunctionChoiceBehavior` class.
+title: Migrating to the new Function Calling capabilities
+description: Describes the steps for SK caller code to migrate from the current function calling capabilities, represented by the `ToolCallBehavior` class, to the new one represented by the `FunctionChoiceBehavior` class.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
@@ -8,14 +8,12 @@ ms.author: semenshi
 ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
-# Function Calling Model Migration Guide
-Semantic Kernel is gradually transitioning from the current function calling model, represented by the `ToolCallBehavior` class, to the new model, represented by the `FunctionChoiceBehavior` class.
-The new model is service-agnostic and is not tied to any specific AI service, unlike the current model. Therefore, it resides in Semantic Kernel abstractions and will be used by all AI connectors working with function-calling capable AI models. 
+# Function Calling Migration Guide
+Semantic Kernel is gradually transitioning from the current function calling capabilities, represented by the `ToolCallBehavior` class, to the new enhanced capabilities, represented by the `FunctionChoiceBehavior` class.
+The new capability is service-agnostic and is not tied to any specific AI service, unlike the current model. Therefore, it resides in Semantic Kernel abstractions and will be used by all AI connectors working with function-calling capable AI models. 
 
-> [!WARNING]
-> The new model is expected to reach general availability (GA) by mid-November 2024, at which point the current model will be deprecated.
 
-This guide is intended to help you to migrate your code to the new function calling model.
+This guide is intended to help you to migrate your code to the new function calling capabilities.
 
 ## Migrate ToolCallBehavior.AutoInvokeKernelFunctions behavior
 The `ToolCallBehavior.AutoInvokeKernelFunctions` behavior is equivalent to the `FunctionChoiceBehavior.Auto` behavior in the new model. 
