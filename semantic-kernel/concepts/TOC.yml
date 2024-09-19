@@ -1,5 +1,3 @@
-- name: Agents
-  href: agents.md
 - name: Kernel
   href: kernel.md
 - name: AI Services
@@ -10,9 +8,5 @@
   href: plugins/TOC.yml
 - name: Planning
   href: planning.md
-- name: Personas
-  href: personas.md
-- name: Filters
-  href: filters.md
 - name: Vector Store connectors (Experimental)
   href: vector-store-connectors/TOC.yml
