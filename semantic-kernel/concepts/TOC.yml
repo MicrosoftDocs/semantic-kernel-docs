@@ -6,5 +6,5 @@
   href: plugins/TOC.yml
 - name: Planning
   href: planning.md
-- name: Vector Store connectors (Experimental)
+- name: Memory - Vector Store connectors (Experimental)
   href: vector-store-connectors/TOC.yml
