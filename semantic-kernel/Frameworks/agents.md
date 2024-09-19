@@ -4,7 +4,7 @@ description: Learn about agents and how to build them with Semantic Kernel.
 author: sophialagerkranspandey
 zone_pivot_groups: programming-languages
 ms.topic: overview
-ms.author: sopand
+ms.author: crickman
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ms.custom: build-2023, build-2023-dataai
