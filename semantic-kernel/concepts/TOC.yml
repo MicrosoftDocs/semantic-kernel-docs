@@ -4,6 +4,8 @@
   href: kernel.md
 - name: AI Services
   href: ai-services/TOC.yml
+- name: Enterprise Readiness
+  href: enterprise-readiness/TOC.yml
 - name: Plugins
   href: plugins/TOC.yml
 - name: Planning
