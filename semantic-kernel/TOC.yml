@@ -8,6 +8,7 @@
   expanded: true
 - name: Getting Support
   href: support/TOC.yml
+  expanded: true
 - name: API Reference
   href: api-docs/TOC.yml
   expanded: true

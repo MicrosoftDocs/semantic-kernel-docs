@@ -4,7 +4,7 @@
   href: ai-services/TOC.yml
 - name: Integrations
   href: integrations/TOC.yml
-- name: Enterprise Readiness
+- name: Enterprise Components
   href: enterprise-readiness/TOC.yml
 - name: Memory - Vector Store connectors (Experimental)
   href: vector-store-connectors/TOC.yml
