@@ -1,10 +1,10 @@
 - name: Overview
   href: index.md
-- name: 'Example: Console'
+- name: Example: Console
   href: telemetry-with-console.md
-- name: 'Example: Application Insights'
+- name: Example: Application Insights
   href: telemetry-with-app-insights.md
-- name: 'Example: Aspire Dashboard'
+- name: Example: Aspire Dashboard
   href: telemetry-with-aspire-dashboard.md
-- name: 'Advanced telemetry with Semantic Kernel'
+- name: Advanced telemetry with Semantic Kernel
   href: telemetry-advanced.md
