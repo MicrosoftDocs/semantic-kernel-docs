@@ -2,8 +2,6 @@
   href: kernel.md
 - name: AI Services
   href: ai-services/TOC.yml
-- name: Integrations
-  href: integrations/TOC.yml
 - name: Enterprise Components
   href: enterprise-readiness/TOC.yml
 - name: Memory - Vector Store connectors (Experimental)
