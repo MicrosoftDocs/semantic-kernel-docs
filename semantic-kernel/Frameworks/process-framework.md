@@ -1,7 +1,7 @@
 ---
 title: Process Framework
 description: Details on the Processes Framework from Semantic Kernel
-zone_pivot_groups: programming-languages
+zone_pivot_groups:  
 author: evchaki            
 ms.topic: tutorial
 ms.author: evchaki   
