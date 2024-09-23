@@ -6,6 +6,8 @@
   href: enterprise-readiness/TOC.yml
 - name: Memory - Vector Store connectors (Experimental)
   href: vector-store-connectors/TOC.yml
+- name: Prompts
+  href: prompts/TOC.yml
 - name: Plugins
   href: plugins/TOC.yml
 - name: Planning
