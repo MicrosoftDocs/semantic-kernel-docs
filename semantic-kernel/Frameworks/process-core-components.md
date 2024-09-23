@@ -1,6 +1,6 @@
 ---
-title: Process Framework - Core Components
-description: Details on the Processes Framework in Semantic Kernel
+title: Process Framework Core Components
+description: Details on the Core Components in the Processes Framework from Semantic Kernel
 zone_pivot_groups: programming-languages
 author: evchaki            
 ms.topic: tutorial
