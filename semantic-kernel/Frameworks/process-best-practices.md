@@ -1,7 +1,7 @@
 ---
 title: Process Framework Best Practices
-description: Details on deploying Processes Framework in Semantic Kernel
-zone_pivot_groups: programming-languages
+description: Details on the Best Practices in the Processes Framework from Semantic Kernel
+zone_pivot_groups: 
 author: evchaki            
 ms.topic: tutorial
 ms.author: evchaki   
@@ -10,6 +10,7 @@ ms.service: semantic-kernel
 ---
 
 # Best Practices for the Process Framework
+
 Utilizing the Process Framework effectively can significantly enhance your workflow automation. Here are some best practices to help you optimize your implementation and avoid common pitfalls.
 
 ### File and Folder Layout Structure
