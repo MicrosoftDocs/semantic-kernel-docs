@@ -1,6 +1,6 @@
 ---
 title: Process Framework Best Practices
-description: Details on deploying Processes Framework in Semantic Kernel
+description: Details on the Best Practices in the Processes Framework from Semantic Kernel
 zone_pivot_groups: programming-languages
 author: evchaki            
 ms.topic: tutorial
