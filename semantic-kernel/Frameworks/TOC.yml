@@ -6,11 +6,11 @@
   href: agents.md
 - name: Process Framework   
   href: process-framework.md
-  - name: Overview   
+- name: Overview   
   href: process-framework.md
-  - name: Core Components   
+- name: Core Components   
   href: process-core-components.md
-  - name: Deployment
+- name: Deployment
   href: process-deployment.md
-  - name: Best Practices
+- name: Best Practices
   href: process-best-practices.md
