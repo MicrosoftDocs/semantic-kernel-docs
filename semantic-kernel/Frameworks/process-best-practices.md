@@ -10,6 +10,7 @@ ms.service: semantic-kernel
 ---
 
 # Best Practices for the Process Framework
+
 Utilizing the Process Framework effectively can significantly enhance your workflow automation. Here are some best practices to help you optimize your implementation and avoid common pitfalls.
 
 ### File and Folder Layout Structure
