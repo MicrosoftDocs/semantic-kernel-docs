@@ -6,6 +6,8 @@
   href: defining-your-data-model.md
 - name: Defining your storage schema using a record definition
   href: schema-with-record-definition.md
+- name: Vector Search
+  href: vector-search.md
 - name: Serialization of data models
   href: serialization.md
 - name: Out-of-the-box connectors
