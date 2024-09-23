@@ -16,7 +16,7 @@ The Process Framework is built upon a modular architecture that enables develope
 
 A Process serves as the overarching container that orchestrates the execution of Steps. It defines the flow and routing of data between Steps, ensuring that process goals are achieved efficiently. Processes handle inputs and outputs, providing flexibility and scalability across various workflows.
 
-## Process Features
+### Process Features
 
 - **Stateful:** Supports querying information such as tracking status and percent completion, as well as the ability to pause and resume.
 - **Reusable:** A Process can be invoked within other processes, promoting modularity and reusability.
