@@ -54,7 +54,7 @@ Are you ready to harness the power of the Process Framework?
 Begin your journey by exploring our .NET samples on GitHub. While Python support is on the horizon, the .NET examples provide an excellent starting point for understanding the framework's capabilities and applications.
 
 > [!NOTE]
-    > Process Framework is avaialble for .NET currently.  The Process Framework for Python is in progress.
+> Process Framework is avaialble for .NET currently.  The Process Framework for Python is in progress.
 
 
 By diving into the Process Framework, developers can transform traditional workflows into intelligent, adaptive systems. Start building with the tools at your disposal and redefine what's possible with AI-driven business processes.
