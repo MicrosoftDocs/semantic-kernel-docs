@@ -21,32 +21,35 @@ productDirectory:
       links:
         - url: /semantic-kernel/overview/index
           text: Introduction to Semantic Kernel
-        - url: /semantic-kernel/get-started/contributing
-          text: Contributing to Semantic Kernel
+        - url: /semantic-kernel/get-started/supported-languages.md
+          text: Supported Languages Semantic Kernel
     - title: Quick Start
       imageSrc: /semantic-kernel/media/Quick-start.svg
       links:
         - url: /semantic-kernel/get-started/quick-start-guide
           text: Learn how to use Semantic Kernel
-      links:
         - url: /semantic-kernel/get-started/detailed-samples
           text: Check out samples for Semantic Kernel
     - title: Concepts
       imageSrc: /semantic-kernel/media/Concepts.svg
       links:
-        - url: /semantic-kernel/concepts/agents
-          text: Agents
-        - url: /semantic-kernel/concepts/plugins/index
+        - url: /semantic-kernel/concepts/kernel.md
+          text: Kernel
+        - url: /semantic-kernel/concepts/plugins/index.md
           text: Plugins
-        - url: /semantic-kernel/concepts/planning
-          text: Planning
-        - url: /semantic-kernel/concepts/personas
-          text: Personas
-    - title: Integrations
-      imageSrc: /semantic-kernel/media/Integrations.svg
-      links:
-        - url: /semantic-kernel/integrations/
+        - url: /semantic-kernel/concepts/vector-store-connectors/index.md
+          text: Memory
+        - url: /semantic-kernel/concepts/
           text: Browse available features by language
+    - title: Enterprise Components
+      imageSrc: /semantic-kernel/media/Security.svg
+      links:
+        - url: /semantic-kernel/enterprise-readiness/observability/index
+          text: Observability
+        - url: /semantic-kernel/enterprise-readiness/SECURITY.md
+          text: Security    
+        - url: /semantic-kernel/enterprise-readiness/filters.md
+          text: Filters
     - title: Connect with us
       imageSrc: /semantic-kernel/media/whats-new.svg
       links:

@@ -714,6 +714,61 @@
             "source_path": "semantic-kernel/when-to-use-ai/schillace-laws.md",
             "redirect_url": "/semantic-kernel/overview/index",
             "redirect_document_id": false
+        },
+        {
+          "source_path": "semantic-kernel/concepts/ai-services/chat-completion/function-calling.md",
+          "redirect_url": "/semantic-kernel/concepts/ai-services/chat-completion/function-calling/index.md",
+          "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/enterprise-readiness/observability/index.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/index.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-advanced.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-advanced.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-with-app-insights.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-app-insights.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-with-aspire-dashboard.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-aspire-dashboard.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-with-console.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-console.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/how-to/vector-store-data-ingestion.md",
+            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/vector-store-data-ingestion.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/integrations/index.md",
+            "redirect_url": "/semantic-kernel/concepts/ai-services/integrations.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/how-to/vector-store-custom-mapper.md",
+            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/vector-store-custom-mapper.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/hackathon-materials.md",
+            "redirect_url": "/semantic-kernel/support/hackathon-materials.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/get-started/contributing.md",
+            "redirect_url": "/semantic-kernel/support/contributing.md",
+            "redirect_document_id": false
         }
     ]
 }
