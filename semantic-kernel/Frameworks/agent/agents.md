@@ -4,7 +4,7 @@ description: Learn about agents and how to build them with Semantic Kernel.
 author: sophialagerkranspandey
 zone_pivot_groups: programming-languages
 ms.topic: overview
-ms.author: sopand
+ms.author: crickman
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ms.custom: build-2023, build-2023-dataai
@@ -138,7 +138,7 @@ AzureOpenAIChatCompletionService chatCompletionService = new (
 // Enable planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 // Create chat history
@@ -160,6 +160,7 @@ import asyncio
 import logging
 
 from semantic_kernel import Kernel
+from semantic_kernel.utils.logging import setup_logging
 from semantic_kernel.functions import kernel_function
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
@@ -176,18 +177,16 @@ async def main():
     kernel = Kernel()
 
     # Add Azure OpenAI chat completion
-    kernel.add_service(AzureChatCompletion(
+    chat_completion = AzureChatCompletion(
         deployment_name="your_models_deployment_name",
         api_key="your_api_key",
         base_url="your_base_url",
-    ))
-
-    # Set the logging level for  semantic_kernel.kernel to DEBUG.
-    logging.basicConfig(
-        format="[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
     )
-    logging.getLogger("kernel").setLevel(logging.DEBUG)
+    kernel.add_service(chat_completion)
+
+    # Set the logging level for semantic_kernel.kernel to DEBUG.
+    setup_logging()
+    logging.setLevel(logging.DEBUG)
 
     # Add a plugin (the EmailPlugin class is defined above)
     kernel.add_plugin(
@@ -195,22 +194,19 @@ async def main():
         plugin_name="Email",
     )
 
-    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
-
     # Enable planning
-    execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
+    execution_settings = AzureChatPromptExecutionSettings()
     execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
 
     # Create a history of the conversation
     history = ChatHistory()
     history.add_user_message("Can you help me write an email for my boss?")
     
-    result = (await chat_completion.get_chat_message_contents(
+    result = await chat_completion.get_chat_message_content(
         chat_history=history,
         settings=execution_settings,
-        kernel=kernel,
-        arguments=KernelArguments(),
-    ))[0]
+        kernel=kernel
+    )
     print(result)
 
 # Run the main function
@@ -269,12 +265,11 @@ history = ChatHistory(system_message="""
 history.add_user_message("Can you help me write an email for my boss?")
 
 # Get the response from the AI
-result = (await chat_completion.get_chat_message_contents(
+result = await chat_completion.get_chat_message_content(
     chat_history=history,
     settings=execution_settings,
-    kernel=kernel,
-    arguments=KernelArguments(),
-))[0]
+    kernel=kernel
+)
 ```
 ::: zone-end
 
@@ -364,19 +359,18 @@ async def main():
     kernel = Kernel()
 
     # Add Azure OpenAI chat completion
-    kernel.add_service(AzureChatCompletion(
+    chat_completion = AzureChatCompletion(
         deployment_name="your_models_deployment_name",
         api_key="your_api_key",
         base_url="your_base_url",
-    ))
+    )
+    kernel.add_service(chat_completion)
 
     # Add a plugin (the EmailPlugin class is defined above)
     kernel.add_plugin(
         EmailPlugin(),
         plugin_name="Email",
     )
-
-    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 
     # Enable planning
     execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
@@ -392,16 +386,15 @@ async def main():
         history.add_user_message(user_input)
 
         # Get the response from the AI
-        result = (await chat_completion.get_chat_message_contents(
+        result = await chat_completion.get_chat_message_content(
             chat_history=history,
             settings=execution_settings,
-            kernel=kernel,
-            arguments=KernelArguments(),
-        ))[0]
+            kernel=kernel
+        )
 
         # Print the response
         print("Assistant > " + str(result))
-        history.add_assistant_message(str(result))
+        history.add_message(result)
 
 # Run the main function
 if __name__ == "__main__":
