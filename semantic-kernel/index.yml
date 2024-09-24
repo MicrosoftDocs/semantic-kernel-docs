@@ -48,7 +48,7 @@ productDirectory:
           text: Observability
         - url: /semantic-kernel/enterprise-readiness/SECURITY.md
           text: Security    
-    -   - url: /semantic-kernel/enterprise-readiness/filters.md
+        - url: /semantic-kernel/enterprise-readiness/filters.md
           text: Filters
     - title: Connect with us
       imageSrc: /semantic-kernel/media/whats-new.svg
