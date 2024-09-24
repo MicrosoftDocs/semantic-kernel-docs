@@ -15,7 +15,9 @@ Welcome to the Process Framework within Microsoft's Semantic Kernel—a cutting-
 
 A Process is a structured sequence of activities or tasks that deliver a service or product, adding value in alignment with specific business goals for customers.
 
-
+    > [!NOTE]
+    > Process Framework package is currently experimental and is subject to change until it is moved to preview and GA.
+    
 ## Introduction to the Process Framework
 
 The Process Framework provides a robust solution for automating complex workflows. Each step within the framework performs tasks by invoking user-defined Kernel Functions, utilizing an event-driven model to manage workflow execution.
