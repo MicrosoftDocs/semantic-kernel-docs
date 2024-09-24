@@ -28,4 +28,5 @@ Using either runtime, developers can scale applications according to demand, ens
 
 With the flexibility to choose between local testing environments and robust cloud platforms, the Process Framework is designed to meet diverse deployment needs. This enables developers to concentrate on building innovative AI-powered processes without the burden of infrastructure complexities.
 
-**Note:** Orleans will be supported first with the .NET Process Framework, followed by Dapr in the upcoming release of the Python version of the Process Framework.
+> [!NOTE]
+    > Orleans will be supported first with the .NET Process Framework, followed by Dapr in the upcoming release of the Python version of the Process Framework.
