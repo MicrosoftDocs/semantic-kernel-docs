@@ -4,7 +4,7 @@ description: Learn about personas in Semantic Kernel.
 author: sophialagerkranspandey
 zone_pivot_groups: programming-languages
 ms.topic: conceptual
-ms.author: sopand
+ms.author: crickman
 ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
