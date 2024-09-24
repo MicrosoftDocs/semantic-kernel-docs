@@ -1,8 +1,4 @@
 - name: Agent Framework   
-  href: agent-framework.md
-- name: Personas
-  href: personas.md
-- name: Agents
-  href: agents.md
+  href: agent/TOC.yml
 - name: Process Framework   
   href: process/TOC.yml 
