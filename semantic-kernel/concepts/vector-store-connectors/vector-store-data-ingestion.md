@@ -1,5 +1,5 @@
 ---
-title: How to ingest data into a Semantic Kernel Vector Store (Experimental)
+title: How to ingest data into a Semantic Kernel Vector Store (Experimental) - Memory
 description: Step by step instructions on how to ingest data into a Vector Store using Semantic Kernel
 zone_pivot_groups: programming-languages
 author: westey-m
