@@ -24,7 +24,7 @@ ms.custom: build-2023, build-2023-dataai
         Semantic Kernel provides you with the infrastructure to build any kind of agent you need without being an expert in AI.
     :::column-end:::
     :::column span="1":::
-        ![3 kinds of agents: Chatbot Copilot and Fully autonomous](../media/what-are-agents.png)
+        ![3 kinds of agents: Chatbot Copilot and Fully autonomous](../../media/what-are-agents.png)
     :::column-end:::
 :::row-end:::
  
@@ -35,7 +35,7 @@ ms.custom: build-2023, build-2023-dataai
         An agent is made up of three core building blocks that harmoniously work together to complete tasks for you. Let’s take a closer look by building a copilot that helps you write and send an email.
     :::column-end:::
     :::column span="2":::
-        ![Building Blocks of an Agent](../media/building-blocks.png)
+        ![Building Blocks of an Agent](../../media/building-blocks.png)
     :::column-end:::
 :::row-end:::
 
@@ -428,14 +428,3 @@ Now that we've completed our program, we can give it a test run. Below is a samp
 | 🟢&nbsp;**Tool**                      | Email sent!                                                                                                                          |
 | 🔴&nbsp;**Assistant**                 | The email has been sent to Sarah. If there's anything else you need assistance with, feel free to ask!                               |
 
-
-## Next steps
-Now that you've built your first agent, you can now deep dive into the different components of Semantic Kernel.
-
-| Section                                     | Description                                                |
-| ------------------------------------------- | ---------------------------------------------------------- |
-| [Kernel](./kernel.md)                       | Setting up and using the core Kernel object                |
-| [AI Services](./ai-services/index.md)       | Integration and usage of various AI services               |
-| [Plugins](./plugins/index.md)               | Integrate native code and APIs with Semantic Kernel        |
-| [Planners](./planning.md)                   | Enabling your AI agents to complete multi-step tasks       |
-| [Personas](./personas.md)                   | Customize your AI agents to better collaborate with others |

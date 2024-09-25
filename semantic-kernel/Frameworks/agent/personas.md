@@ -21,7 +21,7 @@ ms.service: semantic-kernel
      By doing so, you can create agents that are more consistent, more reliable, and more predictable. This is especially important when you're building agents that are responsible for critical tasks or that interact with users in sensitive situations.
    :::column-end:::
    :::column span="2":::
-        ![Semantic Kernel Persona](../media/personas.png)
+        ![Semantic Kernel Persona](../../media/personas.png)
    :::column-end:::
 :::row-end:::
 
