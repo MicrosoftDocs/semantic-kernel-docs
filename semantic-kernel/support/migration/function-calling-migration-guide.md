@@ -146,8 +146,7 @@ The code snippets above demonstrate how to migrate your code that uses the OpenA
 A similar migration process can be applied to the Gemini and Mistral AI connectors when they are updated to support the new function calling model.
 
 ## Next steps
-Now after you have migrated your code to the new function calling model, you can proceed to learn how to configure various aspects of the model that might better correspond to your specific scenarios by referring to the [function calling behaviors section](\semantic-kernel\concepts\ai-services\chat-completion\function-calling\index.md)
-
+Now after you have migrated your code to the new function calling model, you can proceed to learn how to configure various aspects of the model that might better correspond to your specific scenarios by referring to the function calling behaviors section. 
 
 
 ::: zone-end
