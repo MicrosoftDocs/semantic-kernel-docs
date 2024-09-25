@@ -33,10 +33,10 @@ With the available AI and memory connectors, developers can easily build AI agen
 
 Vector databases have many use cases across different domains and applications that involve natural language processing (NLP), computer vision (CV), recommendation systems (RS), and other areas that require semantic understanding and matching of data.
 
-One use case for storing information in a vector database is to enable large language models (LLMs) to generate more relevant and coherent text based on an [AI plugin](../create-plugins/index.md).
+One use case for storing information in a vector database is to enable large language models (LLMs) to generate more relevant and coherent responses based on an [AI plugin](../create-plugins/index.md).
 
 However, large language models often face challenges such as generating inaccurate or irrelevant information; lacking factual consistency or common sense; repeating or contradicting themselves; being biased or offensive. To overcome these challenges, you can use a vector database to store information about different topics, keywords, facts, opinions, and/or sources related to your desired domain or genre.
-Then, you can use a large language model and pass information from the vector database with your AI plugin to generate more informative and engaging content that matches your intent and style.
+Then, you can use a large language model and pass information from the vector database with your AI prompt to generate more accurate and relevant content.
 
 For example, if you want to write a blog post about the latest trends in AI, you can use a vector database to store the latest information about that topic and pass the information along with the ask to a LLM in order to generate a blog post that leverages the latest information.
 
