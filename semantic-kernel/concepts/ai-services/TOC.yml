@@ -3,3 +3,5 @@
 - name: Chat completion
   href: chat-completion/TOC.yml
   expanded: true
+- name: Integrations
+  href: integrations.md
