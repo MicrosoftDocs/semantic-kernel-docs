@@ -54,9 +54,3 @@ Becoming a skilled prompt engineer requires a combination of technical knowledge
 - **Stay updated:** Keep up with the latest advancements in prompt engineering techniques, research, and best practices to enhance your skills and stay ahead in the field.
 
 Prompt engineering is a dynamic and evolving field, and skilled prompt engineers play a crucial role in harnessing the capabilities of LLM AI models effectively.
-
-
-## Take the next step
-
-> [!div class="nextstepaction"]
-> [Create your first prompt](./your-first-prompt.md)
