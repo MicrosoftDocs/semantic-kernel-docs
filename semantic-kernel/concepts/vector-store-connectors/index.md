@@ -142,6 +142,7 @@ string descriptionText = "A place where everyone can be happy.";
 ulong hotelId = 1;
 
 // Create a record and generate a vector for the description using your chosen embedding generation implementation.
+// Just showing a placeholder embedding generation method here for brevity.
 await collection.UpsertAsync(new Hotel
 {
     HotelId = hotelId,
@@ -186,10 +187,14 @@ retrieved_hotel = await collection.get(hotel_id)
 
 ::: zone pivot="programming-language-csharp"
 
+> [!TIP]
+> For more information on how to generate embeddings see [embedding generation.](./embedding-generation.md).
+
 ### Do a vector search
 
 ```csharp
-// Generate a vector for the text to search for using your chosen embedding generation implementation.
+// Generate a vector for your search text, using your chosen embedding generation implementation.
+// Just showing a placeholder method here for brevity.
 var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 // Do the search.
 var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Limit = 1 }).ToListAsync()
@@ -204,6 +209,9 @@ Console.WriteLine("Found hotel description: " + hotel.Description);
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
+
+> [!TIP]
+> For more information on how to generate embeddings see [embedding generation.](./embedding-generation.md).
 
 ## Next steps
 

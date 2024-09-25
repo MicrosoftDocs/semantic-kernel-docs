@@ -15,11 +15,51 @@ ms.service: semantic-kernel
 
 Semantic Kernel provides vector search capabilities as part of its Vector Store abstractions. This supports filtering and many other options, which this article will explain in more detail.
 
+## Vector Search
+
 The `VectorizedSearchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions` class as input.
+This method is available on `IVectorizedSearch<TRecord>` interface. `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorizedSearch<TRecord>`, so also includes this method.
+
+Assuming you have a collection that already contains data, you can easily search it. Here is an example using Qdrant.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.Qdrant;
+using Qdrant.Client;
+
+// Create a Qdrant VectorStore object and choose an existing collection that already contains records.
+var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
+var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
+
+// Generate a vector for your search text, using your chosen embedding generation implementation.
+// Just showing a placeholder method here for brevity.
+var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
+
+// Do the search, passing an options object with a Top value to limit resulst to the single top match.
+var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).ToListAsync()
+
+// Inspect the returned hotel.
+Hotel hotel = searchResult.First().Record;
+Console.WriteLine("Found hotel description: " + hotel.Description);
+```
+
+> [!TIP]
+> For more information on how to generate embeddings see [embedding generation.](./embedding-generation.md).
+
+## Supported Vector Types
+
+`VectorizedSearchAsync` takes a generic type as the vector parameter.
+The types of vectors supported vary by each data store.
+See [the documentation for each connector](./out-of-the-box-connectors/index.md) for the list of supported vector types.
+
+It is also important for the search vector type to match the target vector that is being searched, e.g. if you have two vectors
+on the same record with different vector types.
+See [VectorPropertyName](#vectorpropertyname) for how to to pick a target vector if you have more than one per record.
+
+## Vector Search Options
 
 The following options can be provided using the `VectorSearchOptions` class.
 
-## VectorPropertyName
+### VectorPropertyName
 
 The `VectorPropertyName` option can be used to provide the name of the specific vector property to target during the search.
 If none is provided, the first vector found on the data model or specified in the record definition will be used.
@@ -60,7 +100,7 @@ var vectorSearchOptions = new VectorSearchOptions
 var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).ToListAsync()
 ```
 
-## Top and Skip
+### Top and Skip
 
 The `Top` and `Skip` options allow you to limit the number of results to the Top n results and
 to skip a number of results from the start of the resultset.
@@ -79,7 +119,7 @@ var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSe
 
 The default values for `Top` is 3 and `Skip` is 0.
 
-## IncludeVectors
+### IncludeVectors
 
 The `IncludeVectors` option allows you to specify whether you wish to return vectors in the search results.
 If `false`, the vector properties on the returned model will be left null.
@@ -98,7 +138,7 @@ var vectorSearchOptions = new VectorSearchOptions
 var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).ToListAsync()
 ```
 
-## VectorSearchFilter
+### VectorSearchFilter
 
 The `VectorSearchFilter` option can be used to provide a filter for filtering the records in the chosen collection
 before applying the vector search.
@@ -162,11 +202,11 @@ var vectorSearchOptions = new VectorSearchOptions
 searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).ToListAsync();
 ```
 
-### EqualTo filter clause
+#### EqualTo filter clause
 
 Use `EqualTo` for a direct comparison between property and value.
 
-### AnyTagEqualTo filter clause
+#### AnyTagEqualTo filter clause
 
 Use `AnyTagEqualTo` to check if any of the strings, stored in a tag property in the vector store, contains a provided value.
 For a property to be considered a tag property, it needs to be a List, array or other enumerable of string.
