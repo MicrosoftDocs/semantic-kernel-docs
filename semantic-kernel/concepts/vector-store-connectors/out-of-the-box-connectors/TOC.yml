@@ -2,6 +2,10 @@
   href: index.md
 - name: Azure AI Search connector
   href: azure-ai-search-connector.md
+- name: Azure CosmosDB MongoDB connector
+  href: azure-cosmosdb-mongodb-connector.md
+- name: Azure CosmosDB NoSQL connector
+  href: azure-cosmosdb-nosql-connector.md
 - name: Pinecone connector
   href: pinecone-connector.md
 - name: Qdrant connector
@@ -10,3 +14,5 @@
   href: redis-connector.md
 - name: Volatile (in-memory) connector
   href: volatile-connector.md
+- name: Weaviate connector
+  href: weaviate-connector.md

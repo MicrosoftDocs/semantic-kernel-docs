@@ -42,7 +42,7 @@ Add the Redis Vector Store connector nuget package to your project.
 dotnet add package Microsoft.SemanticKernel.Connectors.Redis --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;

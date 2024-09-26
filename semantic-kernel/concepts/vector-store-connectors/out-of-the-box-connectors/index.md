@@ -17,12 +17,13 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 > [!IMPORTANT]
 > Some connectors are using SDKs that are not officially supported by Microsoft or by the Database provider. The *Officially supported SDK* column lists which are using officially supported SDKs and which are not.
 
-| Vector Store Connectors                             |  C#            | Python          | Java           | Officially supported SDK |
-|-----------------------------------------------------|:--------------:|:---------------:|:--------------:|:---------------------------------:|
-| [Azure AI Search](./azure-ai-search-connector.md)   | ✅             | ✅             | In Development | ✅                                |
-| Cosmos DB No SQL                                    | In Development | In Development  | In Development | ✅                                |
-| Cosmos DB MongoDB                                   | In Development | In Development  | In Development | ✅                                |
-| [Pinecone](./pinecone-connector.md)                 | ✅             | In Development | In Development | C#: ❌ Python: ✅                               |
-| [Qdrant](./qdrant-connector.md)                     | ✅             | ✅             | In Development | ✅                                |
-| [Redis](./redis-connector.md)                       | ✅             | ✅             | In Development | ✅                                |
-| [Volatile (In-Memory)](./volatile-connector.md)     | ✅             | ✅             | In Development | N/A                               |
+| Vector Store Connectors                                    |  C#            | Python          | Java           | Officially supported SDK           |
+|------------------------------------------------------------|:--------------:|:---------------:|:--------------:|:----------------------------------:|
+| [Azure AI Search](./azure-ai-search-connector.md)          | ✅             | ✅             | In Development | ✅                                |
+| [Cosmos DB No SQL](./azure-cosmosdb-mongodb-connector.md)  | ✅             | In Development  | In Development | ✅                                |
+| [Cosmos DB MongoDB](./azure-cosmosdb-nosql-connector.md)   | ✅             | In Development  | In Development | ✅                                |
+| [Pinecone](./pinecone-connector.md)                        | ✅             | In Development  | In Development | C#: ❌ Python: ✅                |
+| [Qdrant](./qdrant-connector.md)                            | ✅             | ✅             | In Development | ✅                                |
+| [Redis](./redis-connector.md)                              | ✅             | ✅             | In Development | ✅                                |
+| [Volatile (In-Memory)](./volatile-connector.md)            | ✅             | ✅             | In Development | N/A                                |
+| [Weaviate](./weaviate-connector.md)                        | ✅             | In Development  | In Development | N/A                               |
