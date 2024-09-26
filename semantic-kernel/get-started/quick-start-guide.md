@@ -105,11 +105,34 @@ To get started, follow these steps:
 
 ::: zone pivot="programming-language-csharp"
 
+1. Create a new .NET Console project using this command:
+
+```bash
+dotnet new console
+```
+
+2. Install the following .NET dependencies:
+
+```bash
+dotnet add package Microsoft.SemanticKernel
+dotnet add package Microsoft.Extensions.Logging
+dotnet add package Microsoft.Extensions.Logging.Console
+```
+
+3. Replace the content of the `Program.cs` file with this code:
+
 ```csharp
 // Import packages
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
+
+// Populate values from your OpenAI deployment
+var modelId = "";
+var endpoint = "";
+var apiKey = "";
 
 // Create a kernel with Azure OpenAI chat completion
 var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
@@ -154,7 +177,7 @@ do {
 
     // Add the message from the agent to the chat history
     history.AddMessage(result.Role, result.Content ?? string.Empty);
-} while (userInput is not null)
+} while (userInput is not null);
 ```
 
 ::: zone-end
@@ -468,6 +491,7 @@ In your own code, you can create a plugin that interacts with any external servi
 
 ```csharp
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 using Microsoft.SemanticKernel;
 
 public class LightsPlugin
@@ -485,7 +509,7 @@ public class LightsPlugin
    [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
-      return lights
+      return lights;
    }
 
    [KernelFunction("change_state")]
@@ -650,6 +674,12 @@ var result = await chatCompletionService.GetChatMessageContentAsync(
     executionSettings: openAIPromptExecutionSettings,
     kernel: kernel
 );
+```
+
+Run the program using this command:
+
+```bash
+dotnet run
 ```
 
 ::: zone-end
