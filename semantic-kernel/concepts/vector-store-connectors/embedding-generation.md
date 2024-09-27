@@ -15,6 +15,9 @@ ms.service: semantic-kernel
 > The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
 
 Semantic Kernel supports generating embeddings using many popular AI services out of the box.
+
+::: zone pivot="programming-language-csharp"
+
 These services can be constructed directly or added to a dependency injection container and resolved from there.
 
 ## Constructing an embedding generator
@@ -116,3 +119,19 @@ public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```csharp
 new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 1536 }
 ```
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end

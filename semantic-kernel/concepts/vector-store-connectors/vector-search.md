@@ -15,6 +15,8 @@ ms.service: semantic-kernel
 
 Semantic Kernel provides vector search capabilities as part of its Vector Store abstractions. This supports filtering and many other options, which this article will explain in more detail.
 
+::: zone pivot="programming-language-csharp"
+
 ## Vector Search
 
 The `VectorizedSearchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions` class as input.
@@ -210,3 +212,19 @@ Use `EqualTo` for a direct comparison between property and value.
 
 Use `AnyTagEqualTo` to check if any of the strings, stored in a tag property in the vector store, contains a provided value.
 For a property to be considered a tag property, it needs to be a List, array or other enumerable of string.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
