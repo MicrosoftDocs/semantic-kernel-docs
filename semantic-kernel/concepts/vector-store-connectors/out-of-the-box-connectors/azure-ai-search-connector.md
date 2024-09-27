@@ -30,13 +30,13 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                |
 
-## Functionality not supported
+## Limitations
 
-Notable Azure AI Search funtionality not supported.
+Notable Azure AI Search functionality limitations.
 
-| Feature Area                                                        | Workaround                                                                                     |
-|---------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
-| Configuring full text search analyzers during collection creation.  | Use the Azure AI Search Client SDK directly for collection creation                            |
+| Feature Area                                                                         | Workaround                                                                                     |
+|--------------------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
+| Configuring full text search analyzers during collection creation is not supported.  | Use the Azure AI Search Client SDK directly for collection creation                            |
 
 ::: zone pivot="programming-language-csharp"
 
@@ -48,7 +48,7 @@ Add the Azure AI Search Vector Store connector NuGet package to your project.
 dotnet add package Microsoft.SemanticKernel.Connectors.AzureAISearch --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Azure;

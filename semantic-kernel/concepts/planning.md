@@ -274,6 +274,3 @@ Before we deprecate these planners, we will provide guidance on how to migrate y
 
 ## Next steps
 Now that you understand how planners work in Semantic Kernel, you can learn more about how influence your AI agent so that they best plan and execute tasks on behalf of your users.
-
-> [!div class="nextstepaction"]
-> [Learn about personas](./personas.md)

@@ -16,7 +16,7 @@ For example, filters are leveraged to validate permissions before an approval fl
 
 A good example of filters is provided [here](https://devblogs.microsoft.com/semantic-kernel/filters-in-semantic-kernel/) in our detailed Semantic Kernel blog post on Filters.
  
- ![Semantic Kernel Filters](../media/WhatAreFilters.png)
+ ![Semantic Kernel Filters](../../media/WhatAreFilters.png)
 
 There are 3 types of filters:
 

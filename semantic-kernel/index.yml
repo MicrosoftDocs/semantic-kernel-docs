@@ -21,8 +21,8 @@ productDirectory:
       links:
         - url: /semantic-kernel/overview/index
           text: Introduction to Semantic Kernel
-        - url: /semantic-kernel/get-started/contributing
-          text: Contributing to Semantic Kernel
+        - url: /semantic-kernel/get-started/supported-languages
+          text: Supported Languages Semantic Kernel
     - title: Quick Start
       imageSrc: /semantic-kernel/media/Quick-start.svg
       links:
@@ -33,24 +33,28 @@ productDirectory:
     - title: Concepts
       imageSrc: /semantic-kernel/media/Concepts.svg
       links:
-        - url: /semantic-kernel/concepts/agents
-          text: Agents
+        - url: /semantic-kernel/concepts/kernel
+          text: Kernel
         - url: /semantic-kernel/concepts/plugins/index
           text: Plugins
-        - url: /semantic-kernel/concepts/planning
-          text: Planning
-        - url: /semantic-kernel/concepts/personas
-          text: Personas
-    - title: Integrations
+        - url: /semantic-kernel/concepts/vector-store-connectors/index
+          text: Memory
+    - title: Frameworks
       imageSrc: /semantic-kernel/media/Integrations.svg
       links:
-        - url: /semantic-kernel/integrations/
-          text: Browse available features by language
-    - title: Enterprise Readiness
+        - url: /semantic-kernel/frameworks/process/process-framework
+          text: Process Framework
+        - url: /semantic-kernel/frameworks/agent/agents
+          text: Agent Framework    
+    - title: Enterprise Components
       imageSrc: /semantic-kernel/media/Security.svg
       links:
-        - url: /semantic-kernel/enterprise-readiness/observability/index
+        - url: /semantic-kernel/concepts/enterprise-readiness/observability/index
           text: Observability
+        - url: /semantic-kernel/concepts/enterprise-readiness/SECURITY
+          text: Security    
+        - url: /semantic-kernel/concepts/enterprise-readiness/filters
+          text: Filters
     - title: Connect with us
       imageSrc: /semantic-kernel/media/whats-new.svg
       links:
