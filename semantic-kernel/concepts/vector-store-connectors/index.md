@@ -217,4 +217,4 @@ Console.WriteLine("Found hotel description: " + hotel.Description);
 
 > [!div class="nextstepaction"]
 > [Learn about the Vector Store data architecture](./data-architecture.md)
-> [How to ingest data into a Vector Store](../../how-to/vector-store-connectors/vector-store-data-ingestion.md)
+> [How to ingest data into a Vector Store](./vector-store-data-ingestion.md)

@@ -14,7 +14,7 @@
   href: serialization.md
 - name: Out-of-the-box connectors
   href: out-of-the-box-connectors/TOC.yml
-- name: Ingest data into a Vector Store
+- name: How to ingest data into a Vector Store
   href: vector-store-data-ingestion.md
-- name: Build a custom mapper for a Vector Store connector
+- name: How to build a custom mapper for a Vector Store connector
   href: vector-store-custom-mapper.md
