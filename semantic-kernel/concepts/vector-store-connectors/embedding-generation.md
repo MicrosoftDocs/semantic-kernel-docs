@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
 ms.author: westey
-ms.date: 23/09/2024
+ms.date: 09/23/2024
 ms.service: semantic-kernel
 ---
 
@@ -32,7 +32,7 @@ ITextEmbeddingGenerationService azureOpenAITES = new AzureOpenAITextEmbeddingGen
     "https://{myservice}.openai.azure.com/",
     "apikey");
 
-// Constructing an Olama embedding generatino service direclty.
+// Constructing an Olama embedding generation service directly.
 ITextEmbeddingGenerationService olamaTES = new OllamaTextEmbeddingGenerationService(
     "mxbai-embed-large",
     new Uri("http://localhost:11434"));
@@ -54,20 +54,24 @@ var kernelBuilder = Kernel
 
 ## Generating embeddings
 
-To use the text embedding service you already created, just call the `GenerateEmbeddingAsync` method.
+To use the `ITextEmbeddingGenerationService` you created, just call the `GenerateEmbeddingAsync` method
+on it.
 
 Here is an example of generating embeddings when uploading records.
 
 ```csharp
-public async Task GenerateEmbeddingsAndUpsert(ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<ulong, Hotel> collection)
+public async Task GenerateEmbeddingsAndUpsertAsync(
+    ITextEmbeddingGenerationService textEmbeddingGenerationService,
+    IVectorStoreRecordCollection<ulong, Hotel> collection)
 {
     // Upsert a record.
     string descriptionText = "A place where everyone can be happy.";
     ulong hotelId = 1;
 
     // Generate the embedding.
-    ReadOnlyMemory<float> embedding = await textEmbeddingGenerationService.GenerateEmbeddingAsync(descriptionText);
-    
+    ReadOnlyMemory<float> embedding =
+        await textEmbeddingGenerationService.GenerateEmbeddingAsync(descriptionText);
+
     // Create a record and upsert with the already generated embedding.
     await collection.UpsertAsync(new Hotel
     {
@@ -83,23 +87,30 @@ public async Task GenerateEmbeddingsAndUpsert(ITextEmbeddingGenerationService em
 Here is an example of generating embeddings when searching.
 
 ```csharp
-public async Task GenerateEmbeddingsAndSearch(ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<ulong, Hotel> collection)
+public async Task GenerateEmbeddingsAndSearchAsync(
+    ITextEmbeddingGenerationService textEmbeddingGenerationService,
+    IVectorStoreRecordCollection<ulong, Hotel> collection)
 {
     // Upsert a record.
     string descriptionText = "Find me a hotel with happiness in mind.";
 
     // Generate the embedding.
-    ReadOnlyMemory<float> searchEmbedding = await textEmbeddingGenerationService.GenerateEmbeddingAsync(descriptionText);
-    
+    ReadOnlyMemory<float> searchEmbedding =
+        await textEmbeddingGenerationService.GenerateEmbeddingAsync(descriptionText);
+
     // Search using the already generated embedding.
-    searchResult = await collection.VectorizedSearchAsync(searchEmbedding).ToListAsync();
+    List<VectorSearchResult<Hotel>> searchResult = await collection.VectorizedSearchAsync(searchEmbedding).ToListAsync();
+
+    // Print the first search result.
+    Console.WriteLine("Score for first result: " + searchResult.FirstOrDefault()?.Score);
+    Console.WriteLine("Hotel description for first result: " + searchResult.FirstOrDefault()?.Record.Description);
 }
 ```
 
 ## Embedding dimensions
 
 Vector databases typically require you to specify the number of dimensions that each vector has when creating the collection.
-Different embedding models typiclaly support generating vectors with different dimension sizes. E.g. Open AI `text-embedding-ada-002`
+Different embedding models typically support generating vectors with different dimension sizes. E.g. Open AI `text-embedding-ada-002`
 generates vectors with 1536 dimensions. Some models also allow a developer to choose the number of dimensions they want in the
 output vector, e.g. Google `text-embedding-004` produces vectors with 768 dimension by default, but allows a developer to
 choose any number of dimensions between 1 and 768.
@@ -119,6 +130,11 @@ public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```csharp
 new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 1536 }
 ```
+
+> [!TIP]
+> For more information on how to annotate your data model, refer to [defining your data model](./defining-your-data-model.md).
+> [!TIP]
+> For more information on creating a record definition, refer to [defining your schema with a record definition](./schema-with-record-definition.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

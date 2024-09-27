@@ -188,7 +188,7 @@ retrieved_hotel = await collection.get(hotel_id)
 ::: zone pivot="programming-language-csharp"
 
 > [!TIP]
-> For more information on how to generate embeddings see [embedding generation.](./embedding-generation.md).
+> For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
 
 ### Do a vector search
 
@@ -211,7 +211,7 @@ Console.WriteLine("Found hotel description: " + hotel.Description);
 ::: zone-end
 
 > [!TIP]
-> For more information on how to generate embeddings see [embedding generation.](./embedding-generation.md).
+> For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
 
 ## Next steps
 
