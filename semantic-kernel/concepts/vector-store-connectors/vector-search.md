@@ -8,7 +8,7 @@ ms.author: westey
 ms.date: 09/23/2024
 ms.service: semantic-kernel
 ---
-# Vector seearch using Semantic Kernel Vector Store connectors (Experimental)
+# Vector search using Semantic Kernel Vector Store connectors (Experimental)
 
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
