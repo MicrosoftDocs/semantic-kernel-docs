@@ -370,11 +370,11 @@ After running the application, head over to the Application Insights portal to i
 
 Navigate to the **Transaction search** tab to view the transactions that have been recorded.
 
-![AppInsights Left Panel](../../media/telemetry-app-insights-left-panel-transaction-search-highlight.png)
+![AppInsights Left Panel](../../../media/telemetry-app-insights-left-panel-transaction-search-highlight.png)
 
 Hit refresh to see the latest transactions. When results appear, click on one of them to see more details.
 
-![AppInsights Transaction Search](../../media/telemetry-app-insights-transaction-search.png)
+![AppInsights Transaction Search](../../../media/telemetry-app-insights-transaction-search.png)
 
 Toggle between the **View all** and **View timeline** button to see all traces and dependencies of the transaction in different views.
 
@@ -383,13 +383,13 @@ Toggle between the **View all** and **View timeline** button to see all traces a
 
 For this particular example, you should see two dependencies and multiple traces. The first dependency represents a kernel function that is created from the prompt. The second dependency represents the call to the Azure OpenAI chat completion model. When you expand the `chat.completion {your-deployment-name}` dependency, you should see the details of the call. A set of `gen_ai` attributes are attached to the dependency, which provides additional context about the call.
 
-![GenAI Attributes](../../media/telemetry-app-insights-gen-ai-attributes.png)
+![GenAI Attributes](../../../media/telemetry-app-insights-gen-ai-attributes.png)
 
 ::: zone pivot="programming-language-csharp"
 
 If you have the switch `Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
 
-![GenAI Sensitive Attributes](../../media/telemetry-app-insights-gen-ai-attributes-sensitive.png)
+![GenAI Sensitive Attributes](../../../media/telemetry-app-insights-gen-ai-attributes-sensitive.png)
 
 Click on them and you will see the prompt and the completion result under the custom properties section.
 
@@ -399,7 +399,7 @@ Click on them and you will see the prompt and the completion result under the cu
 
 If you have the environment variable `SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE` set to `true`, you will also see two traces that carry the sensitive data of the prompt and the completion result.
 
-![GenAI Sensitive Attributes](../../media/telemetry-app-insights-gen-ai-attributes-sensitive.png)
+![GenAI Sensitive Attributes](../../../media/telemetry-app-insights-gen-ai-attributes-sensitive.png)
 
 Click on them and you will see the prompt and the completion result under the custom properties section.
 
@@ -434,7 +434,7 @@ dependencies
 |project timestamp, messages = customDimensions, token=iff(customDimensions contains "gen_ai.prompt", prompt_token, completion_token)
 ```
 
-![Query Result](../../media/telemetry-app-insights-kusto-token-usage-per-message.png)
+![Query Result](../../../media/telemetry-app-insights-kusto-token-usage-per-message.png)
 
 ## Next steps
 

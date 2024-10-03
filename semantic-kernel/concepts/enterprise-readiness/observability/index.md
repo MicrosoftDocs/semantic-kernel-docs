@@ -31,11 +31,11 @@ Semantic Kernel is designed to be observable. It emits logs, metrics, and traces
 Specifically, Semantic Kernel provides the following observability features:
 
 - **Logging**: Semantic Kernel logs meaningful events and errors from the kernel, kernel plugins and functions, as well as the AI connectors.
-    ![Logs and events](../../media/telemetry-log-events-overview-app-insights.png)
+    ![Logs and events](../../../media/telemetry-log-events-overview-app-insights.png)
     > [!IMPORTANT]
     > [Traces in Application Insights](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete#trace) represent traditional log entries and [OpenTelemetry span events](https://opentelemetry.io/docs/concepts/signals/traces/#span-events). They are not the same as distributed traces.
 - **Metrics**: Semantic Kernel emits metrics from kernel functions and AI connectors. You will be able to monitor metrics such as the kernel function execution time, the token consumption of AI connectors, etc.
-    ![Metrics](../../media/telemetry-metrics-overview-app-insights.png)
+    ![Metrics](../../../media/telemetry-metrics-overview-app-insights.png)
 - **Tracing**: Semantic Kernel supports distributed tracing. You can track activities across different services and within Semantic Kernel.
     ![Complete end-to-end transaction of a request](../../media/telemetry-trace-overview-app-insights.png)
 
