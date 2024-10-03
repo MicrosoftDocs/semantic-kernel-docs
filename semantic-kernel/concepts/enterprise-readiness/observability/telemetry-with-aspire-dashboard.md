@@ -372,14 +372,14 @@ After running the application, head over to the dashboard to inspect the telemet
 
 If this is your first time running the application after starting the dashboard, you should see a one trace is the `Traces` tab. Click on the trace to view more details.
 
-![TracesOverview](../../media/telemetry-aspire-dashboard-traces-overview.png)
+![TracesOverview](../../../media/telemetry-aspire-dashboard-traces-overview.png)
 
 In the trace details, you can see the span that represents the prompt function and the span that represents the chat completion model. Click on the chat completion span to see details about the request and response.
 
 > [!TIP]
 > You can filter the attributes of the spans to find the one you are interested in.
 
-![TracesDetails](../../media/telemetry-aspire-dashboard-trace-detail.png)
+![TracesDetails](../../../media/telemetry-aspire-dashboard-trace-detail.png)
 
 ### Logs
 
