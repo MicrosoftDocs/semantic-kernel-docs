@@ -421,7 +421,7 @@ After running the application, head over to the dashboard to inspect the telemet
 
 Find the trace for the application in the **Traces** tab. You should five spans in the trace:
 
-![TracesAdvancedScenarioDotNet](../../media/telemetry-advanced-scenarios-trace-detail-dotnet.png)
+![TracesAdvancedScenarioDotNet](../../../media/telemetry-advanced-scenarios-trace-detail-dotnet.png)
 
 These 5 spans represent the internal operations of the kernel with auto function calling enabled. It first invokes the model, which requests a function call. Then the kernel automatically executes the function `FindAvailableRoomsAsync` and returns the result to the model. The model then requests another function call to make a reservation, and the kernel automatically executes the function `BookRoomAsync` and returns the result to the model. Finally, the model returns a natural language response to the user.
 
@@ -468,7 +468,7 @@ This is the chat history that gets built up as the model and the kernel interact
 
 Find the trace for the application in the **Traces** tab. You should five spans in the trace grouped under the `AutoFunctionInvocationLoop` span:
 
-![TracesAdvancedScenarioPython](../../media/telemetry-advanced-scenarios-trace-detail-python.png)
+![TracesAdvancedScenarioPython](../../../media/telemetry-advanced-scenarios-trace-detail-python.png)
 
 These 5 spans represent the internal operations of the kernel with auto function calling enabled. It first invokes the model, which requests a function call. Then the kernel automatically executes the function `find_available_rooms` and returns the result to the model. The model then requests another function call to make a reservation, and the kernel automatically executes the function `book_room` and returns the result to the model. Finally, the model returns a natural language response to the user.
 
@@ -549,7 +549,7 @@ public async Task<string> BookRoomAsync(string room)
 
 Run the application again and observe the trace in the dashboard. You should see the span representing the kernel function call with an error:
 
-![TracesAdvancedScenarioErrorDotNet](../../media/telemetry-advanced-scenarios-trace-detail-error-handling-dotnet.png)
+![TracesAdvancedScenarioErrorDotNet](../../../media/telemetry-advanced-scenarios-trace-detail-error-handling-dotnet.png)
 
 > [!NOTE]
 > It is very likely that the model responses to the error may vary each time you run the application, because the model is stochastic. You may see the model reserving all three rooms at the same time, or reserving one the first time then reserving the other two the second time, etc.
@@ -575,7 +575,7 @@ async def book_room(self, room: str) -> Annotated[str, "A confirmation message."
 
 Run the application again and observe the trace in the dashboard. You should see the span representing the kernel function call with an error and the stack trace:
 
-![TracesAdvancedScenarioErrorPython](../../media/telemetry-advanced-scenarios-trace-detail-error-handling-python.png)
+![TracesAdvancedScenarioErrorPython](../../../media/telemetry-advanced-scenarios-trace-detail-error-handling-python.png)
 
 > [!NOTE]
 > It is very likely that the model responses to the error may vary each time you run the application, because the model is stochastic. You may see the model reserving all three rooms at the same time, or reserving one the first time then reserving the other two the second time, etc.
