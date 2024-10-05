@@ -1,4 +1,18 @@
-- name: Personas
-  href: personas.md
-- name: Agents
-  href: agents.md
+- name: Overview&colon; Semantic Kernel Agent Framework
+  href: index.md
+- name: Semantic Kernel Agent Architecture
+  href: agent-architecture.md
+- name: Exploring Chat Completion Agent
+  href: chat-completion-agent.md
+- name: Exploring Open AI Assistant Agent
+  href: assistant-agent.md
+- name: Exploring Agent Collaboration
+  href: agent-chat.md
+- name: Create an Agent from a Template
+  href: agent-templates.md
+- name: Configuring Agents with Plugins
+  href: agent-functions.md
+- name: How to Stream Agent Responses
+  href: agent-streaming.md
+- name: How-To with Agents
+  href: examples/TOC.yml
