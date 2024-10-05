@@ -769,6 +769,21 @@
             "source_path": "semantic-kernel/get-started/contributing.md",
             "redirect_url": "/semantic-kernel/support/contributing.md",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/frameworks/agent/agent-framework.md",
+            "redirect_url": "semantic-kernel/frameworks/agent/index.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/agents.md",
+            "redirect_url": "semantic-kernel/frameworks/agent/index.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/personas.md",
+            "redirect_url": "semantic-kernel/frameworks/agent/index.md",
+            "redirect_document_id": false
         }
     ]
 }
