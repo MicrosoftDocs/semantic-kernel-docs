@@ -2,15 +2,16 @@
 title: Create an Agent from a Semantic Kernel Template (Experimental)
 description: Describes how to use a Semantic Kernel template to define an agent.
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # Create an Agent from a Semantic Kernel Template (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 ## Prompt Templates in Semantic Kernel
 

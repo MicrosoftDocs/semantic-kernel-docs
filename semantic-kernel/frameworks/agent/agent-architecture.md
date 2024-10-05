@@ -2,15 +2,16 @@
 title: Semantic Kernel Agent Architecture (Experimental)
 description: An overview of the architecture of the Semantic Kernel Agent Framework and how it aligns with core Semantic Kernel features.
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # An Overview of the Agent Architecture (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 This article explores the key concepts and priorities that shaped the development of the _Agent Framework_. It delves into the foundational principles, design objectives, and strategic goals that influenced its creation, providing insight into how these elements come together to drive the framework's functionality and effectiveness.
 
@@ -162,12 +163,12 @@ Agent messaging, including both input and response, is built upon the core conte
 
 ::: zone pivot="programming-language-csharp"
 
-- [`ChatHistory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatcompletion.chathistoryernel)
-- [`ChatMessageContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatmessagecontenternel)
+- [`ChatHistory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatcompletion.chathistory)
+- [`ChatMessageContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatmessagecontent)
 - [`KernelContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelcontent)
-- [`StreamingKernelContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.streamingkernelcontenternel)
-- [`FileReferenceContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.filereferencecontenternel)
-[`AnnotationContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.openai.annotationcontenternel)
+- [`StreamingKernelContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.streamingkernelcontent)
+- [`FileReferenceContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.filereferencecontent)
+[`AnnotationContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.openai.annotationcontent)
 
 
 ::: zone-end

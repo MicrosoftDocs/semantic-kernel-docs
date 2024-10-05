@@ -2,15 +2,16 @@
 title: Exploring Agent Collaboration in Agent Chat (Experimental)
 description: An exploration of defining and managing agent collaboration via Agent Chat.
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # Exploring Agent Collaboration in _Agent Chat_ (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 Detailed API documentation related to this discussion is available at:
 

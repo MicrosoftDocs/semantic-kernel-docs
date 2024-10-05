@@ -2,15 +2,16 @@
 title: Semantic Kernel Agent Framework (Experimental)
 description: Introducing the Semantic Kernel Agent Framework
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # Semantic Kernel Agent Framework (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 The _Semantic Kernel Agent Framework_ provides a platform within the Semantic Kernel eco-system that allow for the creation of AI **agents** and the ability to  incorporate **agentic patterns** into any application based on the same patterns and features that exist in the core _Semantic Kernel_ framework.
 

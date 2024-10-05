@@ -2,15 +2,16 @@
 title: Configuring Agents with Semantic Kernel Plugins. (Experimental)
 description: Describes how to use Semantic Kernal plugins and function calling with agents.
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # Configuring Agents with Semantic Kernel Plugins (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 ## Functions and Plugins in Semantic Kernel
 

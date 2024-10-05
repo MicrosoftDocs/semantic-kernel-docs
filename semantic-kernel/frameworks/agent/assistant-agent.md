@@ -2,15 +2,16 @@
 title: Exploring the Semantic Kernel Open AI Assistant Agent (Experimental)
 description: An exploration of the definition, behaviors, and usage patterns for a `OpenAIAssistantAgent`
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # Exploring the _Semantic Kernel_ _Open AI Assistant Agent_ (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING] 
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 Detailed API documentation related to this discussion is available at:
 

@@ -2,15 +2,16 @@
 title: How-To&colon; _Chat Completion Agent_ (Experimental)
 description: A step-by-step walk-through of defining and utilizing the features of a Chat Completion Agent.
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # How-To: _Chat Completion Agent_ (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 ## Overview
 

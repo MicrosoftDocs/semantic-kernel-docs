@@ -2,15 +2,16 @@
 title: How-To&colon; Coordinate Agent Collaboration using Agent Group Chat (Experimental)
 description: TBD $$$
 zone_pivot_groups: programming-languages
-author: crickman, evan.mattson
+author: crickman
 ms.topic: tutorial
-ms.author: crickman, evan.mattson
+author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
 # How-To: Coordinate Agent Collaboration using Agent Group Chat (Experimental)
 
-> [!WARNING] The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
 ## Overview
 
