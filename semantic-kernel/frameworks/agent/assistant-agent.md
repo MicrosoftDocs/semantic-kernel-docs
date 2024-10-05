@@ -4,7 +4,7 @@ description: An exploration of the definition, behaviors, and usage patterns for
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
-author: crickman
+ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---

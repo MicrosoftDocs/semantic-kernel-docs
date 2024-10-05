@@ -4,7 +4,7 @@ description: Describes how to use a Semantic Kernel template to define an agent.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
-author: crickman
+ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
