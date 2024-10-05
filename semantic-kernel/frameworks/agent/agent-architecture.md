@@ -66,7 +66,7 @@ The  [_Agent Chat_](./agent-chat.md) class serves as the foundational component 
 This structure facilitates more complex, multi-agent scenarios where different agents can work together, share information, and dynamically respond to evolving conversations, making it an ideal solution for advanced use cases such as customer support, multi-faceted task management, or collaborative problem-solving environments.
 
 #### Deep Dive:
-- [`AgentChat`](./agent-chat)
+- [`AgentChat`](./agent-chat.md)
 
 
 ## Agent Channel
