@@ -1,6 +1,6 @@
 ---
 title: How-To&colon; _Open AI Assistant Agent_ Code Interpreter (Experimental)
-description: A step-by-step walk-through of defining and utilizing the features of an Open AI Assistant Agent.
+description: A step-by-step walk-through of defining and utilizing the code-interpreter tool of an Open AI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial

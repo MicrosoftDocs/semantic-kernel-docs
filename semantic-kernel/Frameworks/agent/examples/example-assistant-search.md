@@ -1,6 +1,6 @@
 ---
 title: How-To&colon; _Open AI Assistant Agent_ File Search (Experimental)
-description: A step-by-step walk-through of defining and utilizing the features of an Open AI Assistant Agent.
+description: A step-by-step walk-through of defining and utilizing the file-search tool of an Open AI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
