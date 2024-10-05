@@ -37,7 +37,7 @@ Start by creating a _Console_ project. Then, include the following package refer
   </ItemGroup>
 ```
 
-Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubModels.cs`) from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Plugins/.GitHub).  Add these files in your project folder.
+Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubModels.cs`) from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Plugins/GitHub).  Add these files in your project folder.
 
 ::: zone-end
 
