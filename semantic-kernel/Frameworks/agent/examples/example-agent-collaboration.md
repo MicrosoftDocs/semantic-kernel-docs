@@ -437,7 +437,7 @@ AgentGroupChat chat =
                 {
                     // Always start with the editor agent.
                     InitialAgent = agentReviewer,
-                    // Save tokens by only including the final two responses
+                    // Save tokens by only including the final response
                     HistoryReducer = historyReducer,
                     // The prompt variable name for the history argument.
                     HistoryVariableName = "lastmessage",
@@ -733,7 +733,7 @@ public static class Program
                         {
                             // Always start with the editor agent.
                             InitialAgent = agentReviewer,
-                            // Save tokens by only including the final two responses
+                            // Save tokens by only including the final response
                             HistoryReducer = historyReducer,
                             // The prompt variable name for the history argument.
                             HistoryVariableName = "lastmessage",
