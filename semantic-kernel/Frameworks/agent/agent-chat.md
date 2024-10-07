@@ -16,9 +16,9 @@ ms.service: semantic-kernel
 Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
-- [`AgentChat`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.agentchat)
-- [`AgentGroupChat`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.agentgroupchat)
-- [`Microsoft.SemanticKernel.Agents.Chat`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat)
+- [`AgentChat`](/dotnet/api/microsoft.semantickernel.agents.agentchat)
+- [`AgentGroupChat`](/dotnet/api/microsoft.semantickernel.agents.agentgroupchat)
+- [`Microsoft.SemanticKernel.Agents.Chat`](/dotnet/api/microsoft.semantickernel.agents.chat)
 
 ::: zone-end
 
@@ -183,7 +183,7 @@ Agent responses are returned asynchronously as they are generated, allowing the 
 
 ::: zone pivot="programming-language-csharp"
 
-.NET _Execution Settings_ API: [`AgentGroupChatSettings`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.agentgroupchatsettings)
+.NET _Execution Settings_ API: [`AgentGroupChatSettings`](/dotnet/api/microsoft.semantickernel.agents.chat.agentgroupchatsettings)
 
 ```csharp
 // Define agents
@@ -309,10 +309,10 @@ If known, an initial agent may be specified to always take the first turn.  A hi
 ::: zone pivot="programming-language-csharp"
 
 .NET Selection Strategy API:
-- [`SelectionStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.selectionstrategy)
-- [`SequentialSelectionStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.sequentialselectionstrategy)
-- [`KernelFunctionSelectionStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
-- [`Microsoft.SemanticKernel.Agents.History`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.history)
+- [`SelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.selectionstrategy)
+- [`SequentialSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.sequentialselectionstrategy)
+- [`KernelFunctionSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
+- [`Microsoft.SemanticKernel.Agents.History`](/dotnet/api/microsoft.semantickernel.agents.history)
 
 ```csharp
 // Define the agent names for use in the function template
@@ -449,12 +449,12 @@ This strategy is defined by a base class that can be extended to implement custo
 ::: zone pivot="programming-language-csharp"
 
 .NET Selection Strategy API:
-- [`TerminationStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.terminationstrategy)
-- [`RegexTerminationStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.regexterminationstrategy)
-- [`KernelFunctionSelectionStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
-- [`KernelFunctionTerminationStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionterminationstrategy)
-- [`AggregatorTerminationStrategy`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chat.aggregatorterminationstrategy)
-- [`Microsoft.SemanticKernel.Agents.History`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.history)
+- [`TerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.terminationstrategy)
+- [`RegexTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.regexterminationstrategy)
+- [`KernelFunctionSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
+- [`KernelFunctionTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionterminationstrategy)
+- [`AggregatorTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.aggregatorterminationstrategy)
+- [`Microsoft.SemanticKernel.Agents.History`](/dotnet/api/microsoft.semantickernel.agents.history)
 
 ```csharp
 // Initialize a Kernel with a chat-completion service

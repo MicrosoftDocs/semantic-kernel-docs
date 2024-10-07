@@ -31,8 +31,8 @@ The _Agent_ class serves as the core abstraction for all types of agents, provid
 
 ::: zone pivot="programming-language-csharp"
 
-- [`Agent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.agent)
-- [`KernelAgent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.kernelagent)
+- [`Agent`](/dotnet/api/microsoft.semantickernel.agents.agent)
+- [`KernelAgent`](/dotnet/api/microsoft.semantickernel.agents.kernelagent)
 
 
 ::: zone-end
@@ -75,7 +75,7 @@ The _Agent Channel_ class enables agents of various types to participate in an [
 
 ::: zone pivot="programming-language-csharp"
 
-- [`AgentChannel`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.agentchannel)
+- [`AgentChannel`](/dotnet/api/microsoft.semantickernel.agents.agentchannel)
 
 ::: zone-end
 
@@ -104,16 +104,16 @@ The [_Chat Completion Agent_](./chat-completion-agent.md) and [_Open AI Assistan
 
 ::: zone pivot="programming-language-csharp"
 
-- [`IKernelBuilder`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel)
-- [`Kernel`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernel)
-- [`KernelBuilderExtensions`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelbuilderextensions)
-- [`KernelExtensions`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelextensions)
+- [`IKernelBuilder`](/dotnet/api/microsoft.semantickernel)
+- [`Kernel`](/dotnet/api/microsoft.semantickernel.kernel)
+- [`KernelBuilderExtensions`](/dotnet/api/microsoft.semantickernel.kernelbuilderextensions)
+- [`KernelExtensions`](/dotnet/api/microsoft.semantickernel.kernelextensions)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`kernel`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.kernel.kernel)
+- [`kernel`](/python/api/semantic-kernel/semantic_kernel.kernel.kernel)
 
 ::: zone-end
 
@@ -133,19 +133,19 @@ Plugins are a fundamental aspect of the _Semantic Kernel_, enabling developers t
 
 ::: zone pivot="programming-language-csharp"
 
-- [`KernelFunctionFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelfunctionfactory)
-- [`KernelFunction`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelfunction)
-- [`KernelPluginFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelpluginfactory)
-- [`KernelPlugin`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelplugin)
-- [`Kernel.Plugins`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernel.plugins)
+- [`KernelFunctionFactory`](/dotnet/api/microsoft.semantickernel.kernelfunctionfactory)
+- [`KernelFunction`](/dotnet/api/microsoft.semantickernel.kernelfunction)
+- [`KernelPluginFactory`](/dotnet/api/microsoft.semantickernel.kernelpluginfactory)
+- [`KernelPlugin`](/dotnet/api/microsoft.semantickernel.kernelplugin)
+- [`Kernel.Plugins`](/dotnet/api/microsoft.semantickernel.kernel.plugins)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`kernel_function`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.functions.kernel_function)
-- [`kernel_function_extension`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.functions.kernel_function_extension)
-- [`kernel_plugin`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.functions.kernel_plugin)
+- [`kernel_function`](/python/api/semantic-kernel/semantic_kernel.functions.kernel_function)
+- [`kernel_function_extension`](/python/api/semantic-kernel/semantic_kernel.functions.kernel_function_extension)
+- [`kernel_plugin`](/python/api/semantic-kernel/semantic_kernel.functions.kernel_plugin)
 
 ::: zone-end
 
@@ -163,22 +163,22 @@ Agent messaging, including both input and response, is built upon the core conte
 
 ::: zone pivot="programming-language-csharp"
 
-- [`ChatHistory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatcompletion.chathistory)
-- [`ChatMessageContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatmessagecontent)
-- [`KernelContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelcontent)
-- [`StreamingKernelContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.streamingkernelcontent)
-- [`FileReferenceContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.filereferencecontent)
-[`AnnotationContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.openai.annotationcontent)
+- [`ChatHistory`](/dotnet/api/microsoft.semantickernel.chatcompletion.chathistory)
+- [`ChatMessageContent`](/dotnet/api/microsoft.semantickernel.chatmessagecontent)
+- [`KernelContent`](/dotnet/api/microsoft.semantickernel.kernelcontent)
+- [`StreamingKernelContent`](/dotnet/api/microsoft.semantickernel.streamingkernelcontent)
+- [`FileReferenceContent`](/dotnet/api/microsoft.semantickernel.filereferencecontent)
+[`AnnotationContent`](/dotnet/api/microsoft.semantickernel.agents.openai.annotationcontent)
 
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`chat_history`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.contents.chat_history)
-- [`chat_message_content`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.contents.chat_message_content)
-- [`kernel_content`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.contents.kernel_content)
-- [`streaming_chat_message_content`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.contents.streaming_chat_message_content)
+- [`chat_history`](/python/api/semantic-kernel/semantic_kernel.contents.chat_history)
+- [`chat_message_content`](/python/api/semantic-kernel/semantic_kernel.contents.chat_message_content)
+- [`kernel_content`](/python/api/semantic-kernel/semantic_kernel.contents.kernel_content)
+- [`streaming_chat_message_content`](/python/api/semantic-kernel/semantic_kernel.contents.streaming_chat_message_content)
 
 ::: zone-end
 
@@ -200,22 +200,22 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 
 ::: zone pivot="programming-language-csharp"
 
-- [`PromptTemplateConfig`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompttemplateconfig)
-- [`KernelFunctionYaml.FromPromptYaml`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelfunctionyaml.frompromptyaml#microsoft-semantickernel-kernelfunctionyaml-frompromptyaml(system-string-microsoft-semantickernel-iprompttemplatefactory-microsoft-extensions-logging-iloggerfactory))
-- [`IPromptTemplateFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.iprompttemplatefactory)
-- [`KernelPromptTemplateFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelprompttemplatefactory)
-- [_Handlebars_](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompttemplates.handlebars)
-- [_Prompty_](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompty)
-- [_Liquid_](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompttemplates.liquid)
+- [`PromptTemplateConfig`](/dotnet/api/microsoft.semantickernel.prompttemplateconfig)
+- [`KernelFunctionYaml.FromPromptYaml`](/dotnet/api/microsoft.semantickernel.kernelfunctionyaml.frompromptyaml#microsoft-semantickernel-kernelfunctionyaml-frompromptyaml(system-string-microsoft-semantickernel-iprompttemplatefactory-microsoft-extensions-logging-iloggerfactory))
+- [`IPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.iprompttemplatefactory)
+- [`KernelPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.kernelprompttemplatefactory)
+- [_Handlebars_](/dotnet/api/microsoft.semantickernel.prompttemplates.handlebars)
+- [_Prompty_](/dotnet/api/microsoft.semantickernel.prompty)
+- [_Liquid_](/dotnet/api/microsoft.semantickernel.prompttemplates.liquid)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`prompt_template_config`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
-- [`kernel_prompt_template`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
-- [`jinja2_prompt_template`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
-- [`handlebars_prompt_teplate`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
+- [`prompt_template_config`](/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
+- [`kernel_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
+- [`jinja2_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
+- [`handlebars_prompt_teplate`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
 
 ::: zone-end
 
@@ -231,20 +231,20 @@ The [_Chat Completion Agent_](./chat-completion-agent.md) is designed around any
 
 ::: zone pivot="programming-language-csharp"
 
-- [`IChatCompletionService`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice)
-- [`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
-- [`Microsoft.SemanticKernel.Connectors.OpenAI`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.openai)
-- [`Microsoft.SemanticKernel.Connectors.Google`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.google)
-- [`Microsoft.SemanticKernel.Connectors.HuggingFace`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.huggingface)
-- [`Microsoft.SemanticKernel.Connectors.MistralAI`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.mistralai)
-- [`Microsoft.SemanticKernel.Connectors.Onnx`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.onnx)
+- [`IChatCompletionService`](/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice)
+- [`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
+- [`Microsoft.SemanticKernel.Connectors.OpenAI`](/dotnet/api/microsoft.semantickernel.connectors.openai)
+- [`Microsoft.SemanticKernel.Connectors.Google`](/dotnet/api/microsoft.semantickernel.connectors.google)
+- [`Microsoft.SemanticKernel.Connectors.HuggingFace`](/dotnet/api/microsoft.semantickernel.connectors.huggingface)
+- [`Microsoft.SemanticKernel.Connectors.MistralAI`](/dotnet/api/microsoft.semantickernel.connectors.mistralai)
+- [`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantickernel.connectors.onnx)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`azure_chat_completion`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion)
-- [`open_ai_chat_completion`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion)
+- [`azure_chat_completion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion)
+- [`open_ai_chat_completion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion)
 
 ::: zone-end
 

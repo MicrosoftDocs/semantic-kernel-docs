@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use the _code-interpreter_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete data-analysis tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
+In this sample, we will explore how to use the _code-interpreter_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -87,7 +87,7 @@ dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
 # Azure Open AI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
-dotnet user-secrets set "AzureOpenAISettings:Endpoint" "https://lightspeed-team-shared-openai-eastus.openai.azure.com/"
+dotnet user-secrets set "AzureOpenAISettings:Endpoint" "<model-endpoint>"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"
 ```
 
@@ -334,7 +334,7 @@ finally:
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid nput will be added to the _Assistant Thread_ as a _User_ message.
+Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Assistant Thread_ as a _User_ message.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp

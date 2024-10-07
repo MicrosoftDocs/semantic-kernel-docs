@@ -16,9 +16,9 @@ ms.service: semantic-kernel
 Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
-- [`OpenAIAssistantAgent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantagent)
-- [`OpenAIAssistantDefinition`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantdefinition)
-- [`OpenAIClientProvider`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.openai.openaiclientprovider)
+- [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantagent)
+- [`OpenAIAssistantDefinition`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantdefinition)
+- [`OpenAIClientProvider`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiclientprovider)
 
 ::: zone-end
 
@@ -38,7 +38,7 @@ The _OpenAI Assistant API_ is a specialized interface designed for more advanced
 
 - [Open AI Assistant Guide](https://platform.openai.com/docs/assistants)
 - [Open AI Assistant API](https://platform.openai.com/docs/api-reference/assistants)
-- [Assistant API in Azure](https://learn.microsoft.com/azure/ai-services/openai/assistants-quickstart)
+- [Assistant API in Azure](/azure/ai-services/openai/assistants-quickstart)
 
 
 ## Creating an _Open AI Assistant Agent_
@@ -175,7 +175,7 @@ Since the assistant's definition is stored remotely, it supports the capability 
 
 ::: zone pivot="programming-language-csharp"
 
-For .NET, the agent identifier is exposed as a `string` via the [`Agent.Id`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.agent.id) property defined by any agent.
+For .NET, the agent identifier is exposed as a `string` via the [`Agent.Id`](/dotnet/api/microsoft.semantickernel.agents.agent.id) property defined by any agent.
 
 ```csharp
 // Perform the deletion

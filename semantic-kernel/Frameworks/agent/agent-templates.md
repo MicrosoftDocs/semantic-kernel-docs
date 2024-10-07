@@ -23,13 +23,13 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 
 ::: zone pivot="programming-language-csharp"
 
-- [`PromptTemplateConfig`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompttemplateconfig)
-- [`KernelFunctionYaml.FromPromptYaml`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelfunctionyaml.frompromptyaml#microsoft-semantickernel-kernelfunctionyaml-frompromptyaml(system-string-microsoft-semantickernel-iprompttemplatefactory-microsoft-extensions-logging-iloggerfactory))
-- [`IPromptTemplateFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.iprompttemplatefactory)
-- [`KernelPromptTemplateFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelprompttemplatefactory)
-- [_Handlebars_](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompttemplates.handlebars)
-- [_Prompty_](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompty)
-- [_Liquid_](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.prompttemplates.liquid)
+- [`PromptTemplateConfig`](/dotnet/api/microsoft.semantickernel.prompttemplateconfig)
+- [`KernelFunctionYaml.FromPromptYaml`](/dotnet/api/microsoft.semantickernel.kernelfunctionyaml.frompromptyaml#microsoft-semantickernel-kernelfunctionyaml-frompromptyaml(system-string-microsoft-semantickernel-iprompttemplatefactory-microsoft-extensions-logging-iloggerfactory))
+- [`IPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.iprompttemplatefactory)
+- [`KernelPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.kernelprompttemplatefactory)
+- [_Handlebars_](/dotnet/api/microsoft.semantickernel.prompttemplates.handlebars)
+- [_Prompty_](/dotnet/api/microsoft.semantickernel.prompty)
+- [_Liquid_](/dotnet/api/microsoft.semantickernel.prompttemplates.liquid)
 
 ::: zone-end
 

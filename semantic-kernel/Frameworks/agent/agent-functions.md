@@ -21,19 +21,19 @@ Once configured, an agent will choose when and how to call an available function
 
 ::: zone pivot="programming-language-csharp"
 
-- [`KernelFunctionFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelfunctionfactory)
-- [`KernelFunction`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelfunction)
-- [`KernelPluginFactory`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelpluginfactory)
-- [`KernelPlugin`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernelplugin)
-- [`Kernel.Plugins`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.kernel.plugins)
+- [`KernelFunctionFactory`](/dotnet/api/microsoft.semantickernel.kernelfunctionfactory)
+- [`KernelFunction`](/dotnet/api/microsoft.semantickernel.kernelfunction)
+- [`KernelPluginFactory`](/dotnet/api/microsoft.semantickernel.kernelpluginfactory)
+- [`KernelPlugin`](/dotnet/api/microsoft.semantickernel.kernelplugin)
+- [`Kernel.Plugins`](/dotnet/api/microsoft.semantickernel.kernel.plugins)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`kernel_function`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.functions.kernel_function)
-- [`kernel_function_extension`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.functions.kernel_function_extension)
-- [`kernel_plugin`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.functions.kernel_plugin)
+- [`kernel_function`](/python/api/semantic-kernel/semantic_kernel.functions.kernel_function)
+- [`kernel_function_extension`](/python/api/semantic-kernel/semantic_kernel.functions.kernel_function_extension)
+- [`kernel_plugin`](/python/api/semantic-kernel/semantic_kernel.functions.kernel_plugin)
 
 ::: zone-end
 
