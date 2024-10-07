@@ -42,8 +42,26 @@ Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubM
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+Start by creating a folder that will hold your script (`.py` file) and the sample resources. Include the following imports at the top of your `.py` file:
 ```python
+import asyncio
+from datetime import datetime
+from typing import List
+
+import httpx
+from pydantic import BaseModel, Field
+
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
+from semantic_kernel.kernel import Kernel
 ```
+
+Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubModels.cs`) from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Plugins/GitHub).  Add these files in your project folder.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -119,8 +137,24 @@ public class Settings
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
+
+Configure the following settings in your `.env` file for either Azure OpenAI or OpenAI:
+
 ```python
+AZURE_OPENAI_API_KEY="..."
+AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_TEXT_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_API_VERSION="..."
+
+OPENAI_API_KEY="sk-..."
+OPENAI_ORG_ID=""
+OPENAI_CHAT_MODEL_ID=""
 ```
+
+Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -152,6 +186,7 @@ Settings settings = new();
 
 ::: zone pivot="programming-language-python"
 ```python
+# Python specific settings are handled internally to the AI service connector.
 ```
 ::: zone-end
 
@@ -173,6 +208,10 @@ GitHubPlugin githubPlugin = new(githubSettings);
 
 ::: zone pivot="programming-language-python"
 ```python
+gh_settings = GitHubSettings(
+    token="<PAT value>"
+)
+kernel.add_plugin(GitHubPlugin(settings=gh_settings), plugin_name="github")
 ```
 ::: zone-end
 
@@ -199,6 +238,15 @@ Kernel kernel = builder.Build();
 
 ::: zone pivot="programming-language-python"
 ```python
+kernel = Kernel()
+
+# Add the AzureChatCompletion AI Service to the Kernel
+service_id = "agent"
+kernel.add_service(AzureChatCompletion(service_id=service_id))
+
+settings = kernel.get_prompt_execution_settings_from_service_id(service_id=service_id)
+# Configure the function choice behavior to auto invoke kernel functions
+settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 ```
 ::: zone-end
 
@@ -241,6 +289,23 @@ Console.WriteLine("Ready!");
 
 ::: zone pivot="programming-language-python"
 ```python
+agent = ChatCompletionAgent(
+    service_id="agent",
+    kernel=kernel,
+    name="SampleAssistantAgent",
+    instructions=f"""
+        You are an agent designed to query and retrieve information from a single GitHub repository in a read-only 
+        manner.
+        You are also able to access the profile of the active user.
+
+        Use the current date and time to provide up-to-date details or time-sensitive responses.
+        
+        The repository you are querying is a public repository with the following name: microsoft/semantic-kernel
+
+        The current date and time is: {current_time}. 
+        """,
+    execution_settings=settings,
+)
 ```
 ::: zone-end
 
@@ -257,13 +322,17 @@ ChatHistory history = [];
 bool isComplete = false;
 do
 {
-
+    // processing logic here
 } while (!isComplete);
 ```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
+history = ChatHistory()
+is_complete: bool = False
+while not is_complete:
+    # processing logic here
 ```
 ::: zone-end
 
@@ -295,6 +364,15 @@ Console.WriteLine();
 
 ::: zone pivot="programming-language-python"
 ```python
+user_input = input("User:> ")
+if not user_input:
+    continue
+
+if user_input.lower() == "exit":
+    is_complete = True
+    break
+
+history.add_message(ChatMessageContent(role=AuthorRole.USER, content=user_input))
 ```
 ::: zone-end
 
@@ -322,6 +400,7 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(history, argumen
 
 ::: zone pivot="programming-language-python"
 ```python
+# Python kernel argument injection coming soon
 ```
 ::: zone-end
 
@@ -435,6 +514,78 @@ public static class Program
 
 ::: zone pivot="programming-language-python"
 ```python
+import asyncio
+from datetime import datetime
+from typing import List
+
+import httpx
+from pydantic import BaseModel, Field
+
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
+from semantic_kernel.kernel import Kernel
+
+
+async def main():
+    kernel = Kernel()
+
+    # Add the AzureChatCompletion AI Service to the Kernel
+    service_id = "agent"
+    kernel.add_service(AzureChatCompletion(service_id=service_id))
+
+    settings = kernel.get_prompt_execution_settings_from_service_id(service_id=service_id)
+    # Configure the function choice behavior to auto invoke kernel functions
+    settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
+
+    gh_settings = GitHubSettings(token="<PAT value>")
+    kernel.add_plugin(GitHubPlugin(settings=gh_settings), plugin_name="github")
+
+    current_time = datetime.now().isoformat()
+
+    # Create the agent
+    agent = ChatCompletionAgent(
+        service_id="agent",
+        kernel=kernel,
+        name="SampleAssistantAgent",
+        instructions=f"""
+            You are an agent designed to query and retrieve information from a single GitHub repository in a read-only 
+            manner.
+            You are also able to access the profile of the active user.
+
+            Use the current date and time to provide up-to-date details or time-sensitive responses.
+            
+            The repository you are querying is a public repository with the following name: microsoft/semantic-kernel
+
+            The current date and time is: {current_time}. 
+            """,
+        execution_settings=settings,
+    )
+
+    history = ChatHistory()
+    is_complete: bool = False
+    while not is_complete:
+        user_input = input("User:> ")
+        if not user_input:
+            continue
+
+        if user_input.lower() == "exit":
+            is_complete = True
+            break
+
+        history.add_message(ChatMessageContent(role=AuthorRole.USER, content=user_input))
+
+        async for response in agent.invoke(history=history):
+            print(f"{response.content}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
 ```
 ::: zone-end
 

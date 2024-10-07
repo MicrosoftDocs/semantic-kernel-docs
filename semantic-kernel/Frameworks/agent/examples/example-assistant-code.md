@@ -54,8 +54,21 @@ Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` da
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+Start by creating a folder that will hold your script (`.py` file) and the sample resources. Include the following imports at the top of your `.py` file:
+
 ```python
+import asyncio
+import os
+
+from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.streaming_file_reference_content import StreamingFileReferenceContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.kernel import Kernel
 ```
+
+Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources).  Add these files in your project folder.
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
@@ -124,28 +137,47 @@ public class Settings
 ```
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
+
+Configure the following settings in your `.env` file for either Azure OpenAI or OpenAI:
+
 ```python
+AZURE_OPENAI_API_KEY="..."
+AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_TEXT_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_API_VERSION="..."
+
+OPENAI_API_KEY="sk-..."
+OPENAI_ORG_ID=""
+OPENAI_CHAT_MODEL_ID=""
 ```
-::: zone-end
-::: zone pivot="programming-language-java"
+
+Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+::: zone-end
 
 ## Coding
 
 The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
-2. [Agent Definition](#agent-definition) - Create the _Chat_Completion_Agent_ with templatized instructions and plug-in.
+2. [Agent Definition](#agent-definition) - Create the _OpenAI_Assistant_Agent_ with templatized instructions and plug-in.
 3. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
 ### Setup
 
-Prior to creating a _Open AI Assistant Agent_, the configuration settings, plugins, and _Client Provider_ must be initialized.
+Prior to creating an _Open AI Assistant Agent_, the configuration settings and plugins must be initialized.
 
 ::: zone pivot="programming-language-csharp"
+
+While working in .Net, the _Client Provider_ must also be initialized.
 
 First, simply initialize the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `OpenAIClientProvider` that will be used for the [Agent Definition](#agent-definition) as well as file-upload.
 
@@ -155,17 +187,18 @@ Settings settings = new();
 OpenAIClientProvider clientProvider =
     OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
 ```
+
+Use the `OpenAIClientProvider` to access a `FileClient` and upload the two data-files described in the previous [Configuration](#configuration) section, preserving the _File Reference_ for final clean-up.
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
+# There is no Python specific client provider setup required.
 ```
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 ::: zone-end
-
-Use the `OpenAIClientProvider` to access a `FileClient` and upload the two data-files described in the previous [Configuration](#configuration) section, preserving the _File Reference_ for final clean-up.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -178,6 +211,16 @@ OpenAIFileInfo fileDataCountryList = await fileClient.UploadFileAsync("Populatio
 
 ::: zone pivot="programming-language-python"
 ```python
+# Let's form the file paths that we will later pass to the assistant
+csv_file_path_1 = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "PopulationByAdmin1.csv",
+)
+
+csv_file_path_2 = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "PopulationByCountry.csv",
+)
 ```
 ::: zone-end
 
@@ -186,7 +229,7 @@ OpenAIFileInfo fileDataCountryList = await fileClient.UploadFileAsync("Populatio
 
 ### Agent Definition
 
-We are now ready to instantiate an _OpenAI Assistant Agent_ using the _Client Provider_ again. The agent is configured with its target model, _Instructions_, and the _Code Interpreter_ tool enabled. Additionally, we explicitly associate the two previously uploaded data files with the _Code Interpreter_ tool.
+We are now ready to instantiate an _OpenAI Assistant Agent_. The agent is configured with its target model, _Instructions_, and the _Code Interpreter_ tool enabled. Additionally, we explicitly associate the two data files with the _Code Interpreter_ tool.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -213,6 +256,19 @@ OpenAIAssistantAgent agent =
 
 ::: zone pivot="programming-language-python"
 ```python
+agent = await AzureAssistantAgent.create(
+        kernel=Kernel(),
+        service_id="agent",
+        name="SampleAssistantAgent",
+        instructions="""
+                Analyze the available data to provide an answer to the user's question.
+                Always format response using markdown.
+                Always include a numerical index that starts at 1 for any lists or tables.
+                Always sort lists in ascending order.
+                """,
+        enable_code_interpreter=True,
+        code_interpreter_filenames=[csv_file_path_1, csv_file_path_2],
+    )
 ```
 ::: zone-end
 
@@ -258,6 +314,20 @@ finally
 
 ::: zone pivot="programming-language-python"
 ```python
+print("Creating thread...")
+thread_id = await agent.create_thread()
+
+try:
+    is_complete: bool = False
+    file_ids: list[str] = []
+    while not is_complete:
+        # agent interaction logic here
+finally:
+    print("Cleaning up resources...")
+    if agent is not None:
+        [await agent.delete_file(file_id) for file_id in agent.code_interpreter_file_ids]
+        await agent.delete_thread(thread_id)
+        await agent.delete()
 ```
 ::: zone-end
 
@@ -289,15 +359,26 @@ Console.WriteLine();
 
 ::: zone pivot="programming-language-python"
 ```python
+user_input = input("User:> ")
+if not user_input:
+    continue
+
+if user_input.lower() == "exit":
+    is_complete = True
+    break
+
+await agent.add_chat_message(thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input))
 ```
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-Before invoking the _Agent_ response, let's add some helper methods to download any files that may be produced by the _Agent_.  Here we're place file content in the system defined temporary directory and then launching the system defined viewer application.
+Before invoking the _Agent_ response, let's add some helper methods to download any files that may be produced by the _Agent_.
 
 ::: zone pivot="programming-language-csharp"
+Here we're place file content in the system defined temporary directory and then launching the system defined viewer application.
+
 ```csharp
 private static async Task DownloadResponseImageAsync(FileClient client, ICollection<string> fileIds)
 {
@@ -342,6 +423,35 @@ private static async Task DownloadFileContentAsync(FileClient client, string fil
 
 ::: zone pivot="programming-language-python"
 ```python
+import os
+
+async def download_file_content(agent, file_id: str):
+    try:
+        # Fetch the content of the file using the provided method
+        response_content = await agent.client.files.content(file_id)
+
+        # Get the current working directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+
+        # Define the path to save the image in the current directory
+        file_path = os.path.join(
+            current_directory,  # Use the current directory of the file
+            f"{file_id}.png"  # You can modify this to use the actual filename with proper extension
+        )
+
+        # Save content to a file asynchronously
+        with open(file_path, "wb") as file:
+            file.write(response_content.content)
+
+        print(f"File saved to: {file_path}")
+    except Exception as e:
+        print(f"An error occurred while downloading file {file_id}: {str(e)}")
+
+async def download_response_image(agent, file_ids: list[str]):
+    if file_ids:
+        # Iterate over file_ids and download each one
+        for file_id in file_ids:
+            await download_file_content(agent, file_id)
 ```
 ::: zone-end
 
@@ -377,6 +487,22 @@ fileIds.Clear();
 
 ::: zone pivot="programming-language-python"
 ```python
+is_code: bool = False
+async for response in agent.invoke(stream(thread_id=thread_id):
+    if is_code != metadata.get("code"):
+        print()
+        is_code = not is_code
+
+    print(f"{response.content})
+
+    file_ids.extend(
+        [item.file_id for item in response.items if isinstance(item, StreamingFileReferenceContent)]
+    )
+
+print()
+
+await download_response_image(agent, file_ids)
+file_ids.clear()
 ```
 ::: zone-end
 
@@ -547,6 +673,118 @@ public static class Program
 
 ::: zone pivot="programming-language-python"
 ```python
+import asyncio
+import os
+
+from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.streaming_file_reference_content import StreamingFileReferenceContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.kernel import Kernel
+
+# Let's form the file paths that we will later pass to the assistant
+csv_file_path_1 = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "PopulationByAdmin1.csv",
+)
+
+csv_file_path_2 = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "PopulationByCountry.csv",
+)
+
+
+async def download_file_content(agent, file_id: str):
+    try:
+        # Fetch the content of the file using the provided method
+        response_content = await agent.client.files.content(file_id)
+
+        # Get the current working directory of the file
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+
+        # Define the path to save the image in the current directory
+        file_path = os.path.join(
+            current_directory,  # Use the current directory of the file
+            f"{file_id}.png",  # You can modify this to use the actual filename with proper extension
+        )
+
+        # Save content to a file asynchronously
+        with open(file_path, "wb") as file:
+            file.write(response_content.content)
+
+        print(f"File saved to: {file_path}")
+    except Exception as e:
+        print(f"An error occurred while downloading file {file_id}: {str(e)}")
+
+
+async def download_response_image(agent, file_ids: list[str]):
+    if file_ids:
+        # Iterate over file_ids and download each one
+        for file_id in file_ids:
+            await download_file_content(agent, file_id)
+
+
+async def main():
+    agent = await AzureAssistantAgent.create(
+        kernel=Kernel(),
+        service_id="agent",
+        name="SampleAssistantAgent",
+        instructions="""
+                    Analyze the available data to provide an answer to the user's question.
+                    Always format response using markdown.
+                    Always include a numerical index that starts at 1 for any lists or tables.
+                    Always sort lists in ascending order.
+                    """,
+        enable_code_interpreter=True,
+        code_interpreter_filenames=[csv_file_path_1, csv_file_path_2],
+    )
+
+    print("Creating thread...")
+    thread_id = await agent.create_thread()
+
+    try:
+        is_complete: bool = False
+        file_ids: list[str] = []
+        while not is_complete:
+            user_input = input("User:> ")
+            if not user_input:
+                continue
+
+            if user_input.lower() == "exit":
+                is_complete = True
+                break
+
+            await agent.add_chat_message(
+                thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
+            )
+            is_code: bool = False
+            async for response in agent.invoke_stream(thread_id=thread_id):
+                if is_code != response.metadata.get("code"):
+                    print()
+                    is_code = not is_code
+
+                print(f"{response.content}", end="", flush=True)
+
+                file_ids.extend([
+                    item.file_id for item in response.items if isinstance(item, StreamingFileReferenceContent)
+                ])
+
+            print()
+
+            await download_response_image(agent, file_ids)
+            file_ids.clear()
+
+    finally:
+        print("Cleaning up resources...")
+        if agent is not None:
+            [await agent.delete_file(file_id) for file_id in agent.code_interpreter_file_ids]
+            await agent.delete_thread(thread_id)
+            await agent.delete()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
 ```
 ::: zone-end
 

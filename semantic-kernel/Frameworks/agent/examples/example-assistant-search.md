@@ -57,8 +57,21 @@ Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+Start by creating a folder that will hold your script (`.py` file) and the sample resources. Include the following imports at the top of your `.py` file:
+
 ```python
+import asyncio
+import os
+
+from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.streaming_annotation_content import StreamingAnnotationContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.kernel import Kernel
 ```
+
+Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The-Water-of-Life.txt` and `Grimms-The-White-Snake.txt` public domain content from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Resources).  Add these files in your project folder and configure to have them copied to the output directory.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -129,8 +142,24 @@ public class Settings
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
+
+Configure the following settings in your `.env` file for either Azure OpenAI or OpenAI:
+
 ```python
+AZURE_OPENAI_API_KEY="..."
+AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_TEXT_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME="..."
+AZURE_OPENAI_API_VERSION="..."
+
+OPENAI_API_KEY="sk-..."
+OPENAI_ORG_ID=""
+OPENAI_CHAT_MODEL_ID=""
 ```
+
+Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -170,6 +199,7 @@ OpenAIClientProvider clientProvider =
 
 ::: zone pivot="programming-language-python"
 ```python
+# There is no Python specific client provider setup required.
 ```
 ::: zone-end
 
@@ -191,6 +221,9 @@ VectorStore store = await storeClient.CreateVectorStoreAsync();
 
 ::: zone pivot="programming-language-python"
 ```python
+def get_filepath_for_filename(filename: str) -> str:
+    base_directory = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(base_directory, filename)
 ```
 ::: zone-end
 
@@ -213,6 +246,11 @@ private static readonly string[] _fileNames =
 
 ::: zone pivot="programming-language-python"
 ```python
+filenames = [
+    "Grimms-The-King-of-the-Golden-Mountain.txt",
+    "Grimms-The-Water-of-Life.txt",
+    "Grimms-The-White-Snake.txt",
+]
 ```
 ::: zone-end
 
@@ -241,6 +279,7 @@ foreach (string fileName in _fileNames)
 
 ::: zone pivot="programming-language-python"
 ```python
+# To upload files in Python, provide the filenames to the Assistant create method as shown below.
 ```
 ::: zone-end
 
@@ -276,6 +315,19 @@ OpenAIAssistantAgent agent =
 
 ::: zone pivot="programming-language-python"
 ```python
+agent = await AzureAssistantAgent.create(
+    kernel=Kernel(),
+    service_id="agent",
+    name="SampleAssistantAgent",
+    instructions="""
+        The document store contains the text of fictional stories.
+        Always analyze the document store to provide an answer to the user's question.
+        Never rely on your knowledge of stories not included in the document store.
+        Always format response using markdown.
+        """,
+    enable_file_search=True,
+    vector_store_filenames=[get_filepath_for_filename(filename) for filename in filenames],
+)
 ```
 ::: zone-end
 
@@ -300,6 +352,7 @@ try
     bool isComplete = false;
     do
     {
+        // Processing occurrs here
     } while (!isComplete);
 }
 finally
@@ -319,6 +372,20 @@ finally
 
 ::: zone pivot="programming-language-python"
 ```python
+print("Creating thread...")
+thread_id = await agent.create_thread()
+
+try:
+    is_complete: bool = False
+    while not is_complete:
+        # Processing occurs here
+
+finally:
+    print("Cleaning up resources...")
+    if agent is not None:
+        [await agent.delete_file(file_id) for file_id in agent.file_search_file_ids]
+        await agent.delete_thread(thread_id)
+        await agent.delete()
 ```
 ::: zone-end
 
@@ -349,6 +416,16 @@ Console.WriteLine();
 
 ::: zone pivot="programming-language-python"
 ```python
+user_input = input("User:> ")
+if not user_input:
+    continue
+
+if user_input.lower() == "exit":
+    is_complete = True
+
+await agent.add_chat_message(
+    thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
+)
 ```
 ::: zone-end
 
@@ -366,6 +443,7 @@ private static string ReplaceUnicodeBrackets(this string content) =>
 
 ::: zone pivot="programming-language-python"
 ```python
+# No special handling required.
 ```
 ::: zone-end
 
@@ -402,6 +480,20 @@ if (footnotes.Count > 0)
 
 ::: zone pivot="programming-language-python"
 ```python
+footnotes: list[StreamingAnnotationContent] = []
+async for response in agent.invoke_stream(thread_id=thread_id):
+    footnotes.extend([item for item in response.items if isinstance(item, StreamingAnnotationContent)])
+
+    print(f"{response.content}", end="", flush=True)
+
+print()
+
+if len(footnotes) > 0:
+    for footnote in footnotes:
+        print(
+            f"\n`{footnote.quote}` => {footnote.file_id} "
+            f"(Index: {footnote.start_index} - {footnote.end_index})"
+        )
 ```
 ::: zone-end
 
@@ -558,6 +650,85 @@ public static class Program
 
 ::: zone pivot="programming-language-python"
 ```python
+import asyncio
+import os
+
+from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.streaming_annotation_content import StreamingAnnotationContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.kernel import Kernel
+
+
+def get_filepath_for_filename(filename: str) -> str:
+    base_directory = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(base_directory, filename)
+
+
+filenames = [
+    "Grimms-The-King-of-the-Golden-Mountain.txt",
+    "Grimms-The-Water-of-Life.txt",
+    "Grimms-The-White-Snake.txt",
+]
+
+
+async def main():
+    agent = await AzureAssistantAgent.create(
+        kernel=Kernel(),
+        service_id="agent",
+        name="SampleAssistantAgent",
+        instructions="""
+            The document store contains the text of fictional stories.
+            Always analyze the document store to provide an answer to the user's question.
+            Never rely on your knowledge of stories not included in the document store.
+            Always format response using markdown.
+            """,
+        enable_file_search=True,
+        vector_store_filenames=[get_filepath_for_filename(filename) for filename in filenames],
+    )
+
+    print("Creating thread...")
+    thread_id = await agent.create_thread()
+
+    try:
+        is_complete: bool = False
+        while not is_complete:
+            user_input = input("User:> ")
+            if not user_input:
+                continue
+
+            if user_input.lower() == "exit":
+                is_complete = True
+
+            await agent.add_chat_message(
+                thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
+            )
+
+            footnotes: list[StreamingAnnotationContent] = []
+            async for response in agent.invoke_stream(thread_id=thread_id):
+                footnotes.extend([item for item in response.items if isinstance(item, StreamingAnnotationContent)])
+
+                print(f"{response.content}", end="", flush=True)
+
+            print()
+
+            if len(footnotes) > 0:
+                for footnote in footnotes:
+                    print(
+                        f"\n`{footnote.quote}` => {footnote.file_id} "
+                        f"(Index: {footnote.start_index} - {footnote.end_index})"
+                    )
+
+    finally:
+        print("Cleaning up resources...")
+        if agent is not None:
+            [await agent.delete_file(file_id) for file_id in agent.file_search_file_ids]
+            await agent.delete_thread(thread_id)
+            await agent.delete()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 ::: zone-end
 
