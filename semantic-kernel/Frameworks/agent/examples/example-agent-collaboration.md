@@ -129,18 +129,24 @@ public class Settings
 The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
-2. [Agent Definition](#agent-definition) - Create the two _Chat Completion Agent_ instances (_Reviewer_ and _Writer_).
-3. [Chat Definition](#chat-definition) - Create the _Agent Group Chat_ and associated strategies.
+2. [_Agent_ Definition](#agent-definition) - Create the two _Chat Completion Agent_ instances (_Reviewer_ and _Writer_).
+3. [_Chat_ Definition](#chat-definition) - Create the _Agent Group Chat_ and associated strategies.
 4. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
 ### Setup
 
-$$$ TBD
+
+Prior to creating any _Chat Completion Agent_, the configuration settings, plugins, and _Kernel_ must be initialized.
+
+::: zone pivot="programming-language-csharp"
+
+First, simply initialize the `Settings` class referenced in the previous [Configuration](#configuration) section.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+Settings settings = new();
 ```
 ::: zone-end
 
@@ -152,10 +158,18 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+Now initialize a `Kernel` instance with an `IChatCompletionService`.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+IKernelBuilder builder = Kernel.CreateBuilder();
+
+builder.AddAzureOpenAIChatCompletion(
+	settings.AzureOpenAI.ChatModelDeployment,
+	settings.AzureOpenAI.Endpoint,
+	new AzureCliCredential());
+
+Kernel kernel = builder.Build();
 ```
 ::: zone-end
 
@@ -167,10 +181,12 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+Let's also create a second _Kernel_ instance via _cloning_ and add a plug-in that will allow the reivew to place updated content on the clip-board.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+Kernel toolKernel = kernel.Clone();
+toolKernel.Plugins.AddFromType<ClipboardAccess>();
 ```
 ::: zone-end
 
@@ -182,10 +198,33 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+The _Clipboard_ plugin may be defined as part of the sample.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+private sealed class ClipboardAccess
+{
+    [KernelFunction]
+    [Description("Copies the provided content to the clipboard.")]
+    public static void SetClipboard(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return;
+        }
+
+        using Process clipProcess = Process.Start(
+            new ProcessStartInfo
+            {
+                FileName = "clip",
+                RedirectStandardInput = true,
+                UseShellExecute = false,
+            });
+
+        clipProcess.StandardInput.Write(content);
+        clipProcess.StandardInput.Close();
+    }
+}
 ```
 ::: zone-end
 
@@ -196,13 +235,15 @@ $$$ TBD
 
 ::: zone pivot="programming-language-java"
 ::: zone-end
-
-$$$ TBD
 
 ### Agent Definition
 
+Let's declare the agent names as `const` so they might be referenced in _Agent Group Chat_ strategies:
+
 ::: zone pivot="programming-language-csharp"
 ```csharp
+const string ReviewerName = "Reviewer";
+const string WriterName = "Writer";
 ```
 ::: zone-end
 
@@ -214,10 +255,37 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+Defining the _Reviewer_ agent uses the pattern explored in [](./example-chat-agent.md).
+
+Here the _Reviewer_ is given the role of responding to user input, providing direction to the _Writer_ agent, and verifying result of the _Writer_ agent.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+ChatCompletionAgent agentReviewer =
+    new()
+    {
+        Name = ReviewerName,
+        Instructions =
+            """
+            Your responsiblity is to review and identify how to improve user provided content.
+            If the user has providing input or direction for content already provided, specify how to address this input.
+            Never directly perform the correction or provide example.
+            Once the content has been updated in a subsequent response, you will review the content again until satisfactory.
+            Always copy satisfactory content to the clipboard using available tools and inform user.
+
+            RULES:
+            - Only identify suggestions that are specific and actionable.
+            - Verify previous suggestions have been addressed.
+            - Never repeat previous suggestions.
+            """,
+        Kernel = toolKernel,
+        Arguments =
+            new KernelArguments(
+                new AzureOpenAIPromptExecutionSettings() 
+                { 
+                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() 
+                })
+    };
 ```
 ::: zone-end
 
@@ -229,70 +297,26 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+The _Writer_ agent is is similiar, but doesn't require the specification of _Execution Settings_ since it isn't configured with a plug-in.
+
+Here the _Writer_ is given a single-purpose task, follow direction and rewrite the content.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
-```
-::: zone-end
+ChatCompletionAgent agentWriter =
+    new()
+    {
+        Name = WriterName,
+        Instructions =
+            """
+            Your sole responsiblity is to rewrite content according to review suggestions.
 
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
+            - Always apply all review direction.
+            - Always revise the content in its entirety without explanation.
+            - Never address the user.
+            """,
+        Kernel = kernel,
+    };
 ```
 ::: zone-end
 
@@ -306,8 +330,35 @@ $$$ TBD
 
 ### Chat Definition
 
+Defining the _Agent Group Chat_ requires considering the strategies for selecting the _Agent_ turn and determining when to exit the _Chat_ loop.  For both of these considerations, we will define a _Kernel Prompt Function_.
+
+The first to reason over _Agent_ selection:
+
 ::: zone pivot="programming-language-csharp"
+
+Using `AgentGroupChat.CreatePromptFunctionForStrategy` provides a convenient mechanism to avoid _HTML encoding_ the message paramter.
+
 ```csharp
+KernelFunction selectionFunction =
+    AgentGroupChat.CreatePromptFunctionForStrategy(
+        $$$"""
+        Examine the provided RESPONSE and choose the next participant.
+        State only the name of the chosen participant without explanation.
+        Never choose the participant named in the RESPONSE.
+        
+        Choose only from these participants:
+        - {{{ReviewerName}}}
+        - {{{WriterName}}}
+
+        Always follow these rules when choosing the next participant:
+        - If RESPONSE is user input, it is {{{ReviewerName}}}'s turn.
+        - If RESPONSE is by {{{ReviewerName}}}, it is {{{WriterName}}}'s turn.
+        - If RESPONSE is by {{{WriterName}}}, it is {{{ReviewerName}}}'s turn.
+
+        RESPONSE:
+        {{$lastmessage}}
+        """,
+        safeParameterNames: "lastmessage");
 ```
 ::: zone-end
 
@@ -319,10 +370,24 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+The second will evaluate when to exit the _Chat_ loop:
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+const string TerminationToken = "yes";
+
+KernelFunction terminationFunction =
+    AgentGroupChat.CreatePromptFunctionForStrategy(
+        $$$"""
+        Examine the RESPONSE and determine whether the content has been deemed satisfactory.
+        If content is satisfactory, respond with a single word without explanation: {{{TerminationToken}}}.
+        If specific suggestions are being provided, it is not satisfactory.
+        If no correction is suggested, it is satisfactory.
+
+        RESPONSE:
+        {{$lastmessage}}
+        """,
+        safeParameterNames: "lastmessage");
 ```
 ::: zone-end
 
@@ -334,10 +399,11 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+Both of these _Strategies_ will only require knowledge of the most recent _Chat_ message.  This will reduce token usage and help improve performance:
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+ChatHistoryTruncationReducer historyReducer = new(1);
 ```
 ::: zone-end
 
@@ -349,55 +415,54 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+Finally we are ready to bring everything together in our _Agent Group Chat_ definition.
 
 ::: zone pivot="programming-language-csharp"
+
+Creating `AgentGroupChat` involves:
+
+1. Include both agents in the constructor.
+2. Define a `KernelFunctionSelectionStrategy` using the previously defined `KernelFunction` and `Kernel` instance.
+3. Define a `KernelFunctionTerminationStrategy` using the previously defined `KernelFunction` and `Kernel` instance.
+
+Notice that each strategy is responsible for parsing the `KernelFunction` result.
+
 ```csharp
-```
-::: zone-end
+AgentGroupChat chat =
+    new(agentReviewer, agentWriter)
+    {
+        ExecutionSettings = new AgentGroupChatSettings
+        {
+            SelectionStrategy =
+                new KernelFunctionSelectionStrategy(selectionFunction, kernel)
+                {
+                    // Always start with the editor agent.
+                    InitialAgent = agentReviewer,
+                    // Save tokens by only including the final two responses
+                    HistoryReducer = historyReducer,
+                    // The prompt variable name for the history argument.
+                    HistoryVariableName = "lastmessage",
+                    // Returns the entire result value as a string.
+                    ResultParser = (result) => result.GetValue<string>() ?? agentReviewer.Name
+                },
+            TerminationStrategy =
+                new KernelFunctionTerminationStrategy(terminationFunction, kernel)
+                {
+                    // Only evaluate for editor's response
+                    Agents = [agentReviewer],
+                    // Save tokens by only including the final response
+                    HistoryReducer = historyReducer,
+                    // The prompt variable name for the history argument.
+                    HistoryVariableName = "lastmessage",
+                    // Limit total number of turns
+                    MaximumIterations = 12,
+                    // Customer result parser to determine if the response is "yes"
+                    ResultParser = (result) => result.GetValue<string>()?.Contains(TerminationToken, StringComparison.OrdinalIgnoreCase) ?? false
+                }
+        }
+    };
 
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
+Console.WriteLine("Ready!");
 ```
 ::: zone-end
 
@@ -411,10 +476,17 @@ $$$ TBD
 
 ### The _Chat_ Loop
 
-$$$ TBD
+At last, we are able to coordinate the interaction between the user and the _Agent Group Chat_.  Start by creating creating an empty loop.
+
+> Note: Unlike the other examples, no external history or _thread_ is managed.  _Agent Group Chat_ manages the conversation history internally.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+bool isComplete = false;
+do
+{
+
+} while (!isComplete);
 ```
 ::: zone-end
 
@@ -426,10 +498,57 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+Now let's capture user input within the previous loop.  In this case:
+- Empty input will be ignored 
+- The term `EXIT` will signal that the conversation is completed
+- The term `RESET` will clear the _Agent Group Chat_ history
+- Any term starting with `@` will be treated as a file-path whose content will be provided as input
+- Valid input will be added to the _Agent Group Chaty_ as a _User_ message.
+
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+Console.WriteLine();
+Console.Write("> ");
+string input = Console.ReadLine();
+if (string.IsNullOrWhiteSpace(input))
+{
+    continue;
+}
+input = input.Trim();
+if (input.Equals("EXIT", StringComparison.OrdinalIgnoreCase))
+{
+    isComplete = true;
+    break;
+}
+
+if (input.Equals("RESET", StringComparison.OrdinalIgnoreCase))
+{
+    await chat.ResetAsync();
+    Console.WriteLine("[Converation has been reset]");
+    continue;
+}
+
+if (input.StartsWith("@", StringComparison.Ordinal) && input.Length > 1)
+{
+    string filePath = input.Substring(1);
+    try
+    {
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"Unable to access file: {filePath}");
+            continue;
+        }
+        input = File.ReadAllText(filePath);
+    }
+    catch (Exception)
+    {
+        Console.WriteLine($"Unable to access file: {filePath}");
+        continue;
+    }
+}
+
+chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, input));
 ```
 ::: zone-end
 
@@ -441,55 +560,34 @@ $$$ TBD
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-$$$ TBD
+To initate the _Agent_ collaboration in response to user input and display the _Agent_ responses, invoke the _Agent Group Chat_; however, first be sure to reset the _Completion_ state from any prior invocation.
+
+> Note: Service failures are being caught and displayed to avoid crashing the conversation loop.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
-```
-::: zone-end
+chat.IsComplete = false;
 
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-```
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
-$$$ TBD
-
-::: zone pivot="programming-language-csharp"
-```csharp
+try
+{
+    await foreach (ChatMessageContent response in chat.InvokeAsync())
+    {
+        Console.WriteLine();
+        Console.WriteLine($"{response.AuthorName.ToUpperInvariant()}:{Environment.NewLine}{response.Content}");
+    }
+}
+catch (HttpOperationException exception)
+{
+    Console.WriteLine(exception.Message);
+    if (exception.InnerException != null)
+    {
+        Console.WriteLine(exception.InnerException.Message);
+        if (exception.InnerException.Data.Count > 0)
+        {
+            Console.WriteLine(JsonSerializer.Serialize(exception.InnerException.Data, new JsonSerializerOptions() { WriteIndented = true }));
+        }
+    }
+}
 ```
 ::: zone-end
 
@@ -508,6 +606,255 @@ Bringing all the steps together, we have the final code for this example. The co
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+// Copyright (c) Microsoft. All rights reserved.
+
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Azure.Identity;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Agents.Chat;
+using Microsoft.SemanticKernel.Agents.History;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+
+namespace AgentsSample;
+
+public static class Program
+{
+    public static async Task Main()
+    {
+        // Load configuration from environment variables or user secrets.
+        Settings settings = new();
+
+        Console.WriteLine("Creating kernel...");
+        IKernelBuilder builder = Kernel.CreateBuilder();
+
+        builder.AddAzureOpenAIChatCompletion(
+            settings.AzureOpenAI.ChatModelDeployment,
+            settings.AzureOpenAI.Endpoint,
+            new AzureCliCredential());
+
+        Kernel kernel = builder.Build();
+
+        Kernel toolKernel = kernel.Clone();
+        toolKernel.Plugins.AddFromType<ClipboardAccess>();
+
+
+        Console.WriteLine("Defining agents...");
+
+        const string ReviewerName = "Reviewer";
+        const string WriterName = "Writer";
+
+        ChatCompletionAgent agentReviewer =
+            new()
+            {
+                Name = ReviewerName,
+                Instructions =
+                    """
+                    Your responsiblity is to review and identify how to improve user provided content.
+                    If the user has providing input or direction for content already provided, specify how to address this input.
+                    Never directly perform the correction or provide example.
+                    Once the content has been updated in a subsequent response, you will review the content again until satisfactory.
+                    Always copy satisfactory content to the clipboard using available tools and inform user.
+
+                    RULES:
+                    - Only identify suggestions that are specific and actionable.
+                    - Verify previous suggestions have been addressed.
+                    - Never repeat previous suggestions.
+                    """,
+                Kernel = toolKernel,
+                Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
+            };
+
+        ChatCompletionAgent agentWriter =
+            new()
+            {
+                Name = WriterName,
+                Instructions =
+                    """
+                    Your sole responsiblity is to rewrite content according to review suggestions.
+
+                    - Always apply all review direction.
+                    - Always revise the content in its entirety without explanation.
+                    - Never address the user.
+                    """,
+                Kernel = kernel,
+            };
+
+        KernelFunction selectionFunction =
+            AgentGroupChat.CreatePromptFunctionForStrategy(
+                $$$"""
+                Examine the provided RESPONSE and choose the next participant.
+                State only the name of the chosen participant without explanation.
+                Never choose the participant named in the RESPONSE.
+                
+                Choose only from these participants:
+                - {{{ReviewerName}}}
+                - {{{WriterName}}}
+
+                Always follow these rules when choosing the next participant:
+                - If RESPONSE is user input, it is {{{ReviewerName}}}'s turn.
+                - If RESPONSE is by {{{ReviewerName}}}, it is {{{WriterName}}}'s turn.
+                - If RESPONSE is by {{{WriterName}}}, it is {{{ReviewerName}}}'s turn.
+
+                RESPONSE:
+                {{$lastmessage}}
+                """,
+                safeParameterNames: "lastmessage");
+
+        const string TerminationToken = "yes";
+
+        KernelFunction terminationFunction =
+            AgentGroupChat.CreatePromptFunctionForStrategy(
+                $$$"""
+                Examine the RESPONSE and determine whether the content has been deemed satisfactory.
+                If content is satisfactory, respond with a single word without explanation: {{{TerminationToken}}}.
+                If specific suggestions are being provided, it is not satisfactory.
+                If no correction is suggested, it is satisfactory.
+
+                RESPONSE:
+                {{$lastmessage}}
+                """,
+                safeParameterNames: "lastmessage");
+
+        ChatHistoryTruncationReducer historyReducer = new(1);
+
+        AgentGroupChat chat =
+            new(agentReviewer, agentWriter)
+            {
+                ExecutionSettings = new AgentGroupChatSettings
+                {
+                    SelectionStrategy =
+                        new KernelFunctionSelectionStrategy(selectionFunction, kernel)
+                        {
+                            // Always start with the editor agent.
+                            InitialAgent = agentReviewer,
+                            // Save tokens by only including the final two responses
+                            HistoryReducer = historyReducer,
+                            // The prompt variable name for the history argument.
+                            HistoryVariableName = "lastmessage",
+                            // Returns the entire result value as a string.
+                            ResultParser = (result) => result.GetValue<string>() ?? agentReviewer.Name
+                        },
+                    TerminationStrategy =
+                        new KernelFunctionTerminationStrategy(terminationFunction, kernel)
+                        {
+                            // Only evaluate for editor's response
+                            Agents = [agentReviewer],
+                            // Save tokens by only including the final response
+                            HistoryReducer = historyReducer,
+                            // The prompt variable name for the history argument.
+                            HistoryVariableName = "lastmessage",
+                            // Limit total number of turns
+                            MaximumIterations = 12,
+                            // Customer result parser to determine if the response is "yes"
+                            ResultParser = (result) => result.GetValue<string>()?.Contains(TerminationToken, StringComparison.OrdinalIgnoreCase) ?? false
+                        }
+                }
+            };
+
+        Console.WriteLine("Ready!");
+
+        bool isComplete = false;
+        do
+        {
+            Console.WriteLine();
+            Console.Write("> ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                continue;
+            }
+            input = input.Trim();
+            if (input.Equals("EXIT", StringComparison.OrdinalIgnoreCase))
+            {
+                isComplete = true;
+                break;
+            }
+
+            if (input.Equals("RESET", StringComparison.OrdinalIgnoreCase))
+            {
+                await chat.ResetAsync();
+                Console.WriteLine("[Converation has been reset]");
+                continue;
+            }
+
+            if (input.StartsWith("@", StringComparison.Ordinal) && input.Length > 1)
+            {
+                string filePath = input.Substring(1);
+                try
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        Console.WriteLine($"Unable to access file: {filePath}");
+                        continue;
+                    }
+                    input = File.ReadAllText(filePath);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Unable to access file: {filePath}");
+                    continue;
+                }
+            }
+
+            chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, input));
+
+            chat.IsComplete = false;
+
+            try
+            {
+                await foreach (ChatMessageContent response in chat.InvokeAsync())
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"{response.AuthorName.ToUpperInvariant()}:{Environment.NewLine}{response.Content}");
+                }
+            }
+            catch (HttpOperationException exception)
+            {
+                Console.WriteLine(exception.Message);
+                if (exception.InnerException != null)
+                {
+                    Console.WriteLine(exception.InnerException.Message);
+                    if (exception.InnerException.Data.Count > 0)
+                    {
+                        Console.WriteLine(JsonSerializer.Serialize(exception.InnerException.Data, new JsonSerializerOptions() { WriteIndented = true }));
+                    }
+                }
+            }
+        } while (!isComplete);
+    }
+
+    private sealed class ClipboardAccess
+    {
+        [KernelFunction]
+        [Description("Copies the provided content to the clipboard.")]
+        public static void SetClipboard(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return;
+            }
+
+            using Process clipProcess = Process.Start(
+                new ProcessStartInfo
+                {
+                    FileName = "clip",
+                    RedirectStandardInput = true,
+                    UseShellExecute = false,
+                });
+
+            clipProcess.StandardInput.Write(content);
+            clipProcess.StandardInput.Close();
+        }
+    }
+}
+
 ```
 ::: zone-end
 
