@@ -144,7 +144,6 @@ Prior to creating any _Chat Completion Agent_, the configuration settings, plugi
 
 First, simply initialize the `Settings` class referenced in the previous [Configuration](#configuration) section.
 
-::: zone pivot="programming-language-csharp"
 ```csharp
 Settings settings = new();
 ```
@@ -255,7 +254,7 @@ const string WriterName = "Writer";
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-Defining the _Reviewer_ agent uses the pattern explored in [](./example-chat-agent.md).
+Defining the _Reviewer_ agent uses the pattern explored in [How-To: Chat Completion Agent](./example-chat-agent.md).
 
 Here the _Reviewer_ is given the role of responding to user input, providing direction to the _Writer_ agent, and verifying result of the _Writer_ agent.
 
