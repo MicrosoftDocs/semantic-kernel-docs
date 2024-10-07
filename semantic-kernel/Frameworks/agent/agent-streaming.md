@@ -22,7 +22,7 @@ A streamed response delivers the message content in small, incremental chunks. T
 - [Open AI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming)
 - [Open AI Chat Completion Streaming](https://platform.openai.com/docs/api-reference/chat/create#chat-create-stream)
 - [Open AI Assistant Streaming](https://platform.openai.com/docs/api-reference/assistants-streaming)
-- [Azure OpenAI Service REST API](https://learn.microsoft.com/azure/ai-services/openai/reference)
+- [Azure OpenAI Service REST API](/azure/ai-services/openai/reference)
 
 
 ## Streaming in Semantic Kernel
@@ -30,10 +30,10 @@ A streamed response delivers the message content in small, incremental chunks. T
 [AI Services](../../concepts/ai-services/index.md) that support streaming in Semantic Kernel use different content types compared to those used for fully-formed messages. These content types are specifically designed to handle the incremental nature of streaming data. The same content types are also utilized within the Agent Framework for similar purposes. This ensures consistency and efficiency across both systems when dealing with streaming information.
 
 ::: zone pivot="programming-language-csharp"
-- [`StreamingChatMessageContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.streamingchatmessagecontent)
-- [`StreamingTextContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.streamingtextcontent)
-- [`StreamingFileReferenceContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.streamingfilereferencecontent)
-- [`StreamingAnnotationContent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.openai.streamingannotationcontent)
+- [`StreamingChatMessageContent`](/dotnet/api/microsoft.semantickernel.streamingchatmessagecontent)
+- [`StreamingTextContent`](/dotnet/api/microsoft.semantickernel.streamingtextcontent)
+- [`StreamingFileReferenceContent`](/dotnet/api/microsoft.semantickernel.streamingfilereferencecontent)
+- [`StreamingAnnotationContent`](/dotnet/api/microsoft.semantickernel.agents.openai.streamingannotationcontent)
 
 ::: zone-end
 

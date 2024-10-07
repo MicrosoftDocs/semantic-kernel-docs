@@ -16,10 +16,10 @@ ms.service: semantic-kernel
 Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
-- [`ChatCompletionAgent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.chatcompletionagent)
-- [`Microsoft.SemanticKernel.Agents`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents)
-- [`IChatCompletionService`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice)
-- [`Microsoft.SemanticKernel.ChatCompletion`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatcompletion )
+- [`ChatCompletionAgent`](/dotnet/api/microsoft.semantickernel.agents.chatcompletionagent)
+- [`Microsoft.SemanticKernel.Agents`](/dotnet/api/microsoft.semantickernel.agents)
+- [`IChatCompletionService`](/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice)
+- [`Microsoft.SemanticKernel.ChatCompletion`](/dotnet/api/microsoft.semantickernel.chatcompletion )
 
 ::: zone-end
 
@@ -43,7 +43,7 @@ Chat-completion is fundamentally a protocol or API designed for interacting with
 
 - [Chat Completion Guide](https://platform.openai.com/docs/guides/chat-completions)
 - [Chat Completion API Reference](https://platform.openai.com/docs/api-reference/chat/create)
-- [Chat Completion in Azure](https://learn.microsoft.com/azure/ai-services/openai/chatgpt-quickstart)
+- [Chat Completion in Azure](/azure/ai-services/openai/chatgpt-quickstart)
 
 The message structure typically consists of three main roles: user, assistant, and system. The system role sets the context for the conversation by determining the model's behavior, while user messages prompt the assistant's responses.
 
@@ -94,25 +94,25 @@ A _chat completion agent_ can leverage any of these [AI services](../../concepts
 
 ::: zone pivot="programming-language-csharp"
 
-For .NET, _chat-completion_ AI Services are based on the [`IChatCompletionService`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice) interface.
+For .NET, _chat-completion_ AI Services are based on the [`IChatCompletionService`](/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice) interface.
 
 For .NET, some of AI services that support models with chat-completion include:
 
 Model|_Semantic Kernel_ AI Service
 --|--
-Azure Open AI|[`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
-Gemini|[`Microsoft.SemanticKernel.Connectors.Google`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.google)
-HuggingFace|[`Microsoft.SemanticKernel.Connectors.HuggingFace`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.huggingface)
-Mistral|[`Microsoft.SemanticKernel.Connectors.MistralAI`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.mistralai)
-OpenAI|[`Microsoft.SemanticKernel.Connectors.OpenAI`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.openai)
-Onyx|[`Microsoft.SemanticKernel.Connectors.Onnx`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.connectors.onnx)
+Azure Open AI|[`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
+Gemini|[`Microsoft.SemanticKernel.Connectors.Google`](/dotnet/api/microsoft.semantickernel.connectors.google)
+HuggingFace|[`Microsoft.SemanticKernel.Connectors.HuggingFace`](/dotnet/api/microsoft.semantickernel.connectors.huggingface)
+Mistral|[`Microsoft.SemanticKernel.Connectors.MistralAI`](/dotnet/api/microsoft.semantickernel.connectors.mistralai)
+OpenAI|[`Microsoft.SemanticKernel.Connectors.OpenAI`](/dotnet/api/microsoft.semantickernel.connectors.openai)
+Onyx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantickernel.connectors.onnx)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`azure_chat_completion`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion)
-- [`open_ai_chat_completion`](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion)
+- [`azure_chat_completion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion)
+- [`open_ai_chat_completion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion)
 
 ::: zone-end
 
