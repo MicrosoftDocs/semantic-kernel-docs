@@ -129,12 +129,15 @@ public class Settings
 The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
-2. [Agent Definition](#agent-definition) - Create the _Chat_Completion_Agent_ with templatized instructions and plug-in.
-3. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
+2. [Agent Definition](#agent-definition) - Create the two _Chat Completion Agent_ instances (_Reviewer_ and _Writer_).
+3. [Chat Definition](#chat-definition) - Create the _Agent Group Chat_ and associated strategies.
+4. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
 ### Setup
+
+$$$ TBD
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -148,6 +151,53 @@ The full example code is provided in the [Final](#final) section. Refer to that 
 
 ::: zone pivot="programming-language-java"
 ::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
 
 ### Agent Definition
 
@@ -164,7 +214,279 @@ The full example code is provided in the [Final](#final) section. Refer to that 
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+### Chat Definition
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
 ### The _Chat_ Loop
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
+
+::: zone pivot="programming-language-csharp"
+```csharp
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
+$$$ TBD
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
