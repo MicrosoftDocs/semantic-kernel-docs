@@ -31,8 +31,8 @@ The _Agent_ class serves as the core abstraction for all types of agents, provid
 
 ::: zone pivot="programming-language-csharp"
 
-- [`Agent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.agent)
-- [`KernelAgent`](https://learn.microsoft.com/dotnet/api/microsoft.semantickernel.agents.kernelagent)
+- [`Agent`](/dotnet/api/microsoft.semantickernel.agents.agent)
+- [`KernelAgent`](/dotnet/api/microsoft.semantickernel.agents.kernelagent)
 
 
 ::: zone-end
