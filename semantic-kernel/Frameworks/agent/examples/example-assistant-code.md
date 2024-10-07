@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use the _code-interpreter_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete data-analysis tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
+In this sample, we will explore how to use the _code-interpreter_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 

@@ -15,7 +15,9 @@ ms.service: semantic-kernel
 
 ## Overview
 
-<!-- SECTION -->
+In this sample, we will explore configuring a plugin to access _GitHub_ API and provide templatized instructions to a [_Chat Completion Agent_](../chat-completion-agent.md) to answer questions about a _GitHub_ repository.  The approach will be broken down step-by-step to high-light the key parts of the coding process.  As part of the task, the agent will provide document citations within the response.
+
+Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
 ## Getting Started
 

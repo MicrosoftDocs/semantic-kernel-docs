@@ -15,11 +15,12 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use _Agent Group Chat_ to coordinate collboration of three different agents working to author content in response to user direction.  Each agent is assigned a distinct role:
+In this sample, we will explore how to use _Agent Group Chat_ to coordinate collboration of two different agents working to review and rewrite user provided content.  Each agent is assigned a distinct role:
 
-- **Planner**: Responsible for creating outline and providing strucural input
-- **Reviewer**: Reviews and provides critical feedback for both _Planner_ and _Writer_ output.
-- **Writer**: Authors content based on _Planner_ and _Reviewer_ input.
+- **Reviewer**: Reviews and provides direction to _Writer_.
+- **Writer**: Updates user content based on _Reviewer_ input.
+
+The approach will be broken down step-by-step to high-light the key parts of the coding process.
 
 ## Getting Started
 
