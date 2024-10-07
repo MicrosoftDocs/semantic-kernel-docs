@@ -37,7 +37,6 @@ Start by creating a _Console_ project. Then, include the following package refer
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="<stable>" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="<stable>" />
     <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="<latest>" />
-    <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="<latest>" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="<latest>" />
   </ItemGroup>
 ```
@@ -65,7 +64,7 @@ dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
 # Azure Open AI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
-dotnet user-secrets set "AzureOpenAISettings:Endpoint" "https://lightspeed-team-shared-openai-eastus.openai.azure.com/"
+dotnet user-secrets set "AzureOpenAISettings:Endpoint" "<model-endpoint>"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"
 ```
 
