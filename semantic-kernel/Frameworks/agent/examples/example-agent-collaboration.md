@@ -1113,10 +1113,10 @@ from semantic_kernel.agents.strategies.selection.kernel_function_selection_strat
 from semantic_kernel.agents.strategies.termination.kernel_function_termination_strategy import (
     KernelFunctionTerminationStrategy,
 )
-from semantic_kernel.agents.strategies.termination.termination_strategy import TerminationStrategy
 from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import AzureChatCompletion
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.functions.kernel_function_from_prompt import KernelFunctionFromPrompt
 from semantic_kernel.kernel import Kernel
 
@@ -1126,6 +1126,15 @@ from semantic_kernel.kernel import Kernel
 # Agent along with a Writer Chat Completion Agent to              #
 # complete a user's task.                                         #
 ###################################################################
+
+
+class ClipboardAccess:
+    @kernel_function
+    def set_clipboard(content: str):
+        if not content.strip():
+            return
+
+        pyperclip.copy(content)
 
 
 REVIEWER_NAME = "Reviewer"
