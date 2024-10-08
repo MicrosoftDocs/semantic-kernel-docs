@@ -39,7 +39,7 @@ The abstract _Agent_ class serves as the core abstraction for all types of agent
 
 ::: zone pivot="programming-language-python"
 
-- [`agent`](python/api/semantic-kernel/semantic_kernel.agents.agent)
+- [`agent`](/python/api/semantic-kernel/semantic_kernel.agents.agent)
 
 ::: zone-end
 
