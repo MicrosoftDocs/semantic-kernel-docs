@@ -60,7 +60,7 @@ The _Agent Framework_ is experimental and requires warning suppression.  This ma
 
 ```xml
   <PropertyGroup>
-    <NoWarn>$(NoWarn);CA2007;SKEXP0001;SKEXP0110;OPENAI001</NoWarn>
+    <NoWarn>$(NoWarn);CA2007;IDE1006;SKEXP0001;SKEXP0110;OPENAI001</NoWarn>
   </PropertyGroup>
 ```
 
