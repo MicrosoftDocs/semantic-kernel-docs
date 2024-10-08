@@ -149,8 +149,6 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 AZURE_OPENAI_API_KEY="..."
 AZURE_OPENAI_ENDPOINT="https://..."
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
-AZURE_OPENAI_TEXT_DEPLOYMENT_NAME="..."
-AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
 OPENAI_API_KEY="sk-..."
@@ -179,25 +177,17 @@ The full example code is provided in the [Final](#final) section. Refer to that 
 
 ### Setup
 
-Prior to creating an _Open AI Assistant Agent_, the configuration settings and plugins must be initialized.
+Prior to creating an _Open AI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
 
 ::: zone pivot="programming-language-csharp"
 
-First, simply initialize the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `OpenAIClientProvider` that will be used for the [Agent Definition](#agent-definition) as well as file-upload.
+Instantiate the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `OpenAIClientProvider` that will be used for the [Agent Definition](#agent-definition) as well as file-upload.
 
 ```csharp
 Settings settings = new();
 
 OpenAIClientProvider clientProvider =
     OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
-```
-
-Use the `OpenAIClientProvider` to access a `FileClient` and upload the two data-files described in the previous [Configuration](#configuration) section, preserving the _File Reference_ for final clean-up.
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-# There is no Python specific client provider setup required.
 ```
 ::: zone-end
 
@@ -208,6 +198,9 @@ Use the `OpenAIClientProvider` to access a `FileClient` and upload the two data-
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
+
+Use the `OpenAIClientProvider` to access a `FileClient` and upload the two data-files described in the previous [Configuration](#configuration) section, preserving the _File Reference_ for final clean-up.
+
 ```csharp
 Console.WriteLine("Uploading files...");
 FileClient fileClient = clientProvider.Client.GetFileClient();

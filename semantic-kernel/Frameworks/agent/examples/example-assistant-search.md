@@ -153,8 +153,6 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 AZURE_OPENAI_API_KEY="..."
 AZURE_OPENAI_ENDPOINT="https://..."
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
-AZURE_OPENAI_TEXT_DEPLOYMENT_NAME="..."
-AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
 OPENAI_API_KEY="sk-..."
@@ -184,9 +182,7 @@ The full example code is provided in the [Final](#final) section. Refer to that 
 
 ### Setup
 
-Prior to creating a _Open AI Assistant Agent_, the configuration settings and plugins must be initialized.
-
-First initialize settings:
+Prior to creating an _Open AI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -200,12 +196,6 @@ OpenAIClientProvider clientProvider =
     OpenAIClientProvider.ForAzureOpenAI(
         new AzureCliCredential(),
         new Uri(settings.AzureOpenAI.Endpoint));
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-# There is no Python specific client provider setup required.
 ```
 ::: zone-end
 
@@ -272,11 +262,9 @@ filenames = [
 
 ::: zone-end
 
-Now upload those files and add them to the _Vector Store_:
-
 ::: zone pivot="programming-language-csharp"
 
-Use the previously created `FileClient` and `VectorStore` client to upload each file and add it to the _Vector Store_, preserving the resulting _File References_.
+Now upload those files and add them to the _Vector Store_ by using the previously created `FileClient` and `VectorStore` client to upload each file and add it to the _Vector Store_, preserving the resulting _File References_.
 
 ```csharp
 Dictionary<string, OpenAIFileInfo> fileReferences = [];
@@ -289,12 +277,6 @@ foreach (string fileName in _fileNames)
     await storeClient.AddFileToVectorStoreAsync(store.Id, fileInfo.Id);
     fileReferences.Add(fileInfo.Id, fileInfo);
 }
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-# To upload files in Python, provide the filenames to the Assistant create method as shown below.
 ```
 ::: zone-end
 

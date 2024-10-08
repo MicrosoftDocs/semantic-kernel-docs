@@ -154,8 +154,6 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 AZURE_OPENAI_API_KEY="..."
 AZURE_OPENAI_ENDPOINT="https://..."
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
-AZURE_OPENAI_TEXT_DEPLOYMENT_NAME="..."
-AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
 OPENAI_API_KEY="sk-..."
@@ -189,16 +187,10 @@ Prior to creating a _Chat Completion Agent_, the configuration settings, plugins
 
 ::: zone pivot="programming-language-csharp"
 
-First, simply initialize the `Settings` class referenced in the previous [Configuration](#configuration) section.
+Initialize the `Settings` class referenced in the previous [Configuration](#configuration) section.
 
 ```csharp
 Settings settings = new();
-```
-::: zone-end
-
-::: zone pivot="programming-language-python"
-```python
-# Python specific settings are handled internally to the AI service connector.
 ```
 ::: zone-end
 
@@ -208,9 +200,11 @@ Settings settings = new();
 
 ::: zone-end
 
-Next initialize the plug-in using its settings.  Here, a message is displaying to indicate progress.
+Initialize the plug-in using its settings.
 
 ::: zone pivot="programming-language-csharp"
+
+Here, a message is displaying to indicate progress.
 
 ```csharp
 Console.WriteLine("Initialize plugins...");

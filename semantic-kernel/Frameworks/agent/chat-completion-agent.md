@@ -91,8 +91,8 @@ Kernel kernel = builder.Build();
 ChatCompletionAgent agent =
     new()
     {
-        Name = "<agent name>",
-        Instructions = "<agent instructions>",
+        Name = "SummarizationAgent",
+        Instructions = "Summarize user input",
         Kernel = kernel
     };
 ```
@@ -179,7 +179,7 @@ agent = ChatCompletionAgent(
 
 ::: zone-end
 
-## Using a _Chat Completion Agent_
+## Conversing with _Chat Completion Agent_
 
 Conversing with your _Chat Completion Agent_ is based on a _Chat History_ instance, no different from interacting with a _Chat Completion_ [AI service](../../concepts/ai-services/index.md).
 
