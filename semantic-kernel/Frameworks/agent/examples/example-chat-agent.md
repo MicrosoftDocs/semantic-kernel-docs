@@ -47,11 +47,9 @@ Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubM
 Start by creating a folder that will hold your script (`.py` file) and the sample resources. Include the following imports at the top of your `.py` file:
 ```python
 import asyncio
+import os
+import sys
 from datetime import datetime
-from typing import List
-
-import httpx
-from pydantic import BaseModel, Field
 
 from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
@@ -59,8 +57,14 @@ from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.kernel import Kernel
+
+# Adjust the sys.path so we can use the GitHubPlugin and GitHubSettings classes
+# This is so we can run the code from the samples/learn_resources/agent_docs directory
+# If you are running code from your own project, you may not need need to do this.
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from plugins.GithubPlugin.github import GitHubPlugin, GitHubSettings  # noqa: E402
 ```
 
 Additionally, copy the GitHub plug-in and models (`github.py`) from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/plugins/GithubPlugin).  Add these files in your project folder.
@@ -517,11 +521,9 @@ public static class Program
 ::: zone pivot="programming-language-python"
 ```python
 import asyncio
+import os
+import sys
 from datetime import datetime
-from typing import List
-
-import httpx
-from pydantic import BaseModel, Field
 
 from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
@@ -529,8 +531,20 @@ from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.kernel import Kernel
+
+# Adjust the sys.path so we can use the GitHubPlugin and GitHubSettings classes
+# This is so we can run the code from the samples/learn_resources/agent_docs directory
+# If you are running code from your own project, you may not need need to do this.
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from plugins.GithubPlugin.github import GitHubPlugin, GitHubSettings  # noqa: E402
+
+###################################################################
+# The following sample demonstrates how to create a simple,       #
+# ChatCompletionAgent to use a GitHub plugin to interact          #
+# with the GitHub API.                                            #
+###################################################################
 
 
 async def main():
@@ -544,8 +558,9 @@ async def main():
     # Configure the function choice behavior to auto invoke kernel functions
     settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
+    # Set your GitHub Personal Access Token (PAT) value here
     gh_settings = GitHubSettings(token="<PAT value>")
-    kernel.add_plugin(GitHubPlugin(settings=gh_settings), plugin_name="github")
+    kernel.add_plugin(plugin=GitHubPlugin(gh_settings), plugin_name="GithubPlugin")
 
     current_time = datetime.now().isoformat()
 
@@ -587,7 +602,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
 ```
 ::: zone-end
 
