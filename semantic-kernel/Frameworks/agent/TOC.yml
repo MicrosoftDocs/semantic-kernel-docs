@@ -6,7 +6,7 @@
   href: chat-completion-agent.md
 - name: Open AI Assistant Agent
   href: assistant-agent.md
-- name: Exploring Agent Collaboration
+- name: Agent Collaboration
   href: agent-chat.md
 - name: Create an Agent from a Template
   href: agent-templates.md
