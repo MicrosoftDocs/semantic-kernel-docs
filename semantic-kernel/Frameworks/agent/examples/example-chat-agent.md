@@ -405,9 +405,7 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(history, argumen
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-```python
-# Python kernel argument injection coming soon
-```
+**Coming soon**
 ::: zone-end
 
 ::: zone pivot="programming-language-java"

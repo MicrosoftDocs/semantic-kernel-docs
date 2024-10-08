@@ -24,7 +24,8 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+- [`agent_chat`](/python/api/semantic-kernel/semantic_kernel.agents.group_chat.agent_chat)
+- [`agent_group_chat`](/python/api/semantic-kernel/semantic_kernel.agents.group_chat.agent_group_chat)
 
 ::: zone-end
 

@@ -70,7 +70,7 @@ ChatCompletionAgent agent =
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+**Coming soon**
 
 ::: zone-end
 

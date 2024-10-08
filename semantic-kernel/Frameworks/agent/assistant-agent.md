@@ -24,7 +24,9 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+- [`open_ai_assistant_base`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_base)
+- [`azure_assistant_agent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_assistant_agent)
+- [`open_ai_assistant_agent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_agent)
 
 ::: zone-end
 

@@ -25,7 +25,8 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+- [`chat_completion_agent`](/python/api/semantic-kernel/semantic_kernel.agents.chat_completion.chat_completion_agent)
+- [`chat_completion_client_base`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.chat_completion_client_base)
 
 ::: zone-end
 

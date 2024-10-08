@@ -39,7 +39,7 @@ The _Agent_ class serves as the core abstraction for all types of agents, provid
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+- [`agent`](python/api/semantic-kernel/semantic_kernel.agents.agent)
 
 ::: zone-end
 
@@ -81,7 +81,7 @@ The _Agent Channel_ class enables agents of various types to participate in an [
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+- [`agent_channel](/python/api/semantic-kernel/semantic_kernel.agents.channels.agent_channel)
 
 ::: zone-end
 
@@ -168,7 +168,7 @@ Agent messaging, including both input and response, is built upon the core conte
 - [`KernelContent`](/dotnet/api/microsoft.semantickernel.kernelcontent)
 - [`StreamingKernelContent`](/dotnet/api/microsoft.semantickernel.streamingkernelcontent)
 - [`FileReferenceContent`](/dotnet/api/microsoft.semantickernel.filereferencecontent)
-[`AnnotationContent`](/dotnet/api/microsoft.semantickernel.agents.openai.annotationcontent)
+- [`AnnotationContent`](/dotnet/api/microsoft.semantickernel.agents.openai.annotationcontent)
 
 
 ::: zone-end
@@ -179,6 +179,8 @@ Agent messaging, including both input and response, is built upon the core conte
 - [`chat_message_content`](/python/api/semantic-kernel/semantic_kernel.contents.chat_message_content)
 - [`kernel_content`](/python/api/semantic-kernel/semantic_kernel.contents.kernel_content)
 - [`streaming_chat_message_content`](/python/api/semantic-kernel/semantic_kernel.contents.streaming_chat_message_content)
+- [`file_reference_content`](/python/api/semantic-kernel/semantic_kernel.contents.file_reference_content)
+- [`annotation_content`](/python/api/semantic-kernel/semantic_kernel.contents.annotation_content)
 
 ::: zone-end
 
