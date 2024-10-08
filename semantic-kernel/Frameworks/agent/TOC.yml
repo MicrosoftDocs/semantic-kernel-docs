@@ -2,9 +2,9 @@
   href: index.md
 - name: Architecture
   href: agent-architecture.md
-- name: Exploring Chat Completion Agent
+- name: Chat Completion Agent
   href: chat-completion-agent.md
-- name: Exploring Open AI Assistant Agent
+- name: Open AI Assistant Agent
   href: assistant-agent.md
 - name: Exploring Agent Collaboration
   href: agent-chat.md
