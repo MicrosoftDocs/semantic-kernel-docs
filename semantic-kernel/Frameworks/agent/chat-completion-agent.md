@@ -34,62 +34,9 @@ Detailed API documentation related to this discussion is available at:
 ::: zone-end
 
 
-## What is Chat Completion?
-
-[_Chat Completion_](../../concepts/ai-services/chat-completion/index.md) is fundamentally a protocol for a chat-based interaction with an AI model where the chat-history maintained and presented to the model with each request.  The specifics behind chat-completion vary, depending on the context:
-
-#### Open AI:
-
-Chat-completion is fundamentally a protocol or API designed for interacting with OpenAI's Large Language Models (LLMs). It provides a structured approach for exchanging messages between a user and the model, including defining roles for the user and the assistant (model response), along with a system instruction to guide the behavior or persona of the model's output.
-
-- [Chat Completion Guide](https://platform.openai.com/docs/guides/chat-completions)
-- [Chat Completion API Reference](https://platform.openai.com/docs/api-reference/chat/create)
-- [Chat Completion in Azure](/azure/ai-services/openai/chatgpt-quickstart)
-
-The message structure typically consists of three main roles: user, assistant, and system. The system role sets the context for the conversation by determining the model's behavior, while user messages prompt the assistant's responses.
-
-```json
-"messages": [
-  {"role": "system", "content": "You are a helpful assistant."},
-  {"role": "user", "content": "Who won the world series in 2020?"},
-  {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-  {"role": "user", "content": "Where was it played?"}
-]
-```
-
-#### Other AI Models:
-
-Several AI models have adopted the chat-completion pattern, though the implementation details may vary between models or APIs. For instance, Google Gemini employs a distinct schema for organizing message data:
-
-```json
-"contents": [
-  {
-    "role": "user",
-    "parts": { "text": "Who won the world series in 2020?" }
-  },
-  {
-    "role": "model",
-    "parts": { "text": "The Los Angeles Dodgers won the World Series in 2020." }
-  },
-  {
-    "role": "user",
-    "parts": { "text": "Where was it played?" }
-  }
-],
-"system_instruction":
-{
-  "parts": [
-    {
-      "text": "You are a helpful assistant."
-    }
-  ]
-}  
-```
-
-
 ## Chat Completion in _Semantic Kernel_
 
-_Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) offer a unified framework for integrating the chat-completion capabilities of various AI models.
+[_Chat Completion_](../../concepts/ai-services/chat-completion/index.md) is fundamentally a protocol for a chat-based interaction with an AI model where the chat-history maintained and presented to the model with each request.  _Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) offer a unified framework for integrating the chat-completion capabilities of various AI models.
 
 A _chat completion agent_ can leverage any of these [AI services](../../concepts/ai-services/index.md) to generate responses, whether directed to a user or another agent.
 
@@ -106,7 +53,7 @@ Gemini|[`Microsoft.SemanticKernel.Connectors.Google`](/dotnet/api/microsoft.sema
 HuggingFace|[`Microsoft.SemanticKernel.Connectors.HuggingFace`](/dotnet/api/microsoft.semantickernel.connectors.huggingface)
 Mistral|[`Microsoft.SemanticKernel.Connectors.MistralAI`](/dotnet/api/microsoft.semantickernel.connectors.mistralai)
 OpenAI|[`Microsoft.SemanticKernel.Connectors.OpenAI`](/dotnet/api/microsoft.semantickernel.connectors.openai)
-Onyx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantickernel.connectors.onnx)
+Onyx|[`Microsoft.SemanticKernel.Connectors.Onyx`](/dotnet/api/microsoft.semantickernel.connectors.onyx)
 
 ::: zone-end
 

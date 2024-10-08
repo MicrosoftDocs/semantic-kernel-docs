@@ -1,6 +1,6 @@
-- name: Overview&colon; Semantic Kernel Agent Framework
+- name: Overview
   href: index.md
-- name: Semantic Kernel Agent Architecture
+- name: Architecture
   href: agent-architecture.md
 - name: Exploring Chat Completion Agent
   href: chat-completion-agent.md

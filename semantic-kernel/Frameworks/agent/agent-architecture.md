@@ -13,7 +13,8 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
 
-This article explores the key concepts and priorities that shaped the development of the _Agent Framework_. It delves into the foundational principles, design objectives, and strategic goals that influenced its creation, providing insight into how these elements come together to drive the framework's functionality and effectiveness.
+This article covers key concepts in the architecture of the Agent Framework, including foundational principles, design objectives, and strategic goals.
+
 
 ## Goals
 
@@ -27,13 +28,12 @@ The _Agent Framework_ was developed with the following key priorities in mind:
 
 ## Agent
 
-The _Agent_ class serves as the core abstraction for all types of agents, providing a foundational structure that can be extended to create more specialized agents. One key subclass is _Kernel Agent_, which establishes a direct association with a [_Kernel_](../../concepts/kernel.md) object. This relationship forms the basis for more specific agent implementations, such as the [_Chat Completion Agent_](./chat-completion-agent.md) and the [_Open AI Assistant Agent_](./assistant-agent.md), both of which leverage the Kernel's capabilities to execute their respective functions.
+The abstract _Agent_ class serves as the core abstraction for all types of agents, providing a foundational structure that can be extended to create more specialized agents. One key subclass is _Kernel Agent_, which establishes a direct association with a [_Kernel_](../../concepts/kernel.md) object. This relationship forms the basis for more specific agent implementations, such as the [_Chat Completion Agent_](./chat-completion-agent.md) and the [_Open AI Assistant Agent_](./assistant-agent.md), both of which leverage the Kernel's capabilities to execute their respective functions.
 
 ::: zone pivot="programming-language-csharp"
 
 - [`Agent`](/dotnet/api/microsoft.semantickernel.agents.agent)
 - [`KernelAgent`](/dotnet/api/microsoft.semantickernel.agents.kernelagent)
-
 
 ::: zone-end
 
@@ -90,12 +90,12 @@ The _Agent Channel_ class enables agents of various types to participate in an [
 
 ## Agent Alignment with _Semantic Kernel_ Features
 
-The __Agent Framework_ is built on the foundational concepts and features that many developers have come to know within the _Semantic Kernel_ ecosystem. These core principles serve as the building blocks for the Agent Framework’s design. By leveraging the familiar structure and capabilities of the _Semantic Kernel_, the Agent Framework extends its functionality to enable more advanced, autonomous agent behaviors, while maintaining consistency with the broader _Semantic Kernel_ architecture. This ensures a smooth transition for developers, allowing them to apply their existing knowledge to create intelligent, adaptable agents within the framework.
+The _Agent Framework_ is built on the foundational concepts and features that many developers have come to know within the _Semantic Kernel_ ecosystem. These core principles serve as the building blocks for the Agent Framework’s design. By leveraging the familiar structure and capabilities of the _Semantic Kernel_, the Agent Framework extends its functionality to enable more advanced, autonomous agent behaviors, while maintaining consistency with the broader _Semantic Kernel_ architecture. This ensures a smooth transition for developers, allowing them to apply their existing knowledge to create intelligent, adaptable agents within the framework.
 
 
-### [The Kernel](../../concepts/kernel.md)
+### The _Kernel_
 
-At the heart of the _Semantic Kernel_ ecosystem is the _Kernel_, which serves as the core object that drives AI operations and interactions. To create any agent within this framework, a _Kernel instance_ is required as it provides the foundational context and capabilities for the agent’s functionality. The _Kernel_ acts as the engine for processing instructions, managing state, and invoking the necessary AI services that power the agent's behavior.
+At the heart of the _Semantic Kernel_ ecosystem is the [_Kernel_](../../concepts/kernel.md), which serves as the core object that drives AI operations and interactions. To create any agent within this framework, a _Kernel instance_ is required as it provides the foundational context and capabilities for the agent’s functionality. The _Kernel_ acts as the engine for processing instructions, managing state, and invoking the necessary AI services that power the agent's behavior.
 
 The [_Chat Completion Agent_](./chat-completion-agent.md) and [_Open AI Assistant Agent_](./assistant-agent.md) articles provide specific details on how to create each type of agent.
  These resources offer step-by-step instructions and highlight the key configurations needed to tailor the agents to different conversational or task-based applications, demonstrating how the Kernel enables dynamic and intelligent agent behaviors across diverse use cases.
