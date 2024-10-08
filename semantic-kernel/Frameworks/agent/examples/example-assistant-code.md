@@ -177,8 +177,6 @@ Prior to creating an _Open AI Assistant Agent_, the configuration settings and p
 
 ::: zone pivot="programming-language-csharp"
 
-While working in .Net, the _Client Provider_ must also be initialized.
-
 First, simply initialize the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `OpenAIClientProvider` that will be used for the [Agent Definition](#agent-definition) as well as file-upload.
 
 ```csharp
