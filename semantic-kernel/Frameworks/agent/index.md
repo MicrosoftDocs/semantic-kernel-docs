@@ -49,8 +49,6 @@ Using an agent framework for application development provides advantages that ar
 
 - **Interactive and Goal-Oriented**: If your application involves goal-driven behavior (e.g., completing tasks autonomously or interacting with users to achieve specific objectives), agent-based frameworks are a better choice. Examples include virtual assistants, game AI, and task planners.
 
-- **Adaptive Problem-Solving**: If your application involves solving complex, evolving problems (e.g., logistics optimization, dynamic resource allocation, or real-time strategy games), agents can provide better adaptability and intelligence.
-
 
 ## How do I install the _Semantic Kernel Agent Framework_?
 
