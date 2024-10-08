@@ -771,18 +771,18 @@
             "redirect_document_id": false
         },
         {
-            "source_path": "semantic-kernel/frameworks/agent/agent-framework",
-            "redirect_url": "semantic-kernel/frameworks/agent/index",
+            "source_path": "semantic-kernel/frameworks/agent/agent-framework.md",
+            "redirect_url": "semantic-kernel/frameworks/agent",
             "redirect_document_id": false
         },
         {
-            "source_path": "semantic-kernel/Frameworks/agent/agents",
-            "redirect_url": "semantic-kernel/frameworks/agent/index",
+            "source_path": "semantic-kernel/Frameworks/agent/agents.md",
+            "redirect_url": "semantic-kernel/frameworks/agent",
             "redirect_document_id": false
         },
         {
-            "source_path": "semantic-kernel/Frameworks/agent/personas",
-            "redirect_url": "semantic-kernel/frameworks/agent/index",
+            "source_path": "semantic-kernel/Frameworks/agent/personas.md",
+            "redirect_url": "semantic-kernel/frameworks/agent",
             "redirect_document_id": false
         }
     ]
