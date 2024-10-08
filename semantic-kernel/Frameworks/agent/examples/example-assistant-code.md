@@ -71,6 +71,9 @@ Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` da
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -159,6 +162,9 @@ Once configured, the respective AI service classes will pick up the required var
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ## Coding
@@ -196,6 +202,9 @@ Use the `OpenAIClientProvider` to access a `FileClient` and upload the two data-
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
@@ -223,6 +232,9 @@ csv_file_path_2 = os.path.join(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Agent Definition
@@ -271,6 +283,9 @@ agent = await AzureAssistantAgent.create(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### The _Chat_ Loop
@@ -330,6 +345,9 @@ finally:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Assistant Thread_ as a _User_ message.
@@ -370,6 +388,9 @@ await agent.add_chat_message(thread_id=thread_id, message=ChatMessageContent(rol
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Before invoking the _Agent_ response, let's add some helper methods to download any files that may be produced by the _Agent_.
@@ -454,6 +475,9 @@ async def download_response_image(agent, file_ids: list[str]):
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 To generate an _Agent_ response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any generated _File References_ for download and review at the end of the response cycle. It's important to note that generated code is identified by the presence of a _Metadata_ key in the response message, distinguishing it from the conversational reply.
@@ -505,6 +529,9 @@ file_ids.clear()
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -787,6 +814,9 @@ if __name__ == "__main__":
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

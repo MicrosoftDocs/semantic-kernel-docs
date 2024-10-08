@@ -1,6 +1,6 @@
 ---
 title: How-To&colon; Coordinate Agent Collaboration using Agent Group Chat (Experimental)
-description: TBD $$$
+description: A step-by-step walk-through for coordinating agent collaboration using Agent Group Chat.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
@@ -49,6 +49,9 @@ Start by creating a _Console_ project. Then, include the following package refer
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -137,6 +140,9 @@ Once configured, the respective AI service classes will pick up the required var
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -171,6 +177,9 @@ Settings settings = new();
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now initialize a `Kernel` instance with an `IChatCompletionService`.
@@ -194,6 +203,9 @@ Kernel kernel = builder.Build();
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Let's also create a second _Kernel_ instance via _cloning_ and add a plug-in that will allow the reivew to place updated content on the clip-board.
@@ -211,6 +223,9 @@ toolKernel.Plugins.AddFromType<ClipboardAccess>();
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 The _Clipboard_ plugin may be defined as part of the sample.
@@ -249,6 +264,9 @@ private sealed class ClipboardAccess
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Agent Definition
@@ -268,6 +286,9 @@ const string WriterName = "Writer";
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Defining the _Reviewer_ agent uses the pattern explored in [How-To: Chat Completion Agent](./example-chat-agent.md).
@@ -310,6 +331,9 @@ ChatCompletionAgent agentReviewer =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 The _Writer_ agent is is similiar, but doesn't require the specification of _Execution Settings_ since it isn't configured with a plug-in.
@@ -341,6 +365,9 @@ ChatCompletionAgent agentWriter =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Chat Definition
@@ -383,6 +410,9 @@ KernelFunction selectionFunction =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 The second will evaluate when to exit the _Chat_ loop:
@@ -412,6 +442,9 @@ KernelFunction terminationFunction =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Both of these _Strategies_ will only require knowledge of the most recent _Chat_ message.  This will reduce token usage and help improve performance:
@@ -428,6 +461,9 @@ ChatHistoryTruncationReducer historyReducer = new(1);
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Finally we are ready to bring everything together in our _Agent Group Chat_ definition.
@@ -487,6 +523,9 @@ Console.WriteLine("Ready!");
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### The _Chat_ Loop
@@ -511,6 +550,9 @@ do
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now let's capture user input within the previous loop.  In this case:
@@ -573,6 +615,9 @@ chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, input));
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 To initate the _Agent_ collaboration in response to user input and display the _Agent_ responses, invoke the _Agent Group Chat_; however, first be sure to reset the _Completion_ state from any prior invocation.
@@ -612,6 +657,9 @@ catch (HttpOperationException exception)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -1044,4 +1092,7 @@ if __name__ == "__main__":
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end

@@ -30,6 +30,9 @@ Detailed API documentation related to this discussion is available at:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -73,6 +76,9 @@ chat = AgentGroupChat(agents=[agent1, agent2])
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 #### Adding _Agents_ to a _Agent Group Chat_:
@@ -108,6 +114,9 @@ chat.add_agent(agent=agent2)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -136,6 +145,9 @@ await chat.add_chat_message(ChatMessageContent(role=AuthorRole.USER, content="<m
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Single-Turn Agent Invocation
@@ -172,6 +184,9 @@ async for message in chat.invoke(agent)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Multi-Turn Agent Invocation
@@ -228,6 +243,9 @@ async for response in chat.invoke():
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Accessing Chat History
@@ -257,6 +275,9 @@ history = await chat.get_chat_messages()
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifing an agent.  (For example: [_Open AI Assistant_](./assistant-agent.md) versus [_Chat Completion Agent_](./chat-completion-agent.md).)
@@ -292,6 +313,9 @@ history2 = await chat.get_chat_messages(agent=agent2)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -438,6 +462,9 @@ chat = AgentGroupChat(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -560,6 +587,9 @@ chat = AgentGroupChat(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -598,6 +628,9 @@ if chat.is_complete:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -628,6 +661,9 @@ await chat.reset()
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

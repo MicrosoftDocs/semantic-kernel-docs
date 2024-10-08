@@ -46,6 +46,9 @@ A streamed response delivers the message content in small, incremental chunks. T
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -96,6 +99,9 @@ async for response in agent.invoke_stream(chat)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Streamed response from _Open AI Assistant Agent_
@@ -142,6 +148,9 @@ async for response in agent.invoke_stream(thread_id=thread_id):
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -205,4 +214,7 @@ async for response in chat.invoke_stream():
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end

@@ -31,6 +31,9 @@ Detailed API documentation related to this discussion is available at:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -65,6 +68,9 @@ Onnx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantic
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -111,6 +117,9 @@ agent = ChatCompletionAgent(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -165,6 +174,9 @@ agent = ChatCompletionAgent(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ## Using a _Chat Completion Agent_
@@ -208,6 +220,9 @@ async for response in agent.invoke(chat):
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

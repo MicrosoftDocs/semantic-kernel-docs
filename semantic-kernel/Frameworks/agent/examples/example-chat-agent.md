@@ -71,6 +71,9 @@ Additionally, copy the GitHub plug-in and models (`github.py`) from [_Semantic K
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ## Configuration
@@ -164,6 +167,9 @@ Once configured, the respective AI service classes will pick up the required var
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -197,13 +203,14 @@ Settings settings = new();
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
-TBD $$$
+Next initialize the plug-in using its settings.  Here, a message is displaying to indicate progress.
 
 ::: zone pivot="programming-language-csharp"
-
-Next initialize the plug-in using its settings.  Here, a message is displaying to indicate progress.
 
 ```csharp
 Console.WriteLine("Initialize plugins...");
@@ -222,6 +229,9 @@ kernel.add_plugin(GitHubPlugin(settings=gh_settings), plugin_name="github")
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now initialize a `Kernel` instance with an `IChatCompletionService` and the `GitHubPlugin` previously created.
@@ -257,6 +267,9 @@ settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Agent Definition
@@ -316,6 +329,9 @@ agent = ChatCompletionAgent(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### The _Chat_ Loop
@@ -343,6 +359,9 @@ while not is_complete:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Chat History_ as a _User_ message.
@@ -383,6 +402,9 @@ history.add_message(ChatMessageContent(role=AuthorRole.USER, content=user_input)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 To generate a _Agent_ response to user input, invoke the agent using _Arguments_ to provide the final template parameter that specifies the current date and time.
@@ -409,6 +431,9 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(history, argumen
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ## Final
@@ -604,6 +629,9 @@ if __name__ == "__main__":
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

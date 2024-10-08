@@ -38,6 +38,9 @@ Once configured, an agent will choose when and how to call an available function
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -113,6 +116,9 @@ agent = ChatCompletionAgent(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -184,6 +190,9 @@ agent = ChatCompletionAgent(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

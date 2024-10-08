@@ -40,6 +40,9 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -75,6 +78,9 @@ ChatCompletionAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 #### Open AI Assistant Agent
@@ -104,6 +110,9 @@ OpenAIAssistantAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -159,6 +168,9 @@ ChatCompletionAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -209,6 +221,9 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(chat, overrideAr
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

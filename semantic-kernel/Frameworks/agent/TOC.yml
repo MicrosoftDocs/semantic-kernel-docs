@@ -12,7 +12,7 @@
   href: agent-templates.md
 - name: Configuring Agents with Plugins
   href: agent-functions.md
-- name: How to Stream Agent Responses
+- name: Streaming Agent Responses
   href: agent-streaming.md
 - name: How-To with Agents
   href: examples/TOC.yml

@@ -44,6 +44,9 @@ The abstract _Agent_ class serves as the core abstraction for all types of agent
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Agents can either be invoked directly to perform tasks or orchestrated within an [_Agent Chat_](./agent-chat.md), where multiple agents may collaborate or interact dynamically with user inputs. This flexible structure allows agents to adapt to various conversational or task-driven scenarios, providing developers with robust tools for building intelligent, multi-agent systems.
@@ -86,6 +89,9 @@ The _Agent Channel_ class enables agents of various types to participate in an [
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ## Agent Alignment with _Semantic Kernel_ Features
@@ -118,6 +124,9 @@ The [_Chat Completion Agent_](./chat-completion-agent.md) and [_Open AI Assistan
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -150,6 +159,9 @@ Plugins are a fundamental aspect of the _Semantic Kernel_, enabling developers t
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -185,6 +197,9 @@ Agent messaging, including both input and response, is built upon the core conte
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -222,6 +237,9 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -251,6 +269,9 @@ The [_Chat Completion Agent_](./chat-completion-agent.md) is designed around any
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

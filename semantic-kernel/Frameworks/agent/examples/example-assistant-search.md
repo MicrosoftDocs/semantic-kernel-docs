@@ -75,6 +75,9 @@ Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -163,6 +166,9 @@ Once configured, the respective AI service classes will pick up the required var
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -204,6 +210,9 @@ OpenAIClientProvider clientProvider =
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now create an empty _Vector Store for use with the _File Search_ tool:
@@ -228,6 +237,9 @@ def get_filepath_for_filename(filename: str) -> str:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Let's declare the the three content-files described in the previous [Configuration](#configuration) section:
@@ -255,6 +267,9 @@ filenames = [
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now upload those files and add them to the _Vector Store_:
@@ -284,6 +299,9 @@ foreach (string fileName in _fileNames)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### Agent Definition
@@ -335,6 +353,9 @@ agent = await AzureAssistantAgent.create(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 ### The _Chat_ Loop
@@ -393,6 +414,9 @@ finally:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid nput will be added to the _Assistant Thread_ as a _User_ message.
@@ -433,6 +457,9 @@ await agent.add_chat_message(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 Before invoking the _Agent_ response, let's add a helper method to reformat the unicode annotation brackets to ANSI brackets.
@@ -451,6 +478,9 @@ private static string ReplaceUnicodeBrackets(this string content) =>
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 To generate an _Agent_ response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
@@ -501,6 +531,9 @@ if len(footnotes) > 0:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -737,6 +770,9 @@ if __name__ == "__main__":
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 

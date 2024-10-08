@@ -31,6 +31,9 @@ Detailed API documentation related to this discussion is available at:
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -82,6 +85,9 @@ openai_agent = await OpenAIAssistantAgent.create(
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -113,6 +119,9 @@ agent = await AzureAssistantAgent.retrieve(id=agent_id, kernel=kernel)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -166,6 +175,9 @@ await agent.delete_thread(thread_id)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
@@ -197,6 +209,9 @@ is_deleted = agent._is_deleted
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
 ::: zone-end
 
 
