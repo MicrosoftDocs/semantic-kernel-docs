@@ -27,6 +27,22 @@ Before proceeding with feature coding, make sure your development environment is
 
 Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
 
+To add package dependencies from the command-line use the `dotnet` command:
+
+```powershell
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Extensions.Configuration
+dotnet add package Microsoft.Extensions.Configuration.Binder
+dotnet add package Microsoft.Extensions.Configuration.UserSecrets
+dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables
+dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
+dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
+```
+
+> If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
+
+The project file (`.csproj`) should contain the following `PackageReference` definitions:
+
 ```xml
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="<stable>" />
@@ -37,6 +53,14 @@ Start by creating a _Console_ project. Then, include the following package refer
     <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="<latest>" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="<latest>" />
   </ItemGroup>
+```
+
+The _Agent Framework_ is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
+
+```xml
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA2007;IDE1006;SKEXP0001;SKEXP0110;OPENAI001</NoWarn>
+  </PropertyGroup>
 ```
 
 Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubModels.cs`) from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Plugins/GitHub).  Add these files in your project folder.

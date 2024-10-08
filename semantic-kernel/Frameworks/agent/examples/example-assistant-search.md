@@ -26,7 +26,21 @@ Before proceeding with feature coding, make sure your development environment is
 
 ::: zone pivot="programming-language-csharp"
 
-Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
+To add package dependencies from the command-line use the `dotnet` command:
+
+```powershell
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Extensions.Configuration
+dotnet add package Microsoft.Extensions.Configuration.Binder
+dotnet add package Microsoft.Extensions.Configuration.UserSecrets
+dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables
+dotnet add package Microsoft.SemanticKernel
+dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
+```
+
+> If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
+
+The project file (`.csproj`) should contain the following `PackageReference` definitions:
 
 ```xml
   <ItemGroup>
@@ -35,8 +49,17 @@ Start by creating a _Console_ project. Then, include the following package refer
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="<stable>" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="<stable>" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="<stable>" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="<latest>" />
     <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="<latest>" />
   </ItemGroup>
+```
+
+The _Agent Framework_ is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
+
+```xml
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA2007;IDE1006;SKEXP0001;SKEXP0110;OPENAI001</NoWarn>
+  </PropertyGroup>
 ```
 
 Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The-Water-of-Life.txt` and `Grimms-The-White-Snake.txt` public domain content from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Resources).  Add these files in your project folder and configure to have them copied to the output directory:
