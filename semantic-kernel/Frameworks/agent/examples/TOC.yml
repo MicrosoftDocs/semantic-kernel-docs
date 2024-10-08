@@ -4,5 +4,5 @@
   href: example-assistant-code.md
 - name: How-To: Open AI Assistant Agent File Search
   href: example-assistant-search.md
-- name: How-To: Coordinate Agent Collaboration using Agent Group Chat
+- name: How-To: Agent Group Chat
   href: example-agent-collaboration.md
