@@ -178,7 +178,7 @@ The full example code is provided in the [Final](#final) section. Refer to that 
 
 ### Setup
 
-Prior to creating a _Open AI Assistant Agent_, the configuration settings, plugins, and _Client Provider_ must be initialized.
+Prior to creating a _Open AI Assistant Agent_, the configuration settings and plugins must be initialized.
 
 First initialize settings:
 
@@ -288,9 +288,12 @@ foreach (string fileName in _fileNames)
 
 ### Agent Definition
 
-We are now ready to instantiate an _OpenAI Assistant Agent_ using the _Client Provider_ again. The agent is configured with its target model, _Instructions_, and the _File Search_ tool enabled. Additionally, we explicitly associate the _Vector Store_ with the _File Search_ tool.
+We are now ready to instantiate an _OpenAI Assistant Agent_. The agent is configured with its target model, _Instructions_, and the _File Search_ tool enabled. Additionally, we explicitly associate the _Vector Store_ with the _File Search_ tool.
 
 ::: zone pivot="programming-language-csharp"
+
+We will utilize the `OpenAIClientProvider` again as part of creating the `OpenAIAssistantAgent`:
+
 ```csharp
 Console.WriteLine("Defining agent...");
 OpenAIAssistantAgent agent =
