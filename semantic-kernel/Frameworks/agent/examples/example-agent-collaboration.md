@@ -845,6 +845,18 @@ if chat.is_complete:
 
 Bringing all the steps together, we have the final code for this example. The complete implementation is provided below.
 
+Try using these suggested inputs:
+
+1. Hi
+2. {"message: "hello world"}
+3. {"message": "hello world"}
+4. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provies a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define thei relationships, and orchestrate interactions between them.
+5. make this two paragraphs
+6. thank you
+7. @.\WomensSuffrage.txt
+8. its good, but is it ready for my college professor? 
+
+
 ::: zone pivot="programming-language-csharp"
 ```csharp
 // Copyright (c) Microsoft. All rights reserved.
