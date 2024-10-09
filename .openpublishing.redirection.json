@@ -517,7 +517,7 @@
         },
         {
             "source_path": "semantic-kernel/agents/index.md",
-            "redirect_url": "/semantic-kernel/concepts/agents.md",
+            "redirect_url": "/semantic-kernel/concepts/agents",
             "redirect_document_id": false
         },
         {
@@ -717,57 +717,72 @@
         },
         {
           "source_path": "semantic-kernel/concepts/ai-services/chat-completion/function-calling.md",
-          "redirect_url": "/semantic-kernel/concepts/ai-services/chat-completion/function-calling/index.md",
+          "redirect_url": "/semantic-kernel/concepts/ai-services/chat-completion/function-calling/index",
           "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/enterprise-readiness/observability/index.md",
-            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/index.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/index",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-advanced.md",
-            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-advanced.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-advanced",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-with-app-insights.md",
-            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-app-insights.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-app-insights",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-with-aspire-dashboard.md",
-            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-aspire-dashboard.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-aspire-dashboard",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/enterprise-readiness/observability/telemetry-with-console.md",
-            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-console.md",
+            "redirect_url": "/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-console",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/how-to/vector-store-data-ingestion.md",
-            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/vector-store-data-ingestion.md",
+            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/vector-store-data-ingestion",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/integrations/index.md",
-            "redirect_url": "/semantic-kernel/concepts/ai-services/integrations.md",
+            "redirect_url": "/semantic-kernel/concepts/ai-services/integrations",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/how-to/vector-store-custom-mapper.md",
-            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/vector-store-custom-mapper.md",
+            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/vector-store-custom-mapper",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/get-started/hackathon-materials.md",
-            "redirect_url": "/semantic-kernel/support/hackathon-materials.md",
+            "redirect_url": "/semantic-kernel/support/hackathon-materials",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/get-started/contributing.md",
-            "redirect_url": "/semantic-kernel/support/contributing.md",
+            "redirect_url": "/semantic-kernel/support/contributing",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/frameworks/agent/agent-framework.md",
+            "redirect_url": "semantic-kernel/frameworks/agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/agents.md",
+            "redirect_url": "semantic-kernel/frameworks/agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/personas.md",
+            "redirect_url": "semantic-kernel/frameworks/agent",
             "redirect_document_id": false
         }
     ]
