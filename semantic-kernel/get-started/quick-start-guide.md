@@ -80,7 +80,7 @@ Instructions for accessing the `SemanticKernel` Java package is available [here]
 ## Quickly get started with notebooks
 If you're a Python or C# developer, you can quickly get started with our notebooks. These notebooks provide step-by-step guides on how to use Semantic Kernel to build AI agents.
 
-![Semantic Kernel notebooks](../media/notebook-image.png)
+![Semantic Kernel notebooks](../media/python_getting_started_notebooks.png)
 
 ::: zone-end
 
@@ -92,7 +92,7 @@ To get started, follow these steps:
 4. Open _00-getting-started.ipynb_ to get started setting your environment and creating your first AI agent!
    ::: zone-end
 
-::: zone pivot="programming-language-python"
+::: zone pivot="programming-language-csharp"
 To get started, follow these steps:
 1. Clone the [Semantic Kernel repo](https://github.com/microsoft/semantic-kernel)
 2. Open the repo in Visual Studio Code
@@ -150,7 +150,7 @@ kernel.Plugins.AddFromType<LightsPlugin>("Lights");
 // Enable planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 // Create a history store the conversation
@@ -189,6 +189,7 @@ do {
 import asyncio
 
 from semantic_kernel import Kernel
+from semantic_kernel.utils.logging import setup_logging
 from semantic_kernel.functions import kernel_function
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
@@ -205,17 +206,15 @@ async def main():
     kernel = Kernel()
 
     # Add Azure OpenAI chat completion
-    kernel.add_service(AzureChatCompletion(
+    chat_completion = AzureChatCompletion(
         deployment_name="your_models_deployment_name",
         api_key="your_api_key",
         base_url="your_base_url",
-    ))
+    )
+    kernel.add_service(chat_completion)
 
     # Set the logging level for  semantic_kernel.kernel to DEBUG.
-    logging.basicConfig(
-        format="[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    setup_logging()
     logging.getLogger("kernel").setLevel(logging.DEBUG)
 
     # Add a plugin (the LightsPlugin class is defined below)
@@ -223,8 +222,6 @@ async def main():
         LightsPlugin(),
         plugin_name="Lights",
     )
-
-    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 
     # Enable planning
     execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
@@ -247,12 +244,11 @@ async def main():
         history.add_user_message(userInput)
 
         # Get the response from the AI
-        result = (await chat_completion.get_chat_message_contents(
+        result = await chat_completion.get_chat_message_content(
             chat_history=history,
             settings=execution_settings,
             kernel=kernel,
-            arguments=KernelArguments(),
-        ))[0]
+        )
 
         # Print the results
         print("Assistant > " + str(result))
@@ -291,7 +287,7 @@ If you're interested in understanding more about the code above, we'll break it 
 To make it easier to get started building enterprise apps with Semantic Kernel, we've created a step-by-step that guides you through the process of creating a kernel and using it to interact with AI services.
 
 ::: zone pivot="programming-language-python"
-![Semantic Kernel Python map](../media/PythonMap.png)
+![Semantic Kernel Python map](../media/UpdatedPythonMap.png)
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
@@ -627,7 +623,7 @@ kernel.add_plugin(
 
 ### 9) Planning
 
-Semantic Kernel leverages [function calling](../concepts/ai-services/chat-completion/function-calling.md)–a native feature of most  LLMs–to provide [planning](../concepts/planning.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
+Semantic Kernel leverages [function calling](../concepts/ai-services/chat-completion/function-calling/index.md)–a native feature of most  LLMs–to provide [planning](../concepts/planning.md). With function calling, LLMs can request (or call) a particular function to satisfy a user's request. Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the LLM so the AI agent can generate a final response.
 
 To enable automatic function calling, we first need to create the appropriate execution settings so that Semantic Kernel knows to automatically invoke the functions in the kernel when the AI agent requests them.
 
@@ -636,7 +632,7 @@ To enable automatic function calling, we first need to create the appropriate ex
 ```csharp
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 ```
 
