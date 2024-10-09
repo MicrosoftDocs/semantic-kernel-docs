@@ -24,7 +24,7 @@ Streaming will be used to deliver the agent's responses. This will provide real-
 
 Before proceeding with feature coding, make sure your development environment is fully set up and configured.
 
-:: zone pivot="programming-language-csharp"
+::: zone pivot="programming-language-csharp"
 
 Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
 

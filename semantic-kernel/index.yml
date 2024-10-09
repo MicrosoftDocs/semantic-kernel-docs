@@ -44,7 +44,7 @@ productDirectory:
       links:
         - url: /semantic-kernel/frameworks/process/process-framework
           text: Process Framework
-        - url: /semantic-kernel/frameworks/agent/agents
+        - url: /semantic-kernel/frameworks/agent/
           text: Agent Framework    
     - title: Enterprise Components
       imageSrc: /semantic-kernel/media/Security.svg
