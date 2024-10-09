@@ -458,6 +458,15 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(history, argumen
 
 Bringing all the steps together, we have the final code for this example. The complete implementation is provided below.
 
+Try using these suggested inputs:
+
+1. What is my username?
+2. Describe the repo.
+3. Describe the newest issue created in the repo.
+4. List the top 10 issues closed within the last week.
+5. How were these issues labeled?
+6. List the 5 most recently opened issues with the "Agents" label
+
 ::: zone pivot="programming-language-csharp"
 ```csharp
 using System;

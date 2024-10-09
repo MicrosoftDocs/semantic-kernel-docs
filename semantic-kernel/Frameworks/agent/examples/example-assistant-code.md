@@ -557,6 +557,12 @@ file_ids.clear()
 
 Bringing all the steps together, we have the final code for this example. The complete implementation is provided below.
 
+Try using these suggested inputs:
+
+1. Compare the files to determine the number of countries do not have a state or province defined compared to the total count
+2. Create a table for countries with state or province defined.  Include the count of states or provinces and the total population
+3. Provide a bar chart for countries whose names start with the same letter and sort the x axis by highest count to lowest (include all countries)
+
 ::: zone pivot="programming-language-csharp"
 ```csharp
 using System;

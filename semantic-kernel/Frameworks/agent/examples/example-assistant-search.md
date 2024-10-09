@@ -546,6 +546,12 @@ if len(footnotes) > 0:
 
 Bringing all the steps together, we have the final code for this example. The complete implementation is provided below.
 
+Try using these suggested inputs:
+
+1. What is the paragraph count for each of the stories?
+2. Create a table that identifies the protagonist and antagonist for each story.
+3. What is the moral in The White Snake?
+
 ::: zone pivot="programming-language-csharp"
 ```csharp
 using System;
