@@ -150,7 +150,7 @@ When developing plugins for Retrieval Augmented Generation (RAG), you must also 
 
 ### Dynamic data retrieval
 
-In most cases, the user query will determine the data that the AI agent needs to retrieve. For example, a user might ask for the difference between two different products. The AI agent would then need to dynamically retrieve the product information from a database or API to generate a response using [function calling](../ai-services/chat-completion/function-calling.md). It would be impractical to pre-fetch all possible product information ahead of time and give it to the AI agent.
+In most cases, the user query will determine the data that the AI agent needs to retrieve. For example, a user might ask for the difference between two different products. The AI agent would then need to dynamically retrieve the product information from a database or API to generate a response using [function calling](../ai-services/chat-completion/function-calling/index.md). It would be impractical to pre-fetch all possible product information ahead of time and give it to the AI agent.
 
 Below is an example of a back-and-forth chat between a user and an AI agent where dynamic data retrieval is necessary.
 
