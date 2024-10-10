@@ -1,0 +1,8 @@
+- name: How-To use Chat Completion Agent
+  href: example-chat-agent.md
+- name: How-To use Assistant Agent - Code Interpreter
+  href: example-assistant-code.md
+- name: How-To use Assistant Agent - File Search
+  href: example-assistant-search.md
+- name: How-To use Agent Group Chat
+  href: example-agent-collaboration.md

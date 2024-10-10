@@ -22,8 +22,8 @@ ms.service: semantic-kernel
 
 ## More support information
 
-* [Frequently Asked Questions (FAQs)](/semantic-kernel/support/faqs)
-* [Hackathon Materials](/semantic-kernel/support/hackathon) 
+* [Frequently Asked Questions (FAQs)](/semantic-kernel/support/glossary)
+* [Hackathon Materials](/semantic-kernel/support/hackathon-materials) 
 * [Code of Conduct](/semantic-kernel/support/CodeofConduct)
 
 ## Next step

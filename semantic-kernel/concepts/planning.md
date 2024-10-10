@@ -13,7 +13,7 @@ ms.service: semantic-kernel
 
 Once you have multiple plugins, you then need a way for your AI agent to use them together to solve a user’s need. This is where planning comes in.
 
-Early on, Semantic Kernel introduced the concept of planners that used prompts to request the AI to choose which functions to invoke. Since Semantic Kernel was introduced, however, OpenAI introduced a native way for the model to invoke or “call” a function: [function calling](../concepts/ai-services/chat-completion/function-calling.md). Other AI models like Gemini, Claude, and Mistral have since adopted function calling as a core capability, making it a cross-model supported feature.
+Early on, Semantic Kernel introduced the concept of planners that used prompts to request the AI to choose which functions to invoke. Since Semantic Kernel was introduced, however, OpenAI introduced a native way for the model to invoke or “call” a function: [function calling](../concepts/ai-services/chat-completion/function-calling/index.md). Other AI models like Gemini, Claude, and Mistral have since adopted function calling as a core capability, making it a cross-model supported feature.
 
 Because of these advancements, Semantic Kernel has evolved to use function calling as the primary way to plan and execute tasks.
 
@@ -65,7 +65,7 @@ Supporting function calling without Semantic Kernel is relatively complex. You w
 In Semantic Kernel, we make it easy to use function calling by automating this loop for you. This allows you to focus on building the plugins needed to solve your user's needs.
 
 > [!NOTE]
-> Understanding how the function calling loop works is essential for building performant and reliable AI agents. For an in-depth look at how the loop works, see the [function calling](./ai-services/chat-completion/function-calling.md) article.
+> Understanding how the function calling loop works is essential for building performant and reliable AI agents. For an in-depth look at how the loop works, see the [function calling](./ai-services/chat-completion/function-calling/index.md) article.
 
 ## Using automatic function calling
 
@@ -92,7 +92,7 @@ var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 // 2. Enable automatic function calling
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 var history = new ChatHistory();
@@ -274,6 +274,3 @@ Before we deprecate these planners, we will provide guidance on how to migrate y
 
 ## Next steps
 Now that you understand how planners work in Semantic Kernel, you can learn more about how influence your AI agent so that they best plan and execute tasks on behalf of your users.
-
-> [!div class="nextstepaction"]
-> [Learn about personas](./personas.md)
