@@ -1,12 +1,14 @@
-- name: Agents
-  href: agents.md
 - name: Kernel
   href: kernel.md
 - name: AI Services
   href: ai-services/TOC.yml
+- name: Enterprise Components
+  href: enterprise-readiness/TOC.yml
+- name: Memory (Vector Stores)
+  href: vector-store-connectors/TOC.yml
+- name: Prompt Engineering
+  href: prompts/TOC.yml
 - name: Plugins
   href: plugins/TOC.yml
 - name: Planning
   href: planning.md
-- name: Personas
-  href: personas.md

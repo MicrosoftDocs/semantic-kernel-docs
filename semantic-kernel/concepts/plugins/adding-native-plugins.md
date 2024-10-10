@@ -84,18 +84,12 @@ class LightsPlugin:
     def __init__(self, lights: List[LightModel]):
         self._lights = lights
 
-    @kernel_function(
-        name="get_lights",
-        description="Gets a list of lights and their current state",
-    )
+    @kernel_function
     async def get_lights(self) -> Annotated[List[LightModel], "An array of lights"]:
         """Gets a list of lights and their current state."""
         return self._lights
 
-    @kernel_function(
-        name="change_state",
-        description="Changes the state of the light",
-    )
+    @kernel_function
     async def change_state(
         self,
         change_state: LightModel
@@ -157,14 +151,14 @@ public enum Brightness
 
 ::: zone pivot="programming-language-python"
 ```python
-from typing import TypedDict, Optional
+from typing import TypedDict
 
 class LightModel(TypedDict):
     id: int
     name: str
-    is_on: Optional[bool]
-    brightness: Optional[int]
-    hex: Optional[str]
+    is_on: bool | None
+    brightness: int | None
+    hex: str | None
 ```
 ::: zone-end
 
