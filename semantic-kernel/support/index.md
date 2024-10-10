@@ -25,6 +25,7 @@ ms.service: semantic-kernel
 * [Frequently Asked Questions (FAQs)](/semantic-kernel/support/glossary)
 * [Hackathon Materials](/semantic-kernel/support/hackathon-materials) 
 * [Code of Conduct](/semantic-kernel/support/CodeofConduct)
+* [Transparency Documentation](https://github.com/microsoft/semantic-kernel/blob/main/TRANSPARENCY_FAQS.md)
 
 ## Next step
 
