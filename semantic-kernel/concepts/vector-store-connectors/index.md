@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # What are Semantic Kernel Vector Store connectors? (Experimental)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change. It still has significant gaps in functionality, e.g. Vector Search, which is currently in development and will be released soon.
 
 Vector databases have many use cases across different domains and applications that involve natural language processing (NLP), computer vision (CV), recommendation systems (RS), and other areas that require semantic understanding and matching of data.
 
@@ -141,8 +141,6 @@ await collection.CreateCollectionIfNotExistsAsync();
 string descriptionText = "A place where everyone can be happy.";
 ulong hotelId = 1;
 
-// Create a record and generate a vector for the description using your chosen embedding generation implementation.
-// Just showing a placeholder embedding generation method here for brevity.
 await collection.UpsertAsync(new Hotel
 {
     HotelId = hotelId,
@@ -179,39 +177,9 @@ await collection.upsert(Hotel(
 
 # Retrieve the upserted record.
 retrieved_hotel = await collection.get(hotel_id)
-```
-
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
-
-::: zone pivot="programming-language-csharp"
-
-> [!TIP]
-> For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
-
-### Do a vector search
-
-```csharp
-// Generate a vector for your search text, using your chosen embedding generation implementation.
-// Just showing a placeholder method here for brevity.
-var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
-// Do the search.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Limit = 1 }).ToListAsync()
-
-// Inspect the returned hotels.
-Hotel hotel = searchResult.First().Record;
-Console.WriteLine("Found hotel description: " + hotel.Description);
-```
-
-::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
-::: zone pivot="programming-language-java"
-::: zone-end
-
-> [!TIP]
-> For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
 
 ## Next steps
 
