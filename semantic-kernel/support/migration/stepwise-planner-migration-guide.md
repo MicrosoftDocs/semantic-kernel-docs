@@ -9,10 +9,10 @@ ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
 # Stepwise Planner Migration Guide
-This migration guide shows how to migrate from `FunctionCallingStepwisePlanner` to a new recommended approach for planning capability - Auto Function Calling. The new approach produces the results more reliably and uses fewer tokens compared to `FunctionCallingStepwisePlanner`.
+This migration guide shows how to migrate from `FunctionCallingStepwisePlanner` to a new recommended approach for planning capability - [Auto Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md). The new approach produces the results more reliably and uses fewer tokens compared to `FunctionCallingStepwisePlanner`.
 
 ## Plan generation
-Following code shows how to generate a new plan with Auto Function Calling by using `FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()`. After sending a request to AI model, the plan will be located in `ChatHistory` object where a message with `Assistant` role will contain a list of functions (steps) to call to execute a plan.
+Following code shows how to generate a new plan with Auto Function Calling by using `FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()`. After sending a request to AI model, the plan will be located in `ChatHistory` object where a message with `Assistant` role will contain a list of functions (steps) to call.
 
 Old approach:
 ```csharp
@@ -89,7 +89,7 @@ Kernel kernel = Kernel
     .Build();
 
 FunctionCallingStepwisePlanner planner = new();
-ChatHistory existingPlan = GetExistingPlan(); // plan can be stored in database for reusability.
+ChatHistory existingPlan = GetExistingPlan(); // plan can be stored in database  or cache for reusability.
 
 FunctionCallingStepwisePlannerResult result = await planner.ExecuteAsync(kernel, "Check current UTC time and return current weather in Boston city.", existingPlan);
 
@@ -105,7 +105,7 @@ Kernel kernel = Kernel
 
 IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
-ChatHistory existingPlan = GetExistingPlan(); // plan can be stored in database for reusability.
+ChatHistory existingPlan = GetExistingPlan(); // plan can be stored in database or cache for reusability.
 
 OpenAIPromptExecutionSettings executionSettings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
 
