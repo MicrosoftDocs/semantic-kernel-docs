@@ -267,7 +267,7 @@ When you use automatic function calling, all of the steps in the automatic plann
 
 The Stepwise and Handlebars planners are still available in Semantic Kernel. However, we recommend using function calling for most tasks as it is more powerful and easier to use. Both the Stepwise and Handlebars planners will be deprecated in a future release of Semantic Kernel.
 
-Before we deprecate these planners, we will provide guidance on how to migrate your existing planners to function calling. If you have any questions about this process, please reach out to us on the [discussions board](https://github.com/microsoft/semantic-kernel/discussions) in the Semantic Kernel GitHub repository.
+Learn how to [migrate Stepwise Planner to Auto Function Calling](../support/migration/stepwise-planner-migration-guide.md).
 
 > [!CAUTION]
 > If you are building a new AI agent, we recommend that you _not_ use the Stepwise or Handlebars planners. Instead, use function calling as it is more powerful and easier to use.
