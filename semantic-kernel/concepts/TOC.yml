@@ -10,5 +10,7 @@
   href: prompts/TOC.yml
 - name: Plugins
   href: plugins/TOC.yml
+- name: Text Search (RAG)
+  href: text-search/TOC.yml
 - name: Planning
   href: planning.md

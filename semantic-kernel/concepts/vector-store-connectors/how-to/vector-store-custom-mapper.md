@@ -1,5 +1,5 @@
 ---
-title: How to build a custom mapper for a Semantic Kernel Vector Store connector (Experimental)
+title: How to build a custom mapper for a Semantic Kernel Vector Store connector (Preview)
 description: Describes how to build a custom mapper for a Semantic Kernel Vector Store connector
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# How to build a custom mapper for a Vector Store connector (Experimental)
+# How to build a custom mapper for a Vector Store connector (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 In this how to, we will show how you can replace the default mapper for a vector store record collection with your own mapper.
 
@@ -90,7 +90,7 @@ Note that the definition here is different to the data model above. To store `Pr
 the two vectors are defined at the same level as the `Id`, `Name` and `Description` fields.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 var productDefinition = new VectorStoreRecordDefinition
 {
@@ -120,7 +120,7 @@ For Qdrant `TStorageModel` is `Qdrant.Client.Grpc.PointStruct`.
 We therefore have to implement a mapper that will map between our `Product` data model and a Qdrant `PointStruct`.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 using Qdrant.Client.Grpc;
 
 public class ProductMapper : IVectorStoreRecordMapper<Product, PointStruct>

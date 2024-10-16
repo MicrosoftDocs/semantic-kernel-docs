@@ -1,5 +1,5 @@
 ---
-title: Using the Semantic Kernel Redis Vector Store connector (Experimental)
+title: Using the Semantic Kernel Redis Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Redis.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Using the Redis connector (Experimental)
+# Using the Redis connector (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ## Overview
 
@@ -267,7 +267,7 @@ Also note the use of `JsonPropertyNameAttribute` on the `Description` property t
 
 ```csharp
 using System.Text.Json.Serialization;
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
@@ -281,7 +281,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -303,7 +303,7 @@ Property name overriding is done by setting the `StoragePropertyName` option via
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how these are set in Redis.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
@@ -316,7 +316,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance, StoragePropertyName = "hotel_description_embedding")]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance, IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

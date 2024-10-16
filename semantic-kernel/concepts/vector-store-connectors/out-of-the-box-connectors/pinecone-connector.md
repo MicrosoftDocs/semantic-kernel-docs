@@ -1,5 +1,5 @@
 ---
-title: Using the Semantic Kernel Pinecone Vector Store connector (Experimental)
+title: Using the Semantic Kernel Pinecone Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Pinecone.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Using the Pinecone connector (Experimental)
+# Using the Pinecone connector (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -31,6 +31,14 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
+
+## Limitations
+
+Notable Pinecone connector functionality limitations.
+
+| Feature Area                                                                         | Workaround                                                                                     |
+|--------------------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
+| Vector Search is not yet implemented                                                 | No workaround at this stage, implementation to follow soon                                     |
 
 ## Getting started
 
@@ -144,7 +152,7 @@ The property name override is done by setting the `StoragePropertyName` option v
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Pinecone.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
@@ -157,7 +165,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

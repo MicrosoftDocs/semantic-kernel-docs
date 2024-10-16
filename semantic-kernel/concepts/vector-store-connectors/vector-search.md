@@ -1,5 +1,5 @@
 ---
-title: Vector seearch using Semantic Kernel Vector Store connectors (Experimental)
+title: Vector seearch using Semantic Kernel Vector Store connectors (Preview)
 description: Describes the different options you can use when doing a vector search using Semantic Kernel vector store connectors.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 09/23/2024
 ms.service: semantic-kernel
 ---
-# Vector search using Semantic Kernel Vector Store connectors (Experimental)
+# Vector search using Semantic Kernel Vector Store connectors (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 Semantic Kernel provides vector search capabilities as part of its Vector Store abstractions. This supports filtering and many other options, which this article will explain in more detail.
 
@@ -31,7 +31,7 @@ Assuming you have a collection that already contains data, you can easily search
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Qdrant;
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 using Qdrant.Client;
 
 // Create a Qdrant VectorStore object and choose an existing collection that already contains records.
@@ -78,9 +78,10 @@ Use this property name even if the property may be stored under a different name
 because of custom serialization settings.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
+using Microsoft.Connectors.Memory.InMemory;
 
-var vectorStore = new VolatileVectorStore();
+var vectorStore = new InMemoryVectorStore();
 var collection = vectorStore.GetCollection<int, Product>("skproducts");
 
 // Create the vector search options and indicate that we want to search the FeatureListEmbedding property.

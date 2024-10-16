@@ -1,5 +1,5 @@
 ---
-title: Using the Semantic Kernel Qdrant Vector Store connector (Experimental)
+title: Using the Semantic Kernel Qdrant Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Qdrant.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Using the Qdrant connector (Experimental)
+# Using the Qdrant connector (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ## Overview
 
@@ -124,7 +124,7 @@ The property name override is done by setting the `StoragePropertyName` option v
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Qdrant.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
@@ -137,7 +137,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance, StoragePropertyName = "hotel_description_embedding")]
+    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

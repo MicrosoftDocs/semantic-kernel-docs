@@ -1,5 +1,5 @@
 ---
-title: Generating embeddings for Semantic Kernel Vector Store connectors (Experimental)
+title: Generating embeddings for Semantic Kernel Vector Store connectors
 description: Describes how you can generate embeddings to use with Semantic Kernel vector store connectors.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 # Generating embeddings for Semantic Kernel Vector Store connectors
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 Semantic Kernel supports generating embeddings using many popular AI services out of the box.
 

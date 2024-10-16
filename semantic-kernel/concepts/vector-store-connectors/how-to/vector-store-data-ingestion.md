@@ -1,5 +1,5 @@
 ---
-title: How to ingest data into a Semantic Kernel Vector Store (Experimental) - Memory
+title: How to ingest data into a Semantic Kernel Vector Store (Preview)
 description: Step by step instructions on how to ingest data into a Vector Store using Semantic Kernel
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# How to ingest data into a Vector Store using Semantic Kernel (Experimental)
+# How to ingest data into a Vector Store using Semantic Kernel (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 This article will demonstrate how to create an application to
 
@@ -25,7 +25,7 @@ For this sample you will need
 
 1. An embedding generation model hosted in Azure or another provider of your choice.
 2. An instance of Redis or Docker Desktop so that you can run Redis locally.
-3. A Word document to parse and load. Here is a zip containing a sample Word document you can download and use: [vector-store-data-ingestion-input.zip](../../media/vector-store-data-ingestion-input.zip).
+3. A Word document to parse and load. Here is a zip containing a sample Word document you can download and use: [vector-store-data-ingestion-input.zip](../../../media/vector-store-data-ingestion-input.zip).
 
 ## Setup Redis
 
@@ -50,7 +50,7 @@ document with and the OpenAI connector from Semantic Kernel for generating embed
 ```dotnetcli
 dotnet new console --framework net8.0 --name SKVectorIngest
 cd SKVectorIngest
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
+dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
 dotnet add package Microsoft.SemanticKernel.Connectors.Redis --prerelease
 dotnet add package DocumentFormat.OpenXml
 ```
@@ -63,9 +63,7 @@ We can do this by creating a data model with attributes that describe the functi
 Add a new file to the project called `TextParagraph.cs` and add the following model to it.
 
 ```csharp
-#pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 namespace SKVectorIngest;
 
@@ -96,7 +94,7 @@ internal class TextParagraph
 Note that we are passing the value `1536` to the `VectorStoreRecordVectorAttribute`. This is the dimension size of the vector and has to match the size of vector that your chosen embedding generator produces.
 
 > [!TIP]
-> For more information on how to annotate your data model and what additional options are available for each attribute, refer to [definining your data model](../../concepts/vector-store-connectors/defining-your-data-model.md).
+> For more information on how to annotate your data model and what additional options are available for each attribute, refer to [definining your data model](../../../concepts/vector-store-connectors/defining-your-data-model.md).
 
 ## Read the paragraphs in the document
 
@@ -187,7 +185,7 @@ Add a new file called `DataUploader.cs` and add the following class to it.
 ```csharp
 #pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Embeddings;
 
 namespace SKVectorIngest;

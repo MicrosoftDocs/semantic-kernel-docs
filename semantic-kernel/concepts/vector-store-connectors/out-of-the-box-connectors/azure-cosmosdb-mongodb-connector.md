@@ -1,5 +1,5 @@
 ---
-title: Using the Semantic Kernel Azure CosmosDB MongoDB Vector Store connector (Experimental)
+title: Using the Semantic Kernel Azure CosmosDB MongoDB Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure CosmosDB MongoDB.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 09/23/2024
 ms.service: semantic-kernel
 ---
-# Using the Azure CosmosDB MongoDB Vector Store connector (Experimental)
+# Using the Azure CosmosDB MongoDB Vector Store connector (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -136,7 +136,7 @@ The property name override is done by setting the `BsonElement` attribute on the
 Here is an example of a data model with `BsonElement` set.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
@@ -152,7 +152,7 @@ public class Hotel
     public string Description { get; set; }
 
     [BsonElement("hotel_description_embedding")]
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

@@ -1,16 +1,16 @@
 ---
-title: Out-of-the-box Vector Store connectors (Experimental)
-description: Out-of-the-box Vector Store connectors (Experimental)
+title: Out-of-the-box Vector Store connectors (Preview)
+description: Out-of-the-box Vector Store connectors
 author: westey-m
 ms.topic: conceptual
 ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Out-of-the-box Vector Store connectors (Experimental)
+# Out-of-the-box Vector Store connectors (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 Semantic Kernel provides a number of out-of-the-box Vector Store integrations making it easy to get started with using Vector Stores. It also allows you to experiment with a free or locally hosted Vector Store and then easily switch to a service when scale requires it.
 
@@ -22,8 +22,9 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Azure AI Search](./azure-ai-search-connector.md)          | ✅             | ✅             | In Development | ✅                                |
 | [Cosmos DB No SQL](./azure-cosmosdb-mongodb-connector.md)  | ✅             | In Development  | In Development | ✅                                |
 | [Cosmos DB MongoDB](./azure-cosmosdb-nosql-connector.md)   | ✅             | In Development  | In Development | ✅                                |
+| [In-Memory](./inmemory-connector.md)                       | ✅             | In Development  | In Development | N/A                                |
 | [Pinecone](./pinecone-connector.md)                        | ✅             | In Development  | In Development | C#: ❌ Python: ✅                |
 | [Qdrant](./qdrant-connector.md)                            | ✅             | ✅             | In Development | ✅                                |
 | [Redis](./redis-connector.md)                              | ✅             | ✅             | In Development | ✅                                |
-| [Volatile (In-Memory)](./volatile-connector.md)            | ✅             | ✅             | In Development | N/A                                |
+| [Volatile (In-Memory)](./volatile-connector.md)            | Deprecated (use In-Memory) | ✅             | In Development | N/A                                |
 | [Weaviate](./weaviate-connector.md)                        | ✅             | In Development  | In Development | N/A                               |

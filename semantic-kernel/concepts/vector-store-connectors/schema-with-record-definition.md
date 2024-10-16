@@ -1,5 +1,5 @@
 ---
-title: Defining your Semantic Kernel storage schema using a record definition (Experimental)
+title: Defining your Semantic Kernel storage schema using a record definition (Preview)
 description: Describes how to create a record definition with Semantic Kernel to use when writing to or reading from a Vector Store.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Defining your storage schema using a record definition (Experimental)
+# Defining your storage schema using a record definition (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ## Overview
 
@@ -30,7 +30,7 @@ This can be useful in multiple scenarios:
 Here is an example of how to create a record definition.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.VectorData;
 
 var hotelDefinition = new VectorStoreRecordDefinition
 {
@@ -39,7 +39,7 @@ var hotelDefinition = new VectorStoreRecordDefinition
         new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
         new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = true },
         new VectorStoreRecordDataProperty("Description", typeof(string)) { IsFullTextSearchable = true },
-        new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, IndexKind = IndexKind.Hnsw, DistanceFunction = DistanceFunction.CosineDistance },
+        new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw },
     }
 };
 ```
@@ -99,7 +99,7 @@ new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = 
 Use this class to incidate that your property contains a vector.
 
 ```csharp
-new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, IndexKind = IndexKind.Hnsw, DistanceFunction = DistanceFunction.CosineDistance },
+new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw },
 ```
 
 #### VectorStoreRecordVectorProperty configuration settings
