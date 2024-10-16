@@ -1,5 +1,5 @@
 ---
-title: Using the Semantic Kernel Azure AI Search Vector Store connector (Experimental)
+title: Using the Semantic Kernel Azure AI Search Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure AI Search.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Using the Azure AI Search Vector Store connector (Experimental)
+# Using the Azure AI Search Vector Store connector (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ## Overview
 
@@ -32,7 +32,7 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 
 ## Limitations
 
-Notable Azure AI Search functionality limitations.
+Notable Azure AI Search connector functionality limitations.
 
 | Feature Area                                                                         | Workaround                                                                                     |
 |--------------------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|

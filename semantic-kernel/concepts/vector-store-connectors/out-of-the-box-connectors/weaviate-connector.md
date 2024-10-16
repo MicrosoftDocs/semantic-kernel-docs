@@ -1,5 +1,5 @@
 ---
-title: Using the Semantic Kernel Weaviate Vector Store connector (Experimental)
+title: Using the Semantic Kernel Weaviate Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Weaviate.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 09/23/2024
 ms.service: semantic-kernel
 ---
-# Using the Weaviate Vector Store connector (Experimental)
+# Using the Weaviate Vector Store connector (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -34,7 +34,7 @@ The Weaviate Vector Store connector can be used to access and manage data in Wea
 
 ## Limitations
 
-Notable Weaviate functionality limitations.
+Notable Weaviate connector functionality limitations.
 
 | Feature Area                                                           | Workaround                                                                                     |
 |------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
@@ -145,7 +145,7 @@ Here is an example of a data model with `JsonPropertyNameAttribute` set and how 
 
 ```csharp
 using System.Text.Json.Serialization;
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
@@ -159,7 +159,7 @@ public class Hotel
     public string Description { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION_EMBEDDING")]
-    [VectorStoreRecordVector(4, IndexKind.QuantizedFlat, DistanceFunction.EuclideanDistance)]
+    [VectorStoreRecordVector(4, DistanceFunction.EuclideanDistance, IndexKind.QuantizedFlat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

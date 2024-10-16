@@ -6,11 +6,17 @@
   href: defining-your-data-model.md
 - name: Defining your storage schema using a record definition
   href: schema-with-record-definition.md
+- name: Embedding Generation
+  href: embedding-generation.md
+- name: Vector Search
+  href: vector-search.md
 - name: Serialization of data models
   href: serialization.md
+- name: Legacy Memory Stores
+  href: memory-stores.md
+- name: Code samples
+  href: code-samples.md
 - name: Out-of-the-box connectors
   href: out-of-the-box-connectors/TOC.yml
-- name: How to ingest data into a Vector Store
-  href: vector-store-data-ingestion.md
-- name: How to build a custom mapper for a Vector Store connector
-  href: vector-store-custom-mapper.md
+- name: How to
+  href: how-to/TOC.yml

@@ -1,5 +1,5 @@
 ---
-title: Defining your Semantic Kernel Vector Store data model (Experimental)
+title: Defining your Semantic Kernel Vector Store data model (Preview)
 description: Describes how to create a data model with Semantic Kernel to use when writing to or reading from a Vector Store.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,10 +8,10 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Defining your data model (Experimental)
+# Defining your data model (Preview)
 
 > [!WARNING]
-> The Semantic Kernel Vector Store functionality is experimental, still in development and is subject to change.
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ## Overview
 
@@ -27,9 +27,7 @@ The properties on these classes are decorated with attributes that indicate the 
 Here is an example of a model that is decorated with these attributes.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
-
-#pragma warning disable SKEXP0001
+using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
@@ -42,7 +40,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
     [VectorStoreRecordData(IsFilterable = true)]
@@ -95,7 +93,7 @@ public string HotelName { get; set; }
 Use this attribute to indicate that your property contains a vector.
 
 ```csharp
-[VectorStoreRecordVector(Dimensions: 4, IndexKind.Hnsw, DistanceFunction.CosineDistance)]
+[VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
 public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```
 

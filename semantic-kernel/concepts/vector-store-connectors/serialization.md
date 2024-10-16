@@ -1,5 +1,5 @@
 ---
-title: Serialization of your data model to and from different stores 
+title: Serialization of your data model to and from different stores (Preview)
 description: How does Semantic Kernel serialize your data model to and from different stores
 author: edvan
 zone_pivot_groups: programming-languages
@@ -8,7 +8,7 @@ ms.author: edvan
 ms.date: 08/15/2024
 ms.service: semantic-kernel
 ---
-# Serialization of your data model to and from different stores (Experimental)
+# Serialization of your data model to and from different stores (Preview)
 
 ::: zone pivot="programming-language-csharp"
 
