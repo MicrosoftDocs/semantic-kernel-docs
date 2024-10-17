@@ -276,7 +276,7 @@ retrieved_hotel = await collection.get(hotel_id)
 // Just showing a placeholder method here for brevity.
 var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 // Do the search.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Limit = 1 }).ToListAsync()
+var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).Results.ToListAsync()
 
 // Inspect the returned hotels.
 Hotel hotel = searchResult.First().Record;

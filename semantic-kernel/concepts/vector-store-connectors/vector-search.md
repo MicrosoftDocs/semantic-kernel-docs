@@ -43,7 +43,7 @@ IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollectio
 var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search, passing an options object with a Top value to limit resulst to the single top match.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).ToListAsync();
+var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).Results.ToListAsync();
 
 // Inspect the returned hotel.
 Hotel hotel = searchResult.First().Record;
@@ -91,7 +91,7 @@ var vectorSearchOptions = new VectorSearchOptions
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).ToListAsync();
+var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync();
 
 public sealed class Product
 {
@@ -127,7 +127,7 @@ var vectorSearchOptions = new VectorSearchOptions
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).ToListAsync();
+var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync();
 ```
 
 The default values for `Top` is 3 and `Skip` is 0.
@@ -148,7 +148,7 @@ var vectorSearchOptions = new VectorSearchOptions
     IncludeVectors = true
 }
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).ToListAsync()
+var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync()
 ```
 
 ### VectorSearchFilter
@@ -189,7 +189,7 @@ var vectorSearchOptions = new VectorSearchOptions
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).ToListAsync();
+searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync();
 
 private sealed class Glossary
 {
