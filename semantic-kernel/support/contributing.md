@@ -107,4 +107,4 @@ The continuous integration (CI) system will automatically perform the required b
 If the CI build fails for any reason, the PR issue will be updated with a link that can be used to determine the cause of the failure so that it can be addressed.
 
 ### Contributing to documentation
-We also accept contributions to the [Semantic Kernel documentation repository](https://github.com/MicrosoftDocs/semantic-kernel-docs/issues). To learn how to make contributions, please start with the Microsoft [docs contributor guide](/contribute).
+We also accept contributions to the [Semantic Kernel documentation repository](https://github.com/MicrosoftDocs/semantic-kernel-docs/issues). 
