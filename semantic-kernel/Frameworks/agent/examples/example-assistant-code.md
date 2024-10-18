@@ -37,7 +37,7 @@ dotnet add package Microsoft.Extensions.Configuration.Binder
 dotnet add package Microsoft.Extensions.Configuration.UserSecrets
 dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables
 dotnet add package Microsoft.SemanticKernel
-dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
+dotnet add package Microsoft.SemanticKernel.Agents.OpenAI --prerelease
 ```
 
 > If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
@@ -224,13 +224,13 @@ OpenAIClientProvider clientProvider =
 
 ::: zone pivot="programming-language-csharp"
 
-Use the `OpenAIClientProvider` to access a `FileClient` and upload the two data-files described in the previous [Configuration](#configuration) section, preserving the _File Reference_ for final clean-up.
+Use the `OpenAIClientProvider` to access an `OpenAIFileClient` and upload the two data-files described in the previous [Configuration](#configuration) section, preserving the _File Reference_ for final clean-up.
 
 ```csharp
 Console.WriteLine("Uploading files...");
-FileClient fileClient = clientProvider.Client.GetFileClient();
-OpenAIFileInfo fileDataCountryDetail = await fileClient.UploadFileAsync("PopulationByAdmin1.csv", FileUploadPurpose.Assistants);
-OpenAIFileInfo fileDataCountryList = await fileClient.UploadFileAsync("PopulationByCountry.csv", FileUploadPurpose.Assistants);
+OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
+OpenAIFile fileDataCountryDetail = await fileClient.UploadFileAsync("PopulationByAdmin1.csv", FileUploadPurpose.Assistants);
+OpenAIFile fileDataCountryList = await fileClient.UploadFileAsync("PopulationByCountry.csv", FileUploadPurpose.Assistants);
 ```
 ::: zone-end
 
@@ -417,7 +417,7 @@ Before invoking the _Agent_ response, let's add some helper methods to download 
 Here we're place file content in the system defined temporary directory and then launching the system defined viewer application.
 
 ```csharp
-private static async Task DownloadResponseImageAsync(FileClient client, ICollection<string> fileIds)
+private static async Task DownloadResponseImageAsync(OpenAIFileClient client, ICollection<string> fileIds)
 {
     if (fileIds.Count > 0)
     {
@@ -429,10 +429,10 @@ private static async Task DownloadResponseImageAsync(FileClient client, ICollect
     }
 }
 
-private static async Task DownloadFileContentAsync(FileClient client, string fileId, bool launchViewer = false)
+private static async Task DownloadFileContentAsync(OpenAIFileClient client, string fileId, bool launchViewer = false)
 {
-    OpenAIFileInfo fileInfo = client.GetFile(fileId);
-    if (fileInfo.Purpose == OpenAIFilePurpose.AssistantsOutput)
+    OpenAIFile fileInfo = client.GetFile(fileId);
+    if (fileInfo.Purpose == FilePurpose.AssistantsOutput)
     {
         string filePath =
             Path.Combine(
@@ -590,9 +590,9 @@ public static class Program
             OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
 
         Console.WriteLine("Uploading files...");
-        FileClient fileClient = clientProvider.Client.GetFileClient();
-        OpenAIFileInfo fileDataCountryDetail = await fileClient.UploadFileAsync("PopulationByAdmin1.csv", FileUploadPurpose.Assistants);
-        OpenAIFileInfo fileDataCountryList = await fileClient.UploadFileAsync("PopulationByCountry.csv", FileUploadPurpose.Assistants);
+        OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
+        OpenAIFile fileDataCountryDetail = await fileClient.UploadFileAsync("PopulationByAdmin1.csv", FileUploadPurpose.Assistants);
+        OpenAIFile fileDataCountryList = await fileClient.UploadFileAsync("PopulationByCountry.csv", FileUploadPurpose.Assistants);
 
         Console.WriteLine("Defining agent...");
         OpenAIAssistantAgent agent =
@@ -678,7 +678,7 @@ public static class Program
         }
     }
 
-    private static async Task DownloadResponseImageAsync(FileClient client, ICollection<string> fileIds)
+    private static async Task DownloadResponseImageAsync(OpenAIFileClient client, ICollection<string> fileIds)
     {
         if (fileIds.Count > 0)
         {
@@ -690,10 +690,10 @@ public static class Program
         }
     }
 
-    private static async Task DownloadFileContentAsync(FileClient client, string fileId, bool launchViewer = false)
+    private static async Task DownloadFileContentAsync(OpenAIFileClient client, string fileId, bool launchViewer = false)
     {
-        OpenAIFileInfo fileInfo = client.GetFile(fileId);
-        if (fileInfo.Purpose == OpenAIFilePurpose.AssistantsOutput)
+        OpenAIFile fileInfo = client.GetFile(fileId);
+        if (fileInfo.Purpose == FilePurpose.AssistantsOutput)
         {
             string filePath =
                 Path.Combine(
@@ -833,7 +833,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
 ```
 ::: zone-end
 
