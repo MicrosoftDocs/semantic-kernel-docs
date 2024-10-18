@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # Legacy Semantic Kernel Memory Stores
 
+> [!TIP]
+> We recommend using the Vector Store abstractions instead of the legacy Memory Stores. For more information on how to use the Vector Store abstractions start [here](./index.md).
+
 Semantic Kernel provides a set of Memory Store abstractions where the primary interface is `Microsoft.SemanticKernel.Memory.IMemoryStore`.
 
 ## Memory Store vs Vector Store abstractions

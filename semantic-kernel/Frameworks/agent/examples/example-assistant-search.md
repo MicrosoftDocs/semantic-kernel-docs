@@ -35,7 +35,7 @@ dotnet add package Microsoft.Extensions.Configuration.Binder
 dotnet add package Microsoft.Extensions.Configuration.UserSecrets
 dotnet add package Microsoft.Extensions.Configuration.EnvironmentVariables
 dotnet add package Microsoft.SemanticKernel
-dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
+dotnet add package Microsoft.SemanticKernel.Agents.OpenAI --prerelease
 ```
 
 > If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
@@ -237,7 +237,8 @@ Use the `OpenAIClientProvider` to access a `VectorStoreClient` and create a `Vec
 ```csharp
 Console.WriteLine("Creating store...");
 VectorStoreClient storeClient = clientProvider.Client.GetVectorStoreClient();
-VectorStore store = await storeClient.CreateVectorStoreAsync();
+CreateVectorStoreOperation operation = await storeClient.CreateVectorStoreAsync(waitUntilCompleted: true);
+string storeId = operation.VectorStoreId;
 ```
 ::: zone-end
 
@@ -287,17 +288,17 @@ filenames = [
 
 ::: zone pivot="programming-language-csharp"
 
-Now upload those files and add them to the _Vector Store_ by using the previously created `FileClient` and `VectorStore` client to upload each file and add it to the _Vector Store_, preserving the resulting _File References_.
+Now upload those files and add them to the _Vector Store_ by using the previously created `VectorStoreClient` clients to upload each file with a `OpenAIFileClient` and add it to the _Vector Store_, preserving the resulting _File References_.
 
 ```csharp
-Dictionary<string, OpenAIFileInfo> fileReferences = [];
+Dictionary<string, OpenAIFile> fileReferences = [];
 
 Console.WriteLine("Uploading files...");
-FileClient fileClient = clientProvider.Client.GetFileClient();
+OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
 foreach (string fileName in _fileNames)
 {
-    OpenAIFileInfo fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
-    await storeClient.AddFileToVectorStoreAsync(store.Id, fileInfo.Id);
+    OpenAIFile fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
+    await storeClient.AddFileToVectorStoreAsync(storeId, fileInfo.Id, waitUntilCompleted: true);
     fileReferences.Add(fileInfo.Id, fileInfo);
 }
 ```
@@ -333,7 +334,7 @@ OpenAIAssistantAgent agent =
                 Always format response using markdown.
                 """,
             EnableFileSearch = true,
-            VectorStoreId = store.Id,
+            VectorStoreId = storeId,
         },
         new Kernel());
 ```
@@ -392,7 +393,7 @@ finally
         [
             agent.DeleteThreadAsync(threadId),
             agent.DeleteAsync(),
-            storeClient.DeleteVectorStoreAsync(store.Id),
+            storeClient.DeleteVectorStoreAsync(storeId),
             ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
         ]);
 }
@@ -592,17 +593,18 @@ public static class Program
 
         Console.WriteLine("Creating store...");
         VectorStoreClient storeClient = clientProvider.Client.GetVectorStoreClient();
-        VectorStore store = await storeClient.CreateVectorStoreAsync();
+        CreateVectorStoreOperation operation = await storeClient.CreateVectorStoreAsync(waitUntilCompleted: true);
+        string storeId = operation.VectorStoreId;
 
         // Retain file references.
-        Dictionary<string, OpenAIFileInfo> fileReferences = [];
+        Dictionary<string, OpenAIFile> fileReferences = [];
 
         Console.WriteLine("Uploading files...");
-        FileClient fileClient = clientProvider.Client.GetFileClient();
+        OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
         foreach (string fileName in _fileNames)
         {
-            OpenAIFileInfo fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
-            await storeClient.AddFileToVectorStoreAsync(store.Id, fileInfo.Id);
+            OpenAIFile fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
+            await storeClient.AddFileToVectorStoreAsync(storeId, fileInfo.Id, waitUntilCompleted: true);
             fileReferences.Add(fileInfo.Id, fileInfo);
         }
 
@@ -622,7 +624,7 @@ public static class Program
                         Always format response using markdown.
                         """,
                     EnableFileSearch = true,
-                    VectorStoreId = store.Id,
+                    VectorStoreId = storeId,
                 },
                 new Kernel());
 
@@ -683,7 +685,7 @@ public static class Program
                 [
                     agent.DeleteThreadAsync(threadId),
                     agent.DeleteAsync(),
-                    storeClient.DeleteVectorStoreAsync(store.Id),
+                    storeClient.DeleteVectorStoreAsync(storeId),
                     ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
                 ]);
         }
