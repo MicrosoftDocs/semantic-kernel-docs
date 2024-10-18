@@ -23,6 +23,8 @@ The properties on these classes are decorated with attributes that indicate the 
 
 > [!TIP]
 > For an alternative to using attributes, refer to [defining your schema with a record definition](./schema-with-record-definition.md).
+> [!TIP]
+> For an alternative to defining your own data model, refer to [using Vector Store abstractions without defining your own data model](./generic-data-model.md).
 
 Here is an example of a model that is decorated with these attributes.
 

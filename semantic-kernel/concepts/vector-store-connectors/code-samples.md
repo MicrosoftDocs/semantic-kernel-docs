@@ -15,6 +15,19 @@ ms.service: semantic-kernel
 
 ::: zone pivot="programming-language-csharp"
 
+## End to end RAG sample with Vector Stores
+
+This example is a standalone console application that demonstrates RAG using Semantic Kernel. The sample has the following characteristics:
+
+1. Allows a choice of chat and embedding services
+1. Allows a choice of vector databases
+1. Reads the contents of one or more PDF files and creates a chunks for each section
+1. Generates embeddings for each text chunk and upserts it to the chosen vector database
+1. Registers the Vector Store as a Text Search plugin with the kernel
+1. Invokes the plugin to augment the prompt provided to the AI model with more context
+
+- [End to end RAG demo](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Demos/VectorStoreRAG/README.md)
+
 ## Simple Data Ingestion and Vector Search
 
 For two very simple examples of how to do data ingestion into a vector store and do vector search, check out these
@@ -58,6 +71,16 @@ you need to build a service that reponds with a small set of results per request
 > [!WARNING]
 > Not all vector databases support Skip functionality natively for vector searches, so some connectors may have to fetch Skip + Top records and skip
 > on the client side to simulate this behavior.
+
+## Using the generic data model vs using a custom data model
+
+It's possible to use the the Vector Store abstractions without defining a data model and defining your schema via a record definition instead.
+This example shows how you can create a vector store using a custom model and read using the generic data model or vice versa.
+
+- [Generic data model interop](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_GenericDataModel_Interop.cs)
+
+> [!TIP]
+> For more information about using the generic data model, refer to [using Vector Store abstractions without defining your own data model](./generic-data-model.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
