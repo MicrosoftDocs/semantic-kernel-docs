@@ -8,3 +8,5 @@
   href: text-search-function-calling.md
 - name: Text Search with Vector Stores
   href: text-search-vector-stores.md
+- name: Out-of-the-box Text Search
+  href: out-of-the-box-textsearch/TOC.yml

@@ -70,6 +70,7 @@ The sample below repeats the pattern described in the previous section with a fe
 
 ```csharp
 using Microsoft.SemanticKernel.Data;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.Plugins.Web.Bing;
 
 // Create a kernel with OpenAI chat completion
@@ -199,6 +200,7 @@ When this sample is executed, the response will use [techcommunity.microsoft.com
 
 ```csharp
 using Microsoft.SemanticKernel.Data;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.Plugins.Web.Bing;
 
 // Create a kernel with OpenAI chat completion
