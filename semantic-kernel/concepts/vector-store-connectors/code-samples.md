@@ -74,13 +74,30 @@ you need to build a service that reponds with a small set of results per request
 
 ## Using the generic data model vs using a custom data model
 
-It's possible to use the the Vector Store abstractions without defining a data model and defining your schema via a record definition instead.
+It's possible to use the Vector Store abstractions without defining a data model and defining your schema via a record definition instead.
 This example shows how you can create a vector store using a custom model and read using the generic data model or vice versa.
 
 - [Generic data model interop](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_GenericDataModel_Interop.cs)
 
 > [!TIP]
 > For more information about using the generic data model, refer to [using Vector Store abstractions without defining your own data model](./generic-data-model.md).
+
+## Reading data that was ingested using Langchain
+
+It's possible to use the Vector Store abstractions to access data that was ingested using a different sytem, e.g. Langchain.
+The main requirement is to create a data model that matches the storage schema that the Langchain implementation used.
+In cases where this is not possible, it's also possible to use a custom mapper instead.
+
+The following two examples, show how to use the Azure AI Search and Redis vector stores to read data that was ingested using Langchain.
+
+- [Azure AI Search](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop_AzureAISearch.cs)
+- [Redis](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop_Redis.cs)
+
+The next example shows how to use the Qdrant vector store with a custom mapper to read data that was ingested using Langchain.
+A custom mapper is required in this case, because the built in Qdrant mapper does not support complex types and the metadata field
+produced by the Langchain ingestion is a complex field.
+
+- [Qdrant](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop_Qdrant.cs)
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
