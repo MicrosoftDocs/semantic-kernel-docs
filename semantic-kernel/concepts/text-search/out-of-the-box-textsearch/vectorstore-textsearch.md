@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Vector Store Text Search implementation uses the [Vector Store Connectors](../../vector-store-connectors/out-of-the-box-connectors/index.md) to retrieve search results. This means you can use Vector Store Text Search with an Vector Store which Semantic Kernel supports and any implementation of [Microsoft.Extensions.VectorData.Abstractions](https://www.nuget.org/packages/Microsoft.Extensions.VectorData.Abstractions).
+The Vector Store Text Search implementation uses the [Vector Store Connectors](../../vector-store-connectors/out-of-the-box-connectors/index.md) to retrieve search results. This means you can use Vector Store Text Search with any Vector Store which Semantic Kernel supports and any implementation of [Microsoft.Extensions.VectorData.Abstractions](https://www.nuget.org/packages/Microsoft.Extensions.VectorData.Abstractions).
 
 ## Limitations
 
