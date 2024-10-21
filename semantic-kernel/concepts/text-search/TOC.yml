@@ -1,0 +1,12 @@
+- name: Overview
+  href: index.md
+- name: Text Search Abstractions
+  href: text-search-abstractions.md
+- name: Text Search Plugins
+  href: text-search-plugins.md
+- name: Text Search Function Calling
+  href: text-search-function-calling.md
+- name: Text Search with Vector Stores
+  href: text-search-vector-stores.md
+- name: Out-of-the-box Text Search
+  href: out-of-the-box-textsearch/TOC.yml
