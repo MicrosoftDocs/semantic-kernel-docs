@@ -349,3 +349,8 @@ More coming soon.
 More coming soon.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Vector Stores](../vector-store-connectors/index.md)
