@@ -23,7 +23,7 @@ See the limitations listed for the [Vector Store connector](../../vector-store-c
 
 ## Getting started
 
-The sample below shows how to create a `VectorStoreTextSearch` which is bound to an in-memory vector store and use it to perform a text search.
+The sample below shows how to use an in-memory vector store to create a `VectorStoreTextSearch` and use it to perform a text search.
 
 ::: zone pivot="programming-language-csharp"
 
