@@ -13,6 +13,8 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The Semantic Kernel Text Search functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
+::: zone pivot="programming-language-csharp"
+
 ## Overview
 
 The Vector Store Text Search implementation uses the [Vector Store Connectors](../../vector-store-connectors/out-of-the-box-connectors/index.md) to retrieve search results. This means you can use Vector Store Text Search with any Vector Store which Semantic Kernel supports and any implementation of [Microsoft.Extensions.VectorData.Abstractions](https://www.nuget.org/packages/Microsoft.Extensions.VectorData.Abstractions).
@@ -24,8 +26,6 @@ See the limitations listed for the [Vector Store connector](../../vector-store-c
 ## Getting started
 
 The sample below shows how to use an in-memory vector store to create a `VectorStoreTextSearch` and use it to perform a text search.
-
-::: zone pivot="programming-language-csharp"
 
 ```csharp
 using Microsoft.Extensions.VectorData;
