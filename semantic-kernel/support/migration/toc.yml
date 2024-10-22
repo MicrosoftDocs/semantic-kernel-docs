@@ -1,0 +1,8 @@
+- name: .NET Migration to v1+
+  href: v1-migration-guide.md
+- name: .NET Migration to 1.18.0+
+  href: v2-openai-migration-guide.md
+- name: Function Calling Migration
+  href: function-calling-migration-guide.md
+- name: .NET Stepwise Planner Migration
+  href: stepwise-planner-migration-guide.md

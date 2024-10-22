@@ -56,6 +56,12 @@ In Python, there's a single package that includes everything you need to get sta
 pip install semantic-kernel
 ```
 
+On [PyPI](https://pypi.org/project/semantic-kernel/) under `Provides-Extra` the additional extras you can install are also listed and when used that will install the packages needed for using SK with that specific connector or service, you can install those with the square bracket syntax for instance:
+```bash
+pip install semantic-kernel[azure]
+```
+This will install Semantic Kernel, as well as specific tested versions of: `azure-ai-inference`, `azure-search-documents`, `azure-core`, `azure-identity`, `azure-cosmos` and `msgraph-sdk` (and any dependencies of those packages). Similarly the extra `hugging_face` will install `transformers` and `sentence-transformers`.
+
 ### Java packages
 
 For Java, Semantic Kernel has the following packages; all are under the group Id `com.microsoft.semantic-kernel`, and can be imported
@@ -152,19 +158,19 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | YAML                             | ✅ | ✅ | ✅ | |
 | Prompty                          | ❌ | ✅ | ❌ | |
 
-### AI Services
+### AI Services Modalities
 
 | Services                          |  C#  | Python | Java | Notes |
 |-----------------------------------|:----:|:------:|:----:|-------|
 | Text Generation                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
 | Chat Completion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
 | Text Embeddings (Experimental)     | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
-| Text to Image (Experimental)       | ✅ | ❌ | ❌ | Example: Dall-E |
-| Image to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Pix2Struct |
+| Text to Image (Experimental)       | ✅ | ✅ | ❌ | Example: Dall-E |
+| Image to Text (Experimental)       | ✅ | ✅  | ❌ | Example: Pix2Struct |
 | Text to Audio (Experimental)       | ✅ | ❌ | ❌ | Example: Text-to-speech |
 | Audio to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Whisper |
 
-### AI service endpoints
+### AI Service Connectors
 
 | Endpoints                                 |  C#  | Python | Java | Notes |
 |-------------------------------------------|:----:|:------:|:----:|-------|
@@ -176,8 +182,7 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 ### Memory Connectors (Experimental)
 
 > [!IMPORTANT]
-> All of the existing memory connectors are currently experimental and are undergoing active development to improve the experience of using them. To provide feedback on the latest proposal, please refer to the active [Search](https://github.com/microsoft/semantic-kernel/pull/6012) and [Memory Connector](https://github.com/microsoft/semantic-kernel/pull/6364) ADRs.
-
+> All of the existing memory connectors are currently experimental and will be replaced by Vector Store connectors. These will provide more functionality via an updated abstraction layer.
 
 | Memory Connectors        |  C#  | Python | Java | Notes |
 |--------------------------|:----:|:------:|:----:|-------|
@@ -192,3 +197,9 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | Sqlite                   | ✅ | ❌ | 🔄 | |
 | Weaviate                 | ✅ | ✅ | ❌ | |
 
+### Vector Store Connectors (Experimental)
+
+> [!IMPORTANT]
+> All of the existing Vector Store connectors are currently experimental and are undergoing active development to improve the experience of using them. To provide feedback on the latest proposal, please refer to the active [Search](https://github.com/microsoft/semantic-kernel/pull/6012) and [Memory Connector](https://github.com/microsoft/semantic-kernel/pull/6364) ADRs.
+
+For the list of out of the box vector store connectors and the language support for each, refer to [out of the box connectors](../concepts/vector-store-connectors/out-of-the-box-connectors/index.md).

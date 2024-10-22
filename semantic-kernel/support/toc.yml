@@ -1,6 +1,12 @@
 - name: Overview
   href: index.md
-- name: Migrating to v1+
-  href: v1-migration-guide.md
+- name: Contributing to Semantic Kernel
+  href: contributing.md
+- name: Hackathon materials
+  href: hackathon-materials.md
 - name: Glossary
   href: glossary.md
+- name: Upgrading
+  href: migration/toc.yml
+- name: Security
+  href: SECURITY.md
