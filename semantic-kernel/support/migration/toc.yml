@@ -4,5 +4,5 @@
   href: v2-openai-migration-guide.md
 - name: Function Calling Migration
   href: function-calling-migration-guide.md
-- name: Stepwise Planner Migration
+- name: .NET Stepwise Planner Migration
   href: stepwise-planner-migration-guide.md
