@@ -1,5 +1,5 @@
 ---
-title: Migrating from Stepwise Planner to Auto Function Calling
+title: .NET Migrating from Stepwise Planner to Auto Function Calling
 description: Describes the steps for SK caller code to migrate from Stepwise Planner to Auto Function Calling.
 zone_pivot_groups: programming-languages
 author: dmytrostruk
@@ -117,11 +117,4 @@ string planResult = result.Content;
 The code snippets above demonstrate how to migrate your code that uses Stepwise Planner to use Auto Function Calling. Learn more about [Function Calling with chat completion](../../concepts/ai-services/chat-completion/function-calling/index.md).
 
 ::: zone-end
-::: zone pivot="programming-language-python"
-## Coming soon
-More info coming soon.
-::: zone-end
-::: zone pivot="programming-language-java"
-## Coming soon
-More info coming soon.
-::: zone-end
+
