@@ -1,0 +1,9 @@
+- name: Overview
+  href: index.md
+- name: Bing text search
+  href: bing-textsearch.md
+- name: Google text search
+  href: google-textsearch.md
+- name: Vector store text search
+  href: vectorstore-textsearch.md
+
