@@ -8,3 +8,5 @@
   href: glossary.md
 - name: Upgrading
   href: migration/toc.yml
+- name: Security
+  href: SECURITY.md

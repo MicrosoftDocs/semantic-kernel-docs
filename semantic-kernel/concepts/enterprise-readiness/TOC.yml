@@ -2,5 +2,3 @@
   href: filters.md
 - name: Observability
   href: observability/TOC.yml
-- name: Security  
-  href: SECURITY.md
