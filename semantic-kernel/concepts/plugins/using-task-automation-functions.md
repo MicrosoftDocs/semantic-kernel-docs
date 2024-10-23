@@ -39,9 +39,9 @@ public class ApprovalFilterExample() : IFunctionInvocationFilter
                 context.Result = new FunctionResult(context.Result, "The order creation was not approved by the user");
                 return;
             }
-            
-            await next(context);
         }
+
+        await next(context);
     }
 }
 ```
