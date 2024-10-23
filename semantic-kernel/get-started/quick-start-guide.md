@@ -154,7 +154,7 @@ do {
 
     // Add the message from the agent to the chat history
     history.AddMessage(result.Role, result.Content ?? string.Empty);
-} while (userInput is not null)
+} while (userInput is not null);
 ```
 
 ::: zone-end
@@ -481,7 +481,7 @@ public class LightsPlugin
    [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
-      return lights
+      return lights;
    }
 
    [KernelFunction("change_state")]
