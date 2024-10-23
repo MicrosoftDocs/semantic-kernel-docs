@@ -40,6 +40,29 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
 
+Some AI models support parallel function calling, where the model chooses multiple functions for invocation. This can be useful in cases when invoking chosen functions takes a long time. For example, the AI may choose to retrieve the latest news and the current time simultaneously, rather than making a round trip per function.
+
+Semantic Kernel can invoke these functions in two different ways:
+- **Sequentially**: The functions are invoked one after another. This is the default behavior.
+- **Concurrently**: The functions are invoked at the same time. This can be enabled by setting the `FunctionChoiceBehaviorOptions.AllowConcurrentInvocation` property to `true`, as shown in the example below.
+```csharp
+using Microsoft.SemanticKernel;
+
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<NewsUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
+
+// Enable concurrent invocation of functions to get the latest news and the current time.
+FunctionChoiceBehaviorOptions options = new() { AllowConcurrentInvocation = true };
+
+PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(options: options) }; 
+
+await kernel.InvokePromptAsync("Good morning! What is the current time and latest news headlines?", new(settings));
+```
+
 ## Manual Function Invocation
 In cases when the caller wants to have more control over the function invocation process, manual function invocation can be used. 
 
