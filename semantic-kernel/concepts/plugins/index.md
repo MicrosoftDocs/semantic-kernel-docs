@@ -159,48 +159,39 @@ public class LightModel
 
 ::: zone pivot="programming-language-python"
 ```python
-from typing import List, Optional, TypedDict, Annotated
+from typing import TypedDict, Annotated
 
 class LightModel(TypedDict):
    id: int
    name: str
-   is_on: Optional[bool]
-   brightness: Optional[int]
-   hex: Optional[str]
+   is_on: bool | None
+   brightness: int | None
+   hex: str | None
 
 class LightsPlugin:
-   lights: List[LightModel] = [
+   lights: list[LightModel] = [
       {"id": 1, "name": "Table Lamp", "is_on": False, "brightness": 100, "hex": "FF0000"},
       {"id": 2, "name": "Porch light", "is_on": False, "brightness": 50, "hex": "00FF00"},
       {"id": 3, "name": "Chandelier", "is_on": True, "brightness": 75, "hex": "0000FF"},
    ]
 
-   @kernel_function(
-      name="get_lights",
-      description="Gets a list of lights and their current state",
-   )
-   async def get_lights(self) -> Annotated[List[LightModel], "An array of lights"]:
+   @kernel_function
+   async def get_lights(self) -> Annotated[list[LightModel], "An array of lights"]:
       """Gets a list of lights and their current state."""
       return self.lights
 
-   @kernel_function(
-      name="get_state",
-      description="Gets the state of a particular light",
-   )
+   @kernel_function
    async def get_state(
       self,
       id: Annotated[int, "The ID of the light"]
-   ) -> Annotated[Optional[LightModel], "The state of the light"]:
+   ) -> Annotated[LightModel | None], "The state of the light"]:
       """Gets the state of a particular light."""
       for light in self.lights:
          if light["id"] == id:
                return light
       return None
 
-   @kernel_function(
-      name="change_state",
-      description="Changes the state of the light",
-   )
+   @kernel_function
    async def change_state(
       self,
       id: Annotated[int, "The ID of the light"],
@@ -284,7 +275,7 @@ kernel.Plugins.AddFromType<LightsPlugin>("Lights");
 // Enable planning
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new() 
 {
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
 };
 
 // Create a history store the conversation
@@ -326,19 +317,18 @@ async def main():
    kernel = Kernel()
 
    # Add Azure OpenAI chat completion
-   kernel.add_service(AzureChatCompletion(
+   chat_completion = AzureChatCompletion(
       deployment_name="your_models_deployment_name",
       api_key="your_api_key",
       base_url="your_base_url",
-   ))
+   )
+   kernel.add_service(chat_completion)
    
    # Add a plugin (the LightsPlugin class is defined below)
    kernel.add_plugin(
       LightsPlugin(),
       plugin_name="Lights",
    )
-
-   chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 
    # Enable planning
    execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
@@ -349,12 +339,11 @@ async def main():
    history.add_message("Please turn on the lamp")
 
    # Get the response from the AI
-   result = (await chat_completion.get_chat_message_contents(
+   result = await chat_completion.get_chat_message_content(
       chat_history=history,
       settings=execution_settings,
       kernel=kernel,
-      arguments=KernelArguments(),
-   ))[0]
+   )
 
    # Print the results
    print("Assistant > " + str(result))
