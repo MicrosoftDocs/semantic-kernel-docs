@@ -26,5 +26,6 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Pinecone](./pinecone-connector.md)                        | ✅             | In Development  | In Development | C#: ❌ Python: ✅                |
 | [Qdrant](./qdrant-connector.md)                            | ✅             | ✅             | In Development | ✅                                |
 | [Redis](./redis-connector.md)                              | ✅             | ✅             | In Development | ✅                                |
+| [SQLite](./sqlite-connector.md)                            | ✅             | In Development  | In Development | ✅                               |
 | [Volatile (In-Memory)](./volatile-connector.md)            | Deprecated (use In-Memory) | ✅             | In Development | N/A                                |
 | [Weaviate](./weaviate-connector.md)                        | ✅             | In Development  | In Development | N/A                               |

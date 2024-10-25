@@ -14,6 +14,8 @@
   href: qdrant-connector.md
 - name: Redis connector
   href: redis-connector.md
+- name: SQLite connector
+  href: sqlite-connector.md
 - name: Volatile (in-memory) connector
   href: volatile-connector.md
 - name: Weaviate connector
