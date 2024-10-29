@@ -8,6 +8,8 @@
   href: azure-cosmosdb-nosql-connector.md
 - name: In-memory connector
   href: inmemory-connector.md
+- name: MongoDB connector
+  href: mongodb-connector.md
 - name: Pinecone connector
   href: pinecone-connector.md
 - name: Qdrant connector
