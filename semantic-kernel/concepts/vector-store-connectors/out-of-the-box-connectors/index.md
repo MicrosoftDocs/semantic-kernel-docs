@@ -23,8 +23,10 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Cosmos DB MongoDB](./azure-cosmosdb-mongodb-connector.md) | ✅             | In Development  | In Development | ✅                                |
 | [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)    | ✅             | In Development  | In Development | ✅                                |
 | [In-Memory](./inmemory-connector.md)                       | ✅             | In Development  | In Development | N/A                               |
+| [MongoDB](./mongodb-connector.md)                          | ✅             | In Development  | In Development | ✅                                |
 | [Pinecone](./pinecone-connector.md)                        | ✅             | In Development  | In Development | C#: ❌ Python: ✅                |
 | [Qdrant](./qdrant-connector.md)                            | ✅             | ✅             | In Development | ✅                                |
 | [Redis](./redis-connector.md)                              | ✅             | ✅             | In Development | ✅                                |
+| [SQLite](./sqlite-connector.md)                            | ✅             | In Development  | In Development | ✅                               |
 | [Volatile (In-Memory)](./volatile-connector.md)            | Deprecated (use In-Memory) | ✅             | In Development | N/A                                |
 | [Weaviate](./weaviate-connector.md)                        | ✅             | In Development  | In Development | N/A                               |
