@@ -130,4 +130,40 @@ For more details on this concept see the [serialization documentation](./../seri
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
+## Getting started
+
+Include the latest version of the Semantic Kernel API in your Maven project, add the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-api</artifactId>
+    <version>[LATEST]</version>
+</dependency>
+```
+
+You can then create a vector store instance using the `VolatileVectorStore` class.
+
+```java
+import com.microsoft.semantickernel.data.VolatileVectorStore;
+import com.microsoft.semantickernel.data.VolatileVectorStoreRecordCollection;
+import com.microsoft.semantickernel.data.VolatileVectorStoreRecordCollectionOptions;
+
+public class Main {
+    public static void main(String[] args) {
+        // Build an Azure AI Search Vector Store
+        var vectorStore = new VolatileVectorStore();
+    }
+}
+```
+You can also create a collection directly.
+
+```java
+var collection = new VolatileVectorStoreRecordCollection<>("skhotels",
+        VolatileVectorStoreRecordCollectionOptions.<Hotel>builder()
+                .withRecordClass(Hotel.class)
+                .build());
+```
+
 ::: zone-end

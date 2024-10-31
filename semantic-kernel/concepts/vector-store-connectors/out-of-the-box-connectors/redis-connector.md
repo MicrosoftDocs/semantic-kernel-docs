@@ -194,6 +194,53 @@ For more details on this concept see the [serialization documentation](./../seri
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
+## Getting started
+
+Include the latest version of the Semantic Kernel Redis data connector in your Maven project by adding the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-data-redis</artifactId>
+    <version>[LATEST]</version>
+</dependency>
+```
+
+You can then create a vector store instance using the `RedisVectorStore` class, having the Redis client (JedisPooled) as a parameter.
+
+```java
+import com.microsoft.semantickernel.data.redis.RedisJsonVectorStoreRecordCollectionOptions;
+import com.microsoft.semantickernel.data.redis.RedisStorageType;
+import com.microsoft.semantickernel.data.redis.RedisVectorStore;
+import com.microsoft.semantickernel.data.redis.RedisVectorStoreOptions;
+import redis.clients.jedis.JedisPooled;
+
+public class Main {
+    public static void main(String[] args) {
+        JedisPooled jedis = new JedisPooled("<your-redis-url>");
+
+        // Build a Redis Vector Store
+        // Available storage types are JSON and HASHSET. Default is JSON.
+        var vectorStore = RedisVectorStore.builder()
+            .withClient(jedis)
+            .withOptions(
+                RedisVectorStoreOptions.builder()
+                    .withStorageType(RedisStorageType.HASH_SET).build())
+            .build();
+    }
+}
+```
+
+You can also retrieve a collection directly.
+
+```java
+var collection = vectorStore.getCollection("skhotels",
+    RedisJsonVectorStoreRecordCollectionOptions.<Hotel>builder()
+        .withRecordClass(Hotel.class)
+        .build());
+```
+
 ::: zone-end
 
 ## Index prefixes
@@ -237,6 +284,17 @@ await collection.get("myprefix_h1")
 ```
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
+```java
+var collection = vectorStore.getCollection("skhotels",
+    RedisJsonVectorStoreRecordCollectionOptions.<Hotel>builder()
+        .withRecordClass(Hotel.class)
+        .withPrefixCollectionName(false)
+        .build());
+
+collection.getAsync("myprefix_h1", null).block();
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
