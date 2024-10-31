@@ -233,7 +233,121 @@ Individual Vector Store implementations may also use their own index kinds and d
 
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+All methods to upsert or get records use strongly typed model classes.
+The fields on these classes are decorated with annotations that indicate the purpose of each field.
+
+> [!TIP]
+> For an alternative to using attributes, refer to [defining your schema with a record definition](./schema-with-record-definition.md).
+
+Here is an example of a model that is decorated with these annotations. By default, most out of the box vector stores use Jackson, thus is a good practice to ensure the model object can be serialized by Jackson, i.e the class is visible, has getters, constructor, annotations, etc.
+
+```java
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordData;
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordKey;
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordVector;
+import com.microsoft.semantickernel.data.vectorstorage.definition.DistanceFunction;
+import com.microsoft.semantickernel.data.vectorstorage.definition.IndexKind;
+
+import java.util.List;
+
+public class Hotel {
+    @VectorStoreRecordKey
+    private String hotelId;
+
+    @VectorStoreRecordData(isFilterable = true)
+    private String name;
+
+    @VectorStoreRecordData(isFullTextSearchable = true)
+    private String description;
+
+    @VectorStoreRecordVector(dimensions = 4, indexKind = IndexKind.HNSW, distanceFunction = DistanceFunction.COSINE_DISTANCE)
+    private List<Float> descriptionEmbedding;
+
+    @VectorStoreRecordData(isFilterable = true)
+    private List<String> tags;
+
+    public Hotel() { }
+
+    public Hotel(String hotelId, String name, String description, List<Float> descriptionEmbedding, List<String> tags) {
+        this.hotelId = hotelId;
+        this.name = name;
+        this.description = description;
+        this.descriptionEmbedding = descriptionEmbedding;
+        this.tags = tags;
+    }
+
+    public String getHotelId() { return hotelId; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public List<Float> getDescriptionEmbedding() { return descriptionEmbedding; }
+    public List<String> getTags() { return tags; }
+}
+```
+
+## Annotations
+
+### VectorStoreRecordKey
+
+Use this annotation to indicate that your field is the key of the record.
+
+```java
+@VectorStoreRecordKey
+private String hotelId;
+```
+
+#### VectorStoreRecordKey parameters
+
+| Parameter                 | Required | Description                                                                                                                                                                                                     |
+|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
+
+> [!TIP]
+> For more information on which connectors support storageName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+
+### VectorStoreRecordData
+
+Use this annotation to indicate that your field contains general data that is not a key or a vector.
+
+```java
+@VectorStoreRecordData(isFilterable = true)
+private String name;
+```
+
+#### VectorStoreRecordData parameters
+
+| Parameter                 | Required | Description                                                                                                                                                                                                     |
+|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| isFilterable              | No       | Indicates whether the field should be indexed for filtering in cases where a database requires opting in to indexing per field. Default is false.                                                         |
+| isFullTextSearchable      | No       | Indicates whether the field should be indexed for full text search for databases that support full text search. Default is false.                                                                            |
+| storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
+
+> [!TIP]
+> For more information on which connectors support storageName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+
+### VectorStoreRecordVector
+
+Use this annotation to indicate that your field contains a vector.
+
+```java
+@VectorStoreRecordVector(dimensions = 4, indexKind = IndexKind.HNSW, distanceFunction = DistanceFunction.COSINE_DISTANCE)
+private List<Float> descriptionEmbedding;
+```
+
+#### VectorStoreRecordVector parameters
+
+| Parameter                 | Required | Description                                                                                                                                                                                                     |
+|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
+| indexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
+| distanceFunction          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
+| storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
+
+Common index kinds and distance function types are supplied on the `com.microsoft.semantickernel.data.vectorstorage.definition.IndexKind` and `com.microsoft.semantickernel.data.vectorstorage.definition.DistanceFunction` enums.
+Individual Vector Store implementations may also use their own index kinds and distance functions, where the database supports unusual types.
+
+> [!TIP]
+> For more information on which connectors support storageName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+
 
 More info coming soon.
 

@@ -520,8 +520,8 @@ ChatResponse response = await chatCompletion.GetChatMessageContentAsync(
 ```python
 chat_completion = kernel.get_service(type=ChatCompletionClientBase)
 
-execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
-execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
+execution_settings = AzureChatPromptExecutionSettings()
+execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
 response = (await chat_completion.get_chat_message_contents(
       chat_history=history,

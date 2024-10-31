@@ -172,6 +172,55 @@ For more details on this concept see the [serialization documentation](./../seri
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
+## Getting started
+
+Include the latest version of the Semantic Kernel Azure AI Search data connector in your Maven project by adding the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-data-azureaisearch</artifactId>
+    <version>[LATEST]</version>
+</dependency>
+```
+
+You can then create a vector store instance using the `AzureAISearchVectorStore` class, having the AzureAISearch client as a parameter.
+
+```java
+import com.azure.core.credential.AzureKeyCredential;
+import com.azure.search.documents.indexes.SearchIndexClientBuilder;
+import com.microsoft.semantickernel.data.azureaisearch.AzureAISearchVectorStore;
+import com.microsoft.semantickernel.data.azureaisearch.AzureAISearchVectorStoreOptions;
+import com.microsoft.semantickernel.data.azureaisearch.AzureAISearchVectorStoreRecordCollection;
+import com.microsoft.semantickernel.data.azureaisearch.AzureAISearchVectorStoreRecordCollectionOptions;
+
+public class Main {
+    public static void main(String[] args) {
+        // Build the Azure AI Search client
+        var searchClient = new SearchIndexClientBuilder()
+                .endpoint("https://<your-search-service-name>.search.windows.net")
+                .credential(new AzureKeyCredential("<your-search-service-key>"))
+                .buildAsyncClient();
+
+        // Build an Azure AI Search Vector Store
+        var vectorStore = AzureAISearchVectorStore.builder()
+                .withSearchIndexAsyncClient(searchClient)
+                .withOptions(new AzureAISearchVectorStoreOptions())
+                .build();
+    }
+}
+```
+
+You can also create a collection directly.
+
+```java
+var collection = new AzureAISearchVectorStoreRecordCollection<>(searchClient, "skhotels",
+        AzureAISearchVectorStoreRecordCollectionOptions.<Hotel>builder()
+                .withRecordClass(Hotel.class)
+                .build());
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"

@@ -56,7 +56,7 @@ var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels", hotelDefini
 
 ### VectorStoreRecordKeyProperty
 
-Use this class to incidate that your property is the key of the record.
+Use this class to indicate that your property is the key of the record.
 
 ```csharp
 new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
@@ -75,7 +75,7 @@ new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
 
 ### VectorStoreRecordDataProperty
 
-Use this class to incidate that your property contains general data that is not a key or a vector.
+Use this class to indicate that your property contains general data that is not a key or a vector.
 
 ```csharp
 new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = true },
@@ -96,7 +96,7 @@ new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = 
 
 ### VectorStoreRecordVectorProperty
 
-Use this class to incidate that your property contains a vector.
+Use this class to indicate that your property contains a vector.
 
 ```csharp
 new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw },
@@ -166,8 +166,111 @@ collection = vector_store.get_collection(
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+Here is an example of how to create a record definition.
 
-More info coming soon.
+```java
+var hotelDefinition = VectorStoreRecordDefinition.fromFields(
+    Arrays.asList(
+        VectorStoreRecordKeyField.builder().withName("hotelId").withFieldType(String.class).build(),
+        VectorStoreRecordDataField.builder()
+            .withName("name")
+            .withFieldType(String.class)
+            .isFilterable(true).build(),
+        VectorStoreRecordDataField.builder()
+            .withName("description")
+            .withFieldType(String.class)
+            .isFullTextSearchable(true).build(),
+        VectorStoreRecordVectorField.builder().withName("descriptionEmbedding")
+            .withDimensions(4)
+            .withIndexKind(IndexKind.HNSW)
+            .withDistanceFunction(DistanceFunction.COSINE_DISTANCE)
+            .withFieldType(List.class).build()
+    )
+);
+```
+
+When creating a definition you always have to provide a name and type for each field in your schema, since this is required for index creation and data mapping.
+
+To use the definition, pass it to the GetCollection method.
+
+```java
+var collection = vectorStore.getCollection("skhotels",
+        JDBCVectorStoreRecordCollectionOptions.builder()
+            .withRecordDefinition(hotelDefinition)
+            .build()
+    );
+```
+
+## Record Field configuration classes
+
+### VectorStoreRecordKeyField
+
+Use this class to indicate that your field is the key of the record.
+
+```csharp
+VectorStoreRecordKeyField.builder().withName("hotelId").withFieldType(String.class).build(),
+```
+
+#### VectorStoreRecordKeyField configuration settings
+
+| Parameter                 | Required | Description                                                                                                                                                       |
+|---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | Yes      | The name of the field on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| fieldType              | Yes      | The type of the field on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
+
+> [!TIP]
+> For more information on which connectors support storageName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+
+### VectorStoreRecordDataField
+
+Use this class to indicate that your property contains general data that is not a key or a vector.
+
+```java
+VectorStoreRecordDataField.builder()
+    .withName("name")
+    .withFieldType(String.class)
+    .isFilterable(true).build(),
+```
+
+#### VectorStoreRecordDataField configuration settings
+
+| Parameter                 | Required | Description                                                                                                                                                       |
+|---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | Yes      | The name of the field on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| fieldType              | Yes      | The type of the field on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| isFilterable              | No       | Indicates whether the field should be indexed for filtering in cases where a database requires opting in to indexing per field. Default is false.           |
+| isFullTextSearchable      | No       | Indicates whether the field should be indexed for full text search for databases that support full text search. Default is false.                              |
+| storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
+
+> [!TIP]
+> For more information on which connectors support storageName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+
+### VectorStoreRecordVectorField
+
+Use this class to indicate that your field contains a vector.
+
+```csharp
+VectorStoreRecordVectorField.builder().withName("descriptionEmbedding")
+    .withDimensions(4)
+    .withIndexKind(IndexKind.HNSW)
+    .withDistanceFunction(DistanceFunction.COSINE_DISTANCE)
+    .withFieldType(List.class).build(),
+```
+
+#### VectorStoreRecordVectorField configuration settings
+
+| Parameter                 | Required | Description                                                                                                                                                       |
+|---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name     | Yes      | The name of the field on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| fieldType              | Yes      | The type of the field on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.      |
+| indexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                  |
+| distanceFunction          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                     |
+| storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
+
+> [!TIP]
+> For more information on which connectors support storageName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+
 
 ::: zone-end
