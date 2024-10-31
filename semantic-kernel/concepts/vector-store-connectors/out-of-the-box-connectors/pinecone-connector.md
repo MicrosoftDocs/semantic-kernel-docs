@@ -32,14 +32,6 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 | IsFullTextSearchable supported?   | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
 
-## Limitations
-
-Notable Pinecone connector functionality limitations.
-
-| Feature Area                                                                         | Workaround                                                                                     |
-|--------------------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
-| Vector Search is not yet implemented                                                 | No workaround at this stage, implementation to follow soon                                     |
-
 ## Getting started
 
 Add the Pinecone Vector Store connector NuGet package to your project.
