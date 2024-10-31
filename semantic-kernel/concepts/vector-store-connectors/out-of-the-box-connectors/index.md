@@ -22,11 +22,16 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Azure AI Search](./azure-ai-search-connector.md)          | ✅             | ✅             | In Development | ✅                                |
 | [Cosmos DB MongoDB](./azure-cosmosdb-mongodb-connector.md) | ✅             | In Development  | In Development | ✅                                |
 | [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)    | ✅             | In Development  | In Development | ✅                                |
+| Chroma                                                     | Coming Soon     | Coming Soon    | Coming Soon    |                                    |
 | [In-Memory](./inmemory-connector.md)                       | ✅             | In Development  | In Development | N/A                               |
+| Milvus                                                     | Coming Soon     | Coming Soon    | Coming Soon    |                                    |
 | [MongoDB](./mongodb-connector.md)                          | ✅             | In Development  | In Development | ✅                                |
 | [Pinecone](./pinecone-connector.md)                        | ✅             | In Development  | In Development | C#: ❌ Python: ✅                |
+| Postgres                                                   | In Development | In Development  | In Development |                                    |
 | [Qdrant](./qdrant-connector.md)                            | ✅             | ✅             | In Development | ✅                                |
 | [Redis](./redis-connector.md)                              | ✅             | ✅             | In Development | ✅                                |
+| Sql Server                                                 | Coming Soon     | Coming Soon    | Coming Soon    |                                    |
+| [Volatile (In-Memory)](./volatile-connector.md)            | Deprecated (use In-Memory) | ✅  | In Development | N/A                               |
 | [SQLite](./sqlite-connector.md)                            | ✅             | In Development  | In Development | ✅                               |
 | [Volatile (In-Memory)](./volatile-connector.md)            | Deprecated (use In-Memory) | ✅             | In Development | N/A                                |
 | [Weaviate](./weaviate-connector.md)                        | ✅             | In Development  | In Development | N/A                               |

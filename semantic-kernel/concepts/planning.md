@@ -129,7 +129,7 @@ import asyncio
 from semantic_kernel import Kernel
 from semantic_kernel.functions import kernel_function
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
-from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.functions.kernel_arguments import KernelArguments
@@ -154,8 +154,8 @@ async def main():
     chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 
     # 2. Enable automatic function calling
-    execution_settings = AzureChatPromptExecutionSettings(tool_choice="auto")
-    execution_settings.function_call_behavior = FunctionCallBehavior.EnableFunctions(auto_invoke=True, filters={})
+    execution_settings = AzureChatPromptExecutionSettings()
+    execution_settings.function_call_behavior = FunctionChoiceBehavior.Auto()
 
     # Create a history of the conversation
     history = ChatHistory()

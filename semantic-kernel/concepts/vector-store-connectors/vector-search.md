@@ -1,5 +1,5 @@
 ---
-title: Vector seearch using Semantic Kernel Vector Store connectors (Preview)
+title: Vector search using Semantic Kernel Vector Store connectors (Preview)
 description: Describes the different options you can use when doing a vector search using Semantic Kernel vector store connectors.
 zone_pivot_groups: programming-languages
 author: westey-m
