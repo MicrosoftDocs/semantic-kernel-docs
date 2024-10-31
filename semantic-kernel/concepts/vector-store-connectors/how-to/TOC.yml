@@ -2,3 +2,5 @@
   href: vector-store-data-ingestion.md
 - name: How to build a custom mapper for a Vector Store connector
   href: vector-store-custom-mapper.md
+- name: How to build your own Vector Store connector
+  href: build-your-own-connector.md
