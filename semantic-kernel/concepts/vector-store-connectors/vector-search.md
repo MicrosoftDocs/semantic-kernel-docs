@@ -234,8 +234,279 @@ More info coming soon.
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+## Vector Search
 
-More info coming soon.
+The `searchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions` class as input.
+This method is available on the following interfaces:
+
+1. `VectorizedSearch<Record>`
+2. `VectorStoreRecordCollection<Key, Record>`
+
+Note that `VectorStoreRecordCollection<Key, Record>` inherits from `VectorizedSearch<Record>`.
+
+Assuming you have a collection that already contains data, you can easily search it. Here is an example using JDBC with PostgreSQL.
+
+```java
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStore;
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStoreOptions;
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStoreRecordCollectionOptions;
+import com.microsoft.semantickernel.data.jdbc.postgres.PostgreSQLVectorStoreQueryProvider;
+import com.microsoft.semantickernel.data.vectorstorage.options.VectorSearchOptions;
+import org.postgresql.ds.PGSimpleDataSource;
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        // Configure the data source
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/sk");
+        dataSource.setUser("postgres");
+        dataSource.setPassword("root");
+
+        // Create a JDBC vector store and choose an existing collection that already contains records.
+        var vectorStore = new JDBCVectorStore(dataSource, JDBCVectorStoreOptions.builder()
+                .withQueryProvider(PostgreSQLVectorStoreQueryProvider.builder()
+                        .withDataSource(dataSource)
+                        .build())
+                .build());
+        var collection = vectorStore.getCollection("skhotels", JDBCVectorStoreRecordCollectionOptions.<Hotel>builder()
+                .withRecordClass(Hotel.class)
+                .build());
+
+        // Generate a vector for your search text, using your chosen embedding generation implementation.
+        // Just showing a placeholder method here for brevity.
+        var searchVector = generateEmbeddingsAsync("I'm looking for a hotel where customer happiness is the priority.").block();
+
+        // Do the search, passing an options object with a Top value to limit results to the single top match.
+        var searchResult = collection.searchAsync(searchVector, VectorSearchOptions.builder()
+                .withTop(1).build()
+        ).block();
+
+        // Inspect the returned hotel.
+        Hotel hotel = searchResult.getResults().get(0).getRecord();
+        System.out.printf("Found hotel description: %s\n", hotel.getDescription());
+    }
+}
+```
+
+> [!TIP]
+> For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
+
+## Vector Search Options
+
+The following options can be provided using the `VectorSearchOptions` class.
+
+### VectorFieldName
+
+The `VectorFieldName` option can be used to specify the name of the vector field to target during the search.
+If none is provided, the first vector found on the data model or specified in the record definition will be used.
+
+Note that when specifying the `VectorFieldName`, use the name of the field as defined on the data model or in the record definition.
+Use this field name even if the field may be stored under a different name in the vector store. The storage name may e.g. be different
+because of custom serialization settings.
+
+```java
+import com.microsoft.semantickernel.data.VolatileVectorStore;
+import com.microsoft.semantickernel.data.VolatileVectorStoreRecordCollectionOptions;
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordData;
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordKey;
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordVector;
+import com.microsoft.semantickernel.data.vectorstorage.options.VectorSearchOptions;
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        // Build a query provider
+        var vectorStore = new VolatileVectorStore();
+        var collection = vectorStore.getCollection("skproducts", VolatileVectorStoreRecordCollectionOptions.<Product>builder()
+                .withRecordClass(Product.class)
+                .build());
+
+        // Create the vector search options and indicate that we want to search the FeatureListEmbedding field.
+        var searchOptions = VectorSearchOptions.builder()
+                .withVectorFieldName("featureListEmbedding")
+                .build();
+
+        // Generate a vector for your search text, using the embedding model of your choice
+        var searchVector = generateEmbeddingsAsync().block();
+
+        // Do the search
+        var searchResult = collection.searchAsync(searchVector, searchOptions).block();
+    }
+
+    public static class Product {
+        @VectorStoreRecordKey
+        private int key;
+
+        @VectorStoreRecordData
+        private String description;
+
+        @VectorStoreRecordData
+        private List<String> featureList;
+
+        @VectorStoreRecordVector(dimensions = 1536)
+        public List<Float> descriptionEmbedding;
+
+        @VectorStoreRecordVector(dimensions = 1536)
+        public List<Float> featureListEmbedding;
+
+        public Product() {
+        }
+
+        public Product(int key, String description, List<String> featureList, List<Float> descriptionEmbedding, List<Float> featureListEmbedding) {
+            this.key = key;
+            this.description = description;
+            this.featureList = featureList;
+            this.descriptionEmbedding = Collections.unmodifiableList(descriptionEmbedding);
+            this.featureListEmbedding = Collections.unmodifiableList(featureListEmbedding);
+        }
+
+        public int getKey() { return key; }
+        public String getDescription() { return description; }
+        public List<String> getFeatureList() { return featureList; }
+        public List<Float> getDescriptionEmbedding() { return descriptionEmbedding; }
+        public List<Float> getFeatureListEmbedding() { return featureListEmbedding; }
+    }
+}
+```
+
+### Top and Skip
+
+The `Top` and `Skip` options allow you to limit the number of results to the Top n results and
+to skip a number of results from the top of the resultset.
+Top and Skip can be used to do paging if you wish to retrieve a large number of results using separate calls.
+
+```java
+// Create the vector search options and indicate that we want to skip the first 40 results and then get the next 20.
+var searchOptions = VectorSearchOptions.builder()
+        .withTop(20)
+        .withSkip(40)
+        .build();
+
+// Generate a vector for your search text, using the embedding model of your choice
+var searchVector = generateEmbeddingsAsync().block();
+
+// Do the search
+var searchResult = collection.searchAsync(searchVector, searchOptions).block();
+```
+
+The default values for `Top` is 3 and `Skip` is 0.
+
+### IncludeVectors
+
+The `IncludeVectors` option allows you to specify whether you wish to return vectors in the search results.
+If `false`, the vector properties on the returned model will be left null.
+Using `false` can significantly reduce the amount of data retrieved from the vector store during search,
+making searches more efficient.
+
+The default value for `IncludeVectors` is `false`.
+
+```java
+// Create the vector search options and indicate that we want to include vectors in the search results.
+var searchOptions = VectorSearchOptions.builder()
+        .withIncludeVectors(true)
+        .build();
+
+// Generate a vector for your search text, using the embedding model of your choice
+var searchVector = generateEmbeddingsAsync().block();
+
+// Do the search
+var searchResult = collection.searchAsync(searchVector, searchOptions).block();
+```
+
+### VectorSearchFilter
+
+The `VectorSearchFilter` option can be used to provide a filter for filtering the records in the chosen collection
+before applying the vector search.
+
+This has multiple benefits:
+
+- Reduce latency and processing cost, since only records remaining after filtering need to be compared with the search vector and therefore fewer vector comparisons have to be done.
+- Limit the resultset for e.g. access control purposes, by excluding data that the user shouldn't have access to.
+
+Note that in order for fields to be used for filtering, many vector stores require those fields to be indexed first.
+Some vector stores will allow filtering using any field, but may optionally allow indexing to improve filtering performance.
+
+If creating a collection via the Semantic Kernel vector store abstractions and you wish to enable filtering on a field,
+set the `IsFilterable` field to true when defining your data model or when creating your record definition.
+
+> [!TIP]
+> For more information on how to set the `IsFilterable` field, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
+
+To create a filter use the `VectorSearchFilter` class. You can combine multiple filter clauses together in one `VectorSearchFilter`.
+All filter clauses are combined with `and`.
+Note that when providing a field name when constructing the filter, use the name of the field as defined on the data model or in the record definition.
+Use this field name even if the field may be stored under a different name in the vector store. The storage name may e.g. be different
+because of custom serialization settings.
+
+```java
+// Filter where category == 'External Definitions' and tags contain 'memory'.
+var filter = VectorSearchFilter.builder()
+        .equalTo("category", "External Definitions")
+        .anyTagEqualTo("tags", "memory")
+        .build();
+
+// Create the vector search options and indicate that we want to filter the search results by a specific field.
+var searchOptions = VectorSearchOptions.builder()
+        .withVectorSearchFilter(filter)
+        .build();
+
+// Generate a vector for your search text, using the embedding model of your choice
+var searchVector = generateEmbeddingsAsync().block();
+
+// Do the search
+var searchResult = collection.searchAsync(searchVector, searchOptions).block();
+
+
+public static class Glossary {
+    @VectorStoreRecordKey
+    private String key;
+
+    @VectorStoreRecordData(isFilterable = true)
+    private String category;
+
+    @VectorStoreRecordData(isFilterable = true)
+    private List<String> tags;
+
+    @VectorStoreRecordData
+    private String term;
+
+    @VectorStoreRecordData
+    private String definition;
+
+    @VectorStoreRecordVector(dimensions = 1536)
+    private List<Float> definitionEmbedding;
+
+    public Glossary() {
+    }
+
+    public Glossary(String key, String category, List<String> tags, String term, String definition, List<Float> definitionEmbedding) {
+        this.key = key;
+        this.category = category;
+        this.tags = tags;
+        this.term = term;
+        this.definition = definition;
+        this.definitionEmbedding = Collections.unmodifiableList(definitionEmbedding);
+    }
+
+    public String getKey() { return key; }
+    public String getCategory() { return category; }
+    public List<String> getTags() { return tags; }
+    public String getTerm() { return term; }
+    public String getDefinition() { return definition; }
+    public List<Float> getDefinitionEmbedding() { return definitionEmbedding; }
+}
+```
+
+#### EqualTo filter clause
+
+Use `equalTo` for a direct comparison between field and value.
+
+#### AnyTagEqualTo filter clause
+
+Use `anyTagEqualTo` to check if any of the strings, stored in a tag field in the vector store, contains a provided value.
+For a field to be considered a tag field, it needs to be a `List<String>`.
 
 ::: zone-end
