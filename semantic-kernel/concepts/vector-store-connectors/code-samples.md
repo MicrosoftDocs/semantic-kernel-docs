@@ -109,8 +109,14 @@ More coming soon.
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+## Simple Data Ingestion and Vector Search
 
-More coming soon.
+For simple examples of how to do data ingestion into a vector store and do vector search, check out these examples, which make use of Azure AI Search, JDBC with PostgreSQL, Redis and In Memory vector stores.
+
+- [Vector Search with Azure AI Search](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/VectorStoreWithAzureAISearch.java)
+- [Vector Search with JDBC](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/VectorStoreWithJDBC.java)
+- [Vector Search with Redis](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/VectorStoreWithRedis.java)
+- [Vector Search with in memory store](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/InMemoryVolatileVectorStore.java)
+
 
 ::: zone-end
