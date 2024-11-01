@@ -270,6 +270,7 @@ constructor parameter of the `FunctionChoiceBehaviorOptions` type. The following
       | false               | true                      | one per function           | false*                |
       | true                | false                     | one per multiple functions | false                 |
       | true                | true                      | one per multiple functions | true                  |
+      
       `*` There's only one function to call
 
 ## Function Invocation
