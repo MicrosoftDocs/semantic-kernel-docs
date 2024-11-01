@@ -264,12 +264,12 @@ constructor parameter of the `FunctionChoiceBehaviorOptions` type. The following
   
       The following table summarizes the effects of different combinations of this option together with the `AllowConcurrentInvocation` option:
 
-      | AllowParallelCalls  | AllowConcurrentInvocation | AI function call requests      | Concurrent Invocation |
-      |---------------------|---------------------------|--------------------------------|-----------------------|
-      | false               | false                     | one per function           | false                 |
-      | false               | true                      | one per function           | false*                |
-      | true                | false                     | one per multiple functions | false                 |
-      | true                | true                      | one per multiple functions | true                  |
+      | AllowParallelCalls  | AllowConcurrentInvocation | # of functions chosen per AI roundtrip  | Concurrent Invocation by SK |
+      |---------------------|---------------------------|-----------------------------------------|-----------------------|
+      | false               | false                     | one                                     | false                 |
+      | false               | true                      | one                                     | false*                |
+      | true                | false                     | multiple                                | false                 |
+      | true                | true                      | multiple                                | true                  |
       
       `*` There's only one function to call
 
