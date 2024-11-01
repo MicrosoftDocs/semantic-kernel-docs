@@ -255,6 +255,23 @@ KernelFunction promptFunction = KernelFunctionYaml.FromPromptYaml(promptTemplate
 Console.WriteLine(await kernel.InvokeAsync(promptFunction));
 ```
 
+## Function Choice Behavior Options
+Some of the aspects of the function choice behaviors can be configured via options that each function choice behavior class can accept via the `options` 
+constructor parameter of the `FunctionChoiceBehaviorOptions` type. The following options are available:
+
+  - `AllowConcurrentInvocation` option enables concurrent invocation of functions by the Semantic Kernel. By default, this option is set to false, meaning that functions are invoked sequentially. Concurrent invocation is only possible if the AI model can choose, a process known as function calling, multiple functions for invocation in a single request; otherwise, there is no distinction between sequential and concurrent invocation.
+  - `AllowParallelCalls` option instructs the AI model to choose or call multiple functions in one request. Some AI models may not support it, in which case the option does not have any effect. By default, this option is set to null, meaning that the AI model default value will be used.
+  
+      The following table summarizes the effects of different combinations of this option together with the `AllowConcurrentInvocation` option:
+
+      | AllowParallelCalls  | AllowConcurrentInvocation | AI function call requests      | Concurrent Invocation |
+      |---------------------|---------------------------|--------------------------------|-----------------------|
+      | false               | false                     | one per function           | false                 |
+      | false               | true                      | one per function           | false*                |
+      | true                | false                     | one per multiple functions | false                 |
+      | true                | true                      | one per multiple functions | true                  |
+      `*` There's only one function to call
+
 ## Function Invocation
 
 Function invocation is the process whereby Sematic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
