@@ -1,6 +1,7 @@
 ---
 title: Semantic Kernel Filters
 description: Learn about filters in Semantic Kernel.
+zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: conceptual
 ms.author: sopand
