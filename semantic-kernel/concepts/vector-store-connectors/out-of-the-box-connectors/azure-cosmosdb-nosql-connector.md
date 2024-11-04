@@ -175,7 +175,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 {
     // When initializing CosmosClient manually, setting this property is required 
     // due to limitations in default serializer. 
-    UseSystemTextJsonSerializerWithOptions = JsonSerializerOptions.Default,
+    UseSystemTextJsonSerializerWithOptions = jsonSerializerOptions
 });
 
 var database = cosmosClient.GetDatabase(databaseName);
