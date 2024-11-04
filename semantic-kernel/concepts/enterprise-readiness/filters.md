@@ -37,7 +37,7 @@ There are three types of filters:
 
 Each filter includes a `context` object that contains all relevant information about the function execution or prompt rendering. Additionally, each filter has a `next` delegate/callback to execute the next filter in the pipeline or the function itself, offering control over function execution (e.g., in cases of malicious prompts or arguments). Multiple filters of the same type can be registered, each with its own responsibility.
 
-In a filter, calling the next delegate is essential to proceed to the next registered filter or the original operation (whether function invocation or prompt rendering). Without calling next, the operation will not be executed.
+In a filter, calling the `next` delegate is essential to proceed to the next registered filter or the original operation (whether function invocation or prompt rendering). Without calling `next`, the operation will not be executed.
 
 To use a filter, first define it, then add it to the `Kernel` object either through dependency injection or the appropriate `Kernel` property. When using dependency injection, the order of filters is not guaranteed, so with multiple filters, the execution order may be unpredictable.
 
@@ -223,11 +223,13 @@ public sealed class DualModeFilter : IFunctionInvocationFilter
 In cases where `IChatCompletionService` is used directly instead of `Kernel`, filters will only be invoked when a `Kernel` object is passed as a parameter to the chat completion service methods, as filters are attached to the `Kernel` instance. 
 
 ```csharp
-Kernel kernel = Kernel.CreateBuilder().Build();
+Kernel kernel = Kernel.CreateBuilder()
+    .AddOpenAIChatCompletion("gpt-4", "api-key")
+    .Build();
 
 kernel.FunctionInvocationFilters.Add(new MyFilter());
 
-IChatCompletionService chatCompletionService = GetService();
+IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
 // Passing a Kernel here is required to trigger filters.
 ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
