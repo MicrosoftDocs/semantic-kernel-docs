@@ -25,7 +25,7 @@ There are three types of filters:
   - Access to information about the function being executed and its arguments
   - Handling of exceptions during function execution
   - Overriding of the function result
-  - Retrying of the function in case of failure (e.g., [switching to an alternative AI model]((https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/RetryWithFilters.cs)))
+  - Retrying of the function in case of failure (e.g., [switching to an alternative AI model](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/RetryWithFilters.cs))
 
 - **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
   - Viewing and modifying the prompt that will be sent to the AI (e.g., for RAG or [PII redaction](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PIIDetection.cs))
