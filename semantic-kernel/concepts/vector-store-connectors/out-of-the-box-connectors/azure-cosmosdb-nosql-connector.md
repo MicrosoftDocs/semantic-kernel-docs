@@ -34,7 +34,7 @@ The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage
 
 ## Limitations
 
-When initializing `CosmosClient` manually, it's required to specify `CosmosClientOptions.UseSystemTextJsonSerializerWithOptions`. This is necessary due to certain limitations in the default serializer. You can set it to use `JsonSerializerOptions.Default` or customize it with other serializer options to fit your specific configuration needs.
+When initializing `CosmosClient` manually, it is necessary to specify `CosmosClientOptions.UseSystemTextJsonSerializerWithOptions` due to limitations in the default serializer. This option can be set to `JsonSerializerOptions.Default` or customized with other serializer options to meet specific configuration needs.
 
 ```csharp
 var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
@@ -223,7 +223,7 @@ In the Azure Cosmos DB for NoSQL connector, the partition key property defaults 
 
 The `AzureCosmosDBNoSQLVectorStoreRecordCollection` class supports two key types: `string` and `AzureCosmosDBNoSQLCompositeKey`. The `AzureCosmosDBNoSQLCompositeKey` consists of `RecordKey` and `PartitionKey`.
 
-If the partition key property is not set (and the default key property is used), you can use `string` keys for operations with database records. However, if a partition key property is specified, it’s recommended to use `AzureCosmosDBNoSQLCompositeKey` to provide both the key and partition key values.
+If the partition key property is not set (and the default key property is used), `string` keys can be used for operations with database records. However, if a partition key property is specified, it is recommended to use `AzureCosmosDBNoSQLCompositeKey` to provide both the key and partition key values.
 
 Specify partition key property name:
 
