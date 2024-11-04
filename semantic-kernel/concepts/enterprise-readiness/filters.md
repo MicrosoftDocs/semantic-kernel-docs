@@ -9,6 +9,8 @@ ms.date: 09/10/2024
 ms.service: semantic-kernel
 ---
 
+::: zone pivot="programming-language-csharp"
+
 # What are Filters?
 
 Filters enhance security by providing control and visibility over how and when functions run. This is needed to instill responsible AI principles into your work so that you feel confident your solution is enterprise ready.
@@ -36,8 +38,6 @@ There are three types of filters:
 Each filter includes a `context` object that contains all relevant information about the function execution or prompt rendering. Additionally, each filter has a `next` delegate/callback to execute the next filter in the pipeline or the function itself, offering control over function execution (e.g., in cases of malicious prompts or arguments). Multiple filters of the same type can be registered, each with its own responsibility.
 
 In a filter, calling the next delegate is essential to proceed to the next registered filter or the original operation (whether function invocation or prompt rendering). Without calling next, the operation will not be executed.
-
-::: zone pivot="programming-language-csharp"
 
 To use a filter, first define it, then add it to the `Kernel` object either through dependency injection or the appropriate `Kernel` property. When using dependency injection, the order of filters is not guaranteed, so with multiple filters, the execution order may be unpredictable.
 
