@@ -237,7 +237,7 @@ var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<Hotel>(databa
     as IVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, TestRecord>;
 ```
 
-Querying with partition key:
+Get with partition key:
 
 ```csharp
 var record = await collection.GetAsync(new AzureCosmosDBNoSQLCompositeKey("hotel-id", "hotel-name"));
