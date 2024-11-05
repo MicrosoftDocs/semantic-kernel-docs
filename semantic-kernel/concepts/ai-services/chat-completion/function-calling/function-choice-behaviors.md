@@ -21,9 +21,8 @@ As of today, the function choice behaviors are represented by three static metho
 - **Required**: Forces the AI model to choose provided function(s).
 - **None**: Instructs the AI model not to choose any function(s).
 
-> [!WARNING]
-> The function-calling capability is experimental and subject to change. It is expected to reach general availability (GA) by mid-November 2024.
-> Please refer to the [migration guide](../../../../support/migration/function-calling-migration-guide.md) to migrate your code to the latest function-calling capabilities.
+> [!NOTE]
+> If your code uses the function-calling capabilities represented by the ToolCallBehavior class, please refer to the [migration guide](../../../../support/migration/function-calling-migration-guide.md) to update the code to the latest function-calling model.
 
 > [!NOTE]
 > The function-calling capabilities is only supported by a few AI connectors so far, see the [Supported AI Connectors](./function-choice-behaviors.md#supported-ai-connectors) section below for more details.
