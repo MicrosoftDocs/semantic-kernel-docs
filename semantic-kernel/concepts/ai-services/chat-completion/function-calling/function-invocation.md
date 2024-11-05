@@ -194,7 +194,7 @@ while (true)
     chatHistory.Add(fcContent);
 
     // Iterating over the requested function calls and invoking them.
-    // The code can easily be modified to invoke functions in concurrently if needed.
+    // The code can easily be modified to invoke functions concurrently if needed.
     foreach (FunctionCallContent functionCall in functionCalls)
     {
         // Adding the original function call to the chat message content
