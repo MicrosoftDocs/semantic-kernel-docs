@@ -4,7 +4,7 @@ description: Contains information on how to use a Semantic Kernel Vector store c
 zone_pivot_groups: programming-languages
 author: flobernd
 ms.topic: conceptual
-ms.author: flobernd
+ms.author: westey
 ms.date: 11/04/2024
 ms.service: semantic-kernel
 ---
