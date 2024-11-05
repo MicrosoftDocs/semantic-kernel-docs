@@ -138,6 +138,77 @@ while (true)
 > [!NOTE]
 > The FunctionCallContent and FunctionResultContent classes are used to represent AI model function calls and Semantic Kernel function invocation results, respectively. 
 > They contain information about chosen function, such as the function ID, name, and arguments, and function invocation results, such as function call ID and result.
+
+The following example demonstrates how to use manual function invocation with the streaming chat completion API. Note the usage of the `FunctionCallContentBuilder` class to build function calls from the streaming content. 
+Due to the streaming nature of the API, function calls are also streamed. This means that the caller must build the function calls from the streaming content before invoking them.  
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+
+IKernelBuilder builder = Kernel.CreateBuilder(); 
+builder.AddOpenAIChatCompletion("<model-id>", "<api-key>");
+builder.Plugins.AddFromType<WeatherForecastUtils>();
+builder.Plugins.AddFromType<DateTimeUtils>(); 
+
+Kernel kernel = builder.Build();
+
+IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+
+// Manual function invocation needs to be enabled explicitly by setting autoInvoke to false.
+PromptExecutionSettings settings = new() { FunctionChoiceBehavior = Microsoft.SemanticKernel.FunctionChoiceBehavior.Auto(autoInvoke: false) };
+
+ChatHistory chatHistory = [];
+chatHistory.AddUserMessage("Given the current time of day and weather, what is the likely color of the sky in Boston?");
+
+while (true)
+{
+    AuthorRole? authorRole = null;
+    FunctionCallContentBuilder fccBuilder = new ();
+
+    // Start or continue streaming chat based on the chat history
+    await foreach (StreamingChatMessageContent streamingContent in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory, settings, kernel))
+    {
+        // Check if the AI model has generated a response.
+        if (streamingContent.Content is not null)
+        {
+            Console.Write(streamingContent.Content);
+            // Sample streamed output: "The color of the sky in Boston is likely to be gray due to the rainy weather."
+        }
+        authorRole ??= streamingContent.Role;
+
+        // Collect function calls details from the streaming content
+        fccBuilder.Append(streamingContent);
+    }
+
+    // Build the function calls from the streaming content and quit the chat loop if no function calls are found
+    IReadOnlyList<FunctionCallContent> functionCalls = fccBuilder.Build();
+    if (!functionCalls.Any())
+    {
+        break;
+    }
+
+    // Creating and adding chat message content to preserve the original function calls in the chat history.
+    // The function calls are added to the chat message a few lines below.
+    ChatMessageContent fcContent = new ChatMessageContent(role: authorRole ?? default, content: null);
+    chatHistory.Add(fcContent);
+
+    // Iterating over the requested function calls and invoking them.
+    // The code can easily be modified to invoke functions in concurrently if needed.
+    foreach (FunctionCallContent functionCall in functionCalls)
+    {
+        // Adding the original function call to the chat message content
+        fcContent.Items.Add(functionCall);
+
+        // Invoking the function
+        FunctionResultContent functionResult = await functionCall.InvokeAsync(kernel);
+
+        // Adding the function result to the chat history
+        chatHistory.Add(functionResult.ToChatMessage());
+    }
+}
+```
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 ## Coming soon
