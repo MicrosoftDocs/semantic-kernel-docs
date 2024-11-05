@@ -200,3 +200,18 @@ public class Hotel
 ```
 
 ::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## Not supported
+
+Not supported.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Not supported
+
+Not supported.
+
+::: zone-end
