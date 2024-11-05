@@ -82,22 +82,36 @@ This example shows how you can create a vector store using a custom model and re
 > [!TIP]
 > For more information about using the generic data model, refer to [using Vector Store abstractions without defining your own data model](./generic-data-model.md).
 
-## Reading data that was ingested using Langchain
+## Using collections that were created and ingested using Langchain
 
-It's possible to use the Vector Store abstractions to access data that was ingested using a different sytem, e.g. Langchain.
-The main requirement is to create a data model that matches the storage schema that the Langchain implementation used.
-In cases where this is not possible, it's also possible to use a custom mapper instead.
+It's possible to use the Vector Store abstractions to access collections that were created and ingested using a different sytem, e.g. Langchain.
+There are various approaches that can be followed to make the interop work correctly. E.g.
 
-The following two examples, show how to use the Azure AI Search and Redis vector stores to read data that was ingested using Langchain.
+1. Creating a data model that matches the storage schema that the Langchain implemenation used.
+1. Using a custom mapper to map between the storage schema and data model.
+1. Using a record definition with special storage property names for fields.
 
-- [Azure AI Search](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop_AzureAISearch.cs)
-- [Redis](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop_Redis.cs)
+In the following sample, we show how to use these approaches to construct Langchain compatible Vector Store implementations.
 
-The next example shows how to use the Qdrant vector store with a custom mapper to read data that was ingested using Langchain.
-A custom mapper is required in this case, because the built in Qdrant mapper does not support complex types and the metadata field
-produced by the Langchain ingestion is a complex field.
+- [VectorStore Langchain Interop](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop.cs)
 
-- [Qdrant](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop_Qdrant.cs)
+For each vector store, there is a factory class that shows how to contruct the Langchain compatible Vector Store. See e.g.
+
+- [AzureAISearchFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/AzureAISearchFactory.cs)
+- [PineconeFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/PineconeFactory.cs)
+- [QdrantFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/QdrantFactory.cs)
+- [RedisFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/RedisFactory.cs)
+
+In this sample, we also demonstrate a technique for having a single unified data model across different Vector Stores, where each Vector Store supports
+different key types and may require different storage schemas.
+
+We use a decorator class [MappingVectorStoreRecordCollection](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/MappingVectorStoreRecordCollection.cs)
+that allows converting data models and key types. E.g. Qdrant only supports `Guid` and `ulong` key types, and Langchain uses the `Guid` key type when creating
+a collection. Azure AI Search, Pinecone and Redis all support `string` keys. In the sample, we use the `MappingVectorStoreRecordCollection` to expose the Qdrant
+Vector Store with a `string` key containing a guid instead of the key being a `Guid` type. This allows us to easily use all databases with
+[one data model](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/LangchainDocument.cs).
+Note that supplying `string` keys that do not contain guids to the decorated Qdrant Vector Store will not work, since the underlying database still
+requires `Guid` keys.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -109,8 +123,14 @@ More coming soon.
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+## Simple Data Ingestion and Vector Search
 
-More coming soon.
+For simple examples of how to do data ingestion into a vector store and do vector search, check out these examples, which make use of Azure AI Search, JDBC with PostgreSQL, Redis and In Memory vector stores.
+
+- [Vector Search with Azure AI Search](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/VectorStoreWithAzureAISearch.java)
+- [Vector Search with JDBC](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/VectorStoreWithJDBC.java)
+- [Vector Search with Redis](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/VectorStoreWithRedis.java)
+- [Vector Search with in memory store](https://github.com/microsoft/semantic-kernel-java/blob/main/samples/semantickernel-concepts/semantickernel-syntax-examples/src/main/java/com/microsoft/semantickernel/samples/syntaxexamples/memory/InMemoryVolatileVectorStore.java)
+
 
 ::: zone-end
