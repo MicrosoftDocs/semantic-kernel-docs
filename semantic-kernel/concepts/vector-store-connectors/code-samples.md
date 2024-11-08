@@ -116,9 +116,19 @@ requires `Guid` keys.
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## End to end RAG sample with Azure AI Search Vector Store
 
-More coming soon.
+This example is set of two scripts, the first showing the basics of settings up the Azure AI Search Vector Store and the second showing how to create a plugin from it and use that to perform RAG.
+
+1. [Explication of the data model and how to setup Azure AI Search for this sample](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/memory/azure_ai_search_hotel_samples/step_0_data_model.py)
+2. [Creating records, adding vectors, and upserting records in Azure AI Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/memory/azure_ai_search_hotel_samples/step_1_interact_with_the_collection.py)
+3. [Use the same connection and data model to create custom functions that can then be used with auto function calling for advanced RAG](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/memory/azure_ai_search_hotel_samples/step_2_use_as_a_plugin.py)
+
+## Simple Data Ingestion and Vector Search
+
+We also have a sample that shows the basics from creating the collection, to adding records, to finally doing search, this can be started with different vector stores.
+
+- [Simple Vector Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/memory/new_memory.py)
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
