@@ -446,8 +446,8 @@ public sealed class MyDBVectorStoreRecordCollectionOptions<TRecord>
 
 ## Documentation
 
-To share the features and limitations of your implementation, you can contribute a documentation page to the
-Microsoft Learn website. See [here](https://learn.microsoft.com/en-us/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/)
+To share the features and limitations of your implementation, you can contribute a documentation page to this
+Microsoft Learn website. See [here](../out-of-the-box-connectors/index.md)
 for the documentation on the existing connectors.
 
 To create your page, create a pull request on the [Semantic Kernel docs Github repository](https://github.com/MicrosoftDocs/semantic-kernel-docs).

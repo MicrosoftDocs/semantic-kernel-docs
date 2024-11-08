@@ -4,10 +4,12 @@ description: Describes how to migrate from using memory stores to vector stores 
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
-ms.author: westey-m
+ms.author: westey
 ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
+
+# Migrating from Memory Stores to Vector Stores
 
 Semantic Kernel provides two distinct abstractions for interacting with vector stores.
 
