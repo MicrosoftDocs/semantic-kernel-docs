@@ -243,6 +243,16 @@ In this example, we'll use Qdrant. You will therefore need to import the Qdrant 
 dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
 ```
 
+If you want to run Qdrant locally using Docker, use the following command to start the Qdrant container
+with the settings used in this example.
+
+```cli
+docker run -d --name qdrant -p 6333:6333 -p 6334:6334 qdrant/qdrant:latest
+```
+
+To verify that your Qdrant instance is up and running correctly, visit the Qdrant dashboard that is
+built into the Qdrant docker container: [http://localhost:6333/dashboard](http://localhost:6333/dashboard)
+
 Since databases support many different types of keys and records, we allow you to specify the type of the key and record for your collection using generics.
 In our case, the type of record will be the `Hotel` class we already defined, and the type of key will be `ulong`, since the `HotelId` property is a `ulong` and Qdrant only supports `Guid` or `ulong` keys.
 
