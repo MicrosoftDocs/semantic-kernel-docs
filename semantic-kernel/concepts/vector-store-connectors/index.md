@@ -421,6 +421,21 @@ Console.WriteLine("Found hotel description: " + hotel.Description);
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+### Do a vector search
+
+```python
+# Generate a vector for your search text, using your chosen embedding generation implementation.
+# Just showing a placeholder method here for brevity.
+search_vector = await GenerateEmbedding("I'm looking for a hotel where customer happiness is the priority.");
+# Do the search.
+search_result = await collection.vectorized_search(vector=searchVector, VectorSearchOptions(top = 1 ))
+
+# Inspect the returned hotels.
+async for result in search_result.results:
+    print(f"Found hotel description: {result.record.description}")
+```
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ```java
