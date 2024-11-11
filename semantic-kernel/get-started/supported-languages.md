@@ -174,10 +174,17 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 
 | Endpoints                                 |  C#  | Python | Java | Notes |
 |-------------------------------------------|:----:|:------:|:----:|-------|
-| OpenAI                                    | ✅ | ✅ | ✅ | |
+| Amazon Bedrock                            | ✅ | ✅ | ❌ | |
+| Anthropic                                 | ✅ | ✅ | ❌ | |
+| Azure AI Inference                        | ✅ | ✅ | ❌ | |
 | Azure OpenAI                              | ✅ | ✅ | ✅ | |
-| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes Ollama, LLM Studio, Azure Model-as-a-service, etc. |
-| Hugging Face Inference API                | 🔄 | ❌ | ❌ | Coming soon to Python, not all scenarios are covered for .NET |
+| Google                                    | ✅ | ✅ | ✅ | |
+| Hugging Face Inference API                | ✅ | ✅ | ❌ | |
+| Mistral                                   | ✅ | ✅ | ❌ | |
+| Ollama                                    | ✅ | ✅ | ❌ | |
+| ONNX                                      | ✅ | ✅ | ❌ | |
+| OpenAI                                    | ✅ | ✅ | ✅ | |
+| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, Azure Model-as-a-service, etc. |
 
 ### Memory Connectors (Experimental)
 
