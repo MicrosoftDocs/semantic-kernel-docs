@@ -742,7 +742,8 @@ AzureAIInferenceChatCompletionService chatCompletionService = new (
 # [Ollama](#tab/csharp-Ollama)
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using OllamaSharp;
 
 using var ollamaClient = new OllamaApiClient(
     uriString: new Uri("YOUR_ENDPOINT"),  // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
