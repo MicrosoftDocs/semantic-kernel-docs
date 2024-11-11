@@ -19,15 +19,20 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 
 | Vector Store Connectors                                    |  C#            | Python          | Java           | Officially supported SDK           |
 |------------------------------------------------------------|:--------------:|:---------------:|:--------------:|:----------------------------------:|
-| [Azure AI Search](./azure-ai-search-connector.md)          | ✅             | ✅             | In Development | ✅                                |
+| [Azure AI Search](./azure-ai-search-connector.md)          | ✅             | ✅             | ✅ | ✅                                |
 | [Cosmos DB MongoDB](./azure-cosmosdb-mongodb-connector.md) | ✅             | In Development  | In Development | ✅                                |
 | [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)    | ✅             | In Development  | In Development | ✅                                |
 | [Elasticsearch](./elasticsearch-connector.md)              | ✅             | ❌             | ❌             | ✅                                |
+| Chroma                                                     | Coming Soon     | Coming Soon    | Coming Soon    |                                    |
 | [In-Memory](./inmemory-connector.md)                       | ✅             | In Development  | In Development | N/A                               |
+| [JDBC](./jdbc-connector.md)                                | N/A             | N/A            | ✅ | ✅                                |
+| Milvus                                                     | Coming Soon     | Coming Soon    | Coming Soon    |                                    |
 | [MongoDB](./mongodb-connector.md)                          | ✅             | In Development  | In Development | ✅                                |
 | [Pinecone](./pinecone-connector.md)                        | ✅             | In Development  | In Development | C#: ❌ Python: ✅                |
+| Postgres                                                   | In Development | In Development  | ✅ [JDBC](./jdbc-connector.md) |                                    |
 | [Qdrant](./qdrant-connector.md)                            | ✅             | ✅             | In Development | ✅                                |
-| [Redis](./redis-connector.md)                              | ✅             | ✅             | In Development | ✅                                |
-| [SQLite](./sqlite-connector.md)                            | ✅             | In Development  | In Development | ✅                               |
-| [Volatile (In-Memory)](./volatile-connector.md)            | Deprecated (use In-Memory) | ✅             | In Development | N/A                                |
+| [Redis](./redis-connector.md)                              | ✅             | ✅             | ✅ | ✅                                |
+| Sql Server                                                 | Coming Soon     | Coming Soon    | Coming Soon    |                                    |
+| [SQLite](./sqlite-connector.md)                            | ✅             | In Development  | ✅ [JDBC](./jdbc-connector.md) | ✅                               |
+| [Volatile (In-Memory)](./volatile-connector.md)            | Deprecated (use In-Memory) | ✅             | ✅ | N/A                                |
 | [Weaviate](./weaviate-connector.md)                        | ✅             | In Development  | In Development | N/A                               |

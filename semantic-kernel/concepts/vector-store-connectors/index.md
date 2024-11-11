@@ -58,6 +58,36 @@ by select connectors.
 ::: zone pivot="programming-language-python"
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
+## The Vector Store Abstraction
+
+The main interfaces in the Vector Store abstraction are the following.
+
+### com.microsoft.semantickernel.data.vectorstorage.VectorStore
+
+`VectorStore` contains operations that spans across all collections in the vector store, e.g. listCollectionNames.
+It also provides the ability to get `VectorStoreRecordCollection<Key, Record>` instances.
+
+### com.microsoft.semantickernel.data.vectorstorage.VectorStoreRecordCollection\<Key, Record\>
+
+`VectorStoreRecordCollection<Key, Record>` represents a collection.
+This collection may or may not exist, and the interface provides methods to check if the collection exists, create it or delete it.
+The interface also provides methods to upsert, get and delete records.
+Finally, the interface inherits from `VectorizedSearch<Record>` providing vector search capabilities.
+
+### com.microsoft.semantickernel.data.vectorsearch.VectorizedSearch\<Record\>
+
+`VectorizedSearch<Record>` contains a method for doing vector searches.
+`VectorStoreRecordCollection<Key, Record>` inherits from `VectorizedSearch<Record>` making it possible to use
+`VectorizedSearch<Record>` on its own in cases where only search is needed and no record or collection management is needed.
+
+### com.microsoft.semantickernel.data.vectorsearch.VectorizableTextSearch\<Record\>
+
+`VectorizableTextSearch<Record>` contains a method for doing vector searches where the vector database has the ability to
+generate embeddings automatically. E.g. you can call this method with a text string and the database will generate the embedding
+for you and search against a vector field. This is not supported by all vector databases and is therefore only implemented
+by select connectors.
+
 ::: zone-end
 
 ## Getting started with Vector Store connectors
@@ -149,7 +179,51 @@ class Hotel:
     tags: Annotated[list[str], VectorStoreRecordDataField(is_filterable=True)]
 ```
 ::: zone-end
+
 ::: zone pivot="programming-language-java"
+```java
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordData;
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordKey;
+import com.microsoft.semantickernel.data.vectorstorage.annotations.VectorStoreRecordVector;
+import com.microsoft.semantickernel.data.vectorstorage.definition.DistanceFunction;
+import com.microsoft.semantickernel.data.vectorstorage.definition.IndexKind;
+
+import java.util.Collections;
+import java.util.List;
+
+public class Hotel {
+    @VectorStoreRecordKey
+    private String hotelId;
+
+    @VectorStoreRecordData(isFilterable = true)
+    private String name;
+
+    @VectorStoreRecordData(isFullTextSearchable = true)
+    private String description;
+
+    @VectorStoreRecordVector(dimensions = 4, indexKind = IndexKind.HNSW, distanceFunction = DistanceFunction.COSINE_DISTANCE)
+    private List<Float> descriptionEmbedding;
+
+    @VectorStoreRecordData(isFilterable = true)
+    private List<String> tags;
+
+    public Hotel() { }
+
+    public Hotel(String hotelId, String name, String description, List<Float> descriptionEmbedding, List<String> tags) {
+        this.hotelId = hotelId;
+        this.name = name;
+        this.description = description;
+        this.descriptionEmbedding = Collections.unmodifiableList(descriptionEmbedding);
+        this.tags = Collections.unmodifiableList(tags);
+    }
+
+    public String getHotelId() { return hotelId; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public List<Float> getDescriptionEmbedding() { return descriptionEmbedding; }
+    public List<String> getTags() { return tags; }
+}
+```
 ::: zone-end
 
 > [!TIP]
@@ -203,6 +277,47 @@ collection = vector_store.get_collection(
 ```
 ::: zone-end
 ::: zone pivot="programming-language-java"
+Since databases support many different types of keys and records, we allow you to specify the type of the key and record for your collection using generics.
+In our case, the type of record will be the `Hotel` class we already defined, and the type of key will be `String`, since the `hotelId` property is a `String` and JDBC store only supports `String` keys.
+
+```java
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStore;
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStoreOptions;
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStoreRecordCollectionOptions;
+import com.microsoft.semantickernel.data.jdbc.mysql.MySQLVectorStoreQueryProvider;
+import com.mysql.cj.jdbc.MysqlDataSource;
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        // Create a MySQL data source
+        var dataSource = new MysqlDataSource();
+        dataSource.setUrl("jdbc:mysql://localhost:3306/sk");
+        dataSource.setPassword("root");
+        dataSource.setUser("root");
+
+        // Create a JDBC vector store
+        var vectorStore = JDBCVectorStore.builder()
+            .withDataSource(dataSource)
+            .withOptions(
+                JDBCVectorStoreOptions.builder()
+                    .withQueryProvider(MySQLVectorStoreQueryProvider.builder()
+                        .withDataSource(dataSource)
+                        .build())
+                    .build()
+            )
+            .build();
+
+        // Get a collection from the vector store
+        var collection = vectorStore.getCollection("skhotels",
+            JDBCVectorStoreRecordCollectionOptions.<Hotel>builder()
+                .withRecordClass(Hotel.class)
+                .build()
+        );
+    }
+}
+```
 ::: zone-end
 
 > [!TIP]
@@ -262,6 +377,27 @@ retrieved_hotel = await collection.get(hotel_id)
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
+```java
+// Create the collection if it doesn't exist yet.
+collection.createCollectionAsync().block();
+
+// Upsert a record.
+var description = "A place where everyone can be happy";
+var hotelId = "1";
+var hotel = new Hotel(
+    hotelId, 
+    "Hotel Happy", 
+    description, 
+    generateEmbeddingsAsync(description).block(), 
+    List.of("luxury", "pool")
+);
+
+collection.upsertAsync(hotel, null).block();
+
+// Retrieve the upserted record.
+var retrievedHotel = collection.getAsync(hotelId, null).block();
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
@@ -287,6 +423,19 @@ Console.WriteLine("Found hotel description: " + hotel.Description);
 ::: zone pivot="programming-language-python"
 ::: zone-end
 ::: zone pivot="programming-language-java"
+```java
+// Generate a vector for your search text, using your chosen embedding generation implementation.
+// Just showing a placeholder method here for brevity.
+var searchVector = generateEmbeddingsAsync("I'm looking for a hotel where customer happiness is the priority.").block();
+
+// Do the search.
+var searchResult = collection.searchAsync(searchVector, VectorSearchOptions.builder()
+    .withTop(1).build()
+).block();
+
+Hotel record = searchResult.getResults().get(0).getRecord();
+System.out.printf("Found hotel description: %s\n", record.getDescription());
+```
 ::: zone-end
 
 > [!TIP]

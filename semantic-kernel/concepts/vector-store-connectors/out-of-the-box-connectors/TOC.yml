@@ -10,6 +10,8 @@
   href: elasticsearch-connector.md
 - name: In-memory connector
   href: inmemory-connector.md
+- name: JDBC connector
+  href: jdbc-connector.md
 - name: MongoDB connector
   href: mongodb-connector.md
 - name: Pinecone connector
