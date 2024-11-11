@@ -458,8 +458,8 @@ Areas to cover:
 1. An `Overview` with a standard table describing the main features of the connector.
 1. An optional `Limitations` section with any limitations for your connector.
 1. A `Getting started` section that describes how to import your nuget and construct your `VectorStore` and `VectorStoreRecordCollection`
-1. A `Data mapping` section that shows how your connector maps data by default from a data model to the database storage model including any property renaming it may support.
-1. Any other information about features that your connector supports.
+1. A `Data mapping` section showing the connector's default data mapping mechanism to the database storage model, including any property renaming it may support.
+1. Information about additional features your connector supports.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
