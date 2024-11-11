@@ -95,9 +95,9 @@ new AzureAISearchVectorStoreRecordCollection<VectorStoreGenericDataModel<string>
 
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## Overview
 
-More info coming soon.
+In python we do not support a generic data model, since you can already use the VectorStoreRecordDefinition in combination with any generic type, like a dict or a (Pandas) dataframe, to achieve the same result. See more info here: [Defining your schema with a record definition](./schema-with-record-definition.md).
 
 ::: zone-end
 
