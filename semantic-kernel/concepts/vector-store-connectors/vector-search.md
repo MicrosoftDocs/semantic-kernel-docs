@@ -229,13 +229,19 @@ For a property to be considered a tag property, it needs to be a List, array or 
 
 ## Vector Search
 
-The `vectorized_search` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions` class as input.
-This method is available on the following parent class: `VectorizedSearch[TRecord]`
-This always should be combined with the `VectorSearchBase[TKey, TRecord]` parent. 
+There are three searches currently supported in the Semantic Kernel Vector Store abstractions:
+1. `vectorized_search`
+   1. This is search based on a vector created in your code, the vector is passed in and used to search.
+2. `vectorizable_text_search`
+   1. This is search based on a text string that is vectorized by the vector store as part of the search, this is not always supported and often requires a specific setup of either the vector store or the index.
+3. `vector_text_search`
+   1. This is text search directly against the vector store, most stores support this and depending on the store it can be as simple as comparing values or more advanced keyword search.
+
+All searches can take a optional `VectorSearchOptions` instance as input. Each of the three searches have a Mixin class that needs to be part of it to surface the search methods and this always should be combined with the `VectorSearchBase[TKey, TRecord]` parent. 
 
 Note that `VectorSearchBase` inherits from `VectorStoreRecordCollection`, as it uses some of the same methods, for instance for serialization and deserialization.
 
-Assuming you have a collection that already contains data, you can easily search it. Here is an example using Qdrant.
+Assuming you have a collection that already contains data, you can easily search it. Here is an example using Azure AI Search.
 
 ```python
 from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchCollection, AzureAISearchStore
@@ -253,7 +259,7 @@ vector = await generate_vector("I'm looking for a hotel where customer happiness
 search_results = await collection.vectorized_search(
     vector=vector, options=VectorSearchOptions(vector_field_name="vector")
 )
-hotels = [record async for record in search_results.results]
+hotels = [record.record async for record in search_results.results]
 print(f"Found hotels: {hotels}")
 ```
 
