@@ -24,23 +24,35 @@ While the overall architecture of the kernel is consistent across all languages,
 
 In C#, there are several packages to help ensure that you only need to import the functionality that you need for your project. The following table shows the available packages in C#.
 
-| Package name | Description | 
+| Package name | Description |
 |--------------|-------------|
 | `Microsoft.SemanticKernel` | The main package that includes everything to get started |
 | `Microsoft.SemanticKernel.Core` | The core package that provides implementations for `Microsoft.SemanticKernel.Abstractions` |
 | `Microsoft.SemanticKernel.Abstractions` | The base abstractions for Semantic Kernel |
-| `Microsoft.SemanticKernel.Connectors.OpenAI` | The connector for OpenAI |
-| `Microsoft.SemanticKernel.Connectors.HuggingFace` | The connector for Hugging Face models |
-| `Microsoft.SemanticKernel.Connectors.Google` | The connector for Google models (e.g., Gemini) |
-| `Microsoft.SemanticKernel.Connectors.MistralAI` | The connector for Mistral AI models |
+| `Microsoft.SemanticKernel.Connectors.Amazon` | The AI connector for Amazon AI |
+| `Microsoft.SemanticKernel.Connectors.AzureAIInference` | The AI connector for Azure AI Inference |
+| `Microsoft.SemanticKernel.Connectors.AzureOpenAI` | The AI connector for Azure OpenAI |
+| `Microsoft.SemanticKernel.Connectors.Google` | The AI connector for Google models (e.g., Gemini) |
+| `Microsoft.SemanticKernel.Connectors.HuggingFace` | The AI connector for Hugging Face models |
+| `Microsoft.SemanticKernel.Connectors.MistralAI` | The AI connector for Mistral AI models |
+| `Microsoft.SemanticKernel.Connectors.Ollama` | The AI connector for Ollama |
+| `Microsoft.SemanticKernel.Connectors.Onnx` | The AI connector for Onnx |
+| `Microsoft.SemanticKernel.Connectors.OpenAI` | The AI connector for OpenAI |
+| `Microsoft.SemanticKernel.Connectors.AzureAISearch` | The vector store connector for AzureAISearch |
+| `Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB` | The vector store connector for AzureCosmosDBMongoDB |
+| `Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL` | The vector store connector for AzureAISearch |
+| `Microsoft.SemanticKernel.Connectors.MongoDB` | The vector store connector for MongoDB |
+| `Microsoft.SemanticKernel.Connectors.Pinecone` | The vector store connector for Pinecone |
+| `Microsoft.SemanticKernel.Connectors.Qdrant` | The vector store connector for Qdrant |
+| `Microsoft.SemanticKernel.Connectors.Redis` | The vector store connector for Redis |
+| `Microsoft.SemanticKernel.Connectors.Sqlite` | The vector store connector for Sqlite |
+| `Microsoft.SemanticKernel.Connectors.Weaviate` | The vector store connector for Weaviate |
 | `Microsoft.SemanticKernel.Plugins.OpenApi` (Experimental) | Enables loading plugins from OpenAPI specifications |
 | `Microsoft.SemanticKernel.PromptTemplates.Handlebars` | Enables the use of Handlebars templates for prompts |
 | `Microsoft.SemanticKernel.Yaml` | Provides support for serializing prompts using YAML files |
 | `Microsoft.SemanticKernel.Prompty` | Provides support for serializing prompts using Prompty files |
 | `Microsoft.SemanticKernel.Agents.Abstractions` | Provides abstractions for creating agents |
 | `Microsoft.SemanticKernel.Agents.OpenAI` | Provides support for Assistant API agents |
-
-There are other packages available (e.g., the memory connectors), but they are still experimental and are not yet recommended for production use.
 
 To install any of these packages, you can use the following command:
 

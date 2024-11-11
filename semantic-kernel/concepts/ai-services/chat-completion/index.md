@@ -75,6 +75,14 @@ From this terminal download the required models, e.g. here we are downloading th
 ollama pull phi3
 ```
 
+# [Anthropic](#tab/csharp-Anthropic)
+
+No local setup.
+
+# [Amazon Bedrock](#tab/csharp-AmazonBedrock)
+
+No local setup.
+
 # [ONNX](#tab/csharp-ONNX)
 
 Clone the repository containing the ONNX model you would like to use.
@@ -733,16 +741,16 @@ AzureAIInferenceChatCompletionService chatCompletionService = new (
 
 # [Ollama](#tab/csharp-Ollama)
 
-> [!IMPORTANT]
-> The Ollama chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
-
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using OllamaSharp;
 
-OllamaChatCompletionService chatCompletionService = new OllamaChatCompletionService(
-    modelId: "NAME_OF_MODEL",           // E.g. "phi3" if phi3 was downloaded as described above.
-    endpoint: new Uri("YOUR_ENDPOINT")  // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
+using var ollamaClient = new OllamaApiClient(
+    uriString: new Uri("YOUR_ENDPOINT"),  // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
+    defaultModel: "NAME_OF_MODEL"         // E.g. "phi3" if phi3 was downloaded as described above.
 );
+
+IChatCompletionService chatCompletionService = ollamaClient.AsChatCompletionService();
 ```
 
 # [Anthropic](#tab/csharp-Anthropic)
