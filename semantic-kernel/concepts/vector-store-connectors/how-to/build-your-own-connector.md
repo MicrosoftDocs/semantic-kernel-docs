@@ -444,6 +444,23 @@ public sealed class MyDBVectorStoreRecordCollectionOptions<TRecord>
 }
 ```
 
+## Documentation
+
+To share the features and limitations of your implementation, you can contribute a documentation page to this
+Microsoft Learn website. See [here](../out-of-the-box-connectors/index.md)
+for the documentation on the existing connectors.
+
+To create your page, create a pull request on the [Semantic Kernel docs Github repository](https://github.com/MicrosoftDocs/semantic-kernel-docs).
+Use the pages in the following folder as examples: [Out-of-the-box connectors](https://github.com/MicrosoftDocs/semantic-kernel-docs/tree/main/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors)
+
+Areas to cover:
+
+1. An `Overview` with a standard table describing the main features of the connector.
+1. An optional `Limitations` section with any limitations for your connector.
+1. A `Getting started` section that describes how to import your nuget and construct your `VectorStore` and `VectorStoreRecordCollection`
+1. A `Data mapping` section showing the connector's default data mapping mechanism to the database storage model, including any property renaming it may support.
+1. Information about additional features your connector supports.
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 

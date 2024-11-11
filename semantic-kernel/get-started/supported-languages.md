@@ -186,27 +186,27 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | OpenAI                                    | ✅ | ✅ | ✅ | |
 | Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, Azure Model-as-a-service, etc. |
 
-### Memory Connectors (Experimental)
+### Vector Store Connectors (Experimental)
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+For the list of out of the box vector store connectors and the language support for each, refer to [out of the box connectors](../concepts/vector-store-connectors/out-of-the-box-connectors/index.md).
+
+### Memory Store Connectors (Legacy)
 
 > [!IMPORTANT]
-> All of the existing memory connectors are currently experimental and will be replaced by Vector Store connectors. These will provide more functionality via an updated abstraction layer.
+> Memory Store connectors are legacy and have been replaced by Vector Store connectors. For more information see [Legacy Memory Stores](../concepts/vector-store-connectors/memory-stores.md).
 
 | Memory Connectors        |  C#  | Python | Java | Notes |
 |--------------------------|:----:|:------:|:----:|-------|
 | Azure AI Search          | ✅ | ✅ | ✅ | |
 | Chroma                   | ✅ | ✅ | ❌ | |
 | DuckDB                   | ✅ | ❌ | ❌ | |
-| Milvus                   | 🔄 | ✅ | ❌ | |
+| Milvus                   | ✅ | ✅ | ❌ | |
 | Pinecone                 | ✅ | ✅ | ❌ | |
 | Postgres                 | ✅ | ✅ | ❌ | |
 | Qdrant                   | ✅ | 🔄 | ❌ | |
 | Redis                    | ✅ | 🔄 | ❌ | |
 | Sqlite                   | ✅ | ❌ | 🔄 | |
 | Weaviate                 | ✅ | ✅ | ❌ | |
-
-### Vector Store Connectors (Experimental)
-
-> [!IMPORTANT]
-> All of the existing Vector Store connectors are currently experimental and are undergoing active development to improve the experience of using them. To provide feedback on the latest proposal, please refer to the active [Search](https://github.com/microsoft/semantic-kernel/pull/6012) and [Memory Connector](https://github.com/microsoft/semantic-kernel/pull/6364) ADRs.
-
-For the list of out of the box vector store connectors and the language support for each, refer to [out of the box connectors](../concepts/vector-store-connectors/out-of-the-box-connectors/index.md).

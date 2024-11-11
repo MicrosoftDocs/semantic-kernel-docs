@@ -28,8 +28,8 @@ The connector has the following characteristics.
 | Supported key property types      | Any type that can be compared                                                                                                    |
 | Supported data property types     | Any type                                                                                                                         |
 | Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
-| Supported index types             | N/A                                                                                                                              |
-| Supported distance functions      | N/A                                                                                                                              |
+| Supported index types             | Flat                                                                                                                             |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                 |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
@@ -76,6 +76,34 @@ It is possible to construct a direct reference to a named collection.
 using Microsoft.SemanticKernel.Connectors.InMemory;
 
 var collection = new InMemoryVectorStoreRecordCollection<string, Hotel>("skhotels");
+```
+
+## Key and Vector property lookup
+
+By default the In-Memory Vector Store connector will read the values of keys and vectors using
+reflection. The keys and vectors are assumed to be direct properties on the data model.
+
+If a data model is required that has a structure where keys and vectors are not direct properties
+of the data model, it is possible to supply functions to read the values of these.
+
+When using this, it is also required to supply a `VectorStoreRecordDefinition` so that information
+about vector dimension size and distance function can be communicated to the In-Memory vector store.
+
+```csharp
+var collection = new InMemoryVectorStoreRecordCollection<string, MyDataModel>(
+    "mydata",
+    new()
+    {
+        VectorStoreRecordDefinition = vectorStoreRecordDefinition,
+        KeyResolver = (record) => record.Key,
+        VectorResolver = (vectorName, record) => record.Vectors[vectorName]
+    });
+
+private class MyDataModel
+{
+    public string Key { get; set; }
+    public Dictionary<string, ReadOnlyMemory<float>> Vectors { get; set; }
+}
 ```
 
 ::: zone-end
