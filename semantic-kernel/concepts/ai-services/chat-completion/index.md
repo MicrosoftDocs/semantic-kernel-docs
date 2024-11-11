@@ -28,6 +28,30 @@ When picking out a chat completion model, you will need to consider the followin
 
 Some of the AI Services can be hosted locally and may require some setup. Below are instructions for those that support this.
 
+# [Azure OpenAI](#tab/csharp-AzureOpenAI)
+
+No local setup.
+
+# [OpenAI](#tab/csharp-OpenAI)
+
+No local setup.
+
+# [Mistral](#tab/csharp-Mistral)
+
+No local setup.
+
+# [Google](#tab/csharp-Google)
+
+No local setup.
+
+# [Hugging Face](#tab/csharp-HuggingFace)
+
+No local setup.
+
+# [Azure AI Inference](#tab/csharp-AzureAIInference)
+
+No local setup.
+
 # [Ollama](#tab/csharp-Ollama)
 
 To run Ollama locally using docker, use the following command to start a container using the CPU.
@@ -58,6 +82,10 @@ Clone the repository containing the ONNX model you would like to use.
 ```bash
 git clone https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx
 ```
+
+# [Other](#tab/csharp-other)
+
+No local setup.
 
 ---
 
