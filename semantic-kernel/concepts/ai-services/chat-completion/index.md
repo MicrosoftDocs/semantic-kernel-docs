@@ -52,14 +52,6 @@ No local setup.
 
 No local setup.
 
-# [Anthropic](#tab/csharp-Anthropic)
-
-No local setup.
-
-# [Amazon Bedrock](#tab/csharp-AmazonBedrock)
-
-No local setup.
-
 # [Ollama](#tab/csharp-Ollama)
 
 To run Ollama locally using docker, use the following command to start a container using the CPU.
@@ -82,6 +74,14 @@ From this terminal download the required models, e.g. here we are downloading th
 ```bash
 ollama pull phi3
 ```
+
+# [Anthropic](#tab/csharp-Anthropic)
+
+No local setup.
+
+# [Amazon Bedrock](#tab/csharp-AmazonBedrock)
+
+No local setup.
 
 # [ONNX](#tab/csharp-ONNX)
 
