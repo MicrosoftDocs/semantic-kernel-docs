@@ -1,2 +1,4 @@
 - name: Prompts
   href: index.md
+- name: Prompt template syntax
+  href: prompt-template-syntax.md
