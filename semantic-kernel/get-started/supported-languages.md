@@ -24,23 +24,35 @@ While the overall architecture of the kernel is consistent across all languages,
 
 In C#, there are several packages to help ensure that you only need to import the functionality that you need for your project. The following table shows the available packages in C#.
 
-| Package name | Description | 
+| Package name | Description |
 |--------------|-------------|
 | `Microsoft.SemanticKernel` | The main package that includes everything to get started |
 | `Microsoft.SemanticKernel.Core` | The core package that provides implementations for `Microsoft.SemanticKernel.Abstractions` |
 | `Microsoft.SemanticKernel.Abstractions` | The base abstractions for Semantic Kernel |
-| `Microsoft.SemanticKernel.Connectors.OpenAI` | The connector for OpenAI |
-| `Microsoft.SemanticKernel.Connectors.HuggingFace` | The connector for Hugging Face models |
-| `Microsoft.SemanticKernel.Connectors.Google` | The connector for Google models (e.g., Gemini) |
-| `Microsoft.SemanticKernel.Connectors.MistralAI` | The connector for Mistral AI models |
+| `Microsoft.SemanticKernel.Connectors.Amazon` | The AI connector for Amazon AI |
+| `Microsoft.SemanticKernel.Connectors.AzureAIInference` | The AI connector for Azure AI Inference |
+| `Microsoft.SemanticKernel.Connectors.AzureOpenAI` | The AI connector for Azure OpenAI |
+| `Microsoft.SemanticKernel.Connectors.Google` | The AI connector for Google models (e.g., Gemini) |
+| `Microsoft.SemanticKernel.Connectors.HuggingFace` | The AI connector for Hugging Face models |
+| `Microsoft.SemanticKernel.Connectors.MistralAI` | The AI connector for Mistral AI models |
+| `Microsoft.SemanticKernel.Connectors.Ollama` | The AI connector for Ollama |
+| `Microsoft.SemanticKernel.Connectors.Onnx` | The AI connector for Onnx |
+| `Microsoft.SemanticKernel.Connectors.OpenAI` | The AI connector for OpenAI |
+| `Microsoft.SemanticKernel.Connectors.AzureAISearch` | The vector store connector for AzureAISearch |
+| `Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB` | The vector store connector for AzureCosmosDBMongoDB |
+| `Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL` | The vector store connector for AzureAISearch |
+| `Microsoft.SemanticKernel.Connectors.MongoDB` | The vector store connector for MongoDB |
+| `Microsoft.SemanticKernel.Connectors.Pinecone` | The vector store connector for Pinecone |
+| `Microsoft.SemanticKernel.Connectors.Qdrant` | The vector store connector for Qdrant |
+| `Microsoft.SemanticKernel.Connectors.Redis` | The vector store connector for Redis |
+| `Microsoft.SemanticKernel.Connectors.Sqlite` | The vector store connector for Sqlite |
+| `Microsoft.SemanticKernel.Connectors.Weaviate` | The vector store connector for Weaviate |
 | `Microsoft.SemanticKernel.Plugins.OpenApi` (Experimental) | Enables loading plugins from OpenAPI specifications |
 | `Microsoft.SemanticKernel.PromptTemplates.Handlebars` | Enables the use of Handlebars templates for prompts |
 | `Microsoft.SemanticKernel.Yaml` | Provides support for serializing prompts using YAML files |
 | `Microsoft.SemanticKernel.Prompty` | Provides support for serializing prompts using Prompty files |
 | `Microsoft.SemanticKernel.Agents.Abstractions` | Provides abstractions for creating agents |
 | `Microsoft.SemanticKernel.Agents.OpenAI` | Provides support for Assistant API agents |
-
-There are other packages available (e.g., the memory connectors), but they are still experimental and are not yet recommended for production use.
 
 To install any of these packages, you can use the following command:
 
@@ -174,32 +186,39 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 
 | Endpoints                                 |  C#  | Python | Java | Notes |
 |-------------------------------------------|:----:|:------:|:----:|-------|
-| OpenAI                                    | ✅ | ✅ | ✅ | |
+| Amazon Bedrock                            | ✅ | ✅ | ❌ | |
+| Anthropic                                 | ✅ | ✅ | ❌ | |
+| Azure AI Inference                        | ✅ | ✅ | ❌ | |
 | Azure OpenAI                              | ✅ | ✅ | ✅ | |
-| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes Ollama, LLM Studio, Azure Model-as-a-service, etc. |
-| Hugging Face Inference API                | 🔄 | ❌ | ❌ | Coming soon to Python, not all scenarios are covered for .NET |
+| Google                                    | ✅ | ✅ | ✅ | |
+| Hugging Face Inference API                | ✅ | ✅ | ❌ | |
+| Mistral                                   | ✅ | ✅ | ❌ | |
+| Ollama                                    | ✅ | ✅ | ❌ | |
+| ONNX                                      | ✅ | ✅ | ❌ | |
+| OpenAI                                    | ✅ | ✅ | ✅ | |
+| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, Azure Model-as-a-service, etc. |
 
-### Memory Connectors (Experimental)
+### Vector Store Connectors (Experimental)
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+For the list of out of the box vector store connectors and the language support for each, refer to [out of the box connectors](../concepts/vector-store-connectors/out-of-the-box-connectors/index.md).
+
+### Memory Store Connectors (Legacy)
 
 > [!IMPORTANT]
-> All of the existing memory connectors are currently experimental and will be replaced by Vector Store connectors. These will provide more functionality via an updated abstraction layer.
+> Memory Store connectors are legacy and have been replaced by Vector Store connectors. For more information see [Legacy Memory Stores](../concepts/vector-store-connectors/memory-stores.md).
 
 | Memory Connectors        |  C#  | Python | Java | Notes |
 |--------------------------|:----:|:------:|:----:|-------|
 | Azure AI Search          | ✅ | ✅ | ✅ | |
 | Chroma                   | ✅ | ✅ | ❌ | |
 | DuckDB                   | ✅ | ❌ | ❌ | |
-| Milvus                   | 🔄 | ✅ | ❌ | |
+| Milvus                   | ✅ | ✅ | ❌ | |
 | Pinecone                 | ✅ | ✅ | ❌ | |
 | Postgres                 | ✅ | ✅ | ❌ | |
 | Qdrant                   | ✅ | 🔄 | ❌ | |
 | Redis                    | ✅ | 🔄 | ❌ | |
 | Sqlite                   | ✅ | ❌ | 🔄 | |
 | Weaviate                 | ✅ | ✅ | ❌ | |
-
-### Vector Store Connectors (Experimental)
-
-> [!IMPORTANT]
-> All of the existing Vector Store connectors are currently experimental and are undergoing active development to improve the experience of using them. To provide feedback on the latest proposal, please refer to the active [Search](https://github.com/microsoft/semantic-kernel/pull/6012) and [Memory Connector](https://github.com/microsoft/semantic-kernel/pull/6364) ADRs.
-
-For the list of out of the box vector store connectors and the language support for each, refer to [out of the box connectors](../concepts/vector-store-connectors/out-of-the-box-connectors/index.md).
