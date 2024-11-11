@@ -95,7 +95,7 @@ The connector has the following characteristics.
 | Supported data property types     | Any type                                                                                                                         |
 | Supported vector property types   | list[float \| int] \| numpy array                                                                                                       |
 | Supported index types             | Flat                                                                                                                              |
-| Supported distance functions      | Cosine Similarity, Cosine Distance, Dot Product, Euclidean Distance, Euclidean Squared Distance, Manhattan, Hamming                                                                                                                              |
+| Supported distance functions      | <ul><li>Cosine Similarity</li><li>Cosine Distance</li><li>Dot Product Similarity</li><li>Euclidean Distance</li><li>Euclidean Squared Distance</li><li>Manhattan Distance</li><li>Hamming Distance</li></ul> |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | is_filterable supported?           | Yes                                                                                                                              |
 | is_full_text_searchable supported?   | Yes                                                                                                                              |
