@@ -94,12 +94,12 @@ The connector has the following characteristics.
 | Supported key property types      | Any that is allowed to be a dict key, see the python documentation for details [here](https://docs.python.org/3/library/stdtypes.html#typesmapping)                                                                                                    |
 | Supported data property types     | Any type                                                                                                                         |
 | Supported vector property types   | list[float \| int] \| numpy array                                                                                                       |
-| Supported index types             | N/A                                                                                                                              |
-| Supported distance functions      | all                                                                                        |
+| Supported index types             | Flat                                                                                                                              |
+| Supported distance functions      | Cosine Similarity, Cosine Distance, Dot Product, Euclidean Distance, Euclidean Squared Distance, Manhattan, Hamming                                                                                                                              |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | is_filterable supported?           | Yes                                                                                                                              |
 | is_full_text_searchable supported?   | Yes                                                                                                                              |
-                      |
+
 
 ## Getting started
 
