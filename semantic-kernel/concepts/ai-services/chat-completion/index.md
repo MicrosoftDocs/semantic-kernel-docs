@@ -95,7 +95,7 @@ Before adding chat completion to your kernel, you will need to install the neces
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
+dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
 ```
 
 # [OpenAI](#tab/csharp-OpenAI)
@@ -169,10 +169,6 @@ Now that you've installed the necessary packages, you can create chat completion
 To add a chat completion service, you can use the following code to add it to the kernel's inner service provider.
 
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -641,7 +637,7 @@ Lastly, you can create instances of the service directly so that you can either 
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 
 AzureOpenAIChatCompletionService chatCompletionService = new (
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT",
