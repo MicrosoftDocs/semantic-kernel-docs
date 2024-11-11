@@ -298,7 +298,7 @@ products = [record async for record in search_result.results]
 
 ### Top and Skip
 
-The `Top` and `Skip` options allow you to limit the number of results to the Top n results and
+The `top` and `skip` options allow you to limit the number of results to the Top n results and
 to skip a number of results from the top of the resultset.
 Top and Skip can be used to do paging if you wish to retrieve a large number of results using separate calls.
 
