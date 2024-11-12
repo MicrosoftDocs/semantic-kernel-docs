@@ -474,7 +474,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Google;
+using Microsoft.SemanticKernel.Connectors.HuggingFace;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -701,13 +701,12 @@ GoogleAIGeminiChatCompletionService chatCompletionService = new (
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.Connectors.HuggingFace;
 
-OpenAIChatCompletionService chatCompletionService = new (
-    modelId: "gpt-4",
-    apiKey: "YOUR_API_KEY",
-    organization: "YOUR_ORG_ID", // Optional
-    httpClient: new HttpClient() // Optional; if not provided, the HttpClient from the kernel will be used
+HuggingFaceChatCompletionService chatCompletionService = new (
+    model: "NAME_OF_MODEL",
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT") // Optional
 );
 ```
 

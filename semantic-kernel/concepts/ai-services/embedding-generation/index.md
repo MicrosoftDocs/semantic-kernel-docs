@@ -155,7 +155,7 @@ kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
     modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
     serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel.
     httpClient: new HttpClient(), // Optional; if not provided, the HttpClient from the kernel will be used.
-    dimensions: 1536
+    dimensions: 1536              // Optional number of dimensions to generate embeddings with.
 );
 Kernel kernel = kernelBuilder.Build();
 ```
@@ -171,7 +171,8 @@ kernelBuilder.AddOpenAITextEmbeddingGeneration(
     apiKey: "YOUR_API_KEY",
     orgId: "YOUR_ORG_ID",         // Optional organization id.
     serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
-    httpClient: new HttpClient()  // Optional; if not provided, the HttpClient from the kernel will be used
+    httpClient: new HttpClient(), // Optional; if not provided, the HttpClient from the kernel will be used
+    dimensions: 1536              // Optional number of dimensions to generate embeddings with.
 );
 Kernel kernel = kernelBuilder.Build();
 ```
@@ -186,7 +187,7 @@ using Microsoft.SemanticKernel;
 
 #pragma warning disable SKEXP0070
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.AddMistralChatCompletion(
+kernelBuilder.AddMistralTextEmbeddingGeneration(
     modelId: "NAME_OF_MODEL",           // Name of the embedding model, e.g. "mistral-embed".
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional uri endpoint including the port where MistralAI server is hosted. Default is https://api.mistral.ai.
@@ -271,6 +272,292 @@ kernelBuilder.AddBertOnnxTextEmbeddingGeneration(
     serviceId: "SERVICE_ID"              // Optional; for targeting specific services within Semantic Kernel
 );
 Kernel kernel = kernelBuilder.Build();
+```
+
+---
+
+### Using dependency injection
+
+If you're using dependency injection, you'll likely want to add your embedding generation services directly to the service provider. This is helpful if you want to create singletons of your embedding generation services and reuse them in transient kernels.
+
+# [Azure OpenAI](#tab/csharp-AzureOpenAI)
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddAzureOpenAITextEmbeddingGeneration(
+    deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    apiKey: "YOUR_API_KEY",
+    modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
+    serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel.
+    httpClient: new HttpClient(), // Optional; if not provided, the HttpClient from the kernel will be used.
+    dimensions: 1536              // Optional number of dimensions to generate embeddings with.
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
+# [OpenAI](#tab/csharp-OpenAI)
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddOpenAITextEmbeddingGeneration(
+    modelId: "MODEL_ID",          // Name of the embedding model, e.g. "text-embedding-ada-002".
+    apiKey: "YOUR_API_KEY",
+    orgId: "YOUR_ORG_ID",         // Optional organization id.
+    serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
+    httpClient: new HttpClient(), // Optional; if not provided, the HttpClient from the kernel will be used
+    dimensions: 1536              // Optional number of dimensions to generate embeddings with.
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
+# [Mistral](#tab/csharp-Mistral)
+
+> [!IMPORTANT]
+> The Mistral embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddMistralTextEmbeddingGeneration(
+    modelId: "NAME_OF_MODEL",           // Name of the embedding model, e.g. "mistral-embed".
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional uri endpoint including the port where MistralAI server is hosted. Default is https://api.mistral.ai.
+    serviceId: "SERVICE_ID",            // Optional; for targeting specific services within Semantic Kernel
+    httpClient: new HttpClient()        // Optional; for customizing HTTP client
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
+# [Google](#tab/csharp-Google)
+
+> [!IMPORTANT]
+> The Google embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Google;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddGoogleAIEmbeddingGeneration(
+    modelId: "NAME_OF_MODEL",       // Name of the embedding model, e.g. "models/text-embedding-004".
+    apiKey: "API_KEY",
+    apiVersion: GoogleAIVersion.V1, // Optional
+    serviceId: "SERVICE_ID",        // Optional; for targeting specific services within Semantic Kernel
+    httpClient: new HttpClient()    // Optional; for customizing HTTP client
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
+# [Hugging Face](#tab/csharp-HuggingFace)
+
+> [!IMPORTANT]
+> The Hugging Face embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Google;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddHuggingFaceChatCompletion(
+    model: "NAME_OF_MODEL",             // Name of the embedding model.
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional
+    serviceId: "SERVICE_ID",            // Optional; for targeting specific services within Semantic Kernel
+    httpClient: new HttpClient()        // Optional; for customizing HTTP client
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
+# [Ollama](#tab/csharp-Ollama)
+
+> [!IMPORTANT]
+> The Ollama embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddOllamaTextEmbeddingGeneration(
+    modelId: "NAME_OF_MODEL",           // E.g. "mxbai-embed-large" if mxbai-embed-large was downloaded as described above.
+    endpoint: new Uri("YOUR_ENDPOINT"), // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
+    serviceId: "SERVICE_ID"             // Optional; for targeting specific services within Semantic Kernel
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
+# [ONNX](#tab/csharp-ONNX)
+
+> [!IMPORTANT]
+> The ONNX embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddBertOnnxTextEmbeddingGeneration(
+    onnxModelPath: "PATH_ON_DISK",       // Path to the model on disk e.g. C:\Repos\huggingface\microsoft\TaylorAI\bge-micro-v2\onnx\model.onnx
+    vocabPath: "VOCABULARY_PATH_ON_DISK",// Path to the vocabulary file on disk, e.g. C:\Repos\huggingface\TailorAI\bge-micro-v2\vocab.txt
+    serviceId: "SERVICE_ID"              // Optional; for targeting specific services within Semantic Kernel
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
+---
+
+### Creating standalone instances
+
+Lastly, you can create instances of the service directly so that you can either add them to a kernel later or use them directly in your code without ever injecting them into the kernel or in a service provider.
+
+# [Azure OpenAI](#tab/csharp-AzureOpenAI)
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+
+AzureOpenAITextEmbeddingGenerationService textEmbeddingGenerationService = new (
+    deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    apiKey: "YOUR_API_KEY",
+    modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
+    httpClient: new HttpClient(), // Optional; if not provided, the HttpClient from the kernel will be used.
+    dimensions: 1536              // Optional number of dimensions to generate embeddings with.
+);
+```
+
+# [OpenAI](#tab/csharp-OpenAI)
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+
+OpenAITextEmbeddingGenerationService textEmbeddingGenerationService = new (
+    modelId: "MODEL_ID",          // Name of the embedding model, e.g. "text-embedding-ada-002".
+    apiKey: "YOUR_API_KEY",
+    organization: "YOUR_ORG_ID",  // Optional organization id.
+    httpClient: new HttpClient()  // Optional; if not provided, the HttpClient from the kernel will be used
+    dimensions: 1536              // Optional number of dimensions to generate embeddings with.
+);
+```
+
+# [Mistral](#tab/csharp-Mistral)
+
+> [!IMPORTANT]
+> The Mistral embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.MistralAI;
+
+#pragma warning disable SKEXP0070
+MistralAITextEmbeddingGenerationService textEmbeddingGenerationService = new (
+    modelId: "NAME_OF_MODEL",           // Name of the embedding model, e.g. "mistral-embed".
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional uri endpoint including the port where MistralAI server is hosted. Default is https://api.mistral.ai.
+    httpClient: new HttpClient()        // Optional; for customizing HTTP client
+);
+```
+
+# [Google](#tab/csharp-Google)
+
+> [!IMPORTANT]
+> The Google embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.Google;
+
+#pragma warning disable SKEXP0070
+GoogleAITextEmbeddingGenerationService textEmbeddingGenerationService = new (
+    modelId: "NAME_OF_MODEL",       // Name of the embedding model, e.g. "models/text-embedding-004".
+    apiKey: "API_KEY",
+    apiVersion: GoogleAIVersion.V1, // Optional
+    httpClient: new HttpClient()    // Optional; for customizing HTTP client
+);
+```
+
+# [Hugging Face](#tab/csharp-HuggingFace)
+
+> [!IMPORTANT]
+> The Hugging Face embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.HuggingFace;
+
+#pragma warning disable SKEXP0070
+HuggingFaceTextEmbeddingGenerationService textEmbeddingGenerationService = new (
+    model: "NAME_OF_MODEL",             // Name of the embedding model.
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT"), // Optional
+    httpClient: new HttpClient()        // Optional; for customizing HTTP client
+);
+```
+
+# [Ollama](#tab/csharp-Ollama)
+
+> [!IMPORTANT]
+> The Ollama embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Embeddings;
+using OllamaSharp;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+ITextEmbeddingGenerationService textEmbeddingGenerationService = new OllamaApiClient(
+    uriString: "YOUR_ENDPOINT",                      // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
+    defaultModel: TestConfiguration.Ollama.ModelId   // E.g. "mxbai-embed-large" if mxbai-embed-large was downloaded as described above.
+).AsEmbeddingGenerationService();
+```
+
+# [ONNX](#tab/csharp-ONNX)
+
+> [!IMPORTANT]
+> The ONNX embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.Onnx;
+
+#pragma warning disable SKEXP0070
+BertOnnxTextEmbeddingGenerationService textEmbeddingGenerationService = new (
+    onnxModelPath: "PATH_ON_DISK",       // Path to the model on disk e.g. C:\Repos\huggingface\microsoft\TaylorAI\bge-micro-v2\onnx\model.onnx
+    vocabPath: "VOCABULARY_PATH_ON_DISK" // Path to the vocabulary file on disk, e.g. C:\Repos\huggingface\TailorAI\bge-micro-v2\vocab.txt
+);
 ```
 
 ::: zone-end
