@@ -105,31 +105,31 @@ dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
 # [Mistral](#tab/csharp-Mistral)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
+dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI --prerelease
 ```
 
 # [Google](#tab/csharp-Google)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Google
+dotnet add package Microsoft.SemanticKernel.Connectors.Google --prerelease
 ```
 
 # [Hugging Face](#tab/csharp-HuggingFace)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
+dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace --prerelease
 ```
 
 # [Ollama](#tab/csharp-Ollama)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Ollama
+dotnet add package Microsoft.SemanticKernel.Connectors.Ollama --prerelease
 ```
 
 # [ONNX](#tab/csharp-ONNX)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Onnx
+dotnet add package Microsoft.SemanticKernel.Connectors.Onnx --prerelease
 ```
 
 ---

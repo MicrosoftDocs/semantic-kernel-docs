@@ -115,49 +115,49 @@ dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
 # [Mistral](#tab/csharp-Mistral)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
+dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI --prerelease
 ```
 
 # [Google](#tab/csharp-Google)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Google
+dotnet add package Microsoft.SemanticKernel.Connectors.Google --prerelease
 ```
 
 # [Hugging Face](#tab/csharp-HuggingFace)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
+dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace --prerelease
 ```
 
 # [Azure AI Inference](#tab/csharp-AzureAIInference)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.AzureAIInference
+dotnet add package Microsoft.SemanticKernel.Connectors.AzureAIInference --prerelease
 ```
 
 # [Ollama](#tab/csharp-Ollama)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Ollama
+dotnet add package Microsoft.SemanticKernel.Connectors.Ollama --prerelease
 ```
 
 # [Anthropic](#tab/csharp-Anthropic)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Amazon
+dotnet add package Microsoft.SemanticKernel.Connectors.Amazon --prerelease
 ```
 
 # [Amazon Bedrock](#tab/csharp-AmazonBedrock)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Amazon
+dotnet add package Microsoft.SemanticKernel.Connectors.Amazon --prerelease
 ```
 
 # [ONNX](#tab/csharp-ONNX)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Onnx
+dotnet add package Microsoft.SemanticKernel.Connectors.Onnx --prerelease
 ```
 
 # [Other](#tab/csharp-other)
