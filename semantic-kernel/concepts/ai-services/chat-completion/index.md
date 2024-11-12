@@ -281,7 +281,7 @@ using Microsoft.SemanticKernel;
 #pragma warning disable SKEXP0070
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.AddAzureAIInferenceChatCompletion(
-    model: "NAME_OF_MODEL",
+    modelId: "NAME_OF_MODEL",
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional
     serviceId: "SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
@@ -505,13 +505,12 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.AzureAIInference;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 #pragma warning disable SKEXP0070
 builder.Services.AddAzureAIInferenceChatCompletion(
-    model: "NAME_OF_MODEL",
+    modelId: "NAME_OF_MODEL",
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional
     serviceId: "SERVICE_ID" // Optional; for targeting specific services within Semantic Kernel
@@ -746,8 +745,8 @@ using OllamaSharp;
 
 #pragma warning disable SKEXP0070
 using var ollamaClient = new OllamaApiClient(
-    uriString: new Uri("YOUR_ENDPOINT"),  // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
-    defaultModel: "NAME_OF_MODEL"         // E.g. "phi3" if phi3 was downloaded as described above.
+    uriString: "YOUR_ENDPOINT"    // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
+    defaultModel: "NAME_OF_MODEL" // E.g. "phi3" if phi3 was downloaded as described above.
 );
 
 IChatCompletionService chatCompletionService = ollamaClient.AsChatCompletionService();
@@ -759,7 +758,7 @@ IChatCompletionService chatCompletionService = ollamaClient.AsChatCompletionServ
 > The Bedrock chat completion connector which is required for Anthropic is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Amazon;
 
 #pragma warning disable SKEXP0070
 BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionService(
@@ -774,7 +773,7 @@ BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionSe
 > The Bedrock chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Amazon;
 
 #pragma warning disable SKEXP0070
 BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionService(
@@ -789,7 +788,7 @@ BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionSe
 > The ONNX chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Onnx;
 
 #pragma warning disable SKEXP0070
 OnnxRuntimeGenAIChatCompletionService chatCompletionService = new OnnxRuntimeGenAIChatCompletionService(
