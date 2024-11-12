@@ -577,6 +577,8 @@ BertOnnxTextEmbeddingGenerationService textEmbeddingGenerationService = await Be
 );
 ```
 
+---
+
 ## Using embedding generation services
 
 All embedding generation services implement the `ITextEmbeddingGenerationService` which has a single method `GenerateEmbeddingsAsync`
