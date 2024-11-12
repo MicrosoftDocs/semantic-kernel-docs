@@ -9,7 +9,7 @@ ms.date: 11/11/2024
 ms.service: semantic-kernel
 ---
 
-# Embedding generation
+# Embedding generation in Semantic Kernel
 
 With embedding generation, you can use an AI model to generate vectors (aka embeddings). These vectors encode the semantic meaning of the text in such a way that mathematical equations can be used on two vectors to compare the similiarty of the original text.
 This is useful for scenarios such as Retrieval Augmented Generation (RAG), where we want to search a database of information, for text related to a user query.
@@ -575,6 +575,26 @@ BertOnnxTextEmbeddingGenerationService textEmbeddingGenerationService = await Be
     onnxModelPath: "PATH_ON_DISK",       // Path to the model on disk e.g. C:\Repos\huggingface\microsoft\TaylorAI\bge-micro-v2\onnx\model.onnx
     vocabPath: "VOCABULARY_PATH_ON_DISK" // Path to the vocabulary file on disk, e.g. C:\Repos\huggingface\TailorAI\bge-micro-v2\vocab.txt
 );
+```
+
+## Using embedding generation services
+
+All embedding generation services implement the `ITextEmbeddingGenerationService` which has a single method `GenerateEmbeddingsAsync`
+that can generate `ReadOnlyMemory<float>` vectors from provided `string` values.
+An extension method `GenerateEmbeddingAsync` is also available for single value versions of the same action.
+
+Here is an example of how to invoke the service with multiple values.
+
+```csharp
+IList<ReadOnlyMemory<float>> embeddings await textEmbeddingGenerationService.GenerateEmbeddingsAsync(["sample text 1", "sample text 2"]);
+```
+
+Here is an example of how to invoke the service with a single value.
+
+```csharp
+using Microsoft.SemanticKernel.Embeddings;
+
+ReadOnlyMemory<float> embedding await textEmbeddingGenerationService.GenerateEmbeddingAsync(["sample text 1", "sample text 2"]);
 ```
 
 ::: zone-end
