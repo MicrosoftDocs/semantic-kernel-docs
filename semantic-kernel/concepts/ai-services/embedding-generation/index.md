@@ -588,15 +588,21 @@ An extension method `GenerateEmbeddingAsync` is also available for single value 
 Here is an example of how to invoke the service with multiple values.
 
 ```csharp
-IList<ReadOnlyMemory<float>> embeddings await textEmbeddingGenerationService.GenerateEmbeddingsAsync(["sample text 1", "sample text 2"]);
-```
+IList<ReadOnlyMemory<float>> embeddings =
+    await textEmbeddingGenerationService.GenerateEmbeddingsAsync(
+    [
+        "sample text 1",
+        "sample text 2"
+    ]);
+    ```
 
 Here is an example of how to invoke the service with a single value.
 
 ```csharp
 using Microsoft.SemanticKernel.Embeddings;
 
-ReadOnlyMemory<float> embedding await textEmbeddingGenerationService.GenerateEmbeddingAsync(["sample text 1", "sample text 2"]);
+ReadOnlyMemory<float> embedding =
+    await textEmbeddingGenerationService.GenerateEmbeddingAsync("sample text");
 ```
 
 ::: zone-end
