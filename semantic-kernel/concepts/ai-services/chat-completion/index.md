@@ -482,7 +482,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.HuggingFace;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -711,6 +710,7 @@ GoogleAIGeminiChatCompletionService chatCompletionService = new (
 ```csharp
 using Microsoft.SemanticKernel.Connectors.HuggingFace;
 
+#pragma warning disable SKEXP0070
 HuggingFaceChatCompletionService chatCompletionService = new (
     model: "NAME_OF_MODEL",
     apiKey: "API_KEY",
@@ -726,6 +726,7 @@ HuggingFaceChatCompletionService chatCompletionService = new (
 ```csharp
 using Microsoft.SemanticKernel.Connectors.AzureAIInference;
 
+#pragma warning disable SKEXP0070
 AzureAIInferenceChatCompletionService chatCompletionService = new (
     modelId: "YOUR_MODEL_ID",
     apiKey: "YOUR_API_KEY",
@@ -736,10 +737,14 @@ AzureAIInferenceChatCompletionService chatCompletionService = new (
 
 # [Ollama](#tab/csharp-Ollama)
 
+> [!IMPORTANT]
+> The Ollama chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
 ```csharp
 using Microsoft.SemanticKernel.ChatCompletion;
 using OllamaSharp;
 
+#pragma warning disable SKEXP0070
 using var ollamaClient = new OllamaApiClient(
     uriString: new Uri("YOUR_ENDPOINT"),  // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
     defaultModel: "NAME_OF_MODEL"         // E.g. "phi3" if phi3 was downloaded as described above.
@@ -756,6 +761,7 @@ IChatCompletionService chatCompletionService = ollamaClient.AsChatCompletionServ
 ```csharp
 using Microsoft.SemanticKernel;
 
+#pragma warning disable SKEXP0070
 BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionService(
     modelId: "NAME_OF_MODEL",
     bedrockRuntime: amazonBedrockRuntime // Optional; An instance of IAmazonBedrockRuntime, used to communicate with Azure Bedrock.
@@ -770,12 +776,13 @@ BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionSe
 ```csharp
 using Microsoft.SemanticKernel;
 
+#pragma warning disable SKEXP0070
 BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionService(
     modelId: "NAME_OF_MODEL",
     bedrockRuntime: amazonBedrockRuntime // Optional; An instance of IAmazonBedrockRuntime, used to communicate with Azure Bedrock.
 );
 ```
-    
+
 # [ONNX](#tab/csharp-ONNX)
 
 > [!IMPORTANT]
@@ -784,6 +791,7 @@ BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionSe
 ```csharp
 using Microsoft.SemanticKernel;
 
+#pragma warning disable SKEXP0070
 OnnxRuntimeGenAIChatCompletionService chatCompletionService = new OnnxRuntimeGenAIChatCompletionService(
     modelId: "NAME_OF_MODEL",  // E.g. phi-3
     modelPath: "PATH_ON_DISK", // Path to the model on disk e.g. C:\Repos\huggingface\microsoft\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32
