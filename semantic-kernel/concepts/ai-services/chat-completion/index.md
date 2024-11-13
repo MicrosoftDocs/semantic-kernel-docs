@@ -103,7 +103,7 @@ Before adding chat completion to your kernel, you will need to install the neces
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
+dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
 ```
 
 # [OpenAI](#tab/csharp-OpenAI)
@@ -115,49 +115,49 @@ dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
 # [Mistral](#tab/csharp-Mistral)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI
+dotnet add package Microsoft.SemanticKernel.Connectors.MistralAI --prerelease
 ```
 
 # [Google](#tab/csharp-Google)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Google
+dotnet add package Microsoft.SemanticKernel.Connectors.Google --prerelease
 ```
 
 # [Hugging Face](#tab/csharp-HuggingFace)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace
+dotnet add package Microsoft.SemanticKernel.Connectors.HuggingFace --prerelease
 ```
 
 # [Azure AI Inference](#tab/csharp-AzureAIInference)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.AzureAIInference
+dotnet add package Microsoft.SemanticKernel.Connectors.AzureAIInference --prerelease
 ```
 
 # [Ollama](#tab/csharp-Ollama)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Ollama
+dotnet add package Microsoft.SemanticKernel.Connectors.Ollama --prerelease
 ```
 
 # [Anthropic](#tab/csharp-Anthropic)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Amazon
+dotnet add package Microsoft.SemanticKernel.Connectors.Amazon --prerelease
 ```
 
 # [Amazon Bedrock](#tab/csharp-AmazonBedrock)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Amazon
+dotnet add package Microsoft.SemanticKernel.Connectors.Amazon --prerelease
 ```
 
 # [ONNX](#tab/csharp-ONNX)
 
 ```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.Onnx
+dotnet add package Microsoft.SemanticKernel.Connectors.Onnx --prerelease
 ```
 
 # [Other](#tab/csharp-other)
@@ -177,10 +177,6 @@ Now that you've installed the necessary packages, you can create chat completion
 To add a chat completion service, you can use the following code to add it to the kernel's inner service provider.
 
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
-
-```bash
-dotnet add package Microsoft.SemanticKernel.Connectors.OpenAI
-```
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -285,7 +281,7 @@ using Microsoft.SemanticKernel;
 #pragma warning disable SKEXP0070
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.AddAzureAIInferenceChatCompletion(
-    model: "NAME_OF_MODEL",
+    modelId: "NAME_OF_MODEL",
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional
     serviceId: "SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel
@@ -486,7 +482,6 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Google;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -510,13 +505,12 @@ builder.Services.AddTransient((serviceProvider)=> {
 
 ```csharp
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.AzureAIInference;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 #pragma warning disable SKEXP0070
 builder.Services.AddAzureAIInferenceChatCompletion(
-    model: "NAME_OF_MODEL",
+    modelId: "NAME_OF_MODEL",
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional
     serviceId: "SERVICE_ID" // Optional; for targeting specific services within Semantic Kernel
@@ -649,7 +643,7 @@ Lastly, you can create instances of the service directly so that you can either 
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 
 AzureOpenAIChatCompletionService chatCompletionService = new (
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT",
@@ -713,13 +707,13 @@ GoogleAIGeminiChatCompletionService chatCompletionService = new (
 > The Hugging Face chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.Connectors.HuggingFace;
 
-OpenAIChatCompletionService chatCompletionService = new (
-    modelId: "gpt-4",
-    apiKey: "YOUR_API_KEY",
-    organization: "YOUR_ORG_ID", // Optional
-    httpClient: new HttpClient() // Optional; if not provided, the HttpClient from the kernel will be used
+#pragma warning disable SKEXP0070
+HuggingFaceChatCompletionService chatCompletionService = new (
+    model: "NAME_OF_MODEL",
+    apiKey: "API_KEY",
+    endpoint: new Uri("YOUR_ENDPOINT") // Optional
 );
 ```
 
@@ -731,6 +725,7 @@ OpenAIChatCompletionService chatCompletionService = new (
 ```csharp
 using Microsoft.SemanticKernel.Connectors.AzureAIInference;
 
+#pragma warning disable SKEXP0070
 AzureAIInferenceChatCompletionService chatCompletionService = new (
     modelId: "YOUR_MODEL_ID",
     apiKey: "YOUR_API_KEY",
@@ -741,13 +736,17 @@ AzureAIInferenceChatCompletionService chatCompletionService = new (
 
 # [Ollama](#tab/csharp-Ollama)
 
+> [!IMPORTANT]
+> The Ollama chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
 ```csharp
 using Microsoft.SemanticKernel.ChatCompletion;
 using OllamaSharp;
 
+#pragma warning disable SKEXP0070
 using var ollamaClient = new OllamaApiClient(
-    uriString: new Uri("YOUR_ENDPOINT"),  // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
-    defaultModel: "NAME_OF_MODEL"         // E.g. "phi3" if phi3 was downloaded as described above.
+    uriString: "YOUR_ENDPOINT"    // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
+    defaultModel: "NAME_OF_MODEL" // E.g. "phi3" if phi3 was downloaded as described above.
 );
 
 IChatCompletionService chatCompletionService = ollamaClient.AsChatCompletionService();
@@ -759,8 +758,9 @@ IChatCompletionService chatCompletionService = ollamaClient.AsChatCompletionServ
 > The Bedrock chat completion connector which is required for Anthropic is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Amazon;
 
+#pragma warning disable SKEXP0070
 BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionService(
     modelId: "NAME_OF_MODEL",
     bedrockRuntime: amazonBedrockRuntime // Optional; An instance of IAmazonBedrockRuntime, used to communicate with Azure Bedrock.
@@ -773,22 +773,24 @@ BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionSe
 > The Bedrock chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Amazon;
 
+#pragma warning disable SKEXP0070
 BedrockChatCompletionService chatCompletionService = new BedrockChatCompletionService(
     modelId: "NAME_OF_MODEL",
     bedrockRuntime: amazonBedrockRuntime // Optional; An instance of IAmazonBedrockRuntime, used to communicate with Azure Bedrock.
 );
 ```
-    
+
 # [ONNX](#tab/csharp-ONNX)
 
 > [!IMPORTANT]
 > The ONNX chat completion connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Onnx;
 
+#pragma warning disable SKEXP0070
 OnnxRuntimeGenAIChatCompletionService chatCompletionService = new OnnxRuntimeGenAIChatCompletionService(
     modelId: "NAME_OF_MODEL",  // E.g. phi-3
     modelPath: "PATH_ON_DISK", // Path to the model on disk e.g. C:\Repos\huggingface\microsoft\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32
