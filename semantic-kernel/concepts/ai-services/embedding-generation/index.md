@@ -9,9 +9,9 @@ ms.date: 11/11/2024
 ms.service: semantic-kernel
 ---
 
-# Embedding generation in Semantic Kernel
+# Text Embedding generation in Semantic Kernel
 
-With embedding generation, you can use an AI model to generate vectors (aka embeddings). These vectors encode the semantic meaning of the text in such a way that mathematical equations can be used on two vectors to compare the similiarty of the original text.
+With text embedding generation, you can use an AI model to generate vectors (aka embeddings). These vectors encode the semantic meaning of the text in such a way that mathematical equations can be used on two vectors to compare the similiarty of the original text.
 This is useful for scenarios such as Retrieval Augmented Generation (RAG), where we want to search a database of information for text related to a user query.
 Any matching information can then be provided as input to Chat Completion, so that the AI Model has more context when answering the user query.
 
@@ -134,13 +134,13 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Onnx --prerelease
 
 ---
 
-## Creating embedding generation services
+## Creating text embedding generation services
 
-Now that you've installed the necessary packages, you can create an embedding generation service. Below are the several ways you can create embedding generation services using Semantic Kernel.
+Now that you've installed the necessary packages, you can create a text embedding generation service. Below are the several ways you can text create embedding generation services using Semantic Kernel.
 
 ### Adding directly to the kernel
 
-To add an embedding generation service, you can use the following code to add it to the kernel's inner service provider.
+To add a text embedding generation service, you can use the following code to add it to the kernel's inner service provider.
 
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
@@ -236,7 +236,7 @@ using Microsoft.SemanticKernel;
 
 #pragma warning disable SKEXP0070
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.AddHuggingFaceChatCompletion(
+kernelBuilder.AddHuggingFaceTextEmbeddingGeneration(
     model: "NAME_OF_MODEL",             // Name of the embedding model.
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional
@@ -286,7 +286,7 @@ Kernel kernel = kernelBuilder.Build();
 
 ### Using dependency injection
 
-If you're using dependency injection, you'll likely want to add your embedding generation services directly to the service provider. This is helpful if you want to create singletons of your embedding generation services and reuse them in transient kernels.
+If you're using dependency injection, you'll likely want to add your text embedding generation services directly to the service provider. This is helpful if you want to create singletons of your embedding generation services and reuse them in transient kernels.
 
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
 
@@ -394,7 +394,7 @@ using Microsoft.SemanticKernel;
 var builder = Host.CreateApplicationBuilder(args);
 
 #pragma warning disable SKEXP0070
-builder.Services.AddHuggingFaceChatCompletion(
+builder.Services.AddHuggingFaceTextEmbeddingGeneration(
     model: "NAME_OF_MODEL",             // Name of the embedding model.
     apiKey: "API_KEY",
     endpoint: new Uri("YOUR_ENDPOINT"), // Optional
@@ -579,9 +579,9 @@ BertOnnxTextEmbeddingGenerationService textEmbeddingGenerationService = await Be
 
 ---
 
-## Using embedding generation services
+## Using text embedding generation services
 
-All embedding generation services implement the `ITextEmbeddingGenerationService` which has a single method `GenerateEmbeddingsAsync`
+All text embedding generation services implement the `ITextEmbeddingGenerationService` which has a single method `GenerateEmbeddingsAsync`
 that can generate `ReadOnlyMemory<float>` vectors from provided `string` values.
 An extension method `GenerateEmbeddingAsync` is also available for single value versions of the same action.
 
