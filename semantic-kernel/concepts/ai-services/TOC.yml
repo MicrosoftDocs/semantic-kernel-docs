@@ -3,5 +3,7 @@
 - name: Chat completion
   href: chat-completion/TOC.yml
   expanded: true
+- name: Embedding generation
+  href: embedding-generation/TOC.yml
 - name: AI Integrations
   href: integrations.md
