@@ -40,14 +40,17 @@ IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollectio
 
 // Generate a vector for your search text, using your chosen embedding generation implementation.
 // Just showing a placeholder method here for brevity.
-var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
+ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search, passing an options object with a Top value to limit resulst to the single top match.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).Results.ToListAsync();
+var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
 
 // Inspect the returned hotel.
-Hotel hotel = searchResult.First().Record;
-Console.WriteLine("Found hotel description: " + hotel.Description);
+await foreach (var record in searchResult.Results)
+{
+    Console.WriteLine("Found hotel description: " + record.Record.Description);
+    Console.WriteLine("Found record score: " + record.Score);
+}
 ```
 
 > [!TIP]
@@ -79,7 +82,7 @@ because of custom serialization settings.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
-using Microsoft.Connectors.Memory.InMemory;
+using Microsoft.SemanticKernel.Connectors.InMemory;
 
 var vectorStore = new InMemoryVectorStore();
 var collection = vectorStore.GetCollection<int, Product>("skproducts");
@@ -127,7 +130,13 @@ var vectorSearchOptions = new VectorSearchOptions
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync();
+var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+
+// Iterate over the search results.
+await foreach (var result in searchResult.Results)
+{
+    Console.WriteLine(result.Record.FeatureList);
+}
 ```
 
 The default values for `Top` is 3 and `Skip` is 0.
@@ -146,9 +155,16 @@ The default value for `IncludeVectors` is `false`.
 var vectorSearchOptions = new VectorSearchOptions
 {
     IncludeVectors = true
-}
+};
+
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync()
+var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+
+// Iterate over the search results.
+await foreach (var result in searchResult.Results)
+{
+    Console.WriteLine(result.Record.FeatureList);
+}
 ```
 
 ### VectorSearchFilter
@@ -189,9 +205,15 @@ var vectorSearchOptions = new VectorSearchOptions
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync();
+var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
 
-private sealed class Glossary
+// Iterate over the search results.
+await foreach (var result in searchResult.Results)
+{
+    Console.WriteLine(result.Record.Definition);
+}
+
+sealed class Glossary
 {
     [VectorStoreRecordKey]
     public ulong Key { get; set; }

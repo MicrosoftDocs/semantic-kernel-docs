@@ -12,9 +12,30 @@ ms.service: semantic-kernel
 
 ::: zone pivot="programming-language-csharp"
 
-## Coming soon
+In order for your data model to be stored in a database, it needs to be converted to a format that the database can understand.
+Different databases require different storage schemas and formats. Some have a strict schema that needs to be adhered to, while
+others allow the schema to be defined by the user.
 
-More info coming soon.
+## Mapping options
+
+The vector store connectors provided by Semantic Kernel provide multiple ways to achieve this mapping.
+
+### Built-in mappers
+
+The vector store connectors provided by Semantic Kernel have built-in mappers that will map your data model to and from the
+database schemas. See the [page for each connector](./out-of-the-box-connectors/index.md) for more information on how the built-in
+mappers map data for each database.
+
+### Custom mappers
+
+The vector store connectors provided by Semantic Kernel support the ability to provide custom mappers in combination with
+a `VectorStoreRecordDefinition`. In this case, the `VectorStoreRecordDefinition` can differ from the supplied data model.
+The `VectorStoreRecordDefinition` is used to define the database schema, while the data model is used by the developer
+to interact with the vector store.
+A custom mapper is required in this case to map from the data model to the custom database schema defined by the `VectorStoreRecordDefinition`.
+
+> [!TIP]
+> See [How to build a custom mapper for a Vector Store connector](./how-to/vector-store-custom-mapper.md) for an example on how to create your own custom mapper.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

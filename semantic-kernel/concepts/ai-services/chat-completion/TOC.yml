@@ -2,5 +2,7 @@
   href: index.md
 - name: Chat history
   href: chat-history.md
+- name: Multi-modal chat completion
+  href: multi-modal-chat-completion.md
 - name: Function calling
   href: function-calling/TOC.yml
