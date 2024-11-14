@@ -349,6 +349,12 @@ public class Main {
 ### Create the collection and add records
 
 ```csharp
+// Placeholder embedding generation method.
+async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
+{
+    // your logic here
+}
+
 // Create the collection if it doesn't exist yet.
 await collection.CreateCollectionIfNotExistsAsync();
 
@@ -357,7 +363,6 @@ string descriptionText = "A place where everyone can be happy.";
 ulong hotelId = 1;
 
 // Create a record and generate a vector for the description using your chosen embedding generation implementation.
-// Just showing a placeholder embedding generation method here for brevity.
 await collection.UpsertAsync(new Hotel
 {
     HotelId = hotelId,
@@ -429,8 +434,13 @@ var retrievedHotel = collection.getAsync(hotelId, null).block();
 ### Do a vector search
 
 ```csharp
+// Placeholder embedding generation method.
+async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
+{
+    // your logic here
+}
+
 // Generate a vector for your search text, using your chosen embedding generation implementation.
-// Just showing a placeholder method here for brevity.
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search.

@@ -27,7 +27,7 @@ you can provide images and text in the following way.
 
 ```csharp
 // Load an image from disk.
-byte[] bytes = LoadImage("sample_image.jpg");
+byte[] bytes = File.ReadAllBytes("path/to/image.jpg");
 
 // Create a chat history with a system message instructing
 // the LLM on its required role.

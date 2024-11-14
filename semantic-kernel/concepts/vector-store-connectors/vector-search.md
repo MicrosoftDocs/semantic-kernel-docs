@@ -34,12 +34,17 @@ using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Microsoft.Extensions.VectorData;
 using Qdrant.Client;
 
+// Placeholder embedding generation method.
+async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
+{
+    // your logic here
+}
+
 // Create a Qdrant VectorStore object and choose an existing collection that already contains records.
 IVectorStore vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
 IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
 
 // Generate a vector for your search text, using your chosen embedding generation implementation.
-// Just showing a placeholder method here for brevity.
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search, passing an options object with a Top value to limit resulst to the single top match.
