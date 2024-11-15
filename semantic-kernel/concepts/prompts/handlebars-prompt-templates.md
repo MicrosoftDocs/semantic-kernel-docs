@@ -25,21 +25,8 @@ Install the [Microsoft.SemanticKernel.PromptTemplates.Handlebars](https://www.nu
 dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-
-::: zone-end
-::: zone pivot="programming-language-java"
-
-## Coming soon
-
-More coming soon.
-
-::: zone-end
-
 ## How to use Handlebars templates programmatically
 
-::: zone pivot="programming-language-csharp"
 The example below demonstrates a chat prompt template that utilizes Handlebars syntax. The template contains Handlebars expressions, which are denoted by `{{` and `}}`. When the template is executed, these expressions are replaced with values from an input object.
 
 In this example, there are two input objects:
@@ -157,18 +144,6 @@ The output will look something like this:
 Hey, John! 👋 Your current membership level is Gold. 🏆 Enjoy all the perks that come with it! If you have any questions, feel free to ask. 😊
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-
-More coming soon.
-
-::: zone-end
-::: zone pivot="programming-language-java"
-
-More coming soon.
-
-::: zone-end
-
 ## How to use Handlebars templates in YAML prompts
 
 You can create prompt functions from YAML files, allowing you to store your prompt templates alongside associated metadata and prompt execution settings. These files can be managed in version control, which is beneficial for tracking changes to complex prompts.
@@ -248,6 +223,22 @@ var arguments = new KernelArguments()
 var response = await kernel.InvokeAsync(function, arguments);
 Console.WriteLine(response);
 ```
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+## Coming soon for Python
+
+More coming soon.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Coming soon for Java
+
+More coming soon.
+
+::: zone-end
 
 ## Next steps
 

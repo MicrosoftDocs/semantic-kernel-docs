@@ -1,4 +1,4 @@
-- name: Prompts
+- name: Prompt Engineering with Semantic Kernel
   href: index.md
 - name: Semantic Kernel Prompt Templates
   href: prompt-template-syntax.md

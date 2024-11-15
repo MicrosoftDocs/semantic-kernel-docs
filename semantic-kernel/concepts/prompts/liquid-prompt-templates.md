@@ -1,7 +1,6 @@
 ---
 title: Using the Liquid prompt template language 
 description: Learn how to use the Liquid prompt template language with Semantic Kernel.
-zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: conceptual
 ms.author: markwallace
@@ -15,7 +14,8 @@ Liquid is a straightforward templating language primarily used for generating HT
 
 This article focuses on how to effectively use Liquid templates to generate prompts.
 
-::: zone pivot="programming-language-csharp"
+> [!TIP]
+> Liquid prompt templates are only supported in .Net at this time. If you want a prompt template format that works across .Net, Python and Java use [Handlebars prompts](./handlebars-prompt-templates.md).
 
 ## Installing Liquid Prompt Template Support
 
@@ -25,21 +25,8 @@ Install the [Microsoft.SemanticKernel.PromptTemplates.Liquid](https://www.nuget.
 dotnet add package Microsoft.SemanticKernel.PromptTemplates.Liquid
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-
-::: zone-end
-::: zone pivot="programming-language-java"
-
-## Coming soon
-
-More coming soon.
-
-::: zone-end
-
 ## How to use Liquid templates programmatically
 
-::: zone pivot="programming-language-csharp"
 The example below demonstrates a chat prompt template that utilizes Liquid syntax. The template contains Liquid expressions, which are denoted by `{{` and `}}`. When the template is executed, these expressions are replaced with values from an input object.
 
 In this example, there are two input objects:
@@ -156,18 +143,6 @@ The output will look something like this:
 ```txt
 Hey, John! 👋 Your current membership level is Gold. 🏆 Enjoy all the perks that come with it! If you have any questions, feel free to ask. 😊
 ```
-
-::: zone-end
-::: zone pivot="programming-language-python"
-
-More coming soon.
-
-::: zone-end
-::: zone pivot="programming-language-java"
-
-More coming soon.
-
-::: zone-end
 
 ## How to use Liquid templates in YAML prompts
 
