@@ -23,6 +23,17 @@ For example, if you want to write a blog post about the latest trends in AI, you
 
 Semantic Kernel and .net provides an abstraction for interacting with Vector Stores and a list of out-of-the-box connectors that implement these abstractions. Features include creating, listing and deleting collections of records, and uploading, retrieving and deleting records. The abstraction makes it easy to experiment with a free or locally hosted Vector Store and then switch to a service when needing to scale up.
 
+## Retrieval Augmented Generation (RAG) with Vector Stores
+
+The vector store abstractions are a low level api for adding and retrieving data from vector stores.
+Semantic Kernel has built-in support for using any one of the Vector Store implementations for RAG.
+This is achieved by wrapping `IVectorizedSearch<TRecord>` and exposing it as a Text Search implementation.
+
+> [!TIP]
+> To learn more about how to use vector stores for RAG see [How to use Vector Stores with Semantic Kernel Text Search](../text-search/text-search-vector-stores.md).
+> [!TIP]
+> To learn more about text search see [What is Semantic Kernel Text Search?](../text-search/index.md)
+
 ::: zone pivot="programming-language-csharp"
 
 ## The Vector Store Abstraction
@@ -338,6 +349,12 @@ public class Main {
 ### Create the collection and add records
 
 ```csharp
+// Placeholder embedding generation method.
+async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
+{
+    // your logic here
+}
+
 // Create the collection if it doesn't exist yet.
 await collection.CreateCollectionIfNotExistsAsync();
 
@@ -346,7 +363,6 @@ string descriptionText = "A place where everyone can be happy.";
 ulong hotelId = 1;
 
 // Create a record and generate a vector for the description using your chosen embedding generation implementation.
-// Just showing a placeholder embedding generation method here for brevity.
 await collection.UpsertAsync(new Hotel
 {
     HotelId = hotelId,
@@ -418,15 +434,24 @@ var retrievedHotel = collection.getAsync(hotelId, null).block();
 ### Do a vector search
 
 ```csharp
-// Generate a vector for your search text, using your chosen embedding generation implementation.
-// Just showing a placeholder method here for brevity.
-var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
-// Do the search.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).Results.ToListAsync()
+// Placeholder embedding generation method.
+async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
+{
+    // your logic here
+}
 
-// Inspect the returned hotels.
-Hotel hotel = searchResult.First().Record;
-Console.WriteLine("Found hotel description: " + hotel.Description);
+// Generate a vector for your search text, using your chosen embedding generation implementation.
+ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
+
+// Do the search.
+var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+
+// Inspect the returned hotel.
+await foreach (var record in searchResult.Results)
+{
+    Console.WriteLine("Found hotel description: " + record.Record.Description);
+    Console.WriteLine("Found record score: " + record.Score);
+}
 ```
 
 ::: zone-end
