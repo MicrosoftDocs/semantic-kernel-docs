@@ -2,7 +2,7 @@
 title: Prompt engineering with Semantic Kernel
 description: Understanding the importance of prompts in directing the behavior of AIs
 author: johnmaeda
-ms.topic: prompt-engineering
+ms.topic: conceptual
 ms.author: johnmaeda
 ms.date: 09/27/2024
 ms.service: semantic-kernel
@@ -63,6 +63,6 @@ Prompt engineering is a dynamic and evolving field, and skilled prompt engineers
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Semantic Kernel Prompt Templates](./semantic-kernel-prompt-template-syntax.md)
+> [Semantic Kernel Prompt Templates](./prompt-template-syntax.md)
 > [Handlebars Prompt Templates](./handlebars-prompt-templates.md)
 > [Liquid Prompt Templates](./liquid-prompt-templates.md)
