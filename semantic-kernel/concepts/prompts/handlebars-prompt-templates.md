@@ -101,12 +101,12 @@ var arguments = new KernelArguments()
     },
 };
 
-// Create the prompt template using liquid format
-var templateFactory = new LiquidPromptTemplateFactory();
+// Create the prompt template using handlebars format
+var templateFactory = new HandlebarsPromptTemplateFactory();
 var promptTemplateConfig = new PromptTemplateConfig()
 {
     Template = template,
-    TemplateFormat = "liquid",
+    TemplateFormat = "handlebars",
     Name = "ContosoChatPrompt",
 };
 
