@@ -26,6 +26,32 @@ By performing an appropriate text search and including the results with the user
 
 Semantic Kernel provides a set of Text Search capabilities that allow developers to perform searches using Web Search or Vector Databases and easily add RAG to their applications.
 
+## How does text search differ from vector search?
+
+Semantic Kernel provides APIs to perform data retrieval at different levels of abstraction.
+
+Text search allows search at a high level in the stack, where the input is text with support for basic filtering.
+The text search interface supports various types of output, including support for just returning a simple string.
+This allows text search to support many implementations, including web search engines and vector stores.
+The main goal for text search is to provide a simple interface that can be exposed as a plugin to chat completion.
+
+> [!TIP]
+> For all out-of-the-box text search implementations see [Out-of-the-box Text Search](./out-of-the-box-textsearch/index.md).
+
+Vector search sits at a lower level in the stack, where the input is a vector. It also supports basic filtering,
+plus choosing a vector from the data store to compare the input vector with. It returns a data model containing
+the data from the data store.
+
+When you want to do RAG with Vector stores, it makes sense to use text search and vector search together.
+The way to to do this, is by wrapping a vector store collection, which supports vector search, with text
+search and then exposing the text search as a plugin to chat completion. Semantic Kernel provides the
+ability to do this easily out of the box. See the following tips for more information on how to do this.
+
+> [!TIP]
+> To see how to expose vector search to chat completion see [How to use Vector Stores with Semantic Kernel Text Search](./text-search-vector-stores.md).
+> [!TIP]
+> For more information on vector stores and vector search see [What are Semantic Kernel Vector Store connectors?](../vector-store-connectors/index.md).
+
 ::: zone pivot="programming-language-csharp"
 
 ## Implementing RAG using web text search
