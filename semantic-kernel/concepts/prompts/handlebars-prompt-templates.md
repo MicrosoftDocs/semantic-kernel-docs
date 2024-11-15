@@ -1,6 +1,7 @@
 ---
 title: Using the Handlebars prompt template language 
 description: Learn how to use the Handlebars prompt template language with Semantic Kernel.
+zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: conceptual
 ms.author: markwallace
