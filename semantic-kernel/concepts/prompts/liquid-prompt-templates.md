@@ -37,10 +37,9 @@ More coming soon.
 
 ::: zone-end
 
-::: zone pivot="programming-language-csharp"
-
 ## How to use Liquid templates programmatically
 
+::: zone pivot="programming-language-csharp"
 The example below demonstrates a chat prompt template that utilizes Liquid syntax. The template contains Liquid expressions, which are denoted by `{{` and `}}`. When the template is executed, these expressions are replaced with values from an input object.
 
 In this example, there are two input objects:
@@ -161,14 +160,10 @@ Hey, John! 👋 Your current membership level is Gold. 🏆 Enjoy all the perks 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
-
 More coming soon.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
-
-## Coming soon
 
 More coming soon.
 
