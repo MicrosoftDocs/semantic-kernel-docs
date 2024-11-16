@@ -18,8 +18,7 @@ Semantic Kernel provides many different components, that can be used individuall
 The Semantic Kernel AI service connectors provide an abstraction layer that exposes multiple AI service types from different providers via a common interface.
 Supported services include Chat Completion, Text Generation, Embedding Generation, Text to Image, Image to Text, Text to Audio and Audio to Text.
 
-The most important of these is Chat Completion. When an implemention is registered with the Kernel this will be used
-by default by any method calls to the kernel. None of the other supported services will be used automatically.
+When an implementation is registered with the Kernel, Chat Completion or Text Generation services will be used by default, by any method calls to the kernel. None of the other supported services will be used automatically.
 
 > [!TIP]
 > For more information on using AI services see [Adding AI services to Semantic Kernel](./ai-services/index.md).
