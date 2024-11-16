@@ -15,7 +15,7 @@ Semantic Kernel provides many different components, that can be used individuall
 
 ## AI Service Connectors
 
-The Semantic Kernl AI service connectors provide an abstraction layer that exposes multiple AI service types from different providers via a common interface.
+The Semantic Kernel AI service connectors provide an abstraction layer that exposes multiple AI service types from different providers via a common interface.
 Supported services include Chat Completion, Text Generation, Embedding Generation, Text to Image, Image to Text, Text to Audio and Audio to Text.
 
 The most important of these is Chat Completion. When an implemention is registered with the Kernel this will be used
@@ -28,7 +28,7 @@ by default by any method calls to the kernel. None of the other supported servic
 
 The Semantic Kernel Vector Store connectors provide an abstraction layer that exposes vector stores from different providers via a common interface.
 The Kernel does not use any registered vector store automatically, but Vector Search can easily be exposed as a plugin to the Kernel
-in which case the plugin is made availble to Prompt Templates and the Chat Completion AI Model.
+in which case the plugin is made available to Prompt Templates and the Chat Completion AI Model.
 
 > [!TIP]
 > For more information on using memory connectors see [Adding AI services to Semantic Kernel](./ai-services/index.md).
@@ -36,7 +36,7 @@ in which case the plugin is made availble to Prompt Templates and the Chat Compl
 ## Functions and Plugins
 
 Plugins are named function containers. Each can contain one or more functions.
-Plugins can be registered with the kernel, which allows the kernel can use them in two ways:
+Plugins can be registered with the kernel, which allows the kernel to use them in two ways:
 
 1. Advertise them to the chat completion AI, so that the AI can choose them for invocation.
 1. Make them available to be called from a template during template rendering.
@@ -66,7 +66,7 @@ The rendered result will then be passed to the Chat Completion AI model. The res
 This allows the possibility of creating functionality that is described using human language instead of actual code. Separating functionality into
 functions like this allows the AI model to reason about this separately and can lead to higher success rates.
 
-Using prompt templates as functions can result in rahter complex flows. E.g. consider the scenario where a prompt template `A` is registered as a plugin.
+Using prompt templates as functions can result in rather complex flows. E.g. consider the scenario where a prompt template `A` is registered as a plugin.
 At the same time a different prompt template `B` may be passed to the kernel to start the chat completion flow. `B` could have a hardcoded call to `A`.
 This would result in the following steps:
 
