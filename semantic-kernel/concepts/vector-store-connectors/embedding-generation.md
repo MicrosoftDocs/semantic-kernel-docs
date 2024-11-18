@@ -107,6 +107,9 @@ public async Task GenerateEmbeddingsAndSearchAsync(
 }
 ```
 
+> [!TIP]
+> For more information on generating embeddings, refer to [Embedding generation in Semantic Kernel](./../ai-services/embedding-generation/index.md).
+
 ## Embedding dimensions
 
 Vector databases typically require you to specify the number of dimensions that each vector has when creating the collection.

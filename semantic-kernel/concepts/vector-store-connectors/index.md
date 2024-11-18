@@ -23,6 +23,17 @@ For example, if you want to write a blog post about the latest trends in AI, you
 
 Semantic Kernel and .net provides an abstraction for interacting with Vector Stores and a list of out-of-the-box connectors that implement these abstractions. Features include creating, listing and deleting collections of records, and uploading, retrieving and deleting records. The abstraction makes it easy to experiment with a free or locally hosted Vector Store and then switch to a service when needing to scale up.
 
+## Retrieval Augmented Generation (RAG) with Vector Stores
+
+The vector store abstractions are a low level api for adding and retrieving data from vector stores.
+Semantic Kernel has built-in support for using any one of the Vector Store implementations for RAG.
+This is achieved by wrapping `IVectorizedSearch<TRecord>` and exposing it as a Text Search implementation.
+
+> [!TIP]
+> To learn more about how to use vector stores for RAG see [How to use Vector Stores with Semantic Kernel Text Search](../text-search/text-search-vector-stores.md).
+> [!TIP]
+> To learn more about text search see [What is Semantic Kernel Text Search?](../text-search/index.md)
+
 ::: zone pivot="programming-language-csharp"
 
 ## The Vector Store Abstraction
@@ -243,6 +254,16 @@ In this example, we'll use Qdrant. You will therefore need to import the Qdrant 
 dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
 ```
 
+If you want to run Qdrant locally using Docker, use the following command to start the Qdrant container
+with the settings used in this example.
+
+```cli
+docker run -d --name qdrant -p 6333:6333 -p 6334:6334 qdrant/qdrant:latest
+```
+
+To verify that your Qdrant instance is up and running correctly, visit the Qdrant dashboard that is
+built into the Qdrant docker container: [http://localhost:6333/dashboard](http://localhost:6333/dashboard)
+
 Since databases support many different types of keys and records, we allow you to specify the type of the key and record for your collection using generics.
 In our case, the type of record will be the `Hotel` class we already defined, and the type of key will be `ulong`, since the `HotelId` property is a `ulong` and Qdrant only supports `Guid` or `ulong` keys.
 
@@ -328,6 +349,12 @@ public class Main {
 ### Create the collection and add records
 
 ```csharp
+// Placeholder embedding generation method.
+async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
+{
+    // your logic here
+}
+
 // Create the collection if it doesn't exist yet.
 await collection.CreateCollectionIfNotExistsAsync();
 
@@ -336,7 +363,6 @@ string descriptionText = "A place where everyone can be happy.";
 ulong hotelId = 1;
 
 // Create a record and generate a vector for the description using your chosen embedding generation implementation.
-// Just showing a placeholder embedding generation method here for brevity.
 await collection.UpsertAsync(new Hotel
 {
     HotelId = hotelId,
@@ -408,19 +434,43 @@ var retrievedHotel = collection.getAsync(hotelId, null).block();
 ### Do a vector search
 
 ```csharp
-// Generate a vector for your search text, using your chosen embedding generation implementation.
-// Just showing a placeholder method here for brevity.
-var searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
-// Do the search.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).Results.ToListAsync()
+// Placeholder embedding generation method.
+async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
+{
+    // your logic here
+}
 
-// Inspect the returned hotels.
-Hotel hotel = searchResult.First().Record;
-Console.WriteLine("Found hotel description: " + hotel.Description);
+// Generate a vector for your search text, using your chosen embedding generation implementation.
+ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
+
+// Do the search.
+var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+
+// Inspect the returned hotel.
+await foreach (var record in searchResult.Results)
+{
+    Console.WriteLine("Found hotel description: " + record.Record.Description);
+    Console.WriteLine("Found record score: " + record.Score);
+}
 ```
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+### Do a vector search
+
+```python
+# Generate a vector for your search text, using your chosen embedding generation implementation.
+# Just showing a placeholder method here for brevity.
+search_vector = await GenerateEmbedding("I'm looking for a hotel where customer happiness is the priority.");
+# Do the search.
+search_result = await collection.vectorized_search(vector=searchVector, VectorSearchOptions(top = 1 ))
+
+# Inspect the returned hotels.
+async for result in search_result.results:
+    print(f"Found hotel description: {result.record.description}")
+```
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ```java

@@ -6,3 +6,5 @@
   href: function-calling-migration-guide.md
 - name: .NET Stepwise Planner Migration
   href: stepwise-planner-migration-guide.md
+- name: Memory Store to Vector Store Migration
+  href: memory-store-migration.md
