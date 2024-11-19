@@ -19,10 +19,10 @@ Within Semantic Kernel, there are interfaces for the most popular AI tasks. In t
 | [Chat completion](./chat-completion/index.md)                    | ✅ | ✅ | ✅ |
 | Text generation                  | ✅ | ✅ | ✅ |
 | Embedding generation (Experimental)     | ✅ | ✅ | ✅ |
-| Text-to-image  (Experimental)       | ✅ | ❌ | ❌ |
+| Text-to-image  (Experimental)       | ✅ | ✅ | ❌ |
 | Image-to-text (Experimental)       | ✅ | ❌ | ❌ |
-| Text-to-audio (Experimental)       | ✅ | ❌ | ❌ | 
-| Audio-to-text (Experimental)       | ✅ | ❌ | ❌ | 
+| Text-to-audio (Experimental)       | ✅ | ✅ | ❌ | 
+| Audio-to-text (Experimental)       | ✅ | ✅ | ❌ | 
 
 > [!TIP]
 > In most scenarios, you will only need to add chat completion to your kernel, but to support multi-modal AI, you can add any of the above services to your kernel.

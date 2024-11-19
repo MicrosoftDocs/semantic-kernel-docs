@@ -822,77 +822,26 @@ OpenAIChatCompletionService chatCompletionService = new (
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-To add a chat completion service, you can use the following code to add it to the kernel.
+To create a chat completion service, you need to import the necessary modules and create an instance of the service. Below are the steps to create a chat completion service for each AI service provider.
 
-# [Azure OpenAI](#tab/python-AzureOpenAI)
-
-```python
-from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
-
-# Initialize the kernel
-kernel = Kernel()
-
-# Add the Azure OpenAI chat completion service
-kernel.add_service(AzureChatCompletion(
-    deployment_name="my-deployment",
-    api_key="my-api-key",
-    base_url="https://my-deployment.azurewebsites.net", # Used to point to your service
-    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
-))
-```
-
-# [OpenAI](#tab/python-OpenAI)
-
-```python
-from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
-
-# Initialize the kernel
-kernel = Kernel()
-
-# Add the Azure OpenAI chat completion service
-kernel.add_service(OpenAIChatCompletion(
-    ai_model_id="my-deployment",
-    api_key="my-api-key",
-    org_id="my-org-id", # Optional
-    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
-))
-```
-
-# [Other](#tab/python-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
-
-```python
-from semantic_kernel import Kernel
-
-# Initialize the kernel
-kernel = Kernel()
-
-# Add the Azure OpenAI chat completion service
-kernel.add_service(OpenAIChatCompletion(
-    ai_model_id="my-deployment",
-    api_key="my-api-key",
-    org_id="my-org-id", # Optional
-    base_url="https://my-custom-deployment.net", # Used to point to your service
-    service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
-))
-```
----
-
-You can also create instances of the service directly so that you can either add them to a kernel later or use them directly in your code without injecting them into the kernel.
+> [!INFO]
+> There are three methods to supply the required information to AI services. You may either provide the information directly through the constructor, set the necessary environment variables, or create a .env file within your project directory containing the environment variables. You can visit this page to find all the required environment variables for each AI service provider: https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/setup/ALL_SETTINGS.md
 
 # [Azure OpenAI](#tab/python-AzureOpenAI)
 ```python
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 
 chat_completion_service = AzureChatCompletion(
-    deployment_name="my-deployment",
+    deployment_name="my-deployment",  
     api_key="my-api-key",
-    base_url="https://my-deployment.azurewebsites.net", # Used to point to your service
+    endpoint="my-api-endpoint", # Used to point to your service
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
+
+# You can do the following if you have set the necessary environment variables or created a .env file
+chat_completion_service = AzureChatCompletion(service_id="my-service-id")
 ```
+The `AzureChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
 
 # [OpenAI](#tab/python-OpenAI)
 
@@ -902,27 +851,73 @@ from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
 chat_completion_service = OpenAIChatCompletion(
     ai_model_id="my-deployment",
     api_key="my-api-key",
-    org_id="my-org-id", # Optional
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
+
+# You can do the following if you have set the necessary environment variables or created a .env file
+chat_completion_service = OpenAIChatCompletion(service_id="my-service-id")
 ```
 
-# [Other](#tab/python-other)
-For other AI service providers that support the OpenAI chat completion API (e.g., LLM Studio), you can use the following code to reuse the existing OpenAI chat completion connector.
+# [Azure AI Inference](#tab/python-AzureAIInference)
 
 ```python
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.connectors.ai.azure_ai_inference import AzureAIInferenceChatCompletion
 
-chat_completion_service = OpenAIChatCompletion(
+chat_completion_service = AzureAIInferenceChatCompletion(
     ai_model_id="my-deployment",
     api_key="my-api-key",
-    org_id="my-org-id", # Optional
-    base_url="https://my-custom-deployment.net", # Used to point to your service
+    endpoint="my-api-endpoint", # Used to point to your service
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
-```
 
+# You can do the following if you have set the necessary environment variables or created a .env file
+chat_completion_service = AzureAIInferenceChatCompletion(ai_model_id="my-deployment", service_id="my-service-id")
+
+# You can also use an Azure OpenAI deployment with the Azure AI Inference service
+from azure.ai.inference.aio import ChatCompletionsClient
+
+chat_completion_service = AzureAIInferenceChatCompletion(
+    ai_model_id="my-deployment",
+    client=ChatCompletionsClient(
+        endpoint=f"{str(endpoint).strip('/')}/openai/deployments/{deployment_name}",
+        credential=DefaultAzureCredential(),
+        credential_scopes=["https://cognitiveservices.azure.com/.default"],
+    ),
+)
+```
+The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
+
+# [Others](#tab/python-others)
+Semantic Kernel also supports a wide range of AI service providers.
+| Provider | Usages |
+|----------|----------|
+| Anthropic    | `
+from semantic_kernel.connectors.ai.anthropic.services.anthropic_chat_completion import AnthropicChatCompletion
+
+chat_completion_service = AnthropicChatCompletion(
+    chat_model_id="model-id",
+    api_key="my-api-key"
+)
+` |
+| Bedrock    | Data 2   |
+| Google AI    | Data 3   |
+| Vertex AI    | Data 4   |
+| Mistral AI    | Data 5   |
+| Ollama    | Data 6   |
+| ONNX    | Data 6   |
 ---
+
+To add a chat completion service, you can use the following code to add it to the kernel.
+
+```python
+from semantic_kernel import Kernel
+
+# Initialize the kernel
+kernel = Kernel()
+
+# Add the chat completion service created above to the kernel
+kernel.add_service(chat_completion_service)
+```
 
 ::: zone-end
 
