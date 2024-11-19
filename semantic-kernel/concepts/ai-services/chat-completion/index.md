@@ -892,13 +892,13 @@ Semantic Kernel also supports a wide range of AI service providers.
 
 | Provider | Usages |
 |----------|----------|
-| Anthropic    | <pre lang="python">from semantic_kernel.connectors.ai.anthropic.services.anthropic_chat_completion import AnthropicChatCompletion&#13;chat_completion_service = AnthropicChatCompletion(chat_model_id="model-id", api_key="my-api-key")</pre> |
-| Bedrock    | Data 2   |
-| Google AI    | Data 3   |
-| Vertex AI    | Data 4   |
-| Mistral AI    | Data 5   |
-| Ollama    | Data 6   |
-| ONNX    | Data 6   |
+| Anthropic    | <pre lang="python">from semantic_kernel.connectors.ai.anthropic.services.anthropic_chat_completion import AnthropicChatCompletion&#13;&#13;chat_completion_service = AnthropicChatCompletion(chat_model_id="model-id", api_key="my-api-key")</pre> |
+| Bedrock    | <pre lang="python">from semantic_kernel.connectors.ai.bedrock.services.bedrock_chat_completion import BedrockChatCompletion&#13;&#13;chat_completion_service = BedrockChatCompletion(model_id="model-id")</pre>   |
+| Google AI    | <pre lang="python">from semantic_kernel.connectors.ai.google.google_ai.services.google_ai_chat_completion import GoogleAIChatCompletion&#13;&#13;chat_completion_service = GoogleAIChatCompletion(gemini_model_id="model-id", api_key="my-api-key")</pre>   |
+| Vertex AI    | <pre lang="python">from semantic_kernel.connectors.ai.google.vertex_ai.services.vertex_ai_chat_completion import VertexAIChatCompletion&#13;&#13;chat_completion_service = VertexAIChatCompletion(project_id="my-project-id", gemini_model_id="model-id")</pre>   |
+| Mistral AI    | <pre lang="python">from semantic_kernel.connectors.ai.mistral_ai.services.mistral_ai_chat_completion import MistralAIChatCompletion&#13;&#13;chat_completion_service = MistralAIChatCompletion(ai_model_id="model-id", api_key="my-api-key")</pre>   |
+| Ollama    | <pre lang="python">from semantic_kernel.connectors.ai.ollama.services.ollama_chat_completion import OllamaChatCompletion&#13;&#13;chat_completion_service = OllamaChatCompletion(ai_model_id="model-id")</pre>   |
+| ONNX    | <pre lang="python">from semantic_kernel.connectors.ai.onnx import OnnxGenAIChatCompletion&#13;&#13;chat_completion_service = OnnxGenAIChatCompletion(template="phi3v", ai_model_path="model-path")</pre>   |
 
 ---
 
