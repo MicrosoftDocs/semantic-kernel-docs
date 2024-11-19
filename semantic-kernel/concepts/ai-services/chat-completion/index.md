@@ -889,9 +889,10 @@ The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](htt
 
 # [Others](#tab/python-others)
 Semantic Kernel also supports a wide range of AI service providers.
+
 | Provider | Usages |
 |----------|----------|
-| Anthropic    | <pre lang="python">from semantic_kernel.connectors.ai.anthropic.services.anthropic_chat_completion import AnthropicChatCompletion&#13chat_completion_service = AnthropicChatCompletion(chat_model_id="model-id", api_key="my-api-key")</pre> |
+| Anthropic    | <pre lang="python">from semantic_kernel.connectors.ai.anthropic.services.anthropic_chat_completion import AnthropicChatCompletion&#13;chat_completion_service = AnthropicChatCompletion(chat_model_id="model-id", api_key="my-api-key")</pre> |
 | Bedrock    | Data 2   |
 | Google AI    | Data 3   |
 | Vertex AI    | Data 4   |
