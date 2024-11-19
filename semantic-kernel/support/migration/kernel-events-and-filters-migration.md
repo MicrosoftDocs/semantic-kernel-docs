@@ -126,7 +126,7 @@ void RenderingHandler(object? sender, PromptRenderingEventArgs e)
 
 void RenderedHandler(object? sender, PromptRenderedEventArgs e)
 {
-    Console.WriteLine($"Prompt rendering for function {e.Function.Name} is finished.");
+    Console.WriteLine($"Prompt rendering for function {e.Function.Name} has completed.");
     e.RenderedPrompt += " USE SHORT, CLEAR, COMPLETE SENTENCES.";
 }
 
@@ -147,7 +147,7 @@ public sealed class PromptRenderFilter : IPromptRenderFilter
     {
         Console.WriteLine($"Prompt rendering for function {context.Function.Name} is about to be started.");
         await next(context);
-        Console.WriteLine($"Prompt rendering for function {context.Function.Name} is finished.");
+        Console.WriteLine($"Prompt rendering for function {context.Function.Name} has completed.");
 
         context.RenderedPrompt += " USE SHORT, CLEAR, COMPLETE SENTENCES.";
     }
@@ -192,7 +192,7 @@ kernel.PromptRenderFilters.Add(new PromptRenderFilter(async (context, next) =>
 {
     Console.WriteLine($"Prompt rendering for function {context.Function.Name} is about to be started.");
     await next(context);
-    Console.WriteLine($"Prompt rendering for function {context.Function.Name} is finished.");
+    Console.WriteLine($"Prompt rendering for function {context.Function.Name} has completed.");
 
     context.RenderedPrompt += " USE SHORT, CLEAR, COMPLETE SENTENCES.";
 }));
