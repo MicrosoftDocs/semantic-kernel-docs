@@ -15,9 +15,16 @@ ms.service: semantic-kernel
 
 Semantic Kernel enables control over function execution using Filters. Over time, multiple versions of the filtering logic have been introduced: starting with Kernel Events, followed by the first version of Filters (`IFunctionFilter`, `IPromptFilter`), and culminating in the latest version (`IFunctionInvocationFilter`, `IPromptRenderFilter`). This guide explains how to migrate from Kernel Events and the first version of Filters to the latest implementation.
 
+The latest version of filters has graduated from experimental status and is now officially released as a stable feature.
+
 ## Migration from Kernel Events
 
-Kernel Events were the initial implementation for intercepting function operations in Semantic Kernel. They were deprecated in version 1.2.0. The examples below illustrate how to transition to the new function filtering logic.
+Kernel Events were the initial mechanism for intercepting function operations in Semantic Kernel. They were deprecated in version 1.2.0 and replaced with the following improvements:
+
+1. Events were replaced by interfaces for greater flexibility.
+2. Implementations can now be registered with the Kernel using a dependency injection container (DI).
+
+The examples below illustrate how to transition to the new function filtering logic.
 
 ### Function Invocation
 
@@ -205,6 +212,13 @@ Console.WriteLine($"Function Result: {result}");
 ## Migration from Filters v1
 
 The first version of Filters introduced a structured approach for function and prompt interception but lacked support for asynchronous operations and consolidated pre/post-operation handling. These limitations were addressed in Semantic Kernel v1.10.0.
+
+The interfaces were renamed as follows:
+
+- `IFunctionFilter` → `IFunctionInvocationFilter`
+- `IPromptFilter` → `IPromptRenderFilter`
+
+Additionally, the interface structure was updated to replace the two-method approach with a single asynchronous method. This simplifies implementation, streamlines exception handling, and allows seamless integration of asynchronous operations using the `async/await` pattern.
 
 ### Function Invocation
 
