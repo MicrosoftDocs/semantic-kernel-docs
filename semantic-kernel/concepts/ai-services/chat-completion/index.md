@@ -824,7 +824,7 @@ OpenAIChatCompletionService chatCompletionService = new (
 ::: zone pivot="programming-language-python"
 To create a chat completion service, you need to import the necessary modules and create an instance of the service. Below are the steps to create a chat completion service for each AI service provider.
 
-> [!INFO]
+> [!TIP]
 > There are three methods to supply the required information to AI services. You may either provide the information directly through the constructor, set the necessary environment variables, or create a .env file within your project directory containing the environment variables. You can visit this page to find all the required environment variables for each AI service provider: https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/setup/ALL_SETTINGS.md
 
 # [Azure OpenAI](#tab/python-AzureOpenAI)
@@ -891,23 +891,25 @@ The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](htt
 Semantic Kernel also supports a wide range of AI service providers.
 | Provider | Usages |
 |----------|----------|
-| Anthropic    | `
+| Anthropic    | 
+<code>
 from semantic_kernel.connectors.ai.anthropic.services.anthropic_chat_completion import AnthropicChatCompletion
 
 chat_completion_service = AnthropicChatCompletion(
     chat_model_id="model-id",
     api_key="my-api-key"
 )
-` |
+</code> |
 | Bedrock    | Data 2   |
 | Google AI    | Data 3   |
 | Vertex AI    | Data 4   |
 | Mistral AI    | Data 5   |
 | Ollama    | Data 6   |
 | ONNX    | Data 6   |
+
 ---
 
-To add a chat completion service, you can use the following code to add it to the kernel.
+To add a chat completion service to a kernel, you can use the following code to add it to the kernel.
 
 ```python
 from semantic_kernel import Kernel
