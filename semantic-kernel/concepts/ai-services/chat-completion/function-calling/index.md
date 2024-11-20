@@ -26,10 +26,10 @@ When you make a request to a model with function calling enabled, Semantic Kerne
 |---|---|---|
 | 1 | [**Serialize functions**](#1-serializing-the-functions) | All of the available functions (and its input parameters) in the kernel are serialized using JSON schema. |
 | 2 | [**Send the messages and functions to the model**](#2-sending-the-messages-and-functions-to-the-model) | The serialized functions (and the current chat history) are sent to the model as part of the input. |
-| 3 | [**Model processes the input**](#3-model-processes-the-input) | The model processes the input and generates a response. The response can either be a chat message or a function call |
-| 4 | [**Handle the response**](#4-handle-the-response) | If the response is a chat message, it is returned to the developer to print the response to the screen. If the response is a function call, however, Semantic Kernel extracts the function name and its parameters. |
+| 3 | [**Model processes the input**](#3-model-processes-the-input) | The model processes the input and generates a response. The response can either be a chat message or one or more function calls. |
+| 4 | [**Handle the response**](#4-handle-the-response) | If the response is a chat message, it is returned to the caller. If the response is a function call, however, Semantic Kernel extracts the function name and its parameters. |
 | 5 | [**Invoke the function**](#5-invoke-the-function) | The extracted function name and parameters are used to invoke the function in the kernel. |
-| 6 | [**Return the function result**](#6-return-the-function-result) | The result of the function is then sent back to the model as part of the chat history. Steps 2-6 are then repeated until the model sends a termination signal |
+| 6 | [**Return the function result**](#6-return-the-function-result) | The result of the function is then sent back to the model as part of the chat history. Steps 2-6 are then repeated until the model returns a chat message or the max iteration number has been reached. |
 
 The following diagram illustrates the process of function calling:
 
@@ -40,6 +40,7 @@ The following section will use a concrete example to illustrate how function cal
 ## Example: Ordering a pizza
 
 Let's assume you have a plugin that allows a user to order a pizza. The plugin has the following functions:
+
 1. `get_pizza_menu`: Returns a list of available pizzas
 2. `add_pizza_to_cart`: Adds a pizza to the user's cart
 3. `remove_pizza_from_cart`: Removes a pizza from the user's cart
@@ -127,6 +128,10 @@ kernelBuilder..AddAzureOpenAIChatCompletion(
 kernelBuilder.Plugins.AddFromType<OrderPizzaPlugin>("OrderPizza");
 Kernel kernel = kernelBuilder.Build();
 ```
+
+> [!NOTE]
+> Only functions with the `[KernelFunction]` attribute will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -186,11 +191,8 @@ You would then add this plugin to the kernel like so:
 
 ```python
 from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
-from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 
 kernel = Kernel()
-kernel.add_service(AzureChatCompletion(model_id, endpoint, api_key))
 
 # Create the services needed for the plugin: pizza_service, user_context, and payment_service
 # ...
@@ -198,6 +200,10 @@ kernel.add_service(AzureChatCompletion(model_id, endpoint, api_key))
 # Add the plugin to the kernel
 kernel.add_plugin(OrderPizzaPlugin(pizza_service, user_context, payment_service), plugin_name="OrderPizza")
 ```
+
+> [!NOTE]
+> Only functions with the `@kernel_function` decorator will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -322,6 +328,9 @@ Kernel kernel = Kernel.builder()
     .build();
 ```
 
+> [!NOTE]
+> Only functions with the `@DefineKernelFunction` annotation will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
+
 ::: zone-end
 
 ### 1) Serializing the functions
@@ -443,20 +452,20 @@ There's a few things to note here which can impact both the performance and the 
     > Keep your functions as simple as possible. In the above example, you'll notice that not _all_ functions have descriptions where the function name is self-explanatory. This is intentional to reduce the number of tokens. The parameters are also kept simple; anything the model shouldn't need to know (like the `cartId` or `paymentId`) are kept hidden. This information is instead provided by internal services.
 
     > [!NOTE]
-    > The one thing you don't need to worry about is the complexity of the return types. You'll notice that the return types are not serialized in the schema. This is because the model doesn't need to know the return type to generate a response. In the step 6, however, we'll see how overly verbose return types can impact the quality of the chat completion.
+    > The one thing you don't need to worry about is the complexity of the return types. You'll notice that the return types are not serialized in the schema. This is because the model doesn't need to know the return type to generate a response. In Step 6, however, we'll see how overly verbose return types can impact the quality of the chat completion.
 
 2. **Parameter types** – With the schema, you can specify the type of each parameter. This is important for the model to understand the expected input. In the above example, the `size` parameter is an enum, and the `toppings` parameter is an array of enums. This helps the model generate more accurate responses.
 
     > [!TIP]
     > Avoid, where possible, using `string` as a parameter type. The model can't infer the type of string, which can lead to ambiguous responses. Instead, use enums or other types (e.g., `int`, `float`, and complex types) where possible.
 
-3. **Required parameters** - You can also specify which parameters are required. This is important for the model to understand which parameters are _actually_ necessary for the function to work. Later on in step 3, the model will use this information to provide as minimal information as necessary to call the function.
+3. **Required parameters** - You can also specify which parameters are required. This is important for the model to understand which parameters are _actually_ necessary for the function to work. Later on in Step 3, the model will use this information to provide as minimal information as necessary to call the function.
 
     > [!TIP]
     > Only mark parameters as required if they are _actually_ required. This helps the model call functions more quickly and accurately.
 
 4. **Function descriptions** – Function descriptions are optional but can help the model generate more accurate responses. In particular, descriptions can tell the model what to expect from the response since the return type is not serialized in the schema. If the model is using functions improperly, you can also add descriptions to provide examples and guidance.
-    
+
     For example, in the `get_pizza_from_cart` function, the description tells the user to use this function instead of relying on previous messages. This is important because the cart may have changed since the last message.
 
     > [!TIP]
@@ -469,6 +478,9 @@ There's a few things to note here which can impact both the performance and the 
     > [!TIP]
     > When choosing a plugin name, we recommend removing superfluous words like "plugin" or "service". This helps reduce verbosity and makes the plugin name easier to understand for the model.
 
+    > [!NOTE]
+    > By default, the delimiter for the function name is `-`. While this works for most models, some of them may have different requirements, such as [Gemini](https://ai.google.dev/gemini-api/docs/function-calling#key-parameters-best-practices). This is taken care of by the kernel automatically however you may see slightly different function names in the serialized functions.
+
 ### 2) Sending the messages and functions to the model
 
 Once the functions are serialized, they are sent to the model along with the current chat history. This allows the model to understand the context of the conversation and the available functions.
@@ -476,17 +488,21 @@ Once the functions are serialized, they are sent to the model along with the cur
 In this scenario, we can imagine the user asking the assistant to add a pizza to their cart:
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 ChatHistory chatHistory = [];
 chatHistory.AddUserMessage("I'd like to order a pizza!");
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 chat_history = ChatHistory()
 chat_history.add_user_message("I'd like to order a pizza!")
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -501,6 +517,7 @@ chatHistory.addUserMessage("I'd like to order a pizza!");
 We can then send this chat history and the serialized functions to the model. The model will use this information to determine the best way to respond.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 IChatCompletionService chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
 
@@ -514,22 +531,30 @@ ChatResponse response = await chatCompletion.GetChatMessageContentAsync(
     executionSettings: openAIPromptExecutionSettings,
     kernel: kernel)
 ```
+
+> [!NOTE]
+> This example uses the `FunctionChoiceBehavior.Auto()` behavior, one of the few available ones. For more information about other function choice behaviors, check out the [function choice behaviors article](./function-choice-behaviors.md).
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 chat_completion = kernel.get_service(type=ChatCompletionClientBase)
 
 execution_settings = AzureChatPromptExecutionSettings()
 execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
-response = (await chat_completion.get_chat_message_contents(
-      chat_history=history,
-      settings=execution_settings,
-      kernel=kernel,
-      arguments=KernelArguments(),
-  ))[0]
+response = await chat_completion.get_chat_message_content(
+    chat_history=history,
+    settings=execution_settings,
+    kernel=kernel,
+)
 ```
+
+> [!NOTE]
+> This example uses the `FunctionChoiceBehavior.Auto()` behavior, one of the few available ones. For more information about other function choice behaviors, check out the [function choice behaviors article](./function-choice-behaviors.md).
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -548,16 +573,15 @@ List<ChatResponse> responses = chatCompletion.getChatMessageContentsAsync(
 
 ::: zone-end
 
-::: zone pivot="programming-language-csharp"
-> [!NOTE]
-> This example uses the `FunctionChoiceBehavior.Auto()` behavior, one of the few available ones. For more information about other function choice behaviors, check out the [function choice behaviors article](./function-choice-behaviors.md).
-::: zone-end
+> [!IMPORTANT]
+> The kernel must be passed to the service in order to use function calling. This is because the plugins are registered with the kernel, and the service needs to know which plugins are available.
 
 ### 3) Model processes the input
 
 With both the chat history and the serialized functions, the model can determine the best way to respond. In this case, the model recognizes that the user wants to order a pizza. The model would likely _want_ to call the `add_pizza_to_cart` function, but because we specified the size and toppings as required parameters, the model will ask the user for this information:
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine(response);
 chatHistory.AddAssistantMessage(response);
@@ -566,9 +590,11 @@ chatHistory.AddAssistantMessage(response);
 // know the size and toppings. What size pizza would
 // you like? Small, medium, or large?"
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 print(response)
 chat_history.add_assistant_message(response)
@@ -577,6 +603,7 @@ chat_history.add_assistant_message(response)
 # know the size and toppings. What size pizza would
 # you like? Small, medium, or large?"
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -592,11 +619,10 @@ chatHistory.addAll(responses);
 
 ::: zone-end
 
-Since the model wants the user to respond next, a termination signal will be sent to Semantic Kernel to stop automatic function calling until the user responds.
-
-At this point, the user can respond with the size and toppings of the pizza they want to order:
+Since the model wants the user to respond next, Semantic Kernel will stop automatic function calling and return control to the user. At this point, the user can respond with the size and toppings of the pizza they want to order:
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 chatHistory.AddUserMessage("I'd like a medium pizza with cheese and pepperoni, please.");
 
@@ -604,19 +630,21 @@ response = await chatCompletion.GetChatMessageContentAsync(
     chatHistory,
     kernel: kernel)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 chat_history.add_user_message("I'd like a medium pizza with cheese and pepperoni, please.")
 
-response = (await chat_completion.get_chat_message_contents(
+response = await chat_completion.get_chat_message_content(
     chat_history=history,
     settings=execution_settings,
     kernel=kernel,
-    arguments=KernelArguments(),
-))[0]
+)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -651,7 +679,7 @@ Now that the model has the necessary information, it can now call the `add_pizza
 > It's good to remember that every argument you require must be generated by the model. This means spending tokens to generate the response. Avoid arguments that require many tokens (like a GUID). For example, notice that we use an `int` for the `pizzaId`. Asking the model to send a one to two digit number is much easier than asking for a GUID.
 
 > [!IMPORTANT]
-> This step is what makes function calling so powerful. Previously, AI app developers had to create separate processes to extract intent and slot fill functions. With function calling, the model can decide _when_ to call a function and _what_ information to provide. 
+> This step is what makes function calling so powerful. Previously, AI app developers had to create separate processes to extract intent and slot fill functions. With function calling, the model can decide _when_ to call a function and _what_ information to provide.
 
 ### 4) Handle the response
 
@@ -662,10 +690,10 @@ With this information, Semantic Kernel can marshal the inputs into the appropria
 > [!NOTE]
 > Marshaling the inputs into the correct types is one of the key benefits of using Semantic Kernel. Everything from the model comes in as a JSON object, but Semantic Kernel can automatically deserialize these objects into the correct types for your functions.
 
-
-After marshalling the inputs, Semantic Kernel can also add the function call to the chat history:
+After marshalling the inputs, Semantic Kernel will also add the function call to the chat history:
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 chatHistory.Add(
     new() {
@@ -681,9 +709,11 @@ chatHistory.Add(
     }
 );
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.contents import ChatMessageContent, FunctionCallContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
@@ -701,6 +731,7 @@ chat_history.add_message(
     )
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -717,7 +748,7 @@ function calls in Java when auto-invoke is false.
 
 Once Semantic Kernel has the correct types, it can finally invoke the `add_pizza_to_cart` function. Because the plugin uses dependency injection, the function can interact with external services like `pizzaService` and `userContext` to add the pizza to the user's cart.
 
-Not all functions will succeed, however. If the function fails, Semantic Kernel can handle the error and provide a default response to the model. This allows the model to understand what went wrong and generate a response to the user.
+Not all functions will succeed, however. If the function fails, Semantic Kernel can handle the error and provide a default response to the model. This allows the model to understand what went wrong and decide to retry or generate a response to the user.
 
 > [!TIP]
 > To ensure a model can self-correct, it's important to provide error messages that clearly communicate what went wrong and how to fix it. This can help the model retry the function call with the correct information.
@@ -732,6 +763,7 @@ After the function has been invoked, the function result is sent back to the mod
 Behind the scenes, Semantic Kernel adds a new message to the chat history from the tool role that looks like this:
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 chatHistory.Add(
     new() {
@@ -747,9 +779,11 @@ chatHistory.Add(
     }
 );
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.contents import ChatMessageContent, FunctionResultContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
@@ -767,6 +801,7 @@ chat_history.add_message(
     )
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -820,7 +855,7 @@ For example, if a user wants to order multiple pizzas, the LLM can call the `add
 
 ## Next steps
 
-Now that you understand how function calling works, you can proceed to learn how to configure various aspects of function calling that better correspond to your specific scenarios by referring to the [function choice behavior article](./function-choice-behaviors.md)
+Now that you understand how function calling works, you can proceed to learn how to configure various aspects of function calling that better correspond to your specific scenarios by going to the next step:
 
 > [!div class="nextstepaction"]
 > [Function Choice Behavior](./function-choice-behaviors.md)
