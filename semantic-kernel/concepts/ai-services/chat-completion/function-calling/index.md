@@ -22,7 +22,7 @@ When using function calling, however, it's good to understand what's _actually_ 
 
 When you make a request to a model with function calling enabled, Semantic Kernel performs the following steps:
 
-| | Step | Description |
+| # | Step | Description |
 |---|---|---|
 | 1 | [**Serialize functions**](#1-serializing-the-functions) | All of the available functions (and its input parameters) in the kernel are serialized using JSON schema. |
 | 2 | [**Send the messages and functions to the model**](#2-sending-the-messages-and-functions-to-the-model) | The serialized functions (and the current chat history) are sent to the model as part of the input. |
