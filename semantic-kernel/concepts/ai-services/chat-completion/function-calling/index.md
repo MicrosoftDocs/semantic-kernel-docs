@@ -130,7 +130,7 @@ Kernel kernel = kernelBuilder.Build();
 ```
 
 > [!NOTE]
-> Only functions with the `[KernelFunction]` attribute will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
+> Only functions with the `KernelFunction` attribute will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
 
 ::: zone-end
 
@@ -202,7 +202,7 @@ kernel.add_plugin(OrderPizzaPlugin(pizza_service, user_context, payment_service)
 ```
 
 > [!NOTE]
-> Only functions with the `@kernel_function` decorator will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
+> Only functions with the `kernel_function` decorator will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
 
 ::: zone-end
 
@@ -329,7 +329,7 @@ Kernel kernel = Kernel.builder()
 ```
 
 > [!NOTE]
-> Only functions with the `@DefineKernelFunction` annotation will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
+> Only functions with the `DefineKernelFunction` annotation will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
 
 ::: zone-end
 
