@@ -908,10 +908,10 @@ chat_completion_service = BedrockChatCompletion(
     model_id="model-id",
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
+```
 
 > [!NOTE]
 > Amazon Bedrock does not accept an API key. Follow this [guide](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/connectors/ai/bedrock/README.md) to configure your environment.
-```
 
 # [Google AI](#tab/python-Google)
 
