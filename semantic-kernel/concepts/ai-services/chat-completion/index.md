@@ -841,7 +841,9 @@ chat_completion_service = AzureChatCompletion(
 # You can do the following if you have set the necessary environment variables or created a .env file
 chat_completion_service = AzureChatCompletion(service_id="my-service-id")
 ```
-The `AzureChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
+
+> [!NOTE]
+> The `AzureChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
 
 # [OpenAI](#tab/python-OpenAI)
 
@@ -885,7 +887,9 @@ chat_completion_service = AzureAIInferenceChatCompletion(
     ),
 )
 ```
-The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
+
+> [!NOTE]
+> The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
 
 # [Anthropic](#tab/python-Anthropic)
 
