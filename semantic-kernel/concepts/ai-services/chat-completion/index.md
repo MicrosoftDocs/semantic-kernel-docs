@@ -908,6 +908,9 @@ chat_completion_service = BedrockChatCompletion(
     model_id="model-id",
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
+
+> [!NOTE]
+> Amazon Bedrock does not accept an API key. Follow this [guide](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/connectors/ai/bedrock/README.md) to configure your environment.
 ```
 
 # [Google AI](#tab/python-Google)
@@ -920,7 +923,11 @@ chat_completion_service = GoogleAIChatCompletion(
     api_key="my-api-key",
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
+
 ```
+
+> [!TIP]
+> Users can access Google's Gemini models via Google AI Studio or Google Vertex platform. Follow this [guide](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/connectors/ai/google/README.md) to configure your environment.
 
 # [Vertex AI](#tab/python-VertexAI)
 
@@ -933,6 +940,9 @@ chat_completion_service = VertexAIChatCompletion(
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
 ```
+
+> [!TIP]
+> Users can access Google's Gemini models via Google AI Studio or Google Vertex platform. Follow this [guide](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/connectors/ai/google/README.md) to configure your environment.
 
 # [Mistral AI](#tab/python-MistralAI)
 
@@ -956,6 +966,9 @@ chat_completion_service = OllamaChatCompletion(
     service_id="my-service-id", # Optional; for targeting specific services within Semantic Kernel
 )
 ```
+
+> [!TIP]
+> Learn more about Ollama and download the necessary software from [here](https://github.com/ollama/ollama).
 
 # [ONNX](#tab/python-ONNX)
 
@@ -1059,7 +1072,11 @@ var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 ```python
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 
+# Retrieve the chat completion service by type
 chat_completion_service = kernel.get_service(type=ChatCompletionClientBase)
+
+# Retrieve the chat completion service by id
+chat_completion_service = kernel.get_service(service_id="my-service-id")
 ```
 ::: zone-end
 
@@ -1074,6 +1091,7 @@ ChatCompletionService chatCompletionService = kernel.getService(ChatCompletionSe
 ## Using chat completion services
 
 Now that you have a chat completion service, you can use it to generate responses from an AI agent. There are two main ways to use a chat completion service:
+
 - Non-streaming: You wait for the service to generate an entire response before returning it to the user.
 - Streaming: Individual chunks of the response are generated and returned to the user as they are created.
 
@@ -1100,10 +1118,7 @@ var response = await chatCompletionService.GetChatMessageContentAsync(
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = await chat_completion.get_chat_message_content(
-    chat_history=history,
-    kernel=kernel,
-)
+response = await chat_completion.get_chat_message_content(chat_history=history)
 ```
 ::: zone-end
 
@@ -1150,13 +1165,10 @@ await foreach (var chunk in response)
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = chat_completion.get_streaming_chat_message_content(
-    chat_history=history,
-    kernel=kernel,
-)
+response = chat_completion.get_streaming_chat_message_content(chat_history=history)
 
 async for chunk in response:
-    print(chunk)
+    print(chunk, end="")
 ```
 ::: zone-end
 
