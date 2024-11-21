@@ -86,7 +86,7 @@ print(response)
 
 ::: zone pivot="programming-language-java"
 
-> ![NOTE]
+> [!NOTE]
 > Multi-modal chat completion is coming soon for Java.
 
 ::: zone-end
