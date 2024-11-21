@@ -7,9 +7,9 @@ ms.author: johnmaeda
 ms.date: 10/23/2024
 ms.service: semantic-kernel
 ---
-# Prompt template syntax
+# Semantic Kernel prompt template syntax
 
-The Semantic Kernel prompt template language is a simple way to
+The Semantic Kernel prompt template language is a simple way to 
 define and compose AI functions using plain text.
 You can use it to create natural language prompts, generate responses, extract
 information, invoke other prompts or perform any other task that can be
@@ -66,8 +66,7 @@ To call an external function and pass a parameter to it, use the
 For example, if you want to pass a different input to the weather forecast
 function, you can write:
 
-
-```
+```txt
 The weather today in {{$city}} is {{weather.getForecast $city}}.
 The weather today in Schio is {{weather.getForecast "Schio"}}.
 ```
@@ -95,7 +94,6 @@ enclosed in quotes, like `{{ "{{" }}` and `{{ "}}" }}`
 
 For example:
 
-
 ```{{ "{{" }} and {{ "}}" }} are special SK sequences.```
 
 will render to:
@@ -112,8 +110,7 @@ when using a value that contains _double quotes_, wrap the value with _single qu
 
 For example:
 
-
-```
+```txt
 ...text... {{ functionName "one 'quoted' word" }} ...text...
 ...text... {{ functionName 'one "quoted" word' }} ...text...
 ```
@@ -124,12 +121,10 @@ need _escaping_, using the special **«`\`»** symbol.
 When using double quotes around a value, use **«`\"`»** to include a double quote
 symbol inside the value:
 
-
 ```... {{ "quotes' \"escaping\" example" }} ...```
 
 and similarly, when using single quotes, use **«`\'`»** to include a single quote
 inside the value:
-
 
 ```... {{ 'quotes\' "escaping" example' }} ...```
 
@@ -158,7 +153,6 @@ is a special char, you will need to escape it too, and use the special sequences
 
 For example:
 
-
 ```{{ 'two special chars \\\' here' }}```
 
 is rendered to:
@@ -169,7 +163,6 @@ Similarly to single and double quotes, the symbol **«`\`»** doesn't always nee
 to be escaped. However, for consistency, it can be escaped even when not required.
 
 For instance:
-
 
 ```... {{ 'c:\\documents\\ai' }} ...```
 
@@ -187,9 +180,17 @@ Lastly, backslashes have a special meaning only when used in front of
 In all other cases, the backslash character has no impact and is rendered as is.
 For example:
 
-
 ```{{ "nothing special about these sequences: \0 \n \t \r \foo" }}```
 
 is rendered to:
 
 ```nothing special about these sequences: \0 \n \t \r \foo```
+
+## Next steps
+
+Semantic Kernel supports other popular template formats in addition to it's own built-in format.
+In the next sections we will look at to additional formats, [Handlebars](https://handlebarsjs.com/) and [Liquid](https://liquidjs.com/) templates.
+
+> [!div class="nextstepaction"]
+> [Handlebars Prompt Templates](./handlebars-prompt-templates.md)
+> [Liquid Prompt Templates](./liquid-prompt-templates.md)
