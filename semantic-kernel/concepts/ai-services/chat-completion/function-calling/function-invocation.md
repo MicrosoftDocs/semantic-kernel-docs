@@ -22,6 +22,9 @@ The results of these function invocations are added to the chat history and sent
 The model then reasons about the chat history, chooses additional functions if needed, or generates the final response.
 This approach is fully automated and requires no manual intervention from the caller.
 
+> [!TIP]
+> Auto function invocation is different from the [auto function choice behavior](./function-choice-behaviors.md#using-auto-function-choice-behavior). The former dictates if functions should be invoked automatically by Semantic Kernel, while the latter determines if functions should be chosen automatically by the AI model.
+
 This example demonstrates how to use the auto function invocation in Semantic Kernel. AI model decides which functions to call to complete the prompt and Semantic Kernel does the rest and invokes them automatically.
 
 ::: zone pivot="programming-language-csharp"
@@ -48,6 +51,33 @@ await kernel.InvokePromptAsync("Given the current time of day and weather, what 
 
 ::: zone pivot="programming-language-python"
 
+```python
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.kernel import Kernel
+
+kernel = Kernel()
+kernel.add_service(OpenAIChatCompletion())
+
+# Assuming that WeatherPlugin and DateTimePlugin are already implemented
+kernel.add_plugin(WeatherPlugin(), "WeatherPlugin")
+kernel.add_plugin(DateTimePlugin(), "DateTimePlugin")
+
+query = "What is the weather in Seattle today?"
+arguments = KernelArguments(
+    settings=PromptExecutionSettings(
+        # By default, functions are set to be automatically invoked.
+        # If you want to explicitly enable this behavior, you can do so with the following code:
+        # function_choice_behavior=FunctionChoiceBehavior.Auto(auto_invoke=True),
+        function_choice_behavior=FunctionChoiceBehavior.Auto(),
+    )
+)
+
+response = await kernel.invoke_prompt(query, arguments=arguments)
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -57,11 +87,11 @@ await kernel.InvokePromptAsync("Given the current time of day and weather, what 
 
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
+
 Some AI models support parallel function calling, where the model chooses multiple functions for invocation. This can be useful in cases when invoking chosen functions takes a long time. For example, the AI may choose to retrieve the latest news and the current time simultaneously, rather than making a round trip per function.
 
 Semantic Kernel can invoke these functions in two different ways:
-
-::: zone pivot="programming-language-csharp"
 
 - **Sequentially**: The functions are invoked one after another. This is the default behavior.
 - **Concurrently**: The functions are invoked at the same time. This can be enabled by setting the `FunctionChoiceBehaviorOptions.AllowConcurrentInvocation` property to `true`, as shown in the example below.
@@ -88,6 +118,21 @@ await kernel.InvokePromptAsync("Good morning! What is the current time and lates
 
 ::: zone pivot="programming-language-python"
 
+Sometimes a model may choose multiple functions for invocation. This is often referred to as **parallel** function calling. When multiple functions are chosen by the AI model, Semantic Kernel will invoke them concurrently.
+
+> [!TIP]
+> In OpenAI, you can disable parallel function calling by doing the following:
+>
+> ```python
+> from semantic_kernel.connectors.ai.open_ai import OpenAIChatPromptExecutionSettings
+> from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+>
+> settings = OpenAIChatPromptExecutionSettings(
+>     function_choice_behavior=FunctionChoiceBehavior.Auto(),
+>     parallel_tool_calls=False
+> )
+> ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -103,7 +148,7 @@ In cases when the caller wants to have more control over the function invocation
 
 When manual function invocation is enabled, Semantic Kernel does not automatically invoke the functions chosen by the AI model.
 Instead, it returns a list of chosen functions to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on.
-The function invocation results need to be added to the chat history and returned to the model, which reasons about them and decides whether to choose additional functions or generate the final response.
+The function invocation results need to be added to the chat history and returned to the model, which will reason about them and decide whether to choose additional functions or generate a final response.
 
 The example below demonstrates how to use manual function invocation.
 
@@ -251,6 +296,54 @@ while (true)
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+```python
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.contents.function_call_content import FunctionCallContent
+from semantic_kernel.contents.function_result_content import FunctionResultContent
+from semantic_kernel.kernel import Kernel
+
+kernel = Kernel()
+chat_completion_service = OpenAIChatCompletion()
+
+# Assuming that WeatherPlugin is already implemented
+kernel.add_plugin(WeatherPlugin(), "WeatherPlugin")
+
+settings = PromptExecutionSettings(
+    function_choice_behavior=FunctionChoiceBehavior.Auto(auto_invoke=False),
+)
+
+chat_history = ChatHistory()
+chat_history.add_user_message("What is the weather in Seattle on 10th of September 2024 at 11:29 AM?")
+
+response = await chat_completion_service.get_chat_message_content(chat_history, settings, kernel=kernel)
+function_call_content = response.items[0]
+assert isinstance(function_call_content, FunctionCallContent)
+
+# Need to add the response to the chat history to preserve the context
+chat_history.add_message(response)
+
+function = kernel.get_function(function_call_content.plugin_name, function_call_content.function_name)
+function_result = await function(kernel, function_call_content.to_kernel_arguments())
+
+function_result_content = FunctionResultContent.from_function_call_content_and_result(
+    function_call_content, function_result
+)
+
+# Adding the function result to the chat history
+chat_history.add_message(function_result_content.to_chat_message_content())
+
+# Invoke the model again with the function result
+response = await chat_completion_service.get_chat_message_content(chat_history, settings, kernel=kernel)
+print(response)
+# The weather in Seattle on September 10th, 2024, is expected to be [weather condition].
+```
+
+> [!NOTE]
+> The FunctionCallContent and FunctionResultContent classes are used to represent AI model function calls and Semantic Kernel function invocation results, respectively. They contain information about chosen function, such as the function ID, name, and arguments, and function invocation results, such as function call ID and result.
 
 ::: zone-end
 

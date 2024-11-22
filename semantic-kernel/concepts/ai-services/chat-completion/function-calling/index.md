@@ -18,7 +18,10 @@ With Semantic Kernel, we simplify the process of using function calling by autom
 
 When using function calling, however, it's good to understand what's _actually_ happening behind the scenes so that you can optimize your code and make the most of this feature.
 
-## How function calling works
+## How auto function calling works
+
+> [!NOTE]
+> The following section describes how auto function calling works in Semantic Kernel. Auto function calling is the default behavior in Semantic Kernel, but you can also manually invoke functions if you prefer. For more information on manual function invocation, please refer to the [function invocation article](./function-invocation.md#manual-function-invocation).
 
 When you make a request to a model with function calling enabled, Semantic Kernel performs the following steps:
 
