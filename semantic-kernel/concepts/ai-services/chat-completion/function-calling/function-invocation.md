@@ -121,7 +121,7 @@ await kernel.InvokePromptAsync("Good morning! What is the current time and lates
 Sometimes a model may choose multiple functions for invocation. This is often referred to as **parallel** function calling. When multiple functions are chosen by the AI model, Semantic Kernel will invoke them concurrently.
 
 > [!TIP]
-> In OpenAI, you can disable parallel function calling by doing the following:
+> With the OpenAI or Azure OpenAI connector, you can disable parallel function calling by doing the following:
 >
 > ```python
 > from semantic_kernel.connectors.ai.open_ai import OpenAIChatPromptExecutionSettings
@@ -132,13 +132,6 @@ Sometimes a model may choose multiple functions for invocation. This is often re
 >     parallel_tool_calls=False
 > )
 > ```
-
-::: zone-end
-
-::: zone pivot="programming-language-java"
-
-> [!TIP]
-> More updates coming soon to the Java SDK.
 
 ::: zone-end
 
