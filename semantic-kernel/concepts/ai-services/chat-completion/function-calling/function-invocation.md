@@ -7,21 +7,25 @@ ms.topic: conceptual
 ms.author: semenshi
 ms.service: semantic-kernel
 ---
-::: zone pivot="programming-language-csharp"
 # Function Invocation Modes
+
 When the AI model receives a prompt containing a list of functions, it may choose one or more of them for invocation to complete the prompt. When a function is chosen by the model, it needs be **invoked** by Semantic Kernel.
 
-The function calling subsystem in Semantic Kernel has two modes of function invocation: **auto** and **manual**. 
+The function calling subsystem in Semantic Kernel has two modes of function invocation: **auto** and **manual**.
 
 Depending on the invocation mode, Semantic Kernel either does end-to-end function invocation or gives the caller control over the function invocation process.
 
 ## Auto Function Invocation
-Auto function invocation is the default mode of the Semantic Kernel function-calling subsystem. When the AI model chooses one or more functions, Semantic Kernel automatically invokes the chosen functions. 
-The results of these function invocations are added to the chat history and sent to the model automatically in subsequent requests. 
-The model then reasons about the chat history, chooses additional functions if needed, or generates the final response. 
+
+Auto function invocation is the default mode of the Semantic Kernel function-calling subsystem. When the AI model chooses one or more functions, Semantic Kernel automatically invokes the chosen functions.
+The results of these function invocations are added to the chat history and sent to the model automatically in subsequent requests.
+The model then reasons about the chat history, chooses additional functions if needed, or generates the final response.
 This approach is fully automated and requires no manual intervention from the caller.
 
 This example demonstrates how to use the auto function invocation in Semantic Kernel. AI model decides which functions to call to complete the prompt and Semantic Kernel does the rest and invokes them automatically.
+
+::: zone pivot="programming-language-csharp"
+
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -40,11 +44,28 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 await kernel.InvokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?", new(settings));
 ```
 
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> [!TIP]
+> More updates coming soon to the Java SDK.
+
+::: zone-end
+
 Some AI models support parallel function calling, where the model chooses multiple functions for invocation. This can be useful in cases when invoking chosen functions takes a long time. For example, the AI may choose to retrieve the latest news and the current time simultaneously, rather than making a round trip per function.
 
 Semantic Kernel can invoke these functions in two different ways:
+
+::: zone pivot="programming-language-csharp"
+
 - **Sequentially**: The functions are invoked one after another. This is the default behavior.
 - **Concurrently**: The functions are invoked at the same time. This can be enabled by setting the `FunctionChoiceBehaviorOptions.AllowConcurrentInvocation` property to `true`, as shown in the example below.
+
 ```csharp
 using Microsoft.SemanticKernel;
 
@@ -63,14 +84,31 @@ PromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoi
 await kernel.InvokePromptAsync("Good morning! What is the current time and latest news headlines?", new(settings));
 ```
 
-## Manual Function Invocation
-In cases when the caller wants to have more control over the function invocation process, manual function invocation can be used. 
+::: zone-end
 
-When manual function invocation is enabled, Semantic Kernel does not automatically invoke the functions chosen by the AI model. 
-Instead, it returns a list of chosen functions to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on. 
+::: zone pivot="programming-language-python"
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> [!TIP]
+> More updates coming soon to the Java SDK.
+
+::: zone-end
+
+## Manual Function Invocation
+
+In cases when the caller wants to have more control over the function invocation process, manual function invocation can be used.
+
+When manual function invocation is enabled, Semantic Kernel does not automatically invoke the functions chosen by the AI model.
+Instead, it returns a list of chosen functions to the caller, who can then decide which functions to invoke, invoke them sequentially or in parallel, handle exceptions, and so on.
 The function invocation results need to be added to the chat history and returned to the model, which reasons about them and decides whether to choose additional functions or generate the final response.
 
 The example below demonstrates how to use manual function invocation.
+
+::: zone pivot="programming-language-csharp"
+
 ```csharp
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -135,11 +173,12 @@ while (true)
 }
 
 ```
+
 > [!NOTE]
-> The FunctionCallContent and FunctionResultContent classes are used to represent AI model function calls and Semantic Kernel function invocation results, respectively. 
+> The FunctionCallContent and FunctionResultContent classes are used to represent AI model function calls and Semantic Kernel function invocation results, respectively.
 > They contain information about chosen function, such as the function ID, name, and arguments, and function invocation results, such as function call ID and result.
 
-The following example demonstrates how to use manual function invocation with the streaming chat completion API. Note the usage of the `FunctionCallContentBuilder` class to build function calls from the streaming content. 
+The following example demonstrates how to use manual function invocation with the streaming chat completion API. Note the usage of the `FunctionCallContentBuilder` class to build function calls from the streaming content.
 Due to the streaming nature of the API, function calls are also streamed. This means that the caller must build the function calls from the streaming content before invoking them.  
 
 ```csharp
@@ -210,11 +249,14 @@ while (true)
 ```
 
 ::: zone-end
+
 ::: zone pivot="programming-language-python"
-## Coming soon
-More info coming soon.
+
 ::: zone-end
+
 ::: zone pivot="programming-language-java"
-## Coming soon
-More info coming soon.
+
+> [!TIP]
+> More updates coming soon to the Java SDK.
+
 ::: zone-end

@@ -357,7 +357,7 @@ string promptTemplateConfig = """
     execution_settings:
       default:
         function_choice_behavior:
-          type: auto
+          type: required
           functions:
             - WeatherForecastUtils.GetWeatherForCity
     """;
