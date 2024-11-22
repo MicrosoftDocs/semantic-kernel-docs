@@ -317,17 +317,17 @@ For example, consider the change_light_state operation, which requires a payload
 ```
 
 In this case, Semantic Kernel will perform the following steps:
-1. Provide metadata(name, type, description, etc) about the properties to the LLM so that it can reason about them.
-2. Handle the call to the OpenAPI operation, constructing the payload based on the provided schema and arguments.
+1. Provide metadata(name, type, description, etc) the payload properties to the LLM so that it can reason about them.
+2. Handle the LLM call to the OpenAPI operation, constructing the payload based on the schema and provided by LLM property values.
 3. Send the HTTP request with the payload to the API.
    
-Dynamic payload construction is best suited for APIs with relatively simple payload structures that have unique property names and do not utilize the `anyOf`, `oneOf`, or `allOf` keywords in the payload schema.
-If the payload schema uses any of these keywords or contains non-unique property names, consider the following alternatives:
+Dynamic payload construction is best suited for APIs with relatively simple payload structures that have unique property names.
+If the payload has non-unique property names, consider the following alternatives:
 1. Provide a unique argument name for each non-unique property, using a method similar to that described in the [Handling OpenAPI plugin parameters](./adding-openapi-plugins.md#handling-openapi-plugin-parameters) section.
 2. Use namespaces to avoid naming conflicts, as outlined in the next section on [Payload namespacing](./adding-openapi-plugins.md#payload-namespacing).
-3. Disable dynamic payload construction and allow the LLM to create the payload based on its schema, as explained in the [The 'payload' argument](./adding-openapi-plugins.md#the-payload-argument) section.
+3. Disable dynamic payload construction and allow the LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
    
-### Payload Namespacing
+### Payload namespacing
 
 Payload namespacing helps prevent naming conflicts that can occur due to non-unique property names in OpenAPI plugin payloads.
 
@@ -357,7 +357,7 @@ Semantic Kernel would have provided the LLM with metadata for the operation that
 - `scheduledTime` - provided as is because it is a top-level property that does not have any parent.
 - `timer.scheduledTime` - provided to the LLM with the augmented name.
 
-In addition to providing operation metadata with augmented property names to the LLM, Semantic Kernel would have performed the following steps:
+In addition to providing operation metadata with augmented property names to the LLM, Semantic Kernel performes the following steps:
 1. Handle the LLM call to the OpenAPI operation and look up the corresponding arguments among those provided by the LLM for all the properties in the payload, using the augmented property names and falling back to the original property names if necessary.
 2. Construct the payload using the original property names as keys and the resolved arguments as values.
 3. Send the HTTP request with the constructed payload to the API.
@@ -380,11 +380,11 @@ If enabled, the namespacing option only takes effect when dynamic payload constr
 
 ### The payload parameter
 
-Semantic Kernel can work with payloads created by the LLM using the 'payload' parameter. This is helpful when the payload schema is complex, 
+Semantic Kernel can work with payloads created by the LLM using the payload parameter. This is helpful when the payload schema is complex, 
 has non-unique property names, making dynamic construction of the payload by Semantic Kernel not feasible.
 When the LLM provides an argument for the the payload parameter, Semantic Kernel uses it as is, without trying to create it based on the schema.
 
-To enable the 'payload' parameter, set the `EnableDynamicPayload` property to `false` in the `OpenApiFunctionExecutionParameters` object when adding an OpenAPI plugin:
+To enable the payload parameter, set the `EnableDynamicPayload` property to `false` in the `OpenApiFunctionExecutionParameters` object when adding an OpenAPI plugin:
 ```csharp
 await kernel.ImportPluginFromOpenApiAsync(
     pluginName: "lights",
@@ -395,8 +395,8 @@ await kernel.ImportPluginFromOpenApiAsync(
     });
 ```
 
-When the 'payload' parameter is enabled, Semantic Kernel provides the LLM with metadata for the operation that includes schemas for the 'payload' and
-'content_type' parameters, allowing the LLM to understand the payload structure and provide the correct arguments for both:
+When the payload parameter is enabled, Semantic Kernel provides the LLM with metadata for the operation that includes schemas for the payload and
+content_type parameters, allowing the LLM to understand the payload structure and construct it accordingly:
 ```json
 {
     "name": "payload",
@@ -443,14 +443,14 @@ When the 'payload' parameter is enabled, Semantic Kernel provides the LLM with m
 ```
 
 In addition to providing the operation metadata with the schema for payload and content type parameters to the LLM, Semantic Kernel performs the following steps:
-1. Handle the LLM call to the OpenAPI operation and uses arguments provided by the LLM for the 'payload' and 'content_type' parameters.
+1. Handle the LLM call to the OpenAPI operation and uses arguments provided by the LLM for the payload and content_type parameters.
 2. Send the HTTP request to the API with provided payload and content type.
 
 ## Server base url
 
 Semantic Kernel OpenAPI plugins require a base URL, which is used to prepend endpoint paths when making API requests. 
 This base URL can be specified in the OpenAPI document, obtained implicitly by loading the document from a URL, or 
-provided when adding the plugin to the kernel.All endpoint paths will be appended to this base URL.
+provided when adding the plugin to the kernel.
 
 ### Url specified in OpenAPI document
    
@@ -528,20 +528,20 @@ await kernel.ImportPluginFromOpenApiAsync(
     });  
 ```  
    
-In this example, the base URL will be `https://custom-server.com/v1`, overriding the server URL specified in the OpenAPI document or the server URL from which the document was loaded.  
+In this example, the base URL will be `https://custom-server.com/v1`, overriding the server URL specified in the OpenAPI document and the server URL from which the document was loaded.  
 
 ## Authentication
 
 Most REST APIs require authentication to access their resources. Semantic Kernel provides a mechanism that enables you to integrate 
 a variety of authentication methods required by OpenAPI plugins.
 
-This mechanism relies on an authentication callback function, which is invoked before each REST API request. This callback function has 
+This mechanism relies on an authentication callback function, which is invoked before each API request. This callback function has 
 access to the HttpRequestMessage object, representing the HTTP request that will be sent to the API. You can use this object to add 
 authentication credentials to the request. The credentials can be added as headers, query parameters, or in the request body, depending 
 on the authentication method used by the API.
 
 You need to register this callback function when adding the OpenAPI plugin to the kernel. The following code snippet demonstrates 
-how to register the authentication callback function and how to use it to authenticate the request:
+how to register it to authenticate requests:
 
 ```csharp
 static Task AuthenticateRequestAsyncCallback(HttpRequestMessage request, CancellationToken cancellationToken = default)
@@ -571,20 +571,6 @@ await kernel.ImportPluginFromOpenApiAsync(
         AuthCallback = AuthenticateRequestAsyncCallback
     });  
 ```
-
-## Response content reading customization
-Semantic Kernel has a built-in mechanism for reading the content of HTTP responses from OpenAPI plugins and converting it to the appropriate data type. 
-This mechanism is based on the content type of the response, which is specified in the `Content-Type` header of the response. The content type is used to determine how the response content should be read and processed.
-
-
-private static readonly Dictionary<string, HttpResponseContentReader> s_contentReaderByContentType = new()
-{
-    { "image", async (context, cancellationToken) => await context.Response.Content.ReadAsByteArrayAndTranslateExceptionAsync(cancellationToken).ConfigureAwait(false) },
-    { "text", async (context, cancellationToken) => await context.Response.Content.ReadAsStringWithExceptionMappingAsync(cancellationToken).ConfigureAwait(false) },
-    { "application/json", async (context, cancellationToken) => await context.Response.Content.ReadAsStringWithExceptionMappingAsync(cancellationToken).ConfigureAwait(false)},
-    { "application/xml", async (context, cancellationToken) => await context.Response.Content.ReadAsStringWithExceptionMappingAsync(cancellationToken).ConfigureAwait(false)}
-};
-
 
 ::: zone-end
 
