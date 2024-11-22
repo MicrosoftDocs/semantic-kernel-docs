@@ -42,7 +42,8 @@ As of today, the function choice behaviors are represented by three class method
 
 ::: zone pivot="programming-language-java"
 
-More info coming soon.
+> [!TIP]
+> More updates coming soon to the Java SDK.
 
 ::: zone-end
 
@@ -183,7 +184,8 @@ response = await kernel.invoke_prompt(query, arguments=arguments)
 
 ::: zone pivot="programming-language-java"
 
-More info coming soon.
+> [!TIP]
+> More updates coming soon to the Java SDK.
 
 ::: zone-end
 
@@ -303,7 +305,8 @@ response = await kernel.invoke(prompt_function)
 
 ::: zone pivot="programming-language-java"
 
-More info coming soon.
+> [!TIP]
+> More updates coming soon to the Java SDK.
 
 ::: zone-end
 
@@ -447,7 +450,8 @@ response = await kernel.invoke(prompt_function)
 
 ::: zone pivot="programming-language-java"
 
-More info coming soon.
+> [!TIP]
+> More updates coming soon to the Java SDK.
 
 ::: zone-end
 
@@ -582,7 +586,8 @@ response = await kernel.invoke(prompt_function)
 
 ::: zone pivot="programming-language-java"
 
-More info coming soon.
+> [!TIP]
+> More updates coming soon to the Java SDK.
 
 ::: zone-end
 
@@ -660,6 +665,7 @@ As of today, the following AI connectors in Semantic Kernel support the function
 
 ::: zone pivot="programming-language-java"
 
-More info coming soon.
+> [!TIP]
+> More updates coming soon to the Java SDK.
 
 ::: zone-end
