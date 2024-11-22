@@ -42,8 +42,6 @@ As of today, the function choice behaviors are represented by three class method
 
 ::: zone pivot="programming-language-java"
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
@@ -185,8 +183,6 @@ response = await kernel.invoke_prompt(query, arguments=arguments)
 
 ::: zone pivot="programming-language-java"
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
@@ -306,8 +302,6 @@ response = await kernel.invoke(prompt_function)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
-
-## Coming soon
 
 More info coming soon.
 
@@ -453,8 +447,6 @@ response = await kernel.invoke(prompt_function)
 
 ::: zone pivot="programming-language-java"
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
@@ -590,8 +582,6 @@ response = await kernel.invoke(prompt_function)
 
 ::: zone pivot="programming-language-java"
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
@@ -664,13 +654,11 @@ As of today, the following AI connectors in Semantic Kernel support the function
 | Azure OpenAI           | ✔️                    | ✔️               |
 
 > [!WARNING]
-> Not all models support function calling. Some models only supports function calling in non-streaming mode. Please understand the limitations of the model you are using before attempting to use function calling.
+> Not all models support function calling while some models only supports function calling in non-streaming mode. Please understand the limitations of the model you are using before attempting to use function calling.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
-
-## Coming soon
 
 More info coming soon.
 
