@@ -15,7 +15,7 @@ Azure AI Foundry Tracing UI is a web-based user interface that allows you to vis
 > [!IMPORTANT]
 > Before you start, make sure you have completed the tutorial on [inspecting telemetry data with Application Insights](./telemetry-with-app-insights.md).
 
-> [IMPORTANT]
+> [!IMPORTANT]
 > This feature is currently only available on Semantic Kernel Python. Support for other languages is coming soon.
 
 Prerequisites:
@@ -32,7 +32,7 @@ Go to the Azure AI Foundry project, select the **Tracing** tab on the left blade
 
 ## Use the Azure AI Inference connector
 
-We are going to replace the chat completion service with the Azure AI Inference connector. This connector will automatically send traces that can be visualized on Azure AI Foundry Tracing UI.
+We are going to replace the chat completion service with the Azure AI Inference connector. This connector will automatically send traces that can be visualized on the Azure AI Foundry Tracing UI.
 
 ```python
 from semantic_kernel.connectors.ai.azure_ai_inference import AzureAIInferenceChatCompletion

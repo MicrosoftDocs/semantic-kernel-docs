@@ -888,6 +888,7 @@ chat_completion_service = AzureAIInferenceChatCompletion(ai_model_id="my-deploym
 
 # You can also use an Azure OpenAI deployment with the Azure AI Inference service
 from azure.ai.inference.aio import ChatCompletionsClient
+from azure.identity.aio import DefaultAzureCredential
 
 chat_completion_service = AzureAIInferenceChatCompletion(
     ai_model_id="my-deployment",
