@@ -8,3 +8,5 @@
   href: stepwise-planner-migration-guide.md
 - name: Memory Store to Vector Store Migration
   href: memory-store-migration.md
+- name: Kernel Events and Filters Migration
+  href: kernel-events-and-filters-migration.md

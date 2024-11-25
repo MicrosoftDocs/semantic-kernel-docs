@@ -1,6 +1,7 @@
 ---
 title: Supported languages for Semantic Kernel
 description: Learn which features are available for C#, Python, and Java.
+zone_pivot_groups: programming-languages
 author: matthewbolanos
 ms.topic: reference
 ms.author: mabolan
@@ -12,15 +13,16 @@ ms.service: semantic-kernel
 
 Semantic Kernel plans on providing support to the following languages:
 > [!div class="checklist"]
+>
 > * C#
 > * Python
 > * Java
 
 While the overall architecture of the kernel is consistent across all languages, we made sure the SDK for each language follows common paradigms and styles in each language to make it feel native and easy to use.
 
-## Available SDK packages
+::: zone pivot="programming-language-csharp"
 
-### C# packages
+## C# packages
 
 In C#, there are several packages to help ensure that you only need to import the functionality that you need for your project. The following table shows the available packages in C#.
 
@@ -60,7 +62,11 @@ To install any of these packages, you can use the following command:
 dotnet add package <package-name>
 ```
 
-### Python packages
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## Python packages
 
 In Python, there's a single package that includes everything you need to get started with Semantic Kernel. To install the package, you can use the following command:
 
@@ -69,12 +75,18 @@ pip install semantic-kernel
 ```
 
 On [PyPI](https://pypi.org/project/semantic-kernel/) under `Provides-Extra` the additional extras you can install are also listed and when used that will install the packages needed for using SK with that specific connector or service, you can install those with the square bracket syntax for instance:
+
 ```bash
 pip install semantic-kernel[azure]
 ```
+
 This will install Semantic Kernel, as well as specific tested versions of: `azure-ai-inference`, `azure-search-documents`, `azure-core`, `azure-identity`, `azure-cosmos` and `msgraph-sdk` (and any dependencies of those packages). Similarly the extra `hugging_face` will install `transformers` and `sentence-transformers`.
 
-### Java packages
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+## Java packages
 
 For Java, Semantic Kernel has the following packages; all are under the group Id `com.microsoft.semantic-kernel`, and can be imported
 from maven.
@@ -134,10 +146,11 @@ Below is an example POM XML for a simple project that uses OpenAI.
 </project>
 ```
 
+::: zone-end
+
 ## Available features in each SDK
 
 The following tables show which features are available in each language. The 🔄 symbol indicates that the feature is partially implemented, please see the associated note column for more details. The ❌ symbol indicates that the feature is not yet available in that language; if you would like to see a feature implemented in a language, please consider [contributing to the project](./contributing.md) or [opening an issue](./contributing.md#reporting-issues).
-
 
 ### Core capabilities
 
@@ -147,7 +160,7 @@ The following tables show which features are available in each language. The �
 | Native functions and plugins      | ✅ | ✅ | ✅ | |
 | OpenAPI plugins                   | ✅ | ✅ | ✅ | Java has a sample demonstrating how to load OpenAPI plugins |
 | Automatic function calling        | ✅ | ✅ | ✅ | |
-| Open Telemetry logs               | ✅ | 🔄 | ❌ | |
+| Open Telemetry logs               | ✅ | ✅ | ❌ | |
 | Hooks and filters                 | ✅ | ✅ | ✅ | |
 
 ### Prompt template formats
@@ -168,7 +181,7 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | Formats                          |  C#  | Python | Java | Notes |
 | ---------------------------------|:----:|:------:|:----:|-------|
 | YAML                             | ✅ | ✅ | ✅ | |
-| Prompty                          | ❌ | ✅ | ❌ | |
+| Prompty                          | ✅ | ❌ | ❌ | |
 
 ### AI Services Modalities
 
@@ -178,9 +191,9 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | Chat Completion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
 | Text Embeddings (Experimental)     | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
 | Text to Image (Experimental)       | ✅ | ✅ | ❌ | Example: Dall-E |
-| Image to Text (Experimental)       | ✅ | ✅  | ❌ | Example: Pix2Struct |
-| Text to Audio (Experimental)       | ✅ | ❌ | ❌ | Example: Text-to-speech |
-| Audio to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Whisper |
+| Image to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Pix2Struct |
+| Text to Audio (Experimental)       | ✅ | ✅ | ❌ | Example: Text-to-speech |
+| Audio to Text (Experimental)       | ✅ | ✅ | ❌ | Example: Whisper |
 
 ### AI Service Connectors
 
@@ -196,7 +209,7 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | Ollama                                    | ✅ | ✅ | ❌ | |
 | ONNX                                      | ✅ | ✅ | ❌ | |
 | OpenAI                                    | ✅ | ✅ | ✅ | |
-| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, Azure Model-as-a-service, etc. |
+| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, etc. |
 
 ### Vector Store Connectors (Experimental)
 
@@ -218,7 +231,7 @@ For the list of out of the box vector store connectors and the language support 
 | Milvus                   | ✅ | ✅ | ❌ | |
 | Pinecone                 | ✅ | ✅ | ❌ | |
 | Postgres                 | ✅ | ✅ | ❌ | |
-| Qdrant                   | ✅ | 🔄 | ❌ | |
-| Redis                    | ✅ | 🔄 | ❌ | |
+| Qdrant                   | ✅ | ✅ | ❌ | |
+| Redis                    | ✅ | ✅ | ❌ | |
 | Sqlite                   | ✅ | ❌ | 🔄 | |
 | Weaviate                 | ✅ | ✅ | ❌ | |
