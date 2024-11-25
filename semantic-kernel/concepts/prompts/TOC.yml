@@ -1,5 +1,7 @@
 - name: Prompt Engineering with Semantic Kernel
   href: index.md
+- name: YAML Schema Reference for Prompts
+  href: yaml-schema.md
 - name: Semantic Kernel Prompt Templates
   href: prompt-template-syntax.md
 - name: Handlebars Prompt Templates
