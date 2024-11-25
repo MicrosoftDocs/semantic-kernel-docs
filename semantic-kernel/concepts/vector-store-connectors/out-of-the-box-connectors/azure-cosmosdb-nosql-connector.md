@@ -234,7 +234,7 @@ var options = new AzureCosmosDBNoSQLVectorStoreRecordCollectionOptions<Hotel>
 };
 
 var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<Hotel>(database, "collection-name", options) 
-    as IVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, TestRecord>;
+    as IVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, Hotel>;
 ```
 
 Get with partition key:

@@ -1,4 +1,8 @@
-- name: Prompts
+- name: Prompt Engineering with Semantic Kernel
   href: index.md
-- name: Prompt template syntax
+- name: Semantic Kernel Prompt Templates
   href: prompt-template-syntax.md
+- name: Handlebars Prompt Templates
+  href: handlebars-prompt-templates.md
+- name: Liquid Prompt Templates
+  href: liquid-prompt-templates.md
