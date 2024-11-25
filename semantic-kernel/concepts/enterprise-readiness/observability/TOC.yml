@@ -6,5 +6,7 @@
   href: telemetry-with-app-insights.md
 - name: 'Example: Aspire Dashboard'
   href: telemetry-with-aspire-dashboard.md
+- name: 'Example: Azure AI Foundry Tracing'
+  href: telemetry-with-azure-ai-foundry-tracing.md
 - name: 'Advanced telemetry with Semantic Kernel'
   href: telemetry-advanced.md
