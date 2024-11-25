@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 # Add plugins from OpenAPI specifications
 
-Often in an enterprise, you already have a set of APIs that perform real work.These could be used by other automation services or 
+Often in an enterprise, you already have a set of APIs that perform real work. These could be used by other automation services or 
 power front-end applications that humans interact with. In Semantic Kernel, you can add these exact same APIs as plugins so your agents can also use them.
 
 ## An example OpenAPI specification
@@ -188,17 +188,13 @@ await kernel.ImportPluginFromOpenApiAsync(
    }
 );
 ```
-With Semantic Kernel, you can add OpenAPI plugins from various sources, such as a URL, file path, or stream. 
+With Semantic Kernel, you can add OpenAPI plugins from various sources, such as a URL, file, or stream. 
 Additionally, plugins can be created once and reused across multiple kernel instances or agents.
 ```csharp
 // Create the OpenAPI plugin from a local file somewhere at the root of the application
 KernelPlugin plugin = await OpenApiKernelPluginFactory.CreateFromOpenApiAsync(
     pluginName: "lights",
-    filePath: "lights.json",
-    executionParameters: new OpenApiFunctionExecutionParameters()
-    {
-        EnablePayloadNamespacing = true
-    }
+    filePath: "path/to/lights.json"
 );
 
 // Add the plugin to the kernel
@@ -265,7 +261,7 @@ the light - it could be handled as shown below:
 ```csharp
 OpenApiDocumentParser parser = new();
 
-using FileStream stream = File.OpenRead("lights.json");
+using FileStream stream = File.OpenRead("path/to/lights.json");
 
 // Parse the OpenAPI document
 RestApiSpecification specification = await parser.ParseAsync(stream);
@@ -399,7 +395,8 @@ await kernel.ImportPluginFromOpenApiAsync(
     });
 ```
 
-If enabled, the namespacing option only takes effect when dynamic payload construction is also enabled; otherwise, it has no effect.
+> [!NOTE]
+> The `EnablePayloadNamespace` option only takes effect when dynamic payload construction is also enabled; otherwise, it has no effect.
 
 ### The payload parameter
 
