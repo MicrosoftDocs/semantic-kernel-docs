@@ -165,7 +165,7 @@ This specification provides everything needed by the AI to understand the API an
 
 Since the AI agent can understand this specification, you can add it as a plugin to the agent.
 
-Semantic Kernel supports OpenAPI versions 2.0 and 3.0, and it aims to accommodate v3.1 specifications by utilizing v3.0 as a fallback option.
+Semantic Kernel supports OpenAPI versions 2.0 and 3.0, and it aims to accommodate version 3.1 specifications by downgrading it to version 3.0.
 
 > [!TIP]
 > If you have existing OpenAPI specifications, you may need to make alterations to make them easier for an AI to understand them. For example, you may need to provide guidance in the descriptions. For more tips on how to make your OpenAPI specifications AI-friendly, see [Tips and tricks for adding OpenAPI plugins](#tips-and-tricks-for-adding-openapi-plugins).
@@ -304,8 +304,7 @@ Semantic Kernel offers a few options for managing payload handling for OpenAPI p
 Dynamic payload construction allows the payloads of OpenAPI operations to be created dynamically based on the payload schema and arguments provided by the LLM.
 This feature is enabled by default but can be disabled by setting the `EnableDynamicPayload` property to `false` in the `OpenApiFunctionExecutionParameters` object when adding an OpenAPI plugin.
    
-For example, consider the change_light_state operation, which requires a payload structured as follows:  
-  
+For example, consider the change_light_state operation, which requires a payload structured as follows:
 ```json
 {
    "isOn": true,
@@ -316,10 +315,25 @@ For example, consider the change_light_state operation, which requires a payload
 }
 ```
 
-In this case, Semantic Kernel will perform the following steps:
-1. Provide metadata(name, type, description, etc) the payload properties to the LLM so that it can reason about them.
-2. Handle the LLM call to the OpenAPI operation, constructing the payload based on the schema and provided by LLM property values.
-3. Send the HTTP request with the payload to the API.
+To change the state of the light and get values for the payload properties, Semantic Kernel provides the LLM with metadata for the operation so it can reason about it:
+```json
+{
+    "name":"lights-change-light-state",
+    "description": "Changes the state of a light.",
+    "parameters":[
+        { "name": "id", "schema": {"type":"string", "description": "The ID of the light to change from the get_all_lights tool.", "format":"uuid"}},
+        { "name": "isOn", "schema": { "type": "boolean", "description": "Specifies whether the light is turned on or off."}},
+        { "name": "hexColor", "schema": { "type": "string", "description": "Specifies whether the light is turned on or off."}},
+        { "name": "brightness", "schema": { "type":"string", "description":"The brightness level of the light.", "enum":["Low","Medium","High"]}},
+        { "name": "fadeDurationInMilliseconds", "schema": { "type":"integer", "description":"Duration for the light to fade to the new state, in milliseconds.", "format":"int32"}},
+        { "name": "scheduledTime", "schema": {"type":"string", "description":"The time at which the change should occur.", "format":"date-time"}},
+    ]
+}
+```
+
+In addition to providing operation metadata to the LLM, Semantic Kernel will perform the following steps:
+1. Handle the LLM call to the OpenAPI operation, constructing the payload based on the schema and provided by LLM property values.
+2. Send the HTTP request with the payload to the API.
    
 Dynamic payload construction is best suited for APIs with relatively simple payload structures that have unique property names.
 If the payload has non-unique property names, consider the following alternatives:
@@ -334,7 +348,7 @@ Payload namespacing helps prevent naming conflicts that can occur due to non-uni
 When namespacing is enabled, Semantic Kernel provides the LLM with OpenAPI operation metadata that includes augmented property names.
 These augmented names are created by adding the parent property name as a prefix, separated by a dot, to the child property names.
 
-For example, if the change_light_state operation had included a nested `timer` object with a `scheduledTime` property:
+For example, if the change_light_state operation had included a nested `offTimer` object with a `scheduledTime` property:
 
 ```json
 {
@@ -343,21 +357,30 @@ For example, if the change_light_state operation had included a nested `timer` o
   "brightness": 100,
   "fadeDurationInMilliseconds": 500,
   "scheduledTime": "2023-07-12T12:00:00Z",
-  "timer": {
+  "offTimer": {
       "scheduledTime": "2023-07-12T12:00:00Z"
   }
 }
 ```
 
 Semantic Kernel would have provided the LLM with metadata for the operation that includes the following property names:
-- `isOn` - provided as is because it is a top-level property that does not have any parent.
-- `hexColor` - provided as is because it is a top-level property that does not have any parent.
-- `brightness` - provided as is because it is a top-level property that does not have any parent.
-- `fadeDurationInMilliseconds` - provided as is because it is a top-level property that does not have any parent.
-- `scheduledTime` - provided as is because it is a top-level property that does not have any parent.
-- `timer.scheduledTime` - provided to the LLM with the augmented name.
+```json
+{
+    "name":"lights-change-light-state",
+    "description": "Changes the state of a light.",
+    "parameters":[
+        { "name": "id", "schema": {"type":"string", "description": "The ID of the light to change from the get_all_lights tool.", "format":"uuid"}},
+        { "name": "isOn", "schema": { "type": "boolean", "description": "Specifies whether the light is turned on or off."}},
+        { "name": "hexColor", "schema": { "type": "string", "description": "Specifies whether the light is turned on or off."}},
+        { "name": "brightness", "schema": { "type":"string", "description":"The brightness level of the light.", "enum":["Low","Medium","High"]}},
+        { "name": "fadeDurationInMilliseconds", "schema": { "type":"integer", "description":"Duration for the light to fade to the new state, in milliseconds.", "format":"int32"}},
+        { "name": "scheduledTime", "schema": {"type":"string", "description":"The time at which the change should occur.", "format":"date-time"}},
+        { "name": "offTimer.scheduledTime", "schema": {"type":"string", "description":"The time at which the device will be turned off.", "format":"date-time"}},
+    ]
+}
+```
 
-In addition to providing operation metadata with augmented property names to the LLM, Semantic Kernel performes the following steps:
+In addition to providing operation metadata with augmented property names to the LLM, Semantic Kernel performs the following steps:
 1. Handle the LLM call to the OpenAPI operation and look up the corresponding arguments among those provided by the LLM for all the properties in the payload, using the augmented property names and falling back to the original property names if necessary.
 2. Construct the payload using the original property names as keys and the resolved arguments as values.
 3. Send the HTTP request with the constructed payload to the API.
@@ -380,9 +403,10 @@ If enabled, the namespacing option only takes effect when dynamic payload constr
 
 ### The payload parameter
 
-Semantic Kernel can work with payloads created by the LLM using the payload parameter. This is helpful when the payload schema is complex, 
-has non-unique property names, making dynamic construction of the payload by Semantic Kernel not feasible.
-When the LLM provides an argument for the the payload parameter, Semantic Kernel uses it as is, without trying to create it based on the schema.
+Semantic Kernel can work with payloads created by the LLM using the payload parameter. This is useful when the payload schema is complex 
+and contains non-unique property names, which makes it infeasible for Semantic Kernel to dynamically construct the payload.
+In such cases, you will be relying on the LLM's ability to understand the schema and construct a valid payload. Recent models, such as `gpt-4o`
+are effective at generating valid JSON payloads.
 
 To enable the payload parameter, set the `EnableDynamicPayload` property to `false` in the `OpenApiFunctionExecutionParameters` object when adding an OpenAPI plugin:
 ```csharp
