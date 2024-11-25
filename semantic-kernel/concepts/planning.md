@@ -9,7 +9,7 @@ ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
 
-# What is a Planner?
+# Planning
 
 Once you have multiple plugins, you then need a way for your AI agent to use them together to solve a user’s need. This is where planning comes in.
 
