@@ -53,7 +53,7 @@ Take for example an API that allows you to alter the state of light bulbs. The O
                   {
                      "name": "id",
                      "in": "path",
-                     "description": "The ID of the light to change from the get_all_lights tool.",
+                     "description": "The ID of the light to change.",
                      "required": true,
                      "style": "simple",
                      "schema": {
@@ -321,7 +321,7 @@ To change the state of the light and get values for the payload properties, Sema
     "name":"lights-change-light-state",
     "description": "Changes the state of a light.",
     "parameters":[
-        { "name": "id", "schema": {"type":"string", "description": "The ID of the light to change from the get_all_lights tool.", "format":"uuid"}},
+        { "name": "id", "schema": {"type":"string", "description": "The ID of the light to change.", "format":"uuid"}},
         { "name": "isOn", "schema": { "type": "boolean", "description": "Specifies whether the light is turned on or off."}},
         { "name": "hexColor", "schema": { "type": "string", "description": "Specifies whether the light is turned on or off."}},
         { "name": "brightness", "schema": { "type":"string", "description":"The brightness level of the light.", "enum":["Low","Medium","High"]}},
@@ -369,7 +369,7 @@ Semantic Kernel would have provided the LLM with metadata for the operation that
     "name":"lights-change-light-state",
     "description": "Changes the state of a light.",
     "parameters":[
-        { "name": "id", "schema": {"type":"string", "description": "The ID of the light to change from the get_all_lights tool.", "format":"uuid"}},
+        { "name": "id", "schema": {"type":"string", "description": "The ID of the light to change.", "format":"uuid"}},
         { "name": "isOn", "schema": { "type": "boolean", "description": "Specifies whether the light is turned on or off."}},
         { "name": "hexColor", "schema": { "type": "string", "description": "Specifies whether the light is turned on or off."}},
         { "name": "brightness", "schema": { "type":"string", "description":"The brightness level of the light.", "enum":["Low","Medium","High"]}},
