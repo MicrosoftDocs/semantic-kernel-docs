@@ -694,7 +694,7 @@ await kernel.InvokePromptAsync("Test");
 ```
 
 In this example, the `AuthenticateRequestAsyncCallbackAsync` method reads the operation metadata from the function context and extracts the security requirements for the operation
-to determine the authentication scheme. It then retrieves the API key for the scheme and scopes from the app identity provider and adds it to the request headers or query parameters.
+to determine the authentication scheme. It then retrieves the API key, for the scheme and scopes, from the app identity provider and adds it to the request headers or query parameters.
 
 The following table lists the metadata available in the `KernelFunction.Metadata.AdditionalParameters` dictionary:
 
