@@ -65,7 +65,7 @@ The output variable has the following properties:
 
 The collection of execution settings used by the prompt template.
 The execution settings are a dictionary which is keyed by the service ID, or `default` for the default execution settings.
-The service id of each [PromptExecutionSettings](/dotnet/api/microsoft.semantickernel.promptexecutionsettings?view=semantic-kernel-dotnet) must match the key in the dictionary.
+The service id of each [PromptExecutionSettings](/dotnet/api/microsoft.semantickernel.promptexecutionsettings) must match the key in the dictionary.
 
 Each entry has the following properties:
 
