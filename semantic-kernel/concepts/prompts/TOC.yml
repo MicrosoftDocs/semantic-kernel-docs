@@ -8,3 +8,5 @@
   href: handlebars-prompt-templates.md
 - name: Liquid Prompt Templates
   href: liquid-prompt-templates.md
+- name: Protecting against Prompt Injection Attacks
+  href: prompt-injection-attacks.md

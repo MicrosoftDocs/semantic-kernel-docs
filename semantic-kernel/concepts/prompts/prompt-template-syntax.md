@@ -194,3 +194,4 @@ In the next sections we will look at to additional formats, [Handlebars](https:/
 > [!div class="nextstepaction"]
 > [Handlebars Prompt Templates](./handlebars-prompt-templates.md)
 > [Liquid Prompt Templates](./liquid-prompt-templates.md)
+> [Protecting against Prompt Injection Attacks](./prompt-injection-attacks.md)

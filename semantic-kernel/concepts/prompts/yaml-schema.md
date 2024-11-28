@@ -4,7 +4,7 @@ description: Detailed YAML schema reference for Semantic Kernel prompts
 author: markwallace
 ms.topic: conceptual
 ms.author: markwallace
-ms.date: 09/27/2024
+ms.date: 11/27/2024
 ms.service: semantic-kernel
 ---
 
@@ -43,9 +43,9 @@ Each input variable has the following properties:
 1. `name` - The name of the variable.
 2. `description` - The description of the variable.
 3. `default` - An optional default value for the variable.
-4. `is_required` - Whether the variable is considered required (rather than optional).
-5. `json_schema` - The JSON Schema describing this variable.
-6. `allow_dangerously_set_content` - A boolean value indicating whether to handle the variable value as potential dangerous content.
+4. `is_required` - Whether the variable is considered required (rather than optional). Default is `true`.
+5. `json_schema` - An optional JSON Schema describing this variable.
+6. `allow_dangerously_set_content` - A boolean value indicating whether to handle the variable value as potential dangerous content. Default is `false`. See [Protecting against Prompt Injection Attacks](./prompt-injection-attacks.md) for more information.
 
 > [!TIP]
 > The default for `allow_dangerously_set_content` is false.
@@ -64,14 +64,14 @@ The output variable has the following properties:
 ### execution_settings
 
 The collection of execution settings used by the prompt template.
-The settings dictionary is keyed by the service ID, or `default` for the default execution settings.
-When setting, the service id of each [PromptExecutionSettings](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/PromptExecutionSettings.cs) must match the key in the dictionary.
+The execution settings are a dictionary which is keyed by the service ID, or `default` for the default execution settings.
+The service id of each [PromptExecutionSettings](/dotnet/api/microsoft.semantickernel.promptexecutionsettings?view=semantic-kernel-dotnet) must match the key in the dictionary.
 
 Each entry has the following properties:
 
 1. `service_id` - This identifies the service these settings are configured for e.g., azure_openai_eastus, openai, ollama, huggingface, etc.
 2. `model_id` - This identifies the AI model these settings are configured for e.g., gpt-4, gpt-3.5-turbo.
-3. `function_choice_behavior` - The behavior defining the way functions are chosen by LLM and how they are invoked by AI connectors.
+3. `function_choice_behavior` - The behavior defining the way functions are chosen by LLM and how they are invoked by AI connectors. For more information see [Function Choice Behaviors](../ai-services/chat-completion/function-calling/function-choice-behaviors.md)
 
 > [!TIP]
 > If provided, the service identifier will be the key in a dictionary collection of execution settings.
@@ -92,6 +92,38 @@ A boolean value indicating whether to allow potentially dangerous content to be 
 When set to true the return values from functions only are treated as safe content.
 For prompts which are being used with a chat completion service this should be set to false to protect against prompt injection attacks.
 When using other AI services e.g. Text-To-Image this can be set to true to allow for more complex prompts.
+See [Protecting against Prompt Injection Attacks](./prompt-injection-attacks.md) for more information.
+
+## Sample YAML prompt
+
+Below is a sample YAML prompt that uses the [Handlebars template format](./handlebars-prompt-templates.md) and
+is configured with different temperatures when be used with `gpt-3` and `gpt-4` models.
+
+```yml
+name: GenerateStory
+template: |
+  Tell a story about {{topic}} that is {{length}} sentences long.
+template_format: handlebars
+description: A function that generates a story about a topic.
+input_variables:
+  - name: topic
+    description: The topic of the story.
+    is_required: true
+  - name: length
+    description: The number of sentences in the story.
+    is_required: true
+output_variable:
+  description: The generated story.
+execution_settings:
+  service1:  
+    model_id: gpt-4
+    temperature: 0.6
+  service2:
+    model_id: gpt-3
+    temperature: 0.4
+  default:
+    temperature: 0.5
+```
 
 ## Next steps
 
