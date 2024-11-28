@@ -538,7 +538,7 @@ The base URL will be `https://api-host.com`.
    
 In some instances, the server URL specified in the OpenAPI document or the server from which the document was loaded may not be suitable for use cases involving the OpenAPI plugin.   
   
-The Semantic Kernel allows you to override the server URL by providing a custom base URL when adding the OpenAPI plugin to the kernel:
+Semantic Kernel allows you to override the server URL by providing a custom base URL when adding the OpenAPI plugin to the kernel:
 ```csharp  
 await kernel.ImportPluginFromOpenApiAsync(  
     pluginName: "lights",  
@@ -592,6 +592,117 @@ await kernel.ImportPluginFromOpenApiAsync(
         AuthCallback = AuthenticateRequestAsyncCallback
     });  
 ```
+
+For more complex authentication scenarios that require dynamic access to the details of the authentication schemas supported by an API, you can use document 
+and operation metadata to obtain this information. For more details, see [Document and operation metadata](./adding-openapi-plugins.md#document-and-operation-metadata).
+
+## Response content reading customization  
+
+Semantic Kernel has a built-in mechanism for reading the content of HTTP responses from OpenAPI plugins and converting them to the appropriate .NET data types. 
+For example, an image response can be read as a byte array, while a JSON or XML response can be read as a string. 
+
+However, there may be cases when the built-in mechanism is insufficient for your needs. For instance, when the response is a large JSON object or image that needs 
+to be read as a stream in order to be supplied as input to another API. In such cases, reading the response content as a string or byte array and then converting 
+it back to a stream can be inefficient and may lead to performance issues. To address this, Semantic Kernel allows for response content reading customization 
+by providing a custom content reader:  
+   
+```csharp  
+private static async Task<object?> ReadHttpResponseContentAsync(HttpResponseContentReaderContext context, CancellationToken cancellationToken)  
+{  
+    // Read JSON content as a stream instead of as a string, which is the default behavior.  
+    if (context.Response.Content.Headers.ContentType?.MediaType == "application/json")  
+    {  
+        return await context.Response.Content.ReadAsStreamAsync(cancellationToken);  
+    }  
+  
+    // HTTP request and response properties can be used to determine how to read the content.  
+    if (context.Request.Headers.Contains("x-stream"))  
+    {  
+        return await context.Response.Content.ReadAsStreamAsync(cancellationToken);  
+    }  
+  
+    // Return null to indicate that any other HTTP content not handled above should be read by the default reader.  
+    return null;  
+}  
+
+await kernel.ImportPluginFromOpenApiAsync(  
+    pluginName: "lights",  
+    uri: new Uri("https://example.com/v1/swagger.json"),  
+    executionParameters: new OpenApiFunctionExecutionParameters()  
+    {  
+        HttpResponseContentReader = ReadHttpResponseContentAsync  
+    });  
+```
+
+In this example, the `ReadHttpResponseContentAsync` method reads the HTTP response content as a stream when the content type is `application/json` or when the request
+contains a custom header `x-stream`. The method returns `null` for any other content types, indicating that the default content reader should be used.
+
+## Document and operation metadata
+
+Semantic Kernel extracts OpenAPI document and operation metadata, including API information, security schemas, operation ID, description, parameter metadata and many more.
+It provides access to this information through the `KernelFunction.Metadata.AdditionalParameters` property. This metadata can be useful in scenarios where additional
+information about the API or operation is required, such as for authentication purposes:
+
+```csharp
+static async Task AuthenticateRequestAsyncCallbackAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+{
+    // Get the function context
+    if (request.Options.TryGetValue(OpenApiKernelFunctionContext.KernelFunctionContextKey, out OpenApiKernelFunctionContext? functionContext))
+    {
+        // Get the operation metadata
+        if (functionContext!.Function!.Metadata.AdditionalProperties["operation"] is RestApiOperation operation)
+        {
+            // Handle API key-based authentication
+            IEnumerable<KeyValuePair<RestApiSecurityScheme, IList<string>>> apiKeySchemes = operation.SecurityRequirements.Select(requirement => requirement.FirstOrDefault(schema => schema.Key.SecuritySchemeType == "apiKey"));
+            if (apiKeySchemes.Any())
+            {
+                (RestApiSecurityScheme scheme, IList<string> scopes) = apiKeySchemes.First();
+
+                // Get the API key for the scheme and scopes from your app identity provider
+                var apiKey = await this.identityPropvider.GetApiKeyAsync(scheme, scopes);
+
+                // Add the API key to the request headers
+                if (scheme.In == RestApiParameterLocation.Header)
+                {
+                    request.Headers.Add(scheme.Name, apiKey);
+                }
+                else if (scheme.In == RestApiParameterLocation.Query)
+                {
+                    request.RequestUri = new Uri($"{request.RequestUri}?{scheme.Name}={apiKey}");
+                }
+                else
+                {
+                    throw new NotSupportedException($"API key location '{scheme.In}' is not supported.");
+                }
+            }
+
+            // Handle other authentication types like Basic, Bearer, OAuth2, etc. For more information, see https://swagger.io/docs/specification/v3_0/authentication/
+        }
+    }
+}
+
+// Import the transformed OpenAPI plugin specification
+var plugin = kernel.ImportPluginFromOpenApi(
+    pluginName: "lights",
+    uri: new Uri("https://example.com/v1/swagger.json"),
+    new OpenApiFunctionExecutionParameters()
+    {
+        AuthCallback = AuthenticateRequestAsyncCallbackAsync
+    });
+
+await kernel.InvokePromptAsync("Test");
+```
+
+In this example, the `AuthenticateRequestAsyncCallbackAsync` method reads the operation metadata from the function context and extracts the security requirements for the operation
+to determine the authentication scheme. It then retrieves the API key, for the scheme and scopes, from the app identity provider and adds it to the request headers or query parameters.
+
+The following table lists the metadata available in the `KernelFunction.Metadata.AdditionalParameters` dictionary:
+
+| Key        | Type                                 | Description                     |
+|------------|--------------------------------------|---------------------------------|
+| info       | `RestApiInfo`                        | API information, including title, description, and version. |
+| operation  | `RestApiOperation`                   | API operation details, such as id, description, path, method, etc. |
+| security   | IList<`RestApiSecurityRequirement`>  | API security requirements - type, name, in, etc. | 
 
 ::: zone-end
 
