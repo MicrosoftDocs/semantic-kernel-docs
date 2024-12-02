@@ -244,3 +244,4 @@ More coming soon.
 
 > [!div class="nextstepaction"]
 > [Liquid Prompt Templates](./liquid-prompt-templates.md)
+> [Protecting against Prompt Injection Attacks](./prompt-injection-attacks.md)
