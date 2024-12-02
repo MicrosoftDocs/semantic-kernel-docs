@@ -64,5 +64,7 @@ Prompt engineering is a dynamic and evolving field, and skilled prompt engineers
 
 > [!div class="nextstepaction"]
 > [Semantic Kernel Prompt Templates](./prompt-template-syntax.md)
+> [YAML Schema Reference for Prompts](./yaml-schema.md)
 > [Handlebars Prompt Templates](./handlebars-prompt-templates.md)
 > [Liquid Prompt Templates](./liquid-prompt-templates.md)
+> [Protecting against Prompt Injection Attacks](./prompt-injection-attacks.md)
