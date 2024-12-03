@@ -1,0 +1,1 @@
+export const ANY_API_GATEWAY_KEY = ''; 
