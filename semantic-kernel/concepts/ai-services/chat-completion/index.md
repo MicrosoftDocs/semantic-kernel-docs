@@ -1121,11 +1121,9 @@ Now that you have a chat completion service, you can use it to generate response
 - **Non-streaming**: You wait for the service to generate an entire response before returning it to the user.
 - **Streaming**: Individual chunks of the response are generated and returned to the user as they are created.
 
-Below are the two ways you can use a chat completion service to generate responses.
-
 ::: zone pivot="programming-language-python"
 
-You will need to manually create an execution settings instance to use the chat completion service if you did not register the service with the kernel.
+Before getting started, you will need to manually create an execution settings instance to use the chat completion service if you did not register the service with the kernel.
 
 # [Azure OpenAI](#tab/python-AzureOpenAI)
 
@@ -1207,10 +1205,14 @@ from semantic_kernel.connectors.ai.onnx import OnnxGenAIPromptExecutionSettings
 execution_settings = OnnxGenAIPromptExecutionSettings()
 ```
 
+---
+
 > [!TIP]
 > To see what you can configure in the execution settings, you can check the class definition in the [source code](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/ai) or check out the [API documentation](https://learn.microsoft.com/en-us/python/api/semantic-kernel/semantic_kernel.connectors.ai?view=semantic-kernel-python).
 
 ::: zone-end
+
+Below are the two ways you can use a chat completion service to generate responses.
 
 ### Non-streaming chat completion
 
@@ -1236,7 +1238,10 @@ var response = await chatCompletionService.GetChatMessageContentAsync(
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = await chat_completion.get_chat_message_content(chat_history=history, settings=execution_settings)
+response = await chat_completion.get_chat_message_content(
+    chat_history=history,
+    settings=execution_settings,
+)
 ```
 
 ::: zone-end
@@ -1287,7 +1292,10 @@ await foreach (var chunk in response)
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = chat_completion.get_streaming_chat_message_content(chat_history=history, settings=execution_settings)
+response = chat_completion.get_streaming_chat_message_content(
+    chat_history=history,
+    settings=execution_settings,
+)
 
 async for chunk in response:
     print(chunk, end="")
