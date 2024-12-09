@@ -378,3 +378,59 @@ With the above code, you should get a response that looks like the following:
 
 > [!Tip]
 > While you can invoke a plugin function directly, this is not advised because the AI should be the one deciding which functions to call. If you need explicit control over which functions are called, consider using standard methods in your codebase instead of plugins.
+
+## General recommendations for authoring plugins
+
+Considering that each scenario has unique requirements, utilizes distinct plugin designs, and may incorporate multiple LLMs, it is challenging to provide a one-size-fits-all guide for plugin design.
+However, below are some general recommendations and guidelines to ensure that plugins are AI-friendly and can be easily and efficiently consumed by LLMs.
+
+### Import only the necessary plugins
+
+Import only the plugins that contain functions necessary for your specific scenario. This approach will not only reduce the number of input tokens consumed but also minimize the occurrence of function 
+miscalls-calls to functions that are not used in the scenario. Overall, this strategy should enhance function-calling accuracy and decrease the number of false positives.
+   
+Additionally, OpenAI recommends that you use no more than 20 tools in a single API call; ideally, no more than 10 tools. As stated by OpenAI: *"We recommend that you use no more than
+20 tools in a single API call. Developers typically see a reduction in the model's ability to select the correct tool once they have between 10-20 tools defined."**
+For more information, you can visit their documentation at [OpenAI Function Calling Guide](https://platform.openai.com/docs/guides/function-calling#keep-the-number-of-functions-low-for-higher-accuracy).
+
+### Make plugins AI-friendly
+
+To enhance the LLM's ability to understand and utilize plugins, it is recommended to follow these guidelines:
+- **Use descriptive and concise function names:** Ensure that function names clearly convey their purpose to help the model understand when to select each function. If a function name is ambiguous, consider renaming it for clarity.
+Avoid using abbreviations or acronyms to shorten function names. Utilize the `DescriptionAttribute` to provide additional context and instructions only when necessary, minimizing token consumption.
+
+- **Minimize function parameters:** Limit the number of function parameters and use primitive types whenever possible. This approach reduces token consumption and simplifies the function signature, making it easier for the LLM
+to match function parameters effectively.  
+
+- **Name function parameters clearly:** Assign descriptive names to function parameters to clarify their purpose. Avoid using abbreviations or acronyms to shorten parameter names, as this will assist the LLM in reasoning about
+the parameters and providing accurate values. As with function names, use the `DescriptionAttribute` only when necessary to minimize token consumption.  
+
+### Find a right balance between the number of functions and their responsibilities
+
+On one hand, having functions with a single responsibility is a good practice that allows to keep functions simple and reusable across multiple scenarios. On the other hand, each function call incurs overhead in terms of network round-trip latency 
+and the number of consumed input and output tokens: input tokens are used to send the function definition and invocation result to the LLM, while output tokens are consumed when receiving the function call from the model.
+Alternatively, a single function with multiple responsibilities can be implemented to reduce the number of consumed tokens and lower network overhead, although this comes at the cost of reduced reusability in other scenarios.
+<br><br>
+However, consolidating many responsibilities into a single function may increase the number and complexity of function parameters and its return type. This complexity can lead to situations where the model may struggle to correctly match the function parameters,
+resulting in missed parameters or values of incorrect type. Therefore, it is essential to strike the right balance between the number of functions to reduce network overhead and the number of responsibilities each function has, ensuring that the model can accurately
+match function parameters.
+
+### Transform Semantic Kernel functions
+   
+Utilize the transformation techniques for Semantic Kernel functions as described in the [Transforming Semantic Kernel Functions](https://devblogs.microsoft.com/semantic-kernel/transforming-semantic-kernel-functions/#:~:text=Semantic%20Kernel%20provides%20a%20series,from%20an%20Open%20API%20specification) blog post to:  
+   
+- **Change function behavior:** There are scenarios where the default behavior of a function may not align with the desired outcome and it's not feasible to modify the original function's implementation. In such cases, you can create a new function that wraps the 
+original one and modifies its behavior accordingly.
+   
+- **Provide context information:** Functions may require parameters that the LLM cannot or should not infer. For example, if a function needs to act on behalf of the current user or requires authentication information, this context is typically available to the host application but not to the LLM. In such cases, you can transform 
+the function to invoke the original one while supplying the necessary context information from the hosting application, along with arguments provided by the LLM.  
+   
+- **Change parameters list, types, and names:** If the original function has a complex signature that the LLM struggles to interpret, you can transform the function into one with a simpler signature that the LLM can more easily understand. 
+This may involve changing parameter names, types, the number of parameters, and flattening or unflattening complex parameters, among other adjustments.
+
+### Local state utilization  
+   
+When designing plugins that operate on relatively large or confidential datasets, such as documents, articles, or emails containing sensitive information, consider utilizing local state to store original data or intermediate results that do not need to be
+sent to the LLM. Functions for such scenarios can accept and return a state id, allowing you to look up and access the data locally instead of passing the actual data to the LLM, only to receive it back as an argument for the next function invocation.
+
+By storing data locally, you can keep the information private and secure while avoiding unnecessary token consumption during function calls. This approach not only enhances data privacy but also improves overall efficiency in processing large or sensitive datasets.

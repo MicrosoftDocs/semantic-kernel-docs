@@ -295,7 +295,7 @@ OpenAPI plugins can modify the state of the system using POST, PUT, or PATCH ope
 
 Semantic Kernel offers a few options for managing payload handling for OpenAPI plugins, depending on your specific scenario and API requirements.
    
-### Dynamic payload construction  
+### Dynamic payload construction
    
 Dynamic payload construction allows the payloads of OpenAPI operations to be created dynamically based on the payload schema and arguments provided by the LLM.
 This feature is enabled by default but can be disabled by setting the `EnableDynamicPayload` property to `false` in the `OpenApiFunctionExecutionParameters` object when adding an OpenAPI plugin.
@@ -330,13 +330,21 @@ To change the state of the light and get values for the payload properties, Sema
 In addition to providing operation metadata to the LLM, Semantic Kernel will perform the following steps:
 1. Handle the LLM call to the OpenAPI operation, constructing the payload based on the schema and provided by LLM property values.
 2. Send the HTTP request with the payload to the API.
-   
-Dynamic payload construction is best suited for APIs with relatively simple payload structures that have unique property names.
-If the payload has non-unique property names, consider the following alternatives:
-1. Provide a unique argument name for each non-unique property, using a method similar to that described in the [Handling OpenAPI plugin parameters](./adding-openapi-plugins.md#handling-openapi-plugin-parameters) section.
-2. Use namespaces to avoid naming conflicts, as outlined in the next section on [Payload namespacing](./adding-openapi-plugins.md#payload-namespacing).
-3. Disable dynamic payload construction and allow the LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
-   
+
+#### Constraints  
+Dynamic payload construction is most effective for APIs with relatively simple payload structures. It may not be reliably work or work at all, for APIs payloads exhibiting the following characteristics:
+- Payloads with non-unique property names regardless of the location of the properties. E.g., two properties named `id`, one for sender object and another for receiver object - ```json { "sender": { "id": ... }, "receiver": { "id": ... }}``` 
+- Payload schemas that use any of the composite keywords `oneOf`, `anyOf`, `allOf`.
+- Payload schemas with recursive references. E.g., ```json { "parent": { "child": { "$ref": "#parent" } } }```
+
+To handle payloads with non-unique property names, consider the following alternatives:
+- Provide a unique argument name for each non-unique property, using a method similar to that described in the [Handling OpenAPI plugin parameters](./adding-openapi-plugins.md#handling-openapi-plugin-parameters) section.
+- Use namespaces to avoid naming conflicts, as outlined in the next section on [Payload namespacing](./adding-openapi-plugins.md#payload-namespacing).
+- Disable dynamic payload construction and allow the LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
+
+If payloads schemas use any of the `oneOf`, `anyOf`, `allOf` composite keywords or recursive references, consider disabling dynamic payload construction and allow the 
+LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
+
 ### Payload namespacing
 
 Payload namespacing helps prevent naming conflicts that can occur due to non-unique property names in OpenAPI plugin payloads.
