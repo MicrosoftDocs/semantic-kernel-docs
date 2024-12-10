@@ -151,6 +151,9 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Ollama --prerelease
 dotnet add package Microsoft.SemanticKernel.Connectors.Amazon --prerelease
 ```
 
+> [!NOTE]
+> Anthropic models are available on the Amazon Bedrock platform. To use Anthropic models, you will need to install the Amazon connector package.
+
 # [Amazon Bedrock](#tab/csharp-AmazonBedrock)
 
 ```bash
