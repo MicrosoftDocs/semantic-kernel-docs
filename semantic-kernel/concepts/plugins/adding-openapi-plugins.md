@@ -331,7 +331,7 @@ In addition to providing operation metadata to the LLM, Semantic Kernel will per
 1. Handle the LLM call to the OpenAPI operation, constructing the payload based on the schema and provided by LLM property values.
 2. Send the HTTP request with the payload to the API.
 
-#### Constraints  
+#### Limitations of dynamic payload construction
 Dynamic payload construction is most effective for APIs with relatively simple payload structures. It may not be reliably work or work at all, for APIs payloads exhibiting the following characteristics:
 - Payloads with non-unique property names regardless of the location of the properties. E.g., two properties named `id`, one for sender object and another for receiver object - ```json { "sender": { "id": ... }, "receiver": { "id": ... }}``` 
 - Payload schemas that use any of the composite keywords `oneOf`, `anyOf`, `allOf`.
