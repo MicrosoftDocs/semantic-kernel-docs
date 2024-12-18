@@ -835,7 +835,68 @@ OpenAIChatCompletionService chatCompletionService = new (
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-To create a chat completion service, you need to import the necessary modules and create an instance of the service. Below are the steps to create a chat completion service for each AI service provider.
+
+To create a chat completion service, you need to install and import the necessary modules and create an instance of the service. Below are the steps to install and create a chat completion service for each AI service provider.
+
+## Installing the necessary packages
+
+# [Azure OpenAI](#tab/python-AzureOpenAI)
+
+The Semantic Kernel package comes with all the necessary packages to use Azure OpenAI. There are no additional packages required to use Azure OpenAI.
+
+# [OpenAI](#tab/python-OpenAI)
+
+The Semantic Kernel package comes with all the necessary packages to use OpenAI. There are no additional packages required to use OpenAI.
+
+# [Azure AI Inference](#tab/python-AzureAIInference)
+
+```bash
+pip install semantic-kernel[azure]
+```
+
+# [Anthropic](#tab/python-Anthropic)
+
+```bash
+pip install semantic-kernel[anthropic]
+```
+
+# [Amazon Bedrock](#tab/python-AmazonBedrock)
+
+```bash
+pip install semantic-kernel[aws]
+```
+
+# [Google AI](#tab/python-Google)
+
+```bash
+pip install semantic-kernel[google]
+```
+
+# [Vertex AI](#tab/python-VertexAI)
+
+```bash
+pip install semantic-kernel[google]
+```
+
+# [Mistral AI](#tab/python-MistralAI)
+
+```bash
+pip install semantic-kernel[mistralai]
+```
+
+# [Ollama](#tab/python-Ollama)
+
+```bash
+pip install semantic-kernel[ollama]
+```
+
+# [ONNX](#tab/python-ONNX)
+
+```bash
+pip install semantic-kernel[onnx]
+```
+
+## Creating a chat completion service
 
 > [!TIP]
 > There are three methods to supply the required information to AI services. You may either provide the information directly through the constructor, set the necessary environment variables, or create a .env file within your project directory containing the environment variables. You can visit this page to find all the required environment variables for each AI service provider: <https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/setup/ALL_SETTINGS.md>
