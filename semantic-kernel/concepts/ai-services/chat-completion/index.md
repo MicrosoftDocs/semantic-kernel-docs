@@ -896,6 +896,8 @@ pip install semantic-kernel[ollama]
 pip install semantic-kernel[onnx]
 ```
 
+---
+
 ## Creating a chat completion service
 
 > [!TIP]
