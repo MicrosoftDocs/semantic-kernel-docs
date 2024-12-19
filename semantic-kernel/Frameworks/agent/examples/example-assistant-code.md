@@ -8,10 +8,10 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: _Open AI Assistant Agent_ Code Interpreter (Experimental)
+# How-To: _Open AI Assistant Agent_ Code Interpreter
 
 > [!WARNING]
-> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
 
 ## Overview
 
