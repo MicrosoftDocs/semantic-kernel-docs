@@ -8,10 +8,10 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Exploring the _Semantic Kernel_ Chat Completion Agent (Experimental)
+# Exploring the _Semantic Kernel_ Chat Completion Agent
 
-> [!WARNING] 
-> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> [!WARNING]
+> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
 
 Detailed API documentation related to this discussion is available at:
 
