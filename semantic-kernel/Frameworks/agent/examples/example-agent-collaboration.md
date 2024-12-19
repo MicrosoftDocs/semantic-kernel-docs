@@ -8,7 +8,7 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: Coordinate Agent Collaboration using Agent Group Chat (Experimental)
+# How-To: Coordinate Agent Collaboration using Agent Group Chat
 
 > [!WARNING]
 > The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
@@ -332,7 +332,7 @@ const string WriterName = "Writer";
 ::: zone pivot="programming-language-python"
 ```python
 REVIEWER_NAME = "Reviewer"
-WRITER_NAME = "Writer"
+COPYWRITER_NAME = "Writer"
 ```
 ::: zone-end
 
