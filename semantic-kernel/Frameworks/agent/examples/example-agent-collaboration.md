@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # How-To: Coordinate Agent Collaboration using Agent Group Chat
 
 > [!WARNING]
-> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
 
 ## Overview
 
