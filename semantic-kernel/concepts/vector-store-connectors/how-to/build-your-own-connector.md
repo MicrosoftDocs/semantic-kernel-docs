@@ -477,11 +477,11 @@ with a database without needing to create a custom data model.
 It is important for connectors to support different types of model and provide developers with flexibility around
 how they use the connector. The following section deep dives into each of these requirements.
 
-# Requirements
+## Requirements
 
 In order to be considered a full implementation of the Vector Store abstractions, the following set of requirements must be met.
 
-## Implement the core classes
+### Implement the core classes
 
 The two core classes that need to be implemented are:
 1. VectorStore
@@ -530,17 +530,17 @@ Some other optional items that can be implemented are:
 4. `Vector...managed_client` - This is a helper property that can be used to indicate whether the current instance is managing the client or not, this is useful for the `__aenter__` and `__aexit__` methods and should be set based on the constructor arguments.
 5. `VectorSearchBase.options_class` - This is a property that returns the search options class, by default this is the `VectorSearchOptions` but can be overwritten to provide a custom options class. The public methods perform a check of the options type and do a cast if needed.
 
-## Collection / Index Creation
+### Collection / Index Creation
 Every store has it's own quirks when it comes to the way indexes/collections are defined and which features are supported. Most implementation use some kind of helper or util function to parse the `VectorStoreRecordDefinition` and create the collection/index definition. This includes mapping from the Semantic Kernel IndexKind and DistanceFunction to the store specific ones, and raising an error when a unsupported index or distance function is used. It is advised to use a dict to map between these so that it is easy to update and maintain over time.
 
 There are features in Semantic Kernel that are not available in the store and vice versa, for instance a data field might be marked as full text searchable in Semantic Kernel but the store might not make that distinction, in this case that setting is ignored. The inverse where there are settings available in the store but not in Semantic Kernel, a sensible default, with a clear docstring or comment on why that default is chosen, should be used and this is exactly the type of thing that a user might want to leverage the break glass feature for (supplying their own definition to the `create_collection` method).
 
-## Exceptions
+### Exceptions
 Most exceptions are raised with the Semantic Kernel specific types by the public methods, so the developer should not worry about it, and also not catch things only to re-raise, that is done once so that the stack trace does not become overly long.
 
 The vector store exceptions are all coming from the [vector_store_exceptions](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/exceptions/vector_store_exceptions.py).
 
-## Batching
+### Batching
 Each store and their client offers different methods and ways of working, we noticed that most either have a batch operation or it has both a single and batch operations, the only one that should be used in Semantic Kernel is the batch one because each of the _inner methods are called with a sequence of keys or records, this is to ensure that the store can optimize the operation as much as possible, without doubling the amount of code. This does mean that sometimes the _inner method will have to batch itself, this should then be done using `asyncio.gather` to ensure that the operations are done in parallel.
 
 ::: zone-end
