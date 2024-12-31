@@ -87,7 +87,7 @@ flowchart TB
 ```
 
 The steps marked with * (in both diagrams) is implemented by the developer of a specific connector, and is different for each store.
-The steps marked with ** (in both diagrams) are supplied either as a method on a record or as part of the record definition, this is always supplied by the user, see [Custom Serialization](#custom-serialization) for more information.
+The steps marked with ** (in both diagrams) are supplied either as a method on a record or as part of the record definition, this is always supplied by the user, see [Direct Serialization](#direct-serialization-data-model-to-store-model) for more information.
 
 ## (De)Serialization approaches
 
@@ -112,9 +112,6 @@ Depending on what kind of data model you have, the steps are done in different w
 3. check if the record is a Pydantic model and use the `model_dump` of the model, see the note below for more info.
 4. loop through the fields in the definition and create the dictionary
 
-> [!NOTE]
-> When you define you model using a Pydantic BaseModel, it will use the `model_dump` and `model_validate` methods to serialize and deserialize the data model to and from a dict. This is done by using the model_dump method without any parameters, if you want to control that, consider implementing the `ToDictMethodProtocol` on your data model, as that is tried first.
-
 #### Serialization Step 2: Dict to Store Model
 
 A method has to be supplied by the connector for converting the dictionary to the store model. This is done by the developer of the connector and is different for each store.
@@ -128,8 +125,11 @@ A method has to be supplied by the connector for converting the store model to a
 The deserialization is done in the reverse order, it tries these options:
 1. `from_dict` method on the definition (aligns to the from_dict attribute of the data model, following the `FromDictFunctionProtocol`)
 2. check if the record is a `FromDictMethodProtocol` and use the `from_dict` method
-3. check if the record is a Pydantic model and use the `model_validate` of the model
+3. check if the record is a Pydantic model and use the `model_validate` of the model, see the note below for more info.
 4. loop through the fields in the definition and set the values, then this dict is passed into the constructor of the data model as named arguments (unless the data model is a dict itself, in that case it is returned as is)
+
+> [!NOTE] Using Pydantic with built-in serialization
+> When you define you model using a Pydantic BaseModel, it will use the `model_dump` and `model_validate` methods to serialize and deserialize the data model to and from a dict. This is done by using the model_dump method without any parameters, if you want to control that, consider implementing the `ToDictMethodProtocol` on your data model, as that is tried first.
 
 ## Serialization of vectors
 
@@ -148,7 +148,7 @@ vector: Annotated[
 ] = None
 ```
 
-If you do use a vector store that can handle native numpy arrays and you don't want to have them converted back and forth, you should setup the [custom serialization and deserialization](#custom-serialization-data-model-to-store-model) for the model and that store.
+If you do use a vector store that can handle native numpy arrays and you don't want to have them converted back and forth, you should setup the [direct serialization and deserialization](#direct-serialization-data-model-to-store-model) methods for the model and that store.
 
 > [!NOTE]This is only used when using the built-in serialization, when using the direct serialization you can handle the vector in any way you want.
 
