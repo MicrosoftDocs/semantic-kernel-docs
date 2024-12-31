@@ -128,7 +128,8 @@ The deserialization is done in the reverse order, it tries these options:
 3. check if the record is a Pydantic model and use the `model_validate` of the model, see the note below for more info.
 4. loop through the fields in the definition and set the values, then this dict is passed into the constructor of the data model as named arguments (unless the data model is a dict itself, in that case it is returned as is)
 
-> [!NOTE] Using Pydantic with built-in serialization
+> [!NOTE]
+> #### Using Pydantic with built-in serialization
 > When you define you model using a Pydantic BaseModel, it will use the `model_dump` and `model_validate` methods to serialize and deserialize the data model to and from a dict. This is done by using the model_dump method without any parameters, if you want to control that, consider implementing the `ToDictMethodProtocol` on your data model, as that is tried first.
 
 ## Serialization of vectors
@@ -150,7 +151,8 @@ vector: Annotated[
 
 If you do use a vector store that can handle native numpy arrays and you don't want to have them converted back and forth, you should setup the [direct serialization and deserialization](#direct-serialization-data-model-to-store-model) methods for the model and that store.
 
-> [!NOTE]This is only used when using the built-in serialization, when using the direct serialization you can handle the vector in any way you want.
+> [!NOTE]
+> This is only used when using the built-in serialization, when using the direct serialization you can handle the vector in any way you want.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
