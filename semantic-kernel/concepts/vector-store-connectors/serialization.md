@@ -52,7 +52,7 @@ In the following two diagrams the flows are shown for both serialization and des
 ### Deserialization Flow (used in Get and Search)
 ![Deserialization Flow](../../media/python-serialization-deserialization-flow.png)
 
-The steps marked with * (in both diagrams) is implemented by the developer of a specific connector, and is different for each store.
+The steps marked with * (in both diagrams) are implemented by the developer of a specific connector, and are different for each store.
 The steps marked with ** (in both diagrams) are supplied either as a method on a record or as part of the record definition, this is always supplied by the user, see [Direct Serialization](#direct-serialization-data-model-to-store-model) for more information.
 
 ## (De)Serialization approaches
