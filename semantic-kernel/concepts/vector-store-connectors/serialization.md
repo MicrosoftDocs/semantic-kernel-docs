@@ -47,44 +47,10 @@ There are two ways that can be done, either by using the built-in serialization 
 In the following two diagrams the flows are shown for both serialization and deserialization of data models to and from a store model.
 
 ### Serialization Flow (used in Upsert)
-```mermaid
-flowchart TB
-    DataModel["Data Model"]
-    Serialize{"Has serialize method on 
-    record or definition?"}
-    SerializeDirect["Serialize**"]
-    SerializeToDict["Data Model to Dict"]
-    SerializeDictToStoreModel["Dict to Store Model*"]
-    StoreModel["Store Model"]
-
-    DataModel -- Upsert --> Serialize
-    Serialize -- Yes --> SerializeDirect
-    SerializeDirect --> StoreModel
-    Serialize -- No --> SerializeToDict   
-    SerializeToDict --> SerializeDictToStoreModel
-    SerializeDictToStoreModel --> StoreModel
-```
-
+![Serialization Flow](../../media/python-serialization-serialization-flow.png)
 
 ### Deserialization Flow (used in Get and Search)
-```mermaid
-flowchart TB
-    DataModel["Data Model"]
-    Deserialize{"Has deserialize method on 
-    record or definition?"}
-    DeserializeDirect["Deserialize**"]
-    DeserializeStoreModelToDict["Store Model to Dict*"]
-    DeserializeDictToDataModel["Dict to Data Model"]
-    StoreModel["Store Data Model"]
-
-    StoreModel -- Get/Search --> Deserialize
-    Deserialize -- Yes --> DeserializeDirect
-    DeserializeDirect --> DataModel
-    Deserialize -- No --> DeserializeStoreModelToDict
-    DeserializeStoreModelToDict --> DeserializeDictToDataModel
-    DeserializeDictToDataModel --> DataModel
-
-```
+![Deserialization Flow](../../media/python-serialization-deserialization-flow.png)
 
 The steps marked with * (in both diagrams) is implemented by the developer of a specific connector, and is different for each store.
 The steps marked with ** (in both diagrams) are supplied either as a method on a record or as part of the record definition, this is always supplied by the user, see [Direct Serialization](#direct-serialization-data-model-to-store-model) for more information.
