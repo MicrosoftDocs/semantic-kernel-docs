@@ -210,7 +210,7 @@ Let's consider each scenario.
 
 | Data model type | VectorStore RecordDefinition supplied | Custom mapper supplied | Combination Supported                                     | Validation required                                              |
 | --------------- | ------------------------------------- | ---------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| Custom          | Yes                                   | Yes                    | Yes                                                       | Validate definition nly                                          |
+| Custom          | Yes                                   | Yes                    | Yes                                                       | Validate definition only                                         |
 | Custom          | Yes                                   | No                     | Yes                                                       | Validate definition and check data model for matching properties |
 | Custom          | No                                    | Yes                    | Yes                                                       | Validate data model properties                                   |
 | Custom          | No                                    | No                     | Yes                                                       | Validate data model properties                                   |
@@ -518,7 +518,7 @@ These are the methods that need to be implemented:
    7. `VectorStoreRecordCollection.does_collection_exist` - This method should return a boolean indicating whether the collection exists or not.
    8. `VectorStoreRecordCollection.delete_collection` - This method should delete the collection/index from the database.
 2. VectorSearchBase
-   1. `VectorSearchBase._inner_search` - This methods should take the options, query text or vector and `KernelSearchResults` with a `VectorSearchResult` as the internal content, the `KernelSearchResults` is a Async Iterable to allow support for paging results, as search can return a large number of results (there is a helper util to take a list of results and return a `AsyncIterable`).
+   1. `VectorSearchBase._inner_search` - This method should take the options, query text or vector and `KernelSearchResults` with a `VectorSearchResult` as the internal content, the `KernelSearchResults` is a Async Iterable to allow support for paging results, as search can return a large number of results (there is a helper util to take a list of results and return a `AsyncIterable`).
    2. `VectorSearchBase._get_record_from_result` - This method should take the search result from the store and extract the actual content, this can also be as simple as returning the result.
    3. `VectorSearchBase._get_score_from_result` - This method should take the search result from the store and extract the score, this is not always present as some databases don't return a score.
 
@@ -536,7 +536,7 @@ Every store has it's own quirks when it comes to the way indexes/collections are
 There are features in Semantic Kernel that are not available in the store and vice versa, for instance a data field might be marked as full text searchable in Semantic Kernel but the store might not make that distinction, in this case that setting is ignored. The inverse where there are settings available in the store but not in Semantic Kernel, a sensible default, with a clear docstring or comment on why that default is chosen, should be used and this is exactly the type of thing that a user might want to leverage the break glass feature for (supplying their own definition to the `create_collection` method).
 
 ### Exceptions
-Most exceptions are raised with the Semantic Kernel specific types by the public methods, so the developer should not worry about it, and also not catch things only to re-raise, that is done once so that the stack trace does not become overly long.
+Most exceptions are raised with the Semantic Kernel specific types by the public methods, so the developer of the connector should not worry about it, this also makes sure that a user does not have to think about very specific exceptions from each connector. You should also not catch things only to re-raise, that is done once so that the stack trace does not become overly long.
 
 The vector store exceptions are all coming from the [vector_store_exceptions](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/exceptions/vector_store_exceptions.py).
 

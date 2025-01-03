@@ -44,7 +44,7 @@ In order for your data model defined either as a [class](./defining-your-data-mo
 
 There are two ways that can be done, either by using the built-in serialization provided by the Semantic Kernel or by providing your own serialization logic.
 
-In the following two diagrams the flows are shown for both serialization and deserialization of data models to and from a store model.
+The following two diagrams show the flows are shown for both serialization and deserialization of data models to and from a store model.
 
 ### Serialization Flow (used in Upsert)
 ![Serialization Flow](../../media/python-serialization-serialization-flow.png)
