@@ -332,7 +332,7 @@ async def main():
 
    # Enable planning
    execution_settings = AzureChatPromptExecutionSettings()
-   execution_settings.function_call_behavior = FunctionChoiceBehavior.Auto()
+   execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
    # Create a history of the conversation
    history = ChatHistory()
