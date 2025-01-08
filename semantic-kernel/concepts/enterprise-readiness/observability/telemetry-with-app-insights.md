@@ -15,6 +15,12 @@ ms.service: semantic-kernel
 
 In this example, we will learn how to export telemetry data to Application Insights, and inspect the data in the Application Insights portal.
 
+> [!WARNING]
+> Semantic Kernel itself utilizes a .NET 8 feature called keyed services.
+> Application Insights has an issue with service registration, making it incompatible with keyed services.
+> If you are using Semantic Kernel with keyed services and encounter unexpected and sometimes even randomly occurring error related to Application Insights dependency injection, you should register Application Insights before any keyed services to resolve the issue.
+> For more information see [microsoft/ApplicationInsights-dotnet#2879](https://github.com/microsoft/ApplicationInsights-dotnet/issues/2879)
+
 ## Exporter
 
 Exporters are responsible for sending telemetry data to a destination. Read more about exporters [here](https://opentelemetry.io/docs/concepts/components/#exporters). In this example, we use the Azure Monitor exporter to output telemetry data to an Application Insights instance.
