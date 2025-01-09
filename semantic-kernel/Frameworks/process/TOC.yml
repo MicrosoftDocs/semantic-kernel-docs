@@ -6,3 +6,5 @@
   href: process-deployment.md
 - name: Best Practices
   href: process-best-practices.md
+- name: How-To with Processes
+  href: examples/TOC.yml
