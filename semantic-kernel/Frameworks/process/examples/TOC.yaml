@@ -1,2 +1,6 @@
 - name: How-To create your first Process
   href: example-first-process.md
+- name: How-To Validation with Cycles
+  href: example-first-process.md
+- name: How-To Human-in-loop
+  href: example-first-process.md

@@ -11,11 +11,11 @@ ms.service: semantic-kernel
 # How-To: Create your first Process
 
 > [!WARNING]
-> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> The _Semantic Kernel Process Framework_ is experimental, still in development and is subject to change.
 
 ## Overview
 
-The Semantic Kernel Process Framework is a powerful orchestration SDK designed to simplify the development and execution of AI-integrated processes. Whether you are managing simple workflows or complex systems, this framework allows you to define a series of steps (or nodes) that can be executed in a structured manner, enhancing your application's capabilities with ease and flexibility.
+The Semantic Kernel Process Framework is a powerful orchestration SDK designed to simplify the development and execution of AI-integrated processes. Whether you are managing simple workflows or complex systems, this framework allows you to define a series of steps that can be executed in a structured manner, enhancing your application's capabilities with ease and flexibility.
 
 Built for extensibility, the Process Framework supports diverse operational patterns such as sequential execution, parallel processing, fan-in and fan-out configurations, and even map-reduce strategies. This adaptability makes it suitable for a variety of real-world applications, particularly those that require intelligent decision-making and multi-step workflows.
 
@@ -54,11 +54,11 @@ graph LR
     A[Request Feature Documentation] --> B[Ask LLM To Write Documentation] --> C[Publish Documentation To Public]
 ```
 
-So now that we understand our processes, let's write some code.
+Now that we understand our processes, let's build it.
 
 **Define the process steps:**
 
-Each step of a Process is defined by a class that inherits from our base step class. For this process we have three steps, let's write the code to them.
+Each step of a Process is defined by a class that inherits from our base step class. For this process we have three steps:
 
 ::: zone pivot="programming-language-csharp"
 
@@ -72,13 +72,23 @@ public class GatherProductInfoStep: KernelProcessStep
     [KernelFunction]
     public string GatherProductInformation(string productName)
     {
-        Console.WriteLine($"Gathering product information for product named {productName}");
+        Console.WriteLine($"{nameof(GatherProductInfoStep)}: Gathering product information for product named {productName}");
     
-        // For example purposes we just return some sample information.
+        // For example purposes we just return some fictional information.
         return
             """
-        
-        """;
+            Product Description:
+            GlowBrew is a revolutionary AI driven coffee machine with industry leading number of LEDs and programmable light shows. The machine is also capable of brewing coffee and has a built in grinder.
+            
+            Product Features:
+            1. **Luminous Brew Technology**: Customize your morning ambiance with programmable LED lights that sync with your brewing process.
+            2. **AI Taste Assistant**: Learns your taste preferences over time and suggests new brew combinations to explore.
+            3. **Gourmet Aroma Diffusion**: Built-in aroma diffusers enhance your coffee's scent profile, energizing your senses before the first sip.
+            
+            Troubleshooting:
+            - **Issue**: LED Lights Malfunctioning
+                - **Solution**: Reset the lighting settings via the app. Ensure the LED connections inside the GlowBrew are secure. Perform a factory reset if necessary.
+            """;
     }
 }
 
@@ -88,7 +98,7 @@ public class GenerateDocumentationStep : KernelProcessStep
     [KernelFunction]
     public async Task<string> GenerateDocumentationAsync(Kernel kernel, string productInfo)
     {
-        Console.WriteLine("Generating documentation for provided productInfo");
+        Console.WriteLine($"{nameof(GenerateDocumentationStep)}: Generating documentation for provided productInfo");
 
         var systemPrompt = 
             """
@@ -114,7 +124,7 @@ public class PublishDocumentationStep : KernelProcessStep
     public void PublishDocumentation(string docs)
     {
         // For example purposes we just write the generated docs to the console
-        Console.WriteLine($"Publishing product documentation:\n\n{docs}");
+        Console.WriteLine($"{nameof(PublishDocumentationStep)}: Publishing product documentation:\n\n{docs}");
     }
 }
 ```
@@ -129,18 +139,11 @@ public class PublishDocumentationStep : KernelProcessStep
 
 The code above defines the three steps we need for our Process. In Semantic Kernel, a `KernelFunction` defines a block of code that is invocable by native code or by an LLM. In the case of the Process framework, `KernelFunction`s are the invocable members of a Step and each step requires at least one KernelFunction to be defined.
 
-Now that we have our steps, let's orchestrate them into a Process.
-
 **Define the process flow:**
 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-// Configure the kernel with your LLM connection details
-Kernel kernel = Kernel.CreateBuilder()
-    .AddAzureOpenAIChatCompletion("myDeployment", "myEndpoint", "myApiKey")
-    .Build();
-
 // Create the process builder
 ProcessBuilder processBuilder = new("DocumentationGeneration");
 
@@ -171,20 +174,21 @@ docsGenerationStep
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-The code above creates and runs the processes. There is a lot going on here so let's break it down step by step.
+There are a few things going on here so let's break it down step by step.
 
 1. Create the builder:
 Processes use a builder pattern to simplify wiring everything up. The builder provides methods for managing the steps within a process and for managing the lifecycle of the process.
 
 1. Add the steps:
-This code adds our three steps to the process and creates a variable for each one. This gives us a handle to the unique instance of each step that we can use next to define the orchestration of events.
+Steps are added to the process by calling the `AddStepFromType` method of the builder. This allows the Process Framework to manage the lifecycle of steps by instantiating instances as needed. In this case we've added three steps to the process and creates a variable for each one. This gives us a handle to the unique instance of each step that we can use next to define the orchestration of events.
 
-1. Orchestrate the events
+1. Orchestrate the events:
 This is where the routing of events from step to step are defined. In this case we have the following routes:
-    - When an external event with Id `Start` is sent to the process, this event and its associated data will be sent to the `infoGatheringStep` step.
-    - When the `infoGatheringStep` finishes running, send the object returned to the `docsGenerationStep` step.
-    - Finally, when the `docsGenerationStep` finishes running, send the object it returned to the `docsPublishStep` step.
+    - When an external event with `id = Start` is sent to the process, this event and its associated data will be sent to the `infoGatheringStep` step.
+    - When the `infoGatheringStep` finishes running, send the returned object to the `docsGenerationStep` step.
+    - Finally, when the `docsGenerationStep` finishes running, send the returned object to the `docsPublishStep` step.
 
+> [!TIP]
 > **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel which is special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `docs` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters in in these advanced scenarios you need to specify the target function and parameter. This is discussed in further detail [here](#illustrative-example-generating-documentation-for-a-new-product)
 
 **Build and run the Process**:
@@ -192,6 +196,11 @@ This is where the routing of events from step to step are defined. In this case 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+// Configure the kernel with your LLM connection details
+Kernel kernel = Kernel.CreateBuilder()
+    .AddAzureOpenAIChatCompletion("myDeployment", "myEndpoint", "myApiKey")
+    .Build();
+
 // Build and run the process
 var process = processBuilder.Build();
 await process.StartAsync(kernel, new KernelProcessEvent { Id = "Start", Data = "Contoso GlowBrew" });
@@ -205,9 +214,13 @@ await process.StartAsync(kernel, new KernelProcessEvent { Id = "Start", Data = "
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-Finally, we build the process and call `StartAsync` to run it. Our process is expecting an initial external event called `Start` to kick things off and so we provide that as well. Run this processes to see the generated documentation!
+We build the process and call `StartAsync` to run it. Our process is expecting an initial external event called `Start` to kick things off and so we provide that as well. Running this process shows the following output in the Console:
 
-```md
+```
+GatherProductInfoStep: Gathering product information for product named Contoso GlowBrew
+GenerateDocumentationStep: Generating documentation for provided productInfo
+PublishDocumentationStep: Publishing product documentation:
+
 # GlowBrew: Your Ultimate Coffee Experience Awaits!
 
 Welcome to the world of GlowBrew, where coffee brewing meets remarkable technology! At Contoso, we believe that your morning ritual shouldn't just include the perfect cup of coffee but also a stunning visual experience that invigorates your senses. Our revolutionary AI-driven coffee machine is designed to transform your kitchen routine into a delightful ceremony.
@@ -254,7 +267,8 @@ Ready to embark on an extraordinary coffee journey? Discover the perfect blend o
 
 Our first draft of the documentation generation process is working but it leaves a lot to be desired. At a minimum, a production version would need:
 
-- An editor agent that will grade the generated documentation and verify that it meets our standards of quality and accuracy.
+- A proof reader agent that will grade the generated documentation and verify that it meets our standards of quality and accuracy.
 - An approval process where the documentation is only published after a human approves it (human-in-the-loop).
 
-Let's add these to our process next.
+[!div class="nextstepaction"]
+[Add a proof reader agent to our process...](./example-cycles.md)
