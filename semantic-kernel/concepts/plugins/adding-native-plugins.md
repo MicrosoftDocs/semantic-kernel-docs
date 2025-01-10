@@ -23,6 +23,7 @@ When authoring a plugin, you need to provide the AI agent with the right informa
 - The descriptions of the functions
 - The parameters of the functions
 - The schema of the parameters
+- The schema of the return value
 
 The value of Semantic Kernel is that it can automatically generate most of this information from the code itself. As a developer, this just means that you must provide the semantic descriptions of the functions and parameters so the AI agent can understand them. If you properly comment and annotate your code, however, you likely already have this information on hand.
 
@@ -45,7 +46,6 @@ public class LightsPlugin
 
    [KernelFunction("get_lights")]
    [Description("Gets a list of lights and their current state")]
-   [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
       return _lights;
@@ -53,7 +53,6 @@ public class LightsPlugin
 
    [KernelFunction("change_state")]
    [Description("Changes the state of the light")]
-   [return: Description("The updated state of the light; will return null if the light does not exist")]
    public async Task<LightModel?> ChangeStateAsync(LightModel changeState)
    {
       // Find the light to change
@@ -85,7 +84,7 @@ class LightsPlugin:
         self._lights = lights
 
     @kernel_function
-    async def get_lights(self) -> Annotated[List[LightModel], "An array of lights"]:
+    async def get_lights(self) -> List[LightModel]:
         """Gets a list of lights and their current state."""
         return self._lights
 
@@ -93,7 +92,7 @@ class LightsPlugin:
     async def change_state(
         self,
         change_state: LightModel
-    ) -> Annotated[Optional[LightModel], "The updated state of the light; will return null if the light does not exist"]:
+    ) -> Optional[LightModel]:
         """Changes the state of the light."""
         for light in self._lights:
             if light["id"] == change_state["id"]:
@@ -132,7 +131,7 @@ public class LightModel
    public bool? IsOn { get; set; }
 
    [JsonPropertyName("brightness")]
-   public enum? Brightness { get; set; }
+   public Brightness? Brightness { get; set; }
 
    [JsonPropertyName("color")]
    [Description("The color of the light with a hex code (ensure you include the # symbol)")]
@@ -214,7 +213,6 @@ public class LightsPlugin
 
    [KernelFunction("get_lights")]
    [Description("Gets a list of lights and their current state")]
-   [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
       _logger.LogInformation("Getting lights");
@@ -223,7 +221,6 @@ public class LightsPlugin
 
    [KernelFunction("change_state")]
    [Description("Changes the state of the light")]
-   [return: Description("The updated state of the light; will return null if the light does not exist")]
    public async Task<LightModel?> ChangeStateAsync(LightModel changeState)
    {
       _logger.LogInformation("Changing light state");
@@ -360,6 +357,137 @@ The `createFromObject` method allows you to build a kernel plugin from an Object
 This plugin can then be added to a kernel.
 
 :::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/withbrightness/LightsAppNonInteractive.java" id="buildkernel":::
+
+::: zone-end
+
+::: zone pivot="programming-language-csharp"
+
+### Providing functions return type schema to LLM
+
+Currently, there is no well-defined, industry-wide standard for providing function return type metadata to AI models. Until such a standard is established,
+the following techniques can be considered for scenarios where the names of return type properties are insufficient for LLMs to reason about their content,
+or where additional context or handling instructions need to be associated with the return type to model or enhance your scenarios.
+
+Before employing any of these techniques, it is advisable to provide more descriptive names for the return type properties, as this is the most straightforward way to improve the LLM's understanding of the return type and is also cost-effective in terms of token usage.
+
+#### Provide function return type information in function description
+
+To apply this technique, include the return type schema in the function's description attribute. The schema should detail the property names, descriptions, and types, as shown in the following example:
+
+```csharp
+public class LightsPlugin
+{
+   [KernelFunction("change_state")]
+   [Description("""Changes the state of the light and returns:
+   {  
+       "type": "object",
+       "properties": {
+           "id": { "type": "integer", "description": "Light ID" },
+           "name": { "type": "string", "description": "Light name" },
+           "is_on": { "type": "boolean", "description": "Is light on" },
+           "brightness": { "type": "string", "enum": ["Low", "Medium", "High"], "description": "Brightness level" },
+           "color": { "type": "string", "description": "Hex color code" }
+       },
+       "required": ["id", "name"]
+   } 
+   """)]
+   public async Task<LightModel?> ChangeStateAsync(LightModel changeState)
+   {
+      ...
+   }
+}
+```
+
+Some models may have limitations on the size of the function description, so it is advisable to keep the schema concise and only include essential information.
+
+In cases where type information is not critical and minimizing token consumption is a priority, consider providing a brief description of the return type in the function’s description attribute instead of the full schema.
+
+```csharp
+public class LightsPlugin
+{
+   [KernelFunction("change_state")]
+   [Description("""Changes the state of the light and returns:
+        id: light ID,
+        name: light name,
+        is_on: is light on,
+        brightness: brightness level (Low, Medium, High),
+        color: Hex color code.
+    """)]
+   public async Task<LightModel?> ChangeStateAsync(LightModel changeState)
+   {
+      ...
+   }
+}
+```
+
+Both approaches mentioned above require manually adding the return type schema and updating it each time the return type changes. To avoid this, consider the next technique.
+
+#### Provide function return type schema as part of the function's return value
+
+This technique involves supplying both the function's return value and its schema to the LLM, rather than just the return value. This allows the LLM to use the schema to reason about the properties of the return value.
+
+To implement this technique, you will need to create and register an auto function invocation filter that wraps the function's return value in a custom object containing both the original return value and its schema. Below is an example:
+
+```csharp
+private sealed class AddReturnTypeSchemaFilter : IAutoFunctionInvocationFilter
+{
+    public async Task OnAutoFunctionInvocationAsync(AutoFunctionInvocationContext context, Func<AutoFunctionInvocationContext, Task> next)
+    {
+        await next(context); // Invoke the original function
+
+        // Crete the result with the schema
+        FunctionResultWithSchema resultWithSchema = new()
+        {
+            Value = context.Result.GetValue<object>(),                  // Get the original result
+            Schema = context.Function.Metadata.ReturnParameter?.Schema  // Get the function return type schema
+        };
+
+        // Return the result with the schema instead of the original one
+        context.Result = new FunctionResult(context.Result, resultWithSchema);
+    }
+
+    private sealed class FunctionResultWithSchema
+    {
+        public object? Value { get; set; }
+        public KernelJsonSchema? Schema { get; set; }
+    }
+}
+
+// Register the filter
+Kernel kernel = new Kernel();
+kernel.AutoFunctionInvocationFilters.Add(new AddReturnTypeSchemaFilter());
+
+```
+
+With the filter registered, you can now provide descriptions for the return type and its properties, which will be automatically extracted by Semantic Kernel:
+
+```csharp
+[Description("The state of the light")] // Equivalent to annotating the function with the [return: Description("The state of the light")] attribute
+public class LightModel
+{
+    [JsonPropertyName("id")]
+    [Description("The ID of the light")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("name")]
+    [Description("The name of the light")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("is_on")]
+    [Description("Indicates whether the light is on")]
+    public bool? IsOn { get; set; }
+
+    [JsonPropertyName("brightness")]
+    [Description("The brightness level of the light")]
+    public Brightness? Brightness { get; set; }
+
+    [JsonPropertyName("color")]
+    [Description("The color of the light with a hex code (ensure you include the # symbol)")]
+    public string? Color { get; set; }
+}
+```
+
+This approach eliminates the need to manually provide and update the return type schema each time the return type changes, as the schema is automatically extracted by the Semantic Kernel.
 
 ::: zone-end
 
