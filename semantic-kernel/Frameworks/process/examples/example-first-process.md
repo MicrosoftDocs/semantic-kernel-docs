@@ -39,7 +39,7 @@ dotnet add package Microsoft.SemanticKernel.Process.LocalRuntime --version 1.33.
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-### Illustrative Example: Generating Documentation for a New Product
+## Illustrative Example: Generating Documentation for a New Product
 
 In this example, we will utilize the Semantic Kernel Process Framework to develop an automated process for creating documentation for a new product. High quality documentation is critical for any product but it can be challenging and energy intensive to create and maintain. This process will start out simple and evolve as we go to cover more realistic scenarios.
 
@@ -56,7 +56,7 @@ graph LR
 
 Now that we understand our processes, let's build it.
 
-**Define the process steps:**
+### Define the process steps
 
 Each step of a Process is defined by a class that inherits from our base step class. For this process we have three steps:
 
@@ -72,7 +72,7 @@ public class GatherProductInfoStep: KernelProcessStep
     [KernelFunction]
     public string GatherProductInformation(string productName)
     {
-        Console.WriteLine($"{nameof(GatherProductInfoStep)}: Gathering product information for product named {productName}");
+        Console.WriteLine($"{nameof(GatherProductInfoStep)}:\n\tGathering product information for product named {productName}");
     
         // For example purposes we just return some fictional information.
         return
@@ -93,27 +93,44 @@ public class GatherProductInfoStep: KernelProcessStep
 }
 
 // A process step to generate documentation for a product
-public class GenerateDocumentationStep : KernelProcessStep
+public class GenerateDocumentationStep : KernelProcessStep<GeneratedDocumentationState>
 {
-    [KernelFunction]
-    public async Task<string> GenerateDocumentationAsync(Kernel kernel, string productInfo)
-    {
-        Console.WriteLine($"{nameof(GenerateDocumentationStep)}: Generating documentation for provided productInfo");
+    private GeneratedDocumentationState _state = new();
 
-        var systemPrompt = 
+    private string systemPrompt =
             """
-            Your job is to write high quality customer facing documentation for a new product from Contoso. You will be provide with information
+            Your job is to write high quality and engaging customer facing documentation for a new product from Contoso. You will be provide with information
             about the product in the form of internal documentation, specs, and troubleshooting guides and you must use this information and
-            nothing else to generate the documentation. 
+            nothing else to generate the documentation. If suggestions are provided on the documentation you create, take the suggestions into account and
+            rewrite the documentation. Make sure the product sounds amazing.
             """;
 
-        ChatHistory chatHistory = new ChatHistory(systemPrompt);
-        chatHistory.AddUserMessage(productInfo);
+    override public ValueTask ActivateAsync(KernelProcessStepState<GeneratedDocumentationState> state)
+    {
+        this._state = state.State!;
+        this._state.ChatHistory ??= new ChatHistory(systemPrompt);
 
+        return base.ActivateAsync(state);
+    }
+
+    [KernelFunction]
+    public async Task GenerateDocumentationAsync(Kernel kernel, KernelProcessStepContext context, string productInfo)
+    {
+        Console.WriteLine($"{nameof(GenerateDocumentationStep)}:\n\tGenerating documentation for provided productInfo...");
+
+        // Add the new product info to the chat history
+        this._state.ChatHistory!.AddUserMessage($"Product Info:\n\n{productInfo}");
+
+        // Get a response from the LLM
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
-        var generatedDocumentationResponse = await chatCompletionService.GetChatMessageContentAsync(chatHistory);
+        var generatedDocumentationResponse = await chatCompletionService.GetChatMessageContentAsync(this._state.ChatHistory!);
 
-        return generatedDocumentationResponse.Content.ToString();
+        await context.EmitEventAsync("DocumentationGenerated", generatedDocumentationResponse.Content!.ToString());
+    }
+
+    public class GeneratedDocumentationState
+    {
+        public ChatHistory? ChatHistory { get; set; }
     }
 }
 
@@ -124,7 +141,7 @@ public class PublishDocumentationStep : KernelProcessStep
     public void PublishDocumentation(string docs)
     {
         // For example purposes we just write the generated docs to the console
-        Console.WriteLine($"{nameof(PublishDocumentationStep)}: Publishing product documentation:\n\n{docs}");
+        Console.WriteLine($"{nameof(PublishDocumentationStep)}:\n\tPublishing product documentation:\n\n{docs}");
     }
 }
 ```
@@ -134,12 +151,13 @@ public class PublishDocumentationStep : KernelProcessStep
 ::: zone pivot="programming-language-python"
 ::: zone-end
 
-::: zone pivot="programming-language-java"
-::: zone-end
+The code above defines the three steps we need for our Process. There are a few points to call out here:
+- In Semantic Kernel, a `KernelFunction` defines a block of code that is invocable by native code or by an LLM. In the case of the Process framework, `KernelFunction`s are the invocable members of a Step and each step requires at least one KernelFunction to be defined.
+- The Process Framework has support for stateless and stateful steps. Stateful steps automatically checkpoint their progress and maintain state over multiple invocations. The `GenerateDocumentationStep` provides an example of this where the `GeneratedDocumentationState` class is used to persist the `ChatHistory` object. More on stateful steps [here]()
+- When a KernelFunction in a step is invoked it will automatically emit an event indicating success or failure and cary the returned object or exception respectively.
+- Steps can manually emit events by calling `EmitEventAsync` on the `KernelProcessStepContext` object. To get an instance of `KernelProcessStepContext` just add it as a parameter on your KernelFunction and the framework will automatically inject it. 
 
-The code above defines the three steps we need for our Process. In Semantic Kernel, a `KernelFunction` defines a block of code that is invocable by native code or by an LLM. In the case of the Process framework, `KernelFunction`s are the invocable members of a Step and each step requires at least one KernelFunction to be defined.
-
-**Define the process flow:**
+### Define the process flow
 
 ::: zone pivot="programming-language-csharp"
 
@@ -191,7 +209,7 @@ This is where the routing of events from step to step are defined. In this case 
 > [!TIP]
 > **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel which is special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `docs` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters in in these advanced scenarios you need to specify the target function and parameter. This is discussed in further detail [here](#illustrative-example-generating-documentation-for-a-new-product)
 
-**Build and run the Process**:
+### Build and run the Process
 
 ::: zone pivot="programming-language-csharp"
 
@@ -263,7 +281,7 @@ Join the growing community of GlowBrew enthusiasts today, and redefine how you e
 Ready to embark on an extraordinary coffee journey? Discover the perfect blend of technology and flavor with Contoso's GlowBrew. Your coffee awaits!
 ```
 
-### What's Next?
+## What's Next?
 
 Our first draft of the documentation generation process is working but it leaves a lot to be desired. At a minimum, a production version would need:
 
