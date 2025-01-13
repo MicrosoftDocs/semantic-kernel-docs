@@ -400,7 +400,7 @@ public class LightsPlugin
 
 Some models may have limitations on the size of the function description, so it is advisable to keep the schema concise and only include essential information.
 
-In cases where type information is not critical and minimizing token consumption is a priority, consider providing a brief description of the return type in the function’s description attribute instead of the full schema.
+In cases where type information is not critical and minimizing token consumption is a priority, consider providing a brief description of the return type in the function's description attribute instead of the full schema.
 
 ```csharp
 public class LightsPlugin
@@ -426,7 +426,7 @@ Both approaches mentioned above require manually adding the return type schema a
 
 This technique involves supplying both the function's return value and its schema to the LLM, rather than just the return value. This allows the LLM to use the schema to reason about the properties of the return value.
 
-To implement this technique, you will need to create and register an auto function invocation filter that wraps the function's return value in a custom object containing both the original return value and its schema. Below is an example:
+To implement this technique, you need to create and register an auto function invocation filter. For more details, see the [Auto Function Invocation Filter](../enterprise-readiness/filters.md#auto-function-invocation-filter) article. This filter should wrap the function's return value in a custom object that contains both the original return value and its schema. Below is an example:
 
 ```csharp
 private sealed class AddReturnTypeSchemaFilter : IAutoFunctionInvocationFilter
