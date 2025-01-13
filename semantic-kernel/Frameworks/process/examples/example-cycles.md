@@ -17,13 +17,7 @@ ms.service: semantic-kernel
 
 In the previous section we build a simple Process to help us automate the creation of documentation for our product. In this section we will improve on that process by adding a quality assurance step. This step will use and LLM to grade the generated documentation and provide recommended changes as well as a pass/fail grade. By taking advantage of the Process Frameworks' support for cycles, we can go one step further and automatically apply the recommended changes (if any) and then start the cycle over, repeating this until the content meets our quality bar. The updated process will look like this:
 
-```mermaid
-graph LR
-    A[Request Feature Documentation] --> B[Ask LLM To Write Documentation] 
-    B --> C[Proofread Documentation]
-    C -->|Updates Needed| B
-    C -->|Approved| D[Publish Documentation To Public]
-```
+![Flow diagram for our process with a cycle for author-critic pattern.](../../../media/process-cycle-flow.png)
 
 ## Updates to the process
 
@@ -292,5 +286,5 @@ Our process is now reliably generating documentation that meets our defined stan
 - A proof reader agent that will grade the generated documentation and verify that it meets our standards of quality and accuracy.
 - An approval process where the documentation is only published after a human approves it (human-in-the-loop).
 
-[!div class="nextstepaction"]
-[Human-in-the-loop](./example-human-in-loop.md)
+> [!div class="nextstepaction"]
+> [Human-in-the-loop](./example-human-in-loop.md)

@@ -41,7 +41,7 @@ dotnet add package Microsoft.SemanticKernel.Process.LocalRuntime --version 1.33.
 
 ## Illustrative Example: Generating Documentation for a New Product
 
-In this example, we will utilize the Semantic Kernel Process Framework to develop an automated process for creating documentation for a new product. High quality documentation is critical for any product but it can be challenging and energy intensive to create and maintain. This process will start out simple and evolve as we go to cover more realistic scenarios.
+In this example, we will utilize the Semantic Kernel Process Framework to develop an automated process for creating documentation for a new product. This process will start out simple and evolve as we go to cover more realistic scenarios.
 
 We will start by modeling the documentation process with a very basic flow:
 
@@ -49,10 +49,7 @@ We will start by modeling the documentation process with a very basic flow:
 1. Ask an LLM to generate documentation from the information gathered in step 1.
 1. Publish the documentation.
 
-```mermaid
-graph LR
-    A[Request Feature Documentation] --> B[Ask LLM To Write Documentation] --> C[Publish Documentation To Public]
-```
+![Flow diagram of our first process: A[Request Feature Documentation] --> B[Ask LLM To Write Documentation] --> C[Publish Documentation To Public]](../../../media/first-process-flow.png)
 
 Now that we understand our processes, let's build it.
 
@@ -288,5 +285,5 @@ Our first draft of the documentation generation process is working but it leaves
 - A proof reader agent that will grade the generated documentation and verify that it meets our standards of quality and accuracy.
 - An approval process where the documentation is only published after a human approves it (human-in-the-loop).
 
-[!div class="nextstepaction"]
-[Add a proof reader agent to our process...](./example-cycles.md)
+> [!div class="nextstepaction"]
+> [Add a proof reader agent to our process...](./example-cycles.md)
