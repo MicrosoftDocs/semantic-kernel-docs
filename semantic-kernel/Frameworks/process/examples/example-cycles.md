@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; Using Cycles
+title: How-To&colon; Author-Critic Pattern with Cycles
 description: A step-by-step walk-through for using Cycles
 zone_pivot_groups: programming-languages
 author: bentho
@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In the previous section we build a simple Process to help us automate the creation of documentation for our product. In this section we will improve on that process by adding a quality assurance step. This step will use and LLM to grade the generated documentation and provide recommended changes as well as a pass/fail grade. By taking advantage of the Process Frameworks' support for cycles, we can go one step further and automatically apply the recommended changes (if any) and then start the cycle over, repeating this until the content meets our quality bar. The updated process will look like this:
+In the previous section we built a simple Process to help us automate the creation of documentation for our product. In this section we will improve on that process by adding a proofreading step. This step will use and LLM to grade the generated documentation as Pass/Fail, and provide recommended changes if needed. By taking advantage of the Process Frameworks' support for cycles, we can go one step further and automatically apply the recommended changes (if any) and then start the cycle over, repeating this until the content meets our quality bar. The updated process will look like this:
 
 ![Flow diagram for our process with a cycle for author-critic pattern.](../../../media/process-cycle-flow.png)
 
@@ -23,69 +23,11 @@ In the previous section we build a simple Process to help us automate the creati
 
 We need to create our new proofreader step and also make a couple changes to our document generation step that will allow us to apply suggestions if needed.
 
-### Step Updates
+### Add the proofreader step
 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-
-// Updated process step to generate and edit documentation for a product
-public class GenerateDocumentationStep : KernelProcessStep<GeneratedDocumentationState>
-{
-    private GeneratedDocumentationState _state = new();
-
-    private string systemPrompt =
-            """
-            Your job is to write high quality and engaging customer facing documentation for a new product from Contoso. You will be provide with information
-            about the product in the form of internal documentation, specs, and troubleshooting guides and you must use this information and
-            nothing else to generate the documentation. If suggestions are provided on the documentation you create, take the suggestions into account and
-            rewrite the documentation. Make sure the product sounds amazing.
-            """;
-
-    override public ValueTask ActivateAsync(KernelProcessStepState<GeneratedDocumentationState> state)
-    {
-        this._state = state.State!;
-        this._state.ChatHistory ??= new ChatHistory(systemPrompt);
-
-        return base.ActivateAsync(state);
-    }
-
-    [KernelFunction]
-    public async Task GenerateDocumentationAsync(Kernel kernel, KernelProcessStepContext context, string productInfo)
-    {
-        Console.WriteLine($"{nameof(GenerateDocumentationStep)}:\n\tGenerating documentation for provided productInfo...");
-
-        // Add the new product info to the chat history
-        this._state.ChatHistory!.AddUserMessage($"Product Info:\n\n{productInfo}");
-
-        // Get a response from the LLM
-        IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
-        var generatedDocumentationResponse = await chatCompletionService.GetChatMessageContentAsync(this._state.ChatHistory!);
-
-        await context.EmitEventAsync("DocumentationGenerated", generatedDocumentationResponse.Content!.ToString());
-    }
-
-    [KernelFunction]
-    public async Task ApplySuggestionsAsync(Kernel kernel, KernelProcessStepContext context, string suggestions)
-    {
-        Console.WriteLine($"{nameof(GenerateDocumentationStep)}:\n\tRewriting documentation with provided suggestions...");
-
-        // Add the new product info to the chat history
-        this._state.ChatHistory!.AddUserMessage($"Rewrite the documentation with the following suggestions:\n\n{suggestions}");
-
-        // Get a response from the LLM
-        IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
-        var generatedDocumentationResponse = await chatCompletionService.GetChatMessageContentAsync(this._state.ChatHistory!);
-
-        await context.EmitEventAsync("DocumentationGenerated", generatedDocumentationResponse.Content!.ToString());
-    }
-
-    public class GeneratedDocumentationState
-    {
-        public ChatHistory? ChatHistory { get; set; }
-    }
-}
-
 // A process step to proofread documentation
 public class ProofreadStep : KernelProcessStep
 {
@@ -153,11 +95,80 @@ public class ProofreadStep : KernelProcessStep
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-The following changes have been made to the steps:
+A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `DocumentationApproved` event or the `DocumentationRejected` event based on the response from the LLM.
 
-- Updates to `GenerateDocumentationStep`:
+### Update the documentation generation step
+
+::: zone pivot="programming-language-csharp"
+
+```csharp
+// Updated process step to generate and edit documentation for a product
+public class GenerateDocumentationStep : KernelProcessStep<GeneratedDocumentationState>
+{
+    private GeneratedDocumentationState _state = new();
+
+    private string systemPrompt =
+            """
+            Your job is to write high quality and engaging customer facing documentation for a new product from Contoso. You will be provide with information
+            about the product in the form of internal documentation, specs, and troubleshooting guides and you must use this information and
+            nothing else to generate the documentation. If suggestions are provided on the documentation you create, take the suggestions into account and
+            rewrite the documentation. Make sure the product sounds amazing.
+            """;
+
+    override public ValueTask ActivateAsync(KernelProcessStepState<GeneratedDocumentationState> state)
+    {
+        this._state = state.State!;
+        this._state.ChatHistory ??= new ChatHistory(systemPrompt);
+
+        return base.ActivateAsync(state);
+    }
+
+    [KernelFunction]
+    public async Task GenerateDocumentationAsync(Kernel kernel, KernelProcessStepContext context, string productInfo)
+    {
+        Console.WriteLine($"{nameof(GenerateDocumentationStep)}:\n\tGenerating documentation for provided productInfo...");
+
+        // Add the new product info to the chat history
+        this._state.ChatHistory!.AddUserMessage($"Product Info:\n\n{productInfo}");
+
+        // Get a response from the LLM
+        IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+        var generatedDocumentationResponse = await chatCompletionService.GetChatMessageContentAsync(this._state.ChatHistory!);
+
+        await context.EmitEventAsync("DocumentationGenerated", generatedDocumentationResponse.Content!.ToString());
+    }
+
+    [KernelFunction]
+    public async Task ApplySuggestionsAsync(Kernel kernel, KernelProcessStepContext context, string suggestions)
+    {
+        Console.WriteLine($"{nameof(GenerateDocumentationStep)}:\n\tRewriting documentation with provided suggestions...");
+
+        // Add the new product info to the chat history
+        this._state.ChatHistory!.AddUserMessage($"Rewrite the documentation with the following suggestions:\n\n{suggestions}");
+
+        // Get a response from the LLM
+        IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+        var generatedDocumentationResponse = await chatCompletionService.GetChatMessageContentAsync(this._state.ChatHistory!);
+
+        await context.EmitEventAsync("DocumentationGenerated", generatedDocumentationResponse.Content!.ToString());
+    }
+
+    public class GeneratedDocumentationState
+    {
+        public ChatHistory? ChatHistory { get; set; }
+    }
+}
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
+
 The `GenerateDocumentationStep` has been updated to include a new KernelFunction. The new function will be used to apply suggested changes to the documentation if our proofreading step requires them. Notice that both functions for generating or rewriting documentation emit the same event named `DocumentationGenerated` indicating that new documentation is available.
-- A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `DocumentationApproved` event or the `DocumentationRejected` event based on the response from the LLM.
 
 ### Flow updates
 
@@ -170,7 +181,7 @@ ProcessBuilder processBuilder = new("DocumentationGeneration");
 // Add the steps
 var infoGatheringStep = processBuilder.AddStepFromType<GatherProductInfoStep>();
 var docsGenerationStep = processBuilder.AddStepFromType<GenerateDocumentationStepV2>();
-var docsProofreadStep = processBuilder.AddStepFromType<ProofreadStep>();
+var docsProofreadStep = processBuilder.AddStepFromType<ProofreadStep>(); // Add new step here
 var docsPublishStep = processBuilder.AddStepFromType<PublishDocumentationStep>();
 
 // Orchestrate the events
