@@ -114,6 +114,12 @@ class LightsPlugin:
 > [!TIP]
 > Because the LLMs are predominantly trained on Python code, it is recommended to use snake_case for function names and parameters (even if you're using C# or Java). This will help the AI agent better understand the function and its parameters.
 
+::: zone pivot="programming-language-csharp"
+> [!TIP]
+> Your functions can specify `Kernel`, `KernelArguments`, `ILoggerFactory`, `ILogger`, `IAIServiceSelector`, `CultureInfo`, `IFormatProvider`, `CancellationToken` as parameters and these will not be advertised to the LLM and will be automatically set when the function is called.
+> If you rely on `KernelArguments` instead of explicit input arguments then your code will be responsible for performing type conversions.
+::: zone-end
+
 If your function has a complex object as an input variable, Semantic Kernel will also generate a schema for that object and pass it to the AI agent. Similar to functions, you should provide `Description` annotations for properties that are non-obvious to the AI. Below is the definition for the `LightState` class and the `Brightness` enum.
 
 ::: zone pivot="programming-language-csharp"
