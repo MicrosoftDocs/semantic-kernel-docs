@@ -8,10 +8,10 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Configuring Agents with Semantic Kernel Plugins (Experimental)
+# Configuring Agents with Semantic Kernel Plugins
 
 > [!WARNING]
-> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
 
 ## Functions and Plugins in Semantic Kernel
 
