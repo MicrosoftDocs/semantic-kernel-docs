@@ -104,6 +104,9 @@ This sample requires configuration setting in order to connect to remote service
 ::: zone pivot="programming-language-csharp"
 
 ```powershell
+# Init user secrets
+dotnet user-secrets init
+
 # Open AI
 dotnet user-secrets set "OpenAISettings:ApiKey" "<api-key>"
 dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
