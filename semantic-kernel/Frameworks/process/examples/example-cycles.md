@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In the previous section we built a simple Process to help us automate the creation of documentation for our product. In this section we will improve on that process by adding a proofreading step. This step will use and LLM to grade the generated documentation as Pass/Fail, and provide recommended changes if needed. By taking advantage of the Process Frameworks' support for cycles, we can go one step further and automatically apply the recommended changes (if any) and then start the cycle over, repeating this until the content meets our quality bar. The updated process will look like this:
+In the previous section we built a simple Process to help us automate the creation of documentation for our new product. In this section we will improve on that process by adding a proofreading step. This step will use and LLM to grade the generated documentation as Pass/Fail, and provide recommended changes if needed. By taking advantage of the Process Frameworks' support for cycles, we can go one step further and automatically apply the recommended changes (if any) and then start the cycle over, repeating this until the content meets our quality bar. The updated process will look like this:
 
 ![Flow diagram for our process with a cycle for author-critic pattern.](../../../media/process-cycle-flow.png)
 
@@ -95,7 +95,7 @@ public class ProofreadStep : KernelProcessStep
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `DocumentationApproved` event or the `DocumentationRejected` event based on the response from the LLM.
+A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `DocumentationApproved` event or the `DocumentationRejected` event based on the response from the LLM. In the case of `DocumentationApproved`, the event will include the approved documentation as it's payload and in the case of `DocumentationRejected` it will include the suggestions from the proofreader.
 
 ### Update the documentation generation step
 
@@ -293,9 +293,6 @@ We hope you enjoy your GlowBrew experience and that it brings a delightful blend
 ## What's Next?
 
 Our process is now reliably generating documentation that meets our defined standards. This is great, but before we publish our documentation publicly we really should require a human to review and approve. Let's do that next.
-
-- A proof reader agent that will grade the generated documentation and verify that it meets our standards of quality and accuracy.
-- An approval process where the documentation is only published after a human approves it (human-in-the-loop).
 
 > [!div class="nextstepaction"]
 > [Human-in-the-loop](./example-human-in-loop.md)
