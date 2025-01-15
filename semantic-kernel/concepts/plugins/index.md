@@ -101,7 +101,6 @@ public class LightsPlugin
 
    [KernelFunction("get_lights")]
    [Description("Gets a list of lights and their current state")]
-   [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
       return lights
@@ -109,7 +108,6 @@ public class LightsPlugin
 
    [KernelFunction("get_state")]
    [Description("Gets the state of a particular light")]
-   [return: Description("The state of the light")]
    public async Task<LightModel?> GetStateAsync([Description("The ID of the light")] int id)
    {
       // Get the state of the light with the specified ID
@@ -118,7 +116,6 @@ public class LightsPlugin
 
    [KernelFunction("change_state")]
    [Description("Changes the state of the light")]
-   [return: Description("The updated state of the light; will return null if the light does not exist")]
    public async Task<LightModel?> ChangeStateAsync(int id, LightModel LightModel)
    {
       var light = lights.FirstOrDefault(light => light.Id == id);
@@ -176,7 +173,7 @@ class LightsPlugin:
    ]
 
    @kernel_function
-   async def get_lights(self) -> Annotated[list[LightModel], "An array of lights"]:
+   async def get_lights(self) -> List[LightModel]:
       """Gets a list of lights and their current state."""
       return self.lights
 
@@ -184,7 +181,7 @@ class LightsPlugin:
    async def get_state(
       self,
       id: Annotated[int, "The ID of the light"]
-   ) -> Annotated[LightModel | None], "The state of the light"]:
+   ) -> Optional[LightModel]:
       """Gets the state of a particular light."""
       for light in self.lights:
          if light["id"] == id:
@@ -196,7 +193,7 @@ class LightsPlugin:
       self,
       id: Annotated[int, "The ID of the light"],
       new_state: LightModel
-   ) -> Annotated[Optional[LightModel], "The updated state of the light; will return null if the light does not exist"]:
+   ) -> Optional[LightModel]:
       """Changes the state of the light."""
       for light in self.lights:
          if light["id"] == id:
@@ -215,7 +212,7 @@ class LightsPlugin:
 
 ::: zone-end
 
-Notice that we provide descriptions for the function, return value, and parameters. This is important for the AI to understand what the function does and how to use it.
+Notice that we provide descriptions for the function, and parameters. This is important for the AI to understand what the function does and how to use it.
 
 > [!Tip]
 > Don't be afraid to provide detailed descriptions for your functions if an AI is having trouble calling them. Few-shot examples, recommendations for when to use (and not use) the function, and guidance on where to get required parameters can all be helpful.
@@ -434,3 +431,10 @@ When designing plugins that operate on relatively large or confidential datasets
 sent to the LLM. Functions for such scenarios can accept and return a state id, allowing you to look up and access the data locally instead of passing the actual data to the LLM, only to receive it back as an argument for the next function invocation.
 
 By storing data locally, you can keep the information private and secure while avoiding unnecessary token consumption during function calls. This approach not only enhances data privacy but also improves overall efficiency in processing large or sensitive datasets.
+
+### Provide function return type schema to AI model
+
+Use one of the techniques described in the [Providing functions return type schema to LLM](./adding-native-plugins.md#provide-function-return-type-information-in-function-description) section to provide the function's return type schema to the AI model.
+
+By utilizing a well-defined return type schema, the AI model can accurately identify the intended properties, eliminating potential inaccuracies that may arise when the model makes assumptions based on incomplete or ambiguous information in the absence of the schema. 
+Consequently, this enhances the accuracy of function calls, leading to more reliable and precise outcomes.

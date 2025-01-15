@@ -228,7 +228,6 @@ We are going to create a simple Python script that uses Semantic Kernel to send 
 ```python
 import asyncio
 import logging
-from typing import Annotated
 
 from opentelemetry._logs import set_logger_provider
 from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
@@ -259,14 +258,14 @@ class BookingPlugin:
         name="find_available_rooms",
         description="Find available conference rooms for today.",
     )
-    def find_available_rooms(self,) -> Annotated[list[str], "A list of available rooms."]:
+    def find_available_rooms(self,) -> list[str]:
         return ["Room 101", "Room 201", "Room 301"]
 
     @kernel_function(
         name="book_room",
         description="Book a conference room.",
     )
-    def book_room(self, room: str) -> Annotated[str, "A confirmation message."]:
+    def book_room(self, room: str) -> str:
         return f"Room {room} booked."
 
 
@@ -566,7 +565,7 @@ Modify the `book_room` function in the Python code to simulate an error:
     name="book_room",
     description="Book a conference room.",
 )
-async def book_room(self, room: str) -> Annotated[str, "A confirmation message."]:
+async def book_room(self, room: str) -> str:
     # Simulate a remote call to a booking system
     await asyncio.sleep(1)
 
