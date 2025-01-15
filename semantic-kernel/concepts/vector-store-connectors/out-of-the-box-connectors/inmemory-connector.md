@@ -30,6 +30,7 @@ The connector has the following characteristics.
 | Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
 | Supported index types             | Flat                                                                                                                             |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                 |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
