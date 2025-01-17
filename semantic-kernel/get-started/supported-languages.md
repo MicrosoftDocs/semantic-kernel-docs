@@ -209,7 +209,7 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | Ollama                                    | ✅ | ✅ | ❌ | |
 | ONNX                                      | ✅ | ✅ | ❌ | |
 | OpenAI                                    | ✅ | ✅ | ✅ | |
-| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, etc. |
+| Other endpoints that support OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, etc. |
 
 ### Vector Store Connectors (Experimental)
 
