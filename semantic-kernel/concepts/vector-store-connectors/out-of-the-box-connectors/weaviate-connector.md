@@ -40,7 +40,7 @@ Notable Weaviate connector functionality limitations.
 |------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
 | Using the 'vector' property for single vector objects is not supported | Use of the 'vectors' property is supported instead.                                            |
 
-> [!IMPORTANT]
+> [!WARNING]
 > Weaviate requires collection names to start with an upper case letter. If you do not provide a collection name with an upper case letter, Weaviate will return an error when you try and create your collection. The error that you will see is `Cannot query field "mycollection" on type "GetObjectsObj". Did you mean "Mycollection"?` where `mycollection` is your collection name. In this example, if you change your collection name to `Mycollection` instead, this will fix the error.
 
 ## Getting started
