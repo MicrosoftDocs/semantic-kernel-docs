@@ -1,5 +1,7 @@
 - name: Kernel
   href: kernel.md
+- name: Semantic Kernel Components
+  href: semantic-kernel-components.md
 - name: AI Services
   href: ai-services/TOC.yml
 - name: Enterprise Components
