@@ -1,6 +1,7 @@
 ---
 title: Out-of-the-box Vector Store connectors (Preview)
 description: Out-of-the-box Vector Store connectors
+zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
 ms.author: westey
