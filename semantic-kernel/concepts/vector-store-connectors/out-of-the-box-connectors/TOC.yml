@@ -16,6 +16,8 @@
   href: mongodb-connector.md
 - name: Pinecone connector
   href: pinecone-connector.md
+- name: Postgres connector
+  href: postgres-connector.md
 - name: Qdrant connector
   href: qdrant-connector.md
 - name: Redis connector
