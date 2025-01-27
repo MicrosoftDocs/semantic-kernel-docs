@@ -71,7 +71,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Azure AI Search](./azure-ai-search-connector.md)          | ✅             | ✅                                | Microsoft Semantic Kernel Project  |
 | [Cosmos DB MongoDB](./azure-cosmosdb-mongodb-connector.md) | In Development | ✅                                | Microsoft Semantic Kernel Project  |
 | [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)    | In Development | ✅                                | Microsoft Semantic Kernel Project  |
-| [Elasticsearch](./elasticsearch-connector.md)              | Planned        | ✅                                |                                    |
+| [Elasticsearch](./elasticsearch-connector.md)              | Planned        |                                    |                                    |
 | Chroma                                                     | Planned        |                                    |                                    |
 | [In-Memory](./inmemory-connector.md)                       | In Development | N/A                                | Microsoft Semantic Kernel Project  |
 | [JDBC](./jdbc-connector.md)                                | ✅             | ✅                                | Microsoft Semantic Kernel Project  |
