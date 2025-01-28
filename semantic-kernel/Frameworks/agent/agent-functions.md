@@ -110,7 +110,7 @@ agent = ChatCompletionAgent(
     kernel=kernel, 
     name=<agent name>, 
     instructions=<agent instructions>, 
-    execution_settings=settings,
+    arguments=KernelArguments(settings=settings),
 )
 ```
 ::: zone-end
@@ -184,7 +184,7 @@ agent = ChatCompletionAgent(
     kernel=kernel, 
     name=<agent name>, 
     instructions=<agent instructions>, 
-    execution_settings=settings,
+    arguments=KernelArguments(settings=settings),
 )
 ```
 ::: zone-end
