@@ -169,6 +169,6 @@ More info coming soon.
 
 ## JDBC
 
-The [JDBC](./jdbc-connector.md) connector can be used to connect to Postgres.
+The [JDBC](./jdbc-connector.md) connector can be used to connect to SQLite.
 
 ::: zone-end
