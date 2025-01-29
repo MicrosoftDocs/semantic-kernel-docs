@@ -431,10 +431,9 @@ Several approaches can be used to keep chat history manageable while preserving 
 
 - Truncation: The oldest messages are removed when the history exceeds a predefined limit, ensuring only recent interactions are retained.
 - Summarization: Older messages are condensed into a summary, preserving key details while reducing the number of stored messages.
-- Selective Retention: Only specific message types (such as user queries and key responses) are retained, while redundant or lower-priority messages are discarded.
-- Threshold-Based Reduction: A reduction process is triggered only when the chat history reaches a certain threshold, preventing premature truncation while maintaining efficiency.
+- Token-Based: Token-based reduction ensures chat history stays within a model’s token limit by measuring total token count and removing or summarizing older messages when the limit is exceeded.
 
-A Chat History Reducer automates these strategies by evaluating the history’s size and reducing it based on configurable parameters such as target_count (the desired number of messages to retain) and threshold_count (the point at which reduction is triggered). By integrating these reduction techniques, chat applications can remain responsive and performant without compromising conversational context.
+A Chat History Reducer automates these strategies by evaluating the history’s size and reducing it based on configurable parameters such as target count (the desired number of messages to retain) and threshold count (the point at which reduction is triggered). By integrating these reduction techniques, chat applications can remain responsive and performant without compromising conversational context.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -450,7 +449,7 @@ In this section, we cover the implementation details of chat history reduction i
 - Reduction Logic: Users can invoke the `reduce` method on the chat history object. The reducer evaluates whether the current message count exceeds `target_count` plus `threshold_count` (if set). If it does, the history is reduced to `target_count` either by truncation or summarization.
 - Configuration: The reduction behavior is configurable through parameters like `target_count` (the desired number of messages to retain) and threshold_count (the message count that triggers the reduction process).
 
-The supported history reducers are `ChatHistorySummarizationReducer` and `ChatHistoryTruncationReducer`. As part of the reducer configuration, `auto_reduce` can be enabled to automatically apply history reduction when used with `add_message_async`, ensuring the chat history stays within the configured limits.
+The supported Semantic Kernel Python history reducers are `ChatHistorySummarizationReducer` and `ChatHistoryTruncationReducer`. As part of the reducer configuration, `auto_reduce` can be enabled to automatically apply history reduction when used with `add_message_async`, ensuring the chat history stays within the configured limits.
 
 The following example demonstrates how to use ChatHistoryTruncationReducer to retain only the last two messages while maintaining conversation flow.
 
