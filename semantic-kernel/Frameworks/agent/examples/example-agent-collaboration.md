@@ -651,6 +651,7 @@ chat = AgentGroupChat(
         result_parser=lambda result: str(result.value[0]) if result.value is not None else COPYWRITER_NAME,
         agent_variable_name="agents",
         history_variable_name="history",
+        history_reducer=history_reducer,
     ),
     termination_strategy=KernelFunctionTerminationStrategy(
         agents=[agent_reviewer],
@@ -659,6 +660,7 @@ chat = AgentGroupChat(
         result_parser=lambda result: TERMINATION_KEYWORD in str(result.value[0]).lower(),
         history_variable_name="history",
         maximum_iterations=10,
+        history_reducer=history_reducer,
     ),
 )
 ```
@@ -1126,6 +1128,7 @@ from semantic_kernel.agents.strategies.termination.kernel_function_termination_s
     KernelFunctionTerminationStrategy,
 )
 from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import AzureChatCompletion
+from semantic_kernel.contents import ChatHistoryTruncationReducer
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
@@ -1229,6 +1232,8 @@ async def main():
             """,
     )
 
+    history_reducer = ChatHistoryTruncationReducer(target_count=1)
+
     chat = AgentGroupChat(
         agents=[agent_writer, agent_reviewer],
         selection_strategy=KernelFunctionSelectionStrategy(
@@ -1237,6 +1242,7 @@ async def main():
             result_parser=lambda result: str(result.value[0]) if result.value is not None else COPYWRITER_NAME,
             agent_variable_name="agents",
             history_variable_name="history",
+            history_reducer=history_reducer,
         ),
         termination_strategy=KernelFunctionTerminationStrategy(
             agents=[agent_reviewer],
@@ -1245,6 +1251,7 @@ async def main():
             result_parser=lambda result: TERMINATION_KEYWORD in str(result.value[0]).lower(),
             history_variable_name="history",
             maximum_iterations=10,
+            history_reducer=history_reducer,
         ),
     )
 
