@@ -35,7 +35,10 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+- [`prompt_template_config`](/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
+- [`kernel_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
+- [`jinja2_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
+- [`handlebars_prompt_teplate`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
 
 ::: zone-end
 
@@ -72,9 +75,16 @@ ChatCompletionAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+```python
+kernel = Kernel()
 
-**Coming soon**
-
+agent = ChatCompletionAgent(
+    kernel=kernel,
+    name="StoryTeller",
+    instructions="Tell a story about {{$topic}} that is {{$length}} sentences long.",
+    arguments=KernelArguments(topic="Dog", length="2"),
+)
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -104,9 +114,13 @@ OpenAIAssistantAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-
-**Coming Soon**
-
+```python
+agent = await OpenAIAssistantAgent.retrieve(
+    id=<assistant_id>,
+    kernel=Kernel(),
+    arguments=KernelArguments(topic="Dog", length="3"),
+)
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -162,9 +176,25 @@ ChatCompletionAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+```python
+import yaml
 
-**Coming Soon**
+# Read the YAML file
+with open("./GenerateStory.yaml", "r", encoding="utf-8") as file:
+    generate_story_yaml = file.read()
 
+# Parse the YAML content
+data = yaml.safe_load(generate_story_yaml)
+
+# Use the parsed data to create a PromptTemplateConfig object
+prompt_template_config = PromptTemplateConfig(**data)
+
+agent = ChatCompletionAgent(
+    kernel=_create_kernel_with_chat_completion(),
+    prompt_template_config=prompt_template_config,
+    arguments=KernelArguments(topic="Dog", length="3"),
+)
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -216,7 +246,24 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(chat, overrideAr
 
 ::: zone pivot="programming-language-python"
 
-**Coming Soon**
+```python
+kernel = Kernel()
+
+agent = ChatCompletionAgent(
+    kernel=kernel,
+    name="StoryTeller",
+    instructions="Tell a story about {{$topic}} that is {{$length}} sentences long.",
+    arguments=KernelArguments(topic="Dog", length="2"),
+)
+
+# Create a chat history to maintain the conversation state
+chat = ChatHistory()
+
+override_arguments = KernelArguments(topic="Cat", length="3")
+
+async for response in agent.invoke(chat, arguments=override_arguments):
+    # process agent response(s)...
+```
 
 ::: zone-end
 
