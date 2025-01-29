@@ -26,7 +26,8 @@ The Weaviate Vector Store connector can be used to access and manage data in Wea
 | Supported data property types     | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>*and enumerables of each of these types*</li></ul> |
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
 | Supported index types             | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                              |
-| Supported distance functions      | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>|
+| Supported distance functions      | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>|
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
@@ -39,6 +40,9 @@ Notable Weaviate connector functionality limitations.
 | Feature Area                                                           | Workaround                                                                                     |
 |------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
 | Using the 'vector' property for single vector objects is not supported | Use of the 'vectors' property is supported instead.                                            |
+
+> [!WARNING]
+> Weaviate requires collection names to start with an upper case letter. If you do not provide a collection name with an upper case letter, Weaviate will return an error when you try and create your collection. The error that you will see is `Cannot query field "mycollection" on type "GetObjectsObj". Did you mean "Mycollection"?` where `mycollection` is your collection name. In this example, if you change your collection name to `Mycollection` instead, this will fix the error.
 
 ## Getting started
 
@@ -114,7 +118,7 @@ using Microsoft.SemanticKernel.Connectors.Weaviate;
 
 var collection = new WeaviateVectorStoreRecordCollection<Hotel>(
     new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") },
-    "skhotels");
+    "Skhotels");
 ```
 
 If needed, it is possible to pass an Api Key, as an option, when using any of the above mentioned mechanisms, e.g.

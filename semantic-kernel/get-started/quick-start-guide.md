@@ -225,7 +225,7 @@ async def main():
 
     # Enable planning
     execution_settings = AzureChatPromptExecutionSettings()
-    execution_settings.function_call_behavior = FunctionChoiceBehavior.Auto()
+    execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
     # Create a history of the conversation
     history = ChatHistory()
@@ -502,7 +502,6 @@ public class LightsPlugin
 
    [KernelFunction("get_lights")]
    [Description("Gets a list of lights and their current state")]
-   [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
       return lights;
@@ -510,7 +509,6 @@ public class LightsPlugin
 
    [KernelFunction("change_state")]
    [Description("Changes the state of the light")]
-   [return: Description("The updated state of the light; will return null if the light does not exist")]
    public async Task<LightModel?> ChangeStateAsync(int id, bool isOn)
    {
       var light = lights.FirstOrDefault(light => light.Id == id);
@@ -561,7 +559,7 @@ class LightsPlugin:
     )
     def get_state(
         self,
-    ) -> Annotated[str, "the output is a string"]:
+    ) -> str:
         """Gets a list of lights and their current state."""
         return self.lights
 
@@ -573,7 +571,7 @@ class LightsPlugin:
         self,
         id: int,
         is_on: bool,
-    ) -> Annotated[str, "the output is a string"]:
+    ) -> str:
         """Changes the state of the light."""
         for light in self.lights:
             if light["id"] == id:
@@ -642,7 +640,7 @@ OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
 
 ```python
 execution_settings = AzureChatPromptExecutionSettings()
-execution_settings.function_call_behavior = FunctionChoiceBehavior.Auto()
+execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 ```
 
 ::: zone-end
