@@ -453,8 +453,8 @@ This interface allows custom implementations for chat history reduction.
 
 Additionally, Semantic Kernel provides built-in reducers:
 
-- `ChatHistoryTruncationReducer` - truncates chat history to a specified size. The reduction is triggered when the chat history length exceeds the limit.
-- `ChatHistorySummarizationReducer` - truncates chat history and summarizes the remaining messages.
+- `ChatHistoryTruncationReducer` - truncates chat history to a specified size and discards the removed messages. The reduction is triggered when the chat history length exceeds the limit.
+- `ChatHistorySummarizationReducer` - truncates chat history, summarizes the removed messages and adds the summary back into the chat history as a single message.
 
 Both reducers always preserve system messages to retain essential context for the model.
 
