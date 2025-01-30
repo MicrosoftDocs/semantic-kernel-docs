@@ -21,16 +21,17 @@ The SQLite Vector Store connector can be used to access and manage data in SQLit
 
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Collection maps to                | SQLite table                                                                                                              |
-| Supported key property types      | <ul><li>ulong</li><li>string</li></ul>                                                                                                                             |
+| Collection maps to                | SQLite table                                                                                                                     |
+| Supported key property types      | <ul><li>ulong</li><li>string</li></ul>                                                                                           |
 | Supported data property types     | <ul><li>int</li><li>long</li><li>ulong</li><li>short</li><li>ushort</li><li>string</li><li>bool</li><li>float</li><li>double</li><li>decimal</li><li>byte[]</li></ul> |
-| Supported vector property types   | ReadOnlyMemory\<float\>                                                       |
-| Supported index types             | N/A                                                                             |
-| Supported distance functions      | <ul><li>CosineDistance</li><li>ManhattanDistance</li><li>EuclideanDistance</li></ul>|
+| Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
+| Supported index types             | N/A                                                                                                                              |
+| Supported distance functions      | <ul><li>CosineDistance</li><li>ManhattanDistance</li><li>EuclideanDistance</li></ul>                                             |
+| Supported filter clauses          | <ul><li>EqualTo</li></ul>                                                                                                        |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | No                                                                                                                              |
-| IsFullTextSearchable supported?   | No                                                                                                                              |
-| StoragePropertyName supported?    | Yes                |
+| IsFilterable supported?           | No                                                                                                                               |
+| IsFullTextSearchable supported?   | No                                                                                                                               |
+| StoragePropertyName supported?    | Yes                                                                                                                              |
 
 ## Limitations
 
@@ -166,8 +167,8 @@ More info coming soon.
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+## JDBC
 
-More info coming soon.
+The [JDBC](./jdbc-connector.md) connector can be used to connect to SQLite.
 
 ::: zone-end
