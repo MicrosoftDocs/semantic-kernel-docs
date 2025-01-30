@@ -437,7 +437,80 @@ A Chat History Reducer automates these strategies by evaluating the history’s 
 
 ::: zone pivot="programming-language-csharp"
 
-> Content About Chat History Reduction in C# is Coming Soon.
+In the .NET version of Semantic Kernel, the Chat History Reducer abstraction is defined by the `IChatHistoryReducer` interface:
+
+```csharp
+namespace Microsoft.SemanticKernel.ChatCompletion;
+
+[Experimental("SKEXP0001")]
+public interface IChatHistoryReducer
+{
+    Task<IEnumerable<ChatMessageContent>?> ReduceAsync(IReadOnlyList<ChatMessageContent> chatHistory, CancellationToken cancellationToken = default);
+}
+```
+
+This interface allows custom implementations for chat history reduction. 
+
+Additionally, Semantic Kernel provides built-in reducers:
+
+- `ChatHistoryTruncationReducer` - truncates chat history to a specified size. The reduction is triggered when the chat history length exceeds the limit.
+- `ChatHistorySummarizationReducer` - truncates chat history and summarizes the remaining messages.
+
+Both reducers always preserve system messages to retain essential context for the model.
+
+The following example demonstrates how to retain only the last two user messages while maintaining conversation flow:
+
+```csharp
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+
+var chatService = new OpenAIChatCompletionService(
+    modelId: "<model-id>",
+    apiKey: "<api-key>");
+
+var reducer = new ChatHistoryTruncationReducer(targetCount: 2); // Keep system message and last user message
+
+var chatHistory = new ChatHistory("You are a librarian and expert on books about cities");
+
+string[] userMessages = [
+    "Recommend a list of books about Seattle",
+    "Recommend a list of books about Dublin",
+    "Recommend a list of books about Amsterdam",
+    "Recommend a list of books about Paris",
+    "Recommend a list of books about London"
+];
+
+int totalTokenCount = 0;
+
+foreach (var userMessage in userMessages)
+{
+    chatHistory.AddUserMessage(userMessage);
+
+    Console.WriteLine($"\n>>> User:\n{userMessage}");
+
+    var reducedMessages = await reducer.ReduceAsync(chatHistory);
+
+    if (reducedMessages is not null)
+    {
+        chatHistory = new ChatHistory(reducedMessages);
+    }
+
+    var response = await chatService.GetChatMessageContentAsync(chatHistory);
+
+    chatHistory.AddAssistantMessage(response.Content!);
+
+    Console.WriteLine($"\n>>> Assistant:\n{response.Content!}");
+
+    if (response.InnerContent is OpenAI.Chat.ChatCompletion chatCompletion)
+    {
+        totalTokenCount += chatCompletion.Usage?.TotalTokenCount ?? 0;
+    }
+}
+
+Console.WriteLine($"Total Token Count: {totalTokenCount}");
+```
+
+More examples can be found in the Semantic Kernel [repository](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/ChatCompletion/MultipleProviders_ChatHistoryReducer.cs).
 
 ::: zone-end
 
