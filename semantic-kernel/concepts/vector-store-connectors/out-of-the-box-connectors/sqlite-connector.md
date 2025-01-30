@@ -167,8 +167,8 @@ More info coming soon.
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+## JDBC
 
-More info coming soon.
+The [JDBC](./jdbc-connector.md) connector can be used to connect to SQLite.
 
 ::: zone-end
