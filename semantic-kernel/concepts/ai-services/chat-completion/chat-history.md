@@ -2,10 +2,10 @@
 title: Creating and managing a chat history object
 description: Use chat history to maintain a record of messages in a chat session
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: evanmattson
 ms.topic: conceptual
-ms.author: mabolan
-ms.date: 07/12/2023
+ms.author: evmattso
+ms.date: 01/20/2025
 ms.service: semantic-kernel
 ---
 
@@ -412,6 +412,175 @@ results.forEach(result -> System.out.println(result.getContent());
 // the ChatCompletionService returns new messages only. 
 chatHistory.addAll(results);
 ```
+
+::: zone-end
+
+## Chat History Reduction
+
+Managing chat history is essential for maintaining context-aware conversations while ensuring efficient performance. As a conversation progresses, the history object can grow beyond the limits of a model’s context window, affecting response quality and slowing down processing. A structured approach to reducing chat history ensures that the most relevant information remains available without unnecessary overhead.
+
+### Why Reduce Chat History?
+- Performance Optimization: Large chat histories increase processing time. Reducing their size helps maintain fast and efficient interactions.
+- Context Window Management: Language models have a fixed context window. When the history exceeds this limit, older messages are lost. Managing chat history ensures that the most important context remains accessible.
+- Memory Efficiency: In resource-constrained environments such as mobile applications or embedded systems, unbounded chat history can lead to excessive memory usage and slow performance.
+- Privacy and Security: Retaining unnecessary conversation history increases the risk of exposing sensitive information. A structured reduction process minimizes data retention while maintaining relevant context.
+
+### Strategies for Reducing Chat History
+
+Several approaches can be used to keep chat history manageable while preserving essential information:
+
+- Truncation: The oldest messages are removed when the history exceeds a predefined limit, ensuring only recent interactions are retained.
+- Summarization: Older messages are condensed into a summary, preserving key details while reducing the number of stored messages.
+- Token-Based: Token-based reduction ensures chat history stays within a model’s token limit by measuring total token count and removing or summarizing older messages when the limit is exceeded.
+
+A Chat History Reducer automates these strategies by evaluating the history’s size and reducing it based on configurable parameters such as target count (the desired number of messages to retain) and threshold count (the point at which reduction is triggered). By integrating these reduction techniques, chat applications can remain responsive and performant without compromising conversational context.
+
+::: zone pivot="programming-language-csharp"
+
+In the .NET version of Semantic Kernel, the Chat History Reducer abstraction is defined by the `IChatHistoryReducer` interface:
+
+```csharp
+namespace Microsoft.SemanticKernel.ChatCompletion;
+
+[Experimental("SKEXP0001")]
+public interface IChatHistoryReducer
+{
+    Task<IEnumerable<ChatMessageContent>?> ReduceAsync(IReadOnlyList<ChatMessageContent> chatHistory, CancellationToken cancellationToken = default);
+}
+```
+
+This interface allows custom implementations for chat history reduction. 
+
+Additionally, Semantic Kernel provides built-in reducers:
+
+- `ChatHistoryTruncationReducer` - truncates chat history to a specified size and discards the removed messages. The reduction is triggered when the chat history length exceeds the limit.
+- `ChatHistorySummarizationReducer` - truncates chat history, summarizes the removed messages and adds the summary back into the chat history as a single message.
+
+Both reducers always preserve system messages to retain essential context for the model.
+
+The following example demonstrates how to retain only the last two user messages while maintaining conversation flow:
+
+```csharp
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+
+var chatService = new OpenAIChatCompletionService(
+    modelId: "<model-id>",
+    apiKey: "<api-key>");
+
+var reducer = new ChatHistoryTruncationReducer(targetCount: 2); // Keep system message and last user message
+
+var chatHistory = new ChatHistory("You are a librarian and expert on books about cities");
+
+string[] userMessages = [
+    "Recommend a list of books about Seattle",
+    "Recommend a list of books about Dublin",
+    "Recommend a list of books about Amsterdam",
+    "Recommend a list of books about Paris",
+    "Recommend a list of books about London"
+];
+
+int totalTokenCount = 0;
+
+foreach (var userMessage in userMessages)
+{
+    chatHistory.AddUserMessage(userMessage);
+
+    Console.WriteLine($"\n>>> User:\n{userMessage}");
+
+    var reducedMessages = await reducer.ReduceAsync(chatHistory);
+
+    if (reducedMessages is not null)
+    {
+        chatHistory = new ChatHistory(reducedMessages);
+    }
+
+    var response = await chatService.GetChatMessageContentAsync(chatHistory);
+
+    chatHistory.AddAssistantMessage(response.Content!);
+
+    Console.WriteLine($"\n>>> Assistant:\n{response.Content!}");
+
+    if (response.InnerContent is OpenAI.Chat.ChatCompletion chatCompletion)
+    {
+        totalTokenCount += chatCompletion.Usage?.TotalTokenCount ?? 0;
+    }
+}
+
+Console.WriteLine($"Total Token Count: {totalTokenCount}");
+```
+
+More examples can be found in the Semantic Kernel [repository](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/ChatCompletion/MultipleProviders_ChatHistoryReducer.cs).
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+In this section, we cover the implementation details of chat history reduction in Python. The approach involves creating a ChatHistoryReducer that integrates seamlessly with the ChatHistory object, allowing it to be used and passed wherever a chat history is required.
+
+- Integration: In Python, the `ChatHistoryReducer` is designed to be a subclass of the `ChatHistory` object. This inheritance allows the reducer to be interchangeable with standard chat history instances.
+- Reduction Logic: Users can invoke the `reduce` method on the chat history object. The reducer evaluates whether the current message count exceeds `target_count` plus `threshold_count` (if set). If it does, the history is reduced to `target_count` either by truncation or summarization.
+- Configuration: The reduction behavior is configurable through parameters like `target_count` (the desired number of messages to retain) and threshold_count (the message count that triggers the reduction process).
+
+The supported Semantic Kernel Python history reducers are `ChatHistorySummarizationReducer` and `ChatHistoryTruncationReducer`. As part of the reducer configuration, `auto_reduce` can be enabled to automatically apply history reduction when used with `add_message_async`, ensuring the chat history stays within the configured limits.
+
+The following example demonstrates how to use ChatHistoryTruncationReducer to retain only the last two messages while maintaining conversation flow.
+
+```python
+import asyncio
+
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.contents import ChatHistoryTruncationReducer
+from semantic_kernel.kernel import Kernel
+
+
+async def main():
+    kernel = Kernel()
+    kernel.add_service(AzureChatCompletion())
+
+    # Keep the last two messages
+    truncation_reducer = ChatHistoryTruncationReducer(
+        target_count=2,
+    )
+    truncation_reducer.add_system_message("You are a helpful chatbot.")
+
+    is_reduced = False
+
+    while True:
+        user_input = input("User:> ")
+
+        if user_input.lower() == "exit":
+            print("\n\nExiting chat...")
+            break
+
+        is_reduced = await truncation_reducer.reduce()
+        if is_reduced:
+            print(f"@ History reduced to {len(truncation_reducer.messages)} messages.")
+
+        response = await kernel.invoke_prompt(
+            prompt="{{$chat_history}}{{$user_input}}", user_input=user_input, chat_history=truncation_reducer
+        )
+
+        if response:
+            print(f"Assistant:> {response}")
+            truncation_reducer.add_user_message(str(user_input))
+            truncation_reducer.add_message(response.value[0])
+
+    if is_reduced:
+        for msg in truncation_reducer.messages:
+            print(f"{msg.role} - {msg.content}\n")
+        print("\n")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Chat History Reduction is currently unavailable in Java.
 
 ::: zone-end
 

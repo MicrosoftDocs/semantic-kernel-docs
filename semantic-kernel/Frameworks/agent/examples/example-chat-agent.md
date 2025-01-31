@@ -8,10 +8,10 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: _Chat Completion Agent_ (Experimental)
+# How-To: _Chat Completion Agent_ 
 
 > [!WARNING]
-> The _Semantic Kernel Agent Framework_ is experimental, still in development and is subject to change.
+> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
 
 ## Overview
 
@@ -82,6 +82,7 @@ from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.kernel import Kernel
+from semantic_kernel.functions.kernel_arguments import KernelArguments
 
 # Adjust the sys.path so we can use the GitHubPlugin and GitHubSettings classes
 # This is so we can run the code from the samples/learn_resources/agent_docs directory
@@ -339,9 +340,12 @@ agent = ChatCompletionAgent(
         
         The repository you are querying is a public repository with the following name: microsoft/semantic-kernel
 
-        The current date and time is: {current_time}. 
+        The current date and time is: {{$now}}. 
         """,
-    execution_settings=settings,
+    arguments=KernelArguments(
+        settings=AzureAIPromptExecutionSettings(function_choice_behavior=FunctionChoiceBehavior.Auto()),
+        repository="microsoft/semantic-kernel",
+    ),
 )
 ```
 ::: zone-end
@@ -445,7 +449,16 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(history, argumen
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-**Coming soon**
+```python
+from datetime import datetime
+
+arguments = KernelArguments(
+    now=datetime.now().strftime("%Y-%m-%d %H:%M")
+)
+
+async for response in agent.invoke(history, arguments):
+    print(f"{response.content}")
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -581,6 +594,7 @@ from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel
 
 # Adjust the sys.path so we can use the GitHubPlugin and GitHubSettings classes
@@ -612,8 +626,6 @@ async def main():
     gh_settings = GitHubSettings(token="<PAT value>")
     kernel.add_plugin(plugin=GitHubPlugin(gh_settings), plugin_name="GithubPlugin")
 
-    current_time = datetime.now().isoformat()
-
     # Create the agent
     agent = ChatCompletionAgent(
         service_id="agent",
@@ -628,9 +640,9 @@ async def main():
             
             The repository you are querying is a public repository with the following name: microsoft/semantic-kernel
 
-            The current date and time is: {current_time}. 
+            The current date and time is: {{$now}}. 
             """,
-        execution_settings=settings,
+        arguments=KernelArguments(settings=settings),
     )
 
     history = ChatHistory()
@@ -646,7 +658,11 @@ async def main():
 
         history.add_message(ChatMessageContent(role=AuthorRole.USER, content=user_input))
 
-        async for response in agent.invoke(history=history):
+        arguments = KernelArguments(
+            now=datetime.now().strftime("%Y-%m-%d %H:%M")
+        )
+
+        async for response in agent.invoke(history=history, arguments):
             print(f"{response.content}")
 
 
