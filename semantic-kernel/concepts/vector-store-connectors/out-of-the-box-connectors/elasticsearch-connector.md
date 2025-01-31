@@ -25,6 +25,7 @@ The Elasticsearch Vector Store connector can be used to access and manage data i
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>IEnumerable\<float\></li></ul>                                                           |
 | Supported index types             | <ul><li>HNSW (32, 8, or 4 bit)</li><li>FLAT (32, 8, or 4 bit)</li></ul>                                                          |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>MaxInnerProduct</li></ul>                |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |

@@ -26,7 +26,8 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 | Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>decimal</li><li>*enumerables of type* string</li></ul> |
 | Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
 | Supported index types             | PGA (Pinecone Graph Algorithm)                                                                                                   |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>                                 |
+| Supported filter clauses          | <ul><li>EqualTo</li></ul>                                                                                                        |
 | Supports multiple vectors in a record | No                                                                                                                           |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | No                                                                                                                               |

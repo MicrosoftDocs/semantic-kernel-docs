@@ -27,6 +27,7 @@ The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<byte\></li><li>ReadOnlyMemory\<sbyte\></li><li>ReadOnlyMemory\<Half\></li></ul> |
 | Supported index types             | <ul><li>Flat</li><li>QuantizedFlat</li><li>DiskAnn</li></ul>                                                                     |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |

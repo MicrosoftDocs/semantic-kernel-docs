@@ -27,10 +27,11 @@ The Azure CosmosDB MongoDB Vector Store connector can be used to access and mana
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
 | Supported index types             | <ul><li>Hnsw</li><li>IvfFlat</li></ul>                                                                                           |
 | Supported distance functions      | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                          |
+| Supported filter clauses          | <ul><li>EqualTo</li></ul>                                                                                                        |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | No                                                                                                                               |
-| StoragePropertyName supported?    | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                              |
+| StoragePropertyName supported?    | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                   |
 
 ## Getting started
 

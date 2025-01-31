@@ -25,6 +25,7 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 | Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
 | Supported index types             | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                              |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
