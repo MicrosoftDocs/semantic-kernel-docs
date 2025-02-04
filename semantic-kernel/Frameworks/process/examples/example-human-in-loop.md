@@ -15,13 +15,13 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In the previous sections we built Process to help us automate the creation of documentation for our new product. our process can now generate documentation and run it through a proofread and edit cycle to ensure we get high quality documentation. In this section we will improve on that process again by requiring a human to approve or reject the documentation before it's published. The flexibility of the process framework means that there are several ways that we could go about doing this but in this example we will demonstrate integration with an external pubsub system for requesting approval.
+In the previous sections we built a Process to help us automate the creation of documentation for our new product. Our process can now generate documentation that is specific to our product, and can ensure it meets our quality bar by running it through a proofread and edit cycle. In this section we will improve on that process again by requiring a human to approve or reject the documentation before it's published. The flexibility of the process framework means that there are several ways that we could go about doing this but in this example we will demonstrate integration with an external pubsub system for requesting approval.
 
 ![Flow diagram for our process with a human-in-the-loop pattern.](../../../media/process-human-in-the-loop.png)
 
 ### Make publishing wait for approval
 
-The first change we need to make to the process is to make the publishing step wait for the approval before it publishes the documentation. One option is to simply add a second parameter for the approval to the `PublishDocumentation` function in the `PublishDocumentationStep`. This works because a KernelFunction in a step will only be invoked when all of its required parameters have been provided. 
+The first change we need to make to the process is to make the publishing step wait for the approval before it publishes the documentation. One option is to simply add a second parameter for the approval to the `PublishDocumentation` function in the `PublishDocumentationStep`. This works because a KernelFunction in a step will only be invoked when all of its required parameters have been provided.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -50,7 +50,41 @@ public class PublishDocumentationStep : KernelProcessStep
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-With the code above, the `PublishDocumentation` function in the `PublishDocumentationStep` will only be invoked when the generated documentation has been sent to the `docs` parameter and the result of the approval has been sent to the `isApproved` parameter. Let's update the process flow to match this new design.
+With the code above, the `PublishDocumentation` function in the `PublishDocumentationStep` will only be invoked when the generated documentation has been sent to the `docs` parameter and the result of the approval has been sent to the `isApproved` parameter.
+
+We can now update the logic in `ProofreadStep` step to additionally emit an event to our external pubsub system which will notify the human approver that there is a new request.
+
+::: zone pivot="programming-language-csharp"
+
+```csharp
+// A process step to publish documentation
+public class PublishDocumentationStep : KernelProcessStep
+{
+    ...
+    if (formattedResponse.MeetsExpectations)
+    {
+        await context.EmitEventAsync("DocumentationApproved", data: documentation);
+
+        // Emit event to external pubsub to trigger human in the loop approval.
+        await context.EmitExternalEventAsync("HumanApprovalRequired", data: documentation);
+    }
+    else
+    {
+        await context.EmitEventAsync("DocumentationRejected", data: new { Explanation = formattedResponse.Explanation, Suggestions = formattedResponse.Suggestions});
+    }
+    ...
+}
+```
+
+Now whenever the newly generated documentation is approved by the proofread agent, the approved documents will be queued on the publishing step, and a human will be notified via our external pubsub system. Let's update the process flow to match this new design.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
@@ -104,6 +138,7 @@ return process;
 ::: zone-end
 
 Two changes have been made to the process flow:
+
 - Added an input event named `HumanApprovalResponse` that will be routed to the `isApproved` parameter of the `docsPublishStep` step.
 - Since the KernelFunction in `docsPublishStep` now has two parameters, we need to update the existing route to specify the parameter name of `docs`.
 

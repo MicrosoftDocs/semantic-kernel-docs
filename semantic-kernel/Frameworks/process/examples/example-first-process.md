@@ -151,7 +151,7 @@ public class PublishDocumentationStep : KernelProcessStep
 
 The code above defines the three steps we need for our Process. There are a few points to call out here:
 - In Semantic Kernel, a `KernelFunction` defines a block of code that is invocable by native code or by an LLM. In the case of the Process framework, `KernelFunction`s are the invocable members of a Step and each step requires at least one KernelFunction to be defined.
-- The Process Framework has support for stateless and stateful steps. Stateful steps automatically checkpoint their progress and maintain state over multiple invocations. The `GenerateDocumentationStep` provides an example of this where the `GeneratedDocumentationState` class is used to persist the `ChatHistory` object. More on stateful steps [here]()
+- The Process Framework has support for stateless and stateful steps. Stateful steps automatically checkpoint their progress and maintain state over multiple invocations. The `GenerateDocumentationStep` provides an example of this where the `GeneratedDocumentationState` class is used to persist the `ChatHistory` object.
 - Steps can manually emit events by calling `EmitEventAsync` on the `KernelProcessStepContext` object. To get an instance of `KernelProcessStepContext` just add it as a parameter on your KernelFunction and the framework will automatically inject it.
 
 ### Define the process flow
@@ -204,7 +204,7 @@ This is where the routing of events from step to step are defined. In this case 
     - Finally, when the `docsGenerationStep` finishes running, send the returned object to the `docsPublishStep` step.
 
 > [!TIP]
-> **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel and the step context which are special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `docs` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters in in these advanced scenarios you need to specify the target function and parameter. This is discussed in further detail [here](#illustrative-example-generating-documentation-for-a-new-product)
+> **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel and the step context which are special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `docs` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters in in these advanced scenarios you need to specify the target function and parameter.
 
 ### Build and run the Process
 
