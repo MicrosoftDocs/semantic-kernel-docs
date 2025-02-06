@@ -26,7 +26,7 @@ Before proceeding with feature coding, make sure your development environment is
 
 ::: zone pivot="programming-language-csharp"
 
-To add package dependencies from the command-line use the `dotnet` command:
+To add package dependencies from the command line use the `dotnet` command:
 
 ```powershell
 dotnet add package Azure.Identity
@@ -256,7 +256,7 @@ def get_filepath_for_filename(filename: str) -> str:
 
 ::: zone-end
 
-Let's declare the the three content-files described in the previous [Configuration](#configuration) section:
+Let's declare the the three content files described in the previous [Configuration](#configuration) section:
 
 ::: zone pivot="programming-language-csharp"
 
@@ -382,7 +382,7 @@ try
     bool isComplete = false;
     do
     {
-        // Processing occurrs here
+        // Processing occurs here
     } while (!isComplete);
 }
 finally
@@ -425,7 +425,7 @@ finally:
 
 ::: zone-end
 
-Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid nput will be added to the _Assistant Thread_ as a _User_ message.
+Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Assistant Thread_ as a _User_ message.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
