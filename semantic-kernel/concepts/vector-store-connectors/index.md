@@ -23,6 +23,8 @@ For example, if you want to write a blog post about the latest trends in AI, you
 
 Semantic Kernel and .net provides an abstraction for interacting with Vector Stores and a list of out-of-the-box connectors that implement these abstractions. Features include creating, listing and deleting collections of records, and uploading, retrieving and deleting records. The abstraction makes it easy to experiment with a free or locally hosted Vector Store and then switch to a service when needing to scale up.
 
+::: zone pivot="programming-language-csharp"
+
 ## Retrieval Augmented Generation (RAG) with Vector Stores
 
 The vector store abstractions are a low level api for adding and retrieving data from vector stores.
@@ -33,8 +35,6 @@ This is achieved by wrapping `IVectorizedSearch<TRecord>` and exposing it as a T
 > To learn more about how to use vector stores for RAG see [How to use Vector Stores with Semantic Kernel Text Search](../text-search/text-search-vector-stores.md).
 > [!TIP]
 > To learn more about text search see [What is Semantic Kernel Text Search?](../text-search/index.md)
-
-::: zone pivot="programming-language-csharp"
 
 ## The Vector Store Abstraction
 
@@ -67,6 +67,18 @@ by select connectors.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+## Retrieval Augmented Generation (RAG) with Vector Stores
+
+The vector store abstractions are a low level api for adding and retrieving data from vector stores.
+Semantic Kernel has built-in support for using any one of the Vector Store implementations for RAG.
+This is achieved by wrapping `VectorSearchBase[TKey, TModel]` with either `VectorizedSearchMixin[Tmodel]`, `VectorizableTextSearchMixin[TModel]` or `VectorTextSearch[TModel]` and exposing it as a Text Search implementation.
+
+> [!TIP]
+> To learn more about how to use vector stores for RAG see [How to use Vector Stores with Semantic Kernel Text Search](../text-search/text-search-vector-stores.md).
+> [!TIP]
+> To learn more about text search see [What is Semantic Kernel Text Search?](../text-search/index.md)
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
