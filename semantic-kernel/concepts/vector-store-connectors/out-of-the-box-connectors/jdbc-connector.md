@@ -33,15 +33,16 @@ The JDBC Vector Store connector can be used to access and manage data in SQL dat
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | SQL database table
-| Supported SQL data sources        | <ul><li>PostgreSQL</li><li>MySQL</li><li>SQLite</li><li>HSQLDB</li></ul>                                                                                                           |
+| Supported SQL data sources        | <ul><li>PostgreSQL</li><li>MySQL</li><li>SQLite</li><li>HSQLDB</li></ul>                                                         |
 | Supported key property types      | String                                                                                                                           |
 | Supported data property types     | <ul><li>String</li><li>int, Integer</li><li>long, Long</li><li>double, Double</li><li>float, Float</li><li>boolean, Boolean</li><li>OffsetDateTime</li></ul> |
-| Supported vector property types   | List\<Float\>                                                                                                          |
-| Supported index types             | <ul><li>PostgreSQL: Hnsw, IVFFlat, Flat</li><li>MySQL: Flat</li><li>SQLite: Flat</li><li>HSQLDB: Flat</li></ul>                                                                                              |
-| Supported distance functions      | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
+| Supported vector property types   | List\<Float\>                                                                                                                    |
+| Supported index types             | <ul><li>PostgreSQL: Hnsw, IVFFlat, Flat</li><li>MySQL: Flat</li><li>SQLite: Flat</li><li>HSQLDB: Flat</li></ul>                  |
+| Supported distance functions      | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                          |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | isFilterable supported?           | Yes                                                                                                                              |
-| isFullTextSearchable supported?   | No                                                                                                                              |
+| isFullTextSearchable supported?   | No                                                                                                                               |
 | storageName supported?    | No, use `@JsonProperty` instead.               |
 
 ## Limitations
