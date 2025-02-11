@@ -169,7 +169,7 @@ CREATE TABLE Hotels (
 
 ## Using with Entra Authentication
 
-Azure Database for PostgreSQL provides the ability to connect to your database using [Entra authentication](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-azure-ad-authentication).
+Azure Database for PostgreSQL provides the ability to connect to your database using [Entra authentication](/azure/postgresql/flexible-server/concepts-azure-ad-authentication).
 This removes the need to store a username and password in your connection string.
 To use Entra authentication for an Azure DB for PostgreSQL database, you can use the following Npgsql extension method and set a connection string that does not have a username or password:
 
@@ -302,7 +302,7 @@ using var datasource = dataSourceBuilder.Build();
 var vectorStore = new PostgresVectorStore(dataSource);
 ```
 
-By default, the `UseEntraAuthentication` method uses the [DefaultAzureCredential](https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet) to authenticate with Azure AD. You can also provide a custom `TokenCredential` implementation if needed.
+By default, the `UseEntraAuthentication` method uses the [DefaultAzureCredential](/dotnet/api/azure.identity.defaultazurecredential) to authenticate with Azure AD. You can also provide a custom `TokenCredential` implementation if needed.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -391,7 +391,7 @@ CREATE TABLE Hotels (
 
 ## Using with Entra Authentication
 
-Azure Database for PostgreSQL provides the ability to connect to your database using [Entra authentication](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-azure-ad-authentication).
+Azure Database for PostgreSQL provides the ability to connect to your database using [Entra authentication](/azure/postgresql/flexible-server/concepts-azure-ad-authentication).
 This removes the need to store a username and password in your connection string.
 To use Entra authentication for an Azure DB for PostgreSQL database, you can use the following custom AsyncConnection class:
 
@@ -489,7 +489,7 @@ with settings.create_connection_pool() as pool:
     ...
 ```
 
-By default, the `AsyncEntraConnection` class uses the [DefaultAzureCredential](https://learn.microsoft.com/en-us/python/api/azure-identity/azure.identity.defaultazurecredential?view=azure-python) to authenticate with Azure AD. 
+By default, the `AsyncEntraConnection` class uses the [DefaultAzureCredential](/python/api/azure-identity/azure.identity.defaultazurecredential) to authenticate with Azure AD. 
 You can also provide another `TokenCredential` in the kwargs if needed:
 
 ```python
