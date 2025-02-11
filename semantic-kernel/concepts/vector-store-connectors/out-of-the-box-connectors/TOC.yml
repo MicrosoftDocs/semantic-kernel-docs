@@ -2,7 +2,7 @@
   href: index.md
 - name: Azure AI Search connector
   href: azure-ai-search-connector.md
-- name: Azure CosmosDB MongoDB connector
+- name: Azure CosmosDB MongoDB (vCore) connector
   href: azure-cosmosdb-mongodb-connector.md
 - name: Azure CosmosDB NoSQL connector
   href: azure-cosmosdb-nosql-connector.md
@@ -18,6 +18,8 @@
   href: mongodb-connector.md
 - name: Pinecone connector
   href: pinecone-connector.md
+- name: Postgres connector
+  href: postgres-connector.md
 - name: Qdrant connector
   href: qdrant-connector.md
 - name: Redis connector

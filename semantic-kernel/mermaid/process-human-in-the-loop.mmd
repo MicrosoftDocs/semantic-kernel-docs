@@ -1,0 +1,17 @@
+graph TD
+    subgraph InternalProcess
+        A[Request Feature Documentation]
+        A --> B[Ask LLM To Write Documentation]
+        B --> C[Proofread Documentation]
+        C --> |Suggestions Needed| B
+        C --> |Approved| E[Send to Pub/Sub Service]
+        D[Publish Documentation To Public]
+    end
+
+    E -.->|External Service| H[Human-in-the-Loop Approval]
+    H --> F{Approval Decision}
+    F --> |Rejected| G[Process Stops]
+    F -.-> |Approved| D
+
+    classDef dottedLine stroke-dasharray: 5, 5;
+    class InternalProcess dottedLine;
