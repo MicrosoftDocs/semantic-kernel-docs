@@ -14,6 +14,8 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
+::: zone pivot="programming-language-csharp"
+
 ## Overview
 
 The Couchbase Vector Store connector can be used to access and manage data in Couchbase. The connector has the
@@ -32,8 +34,6 @@ following characteristics.
 | IsFilterable supported?               | No                                                                                                                |
 | IsFullTextSearchable supported?       | No                                                                                                                |
 | StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
-
-::: zone pivot="programming-language-csharp"
 
 ## Getting Started
 
@@ -217,11 +217,11 @@ public class Hotel
     public string HotelId { get; set; }
 
     [JsonPropertyName("hotelName")]
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData]
     public string HotelName { get; set; }
 
     [JsonPropertyName("description")]
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData]
     public string Description { get; set; }
 
     [JsonPropertyName("descriptionEmbedding")]
