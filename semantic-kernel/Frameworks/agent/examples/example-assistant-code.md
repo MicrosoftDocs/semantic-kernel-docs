@@ -172,7 +172,7 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 
 ```python
 AZURE_OPENAI_API_KEY="..."
-AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
@@ -180,6 +180,9 @@ OPENAI_API_KEY="sk-..."
 OPENAI_ORG_ID=""
 OPENAI_CHAT_MODEL_ID=""
 ```
+
+[!TIP]
+Azure Assistants require an API version of at least 2024-05-01-preview. As new features are introduced, API versions are updated accordingly. As of this writing, the latest version is 2025-01-01-preview. For the most up-to-date versioning details, refer to the [Azure OpenAI API preview lifecycle](https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation).
 
 Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
@@ -239,14 +242,18 @@ OpenAIFile fileDataCountryList = await fileClient.UploadFileAsync("PopulationByC
 # Let's form the file paths that we will later pass to the assistant
 csv_file_path_1 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByAdmin1.csv",
 )
 
 csv_file_path_2 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByCountry.csv",
 )
 ```
+You may need to modify the path creation code based on the storage location of your CSV files.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -285,18 +292,18 @@ OpenAIAssistantAgent agent =
 ::: zone pivot="programming-language-python"
 ```python
 agent = await AzureAssistantAgent.create(
-        kernel=Kernel(),
-        service_id="agent",
-        name="SampleAssistantAgent",
-        instructions="""
-                Analyze the available data to provide an answer to the user's question.
-                Always format response using markdown.
-                Always include a numerical index that starts at 1 for any lists or tables.
-                Always sort lists in ascending order.
-                """,
-        enable_code_interpreter=True,
-        code_interpreter_filenames=[csv_file_path_1, csv_file_path_2],
-    )
+    kernel=Kernel(),
+    service_id="agent",
+    name="SampleAssistantAgent",
+    instructions="""
+            Analyze the available data to provide an answer to the user's question.
+            Always format response using markdown.
+            Always include a numerical index that starts at 1 for any lists or tables.
+            Always sort lists in ascending order.
+            """,
+    enable_code_interpreter=True,
+    code_interpreter_filenames=[csv_file_path_1, csv_file_path_2],
+)
 ```
 ::: zone-end
 
@@ -722,7 +729,10 @@ public static class Program
 
 ::: zone pivot="programming-language-python"
 ```python
+# Copyright (c) Microsoft. All rights reserved.
+
 import asyncio
+import logging
 import os
 
 from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
@@ -731,19 +741,29 @@ from semantic_kernel.contents.streaming_file_reference_content import StreamingF
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.kernel import Kernel
 
+logging.basicConfig(level=logging.ERROR)
+
+###################################################################
+# The following sample demonstrates how to create a simple,       #
+# OpenAI assistant agent that utilizes the code interpreter       #
+# to analyze uploaded files.                                      #
+###################################################################
+
 # Let's form the file paths that we will later pass to the assistant
 csv_file_path_1 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByAdmin1.csv",
 )
 
 csv_file_path_2 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByCountry.csv",
 )
 
 
-async def download_file_content(agent, file_id: str):
+async def download_file_content(agent: AzureAssistantAgent, file_id: str):
     try:
         # Fetch the content of the file using the provided method
         response_content = await agent.client.files.content(file_id)
@@ -766,7 +786,7 @@ async def download_file_content(agent, file_id: str):
         print(f"An error occurred while downloading file {file_id}: {str(e)}")
 
 
-async def download_response_image(agent, file_ids: list[str]):
+async def download_response_image(agent: AzureAssistantAgent, file_ids: list[str]):
     if file_ids:
         # Iterate over file_ids and download each one
         for file_id in file_ids:
@@ -801,30 +821,41 @@ async def main():
 
             if user_input.lower() == "exit":
                 is_complete = True
-                break
 
             await agent.add_chat_message(
                 thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
             )
-            is_code: bool = False
+
+            is_code = False
+            last_role = None
             async for response in agent.invoke_stream(thread_id=thread_id):
-                if is_code != response.metadata.get("code"):
-                    print()
-                    is_code = not is_code
+                current_is_code = response.metadata.get("code", False)
 
-                print(f"{response.content}", end="", flush=True)
-
+                if current_is_code:
+                    if not is_code:
+                        print("\n\n```python")
+                        is_code = True
+                    print(response.content, end="", flush=True)
+                else:
+                    if is_code:
+                        print("\n```")
+                        is_code = False
+                        last_role = None
+                    if hasattr(response, "role") and response.role is not None and last_role != response.role:
+                        print(f"\n# {response.role}: ", end="", flush=True)
+                        last_role = response.role
+                    print(response.content, end="", flush=True)
                 file_ids.extend([
                     item.file_id for item in response.items if isinstance(item, StreamingFileReferenceContent)
                 ])
-
-            print()
+            if is_code:
+                print("```\n")
 
             await download_response_image(agent, file_ids)
             file_ids.clear()
 
     finally:
-        print("Cleaning up resources...")
+        print("\nCleaning up resources...")
         if agent is not None:
             [await agent.delete_file(file_id) for file_id in agent.code_interpreter_file_ids]
             await agent.delete_thread(thread_id)

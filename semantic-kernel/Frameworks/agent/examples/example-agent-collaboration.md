@@ -26,6 +26,8 @@ The approach will be broken down step-by-step to high-light the key parts of the
 
 Before proceeding with feature coding, make sure your development environment is fully set up and configured.
 
+This sample uses an optional text file as part of processing. If you'd like to use it, you may download it [here](https://github.com/microsoft/semantic-kernel/blob/3f22587de5a6f42b41bd268f237547e1034de7df/dotnet/samples/LearnResources/Resources/WomensSuffrage.txt). Place the file in your code working directory.
+
 ::: zone pivot="programming-language-csharp"
 
 Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
@@ -68,11 +70,16 @@ The _Agent Framework_ is experimental and requires warning suppression.  This ma
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+Start by installing the Semantic Kernel Python package.
+
+```bash
+pip install semantic-kernel
+```
+
 ```python
 import asyncio
 import os
 import copy
-import pyperclip # Install via pip
 
 from semantic_kernel.agents import AgentGroupChat, ChatCompletionAgent
 from semantic_kernel.agents.strategies.selection.kernel_function_selection_strategy import (
@@ -167,7 +174,7 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 
 ```python
 AZURE_OPENAI_API_KEY="..."
-AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
@@ -254,11 +261,6 @@ toolKernel.Plugins.AddFromType<ClipboardAccess>();
 ```
 ::: zone-end
 
-::: zone pivot="programming-language-python"
-```python
-tool_kernel = copy.deepcopy(kernel)
-tool_kernel.add_plugin(ClipboardAccess(), plugin_name="clipboard")
-```
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -267,9 +269,9 @@ tool_kernel.add_plugin(ClipboardAccess(), plugin_name="clipboard")
 
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
 The _Clipboard_ plugin may be defined as part of the sample.
 
-::: zone pivot="programming-language-csharp"
 ```csharp
 private sealed class ClipboardAccess
 {
@@ -297,21 +299,6 @@ private sealed class ClipboardAccess
 ```
 ::: zone-end
 
-::: zone pivot="programming-language-python"
-
-Note: we are leveraging a Python package called pyperclip. Please install is using pip.
-
-```python
-class ClipboardAccess:
-    @kernel_function
-    def set_clipboard(content: str):
-        if not content.strip():
-            return
-
-        pyperclip.copy(content)
-```
-::: zone-end
-
 ::: zone pivot="programming-language-java"
 
 > Agents are currently unavailable in Java.
@@ -320,9 +307,9 @@ class ClipboardAccess:
 
 ### Agent Definition
 
+::: zone pivot="programming-language-csharp"
 Let's declare the agent names as `const` so they might be referenced in _Agent Group Chat_ strategies:
 
-::: zone pivot="programming-language-csharp"
 ```csharp
 const string ReviewerName = "Reviewer";
 const string WriterName = "Writer";
@@ -330,6 +317,9 @@ const string WriterName = "Writer";
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+We will declare the agent names as "Reviewer" and "Writer."
+
 ```python
 REVIEWER_NAME = "Reviewer"
 COPYWRITER_NAME = "Writer"
@@ -379,23 +369,20 @@ ChatCompletionAgent agentReviewer =
 ::: zone pivot="programming-language-python"
 ```python
 agent_reviewer = ChatCompletionAgent(
-    service_id=REVIEWER_NAME,
-    kernel=_create_kernel_with_chat_completion(REVIEWER_NAME),
-    name=REVIEWER_NAME,
-    instructions="""
-        Your responsiblity is to review and identify how to improve user provided content.
-        If the user has providing input or direction for content already provided, specify how to 
-        address this input.
-        Never directly perform the correction or provide example.
-        Once the content has been updated in a subsequent response, you will review the content 
-        again until satisfactory.
-        Always copy satisfactory content to the clipboard using available tools and inform user.
+        service_id=REVIEWER_NAME,
+        kernel=kernel,
+        name=REVIEWER_NAME,
+        instructions="""
+Your responsibility is to review and identify how to improve user provided content.
+If the user has provided input or direction for content already provided, specify how to address this input.
+Never directly perform the correction or provide an example.
+Once the content has been updated in a subsequent response, review it again until it is satisfactory.
 
-        RULES:
-        - Only identify suggestions that are specific and actionable.
-        - Verify previous suggestions have been addressed.
-        - Never repeat previous suggestions.
-        """,
+RULES:
+- Only identify suggestions that are specific and actionable.
+- Verify previous suggestions have been addressed.
+- Never repeat previous suggestions.
+""",
 )
 ```
 ::: zone-end
@@ -406,11 +393,11 @@ agent_reviewer = ChatCompletionAgent(
 
 ::: zone-end
 
-The _Writer_ agent is is similiar, but doesn't require the specification of _Execution Settings_ since it isn't configured with a plug-in.
+::: zone pivot="programming-language-csharp"
+The _Writer_ agent is similiar, but doesn't require the specification of _Execution Settings_ since it isn't configured with a plug-in.
 
 Here the _Writer_ is given a single-purpose task, follow direction and rewrite the content.
 
-::: zone pivot="programming-language-csharp"
 ```csharp
 ChatCompletionAgent agentWriter =
     new()
@@ -430,19 +417,19 @@ ChatCompletionAgent agentWriter =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+The _Writer_ agent is similiar. It is given a single-purpose task, follow direction and rewrite the content.
 ```python
 agent_writer = ChatCompletionAgent(
-    service_id=COPYWRITER_NAME,
-    kernel=_create_kernel_with_chat_completion(COPYWRITER_NAME),
-    name=COPYWRITER_NAME,
-    instructions="""
-        Your sole responsiblity is to rewrite content according to review suggestions.
-
-        - Always apply all review direction.
-        - Always revise the content in its entirety without explanation.
-        - Never address the user.
-        """,
-)
+        service_id=WRITER_NAME,
+        kernel=kernel,
+        name=WRITER_NAME,
+        instructions="""
+Your sole responsibility is to rewrite content according to review suggestions.
+- Always apply all review directions.
+- Always revise the content in its entirety without explanation.
+- Never address the user.
+""",
+    )
 ```
 ::: zone-end
 
@@ -489,25 +476,25 @@ KernelFunction selectionFunction =
 ::: zone pivot="programming-language-python"
 ```python
 selection_function = KernelFunctionFromPrompt(
-    function_name="selection",
-    prompt=f"""
-    Determine which participant takes the next turn in a conversation based on the the most recent participant.
-    State only the name of the participant to take the next turn.
-    No participant should take more than one turn in a row.
-    
-    Choose only from these participants:
-    - {REVIEWER_NAME}
-    - {COPYWRITER_NAME}
-    
-    Always follow these rules when selecting the next participant:
-    - After user input, it is {COPYWRITER_NAME}'s turn.
-    - After {COPYWRITER_NAME} replies, it is {REVIEWER_NAME}'s turn.
-    - After {REVIEWER_NAME} provides feedback, it is {COPYWRITER_NAME}'s turn.
+        function_name="selection", 
+        prompt=f"""
+Examine the provided RESPONSE and choose the next participant.
+State only the name of the chosen participant without explanation.
+Never choose the participant named in the RESPONSE.
 
-    History:
-    {{{{$history}}}}
-    """,
-)
+Choose only from these participants:
+- {REVIEWER_NAME}
+- {WRITER_NAME}
+
+Rules:
+- If RESPONSE is user input, it is {REVIEWER_NAME}'s turn.
+- If RESPONSE is by {REVIEWER_NAME}, it is {WRITER_NAME}'s turn.
+- If RESPONSE is by {WRITER_NAME}, it is {REVIEWER_NAME}'s turn.
+
+RESPONSE:
+{{{{$lastmessage}}}}
+"""
+    )
 ```
 ::: zone-end
 
@@ -540,20 +527,20 @@ KernelFunction terminationFunction =
 
 ::: zone pivot="programming-language-python"
 ```python
-TERMINATION_KEYWORD = "yes"
+    termination_keyword = "yes"
 
-termination_function = KernelFunctionFromPrompt(
-    function_name="termination",
-    prompt=f"""
-        Examine the RESPONSE and determine whether the content has been deemed satisfactory.
-        If content is satisfactory, respond with a single word without explanation: {TERMINATION_KEYWORD}.
-        If specific suggestions are being provided, it is not satisfactory.
-        If no correction is suggested, it is satisfactory.
+    termination_function = KernelFunctionFromPrompt(
+        function_name="termination", 
+        prompt=f"""
+Examine the RESPONSE and determine whether the content has been deemed satisfactory.
+If the content is satisfactory, respond with a single word without explanation: {termination_keyword}.
+If specific suggestions are being provided, it is not satisfactory.
+If no correction is suggested, it is satisfactory.
 
-        RESPONSE:
-        {{{{$history}}}}
-        """,
-)
+RESPONSE:
+{{{{$lastmessage}}}}
+"""
+    )
 ```
 ::: zone-end
 
@@ -573,7 +560,7 @@ ChatHistoryTruncationReducer historyReducer = new(1);
 
 ::: zone pivot="programming-language-python"
 ```python
-**ChatHistoryReducer is coming soon to Python.**
+history_reducer = ChatHistoryTruncationReducer(target_count=1)
 ```
 ::: zone-end
 
@@ -644,26 +631,28 @@ Creating `AgentGroupChat` involves:
 Notice that each strategy is responsible for parsing the `KernelFunction` result.
 ```python
 chat = AgentGroupChat(
-    agents=[agent_writer, agent_reviewer],
+    agents=[agent_reviewer, agent_writer],
     selection_strategy=KernelFunctionSelectionStrategy(
+        initial_agent=agent_reviewer,
         function=selection_function,
-        kernel=_create_kernel_with_chat_completion("selection"),
-        result_parser=lambda result: str(result.value[0]) if result.value is not None else COPYWRITER_NAME,
-        agent_variable_name="agents",
-        history_variable_name="history",
+        kernel=kernel,
+        result_parser=lambda result: str(result.value[0]).strip() if result.value[0] is not None else WRITER_NAME,
+        history_variable_name="lastmessage",
         history_reducer=history_reducer,
     ),
     termination_strategy=KernelFunctionTerminationStrategy(
         agents=[agent_reviewer],
         function=termination_function,
-        kernel=_create_kernel_with_chat_completion("termination"),
-        result_parser=lambda result: TERMINATION_KEYWORD in str(result.value[0]).lower(),
-        history_variable_name="history",
+        kernel=kernel,
+        result_parser=lambda result: termination_keyword in str(result.value[0]).lower(),
+        history_variable_name="lastmessage",
         maximum_iterations=10,
         history_reducer=history_reducer,
     ),
 )
 ```
+
+The `lastmessage` `history_variable_name` corresponds with the `KernelFunctionSelectionStrategy` and the `KernelFunctionTerminationStrategy` prompt that was defined above. This is where the last message is placed when rendering the prompt.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -702,15 +691,14 @@ while not is_complete:
 
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
 Now let's capture user input within the previous loop.  In this case:
 - Empty input will be ignored 
 - The term `EXIT` will signal that the conversation is completed
 - The term `RESET` will clear the _Agent Group Chat_ history
 - Any term starting with `@` will be treated as a file-path whose content will be provided as input
-- Valid input will be added to the _Agent Group Chaty_ as a _User_ message.
+- Valid input will be added to the _Agent Group Chat_ as a _User_ message.
 
-
-::: zone pivot="programming-language-csharp"
 ```csharp
 Console.WriteLine();
 Console.Write("> ");
@@ -757,8 +745,18 @@ chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, input));
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+Now let's capture user input within the previous loop.  In this case:
+- Empty input will be ignored.
+- The term `exit` will signal that the conversation is complete.
+- The term `reset` will clear the _Agent Group Chat_ history.
+- Any term starting with `@` will be treated as a file-path whose content will be provided as input.
+- Valid input will be added to the _Agent Group Chat_ as a _User_ message.
+
+The operation logic inside the while loop looks like:
+
 ```python
-user_input = input("User:> ")
+print()
+user_input = input("User > ").strip()
 if not user_input:
     continue
 
@@ -771,18 +769,22 @@ if user_input.lower() == "reset":
     print("[Conversation has been reset]")
     continue
 
-if user_input.startswith("@") and len(input) > 1:
-    file_path = input[1:]
+# Try to grab files from the script's current directory
+if user_input.startswith("@") and len(user_input) > 1:
+    file_name = user_input[1:]
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, file_name)
     try:
         if not os.path.exists(file_path):
             print(f"Unable to access file: {file_path}")
             continue
-        with open(file_path) as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             user_input = file.read()
     except Exception:
         print(f"Unable to access file: {file_path}")
         continue
 
+# Add the current user_input to the chat
 await chat.add_chat_message(ChatMessageContent(role=AuthorRole.USER, content=user_input))
 ```
 ::: zone-end
@@ -826,13 +828,17 @@ catch (HttpOperationException exception)
 
 ::: zone pivot="programming-language-python"
 ```python
-chat.is_complete = False
-async for response in chat.invoke():
-    print(f"# {response.role} - {response.name or '*'}: '{response.content}'")
+try:
+    async for response in chat.invoke():
+        if response is None or not response.name:
+            continue
+        print()
+        print(f"# {response.name.upper()}:\n{response.content}")
+except Exception as e:
+    print(f"Error during chat invocation: {e}")
 
-if chat.is_complete:
-    is_complete = True
-    break
+# Reset the chat's complete flag for the new conversation round.
+chat.is_complete = False
 ```
 ::: zone-end
 
@@ -845,6 +851,8 @@ if chat.is_complete:
 
 ## Final
 
+::: zone pivot="programming-language-csharp"
+
 Bringing all the steps together, we have the final code for this example. The complete implementation is provided below.
 
 Try using these suggested inputs:
@@ -852,14 +860,12 @@ Try using these suggested inputs:
 1. Hi
 2. {"message: "hello world"}
 3. {"message": "hello world"}
-4. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provies a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define thei relationships, and orchestrate interactions between them.
+4. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provies a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define their relationships, and orchestrate interactions between them.
 5. make this two paragraphs
 6. thank you
 7. @.\WomensSuffrage.txt
 8. its good, but is it ready for my college professor? 
 
-
-::: zone pivot="programming-language-csharp"
 ```csharp
 // Copyright (c) Microsoft. All rights reserved.
 
@@ -1114,12 +1120,28 @@ public static class Program
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Bringing all the steps together, we now have the final code for this example. The complete implementation is shown below.  
+
+You can try using one of the suggested inputs. As the agent chat begins, the agents will exchange messages for several iterations until the reviewer agent is satisfied with the copywriter's work. The `while` loop ensures the conversation continues, even if the chat is initially considered complete, by resetting the `is_complete` flag to `False`.
+
+1. Rozes are red, violetz are blue.
+2. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provies a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define their relationships, and orchestrate interactions between them.
+4. Make this two paragraphs
+5. thank you
+7. @WomensSuffrage.txt
+8. It's good, but is it ready for my college professor? 
+
+> [!TIP]  
+> You can reference any file by providing `@<file_path_to_file>`. To reference the "WomensSuffrage" text from above, download it [here](https://github.com/microsoft/semantic-kernel/blob/3f22587de5a6f42b41bd268f237547e1034de7df/dotnet/samples/LearnResources/Resources/WomensSuffrage.txt) and place it in your current working directory. You can then reference it with `@WomensSuffrage.txt`.
+
 ```python
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
 import os
 
+from semantic_kernel import Kernel
 from semantic_kernel.agents import AgentGroupChat, ChatCompletionAgent
 from semantic_kernel.agents.strategies.selection.kernel_function_selection_strategy import (
     KernelFunctionSelectionStrategy,
@@ -1128,12 +1150,10 @@ from semantic_kernel.agents.strategies.termination.kernel_function_termination_s
     KernelFunctionTerminationStrategy,
 )
 from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import AzureChatCompletion
-from semantic_kernel.contents import ChatHistoryTruncationReducer
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.history_reducer.chat_history_truncation_reducer import ChatHistoryTruncationReducer
 from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.functions.kernel_function_from_prompt import KernelFunctionFromPrompt
-from semantic_kernel.kernel import Kernel
 
 ###################################################################
 # The following sample demonstrates how to create a simple,       #
@@ -1142,122 +1162,123 @@ from semantic_kernel.kernel import Kernel
 # complete a user's task.                                         #
 ###################################################################
 
-
-class ClipboardAccess:
-    @kernel_function
-    def set_clipboard(content: str):
-        if not content.strip():
-            return
-
-        pyperclip.copy(content)
-
-
+# Define agent names
 REVIEWER_NAME = "Reviewer"
-COPYWRITER_NAME = "Writer"
+WRITER_NAME = "Writer"
 
 
-def _create_kernel_with_chat_completion(service_id: str) -> Kernel:
+def create_kernel() -> Kernel:
+    """Creates a Kernel instance with an Azure OpenAI ChatCompletion service."""
     kernel = Kernel()
-    kernel.add_service(AzureChatCompletion(service_id=service_id))
+    kernel.add_service(service=AzureChatCompletion())
     return kernel
 
 
 async def main():
+    # Create a single kernel instance for all agents.
+    kernel = create_kernel()
+
+    # Create ChatCompletionAgents using the same kernel.
     agent_reviewer = ChatCompletionAgent(
         service_id=REVIEWER_NAME,
-        kernel=_create_kernel_with_chat_completion(REVIEWER_NAME),
+        kernel=kernel,
         name=REVIEWER_NAME,
         instructions="""
-            Your responsiblity is to review and identify how to improve user provided content.
-            If the user has providing input or direction for content already provided, specify how to 
-            address this input.
-            Never directly perform the correction or provide example.
-            Once the content has been updated in a subsequent response, you will review the content 
-            again until satisfactory.
-            Always copy satisfactory content to the clipboard using available tools and inform user.
+Your responsibility is to review and identify how to improve user provided content.
+If the user has provided input or direction for content already provided, specify how to address this input.
+Never directly perform the correction or provide an example.
+Once the content has been updated in a subsequent response, review it again until it is satisfactory.
 
-            RULES:
-            - Only identify suggestions that are specific and actionable.
-            - Verify previous suggestions have been addressed.
-            - Never repeat previous suggestions.
-            """,
+RULES:
+- Only identify suggestions that are specific and actionable.
+- Verify previous suggestions have been addressed.
+- Never repeat previous suggestions.
+""",
     )
 
     agent_writer = ChatCompletionAgent(
-        service_id=COPYWRITER_NAME,
-        kernel=_create_kernel_with_chat_completion(COPYWRITER_NAME),
-        name=COPYWRITER_NAME,
+        service_id=WRITER_NAME,
+        kernel=kernel,
+        name=WRITER_NAME,
         instructions="""
-            Your sole responsiblity is to rewrite content according to review suggestions.
-
-            - Always apply all review direction.
-            - Always revise the content in its entirety without explanation.
-            - Never address the user.
-            """,
+Your sole responsibility is to rewrite content according to review suggestions.
+- Always apply all review directions.
+- Always revise the content in its entirety without explanation.
+- Never address the user.
+""",
     )
 
+    # Define a selection function to determine which agent should take the next turn.
     selection_function = KernelFunctionFromPrompt(
         function_name="selection",
         prompt=f"""
-        Determine which participant takes the next turn in a conversation based on the the most recent participant.
-        State only the name of the participant to take the next turn.
-        No participant should take more than one turn in a row.
-        
-        Choose only from these participants:
-        - {REVIEWER_NAME}
-        - {COPYWRITER_NAME}
-        
-        Always follow these rules when selecting the next participant:
-        - After user input, it is {COPYWRITER_NAME}'s turn.
-        - After {COPYWRITER_NAME} replies, it is {REVIEWER_NAME}'s turn.
-        - After {REVIEWER_NAME} provides feedback, it is {COPYWRITER_NAME}'s turn.
+Examine the provided RESPONSE and choose the next participant.
+State only the name of the chosen participant without explanation.
+Never choose the participant named in the RESPONSE.
 
-        History:
-        {{{{$history}}}}
-        """,
+Choose only from these participants:
+- {REVIEWER_NAME}
+- {WRITER_NAME}
+
+Rules:
+- If RESPONSE is user input, it is {REVIEWER_NAME}'s turn.
+- If RESPONSE is by {REVIEWER_NAME}, it is {WRITER_NAME}'s turn.
+- If RESPONSE is by {WRITER_NAME}, it is {REVIEWER_NAME}'s turn.
+
+RESPONSE:
+{{{{$lastmessage}}}}
+""",
     )
 
-    TERMINATION_KEYWORD = "yes"
+    # Define a termination function where the reviewer signals completion with "yes".
+    termination_keyword = "yes"
 
     termination_function = KernelFunctionFromPrompt(
         function_name="termination",
         prompt=f"""
-            Examine the RESPONSE and determine whether the content has been deemed satisfactory.
-            If content is satisfactory, respond with a single word without explanation: {TERMINATION_KEYWORD}.
-            If specific suggestions are being provided, it is not satisfactory.
-            If no correction is suggested, it is satisfactory.
+Examine the RESPONSE and determine whether the content has been deemed satisfactory.
+If the content is satisfactory, respond with a single word without explanation: {termination_keyword}.
+If specific suggestions are being provided, it is not satisfactory.
+If no correction is suggested, it is satisfactory.
 
-            RESPONSE:
-            {{{{$history}}}}
-            """,
+RESPONSE:
+{{{{$lastmessage}}}}
+""",
     )
 
-    history_reducer = ChatHistoryTruncationReducer(target_count=1)
+    history_reducer = ChatHistoryTruncationReducer(target_count=5)
 
+    # Create the AgentGroupChat with selection and termination strategies.
     chat = AgentGroupChat(
-        agents=[agent_writer, agent_reviewer],
+        agents=[agent_reviewer, agent_writer],
         selection_strategy=KernelFunctionSelectionStrategy(
+            initial_agent=agent_reviewer,
             function=selection_function,
-            kernel=_create_kernel_with_chat_completion("selection"),
-            result_parser=lambda result: str(result.value[0]) if result.value is not None else COPYWRITER_NAME,
-            agent_variable_name="agents",
-            history_variable_name="history",
+            kernel=kernel,
+            result_parser=lambda result: str(result.value[0]).strip() if result.value[0] is not None else WRITER_NAME,
+            history_variable_name="lastmessage",
             history_reducer=history_reducer,
         ),
         termination_strategy=KernelFunctionTerminationStrategy(
             agents=[agent_reviewer],
             function=termination_function,
-            kernel=_create_kernel_with_chat_completion("termination"),
-            result_parser=lambda result: TERMINATION_KEYWORD in str(result.value[0]).lower(),
-            history_variable_name="history",
+            kernel=kernel,
+            result_parser=lambda result: termination_keyword in str(result.value[0]).lower(),
+            history_variable_name="lastmessage",
             maximum_iterations=10,
             history_reducer=history_reducer,
         ),
     )
 
-    is_complete: bool = False
+    print(
+        "Ready! Type your input, or 'exit' to quit, 'reset' to restart the conversation. "
+        "You may pass in a file path using @<path_to_file>."
+    )
+
+    is_complete = False
     while not is_complete:
-        user_input = input("User:> ")
+        print()
+        user_input = input("User > ").strip()
         if not user_input:
             continue
 
@@ -1270,26 +1291,35 @@ async def main():
             print("[Conversation has been reset]")
             continue
 
-        if user_input.startswith("@") and len(input) > 1:
-            file_path = input[1:]
+        # Try to grab files from the script's current directory
+        if user_input.startswith("@") and len(user_input) > 1:
+            file_name = user_input[1:]
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            file_path = os.path.join(script_dir, file_name)
             try:
                 if not os.path.exists(file_path):
                     print(f"Unable to access file: {file_path}")
                     continue
-                with open(file_path) as file:
+                with open(file_path, "r", encoding="utf-8") as file:
                     user_input = file.read()
             except Exception:
                 print(f"Unable to access file: {file_path}")
                 continue
 
+        # Add the current user_input to the chat
         await chat.add_chat_message(ChatMessageContent(role=AuthorRole.USER, content=user_input))
 
-        async for response in chat.invoke():
-            print(f"# {response.role} - {response.name or '*'}: '{response.content}'")
+        try:
+            async for response in chat.invoke():
+                if response is None or not response.name:
+                    continue
+                print()
+                print(f"# {response.name.upper()}:\n{response.content}")
+        except Exception as e:
+            print(f"Error during chat invocation: {e}")
 
-        if chat.is_complete:
-            is_complete = True
-            break
+        # Reset the chat's complete flag for the new conversation round.
+        chat.is_complete = False
 
 
 if __name__ == "__main__":
