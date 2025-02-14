@@ -1133,7 +1133,7 @@ You can try using one of the suggested inputs. As the agent chat begins, the age
 8. It's good, but is it ready for my college professor? 
 
 > [!TIP]  
-> You can reference any file by providing `@<file_path_to_file>`. To reference the "WomensSuffrage" text from above, download it [here](https://github.com/microsoft/semantic-kernel/blob/3f22587de5a6f42b41bd268f237547e1034de7df/dotnet/samples/LearnResources/Resources/WomensSuffrage.txt) and place it in your current working directory. You can then reference it with `@WomensSuffrage.txt`.
+> You can reference any file by providing `@<file_path_to_file>`. To reference the "WomensSuffrage" text from above, download it [here](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/resources/WomensSuffrage.txt) and place it in your current working directory. You can then reference it with `@WomensSuffrage.txt`.
 
 ```python
 # Copyright (c) Microsoft. All rights reserved.
