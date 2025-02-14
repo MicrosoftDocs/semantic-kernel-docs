@@ -182,7 +182,7 @@ OPENAI_CHAT_MODEL_ID=""
 ```
 
 [!TIP]
-Azure Assistants require an API version of at least 2024-05-01-preview. As new features are introduced, API versions are updated accordingly. As of this writing, the latest version is 2025-01-01-preview. For the most up-to-date versioning details, refer to the [Azure OpenAI API preview lifecycle](https://learn.microsoft.com/azure/ai-services/openai/api-version-deprecation).
+Azure Assistants require an API version of at least 2024-05-01-preview. As new features are introduced, API versions are updated accordingly. As of this writing, the latest version is 2025-01-01-preview. For the most up-to-date versioning details, refer to the [Azure OpenAI API preview lifecycle](/azure/ai-services/openai/api-version-deprecation).
 
 Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
