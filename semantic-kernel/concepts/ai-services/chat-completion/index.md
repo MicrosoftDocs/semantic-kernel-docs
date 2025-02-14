@@ -920,7 +920,7 @@ chat_completion_service = AzureChatCompletion(service_id="my-service-id")
 ```
 
 > [!NOTE]
-> The `AzureChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
+> The `AzureChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
 
 # [OpenAI](#tab/python-OpenAI)
 
@@ -967,7 +967,7 @@ chat_completion_service = AzureAIInferenceChatCompletion(
 ```
 
 > [!NOTE]
-> The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
+> The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
 
 # [Anthropic](#tab/python-Anthropic)
 
@@ -1274,7 +1274,7 @@ execution_settings = OnnxGenAIPromptExecutionSettings()
 ---
 
 > [!TIP]
-> To see what you can configure in the execution settings, you can check the class definition in the [source code](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/ai) or check out the [API documentation](https://learn.microsoft.com/en-us/python/api/semantic-kernel/semantic_kernel.connectors.ai?view=semantic-kernel-python).
+> To see what you can configure in the execution settings, you can check the class definition in the [source code](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/ai) or check out the [API documentation](https://learn.microsoft.com/python/api/semantic-kernel/semantic_kernel.connectors.ai?view=semantic-kernel-python).
 
 ::: zone-end
 
