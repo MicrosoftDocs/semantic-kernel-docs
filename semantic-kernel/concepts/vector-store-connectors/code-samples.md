@@ -50,6 +50,7 @@ vector store they create to use with the common code.
 
 - [Azure AI Search vector search with common code](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_VectorSearch_MultiStore_AzureAISearch.cs)
 - [InMemory vector search with common code](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_VectorSearch_MultiStore_InMemory.cs)
+- [Postgres vector search with common code](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_VectorSearch_MultiStore_Postgres.cs)
 - [Qdrant vector search with common code](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_VectorSearch_MultiStore_Qdrant.cs)
 - [Redis vector search with common code](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_VectorSearch_MultiStore_Redis.cs)
 
