@@ -37,7 +37,7 @@ Specifically, Semantic Kernel provides the following observability features:
 - **Metrics**: Semantic Kernel emits metrics from kernel functions and AI connectors. You will be able to monitor metrics such as the kernel function execution time, the token consumption of AI connectors, etc.
     ![Metrics](../../../media/telemetry-metrics-overview-app-insights.png)
 - **Tracing**: Semantic Kernel supports distributed tracing. You can track activities across different services and within Semantic Kernel.
-    ![Complete end-to-end transaction of a request](../../media/telemetry-trace-overview-app-insights.png)
+    ![Complete end-to-end transaction of a request](../../../media/telemetry-trace-overview-app-insights.png)
 
 
 ::: zone pivot="programming-language-csharp"
