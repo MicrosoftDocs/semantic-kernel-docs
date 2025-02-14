@@ -26,9 +26,10 @@ The approach will be broken down step-by-step to high-light the key parts of the
 
 Before proceeding with feature coding, make sure your development environment is fully set up and configured.
 
-This sample uses an optional text file as part of processing. If you'd like to use it, you may download it [here](https://github.com/microsoft/semantic-kernel/blob/3f22587de5a6f42b41bd268f237547e1034de7df/dotnet/samples/LearnResources/Resources/WomensSuffrage.txt). Place the file in your code working directory.
-
 ::: zone pivot="programming-language-csharp"
+
+> [!TIP]
+> This sample uses an optional text file as part of processing. If you'd like to use it, you may download it [here](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/Resources/WomensSuffrage.txt). Place the file in your code working directory.
 
 Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
 
@@ -70,6 +71,10 @@ The _Agent Framework_ is experimental and requires warning suppression.  This ma
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+> [!TIP]
+> This sample uses an optional text file as part of processing. If you'd like to use it, you may download it [here](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/resources/WomensSuffrage.txt). Place the file in your code working directory.
+
 Start by installing the Semantic Kernel Python package.
 
 ```bash
