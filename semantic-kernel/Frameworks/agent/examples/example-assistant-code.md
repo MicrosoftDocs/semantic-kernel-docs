@@ -92,7 +92,7 @@ from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.kernel import Kernel
 ```
 
-Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources). Add these files in your project folder.
+Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from the [_Semantic Kernel_ `learn_resources/resources` directory](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources). Add these files to your working directory.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
@@ -238,6 +238,10 @@ OpenAIFile fileDataCountryList = await fileClient.UploadFileAsync("PopulationByC
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+> [!TIP]
+> You may need to adjust the file paths depending upon where your files are located.
+
 ```python
 # Let's form the file paths that we will later pass to the assistant
 csv_file_path_1 = os.path.join(
@@ -264,9 +268,10 @@ You may need to modify the path creation code based on the storage location of y
 
 ### Agent Definition
 
+::: zone pivot="programming-language-csharp"
+
 We are now ready to instantiate an _OpenAI Assistant Agent_. The agent is configured with its target model, _Instructions_, and the _Code Interpreter_ tool enabled. Additionally, we explicitly associate the two data files with the _Code Interpreter_ tool.
 
-::: zone pivot="programming-language-csharp"
 ```csharp
 Console.WriteLine("Defining agent...");
 OpenAIAssistantAgent agent =
@@ -290,6 +295,9 @@ OpenAIAssistantAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+We are now ready to instantiate an _Azure Assistant Agent_. The agent is configured with its target model, _Instructions_, and the _Code Interpreter_ tool enabled. Additionally, we explicitly associate the two data files with the _Code Interpreter_ tool.
+
 ```python
 agent = await AzureAssistantAgent.create(
     kernel=Kernel(),
