@@ -1274,7 +1274,7 @@ execution_settings = OnnxGenAIPromptExecutionSettings()
 ---
 
 > [!TIP]
-> To see what you can configure in the execution settings, you can check the class definition in the [source code](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/ai) or check out the [API documentation](/python/api/semantic-kernel/semantic_kernel.connectors.ai?view=semantic-kernel-python).
+> To see what you can configure in the execution settings, you can check the class definition in the [source code](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/ai) or check out the [API documentation](/python/api/semantic-kernel/semantic_kernel.connectors.ai).
 
 ::: zone-end
 
