@@ -177,7 +177,7 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 
 ```python
 AZURE_OPENAI_API_KEY="..."
-AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
@@ -343,7 +343,7 @@ agent = ChatCompletionAgent(
         The current date and time is: {{$now}}. 
         """,
     arguments=KernelArguments(
-        settings=AzureAIPromptExecutionSettings(function_choice_behavior=FunctionChoiceBehavior.Auto()),
+        settings=AzureChatPromptExecutionSettings(function_choice_behavior=FunctionChoiceBehavior.Auto()),
         repository="microsoft/semantic-kernel",
     ),
 )
@@ -669,6 +669,8 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/agent_docs/chat_agent.py), as shown above, in our repo.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"

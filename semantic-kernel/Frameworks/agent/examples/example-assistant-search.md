@@ -174,7 +174,7 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 
 ```python
 AZURE_OPENAI_API_KEY="..."
-AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
@@ -182,6 +182,9 @@ OPENAI_API_KEY="sk-..."
 OPENAI_ORG_ID=""
 OPENAI_CHAT_MODEL_ID=""
 ```
+
+> [!TIP]
+> Azure Assistants require an API version of at least 2024-05-01-preview. As new features are introduced, API versions are updated accordingly. As of this writing, the latest version is 2025-01-01-preview. For the most up-to-date versioning details, refer to the [Azure OpenAI API preview lifecycle](/azure/ai-services/openai/api-version-deprecation).
 
 Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
@@ -780,6 +783,8 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/agent_docs/assistant_search.py), as shown above, in our repo.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
