@@ -9,13 +9,11 @@ ms.date: 09/10/2024
 ms.service: semantic-kernel
 ---
 
-::: zone pivot="programming-language-csharp"
-
 # What are Filters?
 
 Filters enhance security by providing control and visibility over how and when functions run. This is needed to instill responsible AI principles into your work so that you feel confident your solution is enterprise ready.
 
-For example, filters are leveraged to validate permissions before an approval flow begins. The `IFunctionInvocationFilter` is run to check the permissions of the person that’s looking to submit an approval. This means that only a select group of people will be able to kick off the process.
+For example, filters are leveraged to validate permissions before an approval flow begins. The filter runs to check the permissions of the person that’s looking to submit an approval. This means that only a select group of people will be able to kick off the process.
 
 A good example of filters is provided [here](https://devblogs.microsoft.com/semantic-kernel/filters-in-semantic-kernel/) in our detailed Semantic Kernel blog post on Filters.
  
@@ -45,7 +43,9 @@ For cases where filter order is important, it is recommended to add filters dire
 
 ## Function Invocation Filter
 
-This filter is triggered every time a Semantic Kernel function is invoked, regardless of whether it is a function created from a prompt or a C# method.
+This filter is triggered every time a Semantic Kernel function is invoked, regardless of whether it is a function created from a prompt or a method.
+
+::: zone pivot="programming-language-csharp"
 
 ```csharp
 /// <summary>
@@ -80,13 +80,93 @@ Add filter using `Kernel` property:
 kernel.FunctionInvocationFilters.Add(new LoggingFilter(logger));
 ```
 
+
 ### Code examples
 
 * [Function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/FunctionInvocationFiltering.cs)
+* 
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+
+import logging
+from typing import Awaitable, Callable
+from semantic_kernel.filters import FunctionInvocationContext
+
+logger = logging.getLogger(__name__)
+
+async def logger_filter(context: FunctionInvocationContext, next: Callable[[FunctionInvocationContext], Awaitable[None]]) -> None:
+    logger.info(f"FunctionInvoking - {context.function.plugin_name}.{context.function.name}")
+
+    await next(context)
+
+    logger.info(f"FunctionInvoked - {context.function.plugin_name}.{context.function.name}")
+
+# Add filter to the kernel
+kernel.add_filter('function_invocation', logger_filter)
+
+```
+
+You can also add a filter directly to the kernel:
+
+```python
+
+@kernel.filter('function_invocation')
+async def logger_filter(context: FunctionInvocationContext, next: Callable[[FunctionInvocationContext], Awaitable[None]]) -> None:
+    logger.info(f"FunctionInvoking - {context.function.plugin_name}.{context.function.name}")
+
+    await next(context)
+
+    logger.info(f"FunctionInvoked - {context.function.plugin_name}.{context.function.name}")
+```
+
+
+### Streaming invocation
+
+Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns `AsyncGenerator<T>`, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must be of type `AsyncGenerator<T>`, whereas in non-streaming mode, it can simply be of type `T`. 
+
+So to build a simple logger filter for streaming, you would use something like this:
+
+```python
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
+async def streaming_exception_handling(
+    context: FunctionInvocationContext,
+    next: Callable[[FunctionInvocationContext], Coroutine[Any, Any, None]],
+):
+    await next(context)
+
+    async def override_stream(stream):
+        try:
+            async for partial in stream:
+                yield partial
+        except Exception as e:
+            yield [
+                StreamingChatMessageContent(role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0)
+            ]
+
+    stream = context.result.value
+    context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
+```
+
+### Code examples
+* [Function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters.py)
+* [Streaming function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters_stream.py)
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
 
 ## Prompt Render Filter
 
 This filter is invoked only during a prompt rendering operation, such as when a function created from a prompt is called. It will not be triggered for Semantic Kernel functions created from methods.
+
+::: zone pivot="programming-language-csharp"
 
 ```csharp
 /// <summary>
@@ -127,9 +207,36 @@ kernel.PromptRenderFilters.Add(new SafePromptFilter());
 
 * [Prompt render filter examples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PromptRenderFiltering.cs)
 
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+from semantic_kernel.filters import FilterTypes, PromptRenderContext
+
+@kernel.filter(FilterTypes.PROMPT_RENDERING)
+async def prompt_rendering_filter(context: PromptRenderContext, next):
+    await next(context)
+    context.rendered_prompt = f"You pretend to be Mosscap, but you are Papssom who is the opposite of Moscapp in every way {context.rendered_prompt or ''}"
+```
+
+### Code examples
+* [Prompt render filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/prompt_filters.py)
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
+
 ## Auto Function Invocation Filter
 
 This filter is invoked only during an automatic function calling process. It will not be triggered when a function is invoked outside of this process.
+
+::: zone pivot="programming-language-csharp"
 
 ```csharp
 /// <summary>
@@ -174,6 +281,34 @@ kernel.AutoFunctionInvocationFilters.Add(new EarlyTerminationFilter());
 ### Code examples
 
 * [Auto function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/AutoFunctionInvocationFiltering.cs)
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+
+from semantic_kernel.filters import FilterTypes, AutoFunctionInvocationContext
+
+@kernel.filter(FilterTypes.AUTO_FUNCTION_INVOCATION)
+async def auto_function_invocation_filter(context: AutoFunctionInvocationContext, next):
+    await next(context)
+    if context.function_result == "desired result":
+        context.terminate = True
+```
+
+### Code examples
+* [Auto function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/auto_function_invoke_filters.py)
+
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More info coming soon.
+
+::: zone-end
+::: zone pivot="programming-language-csharp"
 
 ## Streaming and non-streaming invocation
 
@@ -245,15 +380,8 @@ ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsy
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## More examples:
 
-More info coming soon.
-
-::: zone-end
-::: zone pivot="programming-language-java"
-
-## Coming soon
-
-More info coming soon.
+* [Retry logic with a filter](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_filters.py)
 
 ::: zone-end
