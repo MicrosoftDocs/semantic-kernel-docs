@@ -179,6 +179,8 @@ ChatCompletionAgent agent =
 ```python
 import yaml
 
+from semantic_kernel.prompt_template import PromptTemplateConfig
+
 # Read the YAML file
 with open("./GenerateStory.yaml", "r", encoding="utf-8") as file:
     generate_story_yaml = file.read()
