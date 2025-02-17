@@ -45,6 +45,7 @@ public class PublishDocumentationStep : KernelProcessStep
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+> Support for Python Human-in-the-loop Process behavior is coming soon.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -81,6 +82,7 @@ Now whenever the newly generated documentation is approved by the proofread agen
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+> Support for Python Human-in-the-loop Process behavior is coming soon.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -132,6 +134,7 @@ return process;
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+> Support for Python Human-in-the-loop Process behavior is coming soon.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -154,6 +157,7 @@ await process.StartAsync(kernel, new KernelProcessEvent { Id = "HumanApprovalRes
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+> Support for Python Human-in-the-loop Process behavior is coming soon.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
