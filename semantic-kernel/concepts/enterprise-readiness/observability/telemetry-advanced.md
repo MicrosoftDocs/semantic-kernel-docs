@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 # More advanced scenarios for telemetry
 
 > [!NOTE]
-> This article will use [Aspire Dashboard](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) for illustration. If you prefer to use other tools, please refer to the documentation of the tool you are using on setup instructions.
+> This article will use [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) for illustration. If you prefer to use other tools, please refer to the documentation of the tool you are using on setup instructions.
 
 ## Auto Function Calling
 
@@ -375,7 +375,7 @@ Please refer to this [article](./telemetry-with-console.md#environment-variables
 
 ### Start the Aspire Dashboard
 
-Follow the instructions [here](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
+Follow the instructions [here](/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
 
 ### Run
 
