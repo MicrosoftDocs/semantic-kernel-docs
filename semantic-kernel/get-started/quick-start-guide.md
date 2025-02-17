@@ -164,7 +164,7 @@ do {
     userInput = Console.ReadLine();
 
     // Add user input
-    history.AddUserMessage(userInput);
+    history.AddUserMessage(userInput!);
 
     // Get the response from the AI
     var result = await chatCompletionService.GetChatMessageContentAsync(
@@ -493,17 +493,18 @@ using Microsoft.SemanticKernel;
 public class LightsPlugin
 {
    // Mock data for the lights
-   private readonly List<LightModel> lights = new()
-   {
+   private readonly List<LightModel> lights =
+   [
       new LightModel { Id = 1, Name = "Table Lamp", IsOn = false },
       new LightModel { Id = 2, Name = "Porch light", IsOn = false },
       new LightModel { Id = 3, Name = "Chandelier", IsOn = true }
-   };
+   ];
 
    [KernelFunction("get_lights")]
    [Description("Gets a list of lights and their current state")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
+      await Task.CompletedTask;
       return lights;
    }
 
@@ -511,6 +512,7 @@ public class LightsPlugin
    [Description("Changes the state of the light")]
    public async Task<LightModel?> ChangeStateAsync(int id, bool isOn)
    {
+      await Task.CompletedTask;
       var light = lights.FirstOrDefault(light => light.Id == id);
 
       if (light == null)
@@ -531,7 +533,7 @@ public class LightModel
    public int Id { get; set; }
 
    [JsonPropertyName("name")]
-   public string Name { get; set; }
+   public required string Name { get; set; }
 
    [JsonPropertyName("is_on")]
    public bool? IsOn { get; set; }
