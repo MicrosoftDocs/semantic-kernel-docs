@@ -226,8 +226,6 @@ async def prompt_rendering_filter(context: PromptRenderContext, next):
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
@@ -303,8 +301,6 @@ async def auto_function_invocation_filter(context: AutoFunctionInvocationContext
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
@@ -370,7 +366,11 @@ IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCo
 ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
 ```
 
+::: zone-end
+
 ## More examples
+
+::: zone pivot="programming-language-csharp"
 
 * [PII detection and redaction with filters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PIIDetection.cs)
 * [Semantic Caching with filters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Caching/SemanticCachingWithFilters.cs)
@@ -379,8 +379,6 @@ ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsy
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
-
-## More examples:
 
 * [Retry logic with a filter](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_filters.py)
 
