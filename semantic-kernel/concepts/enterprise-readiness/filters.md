@@ -156,8 +156,6 @@ async def streaming_exception_handling(
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
