@@ -25,15 +25,7 @@ There are three types of filters:
   - Access to information about the function being executed and its arguments
   - Handling of exceptions during function execution
   - Overriding of the function result, either before (for instance for caching scenario's) or after execution (for instance for responsible AI scenarios)
-::: zone pivot="programming-language-csharp"
   - Retrying of the function in case of failure (e.g., [switching to an alternative AI model](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/RetryWithFilters.cs))
-::: zone-end
-::: zone pivot="programming-language-python"
-  - Retrying of the function in case of failure
-::: zone-end
-::: zone pivot="programming-language-java"
-  - Retrying of the function in case of failure
-::: zone-end
 
 - **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
   - Viewing and modifying the prompt that will be sent to the AI (e.g., for RAG or [PII redaction](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PIIDetection.cs))
@@ -140,9 +132,9 @@ async def logger_filter(context: FunctionInvocationContext, next: Callable[[Func
 
 ### Streaming invocation
 
-Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns `AsyncGenerator<T>`, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must be of type `AsyncGenerator<T>`, whereas in non-streaming mode, it can simply be of type `T`. 
+Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns a `AsyncGenerator[T]` object where `T` is a kind of streaming content type, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must also be of type `AsyncGenerator[T]`.
 
-So to build a simple logger filter for streaming, you would use something like this:
+So to build a simple logger filter for a streaming function invocation, you would use something like this:
 
 ```python
 @kernel.filter(FilterTypes.FUNCTION_INVOCATION)
@@ -391,7 +383,7 @@ When using dependency injection, the order of filters is not guaranteed. If the 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Filters are executed according to the order in which they are added to the `Kernel` object, which is equivalent between using `add_filter` and the `@kernel.filter` decorator. The order of filters can be important and should be understood well.
+Filters are executed in the order they are added to the Kernel object -- whether through `add_filter` or the `@kernel.filter` decorator. Because execution order can affect behavior, it's important to manage filter order carefully.
 
 Consider the following example:
 
@@ -413,7 +405,7 @@ async def filter2(context: FunctionInvocationContext, next):
     print('after filter 2')
 ```
 
-When executed the function, the output will be:
+When executing the function, the output will be:
 
 ```python
 before filter 1
