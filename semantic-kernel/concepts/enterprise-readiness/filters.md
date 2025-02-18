@@ -24,7 +24,7 @@ There are three types of filters:
 - **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
   - Access to information about the function being executed and its arguments
   - Handling of exceptions during function execution
-  - Overriding of the function result
+  - Overriding of the function result, either before (for instance for caching scenario's) or after execution (for instance for responsible AI scenarios)
   - Retrying of the function in case of failure (e.g., [switching to an alternative AI model](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/RetryWithFilters.cs))
 
 - **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
@@ -37,9 +37,17 @@ Each filter includes a `context` object that contains all relevant information a
 
 In a filter, calling the `next` delegate is essential to proceed to the next registered filter or the original operation (whether function invocation or prompt rendering). Without calling `next`, the operation will not be executed.
 
+::: zone pivot="programming-language-csharp"
+
 To use a filter, first define it, then add it to the `Kernel` object either through dependency injection or the appropriate `Kernel` property. When using dependency injection, the order of filters is not guaranteed, so with multiple filters, the execution order may be unpredictable.
 
-For cases where filter order is important, it is recommended to add filters directly to the `Kernel` object using appropriate properties. This approach allows filters to be added, removed, or reordered at runtime.
+::: zone-end
+::: zone pivot="programming-language-python"
+
+To use a filter, you can either define a function with the required parameters and add it to the `Kernel` object using the `add_filter` method, or use the `@kernel.filter` decorator to define a filter function and add it to the `Kernel` object.
+
+::: zone-end
+
 
 ## Function Invocation Filter
 
@@ -362,6 +370,49 @@ IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCo
 
 // Passing a Kernel here is required to trigger filters.
 ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
+```
+
+::: zone-end
+
+## Ordering
+
+::: zone pivot="programming-language-csharp"
+
+When using dependency injection, the order of filters is not guaranteed. If the order of filters is important, it is recommended to add filters directly to the `Kernel` object using appropriate properties. This approach allows filters to be added, removed, or reordered at runtime.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+Filters are executed according to the order in which they are added to the `Kernel` object, which is equivalent between using `add_filter` and the `@kernel.filter` decorator. The order of filters can be important and should be understood well.
+
+Consider the following example:
+
+```python
+def func():
+    print('function')
+
+
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
+async def filter1(context: FunctionInvocationContext, next):
+    print('before filter 1')
+    await next(context)
+    print('after filter 1')
+
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
+async def filter2(context: FunctionInvocationContext, next):
+    print('before filter 2')
+    await next(context)
+    print('after filter 2')
+```
+
+When executed the function, the output will be:
+
+```python
+before filter 1
+before filter 2
+function
+after filter 2
+after filter 1
 ```
 
 ::: zone-end
