@@ -92,7 +92,7 @@ kernel.FunctionInvocationFilters.Add(new LoggingFilter(logger));
 ### Code examples
 
 * [Function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/FunctionInvocationFiltering.cs)
-* 
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
