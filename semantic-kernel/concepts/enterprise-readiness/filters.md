@@ -376,7 +376,7 @@ So to build a simple logger filter for a streaming function invocation, you woul
 @kernel.filter(FilterTypes.FUNCTION_INVOCATION)
 async def streaming_exception_handling(
     context: FunctionInvocationContext,
-    next: Callable[[FunctionInvocationContext], Coroutine[Any, Any, None]],
+    next: Callable[[FunctionInvocationContext], Awaitable[None]],
 ):
     await next(context)
     if not context.is_streaming:
@@ -395,7 +395,7 @@ async def streaming_exception_handling(
     context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
 ```
 
-Code example:
+### Code examples
 * [Streaming function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters_stream.py)
 
 ::: zone-end
