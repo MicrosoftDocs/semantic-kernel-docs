@@ -300,11 +300,11 @@ To make it easier to get started building enterprise apps with Semantic Kernel, 
 
 In the following sections, we'll unpack the above sample by walking through steps **1**, **2**, **3**, **4**, **6**, **9**, and **10**. Everything you need to build a simple agent that is powered by an AI service and can run your code.
 
+  ::: zone pivot="programming-language-csharp,programming-language-python"
+
 - [Import packages](#1-import-packages)
 - [Add AI services](#2-add-ai-services)
-  ::: zone pivot="programming-language-csharp,programming-language-python"
 - [Enterprise components](#3-add-enterprise-services)
-  ::: zone-end
 - [Build the kernel](#4-build-the-kernel-and-retrieve-services)
 - Add memory (skipped)
 - [Add plugins](#6-add-plugins)
@@ -313,6 +313,22 @@ In the following sections, we'll unpack the above sample by walking through step
 - [Planning](#9-planning)
 - [Invoke](#10-invoke)
 
+  ::: zone-end
+
+  ::: zone pivot="programming-language-java"
+
+- [Import packages](#1-import-packages)
+- [Add AI services](#2-add-ai-services)
+- [Build the kernel](#4-build-the-kernel-and-retrieve-services)
+- Add memory (skipped)
+- [Add plugins](#6-add-plugins)
+- Create kernel arguments (skipped)
+- Create prompts (skipped)
+- [Planning](#9-planning)
+- [Invoke](#10-invoke)
+
+  ::: zone-end
+  
 ### 1) Import packages
 For this sample, we first started by importing the following packages:
 
