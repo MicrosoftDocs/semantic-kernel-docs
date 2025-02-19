@@ -20,7 +20,7 @@ A good example of filters is provided [here](https://devblogs.microsoft.com/sema
  ![Semantic Kernel Filters](../../media/WhatAreFilters.png)
 
 There are three types of filters:
-
+::: zone pivot="programming-language-csharp"
 - **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
   - Access to information about the function being executed and its arguments
   - Handling of exceptions during function execution
@@ -30,6 +30,29 @@ There are three types of filters:
 - **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
   - Viewing and modifying the prompt that will be sent to the AI (e.g., for RAG or [PII redaction](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PIIDetection.cs))
   - Preventing prompt submission to the AI by overriding the function result (e.g., for [Semantic Caching](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Caching/SemanticCachingWithFilters.cs))
+::: zone-end
+::: zone pivot="programming-language-python"
+- **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
+  - Access to information about the function being executed and its arguments
+  - Handling of exceptions during function execution
+  - Overriding of the function result, either before (for instance for caching scenario's) or after execution (for instance for responsible AI scenarios)
+  - Retrying of the function in case of failure (e.g., [switching to an alternative AI model](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_different_model.py))
+
+- **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
+- Viewing and modifying the prompt that will be sent to the AI
+- Preventing prompt submission to the AI by overriding the function result (e.g., for [Semantic Caching](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/caching/semantic_caching.py))
+::: zone-end
+::: zone pivot="programming-language-java"
+- **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
+  - Access to information about the function being executed and its arguments
+  - Handling of exceptions during function execution
+  - Overriding of the function result, either before (for instance for caching scenario's) or after execution (for instance for responsible AI scenarios)
+  - Retrying of the function in case of failure
+
+- **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
+- Viewing and modifying the prompt that will be sent to the AI
+- Preventing prompt submission to the AI by overriding the function result
+::: zone-end
 
 - **Auto Function Invocation Filter** - similar to the function invocation filter, this filter operates within the scope of `automatic function calling`, providing additional context, including chat history, a list of all functions to be executed, and iteration counters. It also allows termination of the auto function calling process (e.g., if a desired result is obtained from the second of three planned functions).
 
@@ -129,37 +152,8 @@ async def logger_filter(context: FunctionInvocationContext, next: Callable[[Func
     logger.info(f"FunctionInvoked - {context.function.plugin_name}.{context.function.name}")
 ```
 
-
-### Streaming invocation
-
-Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns a `AsyncGenerator[T]` object where `T` is a kind of streaming content type, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must also be of type `AsyncGenerator[T]`.
-
-So to build a simple logger filter for a streaming function invocation, you would use something like this:
-
-```python
-@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
-async def streaming_exception_handling(
-    context: FunctionInvocationContext,
-    next: Callable[[FunctionInvocationContext], Coroutine[Any, Any, None]],
-):
-    await next(context)
-
-    async def override_stream(stream):
-        try:
-            async for partial in stream:
-                yield partial
-        except Exception as e:
-            yield [
-                StreamingChatMessageContent(role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0)
-            ]
-
-    stream = context.result.value
-    context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
-```
-
 ### Code examples
 * [Function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters.py)
-* [Streaming function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters_stream.py)
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
@@ -310,9 +304,8 @@ async def auto_function_invocation_filter(context: AutoFunctionInvocationContext
 More info coming soon.
 
 ::: zone-end
-::: zone pivot="programming-language-csharp"
-
 ## Streaming and non-streaming invocation
+::: zone pivot="programming-language-csharp"
 
 Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns `IAsyncEnumerable<T>`, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must be of type `IAsyncEnumerable<T>`, whereas in non-streaming mode, it can simply be of type `T`. To determine which result type needs to be returned, the `context.IsStreaming` flag is available in the filter context model.
 
@@ -373,6 +366,44 @@ ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsy
 ```
 
 ::: zone-end
+::: zone pivot="programming-language-python"
+
+Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns a `AsyncGenerator[T]` object where `T` is a kind of streaming content type, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must also be of type `AsyncGenerator[T]`. To determine which result type needs to be returned, the `context.is_streaming` flag is available in all the filter context models.
+
+So to build a simple logger filter for a streaming function invocation, you would use something like this:
+
+```python
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
+async def streaming_exception_handling(
+    context: FunctionInvocationContext,
+    next: Callable[[FunctionInvocationContext], Coroutine[Any, Any, None]],
+):
+    await next(context)
+    if not context.is_streaming:
+        return
+
+    async def override_stream(stream):
+        try:
+            async for partial in stream:
+                yield partial
+        except Exception as e:
+            yield [
+                StreamingChatMessageContent(role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0)
+            ]
+
+    stream = context.result.value
+    context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
+```
+
+Code example:
+* [Streaming function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters_stream.py)
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+More info coming soon.
+
+::: zone-end
 
 ## Ordering
 
@@ -429,6 +460,8 @@ after filter 1
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
+* [Semantic Caching with filters](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/caching/semantic_caching.py)
+* [Retry with a different model](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_different_model.py)
 * [Retry logic with a filter](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_filters.py)
 
 ::: zone-end
