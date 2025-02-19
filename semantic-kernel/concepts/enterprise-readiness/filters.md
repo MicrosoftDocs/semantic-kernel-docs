@@ -39,8 +39,8 @@ There are three types of filters:
   - Retrying of the function in case of failure (e.g., [switching to an alternative AI model](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_different_model.py))
 
 - **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
-- Viewing and modifying the prompt that will be sent to the AI
-- Preventing prompt submission to the AI by overriding the function result (e.g., for [Semantic Caching](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/caching/semantic_caching.py))
+  - Viewing and modifying the prompt that will be sent to the AI
+  - Preventing prompt submission to the AI by overriding the function result (e.g., for [Semantic Caching](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/caching/semantic_caching.py))
 ::: zone-end
 ::: zone pivot="programming-language-java"
 - **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
@@ -50,8 +50,8 @@ There are three types of filters:
   - Retrying of the function in case of failure
 
 - **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
-- Viewing and modifying the prompt that will be sent to the AI
-- Preventing prompt submission to the AI by overriding the function result
+  - Viewing and modifying the prompt that will be sent to the AI
+  - Preventing prompt submission to the AI by overriding the function result
 ::: zone-end
 
 - **Auto Function Invocation Filter** - similar to the function invocation filter, this filter operates within the scope of `automatic function calling`, providing additional context, including chat history, a list of all functions to be executed, and iteration counters. It also allows termination of the auto function calling process (e.g., if a desired result is obtained from the second of three planned functions).
