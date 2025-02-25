@@ -34,6 +34,7 @@ dotnet add package Microsoft.SemanticKernel.Process.LocalRuntime --version 1.33.
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+pip install semantic-kernel==1.20.0
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -144,15 +145,109 @@ public class PublishDocumentationStep : KernelProcessStep
 }
 ```
 
-::: zone-end
-
-::: zone pivot="programming-language-python"
-::: zone-end
-
 The code above defines the three steps we need for our Process. There are a few points to call out here:
 - In Semantic Kernel, a `KernelFunction` defines a block of code that is invocable by native code or by an LLM. In the case of the Process framework, `KernelFunction`s are the invocable members of a Step and each step requires at least one KernelFunction to be defined.
 - The Process Framework has support for stateless and stateful steps. Stateful steps automatically checkpoint their progress and maintain state over multiple invocations. The `GenerateDocumentationStep` provides an example of this where the `GeneratedDocumentationState` class is used to persist the `ChatHistory` object.
 - Steps can manually emit events by calling `EmitEventAsync` on the `KernelProcessStepContext` object. To get an instance of `KernelProcessStepContext` just add it as a parameter on your KernelFunction and the framework will automatically inject it.
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+import asyncio
+from typing import ClassVar
+
+from pydantic import BaseModel, Field
+
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.contents import ChatHistory
+from semantic_kernel.functions import kernel_function
+from semantic_kernel.processes import ProcessBuilder
+from semantic_kernel.processes.kernel_process import KernelProcessStep, KernelProcessStepContext, KernelProcessStepState
+from semantic_kernel.processes.local_runtime import KernelProcessEvent, start
+
+
+# A process step to gather information about a product
+class GatherProductInfoStep(KernelProcessStep):
+    @kernel_function
+    def gather_product_information(self, product_name: str) -> str:
+        print(f"{GatherProductInfoStep.__name__}\n\t Gathering product information for Product Name: {product_name}")
+
+        return """
+Product Description:
+
+GlowBrew is a revolutionary AI driven coffee machine with industry leading number of LEDs and 
+programmable light shows. The machine is also capable of brewing coffee and has a built in grinder.
+
+Product Features:
+1. **Luminous Brew Technology**: Customize your morning ambiance with programmable LED lights that sync 
+    with your brewing process.
+2. **AI Taste Assistant**: Learns your taste preferences over time and suggests new brew combinations 
+    to explore.
+3. **Gourmet Aroma Diffusion**: Built-in aroma diffusers enhance your coffee's scent profile, energizing 
+    your senses before the first sip.
+
+Troubleshooting:
+- **Issue**: LED Lights Malfunctioning
+    - **Solution**: Reset the lighting settings via the app. Ensure the LED connections inside the 
+        GlowBrew are secure. Perform a factory reset if necessary.
+        """
+
+
+# A sample step state model for the GenerateDocumentationStep
+class GeneratedDocumentationState(BaseModel):
+    """State for the GenerateDocumentationStep."""
+
+    chat_history: ChatHistory | None = None
+
+
+# A process step to generate documentation for a product
+class GenerateDocumentationStep(KernelProcessStep[GeneratedDocumentationState]):
+    state: GeneratedDocumentationState = Field(default_factory=GeneratedDocumentationState)
+
+    system_prompt: ClassVar[str] = """
+Your job is to write high quality and engaging customer facing documentation for a new product from Contoso. You will 
+be provided with information about the product in the form of internal documentation, specs, and troubleshooting guides 
+and you must use this information and nothing else to generate the documentation. If suggestions are provided on the 
+documentation you create, take the suggestions into account and rewrite the documentation. Make sure the product 
+sounds amazing.
+"""
+
+    async def activate(self, state: KernelProcessStepState[GeneratedDocumentationState]):
+        self.state = state.state
+        if self.state.chat_history is None:
+            self.state.chat_history = ChatHistory(system_message=self.system_prompt)
+        self.state.chat_history
+
+    @kernel_function
+    async def generate_documentation(
+        self, context: KernelProcessStepContext, product_info: str, kernel: Kernel
+    ) -> None:
+        print(f"{GenerateDocumentationStep.__name__}\n\t Generating documentation for provided product_info...")
+
+        self.state.chat_history.add_user_message(f"Product Information:\n{product_info}")
+
+        chat_service, settings = kernel.select_ai_service(type=ChatCompletionClientBase)
+        assert isinstance(chat_service, ChatCompletionClientBase)  # nosec
+
+        response = await chat_service.get_chat_message_content(chat_history=self.state.chat_history, settings=settings)
+
+        await context.emit_event(process_event="documentation_generated", data=str(response))
+
+
+# A process step to publish documentation
+class PublishDocumentationStep(KernelProcessStep):
+    @kernel_function
+    async def publish_documentation(self, docs: str) -> None:
+        print(f"{PublishDocumentationStep.__name__}\n\t Publishing product documentation:\n\n{docs}")
+```
+
+The code above defines the three steps we need for our Process. There are a few points to call out here:
+- In Semantic Kernel, a `KernelFunction` defines a block of code that is invocable by native code or by an LLM. In the case of the Process framework, `KernelFunction`s are the invocable members of a Step and each step requires at least one KernelFunction to be defined.
+- The Process Framework has support for stateless and stateful steps. Stateful steps automatically checkpoint their progress and maintain state over multiple invocations. The `GenerateDocumentationStep` provides an example of this where the `GeneratedDocumentationState` class is used to persist the `ChatHistory` object.
+- Steps can manually emit events by calling `emit_event` on the `KernelProcessStepContext` object. To get an instance of `KernelProcessStepContext` just add it as a parameter on your KernelFunction and the framework will automatically inject it.
+::: zone-end
 
 ### Define the process flow
 
@@ -181,14 +276,6 @@ docsGenerationStep
     .SendEventTo(new(docsPublishStep));
 ```
 
-::: zone-end
-
-::: zone pivot="programming-language-python"
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
-
 There are a few things going on here so let's break it down step by step.
 
 1. Create the builder:
@@ -204,7 +291,58 @@ This is where the routing of events from step to step are defined. In this case 
     - Finally, when the `docsGenerationStep` finishes running, send the returned object to the `docsPublishStep` step.
 
 > [!TIP]
-> **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel and the step context which are special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `docs` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters in in these advanced scenarios you need to specify the target function and parameter.
+> **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel and the step context which are special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `docs` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters, in these advanced scenarios you need to specify the target function and parameter.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+# Create the process builder
+process_builder = ProcessBuilder(name="DocumentationGeneration")
+
+# Add the steps
+info_gathering_step = process_builder.add_step(GatherProductInfoStep)
+docs_generation_step = process_builder.add_step(GenerateDocumentationStep)
+docs_publish_step = process_builder.add_step(PublishDocumentationStep)
+
+# Orchestrate the events
+process_builder.on_input_event("Start").send_event_to(target=info_gathering_step)
+
+info_gathering_step.on_function_result().send_event_to(
+    target=docs_generation_step, function_name="generate_documentation", parameter_name="product_info"
+)
+
+docs_generation_step.on_event("documentation_generated").send_event_to(target=docs_publish_step)
+
+# Configure the kernel with an AI Service and connection details, if necessary
+kernel = Kernel()
+kernel.add_service(AzureChatCompletion())
+
+# Build the process
+kernel_process = process_builder.build()
+```
+
+There are a few things going on here so let's break it down step by step.
+
+1. Create the builder:
+Processes use a builder pattern to simplify wiring everything up. The builder provides methods for managing the steps within a process and for managing the lifecycle of the process.
+
+1. Add the steps:
+Steps are added to the process by calling the `add_step` method of the builder, which adds the step type to the builder. This allows the Process Framework to manage the lifecycle of steps by instantiating instances as needed. In this case we've added three steps to the process and created a variable for each one. These variables give us a handle to the unique instance of each step that we can use next to define the orchestration of events.
+
+1. Orchestrate the events:
+This is where the routing of events from step to step are defined. In this case we have the following routes:
+    - When an external event with `id = Start` is sent to the process, this event and its associated data will be sent to the `info_gathering_step`.
+    - When the `info_gathering_step` finishes running, send the returned object to the `docs_generation_step`.
+    - Finally, when the `docs_generation_step` finishes running, send the returned object to the `docs_publish_step`.
+
+> [!TIP]
+> **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel and the step context which are special, more on that later). When the event containing the generated documentation is sent to the `docs_publish_step` it will be passed to the `docs` parameter of the `publish_documentation` KernelFunction of the `docs_generation_step` because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters, in these advanced scenarios you need to specify the target function and parameter.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
 
 ### Build and run the Process
 
@@ -220,14 +358,6 @@ Kernel kernel = Kernel.CreateBuilder()
 var process = processBuilder.Build();
 await process.StartAsync(kernel, new KernelProcessEvent { Id = "Start", Data = "Contoso GlowBrew" });
 ```
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-::: zone-end
-
-::: zone pivot="programming-language-java"
-::: zone-end
 
 We build the process and call `StartAsync` to run it. Our process is expecting an initial external event called `Start` to kick things off and so we provide that as well. Running this process shows the following output in the Console:
 
@@ -277,6 +407,67 @@ Join the growing community of GlowBrew enthusiasts today, and redefine how you e
 
 Ready to embark on an extraordinary coffee journey? Discover the perfect blend of technology and flavor with Contoso's GlowBrew. Your coffee awaits!
 ```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+```python
+# Configure the kernel with an AI Service and connection details, if necessary
+kernel = Kernel()
+kernel.add_service(AzureChatCompletion())
+
+# Build the process
+kernel_process = process_builder.build()
+
+# Start the process
+async with await start(
+    process=kernel_process,
+    kernel=kernel,
+    initial_event=KernelProcessEvent(id="Start", data="Contoso GlowBrew"),
+) as process_context:
+    _ = await process_context.get_state()
+```
+
+We build the process and call `start` with the asynchronous context manager to run it. Our process is expecting an initial external event called `Start` to kick things off and so we provide that as well. Running this process shows the following output in the Console:
+
+```
+GatherProductInfoStep
+         Gathering product information for Product Name: Contoso GlowBrew
+GenerateDocumentationStep
+         Generating documentation for provided product_info...
+PublishDocumentationStep
+         Publishing product documentation:
+
+# GlowBrew AI-Driven Coffee Machine: Elevate Your Coffee Experience
+
+Welcome to the future of coffee enjoyment with GlowBrew, the AI-driven coffee machine that not only crafts the perfect cup but does so with a light show that brightens your day. Designed for coffee enthusiasts and tech aficionados alike, GlowBrew combines cutting-edge brewing technology with an immersive lighting experience to start every day on a bright note.
+
+## Unleash the Power of Luminous Brew Technology
+
+With GlowBrew, your mornings will never be dull. The industry-leading number of programmable LEDs offers endless possibilities for customizing your coffee-making ritual. Sync the light show with the brewing process to create a visually stimulating ambiance that transforms your kitchen into a vibrant café each morning.
+
+## Discover New Flavor Dimensions with the AI Taste Assistant
+
+Leave the traditional coffee routines behind and say hello to personalization sophistication. The AI Taste Assistant learns and adapts to your unique preferences over time. Whether you prefer a strong espresso or a light latte, the assistant suggests new brew combinations tailored to your palate, inviting you to explore a world of flavors you never knew existed.
+
+## Heighten Your Senses with Gourmet Aroma Diffusion
+
+The moment you step into the room, let the GlowBrew’s built-in aroma diffusers captivate your senses. This feature is designed to enrich your coffee’s scent profile, ensuring every cup you brew is a multi-sensory delight. Let the burgeoning aroma energize you before the very first sip.
+
+## Troubleshooting Guide: LED Lights Malfunctioning
+
+Occasionally, you might encounter an issue with the LED lights not functioning as intended. Here’s how to resolve it efficiently:
+
+- **Reset Lighting Settings**: Start by using the GlowBrew app to reset the lighting configurations to their default state.
+- **Check Connections**: Ensure that all LED connections inside your GlowBrew machine are secure and properly connected.
+- **Perform a Factory Reset**: If the problem persists, perform a factory reset on your GlowBrew to restore all settings to their original state.
+
+Experience the art of coffee making like never before with the GlowBrew AI-driven coffee machine. From captivating light shows to aromatic sensations, every feature is engineered to enhance your daily brew. Brew, savor, and glow with GlowBrew.
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
 
 ## What's Next?
 
