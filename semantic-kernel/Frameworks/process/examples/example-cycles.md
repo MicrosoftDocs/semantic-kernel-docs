@@ -108,10 +108,10 @@ class ProofreadStep(KernelProcessStep):
         print(f"{ProofreadStep.__name__}\n\t Proofreading product documentation...")
 
         system_prompt = """
-        Your job is to proofread customer facing documentation for a new product from Contoso. You will be provide with 
+        Your job is to proofread customer facing documentation for a new product from Contoso. You will be provided with 
         proposed documentation for a product and you must do the following things:
 
-        1. Determine if the documentation is passes the following criteria:
+        1. Determine if the documentation passes the following criteria:
             1. Documentation must use a professional tone.
             1. Documentation should be free of spelling or grammar mistakes.
             1. Documentation should be free of any offensive or inappropriate language.
