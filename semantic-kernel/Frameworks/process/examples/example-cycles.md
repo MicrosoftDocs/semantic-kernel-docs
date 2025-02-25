@@ -98,8 +98,7 @@ class ProofreadingResponse(BaseModel):
 
     meets_expectations: bool = Field(description="Specifies if the proposed docs meets the standards for publishing.")
     explanation: str = Field(description="An explanation of why the documentation does or does not meet expectations.")
-    suggestions: list[str] = Field(description="List of suggestions, empty if there no suggestions for improvement.")
-
+    suggestions: list[str] = Field(description="List of suggestions, empty if there are no suggestions for improvement.")
 
 # A process step to proofread documentation
 class ProofreadStep(KernelProcessStep):
