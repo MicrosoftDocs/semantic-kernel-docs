@@ -87,15 +87,73 @@ public class ProofreadStep : KernelProcessStep
 }
 ```
 
+A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `DocumentationApproved` event or the `DocumentationRejected` event based on the response from the LLM. In the case of `DocumentationApproved`, the event will include the approved documentation as it's payload and in the case of `DocumentationRejected` it will include the suggestions from the proofreader.
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+```python
+# A sample response model for the ProofreadingStep structured output
+class ProofreadingResponse(BaseModel):
+    """A class to represent the response from the proofreading step."""
+
+    meets_expectations: bool = Field(description="Specifies if the proposed docs meets the standards for publishing.")
+    explanation: str = Field(description="An explanation of why the documentation does or does not meet expectations.")
+    suggestions: list[str] = Field(description="List of suggestions, empty if there no suggestions for improvement.")
+
+
+# A process step to proofread documentation
+class ProofreadStep(KernelProcessStep):
+    @kernel_function
+    async def proofread_documentation(self, docs: str, context: KernelProcessStepContext, kernel: Kernel) -> None:
+        print(f"{ProofreadStep.__name__}\n\t Proofreading product documentation...")
+
+        system_prompt = """
+        Your job is to proofread customer facing documentation for a new product from Contoso. You will be provided with 
+        proposed documentation for a product and you must do the following things:
+
+        1. Determine if the documentation passes the following criteria:
+            1. Documentation must use a professional tone.
+            1. Documentation should be free of spelling or grammar mistakes.
+            1. Documentation should be free of any offensive or inappropriate language.
+            1. Documentation should be technically accurate.
+        2. If the documentation does not pass 1, you must write detailed feedback of the changes that are needed to 
+            improve the documentation. 
+        """
+
+        chat_history = ChatHistory(system_message=system_prompt)
+        chat_history.add_user_message(docs)
+
+        # Use structured output to ensure the response format is easily parsable
+        chat_service, settings = kernel.select_ai_service(type=ChatCompletionClientBase)
+        assert isinstance(chat_service, ChatCompletionClientBase)  # nosec
+        assert isinstance(settings, OpenAIChatPromptExecutionSettings)  # nosec
+
+        settings.response_format = ProofreadingResponse
+
+        response = await chat_service.get_chat_message_content(chat_history=chat_history, settings=settings)
+
+        formatted_response: ProofreadingResponse = ProofreadingResponse.model_validate_json(response.content)
+
+        suggestions_text = "\n\t\t".join(formatted_response.suggestions)
+        print(
+            f"\n\tGrade: {'Pass' if formatted_response.meets_expectations else 'Fail'}\n\t"
+            f"Explanation: {formatted_response.explanation}\n\t"
+            f"Suggestions: {suggestions_text}"
+        )
+
+        if formatted_response.meets_expectations:
+            await context.emit_event(process_event="documentation_approved", data=docs)
+        else:
+            await context.emit_event(
+                process_event="documentation_rejected",
+                data={"explanation": formatted_response.explanation, "suggestions": formatted_response.suggestions},
+            )
+```
+A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `documentation_approved` event or the `documentation_rejected` event based on the response from the LLM. In the case of `documentation_approved`, the event will include the approved documentation as it's payload and in the case of `documentation_rejected` it will include the suggestions from the proofreader.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 ::: zone-end
-
-A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `DocumentationApproved` event or the `DocumentationRejected` event based on the response from the LLM. In the case of `DocumentationApproved`, the event will include the approved documentation as it's payload and in the case of `DocumentationRejected` it will include the suggestions from the proofreader.
 
 ### Update the documentation generation step
 
@@ -160,15 +218,67 @@ public class GenerateDocumentationStep : KernelProcessStep<GeneratedDocumentatio
 }
 ```
 
+The `GenerateDocumentationStep` has been updated to include a new KernelFunction. The new function will be used to apply suggested changes to the documentation if our proofreading step requires them. Notice that both functions for generating or rewriting documentation emit the same event named `DocumentationGenerated` indicating that new documentation is available.
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+```python
+# Updated process step to generate and edit documentation for a product
+class GenerateDocumentationStep(KernelProcessStep[GeneratedDocumentationState]):
+    state: GeneratedDocumentationState = Field(default_factory=GeneratedDocumentationState)
+
+    system_prompt: ClassVar[str] = """
+Your job is to write high quality and engaging customer facing documentation for a new product from Contoso. You will 
+be provide with information about the product in the form of internal documentation, specs, and troubleshooting guides 
+and you must use this information and nothing else to generate the documentation. If suggestions are provided on the 
+documentation you create, take the suggestions into account and rewrite the documentation. Make sure the product 
+sounds amazing.
+"""
+
+    async def activate(self, state: KernelProcessStepState[GeneratedDocumentationState]):
+        self.state = state.state
+        if self.state.chat_history is None:
+            self.state.chat_history = ChatHistory(system_message=self.system_prompt)
+        self.state.chat_history
+
+    @kernel_function
+    async def generate_documentation(
+        self, context: KernelProcessStepContext, product_info: str, kernel: Kernel
+    ) -> None:
+        print(f"{GenerateDocumentationStep.__name__}\n\t Generating documentation for provided product_info...")
+
+        self.state.chat_history.add_user_message(f"Product Information:\n{product_info}")
+
+        chat_service, settings = kernel.select_ai_service(type=ChatCompletionClientBase)
+        assert isinstance(chat_service, ChatCompletionClientBase)  # nosec
+
+        response = await chat_service.get_chat_message_content(chat_history=self.state.chat_history, settings=settings)
+
+        await context.emit_event(process_event="documentation_generated", data=str(response))
+
+    @kernel_function
+    async def apply_suggestions(self, suggestions: str, context: KernelProcessStepContext, kernel: Kernel) -> None:
+        print(f"{GenerateDocumentationStep.__name__}\n\t Rewriting documentation with provided suggestions...")
+
+        self.state.chat_history.add_user_message(
+            f"Rewrite the documentation with the following suggestions:\n\n{suggestions}"
+        )
+
+        chat_service, settings = kernel.select_ai_service(type=ChatCompletionClientBase)
+        assert isinstance(chat_service, ChatCompletionClientBase)  # nosec
+
+        generated_documentation_response = await chat_service.get_chat_message_content(
+            chat_history=self.state.chat_history, settings=settings
+        )
+
+        await context.emit_event(process_event="documentation_generated", data=str(generated_documentation_response))
+```
+
+The `GenerateDocumentationStep` has been updated to include a new KernelFunction. The new function will be used to apply suggested changes to the documentation if our proofreading step requires them. Notice that both functions for generating or rewriting documentation emit the same event named `documentation_generated` indicating that new documentation is available.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 ::: zone-end
-
-The `GenerateDocumentationStep` has been updated to include a new KernelFunction. The new function will be used to apply suggested changes to the documentation if our proofreading step requires them. Notice that both functions for generating or rewriting documentation emit the same event named `DocumentationGenerated` indicating that new documentation is available.
 
 ### Flow updates
 
@@ -209,24 +319,63 @@ var process = processBuilder.Build();
 return process;
 ```
 
+Our updated process routing now does the following:
+- When an external event with `id = Start` is sent to the process, this event and its associated data will be sent to the `infoGatheringStep`.
+- When the `infoGatheringStep` finishes running, send the returned object to the `docsGenerationStep`.
+- When the `docsGenerationStep` finishes running, send the generated docs to the `docsProofreadStep`.
+- When the `docsProofreadStep` rejects our documentation and provides suggestions, send the suggestions back to the `docsGenerationStep`.
+- Finally, when the `docsProofreadStep` approves our documentation, send the returned object to the `docsPublishStep`.
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+```python
+# Create the process builder
+process_builder = ProcessBuilder(name="DocumentationGeneration")
+
+# Add the steps
+info_gathering_step = process_builder.add_step(GatherProductInfoStep)
+docs_generation_step = process_builder.add_step(GenerateDocumentationStep)
+docs_proofread_step = process_builder.add_step(ProofreadStep)  # Add new step here
+docs_publish_step = process_builder.add_step(PublishDocumentationStep)
+
+# Orchestrate the events
+process_builder.on_input_event("Start").send_event_to(target=info_gathering_step)
+
+info_gathering_step.on_function_result().send_event_to(
+    target=docs_generation_step, function_name="generate_documentation", parameter_name="product_info"
+)
+
+docs_generation_step.on_event("documentation_generated").send_event_to(
+    target=docs_proofread_step, parameter_name="docs"
+)
+
+docs_proofread_step.on_event("documentation_rejected").send_event_to(
+    target=docs_generation_step,
+    function_name="apply_suggestions",
+    parameter_name="suggestions",
+)
+
+docs_proofread_step.on_event("documentation_approved").send_event_to(target=docs_publish_step)
+```
+
+Our updated process routing now does the following:
+- When an external event with `id = Start` is sent to the process, this event and its associated data will be sent to the `info_gathering_step`.
+- When the `info_gathering_step` finishes running, send the returned object to the `docs_generation_step`.
+- When the `docs_generation_step` finishes running, send the generated docs to the `docs_proofread_step`.
+- When the `docs_proofread_step` rejects our documentation and provides suggestions, send the suggestions back to the `docs_generation_step`.
+- Finally, when the `docs_proofread_step` approves our documentation, send the returned object to the `docs_publish_step`.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
-Our updated process routing now does the following:
-- When an external event with `id = Start` is sent to the process, this event and its associated data will be sent to the `infoGatheringStep` step.
-- When the `infoGatheringStep` finishes running, send the returned object to the `docsGenerationStep` step.
-- When the `docsGenerationStep` finishes running, send the generated docs to the `docsProofreadStep` step.
-- When the `docsProofreadStep` rejects our documentation and provides suggestions, send the suggestions back to the `docsGenerationStep`.
-- Finally, when the `docsProofreadStep` approves our documentation, send the returned object to the `docsPublishStep` step.
+
 
 ### Build and run the Process
 
 Running our updated process shows the following output in the console:
+
+::: zone pivot="programming-language-csharp"
 
 ```md
 GatherProductInfoStep:
@@ -288,6 +437,59 @@ Introducing GlowBrew-your new partner in coffee brewing that brings together adv
 
 We hope you enjoy your GlowBrew experience and that it brings a delightful blend of flavor and brightness to your coffee moments!
 ```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+```md
+GatherProductInfoStep
+         Gathering product information for Product Name: Contoso GlowBrew
+GenerateDocumentationStep
+         Generating documentation for provided product_info...
+ProofreadStep
+         Proofreading product documentation...
+
+        Grade: Pass
+        Explanation: The GlowBrew AI Coffee Machine User Guide meets all the required criteria for publishing. The document maintains a professional tone throughout, is free from spelling and grammatical errors, contains no offensive or inappropriate content, and appears to be technically accurate in its description of the product features and troubleshooting advice.
+        Suggestions: 
+PublishDocumentationStep
+         Publishing product documentation:
+
+# GlowBrew AI Coffee Machine User Guide
+
+Welcome to the future of coffee making with the GlowBrew AI Coffee Machine! Step into a world where cutting-edge technology meets exquisite taste, creating a coffee experience like no other. Designed for coffee aficionados and tech enthusiasts alike, the GlowBrew promises not just a cup of coffee, but an adventure for your senses.
+
+## Key Features
+
+### Luminous Brew Technology
+Illuminate your mornings with the GlowBrew's mesmerizing programmable LED light shows. With an unmatched number of LEDs, the GlowBrew can transform your kitchen ambiance to sync perfectly with each stage of the brewing process. Choose from a spectrum of colors and patterns to set the perfect mood, whether you're winding down with a rich decaf or kick-starting your day with a bold espresso.
+
+### AI Taste Assistant
+Expand your coffee horizons with the AI Taste Assistant, your personal barista that learns and evolves with your palate. Over time, GlowBrew adapts to your preferences, suggesting new and exciting brew combinations. Experience a variety of flavors, from single-origin specialties to intricate blend recipes, tailored to your unique taste.
+
+### Gourmet Aroma Diffusion
+Enhance your coffee experience with unrivaled aromatic pleasure. The GlowBrew's built-in aroma diffusers release a carefully calibrated scent profile that awakens your senses, heightening anticipation for your first sip. It's not just a coffee machine, it's an indulgent sensory journey.
+
+## Troubleshooting
+
+### LED Lights Malfunctioning
+If you experience issues with your LED lights:
+
+1. **Reset the LED Settings**: Use the GlowBrew app to navigate to the lighting settings and perform a reset.
+2. **Check LED Connections**: Open the GlowBrew machine and ensure all LED wiring connections are secure.
+3. **Perform a Factory Reset**: As a last resort, a full factory reset can resolve persistent issues. Follow the instructions in the user manual to perform this reset safely.
+
+## Experience the Glow
+
+With GlowBrew, every cup of coffee is an art form that combines luminous aesthetics, an intuitive learning AI, and the intoxicating allure of rich aromas. Make each morning magical and every break a celebration with the GlowBrew AI Coffee Machine. Brew brilliantly, taste innovatively, and glow endlessly.
+
+For more support, explore our comprehensive FAQ section or contact our dedicated customer service team.
+```
+::: zone-end
+
+::: zone pivot="programming-language-java"
+::: zone-end
 
 
 ## What's Next?
