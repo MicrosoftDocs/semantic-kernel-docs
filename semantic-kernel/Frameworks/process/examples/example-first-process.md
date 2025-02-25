@@ -208,7 +208,7 @@ class GenerateDocumentationStep(KernelProcessStep[GeneratedDocumentationState]):
 
     system_prompt: ClassVar[str] = """
 Your job is to write high quality and engaging customer facing documentation for a new product from Contoso. You will 
-be provide with information about the product in the form of internal documentation, specs, and troubleshooting guides 
+be provided with information about the product in the form of internal documentation, specs, and troubleshooting guides 
 and you must use this information and nothing else to generate the documentation. If suggestions are provided on the 
 documentation you create, take the suggestions into account and rewrite the documentation. Make sure the product 
 sounds amazing.
