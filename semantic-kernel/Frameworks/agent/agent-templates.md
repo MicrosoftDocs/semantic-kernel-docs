@@ -93,9 +93,9 @@ agent = ChatCompletionAgent(
 
 ::: zone-end
 
-#### Open AI Assistant Agent
+#### OpenAI Assistant Agent
 
-Templated instructions are especially powerful when working with an [_Open AI Assistant Agent_](./assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior. 
+Templated instructions are especially powerful when working with an [_OpenAI Assistant Agent_](./assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior. 
 
 ::: zone pivot="programming-language-csharp"
 ```csharp

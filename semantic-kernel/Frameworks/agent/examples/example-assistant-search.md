@@ -1,6 +1,6 @@
 ---
-title: How-To&colon; _Open AI Assistant Agent_ File Search (Experimental)
-description: A step-by-step walk-through of defining and utilizing the file-search tool of an Open AI Assistant Agent.
+title: How-To&colon; _OpenAI Assistant Agent_ File Search (Experimental)
+description: A step-by-step walk-through of defining and utilizing the file-search tool of an OpenAI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
@@ -8,14 +8,14 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: _Open AI Assistant Agent_ File Search 
+# How-To: _OpenAI Assistant Agent_ File Search 
 
 > [!WARNING]
 > The *Semantic Kernel Agent Framework* is in preview and is subject to change.
 
 ## Overview
 
-In this sample, we will explore how to use the _file-search_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
+In this sample, we will explore how to use the _file-search_ tool of an [_OpenAI Assistant Agent_](../assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -106,16 +106,16 @@ Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The
 
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _Open AI_ or _Azure Open AI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
 
 ::: zone pivot="programming-language-csharp"
 
 ```powershell
-# Open AI
+# OpenAI
 dotnet user-secrets set "OpenAISettings:ApiKey" "<api-key>"
 dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
-# Azure Open AI
+# Azure OpenAI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
 dotnet user-secrets set "AzureOpenAISettings:Endpoint" "https://lightspeed-team-shared-openai-eastus.openai.azure.com/"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"
@@ -208,7 +208,7 @@ The full example code is provided in the [Final](#final) section. Refer to that 
 
 ### Setup
 
-Prior to creating an _Open AI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
+Prior to creating an _OpenAI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
 
 ::: zone pivot="programming-language-csharp"
 

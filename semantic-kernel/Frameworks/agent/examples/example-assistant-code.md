@@ -1,6 +1,6 @@
 ---
-title: How-To&colon; _Open AI Assistant Agent_ Code Interpreter (Experimental)
-description: A step-by-step walk-through of defining and utilizing the code-interpreter tool of an Open AI Assistant Agent.
+title: How-To&colon; _OpenAI Assistant Agent_ Code Interpreter (Experimental)
+description: A step-by-step walk-through of defining and utilizing the code-interpreter tool of an OpenAI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
@@ -8,14 +8,14 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: _Open AI Assistant Agent_ Code Interpreter
+# How-To: _OpenAI Assistant Agent_ Code Interpreter
 
 > [!WARNING]
 > The *Semantic Kernel Agent Framework* is in preview and is subject to change.
 
 ## Overview
 
-In this sample, we will explore how to use the _code-interpreter_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
+In this sample, we will explore how to use the _code-interpreter_ tool of an [_OpenAI Assistant Agent_](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -104,16 +104,16 @@ Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` da
 
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _Open AI_ or _Azure Open AI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
 
 ::: zone pivot="programming-language-csharp"
 
 ```powershell
-# Open AI
+# OpenAI
 dotnet user-secrets set "OpenAISettings:ApiKey" "<api-key>"
 dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
-# Azure Open AI
+# Azure OpenAI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
 dotnet user-secrets set "AzureOpenAISettings:Endpoint" "<model-endpoint>"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"
@@ -205,7 +205,7 @@ The full example code is provided in the [Final](#final) section. Refer to that 
 
 ### Setup
 
-Prior to creating an _Open AI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
+Prior to creating an _OpenAI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -885,5 +885,5 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 
 > [!div class="nextstepaction"]
-> [How-To: _Open AI Assistant Agent_ Code File Search](./example-assistant-search.md)
+> [How-To: _OpenAI Assistant Agent_ Code File Search](./example-assistant-search.md)
 

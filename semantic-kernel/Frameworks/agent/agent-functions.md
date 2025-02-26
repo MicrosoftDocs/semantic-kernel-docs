@@ -50,7 +50,7 @@ Any [Plugin](../../concepts/plugins/index.md) available to an _Agent_ is managed
 
 [Plugins](../../concepts/plugins/index.md) can be added to the _Kernel_ either before or after the _Agent_ is created. The process of initializing [Plugins](../../concepts/plugins/index.md) follows the same patterns used for any _Semantic Kernel_ implementation, allowing for consistency and ease of use in managing AI capabilities.
 
-> Note: For a [_Chat Completion Agent_](./chat-completion-agent.md), the function calling mode must be explicitly enabled.  [_Open AI Assistant_](./assistant-agent.md) agent is always based on automatic function calling.
+> Note: For a [_Chat Completion Agent_](./chat-completion-agent.md), the function calling mode must be explicitly enabled.  [_OpenAI Assistant_](./assistant-agent.md) agent is always based on automatic function calling.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -198,7 +198,7 @@ agent = ChatCompletionAgent(
 
 ## Limitations for Agent Function Calling
 
-When directly invoking a[_Chat Completion Agent_](./chat-completion-agent.md), all _Function Choice Behaviors_ are supported. However, when using an [_Open AI Assistant_](./assistant-agent.md) or [_Agent Chat_](./agent-chat.md), only _Automatic_ [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md) is currently available.
+When directly invoking a[_Chat Completion Agent_](./chat-completion-agent.md), all _Function Choice Behaviors_ are supported. However, when using an [_OpenAI Assistant_](./assistant-agent.md) or [_Agent Chat_](./agent-chat.md), only _Automatic_ [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md) is currently available.
 
 
 ## How-To
