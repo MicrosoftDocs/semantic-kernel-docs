@@ -138,7 +138,7 @@ public class Hotel
     [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
+    [VectorStoreRecordVector(4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
