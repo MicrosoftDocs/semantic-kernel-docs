@@ -1,5 +1,5 @@
 ---
-title: Exploring the Semantic Kernel Open AI Assistant Agent (Experimental)
+title: Exploring the Semantic Kernel OpenAI Assistant Agent (Experimental)
 description: An exploration of the definition, behaviors, and usage patterns for a `OpenAIAssistantAgent`
 zone_pivot_groups: programming-languages
 author: crickman
@@ -8,7 +8,7 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Exploring the _Semantic Kernel_ _Open AI Assistant Agent_
+# Exploring the _Semantic Kernel_ _OpenAI Assistant Agent_
 
 > [!WARNING]
 > The *Semantic Kernel Agent Framework* is in preview and is subject to change.
@@ -41,14 +41,14 @@ Detailed API documentation related to this discussion is available at:
 
 The _OpenAI Assistant API_ is a specialized interface designed for more advanced and interactive AI capabilities, enabling developers to create personalized and multi-step task-oriented agents. Unlike the Chat Completion API, which focuses on simple conversational exchanges, the Assistant API allows for dynamic, goal-driven interactions with additional features like code-interpreter and file-search.
 
-- [Open AI Assistant Guide](https://platform.openai.com/docs/assistants)
-- [Open AI Assistant API](https://platform.openai.com/docs/api-reference/assistants)
+- [OpenAI Assistant Guide](https://platform.openai.com/docs/assistants)
+- [OpenAI Assistant API](https://platform.openai.com/docs/api-reference/assistants)
 - [Assistant API in Azure](/azure/ai-services/openai/assistants-quickstart)
 
 
-## Creating an _Open AI Assistant Agent_
+## Creating an _OpenAI Assistant Agent_
 
-Creating an _Open AI Assistant_ requires invoking a remote service, which is handled asynchronously. To manage this, the _Open AI Assistant Agent_ is instantiated through a static factory method, ensuring the process occurs in a non-blocking manner. This method abstracts the complexity of the asynchronous call, returning a promise or future once the assistant is fully initialized and ready for use.
+Creating an _OpenAI Assistant_ requires invoking a remote service, which is handled asynchronously. To manage this, the _OpenAI Assistant Agent_ is instantiated through a static factory method, ensuring the process occurs in a non-blocking manner. This method abstracts the complexity of the asynchronous call, returning a promise or future once the assistant is fully initialized and ready for use.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -91,9 +91,9 @@ openai_agent = await OpenAIAssistantAgent.create(
 ::: zone-end
 
 
-## Retrieving an _Open AI Assistant Agent_
+## Retrieving an _OpenAI Assistant Agent_
 
-Once created, the identifier of the assistant may be access via its identifier.  This identifier may be used to create an _Open AI Assistant Agent_ from an existing assistant definition.
+Once created, the identifier of the assistant may be access via its identifier.  This identifier may be used to create an _OpenAI Assistant Agent_ from an existing assistant definition.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -125,7 +125,7 @@ agent = await AzureAssistantAgent.retrieve(id=agent_id, kernel=kernel)
 ::: zone-end
 
 
-## Using an _Open AI Assistant Agent_
+## Using an _OpenAI Assistant Agent_
 
 As with all aspects of the _Assistant API_, conversations are stored remotely. Each conversation is referred to as a _thread_ and identified by a unique `string` identifier. Interactions with your _OpenAI Assistant Agent_ are tied to this specific thread identifier which must be specified when calling the agent/
 
@@ -181,7 +181,7 @@ await agent.delete_thread(thread_id)
 ::: zone-end
 
 
-## Deleting an _Open AI Assistant Agent_
+## Deleting an _OpenAI Assistant Agent_
 
 Since the assistant's definition is stored remotely, it supports the capability to self-delete. This enables the agent to be removed from the system when it is no longer needed.
 
@@ -217,10 +217,10 @@ is_deleted = agent._is_deleted
 
 ## How-To
 
-For an end-to-end example for a _Open AI Assistant Agent_, see:
+For an end-to-end example for a _OpenAI Assistant Agent_, see:
 
-- [How-To: _Open AI Assistant Agent_ Code Interpreter](./examples/example-assistant-code.md)
-- [How-To: _Open AI Assistant Agent_ File Search](./examples/example-assistant-search.md)
+- [How-To: _OpenAI Assistant Agent_ Code Interpreter](./examples/example-assistant-code.md)
+- [How-To: _OpenAI Assistant Agent_ File Search](./examples/example-assistant-search.md)
 
 
 > [!div class="nextstepaction"]

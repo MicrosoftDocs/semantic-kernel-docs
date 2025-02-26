@@ -66,7 +66,7 @@ Package|Description
 [Microsoft.SemanticKernel](https://www.nuget.org/packages/Microsoft.SemanticKernel)|This contains the core _Semantic Kernel_ libraries for getting started with the _Agent Framework_.  This must be explicitly referenced by your application.
 [Microsoft.SemanticKernel.Agents.Abstractions](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Abstractions)|Defines the core agent abstractions for the _Agent Framework_.  Generally not required to be specified as it is included in both the `Microsoft.SemanticKernel.Agents.Core` and `Microsoft.SemanticKernel.Agents.OpenAI` packages.
 [Microsoft.SemanticKernel.Agents.Core](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Core)|Includes the [`ChatCompletionAgent`](./chat-completion-agent.md) and [`AgentGroupChat`](./agent-chat.md) classes.
-[Microsoft.SemanticKernel.Agents.OpenAI](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.OpenAI)|Provides ability to use the [Open AI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent`](./assistant-agent.md).
+[Microsoft.SemanticKernel.Agents.OpenAI](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.OpenAI)|Provides ability to use the [OpenAI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent`](./assistant-agent.md).
 
 ::: zone-end
 
@@ -74,7 +74,7 @@ Package|Description
 
 Module|Description
 --|--
-[semantic-kernel.agents](https://pypi.org/project/semantic-kernel/)|This is the _Semantic Kernel_ library for getting started with the _Agent Framework_.  This must be explicitly referenced by your application. This module contains the [`ChatCompletionAgent`](./chat-completion-agent.md) and [`AgentGroupChat`](./agent-chat.md) classes, as well as the ability to use the [Open AI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent` or `AzureOpenAssistant`](./assistant-agent.md).
+[semantic-kernel.agents](https://pypi.org/project/semantic-kernel/)|This is the _Semantic Kernel_ library for getting started with the _Agent Framework_.  This must be explicitly referenced by your application. This module contains the [`ChatCompletionAgent`](./chat-completion-agent.md) and [`AgentGroupChat`](./agent-chat.md) classes, as well as the ability to use the [OpenAI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent` or `AzureOpenAssistant`](./assistant-agent.md).
 
 ::: zone-end
 

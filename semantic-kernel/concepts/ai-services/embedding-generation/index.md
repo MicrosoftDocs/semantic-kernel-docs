@@ -154,7 +154,7 @@ using Microsoft.SemanticKernel;
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
-    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure OpenAI service endpoint, e.g. https://myaiservice.openai.azure.com.
     apiKey: "YOUR_API_KEY",
     modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
     serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel.
@@ -301,7 +301,7 @@ var builder = Host.CreateApplicationBuilder(args);
 #pragma warning disable SKEXP0010
 builder.Services.AddAzureOpenAITextEmbeddingGeneration(
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
-    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure OpenAI service endpoint, e.g. https://myaiservice.openai.azure.com.
     apiKey: "YOUR_API_KEY",
     modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
     serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel.
@@ -468,7 +468,7 @@ using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 #pragma warning disable SKEXP0010
 AzureOpenAITextEmbeddingGenerationService textEmbeddingGenerationService = new (
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
-    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure OpenAI service endpoint, e.g. https://myaiservice.openai.azure.com.
     apiKey: "YOUR_API_KEY",
     modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
     httpClient: new HttpClient(), // Optional; if not provided, the HttpClient from the kernel will be used.

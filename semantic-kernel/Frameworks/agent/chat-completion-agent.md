@@ -51,7 +51,7 @@ For .NET, some of AI services that support models with chat-completion include:
 
 Model|_Semantic Kernel_ AI Service
 --|--
-Azure Open AI|[`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
+Azure OpenAI|[`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
 Gemini|[`Microsoft.SemanticKernel.Connectors.Google`](/dotnet/api/microsoft.semantickernel.connectors.google)
 HuggingFace|[`Microsoft.SemanticKernel.Connectors.HuggingFace`](/dotnet/api/microsoft.semantickernel.connectors.huggingface)
 Mistral|[`Microsoft.SemanticKernel.Connectors.MistralAI`](/dotnet/api/microsoft.semantickernel.connectors.mistralai)
@@ -234,4 +234,4 @@ For an end-to-end example for a _Chat Completion Agent_, see:
 
 
 > [!div class="nextstepaction"]
-> [Exploring _Open AI Assistant Agent_](./assistant-agent.md)
+> [Exploring _OpenAI Assistant Agent_](./assistant-agent.md)

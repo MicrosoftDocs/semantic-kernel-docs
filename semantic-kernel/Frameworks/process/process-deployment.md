@@ -18,7 +18,7 @@ The Process Framework provides an in-process runtime that allows developers to r
 
 ## Cloud Runtimes
 
-For scenarios requiring scalability and distributed processing, the Process Framework supports cloud runtimes such as [**Orleans**](https://learn.microsoft.com/dotnet/orleans/overview) and [**Dapr**](https://dapr.io/). These options empower developers to deploy processes in a distributed manner, facilitating high availability and load balancing across multiple instances. By leveraging these cloud runtimes, organizations can streamline their operations and manage substantial workloads with ease.
+For scenarios requiring scalability and distributed processing, the Process Framework supports cloud runtimes such as [**Orleans**](/dotnet/orleans/overview) and [**Dapr**](https://dapr.io/). These options empower developers to deploy processes in a distributed manner, facilitating high availability and load balancing across multiple instances. By leveraging these cloud runtimes, organizations can streamline their operations and manage substantial workloads with ease.
 
 - **Orleans Runtime:** This framework provides a programming model for building distributed applications and is particularly well-suited for handling virtual actors in a resilient manner, complementing the Process Framework’s event-driven architecture.
   

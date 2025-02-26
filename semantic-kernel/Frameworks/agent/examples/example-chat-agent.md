@@ -103,18 +103,18 @@ Additionally, copy the GitHub plug-in and models (`github.py`) from [_Semantic K
 
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _Open AI_ or _Azure Open AI_ and also for _GitHub_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_ and also for _GitHub_.
 
 > Note: For information on GitHub _Personal Access Tokens_, see: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
 ::: zone pivot="programming-language-csharp"
 
 ```powershell
-# Open AI
+# OpenAI
 dotnet user-secrets set "OpenAISettings:ApiKey" "<api-key>"
 dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
-# Azure Open AI
+# Azure OpenAI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
 dotnet user-secrets set "AzureOpenAISettings:Endpoint" "<model-endpoint>"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"
@@ -177,7 +177,7 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 
 ```python
 AZURE_OPENAI_API_KEY="..."
-AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
@@ -343,7 +343,7 @@ agent = ChatCompletionAgent(
         The current date and time is: {{$now}}. 
         """,
     arguments=KernelArguments(
-        settings=AzureAIPromptExecutionSettings(function_choice_behavior=FunctionChoiceBehavior.Auto()),
+        settings=AzureChatPromptExecutionSettings(function_choice_behavior=FunctionChoiceBehavior.Auto()),
         repository="microsoft/semantic-kernel",
     ),
 )
@@ -669,6 +669,8 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/agent_docs/chat_agent.py), as shown above, in our repo.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -680,6 +682,6 @@ if __name__ == "__main__":
 
 
 > [!div class="nextstepaction"]
-> [How-To: _Open AI Assistant Agent_ Code Interpreter](./example-assistant-code.md)
+> [How-To: _OpenAI Assistant Agent_ Code Interpreter](./example-assistant-code.md)
 
 

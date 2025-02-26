@@ -38,7 +38,7 @@ Detailed API documentation related to this discussion is available at:
 
 ## What is _Agent Chat_?
 
-_Agent Chat_ provides a framework that enables interaction between multiple agents, even if they are of different types. This makes it possible for a [_Chat Completion Agent_](./chat-completion-agent.md) and an [_Open AI Assistant Agent_](./assistant-agent.md) to work together within the same conversation. _Agent Chat_ also defines entry points for initiating collaboration between agents, whether through multiple responses or a single agent response.
+_Agent Chat_ provides a framework that enables interaction between multiple agents, even if they are of different types. This makes it possible for a [_Chat Completion Agent_](./chat-completion-agent.md) and an [_OpenAI Assistant Agent_](./assistant-agent.md) to work together within the same conversation. _Agent Chat_ also defines entry points for initiating collaboration between agents, whether through multiple responses or a single agent response.
 
 As an abstract class, _Agent Chat_ can be subclassed to support custom scenarios.
 
@@ -280,7 +280,7 @@ history = await chat.get_chat_messages()
 
 ::: zone-end
 
-Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifing an agent.  (For example: [_Open AI Assistant_](./assistant-agent.md) versus [_Chat Completion Agent_](./chat-completion-agent.md).)
+Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifing an agent.  (For example: [_OpenAI Assistant_](./assistant-agent.md) versus [_Chat Completion Agent_](./chat-completion-agent.md).)
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -636,7 +636,7 @@ if chat.is_complete:
 
 ### Clear Full Conversation State
 
-When done using an _Agent Chat_ where an [_Open AI Assistant_](./assistant-agent.md) participated, it may be necessary to delete the remote _thread_ associated with the _assistant_. _Agent Chat_ supports resetting or clearing the entire conversation state, which includes deleting any remote _thread_ definition. This ensures that no residual conversation data remains linked to the assistant once the chat concludes.
+When done using an _Agent Chat_ where an [_OpenAI Assistant_](./assistant-agent.md) participated, it may be necessary to delete the remote _thread_ associated with the _assistant_. _Agent Chat_ supports resetting or clearing the entire conversation state, which includes deleting any remote _thread_ definition. This ensures that no residual conversation data remains linked to the assistant once the chat concludes.
 
 A full reset does not remove the _agents_ that had joined the _Agent Chat_ and leaves the _Agent Chat_ in a state where it can be reused. This allows for the continuation of interactions with the same agents without needing to reinitialize them, making future conversations more efficient.
 

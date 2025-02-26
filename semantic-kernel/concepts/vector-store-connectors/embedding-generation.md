@@ -26,7 +26,7 @@ You can construct instances of the text embedding services provided by Semantic 
 They all implement the `ITextEmbeddingGenerationService` interface.
 
 ```csharp
-// Constructing an Azure Open AI embedding generation service directly.
+// Constructing an Azure OpenAI embedding generation service directly.
 ITextEmbeddingGenerationService azureOpenAITES = new AzureOpenAITextEmbeddingGenerationService(
     "text-embedding-ada-002",
     "https://{myservice}.openai.azure.com/",
@@ -113,7 +113,7 @@ public async Task GenerateEmbeddingsAndSearchAsync(
 ## Embedding dimensions
 
 Vector databases typically require you to specify the number of dimensions that each vector has when creating the collection.
-Different embedding models typically support generating vectors with different dimension sizes. E.g. Open AI `text-embedding-ada-002`
+Different embedding models typically support generating vectors with different dimension sizes. E.g. OpenAI `text-embedding-ada-002`
 generates vectors with 1536 dimensions. Some models also allow a developer to choose the number of dimensions they want in the
 output vector, e.g. Google `text-embedding-004` produces vectors with 768 dimension by default, but allows a developer to
 choose any number of dimensions between 1 and 768.

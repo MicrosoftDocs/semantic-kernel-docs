@@ -11,9 +11,9 @@ ms.service: semantic-kernel
 
 # Inspection of telemetry data with Aspire Dashboard
 
-[Aspire Dashboard](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) is part of the [.NET Aspire](https://learn.microsoft.com/dotnet/aspire/get-started/aspire-overview) offering. The dashboard allows developers to monitor and inspect their distributed applications.
+[Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) is part of the [.NET Aspire](/dotnet/aspire/get-started/aspire-overview) offering. The dashboard allows developers to monitor and inspect their distributed applications.
 
-In this example, we will use the [standalone mode](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash) and learn how to export telemetry data to Aspire Dashboard, and inspect the data there.
+In this example, we will use the [standalone mode](/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash) and learn how to export telemetry data to Aspire Dashboard, and inspect the data there.
 
 ## Exporter
 
@@ -330,7 +330,7 @@ Please refer to this [article](./telemetry-with-console.md#add-telemetry-1) for 
 
 ## Start the Aspire Dashboard
 
-Follow the instructions [here](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
+Follow the instructions [here](/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
 
 ## Run
 
@@ -366,7 +366,7 @@ python telemetry_aspire_dashboard_quickstart.py
 After running the application, head over to the dashboard to inspect the telemetry data.
 
 > [!TIP]
-> Follow this [guide](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard interface.
+> Follow this [guide](/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard interface.
 
 ### Traces
 
@@ -383,7 +383,7 @@ In the trace details, you can see the span that represents the prompt function a
 
 ### Logs
 
-Head over to the `Structured` tab to view the logs emitted by the application. Please refer to this [guide](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/explore#structured-logs-page) on how to work with structured logs in the dashboard.
+Head over to the `Structured` tab to view the logs emitted by the application. Please refer to this [guide](/dotnet/aspire/fundamentals/dashboard/explore#structured-logs-page) on how to work with structured logs in the dashboard.
 
 ## Next steps
 
