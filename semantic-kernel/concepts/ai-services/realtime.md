@@ -33,11 +33,11 @@ Any realtime client consists of the following methods:
 
 The python version of semantic kernel currently supports the following realtime clients:
 
-| Client | Protocol  | Description                                                                                                                                                                                        |
-| ------ | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OpenAI | Websocket | The OpenAI Realtime API is a websocket based api that allows you to send and receive messages in realtime, this connector uses the OpenAI Python package to connect and receive and send messages. |
-| OpenAI | WebRTC    | The OpenAI Realtime API is a WebRTC based api that allows you to send and receive messages in realtime, it needs a webRTC compatible audio track at session creation time.                         |
-| Azure  | Websocket | The Azure Realtime API is a websocket based api that allows you to send and receive messages in realtime, this uses the same package as the OpenAI websocket connector.                            |
+| Client | Protocol  | Modalities   | Function calling enabled | Description                                                                                                                                                                                        |
+| ------ | --------- | ------------ | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OpenAI | Websocket | Text & Audio | Yes                      | The OpenAI Realtime API is a websocket based api that allows you to send and receive messages in realtime, this connector uses the OpenAI Python package to connect and receive and send messages. |
+| OpenAI | WebRTC    | Text & Audio | Yes                      | The OpenAI Realtime API is a WebRTC based api that allows you to send and receive messages in realtime, it needs a webRTC compatible audio track at session creation time.                         |
+| Azure  | Websocket | Text & Audio | Yes                      | The Azure Realtime API is a websocket based api that allows you to send and receive messages in realtime, this uses the same package as the OpenAI websocket connector.                            |
 
 ## Getting started
 
