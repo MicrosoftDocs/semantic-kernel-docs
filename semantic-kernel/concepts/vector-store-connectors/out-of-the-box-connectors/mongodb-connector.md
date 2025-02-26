@@ -51,6 +51,7 @@ The MongoDB Vector Store connector can be used to access and manage data in Mong
 ::: zone pivot="programming-language-java"
 More info coming soon.
 ::: zone-end
+::: zone pivot="programming-language-csharp"
 
 ## Getting started
 
@@ -157,7 +158,7 @@ public class Hotel
 
 ## Getting started
 
-Add the MongoDB Atlas Vector Store dependencies to your environment. It needs the `pymongo` package which is included in the mongo extra:
+Add the MongoDB Atlas Vector Store dependencies to your environment. It needs the `pymongo` package which is included in the mongo extra: , you need to install with these extras:
 
 ```bash
 pip install semantic-kernel[mongo]
