@@ -17,27 +17,59 @@ ms.service: semantic-kernel
 
 The Azure AI Search Vector Store connector can be used to access and manage data in Azure AI Search. The connector has the following characteristics.
 
-| Feature Area                      | Support                                                                                                                          |
-|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Collection maps to                | Azure AI Search Index                                                                                                            |
-| Supported key property types      | string                                                                                                                           |
-| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
-| Supported index types             | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                              |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
-| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
-| Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                |
+::: zone pivot="programming-language-csharp"
+
+| Feature Area                          | Support                                                                                                                                                             |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | Azure AI Search Index                                                                                                                                               |
+| Supported key property types          | string                                                                                                                                                              |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported vector property types       | ReadOnlyMemory\<float\>                                                                                                                                             |
+| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                                                                 |
+| Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                           |
+| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                     |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                 |
+| IsFilterable supported?               | Yes                                                                                                                                                                 |
+| IsFullTextSearchable supported?       | Yes                                                                                                                                                                 |
+| StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                   |
+::: zone-end
+::: zone pivot="programming-language-python"
+| Feature Area                          | Support                                                                                                                                                           |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | Azure AI Search Index                                                                                                                                             |
+| Supported key property types          | string                                                                                                                                                            |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and iterables of each of these types*</li></ul> |
+| Supported vector property types       | list[float], list[int], ndarray                                                                                                                                   |
+| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                                                               |
+| Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul><li>Hamming</li></ul>                                                    |
+| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                   |
+| Supports multiple vectors in a record | Yes                                                                                                                                                               |
+| IsFilterable supported?               | Yes                                                                                                                                                               |
+| IsFullTextSearchable supported?       | Yes                                                                                                                                                               |
+::: zone-end
+::: zone pivot="programming-language-java"
+| Feature Area                          | Support                                                                                                                                                             |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | Azure AI Search Index                                                                                                                                               |
+| Supported key property types          | string                                                                                                                                                              |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported vector property types       | ReadOnlyMemory\<float\>                                                                                                                                             |
+| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                                                                 |
+| Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                           |
+| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                     |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                 |
+| IsFilterable supported?               | Yes                                                                                                                                                                 |
+| IsFullTextSearchable supported?       | Yes                                                                                                                                                                 |
+| StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                   |
+::: zone-end
 
 ## Limitations
 
 Notable Azure AI Search connector functionality limitations.
 
-| Feature Area                                                                         | Workaround                                                                                     |
-|--------------------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
-| Configuring full text search analyzers during collection creation is not supported.  | Use the Azure AI Search Client SDK directly for collection creation                            |
+| Feature Area                                                                        | Workaround                                                          |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Configuring full text search analyzers during collection creation is not supported. | Use the Azure AI Search Client SDK directly for collection creation |
 
 ::: zone pivot="programming-language-csharp"
 
