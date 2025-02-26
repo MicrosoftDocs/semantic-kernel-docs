@@ -111,16 +111,16 @@ from semantic_kernel.kernel import Kernel
 
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _Open AI_ or _Azure Open AI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
 
 ::: zone pivot="programming-language-csharp"
 
 ```powershell
-# Open AI
+# OpenAI
 dotnet user-secrets set "OpenAISettings:ApiKey" "<api-key>"
 dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
-# Azure Open AI
+# Azure OpenAI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
 dotnet user-secrets set "AzureOpenAISettings:Endpoint" "<model-endpoint>"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"

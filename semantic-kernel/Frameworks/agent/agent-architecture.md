@@ -28,7 +28,7 @@ The _Agent Framework_ was developed with the following key priorities in mind:
 
 ## Agent
 
-The abstract _Agent_ class serves as the core abstraction for all types of agents, providing a foundational structure that can be extended to create more specialized agents. One key subclass is _Kernel Agent_, which establishes a direct association with a [_Kernel_](../../concepts/kernel.md) object. This relationship forms the basis for more specific agent implementations, such as the [_Chat Completion Agent_](./chat-completion-agent.md) and the [_Open AI Assistant Agent_](./assistant-agent.md), both of which leverage the Kernel's capabilities to execute their respective functions.
+The abstract _Agent_ class serves as the core abstraction for all types of agents, providing a foundational structure that can be extended to create more specialized agents. One key subclass is _Kernel Agent_, which establishes a direct association with a [_Kernel_](../../concepts/kernel.md) object. This relationship forms the basis for more specific agent implementations, such as the [_Chat Completion Agent_](./chat-completion-agent.md) and the [_OpenAI Assistant Agent_](./assistant-agent.md), both of which leverage the Kernel's capabilities to execute their respective functions.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -103,7 +103,7 @@ The _Agent Framework_ is built on the foundational concepts and features that ma
 
 At the heart of the _Semantic Kernel_ ecosystem is the [_Kernel_](../../concepts/kernel.md), which serves as the core object that drives AI operations and interactions. To create any agent within this framework, a _Kernel instance_ is required as it provides the foundational context and capabilities for the agent’s functionality. The _Kernel_ acts as the engine for processing instructions, managing state, and invoking the necessary AI services that power the agent's behavior.
 
-The [_Chat Completion Agent_](./chat-completion-agent.md) and [_Open AI Assistant Agent_](./assistant-agent.md) articles provide specific details on how to create each type of agent.
+The [_Chat Completion Agent_](./chat-completion-agent.md) and [_OpenAI Assistant Agent_](./assistant-agent.md) articles provide specific details on how to create each type of agent.
  These resources offer step-by-step instructions and highlight the key configurations needed to tailor the agents to different conversational or task-based applications, demonstrating how the Kernel enables dynamic and intelligent agent behaviors across diverse use cases.
 
 #### Related API's:
@@ -169,7 +169,7 @@ Plugins are a fundamental aspect of the _Semantic Kernel_, enabling developers t
 
 Agent messaging, including both input and response, is built upon the core content types of the _Semantic Kernel_, providing a unified structure for communication. This design choice simplifies the process of transitioning from traditional chat-completion patterns to more advanced agent-driven patterns in your application development. By leveraging familiar _Semantic Kernel_ content types, developers can seamlessly integrate agent capabilities into their applications without needing to overhaul existing systems. This streamlining ensures that as you evolve from basic conversational AI to more autonomous, task-oriented agents, the underlying framework remains consistent, making development faster and more efficient.
 
-> Note: The [_Open AI Assistant Agent_`_](./assistant-agent.md) introduced content types specific to its usage for _File References_ and _Content Annotation_: 
+> Note: The [_OpenAI Assistant Agent_`_](./assistant-agent.md) introduced content types specific to its usage for _File References_ and _Content Annotation_: 
 
 #### Related API's:
 

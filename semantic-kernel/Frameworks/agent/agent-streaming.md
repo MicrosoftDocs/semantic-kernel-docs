@@ -19,9 +19,9 @@ A streamed response delivers the message content in small, incremental chunks. T
 
 #### Streaming References:
 
-- [Open AI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming)
-- [Open AI Chat Completion Streaming](https://platform.openai.com/docs/api-reference/chat/create#chat-create-stream)
-- [Open AI Assistant Streaming](https://platform.openai.com/docs/api-reference/assistants-streaming)
+- [OpenAI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming)
+- [OpenAI Chat Completion Streaming](https://platform.openai.com/docs/api-reference/chat/create#chat-create-stream)
+- [OpenAI Assistant Streaming](https://platform.openai.com/docs/api-reference/assistants-streaming)
 - [Azure OpenAI Service REST API](/azure/ai-services/openai/reference)
 
 
@@ -54,7 +54,7 @@ A streamed response delivers the message content in small, incremental chunks. T
 
 ## Streaming Agent Invocation
 
-The _Agent Framework_ supports _streamed_ responses when using [_Agent Chat_](./agent-chat.md) or when directly invoking a [_Chat Completion Agent_](./chat-completion-agent.md) or [_Open AI Assistant Agent_](./assistant-agent.md). In either mode, the framework delivers responses asynchronously as they are streamed. Alongside the streamed response, a consistent, non-streamed history is maintained to track the conversation. This ensures both real-time interaction and a reliable record of the conversation's flow.
+The _Agent Framework_ supports _streamed_ responses when using [_Agent Chat_](./agent-chat.md) or when directly invoking a [_Chat Completion Agent_](./chat-completion-agent.md) or [_OpenAI Assistant Agent_](./assistant-agent.md). In either mode, the framework delivers responses asynchronously as they are streamed. Alongside the streamed response, a consistent, non-streamed history is maintained to track the conversation. This ensures both real-time interaction and a reliable record of the conversation's flow.
 
 ### Streamed response from _Chat Completion Agent_
 
@@ -104,9 +104,9 @@ async for response in agent.invoke_stream(chat)
 
 ::: zone-end
 
-### Streamed response from _Open AI Assistant Agent_
+### Streamed response from _OpenAI Assistant Agent_
 
-When invoking a streamed response from an [_Open AI Assistant Agent_](./assistant-agent.md), an optional _Chat History_ can be provided to capture the complete messages for further analysis if needed. Since the assistant maintains the conversation state as a remote thread, capturing these messages is not always necessary. The decision to store and analyze the full response depends on the specific requirements of the interaction.
+When invoking a streamed response from an [_OpenAI Assistant Agent_](./assistant-agent.md), an optional _Chat History_ can be provided to capture the complete messages for further analysis if needed. Since the assistant maintains the conversation state as a remote thread, capturing these messages is not always necessary. The decision to store and analyze the full response depends on the specific requirements of the interaction.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
