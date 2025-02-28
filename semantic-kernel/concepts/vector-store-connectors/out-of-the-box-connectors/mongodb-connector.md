@@ -13,25 +13,45 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
-::: zone pivot="programming-language-csharp"
-
 ## Overview
 
 The MongoDB Vector Store connector can be used to access and manage data in MongoDB. The connector has the following characteristics.
 
-| Feature Area                      | Support                                                                                                                          |
-|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Collection maps to                | MongoDB Collection + Index                                                                                                       |
-| Supported key property types      | string                                                                                                                           |
-| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
-| Supported index types             | N/A                                                                                                                              |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
-| Supported filter clauses          | <ul><li>EqualTo</li></ul>                                                                                                        |
-| Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | No                                                                                                                               |
-| StoragePropertyName supported?    | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                              |
+::: zone pivot="programming-language-csharp"
+
+| Feature Area                          | Support                                                                                                                                                                       |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | MongoDB Collection + Index                                                                                                                                                    |
+| Supported key property types          | string                                                                                                                                                                        |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                                                                    |
+| Supported index types                 | N/A                                                                                                                                                                           |
+| Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                     |
+| Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                                                     |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                           |
+| IsFilterable supported?               | Yes                                                                                                                                                                           |
+| IsFullTextSearchable supported?       | No                                                                                                                                                                            |
+| StoragePropertyName supported?        | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
+::: zone-end
+::: zone pivot="programming-language-python"
+
+| Feature Area                          | Support                                                                                                                                                                     |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | MongoDB Collection + Index                                                                                                                                                  |
+| Supported key property types          | string                                                                                                                                                                      |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and iterables of each of these types*</li></ul> |
+| Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                                                                                             |
+| Supported index types                 | <ul><li>Hnsw</li><li>IvfFlat</li></ul>                                                                                                                                      |
+| Supported distance functions          | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                     |
+| Supported filter clauses              | <ul><li>EqualTo</li></ul><ul><li>AnyTagsEqualTo</li></ul>                                                                                                                   |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                         |
+| IsFilterable supported?               | Yes                                                                                                                                                                         |
+| IsFullTextSearchable supported?       | No                                                                                                                                                                          |
+::: zone-end
+::: zone pivot="programming-language-java"
+More info coming soon.
+::: zone-end
+::: zone pivot="programming-language-csharp"
 
 ## Getting started
 
@@ -136,9 +156,52 @@ public class Hotel
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## Getting started
 
-More info coming soon.
+Add the MongoDB Atlas Vector Store dependencies to your environment. It needs the `pymongo` package which is included in the mongo extra: , you need to install with these extras:
+
+```bash
+pip install semantic-kernel[mongo]
+```
+
+You can then create the vector store.
+
+```python
+from semantic_kernel.connectors.memory.mongodb_atlas import MongoDBAtlasStore
+
+# If the right environment settings are set, namely MONGODB_ATLAS_CONNECTION_STRING and optionally MONGODB_ATLAS_DATABASE_NAME and MONGODB_ATLAS_INDEX_NAME, this is enough to create the Store:
+store = MongoDBAtlasStore()
+```
+
+Alternatively, you can also pass in your own mongodb client if you want to have more control over the client construction:
+
+```python
+from pymongo import AsyncMongoClient
+from semantic_kernel.connectors.memory.mongodb_atlas import MongoDBAtlasStore
+
+client = AsyncMongoClient(...)
+store = MongoDBAtlasStore(mongo_client=client)
+```
+
+When a client is passed in, Semantic Kernel will not close the connection for you, so you need to ensure to close it, for instance with a `async with` statement.
+
+You can also create a collection directly, without the store.
+
+```python
+from semantic_kernel.connectors.memory.mongodb_atlas import MongoDBAtlasCollection
+
+# `hotel` is a class created with the @vectorstoremodel decorator
+collection = MongoDBAtlasCollection(
+    collection_name="my_collection",
+    data_model_type=hotel
+)
+```
+
+## Serialization
+
+Since the MongoDB Atlas connector needs a simple dict with the fields corresponding to the index as the input, the serialization is quite easy, it only uses a predetermined key `_id`, so we replace the key of the data model with that if it is not already `_id`.
+
+For more details on this concept see the [serialization documentation](./../serialization.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
