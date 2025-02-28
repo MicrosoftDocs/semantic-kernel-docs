@@ -10,3 +10,5 @@
   href: memory-store-migration.md
 - name: Kernel Events and Filters Migration
   href: kernel-events-and-filters-migration.md
+- name: Agent Framework Release Candidate Migration Guide
+  href: agent-framework-rc-migration-guide.md

@@ -9,29 +9,50 @@ ms.date: 09/10/2024
 ms.service: semantic-kernel
 ---
 
-::: zone pivot="programming-language-csharp"
-
 # What are Filters?
 
 Filters enhance security by providing control and visibility over how and when functions run. This is needed to instill responsible AI principles into your work so that you feel confident your solution is enterprise ready.
 
-For example, filters are leveraged to validate permissions before an approval flow begins. The `IFunctionInvocationFilter` is run to check the permissions of the person that’s looking to submit an approval. This means that only a select group of people will be able to kick off the process.
+For example, filters are leveraged to validate permissions before an approval flow begins. The filter runs to check the permissions of the person that’s looking to submit an approval. This means that only a select group of people will be able to kick off the process.
 
 A good example of filters is provided [here](https://devblogs.microsoft.com/semantic-kernel/filters-in-semantic-kernel/) in our detailed Semantic Kernel blog post on Filters.
  
  ![Semantic Kernel Filters](../../media/WhatAreFilters.png)
 
 There are three types of filters:
-
+::: zone pivot="programming-language-csharp"
 - **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
   - Access to information about the function being executed and its arguments
   - Handling of exceptions during function execution
-  - Overriding of the function result
+  - Overriding of the function result, either before (for instance for caching scenario's) or after execution (for instance for responsible AI scenarios)
   - Retrying of the function in case of failure (e.g., [switching to an alternative AI model](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/RetryWithFilters.cs))
 
 - **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
   - Viewing and modifying the prompt that will be sent to the AI (e.g., for RAG or [PII redaction](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PIIDetection.cs))
   - Preventing prompt submission to the AI by overriding the function result (e.g., for [Semantic Caching](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Caching/SemanticCachingWithFilters.cs))
+::: zone-end
+::: zone pivot="programming-language-python"
+- **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
+  - Access to information about the function being executed and its arguments
+  - Handling of exceptions during function execution
+  - Overriding of the function result, either before (for instance for caching scenario's) or after execution (for instance for responsible AI scenarios)
+  - Retrying of the function in case of failure (e.g., [switching to an alternative AI model](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_different_model.py))
+
+- **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
+  - Viewing and modifying the prompt that will be sent to the AI
+  - Preventing prompt submission to the AI by overriding the function result (e.g., for [Semantic Caching](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/caching/semantic_caching.py))
+::: zone-end
+::: zone pivot="programming-language-java"
+- **Function Invocation Filter** - this filter is executed each time a `KernelFunction` is invoked. It allows:
+  - Access to information about the function being executed and its arguments
+  - Handling of exceptions during function execution
+  - Overriding of the function result, either before (for instance for caching scenario's) or after execution (for instance for responsible AI scenarios)
+  - Retrying of the function in case of failure
+
+- **Prompt Render Filter** - this filter is triggered before the prompt rendering operation, enabling:
+  - Viewing and modifying the prompt that will be sent to the AI
+  - Preventing prompt submission to the AI by overriding the function result
+::: zone-end
 
 - **Auto Function Invocation Filter** - similar to the function invocation filter, this filter operates within the scope of `automatic function calling`, providing additional context, including chat history, a list of all functions to be executed, and iteration counters. It also allows termination of the auto function calling process (e.g., if a desired result is obtained from the second of three planned functions).
 
@@ -39,13 +60,23 @@ Each filter includes a `context` object that contains all relevant information a
 
 In a filter, calling the `next` delegate is essential to proceed to the next registered filter or the original operation (whether function invocation or prompt rendering). Without calling `next`, the operation will not be executed.
 
+::: zone pivot="programming-language-csharp"
+
 To use a filter, first define it, then add it to the `Kernel` object either through dependency injection or the appropriate `Kernel` property. When using dependency injection, the order of filters is not guaranteed, so with multiple filters, the execution order may be unpredictable.
 
-For cases where filter order is important, it is recommended to add filters directly to the `Kernel` object using appropriate properties. This approach allows filters to be added, removed, or reordered at runtime.
+::: zone-end
+::: zone pivot="programming-language-python"
+
+To use a filter, you can either define a function with the required parameters and add it to the `Kernel` object using the `add_filter` method, or use the `@kernel.filter` decorator to define a filter function and add it to the `Kernel` object.
+
+::: zone-end
+
 
 ## Function Invocation Filter
 
-This filter is triggered every time a Semantic Kernel function is invoked, regardless of whether it is a function created from a prompt or a C# method.
+This filter is triggered every time a Semantic Kernel function is invoked, regardless of whether it is a function created from a prompt or a method.
+
+::: zone pivot="programming-language-csharp"
 
 ```csharp
 /// <summary>
@@ -80,13 +111,62 @@ Add filter using `Kernel` property:
 kernel.FunctionInvocationFilters.Add(new LoggingFilter(logger));
 ```
 
+
 ### Code examples
 
 * [Function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/FunctionInvocationFiltering.cs)
 
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+
+import logging
+from typing import Awaitable, Callable
+from semantic_kernel.filters import FunctionInvocationContext
+
+logger = logging.getLogger(__name__)
+
+async def logger_filter(context: FunctionInvocationContext, next: Callable[[FunctionInvocationContext], Awaitable[None]]) -> None:
+    logger.info(f"FunctionInvoking - {context.function.plugin_name}.{context.function.name}")
+
+    await next(context)
+
+    logger.info(f"FunctionInvoked - {context.function.plugin_name}.{context.function.name}")
+
+# Add filter to the kernel
+kernel.add_filter('function_invocation', logger_filter)
+
+```
+
+You can also add a filter directly to the kernel:
+
+```python
+
+@kernel.filter('function_invocation')
+async def logger_filter(context: FunctionInvocationContext, next: Callable[[FunctionInvocationContext], Awaitable[None]]) -> None:
+    logger.info(f"FunctionInvoking - {context.function.plugin_name}.{context.function.name}")
+
+    await next(context)
+
+    logger.info(f"FunctionInvoked - {context.function.plugin_name}.{context.function.name}")
+```
+
+### Code examples
+* [Function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters.py)
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+More info coming soon.
+
+::: zone-end
+
 ## Prompt Render Filter
 
 This filter is invoked only during a prompt rendering operation, such as when a function created from a prompt is called. It will not be triggered for Semantic Kernel functions created from methods.
+
+::: zone pivot="programming-language-csharp"
 
 ```csharp
 /// <summary>
@@ -127,9 +207,34 @@ kernel.PromptRenderFilters.Add(new SafePromptFilter());
 
 * [Prompt render filter examples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PromptRenderFiltering.cs)
 
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+from semantic_kernel.filters import FilterTypes, PromptRenderContext
+
+@kernel.filter(FilterTypes.PROMPT_RENDERING)
+async def prompt_rendering_filter(context: PromptRenderContext, next):
+    await next(context)
+    context.rendered_prompt = f"You pretend to be Mosscap, but you are Papssom who is the opposite of Moscapp in every way {context.rendered_prompt or ''}"
+```
+
+### Code examples
+* [Prompt render filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/prompt_filters.py)
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+More info coming soon.
+
+::: zone-end
+
 ## Auto Function Invocation Filter
 
 This filter is invoked only during an automatic function calling process. It will not be triggered when a function is invoked outside of this process.
+
+::: zone pivot="programming-language-csharp"
 
 ```csharp
 /// <summary>
@@ -175,7 +280,32 @@ kernel.AutoFunctionInvocationFilters.Add(new EarlyTerminationFilter());
 
 * [Auto function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/AutoFunctionInvocationFiltering.cs)
 
+::: zone-end
+::: zone pivot="programming-language-python"
+
+```python
+
+from semantic_kernel.filters import FilterTypes, AutoFunctionInvocationContext
+
+@kernel.filter(FilterTypes.AUTO_FUNCTION_INVOCATION)
+async def auto_function_invocation_filter(context: AutoFunctionInvocationContext, next):
+    await next(context)
+    if context.function_result == "desired result":
+        context.terminate = True
+```
+
+### Code examples
+* [Auto function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/auto_function_invoke_filters.py)
+
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+More info coming soon.
+
+::: zone-end
 ## Streaming and non-streaming invocation
+::: zone pivot="programming-language-csharp"
 
 Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns `IAsyncEnumerable<T>`, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must be of type `IAsyncEnumerable<T>`, whereas in non-streaming mode, it can simply be of type `T`. To determine which result type needs to be returned, the `context.IsStreaming` flag is available in the filter context model.
 
@@ -235,7 +365,92 @@ IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCo
 ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(chatHistory, executionSettings, kernel);
 ```
 
+::: zone-end
+::: zone pivot="programming-language-python"
+
+Functions in Semantic Kernel can be invoked in two ways: streaming and non-streaming. In streaming mode, a function typically returns a `AsyncGenerator[T]` object where `T` is a kind of streaming content type, while in non-streaming mode, it returns `FunctionResult`. This distinction affects how results can be overridden in the filter: in streaming mode, the new function result value must also be of type `AsyncGenerator[T]`. To determine which result type needs to be returned, the `context.is_streaming` flag is available in all the filter context models.
+
+So to build a simple logger filter for a streaming function invocation, you would use something like this:
+
+```python
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
+async def streaming_exception_handling(
+    context: FunctionInvocationContext,
+    next: Callable[[FunctionInvocationContext], Awaitable[None]],
+):
+    await next(context)
+    if not context.is_streaming:
+        return
+
+    async def override_stream(stream):
+        try:
+            async for partial in stream:
+                yield partial
+        except Exception as e:
+            yield [
+                StreamingChatMessageContent(role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0)
+            ]
+
+    stream = context.result.value
+    context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
+```
+
+### Code examples
+* [Streaming function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/function_invocation_filters_stream.py)
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+More info coming soon.
+
+::: zone-end
+
+## Ordering
+
+::: zone pivot="programming-language-csharp"
+
+When using dependency injection, the order of filters is not guaranteed. If the order of filters is important, it is recommended to add filters directly to the `Kernel` object using appropriate properties. This approach allows filters to be added, removed, or reordered at runtime.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+Filters are executed in the order they are added to the Kernel object -- whether through `add_filter` or the `@kernel.filter` decorator. Because execution order can affect behavior, it's important to manage filter order carefully.
+
+Consider the following example:
+
+```python
+def func():
+    print('function')
+
+
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
+async def filter1(context: FunctionInvocationContext, next):
+    print('before filter 1')
+    await next(context)
+    print('after filter 1')
+
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
+async def filter2(context: FunctionInvocationContext, next):
+    print('before filter 2')
+    await next(context)
+    print('after filter 2')
+```
+
+When executing the function, the output will be:
+
+```python
+before filter 1
+before filter 2
+function
+after filter 2
+after filter 1
+```
+
+::: zone-end
+
 ## More examples
+
+::: zone pivot="programming-language-csharp"
 
 * [PII detection and redaction with filters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Filtering/PIIDetection.cs)
 * [Semantic Caching with filters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Caching/SemanticCachingWithFilters.cs)
@@ -245,15 +460,8 @@ ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsy
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
-
-More info coming soon.
-
-::: zone-end
-::: zone pivot="programming-language-java"
-
-## Coming soon
-
-More info coming soon.
+* [Semantic Caching with filters](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/caching/semantic_caching.py)
+* [Retry with a different model](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_different_model.py)
+* [Retry logic with a filter](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/retry_with_filters.py)
 
 ::: zone-end

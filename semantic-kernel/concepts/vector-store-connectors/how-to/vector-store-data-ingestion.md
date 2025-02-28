@@ -240,7 +240,7 @@ var deploymentName = "text-embedding-ada-002";
 var endpoint = "https://sksample.openai.azure.com/";
 var apiKey = "your-api-key";
 
-// Register Azure Open AI text embedding generation service and Redis vector store.
+// Register Azure OpenAI text embedding generation service and Redis vector store.
 var builder = Kernel.CreateBuilder()
     .AddAzureOpenAITextEmbeddingGeneration(deploymentName, endpoint, apiKey)
     .AddRedisVectorStore("localhost:6379");

@@ -1,6 +1,6 @@
 ---
-title: How-To&colon; _Open AI Assistant Agent_ File Search (Experimental)
-description: A step-by-step walk-through of defining and utilizing the file-search tool of an Open AI Assistant Agent.
+title: How-To&colon; `OpenAIAssistantAgent` File Search
+description: A step-by-step walk-through of defining and utilizing the file-search tool of an OpenAI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
@@ -8,14 +8,14 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: _Open AI Assistant Agent_ File Search 
+# How-To: `OpenAIAssistantAgent` File Search 
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
 ## Overview
 
-In this sample, we will explore how to use the _file-search_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
+In this sample, we will explore how to use the _file-search_ tool of an [`OpenAIAssistantAgent`](../assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -54,7 +54,7 @@ The project file (`.csproj`) should contain the following `PackageReference` def
   </ItemGroup>
 ```
 
-The _Agent Framework_ is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
+The `Agent Framework` is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
 
 ```xml
   <PropertyGroup>
@@ -86,11 +86,8 @@ Start by creating a folder that will hold your script (`.py` file) and the sampl
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.streaming_annotation_content import StreamingAnnotationContent
-from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.kernel import Kernel
+from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.contents import StreamingAnnotationContent
 ```
 
 Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The-Water-of-Life.txt` and `Grimms-The-White-Snake.txt` public domain content from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources).  Add these files in your project folder.
@@ -106,16 +103,16 @@ Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The
 
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _Open AI_ or _Azure Open AI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
 
 ::: zone pivot="programming-language-csharp"
 
 ```powershell
-# Open AI
+# OpenAI
 dotnet user-secrets set "OpenAISettings:ApiKey" "<api-key>"
 dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
-# Azure Open AI
+# Azure OpenAI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
 dotnet user-secrets set "AzureOpenAISettings:Endpoint" "https://lightspeed-team-shared-openai-eastus.openai.azure.com/"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"
@@ -174,7 +171,7 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 
 ```python
 AZURE_OPENAI_API_KEY="..."
-AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
@@ -182,6 +179,9 @@ OPENAI_API_KEY="sk-..."
 OPENAI_ORG_ID=""
 OPENAI_CHAT_MODEL_ID=""
 ```
+
+> [!TIP]
+> Azure Assistants require an API version of at least 2024-05-01-preview. As new features are introduced, API versions are updated accordingly. As of this writing, the latest version is 2025-01-01-preview. For the most up-to-date versioning details, refer to the [Azure OpenAI API preview lifecycle](/azure/ai-services/openai/api-version-deprecation).
 
 Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
@@ -198,14 +198,14 @@ Once configured, the respective AI service classes will pick up the required var
 The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
-2. [Agent Definition](#agent-definition) - Create the _Chat_Completion_Agent_ with templatized instructions and plug-in.
+2. [Agent Definition](#agent-definition) - Create the _Chat_Completion`Agent` with templatized instructions and plug-in.
 3. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
 ### Setup
 
-Prior to creating an _Open AI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
+Prior to creating an `OpenAIAssistantAgent`, ensure the configuration settings are available and prepare the file resources.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -219,6 +219,16 @@ OpenAIClientProvider clientProvider =
     OpenAIClientProvider.ForAzureOpenAI(
         new AzureCliCredential(),
         new Uri(settings.AzureOpenAI.Endpoint));
+```
+::: zone-end
+
+
+::: zone pivot="programming-language-python"
+The class method `setup_resources()` on the Assistant Agent handles creating the client and returning it and the model to use based on the desired configuration. Pydantic settings are used to load environment variables first from environment variables or from the `.env` file. One may pass in the `api_key`, `api_version`, `deployment_name` or `endpoint`, which will take precedence over any environment variables configured.
+
+```python
+# Create the client using Azure OpenAI resources and configuration
+client, model = AzureAssistantAgent.setup_resources()
 ```
 ::: zone-end
 
@@ -245,8 +255,21 @@ string storeId = operation.VectorStoreId;
 ::: zone pivot="programming-language-python"
 ```python
 def get_filepath_for_filename(filename: str) -> str:
-    base_directory = os.path.dirname(os.path.realpath(__file__))
+    base_directory = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+        "resources",
+    )
     return os.path.join(base_directory, filename)
+
+# Upload the files to the client
+file_ids: list[str] = []
+for path in [get_filepath_for_filename(filename) for filename in filenames]:
+    with open(path, "rb") as file:
+        file = await client.files.create(file=file, purpose="assistants")
+        file_ids.append(file.id)
+
+# Get the file search tool and resources
+file_search_tools, file_search_tool_resources = AzureAssistantAgent.configure_file_search_tool(file_ids=file_ids)
 ```
 ::: zone-end
 
@@ -312,7 +335,7 @@ foreach (string fileName in _fileNames)
 
 ### Agent Definition
 
-We are now ready to instantiate an _OpenAI Assistant Agent_. The agent is configured with its target model, _Instructions_, and the _File Search_ tool enabled. Additionally, we explicitly associate the _Vector Store_ with the _File Search_ tool.
+We are now ready to instantiate an `OpenAIAssistantAgent`. The agent is configured with its target model, _Instructions_, and the _File Search_ tool enabled. Additionally, we explicitly associate the _Vector Store_ with the _File Search_ tool.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -342,18 +365,24 @@ OpenAIAssistantAgent agent =
 
 ::: zone pivot="programming-language-python"
 ```python
-agent = await AzureAssistantAgent.create(
-    kernel=Kernel(),
-    service_id="agent",
-    name="SampleAssistantAgent",
+# Create the assistant definition
+definition = await client.beta.assistants.create(
+    model=model,
     instructions="""
         The document store contains the text of fictional stories.
         Always analyze the document store to provide an answer to the user's question.
         Never rely on your knowledge of stories not included in the document store.
         Always format response using markdown.
         """,
-    enable_file_search=True,
-    vector_store_filenames=[get_filepath_for_filename(filename) for filename in filenames],
+    name="SampleAssistantAgent",
+    tools=file_search_tools,
+    tool_resources=file_search_tool_resources,
+)
+
+# Create the agent using the client and the assistant definition
+agent = AzureAssistantAgent(
+    client=client,
+    definition=definition,
 )
 ```
 ::: zone-end
@@ -366,7 +395,7 @@ agent = await AzureAssistantAgent.create(
 
 ### The _Chat_ Loop
 
-At last, we are able to coordinate the interaction between the user and the _Agent_.  Start by creating an _Assistant Thread_ to maintain the conversation state and creating an empty loop.
+At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating an _Assistant Thread_ to maintain the conversation state and creating an empty loop.
 
 Let's also ensure the resources are removed at the end of execution to minimize unnecessary charges.
 
@@ -455,6 +484,7 @@ if not user_input:
 
 if user_input.lower() == "exit":
     is_complete = True
+    break
 
 await agent.add_chat_message(
     thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
@@ -468,7 +498,7 @@ await agent.add_chat_message(
 
 ::: zone-end
 
-Before invoking the _Agent_ response, let's add a helper method to reformat the unicode annotation brackets to ANSI brackets.
+Before invoking the `Agent` response, let's add a helper method to reformat the unicode annotation brackets to ANSI brackets.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -489,7 +519,7 @@ private static string ReplaceUnicodeBrackets(this string content) =>
 
 ::: zone-end
 
-To generate an _Agent_ response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
+To generate an `Agent` response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -699,18 +729,26 @@ public static class Program
 
 ::: zone pivot="programming-language-python"
 ```python
+# Copyright (c) Microsoft. All rights reserved.
+
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.streaming_annotation_content import StreamingAnnotationContent
-from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.kernel import Kernel
+from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.contents import StreamingAnnotationContent
+
+"""
+The following sample demonstrates how to create a simple,
+OpenAI assistant agent that utilizes the vector store
+to answer questions based on the uploaded documents.
+"""
 
 
 def get_filepath_for_filename(filename: str) -> str:
-    base_directory = os.path.dirname(os.path.realpath(__file__))
+    base_directory = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+        "resources",
+    )
     return os.path.join(base_directory, filename)
 
 
@@ -722,22 +760,48 @@ filenames = [
 
 
 async def main():
-    agent = await AzureAssistantAgent.create(
-        kernel=Kernel(),
-        service_id="agent",
-        name="SampleAssistantAgent",
+    # Create the client using Azure OpenAI resources and configuration
+    client, model = AzureAssistantAgent.setup_resources()
+
+    # Upload the files to the client
+    file_ids: list[str] = []
+    for path in [get_filepath_for_filename(filename) for filename in filenames]:
+        with open(path, "rb") as file:
+            file = await client.files.create(file=file, purpose="assistants")
+            file_ids.append(file.id)
+
+    vector_store = await client.beta.vector_stores.create(
+        name="assistant_search",
+        file_ids=file_ids,
+    )
+
+    # Get the file search tool and resources
+    file_search_tools, file_search_tool_resources = AzureAssistantAgent.configure_file_search_tool(
+        vector_store_ids=vector_store.id
+    )
+
+    # Create the assistant definition
+    definition = await client.beta.assistants.create(
+        model=model,
         instructions="""
             The document store contains the text of fictional stories.
             Always analyze the document store to provide an answer to the user's question.
             Never rely on your knowledge of stories not included in the document store.
             Always format response using markdown.
             """,
-        enable_file_search=True,
-        vector_store_filenames=[get_filepath_for_filename(filename) for filename in filenames],
+        name="SampleAssistantAgent",
+        tools=file_search_tools,
+        tool_resources=file_search_tool_resources,
+    )
+
+    # Create the agent using the client and the assistant definition
+    agent = AzureAssistantAgent(
+        client=client,
+        definition=definition,
     )
 
     print("Creating thread...")
-    thread_id = await agent.create_thread()
+    thread = await client.beta.threads.create()
 
     try:
         is_complete: bool = False
@@ -750,12 +814,10 @@ async def main():
                 is_complete = True
                 break
 
-            await agent.add_chat_message(
-                thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
-            )
+            await agent.add_chat_message(thread_id=thread.id, message=user_input)
 
             footnotes: list[StreamingAnnotationContent] = []
-            async for response in agent.invoke_stream(thread_id=thread_id):
+            async for response in agent.invoke_stream(thread_id=thread.id):
                 footnotes.extend([item for item in response.items if isinstance(item, StreamingAnnotationContent)])
 
                 print(f"{response.content}", end="", flush=True)
@@ -770,16 +832,17 @@ async def main():
                     )
 
     finally:
-        print("Cleaning up resources...")
-        if agent is not None:
-            [await agent.delete_file(file_id) for file_id in agent.file_search_file_ids]
-            await agent.delete_thread(thread_id)
-            await agent.delete()
+        print("\nCleaning up resources...")
+        [await client.files.delete(file_id) for file_id in file_ids]
+        await client.beta.threads.delete(thread.id)
+        await client.beta.assistants.delete(agent.id)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/agent_docs/assistant_search.py), as shown above, in our repo.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -790,5 +853,5 @@ if __name__ == "__main__":
 
 
 > [!div class="nextstepaction"]
-> [How to Coordinate Agent Collaboration using _Agent Group Chat_](./example-agent-collaboration.md)
+> [How to Coordinate Agent Collaboration using `AgentGroupChat`](./example-agent-collaboration.md)
 
