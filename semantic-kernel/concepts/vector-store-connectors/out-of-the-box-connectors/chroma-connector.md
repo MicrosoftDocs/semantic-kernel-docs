@@ -33,7 +33,7 @@ following characteristics.
 | Collection maps to                    | Chroma collection                                                                                 |
 | Supported key property types          | string                                                                                            |
 | Supported data property types         | All types that are supported by System.Text.Json (either built-in or by using a custom converter) |
-| Supported vector property types       | <ul><li>list[float]</li></ul> <ul><li>list[int]</li></ul><ul><li>ndarray]</li></ul>               |
+| Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                   |
 | Supported index types                 | <ul><li>HNSW</li></ul>                                                                            |
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>  |
 | Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                   |
