@@ -9,7 +9,7 @@ ms.date: 02/26/2025
 ms.service: semantic-kernel
 ---
 
-# Migration Guide for Updating from Old Code to New Code
+# Agent Framework Release Candidate Migration Guide
 
 As we transition some agents from the experimental stage to the release candidate stage, we have updated the APIs to simplify and streamline their use. Refer to the specific scenario guide to learn how to update your existing code to work with the latest available APIs.
 
