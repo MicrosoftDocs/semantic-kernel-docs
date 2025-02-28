@@ -1,5 +1,5 @@
 ---
-title: Exploring the Semantic Kernel OpenAI Assistant Agent (Experimental)
+title: Exploring the Semantic Kernel OpenAI Assistant Agent
 description: An exploration of the definition, behaviors, and usage patterns for a `OpenAIAssistantAgent`
 zone_pivot_groups: programming-languages
 author: crickman
@@ -8,10 +8,10 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Exploring the _Semantic Kernel_ _OpenAI Assistant Agent_
+# Exploring the _Semantic Kernel_ `OpenAIAssistantAgent`
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
 Detailed API documentation related to this discussion is available at:
 
@@ -24,7 +24,6 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-python"
 
-- [`open_ai_assistant_base`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_base)
 - [`azure_assistant_agent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_assistant_agent)
 - [`open_ai_assistant_agent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_agent)
 
@@ -46,9 +45,9 @@ The _OpenAI Assistant API_ is a specialized interface designed for more advanced
 - [Assistant API in Azure](/azure/ai-services/openai/assistants-quickstart)
 
 
-## Creating an _OpenAI Assistant Agent_
+## Creating an `OpenAIAssistantAgent`
 
-Creating an _OpenAI Assistant_ requires invoking a remote service, which is handled asynchronously. To manage this, the _OpenAI Assistant Agent_ is instantiated through a static factory method, ensuring the process occurs in a non-blocking manner. This method abstracts the complexity of the asynchronous call, returning a promise or future once the assistant is fully initialized and ready for use.
+Creating an `OpenAIAssistant` requires invoking a remote service, which is handled asynchronously. To manage this, the `OpenAIAssistantAgent` is instantiated through a static factory method, ensuring the process occurs in a non-blocking manner. This method abstracts the complexity of the asynchronous call, returning a promise or future once the assistant is fully initialized and ready for use.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -66,20 +65,40 @@ OpenAIAssistantAgent agent =
 
 ::: zone pivot="programming-language-python"
 ```python
-azure_agent = await AzureAssistantAgent.create(
-    kernel=kernel, 
-    service_id=service_id, 
-    name="<agent name>", 
-    instructions="<agent instructions>"
+from semantic_kernel.agents.open_ai import AzureAssistantAgent, OpenAIAssistantAgent
+
+# Set up the client and model using Azure OpenAI Resources
+client, model = AzureAssistantAgent.setup_resources()
+
+# Define the assistant definition
+definition = await client.beta.assistants.create(
+    model=model,
+    instructions="<instructions>",
+    name="<agent name>",
+)
+
+# Create the AzureAssistantAgent instance using the client and the assistant definition
+agent = AzureAssistantAgent(
+    client=client,
+    definition=definition,
 )
 
 # or
 
-openai_agent = await OpenAIAssistantAgent.create(
-    kernel=kernel, 
-    service_id=service_id, 
-    name="<agent name>", 
-    instructions="<agent instructions>"
+# Set up the client and model using OpenAI Resources
+client, model = OpenAIAssistantAgent.setup_resources()
+
+# Define the assistant definition
+definition = await client.beta.assistants.create(
+    model=model,
+    instructions="<instructions>",
+    name="<agent name>",
+)
+
+# Create the OpenAIAssistantAgent instance using the client and the assistant definition
+agent = OpenAIAssistantAgent(
+    client=client,
+    definition=definition,
 )
 ```
 ::: zone-end
@@ -91,9 +110,9 @@ openai_agent = await OpenAIAssistantAgent.create(
 ::: zone-end
 
 
-## Retrieving an _OpenAI Assistant Agent_
+## Retrieving an `OpenAIAssistantAgent`
 
-Once created, the identifier of the assistant may be access via its identifier.  This identifier may be used to create an _OpenAI Assistant Agent_ from an existing assistant definition.
+Once created, the identifier of the assistant may be access via its identifier.  This identifier may be used to create an `OpenAIAssistantAgent` from an existing assistant definition.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -110,11 +129,29 @@ OpenAIAssistantAgent agent =
 
 ::: zone pivot="programming-language-python"
 ```python
-agent = await OpenAIAssistantAgent.retrieve(id=agent_id, kernel=kernel)
+# Using Azure OpenAI Resources
 
-# or
+# Create the client using Azure OpenAI resources and configuration
+client, model = AzureAssistantAgent.setup_resources()
 
-agent = await AzureAssistantAgent.retrieve(id=agent_id, kernel=kernel)
+# Create the assistant definition
+definition = await client.beta.assistants.create(
+    model=model,
+    name="<agent name>",
+    instructions="<instructions>",
+)
+
+# Store the assistant ID
+assistant_id = definition.id
+
+# Retrieve the assistant definition from the server based on the assistant ID
+new_asst_definition = await client.beta.assistants.retrieve(assistant_id)
+
+# Create the AzureAssistantAgent instance using the client and the assistant definition
+agent = AzureAssistantAgent(
+    client=client,
+    definition=new_asst_definition,
+)
 ```
 ::: zone-end
 
@@ -125,9 +162,9 @@ agent = await AzureAssistantAgent.retrieve(id=agent_id, kernel=kernel)
 ::: zone-end
 
 
-## Using an _OpenAI Assistant Agent_
+## Using an `OpenAIAssistantAgent`
 
-As with all aspects of the _Assistant API_, conversations are stored remotely. Each conversation is referred to as a _thread_ and identified by a unique `string` identifier. Interactions with your _OpenAI Assistant Agent_ are tied to this specific thread identifier which must be specified when calling the agent/
+As with all aspects of the _Assistant API_, conversations are stored remotely. Each conversation is referred to as a _thread_ and identified by a unique `string` identifier. Interactions with your `OpenAIAssistantAgent` are tied to this specific thread identifier which must be specified when calling the agent/
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -181,7 +218,7 @@ await agent.delete_thread(thread_id)
 ::: zone-end
 
 
-## Deleting an _OpenAI Assistant Agent_
+## Deleting an `OpenAIAssistantAgent`
 
 Since the assistant's definition is stored remotely, it supports the capability to self-delete. This enables the agent to be removed from the system when it is no longer needed.
 
@@ -217,12 +254,12 @@ is_deleted = agent._is_deleted
 
 ## How-To
 
-For an end-to-end example for a _OpenAI Assistant Agent_, see:
+For an end-to-end example for a `OpenAIAssistantAgent`, see:
 
-- [How-To: _OpenAI Assistant Agent_ Code Interpreter](./examples/example-assistant-code.md)
-- [How-To: _OpenAI Assistant Agent_ File Search](./examples/example-assistant-search.md)
+- [How-To: `OpenAIAssistantAgent` Code Interpreter](./examples/example-assistant-code.md)
+- [How-To: `OpenAIAssistantAgent` File Search](./examples/example-assistant-search.md)
 
 
 > [!div class="nextstepaction"]
-> [Agent Collaboration in _Agent Chat_](./agent-chat.md)
+> [Agent Collaboration in `AgentChat`](./agent-chat.md)
 
