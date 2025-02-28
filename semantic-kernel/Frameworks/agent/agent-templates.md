@@ -1,5 +1,5 @@
 ---
-title: Create an Agent from a Semantic Kernel Template (Experimental)
+title: Create an Agent from a Semantic Kernel Template
 description: Describes how to use a Semantic Kernel template to define an agent.
 zone_pivot_groups: programming-languages
 author: crickman
@@ -10,8 +10,8 @@ ms.service: semantic-kernel
 ---
 # Create an Agent from a Semantic Kernel Template
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
 ## Prompt Templates in Semantic Kernel
 
@@ -95,7 +95,7 @@ agent = ChatCompletionAgent(
 
 #### OpenAI Assistant Agent
 
-Templated instructions are especially powerful when working with an [_OpenAI Assistant Agent_](./assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior. 
+Templated instructions are especially powerful when working with an [`OpenAIAssistantAgent`](./assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior. 
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -208,7 +208,7 @@ agent = ChatCompletionAgent(
 
 ### Overriding Template Values for Direct Invocation
 
-When invoking an agent directly, without using [_Agent Chat_](./agent-chat.md), the agent's parameters can be overridden as needed. This allows for greater control and customization of the agent's behavior during specific tasks, enabling you to modify its instructions or settings on the fly to suit particular requirements.
+When invoking an agent directly, without using [`AgentChat`](./agent-chat.md), the agent's parameters can be overridden as needed. This allows for greater control and customization of the agent's behavior during specific tasks, enabling you to modify its instructions or settings on the fly to suit particular requirements.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -263,6 +263,12 @@ chat = ChatHistory()
 
 override_arguments = KernelArguments(topic="Cat", length="3")
 
+# Two ways to get a response from the agent
+
+# Get the response which returns a ChatMessageContent directly
+response = await agent.get_response(chat, arguments=override_arguments)
+
+# or use the invoke method to return an AsyncIterable of ChatMessageContent
 async for response in agent.invoke(chat, arguments=override_arguments):
     # process agent response(s)...
 ```
@@ -280,7 +286,7 @@ async for response in agent.invoke(chat, arguments=override_arguments):
 
 For an end-to-end example for creating an agent from a _pmompt-template_, see:
 
-- [How-To: _Chat Completion Agent_](./examples/example-chat-agent.md)
+- [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
 
 
 > [!div class="nextstepaction"]

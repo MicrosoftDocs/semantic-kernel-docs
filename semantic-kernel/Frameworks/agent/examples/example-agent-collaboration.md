@@ -10,12 +10,12 @@ ms.service: semantic-kernel
 ---
 # How-To: Coordinate Agent Collaboration using Agent Group Chat
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
 
 ## Overview
 
-In this sample, we will explore how to use _Agent Group Chat_ to coordinate collboration of two different agents working to review and rewrite user provided content.  Each agent is assigned a distinct role:
+In this sample, we will explore how to use `AgentGroupChat` to coordinate collboration of two different agents working to review and rewrite user provided content.  Each agent is assigned a distinct role:
 
 - **Reviewer**: Reviews and provides direction to _Writer_.
 - **Writer**: Updates user content based on _Reviewer_ input.
@@ -61,7 +61,7 @@ The project file (`.csproj`) should contain the following `PackageReference` def
   </ItemGroup>
 ```
 
-The _Agent Framework_ is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
+The `Agent Framework` is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
 
 ```xml
   <PropertyGroup>
@@ -81,24 +81,21 @@ Start by installing the Semantic Kernel Python package.
 pip install semantic-kernel
 ```
 
+Next add the required imports.
+
 ```python
 import asyncio
 import os
-import copy
 
+from semantic_kernel import Kernel
 from semantic_kernel.agents import AgentGroupChat, ChatCompletionAgent
-from semantic_kernel.agents.strategies.selection.kernel_function_selection_strategy import (
+from semantic_kernel.agents.strategies import (
     KernelFunctionSelectionStrategy,
-)
-from semantic_kernel.agents.strategies.termination.kernel_function_termination_strategy import (
     KernelFunctionTerminationStrategy,
 )
-from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import AzureChatCompletion
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.functions.kernel_function_decorator import kernel_function
-from semantic_kernel.functions.kernel_function_from_prompt import KernelFunctionFromPrompt
-from semantic_kernel.kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.contents import ChatHistoryTruncationReducer
+from semantic_kernel.functions import KernelFunctionFromPrompt
 ```
 ::: zone-end
 
@@ -108,12 +105,11 @@ from semantic_kernel.kernel import Kernel
 
 ::: zone-end
 
-
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
-
 ::: zone pivot="programming-language-csharp"
+
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
 
 ```powershell
 # OpenAI
@@ -173,7 +169,7 @@ public class Settings
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
+The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). The sample requires that you have Azure OpenAI or OpenAI resources available.
 
 Configure the following settings in your `.env` file for either Azure OpenAI or OpenAI:
 
@@ -197,21 +193,20 @@ Once configured, the respective AI service classes will pick up the required var
 
 ::: zone-end
 
-
 ## Coding
 
 The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
-2. [_Agent_ Definition](#agent-definition) - Create the two _Chat Completion Agent_ instances (_Reviewer_ and _Writer_).
-3. [_Chat_ Definition](#chat-definition) - Create the _Agent Group Chat_ and associated strategies.
+2. [`Agent` Definition](#agent-definition) - Create the two `ChatCompletionAgent` instances (_Reviewer_ and _Writer_).
+3. [_Chat_ Definition](#chat-definition) - Create the `AgentGroupChat` and associated strategies.
 4. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
 ### Setup
 
-Prior to creating any _Chat Completion Agent_, the configuration settings, plugins, and _Kernel_ must be initialized.
+Prior to creating any `ChatCompletionAgent`, the configuration settings, plugins, and `Kernel` must be initialized.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -252,14 +247,12 @@ kernel = Kernel()
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
-
 > Agents are currently unavailable in Java.
-
 ::: zone-end
 
-Let's also create a second _Kernel_ instance via _cloning_ and add a plug-in that will allow the reivew to place updated content on the clip-board.
-
 ::: zone pivot="programming-language-csharp"
+Let's also create a second `Kernel` instance via _cloning_ and add a plug-in that will allow the reivew to place updated content on the clip-board.
+
 ```csharp
 Kernel toolKernel = kernel.Clone();
 toolKernel.Plugins.AddFromType<ClipboardAccess>();
@@ -313,7 +306,7 @@ private sealed class ClipboardAccess
 ### Agent Definition
 
 ::: zone pivot="programming-language-csharp"
-Let's declare the agent names as `const` so they might be referenced in _Agent Group Chat_ strategies:
+Let's declare the agent names as `const` so they might be referenced in `AgentGroupChat` strategies:
 
 ```csharp
 const string ReviewerName = "Reviewer";
@@ -374,7 +367,6 @@ ChatCompletionAgent agentReviewer =
 ::: zone pivot="programming-language-python"
 ```python
 agent_reviewer = ChatCompletionAgent(
-        service_id=REVIEWER_NAME,
         kernel=kernel,
         name=REVIEWER_NAME,
         instructions="""
@@ -425,7 +417,6 @@ ChatCompletionAgent agentWriter =
 The _Writer_ agent is similiar. It is given a single-purpose task, follow direction and rewrite the content.
 ```python
 agent_writer = ChatCompletionAgent(
-        service_id=WRITER_NAME,
         kernel=kernel,
         name=WRITER_NAME,
         instructions="""
@@ -446,9 +437,9 @@ Your sole responsibility is to rewrite content according to review suggestions.
 
 ### Chat Definition
 
-Defining the _Agent Group Chat_ requires considering the strategies for selecting the _Agent_ turn and determining when to exit the _Chat_ loop.  For both of these considerations, we will define a _Kernel Prompt Function_.
+Defining the `AgentGroupChat` requires considering the strategies for selecting the `Agent` turn and determining when to exit the _Chat_ loop.  For both of these considerations, we will define a _Kernel Prompt Function_.
 
-The first to reason over _Agent_ selection:
+The first to reason over `Agent` selection:
 
 ::: zone pivot="programming-language-csharp"
 
@@ -481,8 +472,8 @@ KernelFunction selectionFunction =
 ::: zone pivot="programming-language-python"
 ```python
 selection_function = KernelFunctionFromPrompt(
-        function_name="selection", 
-        prompt=f"""
+    function_name="selection", 
+    prompt=f"""
 Examine the provided RESPONSE and choose the next participant.
 State only the name of the chosen participant without explanation.
 Never choose the participant named in the RESPONSE.
@@ -499,7 +490,7 @@ Rules:
 RESPONSE:
 {{{{$lastmessage}}}}
 """
-    )
+)
 ```
 ::: zone-end
 
@@ -532,11 +523,11 @@ KernelFunction terminationFunction =
 
 ::: zone pivot="programming-language-python"
 ```python
-    termination_keyword = "yes"
+termination_keyword = "yes"
 
-    termination_function = KernelFunctionFromPrompt(
-        function_name="termination", 
-        prompt=f"""
+termination_function = KernelFunctionFromPrompt(
+    function_name="termination", 
+    prompt=f"""
 Examine the RESPONSE and determine whether the content has been deemed satisfactory.
 If the content is satisfactory, respond with a single word without explanation: {termination_keyword}.
 If specific suggestions are being provided, it is not satisfactory.
@@ -545,7 +536,7 @@ If no correction is suggested, it is satisfactory.
 RESPONSE:
 {{{{$lastmessage}}}}
 """
-    )
+)
 ```
 ::: zone-end
 
@@ -575,7 +566,7 @@ history_reducer = ChatHistoryTruncationReducer(target_count=1)
 
 ::: zone-end
 
-Finally we are ready to bring everything together in our _Agent Group Chat_ definition.
+Finally we are ready to bring everything together in our `AgentGroupChat` definition.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -668,9 +659,9 @@ The `lastmessage` `history_variable_name` corresponds with the `KernelFunctionSe
 
 ### The _Chat_ Loop
 
-At last, we are able to coordinate the interaction between the user and the _Agent Group Chat_.  Start by creating creating an empty loop.
+At last, we are able to coordinate the interaction between the user and the `AgentGroupChat`.  Start by creating creating an empty loop.
 
-> Note: Unlike the other examples, no external history or _thread_ is managed.  _Agent Group Chat_ manages the conversation history internally.
+> Note: Unlike the other examples, no external history or _thread_ is managed.  `AgentGroupChat` manages the conversation history internally.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -700,9 +691,9 @@ while not is_complete:
 Now let's capture user input within the previous loop.  In this case:
 - Empty input will be ignored 
 - The term `EXIT` will signal that the conversation is completed
-- The term `RESET` will clear the _Agent Group Chat_ history
+- The term `RESET` will clear the `AgentGroupChat` history
 - Any term starting with `@` will be treated as a file-path whose content will be provided as input
-- Valid input will be added to the _Agent Group Chat_ as a _User_ message.
+- Valid input will be added to the `AgentGroupChat` as a _User_ message.
 
 ```csharp
 Console.WriteLine();
@@ -753,9 +744,9 @@ chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, input));
 Now let's capture user input within the previous loop.  In this case:
 - Empty input will be ignored.
 - The term `exit` will signal that the conversation is complete.
-- The term `reset` will clear the _Agent Group Chat_ history.
+- The term `reset` will clear the `AgentGroupChat` history.
 - Any term starting with `@` will be treated as a file-path whose content will be provided as input.
-- Valid input will be added to the _Agent Group Chat_ as a _User_ message.
+- Valid input will be added to the `AgentGroupChat` as a _User_ message.
 
 The operation logic inside the while loop looks like:
 
@@ -790,7 +781,7 @@ if user_input.startswith("@") and len(user_input) > 1:
         continue
 
 # Add the current user_input to the chat
-await chat.add_chat_message(ChatMessageContent(role=AuthorRole.USER, content=user_input))
+await chat.add_chat_message(message=user_input)
 ```
 ::: zone-end
 
@@ -800,7 +791,7 @@ await chat.add_chat_message(ChatMessageContent(role=AuthorRole.USER, content=use
 
 ::: zone-end
 
-To initate the _Agent_ collaboration in response to user input and display the _Agent_ responses, invoke the _Agent Group Chat_; however, first be sure to reset the _Completion_ state from any prior invocation.
+To initate the `Agent` collaboration in response to user input and display the `Agent` responses, invoke the `AgentGroupChat`; however, first be sure to reset the _Completion_ state from any prior invocation.
 
 > Note: Service failures are being caught and displayed to avoid crashing the conversation loop.
 
@@ -852,7 +843,6 @@ chat.is_complete = False
 > Agents are currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Final
 
@@ -1148,24 +1138,20 @@ import os
 
 from semantic_kernel import Kernel
 from semantic_kernel.agents import AgentGroupChat, ChatCompletionAgent
-from semantic_kernel.agents.strategies.selection.kernel_function_selection_strategy import (
+from semantic_kernel.agents.strategies import (
     KernelFunctionSelectionStrategy,
-)
-from semantic_kernel.agents.strategies.termination.kernel_function_termination_strategy import (
     KernelFunctionTerminationStrategy,
 )
-from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import AzureChatCompletion
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.history_reducer.chat_history_truncation_reducer import ChatHistoryTruncationReducer
-from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.functions.kernel_function_from_prompt import KernelFunctionFromPrompt
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.contents import ChatHistoryTruncationReducer
+from semantic_kernel.functions import KernelFunctionFromPrompt
 
-###################################################################
-# The following sample demonstrates how to create a simple,       #
-# agent group chat that utilizes a Reviewer Chat Completion       #
-# Agent along with a Writer Chat Completion Agent to              #
-# complete a user's task.                                         #
-###################################################################
+"""
+The following sample demonstrates how to create a simple,
+agent group chat that utilizes a Reviewer Chat Completion
+Agent along with a Writer Chat Completion Agent to
+complete a user's task.
+"""
 
 # Define agent names
 REVIEWER_NAME = "Reviewer"
@@ -1185,7 +1171,6 @@ async def main():
 
     # Create ChatCompletionAgents using the same kernel.
     agent_reviewer = ChatCompletionAgent(
-        service_id=REVIEWER_NAME,
         kernel=kernel,
         name=REVIEWER_NAME,
         instructions="""
@@ -1202,7 +1187,6 @@ RULES:
     )
 
     agent_writer = ChatCompletionAgent(
-        service_id=WRITER_NAME,
         kernel=kernel,
         name=WRITER_NAME,
         instructions="""
@@ -1312,7 +1296,7 @@ RESPONSE:
                 continue
 
         # Add the current user_input to the chat
-        await chat.add_chat_message(ChatMessageContent(role=AuthorRole.USER, content=user_input))
+        await chat.add_chat_message(message=user_input)
 
         try:
             async for response in chat.invoke():

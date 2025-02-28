@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; _Chat Completion Agent_ (Experimental)
+title: How-To&colon; `ChatCompletionAgent`
 description: A step-by-step walk-through of defining and utilizing the features of a Chat Completion Agent.
 zone_pivot_groups: programming-languages
 author: crickman
@@ -8,14 +8,14 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: _Chat Completion Agent_ 
+# How-To: `ChatCompletionAgent` 
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
 
 ## Overview
 
-In this sample, we will explore configuring a plugin to access _GitHub_ API and provide templatized instructions to a [_Chat Completion Agent_](../chat-completion-agent.md) to answer questions about a _GitHub_ repository.  The approach will be broken down step-by-step to high-light the key parts of the coding process.  As part of the task, the agent will provide document citations within the response.
+In this sample, we will explore configuring a plugin to access _GitHub_ API and provide templatized instructions to a [`ChatCompletionAgent`](../chat-completion-agent.md) to answer questions about a _GitHub_ repository.  The approach will be broken down step-by-step to high-light the key parts of the coding process.  As part of the task, the agent will provide document citations within the response.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -55,7 +55,7 @@ The project file (`.csproj`) should contain the following `PackageReference` def
   </ItemGroup>
 ```
 
-The _Agent Framework_ is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
+The `Agent Framework` is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
 
 ```xml
   <PropertyGroup>
@@ -76,13 +76,11 @@ import sys
 from datetime import datetime
 
 from semantic_kernel.agents import ChatCompletionAgent
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
-from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.contents import AuthorRole, ChatHistory, ChatMessageContent
+from semantic_kernel.functions import KernelArguments
 from semantic_kernel.kernel import Kernel
-from semantic_kernel.functions.kernel_arguments import KernelArguments
 
 # Adjust the sys.path so we can use the GitHubPlugin and GitHubSettings classes
 # This is so we can run the code from the samples/learn_resources/agent_docs directory
@@ -201,14 +199,14 @@ Once configured, the respective AI service classes will pick up the required var
 The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
-2. [_Agent_ Definition](#agent-definition) - Create the _Chat Completion Agent_ with templatized instructions and plug-in.
+2. [`Agent` Definition](#agent-definition) - Create the `ChatCompletionAgent` with templatized instructions and plug-in.
 3. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
 ### Setup
 
-Prior to creating a _Chat Completion Agent_, the configuration settings, plugins, and _Kernel_ must be initialized.
+Prior to creating a `ChatCompletionAgent`, the configuration settings, plugins, and `Kernel` must be initialized.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -293,7 +291,7 @@ settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
 ### Agent Definition
 
-Finally we are ready to instantiate a _Chat Completion Agent_ with its _Instructions_, associated _Kernel_, and the default _Arguments_ and _Execution Settings_.  In this case, we desire to have the any plugin functions automatically executed.
+Finally we are ready to instantiate a `ChatCompletionAgent` with its _Instructions_, associated `Kernel`, and the default _Arguments_ and _Execution Settings_.  In this case, we desire to have the any plugin functions automatically executed.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -328,7 +326,6 @@ Console.WriteLine("Ready!");
 ::: zone pivot="programming-language-python"
 ```python
 agent = ChatCompletionAgent(
-    service_id="agent",
     kernel=kernel,
     name="SampleAssistantAgent",
     instructions=f"""
@@ -358,7 +355,7 @@ agent = ChatCompletionAgent(
 
 ### The _Chat_ Loop
 
-At last, we are able to coordinate the interaction between the user and the _Agent_.  Start by creating a _Chat History_ object to maintain the conversation state and creating an empty loop.
+At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating a `ChatHistory` object to maintain the conversation state and creating an empty loop.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -386,7 +383,7 @@ while not is_complete:
 
 ::: zone-end
 
-Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Chat History_ as a _User_ message.
+Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the `ChatHistory` as a _User_ message.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -429,9 +426,9 @@ history.add_message(ChatMessageContent(role=AuthorRole.USER, content=user_input)
 
 ::: zone-end
 
-To generate a _Agent_ response to user input, invoke the agent using _Arguments_ to provide the final template parameter that specifies the current date and time.
+To generate a `Agent` response to user input, invoke the agent using _Arguments_ to provide the final template parameter that specifies the current date and time.
 
-The _Agent_ response is then then displayed to the user.
+The `Agent` response is then then displayed to the user.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -628,7 +625,6 @@ async def main():
 
     # Create the agent
     agent = ChatCompletionAgent(
-        service_id="agent",
         kernel=kernel,
         name="SampleAssistantAgent",
         instructions=f"""
@@ -682,6 +678,6 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 
 > [!div class="nextstepaction"]
-> [How-To: _OpenAI Assistant Agent_ Code Interpreter](./example-assistant-code.md)
+> [How-To: `OpenAIAssistantAgent` Code Interpreter](./example-assistant-code.md)
 
 
