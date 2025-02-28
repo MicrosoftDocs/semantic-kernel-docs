@@ -1,6 +1,6 @@
 ---
-title: How-To&colon; _Open AI Assistant Agent_ Code Interpreter (Experimental)
-description: A step-by-step walk-through of defining and utilizing the code-interpreter tool of an Open AI Assistant Agent.
+title: How-To&colon; `OpenAIAssistantAgent` Code Interpreter
+description: A step-by-step walk-through of defining and utilizing the code-interpreter tool of an OpenAI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial
@@ -8,14 +8,14 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# How-To: _Open AI Assistant Agent_ Code Interpreter
+# How-To: `OpenAIAssistantAgent` Code Interpreter
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
 ## Overview
 
-In this sample, we will explore how to use the _code-interpreter_ tool of an [_Open AI Assistant Agent_](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
+In this sample, we will explore how to use the _code-interpreter_ tool of an [`OpenAIAssistantAgent`](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -56,7 +56,7 @@ The project file (`.csproj`) should contain the following `PackageReference` def
   </ItemGroup>
 ```
 
-The _Agent Framework_ is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
+The `Agent Framework` is experimental and requires warning suppression.  This may addressed in as a property in the project file (`.csproj`):
 
 ```xml
   <PropertyGroup>
@@ -79,41 +79,39 @@ Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` da
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
 Start by creating a folder that will hold your script (`.py` file) and the sample resources. Include the following imports at the top of your `.py` file:
 
 ```python
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.streaming_file_reference_content import StreamingFileReferenceContent
-from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.kernel import Kernel
+from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.contents import StreamingFileReferenceContent
 ```
 
-Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources). Add these files in your project folder.
+Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from the [_Semantic Kernel_ `learn_resources/resources` directory](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources). Add these files to your working directory.
 
 ::: zone-end
+
 ::: zone pivot="programming-language-java"
 
 > Agents are currently unavailable in Java.
 
 ::: zone-end
 
-
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _Open AI_ or _Azure Open AI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
 
 ::: zone pivot="programming-language-csharp"
 
 ```powershell
-# Open AI
+# OpenAI
 dotnet user-secrets set "OpenAISettings:ApiKey" "<api-key>"
 dotnet user-secrets set "OpenAISettings:ChatModel" "gpt-4o"
 
-# Azure Open AI
+# Azure OpenAI
 dotnet user-secrets set "AzureOpenAISettings:ApiKey" "<api-key>" # Not required if using token-credential
 dotnet user-secrets set "AzureOpenAISettings:Endpoint" "<model-endpoint>"
 dotnet user-secrets set "AzureOpenAISettings:ChatModelDeployment" "gpt-4o"
@@ -164,6 +162,7 @@ public class Settings
 }
 ```
 ::: zone-end
+
 ::: zone pivot="programming-language-python"
 
 The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
@@ -172,7 +171,7 @@ Configure the following settings in your `.env` file for either Azure OpenAI or 
 
 ```python
 AZURE_OPENAI_API_KEY="..."
-AZURE_OPENAI_ENDPOINT="https://..."
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="..."
 AZURE_OPENAI_API_VERSION="..."
 
@@ -180,6 +179,9 @@ OPENAI_API_KEY="sk-..."
 OPENAI_ORG_ID=""
 OPENAI_CHAT_MODEL_ID=""
 ```
+
+[!TIP]
+Azure Assistants require an API version of at least 2024-05-01-preview. As new features are introduced, API versions are updated accordingly. As of this writing, the latest version is 2025-01-01-preview. For the most up-to-date versioning details, refer to the [Azure OpenAI API preview lifecycle](/azure/ai-services/openai/api-version-deprecation).
 
 Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.
 ::: zone-end
@@ -195,16 +197,16 @@ Once configured, the respective AI service classes will pick up the required var
 The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
-2. [Agent Definition](#agent-definition) - Create the _OpenAI_Assistant_Agent_ with templatized instructions and plug-in.
+2. [Agent Definition](#agent-definition) - Create the _OpenAI_Assistant`Agent` with templatized instructions and plug-in.
 3. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
 ### Setup
 
-Prior to creating an _Open AI Assistant Agent_, ensure the configuration settings are available and prepare the file resources.
-
 ::: zone pivot="programming-language-csharp"
+
+Prior to creating an `OpenAIAssistantAgent`, ensure the configuration settings are available and prepare the file resources.
 
 Instantiate the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `OpenAIClientProvider` that will be used for the [Agent Definition](#agent-definition) as well as file-upload.
 
@@ -235,18 +237,60 @@ OpenAIFile fileDataCountryList = await fileClient.UploadFileAsync("PopulationByC
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Prior to creating an `AzureAssistantAgent` or an `OpenAIAssistantAgent`, ensure the configuration settings are available and prepare the file resources.
+
+> [!TIP]
+> You may need to adjust the file paths depending upon where your files are located.
+
 ```python
-# Let's form the file paths that we will later pass to the assistant
+# Let's form the file paths that we will use as part of file upload
 csv_file_path_1 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByAdmin1.csv",
 )
 
 csv_file_path_2 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByCountry.csv",
 )
 ```
+
+```python
+# Create the client using Azure OpenAI resources and configuration
+client, model = AzureAssistantAgent.setup_resources()
+
+# Upload the files to the client
+file_ids: list[str] = []
+for path in [csv_file_path_1, csv_file_path_2]:
+    with open(path, "rb") as file:
+        file = await client.files.create(file=file, purpose="assistants")
+        file_ids.append(file.id)
+
+# Get the code interpreter tool and resources
+code_interpreter_tools, code_interpreter_tool_resources = AzureAssistantAgent.configure_code_interpreter_tool(
+    file_ids=file_ids
+)
+
+# Create the assistant definition
+definition = await client.beta.assistants.create(
+    model=model,
+    instructions="""
+        Analyze the available data to provide an answer to the user's question.
+        Always format response using markdown.
+        Always include a numerical index that starts at 1 for any lists or tables.
+        Always sort lists in ascending order.
+        """,
+    name="SampleAssistantAgent",
+    tools=code_interpreter_tools,
+    tool_resources=code_interpreter_tool_resources,
+)
+```
+
+We first set up the Azure OpenAI resources to obtain the client and model. Next, we upload the CSV files from the specified paths using the client's Files API. We then configure the `code_interpreter_tool` using the uploaded file IDs, which are linked to the assistant upon creation along with the model, instructions, and name.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -257,9 +301,10 @@ csv_file_path_2 = os.path.join(
 
 ### Agent Definition
 
-We are now ready to instantiate an _OpenAI Assistant Agent_. The agent is configured with its target model, _Instructions_, and the _Code Interpreter_ tool enabled. Additionally, we explicitly associate the two data files with the _Code Interpreter_ tool.
-
 ::: zone pivot="programming-language-csharp"
+
+We are now ready to instantiate an `OpenAIAssistantAgent`. The agent is configured with its target model, _Instructions_, and the _Code Interpreter_ tool enabled. Additionally, we explicitly associate the two data files with the _Code Interpreter_ tool.
+
 ```csharp
 Console.WriteLine("Defining agent...");
 OpenAIAssistantAgent agent =
@@ -283,20 +328,15 @@ OpenAIAssistantAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+We are now ready to instantiate an `AzureAssistantAgent`. The agent is configured with the client and the assistant definition.
+
 ```python
-agent = await AzureAssistantAgent.create(
-        kernel=Kernel(),
-        service_id="agent",
-        name="SampleAssistantAgent",
-        instructions="""
-                Analyze the available data to provide an answer to the user's question.
-                Always format response using markdown.
-                Always include a numerical index that starts at 1 for any lists or tables.
-                Always sort lists in ascending order.
-                """,
-        enable_code_interpreter=True,
-        code_interpreter_filenames=[csv_file_path_1, csv_file_path_2],
-    )
+# Create the agent using the client and the assistant definition
+agent = AzureAssistantAgent(
+    client=client,
+    definition=definition,
+)
 ```
 ::: zone-end
 
@@ -308,7 +348,7 @@ agent = await AzureAssistantAgent.create(
 
 ### The _Chat_ Loop
 
-At last, we are able to coordinate the interaction between the user and the _Agent_.  Start by creating an _Assistant Thread_ to maintain the conversation state and creating an empty loop.
+At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating an _Assistant Thread_ to maintain the conversation state and creating an empty loop.
 
 Let's also ensure the resources are removed at the end of execution to minimize unnecessary charges.
 
@@ -354,11 +394,10 @@ try:
     while not is_complete:
         # agent interaction logic here
 finally:
-    print("Cleaning up resources...")
-    if agent is not None:
-        [await agent.delete_file(file_id) for file_id in agent.code_interpreter_file_ids]
-        await agent.delete_thread(thread_id)
-        await agent.delete()
+    print("\nCleaning up resources...")
+    [await client.files.delete(file_id) for file_id in file_ids]
+    await client.beta.threads.delete(thread.id)
+    await client.beta.assistants.delete(agent.id)
 ```
 ::: zone-end
 
@@ -411,7 +450,7 @@ await agent.add_chat_message(thread_id=thread_id, message=ChatMessageContent(rol
 
 ::: zone-end
 
-Before invoking the _Agent_ response, let's add some helper methods to download any files that may be produced by the _Agent_.
+Before invoking the `Agent` response, let's add some helper methods to download any files that may be produced by the `Agent`.
 
 ::: zone pivot="programming-language-csharp"
 Here we're place file content in the system defined temporary directory and then launching the system defined viewer application.
@@ -498,7 +537,7 @@ async def download_response_image(agent, file_ids: list[str]):
 
 ::: zone-end
 
-To generate an _Agent_ response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any generated _File References_ for download and review at the end of the response cycle. It's important to note that generated code is identified by the presence of a _Metadata_ key in the response message, distinguishing it from the conversational reply.
+To generate an `Agent` response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any generated _File References_ for download and review at the end of the response cycle. It's important to note that generated code is identified by the presence of a _Metadata_ key in the response message, distinguishing it from the conversational reply.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -722,28 +761,38 @@ public static class Program
 
 ::: zone pivot="programming-language-python"
 ```python
+# Copyright (c) Microsoft. All rights reserved.
+
 import asyncio
+import logging
 import os
 
-from semantic_kernel.agents.open_ai.azure_assistant_agent import AzureAssistantAgent
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.streaming_file_reference_content import StreamingFileReferenceContent
-from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.kernel import Kernel
+from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.contents import StreamingFileReferenceContent
+
+logging.basicConfig(level=logging.ERROR)
+
+"""
+The following sample demonstrates how to create a simple,
+OpenAI assistant agent that utilizes the code interpreter
+to analyze uploaded files.
+""" 
 
 # Let's form the file paths that we will later pass to the assistant
 csv_file_path_1 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByAdmin1.csv",
 )
 
 csv_file_path_2 = os.path.join(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "resources",
     "PopulationByCountry.csv",
 )
 
 
-async def download_file_content(agent, file_id: str):
+async def download_file_content(agent: AzureAssistantAgent, file_id: str):
     try:
         # Fetch the content of the file using the provided method
         response_content = await agent.client.files.content(file_id)
@@ -766,7 +815,7 @@ async def download_file_content(agent, file_id: str):
         print(f"An error occurred while downloading file {file_id}: {str(e)}")
 
 
-async def download_response_image(agent, file_ids: list[str]):
+async def download_response_image(agent: AzureAssistantAgent, file_ids: list[str]):
     if file_ids:
         # Iterate over file_ids and download each one
         for file_id in file_ids:
@@ -774,22 +823,43 @@ async def download_response_image(agent, file_ids: list[str]):
 
 
 async def main():
-    agent = await AzureAssistantAgent.create(
-        kernel=Kernel(),
-        service_id="agent",
-        name="SampleAssistantAgent",
+    # Create the client using Azure OpenAI resources and configuration
+    client, model = AzureAssistantAgent.setup_resources()
+
+    # Upload the files to the client
+    file_ids: list[str] = []
+    for path in [csv_file_path_1, csv_file_path_2]:
+        with open(path, "rb") as file:
+            file = await client.files.create(file=file, purpose="assistants")
+            file_ids.append(file.id)
+
+    # Get the code interpreter tool and resources
+    code_interpreter_tools, code_interpreter_tool_resources = AzureAssistantAgent.configure_code_interpreter_tool(
+        file_ids=file_ids
+    )
+
+    # Create the assistant definition
+    definition = await client.beta.assistants.create(
+        model=model,
         instructions="""
-                    Analyze the available data to provide an answer to the user's question.
-                    Always format response using markdown.
-                    Always include a numerical index that starts at 1 for any lists or tables.
-                    Always sort lists in ascending order.
-                    """,
-        enable_code_interpreter=True,
-        code_interpreter_filenames=[csv_file_path_1, csv_file_path_2],
+            Analyze the available data to provide an answer to the user's question.
+            Always format response using markdown.
+            Always include a numerical index that starts at 1 for any lists or tables.
+            Always sort lists in ascending order.
+            """,
+        name="SampleAssistantAgent",
+        tools=code_interpreter_tools,
+        tool_resources=code_interpreter_tool_resources,
+    )
+
+    # Create the agent using the client and the assistant definition
+    agent = AzureAssistantAgent(
+        client=client,
+        definition=definition,
     )
 
     print("Creating thread...")
-    thread_id = await agent.create_thread()
+    thread = await client.beta.threads.create()
 
     try:
         is_complete: bool = False
@@ -803,37 +873,49 @@ async def main():
                 is_complete = True
                 break
 
-            await agent.add_chat_message(
-                thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
-            )
-            is_code: bool = False
-            async for response in agent.invoke_stream(thread_id=thread_id):
-                if is_code != response.metadata.get("code"):
-                    print()
-                    is_code = not is_code
+            await agent.add_chat_message(thread_id=thread.id, message=user_input)
 
-                print(f"{response.content}", end="", flush=True)
+            is_code = False
+            last_role = None
+            async for response in agent.invoke_stream(thread_id=thread.id):
+                current_is_code = response.metadata.get("code", False)
 
+                if current_is_code:
+                    if not is_code:
+                        print("\n\n```python")
+                        is_code = True
+                    print(response.content, end="", flush=True)
+                else:
+                    if is_code:
+                        print("\n```")
+                        is_code = False
+                        last_role = None
+                    if hasattr(response, "role") and response.role is not None and last_role != response.role:
+                        print(f"\n# {response.role}: ", end="", flush=True)
+                        last_role = response.role
+                    print(response.content, end="", flush=True)
                 file_ids.extend([
                     item.file_id for item in response.items if isinstance(item, StreamingFileReferenceContent)
                 ])
-
+            if is_code:
+                print("```\n")
             print()
 
             await download_response_image(agent, file_ids)
             file_ids.clear()
 
     finally:
-        print("Cleaning up resources...")
-        if agent is not None:
-            [await agent.delete_file(file_id) for file_id in agent.code_interpreter_file_ids]
-            await agent.delete_thread(thread_id)
-            await agent.delete()
+        print("\nCleaning up resources...")
+        [await client.files.delete(file_id) for file_id in file_ids]
+        await client.beta.threads.delete(thread.id)
+        await client.beta.assistants.delete(agent.id)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/agent_docs/assistant_code.py), as shown above, in our repo.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -844,5 +926,5 @@ if __name__ == "__main__":
 
 
 > [!div class="nextstepaction"]
-> [How-To: _Open AI Assistant Agent_ Code File Search](./example-assistant-search.md)
+> [How-To: `OpenAIAssistantAgent` Code File Search](./example-assistant-search.md)
 

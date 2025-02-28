@@ -207,6 +207,41 @@ kernel.add_plugin(OrderPizzaPlugin(pizza_service, user_context, payment_service)
 > [!NOTE]
 > Only functions with the `kernel_function` decorator will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
 
+## Reserved Parameter Names for Auto Function Calling
+
+When using auto function calling in KernelFunctions, certain parameter names are **reserved** and receive special handling. These reserved names allow you to automatically access key objects required for function execution.
+
+### Reserved Names
+
+The following parameter names are reserved:
+- `kernel`
+- `service`
+- `execution_settings`
+- `arguments`
+
+### How They Work
+
+During function invocation, the method [`gather_function_parameters`](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/functions/kernel_function_from_method.py#L148) inspects each parameter. If the parameter's name matches one of the reserved names, it is populated with specific objects:
+
+- **`kernel`**: Injected with the kernel object.
+- **`service`**: Populated with the AI service selected based on the provided arguments.
+- **`execution_settings`**: Contains settings pertinent to the function's execution.
+- **`arguments`**: Receives the entire set of kernel arguments passed during invocation.
+
+This design ensures that these parameters are automatically managed, eliminating the need for manual extraction or assignment.
+
+### Example Usage
+
+Consider the following example:
+
+```python
+class SimplePlugin:
+    @kernel_function(name="GetWeather", description="Get the weather for a location.")
+    async def get_the_weather(self, location: str, arguments: KernelArguments) -> str:
+        # The 'arguments' parameter is reserved and automatically populated with KernelArguments.
+        return f"Received user input: {location}, the weather is nice!"
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"

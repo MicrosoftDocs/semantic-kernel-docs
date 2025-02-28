@@ -163,7 +163,7 @@ public class Hotel
     public string Description { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION_EMBEDDING")]
-    [VectorStoreRecordVector(4, DistanceFunction.EuclideanDistance, IndexKind.QuantizedFlat)]
+    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.QuantizedFlat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
