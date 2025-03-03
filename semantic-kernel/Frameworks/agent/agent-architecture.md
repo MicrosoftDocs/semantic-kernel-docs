@@ -232,7 +232,7 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 - [`prompt_template_config`](/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
 - [`kernel_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
 - [`jinja2_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
-- [`handlebars_prompt_teplate`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
+- [`handlebars_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
 
 ::: zone-end
 

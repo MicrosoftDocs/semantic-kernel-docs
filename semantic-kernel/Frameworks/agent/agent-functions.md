@@ -170,7 +170,7 @@ ChatCompletionAgent CreateSpecificAgent(Kernel kernel)
     agentKernel.CreateFunctionFromMethod(StatelessPlugin.AStaticMethod);
 
     // Initialize plug-in from a prompt
-    agentKernel.CreateFunctionFromPrompt("<your prompt instructiosn>");
+    agentKernel.CreateFunctionFromPrompt("<your prompt instructions>");
     
     // Create the agent
     return 

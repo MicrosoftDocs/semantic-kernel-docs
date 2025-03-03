@@ -411,7 +411,7 @@ try
     bool isComplete = false;
     do
     {
-        // Processing occurrs here
+        // Processing occurs here
     } while (!isComplete);
 }
 finally
@@ -454,7 +454,7 @@ finally:
 
 ::: zone-end
 
-Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid nput will be added to the _Assistant Thread_ as a _User_ message.
+Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Assistant Thread_ as a _User_ message.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp

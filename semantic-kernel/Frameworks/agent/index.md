@@ -56,7 +56,7 @@ Installing the _Agent Framework SDK_ is specific to the distribution channel ass
 
 ::: zone pivot="programming-language-csharp"
 
-For .NET SDK, serveral NuGet packages are available.  
+For .NET SDK, several NuGet packages are available.  
 
 > Note: The core _Semantic Kernel SDK_ is required in addition to any agent packages.
 

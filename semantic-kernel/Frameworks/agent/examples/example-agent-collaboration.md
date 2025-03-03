@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use `AgentGroupChat` to coordinate collboration of two different agents working to review and rewrite user provided content.  Each agent is assigned a distinct role:
+In this sample, we will explore how to use `AgentGroupChat` to coordinate collaboration of two different agents working to review and rewrite user provided content.  Each agent is assigned a distinct role:
 
 - **Reviewer**: Reviews and provides direction to _Writer_.
 - **Writer**: Updates user content based on _Reviewer_ input.
@@ -251,7 +251,7 @@ kernel = Kernel()
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
-Let's also create a second `Kernel` instance via _cloning_ and add a plug-in that will allow the reivew to place updated content on the clip-board.
+Let's also create a second `Kernel` instance via _cloning_ and add a plug-in that will allow the review to place updated content on the clip-board.
 
 ```csharp
 Kernel toolKernel = kernel.Clone();
@@ -342,7 +342,7 @@ ChatCompletionAgent agentReviewer =
         Name = ReviewerName,
         Instructions =
             """
-            Your responsiblity is to review and identify how to improve user provided content.
+            Your responsibility is to review and identify how to improve user provided content.
             If the user has providing input or direction for content already provided, specify how to address this input.
             Never directly perform the correction or provide example.
             Once the content has been updated in a subsequent response, you will review the content again until satisfactory.
@@ -443,7 +443,7 @@ The first to reason over `Agent` selection:
 
 ::: zone pivot="programming-language-csharp"
 
-Using `AgentGroupChat.CreatePromptFunctionForStrategy` provides a convenient mechanism to avoid _HTML encoding_ the message paramter.
+Using `AgentGroupChat.CreatePromptFunctionForStrategy` provides a convenient mechanism to avoid _HTML encoding_ the message parameter.
 
 ```csharp
 KernelFunction selectionFunction =
@@ -713,7 +713,7 @@ if (input.Equals("EXIT", StringComparison.OrdinalIgnoreCase))
 if (input.Equals("RESET", StringComparison.OrdinalIgnoreCase))
 {
     await chat.ResetAsync();
-    Console.WriteLine("[Converation has been reset]");
+    Console.WriteLine("[Conversation has been reset]");
     continue;
 }
 
@@ -791,7 +791,7 @@ await chat.add_chat_message(message=user_input)
 
 ::: zone-end
 
-To initate the `Agent` collaboration in response to user input and display the `Agent` responses, invoke the `AgentGroupChat`; however, first be sure to reset the _Completion_ state from any prior invocation.
+To initiate the `Agent` collaboration in response to user input and display the `Agent` responses, invoke the `AgentGroupChat`; however, first be sure to reset the _Completion_ state from any prior invocation.
 
 > Note: Service failures are being caught and displayed to avoid crashing the conversation loop.
 
@@ -855,7 +855,7 @@ Try using these suggested inputs:
 1. Hi
 2. {"message: "hello world"}
 3. {"message": "hello world"}
-4. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provies a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define their relationships, and orchestrate interactions between them.
+4. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provides a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define their relationships, and orchestrate interactions between them.
 5. make this two paragraphs
 6. thank you
 7. @.\WomensSuffrage.txt
@@ -912,7 +912,7 @@ public static class Program
                 Name = ReviewerName,
                 Instructions =
                     """
-                    Your responsiblity is to review and identify how to improve user provided content.
+                    Your responsibility is to review and identify how to improve user provided content.
                     If the user has providing input or direction for content already provided, specify how to address this input.
                     Never directly perform the correction or provide example.
                     Once the content has been updated in a subsequent response, you will review the content again until satisfactory.
@@ -933,7 +933,7 @@ public static class Program
                 Name = WriterName,
                 Instructions =
                     """
-                    Your sole responsiblity is to rewrite content according to review suggestions.
+                    Your sole responsibility is to rewrite content according to review suggestions.
 
                     - Always apply all review direction.
                     - Always revise the content in its entirety without explanation.
@@ -1036,7 +1036,7 @@ public static class Program
             if (input.Equals("RESET", StringComparison.OrdinalIgnoreCase))
             {
                 await chat.ResetAsync();
-                Console.WriteLine("[Converation has been reset]");
+                Console.WriteLine("[Conversation has been reset]");
                 continue;
             }
 
@@ -1121,7 +1121,7 @@ Bringing all the steps together, we now have the final code for this example. Th
 You can try using one of the suggested inputs. As the agent chat begins, the agents will exchange messages for several iterations until the reviewer agent is satisfied with the copywriter's work. The `while` loop ensures the conversation continues, even if the chat is initially considered complete, by resetting the `is_complete` flag to `False`.
 
 1. Rozes are red, violetz are blue.
-2. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provies a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define their relationships, and orchestrate interactions between them.
+2. Semantic Kernel (SK) is an open-source SDK that enables developers to build and orchestrate complex AI workflows that involve natural language processing (NLP) and machine learning models. It provides a flexible platform for integrating AI capabilities such as semantic search, text summarization, and dialogue systems into applications. With SK, you can easily combine different AI services and models, define their relationships, and orchestrate interactions between them.
 4. Make this two paragraphs
 5. thank you
 7. @WomensSuffrage.txt

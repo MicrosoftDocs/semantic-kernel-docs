@@ -86,7 +86,7 @@ This article details the options for developers to control message tag injection
 
 ## How We Protect Against Prompt Injection Attacks
 
-In line with Microsofts security strategy we are adopting a zero trust approach and will treat content that is being inserted into prompts as being unsafe by default.
+In line with Microsoft's security strategy we are adopting a zero trust approach and will treat content that is being inserted into prompts as being unsafe by default.
 
 We used in following decision drivers to guide the design of our approach to defending against prompt injection attacks:
 
@@ -240,7 +240,7 @@ To trust the return value from a function call the pattern is very similar to tr
 
 Note: This approach will be replaced in the future by the ability to trust specific functions.
 
-The following code sample is an example where the trsutedMessageFunction and trsutedContentFunction functions return unsafe content but in this case it is trusted.
+The following code sample is an example where the `trustedMessageFunction` and `trustedContentFunction` functions return unsafe content but in this case it is trusted.
 
 ```csharp
 KernelFunction trustedMessageFunction = KernelFunctionFactory.CreateFromMethod(() => "<message role=\"system\">You are a helpful assistant who knows all about cities in the USA</message>", "TrustedMessageFunction");

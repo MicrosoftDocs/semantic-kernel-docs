@@ -667,7 +667,7 @@ static async Task AuthenticateRequestAsyncCallbackAsync(HttpRequestMessage reque
                 (RestApiSecurityScheme scheme, IList<string> scopes) = apiKeySchemes.First();
 
                 // Get the API key for the scheme and scopes from your app identity provider
-                var apiKey = await this.identityPropvider.GetApiKeyAsync(scheme, scopes);
+                var apiKey = await this.identityProvider.GetApiKeyAsync(scheme, scopes);
 
                 // Add the API key to the request headers
                 if (scheme.In == RestApiParameterLocation.Header)
