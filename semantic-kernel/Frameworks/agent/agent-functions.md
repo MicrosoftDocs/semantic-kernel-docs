@@ -61,11 +61,11 @@ ChatCompletionAgent CreateSpecificAgent(Kernel kernel, string credentials)
     // Clone kernel instance to allow for agent specific plug-in definition
     Kernel agentKernel = kernel.Clone();
 
-    // Initialize plug-in from type
-    agentKernel.CreatePluginFromType<StatelessPlugin>();
+    // Import plug-in from type
+    agentKernel.ImportPluginFromType<StatelessPlugin>();
 
-    // Initialize plug-in from object
-    agentKernel.CreatePluginFromObject(new StatefulPlugin(credentials));
+    // Import plug-in from object
+    agentKernel.ImportPluginFromObject(new StatefulPlugin(credentials));
 
     // Create the agent
     return 
@@ -166,12 +166,15 @@ ChatCompletionAgent CreateSpecificAgent(Kernel kernel)
     // Clone kernel instance to allow for agent specific plug-in definition
     Kernel agentKernel = kernel.Clone();
 
-    // Initialize plug-in from a static function
-    agentKernel.CreateFunctionFromMethod(StatelessPlugin.AStaticMethod);
+    // Create plug-in from a static function
+    var functionFromMethod = agentKernel.CreateFunctionFromMethod(StatelessPlugin.AStaticMethod);
 
-    // Initialize plug-in from a prompt
-    agentKernel.CreateFunctionFromPrompt("<your prompt instructiosn>");
-    
+    // Create plug-in from a prompt
+    var functionFromPrompt = agentKernel.CreateFunctionFromPrompt("<your prompt instructions>");
+
+    // Add to the kernel
+    agentKernel.ImportPluginFromFunctions("my_plugin", [functionFromMethod, functionFromPrompt]);
+
     // Create the agent
     return 
         new ChatCompletionAgent()
