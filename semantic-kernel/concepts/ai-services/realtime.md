@@ -1,6 +1,6 @@
 ---
 title: Realtime AI Integrations for Semantic Kernel 
-description: Learn about realtime AI integrations available in Semantic Kernel.
+description: Learn about realtime multi-modal AI integrations available in Semantic Kernel.
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
@@ -8,7 +8,7 @@ ms.date: 02/26/2025
 ms.service: semantic-kernel
 ---
 
-# Realtime API integrations for Semantic Kernel
+# Realtime Multi-modal APIs
 
 The first realtime API integration for Semantic Kernel have been added, it is currently only available in Python and considered experimental. This is because the underlying services are still being developed and are subject to changes and we might need to make breaking changes to the API in Semantic Kernel as we learn from customers how to use this and as we add other providers of these kinds of models and APIs.
 
