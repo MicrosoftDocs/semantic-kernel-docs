@@ -187,4 +187,4 @@ async with realtime_client(settings=settings, create_response=True):
 
 ### Samples
 
-There are four samples in [our repo](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/realtime), they cover both the basics using both websockets and WebRTC, as well as a more complex setup including function calling. Finally there is a more [complex demo](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/demos/call_automation) that uses [Azure Communication Services](https://learn.microsoft.com/en-us/azure/communication-services/) to allow you to call your Semantic Kernel enhanced realtime API.
+There are four samples in [our repo](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/realtime), they cover both the basics using both websockets and WebRTC, as well as a more complex setup including function calling. Finally there is a more [complex demo](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/demos/call_automation) that uses [Azure Communication Services](/azure/communication-services/) to allow you to call your Semantic Kernel enhanced realtime API.
