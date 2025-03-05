@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 # Text Embedding generation in Semantic Kernel
 
-With text embedding generation, you can use an AI model to generate vectors (aka embeddings). These vectors encode the semantic meaning of the text in such a way that mathematical equations can be used on two vectors to compare the similiarty of the original text.
+With text embedding generation, you can use an AI model to generate vectors (aka embeddings). These vectors encode the semantic meaning of the text in such a way that mathematical equations can be used on two vectors to compare the similarity of the original text.
 This is useful for scenarios such as Retrieval Augmented Generation (RAG), where we want to search a database of information for text related to a user query.
 Any matching information can then be provided as input to Chat Completion, so that the AI Model has more context when answering the user query.
 

@@ -17,7 +17,7 @@ Semantic Kernel provides a set of Memory Store abstractions where the primary in
 
 ## Memory Store vs Vector Store abstractions
 
-As part of an effort to evolve and expand the vector storage and search capbilities of Semantic Kernel, we have released a new set of abstractions to replace the Memory Store abstractions.
+As part of an effort to evolve and expand the vector storage and search capabilities of Semantic Kernel, we have released a new set of abstractions to replace the Memory Store abstractions.
 We are calling the replacement abstractions Vector Store abstractions.
 The purpose of both are similar, but their interfaces differ and the Vector Store abstractions provide expanded functionality.
 
@@ -70,7 +70,7 @@ Semantic Kernel offers several Memory Store connectors to vector databases that 
 
 ## Migrating from Memory Stores to Vector Stores
 
-If you wanted to migrate from using the Memory Store abstractions to the Vector Store abtractions there are various ways in which you can do this.
+If you wanted to migrate from using the Memory Store abstractions to the Vector Store abstractions there are various ways in which you can do this.
 
 ### Use the existing collection with the Vector Store abstractions
 

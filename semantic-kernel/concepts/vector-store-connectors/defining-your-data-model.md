@@ -123,7 +123,7 @@ All methods to upsert or get records use a class and a vector store record defin
 This can be done by defining your own class with annotations for the fields, or by using a class/type in combination with a record definition. Two things need to be done for a class, the first is to add the annotations with the field types, the second is to decorate the class with the `vectorstoremodel` decorator.
 
 > [!TIP]
-> For the alternative approach using a record definition, refer to [definining your schema with a record definition](./schema-with-record-definition.md).
+> For the alternative approach using a record definition, refer to [defining your schema with a record definition](./schema-with-record-definition.md).
 
 Here is an example of a model that is decorated with these annotations.
 
