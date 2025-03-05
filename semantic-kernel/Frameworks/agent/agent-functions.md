@@ -175,10 +175,6 @@ ChatCompletionAgent CreateSpecificAgent(Kernel kernel)
     // Add to the kernel
     agentKernel.ImportPluginFromFunctions("my_plugin", [functionFromMethod, functionFromPrompt]);
 
-=======
-    // Initialize plug-in from a prompt
-    agentKernel.CreateFunctionFromPrompt("<your prompt instructions>");
-    
     // Create the agent
     return 
         new ChatCompletionAgent()
