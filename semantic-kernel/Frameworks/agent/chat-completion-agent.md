@@ -8,7 +8,7 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Exploring the _Semantic Kernel_ Chat Completion Agent
+# Exploring the Semantic Kernel `ChatCompletionAgent`
 
 > [!IMPORTANT]
 > This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
@@ -224,7 +224,7 @@ agent = ChatCompletionAgent(...)
 chat = ChatHistory()
 
 # Add the user message
-chat.add_message(ChatMessageContent(role=AuthorRole.USER, content=input))
+chat.add_user_message(user_input))
 
 # Generate the agent response
 response = await agent.get_response(chat)
@@ -240,7 +240,7 @@ agent = ChatCompletionAgent(...)
 chat = ChatHistory()
 
 # Add the user message
-chat.add_user_message(ChatMessageContent(role=AuthorRole.USER, content=input))
+chat.add_user_message(user_input)
 
 # Generate the agent response(s)
 async for response in agent.invoke(chat):

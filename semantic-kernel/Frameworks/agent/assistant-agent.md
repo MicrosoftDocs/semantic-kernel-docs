@@ -8,7 +8,7 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Exploring the _Semantic Kernel_ `OpenAIAssistantAgent`
+# Exploring the Semantic Kernel `OpenAIAssistantAgent`
 
 > [!IMPORTANT]
 > This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
