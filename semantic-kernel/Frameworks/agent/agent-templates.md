@@ -100,16 +100,17 @@ Templated instructions are especially powerful when working with an [`OpenAIAssi
 ::: zone pivot="programming-language-csharp"
 ```csharp
 // Retrieve an existing assistant definition by identifier
-OpenAIAssistantAgent agent = 
-    await OpenAIAssistantAgent.RetrieveAsync(
-        this.GetClientProvider(),
-        "<stored agent-identifier>",
-        new Kernel(),
-        new KernelArguments()
-        {
-            { "topic", "Dog" },
-            { "length", "3" },
-        });
+AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri("<your endpoint>"));
+AssistantClient assistantClient = client.GetAssistantClient();
+Assistant assistant = await client.GetAssistantAsync();
+OpenAIAssistantAgent agent = new(assistant, assistantClient, new KernelPromptTemplateFactory(), PromptTemplateConfig.SemanticKernelTemplateFormat)
+{
+    Arguments = new KernelArguments()
+    {
+        { "topic", "Dog" },
+        { "length", "3" },
+    }
+}
 ```
 ::: zone-end
 
