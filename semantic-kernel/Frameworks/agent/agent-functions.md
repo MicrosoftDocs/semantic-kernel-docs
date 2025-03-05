@@ -1,5 +1,5 @@
 ---
-title: Configuring Agents with Semantic Kernel Plugins. (Experimental)
+title: Configuring Agents with Semantic Kernel Plugins.
 description: Describes how to use Semantic Kernal plugins and function calling with agents.
 zone_pivot_groups: programming-languages
 author: crickman
@@ -10,14 +10,14 @@ ms.service: semantic-kernel
 ---
 # Configuring Agents with Semantic Kernel Plugins
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
 ## Functions and Plugins in Semantic Kernel
 
-Function calling is a powerful tool that allows developers to add custom functionalities and expand the capabilities of AI applications. The _Semantic Kernel_ [Plugin](../../concepts/plugins/index.md) architecture offers a flexible framework to support [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md). For an _Agent_, integrating [Plugins](../../concepts/plugins/index.md) and [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md) is built on this foundational _Semantic Kernel_ feature.
+Function calling is a powerful tool that allows developers to add custom functionalities and expand the capabilities of AI applications. The _Semantic Kernel_ [Plugin](../../concepts/plugins/index.md) architecture offers a flexible framework to support [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md). For an `Agent`, integrating [Plugins](../../concepts/plugins/index.md) and [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md) is built on this foundational _Semantic Kernel_ feature.
 
-Once configured, an agent will choose when and how to call an available function, as it would in any usage outside of the _Agent Framework_.
+Once configured, an agent will choose when and how to call an available function, as it would in any usage outside of the `Agent Framework`.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -46,11 +46,11 @@ Once configured, an agent will choose when and how to call an available function
 
 ## Adding Plugins to an Agent
 
-Any [Plugin](../../concepts/plugins/index.md) available to an _Agent_ is managed within its respective _Kernel_ instance. This setup enables each _Agent_ to access distinct functionalities based on its specific role.
+Any [Plugin](../../concepts/plugins/index.md) available to an `Agent` is managed within its respective `Kernel` instance. This setup enables each `Agent` to access distinct functionalities based on its specific role.
 
-[Plugins](../../concepts/plugins/index.md) can be added to the _Kernel_ either before or after the _Agent_ is created. The process of initializing [Plugins](../../concepts/plugins/index.md) follows the same patterns used for any _Semantic Kernel_ implementation, allowing for consistency and ease of use in managing AI capabilities.
+[Plugins](../../concepts/plugins/index.md) can be added to the `Kernel` either before or after the `Agent` is created. The process of initializing [Plugins](../../concepts/plugins/index.md) follows the same patterns used for any _Semantic Kernel_ implementation, allowing for consistency and ease of use in managing AI capabilities.
 
-> Note: For a [_Chat Completion Agent_](./chat-completion-agent.md), the function calling mode must be explicitly enabled.  [_Open AI Assistant_](./assistant-agent.md) agent is always based on automatic function calling.
+> Note: For a [`ChatCompletionAgent`](./chat-completion-agent.md), the function calling mode must be explicitly enabled.  [`OpenAIAssistant`](./assistant-agent.md) agent is always based on automatic function calling.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -85,18 +85,46 @@ ChatCompletionAgent CreateSpecificAgent(Kernel kernel, string credentials)
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+There are two ways to create a `ChatCompletionAgent` with plugins.
+
+#### Method 1: Specify Plugins via the Constructor
+
+You can directly pass a list of plugins to the constructor:
+
 ```python
+from semantic_kernel.agents import ChatCompletionAgent
+
+# Create the Chat Completion Agent instance by specifying a list of plugins
+agent = ChatCompletionAgent(
+    service=AzureChatCompletion(),
+    instructions="<instructions>",
+    plugins=[SamplePlugin()]
+)
+```
+
+> [!TIP]
+> By default, auto-function calling is enabled. To disable it, set the `function_choice_behavior` argument to `function_choice_behavior=FunctionChoiceBehavior.Auto(auto_invoke=False)` in the constructor. With this setting, plugins are still broadcast to the model, but they are not automatically invoked. If execution settings specify the same `service_id` or `ai_model_id` as the AI service configuration, the function calling behavior defined in the execution settings (via `KernelArguments`) will take precedence over the function choice behavior set in the constructor.
+
+#### Method 2: Configure the Kernel Manually
+
+If no kernel is provided via the constructor, one is automatically created during model validation. Any plugins passed in take precedence and are added to the kernel. For more fine-grained control over the kernel's state, follow these steps:
+
+```python
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion, AzureChatPromptExecutionSettings
+from semantic_kernel.functions import KernelFunctionFromPrompt
+from semantic_kernel.kernel import Kernel
+
 # Create the instance of the Kernel
 kernel = Kernel()
 
-# Define the service ID
-service_id = "<service ID>"
-
 # Add the chat completion service to the Kernel
-kernel.add_service(AzureChatCompletion(service_id=service_id))
+kernel.add_service(AzureChatCompletion())
 
-# Get the AI Service settings for the specified service_id
-settings = kernel.get_prompt_execution_settings_from_service_id(service_id=service_id)
+# Get the AI Service settings
+settings = kernel.get_prompt_execution_settings_from_service_id()
 
 # Configure the function choice behavior to auto invoke kernel functions
 settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
@@ -106,13 +134,16 @@ kernel.add_plugin(SamplePlugin(), plugin_name="<plugin name>")
 
 # Create the agent
 agent = ChatCompletionAgent(
-    service_id=service_id, 
     kernel=kernel, 
     name=<agent name>, 
     instructions=<agent instructions>, 
     arguments=KernelArguments(settings=settings),
 )
 ```
+
+> [!TIP]
+> If a `service_id` is not specified when adding a service to the kernel, it defaults to `default`. When configuring multiple AI services on the kernel, it’s recommended to differentiate them using the `service_id` argument. This allows you to retrieve execution settings for a specific `service_id` and tie those settings to the desired service.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -144,6 +175,10 @@ ChatCompletionAgent CreateSpecificAgent(Kernel kernel)
     // Add to the kernel
     agentKernel.ImportPluginFromFunctions("my_plugin", [functionFromMethod, functionFromPrompt]);
 
+=======
+    // Initialize plug-in from a prompt
+    agentKernel.CreateFunctionFromPrompt("<your prompt instructions>");
+    
     // Create the agent
     return 
         new ChatCompletionAgent()
@@ -163,27 +198,35 @@ ChatCompletionAgent CreateSpecificAgent(Kernel kernel)
 
 ::: zone pivot="programming-language-python"
 ```python
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion, AzureChatPromptExecutionSettings
+from semantic_kernel.functions import KernelFunctionFromPrompt
+from semantic_kernel.kernel import Kernel
+
 # Create the instance of the Kernel
 kernel = Kernel()
 
-# Define the service ID
-service_id = "<service ID>"
-
 # Add the chat completion service to the Kernel
-kernel.add_service(AzureChatCompletion(service_id=service_id))
+kernel.add_service(AzureChatCompletion())
 
-# Get the AI Service settings for the specified service_id
-settings = kernel.get_prompt_execution_settings_from_service_id(service_id=service_id)
+# Create the AI Service settings
+settings = AzureChatPromptExecutionSettings()
 
 # Configure the function choice behavior to auto invoke kernel functions
 settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
 # Add the Plugin to the Kernel
-kernel.add_plugin(SamplePlugin(), plugin_name="<plugin name>")
+kernel.add_function(
+    plugin_name="<plugin_name>",
+    function=KernelFunctionFromPrompt(
+        function_name="<function_name>",
+        prompt="<your prompt instructions>",
+    )
+)
 
 # Create the agent
 agent = ChatCompletionAgent(
-    service_id=service_id, 
     kernel=kernel, 
     name=<agent name>, 
     instructions=<agent instructions>, 
@@ -201,14 +244,14 @@ agent = ChatCompletionAgent(
 
 ## Limitations for Agent Function Calling
 
-When directly invoking a[_Chat Completion Agent_](./chat-completion-agent.md), all _Function Choice Behaviors_ are supported. However, when using an [_Open AI Assistant_](./assistant-agent.md) or [_Agent Chat_](./agent-chat.md), only _Automatic_ [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md) is currently available.
+When directly invoking a[`ChatCompletionAgent`](./chat-completion-agent.md), all _Function Choice Behaviors_ are supported. However, when using an [`OpenAIAssistant`](./assistant-agent.md) or [`AgentChat`](./agent-chat.md), only _Automatic_ [Function Calling](../../concepts/ai-services/chat-completion/function-calling/index.md) is currently available.
 
 
 ## How-To
 
 For an end-to-end example for using function calling, see:
 
-- [How-To: _Chat Completion Agent_](./examples/example-chat-agent.md)
+- [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
 
 
 > [!div class="nextstepaction"]

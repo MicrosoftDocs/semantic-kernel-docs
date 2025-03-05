@@ -36,7 +36,7 @@ you can easily start a Redis container using docker.
 docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 ```
 
-To verify that it is running succesfully, visit [http://localhost:8001/redis-stack/browser](http://localhost:8001/redis-stack/browser) in your browser.
+To verify that it is running successfully, visit [http://localhost:8001/redis-stack/browser](http://localhost:8001/redis-stack/browser) in your browser.
 
 The rest of these instructions will assume that you are using this container using the above settings.
 
@@ -240,7 +240,7 @@ var deploymentName = "text-embedding-ada-002";
 var endpoint = "https://sksample.openai.azure.com/";
 var apiKey = "your-api-key";
 
-// Register Azure Open AI text embedding generation service and Redis vector store.
+// Register Azure OpenAI text embedding generation service and Redis vector store.
 var builder = Kernel.CreateBuilder()
     .AddAzureOpenAITextEmbeddingGeneration(deploymentName, endpoint, apiKey)
     .AddRedisVectorStore("localhost:6379");

@@ -21,7 +21,7 @@ The Elasticsearch Vector Store connector can be used to access and manage data i
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Elasticsearch index                                                                                                              |
 | Supported key property types      | string                                                                                                                           |
-| Supported data property types     | All types that are supported by System.Text.Json (etiher built-in or by using a custom converter)                                |
+| Supported data property types     | All types that are supported by System.Text.Json (either built-in or by using a custom converter)                                |
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>IEnumerable\<float\></li></ul>                                                           |
 | Supported index types             | <ul><li>HNSW (32, 8, or 4 bit)</li><li>FLAT (32, 8, or 4 bit)</li></ul>                                                          |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>MaxInnerProduct</li></ul>                |

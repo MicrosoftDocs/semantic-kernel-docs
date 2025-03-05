@@ -1,5 +1,5 @@
 ---
-title: Create an Agent from a Semantic Kernel Template (Experimental)
+title: Create an Agent from a Semantic Kernel Template
 description: Describes how to use a Semantic Kernel template to define an agent.
 zone_pivot_groups: programming-languages
 author: crickman
@@ -10,8 +10,8 @@ ms.service: semantic-kernel
 ---
 # Create an Agent from a Semantic Kernel Template
 
-> [!WARNING]
-> The *Semantic Kernel Agent Framework* is in preview and is subject to change.
+> [!IMPORTANT]
+> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
 ## Prompt Templates in Semantic Kernel
 
@@ -38,7 +38,7 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 - [`prompt_template_config`](/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
 - [`kernel_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
 - [`jinja2_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
-- [`handlebars_prompt_teplate`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
+- [`handlebars_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
 
 ::: zone-end
 
@@ -93,9 +93,9 @@ agent = ChatCompletionAgent(
 
 ::: zone-end
 
-#### Open AI Assistant Agent
+#### OpenAI Assistant Agent
 
-Templated instructions are especially powerful when working with an [_Open AI Assistant Agent_](./assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior. 
+Templated instructions are especially powerful when working with an [`OpenAIAssistantAgent`](./assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior. 
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -179,6 +179,8 @@ ChatCompletionAgent agent =
 ```python
 import yaml
 
+from semantic_kernel.prompt_template import PromptTemplateConfig
+
 # Read the YAML file
 with open("./GenerateStory.yaml", "r", encoding="utf-8") as file:
     generate_story_yaml = file.read()
@@ -206,7 +208,7 @@ agent = ChatCompletionAgent(
 
 ### Overriding Template Values for Direct Invocation
 
-When invoking an agent directly, without using [_Agent Chat_](./agent-chat.md), the agent's parameters can be overridden as needed. This allows for greater control and customization of the agent's behavior during specific tasks, enabling you to modify its instructions or settings on the fly to suit particular requirements.
+When invoking an agent directly, without using [`AgentChat`](./agent-chat.md), the agent's parameters can be overridden as needed. This allows for greater control and customization of the agent's behavior during specific tasks, enabling you to modify its instructions or settings on the fly to suit particular requirements.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -261,6 +263,12 @@ chat = ChatHistory()
 
 override_arguments = KernelArguments(topic="Cat", length="3")
 
+# Two ways to get a response from the agent
+
+# Get the response which returns a ChatMessageContent directly
+response = await agent.get_response(chat, arguments=override_arguments)
+
+# or use the invoke method to return an AsyncIterable of ChatMessageContent
 async for response in agent.invoke(chat, arguments=override_arguments):
     # process agent response(s)...
 ```
@@ -276,9 +284,9 @@ async for response in agent.invoke(chat, arguments=override_arguments):
 
 ## How-To
 
-For an end-to-end example for creating an agent from a _pmompt-template_, see:
+For an end-to-end example for creating an agent from a _prompt-template_, see:
 
-- [How-To: _Chat Completion Agent_](./examples/example-chat-agent.md)
+- [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
 
 
 > [!div class="nextstepaction"]
