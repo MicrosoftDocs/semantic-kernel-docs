@@ -55,7 +55,7 @@ If you want to do custom mapping, and you want to use multiple connector types, 
 Our first step is to create a data model. In this case we will not annotate the data model with attributes, since we will provide a separate record definition
 that describes what the database schema will look like.
 
-Also note that this model is complex, with seperate classes for vectors and additional product info.
+Also note that this model is complex, with separate classes for vectors and additional product info.
 
 ```csharp
 public class Product
