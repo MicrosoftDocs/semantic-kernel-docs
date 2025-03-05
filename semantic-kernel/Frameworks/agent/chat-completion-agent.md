@@ -1,5 +1,5 @@
 ---
-title: Exploring the Semantic Kernel Chat Completion Agent
+title: Exploring the Semantic Kernel ChatCompletionAgent
 description: An exploration of the definition, behaviors, and usage patterns for a Chat Completion Agent
 zone_pivot_groups: programming-languages
 author: crickman
@@ -74,7 +74,7 @@ Onnx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantic
 ::: zone-end
 
 
-## Creating a Chat Completion Agent
+## Creating a `ChatCompletionAgent`
 
 A _chat completion agent_ is fundamentally based on an [AI services](../../concepts/ai-services/index.md).  As such, creating an _chat completion agent_ starts with creating a [`Kernel`](../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../concepts/kernel.md) instance.
 
