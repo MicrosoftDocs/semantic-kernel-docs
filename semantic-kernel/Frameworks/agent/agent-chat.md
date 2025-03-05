@@ -280,7 +280,7 @@ history = await chat.get_chat_messages()
 
 ::: zone-end
 
-Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifing an agent.  (For example: [`OpenAIAssistant`](./assistant-agent.md) versus [`ChatCompletionAgent`](./chat-completion-agent.md).)
+Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifying an agent.  (For example: [`OpenAIAssistant`](./assistant-agent.md) versus [`ChatCompletionAgent`](./chat-completion-agent.md).)
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -470,7 +470,7 @@ chat = AgentGroupChat(
 
 In _multi-turn_ invocation, the _Termination Strategy_ dictates when the final turn takes place. This strategy ensures the conversation ends at the appropriate point.
 
-This strategy is defined by a base class that can be extended to implement custom behaviors tailored to specific needs. For convenience, serveral predefined concrete _Selection Strategies_ are also available, offering ready-to-use approaches for defining termination criteria for an `AgentChat` conversations.
+This strategy is defined by a base class that can be extended to implement custom behaviors tailored to specific needs. For convenience, several predefined concrete _Selection Strategies_ are also available, offering ready-to-use approaches for defining termination criteria for an `AgentChat` conversations.
 
 ::: zone pivot="programming-language-csharp"
 

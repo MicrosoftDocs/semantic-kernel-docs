@@ -16,3 +16,5 @@
   href: text-search/TOC.yml
 - name: Planning
   href: planning.md
+- name: Experimental Attribute
+  href: experimental-attribute.md

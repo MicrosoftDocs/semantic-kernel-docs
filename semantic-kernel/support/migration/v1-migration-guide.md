@@ -105,7 +105,7 @@ Many of our internal naming conventions were changed to better reflect how the A
 
 ## Code Name Changes
 
-Following the convetion name changes, many of the code names were also changed to better reflect the new naming conventions. Abbreaviations were also removed to make the code more readable.
+Following the convention name changes, many of the code names were also changed to better reflect the new naming conventions. Abbreviations were also removed to make the code more readable.
 
 | Previous Name                               | V1 Name                                |
 | ------------------------------------------- | -------------------------------------- |
@@ -252,7 +252,7 @@ Many changes were made to our KernelBuilder to make it more intuitive and easier
 
 - Creating a `KernelBuilder` can now be only created using the `Kernel.CreateBuilder()` method.
 
-  This change make it simpler and easier to use the KernelBuilder in any code-base ensureing one main way of using the builder instead of multiple ways that adds complexity and maintenance overhead.
+  This change make it simpler and easier to use the KernelBuilder in any code-base ensuring one main way of using the builder instead of multiple ways that adds complexity and maintenance overhead.
 
   ```csharp
   // Before
@@ -288,7 +288,7 @@ As the Kernel became just a container for the plugins and now executes just one 
 
 ## SKContext
 
-After a lot of discussions and feedback internally and from the community, to simplify the API and make it more intuitive, the `SKContext` concept was dilluted in different entities: `KernelArguments` for function inputs and `FunctionResult` for function outputs.
+After a lot of discussions and feedback internally and from the community, to simplify the API and make it more intuitive, the `SKContext` concept was diluted in different entities: `KernelArguments` for function inputs and `FunctionResult` for function outputs.
 
 With the important decision to make `Kernel` a required argument of a function calling, the `SKContext` was removed and the `KernelArguments` and `FunctionResult` were introduced.
 

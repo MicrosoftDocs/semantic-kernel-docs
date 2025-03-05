@@ -38,7 +38,7 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 - [`prompt_template_config`](/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
 - [`kernel_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
 - [`jinja2_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
-- [`handlebars_prompt_teplate`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
+- [`handlebars_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
 
 ::: zone-end
 
@@ -285,7 +285,7 @@ async for response in agent.invoke(chat, arguments=override_arguments):
 
 ## How-To
 
-For an end-to-end example for creating an agent from a _pmompt-template_, see:
+For an end-to-end example for creating an agent from a _prompt-template_, see:
 
 - [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
 
