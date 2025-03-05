@@ -51,15 +51,13 @@ Creating an `OpenAIAssistant` requires invoking a remote service, which is handl
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
-OpenAIAssistantAgent agent =
-    await OpenAIAssistantAgent.CreateAsync(
-        OpenAIClientProvider.ForAzureOpenAI(/*<...service configuration>*/),
-        new OpenAIAssistantDefinition("<model name>")
-        {
-          Name = "<agent name>",
-          Instructions = "<agent instructions>",
-        },
-        new Kernel());
+AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
+Assistant assistant =
+    await this.AssistantClient.CreateAssistantAsync(
+        "<model name>",
+        "<agent name>",
+        instructions: "<agent instructions>");
+OpenAIAssistantAgent agent = new(assistant, client);
 ```
 ::: zone-end
 
@@ -119,11 +117,9 @@ Once created, the identifier of the assistant may be access via its identifier. 
 For .NET, the agent identifier is exposed as a `string` via the  property defined by any agent.
 
 ```csharp
-OpenAIAssistantAgent agent =
-    await OpenAIAssistantAgent.RetrieveAsync(
-        OpenAIClientProvider.ForAzureOpenAI(/*<...service configuration>*/),
-        "<your agent id>",
-        new Kernel());
+AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
+Assistant assistant = await this.AssistantClient.GetAssistantAsync("<assistant id>");
+OpenAIAssistantAgent agent = new(assistant, client);
 ```
 ::: zone-end
 
@@ -220,20 +216,18 @@ await agent.delete_thread(thread_id)
 
 ## Deleting an `OpenAIAssistantAgent`
 
-Since the assistant's definition is stored remotely, it supports the capability to self-delete. This enables the agent to be removed from the system when it is no longer needed.
+Since the assistant's definition is stored remotely, it will persist if not deleted.  
+Deleting an assistant definition may be performed directly with the `AssistantClient`.
 
-> Note: Attempting to use an agent instance after being deleted results in an exception.
+> Note: Attempting to use an agent instance after being deleted will result in a service exception.
 
 ::: zone pivot="programming-language-csharp"
 
 For .NET, the agent identifier is exposed as a `string` via the [`Agent.Id`](/dotnet/api/microsoft.semantickernel.agents.agent.id) property defined by any agent.
 
 ```csharp
-// Perform the deletion
-await agent.DeleteAsync();
-
-// Inspect whether an agent has been deleted
-bool isDeleted = agent.IsDeleted();
+AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
+Assistant assistant = await this.AssistantClient.DeleteAssistantAsync("<assistant id>");
 ```
 ::: zone-end
 
