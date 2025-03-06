@@ -538,7 +538,6 @@ This approach eliminates the need to manually provide and update the return type
 When creating a plugin in Python, you can provide additional information about the functions in the `kernel_function` decorator. This information will be used by the AI agent to understand the functions better.
 
 ```python
-
 from typing import List, Optional, Annotated
 
 class LightsPlugin:
