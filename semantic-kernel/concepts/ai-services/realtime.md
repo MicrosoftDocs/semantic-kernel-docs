@@ -15,8 +15,7 @@ The first realtime API integration for Semantic Kernel has been added, it is cur
 ## Realtime Client abstraction
 
 To support different realtime APIs from different vendors, using different protocols, a new client abstraction has been added to the kernel. This client is used to connect to the realtime service and send and receive messages.
-The client is responsible for handling the connection to the service, sending messages, and receiving messages. The client is also responsible for handling any errors that occur during the connection or message sending/receiving process. Considering the way these models work, they can be considered agents more then regular chat completions, therefore they also take instructions, rather then a system message, they keep their own internal state and can be invoked to do work on our behalf.
-
+The client is responsible for handling the connection to the service, sending messages, and receiving messages. The client is also responsible for handling any errors that occur during the connection or message sending/receiving process. Considering the way these models work, they can be considered agents more than regular chat completions, therefore they also take instructions, rather than a system message, they keep their own internal state and can be invoked to do work on our behalf.
 ### Realtime API
 
 Any realtime client implements the following methods:
