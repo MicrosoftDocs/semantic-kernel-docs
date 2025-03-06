@@ -107,26 +107,31 @@ There may be cases where the database doesn't support excluding vectors in which
 returning them is acceptable.
 
 1.9 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should also
-respect the `IncludeVectors` option provided via `VectorSearchOptions` where possible.
+respect the `IncludeVectors` option provided via `VectorSearchOptions<TRecord>` where possible.
 
 1.10 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should simulate
-the `Top` and `Skip` functionality requested via `VectorSearchOptions` if the database
+the `Top` and `Skip` functionality requested via `VectorSearchOptions<TRecord>` if the database
 does not support this natively. To simulate this behavior, the implementation should
 fetch a number of results equal to Top + Skip, and then skip the first Skip number of results
 before returning the remaining results.
 
 1.11 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should ignore
-the `IncludeTotalCount` option provided via `VectorSearchOptions` if the database
+the `IncludeTotalCount` option provided via `VectorSearchOptions<TRecord>` if the database
 does not support this natively.
 
-1.12 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should default
-to the first vector if the `VectorPropertyName` option was not provided via `VectorSearchOptions`.
-If a user does provide this value, the expected name should be the property name from the data model
-and not any customized name that the property may be stored under in the database. E.g. let's say
-the user has a data model property called `TextEmbedding` and they decorated the property with a
-`JsonPropertyNameAttribute` that indicates that it should be serialized as `text_embedding`. Assuming
-that the database is json based, it means that the property should be stored in the database with the
-name `text_embedding`. When specifying the `VectorPropertyName` option, the user should always provide
+1.12 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should not require
+`VectorPropertyName` or `VectorProperty` to be specified if only one vector exists on the data model.
+In this case that single vector should automatically become the search target. If no vector or
+multiple vectors exists on the data model, and no `VectorPropertyName` or `VectorProperty` is provided
+the search method should throw.
+
+When using `VectorPropertyName`, if a user does provide this value, the expected name should be the
+property name from the data model and not any customized name that the property may be stored under
+in the database. E.g. let's say the user has a data model property called `TextEmbedding` and they
+decorated the property with a `JsonPropertyNameAttribute` that indicates that it should be serialized
+as `text_embedding`. Assuming that the database is json based, it means that the property should be
+stored in the database with the name `text_embedding`.
+ When specifying the `VectorPropertyName` option, the user should always provide
 `TextEmbedding` as the value. This is to ensure that where different connectors are used with the
 same data model, the user can always use the same property names, even though the storage name
 of the property may be different.
@@ -299,7 +304,12 @@ To support this scenario, the connector must fulfil the following requirements:
 - Use the `VectorStoreRecordDefinition` to create collections / indexes.
 - Avoid doing reflection on the data model if a custom mapper and `VectorStoreRecordDefinition` is supplied
 
-### 10. Support Vector Store Record Collection factory
+### 10. Support Vector Store Record Collection factory (Deprecated)
+
+> [!IMPORTANT]
+> Support for Vector Store Record Collection factories is now deprecated. The recommended pattern is to unseal
+> the VectorStore class and make the `GetCollection` method virtual so that it can be overridden by developers
+> who require custom construction of collections.
 
 The `IVectorStore.GetCollection` method can be used to create instances of `IVectorStoreRecordCollection`.
 Some connectors however may allow or require users to provide additional configuration options
@@ -404,7 +414,7 @@ into small enough batches already so that parallel requests will succeed without
 E.g. here is an example where batching is simulated with requests happening in parallel.
 
 ```csharp
-public Task DeleteBatchAsync(IEnumerable<string> keys, DeleteRecordOptions? options = default, CancellationToken cancellationToken = default)
+public Task DeleteBatchAsync(IEnumerable<string> keys, CancellationToken cancellationToken = default)
 {
     if (keys == null)
     {
