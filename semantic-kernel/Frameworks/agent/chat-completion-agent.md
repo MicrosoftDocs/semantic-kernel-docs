@@ -74,6 +74,37 @@ Onnx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantic
 ::: zone-end
 
 
+## Preparing Your Development Environment
+
+To proceed with developing an `AzureAIAgent`, configure your development environment with the appropriate packages.
+
+::: zone pivot="programming-language-csharp"
+
+Add the `Microsoft.SemanticKernel.Agents.Core` package to your project:
+
+```pwsh
+dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Install the `semantic-kernel` package:
+
+```bash
+pip install semantic-kernel
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
+
 ## Creating a `ChatCompletionAgent`
 
 A _chat completion agent_ is fundamentally based on an [AI services](../../concepts/ai-services/index.md).  As such, creating an _chat completion agent_ starts with creating a [`Kernel`](../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../concepts/kernel.md) instance.

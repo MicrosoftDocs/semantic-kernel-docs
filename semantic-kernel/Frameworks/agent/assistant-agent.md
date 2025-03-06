@@ -43,6 +43,42 @@ The _OpenAI Assistant API_ is a specialized interface designed for more advanced
 - [Assistant API in Azure](/azure/ai-services/openai/assistants-quickstart)
 
 
+## Preparing Your Development Environment
+
+To proceed with developing an `OpenAIAIAssistantAgent`, configure your development environment with the appropriate packages.
+
+::: zone pivot="programming-language-csharp"
+
+Add the `Microsoft.SemanticKernel.Agents.OpenAI` package to your project:
+
+```pwsh
+dotnet add package Microsoft.SemanticKernel.Agents.AzureAI --prerelease
+```
+
+You may also want to include the `Azure.Identity` package:
+
+```pwsh
+dotnet add package Azure.Identity
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Install the `semantic-kernel` package with the optional _Azure_ dependencies:
+
+```bash
+pip install semantic-kernel[azure]
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
+
 ## Creating an `OpenAIAssistantAgent`
 
 Creating an `OpenAIAssistant` requires invoking a remote service, which is handled asynchronously. To manage this, the `OpenAIAssistantAgent` is instantiated through a static factory method, ensuring the process occurs in a non-blocking manner. This method abstracts the complexity of the asynchronous call, returning a promise or future once the assistant is fully initialized and ready for use.

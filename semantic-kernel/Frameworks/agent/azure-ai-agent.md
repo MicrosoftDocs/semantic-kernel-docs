@@ -17,7 +17,7 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+- [`OpenAIAssistantAgent`](dotnet/api/microsoft.semantickernel.agents.azureai)
 
 ::: zone-end
 
@@ -37,23 +37,70 @@ Detailed API documentation related to this discussion is available at:
 
 An `AzureAIAgent` is a specialized agent within the Semantic Kernel framework, designed to provide advanced conversational capabilities with seamless tool integration. It automates tool calling, eliminating the need for manual parsing and invocation. The agent also securely manages conversation history using threads, reducing the overhead of maintaining state. Additionally, the `AzureAIAgent` supports a variety of built-in tools, including file retrieval, code execution, and data interaction via Bing, Azure AI Search, Azure Functions, and OpenAPI.
 
+To use an `AzureAIAgent`, an _Azure AI Foundry Project_ must be utilized.  The following articles provide an overview of the _Azure AI Foundry_, how to create and configure a project, and the agent service:
+
+- [What is Azure AI Foundry?](azure/ai-foundry/what-is-ai-foundry)
+- [The Azure AI Foundry SDK](azure/ai-foundry/how-to/develop/sdk-overview)
+- [What is Azure AI Agent Service](azure/ai-services/agents/overview)
+- [Quickstart: Create a new agent](azure/ai-services/agents/quickstart)
+
+## Preparing Your Development Environment
+
+To proceed with developing an `AzureAIAgent`, configure your development environment with the appropriate packages.
+
 ::: zone pivot="programming-language-csharp"
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+Add the `Microsoft.SemanticKernel.Agents.AzureAI` package to your project:
+
+```pwsh
+dotnet add package Microsoft.SemanticKernel.Agents.AzureAI --prerelease
+```
+
+You may also want to include the `Azure.Identity` package:
+
+```pwsh
+dotnet add package Azure.Identity
+```
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-To set up the required resources, follow the "Quickstart: Create a new agent" guide [here](/azure/ai-services/agents/quickstart?pivots=programming-language-python-azure).
-
-You will need to install the optional Semantic Kernel azure dependencies if you haven't already via:
+Install the `semantic-kernel` package with the optional _Azure_ dependencies:
 
 ```bash
 pip install semantic-kernel[azure]
 ```
+::: zone-end
 
-Before running an `AzureAIAgent`, modify your .env file to include:
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
+
+## Configuring the AI Project Client
+
+Accessing an `AzureAIAgent` first requires the creation of a project client that is configured for a specific _Foundry Project_, most commonly by providing a connection string ([The Azure AI Foundry SDK: Getting Started with Projects](azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
+
+::: zone pivot="programming-language-csharp"
+
+```c#
+AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
+```
+
+The `AgentsClient` may be accessed from the `AIProjectClient`:
+
+```c#
+AgentsClient agentsClient = client.GetAgentsClient();
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Modify your the `.env` file in the root directory to include:
 
 ```bash
 AZURE_AI_AGENT_PROJECT_CONNECTION_STRING = "<example-connection-string>"
@@ -63,38 +110,14 @@ AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME = "<example-model-deployment-name>"
 or
 
 ```bash
-AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME = "<example-model-deployment-name>"
 AZURE_AI_AGENT_ENDPOINT = "<example-endpoint>"
 AZURE_AI_AGENT_SUBSCRIPTION_ID = "<example-subscription-id>"
 AZURE_AI_AGENT_RESOURCE_GROUP_NAME = "<example-resource-group-name>"
 AZURE_AI_AGENT_PROJECT_NAME = "<example-project-name>"
+AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME = "<example-model-deployment-name>"
 ```
 
-The project connection string is of the following format: `<HostName>;<AzureSubscriptionId>;<ResourceGroup>;<ProjectName>`. See here for information on obtaining the values to populate the connection string.
-
-The `.env` should be placed in the root directory.
-
-::: zone-end
-
-::: zone pivot="programming-language-java"
-
-> Agents are currently unavailable in Java.
-
-::: zone-end
-
-## Configuring the AI Project Client
-
-Ensure that your `AzureAIAgent` resources are configured with at least a Basic or Standard SKU (the Standard SKU is required to do more advanced operations like AI Search).
-
-To begin, create the project client as follows:
-
-::: zone pivot="programming-language-csharp"
-
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
+Once the configuration is defined, the client may be created:
 
 ```python
 async with (
@@ -118,8 +141,20 @@ To create an `AzureAIAgent`, you start by configuring and initializing the agent
 
 ::: zone pivot="programming-language-csharp"
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+```c#
+AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
+AgentsClient agentsClient = client.GetAgentsClient();
 
+// 1. Define an agent on the Azure AI agent service
+Agent definition = agentsClient.CreateAgentAsync(
+    "<name of the the model used by the agent>",
+    name: "<agent name>",
+    description: "<agent description>",
+    instructions: "<agent instructions>");
+
+// 2. Create a Semantic Kernel agent based on the agent definition
+AzureAIAgent agent = new(definition, agentsClient);
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -134,14 +169,14 @@ async with (
     DefaultAzureCredential() as creds,
     AzureAIAgent.create_client(credential=creds) as client,
 ):
-    # 1. Create an agent on the Azure AI agent service
+    # 1. Define an agent on the Azure AI agent service
     agent_definition = await client.agents.create_agent(
         model=ai_agent_settings.model_deployment_name,
         name="<name>",
         instructions="<instructions>",
     )
 
-    # 2. Create a Semantic Kernel agent to use the Azure AI agent
+    # 2. Create a Semantic Kernel agent based on the agent definition
     agent = AzureAIAgent(
         client=client,
         definition=agent_definition,
@@ -161,13 +196,26 @@ async with (
 Interaction with the `AzureAIAgent` is straightforward. The agent maintains the conversation history automatically using a thread:
 
 ::: zone pivot="programming-language-csharp"
-
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
-
+```c#
+AgentThread thread = await agentsClient.CreateThreadAsync();
+try
+{
+    ChatMessageContent message = new(AuthorRole.User, "<your user input>");
+    await agent.AddChatMessageAsync(threadId, message);
+    await foreach (ChatMessageContent response in agent.InvokeAsync(thread.Id))
+    {
+        Console.WriteLine(response.Content);
+    }
+}
+finally
+{
+    await this.AgentsClient.DeleteThreadAsync(thread.Id);
+    await this.AgentsClient.DeleteAgentAsync(agent.Id);
+}
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-
 ```python
 USER_INPUTS = ["Hello", "What's your name?"]
 
@@ -182,22 +230,36 @@ finally:
     await client.agents.delete_thread(thread.id)
 ```
 
-Python also supports invoking an agent in a streaming and a non-streaming fashion:
+Optionally, an agent may be invoked as: 
 
 ```python
-# Streaming
-for user_input in USER_INPUTS:
-    await agent.add_chat_message(thread_id=thread.id, message=user_input)
-    async for content in agent.invoke_stream(thread_id=thread.id):
-        print(content.content, end="", flush=True)
-```
-
-```python
-# Non-streaming
 for user_input in USER_INPUTS:
     await agent.add_chat_message(thread_id=thread.id, message=user_input)
     async for content in agent.invoke(thread_id=thread.id):
         print(content.content)
+```
+
+::: zone-end
+
+An agent may also produce a _streamed_ response:
+
+::: zone pivot="programming-language-csharp"
+```c#
+ChatMessageContent message = new(AuthorRole.User, "<your user input>");
+await agent.AddChatMessageAsync(threadId, message);
+await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(thread.Id))
+{
+    Console.Write(response.Content);
+}
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+```python
+for user_input in USER_INPUTS:
+    await agent.add_chat_message(thread_id=thread.id, message=user_input)
+    async for content in agent.invoke_stream(thread_id=thread.id):
+        print(content.content, end="", flush=True)
 ```
 ::: zone-end
 
@@ -212,13 +274,22 @@ for user_input in USER_INPUTS:
 Semantic Kernel supports extending an `AzureAIAgent` with custom plugins for enhanced functionality:
 
 ::: zone pivot="programming-language-csharp"
+```c#
+Plugin plugin = KernelPluginFactory.CreateFromType<YourPlugin>();
+AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
+AgentsClient agentsClient = client.GetAgentsClient();
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+Agent definition = agentsClient.CreateAgentAsync(
+    "<name of the the model used by the agent>",
+    name: "<agent name>",
+    description: "<agent description>",
+    instructions: "<agent instructions>");
 
+AzureAIAgent agent = new(definition, agentsClient, plugins: [plugin]);
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-
 ```python
 from semantic_kernel.functions import kernel_function
 
@@ -253,14 +324,39 @@ async with (
 
 ## Advanced Features
 
-An `AzureAIAgent` can leverage advanced tools such as code interpreters, file search, OpenAPI and Azure AI Search integration for dynamic and powerful interactions:
+An `AzureAIAgent` can leverage advanced tools such as:
+
+- [Code Interpreter](#code-interpreter)
+- [File Search](#file-search)
+- [OpenAPI integration](#openapi-integration)
+- [Azure AI Search integration](#azureai-search-integration)
 
 ### Code Interpreter
 
+Code Interpreter allows the agents to write and run Python code in a sandboxed execution environment ([Azure AI Agent Service Code Interpreter](azure/ai-services/agents/how-to/tools/code-interpreter)).
+
 ::: zone pivot="programming-language-csharp"
+```c#
+AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
+AgentsClient agentsClient = client.GetAgentsClient();
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+Agent definition = agentsClient.CreateAgentAsync(
+    "<name of the the model used by the agent>",
+    name: "<agent name>",
+    description: "<agent description>",
+    instructions: "<agent instructions>",
+    tools: [new CodeInterpreterToolDefinition()],
+    toolResources:
+        new()
+        {
+            CodeInterpreter = new()
+            {
+                FileIds = { ... },
+            }
+        }));
 
+AzureAIAgent agent = new(definition, agentsClient);
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -288,10 +384,31 @@ async with (
 
 ### File Search
 
+File search augments agents with knowledge from outside its model ([Azure AI Agent Service File Search Tool](azure/ai-services/agents/how-to/tools/file-search)).
+
 ::: zone pivot="programming-language-csharp"
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+```c#
+AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
+AgentsClient agentsClient = client.GetAgentsClient();
 
+Agent definition = agentsClient.CreateAgentAsync(
+    "<name of the the model used by the agent>",
+    name: "<agent name>",
+    description: "<agent description>",
+    instructions: "<agent instructions>",
+    tools: [new FileSearchToolDefinition()],
+    toolResources:
+        new()
+        {
+            FileSearch = new()
+            {
+                VectorStoreIds = { ... },
+            }
+        }));
+
+AzureAIAgent agent = new(definition, agentsClient);
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -319,14 +436,34 @@ async with (
 
 ### OpenAPI Integration
 
+Connects your agent to an external API ([How to use Azure AI Agent Service with OpenAPI Specified Tools](azure/ai-services/agents/how-to/tools/openapi-spec)).
+
 ::: zone pivot="programming-language-csharp"
+```c#
+AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
+AgentsClient agentsClient = client.GetAgentsClient();
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+string apiJsonSpecification = ...; // An Open API JSON specification
 
+Agent definition = agentsClient.CreateAgentAsync(
+    "<name of the the model used by the agent>",
+    name: "<agent name>",
+    description: "<agent description>",
+    instructions: "<agent instructions>",
+    tools: [
+        new OpenApiToolDefinition(
+            "<api name>", 
+            "<api description>", 
+            BinaryData.FromString(apiJsonSpecification), 
+            new OpenApiAnonymousAuthDetails())
+    ],
+);
+
+AzureAIAgent agent = new(definition, agentsClient);
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-
 ```python
 from azure.ai.projects.models import OpenApiTool, OpenApiAnonymousAuthDetails
 
@@ -368,16 +505,38 @@ async with (
 
 ::: zone-end
 
-### AzureAI Search
+### AzureAI Search Integration
+
+Use an existing Azure AI Search index with with your agent ([Use an existing AI Search index](azure/ai-services/agents/how-to/tools/azure-ai-search)).
 
 ::: zone pivot="programming-language-csharp"
+```c#
+AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
+AgentsClient agentsClient = client.GetAgentsClient();
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+ConnectionsClient cxnClient = client.GetConnectionsClient();
+ListConnectionsResponse searchConnections = await cxnClient.GetConnectionsAsync(AzureAIP.ConnectionType.AzureAISearch);
+ConnectionResponse searchConnection = searchConnections.Value[0];
 
+Agent definition = agentsClient.CreateAgentAsync(
+    "<name of the the model used by the agent>",
+    name: "<agent name>",
+    description: "<agent description>",
+    instructions: "<agent instructions>",
+    tools: [new AzureAIP.AzureAISearchToolDefinition()],
+    toolResources: new()
+    {
+        AzureAISearch = new()
+        {
+            IndexList = { new AzureAIP.IndexResource(searchConnection.Id, "<your index name>") }
+        }
+    });
+
+AzureAIAgent agent = new(definition, agentsClient);
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-
 ```python
 from azure.ai.projects.models import AzureAISearchTool, ConnectionType
 
@@ -420,7 +579,10 @@ An existing agent can be retrieved and reused by specifying its assistant ID:
 
 ::: zone pivot="programming-language-csharp"
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+```c#
+Agent definition = agentsClient.GetAgentAsync("<your agent id>");
+AzureAIAgent agent = new(definition, agentsClient);
+```
 
 ::: zone-end
 
@@ -443,8 +605,10 @@ Agents and their associated threads can be deleted when no longer needed:
 
 ::: zone pivot="programming-language-csharp"
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
-
+```c#
+await agentsClient.DeleteThreadAsync(thread.Id);
+await agentsClient.DeleteAgentAsync(agent.Id);
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -453,24 +617,20 @@ await client.agents.delete_thread(thread.id)
 await client.agents.delete_agent(agent.id)
 ```
 
-If working with a vector store or files, they can be deleted as well:
+If working with a vector store or files, they may be deleted as well:
 
+::: zone pivot="programming-language-csharp"
+```c#
+await agentsClient.DeleteVectorStoreAsync("<your store id>");
+await agentsClient.DeleteFileAsync("<your file id>");
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
 ```python
 await client.agents.delete_file(file_id=file.id)
 await client.agents.delete_vector_store(vector_store_id=vector_store.id)
 ```
-
-> [!TIP]
-> To remove a file from a vector store, use:
-> ```python
-> await client.agents.delete_vector_store_file(vector_store_id=vector_store.id, file_id=file.id)
-> ```
-> This operation detaches the file from the vector store but does not permanently delete it.
-> To fully delete the file, call:
-> ```python
-> await client.agents.delete_file(file_id=file.id)
-> ```
-
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -479,13 +639,16 @@ await client.agents.delete_vector_store(vector_store_id=vector_store.id)
 
 ::: zone-end
 
+> More information on the _file search_ tool is described in the [Azure AI Agent Service file search tool](azure/ai-services/agents/how-to/tools/file-search) article.
+
 ## How-To
 
 For practical examples of using an `AzureAIAgent`, see our code samples on GitHub:
 
 ::: zone pivot="programming-language-csharp"
 
-> TODO(crickman) Azure AI Agents are currently unavailable in .NET.
+- [Getting Started with Azure AI Agents](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/GettingStartedWithAgents/AzureAIAgent)
+- [Advanced Azure AI Agent Code Samples](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/Concepts/Agents)
 
 ::: zone-end
 
