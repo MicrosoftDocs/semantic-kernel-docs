@@ -5,6 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
 ms.author: westey
+ms.date: 03/06/2025
 ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"

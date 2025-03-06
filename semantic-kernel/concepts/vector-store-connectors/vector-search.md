@@ -64,7 +64,7 @@ await foreach (var record in searchResult.Results)
 ## Supported Vector Types
 
 `VectorizedSearchAsync` takes a generic type as the vector parameter.
-The types of vectors supported y each data store vary.
+The types of vectors supported by each data store vary.
 See [the documentation for each connector](./out-of-the-box-connectors/index.md) for the list of supported vector types.
 
 It is also important for the search vector type to match the target vector that is being searched, e.g. if you have two vectors
@@ -92,7 +92,7 @@ var collection = vectorStore.GetCollection<int, Product>("skproducts");
 // Create the vector search options and indicate that we want to search the FeatureListEmbedding property.
 var vectorSearchOptions = new VectorSearchOptions<Product>
 {
-    VectorProperty = r -> r.FeatureListEmbedding
+    VectorProperty = r => r.FeatureListEmbedding
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
