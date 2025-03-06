@@ -39,10 +39,11 @@ An `AzureAIAgent` is a specialized agent within the Semantic Kernel framework, d
 
 To use an `AzureAIAgent`, an _Azure AI Foundry Project_ must be utilized.  The following articles provide an overview of the _Azure AI Foundry_, how to create and configure a project, and the agent service:
 
-- [What is Azure AI Foundry?](azure/ai-foundry/what-is-ai-foundry)
-- [The Azure AI Foundry SDK](azure/ai-foundry/how-to/develop/sdk-overview)
-- [What is Azure AI Agent Service](azure/ai-services/agents/overview)
-- [Quickstart: Create a new agent](azure/ai-services/agents/quickstart)
+- [What is Azure AI Foundry?](/azure/ai-foundry/what-is-ai-foundry)
+- [The Azure AI Foundry SDK](/azure/ai-foundry/how-to/develop/sdk-overview)
+- [What is Azure AI Agent Service](/azure/ai-services/agents/overview)
+- [Quickstart: Create a new agent](/azure/ai-services/agents/quickstart)
+
 
 ## Preparing Your Development Environment
 
@@ -82,7 +83,7 @@ pip install semantic-kernel[azure]
 
 ## Configuring the AI Project Client
 
-Accessing an `AzureAIAgent` first requires the creation of a project client that is configured for a specific _Foundry Project_, most commonly by providing a connection string ([The Azure AI Foundry SDK: Getting Started with Projects](azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
+Accessing an `AzureAIAgent` first requires the creation of a project client that is configured for a specific _Foundry Project_, most commonly by providing a connection string ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -333,7 +334,7 @@ An `AzureAIAgent` can leverage advanced tools such as:
 
 ### Code Interpreter
 
-Code Interpreter allows the agents to write and run Python code in a sandboxed execution environment ([Azure AI Agent Service Code Interpreter](azure/ai-services/agents/how-to/tools/code-interpreter)).
+Code Interpreter allows the agents to write and run Python code in a sandboxed execution environment ([Azure AI Agent Service Code Interpreter](/azure/ai-services/agents/how-to/tools/code-interpreter)).
 
 ::: zone pivot="programming-language-csharp"
 ```c#
@@ -384,7 +385,7 @@ async with (
 
 ### File Search
 
-File search augments agents with knowledge from outside its model ([Azure AI Agent Service File Search Tool](azure/ai-services/agents/how-to/tools/file-search)).
+File search augments agents with knowledge from outside its model ([Azure AI Agent Service File Search Tool](/azure/ai-services/agents/how-to/tools/file-search)).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -436,7 +437,7 @@ async with (
 
 ### OpenAPI Integration
 
-Connects your agent to an external API ([How to use Azure AI Agent Service with OpenAPI Specified Tools](azure/ai-services/agents/how-to/tools/openapi-spec)).
+Connects your agent to an external API ([How to use Azure AI Agent Service with OpenAPI Specified Tools](/azure/ai-services/agents/how-to/tools/openapi-spec)).
 
 ::: zone pivot="programming-language-csharp"
 ```c#
@@ -507,7 +508,7 @@ async with (
 
 ### AzureAI Search Integration
 
-Use an existing Azure AI Search index with with your agent ([Use an existing AI Search index](azure/ai-services/agents/how-to/tools/azure-ai-search)).
+Use an existing Azure AI Search index with with your agent ([Use an existing AI Search index](/azure/ai-services/agents/how-to/tools/azure-ai-search)).
 
 ::: zone pivot="programming-language-csharp"
 ```c#
@@ -616,6 +617,7 @@ await agentsClient.DeleteAgentAsync(agent.Id);
 await client.agents.delete_thread(thread.id)
 await client.agents.delete_agent(agent.id)
 ```
+::: zone-end
 
 If working with a vector store or files, they may be deleted as well:
 
@@ -639,7 +641,7 @@ await client.agents.delete_vector_store(vector_store_id=vector_store.id)
 
 ::: zone-end
 
-> More information on the _file search_ tool is described in the [Azure AI Agent Service file search tool](azure/ai-services/agents/how-to/tools/file-search) article.
+> More information on the _file search_ tool is described in the [Azure AI Agent Service file search tool](/azure/ai-services/agents/how-to/tools/file-search) article.
 
 ## How-To
 
