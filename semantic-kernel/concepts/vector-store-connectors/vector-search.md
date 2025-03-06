@@ -169,7 +169,7 @@ await foreach (var result in searchResult.Results)
 }
 ```
 
-### Filter and OldFilter
+### Filter
 
 The vector search filter option can be used to provide a filter for filtering the records in the chosen collection
 before applying the vector search.

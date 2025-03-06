@@ -22,10 +22,10 @@ are returned. Sparse vector based hybrid search is not currently supported.
 
 To execute a hybrid search, your database schema needs to have a vector field and a string field with full text search capabilities enabled.
 If you are creating a collection using the semantic kernel vector storage connectors, make sure to enable the `IsFullTextSearchable` option
-on the string field that you want to target for the keywords search.
+on the string field that you want to target for the keyword search.
 
 > [!TIP]
-> For more information on how to enable `IsFullTextSearchable` see [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters)
+> For more information on how to enable `IsFullTextSearchable` refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings)
 
 ## Hybrid Search
 
@@ -83,7 +83,7 @@ See [VectorProperty and AdditionalProperty](#vectorproperty-and-additionalproper
 
 ## Hybrid Search Options
 
-The following options can be provided using the `VectorSearchOptions<TRecord>` class.
+The following options can be provided using the `HybridSearchOptions<TRecord>` class.
 
 ### VectorProperty and AdditionalProperty
 
@@ -103,7 +103,7 @@ using Qdrant.Client;
 var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
 var collection = (IKeywordHybridSearch<Product>)vectorStore.GetCollection<ulong, Product>("skproducts");
 
-// Create the vector search options and indicate that we want
+// Create the hybrid search options and indicate that we want
 // to search the DescriptionEmbedding vector property and the
 // Description full text search property.
 var hybridSearchOptions = new HybridSearchOptions<Product>
@@ -189,7 +189,7 @@ await foreach (var result in searchResult.Results)
 }
 ```
 
-### Filter and OldFilter
+### Filter
 
 The vector search filter option can be used to provide a filter for filtering the records in the chosen collection
 before applying the vector search.
@@ -214,7 +214,7 @@ by each database, but all databases support a broad base of common expressions, 
 not equals, and, or, etc.
 
 ```csharp
-// Create the vector search options and set the filter on the options.
+// Create the hybrid search options and set the filter on the options.
 var hybridSearchOptions = new HybridSearchOptions<Glossary>
 {
     Filter = r => r.Category == "External Definitions" && r.Tags.Contains("memory")

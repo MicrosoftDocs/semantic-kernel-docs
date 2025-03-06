@@ -422,7 +422,7 @@ public Task DeleteBatchAsync(IEnumerable<string> keys, CancellationToken cancell
     }
 
     // Remove records in parallel.
-    var tasks = keys.Select(key => this.DeleteAsync(key, options, cancellationToken));
+    var tasks = keys.Select(key => this.DeleteAsync(key, cancellationToken));
     return Task.WhenAll(tasks);
 }
 ```
