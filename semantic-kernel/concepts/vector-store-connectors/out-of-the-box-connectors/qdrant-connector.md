@@ -232,6 +232,8 @@ For more details on this concept see the [serialization documentation](./../seri
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
+
 ### Qdrant vector modes
 
 Qdrant supports two modes for vector storage and the Qdrant Connector with default mapper supports both modes.
@@ -241,8 +243,6 @@ The default mode is *single unnamed vector*.
 
 With this option a collection may only contain a single vector and it will be unnamed in the storage model in Qdrant.
 Here is an example of how an object is represented in Qdrant when using *single unnamed vector* mode:
-
-::: zone pivot="programming-language-csharp"
 
 ```csharp
 new Hotel
@@ -265,6 +265,16 @@ new Hotel
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
+### Qdrant vector modes
+
+Qdrant supports two modes for vector storage and the Qdrant Connector with default mapper supports both modes.
+The default mode is *single unnamed vector*.
+
+#### Single unnamed vector
+
+With this option a collection may only contain a single vector and it will be unnamed in the storage model in Qdrant.
+Here is an example of how an object is represented in Qdrant when using *single unnamed vector* mode:
+
 ```python
 Hotel(
     hotel_id = 1,
@@ -283,17 +293,17 @@ PointStruct(
     vector=[0.9, 0.1, 0.1, 0.1],
 )
 ```
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
 
 #### Named vectors
 
 If using the named vectors mode, it means that each point in a collection may contain more than one vector, and each will be named.
 Here is an example of how an object is represented in Qdrant when using *named vectors* mode:
-
-::: zone pivot="programming-language-csharp"
 
 ```csharp
 new Hotel
@@ -319,6 +329,11 @@ new Hotel
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
+#### Named vectors
+
+If using the named vectors mode, it means that each point in a collection may contain more than one vector, and each will be named.
+Here is an example of how an object is represented in Qdrant when using *named vectors* mode:
 
 ```python
 Hotel(
@@ -347,10 +362,10 @@ PointStruct(
 ::: zone pivot="programming-language-java"
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
+
 To enable named vectors mode, pass this as an option when constructing a Vector Store or collection.
 The same options can also be passed to any of the provided dependency injection container extension methods.
-
-::: zone pivot="programming-language-csharp"
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Qdrant;
@@ -369,6 +384,9 @@ var collection = new QdrantVectorStoreRecordCollection<Hotel>(
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
+To enable named vectors mode, pass this as an option when constructing a Vector Store or collection.
+The same options can also be passed to any of the provided dependency injection container extension methods.
+
 In python the default value for `named_vectors` is True, but you can also disable this as shown below.
 
 ```python
@@ -380,6 +398,7 @@ collection = QdrantCollection(
     named_vectors=False,
 )
 ```
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 ::: zone-end
