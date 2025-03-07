@@ -312,4 +312,4 @@ For an end-to-end example for a `ChatCompletionAgent`, see:
 
 
 > [!div class="nextstepaction"]
-> [Exploring `OpenAIAssistantAgent`](./assistant-agent.md)
+> [Exploring the OpenAI Assistant Agent`](./assistant-agent.md)

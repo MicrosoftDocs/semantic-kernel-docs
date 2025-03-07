@@ -248,7 +248,7 @@ await agent.delete_thread(thread_id)
 ::: zone-end
 
 
-## Delete an `OpenAIAssistantAgent`
+## Deleting an `OpenAIAssistantAgent`
 
 Since the assistant's definition is stored remotely, it will persist if not deleted.  
 Deleting an assistant definition may be performed directly with the `AssistantClient`.
@@ -289,5 +289,5 @@ For an end-to-end example for a `OpenAIAssistantAgent`, see:
 
 
 > [!div class="nextstepaction"]
-> [Agent Collaboration in `AgentChat`](./agent-chat.md)
+> [Exploring the Azure AI Agent](./azure-ai-agent.md)
 

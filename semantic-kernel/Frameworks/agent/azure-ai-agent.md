@@ -668,4 +668,4 @@ For practical examples of using an `AzureAIAgent`, see our code samples on GitHu
 ::: zone-end
 
 > [!div class="nextstepaction"]
-> [Agent Collaboration in AgentChat](./agent-chat.md)
+> [Agent Collaboration in Agent Chat](./agent-chat.md)
