@@ -1,6 +1,6 @@
 ---
-title: VectorData changes - March 2025
-description: Describes the changes included in the March 2025 VectorData release and how to migrate
+title: Vector Store changes - March 2025
+description: Describes the changes included in the March 2025 Vector Store release and how to migrate
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
@@ -10,7 +10,7 @@ ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
 
-# VectorData changes - March 2025
+# Vector Store changes - March 2025
 
 ## Linq based filtering
 
@@ -75,7 +75,7 @@ LINQ based filtering and new property selectors metioned above.
 If you are currently constructing the options class without providing the name of the options class
 there will be no change.  E.g. `VectorizedSearchAsync(embedding, new() { Top = 5 })`.
 
-On the other hand if you are specifying the options type, you will need to add the record type as a
+On the other hand if you are using `new` with the type name, you will need to add the record type as a
 generic parameter.
 
 ```csharp
@@ -127,10 +127,10 @@ If you were passing these options in the past, you will need to remove these wit
 ```csharp
 
 // Before
-collection.DeleteAsync("mykey", new DeleteRecordOptions(), cancellationToken );
+collection.DeleteAsync("mykey", new DeleteRecordOptions(), cancellationToken);
 
 // After
-collection.DeleteAsync("mykey", cancellationToken );
+collection.DeleteAsync("mykey", cancellationToken);
 ```
 
 ::: zone-end
