@@ -17,7 +17,7 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
 
-- [`OpenAIAssistantAgent`](dotnet/api/microsoft.semantickernel.agents.azureai)
+- [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.azureai)
 
 ::: zone-end
 
