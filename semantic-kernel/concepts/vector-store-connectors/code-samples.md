@@ -64,7 +64,7 @@ when doing a vector search.
 ## Vector search with paging
 
 When doing vector search with the Vector Store abstractions it's possible to use Top and Skip parameters to support paging, where e.g.
-you need to build a service that reponds with a small set of results per request.
+you need to build a service that responds with a small set of results per request.
 
 - [Vector search with paging](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_VectorSearch_Paging.cs)
 
@@ -84,10 +84,10 @@ This example shows how you can create a vector store using a custom model and re
 
 ## Using collections that were created and ingested using Langchain
 
-It's possible to use the Vector Store abstractions to access collections that were created and ingested using a different sytem, e.g. Langchain.
+It's possible to use the Vector Store abstractions to access collections that were created and ingested using a different system, e.g. Langchain.
 There are various approaches that can be followed to make the interop work correctly. E.g.
 
-1. Creating a data model that matches the storage schema that the Langchain implemenation used.
+1. Creating a data model that matches the storage schema that the Langchain implementation used.
 1. Using a custom mapper to map between the storage schema and data model.
 1. Using a record definition with special storage property names for fields.
 
@@ -95,7 +95,7 @@ In the following sample, we show how to use these approaches to construct Langch
 
 - [VectorStore Langchain Interop](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStore_Langchain_Interop.cs)
 
-For each vector store, there is a factory class that shows how to contruct the Langchain compatible Vector Store. See e.g.
+For each vector store, there is a factory class that shows how to construct the Langchain compatible Vector Store. See e.g.
 
 - [AzureAISearchFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/AzureAISearchFactory.cs)
 - [PineconeFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/PineconeFactory.cs)

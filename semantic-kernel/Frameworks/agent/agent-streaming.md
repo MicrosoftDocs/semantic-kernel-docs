@@ -181,7 +181,7 @@ await foreach (StreamingChatMessageContent response in chat.InvokeStreamingAsync
 {
     if (!lastAgent.Equals(response.AuthorName, StringComparison.Ordinal))
     {
-        // Process begining of agent response
+        // Process beginning of agent response
         lastAgent = response.AuthorName;
     }
 

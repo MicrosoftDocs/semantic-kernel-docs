@@ -67,7 +67,7 @@ E.g.
 - MyDbVectorStore : IVectorStore
 - MyDbVectorStoreRecordCollection<TKey, TRecord\> : IVectorStoreRecordCollection\<TKey, TRecord\>
 
-The `VectorStoreRecordCollection` implementation should accept the name of the collection as a construtor parameter
+The `VectorStoreRecordCollection` implementation should accept the name of the collection as a constructor parameter
 and each instance of it is therefore tied to a specific collection instance in the database.
 
 Here follows specific requirements for individual methods on these interfaces.
@@ -180,7 +180,7 @@ The user should be able to provide a `VectorStoreRecordDefinition` to the
 These are specified via string based settings, but where available a connector should expect
 the strings that are provided as string consts on `Microsoft.Extensions.VectorData.IndexKind`
 and `Microsoft.Extensions.VectorData.DistanceFunction`. Where the connector requires
-index kinds and distance functions that are not available on the abovementioned static classes
+index kinds and distance functions that are not available on the above mentioned static classes
 additional custom strings may be accepted.
 
 E.g. the goal is for a user to be able to specify a standard distance function, like `DotProductSimilarity`
@@ -226,9 +226,9 @@ Let's consider each scenario.
 
 ### 6. Storage property naming
 
-The naming conventions used for properties in code doesn't always match the prefered naming
+The naming conventions used for properties in code doesn't always match the preferred naming
 for matching fields in a database.
-It is therefore valueable to support customized storage names for properties.
+It is therefore valuable to support customized storage names for properties.
 Some databases may support storage formats that already have their own mechanism for
 specifying storage names, e.g. when using JSON as the storage format you can use
 a `JsonPropertyNameAttribute` to provide a custom name.
@@ -327,7 +327,7 @@ To allow customization of these settings when using `IVectorStore.GetCollection`
 that each connector supports an optional `VectorStoreRecordCollectionFactory` that can be passed to the concrete
 implementation of `IVectorStore` as an option. Each connector should therefore provide an interface, similar to the
 following sample. If a user passes an implementation of this to the `VectorStore` as an option, this
-can be used by the `IVectorStore.GetCollection` method to consruct the `IVectorStoreRecordCollection` instance.
+can be used by the `IVectorStore.GetCollection` method to construct the `IVectorStoreRecordCollection` instance.
 
 ```csharp
 public sealed class MyDBVectorStore : IVectorStore

@@ -10,8 +10,7 @@ ms.service: semantic-kernel
 
 # Realtime Multi-modal APIs
 
-The first realtime API integration for Semantic Kernel have been added, it is currently only available in Python and considered experimental. This is because the underlying services are still being developed and are subject to changes and we might need to make breaking changes to the API in Semantic Kernel as we learn from customers how to use this and as we add other providers of these kinds of models and APIs.
-
+The first realtime API integration for Semantic Kernel has been added, it is currently only available in Python and considered experimental. This is because the underlying services are still being developed and are subject to changes and we might need to make breaking changes to the API in Semantic Kernel as we learn from customers how to use this and as we add other providers of these kinds of models and APIs.
 ## Realtime Client abstraction
 
 To support different realtime APIs from different vendors, using different protocols, a new client abstraction has been added to the kernel. This client is used to connect to the realtime service and send and receive messages.

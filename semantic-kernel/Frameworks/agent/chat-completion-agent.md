@@ -124,7 +124,7 @@ agent = ChatCompletionAgent(
 
 ## AI Service Selection
 
-No different from using _Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a _service-selector_.  A _service-selector_ indentifies which [AI service](../../concepts/ai-services/index.md) to target when the [`Kernel`](../../concepts/kernel.md) contains more than one.
+No different from using _Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a _service-selector_.  A _service-selector_ identifies which [AI service](../../concepts/ai-services/index.md) to target when the [`Kernel`](../../concepts/kernel.md) contains more than one.
 
 > Note: If multiple [AI services](../../concepts/ai-services/index.md) are present and no _service-selector_ is provided, the same _default_ logic is applied for the agent that you'd find when using an [AI services](../../concepts/ai-services/index.md) outside of the `Agent Framework`
 
