@@ -209,16 +209,12 @@ Prior to creating an `OpenAIAssistantAgent`, ensure the configuration settings a
 
 ::: zone pivot="programming-language-csharp"
 
-Instantiate the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `OpenAIClientProvider` that will be used for the [Agent Definition](#agent-definition) as well as file-upload and the creation of a `VectorStore`.
+Instantiate the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `AzureOpenAIClient` that will be used for the [Agent Definition](#agent-definition) as well as file-upload and the creation of a `VectorStore`.
 
 ```csharp
-
 Settings settings = new();
 
-OpenAIClientProvider clientProvider =
-    OpenAIClientProvider.ForAzureOpenAI(
-        new AzureCliCredential(),
-        new Uri(settings.AzureOpenAI.Endpoint));
+AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
 ```
 ::: zone-end
 
@@ -242,11 +238,11 @@ Now create an empty _Vector Store for use with the _File Search_ tool:
 
 ::: zone pivot="programming-language-csharp"
 
-Use the `OpenAIClientProvider` to access a `VectorStoreClient` and create a `VectorStore`.
+Use the `AzureOpenAIClient` to access a `VectorStoreClient` and create a `VectorStore`.
 
 ```csharp
 Console.WriteLine("Creating store...");
-VectorStoreClient storeClient = clientProvider.Client.GetVectorStoreClient();
+VectorStoreClient storeClient = client.GetVectorStoreClient();
 CreateVectorStoreOperation operation = await storeClient.CreateVectorStoreAsync(waitUntilCompleted: true);
 string storeId = operation.VectorStoreId;
 ```
@@ -317,7 +313,7 @@ Now upload those files and add them to the _Vector Store_ by using the previousl
 Dictionary<string, OpenAIFile> fileReferences = [];
 
 Console.WriteLine("Uploading files...");
-OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
+OpenAIFileClient fileClient = client.GetOpenAIFileClient();
 foreach (string fileName in _fileNames)
 {
     OpenAIFile fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
@@ -339,27 +335,26 @@ We are now ready to instantiate an `OpenAIAssistantAgent`. The agent is configur
 
 ::: zone pivot="programming-language-csharp"
 
-We will utilize the `OpenAIClientProvider` again as part of creating the `OpenAIAssistantAgent`:
+We will utilize the `AzureOpenAIClient` again as part of creating the `OpenAIAssistantAgent`:
 
 ```csharp
-Console.WriteLine("Defining agent...");
-OpenAIAssistantAgent agent =
-    await OpenAIAssistantAgent.CreateAsync(
-        clientProvider,
-        new OpenAIAssistantDefinition(settings.AzureOpenAI.ChatModelDeployment)
-        {
-            Name = "SampleAssistantAgent",
-            Instructions =
+Console.WriteLine("Defining assistant...");
+Assistant assistant =
+    await assistantClient.CreateAssistantAsync(
+        settings.AzureOpenAI.ChatModelDeployment,
+        name: "SampleAssistantAgent",
+        instructions:
                 """
                 The document store contains the text of fictional stories.
                 Always analyze the document store to provide an answer to the user's question.
                 Never rely on your knowledge of stories not included in the document store.
                 Always format response using markdown.
                 """,
-            EnableFileSearch = true,
-            VectorStoreId = storeId,
-        },
-        new Kernel());
+        enableFileSearch: true,
+        vectorStoreId: storeId);
+
+// Create agent
+OpenAIAssistantAgent agent = new(assistant, assistantClient);
 ```
 ::: zone-end
 
@@ -402,7 +397,7 @@ Let's also ensure the resources are removed at the end of execution to minimize 
 ::: zone pivot="programming-language-csharp"
 ```csharp
 Console.WriteLine("Creating thread...");
-string threadId = await agent.CreateThreadAsync();
+AssistantThread thread = await assistantClient.CreateThreadAsync();
 
 Console.WriteLine("Ready!");
 
@@ -420,8 +415,8 @@ finally
     Console.WriteLine("Cleaning-up...");
     await Task.WhenAll(
         [
-            agent.DeleteThreadAsync(threadId),
-            agent.DeleteAsync(),
+            assistantClient.DeleteThreadAsync(thread.Id),
+            assistantClient.DeleteAssistantAsync(assistant.Id),
             storeClient.DeleteVectorStoreAsync(storeId),
             ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
         ]);
@@ -471,7 +466,7 @@ if (input.Trim().Equals("EXIT", StringComparison.OrdinalIgnoreCase))
     break;
 }
 
-await agent.AddChatMessageAsync(threadId, new ChatMessageContent(AuthorRole.User, input));
+await agent.AddChatMessageAsync(thread.Id, new ChatMessageContent(AuthorRole.User, input));
 Console.WriteLine();
 ```
 ::: zone-end
@@ -524,7 +519,7 @@ To generate an `Agent` response to user input, invoke the agent by specifying th
 ::: zone pivot="programming-language-csharp"
 ```csharp
 List<StreamingAnnotationContent> footnotes = [];
-await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(threadId))
+await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(thread.Id))
 {
     // Capture annotations for footnotes
     footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
@@ -585,16 +580,19 @@ Try using these suggested inputs:
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Agents.OpenAI;
+using Microsoft.SemanticKernel.ChatCompletion;
+using OpenAI.Assistants;
+using OpenAI.Files;
+using OpenAI.VectorStores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.Identity;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Agents.OpenAI;
-using Microsoft.SemanticKernel.ChatCompletion;
-using OpenAI.Files;
-using OpenAI.VectorStores;
 
 namespace AgentsSample;
 
@@ -616,21 +614,21 @@ public static class Program
         // Load configuration from environment variables or user secrets.
         Settings settings = new();
 
-        OpenAIClientProvider clientProvider =
-            OpenAIClientProvider.ForAzureOpenAI(
-                new AzureCliCredential(),
-                new Uri(settings.AzureOpenAI.Endpoint));
+        // Initialize the clients
+        AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
+        //OpenAIClient client = OpenAIAssistantAgent.CreateOpenAIClient(new ApiKeyCredential(settings.OpenAI.ApiKey)));
+        AssistantClient assistantClient = client.GetAssistantClient();
+        OpenAIFileClient fileClient = client.GetOpenAIFileClient();
+        VectorStoreClient storeClient = client.GetVectorStoreClient();
 
+        // Create the vector store
         Console.WriteLine("Creating store...");
-        VectorStoreClient storeClient = clientProvider.Client.GetVectorStoreClient();
         CreateVectorStoreOperation operation = await storeClient.CreateVectorStoreAsync(waitUntilCompleted: true);
         string storeId = operation.VectorStoreId;
 
-        // Retain file references.
-        Dictionary<string, OpenAIFile> fileReferences = [];
-
+        // Upload files and retain file references.
         Console.WriteLine("Uploading files...");
-        OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
+        Dictionary<string, OpenAIFile> fileReferences = [];
         foreach (string fileName in _fileNames)
         {
             OpenAIFile fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
@@ -638,28 +636,28 @@ public static class Program
             fileReferences.Add(fileInfo.Id, fileInfo);
         }
 
-
-        Console.WriteLine("Defining agent...");
-        OpenAIAssistantAgent agent =
-            await OpenAIAssistantAgent.CreateAsync(
-                clientProvider,
-                new OpenAIAssistantDefinition(settings.AzureOpenAI.ChatModelDeployment)
-                {
-                    Name = "SampleAssistantAgent",
-                    Instructions =
+        // Define assistant
+        Console.WriteLine("Defining assistant...");
+        Assistant assistant =
+            await assistantClient.CreateAssistantAsync(
+                settings.AzureOpenAI.ChatModelDeployment,
+                name: "SampleAssistantAgent",
+                instructions:
                         """
                         The document store contains the text of fictional stories.
                         Always analyze the document store to provide an answer to the user's question.
                         Never rely on your knowledge of stories not included in the document store.
                         Always format response using markdown.
                         """,
-                    EnableFileSearch = true,
-                    VectorStoreId = storeId,
-                },
-                new Kernel());
+                enableFileSearch: true,
+                vectorStoreId: storeId);
 
+        // Create agent
+        OpenAIAssistantAgent agent = new(assistant, assistantClient);
+
+        // Create the conversation thread
         Console.WriteLine("Creating thread...");
-        string threadId = await agent.CreateThreadAsync();
+        AssistantThread thread = await assistantClient.CreateThreadAsync();
 
         Console.WriteLine("Ready!");
 
@@ -681,11 +679,11 @@ public static class Program
                     break;
                 }
 
-                await agent.AddChatMessageAsync(threadId, new ChatMessageContent(AuthorRole.User, input));
+                await agent.AddChatMessageAsync(thread.Id, new ChatMessageContent(AuthorRole.User, input));
                 Console.WriteLine();
 
                 List<StreamingAnnotationContent> footnotes = [];
-                await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(threadId))
+                await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(thread.Id))
                 {
                     // Capture annotations for footnotes
                     footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
@@ -713,8 +711,8 @@ public static class Program
             Console.WriteLine("Cleaning-up...");
             await Task.WhenAll(
                 [
-                    agent.DeleteThreadAsync(threadId),
-                    agent.DeleteAsync(),
+                    assistantClient.DeleteThreadAsync(thread.Id),
+                    assistantClient.DeleteAssistantAsync(assistant.Id),
                     storeClient.DeleteVectorStoreAsync(storeId),
                     ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
                 ]);
@@ -729,8 +727,6 @@ public static class Program
 
 ::: zone pivot="programming-language-python"
 ```python
-# Copyright (c) Microsoft. All rights reserved.
-
 import asyncio
 import os
 

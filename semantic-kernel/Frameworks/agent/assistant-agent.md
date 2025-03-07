@@ -8,7 +8,7 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Exploring the _Semantic Kernel_ `OpenAIAssistantAgent`
+# Exploring the Semantic Kernel `OpenAIAssistantAgent`
 
 > [!IMPORTANT]
 > This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
@@ -17,8 +17,6 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
 - [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantagent)
-- [`OpenAIAssistantDefinition`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantdefinition)
-- [`OpenAIClientProvider`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiclientprovider)
 
 ::: zone-end
 
@@ -45,21 +43,55 @@ The _OpenAI Assistant API_ is a specialized interface designed for more advanced
 - [Assistant API in Azure](/azure/ai-services/openai/assistants-quickstart)
 
 
+## Preparing Your Development Environment
+
+To proceed with developing an `OpenAIAIAssistantAgent`, configure your development environment with the appropriate packages.
+
+::: zone pivot="programming-language-csharp"
+
+Add the `Microsoft.SemanticKernel.Agents.OpenAI` package to your project:
+
+```pwsh
+dotnet add package Microsoft.SemanticKernel.Agents.AzureAI --prerelease
+```
+
+You may also want to include the `Azure.Identity` package:
+
+```pwsh
+dotnet add package Azure.Identity
+```
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Install the `semantic-kernel` package with the optional _Azure_ dependencies:
+
+```bash
+pip install semantic-kernel[azure]
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
+
 ## Creating an `OpenAIAssistantAgent`
 
 Creating an `OpenAIAssistant` requires invoking a remote service, which is handled asynchronously. To manage this, the `OpenAIAssistantAgent` is instantiated through a static factory method, ensuring the process occurs in a non-blocking manner. This method abstracts the complexity of the asynchronous call, returning a promise or future once the assistant is fully initialized and ready for use.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
-OpenAIAssistantAgent agent =
-    await OpenAIAssistantAgent.CreateAsync(
-        OpenAIClientProvider.ForAzureOpenAI(/*<...service configuration>*/),
-        new OpenAIAssistantDefinition("<model name>")
-        {
-          Name = "<agent name>",
-          Instructions = "<agent instructions>",
-        },
-        new Kernel());
+AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
+Assistant assistant =
+    await this.AssistantClient.CreateAssistantAsync(
+        "<model name>",
+        "<agent name>",
+        instructions: "<agent instructions>");
+OpenAIAssistantAgent agent = new(assistant, client);
 ```
 ::: zone-end
 
@@ -119,11 +151,9 @@ Once created, the identifier of the assistant may be access via its identifier. 
 For .NET, the agent identifier is exposed as a `string` via the  property defined by any agent.
 
 ```csharp
-OpenAIAssistantAgent agent =
-    await OpenAIAssistantAgent.RetrieveAsync(
-        OpenAIClientProvider.ForAzureOpenAI(/*<...service configuration>*/),
-        "<your agent id>",
-        new Kernel());
+AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
+Assistant assistant = await this.AssistantClient.GetAssistantAsync("<assistant id>");
+OpenAIAssistantAgent agent = new(assistant, client);
 ```
 ::: zone-end
 
@@ -220,20 +250,18 @@ await agent.delete_thread(thread_id)
 
 ## Deleting an `OpenAIAssistantAgent`
 
-Since the assistant's definition is stored remotely, it supports the capability to self-delete. This enables the agent to be removed from the system when it is no longer needed.
+Since the assistant's definition is stored remotely, it will persist if not deleted.  
+Deleting an assistant definition may be performed directly with the `AssistantClient`.
 
-> Note: Attempting to use an agent instance after being deleted results in an exception.
+> Note: Attempting to use an agent instance after being deleted will result in a service exception.
 
 ::: zone pivot="programming-language-csharp"
 
 For .NET, the agent identifier is exposed as a `string` via the [`Agent.Id`](/dotnet/api/microsoft.semantickernel.agents.agent.id) property defined by any agent.
 
 ```csharp
-// Perform the deletion
-await agent.DeleteAsync();
-
-// Inspect whether an agent has been deleted
-bool isDeleted = agent.IsDeleted();
+AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
+Assistant assistant = await this.AssistantClient.DeleteAssistantAsync("<assistant id>");
 ```
 ::: zone-end
 
@@ -261,5 +289,5 @@ For an end-to-end example for a `OpenAIAssistantAgent`, see:
 
 
 > [!div class="nextstepaction"]
-> [Agent Collaboration in `AgentChat`](./agent-chat.md)
+> [Exploring the Azure AI Agent](./azure-ai-agent.md)
 
