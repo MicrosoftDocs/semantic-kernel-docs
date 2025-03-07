@@ -255,8 +255,7 @@ agent = ChatCompletionAgent(...)
 chat = ChatHistory()
 
 # Add the user message
-chat.add_user_message(user_input))
-
+chat.add_user_message(user_input)
 # Generate the agent response
 response = await agent.get_response(chat)
 # response is a `ChatMessageContent` object
