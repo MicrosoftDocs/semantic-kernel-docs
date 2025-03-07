@@ -248,7 +248,7 @@ await agent.delete_thread(thread_id)
 ::: zone-end
 
 
-## Deleting an `OpenAIAssistantAgent`
+## Delete an `OpenAIAssistantAgent`
 
 Since the assistant's definition is stored remotely, it will persist if not deleted.  
 Deleting an assistant definition may be performed directly with the `AssistantClient`.

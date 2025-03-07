@@ -37,7 +37,7 @@ Detailed API documentation related to this discussion is available at:
 
 An `AzureAIAgent` is a specialized agent within the Semantic Kernel framework, designed to provide advanced conversational capabilities with seamless tool integration. It automates tool calling, eliminating the need for manual parsing and invocation. The agent also securely manages conversation history using threads, reducing the overhead of maintaining state. Additionally, the `AzureAIAgent` supports a variety of built-in tools, including file retrieval, code execution, and data interaction via Bing, Azure AI Search, Azure Functions, and OpenAPI.
 
-To use an `AzureAIAgent`, an _Azure AI Foundry Project_ must be utilized.  The following articles provide an overview of the _Azure AI Foundry_, how to create and configure a project, and the agent service:
+To use an `AzureAIAgent`, an Azure AI Foundry Project must be utilized.  The following articles provide an overview of the Azure AI Foundry, how to create and configure a project, and the agent service:
 
 - [What is Azure AI Foundry?](/azure/ai-foundry/what-is-ai-foundry)
 - [The Azure AI Foundry SDK](/azure/ai-foundry/how-to/develop/sdk-overview)
@@ -67,7 +67,7 @@ dotnet add package Azure.Identity
 
 ::: zone pivot="programming-language-python"
 
-Install the `semantic-kernel` package with the optional _Azure_ dependencies:
+Install the `semantic-kernel` package with the optional Azure dependencies:
 
 ```bash
 pip install semantic-kernel[azure]
@@ -83,7 +83,7 @@ pip install semantic-kernel[azure]
 
 ## Configuring the AI Project Client
 
-Accessing an `AzureAIAgent` first requires the creation of a project client that is configured for a specific _Foundry Project_, most commonly by providing a connection string ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
+Accessing an `AzureAIAgent` first requires the creation of a project client that is configured for a specific Foundry Project, most commonly by providing a connection string ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -242,7 +242,7 @@ for user_input in USER_INPUTS:
 
 ::: zone-end
 
-An agent may also produce a _streamed_ response:
+An agent may also produce a streamed response:
 
 ::: zone pivot="programming-language-csharp"
 ```c#
@@ -574,7 +574,7 @@ async with (
 
 ::: zone-end
 
-### Retrieving Existing `AzureAIAgent`
+### Retrieving an Existing `AzureAIAgent`
 
 An existing agent can be retrieved and reused by specifying its assistant ID:
 
@@ -668,4 +668,4 @@ For practical examples of using an `AzureAIAgent`, see our code samples on GitHu
 ::: zone-end
 
 > [!div class="nextstepaction"]
-> [Agent Collaboration in `AgentChat`](./agent-chat.md)
+> [Agent Collaboration in AgentChat](./agent-chat.md)
