@@ -432,13 +432,14 @@ client so that it may send the entire set in one request.
 
 ## Recommended common patterns and pratices
 
+1. Keep `IVectorStore` and `IVectorStoreRecordCollection` implementations unsealed with virtual methods, so that developers can inherit and override if needed.
 1. Always use options classes for optional settings with smart defaults.
 1. Keep required parameters on the main signature and move optional parameters to options.
 
 Here is an example of an `IVectorStoreRecordCollection` constructor following this pattern.
 
 ```csharp
-public sealed class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollection<string, TRecord>
+public class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollection<string, TRecord>
 {
     public MyDBVectorStoreRecordCollection(MyDBClient myDBClient, string collectionName, MyDBVectorStoreRecordCollectionOptions<TRecord>? options = default)
     {
@@ -447,13 +448,18 @@ public sealed class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecor
     ...
 }
 
-public sealed class MyDBVectorStoreRecordCollectionOptions<TRecord>
+public class MyDBVectorStoreRecordCollectionOptions<TRecord>
 {
     public VectorStoreRecordDefinition? VectorStoreRecordDefinition { get; init; } = null;
     public IVectorStoreRecordMapper<TRecord, MyDbRecord>? MyDbRecordCustomMapper { get; init; } = null;
 }
 ```
 
+## SDK Changes
+
+Please also see the following articles for a history of changes to the SDK and therefore implementation requirements:
+
+1. [Vector Store Changes March 2025](../../../support/migration/vectorstore-march-2025.md)
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
