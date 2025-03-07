@@ -580,21 +580,19 @@ Try using these suggested inputs:
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
-using System;
-using System.ClientModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
-using OpenAI;
 using OpenAI.Assistants;
 using OpenAI.Files;
 using OpenAI.VectorStores;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AgentsSample;
 
