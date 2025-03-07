@@ -35,6 +35,7 @@ The connector has the following characteristics.
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | No, since storage is in-memory and data reuse is therefore not possible, custom naming is not applicable.                        |
+| HybridSearch supported?           | No                                                                                                                               |
 
 ## Getting started
 

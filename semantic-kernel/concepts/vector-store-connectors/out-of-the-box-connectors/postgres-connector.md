@@ -32,6 +32,7 @@ The Postgres Vector Store connector can be used to access and manage data in Pos
 | IsFilterable supported?           | No                                                                                                                               |
 | IsFullTextSearchable supported?   | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
+| HybridSearch supported?           | No                                                                                                                               |
 
 ## Getting started
 

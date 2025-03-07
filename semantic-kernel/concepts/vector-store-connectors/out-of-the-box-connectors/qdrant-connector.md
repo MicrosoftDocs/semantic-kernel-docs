@@ -17,6 +17,8 @@ ms.service: semantic-kernel
 
 The Qdrant Vector Store connector can be used to access and manage data in Qdrant. The connector has the following characteristics.
 
+::: zone pivot="programming-language-csharp"
+
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Qdrant collection with payload indices for filterable data fields                                                                |
@@ -30,6 +32,33 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
+| HybridSearch supported?           | Yes                                                                                                                              |
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+| Feature Area                      | Support                                                                                                                          |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| Collection maps to                | Qdrant collection with payload indices for filterable data fields                                                                |
+| Supported key property types      | <ul><li>ulong</li><li>Guid</li></ul>                                                                                             |
+| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>*and iterables of each of these types*</li></ul> |
+| Supported vector property types   | <ul><li>list[float]</li></ul>                                                                                                    |
+| Supported index types             | Hnsw                                                                                                                             |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>              |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
+| Supports multiple vectors in a record | Yes (configurable)                                                                                                           |
+| IsFilterable supported?           | Yes                                                                                                                              |
+| IsFullTextSearchable supported?   | Yes                                                                                                                              |
+| StoragePropertyName supported?    | Yes                                                                                                                              |
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Not Supported
+
+Not currently supported.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 

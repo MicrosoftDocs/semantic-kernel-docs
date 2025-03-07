@@ -32,6 +32,8 @@ The MongoDB Vector Store connector can be used to access and manage data in Mong
 | IsFilterable supported?               | Yes                                                                                                                                                                           |
 | IsFullTextSearchable supported?       | No                                                                                                                                                                            |
 | StoragePropertyName supported?        | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
+| HybridSearch supported?               | Yes                                                                                                                                                                           |
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
@@ -47,9 +49,12 @@ The MongoDB Vector Store connector can be used to access and manage data in Mong
 | Supports multiple vectors in a record | Yes                                                                                                                                                                         |
 | IsFilterable supported?               | Yes                                                                                                                                                                         |
 | IsFullTextSearchable supported?       | No                                                                                                                                                                          |
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
+
 More info coming soon.
+
 ::: zone-end
 ::: zone pivot="programming-language-csharp"
 

@@ -32,8 +32,11 @@ The Azure CosmosDB MongoDB Vector Store connector can be used to access and mana
 | IsFilterable supported?               | Yes                                                                                                                                                                           |
 | IsFullTextSearchable supported?       | No                                                                                                                                                                            |
 | StoragePropertyName supported?        | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
+| HybridSearch supported?               | No                                                                                                                                                                            |
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
 | Feature Area                          | Support                                                                                                                                                                     |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Azure Cosmos DB MongoDB (vCore) Collection + Index                                                                                                                          |
@@ -46,6 +49,7 @@ The Azure CosmosDB MongoDB Vector Store connector can be used to access and mana
 | Supports multiple vectors in a record | Yes                                                                                                                                                                         |
 | IsFilterable supported?               | Yes                                                                                                                                                                         |
 | IsFullTextSearchable supported?       | No                                                                                                                                                                          |
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 More info coming soon.
