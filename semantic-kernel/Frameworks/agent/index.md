@@ -17,6 +17,11 @@ The Semantic Kernel Agent Framework provides a platform within the Semantic Kern
 
 ## What is an AI agent?
 
+![alt text](../../media/agentSKdocs.png)
+![alt text](../../media/agentSKdocs2.png)
+![alt text](../../media/agentSKdocs3.png)
+![alt text](../../media/agentSKdocs4.png)
+
 An **AI agent** is a software entity designed to perform tasks autonomously or semi-autonomously by recieving input, processing information, and taking actions to achieve specific goals.
 
 Agents can send and receive messages, generating responses using a combination of models, tools, human inputs, or other customizable components. 
