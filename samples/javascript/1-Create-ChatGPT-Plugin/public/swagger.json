@@ -1,0 +1,279 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenAPI Document on Azure Functions",
+    "description": "This is the OpenAPI Document on Azure Functions",
+    "version": "1.0.0"
+  },
+  "host": "localhost:9080",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/add": {
+      "get": {
+        "description": "Add two numbers",
+        "tags": [
+          "Add"
+        ],
+        "operationId": "add",
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "number1",
+            "description": "The first number to add",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "number2",
+            "description": "The second number to add",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the sum of the two numbers",
+            "scehma": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/display-languages": {
+      "get": {
+        "description": "Restuns the list of supported languages",
+        "tags": [
+          "Add"
+        ],
+        "operationId": "add",
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/markdown"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the list of supported languages",
+            "scehma": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/divide": {
+      "get": {
+        "description": "Multiply two numbers",
+        "tags": [
+          "Divide"
+        ],
+        "operationId": "divide",
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "number1",
+            "description": "The first number to divide from",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "number2",
+            "description": "The second number to divide by",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the quotient of the division of the two numbers",
+            "scehma": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/multiply": {
+      "get": {
+        "description": "Multiply two numbers",
+        "tags": [
+          "Multiply"
+        ],
+        "operationId": "multiply",
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "number1",
+            "description": "The first number to multiply",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "number2",
+            "description": "The second number to multiply",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the product of the two numbers",
+            "scehma": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/sqrt": {
+      "get": {
+        "description": "Take the square root of a number",
+        "tags": [
+          "Square Root"
+        ],
+        "operationId": "sqrt",
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "number1",
+            "description": "The number to calculate the square root of",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the square root of the number",
+            "scehma": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/subtract": {
+      "get": {
+        "description": "To add two numbers",
+        "tags": [
+          "Add"
+        ],
+        "operationId": "suntract",
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "number1",
+            "description": "The first number to subtract from",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "number2",
+            "description": "The second number to subtract away",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the difference of the two numbers"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {},
+  "responses": {},
+  "parameters": {},
+  "securityDefinitions": {},
+  "tags": []
+}
