@@ -17,7 +17,7 @@ If you want to dive into deeper into Semantic Kernel and learn how to use more a
 :::row:::
 
    :::column span="3":::
-        Each of the SDKs (Python, C#, and Java) have their own set of samples that walk through the SDK. Each sample is modelled as a test case within our main repo, so you're always guaranteed that the sample will work with the latest nightly version of the SDK! Below are most of the samples you'll find in our concepts project.
+        Each of the SDKs (Python, C#, and Java) have their own set of samples that walk through the SDK. Each sample is modeled as a test case within our main repo, so you're always guaranteed that the sample will work with the latest nightly version of the SDK! Below are most of the samples you'll find in our concepts project.
 
 
      ::: zone pivot="programming-language-csharp"
