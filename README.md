@@ -1,12 +1,12 @@
 # Microsoft Semantic Kernel Documentation
 
-This is the GitHub repository for the technical product documentation for **Semantic Kernel**. This documentation is published at [Microsoft Semantic Kernel documentation](https://learn.microsoft.com/semantic-kernel).
+This is the GitHub repository for the technical product documentation for **Semantic Kernel**. This documentation is published at [Microsoft Semantic Kernel documentation](/semantic-kernel).
 
 ## How to contribute
 
-Thanks for your interest in [contributing](https://learn.microsoft.com/), home of technical content for Microsoft products and services.
+Thanks for your interest in contributing to the home of technical content for Microsoft products and services.
 
-To learn how to make contributions to the content in this repository, start with our [Docs contributor guide](https://learn.microsoft.com/contribute).
+To learn how to make contributions to the content in this repository, start with our [Docs contributor guide](/contribute).
 
 ## Code of conduct
 

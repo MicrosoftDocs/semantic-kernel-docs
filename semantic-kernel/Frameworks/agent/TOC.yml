@@ -4,7 +4,7 @@
   href: agent-architecture.md
 - name: Chat Completion Agent
   href: chat-completion-agent.md
-- name: Open AI Assistant Agent
+- name: OpenAI Assistant Agent
   href: assistant-agent.md
 - name: Agent Collaboration
   href: agent-chat.md

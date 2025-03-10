@@ -1,5 +1,5 @@
 ---
-title: Semantic Kernel Agent Framework (Experimental)
+title: Semantic Kernel Agent Framework
 description: Introducing the Semantic Kernel Agent Framework
 zone_pivot_groups: programming-languages
 author: crickman
@@ -10,10 +10,10 @@ ms.service: semantic-kernel
 ---
 # Semantic Kernel Agent Framework 
 
-> [!WARNING]
-> The _Semantic Kernel Agent Framework_ is in preview and is subject to change.
+> [!IMPORTANT]
+> Single-agent features, such as ChatCompletionAgent and OpenAIAssistantAgent, are in the release candidate stage. These features are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability. However, agent chat patterns are still in the experimental stage. These patterns are under active development and may change significantly before advancing to the preview or release candidate stage.
 
-The _Semantic Kernel Agent Framework_ provides a platform within the Semantic Kernel eco-system that allow for the creation of AI **agents** and the ability to  incorporate **agentic patterns** into any application based on the same patterns and features that exist in the core _Semantic Kernel_ framework.
+The Semantic Kernel Agent Framework provides a platform within the Semantic Kernel eco-system that allow for the creation of AI **agents** and the ability to  incorporate **agentic patterns** into any application based on the same patterns and features that exist in the core Semantic Kernel framework.
 
 ## What is an AI agent?
 
@@ -21,7 +21,7 @@ An **AI agent** is a software entity designed to perform tasks autonomously or s
 
 Agents can send and receive messages, generating responses using a combination of models, tools, human inputs, or other customizable components. 
 
-Agents are designed to work collaboratively, enabling complex workflows by interacting with each other.  The _Agent Framework_ allows for the creation of both simple and sophisticated agents, enhancing modularity and ease of maintenance
+Agents are designed to work collaboratively, enabling complex workflows by interacting with each other.  The `Agent Framework` allows for the creation of both simple and sophisticated agents, enhancing modularity and ease of maintenance
 
 
 ## What problems do AI agents solve?
@@ -56,17 +56,17 @@ Installing the _Agent Framework SDK_ is specific to the distribution channel ass
 
 ::: zone pivot="programming-language-csharp"
 
-For .NET SDK, serveral NuGet packages are available.  
+For .NET SDK, several NuGet packages are available.  
 
 > Note: The core _Semantic Kernel SDK_ is required in addition to any agent packages.
 
 
 Package|Description
 --|--
-[Microsoft.SemanticKernel](https://www.nuget.org/packages/Microsoft.SemanticKernel)|This contains the core _Semantic Kernel_ libraries for getting started with the _Agent Framework_.  This must be explicitly referenced by your application.
-[Microsoft.SemanticKernel.Agents.Abstractions](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Abstractions)|Defines the core agent abstractions for the _Agent Framework_.  Generally not required to be specified as it is included in both the `Microsoft.SemanticKernel.Agents.Core` and `Microsoft.SemanticKernel.Agents.OpenAI` packages.
+[Microsoft.SemanticKernel](https://www.nuget.org/packages/Microsoft.SemanticKernel)|This contains the core _Semantic Kernel_ libraries for getting started with the `Agent Framework`.  This must be explicitly referenced by your application.
+[Microsoft.SemanticKernel.Agents.Abstractions](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Abstractions)|Defines the core agent abstractions for the `Agent Framework`.  Generally not required to be specified as it is included in both the `Microsoft.SemanticKernel.Agents.Core` and `Microsoft.SemanticKernel.Agents.OpenAI` packages.
 [Microsoft.SemanticKernel.Agents.Core](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Core)|Includes the [`ChatCompletionAgent`](./chat-completion-agent.md) and [`AgentGroupChat`](./agent-chat.md) classes.
-[Microsoft.SemanticKernel.Agents.OpenAI](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.OpenAI)|Provides ability to use the [Open AI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent`](./assistant-agent.md).
+[Microsoft.SemanticKernel.Agents.OpenAI](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.OpenAI)|Provides ability to use the [OpenAI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent`](./assistant-agent.md).
 
 ::: zone-end
 
@@ -74,7 +74,7 @@ Package|Description
 
 Module|Description
 --|--
-[semantic-kernel.agents](https://pypi.org/project/semantic-kernel/)|This is the _Semantic Kernel_ library for getting started with the _Agent Framework_.  This must be explicitly referenced by your application. This module contains the [`ChatCompletionAgent`](./chat-completion-agent.md) and [`AgentGroupChat`](./agent-chat.md) classes, as well as the ability to use the [Open AI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent` or `AzureOpenAssistant`](./assistant-agent.md).
+[semantic-kernel.agents](https://pypi.org/project/semantic-kernel/)|This is the _Semantic Kernel_ library for getting started with the `Agent Framework`.  This must be explicitly referenced by your application. This module contains the [`ChatCompletionAgent`](./chat-completion-agent.md) and [`AgentGroupChat`](./agent-chat.md) classes, as well as the ability to use the [OpenAI Assistant API](https://platform.openai.com/docs/assistants) via the [`OpenAIAssistantAgent` or `AzureOpenAssistant`](./assistant-agent.md).
 
 ::: zone-end
 

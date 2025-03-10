@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 # Text Embedding generation in Semantic Kernel
 
-With text embedding generation, you can use an AI model to generate vectors (aka embeddings). These vectors encode the semantic meaning of the text in such a way that mathematical equations can be used on two vectors to compare the similiarty of the original text.
+With text embedding generation, you can use an AI model to generate vectors (aka embeddings). These vectors encode the semantic meaning of the text in such a way that mathematical equations can be used on two vectors to compare the similarity of the original text.
 This is useful for scenarios such as Retrieval Augmented Generation (RAG), where we want to search a database of information for text related to a user query.
 Any matching information can then be provided as input to Chat Completion, so that the AI Model has more context when answering the user query.
 
@@ -154,7 +154,7 @@ using Microsoft.SemanticKernel;
 IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
-    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure OpenAI service endpoint, e.g. https://myaiservice.openai.azure.com.
     apiKey: "YOUR_API_KEY",
     modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
     serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel.
@@ -301,7 +301,7 @@ var builder = Host.CreateApplicationBuilder(args);
 #pragma warning disable SKEXP0010
 builder.Services.AddAzureOpenAITextEmbeddingGeneration(
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
-    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure OpenAI service endpoint, e.g. https://myaiservice.openai.azure.com.
     apiKey: "YOUR_API_KEY",
     modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
     serviceId: "YOUR_SERVICE_ID", // Optional; for targeting specific services within Semantic Kernel.
@@ -468,7 +468,7 @@ using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 #pragma warning disable SKEXP0010
 AzureOpenAITextEmbeddingGenerationService textEmbeddingGenerationService = new (
     deploymentName: "NAME_OF_YOUR_DEPLOYMENT", // Name of deployment, e.g. "text-embedding-ada-002".
-    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure Open AI service endpoint, e.g. https://myaiservice.openai.azure.com.
+    endpoint: "YOUR_AZURE_ENDPOINT",           // Name of Azure OpenAI service endpoint, e.g. https://myaiservice.openai.azure.com.
     apiKey: "YOUR_API_KEY",
     modelId: "MODEL_ID",          // Optional name of the underlying model if the deployment name doesn't match the model name, e.g. text-embedding-ada-002.
     httpClient: new HttpClient(), // Optional; if not provided, the HttpClient from the kernel will be used.
