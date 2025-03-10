@@ -26,7 +26,7 @@ Before proceeding with feature coding, make sure your development environment is
 
 ::: zone pivot="programming-language-csharp"
 
-To add package dependencies from the command-line use the `dotnet` command:
+To add package dependencies from the command line use the `dotnet` command:
 
 ```powershell
 dotnet add package Azure.Identity
@@ -279,7 +279,7 @@ file_search_tools, file_search_tool_resources = AzureAssistantAgent.configure_fi
 
 ::: zone-end
 
-Let's declare the the three content-files described in the previous [Configuration](#configuration) section:
+Let's declare the the three content files described in the previous [Configuration](#configuration) section:
 
 ::: zone pivot="programming-language-csharp"
 
