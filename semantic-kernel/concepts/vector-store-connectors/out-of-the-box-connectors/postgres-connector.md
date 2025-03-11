@@ -411,7 +411,6 @@ AZURE_DB_FOR_POSTGRES_SCOPE = "https://ossrdbms-aad.database.windows.net/.defaul
 
 logger = logging.getLogger(__name__)
 
-
 async def get_entra_token_async(credential: AsyncTokenCredential) -> str:
     """Get the password from Entra using the provided credential."""
     logger.info("Acquiring Entra token for postgres password")
@@ -420,14 +419,12 @@ async def get_entra_token_async(credential: AsyncTokenCredential) -> str:
         cred = await credential.get_token(AZURE_DB_FOR_POSTGRES_SCOPE)
         return cred.token
 
-
 def get_entra_token(credential: TokenCredential | None) -> str:
     """Get the password from Entra using the provided credential."""
     logger.info("Acquiring Entra token for postgres password")
     credential = credential or get_default_azure_credentials()
 
     return credential.get_token(AZURE_DB_FOR_POSTGRES_SCOPE).token
-
 
 @lru_cache(maxsize=1)
 def get_default_azure_credentials() -> DefaultAzureCredential:
@@ -437,14 +434,12 @@ def get_default_azure_credentials() -> DefaultAzureCredential:
     """
     return DefaultAzureCredential()
 
-
 def decode_jwt(token):
     """Decode the JWT payload to extract claims."""
     payload = token.split(".")[1]
     padding = "=" * (4 - len(payload) % 4)
     decoded_payload = base64.urlsafe_b64decode(payload + padding)
     return json.loads(decoded_payload)
-
 
 async def get_entra_conninfo(credential: TokenCredential | AsyncTokenCredential | None) -> dict[str, str]:
     """Fetches a token returns the username and token."""
@@ -459,7 +454,6 @@ async def get_entra_conninfo(credential: TokenCredential | AsyncTokenCredential 
         raise ValueError("Could not extract username from token. Have you logged in?")
 
     return {"user": username, "password": token}
-
 
 class AsyncEntraConnection(AsyncConnection):
     """Asynchronous connection class for using Entra auth with Azure DB for PostgreSQL."""
