@@ -862,8 +862,6 @@ Try using these suggested inputs:
 8. its good, but is it ready for my college professor? 
 
 ```csharp
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -1131,8 +1129,6 @@ You can try using one of the suggested inputs. As the agent chat begins, the age
 > You can reference any file by providing `@<file_path_to_file>`. To reference the "WomensSuffrage" text from above, download it [here](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/resources/WomensSuffrage.txt) and place it in your current working directory. You can then reference it with `@WomensSuffrage.txt`.
 
 ```python
-# Copyright (c) Microsoft. All rights reserved.
-
 import asyncio
 import os
 
