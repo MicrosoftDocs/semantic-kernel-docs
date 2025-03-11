@@ -279,6 +279,9 @@ public static class NpgsqlDataSourceBuilderExtensions
 Now you can use the `UseEntraAuthentication` method to set up the connection string for the Postgres connector:
 
 ```csharp
+using Microsoft.SemanticKernel.Connectors.Postgres;
+
+var connectionString = "Host=mydb.postgres.database.azure.com;Port=5432;Database=postgres;SSL Mode=Require;";  // No Username or Password
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 dataSourceBuilder.UseEntraAuthentication();
 dataSourceBuilder.UseVector();
