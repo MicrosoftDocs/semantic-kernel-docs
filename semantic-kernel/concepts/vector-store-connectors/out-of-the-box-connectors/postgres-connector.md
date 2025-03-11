@@ -134,8 +134,8 @@ public class Hotel
 ```
 
 ```sql
-CREATE TABLE Hotels (
-    hotel_id INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS public."Hotels" (
+    "hotel_id" INTEGER PRIMARY KEY NOT NULL,
     hotel_name TEXT,
     hotel_description TEXT,
     hotel_description_embedding VECTOR(4)
