@@ -356,8 +356,8 @@ from semantic_kernel.data import (
 class Hotel(BaseModel):
     hotel_id: Annotated[int, VectorStoreRecordKeyField()]
     hotel_name: Annotated[str, VectorStoreRecordDataField()]
-    hotel_description: Annotated[str, VectorStoreRecordDataField(has_embedding=True, embedding_property_name="description_embedding")]
-    description_embedding: Annotated[
+    hotel_description: Annotated[str, VectorStoreRecordDataField(has_embedding=True, embedding_property_name="hotel_description_embedding")]
+    hotel_description_embedding: Annotated[
         list[float] | None,
         VectorStoreRecordVectorField(
             index_kind=IndexKind.HNSW,
@@ -365,14 +365,19 @@ class Hotel(BaseModel):
             distance_function=DistanceFunction.COSINE_SIMILARITY,
         ),
     ] = None
+
+collection = PostgresCollection(collection_name="Hotels", data_model_type=Hotel)
+
+async with collection:
+    await collection.create_collection_if_not_exists()
 ```
 
 ```sql
-CREATE TABLE Hotels (
-    hotel_id INTEGER PRIMARY KEY,
-    hotel_name TEXT,
-    hotel_description TEXT,
-    description_embedding VECTOR(4)
+CREATE TABLE IF NOT EXISTS public."Hotels" (
+    "hotel_id" INTEGER PRIMARY KEY NOT NULL,
+    "hotel_name" TEXT,
+    "hotel_description" TEXT,
+    "hotel_description_embedding" VECTOR(4)
 );
 ```
 
