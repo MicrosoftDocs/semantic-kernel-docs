@@ -17,13 +17,13 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
 
-- [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.azureai)
+- [`AzureAIAgent`](/dotnet/api/microsoft.semantickernel.agents.azureai)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-> Updated Semantic Kernel Python API Docs are coming soon.
+- [`AzureAIAgent`](python/api/semantic-kernel/semantic_kernel.agents.azure_ai.azure_ai_agent.azureaiagent)
 
 ::: zone-end
 
