@@ -23,7 +23,7 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-python"
 
-- [`AzureAIAgent`](python/api/semantic-kernel/semantic_kernel.agents.azure_ai.azure_ai_agent.azureaiagent)
+- [`AzureAIAgent`](/python/api/semantic-kernel/semantic_kernel.agents.azure_ai.azure_ai_agent.azureaiagent)
 
 ::: zone-end
 
