@@ -115,6 +115,7 @@ The property name override is done by setting the `StoragePropertyName` option v
 Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Postgres as a table, assuming the Collection name is `Hotels`.
 
 ```csharp
+using System;
 using Microsoft.Extensions.VectorData;
 
 public class Hotel
