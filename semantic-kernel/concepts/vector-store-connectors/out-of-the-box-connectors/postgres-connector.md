@@ -377,12 +377,14 @@ async with collection:
 
 ```sql
 CREATE TABLE IF NOT EXISTS public."Hotels" (
-    "hotel_id" INTEGER PRIMARY KEY NOT NULL,
+    "hotel_id" INTEGER NOT NULL,
     "hotel_name" TEXT,
     "hotel_description" TEXT,
     "hotel_description_embedding" VECTOR(4)
+    PRIMARY KEY ("hotel_id")
 );
 ```
+
 
 ## Vector indexing
 
