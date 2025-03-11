@@ -305,12 +305,13 @@ You can pass a `psycopg_pool` [AsyncConnectionPool](https://www.psycopg.org/psyc
 or use the `PostgresSettings` to create a connection pool from environment variables.
 
 ```python
-
-from semantic_kernel.connectors.memory.Postgres import PostgresStore, PostgresSettings
+from semantic_kernel.connectors.memory.postgres import PostgresStore, PostgresSettings
 
 settings = PostgresSettings()
-with settings.create_connection_pool() as pool:
-    vector_store = PostgresStore(pool=pool)
+
+pool = await settings.create_connection_pool()
+async with pool:
+    vector_store = PostgresStore(connection_pool=pool)
     ...
 ```
 
@@ -321,10 +322,10 @@ You can also create a collection directly. The Collection itself is a context ma
 in a connection pool, the collection will create one using the `PostgresSettings` class.
 
 ```python
-from semantic_kernel.connectors.memory.Postgres import PostgresCollection
+from semantic_kernel.connectors.memory.postgres import PostgresCollection
 
 collection = PostgresCollection(collection_name="skhotels", data_model_type=Hotel)
-with collection: # This will create a connection pool using PostgresSettings
+async with collection:  # This will create a connection pool using PostgresSettings
     ...
 ```
 
@@ -341,6 +342,7 @@ into a `dict` that can be serialized to Postgres rows.
 ```python
 from pydantic import BaseModel
 
+from semantic_kernel.connectors.memory.postgres import PostgresCollection
 from semantic_kernel.data import (
     DistanceFunction,
     IndexKind,
@@ -475,11 +477,12 @@ class AsyncEntraConnection(AsyncConnection):
 You can use the custom connection class with the `PostgresSettings.get_connection_pool` method to create a connection pool.
 
 ```python
-from semantic_kernel.connectors.memory.Postgres import PostgresSettings, PostgresStore
+from semantic_kernel.connectors.memory.postgres import PostgresSettings, PostgresStore
 
-settings = PostgresSettings(connection_class=AsyncEntraConnection)
-with settings.create_connection_pool() as pool:
-    vector_store = PostgresStore(pool=pool)
+
+pool = await PostgresSettings().create_connection_pool(connection_class=AsyncEntraConnection)
+async with pool:
+    vector_store = PostgresStore(connection_pool=pool)
     ...
 ```
 
@@ -487,11 +490,14 @@ By default, the `AsyncEntraConnection` class uses the [DefaultAzureCredential](/
 You can also provide another `TokenCredential` in the kwargs if needed:
 
 ```python
-from azure.identity import ManagedIdentityCredential 
+from azure.identity import ManagedIdentityCredential
 
-settings = PostgresSettings(connection_class=AsyncEntraConnection, credential=ManagedIdentityCredential())
-with settings.create_connection_pool() as pool:
-    vector_store = PostgresStore(pool=pool)
+
+pool = await PostgresSettings().create_connection_pool(
+    connection_class=AsyncEntraConnection, credential=ManagedIdentityCredential()
+)
+async with pool:
+    vector_store = PostgresStore(connection_pool=pool)
     ...
 ```
 
