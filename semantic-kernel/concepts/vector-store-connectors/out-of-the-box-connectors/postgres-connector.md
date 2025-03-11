@@ -90,7 +90,7 @@ using Npgsql;
 NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
 using NpgsqlDataSource dataSource = dataSourceBuilder.Build();
-var collection = new PostgresVectorStoreRecordCollection<Hotel>(dataSource, "skhotels");
+var collection = new PostgresVectorStoreRecordCollection<int, Hotel>(dataSource, "skhotels");
 ```
 
 ## Data mapping
@@ -120,7 +120,7 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey(StoragePropertyName = "hotel_id")]
-    public ulong HotelId { get; set; }
+    public int HotelId { get; set; }
 
     [VectorStoreRecordData(StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
