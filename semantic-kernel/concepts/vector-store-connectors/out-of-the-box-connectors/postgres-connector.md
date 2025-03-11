@@ -52,7 +52,7 @@ kernelBuilder.Services.AddPostgresVectorStore("<Connection String>");
 
 Where `<Connection String>` is a connection string to the Postgres instance, in the format that [Npgsql](https://www.npgsql.org/) expects, for example `Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres`.
 
-Extension methods that take no parameters are also provided. These require an instance of [NpgsqlDataSource](https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html) to be separately registered with the dependency injection container. Note that "UseVector" must be called on the builder to enable vector support via [pgvector-dotnet](https://github.com/pgvector/pgvector-dotnet?tab=readme-ov-file#npgsql-c):
+Extension methods that take no parameters are also provided. These require an instance of [NpgsqlDataSource](https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html) to be separately registered with the dependency injection container. Note that `UseVector` must be called on the builder to enable vector support via [pgvector-dotnet](https://github.com/pgvector/pgvector-dotnet?tab=readme-ov-file#npgsql-c):
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -112,7 +112,7 @@ property names on the data model.
 
 The property name override is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
 
-Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Postgres as a table, assuming the Collection name is `Hotels`.
+Here is an example of a data model with `StoragePropertyName` set on its attributes and how it will be represented in Postgres as a table, assuming the Collection name is `Hotels`.
 
 ```csharp
 using System;
