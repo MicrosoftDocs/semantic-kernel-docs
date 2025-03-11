@@ -41,23 +41,13 @@ Add the Postgres Vector Store connector NuGet package to your project.
 dotnet add package Microsoft.SemanticKernel.Connectors.Postgres --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
 using Microsoft.SemanticKernel;
 
-// Using Kernel Builder.
-var kernelBuilder = Kernel
-    .CreateBuilder()
-    .AddPostgresVectorStore("<Connection String>");
-```
-
-```csharp
-using Microsoft.SemanticKernel;
-
-// Using IServiceCollection with ASP.NET Core.
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddPostgresVectorStore("<Connection String>");
+var kernelBuilder = Kernel.CreateBuilder();
+kernelBuilder.Services.AddPostgresVectorStore("<Connection String>");
 ```
 
 Where `<Connection String>` is a connection string to the Postgres instance, in the format that [Npgsql](https://www.npgsql.org/) expects.
@@ -69,29 +59,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Npgsql;
 
-// Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.Services.AddSingleton<NpgsqlDataSource>(sp => {
+kernelBuilder.Services.AddSingleton<NpgsqlDataSource>(sp => 
+{
     NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
     dataSourceBuilder.UseVector();
     return dataSourceBuilder.Build();
 });
-kernelBuilder.AddPostgresVectorStore();
-```
-
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
-using Npgsql;
-
-// Using IServiceCollection with ASP.NET Core.
-var builder = WebApplication.CreateBuilder(args);
-kernelBuilder.Services.AddSingleton<NpgsqlDataSource>(sp => {
-    NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
-    dataSourceBuilder.UseVector();
-    return dataSourceBuilder.Build();
-});
-builder.Services.AddPostgresVectorStore();
+kernelBuilder.Services.AddPostgresVectorStore();
 ```
 
 You can construct a Postgres Vector Store instance directly.
