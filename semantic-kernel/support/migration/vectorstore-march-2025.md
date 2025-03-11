@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 
 # Vector Store changes - March 2025
 
-## Linq based filtering
+## LINQ based filtering
 
 When doing vector searches it is possible to create a filter (in addition to the vector similarity)
 that act on data properties to constrain the list of records matched.
@@ -125,7 +125,6 @@ These parameters were all optional and the options classes did not contain any o
 If you were passing these options in the past, you will need to remove these with this update.
 
 ```csharp
-
 // Before
 collection.DeleteAsync("mykey", new DeleteRecordOptions(), cancellationToken);
 

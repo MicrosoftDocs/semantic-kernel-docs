@@ -21,7 +21,7 @@ Currently the type of hybrid search supported is based on a vector search, plus 
 are returned. Sparse vector based hybrid search is not currently supported.
 
 To execute a hybrid search, your database schema needs to have a vector field and a string field with full text search capabilities enabled.
-If you are creating a collection using the semantic kernel vector storage connectors, make sure to enable the `IsFullTextSearchable` option
+If you are creating a collection using the Semantic Kernel vector storage connectors, make sure to enable the `IsFullTextSearchable` option
 on the string field that you want to target for the keyword search.
 
 > [!TIP]
