@@ -73,7 +73,7 @@ You can construct a Postgres Vector Store instance directly.
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Postgres;
-using Postgres.Client;
+using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
@@ -85,7 +85,7 @@ It is possible to construct a direct reference to a named collection.
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.Postgres;
-using Postgres.Client;
+using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
