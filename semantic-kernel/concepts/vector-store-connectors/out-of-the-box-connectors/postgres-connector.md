@@ -282,7 +282,7 @@ Now you can use the `UseEntraAuthentication` method to set up the connection str
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 dataSourceBuilder.UseEntraAuthentication();
 dataSourceBuilder.UseVector();
-using var datasource = dataSourceBuilder.Build();
+using var dataSource = dataSourceBuilder.Build();
 
 var vectorStore = new PostgresVectorStore(dataSource);
 ```
