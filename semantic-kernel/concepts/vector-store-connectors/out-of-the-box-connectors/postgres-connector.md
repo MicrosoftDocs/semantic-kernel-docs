@@ -156,11 +156,11 @@ using Azure.Core;
 using Azure.Identity;
 using Npgsql;
 
-namespace Npgsql;
+namespace Program;
 
 public static class NpgsqlDataSourceBuilderExtensions
 {
-    private static readonly TokenRequestContext s_azureDBForPostgresTokenRequestContext = new([Constants.AzureDBForPostgresScope]);
+    private static readonly TokenRequestContext s_azureDBForPostgresTokenRequestContext = new(["https://ossrdbms-aad.database.windows.net/.default"]);
 
     public static NpgsqlDataSourceBuilder UseEntraAuthentication(this NpgsqlDataSourceBuilder dataSourceBuilder, TokenCredential? credential = default)
     {
