@@ -143,6 +143,15 @@ CREATE TABLE IF NOT EXISTS public."Hotels" (
 );
 ```
 
+## Vector indexing
+
+The `hotel_description_embedding` in the above `Hotel` model is a vector property with `IndexKind.HNSW` 
+indexing. This index will be created automatically when the collection is created. 
+HNSW is the only index type supported for index creation. IVFFlat index building requires that data already 
+exist in the table at index creation time, and so it is not appropriate for the creation of an empty table. 
+You are free to create and modify indexes on tables outside of the connector, which will 
+be used by the connector when performing queries.
+
 ## Using with Entra Authentication
 
 Azure Database for PostgreSQL provides the ability to connect to your database using [Entra authentication](/azure/postgresql/flexible-server/concepts-azure-ad-authentication).
@@ -364,6 +373,15 @@ CREATE TABLE Hotels (
     description_embedding VECTOR(4)
 );
 ```
+
+## Vector indexing
+
+The `hotel_description_embedding` in the above `Hotel` model is a vector property with `IndexKind.HNSW` 
+indexing. This index will be created automatically when the collection is created. 
+HNSW is the only index type supported for index creation. IVFFlat index building requires that data already 
+exist in the table at index creation time, and so it is not appropriate for the creation of an empty table. 
+You are free to create and modify indexes on tables outside of the connector, which will 
+be used by the connector when performing queries.
 
 ## Using with Entra Authentication
 
