@@ -36,7 +36,7 @@ Detailed API documentation related to this discussion is available at:
 ::: zone-end
 
 
-## Chat Completion in _Semantic Kernel_
+## Chat Completion in Semantic Kernel
 
 [_Chat Completion_](../../concepts/ai-services/chat-completion/index.md) is fundamentally a protocol for a chat-based interaction with an AI model where the chat-history maintained and presented to the model with each request.  _Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) offer a unified framework for integrating the chat-completion capabilities of various AI models.
 
@@ -48,7 +48,7 @@ For .NET, _chat-completion_ AI Services are based on the [`IChatCompletionServic
 
 For .NET, some of AI services that support models with chat-completion include:
 
-Model|_Semantic Kernel_ AI Service
+Model|Semantic Kernel AI Service
 --|--
 Azure OpenAI|[`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
 Gemini|[`Microsoft.SemanticKernel.Connectors.Google`](/dotnet/api/microsoft.semantickernel.connectors.google)
@@ -61,8 +61,8 @@ Onnx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantic
 
 ::: zone pivot="programming-language-python"
 
-- [`azure_chat_completion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion)
-- [`open_ai_chat_completion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion)
+- [`AzureChatCompletion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion.azurechatcompletion)
+- [`OpenAIChatCompletion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion.openaichatcompletion)
 
 ::: zone-end
 
@@ -106,7 +106,7 @@ pip install semantic-kernel
 
 ## Creating a `ChatCompletionAgent`
 
-A _chat completion agent_ is fundamentally based on an [AI services](../../concepts/ai-services/index.md).  As such, creating an _chat completion agent_ starts with creating a [`Kernel`](../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../concepts/kernel.md) instance.
+A `ChatCompletionAgent` is fundamentally based on an [AI services](../../concepts/ai-services/index.md).  As such, creating a `ChatCompletionAgent` starts with creating a [`Kernel`](../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../concepts/kernel.md) instance.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -129,20 +129,35 @@ ChatCompletionAgent agent =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+There are two ways to create a `ChatCompletionAgent`:
+
+### 1. By providing the chat completion service directly:
+
 ```python
-# Define the Kernel
+# Create the agent by directly providing the chat completion service
+agent = ChatCompletionAgent(
+    service=AzureChatCompletion(),  # your chat completion service instance
+    name="<agent name>",
+    instructions="<agent instructions>",
+)
+```
+### 2. By creating a Kernel first, adding the service to it, then providing the kernel:
+
+```python
+# Define the kernel
 kernel = Kernel()
 
-# Add the AzureChatCompletion AI Service to the Kernel
+# Add the chat completion service to the kernel
 kernel.add_service(AzureChatCompletion())
 
-# Create the agent
+# Create the agent using the kernel
 agent = ChatCompletionAgent(
   kernel=kernel, 
   name="<agent name>", 
   instructions="<agent instructions>",
 )
 ```
+The first method is useful when you already have a chat completion service ready. The second method is beneficial when you need a kernel that manages multiple services or additional functionalities.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -154,9 +169,9 @@ agent = ChatCompletionAgent(
 
 ## AI Service Selection
 
-No different from using _Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a _service-selector_.  A _service-selector_ identifies which [AI service](../../concepts/ai-services/index.md) to target when the [`Kernel`](../../concepts/kernel.md) contains more than one.
+No different from using Semantic Kernel [AI services](../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a service-selector.  A service-selector identifies which [AI service](../../concepts/ai-services/index.md) to target when the [`Kernel`](../../concepts/kernel.md) contains more than one.
 
-> Note: If multiple [AI services](../../concepts/ai-services/index.md) are present and no _service-selector_ is provided, the same _default_ logic is applied for the agent that you'd find when using an [AI services](../../concepts/ai-services/index.md) outside of the `Agent Framework`
+> Note: If multiple [AI services](../../concepts/ai-services/index.md) are present and no service-selector is provided, the same default logic is applied for the agent that you'd find when using an [AI services](../../concepts/ai-services/index.md) outside of the `Agent Framework`
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -220,7 +235,7 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-csharp"
 
-Conversing with your `ChatCompletionAgent` is based on a `ChatHistory` instance, no different from interacting with a _Chat Completion_ [AI service](../../concepts/ai-services/index.md).
+Conversing with your `ChatCompletionAgent` is based on a `ChatHistory` instance, no different from interacting with a Chat Completion [AI service](../../concepts/ai-services/index.md).
 
 ```csharp
 // Define agent
