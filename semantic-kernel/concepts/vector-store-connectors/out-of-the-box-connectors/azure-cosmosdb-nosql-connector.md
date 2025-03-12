@@ -32,6 +32,7 @@ The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                |
+| HybridSearch supported?           | Yes                                                                                                                              |
 
 ## Limitations
 

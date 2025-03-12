@@ -32,6 +32,7 @@ The connector has the following characteristics.
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | **When using Hashes:** Yes<br>**When using JSON:** No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
+| HybridSearch supported?           | No                                                                                                                               |
 
 ::: zone pivot="programming-language-csharp"
 

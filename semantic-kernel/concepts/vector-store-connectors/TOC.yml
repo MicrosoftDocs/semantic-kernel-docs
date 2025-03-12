@@ -12,6 +12,8 @@
   href: embedding-generation.md
 - name: Vector Search
   href: vector-search.md
+- name: Hybrid Search
+  href: hybrid-search.md
 - name: Serialization of data models
   href: serialization.md
 - name: Legacy Memory Stores

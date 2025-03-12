@@ -13,6 +13,8 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
+::: zone pivot="programming-language-csharp"
+
 ## Overview
 
 The Elasticsearch Vector Store connector can be used to access and manage data in Elasticsearch. The connector has the following characteristics.
@@ -30,8 +32,7 @@ The Elasticsearch Vector Store connector can be used to access and manage data i
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
 | StoragePropertyName supported?    | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                |
-
-::: zone pivot="programming-language-csharp"
+| HybridSearch supported?           | No                                                                                                                               |
 
 ## Getting started
 
