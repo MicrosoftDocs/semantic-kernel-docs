@@ -19,21 +19,24 @@ The Weaviate Vector Store connector can be used to access and manage data in Wea
 
 ::: zone pivot="programming-language-csharp"
 
-| Feature Area                          | Support                                                                                                                                                                                                                                      |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Collection maps to                    | Weaviate Collection                                                                                                                                                                                                                          |
-| Supported key property types          | Guid                                                                                                                                                                                                                                         |
+| Feature Area                          | Support                                                                                                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | Weaviate Collection                                                                                                                                                                   |
+| Supported key property types          | Guid                                                                                                                                                                                  |
 | Supported data property types         | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                                                                                                                                   |
-| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                                                                                                                                          |
-| Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>                                                                                             |
-| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                                                                                              |
-| Supports multiple vectors in a record | Yes                                                                                                                                                                                                                                          |
-| IsFilterable supported?               | Yes                                                                                                                                                                                                                                          |
-| IsFullTextSearchable supported?       | Yes                                                                                                                                                                                                                                          |
-| StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                                                                            |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                                                                            |
+| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                                                                                   |
+| Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>                                      |
+| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                                       |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                                   |
+| IsFilterable supported?               | Yes                                                                                                                                                                                   |
+| IsFullTextSearchable supported?       | Yes                                                                                                                                                                                   |
+| StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                     |
+| HybridSearch supported?               | Yes                                                                                                                                                                                   |
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
+
 | Feature Area                          | Support                                                                                                                                                                               |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Weaviate Collection                                                                                                                                                                   |
@@ -46,6 +49,7 @@ The Weaviate Vector Store connector can be used to access and manage data in Wea
 | Supports multiple vectors in a record | Yes                                                                                                                                                                                   |
 | IsFilterable supported?               | Yes                                                                                                                                                                                   |
 | IsFullTextSearchable supported?       | Yes                                                                                                                                                                                   |
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 Coming soon.
