@@ -33,6 +33,8 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 | IsFullTextSearchable supported?       | No                                                                                                                                               |
 | StoragePropertyName supported?        | Yes                                                                                                                                              |
 | HybridSearch supported?               | No                                                                                                                                               |
+| Integrated Embeddings supported?      | No                                                                                                                                               |
+| GRPC Supported?                       | No                                                                                                                                               |
 
 ## Getting started
 
