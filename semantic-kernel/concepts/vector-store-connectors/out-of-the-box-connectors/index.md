@@ -52,15 +52,15 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Chroma](./chroma-connector.md)                                    |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Elasticsearch](./elasticsearch-connector.md)                      | Planned |                               |                                   |
-| Faiss                                                              | Planned |                               |                                   |
+| [Faiss](./faiss-connector.md)                                      |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [In-Memory](./inmemory-connector.md)                               |    ✅    |              N/A              | Microsoft Semantic Kernel Project |
 | [MongoDB](./mongodb-connector.md)                                  |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
-| [Pinecone](./pinecone-connector.md)                                | Planned |               ✅               | Microsoft Semantic Kernel Project |
+| [Pinecone](./pinecone-connector.md)                                |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Postgres](./postgres-connector.md)                                |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Qdrant](./qdrant-connector.md)                                    |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Redis](./redis-connector.md)                                      |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
-| SQL Server                                                         | Planned |               ✅               | Microsoft Semantic Kernel Project |
-| SQLite                                                             | Planned |               ✅               | Microsoft Semantic Kernel Project |
+| SQL Server                                                         | Planned |                               | Microsoft Semantic Kernel Project |
+| SQLite                                                             | Planned |                               | Microsoft Semantic Kernel Project |
 | [Weaviate](./weaviate-connector.md)                                |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 
 ::: zone-end
