@@ -256,7 +256,9 @@ collection = store.get_collection(collection_name="collection_name", data_model=
 
 ### Integrated Embeddings
 
-The second is to use the integrated embeddings of Pinecone, this will check for a environment variable for the model to use for that, see [Pinecone docs](https://docs.pinecone.io/guides/indexes/create-an-index) and then the `Use integrated embeddings` sections.
+The second is to use the integrated embeddings of Pinecone, this will check for a environment variable called `PINECONE_EMBED_MODEL` with the model name, or you can pass in a `embed_settings` dict, which can contain just the model key, or the full settings for the embedding model. In the former case, the other settings will be derived from the data model definition.
+
+See [Pinecone docs](https://docs.pinecone.io/guides/indexes/create-an-index) and then the `Use integrated embeddings` sections.
 
 ```python
 from semantic_kernel.connectors.memory.pinecone import PineconeCollection
