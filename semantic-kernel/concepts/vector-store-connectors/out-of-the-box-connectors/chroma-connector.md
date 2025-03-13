@@ -28,18 +28,18 @@ Not supported.
 The Chroma Vector Store connector can be used to access and manage data in Chroma. The connector has the
 following characteristics.
 
-| Feature Area                          | Support                                                                                           |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Collection maps to                    | Chroma collection                                                                                 |
-| Supported key property types          | string                                                                                            |
-| Supported data property types         | All types that are supported by System.Text.Json (either built-in or by using a custom converter) |
-| Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                   |
-| Supported index types                 | <ul><li>HNSW</li></ul>                                                                            |
-| Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>  |
-| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                   |
-| Supports multiple vectors in a record | No                                                                                                |
-| IsFilterable supported?               | Yes                                                                                               |
-| IsFullTextSearchable supported?       | Yes                                                                                               |
+| Feature Area                          | Support                                                                                          |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Collection maps to                    | Chroma collection                                                                                |
+| Supported key property types          | string                                                                                           |
+| Supported data property types         | All types                                                                                        |
+| Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                  |
+| Supported index types                 | <ul><li>HNSW</li></ul>                                                                           |
+| Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul> |
+| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                  |
+| Supports multiple vectors in a record | No                                                                                               |
+| IsFilterable supported?               | Yes                                                                                              |
+| IsFullTextSearchable supported?       | Yes                                                                                              |
 
 ## Limitations
 
