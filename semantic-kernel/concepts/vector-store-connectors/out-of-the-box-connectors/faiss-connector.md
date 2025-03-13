@@ -32,9 +32,9 @@ The connector has the following characteristics.
 | Collection maps to                    | In-memory and Faiss indexes dictionary                                                                                                              |
 | Supported key property types          | Any that is allowed to be a dict key, see the python documentation for details [here](https://docs.python.org/3/library/stdtypes.html#typesmapping) |
 | Supported data property types         | Any type                                                                                                                                            |
-| Supported vector property types       | <li>list[float \| int]</li><li>numpy array</li>                                                                                                     |
+| Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>numpy array</li></ul>                                                                                 |
 | Supported index types                 | Flat (see [custom indexes](#custom-indexes))                                                                                                        |
-| Supported distance functions          | <li>Dot Product Similarity</li><li>Euclidean Squared Distance</li>                                                                                  |
+| Supported distance functions          | <ul><li>Dot Product Similarity</li><li>Euclidean Squared Distance</li></ul>                                                                         |
 | Supports multiple vectors in a record | Yes                                                                                                                                                 |
 | is_filterable supported?              | Yes                                                                                                                                                 |
 | is_full_text_searchable supported?    | Yes                                                                                                                                                 |
