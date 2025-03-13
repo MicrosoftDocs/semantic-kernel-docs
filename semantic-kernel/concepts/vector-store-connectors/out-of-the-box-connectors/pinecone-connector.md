@@ -221,7 +221,7 @@ collection = PineconeCollection(collection_name="collection_name", data_model=Da
 ```
 
 You can also create your own Pinecone client and pass it into the constructor.
-The client needs to be either `PineconeAsyncio` or `PineconeGRCP` (see [GRCP Support](#grpc-support)).
+The client needs to be either `PineconeAsyncio` or `PineconeGRPC` (see [GRPC Support](#grpc-support)).
 
 ```python
 from semantic_kernel.connectors.memory.pinecone import PineconeStore, PineconeCollection
@@ -246,7 +246,7 @@ Or with your own client:
 
 ```python
 from semantic_kernel.connectors.memory.pinecone import PineconeStore
-from pinecone.grcp import PineconeGRPC
+from pinecone.grpc import PineconeGRPC
 
 client = PineconeGRPC(api_key="your_api_key")
 store = PineconeStore(client=client)
@@ -281,7 +281,7 @@ collection = PineconeCollection(collection_name="collection_name", data_model=Da
 await collection.create_collection(embed_settings={"model": "multilingual-e5-large"})
 ```
 
-> Important: GRCP and Integrated embeddings cannot be used together.
+> Important: GRPC and Integrated embeddings cannot be used together.
 
 ## Index Namespace
 
