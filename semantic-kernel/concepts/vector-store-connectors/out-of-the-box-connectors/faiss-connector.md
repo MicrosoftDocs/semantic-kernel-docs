@@ -22,7 +22,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Faiss Vector Store connector is a Vector Store implementation provided by Semantic Kernel that uses no external database and stores data in memory and vectors in a Faiss Index.
+The Faiss Vector Store connector is a Vector Store implementation provided by Semantic Kernel that uses no external database and stores data in memory and vectors in a Faiss Index. It uses the [`InMemoryVectorCollection`](./inmemory-connector.md) for the other parts of the records, while using the Faiss indexes for search.
 This Vector Store is useful for prototyping scenarios or where high-speed in-memory operations are required.
 
 The connector has the following characteristics.

@@ -12,6 +12,8 @@
   href: couchbase-connector.md
 - name: Elasticsearch connector
   href: elasticsearch-connector.md
+- name: FAISS connector
+  href: faiss-connector.md
 - name: In-memory connector
   href: inmemory-connector.md
 - name: JDBC connector

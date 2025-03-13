@@ -52,7 +52,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Chroma](./chroma-connector.md)                                    |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Elasticsearch](./elasticsearch-connector.md)                      | Planned |                               |                                   |
-| [Faiss](./faiss.md)                                                |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
+| [Faiss](./faiss-connector.md)                                      |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [In-Memory](./inmemory-connector.md)                               |    ✅    |              N/A              | Microsoft Semantic Kernel Project |
 | [MongoDB](./mongodb-connector.md)                                  |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
 | [Pinecone](./pinecone-connector.md)                                |    ✅    |               ✅               | Microsoft Semantic Kernel Project |
