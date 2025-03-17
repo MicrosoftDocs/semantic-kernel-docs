@@ -200,9 +200,88 @@ Next we recommend looking at [Text Search Abstractions](./text-search-abstractio
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## Implementing RAG using web text search
 
-More coming soon.
+In the following sample code, you can choose between using Bing or Google to perform web search operations.
+
+> [!TIP]
+> Install the required packages using:
+>
+> `pip install semantic-kernel`
+> `pip install semantic-kernel-plugins-web`
+
+### Create text search instance
+
+Each sample creates a text search instance and then performs a search operation to get results for the provided query.
+
+#### Bing web search
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.plugins.web import BingTextSearch
+from semantic_kernel.kernel_arguments import KernelArguments
+
+# Create a kernel with OpenAI chat completion
+kernel = Kernel()
+kernel.add_service(
+    OpenAIChatCompletion(
+        model_id="gpt-4o",
+        api_key="<Your OpenAI API Key>"
+    )
+)
+
+# Create a text search using Bing search
+text_search = BingTextSearch(api_key="<Your Bing API Key>")
+
+# Build a text search plugin with Bing search and add to the kernel
+search_plugin = text_search.create_with_search("SearchPlugin")
+kernel.plugins.add(search_plugin)
+
+# Invoke prompt and use text search plugin to provide grounding information
+query = "What is the Semantic Kernel?"
+prompt = "{{SearchPlugin.Search $query}}. {{$query}}"
+arguments = KernelArguments({"query": query})
+
+response = kernel.invoke_prompt(prompt, arguments)
+print(response)
+```
+
+#### Google web search 
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.plugins.web import GoogleTextSearch
+from semantic_kernel.kernel_arguments import KernelArguments
+
+# Create a kernel with OpenAI chat completion
+kernel = Kernel()
+kernel.add_service(
+    OpenAIChatCompletion(
+        model_id="gpt-4o",
+        api_key="<Your OpenAI API Key>"
+    )
+)
+
+# Create an ITextSearch instance using Google search
+text_search = GoogleTextSearch(
+    search_engine_id="<Your Google Search Engine Id>",
+    api_key="<Your Google API Key>"
+)
+
+# Build a text search plugin with Google search and add to the kernel
+search_plugin = text_search.create_with_search("SearchPlugin")
+kernel.plugins.add(search_plugin)
+
+# Invoke prompt and use text search plugin to provide grounding information
+query = "What is the Semantic Kernel?"
+prompt = "{{SearchPlugin.Search $query}}. {{$query}}"
+arguments = KernelArguments({"query": query})
+
+response = kernel.invoke_prompt(prompt, arguments)
+print(response)
+```
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
