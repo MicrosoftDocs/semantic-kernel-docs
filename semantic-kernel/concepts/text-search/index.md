@@ -220,7 +220,7 @@ Each sample creates a text search instance and then performs a search operation 
 from semantic_kernel import Kernel
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
 from semantic_kernel.plugins.web import BingTextSearch
-from semantic_kernel.kernel_arguments import KernelArguments
+from semantic_kernel.functions import KernelArguments
 
 # Create a kernel with OpenAI chat completion
 kernel = Kernel()
