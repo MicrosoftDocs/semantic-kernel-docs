@@ -275,7 +275,7 @@ search_plugin = text_search.create_with_search("SearchPlugin")
 kernel.plugins.add(search_plugin)
 
 # Invoke prompt and use text search plugin to provide grounding information
-query = "What is the Semantic Kernel?"
+query = "What is Semantic Kernel?"
 prompt = "{{SearchPlugin.Search $query}}. {{$query}}"
 arguments = KernelArguments({"query": query})
 
