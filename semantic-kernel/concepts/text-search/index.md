@@ -208,7 +208,6 @@ In the following sample code, you can choose between using Bing or Google to per
 > Install the required packages using:
 >
 > `pip install semantic-kernel`
-> `pip install semantic-kernel-plugins-web`
 
 ### Create text search instance
 
@@ -217,70 +216,78 @@ Each sample creates a text search instance and then performs a search operation 
 #### Bing web search
 
 ```python
-from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
-from semantic_kernel.plugins.web import BingTextSearch
-from semantic_kernel.kernel_arguments import KernelArguments
-
 # Create a kernel with OpenAI chat completion
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.connectors.search.bing import BingSearch
+from semantic_kernel.functions import KernelArguments, KernelPlugin
+
+# Initialize the Kernel
 kernel = Kernel()
-kernel.add_service(
-    OpenAIChatCompletion(
-        model_id="gpt-4o",
-        api_key="<Your OpenAI API Key>"
-    )
+
+# Add OpenAI/Azure OpenAI chat completion service
+kernel.add_service(AzureChatCompletion(service_id="chat"))
+
+# Create a Bing Search instance (API key will be picked up from the environment)
+bing_search = BingSearch()
+
+# Build a Bing Search plugin and add it to the kernel
+search_plugin = KernelPlugin.from_text_search_with_search(
+    bing_search,
+    description="Get search results using Bing."
 )
 
-# Create a text search using Bing search
-text_search = BingTextSearch(api_key="<Your Bing API Key>")
+# Add plugin to the kernel with a specific plugin name
+kernel.add_plugin(search_plugin, plugin_name="bing")
 
-# Build a text search plugin with Bing search and add to the kernel
-search_plugin = text_search.create_with_search("SearchPlugin")
-kernel.plugins.add(search_plugin)
+# Define query and prompt
+query = "What is Semantic Kernel?"
+prompt = "{{bing.search $query}}. {{$query}}"
 
-# Invoke prompt and use text search plugin to provide grounding information
-query = "What is the Semantic Kernel?"
-prompt = "{{SearchPlugin.Search $query}}. {{$query}}"
-arguments = KernelArguments({"query": query})
+# Execute search query using the plugin
+arguments = KernelArguments(query=query)
+result = kernel.invoke_prompt(prompt, arguments)
 
-response = kernel.invoke_prompt(prompt, arguments)
-print(response)
+# Display result
+print(result)
 ```
 
 #### Google web search 
 
 ```python
 from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
-from semantic_kernel.plugins.web import GoogleTextSearch
-from semantic_kernel.kernel_arguments import KernelArguments
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.connectors.search.google import GoogleSearch
+from semantic_kernel.functions import KernelArguments, KernelPlugin
 
-# Create a kernel with OpenAI chat completion
+# Initialize the Kernel
 kernel = Kernel()
-kernel.add_service(
-    OpenAIChatCompletion(
-        model_id="gpt-4o",
-        api_key="<Your OpenAI API Key>"
-    )
+
+# Add OpenAI/Azure OpenAI chat completion service
+kernel.add_service(AzureChatCompletion(service_id="chat"))
+
+# Create a Google Search instance (API key and Search Engine ID picked from environment)
+google_search = GoogleSearch()
+
+# Build a Google Search plugin and add it to the kernel
+search_plugin = KernelPlugin.from_text_search_with_search(
+    google_search,
+    description="Get details about Semantic Kernel concepts."
 )
 
-# Create an ITextSearch instance using Google search
-text_search = GoogleTextSearch(
-    search_engine_id="<Your Google Search Engine Id>",
-    api_key="<Your Google API Key>"
-)
+# Add plugin to the kernel with a specific plugin name
+kernel.add_plugin(search_plugin, plugin_name="google")
 
-# Build a text search plugin with Google search and add to the kernel
-search_plugin = text_search.create_with_search("SearchPlugin")
-kernel.plugins.add(search_plugin)
+# Define query and prompt
+query = "What is Semantic Kernel?"
+prompt = "{{google.search $query}}. {{$query}}"
 
-# Invoke prompt and use text search plugin to provide grounding information
-query = "What is the Semantic Kernel?"
-prompt = "{{SearchPlugin.Search $query}}. {{$query}}"
-arguments = KernelArguments({"query": query})
+# Execute search query using the plugin
+arguments = KernelArguments(query=query)
+result = kernel.invoke_prompt(prompt, arguments)
 
-response = kernel.invoke_prompt(prompt, arguments)
-print(response)
+# Display result
+print(result)
 ```
 
 ::: zone-end
