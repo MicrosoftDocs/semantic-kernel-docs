@@ -107,8 +107,9 @@ It's also possible to override the default mapper behavior by providing a custom
 
 ### Property name override
 
-For data properties and vector properties (if using named vectors mode), you can provide override field names to use in storage that is different from the
-property names on the data model.
+You can provide override field names to use in storage that is different from the
+property names on the data model. This allows you to match table column names even
+if they don't match the property names on the data model.
 
 The property name override is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
 
