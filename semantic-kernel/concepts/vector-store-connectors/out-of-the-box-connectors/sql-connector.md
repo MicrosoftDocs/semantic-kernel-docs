@@ -44,7 +44,7 @@ The connector has the following characteristics.
 
 Add the Semantic Kernel package to your project.
 
-```cmd
+```bash
 pip install semantic-kernel[sql]
 ```
 
