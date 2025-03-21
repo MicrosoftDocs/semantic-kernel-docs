@@ -24,7 +24,7 @@ More info coming soon.
 
 ## Overview
 
-The [SQL Server](https://learn.microsoft.com/sql) Vector Store connector is a Vector Store implementation provided by Semantic Kernel that uses Azure SQL as a vector store. Once SQL Server on-prem supports vectors it can also be used with that.
+The [SQL Server](/sql) Vector Store connector is a Vector Store implementation provided by Semantic Kernel that uses Azure SQL as a vector store. Once SQL Server on-prem supports vectors it can also be used with that.
 
 The connector has the following characteristics.
 
@@ -48,7 +48,7 @@ Add the Semantic Kernel package to your project.
 pip install semantic-kernel[sql]
 ```
 
-The SQL Server connector uses the [pyodbc](https://pypi.org/project/pyodbc/) package to connect to SQL Server. The extra will install the package, but you will need to install the ODBC driver for SQL Server separately, this differs by platform, see the [Azure SQL Documentation](azure/azure-sql/database/azure-sql-python-quickstart?view=azuresql&tabs=windows%2Csql-inter) for details.
+The SQL Server connector uses the [pyodbc](https://pypi.org/project/pyodbc/) package to connect to SQL Server. The extra will install the package, but you will need to install the ODBC driver for SQL Server separately, this differs by platform, see the [Azure SQL Documentation](/azure/azure-sql/database/azure-sql-python-quickstart) for details.
 
 In order for the store and collection to work, it needs a connection string, this can be passed to the constructor or be set in the environment variable `SQL_SERVER_CONNECTION_STRING`. In order to properly deal with vectors, the `LongAsMax=yes` option will be added if not found. It also can use both username/password or integrated security, for the latter, the `DefaultAzureCredential` is used.
 
