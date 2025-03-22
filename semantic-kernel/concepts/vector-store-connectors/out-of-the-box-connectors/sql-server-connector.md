@@ -2,10 +2,10 @@
 title: Using the Semantic Kernel SQL Server Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure SQL Server.
 zone_pivot_groups: programming-languages
-author: rwj-dk
+author: rwjdk
 ms.topic: conceptual
-ms.author: sophialagerkranspandey
-ms.date: 22/03/2025
+ms.author: 
+ms.date: 03/22/2025
 ms.service: semantic-kernel
 ---
 # Using the SQL Server Vector Store connector (Preview)
@@ -60,16 +60,12 @@ IVectorStore sqlServerVectorStore = new SqlServerVectorStore("sql-server-connect
 
 ## Getting started
 
-## Coming soon
-
 More info coming soon.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
 ## Getting started
-
-## Coming soon
 
 More info coming soon.
 ::: zone-end
