@@ -40,7 +40,7 @@ dotnet add package Microsoft.SemanticKernel
 dotnet add package Microsoft.SemanticKernel.Agents.OpenAI --prerelease
 ```
 
-> If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
+> If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
 
@@ -86,7 +86,7 @@ Start by creating a folder that will hold your script (`.py` file) and the sampl
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
 from semantic_kernel.contents import StreamingFileReferenceContent
 ```
 
@@ -198,7 +198,7 @@ The coding process for this sample involves:
 
 1. [Setup](#setup) - Initializing settings and the plug-in.
 2. [Agent Definition](#agent-definition) - Create the _OpenAI_Assistant`Agent` with templatized instructions and plug-in.
-3. [The _Chat_ Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
+3. [The Chat Loop](#the-chat-loop) - Write the loop that drives user / agent interaction.
 
 The full example code is provided in the [Final](#final) section. Refer to that section for the complete implementation.
 
@@ -345,7 +345,7 @@ agent = AzureAssistantAgent(
 
 ::: zone-end
 
-### The _Chat_ Loop
+### The Chat Loop
 
 At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating an _Assistant Thread_ to maintain the conversation state and creating an empty loop.
 
@@ -384,8 +384,7 @@ finally
 
 ::: zone pivot="programming-language-python"
 ```python
-print("Creating thread...")
-thread_id = await agent.create_thread()
+thread: AssistantAgentThread = None
 
 try:
     is_complete: bool = False
@@ -395,7 +394,7 @@ try:
 finally:
     print("\nCleaning up resources...")
     [await client.files.delete(file_id) for file_id in file_ids]
-    await client.beta.threads.delete(thread.id)
+    await thread.delete() if thread else None
     await client.beta.assistants.delete(agent.id)
 ```
 ::: zone-end
@@ -438,8 +437,6 @@ if not user_input:
 if user_input.lower() == "exit":
     is_complete = True
     break
-
-await agent.add_chat_message(thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input))
 ```
 ::: zone-end
 
@@ -565,18 +562,31 @@ fileIds.Clear();
 
 ::: zone pivot="programming-language-python"
 ```python
-is_code: bool = False
-async for response in agent.invoke(stream(thread_id=thread_id):
-    if is_code != metadata.get("code"):
-        print()
-        is_code = not is_code
+is_code = False
+last_role = None
+async for response in agent.invoke_stream(messages=user_input, thread=thread):
+    current_is_code = response.metadata.get("code", False)
 
-    print(f"{response.content})
-
-    file_ids.extend(
-        [item.file_id for item in response.items if isinstance(item, StreamingFileReferenceContent)]
-    )
-
+    if current_is_code:
+        if not is_code:
+            print("\n\n```python")
+            is_code = True
+        print(response.content, end="", flush=True)
+    else:
+        if is_code:
+            print("\n```")
+            is_code = False
+            last_role = None
+        if hasattr(response, "role") and response.role is not None and last_role != response.role:
+            print(f"\n# {response.role}: ", end="", flush=True)
+            last_role = response.role
+        print(response.content, end="", flush=True)
+    file_ids.extend([
+        item.file_id for item in response.items if isinstance(item, StreamingFileReferenceContent)
+    ])
+    thread = response.thread
+if is_code:
+    print("```\n")
 print()
 
 await download_response_image(agent, file_ids)
@@ -770,7 +780,7 @@ import asyncio
 import logging
 import os
 
-from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
 from semantic_kernel.contents import StreamingFileReferenceContent
 
 logging.basicConfig(level=logging.ERROR)
@@ -779,7 +789,7 @@ logging.basicConfig(level=logging.ERROR)
 The following sample demonstrates how to create a simple,
 OpenAI assistant agent that utilizes the code interpreter
 to analyze uploaded files.
-""" 
+"""
 
 # Let's form the file paths that we will later pass to the assistant
 csv_file_path_1 = os.path.join(
@@ -861,8 +871,7 @@ async def main():
         definition=definition,
     )
 
-    print("Creating thread...")
-    thread = await client.beta.threads.create()
+    thread: AssistantAgentThread = None
 
     try:
         is_complete: bool = False
@@ -876,11 +885,9 @@ async def main():
                 is_complete = True
                 break
 
-            await agent.add_chat_message(thread_id=thread.id, message=user_input)
-
             is_code = False
             last_role = None
-            async for response in agent.invoke_stream(thread_id=thread.id):
+            async for response in agent.invoke_stream(messages=user_input, thread=thread):
                 current_is_code = response.metadata.get("code", False)
 
                 if current_is_code:
@@ -900,6 +907,7 @@ async def main():
                 file_ids.extend([
                     item.file_id for item in response.items if isinstance(item, StreamingFileReferenceContent)
                 ])
+                thread = response.thread
             if is_code:
                 print("```\n")
             print()
@@ -910,7 +918,7 @@ async def main():
     finally:
         print("\nCleaning up resources...")
         [await client.files.delete(file_id) for file_id in file_ids]
-        await client.beta.threads.delete(thread.id)
+        await thread.delete() if thread else None
         await client.beta.assistants.delete(agent.id)
 
 

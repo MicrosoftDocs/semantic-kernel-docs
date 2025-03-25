@@ -28,6 +28,8 @@
   href: qdrant-connector.md
 - name: Redis connector
   href: redis-connector.md
+- name: SQL Server connector
+  href: sql-connector.md
 - name: SQLite connector
   href: sqlite-connector.md
 - name: Volatile (in-memory) connector

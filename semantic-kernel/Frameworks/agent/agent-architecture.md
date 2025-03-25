@@ -53,6 +53,7 @@ Agents can either be invoked directly to perform tasks or orchestrated within an
 
 #### Deep Dive:
 
+- [`AzureAIAgent`](./azure-ai-agent.md)
 - [`ChatCompletionAgent`](./chat-completion-agent.md)
 - [`OpenAIAssistantAgent`](./assistant-agent.md)
 
@@ -61,10 +62,23 @@ Agents can either be invoked directly to perform tasks or orchestrated within an
 ## Agent Exensibility
   -->
 
+## Agent Thread
+
+The abstract `AgentThread` class serves as the core abstraction for threads or conversation state.
+It abstracts away the different ways in which convesation state may be managed for different agents.
+
+Stateful agent services often store conversation state in the service, and you can interact with it via an id.
+Other agents may require the entire chat history to be passed to the agent on each invocation, in which
+case the conversation state is managed locally in the application.
+
+Stateful agents typically only work with a matching `AgentThread` implementation, while other types of agents could work with more than one `AgentThread` type.
+For example, `AzureAIAgent` requires a matching `AzureAIAgentThread`.
+This is because the Azure AI Agent service stores conversations in the service, and requires specific service calls to create a thread and update it.
+If a different agent thread type was used with `AzureAIAgent`, no thread would be created in the Azure AI Agent service and invoke calls would fail.
 
 ## Agent Chat
 
-The  [`AgentChat`](./agent-chat.md) class serves as the foundational component that enables agents of any type to engage in a specific conversation. This class provides the essential capabilities for managing agent interactions within a chat environment. Building on this, the [`AgentGroupChat`](./agent-chat.md#creating-an-agentgroupchat) class extends these capabilities by offering a stategy-based container, which allows multiple agents to collaborate across numerous interactions within the same conversation. 
+The  [`AgentChat`](./agent-chat.md) class serves as the foundational component that enables agents of any type to engage in a specific conversation. This class provides the essential capabilities for managing agent interactions within a chat environment. Building on this, the [`AgentGroupChat`](./agent-chat.md#creating-an-agentgroupchat) class extends these capabilities by offering a stategy-based container, which allows multiple agents to collaborate across numerous interactions within the same conversation.
 
 This structure facilitates more complex, multi-agent scenarios where different agents can work together, share information, and dynamically respond to evolving conversations, making it an ideal solution for advanced use cases such as customer support, multi-faceted task management, or collaborative problem-solving environments.
 
@@ -94,7 +108,7 @@ The _Agent Channel_ class enables agents of various types to participate in an [
 
 ::: zone-end
 
-## Agent Alignment with _Semantic Kernel_ Features
+## Agent Alignment with Semantic Kernel Features
 
 The `Agent Framework` is built on the foundational concepts and features that many developers have come to know within the _Semantic Kernel_ ecosystem. These core principles serve as the building blocks for the Agent Framework’s design. By leveraging the familiar structure and capabilities of the _Semantic Kernel_, the Agent Framework extends its functionality to enable more advanced, autonomous agent behaviors, while maintaining consistency with the broader _Semantic Kernel_ architecture. This ensures a smooth transition for developers, allowing them to apply their existing knowledge to create intelligent, adaptable agents within the framework.
 
@@ -103,8 +117,9 @@ The `Agent Framework` is built on the foundational concepts and features that ma
 
 At the heart of the Semantic Kernel ecosystem is the [`Kernel`](../../concepts/kernel.md), which serves as the core object that drives AI operations and interactions. To create any agent within this framework, a _Kernel instance_ is required as it provides the foundational context and capabilities for the agent’s functionality. The `Kernel` acts as the engine for processing instructions, managing state, and invoking the necessary AI services that power the agent's behavior.
 
-The [`ChatCompletionAgent`](./chat-completion-agent.md) and [`OpenAIAssistantAgent`](./assistant-agent.md) articles provide specific details on how to create each type of agent.
- These resources offer step-by-step instructions and highlight the key configurations needed to tailor the agents to different conversational or task-based applications, demonstrating how the Kernel enables dynamic and intelligent agent behaviors across diverse use cases.
+The [`AzureAIAgent`](./azure-ai-agent.md), [`ChatCompletionAgent`](./chat-completion-agent.md) and [`OpenAIAssistantAgent`](./assistant-agent.md) articles provide specific details on how to create each type of agent.
+
+These resources offer step-by-step instructions and highlight the key configurations needed to tailor the agents to different conversational or task-based applications, demonstrating how the Kernel enables dynamic and intelligent agent behaviors across diverse use cases.
 
 #### Related API's:
 
