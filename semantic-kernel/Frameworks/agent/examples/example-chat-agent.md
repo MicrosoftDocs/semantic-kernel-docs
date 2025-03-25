@@ -358,7 +358,7 @@ At last, we are able to coordinate the interaction between the user and the `Age
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
-ChatHistory history = [];
+ChatHistoryAgentThread agentThread = new();
 bool isComplete = false;
 do
 {
@@ -399,7 +399,7 @@ if (input.Trim().Equals("EXIT", StringComparison.OrdinalIgnoreCase))
     break;
 }
 
-history.Add(new ChatMessageContent(AuthorRole.User, input));
+var message = new ChatMessageContent(AuthorRole.User, input);
 
 Console.WriteLine();
 ```
@@ -435,7 +435,7 @@ KernelArguments arguments =
     {
         { "now", $"{now.ToShortDateString()} {now.ToShortTimeString()}" }
     };
-await foreach (ChatMessageContent response in agent.InvokeAsync(history, arguments))
+await foreach (ChatMessageContent response in agent.InvokeAsync(message, agentThread, options: new() { KernelArguments = arguments }))
 {
     Console.WriteLine($"{response.Content}");
 }
@@ -537,7 +537,7 @@ public static class Program
 
         Console.WriteLine("Ready!");
 
-        ChatHistory history = [];
+        ChatHistoryAgentThread agentThread = new();
         bool isComplete = false;
         do
         {
@@ -554,7 +554,7 @@ public static class Program
                 break;
             }
 
-            history.Add(new ChatMessageContent(AuthorRole.User, input));
+            var message = new ChatMessageContent(AuthorRole.User, input);
 
             Console.WriteLine();
 
@@ -564,7 +564,7 @@ public static class Program
                 {
                     { "now", $"{now.ToShortDateString()} {now.ToShortTimeString()}" }
                 };
-            await foreach (ChatMessageContent response in agent.InvokeAsync(history, arguments))
+            await foreach (ChatMessageContent response in agent.InvokeAsync(message, agentThread, options: new() { KernelArguments = arguments }))
             {
                 // Display response.
                 Console.WriteLine($"{response.Content}");

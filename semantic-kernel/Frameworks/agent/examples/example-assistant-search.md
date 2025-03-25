@@ -390,14 +390,14 @@ agent = AzureAssistantAgent(
 
 ### The _Chat_ Loop
 
-At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating an _Assistant Thread_ to maintain the conversation state and creating an empty loop.
+At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating an `AgentThread` to maintain the conversation state and creating an empty loop.
 
 Let's also ensure the resources are removed at the end of execution to minimize unnecessary charges.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
 Console.WriteLine("Creating thread...");
-AssistantThread thread = await assistantClient.CreateThreadAsync();
+OpenAIAssistantAgent agentThread = new();
 
 Console.WriteLine("Ready!");
 
@@ -415,7 +415,7 @@ finally
     Console.WriteLine("Cleaning-up...");
     await Task.WhenAll(
         [
-            assistantClient.DeleteThreadAsync(thread.Id),
+            agentThread.DeleteAsync();
             assistantClient.DeleteAssistantAsync(assistant.Id),
             storeClient.DeleteVectorStoreAsync(storeId),
             ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
@@ -449,7 +449,7 @@ finally:
 
 ::: zone-end
 
-Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Assistant Thread_ as a _User_ message.
+Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -466,7 +466,7 @@ if (input.Trim().Equals("EXIT", StringComparison.OrdinalIgnoreCase))
     break;
 }
 
-await agent.AddChatMessageAsync(thread.Id, new ChatMessageContent(AuthorRole.User, input));
+var message = new ChatMessageContent(AuthorRole.User, input);
 Console.WriteLine();
 ```
 ::: zone-end
@@ -510,12 +510,12 @@ private static string ReplaceUnicodeBrackets(this string content) =>
 
 ::: zone-end
 
-To generate an `Agent` response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
+To generate an `Agent` response to user input, invoke the agent by specifying the message and agent thread. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
 List<StreamingAnnotationContent> footnotes = [];
-await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(thread.Id))
+await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(message, agentThread))
 {
     // Capture annotations for footnotes
     footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
@@ -654,7 +654,7 @@ public static class Program
 
         // Create the conversation thread
         Console.WriteLine("Creating thread...");
-        AssistantThread thread = await assistantClient.CreateThreadAsync();
+        AssistantAgentThread agentThread = new();
 
         Console.WriteLine("Ready!");
 
@@ -676,11 +676,11 @@ public static class Program
                     break;
                 }
 
-                await agent.AddChatMessageAsync(thread.Id, new ChatMessageContent(AuthorRole.User, input));
+                var message = new ChatMessageContent(AuthorRole.User, input);
                 Console.WriteLine();
 
                 List<StreamingAnnotationContent> footnotes = [];
-                await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(thread.Id))
+                await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(message, agentThread))
                 {
                     // Capture annotations for footnotes
                     footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
@@ -708,7 +708,7 @@ public static class Program
             Console.WriteLine("Cleaning-up...");
             await Task.WhenAll(
                 [
-                    assistantClient.DeleteThreadAsync(thread.Id),
+                    agentThread.DeleteAsync(),
                     assistantClient.DeleteAssistantAsync(assistant.Id),
                     storeClient.DeleteVectorStoreAsync(storeId),
                     ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
