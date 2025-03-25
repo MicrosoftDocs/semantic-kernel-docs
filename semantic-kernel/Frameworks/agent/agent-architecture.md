@@ -74,7 +74,7 @@ case the conversation state is managed locally in the application.
 Stateful agents typically only work with a matching `AgentThread` implementation, while other types of agents could work with more than one `AgentThread` type.
 For example, `AzureAIAgent` requires a matching `AzureAIAgentThread`.
 This is because the Azure AI Agent service stores conversations in the service, and requires specific service calls to create a thread and update it.
-If a different agent thread type was used with `AzureAIAgent`, no thread would be created in the Azure AI Agent service and invoke calls would fail.
+If a different agent thread type is used with the `AzureAIAgent`, we fail fast due to an unexpected thread type and raise an exception to alert the caller.
 
 ## Agent Chat
 

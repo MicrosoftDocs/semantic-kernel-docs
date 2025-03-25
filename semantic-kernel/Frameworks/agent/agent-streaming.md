@@ -141,11 +141,40 @@ await foreach (ChatMessageContent response in agentThread.GetMessagesAsync())
 // Delete the thread when it is no longer needed
 await agentThread.DeleteAsync();
 ```
+
+To create a thread using an existing `threadId`, pass it to the constructor of `OpenAIAssistantAgentThread`:
+
+```csharp
+// Define agent
+OpenAIAssistantAgent agent = ...;
+
+// Create a thread for the agent conversation.
+OpenAIAssistantAgentThread agentThread = new(assistantClient, threadId);
+
+// Cerate a user message
+var message = new ChatMessageContent(AuthorRole.User, "<user input>");
+
+// Generate the streamed agent response(s)
+await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread))
+{
+  // Process streamed response(s)...
+}
+
+// It's possible to read the messages from the remote thread.
+await foreach (ChatMessageContent response in agentThread.GetMessagesAsync())
+{
+  // Process messages...
+}
+
+// Delete the thread when it is no longer needed
+await agentThread.DeleteAsync();
+```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
 from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent, OpenAIAssistantAgent
+
 # Define agent
 agent = OpenAIAssistantAgent(...)  # or = AzureAssistantAgent(...)
 
@@ -158,7 +187,37 @@ thread: AssistantAgentThread = None
 async for response in agent.invoke_stream(messages="user input", thread=thread):
   # Process streamed response(s)...
   thread = response.thread
+
+# Read the messages from the remote thread
+async for response in thread.get_messages():
+  # Process messages
+
+# Delete the thread
+await thread.delete()
 ```
+
+To create a thread using an existing `thread_id`, pass it to the constructor of `AssistantAgentThread`:
+
+```python
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent, OpenAIAssistantAgent
+
+# Define agent
+agent = OpenAIAssistantAgent(...)  # or = AzureAssistantAgent(...)
+
+# Create a thread for the agent conversation.
+# If no thread is provided one will be created and returned with
+# the initial response.
+thread = AssistantAgentThread(client=client, thread_id="your-existing-thread-id")
+
+# Generate the streamed agent response(s)
+async for response in agent.invoke_stream(messages="user input", thread=thread):
+  # Process streamed response(s)...
+  thread = response.thread
+
+# Delete the thread
+await thread.delete()
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
