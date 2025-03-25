@@ -98,7 +98,7 @@ The _Agent Channel_ class enables agents of various types to participate in an [
 
 ::: zone pivot="programming-language-python"
 
-- [`agent_channel](/python/api/semantic-kernel/semantic_kernel.agents.channels.agent_channel)
+- [`agent_channel`](/python/api/semantic-kernel/semantic_kernel.agents.channels.agent_channel)
 
 ::: zone-end
 
