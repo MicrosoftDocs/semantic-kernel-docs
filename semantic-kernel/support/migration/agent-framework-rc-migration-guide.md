@@ -15,7 +15,135 @@ As we transition some agents from the experimental stage to the release candidat
 
 ::: zone pivot="programming-language-csharp"
 
-##  OpenAIAssistantAgent C# Migration Guide
+## Common Agent Invocation API
+
+In version 1.43.0 we are releasing a new common agent invocation API, that will allow all agent types to be invoked via a common API.
+
+To enable this new API we are introducing the concept of an `AgentThread`, which represents a conversation thread and abstracts away the different thread management requirements of different agent types. For some agent types it will also, in future, allow different thread imlementations to be used with the same agent.
+
+The common `Invoke` methods that we are introducing allow you to provide the message(s) that you want to pass to the agent and an optional `AgentThread`. If an `AgentThread` is provided, this will continue the conversation already on the `AgentThread`. If no `AgentThread` is provided, a new default thread will be created and returned as part of the response.
+
+It is also possible to manually create an `AgentThread` instance, for example in cases where you may have a thread id from the underlying agent service, and you want to continue that thread. You may also want to customize the options for the thread, e.g. associate tools.
+
+Here is a simple example of how any agent can now be used with agent agnostic code.
+
+```csharp
+private async Task UseAgentAsync(Agent agent, AgentThread? agentThread = null)
+{
+    // Invoke the agent, and continue the existing thread if provided.
+    var responses = agent.InvokeAsync(new ChatMessageContent(AuthorRole.User, "Hi"), agentThread);
+
+    // Output results.
+    await foreach (AgentResponseItem<ChatMessageContent> response in responses)
+    {
+        Console.WriteLine(response);
+        agentThread = response.Thread;
+    }
+
+    // Delete the thread if required.
+    if (agentThread is not null)
+    {
+        await agentThread.DeleteAsync();
+    }
+}
+```
+
+These changes were applied in:
+
+- [PR #11116](https://github.com/microsoft/semantic-kernel/pull/11116)
+
+### Azure AI Agent Thread Options
+
+The `AzureAIAgent` currently only supports threads of type `AzureAIAgentThread`.
+
+In addition to allowing a thread to be created for you automatically on agent invocation, you can also manually
+construct an instance of an `AzureAIAgentThread`.
+
+`AzureAIAgentThread` supports being created with customized tools and metadata, plus messages to seed the conversation with.
+
+```csharp
+AgentThread thread = new AzureAIAgentThread(
+    agentsClient,
+    messages: seedMessages,
+    toolResources: tools,
+    metadata: metadata);
+```
+
+You can also construct an instance of an `AzureAIAgentThread` that continues an existing conversation.
+
+```csharp
+AgentThread thread = new AzureAIAgentThread(
+    agentsClient,
+    id: "my-existing-thread-id");
+```
+
+### Bedrock Agent Thread Options
+
+The `BedrockAgent` currently only supports threads of type `BedrockAgentThread`.
+
+In addition to allowing a thread to be created for you automatically on agent invocation, you can also manually
+construct an instance of an `BedrockAgentThread`.
+
+```csharp
+AgentThread thread = new BedrockAgentThread(amazonBedrockAgentRuntimeClient);
+```
+
+You can also construct an instance of an `BedrockAgentThread` that continues an existing conversation.
+
+```csharp
+AgentThread thread = new BedrockAgentThread(
+    amazonBedrockAgentRuntimeClient,
+    sessionId: "my-existing-session-id");
+```
+
+### Chat Completion Agent Thread Options
+
+The `ChatCompletionAgent` currently only supports threads of type `ChatHistoryAgentThread`.
+`ChatHistoryAgentThread` uses an in-memory `ChatHistory` object to store the messages on the thread.
+
+In addition to allowing a thread to be created for you automatically on agent invocation, you can also manually
+construct an instance of an `ChatHistoryAgentThread`.
+
+```csharp
+AgentThread thread = new ChatHistoryAgentThread();
+```
+
+You can also construct an instance of an `ChatHistoryAgentThread` that continues an existing conversation
+by passing in a `ChatHistory` object with the existing messages.
+
+```csharp
+ChatHistory chatHistory = new([new ChatMessageContent(AuthorRole.User, "Hi")]);
+
+AgentThread thread = new ChatHistoryAgentThread(chatHistory: chatHistory);
+```
+
+### OpenAI Assistant Thread Options
+
+The `OpenAIAssistantAgent` currently only supports threads of type `OpenAIAssistantAgentThread`.
+
+In addition to allowing a thread to be created for you automatically on agent invocation, you can also manually
+construct an instance of an `OpenAIAssistantAgentThread`.
+
+`OpenAIAssistantAgentThread` supports being created with customized tools and metadata, plus messages to seed the conversation with.
+
+```csharp
+AgentThread thread = new OpenAIAssistantAgentThread(
+    assistantClient,
+    messages: seedMessages,
+    codeInterpreterFileIds: fileIds,
+    vectorStoreId: "my-vector-store",
+    metadata: metadata);
+```
+
+You can also construct an instance of an `OpenAIAssistantAgentThread` that continues an existing conversation.
+
+```csharp
+AgentThread thread = new OpenAIAssistantAgentThread(
+    assistantClient,
+    id: "my-existing-thread-id");
+```
+
+## OpenAIAssistantAgent C# Migration Guide
 
 We recently applied a significant shift around the [`OpenAIAssistantAgent`](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Agents/OpenAI/OpenAIAssistantAgent.cs) in the _Semantic Kernel Agent Framework_.
 
@@ -104,24 +232,29 @@ await assistantClient.DeleteAssistantAsync(agent.Id);
 ## 5. Thread Lifecycle
 
 ### **Creating a Thread**
-Threads are now created directly using `AssistantClient`.
+
+Threads are now managed via `AssistantAgentThread`.
 
 ##### **New Way**
-```csharp
-AssistantThread thread = await assistantClient.CreateThreadAsync();
-```
 
-Using a convenience extension method:
 ```csharp
-string threadId = await assistantClient.CreateThreadAsync(messages: [new ChatMessageContent(AuthorRole.User, "<message content>")]);
+var thread = new AssistantAgentThread(assistantClient);
+// Calling CreateAsync is an optional step.
+// A thread will be created automatically on first use if CreateAsync was not called.
+// Note that CreateAsync is not on the AgentThread base implementation since not all
+// agent services support explicit thread creation.
+await thread.CreateAsync();
 ```
 
 ##### **Old Way (Deprecated)**
+
 Previously, thread management was indirect or agent-bound.
 
 ### **Thread Deletion**
+
 ```csharp
-await assistantClient.DeleteThreadAsync(thread.Id);
+var thread = new AssistantAgentThread(assistantClient, "existing-thread-id");
+await thread.DeleteAsync();
 ```
 
 ## 6. File Lifecycle
@@ -165,11 +298,17 @@ Deprecated patterns are marked with `[Obsolete]`. To suppress obsolete warnings 
 This migration guide helps you transition smoothly to the new implementation, simplifying client initialization, resource management, and integration with the **Semantic Kernel .NET SDK**.
 
 ::: zone-end
+
 ::: zone pivot="programming-language-python"
 
-For developers upgrading to Semantic Kernel Python 1.22.0 or later, the ChatCompletionAgent and OpenAI Assistant abstractions have been updated.
+> [!IMPORTANT]
+> For developers upgrading to Semantic Kernel Python 1.26.0 or later, significant updates and breaking changes have been introduced to improve our agent framework as we approach GA.
 
 These changes were applied in:
+
+- [PR #11116](https://github.com/microsoft/semantic-kernel/pull/11116)
+
+Previous changes were applied in:
 
 - [PR #10666](https://github.com/microsoft/semantic-kernel/pull/10666)
 - [PR #10667](https://github.com/microsoft/semantic-kernel/pull/10667)
@@ -177,6 +316,368 @@ These changes were applied in:
 - [PR #10707](https://github.com/microsoft/semantic-kernel/pull/10707)
 
 This guide provides step-by-step instructions for migrating your Python code from the old implementation to the new implementation.
+
+## Agent Imports
+
+All agent import paths have been consolidated under `semantic_kernel.agents`.
+
+#### Updated import style
+
+```python
+from semantic_kernel.agents import (
+    AutoGenConversableAgent,
+    AzureAIAgent,
+    AzureAssistantAgent,
+    BedrockAgent,
+    ChatCompletionAgent,
+    OpenAIAssistantAgent,
+)
+```
+
+#### Previous import style (deprecated):
+
+```
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.agents.autogen import AutoGenConversableAgent
+from semantic_kernel.agents.azure_ai import AzureAIAgent
+from semantic_kernel.agents.bedrock import BedrockAgent
+from semantic_kernel.agents.open_ai import AzureAssistantAgent, OpenAIAssistantAgent
+```
+
+## Common Agent Invocation API
+
+As of Semantic Kernel Python 1.26.0 and later, we introduced a new common abstraction to manage threads for all agents. For each agent we now expose a thread class that implements the `AgentThread` base class, allowing context management via methods like `create()` and `delete()`.
+
+Agent responses `get_response(...)`, `invoke(...)`, `invoke_stream(...)` now return an `AgentResponseItem[ChatMessageContent]`, which has two attributes:
+
+```python
+message: TMessage  # Usually ChatMessageContent
+thread: AgentThread  # Contains the concrete type for the given agent
+```
+
+### Adding Messages to a Thread
+
+Messages should be added to a thread via the `messages` argument as part of the agent's  `get_response(...)`, `invoke(...)` or `invoke_stream(...)` methods. 
+
+### Azure AI Agent Thread
+
+An `AzureAIAgentThread` can be created as follows:
+
+```python
+from semantic_kernel.agents import AzureAIAgentThread
+
+thread = AzureAIAgentThread(
+    client: AIProjectClient,  # required
+    messages: list[ThreadMessageOptions] | None = None,  # optional
+    metadata: dict[str, str] | None = None,  # optional
+    thread_id: str | None = None,  # optional
+    tool_resources: "ToolResources | None" = None,  # optional
+)
+```
+
+Providing a `thread_id` (string) allows you to continue an existing conversation. If omitted, a new thread is created and returned as part of the agent response.
+
+A complete implementation example:
+
+```python
+import asyncio
+
+from azure.identity.aio import DefaultAzureCredential
+
+from semantic_kernel.agents import AzureAIAgent, AzureAIAgentSettings, AzureAIAgentThread
+
+USER_INPUTS = [
+    "Why is the sky blue?",
+    "What are we talking about?",
+]
+
+async def main() -> None:
+    ai_agent_settings = AzureAIAgentSettings.create()
+
+    async with (
+        DefaultAzureCredential() as creds,
+        AzureAIAgent.create_client(credential=creds) as client,
+    ):
+        # 1. Create an agent on the Azure AI agent service
+        agent_definition = await client.agents.create_agent(
+            model=ai_agent_settings.model_deployment_name,
+            name="Assistant",
+            instructions="Answer the user's questions.",
+        )
+
+        # 2. Create a Semantic Kernel agent for the Azure AI agent
+        agent = AzureAIAgent(
+            client=client,
+            definition=agent_definition,
+        )
+
+        # 3. Create a thread for the agent
+        # If no thread is provided, a new thread will be
+        # created and returned with the initial response
+        thread: AzureAIAgentThread = None
+
+        try:
+            for user_input in USER_INPUTS:
+                print(f"# User: {user_input}")
+                # 4. Invoke the agent with the specified message for response
+                response = await agent.get_response(messages=user_input, thread=thread)
+                print(f"# {response.content}: {response}")
+                thread = response.thread
+        finally:
+            # 6. Cleanup: Delete the thread and agent
+            await thread.delete() if thread else None
+            await client.agents.delete_agent(agent.id)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Bedrock Agent Thread
+
+A `BedrockAgent` uses a `BedrockAgentThread` to manage conversation history and context. You may provide a `session_id` to either continue or initiate a fresh conversation context.
+
+```python
+from semantic_kernel.agents import BedrockAgentThread
+
+thread = BedrockAgentThread(
+    bedrock_runtime_client: Any,
+    session_id: str | None = None,
+)
+```
+
+If no `session_id` is provided, a new context is created automatically.
+
+A complete implementation example:
+
+```python
+import asyncio
+
+from semantic_kernel.agents import BedrockAgent, BedrockAgentThread
+
+async def main():
+    bedrock_agent = await BedrockAgent.create_and_prepare_agent(
+        "semantic-kernel-bedrock-agent",
+        instructions="You are a friendly assistant. You help people find information.",
+    )
+
+    # Create a thread for the agent
+    # If no thread is provided, a new thread will be
+    # created and returned with the initial response
+    thread: BedrockAgentThread = None
+
+    try:
+        while True:
+            user_input = input("User:> ")
+            if user_input == "exit":
+                print("\n\nExiting chat...")
+                break
+
+            # Invoke the agent
+            # The chat history is maintained in the session
+            response = await bedrock_agent.get_response(
+                input_text=user_input,
+                thread=thread,
+            )
+            print(f"Bedrock agent: {response}")
+            thread = response.thread
+    except KeyboardInterrupt:
+        print("\n\nExiting chat...")
+        return False
+    except EOFError:
+        print("\n\nExiting chat...")
+        return False
+    finally:
+        # Delete the agent
+        await bedrock_agent.delete_agent()
+        await thread.delete() if thread else None
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Chat History Agent Thread
+
+A `ChatCompletionAgent` uses `ChatHistoryAgentThread` to manage conversation history. It can be initialized as follows:
+
+```python
+from semantic_kernel.agents import ChatHistoryAgentThread
+
+thread = ChatHistoryAgentThread(
+    chat_history: ChatHistory | None = None, 
+    thread_id: str | None = None
+)
+```
+
+Providing a `thread_id` allows continuing existing conversations. Omitting it creates a new thread. Serialization and rehydration of thread state are supported for persistent conversation contexts.
+
+A complete implementation example:
+
+```python
+import asyncio
+
+from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+
+# Simulate a conversation with the agent
+USER_INPUTS = [
+    "Hello, I am John Doe.",
+    "What is your name?",
+    "What is my name?",
+]
+
+
+async def main():
+    # 1. Create the agent by specifying the service
+    agent = ChatCompletionAgent(
+        service=AzureChatCompletion(),
+        name="Assistant",
+        instructions="Answer the user's questions.",
+    )
+
+    # 2. Create a thread to hold the conversation
+    # If no thread is provided, a new thread will be
+    # created and returned with the initial response
+    thread: ChatHistoryAgentThread = None
+
+    for user_input in USER_INPUTS:
+        print(f"# User: {user_input}")
+        # 3. Invoke the agent for a response
+        response = await agent.get_response(
+            messages=user_input,
+            thread=thread,
+        )
+        print(f"# {response.name}: {response}")
+        # 4. Store the thread, which allows the agent to
+        # maintain conversation history across multiple messages.
+        thread = response.thread
+
+    # 5. Cleanup: Clear the thread
+    await thread.delete() if thread else None
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### OpenAI Assistant Thread
+
+The `AzureAssistantAgent` and `OpenAIAssistantAgent` use `AssistantAgentThread` to manage conversation history and context:
+
+```python
+from semantic_kernel.agents import ChatHistoryAgentThread
+
+thread = AssistantAgentThread(
+    client: AsyncOpenAI,
+    thread_id: str | None = None,
+    messages: Iterable["ThreadCreateMessage"] | NotGiven = NOT_GIVEN,
+    metadata: dict[str, Any] | NotGiven = NOT_GIVEN,
+    tool_resources: ToolResources | NotGiven = NOT_GIVEN,
+)
+```
+
+Providing a `thread_id` continues an existing conversation; otherwise, a new thread is created.
+
+A complete implementation example:
+
+```python
+# Copyright (c) Microsoft. All rights reserved.
+import asyncio
+
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
+
+
+# Simulate a conversation with the agent
+USER_INPUTS = [
+    "Why is the sky blue?",
+    "What is the speed of light?",
+    "What have we been talking about?",
+]
+
+
+async def main():
+    # 1. Create the client using Azure OpenAI resources and configuration
+    client, model = AzureAssistantAgent.setup_resources()
+
+    # 2. Create the assistant on the Azure OpenAI service
+    definition = await client.beta.assistants.create(
+        model=model,
+        instructions="Answer questions about the world in one sentence.",
+        name="Assistant",
+    )
+
+    # 3. Create a Semantic Kernel agent for the Azure OpenAI assistant
+    agent = AzureAssistantAgent(
+        client=client,
+        definition=definition,
+    )
+
+    # 4. Create a new thread for use with the assistant
+    # If no thread is provided, a new thread will be
+    # created and returned with the initial response
+    thread: AssistantAgentThread = None
+
+    try:
+        for user_input in USER_INPUTS:
+            print(f"# User: '{user_input}'")
+            # 6. Invoke the agent for the current thread and print the response
+            response = await agent.get_response(messages=user_input, thread=thread)
+            print(f"# {response.name}: {response}")
+            thread = response.thread
+
+    finally:
+        # 7. Clean up the resources
+        await thread.delete() if thread else None
+        await agent.client.beta.assistants.delete(assistant_id=agent.id)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+```
+
+## Message Inputs for Agent Invocation
+
+Previous implementations allowed only a single message input to methods like `get_response(...)`, `invoke(...)`, and `invoke_stream(...)`. We've now updated these methods to support multiple `messages (str | ChatMessageContent | list[str | ChatMessageContent])`.
+
+Agent invocation methods need updates as follows:
+
+### Old Way
+
+```python
+response = await agent.get_response(message="some user input", thread=thread)
+```
+
+### New Way
+
+```python
+response = await agent.get_response(messages=["some initial inputer", "other input"], thread=thread)
+```
+
+## `AzureAIAgent`
+
+In Semantic Kernel Python 1.26.0+, `AzureAIAgent` thread creation is now managed via the `AzureAIAgentThread` object, not directly on the client.
+
+### Old Way
+
+```python
+thread = await client.agents.create_thread()
+```
+
+### New Way
+
+```python
+from semantic_kernel.agents import AzureAIAgentThread
+
+thread = AzureAIAgentThread(
+    client: AIProjectClient,  # required
+    messages: list[ThreadMessageOptions] | None = None,  # optional
+    metadata: dict[str, str] | None = None,  # optional
+    thread_id: str | None = None,  # optional
+    tool_resources: "ToolResources | None" = None,  # optional
+)
+```
+
+If no `thread_id` is provided initially, a new thread is created and returned in the agent response.
 
 ## `ChatCompletionAgent`
 
@@ -189,6 +690,9 @@ You can now specify the service directly as part of the agent constructor:
 #### New Way
 
 ```python
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+
 agent = ChatCompletionAgent(
     service=AzureChatCompletion(),
     name="<name>",
@@ -203,6 +707,9 @@ Note: If both a kernel and a service are provided, the service will take precede
 Previously, you would first add a service to a kernel and then pass the kernel to the agent:
 
 ```python
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+
 kernel = Kernel()
 kernel.add_service(AzureChatCompletion())
 
@@ -220,6 +727,9 @@ Plugins can now be supplied directly through the constructor:
 #### New Way
 
 ```python
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+
 agent = ChatCompletionAgent(
     service=AzureChatCompletion(),
     name="<name>",
@@ -233,6 +743,9 @@ agent = ChatCompletionAgent(
 Plugins previously had to be added to the kernel separately:
 
 ```python
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+
 kernel = Kernel()
 kernel.add_plugin(SamplePlugin())
 
@@ -249,22 +762,31 @@ Note: Both approaches are valid, but directly specifying plugins simplifies init
 
 You now have two ways to invoke the agent. The new method directly retrieves a single response, while the old method supports streaming.
 
-#### New Way (Single Response)
+#### New Way (No Conversation Thread/Context)
 
 ```python
-chat_history = ChatHistory()
-chat_history.add_user_message("<user_input>")
-response = await agent.get_response(chat_history)
-# response is of type ChatMessageContent
+response = await agent.get_response(messages="user input")
+# response is of type AgentResponseItem[ChatMessageContent]
+```
+Note: if the next response does not use the returned thread, the conversation will use a new thread and thus will not continue with previous context.
+
+#### New Way (Single Response with Context)
+
+```python
+thread = ChatHistoryAgentThread()
+
+for user_input in ["First user input", "Second User Input"]:
+    response = await agent.get_response(messages=user_input, thread=thread)
+    # response is of type AgentResponseItem[ChatMessageContent]
+    thread = response.thread
 ```
 
-#### Old Way (Still Valid)
+#### Old Way (No Longer Valid)
 
 ```python
 chat_history = ChatHistory()
 chat_history.add_user_message("<user_input>")
-async for response in agent.invoke(chat_history):
-    # handle response
+response = agent.get_response(message="user input", chat_history=chat_history)
 ```
 
 ### 4. Controlling Function Calling
@@ -404,8 +926,14 @@ thread_id = await agent.create_thread()
 
 ### New Way
 ```python
-thread = await agent.client.beta.threads.create()
-# Use thread.id for the thread_id string
+from semantic_kernel.agents AssistantAgentThread
+
+thread = AssistantAgentThread()
+
+async for response in agent.invoke(messages="user input", thread=thread)
+    # handle response
+    print(response)
+    thread = response.thread
 ```
 
 ## 3. Handling Plugins
@@ -580,7 +1108,7 @@ await agent.delete()
 ### New Way
 ```python
 await client.files.delete(file_id)
-await client.beta.threads.delete(thread.id)
+await thread.delete()
 await client.beta.assistants.delete(agent.id)
 ```
 
