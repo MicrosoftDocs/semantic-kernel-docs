@@ -142,14 +142,14 @@ await foreach (ChatMessageContent response in agentThread.GetMessagesAsync())
 await agentThread.DeleteAsync();
 ```
 
-To create a thread using an existing `threadId`, pass it to the constructor of `OpenAIAssistantAgentThread`:
+To create a thread using an existing `Id`, pass it to the constructor of `OpenAIAssistantAgentThread`:
 
 ```csharp
 // Define agent
 OpenAIAssistantAgent agent = ...;
 
 // Create a thread for the agent conversation.
-OpenAIAssistantAgentThread agentThread = new(assistantClient, threadId);
+OpenAIAssistantAgentThread agentThread = new(assistantClient, "your-existing-thread-id");
 
 // Cerate a user message
 var message = new ChatMessageContent(AuthorRole.User, "<user input>");
