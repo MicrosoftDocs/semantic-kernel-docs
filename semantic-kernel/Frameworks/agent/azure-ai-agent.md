@@ -121,6 +121,8 @@ AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME = "<example-model-deployment-name>"
 Once the configuration is defined, the client may be created:
 
 ```python
+from semantic_kernel.agents import AzureAIAgent
+
 async with (
     DefaultAzureCredential() as creds,
     AzureAIAgent.create_client(credential=creds) as client,
@@ -162,7 +164,7 @@ AzureAIAgent agent = new(definition, agentsClient);
 
 ```python
 from azure.identity.aio import DefaultAzureCredential
-from semantic_kernel.agents.azure_ai import AzureAIAgent, AzureAIAgentSettings
+from semantic_kernel.agents import AzureAIAgent, AzureAIAgentSettings
 
 ai_agent_settings = AzureAIAgentSettings.create()
 
@@ -194,23 +196,25 @@ async with (
 
 ## Interacting with an `AzureAIAgent`
 
-Interaction with the `AzureAIAgent` is straightforward. The agent maintains the conversation history automatically using a thread:
+Interaction with the `AzureAIAgent` is straightforward. The agent maintains the conversation history automatically using a thread.
+The specifics of the _Azure AI Agent thread_ is abstracted away via the `AzureAIAgentThread` class, which is an implementation of `AgentThread`.
+
+The `AzureAIAgent` currently only supports threads of type `AzureAIAgentThread`.
 
 ::: zone pivot="programming-language-csharp"
 ```c#
-AgentThread thread = await agentsClient.CreateThreadAsync();
+AgentThread agentThread = new AzureAIAgentThread(agentsClient);
 try
 {
     ChatMessageContent message = new(AuthorRole.User, "<your user input>");
-    await agent.AddChatMessageAsync(threadId, message);
-    await foreach (ChatMessageContent response in agent.InvokeAsync(thread.Id))
+    await foreach (ChatMessageContent response in agent.InvokeAsync(message, agentThread))
     {
         Console.WriteLine(response.Content);
     }
 }
 finally
 {
-    await this.AgentsClient.DeleteThreadAsync(thread.Id);
+    await agentThread.DeleteAsync();
     await this.AgentsClient.DeleteAgentAsync(agent.Id);
 }
 ```
@@ -220,24 +224,40 @@ finally
 ```python
 USER_INPUTS = ["Hello", "What's your name?"]
 
-thread = await client.agents.create_thread()
+thread: AzureAIAgentThread = AzureAIAgentThread()
 
 try:
     for user_input in USER_INPUTS:
-        await agent.add_chat_message(thread_id=thread.id, message=user_input)
-        response = await agent.get_response(thread_id=thread.id)
+        response = await agent.get_response(messages=user_inputs, thread=thread)
         print(response)
+        thread = response.thread
 finally:
-    await client.agents.delete_thread(thread.id)
+    await thread.delete() if thread else None
 ```
 
 Optionally, an agent may be invoked as: 
 
 ```python
 for user_input in USER_INPUTS:
-    await agent.add_chat_message(thread_id=thread.id, message=user_input)
-    async for content in agent.invoke(thread_id=thread.id):
+    async for content in agent.invoke(message=user_input, thread=thread):
         print(content.content)
+        thread = response.thread
+```
+
+You may also pass in a list of messages to the `get_response(...)`, `invoke(...)`, or `invoke_stream(...)` methods:
+
+```python
+USER_INPUTS = ["Hello", "What's your name?"]
+
+thread: AzureAIAgentThread = AzureAIAgentThread()
+
+try:
+    for user_input in USER_INPUTS:
+        response = await agent.get_response(messages=USER_INPUTS, thread=thread)
+        print(response)
+        thread = response.thread
+finally:
+    await thread.delete() if thread else None
 ```
 
 ::: zone-end
@@ -247,8 +267,7 @@ An agent may also produce a streamed response:
 ::: zone pivot="programming-language-csharp"
 ```c#
 ChatMessageContent message = new(AuthorRole.User, "<your user input>");
-await agent.AddChatMessageAsync(threadId, message);
-await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(thread.Id))
+await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread))
 {
     Console.Write(response.Content);
 }
@@ -607,7 +626,7 @@ Agents and their associated threads can be deleted when no longer needed:
 ::: zone pivot="programming-language-csharp"
 
 ```c#
-await agentsClient.DeleteThreadAsync(thread.Id);
+await agentThread.DeleteAsync();
 await agentsClient.DeleteAgentAsync(agent.Id);
 ```
 ::: zone-end

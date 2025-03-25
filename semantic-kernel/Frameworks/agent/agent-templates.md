@@ -235,9 +235,6 @@ ChatCompletionAgent agent =
         }
     };
 
-// Create a ChatHistory object to maintain the conversation state.
-ChatHistory chat = [];
-
 KernelArguments overrideArguments =
     new()
     {
@@ -246,7 +243,7 @@ KernelArguments overrideArguments =
     });
 
 // Generate the agent response(s)
-await foreach (ChatMessageContent response in agent.InvokeAsync(chat, overrideArguments))
+await foreach (ChatMessageContent response in agent.InvokeAsync([], options: new() { KernelArguments = overrideArguments }))
 {
   // Process agent response(s)...
 }

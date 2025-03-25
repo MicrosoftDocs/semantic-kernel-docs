@@ -86,7 +86,7 @@ Start by creating a folder that will hold your script (`.py` file) and the sampl
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
 from semantic_kernel.contents import StreamingAnnotationContent
 ```
 
@@ -480,10 +480,6 @@ if not user_input:
 if user_input.lower() == "exit":
     is_complete = True
     break
-
-await agent.add_chat_message(
-    thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
-)
 ```
 ::: zone-end
 
@@ -545,7 +541,8 @@ if (footnotes.Count > 0)
 ::: zone pivot="programming-language-python"
 ```python
 footnotes: list[StreamingAnnotationContent] = []
-async for response in agent.invoke_stream(thread_id=thread_id):
+async for response in agent.invoke_stream(messages=user_input, thread=thread):
+    thread = response.thread
     footnotes.extend([item for item in response.items if isinstance(item, StreamingAnnotationContent)])
 
     print(f"{response.content}", end="", flush=True)
@@ -796,8 +793,7 @@ async def main():
         definition=definition,
     )
 
-    print("Creating thread...")
-    thread = await client.beta.threads.create()
+    thread: AssistantAgentThread = None
 
     try:
         is_complete: bool = False

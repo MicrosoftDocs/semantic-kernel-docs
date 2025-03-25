@@ -58,42 +58,49 @@ The `Agent Framework` supports _streamed_ responses when using [`AgentChat`](./a
 
 ### Streamed response from `ChatCompletionAgent`
 
-When invoking a streamed response from a [`ChatCompletionAgent`](./chat-completion-agent.md), the `ChatHistory` is updated after the full response is received. Although the response is streamed incrementally, the history records only the complete message. This ensures that the `ChatHistory` reflects fully formed responses for consistency.
+When invoking a streamed response from a [`ChatCompletionAgent`](./chat-completion-agent.md), the `ChatHistory` in the `AgentThread` is updated after the full response is received. Although the response is streamed incrementally, the history records only the complete message. This ensures that the `ChatHistory` reflects fully formed responses for consistency.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
 // Define agent
 ChatCompletionAgent agent = ...;
 
-// Create a ChatHistory object to maintain the conversation state.
-ChatHistory chat = [];
+ChatHistoryAgentThread agentThread = new();
 
-// Add a user message to the conversation
-chat.Add(new ChatMessageContent(AuthorRole.User, "<user input>"));
+// Create a user message
+var message = ChatMessageContent(AuthorRole.User, "<user input>");
 
 // Generate the streamed agent response(s)
-await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(chat))
+await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread))
 {
   // Process streamed response(s)...
+}
+
+// It's also possible to read the messages that were added to the ChatHistoryAgentThread.
+await foreach (ChatMessageContent response in agentThread.GetMessagesAsync())
+{
+  // Process messages...
 }
 ```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
+from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
+
 # Define agent
 agent = ChatCompletionAgent(...)
 
-# Create a ChatHistory object to maintain the conversation state.
-chat = ChatHistory()
-
-# Add a user message to the conversation
-chat.add_message(ChatMessageContent(AuthorRole.USER, "<user input>"))
+# Create a thread object to maintain the conversation state.
+# If no thread is provided one will be created and returned with
+# the initial response.
+thread: ChatHistoryAgentThread = None
 
 # Generate the streamed agent response(s)
-async for response in agent.invoke_stream(chat)
+async for response in agent.invoke_stream(messages="user input", thread=thread)
 {
   # Process streamed response(s)...
+  thread = response.thread
 }
 ```
 ::: zone-end
@@ -106,7 +113,7 @@ async for response in agent.invoke_stream(chat)
 
 ### Streamed response from `OpenAIAssistantAgent`
 
-When invoking a streamed response from an [`OpenAIAssistantAgent`](./assistant-agent.md), an optional `ChatHistory` can be provided to capture the complete messages for further analysis if needed. Since the assistant maintains the conversation state as a remote thread, capturing these messages is not always necessary. The decision to store and analyze the full response depends on the specific requirements of the interaction.
+When invoking a streamed response from an [`OpenAIAssistantAgent`](./assistant-agent.md), the assistant maintains the conversation state as a remote thread. It is possible to read the messages from the remote thread if required.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -114,36 +121,43 @@ When invoking a streamed response from an [`OpenAIAssistantAgent`](./assistant-a
 OpenAIAssistantAgent agent = ...;
 
 // Create a thread for the agent conversation.
-string threadId = await agent.CreateThreadAsync();
+OpenAIAssistantAgentThread agentThread = new(assistantClient);
 
-// Add a user message to the conversation
-chat.Add(threadId, new ChatMessageContent(AuthorRole.User, "<user input>"));
+// Cerate a user message
+var message = new ChatMessageContent(AuthorRole.User, "<user input>");
 
 // Generate the streamed agent response(s)
-await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(threadId))
+await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread))
 {
   // Process streamed response(s)...
 }
 
+// It's possible to read the messages from the remote thread.
+await foreach (ChatMessageContent response in agentThread.GetMessagesAsync())
+{
+  // Process messages...
+}
+
 // Delete the thread when it is no longer needed
-await agent.DeleteThreadAsync(threadId);
+await agentThread.DeleteAsync();
 ```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent, OpenAIAssistantAgent
 # Define agent
-agent = OpenAIAssistantAgent(...)
+agent = OpenAIAssistantAgent(...)  # or = AzureAssistantAgent(...)
 
 # Create a thread for the agent conversation.
-thread_id = await agent.create_thread()
-
-# Add user message to the conversation
-await agent.add_chat_message(message="<user input>")
+# If no thread is provided one will be created and returned with
+# the initial response.
+thread: AssistantAgentThread = None
 
 # Generate the streamed agent response(s)
-async for response in agent.invoke_stream(thread_id=thread_id):
+async for response in agent.invoke_stream(messages="user input", thread=thread):
   # Process streamed response(s)...
+  thread = response.thread
 ```
 ::: zone-end
 

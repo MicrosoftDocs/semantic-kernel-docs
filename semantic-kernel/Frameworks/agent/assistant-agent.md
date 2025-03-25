@@ -97,7 +97,7 @@ OpenAIAssistantAgent agent = new(assistant, client);
 
 ::: zone pivot="programming-language-python"
 ```python
-from semantic_kernel.agents.open_ai import AzureAssistantAgent, OpenAIAssistantAgent
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent, OpenAIAssistantAgent
 
 # Set up the client and model using Azure OpenAI Resources
 client, model = AzureAssistantAgent.setup_resources()
@@ -194,50 +194,78 @@ agent = AzureAssistantAgent(
 
 ## Using an `OpenAIAssistantAgent`
 
-As with all aspects of the _Assistant API_, conversations are stored remotely. Each conversation is referred to as a _thread_ and identified by a unique `string` identifier. Interactions with your `OpenAIAssistantAgent` are tied to this specific thread identifier which must be specified when calling the agent/
+As with all aspects of the _Assistant API_, conversations are stored remotely. Each conversation is referred to as a _thread_ and identified by a unique `string` identifier. Interactions with your `OpenAIAssistantAgent` are tied to this specific thread identifier. The specifics of the _Assistant API thread_ is abstracted away via the `OpenAIAssistantAgentThread` class, which is an implementation of `AgentThread`.
+
+The `OpenAIAssistantAgent` currently only supports threads of type `OpenAIAssistantAgentThread`.
+
+You can invoke the `OpenAIAssistantAgent` without specifying an `AgentThread`, to start a new thread and a new `AgentThread` will be returned as part of the response.
 
 ::: zone pivot="programming-language-csharp"
+```csharp
+
+// Define agent
+OpenAIAssistantAgent agent = ...;
+AgentThread? agentThread = null;
+
+// Generate the agent response(s)
+await foreach (AgentResponseItem<ChatMessageContent> response in agent.InvokeAsync(new ChatMessageContent(AuthorRole.User, "<user input>")))
+{
+  // Process agent response(s)...
+  agentThread = response.Thread;
+}
+
+// Delete the thread if no longer needed
+if (agentThread is not null)
+{
+    await agentThread.DeleteAsync();
+}
+```
+
+You can also invoke the `OpenAIAssistantAgent` with an `AgentThread` that you created.
+
 ```csharp
 // Define agent
 OpenAIAssistantAgent agent = ...;
 
-// Create a thread for the agent conversation.
-string threadId = await agent.CreateThreadAsync();
-
-// Add a user message to the conversation
-chat.Add(threadId, new ChatMessageContent(AuthorRole.User, "<user input>"));
+// Create a thread with some custom metadata.
+AgentThread agentThread = new OpenAIAssistantAgentThread(this.AssistantClient, metadata: myMetadata);
 
 // Generate the agent response(s)
-await foreach (ChatMessageContent response in agent.InvokeAsync(threadId))
+await foreach (ChatMessageContent response in agent.InvokeAsync(new ChatMessageContent(AuthorRole.User, "<user input>"), agentThread))
 {
   // Process agent response(s)...
 }
 
 // Delete the thread when it is no longer needed
-await agent.DeleteThreadAsync(threadId);
+await agentThread.DeleteAsync();
 ```
+
+You can also create an `OpenAIAssistantAgentThread` that resumes an earlier conversation by id.
+
+```csharp
+// Create a thread with an existing thread id.
+AgentThread agentThread = new OpenAIAssistantAgentThread(this.AssistantClient, "existing-thread-id");
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
+
 # Define agent
 openai_agent = await ...
 
 # Create a thread for the agent conversation
-thread_id = await agent.create_thread()
-
-# Add a user message to the conversation
-await agent.add_chat_message(
-  thread_id=thread_id, 
-  message=ChatMessageContent(role=AuthorRole.USER, content="<user input>"),
-)
+thread: AssistantAgentThread = None
 
 # Generate the agent response(s)
-async for response in agent.invoke(thread_id=thread_id):
+async for response in agent.invoke(messages="user input", thread=thread):
   # process agent response(s)...
+  thread = response.thread
 
 # Delete the thread when it is no longer needed
-await agent.delete_thread(thread_id)
+await thread.delete() if thread else None
 ```
 ::: zone-end
 

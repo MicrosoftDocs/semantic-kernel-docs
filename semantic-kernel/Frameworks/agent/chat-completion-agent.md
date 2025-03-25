@@ -134,6 +134,8 @@ There are two ways to create a `ChatCompletionAgent`:
 ### 1. By providing the chat completion service directly:
 
 ```python
+from semantic_kernel.agents import ChatCompletionAgent
+
 # Create the agent by directly providing the chat completion service
 agent = ChatCompletionAgent(
     service=AzureChatCompletion(),  # your chat completion service instance
@@ -237,22 +239,38 @@ agent = ChatCompletionAgent(
 
 Conversing with your `ChatCompletionAgent` is based on a `ChatHistory` instance, no different from interacting with a Chat Completion [AI service](../../concepts/ai-services/index.md).
 
+You can simply invoke the agent with your user message.
+
 ```csharp
 // Define agent
 ChatCompletionAgent agent = ...;
 
-// Create a ChatHistory object to maintain the conversation state.
-ChatHistory chat = [];
-
-// Add a user message to the conversation
-chat.Add(new ChatMessageContent(AuthorRole.User, "<user input>"));
-
 // Generate the agent response(s)
-await foreach (ChatMessageContent response in agent.InvokeAsync(chat))
+await foreach (ChatMessageContent response in agent.InvokeAsync(new ChatMessageContent(AuthorRole.User, "<user input>")))
 {
   // Process agent response(s)...
 }
 ```
+
+You can also use an `AgentThread` to have a conversation with your agent.
+Here we are using a `ChatHistoryAgentThread`.
+
+The `ChatHistoryAgentThread` can also take an optional `ChatHistory`
+object as input, via its constructor, if resuming a previous conversation. (not shown)
+
+```csharp
+// Define agent
+ChatCompletionAgent agent = ...;
+
+AgentThread thread = new ChatHistoryAgentThread();
+
+// Generate the agent response(s)
+await foreach (ChatMessageContent response in agent.InvokeAsync(new ChatMessageContent(AuthorRole.User, "<user input>"), thread))
+{
+  // Process agent response(s)...
+}
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -265,29 +283,24 @@ The easiest is to call and await `get_response`:
 # Define agent
 agent = ChatCompletionAgent(...)
   
-# Define the chat history
-chat = ChatHistory()
+# Define the thread
+thread = ChatHistoryAgentThread()
 
-# Add the user message
-chat.add_user_message(user_input)
 # Generate the agent response
-response = await agent.get_response(chat)
-# response is a `ChatMessageContent` object
+response = await agent.get_response(messages="user input", thread=thread)
+# response is an `AgentResponseItem[ChatMessageContent]` object
 ```
-Otherwise, calling the `invoke` method returns an `AsyncIterable` of `ChatMessageContent`.
+Otherwise, calling the `invoke` method returns an `AsyncIterable` of `AgentResponseItem[ChatMessageContent]`.
 
 ```python
 # Define agent
 agent = ChatCompletionAgent(...)
   
-# Define the chat history
-chat = ChatHistory()
-
-# Add the user message
-chat.add_user_message(user_input)
+# Define the thread
+thread = ChatHistoryAgentThread()
 
 # Generate the agent response(s)
-async for response in agent.invoke(chat):
+async for response in agent.invoke(messages="user input", thread=thread):
   # process agent response(s)
 ```
 
@@ -297,14 +310,11 @@ The `ChatCompletionAgent` also supports streaming in which the `invoke_stream` m
 # Define agent
 agent = ChatCompletionAgent(...)
   
-# Define the chat history
-chat = ChatHistory()
-
-# Add the user message
-chat.add_message(ChatMessageContent(role=AuthorRole.USER, content=input))
+# Define the thread
+thread = ChatHistoryAgentThread()
 
 # Generate the agent response(s)
-async for response in agent.invoke_stream(chat):
+async for response in agent.invoke_stream(messages="user input", thread=thread):
   # process agent response(s)
 ```
 
