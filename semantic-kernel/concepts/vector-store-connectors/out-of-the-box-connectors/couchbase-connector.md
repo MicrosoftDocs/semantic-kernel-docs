@@ -34,6 +34,7 @@ following characteristics.
 | IsFilterable supported?               | No                                                                                                                |
 | IsFullTextSearchable supported?       | No                                                                                                                |
 | StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
+| HybridSearch supported?               | No                                                                                                                |
 
 ## Getting Started
 
