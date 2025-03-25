@@ -302,7 +302,7 @@ This migration guide helps you transition smoothly to the new implementation, si
 ::: zone pivot="programming-language-python"
 
 > [!IMPORTANT]
-> For developers upgrading to Semantic Kernel Python 1.26.0 or later, significant updates and breaking changes have been introduced to improve our agent framework as we approach GA.
+> For developers upgrading to Semantic Kernel Python 1.26.1 or later, significant updates and breaking changes have been introduced to improve our agent framework as we approach GA.
 
 These changes were applied in:
 
