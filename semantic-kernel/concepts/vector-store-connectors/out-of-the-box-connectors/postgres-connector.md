@@ -17,7 +17,9 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Postgres Vector Store connector can be used to access and manage data in Postgres. The connector has the following characteristics.
+The Postgres Vector Store connector can be used to access and manage data in Postgres and also supports [Neon Serverless Postgres](https://neon.tech/).
+
+The connector has the following characteristics.
 
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
