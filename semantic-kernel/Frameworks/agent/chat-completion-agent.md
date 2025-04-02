@@ -16,6 +16,7 @@ ms.service: semantic-kernel
 Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
+
 - [`ChatCompletionAgent`](/dotnet/api/microsoft.semantickernel.agents.chatcompletionagent)
 - [`Microsoft.SemanticKernel.Agents`](/dotnet/api/microsoft.semantickernel.agents)
 - [`IChatCompletionService`](/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice)
@@ -35,47 +36,15 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone-end
 
-
 ## Chat Completion in Semantic Kernel
 
-[_Chat Completion_](../../concepts/ai-services/chat-completion/index.md) is fundamentally a protocol for a chat-based interaction with an AI model where the chat-history maintained and presented to the model with each request.  _Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) offer a unified framework for integrating the chat-completion capabilities of various AI models.
+[_Chat Completion_](../../concepts/ai-services/chat-completion/index.md) is fundamentally a protocol for a chat-based interaction with an AI model where the chat-history is maintained and presented to the model with each request.  _Semantic Kernel_ [AI services](../../concepts/ai-services/index.md) offer a unified framework for integrating the chat-completion capabilities of various AI models.
 
-A _chat completion agent_ can leverage any of these [AI services](../../concepts/ai-services/index.md) to generate responses, whether directed to a user or another agent.
-
-::: zone pivot="programming-language-csharp"
-
-For .NET, _chat-completion_ AI Services are based on the [`IChatCompletionService`](/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice) interface.
-
-For .NET, some of AI services that support models with chat-completion include:
-
-Model|Semantic Kernel AI Service
---|--
-Azure OpenAI|[`Microsoft.SemanticKernel.Connectors.AzureOpenAI`](/dotnet/api/microsoft.semantickernel.connectors.azureopenai)
-Gemini|[`Microsoft.SemanticKernel.Connectors.Google`](/dotnet/api/microsoft.semantickernel.connectors.google)
-HuggingFace|[`Microsoft.SemanticKernel.Connectors.HuggingFace`](/dotnet/api/microsoft.semantickernel.connectors.huggingface)
-Mistral|[`Microsoft.SemanticKernel.Connectors.MistralAI`](/dotnet/api/microsoft.semantickernel.connectors.mistralai)
-OpenAI|[`Microsoft.SemanticKernel.Connectors.OpenAI`](/dotnet/api/microsoft.semantickernel.connectors.openai)
-Onnx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantickernel.connectors.onnx)
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-
-- [`AzureChatCompletion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion.azurechatcompletion)
-- [`OpenAIChatCompletion`](/python/api/semantic-kernel/semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion.openaichatcompletion)
-
-::: zone-end
-
-::: zone pivot="programming-language-java"
-
-> Agents are currently unavailable in Java.
-
-::: zone-end
-
+A _chat completion agent_ can leverage any of these [AI services](../../concepts/ai-services/chat-completion/index.md) to generate responses, whether directed to a user or another agent.
 
 ## Preparing Your Development Environment
 
-To proceed with developing an `AzureAIAgent`, configure your development environment with the appropriate packages.
+To proceed with developing an `ChatCompletionAgent`, configure your development environment with the appropriate packages.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -103,12 +72,12 @@ pip install semantic-kernel
 
 ::: zone-end
 
-
 ## Creating a `ChatCompletionAgent`
 
 A `ChatCompletionAgent` is fundamentally based on an [AI services](../../concepts/ai-services/index.md).  As such, creating a `ChatCompletionAgent` starts with creating a [`Kernel`](../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../concepts/kernel.md) instance.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 // Initialize a Kernel with a chat-completion service
 IKernelBuilder builder = Kernel.CreateBuilder();
@@ -126,12 +95,13 @@ ChatCompletionAgent agent =
         Kernel = kernel
     };
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 There are two ways to create a `ChatCompletionAgent`:
 
-### 1. By providing the chat completion service directly:
+### 1. By providing the chat completion service directly
 
 ```python
 from semantic_kernel.agents import ChatCompletionAgent
@@ -143,7 +113,8 @@ agent = ChatCompletionAgent(
     instructions="<agent instructions>",
 )
 ```
-### 2. By creating a Kernel first, adding the service to it, then providing the kernel:
+
+### 2. By creating a Kernel first, adding the service to it, then providing the kernel
 
 ```python
 # Define the kernel
@@ -159,6 +130,7 @@ agent = ChatCompletionAgent(
   instructions="<agent instructions>",
 )
 ```
+
 The first method is useful when you already have a chat completion service ready. The second method is beneficial when you need a kernel that manages multiple services or additional functionalities.
 ::: zone-end
 
@@ -168,7 +140,6 @@ The first method is useful when you already have a chat completion service ready
 
 ::: zone-end
 
-
 ## AI Service Selection
 
 No different from using Semantic Kernel [AI services](../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a service-selector.  A service-selector identifies which [AI service](../../concepts/ai-services/index.md) to target when the [`Kernel`](../../concepts/kernel.md) contains more than one.
@@ -176,6 +147,7 @@ No different from using Semantic Kernel [AI services](../../concepts/ai-services
 > Note: If multiple [AI services](../../concepts/ai-services/index.md) are present and no service-selector is provided, the same default logic is applied for the agent that you'd find when using an [AI services](../../concepts/ai-services/index.md) outside of the `Agent Framework`
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 IKernelBuilder builder = Kernel.CreateBuilder();
 
@@ -199,9 +171,11 @@ ChatCompletionAgent agent =
             });
     };
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.connectors.ai.open_ai import (
     AzureChatCompletion,
@@ -225,6 +199,7 @@ agent = ChatCompletionAgent(
   arguments=KernelArguments(settings=settings)
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -282,15 +257,29 @@ The easiest is to call and await `get_response`:
 ```python
 # Define agent
 agent = ChatCompletionAgent(...)
-  
-# Define the thread
-thread = ChatHistoryAgentThread()
 
 # Generate the agent response
-response = await agent.get_response(messages="user input", thread=thread)
+response = await agent.get_response(messages="user input")
 # response is an `AgentResponseItem[ChatMessageContent]` object
 ```
-Otherwise, calling the `invoke` method returns an `AsyncIterable` of `AgentResponseItem[ChatMessageContent]`.
+
+If you want the agent to maintain conversation history between invocations, you can pass it a `ChatHistoryAgentThread` as follows:
+
+```python
+
+# Define agent
+agent = ChatCompletionAgent(...)
+
+# Generate the agent response(s)
+response = await agent.get_response(messages="user input")
+
+# Generate another response, continuing the conversation thread from the first response.
+response2 = await agent.get_response(messages="user input", thread=response.thread)
+# process agent response(s)
+
+```
+
+Calling the `invoke` method returns an `AsyncIterable` of `AgentResponseItem[ChatMessageContent]`.
 
 ```python
 # Define agent
@@ -326,13 +315,11 @@ async for response in agent.invoke_stream(messages="user input", thread=thread):
 
 ::: zone-end
 
-
-#### How-To:
+### How-To
 
 For an end-to-end example for a `ChatCompletionAgent`, see:
 
 - [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
-
 
 > [!div class="nextstepaction"]
 > [Exploring the OpenAI Assistant Agent](./assistant-agent.md)
