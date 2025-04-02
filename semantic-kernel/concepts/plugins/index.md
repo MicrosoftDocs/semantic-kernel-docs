@@ -103,7 +103,7 @@ public class LightsPlugin
    [Description("Gets a list of lights and their current state")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
-      return lights
+      return lights;
    }
 
    [KernelFunction("get_state")]
