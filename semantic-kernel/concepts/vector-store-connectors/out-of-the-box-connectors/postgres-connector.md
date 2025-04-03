@@ -36,6 +36,21 @@ The connector has the following characteristics.
 | StoragePropertyName supported?    | Yes                                                                                                                              |
 | HybridSearch supported?           | No                                                                                                                               |
 
+## Limitations
+
+> [!IMPORTANT]
+> When initializing `NpgsqlDataSource` manually, it is necessary to call `UseVector` on the `NpgsqlDataSourceBuilder`. This enables vector support. Without this, usage of the VectorStore implementation will fail.
+
+Here is an example of how to call `UseVector`.
+
+```csharp
+NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+dataSourceBuilder.UseVector();
+NpgsqlDataSource dataSource = dataSourceBuilder.Build();
+```
+
+When using the `AddPostgresVectorStore` dependency injection registration method with a connection string, the datasource will be constructed by this method and will automatically have `UseVector` applied.
+
 ## Getting started
 
 Add the Postgres Vector Store connector NuGet package to your project.
