@@ -583,7 +583,7 @@ A complete implementation example:
 # Copyright (c) Microsoft. All rights reserved.
 import asyncio
 
-from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
+from semantic_kernel.agents import AzureAssistantAgent
 
 
 # Simulate a conversation with the agent
@@ -614,7 +614,7 @@ async def main():
     # 4. Create a new thread for use with the assistant
     # If no thread is provided, a new thread will be
     # created and returned with the initial response
-    thread: AssistantAgentThread = None
+    thread = None
 
     try:
         for user_input in USER_INPUTS:
@@ -926,11 +926,17 @@ thread_id = await agent.create_thread()
 
 ### New Way
 ```python
-from semantic_kernel.agents AssistantAgentThread
+from semantic_kernel.agents AssistantAgentThread, AzureAssistantAgent
 
-thread = AssistantAgentThread()
+client, model = AzureAssistantAgent.setup_resources()
 
-async for response in agent.invoke(messages="user input", thread=thread)
+# You may create a thread based on an existing thread id
+# thread = AssistantAgentThread(client=client, thread_id="existing-thread-id")
+# Otherwise, if not specified, a thread will be created during the first invocation
+# and returned as part of the response
+thread = None
+
+async for response in agent.invoke(messages="user input", thread=thread):
     # handle response
     print(response)
     thread = response.thread

@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use the _code-interpreter_ tool of an [`OpenAIAssistantAgent`](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
+In this sample, we will explore how to use the code-interpreter tool of an [`OpenAIAssistantAgent`](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -26,7 +26,7 @@ Before proceeding with feature coding, make sure your development environment is
 
 ::: zone pivot="programming-language-csharp"
 
-Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
+Start by creating a Console project. Then, include the following package references to ensure all required dependencies are available.
 
 To add package dependencies from the command-line use the `dotnet` command:
 
@@ -64,7 +64,7 @@ The `Agent Framework` is experimental and requires warning suppression.  This ma
   </PropertyGroup>
 ```
 
-Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Resources).  Add these files in your project folder and configure to have them copied to the output directory:
+Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from [Semantic Kernel `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Resources).  Add these files in your project folder and configure to have them copied to the output directory:
 
 ```xml
   <ItemGroup>
@@ -90,7 +90,7 @@ from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
 from semantic_kernel.contents import StreamingFileReferenceContent
 ```
 
-Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from the [_Semantic Kernel_ `learn_resources/resources` directory](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources). Add these files to your working directory.
+Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` data files from the [Semantic Kernel `learn_resources/resources` directory](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources). Add these files to your working directory.
 
 ::: zone-end
 
@@ -102,7 +102,7 @@ Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` da
 
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either OpenAI or Azure OpenAI.
 
 ::: zone pivot="programming-language-csharp"
 

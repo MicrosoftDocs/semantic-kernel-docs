@@ -11,11 +11,11 @@ ms.service: semantic-kernel
 # How-To: `ChatCompletionAgent` 
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 ## Overview
 
-In this sample, we will explore configuring a plugin to access _GitHub_ API and provide templatized instructions to a [`ChatCompletionAgent`](../chat-completion-agent.md) to answer questions about a _GitHub_ repository.  The approach will be broken down step-by-step to high-light the key parts of the coding process.  As part of the task, the agent will provide document citations within the response.
+In this sample, we will explore configuring a plugin to access GitHub API and provide templatized instructions to a [`ChatCompletionAgent`](../chat-completion-agent.md) to answer questions about a GitHub repository.  The approach will be broken down step-by-step to high-light the key parts of the coding process.  As part of the task, the agent will provide document citations within the response.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -39,7 +39,7 @@ dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
 dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
 ```
 
-> If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
+> If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
 
@@ -63,7 +63,7 @@ The `Agent Framework` is experimental and requires warning suppression.  This ma
   </PropertyGroup>
 ```
 
-Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubModels.cs`) from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Plugins/GitHub).  Add these files in your project folder.
+Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubModels.cs`) from [Semantic Kernel `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Plugins/GitHub).  Add these files in your project folder.
 
 ::: zone-end
 
@@ -89,7 +89,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from plugins.GithubPlugin.github import GitHubPlugin, GitHubSettings  # noqa: E402
 ```
 
-Additionally, copy the GitHub plug-in and models (`github.py`) from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/plugins/GithubPlugin).  Add these files in your project folder.
+Additionally, copy the GitHub plug-in and models (`github.py`) from [Semantic Kernel `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/plugins/GithubPlugin).  Add these files in your project folder.
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -100,9 +100,9 @@ Additionally, copy the GitHub plug-in and models (`github.py`) from [_Semantic K
 
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_ and also for _GitHub_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either OpenAI or Azure OpenAI and also for GitHub.
 
-> Note: For information on GitHub _Personal Access Tokens_, see: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+> Note: For information on GitHub Personal Access Tokens, see: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -290,7 +290,7 @@ settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
 ### Agent Definition
 
-Finally we are ready to instantiate a `ChatCompletionAgent` with its _Instructions_, associated `Kernel`, and the default _Arguments_ and _Execution Settings_.  In this case, we desire to have the any plugin functions automatically executed.
+Finally we are ready to instantiate a `ChatCompletionAgent` with its Instructions, associated `Kernel`, and the default Arguments and Execution Settings.  In this case, we desire to have the any plugin functions automatically executed.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -339,8 +339,7 @@ agent = ChatCompletionAgent(
         The current date and time is: {{$now}}. 
         """,
     arguments=KernelArguments(
-        settings=AzureChatPromptExecutionSettings(function_choice_behavior=FunctionChoiceBehavior.Auto()),
-        repository="microsoft/semantic-kernel",
+        settings=settings,
     ),
 )
 ```
@@ -352,7 +351,7 @@ agent = ChatCompletionAgent(
 
 ::: zone-end
 
-### The _Chat_ Loop
+### The Chat Loop
 
 At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating a `ChatHistoryAgentThread` object to maintain the conversation state and creating an empty loop.
 
@@ -444,8 +443,6 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(message, agentTh
 
 ::: zone pivot="programming-language-python"
 ```python
-from datetime import datetime
-
 arguments = KernelArguments(
     now=datetime.now().strftime("%Y-%m-%d %H:%M")
 )
@@ -596,13 +593,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from plugins.GithubPlugin.github import GitHubPlugin, GitHubSettings  # noqa: E402
 
-"""
-The following sample demonstrates how to create a simple,
-ChatCompletionAgent to use a GitHub plugin to interact
-with the GitHub API.
-"""
-
-
 async def main():
     kernel = Kernel()
 
@@ -615,8 +605,10 @@ async def main():
     settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
     # Set your GitHub Personal Access Token (PAT) value here
-    gh_settings = GitHubSettings(token="<PAT value>")
+    gh_settings = GitHubSettings(token="")  # nosec
     kernel.add_plugin(plugin=GitHubPlugin(gh_settings), plugin_name="GithubPlugin")
+
+    current_time = datetime.now().isoformat()
 
     # Create the agent
     agent = ChatCompletionAgent(
@@ -631,7 +623,7 @@ async def main():
             
             The repository you are querying is a public repository with the following name: microsoft/semantic-kernel
 
-            The current date and time is: {{$now}}. 
+            The current date and time is: {current_time}. 
             """,
         arguments=KernelArguments(settings=settings),
     )
@@ -647,9 +639,7 @@ async def main():
             is_complete = True
             break
 
-        arguments = KernelArguments(
-            now=datetime.now().strftime("%Y-%m-%d %H:%M")
-        )
+        arguments = KernelArguments(now=datetime.now().strftime("%Y-%m-%d %H:%M"))
 
         async for response in agent.invoke(messages=user_input, thread=thread, arguments=arguments):
             print(f"{response.content}")

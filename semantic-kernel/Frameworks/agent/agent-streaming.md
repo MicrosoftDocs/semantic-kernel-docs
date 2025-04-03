@@ -10,9 +10,6 @@ ms.service: semantic-kernel
 ---
 # How to Stream Agent Responses
 
-> [!IMPORTANT]
-> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
-
 ## What is a Streamed Response?
 
 A streamed response delivers the message content in small, incremental chunks. This approach enhances the user experience by allowing them to view and engage with the message as it unfolds, rather than waiting for the entire response to load. Users can begin processing information immediately, improving the sense of responsiveness and interactivity. As a result, it minimizes delays and keeps users more engaged throughout the communication process.
@@ -54,7 +51,7 @@ A streamed response delivers the message content in small, incremental chunks. T
 
 ## Streaming Agent Invocation
 
-The `Agent Framework` supports _streamed_ responses when using [`AgentChat`](./agent-chat.md) or when directly invoking a [`ChatCompletionAgent`](./chat-completion-agent.md) or [`OpenAIAssistantAgent`](./assistant-agent.md). In either mode, the framework delivers responses asynchronously as they are streamed. Alongside the streamed response, a consistent, non-streamed history is maintained to track the conversation. This ensures both real-time interaction and a reliable record of the conversation's flow.
+The `Agent Framework` supports streamed responses when using [`AgentChat`](./agent-chat.md) or when directly invoking a [`ChatCompletionAgent`](./chat-completion-agent.md) or [`OpenAIAssistantAgent`](./assistant-agent.md). In either mode, the framework delivers responses asynchronously as they are streamed. Alongside the streamed response, a consistent, non-streamed history is maintained to track the conversation. This ensures both real-time interaction and a reliable record of the conversation's flow.
 
 ### Streamed response from `ChatCompletionAgent`
 
@@ -216,6 +213,147 @@ async for response in agent.invoke_stream(messages="user input", thread=thread):
 
 # Delete the thread
 await thread.delete()
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
+## Handling Intermediate Messages with a Streaming Response
+
+The nature of streaming responses allows LLM models to return incremental chunks of text, enabling quicker rendering in a UI or console without waiting for the entire response to complete. Additionally, a caller might want to handle intermediate content, such as results from function calls. This can be achieved by supplying a callback function when invoking the streaming response. The callback function receives complete messages encapsulated within `ChatMessageContent`.
+
+::: zone pivot="programming-language-csharp"
+> Callback documentation for the `AzureAIAgent` is coming soon.
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Configuring the `on_intermediate_message` callback within `agent.invoke_stream(...)` allows the caller to receive intermediate messages generated during the process of formulating the agent's final response.
+
+```python
+import asyncio
+from typing import Annotated
+
+from semantic_kernel.agents import AzureResponsesAgent
+from semantic_kernel.functions import kernel_function
+
+
+# Define a sample plugin for the sample
+class MenuPlugin:
+    """A sample Menu Plugin used for the concept sample."""
+
+    @kernel_function(description="Provides a list of specials from the menu.")
+    def get_specials(self, menu_item: str) -> Annotated[str, "Returns the specials from the menu."]:
+        return """
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        """
+
+    @kernel_function(description="Provides the price of the requested menu item.")
+    def get_item_price(
+        self, menu_item: Annotated[str, "The name of the menu item."]
+    ) -> Annotated[str, "Returns the price of the menu item."]:
+        return "$9.99"
+
+
+# Simulate a conversation with the agent
+USER_INPUTS = [
+    "Hello",
+    "What is the special soup?",
+    "What is the special drink?",
+    "How much is it?",
+    "Thank you",
+]
+
+
+async def main():
+    # 1. Create the client using OpenAI resources and configuration
+    client, model = AzureResponsesAgent.setup_resources()
+
+    # 2. Create a Semantic Kernel agent for the OpenAI Responses API
+    agent = AzureResponsesAgent(
+        ai_model_id=model,
+        client=client,
+        instructions="Answer questions about the menu.",
+        name="Host",
+        plugins=[MenuPlugin()],
+    )
+
+    # 3. Create a thread for the agent
+    # If no thread is provided, a new thread will be
+    # created and returned with the initial response
+    thread = None
+
+    for user_input in USER_INPUTS:
+        print(f"# User: '{user_input}'")
+        first_chunk = True
+        # 4. Invoke the agent for the current message and print the response
+        async for response in agent.invoke_stream(messages=user_input, thread=thread):
+            thread = response.thread
+            if first_chunk:
+                print(f"# {response.name}: ", end="", flush=True)
+                first_chunk = False
+            print(response.content, end="", flush=True)
+        print()
+
+    # Print the intermediate steps
+    print("\nIntermediate Steps:")
+    for msg in intermediate_steps:
+        if any(isinstance(item, FunctionResultContent) for item in msg.items):
+            for fr in msg.items:
+                if isinstance(fr, FunctionResultContent):
+                    print(f"Function Result:> {fr.result} for function: {fr.name}")
+        elif any(isinstance(item, FunctionCallContent) for item in msg.items):
+            for fcc in msg.items:
+                if isinstance(fcc, FunctionCallContent):
+                    print(f"Function Call:> {fcc.name} with arguments: {fcc.arguments}")
+        else:
+            print(f"{msg.role}: {msg.content}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+The following demonstrates sample output from the agent invocation process:
+
+```bash
+Sample Output:
+
+# AuthorRole.USER: 'Hello'
+# Host: Hi there! How can I assist you with the menu today?
+# AuthorRole.USER: 'What is the special soup?'
+# Host: The special soup is Clam Chowder.
+# AuthorRole.USER: 'What is the special drink?'
+# Host: The special drink is Chai Tea.
+# AuthorRole.USER: 'How much is that?'
+# Host: Could you please specify the menu item you are asking about?
+# AuthorRole.USER: 'Thank you'
+# Host: You're welcome! If you have any questions about the menu or need assistance, feel free to ask.
+
+Intermediate Steps:
+AuthorRole.ASSISTANT: Hi there! How can I assist you with the menu today?
+AuthorRole.ASSISTANT: 
+Function Result:> 
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        for function: MenuPlugin-get_specials
+AuthorRole.ASSISTANT: The special soup is Clam Chowder.
+AuthorRole.ASSISTANT: 
+Function Result:> 
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        for function: MenuPlugin-get_specials
+AuthorRole.ASSISTANT: The special drink is Chai Tea.
+AuthorRole.ASSISTANT: Could you please specify the menu item you are asking about?
+AuthorRole.ASSISTANT: You're welcome! If you have any questions about the menu or need assistance, feel free to ask.
 ```
 
 ::: zone-end

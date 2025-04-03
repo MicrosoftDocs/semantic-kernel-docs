@@ -11,14 +11,14 @@ ms.service: semantic-kernel
 # How-To: Coordinate Agent Collaboration using Agent Group Chat
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 ## Overview
 
 In this sample, we will explore how to use `AgentGroupChat` to coordinate collaboration of two different agents working to review and rewrite user provided content.  Each agent is assigned a distinct role:
 
-- **Reviewer**: Reviews and provides direction to _Writer_.
-- **Writer**: Updates user content based on _Reviewer_ input.
+- **Reviewer**: Reviews and provides direction to Writer.
+- **Writer**: Updates user content based on Reviewer input.
 
 The approach will be broken down step-by-step to high-light the key parts of the coding process.
 
@@ -31,7 +31,7 @@ Before proceeding with feature coding, make sure your development environment is
 > [!TIP]
 > This sample uses an optional text file as part of processing. If you'd like to use it, you may download it [here](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/Resources/WomensSuffrage.txt). Place the file in your code working directory.
 
-Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
+Start by creating a Console project. Then, include the following package references to ensure all required dependencies are available.
 
 To add package dependencies from the command-line use the `dotnet` command:
 
@@ -45,7 +45,7 @@ dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
 dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
 ```
 
-> If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
+> If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
 
@@ -109,7 +109,7 @@ from semantic_kernel.functions import KernelFunctionFromPrompt
 
 ::: zone pivot="programming-language-csharp"
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either OpenAI or Azure OpenAI.
 
 ```powershell
 # OpenAI
@@ -391,7 +391,7 @@ RULES:
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
-The _Writer_ agent is similiar, but doesn't require the specification of _Execution Settings_ since it isn't configured with a plug-in.
+The _Writer_ agent is similiar, but doesn't require the specification of Execution Settings since it isn't configured with a plug-in.
 
 Here the _Writer_ is given a single-purpose task, follow direction and rewrite the content.
 

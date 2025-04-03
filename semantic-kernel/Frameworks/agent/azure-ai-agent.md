@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # Exploring the Semantic Kernel `AzureAIAgent`
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 Detailed API documentation related to this discussion is available at:
 
@@ -686,5 +686,161 @@ For practical examples of using an `AzureAIAgent`, see our code samples on GitHu
 
 ::: zone-end
 
+## Handling Intermediate Messages with an `AzureAIAgent`
+
+The Semantic Kernel `AzureAIAgent` is designed to invoke an agent that fulfills user queries or questions. During invocation, the agent may execute tools to derive the final answer. To access intermediate messages produced during this process, callers can supply a callback function that handles instances of `FunctionCallContent` or `FunctionResultContent`.
+
+::: zone pivot="programming-language-csharp"
+> Callback documentation for the `AzureAIAgent` is coming soon.
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Configuring the `on_intermediate_message` callback within `agent.invoke(...)` or `agent.invoke_stream(...)` allows the caller to receive intermediate messages generated during the process of formulating the agent's final response.
+
+```python
+import asyncio
+from typing import Annotated
+
+from azure.identity.aio import DefaultAzureCredential
+
+from semantic_kernel.agents import AzureAIAgent, AzureAIAgentSettings
+from semantic_kernel.contents import ChatMessageContent, FunctionCallContent, FunctionResultContent
+from semantic_kernel.functions import kernel_function
+
+class MenuPlugin:
+    """A sample Menu Plugin used for the concept sample."""
+
+    @kernel_function(description="Provides a list of specials from the menu.")
+    def get_specials(self) -> Annotated[str, "Returns the specials from the menu."]:
+        return """
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        """
+
+    @kernel_function(description="Provides the price of the requested menu item.")
+    def get_item_price(
+        self, menu_item: Annotated[str, "The name of the menu item."]
+    ) -> Annotated[str, "Returns the price of the menu item."]:
+        return "$9.99"
+
+# Define a list to hold callback message content
+intermediate_steps: list[ChatMessageContent] = []
+
+# Define an async method to handle the `on_intermediate_message` callback
+async def handle_intermediate_steps(message: ChatMessageContent) -> None:
+    intermediate_steps.append(message)
+
+async def main():
+    ai_agent_settings = AzureAIAgentSettings.create()
+
+    async with (
+        DefaultAzureCredential() as creds,
+        AzureAIAgent.create_client(
+            credential=creds,
+            conn_str=ai_agent_settings.project_connection_string.get_secret_value(),
+        ) as client,
+    ):
+        # Create agent definition
+        agent_definition = await client.agents.create_agent(
+            model=ai_agent_settings.model_deployment_name,
+            name="<agent-name>",
+            instructions="<agent-instructions>",
+        )
+
+        # Create the AzureAI Agent
+        agent = AzureAIAgent(
+            client=client,
+            definition=agent_definition,
+            plugins=[MenuPlugin()],
+        )
+
+        user_inputs = [
+            "Hello", 
+            "What is the special soup?", 
+            "What is the special drink?", 
+            "How much is that?", 
+            "Thank you",
+        ]
+
+        thread = None
+
+        # Generate the agent response(s)
+        for user_input in user_inputs:
+            print(f"# {AuthorRole.USER}: '{user_input}'")
+            async for response in agent.invoke(
+                messages=user_input,
+                thread=thread,
+                on_intermediate_message=handle_intermediate_steps,
+            ):
+                thread = response.thread
+                print(f"# {response.name}: {response.content}")
+
+        # Delete the thread when it is no longer needed
+        await thread.delete() if thread else None
+
+        # Print the intermediate steps
+        print("\nIntermediate Steps:")
+        for msg in intermediate_steps:
+            if any(isinstance(item, FunctionResultContent) for item in msg.items):
+                for fr in msg.items:
+                    if isinstance(fr, FunctionResultContent):
+                        print(f"Function Result:> {fr.result} for function: {fr.name}")
+            elif any(isinstance(item, FunctionCallContent) for item in msg.items):
+                for fcc in msg.items:
+                    if isinstance(fcc, FunctionCallContent):
+                        print(f"Function Call:> {fcc.name} with arguments: {fcc.arguments}")
+            else:
+                print(f"{msg.role}: {msg.content}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+The following demonstrates sample output from the agent invocation process:
+
+```bash
+Sample Output:
+
+# AuthorRole.USER: 'Hello'
+# Host: Hi there! How can I assist you with the menu today?
+# AuthorRole.USER: 'What is the special soup?'
+# Host: The special soup is Clam Chowder.
+# AuthorRole.USER: 'What is the special drink?'
+# Host: The special drink is Chai Tea.
+# AuthorRole.USER: 'How much is that?'
+# Host: Could you please specify the menu item you are asking about?
+# AuthorRole.USER: 'Thank you'
+# Host: You're welcome! If you have any questions about the menu or need assistance, feel free to ask.
+
+Intermediate Steps:
+AuthorRole.ASSISTANT: Hi there! How can I assist you with the menu today?
+AuthorRole.ASSISTANT: 
+Function Result:> 
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        for function: MenuPlugin-get_specials
+AuthorRole.ASSISTANT: The special soup is Clam Chowder.
+AuthorRole.ASSISTANT: 
+Function Result:> 
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        for function: MenuPlugin-get_specials
+AuthorRole.ASSISTANT: The special drink is Chai Tea.
+AuthorRole.ASSISTANT: Could you please specify the menu item you are asking about?
+AuthorRole.ASSISTANT: You're welcome! If you have any questions about the menu or need assistance, feel free to ask.
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
 > [!div class="nextstepaction"]
-> [Agent Collaboration in Agent Chat](./agent-chat.md)
+> [OpenAI Responses Agent](./responses-agent.md)

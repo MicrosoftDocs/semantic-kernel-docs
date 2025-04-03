@@ -8,6 +8,8 @@
   href: assistant-agent.md
 - name: Azure AI Agent
   href: azure-ai-agent.md
+- name: OpenAI Responses Agent
+  href: responses-agent.md
 - name: Agent Collaboration
   href: agent-chat.md
 - name: Create an Agent from a Template
