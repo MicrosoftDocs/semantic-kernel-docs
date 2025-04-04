@@ -10,6 +10,9 @@ ms.service: semantic-kernel
 ---
 # Exploring the Semantic Kernel `OpenAIAssistantAgent`
 
+> [!IMPORTANT]
+> Single-agent features, such as `OpenAIAssistantAgent`, are in the release candidate stage. These features are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
+
 Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-csharp"
