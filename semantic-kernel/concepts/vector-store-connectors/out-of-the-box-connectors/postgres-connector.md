@@ -17,7 +17,9 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Postgres Vector Store connector can be used to access and manage data in Postgres. The connector has the following characteristics.
+The Postgres Vector Store connector can be used to access and manage data in Postgres and also supports [Neon Serverless Postgres](https://neon.tech/).
+
+The connector has the following characteristics.
 
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
@@ -33,6 +35,21 @@ The Postgres Vector Store connector can be used to access and manage data in Pos
 | IsFullTextSearchable supported?   | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
 | HybridSearch supported?           | No                                                                                                                               |
+
+## Limitations
+
+> [!IMPORTANT]
+> When initializing `NpgsqlDataSource` manually, it is necessary to call `UseVector` on the `NpgsqlDataSourceBuilder`. This enables vector support. Without this, usage of the VectorStore implementation will fail.
+
+Here is an example of how to call `UseVector`.
+
+```csharp
+NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+dataSourceBuilder.UseVector();
+NpgsqlDataSource dataSource = dataSourceBuilder.Build();
+```
+
+When using the `AddPostgresVectorStore` dependency injection registration method with a connection string, the datasource will be constructed by this method and will automatically have `UseVector` applied.
 
 ## Getting started
 

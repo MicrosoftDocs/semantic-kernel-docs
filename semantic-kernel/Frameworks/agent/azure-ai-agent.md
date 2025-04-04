@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # Exploring the Semantic Kernel `AzureAIAgent`
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 Detailed API documentation related to this discussion is available at:
 
@@ -149,7 +149,7 @@ AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-stri
 AgentsClient agentsClient = client.GetAgentsClient();
 
 // 1. Define an agent on the Azure AI agent service
-Agent definition = agentsClient.CreateAgentAsync(
+Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -197,13 +197,16 @@ async with (
 ## Interacting with an `AzureAIAgent`
 
 Interaction with the `AzureAIAgent` is straightforward. The agent maintains the conversation history automatically using a thread.
-The specifics of the _Azure AI Agent thread_ is abstracted away via the `AzureAIAgentThread` class, which is an implementation of `AgentThread`.
+::: zone pivot="programming-language-csharp"
+The specifics of the _Azure AI Agent thread_ is abstracted away via the `Microsoft.SemanticKernel.Agents.AzureAI.AzureAIAgentThread` class, which is an implementation of `Microsoft.SemanticKernel.Agents.AgentThread`.
+
+> [!IMPORTANT]
+> Note that the Azure AI Agents SDK has the `Azure.AI.Projects.AgentThread` class. It should not be confused with `Microsoft.SemanticKernel.Agents.AgentThread`, which is the common Semantic Kernel Agents abstraction for all thread types.
 
 The `AzureAIAgent` currently only supports threads of type `AzureAIAgentThread`.
 
-::: zone pivot="programming-language-csharp"
 ```c#
-AgentThread agentThread = new AzureAIAgentThread(agentsClient);
+Microsoft.SemanticKernel.Agents.AgentThread agentThread = new AzureAIAgentThread(agent.Client);
 try
 {
     ChatMessageContent message = new(AuthorRole.User, "<your user input>");
@@ -215,12 +218,15 @@ try
 finally
 {
     await agentThread.DeleteAsync();
-    await this.AgentsClient.DeleteAgentAsync(agent.Id);
+    await agent.Client.DeleteAgentAsync(agent.Id);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+The specifics of the _Azure AI Agent thread_ is abstracted away via the `AzureAIAgentThread` class, which is an implementation of `AgentThread`.
+
 ```python
 USER_INPUTS = ["Hello", "What's your name?"]
 
@@ -239,7 +245,7 @@ Optionally, an agent may be invoked as:
 
 ```python
 for user_input in USER_INPUTS:
-    async for content in agent.invoke(message=user_input, thread=thread):
+    async for content in agent.invoke(messages=user_input, thread=thread):
         print(content.content)
         thread = response.thread
 ```
@@ -295,11 +301,11 @@ Semantic Kernel supports extending an `AzureAIAgent` with custom plugins for enh
 
 ::: zone pivot="programming-language-csharp"
 ```c#
-Plugin plugin = KernelPluginFactory.CreateFromType<YourPlugin>();
+KernelPlugin plugin = KernelPluginFactory.CreateFromType<YourPlugin>();
 AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
 AgentsClient agentsClient = client.GetAgentsClient();
 
-Agent definition = agentsClient.CreateAgentAsync(
+Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -360,7 +366,7 @@ Code Interpreter allows the agents to write and run Python code in a sandboxed e
 AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
 AgentsClient agentsClient = client.GetAgentsClient();
 
-Agent definition = agentsClient.CreateAgentAsync(
+Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -412,7 +418,7 @@ File search augments agents with knowledge from outside its model ([Azure AI Age
 AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
 AgentsClient agentsClient = client.GetAgentsClient();
 
-Agent definition = agentsClient.CreateAgentAsync(
+Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -425,7 +431,7 @@ Agent definition = agentsClient.CreateAgentAsync(
             {
                 VectorStoreIds = { ... },
             }
-        }));
+        });
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
@@ -465,7 +471,7 @@ AgentsClient agentsClient = client.GetAgentsClient();
 
 string apiJsonSpecification = ...; // An Open API JSON specification
 
-Agent definition = agentsClient.CreateAgentAsync(
+Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -476,7 +482,7 @@ Agent definition = agentsClient.CreateAgentAsync(
             "<api description>", 
             BinaryData.FromString(apiJsonSpecification), 
             new OpenApiAnonymousAuthDetails())
-    ],
+    ]
 );
 
 AzureAIAgent agent = new(definition, agentsClient);
@@ -535,20 +541,20 @@ AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-stri
 AgentsClient agentsClient = client.GetAgentsClient();
 
 ConnectionsClient cxnClient = client.GetConnectionsClient();
-ListConnectionsResponse searchConnections = await cxnClient.GetConnectionsAsync(AzureAIP.ConnectionType.AzureAISearch);
+ListConnectionsResponse searchConnections = await cxnClient.GetConnectionsAsync(Azure.AI.Projects.ConnectionType.AzureAISearch);
 ConnectionResponse searchConnection = searchConnections.Value[0];
 
-Agent definition = agentsClient.CreateAgentAsync(
+Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
     instructions: "<agent instructions>",
-    tools: [new AzureAIP.AzureAISearchToolDefinition()],
+    tools: [new Azure.AI.Projects.AzureAISearchToolDefinition()],
     toolResources: new()
     {
         AzureAISearch = new()
         {
-            IndexList = { new AzureAIP.IndexResource(searchConnection.Id, "<your index name>") }
+            IndexList = { new Azure.AI.Projects.IndexResource(searchConnection.Id, "<your index name>") }
         }
     });
 
@@ -600,7 +606,7 @@ An existing agent can be retrieved and reused by specifying its assistant ID:
 ::: zone pivot="programming-language-csharp"
 
 ```c#
-Agent definition = agentsClient.GetAgentAsync("<your agent id>");
+Azure.AI.Projects.Agent definition = await agentsClient.GetAgentAsync("<your agent id>");
 AzureAIAgent agent = new(definition, agentsClient);
 ```
 
@@ -686,5 +692,161 @@ For practical examples of using an `AzureAIAgent`, see our code samples on GitHu
 
 ::: zone-end
 
+## Handling Intermediate Messages with an `AzureAIAgent`
+
+The Semantic Kernel `AzureAIAgent` is designed to invoke an agent that fulfills user queries or questions. During invocation, the agent may execute tools to derive the final answer. To access intermediate messages produced during this process, callers can supply a callback function that handles instances of `FunctionCallContent` or `FunctionResultContent`.
+
+::: zone pivot="programming-language-csharp"
+> Callback documentation for the `AzureAIAgent` is coming soon.
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Configuring the `on_intermediate_message` callback within `agent.invoke(...)` or `agent.invoke_stream(...)` allows the caller to receive intermediate messages generated during the process of formulating the agent's final response.
+
+```python
+import asyncio
+from typing import Annotated
+
+from azure.identity.aio import DefaultAzureCredential
+
+from semantic_kernel.agents import AzureAIAgent, AzureAIAgentSettings
+from semantic_kernel.contents import ChatMessageContent, FunctionCallContent, FunctionResultContent
+from semantic_kernel.functions import kernel_function
+
+class MenuPlugin:
+    """A sample Menu Plugin used for the concept sample."""
+
+    @kernel_function(description="Provides a list of specials from the menu.")
+    def get_specials(self) -> Annotated[str, "Returns the specials from the menu."]:
+        return """
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        """
+
+    @kernel_function(description="Provides the price of the requested menu item.")
+    def get_item_price(
+        self, menu_item: Annotated[str, "The name of the menu item."]
+    ) -> Annotated[str, "Returns the price of the menu item."]:
+        return "$9.99"
+
+# Define a list to hold callback message content
+intermediate_steps: list[ChatMessageContent] = []
+
+# Define an async method to handle the `on_intermediate_message` callback
+async def handle_intermediate_steps(message: ChatMessageContent) -> None:
+    intermediate_steps.append(message)
+
+async def main():
+    ai_agent_settings = AzureAIAgentSettings.create()
+
+    async with (
+        DefaultAzureCredential() as creds,
+        AzureAIAgent.create_client(
+            credential=creds,
+            conn_str=ai_agent_settings.project_connection_string.get_secret_value(),
+        ) as client,
+    ):
+        # Create agent definition
+        agent_definition = await client.agents.create_agent(
+            model=ai_agent_settings.model_deployment_name,
+            name="<agent-name>",
+            instructions="<agent-instructions>",
+        )
+
+        # Create the AzureAI Agent
+        agent = AzureAIAgent(
+            client=client,
+            definition=agent_definition,
+            plugins=[MenuPlugin()],
+        )
+
+        user_inputs = [
+            "Hello", 
+            "What is the special soup?", 
+            "What is the special drink?", 
+            "How much is that?", 
+            "Thank you",
+        ]
+
+        thread = None
+
+        # Generate the agent response(s)
+        for user_input in user_inputs:
+            print(f"# {AuthorRole.USER}: '{user_input}'")
+            async for response in agent.invoke(
+                messages=user_input,
+                thread=thread,
+                on_intermediate_message=handle_intermediate_steps,
+            ):
+                thread = response.thread
+                print(f"# {response.name}: {response.content}")
+
+        # Delete the thread when it is no longer needed
+        await thread.delete() if thread else None
+
+        # Print the intermediate steps
+        print("\nIntermediate Steps:")
+        for msg in intermediate_steps:
+            if any(isinstance(item, FunctionResultContent) for item in msg.items):
+                for fr in msg.items:
+                    if isinstance(fr, FunctionResultContent):
+                        print(f"Function Result:> {fr.result} for function: {fr.name}")
+            elif any(isinstance(item, FunctionCallContent) for item in msg.items):
+                for fcc in msg.items:
+                    if isinstance(fcc, FunctionCallContent):
+                        print(f"Function Call:> {fcc.name} with arguments: {fcc.arguments}")
+            else:
+                print(f"{msg.role}: {msg.content}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+The following demonstrates sample output from the agent invocation process:
+
+```bash
+Sample Output:
+
+# AuthorRole.USER: 'Hello'
+# Host: Hi there! How can I assist you with the menu today?
+# AuthorRole.USER: 'What is the special soup?'
+# Host: The special soup is Clam Chowder.
+# AuthorRole.USER: 'What is the special drink?'
+# Host: The special drink is Chai Tea.
+# AuthorRole.USER: 'How much is that?'
+# Host: Could you please specify the menu item you are asking about?
+# AuthorRole.USER: 'Thank you'
+# Host: You're welcome! If you have any questions about the menu or need assistance, feel free to ask.
+
+Intermediate Steps:
+AuthorRole.ASSISTANT: Hi there! How can I assist you with the menu today?
+AuthorRole.ASSISTANT: 
+Function Result:> 
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        for function: MenuPlugin-get_specials
+AuthorRole.ASSISTANT: The special soup is Clam Chowder.
+AuthorRole.ASSISTANT: 
+Function Result:> 
+        Special Soup: Clam Chowder
+        Special Salad: Cobb Salad
+        Special Drink: Chai Tea
+        for function: MenuPlugin-get_specials
+AuthorRole.ASSISTANT: The special drink is Chai Tea.
+AuthorRole.ASSISTANT: Could you please specify the menu item you are asking about?
+AuthorRole.ASSISTANT: You're welcome! If you have any questions about the menu or need assistance, feel free to ask.
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
 > [!div class="nextstepaction"]
-> [Agent Collaboration in Agent Chat](./agent-chat.md)
+> [Explore the OpenAI Responses Agent](./responses-agent.md)
