@@ -12,6 +12,10 @@ ms.service: semantic-kernel
 
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+> [!WARNING]
+> Support for custom mappers may be deprecated in future, since filtering and target property selection is not able to target the top level mapped types.
+
+::: zone pivot="programming-language-csharp"
 
 In this how to, we will show how you can replace the default mapper for a vector store record collection with your own mapper.
 
@@ -37,18 +41,10 @@ All Vector Store connector implementations allow you to provide a custom mapper.
 The underlying data stores of each Vector Store connector have different ways of storing data. Therefore what you are mapping to on the storage side may
 differ for each connector.
 
-::: zone pivot="programming-language-csharp"
 E.g. if using the Qdrant connector, the storage type is a `PointStruct` class provided by the Qdrant SDK. If using the Redis JSON connector, the storage type
 is a `string` key and a `JsonNode`, while if using a JSON HashSet connector, the storage type is a `string` key and a `HashEntry` array.
-::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
-::: zone pivot="programming-language-java"
-::: zone-end
 
 If you want to do custom mapping, and you want to use multiple connector types, you will therefore need to implement a mapper for each connector type.
-
-::: zone pivot="programming-language-csharp"
 
 ## Creating the data model
 
@@ -204,18 +200,15 @@ When using `IVectorStore` to get `IVectorStoreRecordCollection` object instances
 the `GetCollection` method. This is because custom mappers differ for each Vector Store type, and would make it impossible to use `IVectorStore`
 to communicate with any vector store implementation.
 
-It is however possible to provide a factory when constructing a Vector Store implementation. This can be used to customize `IVectorStoreRecordCollection`
-instances as they are created.
+It is however possible to override the default implementation of `GetCollection` and provide your own custom implementation of the vector store.
 
-Here is an example of such a factory, which checks if `CreateCollection` was called with the product definition and data type, and if so
-injects the custom mapper and switches on named vectors mode.
+Here is an example where we inherit from the `QdrantVectorStore` and override the `GetCollection` method to do the custom construction.
 
 ```csharp
-public class QdrantCollectionFactory(VectorStoreRecordDefinition productDefinition) : IQdrantVectorStoreRecordCollectionFactory
+private sealed class QdrantCustomVectorStore(QdrantClient qdrantClient, VectorStoreRecordDefinition productDefinition)
+    : QdrantVectorStore(qdrantClient)
 {
-    public IVectorStoreRecordCollection<TKey, TRecord> CreateVectorStoreRecordCollection<TKey, TRecord>(QdrantClient qdrantClient, string name, VectorStoreRecordDefinition? vectorStoreRecordDefinition)
-        where TKey : notnull
-        where TRecord : class
+    public override IVectorStoreRecordCollection<TKey, TRecord> GetCollection<TKey, TRecord>(string name, VectorStoreRecordDefinition? vectorStoreRecordDefinition = null)
     {
         // If the record definition is the product definition and the record type is the product data
         // model, inject the custom mapper into the collection options.
@@ -233,39 +226,30 @@ public class QdrantCollectionFactory(VectorStoreRecordDefinition productDefiniti
             return customCollection!;
         }
 
-        // Otherwise, just create a standard collection with the default mapper.
-        var collection = new QdrantVectorStoreRecordCollection<TRecord>(
-            qdrantClient,
-            name,
-            new()
-            {
-                VectorStoreRecordDefinition = vectorStoreRecordDefinition
-            }) as IVectorStoreRecordCollection<TKey, TRecord>;
-        return collection!;
+        // Otherwise, just create a standard collection.
+        return base.GetCollection<TKey, TRecord>(name, vectorStoreRecordDefinition);
     }
 }
 ```
 
-To use the collection factory, pass it to the Vector Store when constructing it, or when registering it with the dependency injection container.
+To use the replacement vector store, register it with your dependency injection container or use just use it directly as you would a regular `QdrantVectorStore`.
 
 ```csharp
 // When registering with the dependency injection container on the kernel builder.
-kernelBuilder.AddQdrantVectorStore(
-    "localhost",
-    options: new()
+kernelBuilder.Services.AddTransient<IVectorStore>(
+    (sp) =>
     {
-        VectorStoreCollectionFactory = new QdrantCollectionFactory(productDefinition)
+        return new QdrantCustomVectorStore(
+            new QdrantClient("localhost"),
+            productDefinition);
     });
 ```
 
 ```csharp
 // When constructing the Vector Store instance directly.
-var vectorStore = new QdrantVectorStore(
+var vectorStore = new QdrantCustomVectorStore(
     new QdrantClient("localhost"),
-    new()
-    {
-        VectorStoreCollectionFactory = new QdrantCollectionFactory(productDefinition)
-    });
+    productDefinition);
 ```
 
 Now you can use the vector store as normal to get a collection.
