@@ -313,5 +313,5 @@ The [`ChatCompletionAgent`](./chat-completion-agent.md) is designed around any S
 
 
 > [!div class="nextstepaction"]
-> [Exploring Chat Completion Agent](./chat-completion-agent.md)
+> [Explore the Common Agent Invocation API](./agent-api.md)
 

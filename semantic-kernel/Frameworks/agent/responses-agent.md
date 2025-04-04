@@ -21,7 +21,8 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-python"
 
-> Updated Python API documentation is coming soon.
+- [`AzureResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_responses_agent.azureresponsesagent)
+- [`OpenAIResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_responses_agent.openairesponsesagent)
 
 ::: zone-end
 
@@ -336,5 +337,5 @@ AuthorRole.ASSISTANT: You're welcome! If you have any questions about the menu o
 ::: zone-end
 
 > [!div class="nextstepaction"]
-> [Agent Collaboration in Agent Chat](./agent-chat.md)
+> [Explore Agent Collaboration in Agent Chat](./agent-chat.md)
 

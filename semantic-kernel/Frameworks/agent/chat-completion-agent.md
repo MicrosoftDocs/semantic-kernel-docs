@@ -169,7 +169,7 @@ ChatCompletionAgent agent =
             new OpenAIPromptExecutionSettings() 
             { 
               ServiceId = "service-2" // The target service-identifier.
-            });
+            })
     };
 ```
 
@@ -463,4 +463,4 @@ For an end-to-end example for a `ChatCompletionAgent`, see:
 - [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
 
 > [!div class="nextstepaction"]
-> [Exploring the OpenAI Assistant Agent](./assistant-agent.md)
+> [Explore the OpenAI Assistant Agent](./assistant-agent.md)

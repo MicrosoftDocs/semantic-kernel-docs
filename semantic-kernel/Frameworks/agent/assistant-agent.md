@@ -84,7 +84,7 @@ Creating an `OpenAIAssistant` requires first creating a client to be able to tal
 ```csharp
 AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
 Assistant assistant =
-    await this.AssistantClient.CreateAssistantAsync(
+    await client.CreateAssistantAsync(
         "<model name>",
         "<agent name>",
         instructions: "<agent instructions>");
@@ -149,7 +149,7 @@ For .NET, the agent identifier is exposed as a `string` via the  property define
 
 ```csharp
 AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
-Assistant assistant = await this.AssistantClient.GetAssistantAsync("<assistant id>");
+Assistant assistant = await client.GetAssistantAsync("<assistant id>");
 OpenAIAssistantAgent agent = new(assistant, client);
 ```
 ::: zone-end
@@ -225,7 +225,7 @@ You can also invoke the `OpenAIAssistantAgent` with an `AgentThread` that you cr
 OpenAIAssistantAgent agent = ...;
 
 // Create a thread with some custom metadata.
-AgentThread agentThread = new OpenAIAssistantAgentThread(this.AssistantClient, metadata: myMetadata);
+AgentThread agentThread = new OpenAIAssistantAgentThread(client, metadata: myMetadata);
 
 // Generate the agent response(s)
 await foreach (ChatMessageContent response in agent.InvokeAsync(new ChatMessageContent(AuthorRole.User, "<user input>"), agentThread))
@@ -241,7 +241,7 @@ You can also create an `OpenAIAssistantAgentThread` that resumes an earlier conv
 
 ```csharp
 // Create a thread with an existing thread id.
-AgentThread agentThread = new OpenAIAssistantAgentThread(this.AssistantClient, "existing-thread-id");
+AgentThread agentThread = new OpenAIAssistantAgentThread(client, "existing-thread-id");
 ```
 
 ::: zone-end
@@ -286,7 +286,7 @@ For .NET, the agent identifier is exposed as a `string` via the [`Agent.Id`](/do
 
 ```csharp
 AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
-Assistant assistant = await this.AssistantClient.DeleteAssistantAsync("<assistant id>");
+await client.DeleteAssistantAsync("<assistant id>");
 ```
 ::: zone-end
 
@@ -462,5 +462,5 @@ For an end-to-end example for a `OpenAIAssistantAgent`, see:
 
 
 > [!div class="nextstepaction"]
-> [Exploring the Azure AI Agent](./azure-ai-agent.md)
+> [Explore the Azure AI Agent](./azure-ai-agent.md)
 

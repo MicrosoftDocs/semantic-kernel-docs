@@ -2,6 +2,8 @@
   href: index.md
 - name: Architecture
   href: agent-architecture.md
+- name: Common Agent Invocation API
+  href: agent-api.md
 - name: Chat Completion Agent
   href: chat-completion-agent.md
 - name: OpenAI Assistant Agent

@@ -257,19 +257,23 @@ agent = ChatCompletionAgent(
     arguments=KernelArguments(topic="Dog", length="2"),
 )
 
-# Create a chat history to maintain the conversation state
-chat = ChatHistory()
+# Create a thread to maintain the conversation state
+# If no threaded is created, a thread will be returned
+# with the initial response
+thread = None
 
 override_arguments = KernelArguments(topic="Cat", length="3")
 
 # Two ways to get a response from the agent
 
 # Get the response which returns a ChatMessageContent directly
-response = await agent.get_response(chat, arguments=override_arguments)
+response = await agent.get_response(messages="user input", arguments=override_arguments)
+thread = response.thread
 
 # or use the invoke method to return an AsyncIterable of ChatMessageContent
-async for response in agent.invoke(chat, arguments=override_arguments):
+async for response in agent.invoke(messages="user input", arguments=override_arguments):
     # process agent response(s)...
+    thread = response.thread
 ```
 
 ::: zone-end

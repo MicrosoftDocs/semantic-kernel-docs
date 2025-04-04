@@ -409,6 +409,12 @@ AgentGroupChat chat =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Python Selection Strategy API:
+- [`SelectionStrategy` Base Class](/python/api/semantic-kernel/semantic_kernel.agents.strategies.selection.selection_strategy.selectionstrategy)
+- [`SequentialSelectionStrategy`](/python/api/semantic-kernel/semantic_kernel.agents.strategies.selection.sequential_selection_strategy.sequentialselectionstrategy)
+- [`KernelFunctionSelectionStrategy`](/python/api/semantic-kernel/semantic_kernel.agents.strategies.kernelfunctionselectionstrategy)
+
 ```python
 REVIEWER_NAME = "Reviewer"
 WRITER_NAME = "Writer"
@@ -474,7 +480,7 @@ This strategy is defined by a base class that can be extended to implement custo
 
 ::: zone pivot="programming-language-csharp"
 
-.NET Selection Strategy API:
+.NET Termination Strategy API:
 - [`TerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.terminationstrategy)
 - [`RegexTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.regexterminationstrategy)
 - [`KernelFunctionSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
@@ -542,6 +548,13 @@ AgentGroupChat chat =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Python Termination Strategy API:
+- [`TerminationStrategy` Base Class](/python/api/semantic-kernel/semantic_kernel.agents.strategies.termination.termination_strategy.terminationstrategy)
+- [`KernelFunctionTerminationStrategy`](/python/api/semantic-kernel/semantic_kernel.agents.strategies.termination.kernel_function_termination_strategy.kernelfunctionterminationstrategy)
+- [`AggregatorTerminationStrategy`](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/agents/strategies/termination/aggregator_termination_strategy.py#L27)
+
+
 ```python
 REVIEWER_NAME = "Reviewer"
 WRITER_NAME = "Writer"

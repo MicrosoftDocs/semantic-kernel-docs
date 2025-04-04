@@ -637,7 +637,7 @@ if __name__ == "__main__":
 
 ## Message Inputs for Agent Invocation
 
-Previous implementations allowed only a single message input to methods like `get_response(...)`, `invoke(...)`, and `invoke_stream(...)`. We've now updated these methods to support multiple `messages (str | ChatMessageContent | list[str | ChatMessageContent])`.
+Previous implementations allowed only a single message input to methods like `get_response(...)`, `invoke(...)`, and `invoke_stream(...)`. We've now updated these methods to support multiple `messages (str | ChatMessageContent | list[str | ChatMessageContent])`. Message inputs need to be passed in with the `messages` keyword argument, such as `agent.get_response(messages="user input")` or `agent.invoke(messages="user input")`.
 
 Agent invocation methods need updates as follows:
 
