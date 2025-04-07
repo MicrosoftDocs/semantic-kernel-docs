@@ -52,7 +52,7 @@ To proceed with developing an `OpenAIAIAssistantAgent`, configure your developme
 Add the `Microsoft.SemanticKernel.Agents.OpenAI` package to your project:
 
 ```pwsh
-dotnet add package Microsoft.SemanticKernel.Agents.AzureAI --prerelease
+dotnet add package Microsoft.SemanticKernel.Agents.OpenAI --prerelease
 ```
 
 You may also want to include the `Azure.Identity` package:
