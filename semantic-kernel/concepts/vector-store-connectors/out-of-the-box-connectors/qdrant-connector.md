@@ -222,7 +222,7 @@ collection = QdrantCollection(collection_name="skhotels", data_model_type=hotel)
 
 ## Serialization
 
-The Qdrant connector uses a model called `PointStruct` for reading and writing to the store. This can be imported from `from qdrant_client.models import PointStruct`. The serialization methods expects a output of a list of PointStruct objects, and the deserialization method recieves a list of PointStruct objects.
+The Qdrant connector uses a model called `PointStruct` for reading and writing to the store. This can be imported from `from qdrant_client.models import PointStruct`. The serialization methods expects a output of a list of PointStruct objects, and the deserialization method receives a list of PointStruct objects.
 
 There are some special considerations for this that have to do with named or unnamed vectors, see below.
 

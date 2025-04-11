@@ -69,8 +69,8 @@ one vector property, one must be chosen.
 
 ## `VectorSearchOptions` change to generic type
 
-The `VectorSearchOptions` class is changing to `VectorSearchOptions<TRecord>`, to accomodate the
-LINQ based filtering and new property selectors metioned above.
+The `VectorSearchOptions` class is changing to `VectorSearchOptions<TRecord>`, to accommodate the
+LINQ based filtering and new property selectors mentioned above.
 
 If you are currently constructing the options class without providing the name of the options class
 there will be no change.  E.g. `VectorizedSearchAsync(embedding, new() { Top = 5 })`.

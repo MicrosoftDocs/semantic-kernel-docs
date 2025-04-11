@@ -21,7 +21,7 @@ Built for extensibility, the Process Framework supports diverse operational patt
 
 ## Getting Started
 
-The Sematic Kernel Process Framework can be used to infuse AI into just about any business process you can think of. As an illustrative example to get started, let's look at building a process for generating documentation for a new product.
+The Semantic Kernel Process Framework can be used to infuse AI into just about any business process you can think of. As an illustrative example to get started, let's look at building a process to generate documentation for a new product.
 
 Before we get started, make sure you have the required Semantic Kernel packages installed:
 
