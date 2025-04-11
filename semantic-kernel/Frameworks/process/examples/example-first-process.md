@@ -28,7 +28,7 @@ Before we get started, make sure you have the required Semantic Kernel packages 
 ::: zone pivot="programming-language-csharp"
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Process.LocalRuntime --version 1.33.0-alpha
+dotnet add package Microsoft.SemanticKernel.Process.LocalRuntime --version 1.46.0-alpha
 ```
 
 ::: zone-end
@@ -46,9 +46,9 @@ In this example, we will utilize the Semantic Kernel Process Framework to develo
 
 We will start by modeling the documentation process with a very basic flow:
 
-1. Gather information about the product.
-1. Ask an LLM to generate documentation from the information gathered in step 1.
-1. Publish the documentation.
+1. `GatherProductInfoStep`: Gather information about the product.
+1. `GenerateDocumentationStep`: Ask an LLM to generate documentation from the information gathered in step 1.
+1. `PublishDocumentationStep`: Publish the documentation.
 
 ![Flow diagram of our first process: A[Request Feature Documentation] --> B[Ask LLM To Write Documentation] --> C[Publish Documentation To Public]](../../../media/first-process-flow.png)
 
@@ -115,20 +115,30 @@ public class GenerateDocumentationStep : KernelProcessStep<GeneratedDocumentatio
     [KernelFunction]
     public async Task GenerateDocumentationAsync(Kernel kernel, KernelProcessStepContext context, string productInfo)
     {
-        Console.WriteLine($"{nameof(GenerateDocumentationStep)}:\n\tGenerating documentation for provided productInfo...");
+        Console.WriteLine($"[{nameof(GenerateDocumentationStep)}]:\tGenerating documentation for provided productInfo...");
 
         // Add the new product info to the chat history
-        this._state.ChatHistory!.AddUserMessage($"Product Info:\n\n{productInfo}");
+        this._state.ChatHistory!.AddUserMessage($"Product Info:\n{productInfo.Title} - {productInfo.Content}");
 
         // Get a response from the LLM
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
         var generatedDocumentationResponse = await chatCompletionService.GetChatMessageContentAsync(this._state.ChatHistory!);
 
-        await context.EmitEventAsync("DocumentationGenerated", generatedDocumentationResponse.Content!.ToString());
+        DocumentInfo generatedContent = new()
+        {
+            Id = Guid.NewGuid().ToString(),
+            Title = $"Generated document - {productInfo.Title}",
+            Content = generatedDocumentationResponse.Content!,
+        };
+
+        this._state!.LastGeneratedDocument = generatedContent;
+
+        await context.EmitEventAsync("DocumentationGenerated", generatedContent);
     }
 
     public class GeneratedDocumentationState
     {
+        public DocumentInfo LastGeneratedDocument { get; set; } = new();
         public ChatHistory? ChatHistory { get; set; }
     }
 }
@@ -137,17 +147,27 @@ public class GenerateDocumentationStep : KernelProcessStep<GeneratedDocumentatio
 public class PublishDocumentationStep : KernelProcessStep
 {
     [KernelFunction]
-    public void PublishDocumentation(string docs)
+    public DocumentInfo PublishDocumentation(DocumentInfo document)
     {
         // For example purposes we just write the generated docs to the console
-        Console.WriteLine($"{nameof(PublishDocumentationStep)}:\n\tPublishing product documentation:\n\n{docs}");
+        Console.WriteLine($"[{nameof(PublishDocumentationStep)}]:\tPublishing product documentation approved by user: \n{document.Title}\n{document.Content}");
+        return document;
     }
 }
+
+// Custom classes must be serializable
+public class DocumentInfo
+{
+    public string Id { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+}
+
 ```
 
 The code above defines the three steps we need for our Process. There are a few points to call out here:
 - In Semantic Kernel, a `KernelFunction` defines a block of code that is invocable by native code or by an LLM. In the case of the Process framework, `KernelFunction`s are the invocable members of a Step and each step requires at least one KernelFunction to be defined.
-- The Process Framework has support for stateless and stateful steps. Stateful steps automatically checkpoint their progress and maintain state over multiple invocations. The `GenerateDocumentationStep` provides an example of this where the `GeneratedDocumentationState` class is used to persist the `ChatHistory` object.
+- The Process Framework has support for stateless and stateful steps. Stateful steps automatically checkpoint their progress and maintain state over multiple invocations. The `GenerateDocumentationStep` provides an example of this where the `GeneratedDocumentationState` class is used to persist the `ChatHistory` and `LastGeneratedDocument` object.
 - Steps can manually emit events by calling `EmitEventAsync` on the `KernelProcessStepContext` object. To get an instance of `KernelProcessStepContext` just add it as a parameter on your KernelFunction and the framework will automatically inject it.
 ::: zone-end
 
@@ -291,7 +311,7 @@ This is where the routing of events from step to step are defined. In this case 
     - Finally, when the `docsGenerationStep` finishes running, send the returned object to the `docsPublishStep` step.
 
 > [!TIP]
-> **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel and the step context which are special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `docs` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters, in these advanced scenarios you need to specify the target function and parameter.
+> **_Event Routing in Process Framework:_** You may be wondering how events that are sent to steps are routed to KernelFunctions within the step. In the code above, each step has only defined a single KernelFunction and each KernelFunction has only a single parameter (other than Kernel and the step context which are special, more on that later). When the event containing the generated documentation is sent to the `docsPublishStep` it will be passed to the `document` parameter of the `PublishDocumentation` KernelFunction of the `docsGenerationStep` step because there is no other choice. However, steps can have multiple KernelFunctions and KernelFunctions can have multiple parameters, in these advanced scenarios you need to specify the target function and parameter.
 
 ::: zone-end
 
