@@ -19,7 +19,7 @@ As we transition some agents from the experimental stage to the release candidat
 
 In version 1.43.0 we are releasing a new common agent invocation API, that will allow all agent types to be invoked via a common API.
 
-To enable this new API we are introducing the concept of an `AgentThread`, which represents a conversation thread and abstracts away the different thread management requirements of different agent types. For some agent types it will also, in future, allow different thread imlementations to be used with the same agent.
+To enable this new API we are introducing the concept of an `AgentThread`, which represents a conversation thread and abstracts away the different thread management requirements of different agent types. For some agent types it will also, in future, allow different thread implementations to be used with the same agent.
 
 The common `Invoke` methods that we are introducing allow you to provide the message(s) that you want to pass to the agent and an optional `AgentThread`. If an `AgentThread` is provided, this will continue the conversation already on the `AgentThread`. If no `AgentThread` is provided, a new default thread will be created and returned as part of the response.
 

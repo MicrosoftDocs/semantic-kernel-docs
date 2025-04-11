@@ -94,7 +94,7 @@ internal class TextParagraph
 Note that we are passing the value `1536` to the `VectorStoreRecordVectorAttribute`. This is the dimension size of the vector and has to match the size of vector that your chosen embedding generator produces.
 
 > [!TIP]
-> For more information on how to annotate your data model and what additional options are available for each attribute, refer to [definining your data model](../../../concepts/vector-store-connectors/defining-your-data-model.md).
+> For more information on how to annotate your data model and what additional options are available for each attribute, refer to [defining your data model](../../../concepts/vector-store-connectors/defining-your-data-model.md).
 
 ## Read the paragraphs in the document
 

@@ -391,7 +391,7 @@ RULES:
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
-The _Writer_ agent is similiar, but doesn't require the specification of Execution Settings since it isn't configured with a plug-in.
+The _Writer_ agent is similar, but doesn't require the specification of Execution Settings since it isn't configured with a plug-in.
 
 Here the _Writer_ is given a single-purpose task, follow direction and rewrite the content.
 
@@ -402,7 +402,7 @@ ChatCompletionAgent agentWriter =
         Name = WriterName,
         Instructions =
             """
-            Your sole responsiblity is to rewrite content according to review suggestions.
+            Your sole responsibility is to rewrite content according to review suggestions.
 
             - Always apply all review direction.
             - Always revise the content in its entirety without explanation.
@@ -414,7 +414,7 @@ ChatCompletionAgent agentWriter =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-The _Writer_ agent is similiar. It is given a single-purpose task, follow direction and rewrite the content.
+The _Writer_ agent is similar. It is given a single-purpose task, follow direction and rewrite the content.
 ```python
 agent_writer = ChatCompletionAgent(
         kernel=kernel,

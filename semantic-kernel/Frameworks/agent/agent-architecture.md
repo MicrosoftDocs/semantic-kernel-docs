@@ -68,7 +68,7 @@ Agents can either be invoked directly to perform tasks or orchestrated within an
 ## Agent Thread
 
 The abstract `AgentThread` class serves as the core abstraction for threads or conversation state.
-It abstracts away the different ways in which convesation state may be managed for different agents.
+It abstracts away the different ways in which conversation state may be managed for different agents.
 
 Stateful agent services often store conversation state in the service, and you can interact with it via an id.
 Other agents may require the entire chat history to be passed to the agent on each invocation, in which
@@ -81,7 +81,7 @@ If a different agent thread type is used with the `AzureAIAgent`, we fail fast d
 
 ## Agent Chat
 
-The  [`AgentChat`](./agent-chat.md) class serves as the foundational component that enables agents of any type to engage in a specific conversation. This class provides the essential capabilities for managing agent interactions within a chat environment. Building on this, the [`AgentGroupChat`](./agent-chat.md#creating-an-agentgroupchat) class extends these capabilities by offering a stategy-based container, which allows multiple agents to collaborate across numerous interactions within the same conversation.
+The  [`AgentChat`](./agent-chat.md) class serves as the foundational component that enables agents of any type to engage in a specific conversation. This class provides the essential capabilities for managing agent interactions within a chat environment. Building on this, the [`AgentGroupChat`](./agent-chat.md#creating-an-agentgroupchat) class extends these capabilities by offering a strategy-based container, which allows multiple agents to collaborate across numerous interactions within the same conversation.
 
 > [!IMPORTANT]
 > The current `OpenAIResponsesAgent` is not supported as part of Semantic Kernel's `AgentGroupChat` patterns. Stayed tuned for updates.

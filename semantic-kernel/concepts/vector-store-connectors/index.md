@@ -1,6 +1,6 @@
 ---
 title: What are Semantic Kernel Vector Store connectors? (Preview)
-description: Describes what a Semantic Kernal Vector Store is, an provides a basic example of how to use one and how to get started.
+description: Describes what a Semantic Kernel Vector Store is, and provides a basic example of how to use one and how to get started.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual

@@ -1,6 +1,6 @@
 ---
 title: Configuring Agents with Semantic Kernel Plugins.
-description: Describes how to use Semantic Kernal plugins and function calling with agents.
+description: Describes how to use Semantic Kernel plugins and function calling with agents.
 zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: tutorial

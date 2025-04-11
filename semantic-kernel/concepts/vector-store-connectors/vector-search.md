@@ -47,7 +47,7 @@ IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollectio
 // Generate a vector for your search text, using your chosen embedding generation implementation.
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
-// Do the search, passing an options object with a Top value to limit resulst to the single top match.
+// Do the search, passing an options object with a Top value to limit results to the single top match.
 var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
 
 // Inspect the returned hotel.
