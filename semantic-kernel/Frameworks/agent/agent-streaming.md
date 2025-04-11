@@ -120,7 +120,7 @@ OpenAIAssistantAgent agent = ...;
 // Create a thread for the agent conversation.
 OpenAIAssistantAgentThread agentThread = new(assistantClient);
 
-// Cerate a user message
+// Create a user message
 var message = new ChatMessageContent(AuthorRole.User, "<user input>");
 
 // Generate the streamed agent response(s)
@@ -148,7 +148,7 @@ OpenAIAssistantAgent agent = ...;
 // Create a thread for the agent conversation.
 OpenAIAssistantAgentThread agentThread = new(assistantClient, "your-existing-thread-id");
 
-// Cerate a user message
+// Create a user message
 var message = new ChatMessageContent(AuthorRole.User, "<user input>");
 
 // Generate the streamed agent response(s)

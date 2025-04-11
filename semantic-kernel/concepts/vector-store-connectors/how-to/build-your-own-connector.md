@@ -430,7 +430,7 @@ public Task DeleteBatchAsync(IEnumerable<string> keys, CancellationToken cancell
 Secondly, if the database client does support batching, pass all requests directly to the underlying
 client so that it may send the entire set in one request.
 
-## Recommended common patterns and pratices
+## Recommended common patterns and practices
 
 1. Keep `IVectorStore` and `IVectorStoreRecordCollection` implementations unsealed with virtual methods, so that developers can inherit and override if needed.
 1. Always use options classes for optional settings with smart defaults.
