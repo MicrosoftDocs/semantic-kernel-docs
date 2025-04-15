@@ -47,7 +47,7 @@ For example, the sample `WriterPlugin` plugin on the right has functions with se
 
 ### Importing different types of plugins
 
-There are three primary ways of importing plugins into Semantic Kernel: using [native code](./adding-native-plugins.md), using an [OpenAPI specification](./adding-openapi-plugins.md) or from a [MCP Server](./adding-mcp-plugins.py) The former allows you to author plugins in your existing codebase that can leverage dependencies and services you already have. The latter two allow you to import plugins from an OpenAPI specification or a MCP Server, which can be shared across different programming languages and platforms.
+There are three primary ways of importing plugins into Semantic Kernel: using [native code](./adding-native-plugins.md), using an [OpenAPI specification](./adding-openapi-plugins.md) or from a [MCP Server](./adding-mcp-plugins.md) The former allows you to author plugins in your existing codebase that can leverage dependencies and services you already have. The latter two allow you to import plugins from an OpenAPI specification or a MCP Server, which can be shared across different programming languages and platforms.
 
 Below we provide a simple example of importing and using a native plugin. To learn more about how to  import these different types of plugins, refer to the following articles:
 

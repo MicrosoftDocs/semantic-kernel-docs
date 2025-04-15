@@ -33,10 +33,10 @@ Throughout this entire process, you can create events and middleware that are tr
 
 Before building a kernel, you should first understand the two types of components that exist:
 
-| | Components | Description |
-|---|---|---|
-| 1 | **Services** | These consist of both AI services (e.g., chat completion) and other services (e.g., logging and HTTP clients) that are necessary to run your application. This was modelled after the Service Provider pattern in .NET so that we could support dependency injection across all languages. |
-| 2 | **Plugins** | These are the components that are used by your AI services and prompt templates to perform work. AI services, for example, can use plugins to retrieve data from a database or call an external API to perform actions. |
+| Component | Description |
+|---|---|
+| **Services** | These consist of both AI services (e.g., chat completion) and other services (e.g., logging and HTTP clients) that are necessary to run your application. This was modelled after the Service Provider pattern in .NET so that we could support dependency injection across all languages. |
+| **Plugins** | These are the components that are used by your AI services and prompt templates to perform work. AI services, for example, can use plugins to retrieve data from a database or call an external API to perform actions. |
 
 ::: zone pivot="programming-language-csharp"
 To start creating a kernel, import the necessary packages at the top of your file:
