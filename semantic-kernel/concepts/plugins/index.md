@@ -25,6 +25,7 @@ ms.service: semantic-kernel
 Not all AI SDKs have an analogous concept to plugins (most just have functions or tools). In enterprise scenarios, however, plugins are valuable because they encapsulate a set of functionality that mirrors how enterprise developers already develop services and APIs. Plugins also play nicely with dependency injection. Within a plugin's constructor, you can inject services that are necessary to perform the work of the plugin (e.g., database connections, HTTP clients, etc.). This is difficult to accomplish with other SDKs that lack plugins.
 
 ## Anatomy of a plugin
+
 At a high-level, a plugin is a group of [functions](#importing-different-types-of-plugins) that can be exposed to AI apps and services. The functions within plugins can then be orchestrated by an AI application to accomplish user requests. Within Semantic Kernel, you can invoke these functions automatically with function calling.
 
 > [!Note]
@@ -32,12 +33,11 @@ At a high-level, a plugin is a group of [functions](#importing-different-types-o
 
 Just providing functions, however, is not enough to make a plugin. To power automatic orchestration with function calling, plugins also need to provide details that semantically describe how they behave. Everything from the function's input, output, and side effects need to be described in a way that the AI can understand, otherwise, the AI will not correctly call the function.
 
-
 For example, the sample `WriterPlugin` plugin on the right has functions with semantic descriptions that describe what each function does. An LLM can then use these descriptions to choose the best functions to call to fulfill a user's ask.
 
 :::row:::
    :::column span="1":::
-      
+
       In the picture on the right, an LLM would likely call the `ShortPoem` and `StoryGen` functions to satisfy the users ask thanks to the provided semantic descriptions.
    :::column-end:::
    :::column span="3":::
@@ -46,27 +46,33 @@ For example, the sample `WriterPlugin` plugin on the right has functions with se
 :::row-end:::
 
 ### Importing different types of plugins
-There are two primary ways of importing plugins into Semantic Kernel: using [native code](./adding-native-plugins.md) or using an [OpenAPI specification](./adding-openapi-plugins.md). The former allows you to author plugins in your existing codebase that can leverage dependencies and services you already have. The latter allows you to import plugins from an OpenAPI specification, which can be shared across different programming languages and platforms.
+
+There are three primary ways of importing plugins into Semantic Kernel: using [native code](./adding-native-plugins.md), using an [OpenAPI specification](./adding-openapi-plugins.md) or from a [MCP Server](./adding-mcp-plugins.py) The former allows you to author plugins in your existing codebase that can leverage dependencies and services you already have. The latter two allow you to import plugins from an OpenAPI specification or a MCP Server, which can be shared across different programming languages and platforms.
 
 Below we provide a simple example of importing and using a native plugin. To learn more about how to  import these different types of plugins, refer to the following articles:
+
 - [Importing native code](./adding-native-plugins.md)
 - [Importing an OpenAPI specification](./adding-openapi-plugins.md)
+- [Importing a MCP Server](./adding-mcp-plugins.md)
 
 > [!Tip]
-> When getting started, we recommend using native code plugins. As your application matures, and as you work across cross-platform teams, you may want to consider using OpenAPI specifications to share plugins across different programming languages and platforms.
+> When getting started, we recommend using native code plugins. As your application matures, and as you work across cross-platform teams, you may want to consider using OpenAPI specifications to share plugins across different programming languages and platforms. You can then also create a MCP Server from your Kernel instance, which allows other applications to consume your plugins as a service.
 
 ### The different types of plugin functions
+
 Within a plugin, you will typically have two different types of functions, those that retrieve data for retrieval augmented generation (RAG) and those that automate tasks. While each type is functionally the same, they are typically used differently within applications that use Semantic Kernel.
 
 For example, with retrieval functions, you may want to use strategies to improve performance (e.g., caching and using cheaper intermediate models for summarization). Whereas with task automation functions, you'll likely want to implement human-in-the-loop approval processes to ensure that tasks are completed correctly.
 
 To learn more about the different types of plugin functions, refer to the following articles:
+
 - [Data retrieval functions](./using-data-retrieval-functions-for-rag.md)
 - [Task automation functions](./using-task-automation-functions.md)
 
 ## Getting started with plugins
 
 Using plugins within Semantic Kernel is always a three step process:
+
 1. [Define your plugin](#1-define-your-plugin)
 2. [Add the plugin to your kernel](#2-add-the-plugin-to-your-kernel)
 3. [And then either invoke the plugin's functions in either a prompt with function calling](#3-invoke-the-plugins-functions)
@@ -85,6 +91,7 @@ Below, we'll create a plugin that can retrieve the state of lights and alter its
 > Since most LLM have been trained with Python for function calling, its recommended to use snake case for function names and property names even if you're using the C# or Java SDK.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
@@ -152,9 +159,11 @@ public class LightModel
    public string? Hex { get; set; }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from typing import TypedDict, Annotated
 
@@ -203,8 +212,8 @@ class LightsPlugin:
                return light
       return None
 ```
-::: zone-end
 
+::: zone-end
 
 ::: zone pivot="programming-language-java"
 
@@ -224,14 +233,17 @@ Once you've defined your plugin, you can add it to your kernel by creating a new
 This example demonstrates the easiest way of adding a class as a plugin with the `AddFromType` method. To learn about other ways of adding plugins, refer to the [adding native plugins](./adding-native-plugins.md) article.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 var builder = new KernelBuilder();
 builder.Plugins.AddFromType<LightsPlugin>("Lights")
 Kernel kernel = builder.Build();
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 kernel = Kernel()
 kernel.add_plugin(
@@ -239,6 +251,7 @@ kernel.add_plugin(
    plugin_name="Lights",
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -248,12 +261,12 @@ kernel.add_plugin(
 
 ::: zone-end
 
-
 ### 3) Invoke the plugin's functions
 
-Finally, you can have the AI invoke your plugin's functions by using function calling. Below is an example that demonstrates how to coax the AI to call the `get_lights` function from the `Lights` plugin before calling the `change_state` function to turn on a light. 
+Finally, you can have the AI invoke your plugin's functions by using function calling. Below is an example that demonstrates how to coax the AI to call the `get_lights` function from the `Lights` plugin before calling the `change_state` function to turn on a light.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -291,23 +304,20 @@ Console.WriteLine("Assistant > " + result);
 // Add the message from the agent to the chat history
 history.AddAssistantMessage(result);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 import asyncio
 
 from semantic_kernel import Kernel
 from semantic_kernel.functions import kernel_function
-from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
-from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.functions.kernel_arguments import KernelArguments
-
-from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
-    AzureChatPromptExecutionSettings,
-)
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion, AzureChatPromptExecutionSettings
+from semantic_kernel.connectors.ai import FunctionChoiceBehavior
+from semantic_kernel.contents import ChatHistory
+from semantic_kernel.functions import KernelArguments
 
 async def main():
    # Initialize the kernel
@@ -352,6 +362,7 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -359,7 +370,6 @@ if __name__ == "__main__":
 :::code language="java" source="~/../semantic-kernel-samples-java/learnDocs/LightsApp/src/main/java/LightsAppNonInteractive.java" id="invoke":::
 
 ::: zone-end
-
 
 With the above code, you should get a response that looks like the following:
 
@@ -372,7 +382,6 @@ With the above code, you should get a response that looks like the following:
 | 🟢&nbsp;**Tool**                      | `{ "id": 1, "name": "Table Lamp", "isOn": true, "brightness": 100, "hex": "FF0000" }` |
 | 🔴&nbsp;**Assistant**                 | The lamp is now on                                |
 
-
 > [!Tip]
 > While you can invoke a plugin function directly, this is not advised because the AI should be the one deciding which functions to call. If you need explicit control over which functions are called, consider using standard methods in your codebase instead of plugins.
 
@@ -383,9 +392,9 @@ However, below are some general recommendations and guidelines to ensure that pl
 
 ### Import only the necessary plugins
 
-Import only the plugins that contain functions necessary for your specific scenario. This approach will not only reduce the number of input tokens consumed but also minimize the occurrence of function 
+Import only the plugins that contain functions necessary for your specific scenario. This approach will not only reduce the number of input tokens consumed but also minimize the occurrence of function
 miscalls-calls to functions that are not used in the scenario. Overall, this strategy should enhance function-calling accuracy and decrease the number of false positives.
-   
+
 Additionally, OpenAI recommends that you use no more than 20 tools in a single API call; ideally, no more than 10 tools. As stated by OpenAI: *"We recommend that you use no more than
 20 tools in a single API call. Developers typically see a reduction in the model's ability to select the correct tool once they have between 10-20 tools defined."**
 For more information, you can visit their documentation at [OpenAI Function Calling Guide](https://platform.openai.com/docs/guides/function-calling#keep-the-number-of-functions-low-for-higher-accuracy).
@@ -393,6 +402,7 @@ For more information, you can visit their documentation at [OpenAI Function Call
 ### Make plugins AI-friendly
 
 To enhance the LLM's ability to understand and utilize plugins, it is recommended to follow these guidelines:
+
 - **Use descriptive and concise function names:** Ensure that function names clearly convey their purpose to help the model understand when to select each function. If a function name is ambiguous, consider renaming it for clarity.
 Avoid using abbreviations or acronyms to shorten function names. Utilize the `DescriptionAttribute` to provide additional context and instructions only when necessary, minimizing token consumption.
 
@@ -404,7 +414,7 @@ the parameters and providing accurate values. As with function names, use the `D
 
 ### Find a right balance between the number of functions and their responsibilities
 
-On one hand, having functions with a single responsibility is a good practice that allows to keep functions simple and reusable across multiple scenarios. On the other hand, each function call incurs overhead in terms of network round-trip latency 
+On one hand, having functions with a single responsibility is a good practice that allows to keep functions simple and reusable across multiple scenarios. On the other hand, each function call incurs overhead in terms of network round-trip latency
 and the number of consumed input and output tokens: input tokens are used to send the function definition and invocation result to the LLM, while output tokens are consumed when receiving the function call from the model.
 Alternatively, a single function with multiple responsibilities can be implemented to reduce the number of consumed tokens and lower network overhead, although this comes at the cost of reduced reusability in other scenarios.
 <br><br>
@@ -413,20 +423,20 @@ resulting in missed parameters or values of incorrect type. Therefore, it is ess
 match function parameters.
 
 ### Transform Semantic Kernel functions
-   
+
 Utilize the transformation techniques for Semantic Kernel functions as described in the [Transforming Semantic Kernel Functions](https://devblogs.microsoft.com/semantic-kernel/transforming-semantic-kernel-functions/#:~:text=Semantic%20Kernel%20provides%20a%20series,from%20an%20Open%20API%20specification) blog post to:  
-   
-- **Change function behavior:** There are scenarios where the default behavior of a function may not align with the desired outcome and it's not feasible to modify the original function's implementation. In such cases, you can create a new function that wraps the 
+
+- **Change function behavior:** There are scenarios where the default behavior of a function may not align with the desired outcome and it's not feasible to modify the original function's implementation. In such cases, you can create a new function that wraps the
 original one and modifies its behavior accordingly.
-   
-- **Provide context information:** Functions may require parameters that the LLM cannot or should not infer. For example, if a function needs to act on behalf of the current user or requires authentication information, this context is typically available to the host application but not to the LLM. In such cases, you can transform 
+
+- **Provide context information:** Functions may require parameters that the LLM cannot or should not infer. For example, if a function needs to act on behalf of the current user or requires authentication information, this context is typically available to the host application but not to the LLM. In such cases, you can transform
 the function to invoke the original one while supplying the necessary context information from the hosting application, along with arguments provided by the LLM.  
-   
-- **Change parameters list, types, and names:** If the original function has a complex signature that the LLM struggles to interpret, you can transform the function into one with a simpler signature that the LLM can more easily understand. 
+
+- **Change parameters list, types, and names:** If the original function has a complex signature that the LLM struggles to interpret, you can transform the function into one with a simpler signature that the LLM can more easily understand.
 This may involve changing parameter names, types, the number of parameters, and flattening or unflattening complex parameters, among other adjustments.
 
 ### Local state utilization  
-   
+
 When designing plugins that operate on relatively large or confidential datasets, such as documents, articles, or emails containing sensitive information, consider utilizing local state to store original data or intermediate results that do not need to be
 sent to the LLM. Functions for such scenarios can accept and return a state id, allowing you to look up and access the data locally instead of passing the actual data to the LLM, only to receive it back as an argument for the next function invocation.
 
@@ -436,5 +446,5 @@ By storing data locally, you can keep the information private and secure while a
 
 Use one of the techniques described in the [Providing functions return type schema to LLM](./adding-native-plugins.md#provide-function-return-type-information-in-function-description) section to provide the function's return type schema to the AI model.
 
-By utilizing a well-defined return type schema, the AI model can accurately identify the intended properties, eliminating potential inaccuracies that may arise when the model makes assumptions based on incomplete or ambiguous information in the absence of the schema. 
+By utilizing a well-defined return type schema, the AI model can accurately identify the intended properties, eliminating potential inaccuracies that may arise when the model makes assumptions based on incomplete or ambiguous information in the absence of the schema.
 Consequently, this enhances the accuracy of function calls, leading to more reliable and precise outcomes.
