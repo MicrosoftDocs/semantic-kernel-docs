@@ -251,8 +251,7 @@ You can also customize this behavior. In order to do that, you need to annotate 
 class SimplePlugin:
     @kernel_function(name="GetWeather", description="Get the weather for a location.")
     async def get_the_weather(self, location: str, special_arg: Annotated[str, {"include_in_function_choices": False}]) -> str:
-        # The 'special_arg' parameter is reserved and you need to ensure it either has a default value or get's passed.
-        return f"Received user input: {location}, the weather is nice!"
+        # The 'special_arg' parameter is reserved and you need to ensure it either has a default value or gets passed.
 ```
 
 When calling this function, make sure to pass the `special_arg` parameter, otherwise it will raise an error.
