@@ -345,6 +345,18 @@ To handle payloads with non-unique property names, consider the following altern
 If payloads schemas use any of the `oneOf`, `anyOf`, `allOf` composite keywords or recursive references, consider disabling dynamic payload construction and allow the 
 LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
 
+#### Note on the `oneOf` and `anyOf` Keywords
+The `anyOf` and `oneOf` keywords assume that a payload can be composed of properties defined by multiple schemas.
+The `anyOf` keyword allows a payload to include properties defined in one or more schemas, while `oneOf` restricts the payload to contain properties from only one schema among the many provided.
+For more information, you can refer to the [Swagger documentation on oneOf and anyOf](https://swagger.io/docs/specification/v3_0/data-models/oneof-anyof-allof-not/).
+
+With both `anyOf` and `oneOf` keywords, which offer alternatives to the payload structure, it's impossible to predict which alternative a caller will choose 
+when invoking operations that define payloads with these keywords. For example, it is not possible to determine in advance whether a caller will invoke an operation with a Dog or Cat object, or with an object composed of some or perhaps all properties from the PetByAge and PetByType schemas 
+described in the examples for `anyOf` and `oneOf` in the [Swagger documentation](https://swagger.io/docs/specification/v3_0/data-models/oneof-anyof-allof-not/).
+As a result, because there's no set of parameters known in advance that Semantic Kernel can use to create the a plugin function with for such operations, Semantic Kernel creates a function with only one [payload](./adding-openapi-plugins.md#the-payload-parameter) parameter 
+having a schema from the operation describing a multitude of possible alternatives, offloading the payload creation to the operation caller: LLM or calling code 
+that must have all the context to know which one of the available alternatives to invoke the function with. 
+
 ### Payload namespacing
 
 Payload namespacing helps prevent naming conflicts that can occur due to non-unique property names in OpenAPI plugin payloads.

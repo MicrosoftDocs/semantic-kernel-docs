@@ -618,7 +618,7 @@ Certain aspects of the function choice behaviors can be configured through optio
 
 ## Function Invocation
 
-Function invocation is the process whereby Sematic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
+Function invocation is the process whereby Semantic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
 
 ## Supported AI Connectors
 
