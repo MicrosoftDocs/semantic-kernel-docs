@@ -4,6 +4,8 @@
   href: adding-native-plugins.md
 - name: Adding OpenAPI plugins
   href: adding-openapi-plugins.md
+- name: Adding MCP plugins
+  href: adding-mcp-plugins.md
 - name: Adding Logic Apps as plugins
   href: adding-logic-apps-as-plugins.md
 - name: Using data retrieval functions for RAG

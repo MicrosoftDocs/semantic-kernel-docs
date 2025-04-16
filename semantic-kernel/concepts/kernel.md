@@ -14,11 +14,13 @@ ms.service: semantic-kernel
 The kernel is the central component of Semantic Kernel. At its simplest, the kernel is a Dependency Injection container that manages all of the services and plugins necessary to run your AI application. If you provide all of your services and plugins to the kernel, they will then be seamlessly used by the AI as needed.
 
 ## The kernel is at the center
+
 Because the kernel has all of the services and plugins necessary to run both native code and AI services, it is used by nearly every component within the Semantic Kernel SDK to power your agents. This means that if you run any prompt or code in Semantic Kernel, the kernel will always be available to retrieve the necessary services and plugins.
 
 ![The kernel is at the center of everything in Semantic Kernel](../media/the-kernel-is-at-the-center-of-everything.png)
 
 This is extremely powerful, because it means you as a developer have a single place where you can configure, and most importantly monitor, your AI agents. Take for example, when you invoke a prompt from the kernel. When you do so, the kernel will...
+
 1. Select the best AI service to run the prompt.
 2. Build the prompt using the provided prompt template.
 3. Send the prompt to the AI service.
@@ -28,12 +30,13 @@ This is extremely powerful, because it means you as a developer have a single pl
 Throughout this entire process, you can create events and middleware that are triggered at each of these steps. This means you can perform actions like logging, provide status updates to users, and most importantly responsible AI. All from a single place.
 
 ## Build a kernel with services and plugins
+
 Before building a kernel, you should first understand the two types of components that exist:
 
-| | Components | Description |
-|---|---|---|
-| 1 | **Services** | These consist of both AI services (e.g., chat completion) and other services (e.g., logging and HTTP clients) that are necessary to run your application. This was modelled after the Service Provider pattern in .NET so that we could support dependency injection across all languages. |
-| 2 | **Plugins** | These are the components that are used by your AI services and prompt templates to perform work. AI services, for example, can use plugins to retrieve data from a database or call an external API to perform actions. |
+| Component | Description |
+|---|---|
+| **Services** | These consist of both AI services (e.g., chat completion) and other services (e.g., logging and HTTP clients) that are necessary to run your application. This was modelled after the Service Provider pattern in .NET so that we could support dependency injection across all languages. |
+| **Plugins** | These are the components that are used by your AI services and prompt templates to perform work. AI services, for example, can use plugins to retrieve data from a database or call an external API to perform actions. |
 
 ::: zone pivot="programming-language-csharp"
 To start creating a kernel, import the necessary packages at the top of your file:
@@ -49,7 +52,7 @@ builder.AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
 builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
 builder.Plugins.AddFromType<TimePlugin>();
 Kernel kernel = builder.Build();
-``` 
+```
 
 ::: zone-end
 
@@ -82,6 +85,119 @@ kernel.add_plugin(
 )
 ```
 
+## Creating a MCP Server from your Kernel
+
+We now support creating a MCP server from the function you have registered in your Semantic Kernel instance.
+
+In order to do this, you create your kernel as you normally would, and then you can create a MCP server from it.
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.functions import kernel_function
+from semantic_kernel.prompt_template import InputVariable, PromptTemplateConfig
+
+kernel = Kernel()
+
+@kernel_function()
+def echo_function(message: str, extra: str = "") -> str:
+    """Echo a message as a function"""
+    return f"Function echo: {message} {extra}"
+
+kernel.add_service(OpenAIChatCompletion(service_id="default"))
+kernel.add_function("echo", echo_function, "echo_function")
+kernel.add_function(
+    plugin_name="prompt",
+    function_name="prompt",
+    prompt_template_config=PromptTemplateConfig(
+        name="prompt",
+        description="This is a prompt",
+        template="Please repeat this: {{$message}} and this: {{$extra}}",
+        input_variables=[
+            InputVariable(
+                name="message",
+                description="This is the message.",
+                is_required=True,
+                json_schema='{ "type": "string", "description": "This is the message."}',
+            ),
+            InputVariable(
+                name="extra",
+                description="This is extra.",
+                default="default",
+                is_required=False,
+                json_schema='{ "type": "string", "description": "This is the message."}',
+            ),
+        ],
+    ),
+)
+server = kernel.as_mcp_server(server_name="sk")
+
+```
+
+The `server` object created above comes from the mcp package, you can extend it even further for instance by adding resources, or other features to it. And then you can bring it online, for instance to be used with Stdio:
+
+```python
+import anyio
+from mcp.server.stdio import stdio_server
+
+async def handle_stdin(stdin: Any | None = None, stdout: Any | None = None) -> None:
+    async with stdio_server() as (read_stream, write_stream):
+        await server.run(read_stream, write_stream, server.create_initialization_options())
+
+anyio.run(handle_stdin)
+```
+
+Or with SSE:
+
+```python
+import uvicorn
+from mcp.server.sse import SseServerTransport
+from starlette.applications import Starlette
+from starlette.routing import Mount, Route
+
+sse = SseServerTransport("/messages/")
+
+async def handle_sse(request):
+    async with sse.connect_sse(request.scope, request.receive, request._send) as (read_stream, write_stream):
+        await server.run(read_stream, write_stream, server.create_initialization_options())
+
+starlette_app = Starlette(
+    debug=True,
+    routes=[
+        Route("/sse", endpoint=handle_sse),
+        Mount("/messages/", app=sse.handle_post_message),
+    ],
+)
+
+uvicorn.run(starlette_app, host="0.0.0.0", port=8000)
+```
+
+### Exposing prompt templates as MCP Prompt
+
+You can also leverage the different Semantic Kernel prompt templates by exposing them as MCP Prompts, like this:
+
+```python
+from semantic_kernel.prompt_template import InputVariable, KernelPromptTemplate, PromptTemplateConfig
+
+prompt = KernelPromptTemplate(
+    prompt_template_config=PromptTemplateConfig(
+        name="release_notes_prompt",
+        description="This creates the prompts for a full set of release notes based on the PR messages given.",
+        template=template,
+        input_variables=[
+            InputVariable(
+                name="messages",
+                description="These are the PR messages, they are a single string with new lines.",
+                is_required=True,
+                json_schema='{"type": "string"}',
+            )
+        ],
+    )
+)
+
+server = kernel.as_mcp_server(server_name="sk_release_notes", prompts=[prompt])
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -99,8 +215,8 @@ Kernel kernel = Kernel.builder()
 
 ::: zone-end
 
-
 ::: zone pivot="programming-language-csharp"
+
 ## Using Dependency Injection
 
 In C#, you can use Dependency Injection to create a kernel. This is done by creating a `ServiceCollection` and adding services and plugins to it. Below is an example of how you can create a kernel using Dependency Injection.
@@ -151,6 +267,7 @@ builder.Services.AddTransient((serviceProvider)=> {
 ::: zone-end
 
 ## Next steps
+
 Now that you understand the kernel, you can learn about all the different AI services that you can add to it.
 
 > [!div class="nextstepaction"]
