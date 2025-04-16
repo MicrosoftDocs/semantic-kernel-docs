@@ -11,8 +11,7 @@ ms.service: semantic-kernel
 
 # Add plugins from a MCP Server
 
-MCP is the Model Context Protocol, it is a open protocol that is designed to allow additional capabilities to be added to AI applications with ease, see [the documentation](https://modelcontextprotocol.io/introduction) for more info.
-
+MCP is the Model Context Protocol, it is an open protocol that is designed to allow additional capabilities to be added to AI applications with ease, see [the documentation](https://modelcontextprotocol.io/introduction) for more info.
 Semantic Kernel allows you to add plugins from a MCP Server to your agents. This is useful when you want to use plugins that are made available as a MCP Server.
 
 Semantic Kernel supports both local MCP Servers, through Stdio, or servers that connect through SSE over HTTPS.
