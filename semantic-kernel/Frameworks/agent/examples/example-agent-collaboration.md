@@ -259,8 +259,6 @@ toolKernel.Plugins.AddFromType<ClipboardAccess>();
 ```
 ::: zone-end
 
-::: zone-end
-
 ::: zone pivot="programming-language-java"
 
 > Agents are currently unavailable in Java.
