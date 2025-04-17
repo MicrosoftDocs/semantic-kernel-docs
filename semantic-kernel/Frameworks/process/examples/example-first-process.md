@@ -28,7 +28,11 @@ Before we get started, make sure you have the required Semantic Kernel packages 
 ::: zone pivot="programming-language-csharp"
 
 ```dotnetcli
+// Install the Semantic Kernel Process Framework Local Runtime package
 dotnet add package Microsoft.SemanticKernel.Process.LocalRuntime --version 1.46.0-alpha
+// or
+// Install the Semantic Kernel Process Framework Dapr Runtime package
+dotnet add package Microsoft.SemanticKernel.Process.Runtime.Dapr --version 1.46.0-alpha
 ```
 
 ::: zone-end
