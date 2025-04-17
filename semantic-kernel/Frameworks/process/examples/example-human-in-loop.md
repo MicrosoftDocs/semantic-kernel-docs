@@ -17,7 +17,7 @@ ms.service: semantic-kernel
 
 In the previous sections we built a Process to help us automate the creation of documentation for our new product. Our process can now generate documentation that is specific to our product, and can ensure it meets our quality bar by running it through a proofread and edit cycle. In this section we will improve on that process again by requiring a human to approve or reject the documentation before it's published. The flexibility of the process framework means that there are several ways that we could go about doing this but in this example we will demonstrate integration with an external pubsub system for requesting approval.
 
-![Flow diagram for our process with a human-in-the-loop pattern.](../../../media/process-human-in-the-loop.png)
+![Flow diagram for our process with a human-in-the-loop pattern.](../../../media/process-human-in-the-loop-2.png)
 
 ### Make publishing wait for approval
 
