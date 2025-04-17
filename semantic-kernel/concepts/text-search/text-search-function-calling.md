@@ -113,7 +113,7 @@ Console.WriteLine(await kernel.InvokePromptAsync("What is the Semantic Kernel? I
 The final sample in this section shows how to use a filter with function calling.
 For this sample only search results from the Microsoft Developer Blogs site will be included.
 An instance of `TextSearchFilter` is created and an equality clause is added to match the `devblogs.microsoft.com` site.
-Ths filter will be used when the function is invoked in response to a function calling request from the model.
+This filter will be used when the function is invoked in response to a function calling request from the model.
 
 ```csharp
 using Microsoft.SemanticKernel;

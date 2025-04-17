@@ -7,3 +7,5 @@
   href: embedding-generation/TOC.yml
 - name: AI Integrations
   href: integrations.md
+- name: Realtime
+  href: realtime.md
