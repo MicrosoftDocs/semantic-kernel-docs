@@ -22,7 +22,6 @@ Another way of providing this information is via record definitions, that can be
 This can be useful in multiple scenarios:
 
 - There may be a case where a developer wants to use the same data model with more than one configuration.
-- There may be a case where the developer wants to store data using a very different schema to the model and wants to supply a custom mapper for converting between the data model and storage schema.
 - There may be a case where a developer wants to use a built-in type, like a dict, or a optimized format like a dataframe and still wants to leverage the vector store functionality.
 
 ::: zone pivot="programming-language-csharp"
@@ -66,8 +65,8 @@ new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
 
 | Parameter                 | Required | Description                                                                                                                                                       |
 |---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| PropertyType              | Yes      | The type of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
+| PropertyType              | Yes      | The type of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
@@ -85,8 +84,8 @@ new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = 
 
 | Parameter                 | Required | Description                                                                                                                                                       |
 |---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| PropertyType              | Yes      | The type of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
+| PropertyType              | Yes      | The type of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
 | IsFilterable              | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.           |
 | IsFullTextSearchable      | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                              |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
@@ -106,8 +105,8 @@ new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dim
 
 | Parameter                 | Required | Description                                                                                                                                                       |
 |---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| PropertyType              | Yes      | The type of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
+| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
+| PropertyType              | Yes      | The type of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
 | Dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.      |
 | IndexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                  |
 | DistanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                     |
@@ -207,7 +206,7 @@ var collection = vectorStore.getCollection("skhotels",
 
 Use this class to indicate that your field is the key of the record.
 
-```csharp
+```java
 VectorStoreRecordKeyField.builder().withName("hotelId").withFieldType(String.class).build(),
 ```
 

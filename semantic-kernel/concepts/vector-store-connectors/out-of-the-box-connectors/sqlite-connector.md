@@ -114,8 +114,6 @@ var collection = new SqliteVectorStoreRecordCollection<Hotel>(connection, "skhot
 The SQLite Vector Store connector provides a default mapper when mapping from the data model to storage.
 This mapper does a direct conversion of the list of properties on the data model to the columns in SQLite.
 
-It's also possible to override the default mapper behavior by providing a custom mapper via the `SqliteVectorStoreRecordCollectionOptions<TRecord>.DictionaryCustomMapper` property.
-
 With the vector search extension, vectors are stored in virtual tables, separately from key and data properties.
 By default, the virtual table with vectors will use the same name as the table with key and data properties, but with a `vec_` prefix. For example, if the collection name in `SqliteVectorStoreRecordCollection` is `skhotels`, the name of the virtual table with vectors will be `vec_skhotels`. It's possible to override the virtual table name by using the `SqliteVectorStoreOptions.VectorVirtualTableName` or `SqliteVectorStoreRecordCollectionOptions<TRecord>.VectorVirtualTableName` properties.
 
