@@ -1,0 +1,28 @@
+``` mermaid
+flowchart TD
+    
+
+    subgraph Internal SK Process  
+        A[Request Feature Documentation] --> B[Ask LLM To Write Documentation]   
+        B --> C[Proofread Documentation]
+        C -->|Rejected <br/> Sending proof read suggestions| B
+        C -->|Approved| D[Send to Pub/Sub Service]
+
+        
+        G -->I[Send to Pub/Sub Service]
+        G[Publish Documentation To Public] --> H[Process Stops]
+    end
+
+        subgraph User
+        D -.->|External Service| E[Human-in-the-Loop Approval]  
+        E --> F{Approval Decision}  
+        F -->|Rejected <br> Sending User Suggetions| B
+        F -->|Approved| G 
+        I -.->|External Service| K[Published Document]
+        J[Start Process] --> A
+    end
+
+
+  
+
+```

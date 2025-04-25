@@ -214,6 +214,7 @@ When using auto function calling in KernelFunctions, certain parameter names are
 ### Reserved Names
 
 The following parameter names are reserved:
+
 - `kernel`
 - `service`
 - `execution_settings`
@@ -240,6 +241,37 @@ class SimplePlugin:
     async def get_the_weather(self, location: str, arguments: KernelArguments) -> str:
         # The 'arguments' parameter is reserved and automatically populated with KernelArguments.
         return f"Received user input: {location}, the weather is nice!"
+```
+
+## Custom Reserved Parameter Names for Auto Function Calling
+
+You can also customize this behavior. In order to do that, you need to annotate the parameter you want to exclude from the function calling definition, like this:
+
+```python
+class SimplePlugin:
+    @kernel_function(name="GetWeather", description="Get the weather for a location.")
+    async def get_the_weather(self, location: str, special_arg: Annotated[str, {"include_in_function_choices": False}]) -> str:
+        # The 'special_arg' parameter is reserved and you need to ensure it either has a default value or gets passed.
+```
+
+When calling this function, make sure to pass the `special_arg` parameter, otherwise it will raise an error.
+
+```python
+response = await kernel.invoke_async(
+    plugin_name=...,
+    function_name="GetWeather",
+    location="Seattle",
+    special_arg="This is a special argument"
+)
+```
+
+Or add it to the `KernelArguments` object to use it with auto function calling in an agent like this:
+
+```python
+arguments = KernelArguments(special_arg="This is a special argument")
+response = await agent.get_response(
+    messages="what's the weather in Seattle?"
+    arguments=arguments)
 ```
 
 ::: zone-end
