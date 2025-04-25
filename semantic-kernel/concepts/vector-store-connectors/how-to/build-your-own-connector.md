@@ -242,10 +242,9 @@ model supplied by the abstraction package: `Microsoft.Extensions.VectorData.Vect
 
 In practice this means that the connector must implement a special mapper
 to support the generic data model. The connector should automatically use this mapper
-if the user specified the generic data model as their data model and they did not provide
-their own custom mapper.
+if the user specified the generic data model as their data model.
 
-### 9. Support divergent data model and database schema
+### 9. Divergent data model and database schema
 
 The only divergence required to be supported by connector implementations are
 customizing storage property names for any properties.
@@ -383,14 +382,14 @@ client so that it may send the entire set in one request.
 
 ## Recommended common patterns and practices
 
-1. Keep `IVectorStore` and `IVectorStoreRecordCollection` implementations unsealed with virtual methods, so that developers can inherit and override if needed.
+1. Keep `IVectorStore` and `IVectorStoreRecordCollection` implementations sealed. It is recommended to use a decorator pattern to override a default vector store behaviour.
 1. Always use options classes for optional settings with smart defaults.
 1. Keep required parameters on the main signature and move optional parameters to options.
 
 Here is an example of an `IVectorStoreRecordCollection` constructor following this pattern.
 
 ```csharp
-public class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollection<string, TRecord>
+public sealed class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollection<string, TRecord>
 {
     public MyDBVectorStoreRecordCollection(MyDBClient myDBClient, string collectionName, MyDBVectorStoreRecordCollectionOptions<TRecord>? options = default)
     {
