@@ -121,8 +121,6 @@ var collection = new PostgresVectorStoreRecordCollection<string, Hotel>(dataSour
 The Postgres Vector Store connector provides a default mapper when mapping from the data model to storage.
 This mapper does a direct conversion of the list of properties on the data model to the columns in Postgres.
 
-It's also possible to override the default mapper behavior by providing a custom mapper via the `PostgresVectorStoreRecordCollectionOptions<TRecord>.DictionaryCustomMapper` property.
-
 ### Property name override
 
 You can override property names to use in storage that is different to the property names on the data model.

@@ -151,9 +151,6 @@ This information is typically required for
 If the user does not provide a `VectorStoreRecordDefinition`, this information should
 be read from the data model attributes using reflection. If the user did provide a
 `VectorStoreRecordDefinition`, the data model should not be used as the source of truth.
-The `VectorStoreRecordDefinition` may have been provided with a custom mapper, in order
-for the database schema and data model to differ. In this case the `VectorStoreRecordDefinition`
-should match the database schema, but the data model may be deliberately different.
 
 > [!TIP]
 > Refer to [Defining your data model](../defining-your-data-model.md) for a detailed list of
@@ -205,25 +202,6 @@ Every database doesn't support every data type. To improve the user experience i
 the data types of any record properties and to do so early, e.g. when an `IVectorStoreRecordCollection`
 instance is constructed. This way the user will be notified of any potential failures before starting to use the database.
 
-The type of validation required will also depend on the type of mapper used by the user. E.g. The user may have supplied
-a custom data model, a custom mapper and a `VectorStoreRecordDefinition`. They may want the data model to differ significantly
-from the storage schema, and the custom mapper would map between the two. In this case, we want to avoid doing any checks
-on the data model, but focus on the `VectorStoreRecordDefinition` only, to ensure the data types requested are allowed
-by the underlying database.
-
-Let's consider each scenario.
-
-| Data model type | VectorStore RecordDefinition supplied | Custom mapper supplied | Combination Supported                                     | Validation required                                              |
-| --------------- | ------------------------------------- | ---------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| Custom          | Yes                                   | Yes                    | Yes                                                       | Validate definition only                                         |
-| Custom          | Yes                                   | No                     | Yes                                                       | Validate definition and check data model for matching properties |
-| Custom          | No                                    | Yes                    | Yes                                                       | Validate data model properties                                   |
-| Custom          | No                                    | No                     | Yes                                                       | Validate data model properties                                   |
-| Generic         | Yes                                   | Yes                    | Yes                                                       | Validate definition only                                         |
-| Generic         | Yes                                   | No                     | Yes                                                       | Validate definition and data type of GenericDataModel Key        |
-| Generic         | No                                    | Yes                    | No - Definition required for collection create            |                                                                  |
-| Generic         | No                                    | No                     | No - Definition required for collection create and mapper |                                                                  |
-
 ### 6. Storage property naming
 
 The naming conventions used for properties in code doesn't always match the preferred naming
@@ -244,29 +222,13 @@ attributes or the `VectorStoreRecordDefinition`.
 
 Connectors should provide the ability to map between the user supplied data model and the
 storage model that the database requires, but should also provide some flexibility in how
-that mapping is done. Most connectors would typically need to support the following three
+that mapping is done. Most connectors would typically need to support the following two
 mappers.
 
 7.1 All connectors should come with a built in mapper that can map between the user supplied
 data model and the storage model required by the underlying database.
 
-7.2 To allow users the ability to support data models that vary significantly from
-the storage models of the underlying database, or to customize the mapping behavior
-between the two, each connector must support custom mappers.
-
-The `IVectorStoreRecordCollection` implementation should allow a user to provide a custom
-mapper via options. E.g.
-
-```csharp
-public IVectorStoreRecordMapper<TRecord, MyDBRecord>? MyDBRecordCustomMapper { get; init; } = null;
-```
-
-Mappers should all use the same standard interface
-`IMicrosoft.Extensions.VectorData.VectorStoreRecordMapper<TRecordDataModel, TStorageModel>`.
-`TRecordDataModel` should be the data model chosen by the user, while `TStorageModel` should be whatever
-data type the database client requires.
-
-7.3. All connectors should have a built in mapper that works with the `VectorStoreGenericDataModel`.
+7.2. All connectors should have a built in mapper that works with the `VectorStoreGenericDataModel`.
 See [Support GenericDataModel](#8-support-genericdatamodel) for more information.
 
 ### 8. Support GenericDataModel
@@ -280,29 +242,17 @@ model supplied by the abstraction package: `Microsoft.Extensions.VectorData.Vect
 
 In practice this means that the connector must implement a special mapper
 to support the generic data model. The connector should automatically use this mapper
-if the user specified the generic data model as their data model and they did not provide
-their own custom mapper.
+if the user specified the generic data model as their data model.
 
-### 9. Support divergent data model and database schema
+### 9. Divergent data model and database schema
 
-In most cases there will be a logical default mapping between the data model
-and storage model. E.g. property x on the data model maps to property x on the
-storage model. The built in mapper provided by the connector should support
-this default case.
+The only divergence required to be supported by connector implementations are
+customizing storage property names for any properties.
 
-There may be scenarios where the user wants to do something more complex, e.g.
-use a data model that has complex properties, where sub properties of a property
-on the data model are mapped to individual properties on the storage model. In
-this scenario the user would need to supply both a custom mapper and a
-`VectorStoreRecordDefinition`. The `VectorStoreRecordDefinition` is required
-to describe the database schema for collection / index create scenarios, while
-the custom mapper is required to map between the data and storage models.
-
-To support this scenario, the connector must fulfil the following requirements:
-
-- Allow a user to supply a custom mapper and `VectorStoreRecordDefinition`.
-- Use the `VectorStoreRecordDefinition` to create collections / indexes.
-- Avoid doing reflection on the data model if a custom mapper and `VectorStoreRecordDefinition` is supplied
+Any more complex divergence is not supported, since this causes additional
+complexity for filtering. E.g. if the user has a filter expression that references
+the data model, but the underlying schema is different to the data model, the
+filter expression cannot be used against the underlying schema.
 
 ### 10. Support Vector Store Record Collection factory (Deprecated)
 
@@ -432,14 +382,14 @@ client so that it may send the entire set in one request.
 
 ## Recommended common patterns and practices
 
-1. Keep `IVectorStore` and `IVectorStoreRecordCollection` implementations unsealed with virtual methods, so that developers can inherit and override if needed.
+1. Keep `IVectorStore` and `IVectorStoreRecordCollection` implementations sealed. It is recommended to use a decorator pattern to override a default vector store behaviour.
 1. Always use options classes for optional settings with smart defaults.
 1. Keep required parameters on the main signature and move optional parameters to options.
 
 Here is an example of an `IVectorStoreRecordCollection` constructor following this pattern.
 
 ```csharp
-public class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollection<string, TRecord>
+public sealed class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollection<string, TRecord>
 {
     public MyDBVectorStoreRecordCollection(MyDBClient myDBClient, string collectionName, MyDBVectorStoreRecordCollectionOptions<TRecord>? options = default)
     {
@@ -451,7 +401,6 @@ public class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollec
 public class MyDBVectorStoreRecordCollectionOptions<TRecord>
 {
     public VectorStoreRecordDefinition? VectorStoreRecordDefinition { get; init; } = null;
-    public IVectorStoreRecordMapper<TRecord, MyDbRecord>? MyDbRecordCustomMapper { get; init; } = null;
 }
 ```
 
