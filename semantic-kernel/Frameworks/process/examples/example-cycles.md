@@ -145,7 +145,7 @@ class ProofreadStep(KernelProcessStep):
         else:
             await context.emit_event(
                 process_event="documentation_rejected",
-                data={"explanation": formatted_response.explanation, "suggestions": formatted_response.suggestions},
+                data="suggestions_text",
             )
 ```
 A new step named `ProofreadStep` has been created. This step uses the LLM to grade the generated documentation as discussed above. Notice that this step conditionally emits either the `documentation_approved` event or the `documentation_rejected` event based on the response from the LLM. In the case of `documentation_approved`, the event will include the approved documentation as it's payload and in the case of `documentation_rejected` it will include the suggestions from the proofreader.
