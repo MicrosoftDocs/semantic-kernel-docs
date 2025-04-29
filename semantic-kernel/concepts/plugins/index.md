@@ -156,7 +156,7 @@ public class LightModel
 
 ::: zone pivot="programming-language-python"
 ```python
-from typing import TypedDict, Annotated
+from typing import TypedDict, Annotated, List, Optional
 
 class LightModel(TypedDict):
    id: int
@@ -302,8 +302,8 @@ from semantic_kernel.functions import kernel_function
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.contents.chat_history import ChatHistory, ChatMessageContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
 
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
     AzureChatPromptExecutionSettings,
@@ -317,7 +317,7 @@ async def main():
    chat_completion = AzureChatCompletion(
       deployment_name="your_models_deployment_name",
       api_key="your_api_key",
-      base_url="your_base_url",
+      endpoint="your_base_url",
    )
    kernel.add_service(chat_completion)
    
@@ -333,7 +333,12 @@ async def main():
 
    # Create a history of the conversation
    history = ChatHistory()
-   history.add_message("Please turn on the lamp")
+   history.add_message(
+      ChatMessageContent(
+         role=AuthorRole.USER,
+         content="Please turn on the lamp"
+      )
+   )
 
    # Get the response from the AI
    result = await chat_completion.get_chat_message_content(
