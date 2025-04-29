@@ -373,7 +373,7 @@ public class Hotel
     [VectorStoreRecordData(IsIndexed = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexex = true, StoragePropertyName = "hotel_description")]
+    [VectorStoreRecordData(IsFullTextIndexed = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
     [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
