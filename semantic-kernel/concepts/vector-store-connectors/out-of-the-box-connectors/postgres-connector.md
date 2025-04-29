@@ -134,7 +134,7 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public int HotelId { get; set; }
 
     [VectorStoreRecordData(StoragePropertyName = "hotel_name")]
     public string? HotelName { get; set; }

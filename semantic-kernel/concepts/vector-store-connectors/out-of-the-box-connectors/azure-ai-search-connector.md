@@ -277,7 +277,7 @@ must be passed to both the `SearchIndexClient` and the `AzureAISearchVectorStore
 
 ```csharp
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseUpper };
-var collection = new AzureAISearchVectorStoreRecordCollection<Hotel>(
+var collection = new AzureAISearchVectorStoreRecordCollection<string, Hotel>(
     new SearchIndexClient(
         new Uri(azureAISearchUri),
         new AzureKeyCredential(secret),

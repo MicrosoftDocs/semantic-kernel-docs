@@ -196,7 +196,7 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public string HotelId { get; set; }
 
     [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
@@ -212,7 +212,7 @@ public class Hotel
 
 ```json
 {
-    "id": 1,
+    "id": "1",
     "HOTEL_NAME": "Hotel Happy",
     "DESCRIPTION": "A place where everyone can be happy.",
     "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1],

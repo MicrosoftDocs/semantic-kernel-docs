@@ -60,7 +60,7 @@ ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking f
 var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 1);
 
 // Inspect the returned hotel.
-await foreach (var record in searchResult.Results)
+await foreach (var record in searchResult)
 {
     Console.WriteLine("Found hotel description: " + record.Record.Description);
     Console.WriteLine("Found record score: " + record.Score);
@@ -155,7 +155,7 @@ var hybridSearchOptions = new HybridSearchOptions<Product>
 var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 3, hybridSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.Description);
 }
@@ -183,7 +183,7 @@ var hybridSearchOptions = new HybridSearchOptions<Product>
 var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 3, hybridSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.FeatureList);
 }
