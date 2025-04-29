@@ -29,8 +29,8 @@ The SQLite Vector Store connector can be used to access and manage data in SQLit
 | Supported distance functions      | <ul><li>CosineDistance</li><li>ManhattanDistance</li><li>EuclideanDistance</li></ul>                                             |
 | Supported filter clauses          | <ul><li>EqualTo</li></ul>                                                                                                        |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | No                                                                                                                               |
-| IsFullTextSearchable supported?   | No                                                                                                                               |
+| IsIndexed    supported?           | No                                                                                                                               |
+| IsFullTextIndexed supported?      | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
 | HybridSearch supported?           | No                                                                                                                               |
 
@@ -106,7 +106,7 @@ var connection = new SqliteConnection("Data Source=:memory:");
 
 connection.LoadExtension("vector-search-extension-name");
 
-var collection = new SqliteVectorStoreRecordCollection<Hotel>(connection, "skhotels");
+var collection = new SqliteVectorStoreRecordCollection<string, Hotel>(connection, "skhotels");
 ```
 
 ## Data mapping
@@ -138,7 +138,7 @@ public class Hotel
     [VectorStoreRecordData(StoragePropertyName = "hotel_description")]
     public string? Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

@@ -99,8 +99,8 @@ public async Task GenerateEmbeddingsAndSearchAsync(
         await textEmbeddingGenerationService.GenerateEmbeddingAsync(descriptionText);
 
     // Search using the already generated embedding.
-    VectorSearchResults<Hotel> searchResult = await collection.VectorizedSearchAsync(searchEmbedding);
-    List<VectorSearchResult<Hotel>> resultItems = await searchResult.Results.ToListAsync();
+    IAsyncEnumerable<VectorSearchResult<Hotel>> searchResult = collection.SearchEmbeddingAsync(searchEmbedding, top: 1);
+    List<VectorSearchResult<Hotel>> resultItems = await searchResult.ToListAsync();
 
     // Print the first search result.
     Console.WriteLine("Score for first result: " + resultItems.FirstOrDefault()?.Score);
@@ -132,7 +132,7 @@ public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```
 
 ```csharp
-new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 1536 }
+new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float), dimensions: 1536);
 ```
 
 > [!TIP]

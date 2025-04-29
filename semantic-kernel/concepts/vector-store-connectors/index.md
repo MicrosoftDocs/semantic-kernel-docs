@@ -29,7 +29,7 @@ Semantic Kernel and .net provides an abstraction for interacting with Vector Sto
 
 The vector store abstractions are a low level api for adding and retrieving data from vector stores.
 Semantic Kernel has built-in support for using any one of the Vector Store implementations for RAG.
-This is achieved by wrapping `IVectorizedSearch<TRecord>` and exposing it as a Text Search implementation.
+This is achieved by wrapping `IVectorSearch<TRecord>` and exposing it as a Text Search implementation.
 
 > [!TIP]
 > To learn more about how to use vector stores for RAG see [How to use Vector Stores with Semantic Kernel Text Search](../text-search/text-search-vector-stores.md).
@@ -50,20 +50,12 @@ It also provides the ability to get `IVectorStoreRecordCollection<TKey, TRecord>
 `IVectorStoreRecordCollection<TKey, TRecord>` represents a collection.
 This collection may or may not exist, and the interface provides methods to check if the collection exists, create it or delete it.
 The interface also provides methods to upsert, get and delete records.
-Finally, the interface inherits from `IVectorizedSearch<TRecord>` providing vector search capabilities.
+Finally, the interface inherits from `IVectorSearch<TRecord>` providing vector search capabilities.
 
-### Microsoft.Extensions.VectorData.IVectorizedSearch\<TRecord\>
+### Microsoft.Extensions.VectorData.IVectorSearch\<TRecord\>
 
-`IVectorizedSearch<TRecord>` contains a method for doing vector searches.
-`IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorizedSearch<TRecord>` making it possible to use
-`IVectorizedSearch<TRecord>` on its own in cases where only search is needed and no record or collection management is needed.
-
-### IVectorizableTextSearch\<TRecord\>
-
-`IVectorizableTextSearch<TRecord>` contains a method for doing vector searches where the vector database has the ability to
-generate embeddings automatically. E.g. you can call this method with a text string and the database will generate the embedding
-for you and search against a vector field. This is not supported by all vector databases and is therefore only implemented
-by select connectors.
+- `SearchAsync<TRecord>` contains a method for doing vector searches taking some input that can be vectorized by a registered embedding generator or by the vector database where the database supports this.
+- `SearchEmbeddingAsync<TRecord>` contains a method for doing vector searches taking a vector as input.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -163,16 +155,16 @@ public class Hotel
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string[] Tags { get; set; }
 }
 ```
@@ -456,10 +448,10 @@ async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 1);
 
 // Inspect the returned hotel.
-await foreach (var record in searchResult.Results)
+await foreach (var record in searchResult)
 {
     Console.WriteLine("Found hotel description: " + record.Record.Description);
     Console.WriteLine("Found record score: " + record.Score);

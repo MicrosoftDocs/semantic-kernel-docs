@@ -29,8 +29,8 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>              |
 | Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes (configurable)                                                                                                           |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
+| IsIndexed supported?              | Yes                                                                                                                              |
+| IsFullTextIndexed supported?      | Yes                                                                                                                              |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
 | HybridSearch supported?           | Yes                                                                                                                              |
 
@@ -128,7 +128,7 @@ It is possible to construct a direct reference to a named collection.
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
-var collection = new QdrantVectorStoreRecordCollection<Hotel>(
+var collection = new QdrantVectorStoreRecordCollection<ulong, Hotel>(
     new QdrantClient("localhost"),
     "skhotels");
 ```
@@ -161,13 +161,13 @@ public class Hotel
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
+    [VectorStoreRecordData(IsIndexed = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
+    [VectorStoreRecordData(IsFullTextIndexed = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
+    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

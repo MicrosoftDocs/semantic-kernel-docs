@@ -29,8 +29,8 @@ The connector has the following characteristics.
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>                                 |
 | Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
+| IsIndexed supported?              | Yes                                                                                                                              |
+| IsFullTextIndexed supported?      | Yes                                                                                                                              |
 | StoragePropertyName supported?    | **When using Hashes:** Yes<br>**When using JSON:** No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
 | HybridSearch supported?           | No                                                                                                                               |
 
@@ -104,7 +104,7 @@ using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
 // Using Hashes.
-var hashesCollection = new RedisHashSetVectorStoreRecordCollection<Hotel>(
+var hashesCollection = new RedisHashSetVectorStoreRecordCollection<string, Hotel>(
     ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
     "skhotelshashes");
 ```
@@ -114,7 +114,7 @@ using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
 // Using JSON.
-var jsonCollection = new RedisJsonVectorStoreRecordCollection<Hotel>(
+var jsonCollection = new RedisJsonVectorStoreRecordCollection<string, Hotel>(
     ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
     "skhotelsjson");
 ```
@@ -332,16 +332,16 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public string HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION")]
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -368,15 +368,15 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public string HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
+    [VectorStoreRecordData(IsIndexed = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
+    [VectorStoreRecordData(IsFullTextIndexed = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

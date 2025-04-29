@@ -32,8 +32,8 @@ The connector has the following characteristics.
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                 |
 | Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
+| IsIndexed supported?              | Yes                                                                                                                              |
+| IsFullTextIndexed supported?      | Yes                                                                                                                              |
 | StoragePropertyName supported?    | No, since storage is in-memory and data reuse is therefore not possible, custom naming is not applicable.                        |
 | HybridSearch supported?           | No                                                                                                                               |
 

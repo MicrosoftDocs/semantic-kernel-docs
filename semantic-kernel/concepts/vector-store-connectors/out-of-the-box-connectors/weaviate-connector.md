@@ -29,8 +29,8 @@ The Weaviate Vector Store connector can be used to access and manage data in Wea
 | Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>                                      |
 | Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                                       |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                                   |
-| IsFilterable supported?               | Yes                                                                                                                                                                                   |
-| IsFullTextSearchable supported?       | Yes                                                                                                                                                                                   |
+| IsIndexed supported?                  | Yes                                                                                                                                                                                   |
+| IsFullTextIndexed supported?          | Yes                                                                                                                                                                                   |
 | StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                     |
 | HybridSearch supported?               | Yes                                                                                                                                                                                   |
 
@@ -65,6 +65,8 @@ Notable Weaviate connector functionality limitations.
 
 > [!WARNING]
 > Weaviate requires collection names to start with an upper case letter. If you do not provide a collection name with an upper case letter, Weaviate will return an error when you try and create your collection. The error that you will see is `Cannot query field "mycollection" on type "GetObjectsObj". Did you mean "Mycollection"?` where `mycollection` is your collection name. In this example, if you change your collection name to `Mycollection` instead, this will fix the error.
+
+::: zone pivot="programming-language-csharp"
 
 ## Getting started
 
@@ -138,7 +140,7 @@ It is possible to construct a direct reference to a named collection.
 using System.Net.Http;
 using Microsoft.SemanticKernel.Connectors.Weaviate;
 
-var collection = new WeaviateVectorStoreRecordCollection<Hotel>(
+var collection = new WeaviateVectorStoreRecordCollection<Guid, Hotel>(
     new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") },
     "Skhotels");
 ```
@@ -176,23 +178,23 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public Guid HotelId { get; set; }
 
     [VectorStoreRecordData(IsFilterable = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION_EMBEDDING")]
-    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.QuantizedFlat)]
+    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.QuantizedFlat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
 ```json
 {
-    "id": 1,
+    "id": "11111111-1111-1111-1111-111111111111",
     "properties": { "HotelName": "Hotel Happy", "Description": "A place where everyone can be happy." },
     "vectors": {
         "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1],
