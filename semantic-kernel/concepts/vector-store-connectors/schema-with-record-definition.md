@@ -77,7 +77,7 @@ new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
 Use this class to indicate that your property contains general data that is not a key or a vector.
 
 ```csharp
-new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = true },
+new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsIndexed = true },
 ```
 
 #### VectorStoreRecordDataProperty configuration settings
