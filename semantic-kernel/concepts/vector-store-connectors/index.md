@@ -448,7 +448,7 @@ async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search.
-var searchResult = await collection.SearchEmbeddingAsync(searchVector, new() { Top = 1 });
+var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 1);
 
 // Inspect the returned hotel.
 await foreach (var record in searchResult)

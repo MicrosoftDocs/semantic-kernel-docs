@@ -99,7 +99,7 @@ public async Task GenerateEmbeddingsAndSearchAsync(
         await textEmbeddingGenerationService.GenerateEmbeddingAsync(descriptionText);
 
     // Search using the already generated embedding.
-    IAsyncEnumerable<VectorSearchResult<Hotel>> searchResult = await collection.SearchEmbeddingAsync(searchEmbedding);
+    IAsyncEnumerable<VectorSearchResult<Hotel>> searchResult = collection.SearchEmbeddingAsync(searchEmbedding);
     List<VectorSearchResult<Hotel>> resultItems = await searchResult.ToListAsync();
 
     // Print the first search result.
