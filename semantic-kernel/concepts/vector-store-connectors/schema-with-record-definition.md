@@ -36,9 +36,9 @@ var hotelDefinition = new VectorStoreRecordDefinition
     Properties = new List<VectorStoreRecordProperty>
     {
         new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
-        new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = true },
-        new VectorStoreRecordDataProperty("Description", typeof(string)) { IsFullTextSearchable = true },
-        new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
+        new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsIndexed = true },
+        new VectorStoreRecordDataProperty("Description", typeof(string)) { IsFullTextIndexed = true },
+        new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float), Dimensions: 4) { DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
     }
 };
 ```
@@ -86,8 +86,8 @@ new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = 
 |---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
 | PropertyType              | Yes      | The type of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes. |
-| IsFilterable              | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.           |
-| IsFullTextSearchable      | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                              |
+| IsIndexed                 | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.           |
+| IsFullTextIndexed         | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                              |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
@@ -111,6 +111,7 @@ new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dim
 | IndexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                  |
 | DistanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                     |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+| EmbeddingGenerator        | No       | Allows specifying a `Microsoft.Extensions.AI.IEmbeddingGenerator` instance to use for generating embeddings automatically for the decorated property.             |
 
 > [!TIP]
 > For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).

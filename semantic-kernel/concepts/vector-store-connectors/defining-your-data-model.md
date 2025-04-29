@@ -36,16 +36,16 @@ public class Hotel
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string[] Tags { get; set; }
 }
 ```
@@ -83,8 +83,8 @@ public string HotelName { get; set; }
 
 | Parameter                 | Required | Description                                                                                                                                                                                                     |
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IsFilterable              | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.                                                         |
-| IsFullTextSearchable      | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                                                                            |
+| IsIndexed                 | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.                                                         |
+| IsFullTextIndexed         | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                                                                            |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
@@ -103,7 +103,7 @@ public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
 | Parameter                 | Required | Description                                                                                                                                                                                                     |
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
+| Dimensions                | Yes      | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
 | IndexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
 | DistanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |

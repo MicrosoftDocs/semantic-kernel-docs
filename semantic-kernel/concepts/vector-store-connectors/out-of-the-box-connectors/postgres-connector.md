@@ -31,8 +31,8 @@ The connector has the following characteristics.
 | Supported distance functions      | <ul><li>CosineDistance</li><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>|
 | Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | No                                                                                                                               |
-| IsFullTextSearchable supported?   | No                                                                                                                               |
+| IsIndexed supported?              | No                                                                                                                               |
+| IsFullTextIndexed supported?      | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
 | HybridSearch supported?           | No                                                                                                                               |
 
@@ -142,7 +142,7 @@ public class Hotel
     [VectorStoreRecordData(StoragePropertyName = "hotel_description")]
     public string? Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

@@ -21,11 +21,11 @@ Currently the type of hybrid search supported is based on a vector search, plus 
 are returned. Sparse vector based hybrid search is not currently supported.
 
 To execute a hybrid search, your database schema needs to have a vector field and a string field with full text search capabilities enabled.
-If you are creating a collection using the Semantic Kernel vector storage connectors, make sure to enable the `IsFullTextSearchable` option
+If you are creating a collection using the Semantic Kernel vector storage connectors, make sure to enable the `IsFullTextIndexed` option
 on the string field that you want to target for the keyword search.
 
 > [!TIP]
-> For more information on how to enable `IsFullTextSearchable` refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings)
+> For more information on how to enable `IsFullTextIndexed` refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings)
 
 ## Hybrid Search
 
@@ -120,10 +120,10 @@ public sealed class Product
     [VectorStoreRecordKey]
     public int Key { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Name { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [VectorStoreRecordData]
@@ -224,7 +224,7 @@ var hybridSearchOptions = new HybridSearchOptions<Glossary>
 var searchResult = await collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], hybridSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.Definition);
 }
@@ -234,18 +234,18 @@ sealed class Glossary
     [VectorStoreRecordKey]
     public ulong Key { get; set; }
 
-    // Category is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Category is marked as indexed, since we want to filter using this property.
+    [VectorStoreRecordData(IsIndexed = true)]
     public string Category { get; set; }
 
-    // Tags is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Tags is marked as indexed, since we want to filter using this property.
+    [VectorStoreRecordData(IsIndexed = true)]
     public List<string> Tags { get; set; }
 
     [VectorStoreRecordData]
     public string Term { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Definition { get; set; }
 
     [VectorStoreRecordVector(1536)]

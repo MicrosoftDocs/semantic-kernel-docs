@@ -29,8 +29,8 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                           |
 | Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                     |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                 |
-| IsFilterable supported?               | Yes                                                                                                                                                                 |
-| IsFullTextSearchable supported?       | Yes                                                                                                                                                                 |
+| IsIndexed supported?                  | Yes                                                                                                                                                                 |
+| IsFullTextIndexed supported?          | Yes                                                                                                                                                                 |
 | StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                   |
 | HybridSearch supported?               | Yes                                                                                                                                                                 |
 
@@ -160,7 +160,7 @@ using Azure;
 using Azure.Search.Documents.Indexes;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 
-var collection = new AzureAISearchVectorStoreRecordCollection<Hotel>(
+var collection = new AzureAISearchVectorStoreRecordCollection<string, Hotel>(
     new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret)),
     "skhotels");
 ```

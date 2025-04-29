@@ -29,8 +29,8 @@ The Azure CosmosDB MongoDB Vector Store connector can be used to access and mana
 | Supported distance functions          | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                       |
 | Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                                                     |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                           |
-| IsFilterable supported?               | Yes                                                                                                                                                                           |
-| IsFullTextSearchable supported?       | No                                                                                                                                                                            |
+| IsIndexed supported?               | Yes                                                                                                                                                                           |
+| IsFullTextIndexed supported?       | No                                                                                                                                                                            |
 | StoragePropertyName supported?        | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
 | HybridSearch supported?               | No                                                                                                                                                                            |
 
@@ -141,7 +141,7 @@ using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var collection = new AzureCosmosDBMongoDBVectorStoreRecordCollection<Hotel>(
+var collection = new AzureCosmosDBMongoDBVectorStoreRecordCollection<ulong, Hotel>(
     database,
     "skhotels");
 ```
@@ -173,15 +173,15 @@ public class Hotel
     public ulong HotelId { get; set; }
 
     [BsonElement("hotel_name")]
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
 
     [BsonElement("hotel_description")]
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [BsonElement("hotel_description_embedding")]
-    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
+    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

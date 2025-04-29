@@ -19,13 +19,13 @@ Semantic Kernel provides vector search capabilities as part of its Vector Store 
 
 ## Vector Search
 
-The `VectorizedSearchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions<TRecord>` class as input.
+The `SearchEmbeddingAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions<TRecord>` class as input.
 This method is available on the following interfaces:
 
-1. `IVectorizedSearch<TRecord>`
+1. `IVectorSearch<TRecord>`
 2. `IVectorStoreRecordCollection<TKey, TRecord>`
 
-Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorizedSearch<TRecord>`.
+Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorSearch<TRecord>`.
 
 Assuming you have a collection that already contains data, you can easily search it. Here is an example using Qdrant.
 
@@ -48,10 +48,10 @@ IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollectio
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search, passing an options object with a Top value to limit results to the single top match.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+var searchResult = await collection.SearchEmbeddingAsync(searchVector, new() { Top = 1 });
 
 // Inspect the returned hotel.
-await foreach (var record in searchResult.Results)
+await foreach (var record in searchResult)
 {
     Console.WriteLine("Found hotel description: " + record.Record.Description);
     Console.WriteLine("Found record score: " + record.Score);
@@ -63,7 +63,7 @@ await foreach (var record in searchResult.Results)
 
 ## Supported Vector Types
 
-`VectorizedSearchAsync` takes a generic type as the vector parameter.
+`SearchEmbeddingAsync` takes a generic type as the vector parameter.
 The types of vectors supported by each data store vary.
 See [the documentation for each connector](./out-of-the-box-connectors/index.md) for the list of supported vector types.
 
@@ -96,7 +96,7 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = await collection.SearchEmbeddingAsync(searchVector, vectorSearchOptions);
 
 public sealed class Product
 {
@@ -132,10 +132,10 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = await collection.SearchEmbeddingAsync(searchVector, vectorSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.FeatureList);
 }
@@ -160,7 +160,7 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = await collection.SearchEmbeddingAsync(searchVector, vectorSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult.Results)
@@ -201,7 +201,7 @@ var vectorSearchOptions = new VectorSearchOptions<Glossary>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = await collection.SearchEmbeddingAsync(searchVector, vectorSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult.Results)
@@ -214,12 +214,12 @@ sealed class Glossary
     [VectorStoreRecordKey]
     public ulong Key { get; set; }
 
-    // Category is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Category is marked as indexed, since we want to filter using this property.
+    [VectorStoreRecordData(IsIndexed = true)]
     public string Category { get; set; }
 
-    // Tags is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Tags is marked as indexed, since we want to filter using this property.
+    [VectorStoreRecordData(IsIndexed = true)]
     public List<string> Tags { get; set; }
 
     [VectorStoreRecordData]

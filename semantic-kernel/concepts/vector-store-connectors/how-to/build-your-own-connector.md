@@ -54,9 +54,9 @@ In order to be considered a full implementation of the Vector Store abstractions
 
 - Microsoft.Extensions.VectorData.IVectorStore
 - Microsoft.Extensions.VectorData.IVectorStoreRecordCollection\<TKey, TRecord\>
-- Microsoft.Extensions.VectorData.IVectorizedSearch\<TRecord\>
+- Microsoft.Extensions.VectorData.IVectorSearch\<TRecord\>
 
-Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorizedSearch<TRecord>`, so only
+Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorSearch<TRecord>`, so only
 two classes are required to implement the three interfaces. The following naming convention should be used:
 
 - {database type}VectorStore : IVectorStore
@@ -106,20 +106,16 @@ comparison happens during vector searches and downloading them can be costly due
 There may be cases where the database doesn't support excluding vectors in which case
 returning them is acceptable.
 
-1.9 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should also
+1.9 *`IVectorizedSearch<TRecord>.SearchEmbeddingAsync<TVector>`* implementations should also
 respect the `IncludeVectors` option provided via `VectorSearchOptions<TRecord>` where possible.
 
-1.10 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should simulate
+1.10 *`IVectorizedSearch<TRecord>.SearchEmbeddingAsync<TVector>`* implementations should simulate
 the `Top` and `Skip` functionality requested via `VectorSearchOptions<TRecord>` if the database
 does not support this natively. To simulate this behavior, the implementation should
 fetch a number of results equal to Top + Skip, and then skip the first Skip number of results
 before returning the remaining results.
 
-1.11 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should ignore
-the `IncludeTotalCount` option provided via `VectorSearchOptions<TRecord>` if the database
-does not support this natively.
-
-1.12 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should not require
+1.11 *`IVectorizedSearch<TRecord>.SearchEmbeddingAsync<TVector>`* implementations should not require
 `VectorPropertyName` or `VectorProperty` to be specified if only one vector exists on the data model.
 In this case that single vector should automatically become the search target. If no vector or
 multiple vectors exists on the data model, and no `VectorPropertyName` or `VectorProperty` is provided
@@ -185,15 +181,15 @@ for any connector that supports this distance function, without needing to use d
 naming for each connector.
 
 ```csharp
-    [VectorStoreRecordVector(1536, DistanceFunction.DotProductSimilarity]
+    [VectorStoreRecordVector(1536, DistanceFunction = DistanceFunction.DotProductSimilarity]
     public ReadOnlyMemory<float>? Embedding { get; set; }
 ```
 
-4.2 A user can optionally choose whether each data property should be filterable or full text searchable.
+4.2 A user can optionally choose whether each data property should be indexed or full text indexed.
 In some databases, all properties may already be filterable or full text searchable by default, however
 in many databases, special indexing is required to achieve this. If special indexing is required
 this also means that adding this indexing will most likely incur extra cost.
-The `IsFilterable` and `IsFullTextSearchable` settings allow a user to control whether to enable
+The `IsIndexed` and `IsFullTextIndexed` settings allow a user to control whether to enable
 this additional indexing per property.
 
 ### 5. Data model validation
