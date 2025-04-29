@@ -57,7 +57,7 @@ IKeywordHybridSearch<Hotel> collection = (IKeywordHybridSearch<Hotel>)vectorStor
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search, passing an options object with a Top value to limit results to the single top match.
-var searchResult = await collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], new() { Top = 1 });
+var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 1);
 
 // Inspect the returned hotel.
 await foreach (var record in searchResult.Results)
@@ -113,7 +113,7 @@ var hybridSearchOptions = new HybridSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], hybridSearchOptions);
+var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 3, hybridSearchOptions);
 
 public sealed class Product
 {
@@ -152,7 +152,7 @@ var hybridSearchOptions = new HybridSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], hybridSearchOptions);
+var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 3, hybridSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult.Results)
@@ -180,7 +180,7 @@ var hybridSearchOptions = new HybridSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], hybridSearchOptions);
+var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 3, hybridSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult.Results)
@@ -221,7 +221,7 @@ var hybridSearchOptions = new HybridSearchOptions<Glossary>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], hybridSearchOptions);
+var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 3, hybridSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult)

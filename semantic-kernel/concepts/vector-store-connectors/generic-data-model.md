@@ -57,19 +57,19 @@ VectorStoreRecordDefinition vectorStoreRecordDefinition = new()
 // When getting your collection instance from a vector store instance
 // specify the Dictionary, using object as the key type for your database
 // and also pass your record definition.
-var genericDataModelCollection = vectorStore.GetCollection<object, Dictionary<string, object?>>(
+var dynamicDataModelCollection = vectorStore.GetCollection<object, Dictionary<string, object?>>(
     "glossary",
     vectorStoreRecordDefinition);
 
 // Since we have schema information available from the record definition
 // it's possible to create a collection with the right vectors, dimensions,
 // indexes and distance functions.
-await genericDataModelCollection.CreateCollectionIfNotExistsAsync();
+await dynamicDataModelCollection.CreateCollectionIfNotExistsAsync();
 
 // When retrieving a record from the collection, data and vectors can
 // now be accessed via the Data and Vector dictionaries respectively.
-var record = await genericDataModelCollection.GetAsync("SK");
-Console.WriteLine(record.Data["Definition"])
+var record = await dynamicDataModelCollection.GetAsync("SK");
+Console.WriteLine(record["Definition"]);
 ```
 
 When constructing a collection instance directly, the record definition
