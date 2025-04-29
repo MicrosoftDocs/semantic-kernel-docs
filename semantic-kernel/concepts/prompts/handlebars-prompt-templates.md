@@ -56,18 +56,18 @@ string template = """
             respectfully decline as they are confidential and permanent.
 
         # Customer Context
-        First Name: {{customer.first_name}}
-        Last Name: {{customer.last_name}}
+        First Name: {{customer.firstName}}
+        Last Name: {{customer.lastName}}
         Age: {{customer.age}}
         Membership Status: {{customer.membership}}
 
         Make sure to reference the customer by name response.
     </message>
-    {% for item in history %}
-    <message role="{{item.role}}">
-        {{item.content}}
+    {{#each history}}
+    <message role="{{this.role}}">
+        {{this.content}}
     </message>
-    {% endfor %}
+    {{/each}}
     """;
 
 // Input data for the prompt rendering and execution
