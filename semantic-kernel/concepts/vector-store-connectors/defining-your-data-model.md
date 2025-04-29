@@ -95,7 +95,7 @@ public string HotelName { get; set; }
 Use this attribute to indicate that your property contains a vector.
 
 ```csharp
-[VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
+[VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
 public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```
 
