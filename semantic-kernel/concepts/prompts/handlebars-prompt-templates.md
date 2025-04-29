@@ -63,11 +63,11 @@ string template = """
 
         Make sure to reference the customer by name response.
     </message>
-    {% for item in history %}
-    <message role="{{item.role}}">
-        {{item.content}}
-    </message>
-    {% endfor %}
+    {{#each history}}
+      <message role="{{this.role}}">
+        {{this.content}}
+      </message>
+    {{/each}}
     """;
 
 // Input data for the prompt rendering and execution
