@@ -277,7 +277,7 @@ public ReadOnlyMemory<float> DefinitionEmbedding { get; set; }
 
 ### Changes to `VectorStoreRecordVectorProperty`
 
-Similarly, when defining a vector property programmatically using `VectorStoreRecordVectorProperty`, the `Dimensions` parameter is now required.
+Similarly, when defining a vector property programmatically using `VectorStoreRecordVectorProperty`, the `dimensions` parameter is now required.
 
 **Before:**
 

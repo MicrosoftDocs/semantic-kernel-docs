@@ -50,7 +50,7 @@ VectorStoreRecordDefinition vectorStoreRecordDefinition = new()
         new VectorStoreRecordKeyProperty("Key", typeof(string)),
         new VectorStoreRecordDataProperty("Term", typeof(string)),
         new VectorStoreRecordDataProperty("Definition", typeof(string)),
-        new VectorStoreRecordVectorProperty("DefinitionEmbedding", typeof(ReadOnlyMemory<float>), Dimension: 1536)
+        new VectorStoreRecordVectorProperty("DefinitionEmbedding", typeof(ReadOnlyMemory<float>), dimensions: 1536)
     }
 };
 

@@ -38,7 +38,7 @@ var hotelDefinition = new VectorStoreRecordDefinition
         new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
         new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsIndexed = true },
         new VectorStoreRecordDataProperty("Description", typeof(string)) { IsFullTextIndexed = true },
-        new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float), Dimensions: 4) { DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
+        new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float), dimensions: 4) { DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
     }
 };
 ```
@@ -98,7 +98,7 @@ new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = 
 Use this class to indicate that your property contains a vector.
 
 ```csharp
-new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
+new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float), dimensions: 4) { DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
 ```
 
 #### VectorStoreRecordVectorProperty configuration settings
