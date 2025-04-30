@@ -522,7 +522,7 @@ KernelFunction terminationFunction =
 
 // Define the termination strategy
 KernelFunctionTerminationStrategy terminationStrategy = 
-  new(selectionFunction, kernel)
+  new(terminationFunction, kernel)
   {
       // Only the reviewer may give approval.
       Agents = [reviewerAgent],
