@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; `ChatCompletionAgent`
+title: How-To use `ChatCompletionAgent`
 description: A step-by-step walk-through of defining and utilizing the features of a Chat Completion Agent.
 zone_pivot_groups: programming-languages
 author: crickman

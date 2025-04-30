@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; Create your first Process
+title: How-To - Create your first Process
 description: A step-by-step walk-through for creating a basic Process
 zone_pivot_groups: programming-languages
 author: bentho

@@ -337,7 +337,6 @@ If known, an initial agent may be specified to always take the first turn.  A hi
 - [`SelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.selectionstrategy)
 - [`SequentialSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.sequentialselectionstrategy)
 - [`KernelFunctionSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
-- [`Microsoft.SemanticKernel.Agents.History`](/dotnet/api/microsoft.semantickernel.agents.history)
 
 ```csharp
 // Define the agent names for use in the function template
@@ -486,7 +485,6 @@ This strategy is defined by a base class that can be extended to implement custo
 - [`KernelFunctionSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
 - [`KernelFunctionTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionterminationstrategy)
 - [`AggregatorTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.aggregatorterminationstrategy)
-- [`Microsoft.SemanticKernel.Agents.History`](/dotnet/api/microsoft.semantickernel.agents.history)
 
 ```csharp
 // Initialize a Kernel with a chat-completion service
@@ -522,7 +520,7 @@ KernelFunction terminationFunction =
 
 // Define the termination strategy
 KernelFunctionTerminationStrategy terminationStrategy = 
-  new(selectionFunction, kernel)
+  new(terminationFunction, kernel)
   {
       // Only the reviewer may give approval.
       Agents = [reviewerAgent],
