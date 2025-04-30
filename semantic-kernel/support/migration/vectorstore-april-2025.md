@@ -18,12 +18,17 @@ The April 2025 update introduces built-in support for embedding generation direc
 
 ### Configuring an Embedding Generator
 
-The embedding generator is provided by the `Microsoft.Extensions.AI` package and can be configured at various levels:
+Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are supported and can be configured at various levels:
 
 1. **On the Vector Store**:
     You can set a default embedding generator for the entire vector store. This generator will be used for all collections and properties unless overridden.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using OpenAI;
+    using Qdrant.Client;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
@@ -38,6 +43,11 @@ The embedding generator is provided by the `Microsoft.Extensions.AI` package and
     You can configure an embedding generator for a specific collection, overriding the store-level generator.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using OpenAI;
+    using Qdrant.Client;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
@@ -53,6 +63,12 @@ The embedding generator is provided by the `Microsoft.Extensions.AI` package and
     When defining properties programmatically using `VectorStoreRecordDefinition`, you can specify an embedding generator for all properties.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.Extensions.VectorData;
+    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using OpenAI;
+    using Qdrant.Client;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
@@ -66,12 +82,22 @@ The embedding generator is provided by the `Microsoft.Extensions.AI` package and
             new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(string), dimensions: 1536)
         }
     };
+
+    var collectionOptions = new QdrantVectorStoreRecordCollectionOptions<MyRecord>
+    {
+        VectorStoreRecordDefinition = recordDefinition
+    };
+    var collection = new QdrantVectorStoreRecordCollection<ulong, MyRecord>(new QdrantClient("localhost"), "myCollection", collectionOptions);
     ```
 
 4. **On a Vector Property Definition**:
     When defining properties programmatically, you can set an embedding generator directly on the property.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.Extensions.VectorData;
+    using OpenAI;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
@@ -94,7 +120,6 @@ internal class FinanceInfo
     [VectorStoreRecordKey]
     public string Key { get; set; } = string.Empty;
 
-    [TextSearchResultValue]
     [VectorStoreRecordData]
     public string Text { get; set; } = string.Empty;
 
@@ -219,6 +244,40 @@ A new method allows you to delete a collection from the vector store without hav
 // Example: Delete a collection
 await vectorStore.DeleteCollectionAsync("myCollection", cancellationToken);
 Console.WriteLine("The collection has been deleted.");
+```
+
+## Replacement of `VectorStoreGenericDataModel<TKey>` with `Dictionary<string, object?>`
+
+The vector data abstractions support working with databases where the schema of a collection is not known at build time.
+Previously this was supported via the `VectorStoreGenericDataModel<TKey>` type, where this model can be used in place of
+a custom data model.
+
+In this release, the `VectorStoreGenericDataModel<TKey>` has been obsoleted, and the recommended approach is to use
+a `Dictionary<string, object?>` instead.
+
+As before, a record definition needs to be supplied to determine the schema of the collection. Also note that the
+key type required when getting the collection instance is `object`, while in the schema it is fixed to `string`.
+
+```csharp
+var recordDefinition = new VectorStoreRecordDefinition
+{
+    Properties = new List<VectorStoreRecordProperty>
+    {
+        new VectorStoreRecordKeyProperty("Key", typeof(string)),
+        new VectorStoreRecordDataProperty("Text", typeof(string)),
+        new VectorStoreRecordVectorProperty("Embedding", typeof(ReadOnlyMemory<float>), 1536)
+    }
+};
+var collection = vectorStore.GetCollection<object, Dictionary<string, object?>>("finances", recordDefinition);
+var record = new Dictionary<string, object?>
+{
+    { "Key", "1" },
+    { "Text", "The budget for 2024 is EUR 364 000" },
+    { "Embedding", vector }
+};
+await collection.UpsertAsync(record);
+var retrievedRecord = await collection.GetAsync("1");
+Console.WriteLine(retrievedRecord["Text"]);
 ```
 
 ## Change in Batch method naming convention

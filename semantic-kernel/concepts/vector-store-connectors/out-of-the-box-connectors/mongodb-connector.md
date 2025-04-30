@@ -113,7 +113,7 @@ using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var collection = new MongoDBVectorStoreRecordCollection<Hotel>(
+var collection = new MongoDBVectorStoreRecordCollection<string, Hotel>(
     database,
     "skhotels");
 ```
