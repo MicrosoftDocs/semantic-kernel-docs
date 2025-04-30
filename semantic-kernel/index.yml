@@ -51,7 +51,7 @@ productDirectory:
       links:
         - url: /semantic-kernel/concepts/enterprise-readiness/observability/index
           text: Observability
-        - url: /semantic-kernel/concepts/enterprise-readiness/SECURITY
+        - url: /semantic-kernel/support/SECURITY
           text: Security    
         - url: /semantic-kernel/concepts/enterprise-readiness/filters
           text: Filters
