@@ -18,7 +18,7 @@ The April 2025 update introduces built-in support for embedding generation direc
 
 ### Configuring an Embedding Generator
 
-The embedding generator is provided by the `Microsoft.Extensions.AI` package and can be configured at various levels:
+Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are supported and can be configured at various levels:
 
 1. **On the Vector Store**:
     You can set a default embedding generator for the entire vector store. This generator will be used for all collections and properties unless overridden.
@@ -94,7 +94,6 @@ internal class FinanceInfo
     [VectorStoreRecordKey]
     public string Key { get; set; } = string.Empty;
 
-    [TextSearchResultValue]
     [VectorStoreRecordData]
     public string Text { get; set; } = string.Empty;
 
