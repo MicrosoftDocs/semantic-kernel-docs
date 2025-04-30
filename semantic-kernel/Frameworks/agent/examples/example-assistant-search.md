@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; `OpenAIAssistantAgent` File Search
+title: How-To use `OpenAIAssistantAgent` - File Search
 description: A step-by-step walk-through of defining and utilizing the file-search tool of an OpenAI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman

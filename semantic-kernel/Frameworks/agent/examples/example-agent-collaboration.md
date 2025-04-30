@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; Coordinate Agent Collaboration using Agent Group Chat (Experimental)
+title: How-To Coordinate Agent Collaboration using Agent Group Chat (Experimental)
 description: A step-by-step walk-through for coordinating agent collaboration using Agent Group Chat.
 zone_pivot_groups: programming-languages
 author: crickman

@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; `OpenAIAssistantAgent` Code Interpreter
+title: How-To use `OpenAIAssistantAgent` - Code Interpreter
 description: A step-by-step walk-through of defining and utilizing the code-interpreter tool of an OpenAI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman

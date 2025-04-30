@@ -29,8 +29,8 @@ The MongoDB Vector Store connector can be used to access and manage data in Mong
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                     |
 | Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                                                     |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                           |
-| IsFilterable supported?               | Yes                                                                                                                                                                           |
-| IsFullTextSearchable supported?       | No                                                                                                                                                                            |
+| IsIndexed supported?                  | Yes                                                                                                                                                                           |
+| IsFullTextIndexed supported?          | No                                                                                                                                                                            |
 | StoragePropertyName supported?        | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
 | HybridSearch supported?               | Yes                                                                                                                                                                           |
 
@@ -113,7 +113,7 @@ using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var collection = new MongoDBVectorStoreRecordCollection<Hotel>(
+var collection = new MongoDBVectorStoreRecordCollection<string, Hotel>(
     database,
     "skhotels");
 ```
@@ -145,15 +145,15 @@ public class Hotel
     public ulong HotelId { get; set; }
 
     [BsonElement("hotel_name")]
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
 
     [BsonElement("hotel_description")]
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [BsonElement("hotel_description_embedding")]
-    [VectorStoreRecordVector(4, DistanceFunction.CosineSimilarity)]
+    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineSimilarity)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

@@ -29,8 +29,8 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>                                                 |
 | Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                        |
 | Supports multiple vectors in a record | No                                                                                                                                               |
-| IsFilterable supported?               | Yes                                                                                                                                              |
-| IsFullTextSearchable supported?       | No                                                                                                                                               |
+| IsIndexed supported?                  | Yes                                                                                                                                              |
+| IsFullTextIndexed supported?          | No                                                                                                                                               |
 | StoragePropertyName supported?        | Yes                                                                                                                                              |
 | HybridSearch supported?               | No                                                                                                                                               |
 | Integrated Embeddings supported?      | No                                                                                                                                               |
@@ -104,7 +104,7 @@ It is possible to construct a direct reference to a named collection.
 using Microsoft.SemanticKernel.Connectors.Pinecone;
 using PineconeClient = Pinecone.PineconeClient;
 
-var collection = new PineconeVectorStoreRecordCollection<Hotel>(
+var collection = new PineconeVectorStoreRecordCollection<string, Hotel>(
     new PineconeClient(pineconeApiKey),
     "skhotels");
 ```
@@ -121,7 +121,7 @@ Pinecone collection when constructing it and use this instead for all operations
 using Microsoft.SemanticKernel.Connectors.Pinecone;
 using PineconeClient = Pinecone.PineconeClient;
 
-var collection = new PineconeVectorStoreRecordCollection<Hotel>(
+var collection = new PineconeVectorStoreRecordCollection<string, Hotel>(
     new PineconeClient(pineconeApiKey),
     "skhotels",
     new() { IndexNamespace = "seasidehotels" });
@@ -152,15 +152,15 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public string HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
+    [VectorStoreRecordData(IsIndexed = true, StoragePropertyName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
+    [VectorStoreRecordData(IsFullTextIndexed = true, StoragePropertyName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

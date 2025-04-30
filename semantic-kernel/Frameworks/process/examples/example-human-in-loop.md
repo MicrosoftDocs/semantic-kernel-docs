@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; Human-in-the-Loop
+title: How-To - Human-in-the-Loop
 description: A step-by-step walk-through for Human-in-the-Loop in Processes
 zone_pivot_groups: programming-languages
 author: bentho

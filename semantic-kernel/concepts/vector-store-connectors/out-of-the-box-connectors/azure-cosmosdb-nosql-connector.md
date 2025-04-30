@@ -29,8 +29,8 @@ The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                           |
 | Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                     |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                 |
-| IsFilterable supported?               | Yes                                                                                                                                                                 |
-| IsFullTextSearchable supported?       | Yes                                                                                                                                                                 |
+| IsIndexed supported?                  | Yes                                                                                                                                                                 |
+| IsFullTextIndexed supported?          | Yes                                                                                                                                                                 |
 | StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                   |
 | HybridSearch supported?               | Yes                                                                                                                                                                 |
 
@@ -149,7 +149,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 });
 
 var database = cosmosClient.GetDatabase(databaseName);
-var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<Hotel>(
+var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, Hotel>(
     database,
     "skhotels");
 ```
@@ -181,7 +181,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 });
 
 var database = cosmosClient.GetDatabase(databaseName);
-var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<Hotel>(
+var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, Hotel>(
     database,
     "skhotels",
     new() { JsonSerializerOptions = jsonSerializerOptions });
@@ -196,23 +196,23 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public string HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION_EMBEDDING")]
-    [VectorStoreRecordVector(4, DistanceFunction.EuclideanDistance, IndexKind.QuantizedFlat)]
+    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.EuclideanDistance, IndexKind = IndexKind.QuantizedFlat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
 ```json
 {
-    "id": 1,
+    "id": "1",
     "HOTEL_NAME": "Hotel Happy",
     "DESCRIPTION": "A place where everyone can be happy.",
     "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1],
@@ -235,7 +235,7 @@ var options = new AzureCosmosDBNoSQLVectorStoreRecordCollectionOptions<Hotel>
     PartitionKeyPropertyName = nameof(Hotel.HotelName)
 };
 
-var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<Hotel>(database, "collection-name", options) 
+var collection = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, Hotel>(database, "collection-name", options) 
     as IVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, Hotel>;
 ```
 

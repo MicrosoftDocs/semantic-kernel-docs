@@ -19,13 +19,13 @@ Semantic Kernel provides vector search capabilities as part of its Vector Store 
 
 ## Vector Search
 
-The `VectorizedSearchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions<TRecord>` class as input.
+The `SearchEmbeddingAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions<TRecord>` class as input.
 This method is available on the following interfaces:
 
-1. `IVectorizedSearch<TRecord>`
+1. `IVectorSearch<TRecord>`
 2. `IVectorStoreRecordCollection<TKey, TRecord>`
 
-Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorizedSearch<TRecord>`.
+Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorSearch<TRecord>`.
 
 Assuming you have a collection that already contains data, you can easily search it. Here is an example using Qdrant.
 
@@ -48,10 +48,10 @@ IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollectio
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search, passing an options object with a Top value to limit results to the single top match.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 1);
 
 // Inspect the returned hotel.
-await foreach (var record in searchResult.Results)
+await foreach (var record in searchResult)
 {
     Console.WriteLine("Found hotel description: " + record.Record.Description);
     Console.WriteLine("Found record score: " + record.Score);
@@ -63,7 +63,7 @@ await foreach (var record in searchResult.Results)
 
 ## Supported Vector Types
 
-`VectorizedSearchAsync` takes a generic type as the vector parameter.
+`SearchEmbeddingAsync` takes a generic type as the vector parameter.
 The types of vectors supported by each data store vary.
 See [the documentation for each connector](./out-of-the-box-connectors/index.md) for the list of supported vector types.
 
@@ -96,7 +96,7 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 3, vectorSearchOptions);
 
 public sealed class Product
 {
@@ -124,24 +124,25 @@ to skip a number of results from the top of the resultset.
 Top and Skip can be used to do paging if you wish to retrieve a large number of results using separate calls.
 
 ```csharp
-// Create the vector search options and indicate that we want to skip the first 40 results and then get the next 20.
+// Create the vector search options and indicate that we want to skip the first 40 results.
 var vectorSearchOptions = new VectorSearchOptions<Product>
 {
-    Top = 20,
     Skip = 40
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+// Here we pass top: 20 to indicate that we want to retrieve the next 20 results after skipping
+// the first 40
+var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 20, vectorSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.FeatureList);
 }
 ```
 
-The default values for `Top` is 3 and `Skip` is 0.
+The default value `Skip` is 0.
 
 ### IncludeVectors
 
@@ -160,10 +161,10 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 3, vectorSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.FeatureList);
 }
@@ -201,10 +202,10 @@ var vectorSearchOptions = new VectorSearchOptions<Glossary>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 3, vectorSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.Definition);
 }
@@ -214,12 +215,12 @@ sealed class Glossary
     [VectorStoreRecordKey]
     public ulong Key { get; set; }
 
-    // Category is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Category is marked as indexed, since we want to filter using this property.
+    [VectorStoreRecordData(IsIndexed = true)]
     public string Category { get; set; }
 
-    // Tags is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Tags is marked as indexed, since we want to filter using this property.
+    [VectorStoreRecordData(IsIndexed = true)]
     public List<string> Tags { get; set; }
 
     [VectorStoreRecordData]
