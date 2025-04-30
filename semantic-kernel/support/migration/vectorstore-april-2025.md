@@ -246,6 +246,40 @@ await vectorStore.DeleteCollectionAsync("myCollection", cancellationToken);
 Console.WriteLine("The collection has been deleted.");
 ```
 
+## Replacement of `VectorStoreGenericDataModel<TKey>` with `Dictionary<string, object?>`
+
+The vector data abstractions support working with databases where the schema of a collection is not known at build time.
+Previously this was supported via the `VectorStoreGenericDataModel<TKey>` type, where this model can be used in place of
+a custom data model.
+
+In this release, the `VectorStoreGenericDataModel<TKey>` has been obsoleted, and the recommended approach is to use
+a `Dictionary<string, object?>` instead.
+
+As before, a record definition needs to be supplied to determine the schema of the collection. Also note that the
+key type required when getting the collection instance is `object`, while in the schema it is fixed to `string`.
+
+```csharp
+var recordDefinition = new VectorStoreRecordDefinition
+{
+    Properties = new List<VectorStoreRecordProperty>
+    {
+        new VectorStoreRecordKeyProperty("Key", typeof(string)),
+        new VectorStoreRecordDataProperty("Text", typeof(string)),
+        new VectorStoreRecordVectorProperty("Embedding", typeof(ReadOnlyMemory<float>), 1536)
+    }
+};
+var collection = vectorStore.GetCollection<object, Dictionary<string, object?>>("finances", recordDefinition);
+var record = new Dictionary<string, object?>
+{
+    { "Key", "1" },
+    { "Text", "The budget for 2024 is EUR 364 000" },
+    { "Embedding", vector }
+};
+await collection.UpsertAsync(record);
+var retrievedRecord = await collection.GetAsync("1");
+Console.WriteLine(retrievedRecord["Text"]);
+```
+
 ## Change in Batch method naming convention
 
 The `IVectorStoreRecordCollection` interface has been updated to improve consistency in method naming conventions.
