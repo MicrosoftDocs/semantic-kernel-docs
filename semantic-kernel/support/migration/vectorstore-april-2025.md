@@ -24,6 +24,11 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
     You can set a default embedding generator for the entire vector store. This generator will be used for all collections and properties unless overridden.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using OpenAI;
+    using Qdrant.Client;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
@@ -38,6 +43,11 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
     You can configure an embedding generator for a specific collection, overriding the store-level generator.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using OpenAI;
+    using Qdrant.Client;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
@@ -53,6 +63,12 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
     When defining properties programmatically using `VectorStoreRecordDefinition`, you can specify an embedding generator for all properties.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.Extensions.VectorData;
+    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using OpenAI;
+    using Qdrant.Client;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
@@ -66,12 +82,22 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
             new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(string), dimensions: 1536)
         }
     };
+
+    var collectionOptions = new QdrantVectorStoreRecordCollectionOptions<MyRecord>
+    {
+        VectorStoreRecordDefinition = recordDefinition
+    };
+    var collection = new QdrantVectorStoreRecordCollection<ulong, MyRecord>(new QdrantClient("localhost"), "myCollection", collectionOptions);
     ```
 
 4. **On a Vector Property Definition**:
     When defining properties programmatically, you can set an embedding generator directly on the property.
 
     ```csharp
+    using Microsoft.Extensions.AI;
+    using Microsoft.Extensions.VectorData;
+    using OpenAI;
+    
     var embeddingGenerator = new OpenAIClient("your key")
         .GetEmbeddingClient("your chosen model")
         .AsIEmbeddingGenerator();
