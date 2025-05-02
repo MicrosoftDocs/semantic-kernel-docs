@@ -85,10 +85,14 @@ Module|Description
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+Package|Description
+--|--
+
+[semantickernel-agents-core](https://central.sonatype.com/artifact/com.microsoft.semantic-kernel/semantickernel-agents-core)| Includes the [`ChatCompletionAgent`](./chat-completion-agent.md) class.
+[semantickernel-aiservices-openai](https://central.sonatype.com/artifact/com.microsoft.semantic-kernel/semantickernel-aiservices-openai)| This contains Semantic Kernel service library for getting started with the `Agent Framework` using OpenAI.
+[semantickernel-api](https://central.sonatype.com/artifact/com.microsoft.semantic-kernel/semantickernel-api)||Defines the core agent abstractions for the `Agent Framework`. Generally not required to be specified as it is included in both above.
 
 ::: zone-end
-
 
 > [!div class="nextstepaction"]
 > [Agent Architecture](./agent-architecture.md)

@@ -44,7 +44,7 @@ A streamed response delivers the message content in small, incremental chunks. T
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -104,7 +104,7 @@ async for response in agent.invoke_stream(messages="user input", thread=thread)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -219,7 +219,7 @@ await thread.delete()
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -360,7 +360,7 @@ AuthorRole.ASSISTANT: You're welcome! If you have any questions about the menu o
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -428,6 +428,6 @@ async for response in chat.invoke_stream():
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end

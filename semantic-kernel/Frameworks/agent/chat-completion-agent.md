@@ -29,7 +29,7 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+- [`ChatCompletionAgent`](/java/api/com.microsoft.semantickernel.agents.chatcompletion.chatcompletionagent)
 
 ::: zone-end
 
@@ -69,7 +69,13 @@ pip install semantic-kernel
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```xml
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-agents-core</artifactId>
+    <version>[LATEST]</version>
+</dependency>
+```
 
 ::: zone-end
 
@@ -137,7 +143,22 @@ The first method is useful when you already have a chat completion service ready
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```csharp
+// Initialize a Kernel with a chat-completion service
+var chatCompletion = OpenAIChatCompletion.builder()
+        .withOpenAIAsyncClient(client) // OpenAIAsyncClient with configuration parameters
+        .withModelId(MODEL_ID)
+        .build();
+
+var kernel = Kernel.builder()
+        .withAIService(ChatCompletionService.class, chatCompletion)
+        .build();
+
+// Create the agent
+var agent = ChatCompletionAgent.builder()
+        .withKernel(kernel)
+        .build();
+```
 
 ::: zone-end
 
@@ -205,7 +226,7 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -312,7 +333,27 @@ async for response in agent.invoke_stream(messages="user input", thread=thread):
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+ChatCompletionAgent agent = ...;
+
+// Generate the agent response(s)
+agent.invokeAsync(new ChatMessageContent<>(AuthorRole.USER, "<user input>")).block();
+```
+
+You can also use an `AgentThread` to have a conversation with your agent.
+Here we are using a `ChatHistoryAgentThread`.
+
+The `ChatHistoryAgentThread` can also take a `ChatHistory` object as input, via its constructor, if resuming a previous conversation. (not shown)
+
+```java
+// Define agent
+ChatCompletionAgent agent = ...;
+
+AgentThread thread = new ChatHistoryAgentThread();
+
+// Generate the agent response(s)
+agent.invokeAsync(new ChatMessageContent<>(AuthorRole.USER, "<user input>"), thread).block();
+```
 
 ::: zone-end
 
@@ -452,7 +493,7 @@ AuthorRole.ASSISTANT: You're welcome! If you have any questions about the menu o
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 

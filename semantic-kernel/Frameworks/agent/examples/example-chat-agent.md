@@ -94,7 +94,37 @@ Additionally, copy the GitHub plug-in and models (`github.py`) from [Semantic Ke
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+Start by creating a Maven console project. Then, include the following package references to ensure all required dependencies are available.
+
+The project `pom.xml` should contain the following dependencies:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-bom</artifactId>
+            <version>[LATEST]</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+    <dependency>
+        <groupId>com.microsoft.semantic-kernel</groupId>
+        <artifactId>semantickernel-agents-core</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>com.microsoft.semantic-kernel</groupId>
+        <artifactId>semantickernel-aiservices-openai</artifactId>
+    </dependency>
+</dependencies>
+```
+
+Additionally, copy the GitHub plug-in and models (`GitHubPlugin.java` and `GitHubModels.java`) from [Semantic Kernel `LearnResources` Project](https://github.com/microsoft/semantic-kernel-java/tree/main/samples/semantickernel-learn-resources/src/main/java/com/microsoft/semantickernel/samples/plugins/github).  Add these files in your project folder.
 
 ::: zone-end
 
@@ -188,7 +218,31 @@ Once configured, the respective AI service classes will pick up the required var
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+Define the following environment variables in your system.
+
+```bash
+# Azure OpenAI
+AZURE_OPENAI_API_KEY=""
+AZURE_OPENAI_ENDPOINT="https://<resource-name>.openai.azure.com/"
+AZURE_CHAT_MODEL_DEPLOYMENT=""
+
+# OpenAI
+OPENAI_API_KEY=""
+OPENAI_MODEL_ID=""
+```
+
+At the top of the file you can retrieve their values as following.
+
+```java
+// Azure OpenAI
+private static final String AZURE_OPENAI_API_KEY = System.getenv("AZURE_OPENAI_API_KEY");
+private static final String AZURE_OPENAI_ENDPOINT = System.getenv("AZURE_OPENAI_ENDPOINT");
+private static final String AZURE_CHAT_MODEL_DEPLOYMENT = System.getenv().getOrDefault("AZURE_CHAT_MODEL_DEPLOYMENT", "gpt-4o");
+
+// OpenAI
+private static final String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
+private static final String OPENAI_MODEL_ID = System.getenv().getOrDefault("OPENAI_MODEL_ID", "gpt-4o");
+```
 
 ::: zone-end
 
@@ -216,12 +270,6 @@ Settings settings = new();
 ```
 ::: zone-end
 
-::: zone pivot="programming-language-java"
-
-> Agents are currently unavailable in Java.
-
-::: zone-end
-
 Initialize the plug-in using its settings.
 
 ::: zone pivot="programming-language-csharp"
@@ -246,7 +294,9 @@ kernel.add_plugin(GitHubPlugin(settings=gh_settings), plugin_name="github")
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+var githubPlugin = new GitHubPlugin(GITHUB_PAT);
+```
 
 ::: zone-end
 
@@ -284,7 +334,22 @@ settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+OpenAIAsyncClient client = new OpenAIClientBuilder()
+    .credential(new AzureKeyCredential(AZURE_OPENAI_API_KEY))
+    .endpoint(AZURE_OPENAI_ENDPOINT)
+    .buildAsyncClient();
+
+ChatCompletionService chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId(AZURE_CHAT_MODEL_DEPLOYMENT)
+    .withOpenAIAsyncClient(client)
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(githubPlugin, "GitHubPlugin"))
+    .build();
+```
 
 ::: zone-end
 
@@ -347,7 +412,40 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+// Invocation context for the agent
+InvocationContext invocationContext = InvocationContext.builder()
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true))
+    .build()
+
+ChatCompletionAgent agent = ChatCompletionAgent.builder()
+    .withName("SampleAssistantAgent")
+    .withKernel(kernel)
+    .withInvocationContext(invocationContext)
+    .withTemplate(
+        DefaultPromptTemplate.build(
+            PromptTemplateConfig.builder()
+                .withTemplate(
+                    """
+                    You are an agent designed to query and retrieve information from a single GitHub repository in a read-only manner.
+                    You are also able to access the profile of the active user.
+
+                    Use the current date and time to provide up-to-date details or time-sensitive responses.
+
+                    The repository you are querying is a public repository with the following name: {{$repository}}
+
+                    The current date and time is: {{$now}}.
+                    """)
+                .build()))
+    .withKernelArguments(
+        KernelArguments.builder()
+            .withVariable("repository", "microsoft/semantic-kernel-java")
+            .withExecutionSettings(PromptExecutionSettings.builder()
+                    .build())
+            .build())
+    .build();
+```
+
 
 ::: zone-end
 
@@ -377,7 +475,15 @@ while not is_complete:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+AgentThread agentThread = new ChatHistoryAgentThread();
+boolean isComplete = false;
+
+while (!isComplete) {
+    // processing logic here
+}
+```
+
 
 ::: zone-end
 
@@ -418,7 +524,24 @@ if user_input.lower() == "exit":
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+Scanner scanner = new Scanner(System.in);
+
+while (!isComplete) {
+    System.out.print("> ");
+
+    String input = scanner.nextLine();
+    if (input.isEmpty()) {
+        continue;
+    }
+
+    if (input.equalsIgnoreCase("exit")) {
+        isComplete = true;
+        break;
+    }
+
+}
+```
 
 ::: zone-end
 
@@ -455,7 +578,19 @@ async for response in agent.invoke(messages=user_input, thread=thread, arguments
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+var options = AgentInvokeOptions.builder()
+    .withKernelArguments(KernelArguments.builder()
+            .withVariable("now", OffsetDateTime.now())
+            .build())
+    .build();
+
+for (var response : agent.invokeAsync(message, agentThread, options).block()) {
+    System.out.println(response.getMessage());
+    agentThread = response.getThread();
+}
+```
+
 
 ::: zone-end
 
@@ -655,7 +790,132 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+import com.microsoft.semantickernel.Kernel;
+import com.microsoft.semantickernel.agents.AgentInvokeOptions;
+import com.microsoft.semantickernel.agents.AgentThread;
+import com.microsoft.semantickernel.agents.chatcompletion.ChatCompletionAgent;
+import com.microsoft.semantickernel.agents.chatcompletion.ChatHistoryAgentThread;
+import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
+import com.microsoft.semantickernel.contextvariables.ContextVariableTypeConverter;
+import com.microsoft.semantickernel.functionchoice.FunctionChoiceBehavior;
+import com.microsoft.semantickernel.implementation.templateengine.tokenizer.DefaultPromptTemplate;
+import com.microsoft.semantickernel.orchestration.InvocationContext;
+import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
+import com.microsoft.semantickernel.plugin.KernelPluginFactory;
+import com.microsoft.semantickernel.samples.plugins.github.GitHubModel;
+import com.microsoft.semantickernel.samples.plugins.github.GitHubPlugin;
+import com.microsoft.semantickernel.semanticfunctions.KernelArguments;
+import com.microsoft.semantickernel.semanticfunctions.PromptTemplateConfig;
+import com.microsoft.semantickernel.services.chatcompletion.AuthorRole;
+import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
+import com.microsoft.semantickernel.services.chatcompletion.ChatMessageContent;
+import com.azure.ai.openai.OpenAIAsyncClient;
+import com.azure.ai.openai.OpenAIClientBuilder;
+import com.azure.core.credential.AzureKeyCredential;
+
+import java.time.OffsetDateTime;
+import java.util.Scanner;
+
+public class CompletionAgent {
+    // Azure OpenAI
+    private static final String AZURE_OPENAI_API_KEY = System.getenv("AZURE_OPENAI_API_KEY");
+    private static final String AZURE_OPENAI_ENDPOINT = System.getenv("AZURE_OPENAI_ENDPOINT");
+    private static final String AZURE_CHAT_MODEL_DEPLOYMENT = System.getenv().getOrDefault("AZURE_CHAT_MODEL_DEPLOYMENT", "gpt-4o");
+
+    // GitHub Personal Access Token
+    private static final String GITHUB_PAT = System.getenv("GITHUB_PAT");
+
+    public static void main(String[] args) {
+        System.out.println("======== ChatCompletion Agent ========");
+
+        OpenAIAsyncClient client = new OpenAIClientBuilder()
+                .credential(new AzureKeyCredential(AZURE_OPENAI_API_KEY))
+                .endpoint(AZURE_OPENAI_ENDPOINT)
+                .buildAsyncClient();
+
+        var githubPlugin = new GitHubPlugin(GITHUB_PAT);
+
+        ChatCompletionService chatCompletion = OpenAIChatCompletion.builder()
+                .withModelId(AZURE_CHAT_MODEL_DEPLOYMENT)
+                .withOpenAIAsyncClient(client)
+                .build();
+
+        Kernel kernel = Kernel.builder()
+            .withAIService(ChatCompletionService.class, chatCompletion)
+            .withPlugin(KernelPluginFactory.createFromObject(githubPlugin, "GitHubPlugin"))
+            .build();
+
+        InvocationContext invocationContext = InvocationContext.builder()
+            .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true))
+            .withContextVariableConverter(new ContextVariableTypeConverter<>(
+                    GitHubModel.Issue.class,
+                    o -> (GitHubModel.Issue) o,
+                    o -> o.toString(),
+                    s -> null))
+            .build();
+
+        ChatCompletionAgent agent = ChatCompletionAgent.builder()
+            .withName("SampleAssistantAgent")
+            .withKernel(kernel)
+            .withInvocationContext(invocationContext)
+            .withTemplate(
+                DefaultPromptTemplate.build(
+                    PromptTemplateConfig.builder()
+                        .withTemplate(
+                            """
+                            You are an agent designed to query and retrieve information from a single GitHub repository in a read-only manner.
+                            You are also able to access the profile of the active user.
+        
+                            Use the current date and time to provide up-to-date details or time-sensitive responses.
+        
+                            The repository you are querying is a public repository with the following name: {{$repository}}
+        
+                            The current date and time is: {{$now}}.
+                            """)
+                        .build()))
+            .withKernelArguments(
+                KernelArguments.builder()
+                    .withVariable("repository", "microsoft/semantic-kernel-java")
+                    .withExecutionSettings(PromptExecutionSettings.builder()
+                            .build())
+                    .build())
+            .build();
+
+        AgentThread agentThread = new ChatHistoryAgentThread();
+        boolean isComplete = false;
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (!isComplete) {
+            System.out.print("> ");
+
+            String input = scanner.nextLine();
+            if (input.isEmpty()) {
+                continue;
+            }
+
+            if (input.equalsIgnoreCase("EXIT")) {
+                isComplete = true;
+                break;
+            }
+
+            var message = new ChatMessageContent<>(AuthorRole.USER, input);
+
+            var options = AgentInvokeOptions.builder()
+                .withKernelArguments(KernelArguments.builder()
+                        .withVariable("now", OffsetDateTime.now())
+                        .build())
+                .build();
+
+            for (var response : agent.invokeAsync(message, agentThread, options).block()) {
+                System.out.println(response.getMessage());
+                agentThread = response.getThread();
+            }
+        }
+    }
+}
+```
 
 ::: zone-end
 
