@@ -205,7 +205,7 @@ async for response in agent.invoke_stream(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
