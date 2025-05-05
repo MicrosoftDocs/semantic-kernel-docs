@@ -379,7 +379,7 @@ await agent_thread.delete()
 
 ::: zone pivot="programming-language-java"
 
-```csharp
+```java
 // Delete a thread.
 agentThread.deleteAsync().block();
 ```
