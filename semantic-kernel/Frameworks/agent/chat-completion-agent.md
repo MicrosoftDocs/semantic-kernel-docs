@@ -143,7 +143,7 @@ The first method is useful when you already have a chat completion service ready
 
 ::: zone pivot="programming-language-java"
 
-```csharp
+```java
 // Initialize a Kernel with a chat-completion service
 var chatCompletion = OpenAIChatCompletion.builder()
         .withOpenAIAsyncClient(client) // OpenAIAsyncClient with configuration parameters
