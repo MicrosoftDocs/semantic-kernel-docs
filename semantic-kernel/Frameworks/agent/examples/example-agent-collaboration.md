@@ -101,7 +101,7 @@ from semantic_kernel.functions import KernelFunctionFromPrompt
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -189,7 +189,7 @@ Once configured, the respective AI service classes will pick up the required var
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -219,7 +219,7 @@ Settings settings = new();
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -247,7 +247,7 @@ kernel = Kernel()
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
@@ -261,7 +261,7 @@ toolKernel.Plugins.AddFromType<ClipboardAccess>();
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -297,7 +297,7 @@ private sealed class ClipboardAccess
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -324,7 +324,7 @@ COPYWRITER_NAME = "Writer"
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -384,7 +384,7 @@ RULES:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -429,7 +429,7 @@ Your sole responsibility is to rewrite content according to review suggestions.
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -494,7 +494,7 @@ RESPONSE:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -540,7 +540,7 @@ RESPONSE:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -560,7 +560,7 @@ history_reducer = ChatHistoryTruncationReducer(target_count=1)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -651,7 +651,7 @@ The `lastmessage` `history_variable_name` corresponds with the `KernelFunctionSe
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -681,7 +681,7 @@ while not is_complete:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -785,7 +785,7 @@ await chat.add_chat_message(message=user_input)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -838,7 +838,7 @@ chat.is_complete = False
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -1314,6 +1314,6 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end

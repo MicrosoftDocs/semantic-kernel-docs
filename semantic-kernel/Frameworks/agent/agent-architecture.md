@@ -47,7 +47,7 @@ The underlying Semantic Kernel `Agent` abstraction can be found here:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -110,7 +110,7 @@ The Agent Channel class enables agents of various types to participate in an [`A
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -135,7 +135,7 @@ At the core of the Semantic Kernel ecosystem is the [`Kernel`](../../concepts/ke
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+At the heart of the Semantic Kernel ecosystem is the [`Kernel`](../../concepts/kernel.md), which serves as the core object that drives AI operations and interactions. To create any agent within this framework, a Kernel instance is required as it provides the foundational context and capabilities for the agent’s functionality. The `Kernel` acts as the engine for processing instructions, managing state, and invoking the necessary AI services that power the agent's behavior.
 
 ::: zone-end
 
@@ -162,7 +162,7 @@ These resources offer step-by-step instructions and highlight the key configurat
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+- [`Kernel`](/java/api/com.microsoft.semantickernel.kernel)
 
 ::: zone-end
 
@@ -197,7 +197,9 @@ Plugins are a fundamental aspect of the Semantic Kernel, enabling developers to 
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+- [`KernelFunction`](/java/api/com.microsoft.semantickernel.semanticfunctions.kernelfunction)
+- [`KernelPlugin`](/java/api/com.microsoft.semantickernel.plugin.kernelplugin)
+- [`KernelPluginFactory`](/java/api/com.microsoft.semantickernel.plugin.kernelpluginfactory)
 
 ::: zone-end
 
@@ -235,7 +237,10 @@ Agent messaging, including both input and response, is built upon the core conte
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+- [`ChatHistory`](/java/api/com.microsoft.semantickernel.services.chatcompletion.chathistory)
+- [`ChatMessageContent`](/java/api/com.microsoft.semantickernel.services.chatcompletion.chatmessagecontent)
+- [`KernelContent`](/java/api/com.microsoft.semantickernel.services.kernelcontent)
+- [`StreamingKernelContent`](/java/api/com.microsoft.semantickernel.services.streamingkernelcontent)
 
 ::: zone-end
 
@@ -275,7 +280,11 @@ Additionally, an agent can be configured directly using a Prompt Template Config
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+- [`PromptTemplateConfig`](/java/api/com.microsoft.semantickernel.semanticfunctions.prompttemplateconfig)
+- [`KernelFunctionYaml.FromPromptYaml`](/java/api/com.microsoft.semantickernel.semanticfunctions.kernelfunctionyaml#com-microsoft-semantickernel-semanticfunctions-kernelfunctionyaml-(t)frompromptyaml(java-lang-string))
+- [`PromptTemplateFactory`](/java/api/com.microsoft.semantickernel.semanticfunctions.prompttemplatefactory)
+- [`KernelPromptTemplateFactory`](/java/api/com.microsoft.semantickernel.semanticfunctions.kernelprompttemplatefactory)
+- [`Handlebars`](/java/api/com.microsoft.semantickernel.templateengine.handlebars.handlebarsprompttemplate)
 
 ::: zone-end
 
@@ -307,7 +316,9 @@ The [`ChatCompletionAgent`](./chat-completion-agent.md) is designed around any S
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+- [`semantickernel.aiservices.openai`](/java/api/com.microsoft.semantickernel.services.openai)
+- [`semantickernel.aiservices.google`](/java/api/com.microsoft.semantickernel.aiservices.google)
+- [`semantickernel.aiservices.huggingface`](/java/api/com.microsoft.semantickernel.aiservices.huggingface)
 
 ::: zone-end
 
