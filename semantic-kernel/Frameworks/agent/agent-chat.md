@@ -31,7 +31,7 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -77,7 +77,7 @@ chat = AgentGroupChat(agents=[agent1, agent2])
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -115,7 +115,7 @@ chat.add_agent(agent=agent2)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -146,7 +146,7 @@ await chat.add_chat_message(message="<message content>")
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -185,7 +185,7 @@ async for message in chat.invoke(agent)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -244,7 +244,7 @@ async for response in chat.invoke():
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -276,7 +276,7 @@ history = await chat.get_chat_messages()
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -314,7 +314,7 @@ history2 = await chat.get_chat_messages(agent=agent2)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -466,7 +466,7 @@ chat = AgentGroupChat(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -595,7 +595,7 @@ chat = AgentGroupChat(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -636,7 +636,7 @@ if chat.is_complete:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -669,7 +669,7 @@ await chat.reset()
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 

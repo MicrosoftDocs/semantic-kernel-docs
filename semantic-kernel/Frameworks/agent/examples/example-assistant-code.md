@@ -96,7 +96,7 @@ Additionally, copy the `PopulationByAdmin1.csv` and `PopulationByCountry.csv` da
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -188,7 +188,7 @@ Once configured, the respective AI service classes will pick up the required var
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -219,7 +219,7 @@ AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new Azur
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -294,7 +294,7 @@ We first set up the Azure OpenAI resources to obtain the client and model. Next,
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -341,7 +341,7 @@ agent = AzureAssistantAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -401,7 +401,7 @@ finally:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -442,7 +442,7 @@ if user_input.lower() == "exit":
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -529,7 +529,7 @@ async def download_response_image(agent, file_ids: list[str]):
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -596,7 +596,7 @@ file_ids.clear()
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -931,7 +931,7 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 

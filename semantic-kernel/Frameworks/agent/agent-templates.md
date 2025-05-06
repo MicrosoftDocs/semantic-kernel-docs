@@ -41,7 +41,7 @@ Additionally, an agent can be configured directly using a Prompt Template Config
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -84,7 +84,7 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -130,7 +130,7 @@ agent = AzureAssistantAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -205,7 +205,7 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -280,7 +280,7 @@ async for response in agent.invoke(messages="user input", arguments=override_arg
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 

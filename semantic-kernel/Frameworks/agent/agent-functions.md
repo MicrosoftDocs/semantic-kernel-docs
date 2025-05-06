@@ -39,7 +39,9 @@ Once configured, an agent will choose when and how to call an available function
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+- [`KernelFunction`](/java/api/com.microsoft.semantickernel.semanticfunctions.kernelfunction)
+- [`KernelFunctionFromMethod`](/java/api/com.microsoft.semantickernel.semanticfunctions.kernelfunctionfrommethod)
+- [`KernelFunctionFromPrompt`](/java/api/com.microsoft.semantickernel.semanticfunctions.kernelfunctionfromprompt)
 
 ::: zone-end
 
@@ -148,7 +150,27 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(new SamplePlugin(), "<plugin name>"))
+    .build();
+
+var agent = ChatCompletionAgent.builder()
+    .withKernel(kernel)
+    .withName("<agent name>")
+    .withInstructions("<agent instructions>")
+    .build();
+```
+
 
 ::: zone-end
 
@@ -233,7 +255,40 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+```java
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+// Create function from method
+var functionFromMethod = KernelFunction.createFromMethod(SamplePlugin.class.getMethod("method"), new SamplePlugin());
+
+// Create function from prompt
+var functionFromPrompt = KernelFunction.createFromPrompt("<your prompt instructions>");
+
+// Create the kernel with a plugin from the two functions
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromFunctions("SamplePlugin", List.of(functionFromMethod, functionFromPrompt)))
+    .build();
+
+InvocationContext invocationContext = InvocationContext.builder()
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true))
+    .build();
+
+// Create the agent
+var agent = ChatCompletionAgent.builder()
+    .withKernel(kernel)
+    .withName("<agent name>")
+    .withInstructions("<agent instructions>")
+    .withInvocationContext(invocationContext)
+    .build();
+```
+
 
 ::: zone-end
 
