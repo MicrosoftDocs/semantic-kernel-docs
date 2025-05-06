@@ -17,7 +17,9 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Postgres Vector Store connector can be used to access and manage data in Postgres. The connector has the following characteristics.
+The Postgres Vector Store connector can be used to access and manage data in Postgres and also supports [Neon Serverless Postgres](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/neon1722366567200.neon_serverless_postgres_azure_prod).
+
+The connector has the following characteristics.
 
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
@@ -29,9 +31,25 @@ The Postgres Vector Store connector can be used to access and manage data in Pos
 | Supported distance functions      | <ul><li>CosineDistance</li><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>|
 | Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | No                                                                                                                               |
-| IsFullTextSearchable supported?   | No                                                                                                                               |
+| IsIndexed supported?              | No                                                                                                                               |
+| IsFullTextIndexed supported?      | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
+| HybridSearch supported?           | No                                                                                                                               |
+
+## Limitations
+
+> [!IMPORTANT]
+> When initializing `NpgsqlDataSource` manually, it is necessary to call `UseVector` on the `NpgsqlDataSourceBuilder`. This enables vector support. Without this, usage of the VectorStore implementation will fail.
+
+Here is an example of how to call `UseVector`.
+
+```csharp
+NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+dataSourceBuilder.UseVector();
+NpgsqlDataSource dataSource = dataSourceBuilder.Build();
+```
+
+When using the `AddPostgresVectorStore` dependency injection registration method with a connection string, the datasource will be constructed by this method and will automatically have `UseVector` applied.
 
 ## Getting started
 
@@ -103,8 +121,6 @@ var collection = new PostgresVectorStoreRecordCollection<string, Hotel>(dataSour
 The Postgres Vector Store connector provides a default mapper when mapping from the data model to storage.
 This mapper does a direct conversion of the list of properties on the data model to the columns in Postgres.
 
-It's also possible to override the default mapper behavior by providing a custom mapper via the `PostgresVectorStoreRecordCollectionOptions<TRecord>.DictionaryCustomMapper` property.
-
 ### Property name override
 
 You can override property names to use in storage that is different to the property names on the data model.
@@ -118,7 +134,7 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public int HotelId { get; set; }
 
     [VectorStoreRecordData(StoragePropertyName = "hotel_name")]
     public string? HotelName { get; set; }
@@ -126,7 +142,7 @@ public class Hotel
     [VectorStoreRecordData(StoragePropertyName = "hotel_description")]
     public string? Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

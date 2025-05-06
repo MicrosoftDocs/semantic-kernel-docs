@@ -13,36 +13,60 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
-::: zone pivot="programming-language-csharp"
-
 ## Overview
 
 The Weaviate Vector Store connector can be used to access and manage data in Weaviate. The connector has the following characteristics.
 
-| Feature Area                      | Support                                                                                                                          |
-|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Collection maps to                | Weaviate Collection                                                                                                              |
-| Supported key property types      | Guid                                                                                                                             |
-| Supported data property types     | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
-| Supported index types             | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                              |
-| Supported distance functions      | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>|
-| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
-| Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                |
+::: zone pivot="programming-language-csharp"
+
+| Feature Area                          | Support                                                                                                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | Weaviate Collection                                                                                                                                                                   |
+| Supported key property types          | Guid                                                                                                                                                                                  |
+| Supported data property types         | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                                                                            |
+| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                                                                                   |
+| Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>                                      |
+| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                                       |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                                   |
+| IsIndexed supported?                  | Yes                                                                                                                                                                                   |
+| IsFullTextIndexed supported?          | Yes                                                                                                                                                                                   |
+| StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                     |
+| HybridSearch supported?               | Yes                                                                                                                                                                                   |
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+| Feature Area                          | Support                                                                                                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | Weaviate Collection                                                                                                                                                                   |
+| Supported key property types          | Guid                                                                                                                                                                                  |
+| Supported data property types         | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>*and iterables of each of these types*</li></ul> |
+| Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                                                                                                       |
+| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                                                                                   |
+| Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>                                      |
+| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                                       |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                                   |
+| IsFilterable supported?               | Yes                                                                                                                                                                                   |
+| IsFullTextSearchable supported?       | Yes                                                                                                                                                                                   |
+
+::: zone-end
+::: zone pivot="programming-language-java"
+Coming soon.
+::: zone-end
 
 ## Limitations
 
 Notable Weaviate connector functionality limitations.
 
-| Feature Area                                                           | Workaround                                                                                     |
-|------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------|
-| Using the 'vector' property for single vector objects is not supported | Use of the 'vectors' property is supported instead.                                            |
+| Feature Area                                                           | Workaround                                          |
+| ---------------------------------------------------------------------- | --------------------------------------------------- |
+| Using the 'vector' property for single vector objects is not supported | Use of the 'vectors' property is supported instead. |
 
 > [!WARNING]
 > Weaviate requires collection names to start with an upper case letter. If you do not provide a collection name with an upper case letter, Weaviate will return an error when you try and create your collection. The error that you will see is `Cannot query field "mycollection" on type "GetObjectsObj". Did you mean "Mycollection"?` where `mycollection` is your collection name. In this example, if you change your collection name to `Mycollection` instead, this will fix the error.
+
+::: zone pivot="programming-language-csharp"
 
 ## Getting started
 
@@ -116,7 +140,7 @@ It is possible to construct a direct reference to a named collection.
 using System.Net.Http;
 using Microsoft.SemanticKernel.Connectors.Weaviate;
 
-var collection = new WeaviateVectorStoreRecordCollection<Hotel>(
+var collection = new WeaviateVectorStoreRecordCollection<Guid, Hotel>(
     new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") },
     "Skhotels");
 ```
@@ -154,23 +178,23 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    public Guid HotelId { get; set; }
 
     [VectorStoreRecordData(IsFilterable = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION_EMBEDDING")]
-    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.QuantizedFlat)]
+    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.QuantizedFlat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
 ```json
 {
-    "id": 1,
+    "id": "11111111-1111-1111-1111-111111111111",
     "properties": { "HotelName": "Hotel Happy", "Description": "A place where everyone can be happy." },
     "vectors": {
         "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1],
@@ -181,9 +205,64 @@ public class Hotel
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## Getting Started
 
-More info coming soon.
+Add the Weaviate Vector Store connector dependencies to your project.
+
+```bash
+pip install semantic-kernel[weaviate]
+```
+
+You can then create the vector store, it uses environment settings to connect:
+
+For using Weaviate Cloud:
+
+- url: WEAVIATE_URL
+- api_key: WEAVIATE_API_KEY
+
+For using Weaviate Local (i.e. Weaviate in a Docker container):
+
+- local_host: WEAVIATE_LOCAL_HOST
+- local_port: WEAVIATE_LOCAL_PORT
+- local_grpc_port: WEAVIATE_LOCAL_GRPC_PORT
+
+If you want to use embedded:
+
+- use_embed: WEAVIATE_USE_EMBED
+
+These should be set exclusively, so only one set of the above is present, otherwise it will raise an exception.
+
+```python
+from semantic_kernel.connectors.memory.weaviate import WeaviateStore
+
+store = WeaviateStore()
+```
+
+Alternatively, you can also pass in your own mongodb client if you want to have more control over the client construction:
+
+```python
+import weaviate
+from semantic_kernel.connectors.memory.weaviate import WeaviateStore
+
+client = weaviate.WeaviateAsyncClient(...)
+store = WeaviateStore(async_client=client)
+```
+
+You can also create a collection directly, without the store.
+
+```python
+from semantic_kernel.connectors.memory.weaviate import WeaviateCollection
+
+# `hotel` is a class created with the @vectorstoremodel decorator
+collection = WeaviateCollection(
+    collection_name="my_collection",
+    data_model_type=hotel
+)
+```
+
+## Serialization
+
+The Weaviate client returns it's own objects which are parsed and turned into dicts in the regular flow, for more details on this concept see the [serialization documentation](./../serialization.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-java"

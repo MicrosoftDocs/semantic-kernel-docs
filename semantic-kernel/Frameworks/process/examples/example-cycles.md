@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; Author-Critic Pattern with Cycles
+title: How-To - Author-Critic Pattern with Cycles
 description: A step-by-step walk-through for using Cycles
 zone_pivot_groups: programming-languages
 author: bentho
