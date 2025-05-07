@@ -4,6 +4,7 @@ description: Outlines the changes introduced to the SessionsPythonPlugin and pro
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
+ms.date: 05/07/2025
 ms.service: semantic-kernel
 ---
 
