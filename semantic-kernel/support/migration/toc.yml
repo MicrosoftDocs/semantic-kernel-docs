@@ -16,3 +16,5 @@
   href: vectorstore-march-2025.md
 - name: Vector Store changes - April 2025
   href: vectorstore-april-2025.md
+- name: Functions.Markdown NuGet Package Migration Guide
+  href: functions-markdown-migration-guide.md
