@@ -10,7 +10,7 @@ ms.service: semantic-kernel
 
 # Functions.Markdown NuGet Package Migration Guide
 
-The Functions.Markdown NuGet package is deprecated and will be removed in a future release as part of the clean-uo initiative. The recommended replacement is the Functions.Yaml package.
+The Functions.Markdown NuGet package is deprecated and will be removed in a future release as part of the clean-up initiative. The recommended replacement is the Functions.Yaml package.
 
 ## Markdown Prompt Templates
 
