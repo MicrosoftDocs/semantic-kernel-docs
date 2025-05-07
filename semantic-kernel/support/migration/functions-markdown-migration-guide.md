@@ -1,5 +1,5 @@
 ---
-title: Functions.Markdown NuGet Package Migration Guide
+title: Functions.Markdown Package Migration Guide
 description: Describes the steps to migrate from the APIs of the Functions.Markdown NuGet package to the APIs of the Functions.Yaml package.
 author: SergeyMenshykh
 ms.topic: conceptual
@@ -8,7 +8,7 @@ ms.date: 05/07/2025
 ms.service: semantic-kernel
 ---
 
-# Functions.Markdown NuGet Package Migration Guide
+# Functions.Markdown Package Migration Guide
 
 The Functions.Markdown NuGet package is deprecated and will be removed in a future release as part of the clean-up initiative. The recommended replacement is the Functions.Yaml package.
 
