@@ -1,6 +1,6 @@
 ---
-title: Migrating to the updated Python code interpreter plugin
-description: Describes the steps for SK caller code that uses .NET version of `SessionsPythonPlugin` to migrate to the latest version of the plugin.
+title: Sessions Python Plugin Migration
+description: Outlines the changes introduced to the SessionsPythonPlugin and provides steps for migrating.
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
@@ -71,7 +71,7 @@ The `ExecuteCodeAsync` method signature has changed to provide a structured way 
 
 ```csharp
 // Before
-string res = await plugin.ExecuteCodeAsync(code: "print('Hello, world!')");
+string result = await plugin.ExecuteCodeAsync(code: "print('Hello, world!')");
 
 // After
 SessionsPythonCodeExecutionResult result = await plugin.ExecuteCodeAsync(code: "print('Hello, world!')");
@@ -90,11 +90,11 @@ The `SessionsRemoteFileMetadata` model class, used by the `UploadFileAsync` and 
 SessionsRemoteFileMetadata file = await plugin.UploadFileAsync(...);
 string fileName = file.Filename;
 long fileSize = file.Size;
-DateTime lastModified = file.LastModifiedTime;
+DateTime? lastModified = file.LastModifiedTime;
 
 // After
 SessionsRemoteFileMetadata file = await plugin.UploadFileAsync(...);
-string fileName = file.Name;
-long fileSize = file.SizeInBytes;
+string name = file.Name;
+long? size = file.SizeInBytes;
 DateTime lastModified = file.LastModifiedAt;
 ```
