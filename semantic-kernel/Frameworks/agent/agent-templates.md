@@ -76,10 +76,8 @@ ChatCompletionAgent agent =
 
 ::: zone pivot="programming-language-python"
 ```python
-kernel = Kernel()
-
 agent = ChatCompletionAgent(
-    kernel=kernel,
+    service=AzureChatCompletion(), # or other supported AI Services
     name="StoryTeller",
     instructions="Tell a story about {{$topic}} that is {{$length}} sentences long.",
     arguments=KernelArguments(topic="Dog", length="2"),
@@ -100,24 +98,34 @@ Templated instructions are especially powerful when working with an [`OpenAIAssi
 ::: zone pivot="programming-language-csharp"
 ```csharp
 // Retrieve an existing assistant definition by identifier
-OpenAIAssistantAgent agent = 
-    await OpenAIAssistantAgent.RetrieveAsync(
-        this.GetClientProvider(),
-        "<stored agent-identifier>",
-        new Kernel(),
-        new KernelArguments()
-        {
-            { "topic", "Dog" },
-            { "length", "3" },
-        });
+AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri("<your endpoint>"));
+AssistantClient assistantClient = client.GetAssistantClient();
+Assistant assistant = await client.GetAssistantAsync();
+OpenAIAssistantAgent agent = new(assistant, assistantClient, new KernelPromptTemplateFactory(), PromptTemplateConfig.SemanticKernelTemplateFormat)
+{
+    Arguments = new KernelArguments()
+    {
+        { "topic", "Dog" },
+        { "length", "3" },
+    }
+}
 ```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
-agent = await OpenAIAssistantAgent.retrieve(
-    id=<assistant_id>,
-    kernel=Kernel(),
+# Create the client using Azure OpenAI resources and configuration
+client, model = AzureAssistantAgent.setup_resources()
+
+# Retrieve the assistant definition from the server based on the assistant ID
+definition = await client.beta.assistants.retrieve(
+    assistant_id="your-assistant-id",
+)
+
+# Create the AzureAssistantAgent instance using the client and the assistant definition
+agent = AzureAssistantAgent(
+    client=client,
+    definition=definition,
     arguments=KernelArguments(topic="Dog", length="3"),
 )
 ```
@@ -130,10 +138,9 @@ agent = await OpenAIAssistantAgent.retrieve(
 ::: zone-end
 
 
-## Agent Definition from a _Prompt Template_
+## Agent Definition from a Prompt Template
 
-The same _Prompt Template Config_ used to create a _Kernel Prompt Function_ can also be leveraged to define an agent. This allows for a unified approach in managing both prompts and agents, promoting consistency and reuse across different components. By externalizing agent definitions from the codebase, this method simplifies the management of multiple agents, making them easier to update and maintain without requiring changes to the underlying logic. This separation also enhances flexibility, enabling developers to modify agent behavior or introduce new agents by simply updating the configuration, rather than adjusting the code itself.
-
+The same Prompt Template Config used to create a Kernel Prompt Function can also be leveraged to define an agent. This allows for a unified approach in managing both prompts and agents, promoting consistency and reuse across different components. By externalizing agent definitions from the codebase, this method simplifies the management of multiple agents, making them easier to update and maintain without requiring changes to the underlying logic. This separation also enhances flexibility, enabling developers to modify agent behavior or introduce new agents by simply updating the configuration, rather than adjusting the code itself.
 #### YAML Template
 
 ```yaml
@@ -192,7 +199,7 @@ data = yaml.safe_load(generate_story_yaml)
 prompt_template_config = PromptTemplateConfig(**data)
 
 agent = ChatCompletionAgent(
-    kernel=_create_kernel_with_chat_completion(),
+    service=AzureChatCompletion(), # or other supported AI services
     prompt_template_config=prompt_template_config,
     arguments=KernelArguments(topic="Dog", length="3"),
 )
@@ -249,10 +256,8 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(chat, overrideAr
 ::: zone pivot="programming-language-python"
 
 ```python
-kernel = Kernel()
-
 agent = ChatCompletionAgent(
-    kernel=kernel,
+    service=AzureChatCompletion(),
     name="StoryTeller",
     instructions="Tell a story about {{$topic}} that is {{$length}} sentences long.",
     arguments=KernelArguments(topic="Dog", length="2"),
