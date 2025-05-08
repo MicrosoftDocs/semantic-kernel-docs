@@ -18,21 +18,22 @@ With the available AI connectors, developers can easily build AI agents with swa
 
 ### AI Services
 
-| Services                          |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| Text Generation                    | ✅ | ✅ | ✅ | Example: Text-Davinci-003 |
-| Chat Completion                    | ✅ | ✅ | ✅ | Example: GPT4, Chat-GPT |
-| Text Embeddings (Experimental)     | ✅ | ✅ | ✅ | Example: Text-Embeddings-Ada-002 |
-| Text to Image (Experimental)       | ✅ | ✅ | ❌ | Example: Dall-E |
-| Image to Text (Experimental)       | ✅ | ❌ | ❌ | Example: Pix2Struct |
-| Text to Audio (Experimental)       | ✅ | ✅ | ❌ | Example: Text-to-speech |
-| Audio to Text (Experimental)       | ✅ | ✅ | ❌ | Example: Whisper |
+| Services                       |  C#   | Python | Java  | Notes                            |
+| ------------------------------ | :---: | :----: | :---: | -------------------------------- |
+| Text Generation                |   ✅   |   ✅    |   ✅   | Example: Text-Davinci-003        |
+| Chat Completion                |   ✅   |   ✅    |   ✅   | Example: GPT4, Chat-GPT          |
+| Text Embeddings (Experimental) |   ✅   |   ✅    |   ✅   | Example: Text-Embeddings-Ada-002 |
+| Text to Image (Experimental)   |   ✅   |   ✅    |   ❌   | Example: Dall-E                  |
+| Image to Text (Experimental)   |   ✅   |   ❌    |   ❌   | Example: Pix2Struct              |
+| Text to Audio (Experimental)   |   ✅   |   ✅    |   ❌   | Example: Text-to-speech          |
+| Audio to Text (Experimental)   |   ✅   |   ✅    |   ❌   | Example: Whisper                 |
+| Realtime (Experimental)        |   ❌   |   ✅    |   ❌   | Example: gpt-4o-realtime-preview |
 
 ## Additional plugins
 
 If you want to extend the functionality of your AI agent, you can use plugins to integrate with other Microsoft services. Here are some of the plugins that are available for Semantic Kernel:
 
-| Plugin     | C#  | Python | Java | Description |
-| ---------- | :-: | :----: | :--: | ----------- |
-| Logic Apps | ✅  |   ✅   |  ✅  | Build workflows within Logic Apps using its available connectors and import them as plugins in Semantic Kernel. [Learn more](../plugins/adding-logic-apps-as-plugins.md). |
-| Azure Container Apps Dynamic Sessions | ✅  |   ✅   |  ❌  | With dynamic sessions, you can recreate the Code Interpreter experience from the Assistants API by effortlessly spinning up Python containers where AI agents can execute Python code. [Learn more](/azure/container-apps/sessions). |
+| Plugin                                |  C#   | Python | Java  | Description                                                                                                                                                                                                                          |
+| ------------------------------------- | :---: | :----: | :---: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Logic Apps                            |   ✅   |   ✅    |   ✅   | Build workflows within Logic Apps using its available connectors and import them as plugins in Semantic Kernel. [Learn more](../plugins/adding-logic-apps-as-plugins.md).                                                            |
+| Azure Container Apps Dynamic Sessions |   ✅   |   ✅    |   ❌   | With dynamic sessions, you can recreate the Code Interpreter experience from the Assistants API by effortlessly spinning up Python containers where AI agents can execute Python code. [Learn more](/azure/container-apps/sessions). |
