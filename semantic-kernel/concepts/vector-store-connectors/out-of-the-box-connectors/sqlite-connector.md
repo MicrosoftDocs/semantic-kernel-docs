@@ -32,6 +32,7 @@ The SQLite Vector Store connector can be used to access and manage data in SQLit
 | IsFilterable supported?           | No                                                                                                                               |
 | IsFullTextSearchable supported?   | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
+| HybridSearch supported?           | No                                                                                                                               |
 
 ## Limitations
 

@@ -6,10 +6,14 @@
   href: azure-cosmosdb-mongodb-connector.md
 - name: Azure CosmosDB NoSQL connector
   href: azure-cosmosdb-nosql-connector.md
+- name: Chroma connector
+  href: chroma-connector.md
 - name: Couchbase connector
   href: couchbase-connector.md
 - name: Elasticsearch connector
   href: elasticsearch-connector.md
+- name: Faiss connector
+  href: faiss-connector.md
 - name: In-memory connector
   href: inmemory-connector.md
 - name: JDBC connector
@@ -24,6 +28,8 @@
   href: qdrant-connector.md
 - name: Redis connector
   href: redis-connector.md
+- name: SQL Server connector
+  href: sql-connector.md
 - name: SQLite connector
   href: sqlite-connector.md
 - name: Volatile (in-memory) connector
