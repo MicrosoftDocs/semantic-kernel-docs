@@ -1,5 +1,5 @@
 ---
-title: Exploring the Semantic Kernel Chat Completion Agent
+title: Exploring the Semantic Kernel ChatCompletionAgent
 description: An exploration of the definition, behaviors, and usage patterns for a Chat Completion Agent
 zone_pivot_groups: programming-languages
 author: crickman
@@ -8,7 +8,7 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
-# Exploring the _Semantic Kernel_ Chat Completion Agent
+# Exploring the Semantic Kernel `ChatCompletionAgent`
 
 > [!IMPORTANT]
 > This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
@@ -74,7 +74,38 @@ Onnx|[`Microsoft.SemanticKernel.Connectors.Onnx`](/dotnet/api/microsoft.semantic
 ::: zone-end
 
 
-## Creating a Chat Completion Agent
+## Preparing Your Development Environment
+
+To proceed with developing an `AzureAIAgent`, configure your development environment with the appropriate packages.
+
+::: zone pivot="programming-language-csharp"
+
+Add the `Microsoft.SemanticKernel.Agents.Core` package to your project:
+
+```pwsh
+dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Install the `semantic-kernel` package:
+
+```bash
+pip install semantic-kernel
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Agents are currently unavailable in Java.
+
+::: zone-end
+
+
+## Creating a `ChatCompletionAgent`
 
 A _chat completion agent_ is fundamentally based on an [AI services](../../concepts/ai-services/index.md).  As such, creating an _chat completion agent_ starts with creating a [`Kernel`](../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../concepts/kernel.md) instance.
 
@@ -224,8 +255,7 @@ agent = ChatCompletionAgent(...)
 chat = ChatHistory()
 
 # Add the user message
-chat.add_message(ChatMessageContent(role=AuthorRole.USER, content=input))
-
+chat.add_user_message(user_input)
 # Generate the agent response
 response = await agent.get_response(chat)
 # response is a `ChatMessageContent` object
@@ -240,7 +270,7 @@ agent = ChatCompletionAgent(...)
 chat = ChatHistory()
 
 # Add the user message
-chat.add_user_message(ChatMessageContent(role=AuthorRole.USER, content=input))
+chat.add_user_message(user_input)
 
 # Generate the agent response(s)
 async for response in agent.invoke(chat):
@@ -281,4 +311,4 @@ For an end-to-end example for a `ChatCompletionAgent`, see:
 
 
 > [!div class="nextstepaction"]
-> [Exploring `OpenAIAssistantAgent`](./assistant-agent.md)
+> [Exploring the OpenAI Assistant Agent](./assistant-agent.md)
