@@ -99,11 +99,12 @@ public async Task GenerateEmbeddingsAndSearchAsync(
         await textEmbeddingGenerationService.GenerateEmbeddingAsync(descriptionText);
 
     // Search using the already generated embedding.
-    List<VectorSearchResult<Hotel>> searchResult = await collection.VectorizedSearchAsync(searchEmbedding).ToListAsync();
+    VectorSearchResults<Hotel> searchResult = await collection.VectorizedSearchAsync(searchEmbedding);
+    List<VectorSearchResult<Hotel>> resultItems = await searchResult.Results.ToListAsync();
 
     // Print the first search result.
-    Console.WriteLine("Score for first result: " + searchResult.FirstOrDefault()?.Score);
-    Console.WriteLine("Hotel description for first result: " + searchResult.FirstOrDefault()?.Record.Description);
+    Console.WriteLine("Score for first result: " + resultItems.FirstOrDefault()?.Score);
+    Console.WriteLine("Hotel description for first result: " + resultItems.FirstOrDefault()?.Record.Description);
 }
 ```
 
