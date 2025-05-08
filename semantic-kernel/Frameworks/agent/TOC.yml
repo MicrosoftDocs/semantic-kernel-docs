@@ -6,6 +6,8 @@
   href: chat-completion-agent.md
 - name: OpenAI Assistant Agent
   href: assistant-agent.md
+- name: Azure AI Agent
+  href: azure-ai-agent.md
 - name: Agent Collaboration
   href: agent-chat.md
 - name: Create an Agent from a Template
