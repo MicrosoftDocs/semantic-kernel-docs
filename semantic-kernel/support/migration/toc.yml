@@ -16,5 +16,5 @@
   href: vectorstore-march-2025.md
 - name: Vector Store changes - April 2025
   href: vectorstore-april-2025.md
-- name: Functions.Markdown Package Migration Guide
+- name: Functions.Markdown to Functions.Yaml Package Migration Guide
   href: functions-markdown-migration-guide.md
