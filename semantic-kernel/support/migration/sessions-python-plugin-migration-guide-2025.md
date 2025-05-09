@@ -1,5 +1,5 @@
 ---
-title: Sessions Python Plugin Migration
+title: Sessions Python Plugin Migration Guide - May 2025
 description: Outlines the changes introduced to the SessionsPythonPlugin and provides steps for migrating.
 author: SergeyMenshykh
 ms.topic: conceptual
@@ -8,7 +8,7 @@ ms.date: 05/07/2025
 ms.service: semantic-kernel
 ---
 
-# Sessions Python Plugin Migration Guide
+# Sessions Python Plugin Migration Guide - May 2025
 
 The `SessionsPythonPlugin` has been updated to use the latest version (2024-10-02-preview) of the Azure Code Interpreter Dynamic Sessions API. The new API has introduced breaking changes, which are reflected in the public API surface of the plugin.
 
@@ -36,18 +36,18 @@ var plugin = new SessionsPythonPlugin(settings, httpClientFactory, GetAuthTokenA
 
 ## The UploadFileAsync method
 
-The `UploadFileAsync` method signature has changed to better represent purpose of the parameters:
+The `UploadFileAsync` method signature has changed to better represent the purpose of the parameters:
 
 ```csharp
 // Before
 string remoteFilePath = "your_file.txt";
-string? localFilePath = "your_file.txt";
+string? localFilePath = "C:\documents\your_file.txt";
 
 await plugin.UploadFileAsync(remoteFilePath: remoteFilePath, localFilePath: localFilePath);
 
 // After
 string remoteFileName = "your_file.txt";
-string localFilePath = "your_file.txt";
+string localFilePath = "C:\documents\your_file.txt";
 
 await plugin.UploadFileAsync(remoteFileName: remoteFileName, localFilePath: localFilePath);
 ```
