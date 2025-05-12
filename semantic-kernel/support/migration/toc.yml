@@ -16,5 +16,7 @@
   href: vectorstore-march-2025.md
 - name: Vector Store changes - April 2025
   href: vectorstore-april-2025.md
+- name: Sessions Python Plugin Migration Guide - May 2025
+  href: sessions-python-plugin-migration-guide-2025.md
 - name: Functions.Markdown to Functions.Yaml Package Migration Guide
   href: functions-markdown-migration-guide.md
