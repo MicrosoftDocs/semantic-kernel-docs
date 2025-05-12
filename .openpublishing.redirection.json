@@ -761,16 +761,6 @@
             "redirect_document_id": false
         },
         {
-            "source_path": "semantic-kernel/how-to/vector-store-custom-mapper.md",
-            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/how-to/vector-store-custom-mapper",
-            "redirect_document_id": false
-        },
-        {
-            "source_path": "semantic-kernel/concepts/vector-store-connectors/vector-store-custom-mapper.md",
-            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/how-to/vector-store-custom-mapper",
-            "redirect_document_id": false
-        },
-        {
             "source_path": "semantic-kernel/get-started/hackathon-materials.md",
             "redirect_url": "/semantic-kernel/support/hackathon-materials",
             "redirect_document_id": false

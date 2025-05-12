@@ -54,9 +54,9 @@ In order to be considered a full implementation of the Vector Store abstractions
 
 - Microsoft.Extensions.VectorData.IVectorStore
 - Microsoft.Extensions.VectorData.IVectorStoreRecordCollection\<TKey, TRecord\>
-- Microsoft.Extensions.VectorData.IVectorizedSearch\<TRecord\>
+- Microsoft.Extensions.VectorData.IVectorSearch\<TRecord\>
 
-Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorizedSearch<TRecord>`, so only
+Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorSearch<TRecord>`, so only
 two classes are required to implement the three interfaces. The following naming convention should be used:
 
 - {database type}VectorStore : IVectorStore
@@ -106,27 +106,28 @@ comparison happens during vector searches and downloading them can be costly due
 There may be cases where the database doesn't support excluding vectors in which case
 returning them is acceptable.
 
-1.9 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should also
-respect the `IncludeVectors` option provided via `VectorSearchOptions` where possible.
+1.9 *`IVectorizedSearch<TRecord>.SearchEmbeddingAsync<TVector>`* implementations should also
+respect the `IncludeVectors` option provided via `VectorSearchOptions<TRecord>` where possible.
 
-1.10 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should simulate
-the `Top` and `Skip` functionality requested via `VectorSearchOptions` if the database
+1.10 *`IVectorizedSearch<TRecord>.SearchEmbeddingAsync<TVector>`* implementations should simulate
+the `Top` and `Skip` functionality requested via `VectorSearchOptions<TRecord>` if the database
 does not support this natively. To simulate this behavior, the implementation should
 fetch a number of results equal to Top + Skip, and then skip the first Skip number of results
 before returning the remaining results.
 
-1.11 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should ignore
-the `IncludeTotalCount` option provided via `VectorSearchOptions` if the database
-does not support this natively.
+1.11 *`IVectorizedSearch<TRecord>.SearchEmbeddingAsync<TVector>`* implementations should not require
+`VectorPropertyName` or `VectorProperty` to be specified if only one vector exists on the data model.
+In this case that single vector should automatically become the search target. If no vector or
+multiple vectors exists on the data model, and no `VectorPropertyName` or `VectorProperty` is provided
+the search method should throw.
 
-1.12 *`IVectorizedSearch<TRecord>.VectorizedSearchAsync<TVector>`* implementations should default
-to the first vector if the `VectorPropertyName` option was not provided via `VectorSearchOptions`.
-If a user does provide this value, the expected name should be the property name from the data model
-and not any customized name that the property may be stored under in the database. E.g. let's say
-the user has a data model property called `TextEmbedding` and they decorated the property with a
-`JsonPropertyNameAttribute` that indicates that it should be serialized as `text_embedding`. Assuming
-that the database is json based, it means that the property should be stored in the database with the
-name `text_embedding`. When specifying the `VectorPropertyName` option, the user should always provide
+When using `VectorPropertyName`, if a user does provide this value, the expected name should be the
+property name from the data model and not any customized name that the property may be stored under
+in the database. E.g. let's say the user has a data model property called `TextEmbedding` and they
+decorated the property with a `JsonPropertyNameAttribute` that indicates that it should be serialized
+as `text_embedding`. Assuming that the database is json based, it means that the property should be
+stored in the database with the name `text_embedding`.
+ When specifying the `VectorPropertyName` option, the user should always provide
 `TextEmbedding` as the value. This is to ensure that where different connectors are used with the
 same data model, the user can always use the same property names, even though the storage name
 of the property may be different.
@@ -146,9 +147,6 @@ This information is typically required for
 If the user does not provide a `VectorStoreRecordDefinition`, this information should
 be read from the data model attributes using reflection. If the user did provide a
 `VectorStoreRecordDefinition`, the data model should not be used as the source of truth.
-The `VectorStoreRecordDefinition` may have been provided with a custom mapper, in order
-for the database schema and data model to differ. In this case the `VectorStoreRecordDefinition`
-should match the database schema, but the data model may be deliberately different.
 
 > [!TIP]
 > Refer to [Defining your data model](../defining-your-data-model.md) for a detailed list of
@@ -183,15 +181,15 @@ for any connector that supports this distance function, without needing to use d
 naming for each connector.
 
 ```csharp
-    [VectorStoreRecordVector(1536, DistanceFunction.DotProductSimilarity]
+    [VectorStoreRecordVector(1536, DistanceFunction = DistanceFunction.DotProductSimilarity]
     public ReadOnlyMemory<float>? Embedding { get; set; }
 ```
 
-4.2 A user can optionally choose whether each data property should be filterable or full text searchable.
+4.2 A user can optionally choose whether each data property should be indexed or full text indexed.
 In some databases, all properties may already be filterable or full text searchable by default, however
 in many databases, special indexing is required to achieve this. If special indexing is required
 this also means that adding this indexing will most likely incur extra cost.
-The `IsFilterable` and `IsFullTextSearchable` settings allow a user to control whether to enable
+The `IsIndexed` and `IsFullTextIndexed` settings allow a user to control whether to enable
 this additional indexing per property.
 
 ### 5. Data model validation
@@ -199,25 +197,6 @@ this additional indexing per property.
 Every database doesn't support every data type. To improve the user experience it's important to validate
 the data types of any record properties and to do so early, e.g. when an `IVectorStoreRecordCollection`
 instance is constructed. This way the user will be notified of any potential failures before starting to use the database.
-
-The type of validation required will also depend on the type of mapper used by the user. E.g. The user may have supplied
-a custom data model, a custom mapper and a `VectorStoreRecordDefinition`. They may want the data model to differ significantly
-from the storage schema, and the custom mapper would map between the two. In this case, we want to avoid doing any checks
-on the data model, but focus on the `VectorStoreRecordDefinition` only, to ensure the data types requested are allowed
-by the underlying database.
-
-Let's consider each scenario.
-
-| Data model type | VectorStore RecordDefinition supplied | Custom mapper supplied | Combination Supported                                     | Validation required                                              |
-| --------------- | ------------------------------------- | ---------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| Custom          | Yes                                   | Yes                    | Yes                                                       | Validate definition only                                         |
-| Custom          | Yes                                   | No                     | Yes                                                       | Validate definition and check data model for matching properties |
-| Custom          | No                                    | Yes                    | Yes                                                       | Validate data model properties                                   |
-| Custom          | No                                    | No                     | Yes                                                       | Validate data model properties                                   |
-| Generic         | Yes                                   | Yes                    | Yes                                                       | Validate definition only                                         |
-| Generic         | Yes                                   | No                     | Yes                                                       | Validate definition and data type of GenericDataModel Key        |
-| Generic         | No                                    | Yes                    | No - Definition required for collection create            |                                                                  |
-| Generic         | No                                    | No                     | No - Definition required for collection create and mapper |                                                                  |
 
 ### 6. Storage property naming
 
@@ -239,29 +218,13 @@ attributes or the `VectorStoreRecordDefinition`.
 
 Connectors should provide the ability to map between the user supplied data model and the
 storage model that the database requires, but should also provide some flexibility in how
-that mapping is done. Most connectors would typically need to support the following three
+that mapping is done. Most connectors would typically need to support the following two
 mappers.
 
 7.1 All connectors should come with a built in mapper that can map between the user supplied
 data model and the storage model required by the underlying database.
 
-7.2 To allow users the ability to support data models that vary significantly from
-the storage models of the underlying database, or to customize the mapping behavior
-between the two, each connector must support custom mappers.
-
-The `IVectorStoreRecordCollection` implementation should allow a user to provide a custom
-mapper via options. E.g.
-
-```csharp
-public IVectorStoreRecordMapper<TRecord, MyDBRecord>? MyDBRecordCustomMapper { get; init; } = null;
-```
-
-Mappers should all use the same standard interface
-`IMicrosoft.Extensions.VectorData.VectorStoreRecordMapper<TRecordDataModel, TStorageModel>`.
-`TRecordDataModel` should be the data model chosen by the user, while `TStorageModel` should be whatever
-data type the database client requires.
-
-7.3. All connectors should have a built in mapper that works with the `VectorStoreGenericDataModel`.
+7.2. All connectors should have a built in mapper that works with the `VectorStoreGenericDataModel`.
 See [Support GenericDataModel](#8-support-genericdatamodel) for more information.
 
 ### 8. Support GenericDataModel
@@ -275,31 +238,24 @@ model supplied by the abstraction package: `Microsoft.Extensions.VectorData.Vect
 
 In practice this means that the connector must implement a special mapper
 to support the generic data model. The connector should automatically use this mapper
-if the user specified the generic data model as their data model and they did not provide
-their own custom mapper.
+if the user specified the generic data model as their data model.
 
-### 9. Support divergent data model and database schema
+### 9. Divergent data model and database schema
 
-In most cases there will be a logical default mapping between the data model
-and storage model. E.g. property x on the data model maps to property x on the
-storage model. The built in mapper provided by the connector should support
-this default case.
+The only divergence required to be supported by connector implementations are
+customizing storage property names for any properties.
 
-There may be scenarios where the user wants to do something more complex, e.g.
-use a data model that has complex properties, where sub properties of a property
-on the data model are mapped to individual properties on the storage model. In
-this scenario the user would need to supply both a custom mapper and a
-`VectorStoreRecordDefinition`. The `VectorStoreRecordDefinition` is required
-to describe the database schema for collection / index create scenarios, while
-the custom mapper is required to map between the data and storage models.
+Any more complex divergence is not supported, since this causes additional
+complexity for filtering. E.g. if the user has a filter expression that references
+the data model, but the underlying schema is different to the data model, the
+filter expression cannot be used against the underlying schema.
 
-To support this scenario, the connector must fulfil the following requirements:
+### 10. Support Vector Store Record Collection factory (Deprecated)
 
-- Allow a user to supply a custom mapper and `VectorStoreRecordDefinition`.
-- Use the `VectorStoreRecordDefinition` to create collections / indexes.
-- Avoid doing reflection on the data model if a custom mapper and `VectorStoreRecordDefinition` is supplied
-
-### 10. Support Vector Store Record Collection factory
+> [!IMPORTANT]
+> Support for Vector Store Record Collection factories is now deprecated. The recommended pattern is to unseal
+> the VectorStore class and make the `GetCollection` method virtual so that it can be overridden by developers
+> who require custom construction of collections.
 
 The `IVectorStore.GetCollection` method can be used to create instances of `IVectorStoreRecordCollection`.
 Some connectors however may allow or require users to provide additional configuration options
@@ -404,7 +360,7 @@ into small enough batches already so that parallel requests will succeed without
 E.g. here is an example where batching is simulated with requests happening in parallel.
 
 ```csharp
-public Task DeleteBatchAsync(IEnumerable<string> keys, DeleteRecordOptions? options = default, CancellationToken cancellationToken = default)
+public Task DeleteBatchAsync(IEnumerable<string> keys, CancellationToken cancellationToken = default)
 {
     if (keys == null)
     {
@@ -412,7 +368,7 @@ public Task DeleteBatchAsync(IEnumerable<string> keys, DeleteRecordOptions? opti
     }
 
     // Remove records in parallel.
-    var tasks = keys.Select(key => this.DeleteAsync(key, options, cancellationToken));
+    var tasks = keys.Select(key => this.DeleteAsync(key, cancellationToken));
     return Task.WhenAll(tasks);
 }
 ```
@@ -420,8 +376,9 @@ public Task DeleteBatchAsync(IEnumerable<string> keys, DeleteRecordOptions? opti
 Secondly, if the database client does support batching, pass all requests directly to the underlying
 client so that it may send the entire set in one request.
 
-## Recommended common patterns and pratices
+## Recommended common patterns and practices
 
+1. Keep `IVectorStore` and `IVectorStoreRecordCollection` implementations sealed. It is recommended to use a decorator pattern to override a default vector store behaviour.
 1. Always use options classes for optional settings with smart defaults.
 1. Keep required parameters on the main signature and move optional parameters to options.
 
@@ -437,13 +394,17 @@ public sealed class MyDBVectorStoreRecordCollection<TRecord> : IVectorStoreRecor
     ...
 }
 
-public sealed class MyDBVectorStoreRecordCollectionOptions<TRecord>
+public class MyDBVectorStoreRecordCollectionOptions<TRecord>
 {
     public VectorStoreRecordDefinition? VectorStoreRecordDefinition { get; init; } = null;
-    public IVectorStoreRecordMapper<TRecord, MyDbRecord>? MyDbRecordCustomMapper { get; init; } = null;
 }
 ```
 
+## SDK Changes
+
+Please also see the following articles for a history of changes to the SDK and therefore implementation requirements:
+
+1. [Vector Store Changes March 2025](../../../support/migration/vectorstore-march-2025.md)
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

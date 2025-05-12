@@ -42,8 +42,9 @@ As of today, the function choice behaviors are represented by three class method
 
 ::: zone pivot="programming-language-java"
 
-> [!TIP]
-> More updates coming soon to the Java SDK.
+- **Auto**: Allows the AI model to choose from zero or more function(s) from the provided function(s) for invocation.
+- **Required**: Forces the AI model to choose one or more function(s) from the provided function(s) for invocation.
+- **None**: Instructs the AI model not to choose any function(s).
 
 ::: zone-end
 
@@ -184,8 +185,92 @@ response = await kernel.invoke_prompt(query, arguments=arguments)
 
 ::: zone pivot="programming-language-java"
 
-> [!TIP]
-> More updates coming soon to the Java SDK.
+Function advertising is the process of providing functions to AI models for further calling and invocation. All three function choice behaviors accept a list of functions to advertise as a `functions` parameter. By default, it is null, which means all functions from plugins registered on the Kernel are provided to the AI model.
+
+```java
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(new WeatherForecastUtils(), "WeatherForecastUtils"))
+    .withPlugin(KernelPluginFactory.createFromObject(new DateTimeUtils(), "DateTimeUtils"))
+    .build();
+
+InvocationContext invocationContext = InvocationContext.builder()
+    // All functions from the DateTimeUtils and WeatherForecastUtils plugins will be sent to AI model together with the prompt.
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true))
+    .build();
+
+var response = kernel.invokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?",
+    KernelArguments.builder().build(),
+    invocationContext
+).block();
+```
+
+If a list of functions is provided, only those functions are sent to the AI model:
+
+```java
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(new WeatherForecastUtils(), "WeatherForecastUtils"))
+    .withPlugin(KernelPluginFactory.createFromObject(new DateTimeUtils(), "DateTimeUtils"))
+    .build();
+
+var getWeatherForCity = kernel.getFunction("WeatherPlugin", "getWeatherForCity");
+var getCurrentTime = kernel.getFunction("WeatherPlugin", "getWeatherForCity");
+
+InvocationContext invocationContext = InvocationContext.builder()
+    // Only the specified getWeatherForCity and getCurrentTime functions will be sent to AI model alongside the prompt.
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true, List.of(getWeatherForCity, getCurrentTime)))
+    .build();
+
+var response = kernel.invokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?",
+    KernelArguments.builder().build(),
+    invocationContext
+).block();
+```
+
+An empty list of functions means no functions are provided to the AI model, which is equivalent to disabling function calling.
+
+```java
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(new WeatherForecastUtils(), "WeatherForecastUtils"))
+    .withPlugin(KernelPluginFactory.createFromObject(new DateTimeUtils(), "DateTimeUtils"))
+    .build();
+
+InvocationContext invocationContext = InvocationContext.builder()
+    // Disables function calling. Equivalent to .withFunctionChoiceBehavior(null)
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true, new ArrayList<>()))
+    .build();
+
+var response = kernel.invokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?",
+    KernelArguments.builder().build(),
+    invocationContext
+).block();
+```
 
 ::: zone-end
 
@@ -304,6 +389,32 @@ response = await kernel.invoke(prompt_function)
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
+
+```java
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(new WeatherForecastUtils(), "WeatherForecastUtils"))
+    .withPlugin(KernelPluginFactory.createFromObject(new DateTimeUtils(), "DateTimeUtils"))
+    .build();
+
+InvocationContext invocationContext = InvocationContext.builder()
+    // All functions from the DateTimeUtils and WeatherForecastUtils plugins will be sent to AI model together with the prompt.
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true))
+    .build();
+
+var response = kernel.invokePromptAsync("Given the current time of day and weather, what is the likely color of the sky in Boston?",
+    KernelArguments.builder().build(),
+    invocationContext
+).block();
+```
 
 > [!TIP]
 > More updates coming soon to the Java SDK.
@@ -450,6 +561,34 @@ response = await kernel.invoke(prompt_function)
 
 ::: zone pivot="programming-language-java"
 
+```java
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(new WeatherForecastUtils(), "WeatherForecastUtils"))
+    .withPlugin(KernelPluginFactory.createFromObject(new DateTimeUtils(), "DateTimeUtils"))
+    .build();
+
+var getWeatherForCity = kernel.getFunction("WeatherPlugin", "getWeatherForCity");
+
+InvocationContext invocationContext = InvocationContext.builder()
+    // Force the AI model to choose the getWeatherForCity function for invocation.
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.auto(true, List.of(getWeatherForCity)))
+    .build();
+
+var response = kernel.invokePromptAsync("Given that it is now the 10th of September 2024, 11:29 AM, what is the likely color of the sky in Boston?",
+    KernelArguments.builder().build(),
+    invocationContext
+).block();
+```
+
 > [!TIP]
 > More updates coming soon to the Java SDK.
 
@@ -586,14 +725,46 @@ response = await kernel.invoke(prompt_function)
 
 ::: zone pivot="programming-language-java"
 
+Here, we advertise all functions from the `DateTimeUtils` and `WeatherForecastUtils` plugins to the AI model but instruct it not to choose any of them.
+Instead, the model will provide a response describing which functions it would choose to determine the color of the sky in Boston on a specified date.
+
+```csharp
+var chatCompletion = OpenAIChatCompletion.builder()
+    .withModelId("<model-id>")
+    .withOpenAIAsyncClient(new OpenAIClientBuilder()
+            .credential(new AzureKeyCredential("<api-key>"))
+            .endpoint("<endpoint>")
+            .buildAsyncClient())
+    .build();
+
+Kernel kernel = Kernel.builder()
+    .withAIService(ChatCompletionService.class, chatCompletion)
+    .withPlugin(KernelPluginFactory.createFromObject(new WeatherForecastUtils(), "WeatherForecastUtils"))
+    .withPlugin(KernelPluginFactory.createFromObject(new DateTimeUtils(), "DateTimeUtils"))
+    .build();
+
+InvocationContext invocationContext = InvocationContext.builder()
+    // All functions from the WeatherForecastUtils and DateTimeUtils plugins will be sent to AI model together with the prompt.
+    .withFunctionChoiceBehavior(FunctionChoiceBehavior.none())
+    .build();
+
+var response = kernel.invokePromptAsync("Specify which provided functions are needed to determine the color of the sky in Boston on a specified date.",
+    KernelArguments.builder().build(),
+    invocationContext
+).block();
+// Sample response: To determine the color of the sky in Boston on a specified date, first call the DateTimeUtils-GetCurrentUtcDateTime function to obtain the 
+// current date and time in UTC. Next, use the WeatherForecastUtils-GetWeatherForCity function, providing 'Boston' as the city name and the retrieved UTC date and time. 
+// These functions do not directly provide the sky's color, but the GetWeatherForCity function offers weather data, which can be used to infer the general sky condition (e.g., clear, cloudy, rainy).
+```
+
 > [!TIP]
 > More updates coming soon to the Java SDK.
 
 ::: zone-end
 
-::: zone pivot="programming-language-csharp"
-
 ## Function Choice Behavior Options
+
+::: zone pivot="programming-language-csharp"
 
 Certain aspects of the function choice behaviors can be configured through options that each function choice behavior class accepts via the `options` constructor parameter of the `FunctionChoiceBehaviorOptions` type. The following options are available:
 
@@ -616,9 +787,18 @@ Certain aspects of the function choice behaviors can be configured through optio
 
 ::: zone-end
 
+::: zone pivot="programming-language-java"
+
+Certain aspects of the function choice behaviors can be configured through options that each function choice behavior class accepts via the `options` constructor parameter of the `FunctionChoiceBehaviorOptions` type. The following options are available:
+
+- **AllowParallelCalls**: This option allows the AI model to choose multiple functions in one request. Some AI models may not support this feature; in such cases, the option will have no effect.
+    By default, this option is set to null, indicating that the AI model's default behavior will be used.
+
+::: zone-end
+
 ## Function Invocation
 
-Function invocation is the process whereby Sematic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
+Function invocation is the process whereby Semantic Kernel invokes functions chosen by the AI model. For more details on function invocation see [function invocation article](./function-invocation.md).
 
 ## Supported AI Connectors
 
@@ -665,7 +845,12 @@ As of today, the following AI connectors in Semantic Kernel support the function
 
 ::: zone pivot="programming-language-java"
 
-> [!TIP]
-> More updates coming soon to the Java SDK.
+As of today, the following AI connectors in Semantic Kernel support the function calling model:
+
+| AI Connector           | FunctionChoiceBehavior | ToolCallBehavior |  
+|------------------------|------------------------|------------------|
+| AzureOpenAI            | ✔️                     | ✔️               |  
+| Gemini                 | Planned                | ✔️               |
+| OpenAI                 | ✔️                     | ✔️               |
 
 ::: zone-end
