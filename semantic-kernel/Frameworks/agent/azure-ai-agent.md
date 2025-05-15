@@ -104,17 +104,7 @@ AgentsClient agentsClient = client.GetAgentsClient();
 Modify your the `.env` file in the root directory to include:
 
 ```bash
-AZURE_AI_AGENT_PROJECT_CONNECTION_STRING = "<example-connection-string>"
-AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME = "<example-model-deployment-name>"
-```
-
-or
-
-```bash
 AZURE_AI_AGENT_ENDPOINT = "<example-endpoint>"
-AZURE_AI_AGENT_SUBSCRIPTION_ID = "<example-subscription-id>"
-AZURE_AI_AGENT_RESOURCE_GROUP_NAME = "<example-resource-group-name>"
-AZURE_AI_AGENT_PROJECT_NAME = "<example-project-name>"
 AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME = "<example-model-deployment-name>"
 ```
 
@@ -126,6 +116,18 @@ from semantic_kernel.agents import AzureAIAgent
 async with (
     DefaultAzureCredential() as creds,
     AzureAIAgent.create_client(credential=creds) as client,
+):
+    # Your operational code here
+```
+
+The underlying `endpoint` will be picked up by Pydantic Settings if configured. Otherwise you may explicitly pass it in to the `create_client()` method:
+
+```python
+from semantic_kernel.agents import AzureAIAgent
+
+async with (
+    DefaultAzureCredential() as creds,
+    AzureAIAgent.create_client(credential=creds, endpoint="<your-endpoint>") as client,
 ):
     # Your operational code here
 ```
@@ -166,15 +168,13 @@ AzureAIAgent agent = new(definition, agentsClient);
 from azure.identity.aio import DefaultAzureCredential
 from semantic_kernel.agents import AzureAIAgent, AzureAIAgentSettings
 
-ai_agent_settings = AzureAIAgentSettings.create()
-
 async with (
     DefaultAzureCredential() as creds,
     AzureAIAgent.create_client(credential=creds) as client,
 ):
     # 1. Define an agent on the Azure AI agent service
     agent_definition = await client.agents.create_agent(
-        model=ai_agent_settings.model_deployment_name,
+        model=AzureAIAgentSettings().model_deployment_name,
         name="<name>",
         instructions="<instructions>",
     )
@@ -324,14 +324,12 @@ class SamplePlugin:
     def get_data(self) -> str:
         return "Sample data"
 
-ai_agent_settings = AzureAIAgentSettings.create()
-
 async with (
         DefaultAzureCredential() as creds,
         AzureAIAgent.create_client(credential=creds) as client,
     ):
         agent_definition = await client.agents.create_agent(
-            model=ai_agent_settings.model_deployment_name,
+            model=AzureAIAgentSettings().model_deployment_name,
         )
 
         agent = AzureAIAgent(
@@ -655,8 +653,8 @@ await agentsClient.DeleteFileAsync("<your file id>");
 
 ::: zone pivot="programming-language-python"
 ```python
-await client.agents.delete_file(file_id=file.id)
-await client.agents.delete_vector_store(vector_store_id=vector_store.id)
+await client.agents.files.delete(file_id=file.id)
+await client.agents.vector_stores.delete(vector_store_id=vector_store.id)
 ```
 ::: zone-end
 
