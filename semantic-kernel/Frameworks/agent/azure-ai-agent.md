@@ -83,18 +83,12 @@ pip install semantic-kernel[azure]
 
 ## Configuring the AI Project Client
 
-Accessing an `AzureAIAgent` first requires the creation of a project client that is configured for a specific Foundry Project, most commonly by providing a connection string ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
+Accessing an `AzureAIAgent` first requires the creation of a client that is configured for a specific Foundry Project, most commonly by providing your project endpoint ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
 
 ::: zone pivot="programming-language-csharp"
 
 ```c#
-AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
-```
-
-The `AgentsClient` may be accessed from the `AIProjectClient`:
-
-```c#
-AgentsClient agentsClient = client.GetAgentsClient();
+PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 ```
 
 ::: zone-end
@@ -142,16 +136,15 @@ async with (
 
 ## Creating an `AzureAIAgent`
 
-To create an `AzureAIAgent`, you start by configuring and initializing the agent project through the Azure AI service and then integrate it with Semantic Kernel:
+To create an `AzureAIAgent`, you start by configuring and initializing the Foundry project through the Azure Agent service and then integrate it with Semantic Kernel:
 
 ::: zone pivot="programming-language-csharp"
 
 ```c#
-AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
-AgentsClient agentsClient = client.GetAgentsClient();
+PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 // 1. Define an agent on the Azure AI agent service
-Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
+PersistentAgent definition = await agentsClient.Administration.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -197,16 +190,17 @@ async with (
 ## Interacting with an `AzureAIAgent`
 
 Interaction with the `AzureAIAgent` is straightforward. The agent maintains the conversation history automatically using a thread.
+
 ::: zone pivot="programming-language-csharp"
 The specifics of the _Azure AI Agent thread_ is abstracted away via the `Microsoft.SemanticKernel.Agents.AzureAI.AzureAIAgentThread` class, which is an implementation of `Microsoft.SemanticKernel.Agents.AgentThread`.
 
 > [!IMPORTANT]
-> Note that the Azure AI Agents SDK has the `Azure.AI.Projects.AgentThread` class. It should not be confused with `Microsoft.SemanticKernel.Agents.AgentThread`, which is the common Semantic Kernel Agents abstraction for all thread types.
+> Note that the Azure AI Agents SDK has the `PersistentAgentThread` class. It should not be confused with `Microsoft.SemanticKernel.Agents.AgentThread`, which is the common Semantic Kernel Agents abstraction for all thread types.
 
 The `AzureAIAgent` currently only supports threads of type `AzureAIAgentThread`.
 
 ```c#
-Microsoft.SemanticKernel.Agents.AgentThread agentThread = new AzureAIAgentThread(agent.Client);
+AzureAIAgentThread agentThread = new(agent.Client);
 try
 {
     ChatMessageContent message = new(AuthorRole.User, "<your user input>");
@@ -302,10 +296,9 @@ Semantic Kernel supports extending an `AzureAIAgent` with custom plugins for enh
 ::: zone pivot="programming-language-csharp"
 ```c#
 KernelPlugin plugin = KernelPluginFactory.CreateFromType<YourPlugin>();
-AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
-AgentsClient agentsClient = client.GetAgentsClient();
+PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
-Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
+PersistentAgent definition = await agentsClient.Administration.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -361,10 +354,9 @@ Code Interpreter allows the agents to write and run Python code in a sandboxed e
 
 ::: zone pivot="programming-language-csharp"
 ```c#
-AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
-AgentsClient agentsClient = client.GetAgentsClient();
+PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
-Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
+PersistentAgent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -413,10 +405,9 @@ File search augments agents with knowledge from outside its model ([Azure AI Age
 ::: zone pivot="programming-language-csharp"
 
 ```c#
-AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
-AgentsClient agentsClient = client.GetAgentsClient();
+PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
-Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
+PersistentAgent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -464,12 +455,11 @@ Connects your agent to an external API ([How to use Azure AI Agent Service with 
 
 ::: zone pivot="programming-language-csharp"
 ```c#
-AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
-AgentsClient agentsClient = client.GetAgentsClient();
+PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 string apiJsonSpecification = ...; // An Open API JSON specification
 
-Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
+PersistentAgent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
@@ -535,24 +525,19 @@ Use an existing Azure AI Search index with with your agent ([Use an existing AI 
 
 ::: zone pivot="programming-language-csharp"
 ```c#
-AIProjectClient client = AzureAIAgent.CreateAzureAIClient("<your connection-string>", new AzureCliCredential());
-AgentsClient agentsClient = client.GetAgentsClient();
+PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
-ConnectionsClient cxnClient = client.GetConnectionsClient();
-ListConnectionsResponse searchConnections = await cxnClient.GetConnectionsAsync(Azure.AI.Projects.ConnectionType.AzureAISearch);
-ConnectionResponse searchConnection = searchConnections.Value[0];
-
-Azure.AI.Projects.Agent definition = await agentsClient.CreateAgentAsync(
+PersistentAgent definition = await agentsClient.CreateAgentAsync(
     "<name of the the model used by the agent>",
     name: "<agent name>",
     description: "<agent description>",
     instructions: "<agent instructions>",
-    tools: [new Azure.AI.Projects.AzureAISearchToolDefinition()],
+    tools: [new AzureAISearchToolDefinition()],
     toolResources: new()
     {
         AzureAISearch = new()
         {
-            IndexList = { new Azure.AI.Projects.IndexResource(searchConnection.Id, "<your index name>") }
+            IndexList = { new AISearchIndexResource("<your connection id>", "<your index name>") }
         }
     });
 
@@ -604,7 +589,7 @@ An existing agent can be retrieved and reused by specifying its assistant ID:
 ::: zone pivot="programming-language-csharp"
 
 ```c#
-Azure.AI.Projects.Agent definition = await agentsClient.GetAgentAsync("<your agent id>");
+PersistentAgent definition = await agentsClient.Administration.GetAgentAsync("<your agent id>");
 AzureAIAgent agent = new(definition, agentsClient);
 ```
 
@@ -631,7 +616,7 @@ Agents and their associated threads can be deleted when no longer needed:
 
 ```c#
 await agentThread.DeleteAsync();
-await agentsClient.DeleteAgentAsync(agent.Id);
+await agentsClient.Administration.DeleteAgentAsync(agent.Id);
 ```
 ::: zone-end
 
@@ -646,8 +631,8 @@ If working with a vector store or files, they may be deleted as well:
 
 ::: zone pivot="programming-language-csharp"
 ```c#
-await agentsClient.DeleteVectorStoreAsync("<your store id>");
-await agentsClient.DeleteFileAsync("<your file id>");
+await agentsClient.VectorStores.DeleteVectorStoreAsync("<your store id>");
+await agentsClient.Files.DeleteFileAsync("<your file id>");
 ```
 ::: zone-end
 
