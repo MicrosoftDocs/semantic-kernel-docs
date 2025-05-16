@@ -36,16 +36,16 @@ public class Hotel
     [VectorStoreRecordKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string[] Tags { get; set; }
 }
 ```
@@ -83,8 +83,8 @@ public string HotelName { get; set; }
 
 | Parameter                 | Required | Description                                                                                                                                                                                                     |
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IsFilterable              | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.                                                         |
-| IsFullTextSearchable      | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                                                                            |
+| IsIndexed                 | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.                                                         |
+| IsFullTextIndexed         | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                                                                            |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
@@ -95,7 +95,7 @@ public string HotelName { get; set; }
 Use this attribute to indicate that your property contains a vector.
 
 ```csharp
-[VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
+[VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
 public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```
 
@@ -103,9 +103,9 @@ public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
 | Parameter                 | Required | Description                                                                                                                                                                                                     |
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
+| Dimensions                | Yes      | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
 | IndexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
-| DistanceFunction          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
+| DistanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
 | StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 Common index kinds and distance function types are supplied as static values on the `Microsoft.SemanticKernel.Data.IndexKind` and `Microsoft.SemanticKernel.Data.DistanceFunction` classes.
@@ -218,7 +218,7 @@ VectorStoreRecordVectorField(dimensions=4, distance_function=DistanceFunction.CO
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
 | index_kind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
-| distance_function          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
+| distance_function          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
 | local_embedding            | No       | Indicates whether the property has a local embedding associated with it, default is None.                                                         |
 | embedding_settings        | No       | The settings for the embedding, in the form of a dict with service_id as key and PromptExecutionSettings as value, default is None.                                                                            |
 | serialize_function        | No       | The function to use to serialize the vector, if the type is not a list[float \| int] this function is needed, or the whole model needs to be serialized.                                                                            |
@@ -339,7 +339,7 @@ private List<Float> descriptionEmbedding;
 |---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
 | indexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
-| distanceFunction          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
+| distanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
 | storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
 
 Common index kinds and distance function types are supplied on the `com.microsoft.semantickernel.data.vectorstorage.definition.IndexKind` and `com.microsoft.semantickernel.data.vectorstorage.definition.DistanceFunction` enums.

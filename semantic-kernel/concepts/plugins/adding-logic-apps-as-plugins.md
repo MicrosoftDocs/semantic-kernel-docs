@@ -203,7 +203,7 @@ Below is an example in C# that leverages interactive auth to acquire a token and
 string ClientId = "[AAD_CLIENT_ID]";
 string TenantId = "[TENANT_ID]";
 string Authority = $"https://login.microsoftonline.com/{TenantId}";
-string[] Scopes = new string[] { "api://[AAD_CIENT_ID]/SKLogicApp" };
+string[] Scopes = new string[] { "api://[AAD_CLIENT_ID]/SKLogicApp" };
 
 var app = PublicClientApplicationBuilder.Create(ClientId)
             .WithAuthority(Authority)

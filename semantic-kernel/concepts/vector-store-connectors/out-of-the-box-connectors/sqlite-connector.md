@@ -29,9 +29,10 @@ The SQLite Vector Store connector can be used to access and manage data in SQLit
 | Supported distance functions      | <ul><li>CosineDistance</li><li>ManhattanDistance</li><li>EuclideanDistance</li></ul>                                             |
 | Supported filter clauses          | <ul><li>EqualTo</li></ul>                                                                                                        |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | No                                                                                                                               |
-| IsFullTextSearchable supported?   | No                                                                                                                               |
+| IsIndexed    supported?           | No                                                                                                                               |
+| IsFullTextIndexed supported?      | No                                                                                                                               |
 | StoragePropertyName supported?    | Yes                                                                                                                              |
+| HybridSearch supported?           | No                                                                                                                               |
 
 ## Limitations
 
@@ -105,15 +106,13 @@ var connection = new SqliteConnection("Data Source=:memory:");
 
 connection.LoadExtension("vector-search-extension-name");
 
-var collection = new SqliteVectorStoreRecordCollection<Hotel>(connection, "skhotels");
+var collection = new SqliteVectorStoreRecordCollection<string, Hotel>(connection, "skhotels");
 ```
 
 ## Data mapping
 
 The SQLite Vector Store connector provides a default mapper when mapping from the data model to storage.
 This mapper does a direct conversion of the list of properties on the data model to the columns in SQLite.
-
-It's also possible to override the default mapper behavior by providing a custom mapper via the `SqliteVectorStoreRecordCollectionOptions<TRecord>.DictionaryCustomMapper` property.
 
 With the vector search extension, vectors are stored in virtual tables, separately from key and data properties.
 By default, the virtual table with vectors will use the same name as the table with key and data properties, but with a `vec_` prefix. For example, if the collection name in `SqliteVectorStoreRecordCollection` is `skhotels`, the name of the virtual table with vectors will be `vec_skhotels`. It's possible to override the virtual table name by using the `SqliteVectorStoreOptions.VectorVirtualTableName` or `SqliteVectorStoreRecordCollectionOptions<TRecord>.VectorVirtualTableName` properties.
@@ -139,7 +138,7 @@ public class Hotel
     [VectorStoreRecordData(StoragePropertyName = "hotel_description")]
     public string? Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
