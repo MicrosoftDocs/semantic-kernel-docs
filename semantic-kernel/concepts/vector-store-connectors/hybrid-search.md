@@ -10,8 +10,21 @@ ms.service: semantic-kernel
 ---
 # Hybrid search using Semantic Kernel Vector Store connectors (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
@@ -25,14 +38,14 @@ If you are creating a collection using the Semantic Kernel vector storage connec
 on the string field that you want to target for the keyword search.
 
 > [!TIP]
-> For more information on how to enable `IsFullTextIndexed` refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings)
+> For more information on how to enable `IsFullTextIndexed` refer to [VectorStoreDataAttribute parameters](./defining-your-data-model.md#vectorstoredataattribute-parameters) or [VectorStoreDataProperty configuration settings](./schema-with-record-definition.md#vectorstoredataproperty-configuration-settings)
 
 ## Hybrid Search
 
 The `HybridSearchAsync` method allows searching using a vector and an `ICollection` of string keywords. It also takes an optional `HybridSearchOptions<TRecord>` class as input.
 This method is available on the following interface:
 
-1. `IKeywordHybridSearch<TRecord>`
+1. `IKeywordHybridSearchable<TRecord>`
 
 Only connectors for databases that currently support vector plus keyword hybrid search are implementing this interface.
 
@@ -50,8 +63,8 @@ async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
 }
 
 // Create a Qdrant VectorStore object and choose an existing collection that already contains records.
-IVectorStore vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
-IKeywordHybridSearch<Hotel> collection = (IKeywordHybridSearch<Hotel>)vectorStore.GetCollection<ulong, Hotel>("skhotels");
+VectorStore vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClient: true);
+IKeywordHybridSearchable<Hotel> collection = (IKeywordHybridSearchable<Hotel>)vectorStore.GetCollection<ulong, Hotel>("skhotels");
 
 // Generate a vector for your search text, using your chosen embedding generation implementation.
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
@@ -100,8 +113,8 @@ using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Microsoft.Extensions.VectorData;
 using Qdrant.Client;
 
-var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
-var collection = (IKeywordHybridSearch<Product>)vectorStore.GetCollection<ulong, Product>("skproducts");
+var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClient: true);
+var collection = (IKeywordHybridSearchable<Product>)vectorStore.GetCollection<ulong, Product>("skproducts");
 
 // Create the hybrid search options and indicate that we want
 // to search the DescriptionEmbedding vector property and the
@@ -117,22 +130,22 @@ var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hot
 
 public sealed class Product
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public int Key { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Name { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public List<string> FeatureList { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> FeatureListEmbedding { get; set; }
 }
 ```
@@ -144,15 +157,14 @@ to skip a number of results from the top of the resultset.
 Top and Skip can be used to do paging if you wish to retrieve a large number of results using separate calls.
 
 ```csharp
-// Create the vector search options and indicate that we want to skip the first 40 results and then get the next 20.
+// Create the vector search options and indicate that we want to skip the first 40 results and then pass 20 to search to get the next 20.
 var hybridSearchOptions = new HybridSearchOptions<Product>
 {
-    Top = 20,
     Skip = 40
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 3, hybridSearchOptions);
+var searchResult = collection.HybridSearchAsync(searchVector, ["happiness", "hotel", "customer"], top: 20, hybridSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult)
@@ -161,7 +173,7 @@ await foreach (var result in searchResult)
 }
 ```
 
-The default values for `Top` is 3 and `Skip` is 0.
+The default values for `Skip` is 0.
 
 ### IncludeVectors
 
@@ -206,7 +218,7 @@ If creating a collection via the Semantic Kernel vector store abstractions and y
 set the `IsFilterable` property to true when defining your data model or when creating your record definition.
 
 > [!TIP]
-> For more information on how to set the `IsFilterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
+> For more information on how to set the `IsFilterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddatafield-parameters) or [VectorStoreRecordDataField configuration settings](./schema-with-record-definition.md).
 
 Filters are expressed using LINQ expressions based on the type of the data model.
 The set of LINQ expressions supported will vary depending on the functionality supported
@@ -231,24 +243,24 @@ await foreach (var result in searchResult)
 
 sealed class Glossary
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong Key { get; set; }
 
     // Category is marked as indexed, since we want to filter using this property.
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string Category { get; set; }
 
     // Tags is marked as indexed, since we want to filter using this property.
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public List<string> Tags { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Term { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Definition { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> DefinitionEmbedding { get; set; }
 }
 ```

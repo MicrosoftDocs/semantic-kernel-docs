@@ -10,8 +10,22 @@ ms.service: semantic-kernel
 ---
 # What are Semantic Kernel Vector Store connectors? (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+
 > [!TIP]
 > If you are looking for information about the legacy Memory Store connectors, refer to the [Memory Stores page](./memory-stores.md).
 
@@ -29,7 +43,7 @@ Semantic Kernel and .net provides an abstraction for interacting with Vector Sto
 
 The vector store abstractions are a low level api for adding and retrieving data from vector stores.
 Semantic Kernel has built-in support for using any one of the Vector Store implementations for RAG.
-This is achieved by wrapping `IVectorSearch<TRecord>` and exposing it as a Text Search implementation.
+This is achieved by wrapping `IVectorSearchable<TRecord>` and exposing it as a Text Search implementation.
 
 > [!TIP]
 > To learn more about how to use vector stores for RAG see [How to use Vector Stores with Semantic Kernel Text Search](../text-search/text-search-vector-stores.md).
@@ -38,24 +52,25 @@ This is achieved by wrapping `IVectorSearch<TRecord>` and exposing it as a Text 
 
 ## The Vector Store Abstraction
 
-The main interfaces in the Vector Store abstraction are the following.
+The main abstract base classes and interfaces in the Vector Store abstraction are the following.
 
-### Microsoft.Extensions.VectorData.IVectorStore
+### Microsoft.Extensions.VectorData.VectorStore
 
-`IVectorStore` contains operations that spans across all collections in the vector store, e.g. ListCollectionNames.
-It also provides the ability to get `IVectorStoreRecordCollection<TKey, TRecord>` instances.
+`VectorStore` contains operations that spans across all collections in the vector store, e.g. ListCollectionNames.
+It also provides the ability to get `VectorStoreCollection<TKey, TRecord>` instances.
 
-### Microsoft.Extensions.VectorData.IVectorStoreRecordCollection\<TKey, TRecord\>
+### Microsoft.Extensions.VectorData.VectorStoreCollection\<TKey, TRecord\>
 
-`IVectorStoreRecordCollection<TKey, TRecord>` represents a collection.
-This collection may or may not exist, and the interface provides methods to check if the collection exists, create it or delete it.
-The interface also provides methods to upsert, get and delete records.
-Finally, the interface inherits from `IVectorSearch<TRecord>` providing vector search capabilities.
+`VectorStoreCollection<TKey, TRecord>` represents a collection.
+This collection may or may not exist, and the abstract base class provides methods to check if the collection exists, create it or delete it.
+The abstract base class also provides methods to upsert, get and delete records.
+Finally, the abstract base class inherits from `IVectorSearchable<TRecord>` providing vector search capabilities.
 
-### Microsoft.Extensions.VectorData.IVectorSearch\<TRecord\>
+### Microsoft.Extensions.VectorData.IVectorSearchable\<TRecord\>
 
-- `SearchAsync<TRecord>` contains a method for doing vector searches taking some input that can be vectorized by a registered embedding generator or by the vector database where the database supports this.
-- `SearchEmbeddingAsync<TRecord>` contains a method for doing vector searches taking a vector as input.
+- `SearchAsync<TRecord>` can be used to do either:
+  - vector searches taking some input that can be vectorized by a registered embedding generator or by the vector database where the database supports this.
+  - vector searches taking a vector as input.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -117,23 +132,8 @@ Each vector store implementation is available in its own nuget package. For a li
 The abstractions package can be added like this.
 
 ```dotnetcli
-dotnet add package Microsoft.Extensions.VectorData.Abstractions --prerelease
+dotnet add package Microsoft.Extensions.VectorData.Abstractions
 ```
-
-> [!WARNING]
-> From version 1.23.0 of Semantic Kernel, the Vector Store abstractions have been removed from `Microsoft.SemanticKernel.Abstractions`
-> and are available in the new dedicated `Microsoft.Extensions.VectorData.Abstractions` package.
->
-> Note that from version 1.23.0, `Microsoft.SemanticKernel.Abstractions` has a dependency on `Microsoft.Extensions.VectorData.Abstractions`,
-> therefore there is no need to reference additional packages.
-> The abstractions will however now be in the new `Microsoft.Extensions.VectorData` namespace.
->
-> When upgrading from 1.22.0 or earlier to 1.23.0 or later, you will need to add an additional `using Microsoft.Extensions.VectorData;`
-> clause in files where any of the Vector Store abstraction types are used e.g. `IVectorStore`, `IVectorStoreRecordCollection`, `VectorStoreRecordDataAttribute`, `VectorStoreRecordKeyProperty`, etc.
->
-> This change has been made to support vector store providers when creating their own implementations. A provider only has to reference
-> the `Microsoft.Extensions.VectorData.Abstractions` package. This reduces potential version conflicts and allows Semantic Kernel
-> to continue to evolve fast without impacting vector store providers.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -152,19 +152,19 @@ using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string[] Tags { get; set; }
 }
 ```
@@ -276,7 +276,7 @@ using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
 // Create a Qdrant VectorStore object
-var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
+var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClient: true);
 
 // Choose a collection from the database and specify the type of key and record stored in it via Generic parameters.
 var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
@@ -360,7 +360,7 @@ async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
 }
 
 // Create the collection if it doesn't exist yet.
-await collection.CreateCollectionIfNotExistsAsync();
+await collection.EnsureCollectionExistsAsync();
 
 // Upsert a record.
 string descriptionText = "A place where everyone can be happy.";
@@ -448,7 +448,7 @@ async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search.
-var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 1);
+var searchResult = collection.SearchAsync(searchVector, top: 1);
 
 // Inspect the returned hotel.
 await foreach (var record in searchResult)

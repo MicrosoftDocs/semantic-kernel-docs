@@ -10,22 +10,38 @@ ms.service: semantic-kernel
 ---
 # Vector search using Semantic Kernel Vector Store connectors (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 Semantic Kernel provides vector search capabilities as part of its Vector Store abstractions. This supports filtering and many other options, which this article will explain in more detail.
 
 ::: zone pivot="programming-language-csharp"
 
+> [!TIP]
+> To see how you can search without generating embeddings yourself, see [Letting the Vector Store generate embeddings](./embedding-generation.md#letting-the-vector-store-generate-embeddings).
+
 ## Vector Search
 
-The `SearchEmbeddingAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions<TRecord>` class as input.
-This method is available on the following interfaces:
+The `SearchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions<TRecord>` class as input.
+This method is available on the following types:
 
-1. `IVectorSearch<TRecord>`
-2. `IVectorStoreRecordCollection<TKey, TRecord>`
+1. `IVectorSearchable<TRecord>`
+2. `VectorStoreCollection<TKey, TRecord>`
 
-Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorSearch<TRecord>`.
+Note that `VectorStoreCollection<TKey, TRecord>` implements from `IVectorSearchable<TRecord>`.
 
 Assuming you have a collection that already contains data, you can easily search it. Here is an example using Qdrant.
 
@@ -41,14 +57,14 @@ async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
 }
 
 // Create a Qdrant VectorStore object and choose an existing collection that already contains records.
-IVectorStore vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
-IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
+VectorStore vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClient: true);
+VectorStoreCollection<ulong, Hotel> collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
 
 // Generate a vector for your search text, using your chosen embedding generation implementation.
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
 // Do the search, passing an options object with a Top value to limit results to the single top match.
-var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 1);
+var searchResult = collection.SearchAsync(searchVector, top: 1);
 
 // Inspect the returned hotel.
 await foreach (var record in searchResult)
@@ -63,7 +79,7 @@ await foreach (var record in searchResult)
 
 ## Supported Vector Types
 
-`SearchEmbeddingAsync` takes a generic type as the vector parameter.
+`SearchAsync` takes a generic type as the vector parameter.
 The types of vectors supported by each data store vary.
 See [the documentation for each connector](./out-of-the-box-connectors/index.md) for the list of supported vector types.
 
@@ -96,23 +112,23 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 3, vectorSearchOptions);
+var searchResult = collection.SearchAsync(searchVector, top: 3, vectorSearchOptions);
 
 public sealed class Product
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public int Key { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Description { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public List<string> FeatureList { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> FeatureListEmbedding { get; set; }
 }
 ```
@@ -133,7 +149,7 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
 // Here we pass top: 20 to indicate that we want to retrieve the next 20 results after skipping
 // the first 40
-var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 20, vectorSearchOptions);
+var searchResult = collection.SearchAsync(searchVector, top: 20, vectorSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult)
@@ -161,7 +177,7 @@ var vectorSearchOptions = new VectorSearchOptions<Product>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 3, vectorSearchOptions);
+var searchResult = collection.SearchAsync(searchVector, top: 3, vectorSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult)
@@ -187,7 +203,7 @@ If creating a collection via the Semantic Kernel vector store abstractions and y
 set the `IsFilterable` property to true when defining your data model or when creating your record definition.
 
 > [!TIP]
-> For more information on how to set the `IsFilterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
+> For more information on how to set the `IsFilterable` property, refer to [VectorStoreDataAttribute parameters](./defining-your-data-model.md#vectorstoredataattribute-parameters) or [VectorStoreDataProperty configuration settings](./schema-with-record-definition.md#vectorstoredataproperty-configuration-settings).
 
 Filters are expressed using LINQ expressions based on the type of the data model.
 The set of LINQ expressions supported will vary depending on the functionality supported
@@ -202,7 +218,7 @@ var vectorSearchOptions = new VectorSearchOptions<Glossary>
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = collection.SearchEmbeddingAsync(searchVector, top: 3, vectorSearchOptions);
+var searchResult = collection.SearchAsync(searchVector, top: 3, vectorSearchOptions);
 
 // Iterate over the search results.
 await foreach (var result in searchResult)
@@ -212,24 +228,24 @@ await foreach (var result in searchResult)
 
 sealed class Glossary
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong Key { get; set; }
 
     // Category is marked as indexed, since we want to filter using this property.
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string Category { get; set; }
 
     // Tags is marked as indexed, since we want to filter using this property.
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public List<string> Tags { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Term { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Definition { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> DefinitionEmbedding { get; set; }
 }
 ```
@@ -353,7 +369,7 @@ If creating a collection via the Semantic Kernel vector store abstractions and y
 set the `is_filterable` property to true when defining your data model or when creating your record definition.
 
 > [!TIP]
-> For more information on how to set the `is_filterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
+> For more information on how to set the `is_filterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddatafield-parameters) or [VectorStoreRecordDataField configuration settings](./schema-with-record-definition.md).
 
 To create a filter use the `VectorSearchFilter` class. You can combine multiple filter clauses together in one `VectorSearchFilter`.
 All filter clauses are combined with `and`.
@@ -584,7 +600,7 @@ If creating a collection via the Semantic Kernel vector store abstractions and y
 set the `IsFilterable` field to true when defining your data model or when creating your record definition.
 
 > [!TIP]
-> For more information on how to set the `IsFilterable` field, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
+> For more information on how to set the `IsFilterable` field, refer to [VectorStoreRecordData parameters](./defining-your-data-model.md#vectorstorerecorddata-parameters) or [VectorStoreRecordDataField configuration settings](./schema-with-record-definition.md#vectorstorerecorddatafield-configuration-settings).
 
 To create a filter use the `VectorSearchFilter` class. You can combine multiple filter clauses together in one `VectorSearchFilter`.
 All filter clauses are combined with `and`.

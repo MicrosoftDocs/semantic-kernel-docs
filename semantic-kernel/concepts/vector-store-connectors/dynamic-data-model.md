@@ -10,8 +10,21 @@ ms.service: semantic-kernel
 ---
 # Using Vector Store abstractions without defining your own data model (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
@@ -43,31 +56,33 @@ To use the Dictionary with a connector, simply specify it as your data model whe
 
 ```csharp
 // Create the definition to define the schema.
-VectorStoreRecordDefinition vectorStoreRecordDefinition = new()
+VectorStoreCollectionDefinition definition = new()
 {
-    Properties = new List<VectorStoreRecordProperty>
+    Properties = new List<VectorStoreProperty>
     {
-        new VectorStoreRecordKeyProperty("Key", typeof(string)),
-        new VectorStoreRecordDataProperty("Term", typeof(string)),
-        new VectorStoreRecordDataProperty("Definition", typeof(string)),
-        new VectorStoreRecordVectorProperty("DefinitionEmbedding", typeof(ReadOnlyMemory<float>), dimensions: 1536)
+        new VectorStoreKeyProperty("Key", typeof(string)),
+        new VectorStoreDataProperty("Term", typeof(string)),
+        new VectorStoreDataProperty("Definition", typeof(string)),
+        new VectorStoreVectorProperty("DefinitionEmbedding", typeof(ReadOnlyMemory<float>), dimensions: 1536)
     }
 };
 
 // When getting your collection instance from a vector store instance
 // specify the Dictionary, using object as the key type for your database
 // and also pass your record definition.
-var dynamicDataModelCollection = vectorStore.GetCollection<object, Dictionary<string, object?>>(
+// Note that you have to use GetDynamicCollection instead of the regular GetCollection method
+// to get an instance of a collection using Dictionary<string, object?>.
+var dynamicDataModelCollection = vectorStore.GetDynamicCollection(
     "glossary",
-    vectorStoreRecordDefinition);
+    definition);
 
 // Since we have schema information available from the record definition
 // it's possible to create a collection with the right vectors, dimensions,
 // indexes and distance functions.
-await dynamicDataModelCollection.CreateCollectionIfNotExistsAsync();
+await dynamicDataModelCollection.EnsureCollectionExistsAsync();
 
-// When retrieving a record from the collection, data and vectors can
-// now be accessed via the Data and Vector dictionaries respectively.
+// When retrieving a record from the collection, key, data and vector values can
+// now be accessed via the dictionary entries.
 var record = await dynamicDataModelCollection.GetAsync("SK");
 Console.WriteLine(record["Definition"]);
 ```
@@ -76,11 +91,15 @@ When constructing a collection instance directly, the record definition
 is passed as an option. E.g. here is an example of constructing
 an Azure AI Search collection instance with the Dictionary.
 
+Note that each vector store collection implementation has a separate `*DynamicCollection`
+class that can be used with Dictionary<string, object?>.
+This is because these implementations may support NativeAOT/Trimming.
+
 ```csharp
-new AzureAISearchVectorStoreRecordCollection<object, Dictionary<string, object?>>(
+new AzureAISearchDynamicCollection(
     searchIndexClient,
     "glossary",
-    new() { VectorStoreRecordDefinition = vectorStoreRecordDefinition });
+    new() { Definition = definition });
 ```
 
 ::: zone-end

@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the Weaviate Vector Store connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The Weaviate Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ## Overview
 
@@ -24,14 +40,14 @@ The Weaviate Vector Store connector can be used to access and manage data in Wea
 | Collection maps to                    | Weaviate Collection                                                                                                                                                                   |
 | Supported key property types          | Guid                                                                                                                                                                                  |
 | Supported data property types         | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                                                                            |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                                  |
 | Supported index types                 | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                                                                                   |
-| Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>Hamming</li><li>ManhattanDistance</li></ul>                                      |
+| Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>HammingDistance</li><li>ManhattanDistance</li></ul>                              |
 | Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                                       |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                                   |
 | IsIndexed supported?                  | Yes                                                                                                                                                                                   |
 | IsFullTextIndexed supported?          | Yes                                                                                                                                                                                   |
-| StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                     |
+| StorageName supported?                | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                     |
 | HybridSearch supported?               | Yes                                                                                                                                                                                   |
 
 ::: zone-end
@@ -84,20 +100,22 @@ This first example shows how to set the service URL via options.
 Also note that these methods will retrieve an `HttpClient` instance for making calls to the Weaviate service from the dependency injection service provider.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
-    .CreateBuilder()
-    .AddWeaviateVectorStore(options: new() { Endpoint = new Uri("http://localhost:8080/v1/") });
+    .CreateBuilder();
+kernelBuilder.Services
+    .AddWeaviateVectorStore(new Uri("http://localhost:8080/v1/"), apiKey: null);
 ```
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddWeaviateVectorStore(options: new() { Endpoint = new Uri("http://localhost:8080/v1/") });
+builder.Services.AddWeaviateVectorStore(new Uri("http://localhost:8080/v1/"), apiKey: null);
 ```
 
 Overloads where you can specify your own `HttpClient` are also provided.
@@ -105,23 +123,23 @@ In this case it's possible to set the service url via the `HttpClient` `BaseAddr
 
 ```csharp
 using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
 using HttpClient client = new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") };
-kernelBuilder.AddWeaviateVectorStore(client);
+kernelBuilder.Services.AddWeaviateVectorStore(_ => client);
 ```
 
 ```csharp
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
 using HttpClient client = new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") };
-builder.Services.AddWeaviateVectorStore(client);
+builder.Services.AddWeaviateVectorStore(_ => client);
 ```
 
 You can construct a Weaviate Vector Store instance directly as well.
@@ -140,7 +158,7 @@ It is possible to construct a direct reference to a named collection.
 using System.Net.Http;
 using Microsoft.SemanticKernel.Connectors.Weaviate;
 
-var collection = new WeaviateVectorStoreRecordCollection<Guid, Hotel>(
+var collection = new WeaviateCollection<Guid, Hotel>(
     new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") },
     "Skhotels");
 ```
@@ -151,8 +169,9 @@ If needed, it is possible to pass an Api Key, as an option, when using any of th
 using Microsoft.SemanticKernel;
 
 var kernelBuilder = Kernel
-    .CreateBuilder()
-    .AddWeaviateVectorStore(options: new() { Endpoint = new Uri("http://localhost:8080/v1/"), ApiKey = secretVar });
+    .CreateBuilder();
+kernelBuilder.Services
+    .AddWeaviateVectorStore(new Uri("http://localhost:8080/v1/"), secretVar);
 ```
 
 ## Data mapping
@@ -177,17 +196,17 @@ using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public Guid HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION_EMBEDDING")]
-    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.QuantizedFlat)]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.QuantizedFlat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

@@ -10,8 +10,21 @@ ms.service: semantic-kernel
 ---
 # Out-of-the-box Vector Store connectors (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 Semantic Kernel provides a number of out-of-the-box Vector Store integrations making it easy to get started with using Vector Stores. It also allows you to experiment with a free or locally hosted Vector Store and then easily switch to a service when scale requires it.
 
@@ -38,7 +51,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
 | [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
 | [Redis](./redis-connector.md)                                      |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| Sql Server                                                         |          Planned             |                                |                                   |
+| [SQL Server](./sql-connector.md)                                   |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
 | [SQLite](./sqlite-connector.md)                                    |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
 | [Volatile (In-Memory)](./volatile-connector.md)                    | Deprecated (use In-Memory)   |              N/A               | Microsoft Semantic Kernel Project |
 | [Weaviate](./weaviate-connector.md)                                |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
