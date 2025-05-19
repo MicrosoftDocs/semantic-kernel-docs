@@ -42,7 +42,6 @@ These should help improve clarity, consistency and reduce type name length.
 | Microsoft.Extensions.VectorData | GetFilteredRecordOptions&lt;TRecord&gt; | Microsoft.Extensions.VectorData | **FilteredRecordRetrievalOptions&lt;TRecord&gt;** |
 | Microsoft.Extensions.VectorData | IVectorSearch&lt;TRecord&gt; | Microsoft.Extensions.VectorData | **IVectorSearchable&lt;TRecord&gt;** |
 | Microsoft.Extensions.VectorData | IKeywordHybridSearch&lt;TRecord&gt; | Microsoft.Extensions.VectorData | **IKeywordHybridSearchable&lt;TRecord&gt;** |
-| Microsoft.Extensions.VectorData | HybridSearchOptions&lt;TRecord&gt; | Microsoft.Extensions.VectorData | ??? |
 | Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB | AzureCosmosDBMongoDBVectorStore | **Microsoft.SemanticKernel.Connectors.CosmosMongoDB** | **CosmosMongoVectorStore** |
 | Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB | AzureCosmosDBMongoDBVectorStoreRecordCollection | **Microsoft.SemanticKernel.Connectors.CosmosMongoDB** | **CosmosMongoCollection** |
 | Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL | AzureCosmosDBNoSQLVectorStore | **Microsoft.SemanticKernel.Connectors.CosmosNoSql** | **CosmosNoSqlVectorStore** |
@@ -155,10 +154,6 @@ The `CreateCollection` method on the `Collection` has been removed, and only `En
 `VectorStoreOperationException` and `VectorStoreRecordMappingException` has been removed, and only `VectorStoreException` is now supported.
 All database request failures resulting in a database specific exception are wrapped and thrown as a `VectorStoreException`, allowing
 consuming code to catch a single exception type instead of a different one for each implementation.
-
-## Dependency Injection helper changes
-
-
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
