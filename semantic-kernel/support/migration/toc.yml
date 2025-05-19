@@ -12,6 +12,8 @@
   href: kernel-events-and-filters-migration.md
 - name: Agent Framework Release Candidate Migration Guide
   href: agent-framework-rc-migration-guide.md
+- name: AzureAIAgent Foundry GA Migration Guide
+  href: azureagent-foundry-ga-migration-guide.md
 - name: Vector Store changes - March 2025
   href: vectorstore-march-2025.md
 - name: Vector Store changes - April 2025
