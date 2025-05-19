@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the Azure CosmosDB MongoDB (vCore) Vector Store connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The Azure CosmosDB MongoDB (vCore) Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ## Overview
 
@@ -24,14 +40,14 @@ The Azure CosmosDB MongoDB Vector Store connector can be used to access and mana
 | Collection maps to                    | Azure Cosmos DB MongoDB (vCore) Collection + Index                                                                                                                            |
 | Supported key property types          | string                                                                                                                                                                        |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                                                                    |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                                    |
 | Supported index types                 | <ul><li>Hnsw</li><li>IvfFlat</li></ul>                                                                                                                                        |
 | Supported distance functions          | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                       |
 | Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                                                     |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                           |
-| IsIndexed supported?               | Yes                                                                                                                                                                           |
-| IsFullTextIndexed supported?       | No                                                                                                                                                                            |
-| StoragePropertyName supported?        | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
+| IsIndexed supported?                  | Yes                                                                                                                                                                           |
+| IsFullTextIndexed supported?          | No                                                                                                                                                                            |
+| StorageName supported?                | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
 | HybridSearch supported?               | No                                                                                                                                                                            |
 
 ::: zone-end
@@ -66,26 +82,29 @@ This connector is compatible with Azure Cosmos DB MongoDB (vCore) and is *not* d
 Add the Azure CosmosDB MongoDB Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB --prerelease
+dotnet add package Microsoft.SemanticKernel.Connectors.CosmosMongoDB --prerelease
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
-    .CreateBuilder()
-    .AddAzureCosmosDBMongoDBVectorStore(connectionString, databaseName);
+    .CreateBuilder();
+kernelBuilder.Services
+    .AddCosmosMongoVectorStore(connectionString, databaseName);
 ```
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAzureCosmosDBMongoDBVectorStore(connectionString, databaseName);
+builder.Services.AddCosmosMongoVectorStore(connectionString, databaseName);
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of `MongoDB.Driver.IMongoDatabase` to be separately registered with the dependency injection container.
@@ -103,7 +122,7 @@ kernelBuilder.Services.AddSingleton<IMongoDatabase>(
         var mongoClient = new MongoClient(connectionString);
         return mongoClient.GetDatabase(databaseName);
     });
-kernelBuilder.AddAzureCosmosDBMongoDBVectorStore();
+kernelBuilder.Services.AddCosmosMongoVectorStore();
 ```
 
 ```csharp
@@ -119,29 +138,29 @@ builder.Services.AddSingleton<IMongoDatabase>(
         var mongoClient = new MongoClient(connectionString);
         return mongoClient.GetDatabase(databaseName);
     });
-builder.Services.AddAzureCosmosDBMongoDBVectorStore();
+builder.Services.AddCosmosMongoVectorStore();
 ```
 
 You can construct an Azure CosmosDB MongoDB Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
+using Microsoft.SemanticKernel.Connectors.CosmosMongoDB;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var vectorStore = new AzureCosmosDBMongoDBVectorStore(database);
+var vectorStore = new CosmosMongoVectorStore(database);
 ```
 
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
+using Microsoft.SemanticKernel.Connectors.CosmosMongoDB;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var collection = new AzureCosmosDBMongoDBVectorStoreRecordCollection<ulong, Hotel>(
+var collection = new CosmosMongoCollection<ulong, Hotel>(
     database,
     "skhotels");
 ```
@@ -169,19 +188,19 @@ using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong HotelId { get; set; }
 
     [BsonElement("hotel_name")]
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string HotelName { get; set; }
 
     [BsonElement("hotel_description")]
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [BsonElement("hotel_description_embedding")]
-    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw)]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

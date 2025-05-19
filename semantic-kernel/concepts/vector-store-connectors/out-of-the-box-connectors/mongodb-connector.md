@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the MongoDB Vector Store connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The MongoDB Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ## Overview
 
@@ -24,14 +40,14 @@ The MongoDB Vector Store connector can be used to access and manage data in Mong
 | Collection maps to                    | MongoDB Collection + Index                                                                                                                                                    |
 | Supported key property types          | string                                                                                                                                                                        |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                                                                    |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                          |
 | Supported index types                 | N/A                                                                                                                                                                           |
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                     |
 | Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                                                     |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                           |
 | IsIndexed supported?                  | Yes                                                                                                                                                                           |
 | IsFullTextIndexed supported?          | No                                                                                                                                                                            |
-| StoragePropertyName supported?        | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
+| StorageName supported?                | No, use BsonElementAttribute instead. [See here for more info.](#data-mapping)                                                                                                |
 | HybridSearch supported?               | Yes                                                                                                                                                                           |
 
 ::: zone-end
@@ -69,18 +85,17 @@ dotnet add package Microsoft.SemanticKernel.Connectors.MongoDB --prerelease
 You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddMongoDBVectorStore(connectionString, databaseName);
+builder.Services.AddMongoVectorStore(connectionString, databaseName);
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of `MongoDB.Driver.IMongoDatabase` to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using MongoDB.Driver;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -91,7 +106,7 @@ builder.Services.AddSingleton<IMongoDatabase>(
         var mongoClient = new MongoClient(connectionString);
         return mongoClient.GetDatabase(databaseName);
     });
-builder.Services.AddMongoDBVectorStore();
+builder.Services.AddMongoVectorStore();
 ```
 
 You can construct a MongoDB Vector Store instance directly.
@@ -102,7 +117,7 @@ using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var vectorStore = new MongoDBVectorStore(database);
+var vectorStore = new MongoVectorStore(database);
 ```
 
 It is possible to construct a direct reference to a named collection.
@@ -113,7 +128,7 @@ using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var collection = new MongoDBVectorStoreRecordCollection<string, Hotel>(
+var collection = new MongoCollection<string, Hotel>(
     database,
     "skhotels");
 ```
@@ -138,22 +153,23 @@ Here is an example of a data model with `BsonElement` set.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong HotelId { get; set; }
 
     [BsonElement("hotel_name")]
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string HotelName { get; set; }
 
     [BsonElement("hotel_description")]
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
     [BsonElement("hotel_description_embedding")]
-    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineSimilarity)]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineSimilarity)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

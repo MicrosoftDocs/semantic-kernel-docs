@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the Qdrant connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The Qdrant Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ## Overview
 
@@ -24,14 +40,14 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 | Collection maps to                | Qdrant collection with payload indices for filterable data fields                                                                |
 | Supported key property types      | <ul><li>ulong</li><li>Guid</li></ul>                                                                                             |
 | Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>*and enumerables of each of these types*</li></ul> |
-| Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                             |
 | Supported index types             | Hnsw                                                                                                                             |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>              |
 | Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes (configurable)                                                                                                           |
 | IsIndexed supported?              | Yes                                                                                                                              |
 | IsFullTextIndexed supported?      | Yes                                                                                                                              |
-| StoragePropertyName supported?    | Yes                                                                                                                              |
+| StorageName supported?            | Yes                                                                                                                              |
 | HybridSearch supported?           | Yes                                                                                                                              |
 
 ::: zone-end
@@ -49,7 +65,7 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 | Supports multiple vectors in a record | Yes (configurable)                                                                                                           |
 | IsFilterable supported?           | Yes                                                                                                                              |
 | IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | Yes                                                                                                                              |
+| StorageName supported?            | Yes                                                                                                                              |
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
@@ -73,16 +89,18 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
-    .CreateBuilder()
+    .CreateBuilder();
+kernelBuilder.Services
     .AddQdrantVectorStore("localhost");
 ```
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -99,7 +117,7 @@ using Qdrant.Client;
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.Services.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
-kernelBuilder.AddQdrantVectorStore();
+kernelBuilder.Services.AddQdrantVectorStore();
 ```
 
 ```csharp
@@ -119,7 +137,7 @@ You can construct a Qdrant Vector Store instance directly.
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
-var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
+var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClient: true);
 ```
 
 It is possible to construct a direct reference to a named collection.
@@ -128,9 +146,10 @@ It is possible to construct a direct reference to a named collection.
 using Microsoft.SemanticKernel.Connectors.Qdrant;
 using Qdrant.Client;
 
-var collection = new QdrantVectorStoreRecordCollection<ulong, Hotel>(
+var collection = new QdrantCollection<ulong, Hotel>(
     new QdrantClient("localhost"),
-    "skhotels");
+    "skhotels",
+    ownsClient: true);
 ```
 
 ## Data mapping
@@ -149,25 +168,25 @@ For data properties and vector properties (if using named vectors mode), you can
 property names on the data model. This is not supported for keys, since a key has a fixed name in Qdrant. It is also not supported for vectors in *single
 unnamed vector* mode, since the vector is stored under a fixed name.
 
-The property name override is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
+The property name override is done by setting the `StorageName` option via the data model attributes or record definition.
 
-Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Qdrant.
+Here is an example of a data model with `StorageName` set on its attributes and how that will be represented in Qdrant.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsIndexed = true, StoragePropertyName = "hotel_name")]
+    [VectorStoreData(IsIndexed = true, StorageName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true, StoragePropertyName = "hotel_description")]
+    [VectorStoreData(IsFullTextIndexed = true, StorageName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw, StorageName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -373,11 +392,13 @@ using Qdrant.Client;
 
 var vectorStore = new QdrantVectorStore(
     new QdrantClient("localhost"),
+    ownsClient: true,
     new() { HasNamedVectors = true });
 
-var collection = new QdrantVectorStoreRecordCollection<Hotel>(
+var collection = new QdrantCollection<ulong, Hotel>(
     new QdrantClient("localhost"),
     "skhotels",
+    ownsClient: true,
     new() { HasNamedVectors = true });
 ```
 

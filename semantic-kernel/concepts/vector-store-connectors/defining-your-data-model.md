@@ -10,8 +10,21 @@ ms.service: semantic-kernel
 ---
 # Defining your data model (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ## Overview
 
@@ -33,86 +46,99 @@ using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong HotelId { get; set; }
 
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordData(IsIndexed = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string[] Tags { get; set; }
 }
 ```
 
 ## Attributes
 
-### VectorStoreRecordKeyAttribute
+### VectorStoreKeyAttribute
 
 Use this attribute to indicate that your property is the key of the record.
 
 ```csharp
-[VectorStoreRecordKey]
+[VectorStoreKey]
 public ulong HotelId { get; set; }
 ```
 
-#### VectorStoreRecordKeyAttribute parameters
+#### VectorStoreKeyAttribute parameters
 
-| Parameter                 | Required | Description                                                                                                                                                                                                     |
-|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+| Parameter                 | Required | Description                                                                                                                                                             |
+|---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| StorageName               | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
-> For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+> For more information on which connectors support `StorageName` and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
-### VectorStoreRecordDataAttribute
+### VectorStoreDataAttribute
 
 Use this attribute to indicate that your property contains general data that is not a key or a vector.
 
 ```csharp
-[VectorStoreRecordData(IsFilterable = true)]
+[VectorStoreData(IsIndexed = true)]
 public string HotelName { get; set; }
 ```
 
-#### VectorStoreRecordDataAttribute parameters
+#### VectorStoreDataAttribute parameters
 
-| Parameter                 | Required | Description                                                                                                                                                                                                     |
-|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IsIndexed                 | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.                                                         |
-| IsFullTextIndexed         | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                                                                            |
-| StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+| Parameter                 | Required | Description                                                                                                                                                             |
+|---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IsIndexed                 | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.                 |
+| IsFullTextIndexed         | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                                    |
+| StorageName               | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
-> For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+> For more information on which connectors support `StorageName` and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
-### VectorStoreRecordVectorAttribute
+### VectorStoreVectorAttribute
 
 Use this attribute to indicate that your property contains a vector.
 
 ```csharp
-[VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+[VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
 public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 ```
 
-#### VectorStoreRecordVectorAttribute parameters
+It is also possible to use the `VectorStoreVectorAttribute` on properties that do not have a vector type, e.g. a property of type `string`.
+When a property is decorated in this way, an `Microsoft.Exntesions.AI.IEmbeddingGenerator` instance needs to be provided to the vector store.
+When upserting the record, the text that is in the `string` property will automatically be turned into a vector and stored as a vector in the database.
+It is not possible to retrieve a vector using this mechanism.
 
-| Parameter                 | Required | Description                                                                                                                                                                                                     |
-|---------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Dimensions                | Yes      | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.                                                    |
-| IndexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                                                                |
-| DistanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                                                   |
-| StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+```csharp
+[VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+public string DescriptionEmbedding { get; set; }
+```
+
+> [!TIP]
+> For more information on how to use built-in embedding generation, refer to [Letting the Vector Store generate embeddings](./embedding-generation.md#letting-the-vector-store-generate-embeddings).
+
+#### VectorStoreVectorAttribute parameters
+
+| Parameter                 | Required | Description                                                                                                                                                             |
+|---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Dimensions                | Yes      | The number of dimensions that the vector has. This is required when creating a vector index for a collection.                                                           |
+| IndexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                        |
+| DistanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                                    |
+| StorageName               | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 Common index kinds and distance function types are supplied as static values on the `Microsoft.SemanticKernel.Data.IndexKind` and `Microsoft.SemanticKernel.Data.DistanceFunction` classes.
 Individual Vector Store implementations may also use their own index kinds and distance functions, where the database supports unusual types.
 
 > [!TIP]
-> For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+> For more information on which connectors support `StorageName` and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
 ::: zone-end
 

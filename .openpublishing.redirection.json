@@ -746,6 +746,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path": "semantic-kernel/concepts/vector-store-connectors/generic-data-model.md",
+            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/dynamic-data-model.md",
+            "redirect_document_id": false
+        },
+        {
             "source_path": "semantic-kernel/how-to/vector-store-data-ingestion.md",
             "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/how-to/vector-store-data-ingestion",
             "redirect_document_id": false

@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the Pinecone connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The Pinecone Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
@@ -24,14 +40,14 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 | Collection maps to                    | Pinecone serverless Index                                                                                                                        |
 | Supported key property types          | string                                                                                                                                           |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>decimal</li><li>*enumerables of type* string</li></ul> |
-| Supported vector property types       | ReadOnlyMemory\<float\>                                                                                                                          |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                             |
 | Supported index types                 | PGA (Pinecone Graph Algorithm)                                                                                                                   |
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>                                                 |
 | Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                        |
 | Supports multiple vectors in a record | No                                                                                                                                               |
 | IsIndexed supported?                  | Yes                                                                                                                                              |
 | IsFullTextIndexed supported?          | No                                                                                                                                               |
-| StoragePropertyName supported?        | Yes                                                                                                                                              |
+| StorageName supported?                | Yes                                                                                                                                              |
 | HybridSearch supported?               | No                                                                                                                                               |
 | Integrated Embeddings supported?      | No                                                                                                                                               |
 
@@ -46,16 +62,18 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Pinecone --prerelease
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
-    .CreateBuilder()
+    .CreateBuilder();
+kernelBuilder.Services
     .AddPineconeVectorStore(pineconeApiKey);
 ```
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -73,7 +91,7 @@ using PineconeClient = Pinecone.PineconeClient;
 var kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.Services.AddSingleton<PineconeClient>(
     sp => new PineconeClient(pineconeApiKey));
-kernelBuilder.AddPineconeVectorStore();
+kernelBuilder.Services.AddPineconeVectorStore();
 ```
 
 ```csharp
@@ -104,7 +122,7 @@ It is possible to construct a direct reference to a named collection.
 using Microsoft.SemanticKernel.Connectors.Pinecone;
 using PineconeClient = Pinecone.PineconeClient;
 
-var collection = new PineconeVectorStoreRecordCollection<string, Hotel>(
+var collection = new PineconeCollection<string, Hotel>(
     new PineconeClient(pineconeApiKey),
     "skhotels");
 ```
@@ -121,7 +139,7 @@ Pinecone collection when constructing it and use this instead for all operations
 using Microsoft.SemanticKernel.Connectors.Pinecone;
 using PineconeClient = Pinecone.PineconeClient;
 
-var collection = new PineconeVectorStoreRecordCollection<string, Hotel>(
+var collection = new PineconeCollection<string, Hotel>(
     new PineconeClient(pineconeApiKey),
     "skhotels",
     new() { IndexNamespace = "seasidehotels" });
@@ -142,25 +160,25 @@ The default mapper uses the model annotations or record definition to determine 
 For data properties, you can provide override field names to use in storage that is different to the
 property names on the data model. This is not supported for keys, since a key has a fixed name in Pinecone.
 It is also not supported for vectors, since the vector is stored under a fixed name `values`.
-The property name override is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
+The property name override is done by setting the `StorageName` option via the data model attributes or record definition.
 
-Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Pinecone.
+Here is an example of a data model with `StorageName` set on its attributes and how that will be represented in Pinecone.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public string HotelId { get; set; }
 
-    [VectorStoreRecordData(IsIndexed = true, StoragePropertyName = "hotel_name")]
+    [VectorStoreData(IsIndexed = true, StorageName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextIndexed = true, StoragePropertyName = "hotel_description")]
+    [VectorStoreData(IsFullTextIndexed = true, StorageName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

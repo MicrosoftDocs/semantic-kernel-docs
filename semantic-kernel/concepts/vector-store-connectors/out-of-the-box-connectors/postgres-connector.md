@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the Postgres Vector Store connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The Postgres Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
@@ -26,14 +42,14 @@ The connector has the following characteristics.
 | Collection maps to                | Postgres table                                                                                                                   |
 | Supported key property types      | <ul><li>short</li><li>int</li><li>long</li><li>string</li><li>Guid</li></ul>                                                     |
 | Supported data property types     | <ul><li>bool</li><li>short</li><li>int</li><li>long</li><li>float</li><li>double</li><li>decimal</li><li>string</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>byte[]</li><li>bool Enumerables</li><li>short Enumerables</li><li>int Enumerables</li><li>long Enumerables</li><li>float Enumerables</li><li>double Enumerables</li><li>decimal Enumerables</li><li>string Enumerables</li><li>DateTime Enumerables</li><li>DateTimeOffset Enumerables</li><li>Guid Enumerables</li></ul> |
-| Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<Half\></li><li>Embedding\<Half\></li><li>Half[]</li><li>BitArray</li><li>Pgvector.SparseVector</li></ul>                                             |
 | Supported index types             | Hnsw                                                                                                                             |
 | Supported distance functions      | <ul><li>CosineDistance</li><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>|
 | Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsIndexed supported?              | No                                                                                                                               |
 | IsFullTextIndexed supported?      | No                                                                                                                               |
-| StoragePropertyName supported?    | Yes                                                                                                                              |
+| StorageName supported?            | Yes                                                                                                                              |
 | HybridSearch supported?           | No                                                                                                                               |
 
 ## Limitations
@@ -56,7 +72,7 @@ When using the `AddPostgresVectorStore` dependency injection registration method
 Add the Postgres Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.Postgres --prerelease
+dotnet add package Microsoft.SemanticKernel.Connectors.PgVector --prerelease
 ```
 
 You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
@@ -64,7 +80,7 @@ You can add the vector store to the `IServiceCollection` dependency injection co
 In this case, an instance of the `Npgsql.NpgsqlDataSource` class, which has vector capabilities enabled, will also be registered with the container.
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -75,7 +91,6 @@ Extension methods that take no parameters are also provided. These require an in
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using Npgsql;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -90,30 +105,42 @@ builder.Services.AddSingleton<NpgsqlDataSource>(sp =>
 builder.Services.AddPostgresVectorStore();
 ```
 
-You can construct a Postgres Vector Store instance directly.
+You can construct a Postgres Vector Store instance directly with a custom data source or with a connection string.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Postgres;
+using Microsoft.SemanticKernel.Connectors.PgVector;
 using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
 dataSourceBuilder.UseVector();
 var dataSource = dataSourceBuilder.Build();
 
-var connection = new PostgresVectorStore(dataSource);
+var connection = new PostgresVectorStore(dataSource, ownsDataSource: true);
 ```
 
-It is possible to construct a direct reference to a named collection.
+```csharp
+using Microsoft.SemanticKernel.Connectors.PgVector;
+
+var connection = new PostgresVectorStore("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+```
+
+It is possible to construct a direct reference to a named collection with a custom data source or with a connection string.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Postgres;
+using Microsoft.SemanticKernel.Connectors.PgVector;
 using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
 dataSourceBuilder.UseVector();
 var dataSource = dataSourceBuilder.Build();
 
-var collection = new PostgresVectorStoreRecordCollection<string, Hotel>(dataSource, "skhotels");
+var collection = new PostgresCollection<string, Hotel>(dataSource, "skhotels", ownsDataSource: true);
+```
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.PgVector;
+
+var collection = new PostgresCollection<string, Hotel>("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;", "skhotels");
 ```
 
 ## Data mapping
@@ -123,26 +150,26 @@ This mapper does a direct conversion of the list of properties on the data model
 
 ### Property name override
 
-You can override property names to use in storage that is different to the property names on the data model.
-The property name override is done by setting the `StoragePropertyName` option via the data model property attributes or record definition.
+You can provide override property names to use in storage that is different to the property names on the data model.
+The property name override is done by setting the `StorageName` option via the data model property attributes or record definition.
 
-Here is an example of a data model with `StoragePropertyName` set on its attributes and how that will be represented in Postgres query.
+Here is an example of a data model with `StorageName` set on its attributes and how that will be represented in a Postgres command.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public int HotelId { get; set; }
 
-    [VectorStoreRecordData(StoragePropertyName = "hotel_name")]
+    [VectorStoreData(StorageName = "hotel_name")]
     public string? HotelName { get; set; }
 
-    [VectorStoreRecordData(StoragePropertyName = "hotel_description")]
+    [VectorStoreData(StorageName = "hotel_description")]
     public string? Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
