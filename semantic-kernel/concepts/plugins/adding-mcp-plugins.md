@@ -47,6 +47,13 @@ In order to make the same plugin available to your kernel or agent, you would do
 
 ::: zone pivot="programming-language-python"
 
+> [!NOTE]
+> Make sure to install Semantic Kernel with the `mcp` extra, for instance:
+> ```bash
+> pip install semantic-kernel[mcp]
+> ```
+>
+
 ```python
 import os
 from semantic_kernel import Kernel
@@ -102,6 +109,11 @@ async def main():
     # Do something with the kernel
     await plugin.close()
 ```
+
+All the MCP plugins have additional options:
+- `load_tools`: Whether or not to load the tools from the MCP server, this is useful when you know there are no tools available, default is True.
+- `load_prompts`: Whether or not to load the prompts from the MCP server, this is useful when you know there are no prompts available, default is True. We have also heard cases where the call to load prompts hangs when it there are no prompts, so this is a good option to set to `False` if you know there are no prompts available.
+- `request_timeout`: The timeout for the requests to the MCP server, this is useful when you know the server is sometimes non-responding, and you do not want your app to hang.
 
 ::: zone-end
 ::: zone pivot="programming-language-csharp"
