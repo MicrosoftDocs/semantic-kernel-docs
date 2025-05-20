@@ -67,4 +67,5 @@ Prompt engineering is a dynamic and evolving field, and skilled prompt engineers
 > [YAML Schema Reference for Prompts](./yaml-schema.md)
 > [Handlebars Prompt Templates](./handlebars-prompt-templates.md)
 > [Liquid Prompt Templates](./liquid-prompt-templates.md)
+> [Jinja2 Prompt Templates](./jinja2-prompt-templates.md)
 > [Protecting against Prompt Injection Attacks](./prompt-injection-attacks.md)

@@ -223,3 +223,7 @@ var arguments = new KernelArguments()
 var response = await kernel.InvokeAsync(function, arguments);
 Console.WriteLine(response);
 ```
+
+> [!div class="nextstepaction"]
+> [Jinja2 Prompt Templates](./jinja2-prompt-templates.md)
+> [Protecting against Prompt Injection Attacks](./prompt-injection-attacks.md)
