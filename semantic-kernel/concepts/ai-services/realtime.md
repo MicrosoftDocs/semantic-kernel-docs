@@ -1,12 +1,15 @@
 ---
 title: Realtime AI Integrations for Semantic Kernel 
 description: Learn about realtime multi-modal AI integrations available in Semantic Kernel.
+zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
 ms.date: 02/26/2025
 ms.service: semantic-kernel
 ---
+
+::: zone pivot="programming-language-python"
 
 # Realtime Multi-modal APIs
 
@@ -16,6 +19,7 @@ The first realtime API integration for Semantic Kernel has been added, it is cur
 
 To support different realtime APIs from different vendors, using different protocols, a new client abstraction has been added to the kernel. This client is used to connect to the realtime service and send and receive messages.
 The client is responsible for handling the connection to the service, sending messages, and receiving messages. The client is also responsible for handling any errors that occur during the connection or message sending/receiving process. Considering the way these models work, they can be considered agents more than regular chat completions, therefore they also take instructions, rather than a system message, they keep their own internal state and can be invoked to do work on our behalf.
+
 ### Realtime API
 
 Any realtime client implements the following methods:
@@ -37,13 +41,14 @@ The python version of Semantic Kernel currently supports the following realtime 
 | OpenAI | Websocket | Text & Audio | Yes                      | The OpenAI Realtime API is a websocket based api that allows you to send and receive messages in realtime, this connector uses the OpenAI Python package to connect and receive and send messages. |
 | OpenAI | WebRTC    | Text & Audio | Yes                      | The OpenAI Realtime API is a WebRTC based api that allows you to send and receive messages in realtime, it needs a webRTC compatible audio track at session creation time.                         |
 | Azure  | Websocket | Text & Audio | Yes                      | The Azure Realtime API is a websocket based api that allows you to send and receive messages in realtime, this uses the same package as the OpenAI websocket connector.                            |
+| Azure  | WebRTC    | Text & Audio | Yes                      | The Azure Realtime API is a WebRTC based api that allows you to send and receive messages in realtime, this uses the same package as the OpenAI WebRTC connector.                            |
 
 ## Getting started
 
-To get started with the Realtime API, you need to install the `semantic-kernel` package with the `realtime` extra.
+To get started with the Realtime API, you need to install the `semantic-kernel` package.
 
 ```bash
-pip install semantic-kernel[realtime]
+pip install semantic-kernel
 ```
 
 Depending on how you want to handle audio, you might need additional packages to interface with speakers and microphones, like `pyaudio` or `sounddevice`.
@@ -134,6 +139,8 @@ async with realtime_client(settings=settings, create_response=True):
 
 Both of these samples receive the audio as RealtimeAudioEvent and then they pass that to a unspecified audio_player object.
 
+> Note: The Azure OpenAI WebRTC client has a extra parameter: `region`, this refers to the Azure region where your OpenAI service is hosted. Currently only `eastus2` and `swedencentral` are supported.
+
 ### Audio output callback
 
 Next to this we have a parameter called `audio_output_callback`  on the `receive` method and on the class creation. This callback will be called first before any further handling of the audio and gets a `numpy` array of the audio data, instead of it being parsed into AudioContent and returned as a RealtimeAudioEvent that you can then handle, which is what happens above. This has shown to give smoother audio output because there is less overhead between the audio data coming in and it being given to the player.
@@ -187,3 +194,21 @@ async with realtime_client(settings=settings, create_response=True):
 ### Samples
 
 There are four samples in [our repo](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/realtime), they cover both the basics using both websockets and WebRTC, as well as a more complex setup including function calling. Finally there is a more [complex demo](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/demos/call_automation) that uses [Azure Communication Services](/azure/communication-services/) to allow you to call your Semantic Kernel enhanced realtime API.
+
+::: zone-end
+
+::: zone pivot="programming-language-csharp"
+
+## Coming soon
+
+More information coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+## Coming soon
+
+More information coming soon.
+
+::: zone-end
