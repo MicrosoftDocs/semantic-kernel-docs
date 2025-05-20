@@ -318,5 +318,4 @@ Host: You're welcome! If you have any more questions, feel free to ask. Enjoy yo
 ::: zone-end
 
 > [!div class="nextstepaction"]
-> [Explore Agent Collaboration in Agent Chat](./agent-chat.md)
-
+> [Explore the Copilot Studio Agent](./copilot-studio-agent.md)

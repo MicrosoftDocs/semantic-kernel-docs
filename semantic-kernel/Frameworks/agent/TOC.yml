@@ -12,6 +12,8 @@
   href: azure-ai-agent.md
 - name: OpenAI Responses Agent
   href: responses-agent.md
+- name: Copilot Studio Agent
+  href: copilot-studio-agent.md
 - name: Agent Collaboration
   href: agent-chat.md
 - name: Create an Agent from a Template

@@ -2,9 +2,9 @@
 title: Add chat completion services to Semantic Kernel
 description: Learn how to add gpt-4, Mistral, Google, and other chat completion services to your Semantic Kernel project.
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: conceptual
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
@@ -1304,7 +1304,7 @@ var response = await chatCompletionService.GetChatMessageContentAsync(
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = await chat_completion.get_chat_message_content(
+response = await chat_completion_service.get_chat_message_content(
     chat_history=history,
     settings=execution_settings,
 )
@@ -1358,7 +1358,7 @@ await foreach (var chunk in response)
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = chat_completion.get_streaming_chat_message_content(
+response = chat_completion_service.get_streaming_chat_message_content(
     chat_history=history,
     settings=execution_settings,
 )
