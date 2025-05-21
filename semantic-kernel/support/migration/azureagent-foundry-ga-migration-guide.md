@@ -20,14 +20,14 @@ In Semantic Kernel .NET 1.53.1+, .NET and Python developers using `AzureAIAgent`
 - Must be created on or after May 19th, 2025
 - Connect programatically using the _Foundry Project's_ endpoint url.
 - Requires Semantic Kernel version 1.53.1 and above.
-- Based on package [Azure.AI.Projects version 1.0.0-beta.8](https://www.nuget.org/packages/Azure.AI.Projects/1.0.0-beta.8)
+- Based on package [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent/1.0.0)
 
 ### Pre-GA Foundry Project
 
 - Was created prior to May 19th, 2025
 - Connect programatically using the _Foundry Project's_ connection string.
 - Continue to use Semantic Kernel versions below version 1.53.*
-- Based on package [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent/1.0.0)
+- Based on package [Azure.AI.Projects version 1.0.0-beta.8](https://www.nuget.org/packages/Azure.AI.Projects/1.0.0-beta.8)
 
 
 ## Creating an Client
