@@ -13,19 +13,21 @@ ms.service: semantic-kernel
 
 ::: zone pivot="programming-language-csharp"
 
-In Semantic Kernel .NET 1.53.0+, .NET and Python developers using `AzureAIAgent` must to update the patterns they use to interact with the Azure AI Foundry in response to its move to GA.
+In Semantic Kernel .NET 1.53.1+, .NET and Python developers using `AzureAIAgent` must to update the patterns they use to interact with the Azure AI Foundry in response to its move to GA.
 
 ### GA Foundry Project
 
-- Connect programatically using the _Foundry Project's_ endpoint url.
-- Requires Semantic Kernel version 1.53.0 and above.
 - Must be created on or after May 19th, 2025
+- Connect programatically using the _Foundry Project's_ endpoint url.
+- Requires Semantic Kernel version 1.53.1 and above.
+- Based on package [Azure.AI.Projects version 1.0.0-beta.8](https://www.nuget.org/packages/Azure.AI.Projects/1.0.0-beta.8)
 
 ### Pre-GA Foundry Project
 
+- Was created prior to May 19th, 2025
 - Connect programatically using the _Foundry Project's_ connection string.
-- Continue to use Semantic Kernel versions prior to version 1.53.0
-- Created prior to May 19th, 2025
+- Continue to use Semantic Kernel versions below version 1.53.*
+- Based on package [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent/1.0.0)
 
 
 ## Creating an Client
