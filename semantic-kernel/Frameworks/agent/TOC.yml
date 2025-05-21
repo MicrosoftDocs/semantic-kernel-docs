@@ -2,10 +2,18 @@
   href: index.md
 - name: Architecture
   href: agent-architecture.md
+- name: Common Agent Invocation API
+  href: agent-api.md
 - name: Chat Completion Agent
   href: chat-completion-agent.md
 - name: OpenAI Assistant Agent
   href: assistant-agent.md
+- name: Azure AI Agent
+  href: azure-ai-agent.md
+- name: OpenAI Responses Agent
+  href: responses-agent.md
+- name: Copilot Studio Agent
+  href: copilot-studio-agent.md
 - name: Agent Collaboration
   href: agent-chat.md
 - name: Create an Agent from a Template

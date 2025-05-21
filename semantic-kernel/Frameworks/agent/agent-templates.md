@@ -10,14 +10,11 @@ ms.service: semantic-kernel
 ---
 # Create an Agent from a Semantic Kernel Template
 
-> [!IMPORTANT]
-> This feature is in the release candidate stage. Features at this stage are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
-
 ## Prompt Templates in Semantic Kernel
 
 An agent's role is primarily shaped by the instructions it receives, which dictate its behavior and actions. Similar to invoking a `Kernel` [prompt](../../concepts/prompts/index.md), an agent's instructions can include templated parameters—both values and functions—that are dynamically substituted during execution. This enables flexible, context-aware responses, allowing the agent to adjust its output based on real-time input.
 
-Additionally, an agent can be configured directly using a _Prompt Template Configuration_, providing developers with a structured and reusable way to define its behavior. This approach offers a powerful tool for standardizing and customizing agent instructions, ensuring consistency across various use cases while still maintaining dynamic adaptability.
+Additionally, an agent can be configured directly using a Prompt Template Configuration, providing developers with a structured and reusable way to define its behavior. This approach offers a powerful tool for standardizing and customizing agent instructions, ensuring consistency across various use cases while still maintaining dynamic adaptability.
 
 #### Related API's:
 
@@ -44,7 +41,7 @@ Additionally, an agent can be configured directly using a _Prompt Template Confi
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -76,10 +73,8 @@ ChatCompletionAgent agent =
 
 ::: zone pivot="programming-language-python"
 ```python
-kernel = Kernel()
-
 agent = ChatCompletionAgent(
-    kernel=kernel,
+    service=AzureChatCompletion(), # or other supported AI Services
     name="StoryTeller",
     instructions="Tell a story about {{$topic}} that is {{$length}} sentences long.",
     arguments=KernelArguments(topic="Dog", length="2"),
@@ -89,7 +84,7 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -100,24 +95,34 @@ Templated instructions are especially powerful when working with an [`OpenAIAssi
 ::: zone pivot="programming-language-csharp"
 ```csharp
 // Retrieve an existing assistant definition by identifier
-OpenAIAssistantAgent agent = 
-    await OpenAIAssistantAgent.RetrieveAsync(
-        this.GetClientProvider(),
-        "<stored agent-identifier>",
-        new Kernel(),
-        new KernelArguments()
-        {
-            { "topic", "Dog" },
-            { "length", "3" },
-        });
+AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri("<your endpoint>"));
+AssistantClient assistantClient = client.GetAssistantClient();
+Assistant assistant = await client.GetAssistantAsync();
+OpenAIAssistantAgent agent = new(assistant, assistantClient, new KernelPromptTemplateFactory(), PromptTemplateConfig.SemanticKernelTemplateFormat)
+{
+    Arguments = new KernelArguments()
+    {
+        { "topic", "Dog" },
+        { "length", "3" },
+    }
+}
 ```
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 ```python
-agent = await OpenAIAssistantAgent.retrieve(
-    id=<assistant_id>,
-    kernel=Kernel(),
+# Create the client using Azure OpenAI resources and configuration
+client, model = AzureAssistantAgent.setup_resources()
+
+# Retrieve the assistant definition from the server based on the assistant ID
+definition = await client.beta.assistants.retrieve(
+    assistant_id="your-assistant-id",
+)
+
+# Create the AzureAssistantAgent instance using the client and the assistant definition
+agent = AzureAssistantAgent(
+    client=client,
+    definition=definition,
     arguments=KernelArguments(topic="Dog", length="3"),
 )
 ```
@@ -125,15 +130,14 @@ agent = await OpenAIAssistantAgent.retrieve(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 
-## Agent Definition from a _Prompt Template_
+## Agent Definition from a Prompt Template
 
-The same _Prompt Template Config_ used to create a _Kernel Prompt Function_ can also be leveraged to define an agent. This allows for a unified approach in managing both prompts and agents, promoting consistency and reuse across different components. By externalizing agent definitions from the codebase, this method simplifies the management of multiple agents, making them easier to update and maintain without requiring changes to the underlying logic. This separation also enhances flexibility, enabling developers to modify agent behavior or introduce new agents by simply updating the configuration, rather than adjusting the code itself.
-
+The same Prompt Template Config used to create a Kernel Prompt Function can also be leveraged to define an agent. This allows for a unified approach in managing both prompts and agents, promoting consistency and reuse across different components. By externalizing agent definitions from the codebase, this method simplifies the management of multiple agents, making them easier to update and maintain without requiring changes to the underlying logic. This separation also enhances flexibility, enabling developers to modify agent behavior or introduce new agents by simply updating the configuration, rather than adjusting the code itself.
 #### YAML Template
 
 ```yaml
@@ -192,7 +196,7 @@ data = yaml.safe_load(generate_story_yaml)
 prompt_template_config = PromptTemplateConfig(**data)
 
 agent = ChatCompletionAgent(
-    kernel=_create_kernel_with_chat_completion(),
+    service=AzureChatCompletion(), # or other supported AI services
     prompt_template_config=prompt_template_config,
     arguments=KernelArguments(topic="Dog", length="3"),
 )
@@ -201,7 +205,7 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -228,9 +232,6 @@ ChatCompletionAgent agent =
         }
     };
 
-// Create a ChatHistory object to maintain the conversation state.
-ChatHistory chat = [];
-
 KernelArguments overrideArguments =
     new()
     {
@@ -239,7 +240,7 @@ KernelArguments overrideArguments =
     });
 
 // Generate the agent response(s)
-await foreach (ChatMessageContent response in agent.InvokeAsync(chat, overrideArguments))
+await foreach (ChatMessageContent response in agent.InvokeAsync([], options: new() { KernelArguments = overrideArguments }))
 {
   // Process agent response(s)...
 }
@@ -249,35 +250,37 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(chat, overrideAr
 ::: zone pivot="programming-language-python"
 
 ```python
-kernel = Kernel()
-
 agent = ChatCompletionAgent(
-    kernel=kernel,
+    service=AzureChatCompletion(),
     name="StoryTeller",
     instructions="Tell a story about {{$topic}} that is {{$length}} sentences long.",
     arguments=KernelArguments(topic="Dog", length="2"),
 )
 
-# Create a chat history to maintain the conversation state
-chat = ChatHistory()
+# Create a thread to maintain the conversation state
+# If no threaded is created, a thread will be returned
+# with the initial response
+thread = None
 
 override_arguments = KernelArguments(topic="Cat", length="3")
 
 # Two ways to get a response from the agent
 
 # Get the response which returns a ChatMessageContent directly
-response = await agent.get_response(chat, arguments=override_arguments)
+response = await agent.get_response(messages="user input", arguments=override_arguments)
+thread = response.thread
 
 # or use the invoke method to return an AsyncIterable of ChatMessageContent
-async for response in agent.invoke(chat, arguments=override_arguments):
+async for response in agent.invoke(messages="user input", arguments=override_arguments):
     # process agent response(s)...
+    thread = response.thread
 ```
 
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 

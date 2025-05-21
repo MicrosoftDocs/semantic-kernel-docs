@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; Coordinate Agent Collaboration using Agent Group Chat (Experimental)
+title: How-To Coordinate Agent Collaboration using Agent Group Chat (Experimental)
 description: A step-by-step walk-through for coordinating agent collaboration using Agent Group Chat.
 zone_pivot_groups: programming-languages
 author: crickman
@@ -11,14 +11,14 @@ ms.service: semantic-kernel
 # How-To: Coordinate Agent Collaboration using Agent Group Chat
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 ## Overview
 
 In this sample, we will explore how to use `AgentGroupChat` to coordinate collaboration of two different agents working to review and rewrite user provided content.  Each agent is assigned a distinct role:
 
-- **Reviewer**: Reviews and provides direction to _Writer_.
-- **Writer**: Updates user content based on _Reviewer_ input.
+- **Reviewer**: Reviews and provides direction to Writer.
+- **Writer**: Updates user content based on Reviewer input.
 
 The approach will be broken down step-by-step to high-light the key parts of the coding process.
 
@@ -31,7 +31,7 @@ Before proceeding with feature coding, make sure your development environment is
 > [!TIP]
 > This sample uses an optional text file as part of processing. If you'd like to use it, you may download it [here](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/LearnResources/Resources/WomensSuffrage.txt). Place the file in your code working directory.
 
-Start by creating a _Console_ project. Then, include the following package references to ensure all required dependencies are available.
+Start by creating a Console project. Then, include the following package references to ensure all required dependencies are available.
 
 To add package dependencies from the command-line use the `dotnet` command:
 
@@ -45,7 +45,7 @@ dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
 dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
 ```
 
-> If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
+> If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
 
@@ -101,7 +101,7 @@ from semantic_kernel.functions import KernelFunctionFromPrompt
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -109,7 +109,7 @@ from semantic_kernel.functions import KernelFunctionFromPrompt
 
 ::: zone pivot="programming-language-csharp"
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either OpenAI or Azure OpenAI.
 
 ```powershell
 # OpenAI
@@ -189,7 +189,7 @@ Once configured, the respective AI service classes will pick up the required var
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -219,7 +219,7 @@ Settings settings = new();
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -247,7 +247,7 @@ kernel = Kernel()
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
@@ -261,7 +261,7 @@ toolKernel.Plugins.AddFromType<ClipboardAccess>();
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -297,7 +297,7 @@ private sealed class ClipboardAccess
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -324,7 +324,7 @@ COPYWRITER_NAME = "Writer"
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -384,12 +384,12 @@ RULES:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-csharp"
-The _Writer_ agent is similiar, but doesn't require the specification of _Execution Settings_ since it isn't configured with a plug-in.
+The _Writer_ agent is similar, but doesn't require the specification of Execution Settings since it isn't configured with a plug-in.
 
 Here the _Writer_ is given a single-purpose task, follow direction and rewrite the content.
 
@@ -400,7 +400,7 @@ ChatCompletionAgent agentWriter =
         Name = WriterName,
         Instructions =
             """
-            Your sole responsiblity is to rewrite content according to review suggestions.
+            Your sole responsibility is to rewrite content according to review suggestions.
 
             - Always apply all review direction.
             - Always revise the content in its entirety without explanation.
@@ -412,7 +412,7 @@ ChatCompletionAgent agentWriter =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-The _Writer_ agent is similiar. It is given a single-purpose task, follow direction and rewrite the content.
+The _Writer_ agent is similar. It is given a single-purpose task, follow direction and rewrite the content.
 ```python
 agent_writer = ChatCompletionAgent(
         kernel=kernel,
@@ -429,7 +429,7 @@ Your sole responsibility is to rewrite content according to review suggestions.
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -494,7 +494,7 @@ RESPONSE:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -540,7 +540,7 @@ RESPONSE:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -560,7 +560,7 @@ history_reducer = ChatHistoryTruncationReducer(target_count=1)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -651,7 +651,7 @@ The `lastmessage` `history_variable_name` corresponds with the `KernelFunctionSe
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -681,7 +681,7 @@ while not is_complete:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -785,7 +785,7 @@ await chat.add_chat_message(message=user_input)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -838,7 +838,7 @@ chat.is_complete = False
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -860,8 +860,6 @@ Try using these suggested inputs:
 8. its good, but is it ready for my college professor? 
 
 ```csharp
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -1129,8 +1127,6 @@ You can try using one of the suggested inputs. As the agent chat begins, the age
 > You can reference any file by providing `@<file_path_to_file>`. To reference the "WomensSuffrage" text from above, download it [here](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/learn_resources/resources/WomensSuffrage.txt) and place it in your current working directory. You can then reference it with `@WomensSuffrage.txt`.
 
 ```python
-# Copyright (c) Microsoft. All rights reserved.
-
 import asyncio
 import os
 
@@ -1318,6 +1314,6 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end

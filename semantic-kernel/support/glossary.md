@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 👋 Hello! We've included a Glossary below with key terminology. 
 
-| Term/Word | Defintion |
+| Term/Word | Definition |
 |---|---|
 | Agent | An agent is an artificial intelligence that can answer questions and automate processes for users. There's a wide spectrum of agents that can be built, ranging from simple chat bots to fully automated AI assistants. With Semantic Kernel, we provide you with the tools to build increasingly more sophisticated agents that don't require you to be an AI expert. |
 | API | Application Programming Interface. A set of rules and specifications that allow software components to communicate and exchange data. |

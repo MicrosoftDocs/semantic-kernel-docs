@@ -5,6 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
 ms.author: westey
+ms.date: 03/06/2025
 ms.service: semantic-kernel
 ---
 ::: zone pivot="programming-language-csharp"
@@ -14,7 +15,7 @@ ms.service: semantic-kernel
 Semantic Kernel provides two distinct abstractions for interacting with vector stores.
 
 1. A set of legacy abstractions where the primary interface is `Microsoft.SemanticKernel.Memory.IMemoryStore`.
-2. A new and improved set of abstractions where the primary interface is `Microsoft.Extensions.VectorData.IVectorStore`.
+2. A new and improved set of abstractions where the primary abstract base class is `Microsoft.Extensions.VectorData.VectorStore`.
 
 The Vector Store abstractions provide more functionality than what the Memory Store abstractions provide, e.g. being
 able to define your own schema, supporting multiple vectors per record (database permitting), supporting more

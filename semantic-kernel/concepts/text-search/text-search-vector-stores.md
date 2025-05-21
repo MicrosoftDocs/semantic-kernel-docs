@@ -48,22 +48,22 @@ using Microsoft.SemanticKernel.Data;
 
 public sealed class DataModel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     [TextSearchResultName]
     public Guid Key { get; init; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     [TextSearchResultValue]
     public string Text { get; init; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     [TextSearchResultLink]
     public string Link { get; init; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreData(IsFilterable = true)]
     public required string Tag { get; init; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> Embedding { get; init; }
 }
 ```
@@ -83,19 +83,19 @@ using Microsoft.SemanticKernel.Data;
 
 protected sealed class DataModel
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public Guid Key { get; init; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public required string Text { get; init; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public required string Link { get; init; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreData(IsFilterable = true)]
     public required string Tag { get; init; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> Embedding { get; init; }
 }
 
@@ -144,10 +144,10 @@ var stringMapper = new DataModelTextSearchStringMapper();
 // Create custom mapper to map a <see cref="DataModel"/> to a <see cref="TextSearchResult"/>
 var resultMapper = new DataModelTextSearchResultMapper();
 
-// Add code to create instances of IVectorStoreRecordCollection and ITextEmbeddingGenerationService 
+// Add code to create instances of VectorStoreCollection and ITextEmbeddingGenerationService 
 
-// Create a text search instance using the vector store record collection.
-var result = new VectorStoreTextSearch<DataModel>(vectorStoreRecordCollection, textEmbeddingGeneration, stringMapper, resultMapper);
+// Create a text search instance using the vector store collection.
+var result = new VectorStoreTextSearch<DataModel>(vectorStoreCollection, textEmbeddingGeneration, stringMapper, resultMapper);
 ```
 
 ## Using a vector store with text search
@@ -155,8 +155,8 @@ var result = new VectorStoreTextSearch<DataModel>(vectorStoreRecordCollection, t
 The sample below shows how to create an instance of `VectorStoreTextSearch` using a Vector Store record collection.
 
 > [!TIP]
-> The following samples require instances of `IVectorStoreRecordCollection` and `ITextEmbeddingGenerationService`.
-> To create an instance of `IVectorStoreRecordCollection` refer to [the documentation for each connector](../vector-store-connectors/out-of-the-box-connectors/index.md).
+> The following samples require instances of `VectorStoreCollection` and `ITextEmbeddingGenerationService`.
+> To create an instance of `VectorStoreCollection` refer to [the documentation for each connector](../vector-store-connectors/out-of-the-box-connectors/index.md).
 > To create an instance of `ITextEmbeddingGenerationService` select the service you wish to use e.g., Azure OpenAI, OpenAI, ... or use a local model ONNX, Ollama, ... and create an instance of the corresponding `ITextEmbeddingGenerationService` implementation.
 
 > [!TIP]
@@ -169,10 +169,10 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 
-// Add code to create instances of IVectorStoreRecordCollection and ITextEmbeddingGenerationService 
+// Add code to create instances of VectorStoreCollection and ITextEmbeddingGenerationService 
 
-// Create a text search instance using the vector store record collection.
-var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreRecordCollection, textEmbeddingGeneration);
+// Create a text search instance using the vector store collection.
+var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreCollection, textEmbeddingGeneration);
 
 // Search and return results as TextSearchResult items
 var query = "What is the Semantic Kernel?";
@@ -208,10 +208,10 @@ kernelBuilder.AddOpenAIChatCompletion(
         apiKey: TestConfiguration.OpenAI.ApiKey);
 Kernel kernel = kernelBuilder.Build();
 
-// Add code to create instances of IVectorStoreRecordCollection and ITextEmbeddingGenerationService
+// Add code to create instances of VectorStoreCollection and ITextEmbeddingGenerationService
 
-// Create a text search instance using the vector store record collection.
-var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreRecordCollection, textEmbeddingGeneration);
+// Create a text search instance using the vector store collection.
+var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreCollection, textEmbeddingGeneration);
 
 // Build a text search plugin with vector store search and add to the kernel
 var searchPlugin = textSearch.CreateWithGetTextSearchResults("SearchPlugin");
@@ -264,10 +264,10 @@ kernelBuilder.AddOpenAIChatCompletion(
         apiKey: TestConfiguration.OpenAI.ApiKey);
 Kernel kernel = kernelBuilder.Build();
 
-// Add code to create instances of IVectorStoreRecordCollection and ITextEmbeddingGenerationService
+// Add code to create instances of VectorStoreCollection and ITextEmbeddingGenerationService
 
-// Create a text search instance using the vector store record collection.
-var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreRecordCollection, textEmbeddingGeneration);
+// Create a text search instance using the vector store collection.
+var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreCollection, textEmbeddingGeneration);
 
 // Build a text search plugin with vector store search and add to the kernel
 var searchPlugin = textSearch.CreateWithGetTextSearchResults("SearchPlugin");
@@ -305,10 +305,10 @@ kernelBuilder.AddOpenAIChatCompletion(
         apiKey: TestConfiguration.OpenAI.ApiKey);
 Kernel kernel = kernelBuilder.Build();
 
-// Add code to create instances of IVectorStoreRecordCollection and ITextEmbeddingGenerationService
+// Add code to create instances of VectorStoreCollection and ITextEmbeddingGenerationService
 
-// Create a text search instance using the vector store record collection.
-var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreRecordCollection, textEmbeddingGeneration);
+// Create a text search instance using the vector store collection.
+var textSearch = new VectorStoreTextSearch<DataModel>(vectorStoreCollection, textEmbeddingGeneration);
 
 // Create options to describe the function I want to register.
 var options = new KernelFunctionFromMethodOptions()

@@ -6,12 +6,14 @@
   href: defining-your-data-model.md
 - name: Defining your storage schema using a record definition
   href: schema-with-record-definition.md
-- name: Generic data model
-  href: generic-data-model.md
+- name: Dynamic data model
+  href: dynamic-data-model.md
 - name: Embedding Generation
   href: embedding-generation.md
 - name: Vector Search
   href: vector-search.md
+- name: Hybrid Search
+  href: hybrid-search.md
 - name: Serialization of data models
   href: serialization.md
 - name: Legacy Memory Stores
