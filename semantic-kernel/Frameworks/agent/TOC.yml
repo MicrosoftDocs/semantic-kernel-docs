@@ -22,5 +22,9 @@
   href: agent-functions.md
 - name: Streaming Agent Responses
   href: agent-streaming.md
+- name: Agent Memory
+  href: agent-memory.md
+- name: Agent Text Search (RAG)
+  href: agent-rag.md
 - name: How-To with Agents
   href: examples/TOC.yml
