@@ -19,20 +19,20 @@ ms.service: semantic-kernel
 
 The Elasticsearch Vector Store connector can be used to access and manage data in Elasticsearch. The connector has the following characteristics.
 
-| Feature Area                      | Support                                                                                                                          |
-|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Collection maps to                | Elasticsearch index                                                                                                              |
-| Supported key property types      | string                                                                                                                           |
-| Supported data property types     | All types that are supported by System.Text.Json (either built-in or by using a custom converter)                                |
-| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>IEnumerable\<float\></li></ul>                                                           |
-| Supported index types             | <ul><li>HNSW (32, 8, or 4 bit)</li><li>FLAT (32, 8, or 4 bit)</li></ul>                                                          |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>MaxInnerProduct</li></ul>                |
-| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
-| Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                |
-| HybridSearch supported?           | No                                                                                                                               |
+| Feature Area                          | Support                                                                                                                                                                                                          |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Collection maps to                    | Elasticsearch index                                                                                                                                                                                              |
+| Supported key property types          | <ul><li>`string`</li><li>`long`</li><li>`Guid`</li></ul>                                                                                                                                                         |
+| Supported data property types         | All types that are supported by `System.Text.Json` (etiher built-in or by using a custom converter)                                                                                                              |
+| Supported vector property types       | <ul><li>`ReadOnlyMemory<float>`</li><li>`IEnumerable<float>`</li><li>`IReadOnlyCollection<float>`</li><li>`ICollection<float>`</li><li>`IReadOnlyList<float>`</li><li>`IList<float>`</li><li>`float[]`</li></ul> |
+| Supported index types                 | <ul><li>HNSW (32, 8, or 4 bit or BBQ)</li><li>FLAT (32, 8, or 4 bit or BBQ)</li></ul>                                                                                                                            |
+| Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>MaxInnerProduct</li></ul>                                                                                                |
+| Supported filter clauses              | <ul><li>`AnyTagEqualTo`</li><li>`EqualTo`</li></ul>                                                                                                                                                              |
+| Supports multiple vectors in a record | Yes                                                                                                                                                                                                              |
+| IsIndexed supported?                  | Yes                                                                                                                                                                                                              |
+| IsFullTextIndexed supported?          | Yes                                                                                                                                                                                                              |
+| StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                                                |
+| HybridSearch supported?               | Yes                                                                                                                                                                                                              |
 
 ## Getting started
 
