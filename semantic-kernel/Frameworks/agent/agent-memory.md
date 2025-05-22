@@ -100,6 +100,12 @@ Console.WriteLine(response.Content);
 
 By combining these memory features, agents can provide a more personalized and context-aware experience for users.
 
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Explore the Agent with mem0 sample](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_Mem0.cs)
+> [Explore the Agent with Whiteboard sample](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_Whiteboard.cs)
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"

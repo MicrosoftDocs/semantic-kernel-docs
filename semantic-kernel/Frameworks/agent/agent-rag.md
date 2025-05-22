@@ -140,6 +140,11 @@ Console.WriteLine(response.Content);
 
 By combining these features, agents can deliver a more personalized and context-aware experience.
 
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Explore the Agent with RAG sample](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_Rag.cs)
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
