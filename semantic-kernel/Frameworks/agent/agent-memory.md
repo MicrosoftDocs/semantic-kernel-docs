@@ -25,7 +25,7 @@ The **mem0** memory provider integrates with the mem0 service allowing agents to
 Each message added to the thread is sent to the mem0 service to extract memories.
 For each agent invocation, mem0 is queried for memories matching the provided user request, and any memories are added to the agent context for that invocation.
 
-The **mem0** memory provider can be configured with a user id to allow storing memories about the user, long term, across multiple threads.
+The mem0 memory provider can be configured with a user id to allow storing memories about the user, long term, across multiple threads.
 It can also be configured with a thread id or to use the thread id of the agent thread, to allow for short term memories that are only attached to a single thread.
 
 Here is an example of how to use this component.
@@ -63,7 +63,7 @@ The whiteboard memory feature allows agents to capture the most relevant informa
 Each message added to the conversation is processed by the `WhiteboardProvider` to extract requirements, proposals, decisions, actions.
 These are stored on a whiteboard and provided to the agent as additional context on each invocation.
 
-Setting Up Whiteboard Memory
+Here is an example of how to set up Whiteboard Memory:
 
 ```csharp
 // Create a whiteboard provider.
