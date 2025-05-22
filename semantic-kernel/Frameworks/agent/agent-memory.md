@@ -14,7 +14,7 @@ ms.service: semantic-kernel
 ::: zone pivot="programming-language-csharp"
 
 > [!WARNING]
-> The Semantic Kernel Agent Memory functionality is experimental, is subject to change and will only be graduated based on feedback and evaluation.
+> The Semantic Kernel Agent Memory functionality is experimental, is subject to change and will only be finalized based on feedback and evaluation.
 
 ## Using mem0 for Agent memory
 
@@ -22,8 +22,8 @@ ms.service: semantic-kernel
 
 The **mem0** memory provider integrates with the mem0 service allowing agents to remember user preferences and context across multiple threads, enabling a seamless user experience.
 
-Each message added to the thread is passed to the mem0 service to allow it to extract memories.
-For each agent invocation mem0 is queried for memories matching the provided user request and any memories are added to the agent context for that invocation.
+Each message added to the thread is sent to the mem0 service to extract memories.
+For each agent invocation, mem0 is queried for memories matching the provided user request, and any memories are added to the agent context for that invocation.
 
 The **mem0** memory provider can be configured with a user id to allow storing memories about the user, long term, across multiple threads.
 It can also be configured with a thread id or to use the thread id of the agent thread, to allow for short term memories that are only attached to a single thread.
@@ -60,8 +60,8 @@ Console.WriteLine(response.Content);
 
 The whiteboard memory feature allows agents to capture the most relevant information from a conversation, even when the chat history is truncated.
 
-Each message that is added to the converstion will be processed by the `WhiteboardProvider` to extract requriements, proposals, decisions, actions.
-These will be kept on a whiteboard that is provided to the agent as additional context on each invocation.
+Each message added to the conversation is processed by the `WhiteboardProvider` to extract requirements, proposals, decisions, actions.
+These are stored on a whiteboard and provided to the agent as additional context on each invocation.
 
 Setting Up Whiteboard Memory
 
@@ -81,8 +81,8 @@ await agent.InvokeAsync("I would like to book a trip to Paris.", agentThread);
 
 Benefits of Whiteboard Memory
 
-- Short-Term Context: Retains key information about the goal of the ongoing conversations.
-- Efficient Truncation: Allows chat history to be reduced without losing critical context.
+- Short-Term Context: Retains key information about the goals of ongoing conversations.
+- Allows Chat History Truncation: Supports maintaining critical context if the chat history is truncated.
 
 ## Combining mem0 and Whiteboard Memory
 

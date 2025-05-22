@@ -14,21 +14,23 @@ ms.service: semantic-kernel
 ::: zone pivot="programming-language-csharp"
 
 > [!WARNING]
-> The Semantic Kernel Agent RAG functionality is experimental, is subject to change, and will only be graduated based on feedback and evaluation.
+> The Semantic Kernel Agent RAG functionality is experimental, subject to change, and will only be finalized based on feedback and evaluation.
 
 ## Using the TextSearchProvider for RAG
 
 The `Microsoft.SemanticKernel.Data.TextSearchProvider` allows agents to retrieve relevant documents based on user input and inject them into the agent's context for more informed responses.
 It integrates an `Microsoft.SemanticKernel.Data.ITextSearch` instance with Semantic Kernel agents.
-Multiple implementations for `ITextSearch` exist, including for doing similarity searches on vector stores, and for search engine integration.
+Multiple `ITextSearch` implementations exist, supporting similarity searches on vector stores and search engine integration.
 More information can be found [here](../../concepts/text-search/index.md).
 
 We also provide a `Microsoft.SemanticKernel.Data.TextSearchStore`, which provides simple, opinionated vector storage of textual data for the purposes of Retrieval Augmented Generation.
-`TextSearchStore` has a bulit in schema for storing and retrieving textual data in a vector store. If you wish to use your own schema for storage, check out [VectorStoreTextSearch](../../concepts/text-search/text-search-vector-stores.md).
+`TextSearchStore` has a built-in schema for storing and retrieving textual data in a vector store. If you wish to use your own schema for storage, check out [VectorStoreTextSearch](../../concepts/text-search/text-search-vector-stores.md).
 
 ## Setting Up the TextSearchProvider
 
-The `TextSearchProvider` can be used with a `VectorStore` and `TextSearchStore` to store and search text documents. Below is an example of how to set up and use the `TextSearchProvider` with an agent.
+The `TextSearchProvider` can be used with a `VectorStore` and `TextSearchStore` to store and search text documents.
+
+The following example demonstrates how to set up and use the `TextSearchProvider` with a `TextSearchStore` and `InMemoryVectorStore` for an agent for to do simple RAG over text.
 
 ```csharp
 // Create an embedding generator using Azure OpenAI.
@@ -74,7 +76,7 @@ The `TextSearchStore` supports advanced features such as filtering results by na
 
 ### Including Citations
 
-Documents stored in the TextSearchStore can include metadata such as source names and links, which can be used to generate citations in agent responses.
+Documents in the `TextSearchStore` can include metadata like source names and links, enabling citation generation in agent responses.
 
 ```csharp
 await textSearchStore.UpsertDocumentsAsync(new[]
@@ -94,6 +96,7 @@ When the `TextSearchProvider` retrieves this document, it will by default includ
 ### Filtering by Namespace
 
 When upserting documents you can optionally provide one or more namespaces for each document.
+Namespaces can be any string that defines the scope of a document.
 You can then configure the `TextSearchStore` to limit search results to only those records that match the requested namespace.
 
 ```csharp
@@ -107,7 +110,7 @@ using var textSearchStore = new TextSearchStore<string>(
 
 ### Automatic vs on-demand RAG
 
-The `TextSearchProvider` can be configured to either do a search on each invocation of the agent and include any matching results, or to allow searching on demand via tool calls if the agent decides that more information is required.
+The `TextSearchProvider` can perform searches automatically during each agent invocation or allow on-demand searches via tool calls when the agent needs additional information.
 
 The default setting is `BeforeAIInvoke`, which means that searches will be performed before each agent invocation using the message passed to the agent.
 This can be changed to `OnDemandFunctionCalling`, which will allow the Agent to make a tool call to do searches using a search string of the agent's choice.
