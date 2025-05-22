@@ -20,7 +20,7 @@ ms.service: semantic-kernel
 
 [mem0](https://mem0.ai) is a self-improving memory layer for LLM applications, enabling personalized AI experiences.
 
-The **mem0** memory provider integrates with the mem0 service allowing agents to remember user preferences and context across multiple threads, enabling a seamless user experience.
+The `Microsoft.SemanticKernel.Memory.Mem0Provider` integrates with the mem0 service allowing agents to remember user preferences and context across multiple threads, enabling a seamless user experience.
 
 Each message added to the thread is sent to the mem0 service to extract memories.
 For each agent invocation, mem0 is queried for memories matching the provided user request, and any memories are added to the agent context for that invocation.
@@ -58,9 +58,9 @@ Console.WriteLine(response.Content);
 
 ## Using Whiteboard Memory for Short-Term Context
 
-The whiteboard memory feature allows agents to capture the most relevant information from a conversation, even when the chat history is truncated.
+The whiteboard memory feature allows agents to capture and retain the most relevant information from a conversation, even when the chat history is truncated.
 
-Each message added to the conversation is processed by the `WhiteboardProvider` to extract requirements, proposals, decisions, actions.
+Each message added to the conversation is processed by the `Microsoft.SemanticKernel.Memory.WhiteboardProvider` to extract requirements, proposals, decisions, actions.
 These are stored on a whiteboard and provided to the agent as additional context on each invocation.
 
 Here is an example of how to set up Whiteboard Memory:
