@@ -8,6 +8,7 @@ ms.author: crickman
 ms.date: 09/13/2024
 ms.service: semantic-kernel
 ---
+
 # Create an Agent from a Semantic Kernel Template
 
 ## Prompt Templates in Semantic Kernel
@@ -16,26 +17,30 @@ An agent's role is primarily shaped by the instructions it receives, which dicta
 
 Additionally, an agent can be configured directly using a Prompt Template Configuration, providing developers with a structured and reusable way to define its behavior. This approach offers a powerful tool for standardizing and customizing agent instructions, ensuring consistency across various use cases while still maintaining dynamic adaptability.
 
-#### Related API's:
-
 ::: zone pivot="programming-language-csharp"
 
-- [`PromptTemplateConfig`](/dotnet/api/microsoft.semantickernel.prompttemplateconfig)
-- [`KernelFunctionYaml.FromPromptYaml`](/dotnet/api/microsoft.semantickernel.kernelfunctionyaml.frompromptyaml#microsoft-semantickernel-kernelfunctionyaml-frompromptyaml(system-string-microsoft-semantickernel-iprompttemplatefactory-microsoft-extensions-logging-iloggerfactory))
-- [`IPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.iprompttemplatefactory)
-- [`KernelPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.kernelprompttemplatefactory)
-- [_Handlebars_](/dotnet/api/microsoft.semantickernel.prompttemplates.handlebars)
-- [_Prompty_](/dotnet/api/microsoft.semantickernel.prompty)
-- [_Liquid_](/dotnet/api/microsoft.semantickernel.prompttemplates.liquid)
+> [!TIP]
+> API reference:
+>
+> - [`PromptTemplateConfig`](/dotnet/api/microsoft.semantickernel.prompttemplateconfig)
+> - [`KernelFunctionYaml.FromPromptYaml`](</dotnet/api/microsoft.semantickernel.kernelfunctionyaml.frompromptyaml#microsoft-semantickernel-kernelfunctionyaml-frompromptyaml(system-string-microsoft-semantickernel-iprompttemplatefactory-microsoft-extensions-logging-iloggerfactory)>)
+> - [`IPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.iprompttemplatefactory)
+> - [`KernelPromptTemplateFactory`](/dotnet/api/microsoft.semantickernel.kernelprompttemplatefactory)
+> - [_Handlebars_](/dotnet/api/microsoft.semantickernel.prompttemplates.handlebars)
+> - [_Prompty_](/dotnet/api/microsoft.semantickernel.prompty)
+> - [_Liquid_](/dotnet/api/microsoft.semantickernel.prompttemplates.liquid)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`prompt_template_config`](/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
-- [`kernel_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
-- [`jinja2_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
-- [`handlebars_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
+> [!TIP]
+> API reference:
+>
+> - [`prompt_template_config`](/python/api/semantic-kernel/semantic_kernel.prompt_template.prompt_template_config)
+> - [`kernel_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.kernel_prompt_template)
+> - [`jinja2_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.jinja2_prompt_template)
+> - [`handlebars_prompt_template`](/python/api/semantic-kernel/semantic_kernel.prompt_template.handlebars_prompt_template)
 
 ::: zone-end
 
@@ -45,13 +50,14 @@ Additionally, an agent can be configured directly using a Prompt Template Config
 
 ::: zone-end
 
-
 ## Agent Instructions as a Template
 
 Creating an agent with template parameters provides greater flexibility by allowing its instructions to be easily customized based on different scenarios or requirements. This approach enables the agent's behavior to be tailored by substituting specific values or functions into the template, making it adaptable to a variety of tasks or contexts. By leveraging template parameters, developers can design more versatile agents that can be configured to meet diverse use cases without needing to modify the core logic.
 
-#### Chat Completion Agent
+### Chat Completion Agent
+
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 // Initialize a Kernel with a chat-completion service
 Kernel kernel = ...;
@@ -69,9 +75,11 @@ ChatCompletionAgent agent =
         }
     };
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 agent = ChatCompletionAgent(
     service=AzureChatCompletion(), # or other supported AI Services
@@ -80,6 +88,7 @@ agent = ChatCompletionAgent(
     arguments=KernelArguments(topic="Dog", length="2"),
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -88,11 +97,12 @@ agent = ChatCompletionAgent(
 
 ::: zone-end
 
-#### OpenAI Assistant Agent
+### OpenAI Assistant Agent
 
-Templated instructions are especially powerful when working with an [`OpenAIAssistantAgent`](./assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior. 
+Templated instructions are especially powerful when working with an [`OpenAIAssistantAgent`](./agent-types/assistant-agent.md). With this approach, a single assistant definition can be created and reused multiple times, each time with different parameter values tailored to specific tasks or contexts. This enables a more efficient setup, allowing the same assistant framework to handle a wide range of scenarios while maintaining consistency in its core behavior.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 // Retrieve an existing assistant definition by identifier
 AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri("<your endpoint>"));
@@ -107,9 +117,11 @@ OpenAIAssistantAgent agent = new(assistant, assistantClient, new KernelPromptTem
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # Create the client using Azure OpenAI resources and configuration
 client, model = AzureAssistantAgent.setup_resources()
@@ -126,6 +138,7 @@ agent = AzureAssistantAgent(
     arguments=KernelArguments(topic="Dog", length="3"),
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -134,11 +147,11 @@ agent = AzureAssistantAgent(
 
 ::: zone-end
 
-
 ## Agent Definition from a Prompt Template
 
 The same Prompt Template Config used to create a Kernel Prompt Function can also be leveraged to define an agent. This allows for a unified approach in managing both prompts and agents, promoting consistency and reuse across different components. By externalizing agent definitions from the codebase, this method simplifies the management of multiple agents, making them easier to update and maintain without requiring changes to the underlying logic. This separation also enhances flexibility, enabling developers to modify agent behavior or introduce new agents by simply updating the configuration, rather than adjusting the code itself.
-#### YAML Template
+
+### YAML Template
 
 ```yaml
 name: GenerateStory
@@ -155,15 +168,17 @@ input_variables:
     is_required: true
 ```
 
-#### Agent Initialization
+### Agent Initialization
+
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 // Read YAML resource
 string generateStoryYaml = File.ReadAllText("./GenerateStory.yaml");
 // Convert to a prompt template config
 PromptTemplateConfig templateConfig = KernelFunctionYaml.ToPromptTemplateConfig(generateStoryYaml);
 
-// Create agent with Instructions, Name and Description 
+// Create agent with Instructions, Name and Description
 // provided by the template config.
 ChatCompletionAgent agent =
     new(templateConfig)
@@ -177,9 +192,11 @@ ChatCompletionAgent agent =
         }
     };
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 import yaml
 
@@ -201,6 +218,7 @@ agent = ChatCompletionAgent(
     arguments=KernelArguments(topic="Dog", length="3"),
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -209,12 +227,12 @@ agent = ChatCompletionAgent(
 
 ::: zone-end
 
+## Overriding Template Values for Direct Invocation
 
-### Overriding Template Values for Direct Invocation
-
-When invoking an agent directly, without using [`AgentChat`](./agent-chat.md), the agent's parameters can be overridden as needed. This allows for greater control and customization of the agent's behavior during specific tasks, enabling you to modify its instructions or settings on the fly to suit particular requirements.
+When invoking an agent directly, the agent's parameters can be overridden as needed. This allows for greater control and customization of the agent's behavior during specific tasks, enabling you to modify its instructions or settings on the fly to suit particular requirements.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 // Initialize a Kernel with a chat-completion service
 Kernel kernel = ...;
@@ -245,6 +263,7 @@ await foreach (ChatMessageContent response in agent.InvokeAsync([], options: new
   // Process agent response(s)...
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -284,14 +303,13 @@ async for response in agent.invoke(messages="user input", arguments=override_arg
 
 ::: zone-end
 
-
 ## How-To
 
 For an end-to-end example for creating an agent from a _prompt-template_, see:
 
 - [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
 
+## Next steps
 
 > [!div class="nextstepaction"]
-> [Configuring Agents with Plugins](./agent-functions.md)
-
+> [Agent orchestration](./agent-orchestration/index.md)

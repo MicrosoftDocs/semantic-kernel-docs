@@ -10,34 +10,41 @@ ms.service: semantic-kernel
 ---
 # Exploring the Semantic Kernel `ChatCompletionAgent`
 
-Detailed API documentation related to this discussion is available at:
-
 ::: zone pivot="programming-language-csharp"
 
-- [`ChatCompletionAgent`](/dotnet/api/microsoft.semantickernel.agents.chatcompletionagent)
-- [`Microsoft.SemanticKernel.Agents`](/dotnet/api/microsoft.semantickernel.agents)
-- [`IChatCompletionService`](/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice)
-- [`Microsoft.SemanticKernel.ChatCompletion`](/dotnet/api/microsoft.semantickernel.chatcompletion )
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`ChatCompletionAgent`](/dotnet/api/microsoft.semantickernel.agents.chatcompletionagent)
+> - [`Microsoft.SemanticKernel.Agents`](/dotnet/api/microsoft.semantickernel.agents)
+> - [`IChatCompletionService`](/dotnet/api/microsoft.semantickernel.chatcompletion.ichatcompletionservice)
+> - [`Microsoft.SemanticKernel.ChatCompletion`](/dotnet/api/microsoft.semantickernel.chatcompletion )
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`ChatCompletionAgent`](/python/api/semantic-kernel/semantic_kernel.agents.chat_completion.chat_completion_agent.chatcompletionagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`ChatCompletionAgent`](/python/api/semantic-kernel/semantic_kernel.agents.chat_completion.chat_completion_agent.chatcompletionagent)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-- [`ChatCompletionAgent`](/java/api/com.microsoft.semantickernel.agents.chatcompletion.chatcompletionagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`ChatCompletionAgent`](/java/api/com.microsoft.semantickernel.agents.chatcompletion.chatcompletionagent)
 
 ::: zone-end
 
 ## Chat Completion in Semantic Kernel
 
-[Chat Completion](../../concepts/ai-services/chat-completion/index.md) is fundamentally a protocol for a chat-based interaction with an AI model where the chat-history is maintained and presented to the model with each request.  Semantic Kernel [AI services](../../concepts/ai-services/index.md) offer a unified framework for integrating the chat-completion capabilities of various AI models.
+[Chat Completion](../../../concepts/ai-services/chat-completion/index.md) is fundamentally a protocol for a chat-based interaction with an AI model where the chat-history is maintained and presented to the model with each request.  Semantic Kernel [AI services](../../../concepts/ai-services/index.md) offer a unified framework for integrating the chat-completion capabilities of various AI models.
 
-A `ChatCompletionAgent` can leverage any of these [AI services](../../concepts/ai-services/chat-completion/index.md) to generate responses, whether directed to a user or another agent.
+A `ChatCompletionAgent` can leverage any of these [AI services](../../../concepts/ai-services/chat-completion/index.md) to generate responses, whether directed to a user or another agent.
 
 ## Preparing Your Development Environment
 
@@ -62,7 +69,7 @@ pip install semantic-kernel
 ```
 
 > [!IMPORTANT]
-> Depending upon which AI Service you use as part of the `ChatCompletionAgent`, you may need to install extra packages. Please check for the required extra on the following [page](../../concepts/ai-services/chat-completion/index.md#creating-a-chat-completion-service)
+> Depending upon which AI Service you use as part of the `ChatCompletionAgent`, you may need to install extra packages. Please check for the required extra on the following [page](../../../concepts/ai-services/chat-completion/index.md#creating-a-chat-completion-service)
 
 
 ::: zone-end
@@ -81,7 +88,7 @@ pip install semantic-kernel
 
 ## Creating a `ChatCompletionAgent`
 
-A `ChatCompletionAgent` is fundamentally based on an [AI services](../../concepts/ai-services/index.md).  As such, creating a `ChatCompletionAgent` starts with creating a [`Kernel`](../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../concepts/kernel.md) instance.
+A `ChatCompletionAgent` is fundamentally based on an [AI services](../../../concepts/ai-services/index.md).  As such, creating a `ChatCompletionAgent` starts with creating a [`Kernel`](../../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../../concepts/kernel.md) instance.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -164,9 +171,10 @@ var agent = ChatCompletionAgent.builder()
 
 ## AI Service Selection
 
-No different from using Semantic Kernel [AI services](../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a service-selector.  A service-selector identifies which [AI service](../../concepts/ai-services/index.md) to target when the [`Kernel`](../../concepts/kernel.md) contains more than one.
+No different from using Semantic Kernel [AI services](../../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a service-selector.  A service-selector identifies which [AI service](../../../concepts/ai-services/index.md) to target when the [`Kernel`](../../../concepts/kernel.md) contains more than one.
 
-> Note: If multiple [AI services](../../concepts/ai-services/index.md) are present and no service-selector is provided, the same default logic is applied for the agent that you'd find when using an [AI services](../../concepts/ai-services/index.md) outside of the `Agent Framework`
+> [!NOTE]
+> If multiple [AI services](../../../concepts/ai-services/index.md) are present and no service-selector is provided, the same default logic is applied for the agent that you'd find when using an [AI services](../../../concepts/ai-services/index.md) outside of the `Agent Framework`
 
 ::: zone pivot="programming-language-csharp"
 
@@ -234,7 +242,7 @@ agent = ChatCompletionAgent(
 
 ::: zone pivot="programming-language-csharp"
 
-Conversing with your `ChatCompletionAgent` is based on a `ChatHistory` instance, no different from interacting with a Chat Completion [AI service](../../concepts/ai-services/index.md).
+Conversing with your `ChatCompletionAgent` is based on a `ChatHistory` instance, no different from interacting with a Chat Completion [AI service](../../../concepts/ai-services/index.md).
 
 You can simply invoke the agent with your user message.
 
@@ -481,7 +489,9 @@ AuthorRole.ASSISTANT: You're welcome! If you have any more questions, feel free 
 
 For an end-to-end example for a `ChatCompletionAgent`, see:
 
-- [How-To: `ChatCompletionAgent`](./examples/example-chat-agent.md)
+- [How-To: `ChatCompletionAgent`](./../examples/example-chat-agent.md)
+
+## Next Steps
 
 > [!div class="nextstepaction"]
 > [Explore the OpenAI Assistant Agent](./assistant-agent.md)

@@ -789,6 +789,31 @@
             "source_path": "semantic-kernel/Frameworks/agent/personas.md",
             "redirect_url": "semantic-kernel/frameworks/agent",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/assistant-agent.md",
+            "redirect_url": "semantic-kernel/frameworks/agent/agent-types/assistant-agent.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/chat-completion-agent.md",
+            "redirect_url": "semantic-kernel/frameworks/agent/agent-types/chat-completion-agent.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/azure-ai-agent.md",
+            "redirect_url": "semantic-kernel/frameworks/agent/agent-types/azure-ai-agent.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/copilot-studio-agent.md",
+            "redirect_url": "/semantic-kernel/frameworks/agent/agent-types/copilot-studio-agent.md",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/responses-agent.md",
+            "redirect_url": "/semantic-kernel/frameworks/agent/agent-types/responses-agent.md",
+            "redirect_document_id": false
         }
     ]
 }

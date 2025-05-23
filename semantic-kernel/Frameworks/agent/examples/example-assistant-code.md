@@ -15,10 +15,9 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use the code-interpreter tool of an [`OpenAIAssistantAgent`](../assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
+In this sample, we will explore how to use the code-interpreter tool of an [`OpenAIAssistantAgent`](../agent-types/assistant-agent.md) to complete data-analysis tasks. The approach will be broken down step-by-step to high-light the key parts of the coding process. As part of the task, the agent will generate both image and text responses. This will demonstrate the versatility of this tool in performing quantitative analysis.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
-
 
 ## Getting Started
 
@@ -40,6 +39,7 @@ dotnet add package Microsoft.SemanticKernel
 dotnet add package Microsoft.SemanticKernel.Agents.OpenAI --prerelease
 ```
 
+> [!IMPORTANT]
 > If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
@@ -161,11 +161,12 @@ public class Settings
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
+The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run).
 
 Configure the following settings in your `.env` file for either Azure OpenAI or OpenAI:
 
@@ -215,6 +216,7 @@ Settings settings = new();
 
 AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -233,6 +235,7 @@ OpenAIFileClient fileClient = client.GetOpenAIFileClient();
 OpenAIFile fileDataCountryDetail = await fileClient.UploadFileAsync("PopulationByAdmin1.csv", FileUploadPurpose.Assistants);
 OpenAIFile fileDataCountryList = await fileClient.UploadFileAsync("PopulationByCountry.csv", FileUploadPurpose.Assistants);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -324,6 +327,7 @@ AssistantClient assistantClient = client.GetAssistantClient();
 // Create agent
 OpenAIAssistantAgent agent = new(assistant, assistantClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -337,6 +341,7 @@ agent = AzureAssistantAgent(
     definition=definition,
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -352,6 +357,7 @@ At last, we are able to coordinate the interaction between the user and the `Age
 Let's also ensure the resources are removed at the end of execution to minimize unnecessary charges.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine("Creating thread...");
 AssistantAgentThread agentThread = new();
@@ -380,9 +386,11 @@ finally
         ]);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 thread: AssistantAgentThread = None
 
@@ -397,6 +405,7 @@ finally:
     await thread.delete() if thread else None
     await client.beta.assistants.delete(agent.id)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -408,6 +417,7 @@ finally:
 Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine();
 Console.Write("> ");
@@ -426,9 +436,11 @@ var message = new ChatMessageContent(AuthorRole.User, input);
 
 Console.WriteLine();
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 user_input = input("User:> ")
 if not user_input:
@@ -438,6 +450,7 @@ if user_input.lower() == "exit":
     is_complete = True
     break
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -491,9 +504,11 @@ private static async Task DownloadFileContentAsync(OpenAIFileClient client, stri
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 import os
 
@@ -525,6 +540,7 @@ async def download_response_image(agent, file_ids: list[str]):
         for file_id in file_ids:
             await download_file_content(agent, file_id)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -536,6 +552,7 @@ async def download_response_image(agent, file_ids: list[str]):
 To generate an `Agent` response to user input, invoke the agent by providing the message and the `AgentThread`. In this example, we choose a streamed response and capture any generated _File References_ for download and review at the end of the response cycle. It's important to note that generated code is identified by the presence of a _Metadata_ key in the response message, distinguishing it from the conversational reply.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 bool isCode = false;
 await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread))
@@ -558,9 +575,11 @@ Console.WriteLine();
 await DownloadResponseImageAsync(fileClient, fileIds);
 fileIds.Clear();
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 is_code = False
 last_role = None
@@ -592,6 +611,7 @@ print()
 await download_response_image(agent, file_ids)
 file_ids.clear()
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -599,7 +619,6 @@ file_ids.clear()
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Final
 
@@ -612,6 +631,7 @@ Try using these suggested inputs:
 3. Provide a bar chart for countries whose names start with the same letter and sort the x axis by highest count to lowest (include all countries)
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 using Azure.AI.OpenAI;
 using Azure.Identity;
@@ -772,9 +792,11 @@ public static class Program
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 import asyncio
 import logging
@@ -935,7 +957,7 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 ::: zone-end
 
+## Next steps
 
 > [!div class="nextstepaction"]
 > [How-To: `OpenAIAssistantAgent` Code File Search](./example-assistant-search.md)
-
