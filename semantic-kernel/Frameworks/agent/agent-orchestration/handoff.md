@@ -112,10 +112,16 @@ var handoffs = OrchestrationHandoffs
 
 ### Observe Agent Responses
 
-You can create a monitor to capture agent responses as the conversation progresses via the `ResponseCallback` property.
+You can create a callback to capture agent responses as the conversation progresses via the `ResponseCallback` property.
 
 ```csharp
-OrchestrationMonitor monitor = new();
+ChatHistory history = [];
+
+ValueTask responseCallback(ChatMessageContent response)
+{
+    history.Add(response);
+    return ValueTask.CompletedTask;
+}
 ```
 
 ### Human in the Loop
@@ -153,7 +159,7 @@ HandoffOrchestration orchestration = new HandoffOrchestration(
     refundAgent)
 {
     InteractiveCallback = interactiveCallback,
-    ResponseCallback = monitor.ResponseCallback,
+    ResponseCallback = responseCallback,
 };
 ```
 
@@ -183,7 +189,7 @@ Wait for the orchestration to complete and retrieve the final output.
 string output = await result.GetValueAsync(TimeSpan.FromSeconds(300));
 Console.WriteLine($"\n# RESULT: {output}");
 Console.WriteLine("\n\nORCHESTRATION HISTORY");
-foreach (ChatMessageContent message in monitor.History)
+foreach (ChatMessageContent message in history)
 {
     // Print each message
     Console.WriteLine($"# {message.Role} - {message.AuthorName}: {message.Content}");

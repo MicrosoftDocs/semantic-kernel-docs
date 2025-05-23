@@ -65,10 +65,16 @@ ChatCompletionAgent editor = new ChatCompletionAgent {
 
 ### Optional: Observe Agent Responses
 
-You can create a monitor to capture agent responses as the sequence progresses via the `ResponseCallback` property.
+You can create a callback to capture agent responses as the sequence progresses via the `ResponseCallback` property.
 
 ```csharp
-OrchestrationMonitor monitor = new();
+ChatHistory history = [];
+
+ValueTask responseCallback(ChatMessageContent response)
+{
+    history.Add(response);
+    return ValueTask.CompletedTask;
+}
 ```
 
 ### Set Up the Group Chat Orchestration
@@ -81,7 +87,7 @@ GroupChatOrchestration orchestration = new GroupChatOrchestration(
     writer,
     editor)
 {
-    ResponseCallback = monitor.ResponseCallback,
+    ResponseCallback = responseCallback,
 };
 ```
 
@@ -112,7 +118,7 @@ Wait for the orchestration to complete and retrieve the final output.
 string output = await result.GetValueAsync(TimeSpan.FromSeconds(60));
 Console.WriteLine($"\n# RESULT: {text}");
 Console.WriteLine("\n\nORCHESTRATION HISTORY");
-foreach (ChatMessageContent message in monitor.History)
+foreach (ChatMessageContent message in history)
 {
     this.WriteAgentChatMessage(message);
 }
