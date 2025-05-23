@@ -38,7 +38,7 @@ Detailed API documentation related to this discussion is available at:
 
 ## What is `AgentChat`?
 
-`AgentChat` provides a framework that enables interaction between multiple agents, even if they are of different types. This makes it possible for a [`ChatCompletionAgent`](./chat-completion-agent.md) and an [`OpenAIAssistantAgent`](./assistant-agent.md) to work together within the same conversation. `AgentChat` also defines entry points for initiating collaboration between agents, whether through multiple responses or a single agent response.
+`AgentChat` provides a framework that enables interaction between multiple agents, even if they are of different types. This makes it possible for a [`ChatCompletionAgent`](./agent-types/chat-completion-agent.md) and an [`OpenAIAssistantAgent`](./agent-types/assistant-agent.md) to work together within the same conversation. `AgentChat` also defines entry points for initiating collaboration between agents, whether through multiple responses or a single agent response.
 
 As an abstract class, `AgentChat` can be subclassed to support custom scenarios.
 
@@ -280,7 +280,7 @@ history = await chat.get_chat_messages()
 
 ::: zone-end
 
-Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifying an agent.  (For example: [`OpenAIAssistant`](./assistant-agent.md) versus [`ChatCompletionAgent`](./chat-completion-agent.md).)
+Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifying an agent.  (For example: [`OpenAIAssistant`](./agent-types/assistant-agent.md) versus [`ChatCompletionAgent`](./agent-types/chat-completion-agent.md).)
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -643,7 +643,7 @@ if chat.is_complete:
 
 ### Clear Full Conversation State
 
-When done using an `AgentChat` where an [`OpenAIAssistant`](./assistant-agent.md) participated, it may be necessary to delete the remote thread associated with the assistant. `AgentChat` supports resetting or clearing the entire conversation state, which includes deleting any remote thread definition. This ensures that no residual conversation data remains linked to the assistant once the chat concludes.
+When done using an `AgentChat` where an [`OpenAIAssistant`](./agent-types/assistant-agent.md) participated, it may be necessary to delete the remote thread associated with the assistant. `AgentChat` supports resetting or clearing the entire conversation state, which includes deleting any remote thread definition. This ensures that no residual conversation data remains linked to the assistant once the chat concludes.
 
 A full reset does not remove the agents that had joined the `AgentChat` and leaves the `AgentChat` in a state where it can be reused. This allows for the continuation of interactions with the same agents without needing to reinitialize them, making future conversations more efficient.
 

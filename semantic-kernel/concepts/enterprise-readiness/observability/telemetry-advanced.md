@@ -2,7 +2,7 @@
 title: More advanced scenarios for telemetry
 description: More advanced scenarios for telemetry
 zone_pivot_groups: programming-languages
-author: taochen
+author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
 ms.date: 09/12/2024
@@ -555,7 +555,6 @@ Run the application again and observe the trace in the dashboard. You should see
 
 ::: zone-end
 
-
 ::: zone pivot="programming-language-python"
 
 Modify the `book_room` function in the Python code to simulate an error:
@@ -581,7 +580,6 @@ Run the application again and observe the trace in the dashboard. You should see
 
 ::: zone-end
 
-
 ::: zone pivot="programming-language-java"
 
 > [!NOTE]
@@ -594,9 +592,3 @@ Run the application again and observe the trace in the dashboard. You should see
 In production, your services may get a large number of requests. Semantic Kernel will generate a large amount of telemetry data. some of which may not be useful for your use case and will introduce unnecessary costs to store the data. You can use the [sampling](https://opentelemetry.io/docs/concepts/sampling/) feature to reduce the amount of telemetry data that is collected.
 
 Observability in Semantic Kernel is constantly improving. You can find the latest updates and new features in the [GitHub repository](https://github.com/microsoft/semantic-kernel).
-
-
-
-
-
-
