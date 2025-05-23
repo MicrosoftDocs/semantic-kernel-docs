@@ -232,7 +232,7 @@ All invocation method keyword arguments allow passing an `AgentThread` parameter
 
 ```python
 # Invoke with an existing AgentThread.
-agent.get_response(messages="What is the capital of France?", existing_agent_thread)
+agent.get_response(messages="What is the capital of France?", thread=existing_agent_thread)
 ```
 
 All invocation methods also return the active `AgentThread` as part of the invoke response.
