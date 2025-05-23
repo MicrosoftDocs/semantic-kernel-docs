@@ -1,7 +1,7 @@
 ---
 title: Visualize traces on Azure AI Foundry Tracing UI
 description: Learn how to visualize traces on Azure AI Foundry Tracing UI
-author: taochen
+author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
 ms.date: 09/12/2024

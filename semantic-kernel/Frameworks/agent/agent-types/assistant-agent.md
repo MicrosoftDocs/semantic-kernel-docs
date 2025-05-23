@@ -13,17 +13,22 @@ ms.service: semantic-kernel
 > [!IMPORTANT]
 > Single-agent features, such as `OpenAIAssistantAgent`, are in the release candidate stage. These features are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
-Detailed API documentation related to this discussion is available at:
-
 ::: zone pivot="programming-language-csharp"
-- [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantagent)
+
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantagent)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`AzureAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_assistant_agent.azureassistantagent)
-- [`OpenAIAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_agent.openaiassistantagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_assistant_agent.azureassistantagent)
+> - [`OpenAIAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_agent.openaiassistantagent)
 
 ::: zone-end
 
@@ -33,7 +38,6 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone-end
 
-
 ## What is an Assistant?
 
 The OpenAI Assistants API is a specialized interface designed for more advanced and interactive AI capabilities, enabling developers to create personalized and multi-step task-oriented agents. Unlike the Chat Completion API, which focuses on simple conversational exchanges, the Assistant API allows for dynamic, goal-driven interactions with additional features like code-interpreter and file-search.
@@ -42,10 +46,9 @@ The OpenAI Assistants API is a specialized interface designed for more advanced 
 - [OpenAI Assistant API](https://platform.openai.com/docs/api-reference/assistants)
 - [Assistant API in Azure](/azure/ai-services/openai/assistants-quickstart)
 
-
 ## Preparing Your Development Environment
 
-To proceed with developing an `OpenAIAIAssistantAgent`, configure your development environment with the appropriate packages.
+To proceed with developing an `OpenAIAssistantAgent`, configure your development environment with the appropriate packages.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -60,6 +63,7 @@ You may also want to include the `Azure.Identity` package:
 ```pwsh
 dotnet add package Azure.Identity
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -78,12 +82,12 @@ pip install semantic-kernel[azure]
 
 ::: zone-end
 
-
 ## Creating an `OpenAIAssistantAgent`
 
 Creating an `OpenAIAssistant` requires first creating a client to be able to talk a remote service.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
 Assistant assistant =
@@ -93,9 +97,11 @@ Assistant assistant =
         instructions: "<agent instructions>");
 OpenAIAssistantAgent agent = new(assistant, client);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent, OpenAIAssistantAgent
 
@@ -133,6 +139,7 @@ agent = OpenAIAssistantAgent(
     definition=definition,
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -140,7 +147,6 @@ agent = OpenAIAssistantAgent(
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Retrieving an `OpenAIAssistantAgent`
 
@@ -155,9 +161,11 @@ AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAs
 Assistant assistant = await client.GetAssistantAsync("<assistant id>");
 OpenAIAssistantAgent agent = new(assistant, client);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # Using Azure OpenAI Resources
 
@@ -183,6 +191,7 @@ agent = AzureAssistantAgent(
     definition=new_asst_definition,
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -190,7 +199,6 @@ agent = AzureAssistantAgent(
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Using an `OpenAIAssistantAgent`
 
@@ -201,6 +209,7 @@ The `OpenAIAssistantAgent` currently only supports threads of type `OpenAIAssist
 You can invoke the `OpenAIAssistantAgent` without specifying an `AgentThread`, to start a new thread and a new `AgentThread` will be returned as part of the response.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 
 // Define agent
@@ -250,6 +259,7 @@ AgentThread agentThread = new OpenAIAssistantAgentThread(client, "existing-threa
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
 
@@ -267,6 +277,7 @@ async for response in agent.invoke(messages="user input", thread=thread):
 # Delete the thread when it is no longer needed
 await thread.delete() if thread else None
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -274,7 +285,6 @@ await thread.delete() if thread else None
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Deleting an `OpenAIAssistantAgent`
 
@@ -291,14 +301,17 @@ For .NET, the agent identifier is exposed as a `string` via the [`Agent.Id`](/do
 AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
 await client.DeleteAssistantAsync("<assistant id>");
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 await agent.delete()
 
 is_deleted = agent._is_deleted
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -447,15 +460,14 @@ AuthorRole.ASSISTANT: You're welcome! If you have any more questions or need fur
 
 ::: zone-end
 
-
 ## How-To
 
 For an end-to-end example for a `OpenAIAssistantAgent`, see:
 
-- [How-To: `OpenAIAssistantAgent` Code Interpreter](./examples/example-assistant-code.md)
-- [How-To: `OpenAIAssistantAgent` File Search](./examples/example-assistant-search.md)
+- [How-To: `OpenAIAssistantAgent` Code Interpreter](./../examples/example-assistant-code.md)
+- [How-To: `OpenAIAssistantAgent` File Search](./../examples/example-assistant-search.md)
 
+## Next Steps
 
 > [!div class="nextstepaction"]
 > [Explore the Azure AI Agent](./azure-ai-agent.md)
-

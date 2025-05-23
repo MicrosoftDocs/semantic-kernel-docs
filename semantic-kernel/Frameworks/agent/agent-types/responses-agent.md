@@ -8,21 +8,25 @@ ms.author: evmattso
 ms.date: 04/02/2025
 ms.service: semantic-kernel
 ---
+
 # Exploring the Semantic Kernel `OpenAIResponsesAgent`
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage. The current `OpenAIResponsesAgent` is not supported as part of Semantic Kernel's `AgentGroupChat` patterns. Stayed tuned for updates.
-
-Detailed API documentation related to this discussion is available at:
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`AzureResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_responses_agent.azureresponsesagent)
-- [`OpenAIResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_responses_agent.openairesponsesagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_responses_agent.azureresponsesagent)
+> - [`OpenAIResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_responses_agent.openairesponsesagent)
 
 ::: zone-end
 
@@ -32,7 +36,6 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone-end
 
-
 ## What is a Responses Agent?
 
 The OpenAI Responses API is OpenAI's most advanced interface for generating model responses. It supports text and image inputs, and text outputs. You are able to create stateful interactions with the model, using the output of previous responses as input. It is also possible to extend the model's capabilities with built-in tools for file search, web search, computer use, and more.
@@ -40,13 +43,14 @@ The OpenAI Responses API is OpenAI's most advanced interface for generating mode
 - [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses)
 - [Responses API in Azure](/azure/ai-services/openai/how-to/responses?tabs=python-secure)
 
-
 ## Preparing Your Development Environment
 
 To proceed with developing an `OpenAIResponsesAgent`, configure your development environment with the appropriate packages.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -68,13 +72,14 @@ pip install semantic-kernel
 
 ::: zone-end
 
-
 ## Creating an `OpenAIResponsesAgent`
 
 Creating an `OpenAIResponsesAgent` requires first creating a client to be able to talk a remote service.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -89,7 +94,7 @@ AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=""
 Set the appropriate variable depending on which provider you're using.
 
 > [!TIP]
-> The minimum allowed Azure OpenAI api version is `2025-03-01-preview`. Please visit the following [link](azure/ai-services/openai/how-to/responses) to view region availability, model support, and further details. 
+> The minimum allowed Azure OpenAI api version is `2025-03-01-preview`. Please visit the following [link](azure/ai-services/openai/how-to/responses) to view region availability, model support, and further details.
 
 To create an `AzureResponsesAgent` to use with Azure OpenAI models:
 
@@ -136,7 +141,9 @@ agent = OpenAIResponsesAgent(
 ## Using an `OpenAIResponsesAgent`
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -185,6 +192,7 @@ for user_input in USER_INPUTS:
 # Delete the thread when it is no longer needed
 await thread.delete() if thread else None
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -198,7 +206,9 @@ await thread.delete() if thread else None
 The Semantic Kernel `OpenAIResponsesAgent` is designed to invoke an agent that fulfills user queries or questions. During invocation, the agent may execute tools to derive the final answer. To access intermediate messages produced during this process, callers can supply a callback function that handles instances of `FunctionCallContent` or `FunctionResultContent`.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -293,7 +303,7 @@ AuthorRole.USER: 'Hello'
 Host: Hi there! How can I assist you with the menu today?
 AuthorRole.USER: 'What is the special soup?'
 Function Call:> MenuPlugin-get_specials with arguments: {}
-Function Result:> 
+Function Result:>
         Special Soup: Clam Chowder
         Special Salad: Cobb Salad
         Special Drink: Chai Tea
@@ -316,6 +326,8 @@ Host: You're welcome! If you have any more questions, feel free to ask. Enjoy yo
 > Feature currently unavailable in Java.
 
 ::: zone-end
+
+## Next Steps
 
 > [!div class="nextstepaction"]
 > [Explore the Copilot Studio Agent](./copilot-studio-agent.md)

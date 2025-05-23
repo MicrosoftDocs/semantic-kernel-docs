@@ -13,17 +13,21 @@ ms.service: semantic-kernel
 > [!IMPORTANT]
 > This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
-Detailed API documentation related to this discussion is available at:
-
 ::: zone pivot="programming-language-csharp"
 
-- [`AzureAIAgent`](/dotnet/api/microsoft.semantickernel.agents.azureai)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureAIAgent`](/dotnet/api/microsoft.semantickernel.agents.azureai)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`AzureAIAgent`](/python/api/semantic-kernel/semantic_kernel.agents.azure_ai.azure_ai_agent.azureaiagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureAIAgent`](/python/api/semantic-kernel/semantic_kernel.agents.azure_ai.azure_ai_agent.azureaiagent)
 
 ::: zone-end
 
@@ -43,7 +47,6 @@ To use an `AzureAIAgent`, an Azure AI Foundry Project must be utilized.  The fol
 - [The Azure AI Foundry SDK](/azure/ai-foundry/how-to/develop/sdk-overview)
 - [What is Azure AI Agent Service](/azure/ai-services/agents/overview)
 - [Quickstart: Create a new agent](/azure/ai-services/agents/quickstart)
-
 
 ## Preparing Your Development Environment
 
@@ -72,6 +75,7 @@ Install the `semantic-kernel` package with the optional Azure dependencies:
 ```bash
 pip install semantic-kernel[azure]
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -80,14 +84,13 @@ pip install semantic-kernel[azure]
 
 ::: zone-end
 
-
 ## Configuring the AI Project Client
 
 Accessing an `AzureAIAgent` first requires the creation of a client that is configured for a specific Foundry Project, most commonly by providing your project endpoint ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 ```
 
@@ -140,7 +143,7 @@ To create an `AzureAIAgent`, you start by configuring and initializing the Found
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 // 1. Define an agent on the Azure AI agent service
@@ -153,6 +156,7 @@ PersistentAgent definition = await agentsClient.Administration.CreateAgentAsync(
 // 2. Create a Semantic Kernel agent based on the agent definition
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -199,7 +203,7 @@ The specifics of the _Azure AI Agent thread_ is abstracted away via the `Microso
 
 The `AzureAIAgent` currently only supports threads of type `AzureAIAgentThread`.
 
-```c#
+```csharp
 AzureAIAgentThread agentThread = new(agent.Client);
 try
 {
@@ -235,7 +239,7 @@ finally:
     await thread.delete() if thread else None
 ```
 
-Optionally, an agent may be invoked as: 
+Optionally, an agent may be invoked as:
 
 ```python
 for user_input in USER_INPUTS:
@@ -265,22 +269,26 @@ finally:
 An agent may also produce a streamed response:
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 ChatMessageContent message = new(AuthorRole.User, "<your user input>");
 await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread))
 {
     Console.Write(response.Content);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 for user_input in USER_INPUTS:
     await agent.add_chat_message(thread_id=thread.id, message=user_input)
     async for content in agent.invoke_stream(thread_id=thread.id):
         print(content.content, end="", flush=True)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -294,7 +302,8 @@ for user_input in USER_INPUTS:
 Semantic Kernel supports extending an `AzureAIAgent` with custom plugins for enhanced functionality:
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 KernelPlugin plugin = KernelPluginFactory.CreateFromType<YourPlugin>();
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
@@ -306,9 +315,11 @@ PersistentAgent definition = await agentsClient.Administration.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient, plugins: [plugin]);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.functions import kernel_function
 
@@ -331,6 +342,7 @@ async with (
             plugins=[SamplePlugin()]
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -353,7 +365,8 @@ An `AzureAIAgent` can leverage advanced tools such as:
 Code Interpreter allows the agents to write and run Python code in a sandboxed execution environment ([Azure AI Agent Service Code Interpreter](/azure/ai-services/agents/how-to/tools/code-interpreter)).
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 PersistentAgent definition = await agentsClient.CreateAgentAsync(
@@ -373,9 +386,11 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import CodeInterpreterTool
 
@@ -390,6 +405,7 @@ async with (
             tool_resources=code_interpreter.resources,
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -404,7 +420,7 @@ File search augments agents with knowledge from outside its model ([Azure AI Age
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 PersistentAgent definition = await agentsClient.CreateAgentAsync(
@@ -424,9 +440,11 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import FileSearchTool
 
@@ -441,6 +459,7 @@ async with (
             tool_resources=file_search.resources,
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -454,7 +473,8 @@ async with (
 Connects your agent to an external API ([How to use Azure AI Agent Service with OpenAPI Specified Tools](/azure/ai-services/agents/how-to/tools/openapi-spec)).
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 string apiJsonSpecification = ...; // An Open API JSON specification
@@ -475,9 +495,11 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import OpenApiTool, OpenApiAnonymousAuthDetails
 
@@ -511,6 +533,7 @@ async with (
             tools=openapi_tool_one.definitions + openapi_tool_two.definitions,
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -524,7 +547,8 @@ async with (
 Use an existing Azure AI Search index with with your agent ([Use an existing AI Search index](/azure/ai-services/agents/how-to/tools/azure-ai-search)).
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 PersistentAgent definition = await agentsClient.CreateAgentAsync(
@@ -543,9 +567,11 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import AzureAISearchTool, ConnectionType
 
@@ -574,6 +600,7 @@ async with (
             headers={"x-ms-enable-preview": "true"},
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -588,7 +615,7 @@ An existing agent can be retrieved and reused by specifying its assistant ID:
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgent definition = await agentsClient.Administration.GetAgentAsync("<your agent id>");
 AzureAIAgent agent = new(definition, agentsClient);
 ```
@@ -596,10 +623,12 @@ AzureAIAgent agent = new(definition, agentsClient);
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 agent_definition = await client.agents.get_agent(assistant_id="your-agent-id")
 agent = AzureAIAgent(client=client, definition=agent_definition)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -614,33 +643,40 @@ Agents and their associated threads can be deleted when no longer needed:
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 await agentThread.DeleteAsync();
 await agentsClient.Administration.DeleteAgentAsync(agent.Id);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 await client.agents.delete_thread(thread.id)
 await client.agents.delete_agent(agent.id)
 ```
+
 ::: zone-end
 
 If working with a vector store or files, they may be deleted as well:
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 await agentsClient.VectorStores.DeleteVectorStoreAsync("<your store id>");
 await agentsClient.Files.DeleteFileAsync("<your file id>");
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 await client.agents.files.delete(file_id=file.id)
 await client.agents.vector_stores.delete(vector_store_id=vector_store.id)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -816,6 +852,8 @@ Agent: You're welcome! Enjoy your meal! 😊
 > Feature currently unavailable in Java.
 
 ::: zone-end
+
+## Next Steps
 
 > [!div class="nextstepaction"]
 > [Explore the OpenAI Responses Agent](./responses-agent.md)

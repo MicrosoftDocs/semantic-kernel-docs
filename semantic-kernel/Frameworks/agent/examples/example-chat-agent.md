@@ -15,7 +15,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore configuring a plugin to access GitHub API and provide templatized instructions to a [`ChatCompletionAgent`](../chat-completion-agent.md) to answer questions about a GitHub repository.  The approach will be broken down step-by-step to high-light the key parts of the coding process.  As part of the task, the agent will provide document citations within the response.
+In this sample, we will explore configuring a plugin to access GitHub API and provide templatized instructions to a [`ChatCompletionAgent`](../agent-types/chat-completion-agent.md) to answer questions about a GitHub repository.  The approach will be broken down step-by-step to high-light the key parts of the coding process.  As part of the task, the agent will provide document citations within the response.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
 
@@ -39,6 +39,7 @@ dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
 dotnet add package Microsoft.SemanticKernel.Agents.Core --prerelease
 ```
 
+> [!IMPORTANT]
 > If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
@@ -69,6 +70,7 @@ Additionally, copy the GitHub plug-in and models (`GitHubPlugin.cs` and `GitHubM
 
 ::: zone pivot="programming-language-python"
 Start by creating a folder that will hold your script (`.py` file) and the sample resources. Include the following imports at the top of your `.py` file:
+
 ```python
 import asyncio
 import os
@@ -132,7 +134,8 @@ Additionally, copy the GitHub plug-in and models (`GitHubPlugin.java` and `GitHu
 
 This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either OpenAI or Azure OpenAI and also for GitHub.
 
-> Note: For information on GitHub Personal Access Tokens, see: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+> [!NOTE]
+> For information on GitHub Personal Access Tokens, see: [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -195,6 +198,7 @@ public class Settings
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -246,7 +250,6 @@ private static final String OPENAI_MODEL_ID = System.getenv().getOrDefault("OPEN
 
 ::: zone-end
 
-
 ## Coding
 
 The coding process for this sample involves:
@@ -268,6 +271,7 @@ Initialize the `Settings` class referenced in the previous [Configuration](#conf
 ```csharp
 Settings settings = new();
 ```
+
 ::: zone-end
 
 Initialize the plug-in using its settings.
@@ -281,15 +285,18 @@ Console.WriteLine("Initialize plugins...");
 GitHubSettings githubSettings = settings.GetSettings<GitHubSettings>();
 GitHubPlugin githubPlugin = new(githubSettings);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 gh_settings = GitHubSettings(
     token="<PAT value>"
 )
 kernel.add_plugin(GitHubPlugin(settings=gh_settings), plugin_name="github")
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -303,6 +310,7 @@ var githubPlugin = new GitHubPlugin(GITHUB_PAT);
 Now initialize a `Kernel` instance with an `IChatCompletionService` and the `GitHubPlugin` previously created.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine("Creating kernel...");
 IKernelBuilder builder = Kernel.CreateBuilder();
@@ -316,9 +324,11 @@ builder.Plugins.AddFromObject(githubPlugin);
 
 Kernel kernel = builder.Build();
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 kernel = Kernel()
 
@@ -330,6 +340,7 @@ settings = kernel.get_prompt_execution_settings_from_service_id(service_id=servi
 # Configure the function choice behavior to auto invoke kernel functions
 settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -358,6 +369,7 @@ Kernel kernel = Kernel.builder()
 Finally we are ready to instantiate a `ChatCompletionAgent` with its Instructions, associated `Kernel`, and the default Arguments and Execution Settings.  In this case, we desire to have the any plugin functions automatically executed.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine("Defining agent...");
 ChatCompletionAgent agent =
@@ -385,9 +397,11 @@ ChatCompletionAgent agent =
 
 Console.WriteLine("Ready!");
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 agent = ChatCompletionAgent(
     kernel=kernel,
@@ -408,6 +422,7 @@ agent = ChatCompletionAgent(
     ),
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -446,7 +461,6 @@ ChatCompletionAgent agent = ChatCompletionAgent.builder()
     .build();
 ```
 
-
 ::: zone-end
 
 ### The Chat Loop
@@ -454,6 +468,7 @@ ChatCompletionAgent agent = ChatCompletionAgent.builder()
 At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating a `ChatHistoryAgentThread` object to maintain the conversation state and creating an empty loop.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 ChatHistoryAgentThread agentThread = new();
 bool isComplete = false;
@@ -462,15 +477,18 @@ do
     // processing logic here
 } while (!isComplete);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 thread: ChatHistoryAgentThread = None
 is_complete: bool = False
 while not is_complete:
     # processing logic here
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -484,12 +502,12 @@ while (!isComplete) {
 }
 ```
 
-
 ::: zone-end
 
 Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine();
 Console.Write("> ");
@@ -508,9 +526,11 @@ var message = new ChatMessageContent(AuthorRole.User, input);
 
 Console.WriteLine();
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 user_input = input("User:> ")
 if not user_input:
@@ -520,6 +540,7 @@ if user_input.lower() == "exit":
     is_complete = True
     break
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -550,6 +571,7 @@ To generate a `Agent` response to user input, invoke the agent using _Arguments_
 The `Agent` response is then then displayed to the user.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 DateTime now = DateTime.Now;
 KernelArguments arguments =
@@ -562,9 +584,11 @@ await foreach (ChatMessageContent response in agent.InvokeAsync(message, agentTh
     Console.WriteLine($"{response.Content}");
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 arguments = KernelArguments(
     now=datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -574,6 +598,7 @@ async for response in agent.invoke(messages=user_input, thread=thread, arguments
     print(f"{response.content}")
     thread = response.thread
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -591,7 +616,6 @@ for (var response : agent.invokeAsync(message, agentThread, options).block()) {
 }
 ```
 
-
 ::: zone-end
 
 ## Final
@@ -608,6 +632,7 @@ Try using these suggested inputs:
 6. List the 5 most recently opened issues with the "Agents" label
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 using System;
 using System.Threading.Tasks;
@@ -706,9 +731,11 @@ public static class Program
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 import asyncio
 import os
@@ -919,9 +946,7 @@ public class CompletionAgent {
 
 ::: zone-end
 
-
+## Next Steps
 
 > [!div class="nextstepaction"]
 > [How-To: `OpenAIAssistantAgent` Code Interpreter](./example-assistant-code.md)
-
-
