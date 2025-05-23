@@ -60,6 +60,9 @@ Stateful agents typically only work with a matching `AgentThread` implementation
 > [!IMPORTANT]
 > Agent Orchestrations are in the experimental stage. These patterns are under active development and may change significantly before advancing to the preview or release candidate stage.
 
+> [!NOTE]
+> If you have been using the [`AgentGroupChat`](../../support/archive/agent-chat.md) orchestration pattern, please note that it is no longer maintained. We recommend developers to use the new [`GroupChatOrchestration`](./agent-orchestration/group-chat.md) pattern. A migration guide is provided [here](../../support/migration/group-chat-orchestration-migration-guide.md).
+
 The [Agent Orchestration](./agent-orchestration/index.md) framework in Semantic Kernel enables the coordination of multiple agents to solve complex tasks collaboratively. It provides a flexible structure for defining how agents interact, share information, and delegate responsibilities. The core components and concepts include:
 
 - **Orchestration Patterns:** Pre-built patterns such as Concurrent, Sequential, Handoff, Group Chat, and Magentic allow developers to choose the most suitable collaboration model for their scenario. Each pattern defines a different way for agents to communicate and process tasks (see the [Orchestration patterns](./agent-orchestration/index.md#supported-orchestration-patterns) table for details).
