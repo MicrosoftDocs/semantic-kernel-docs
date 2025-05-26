@@ -15,14 +15,10 @@ ms.service: semantic-kernel
 > [!IMPORTANT]
 > Before you start, make sure you have completed the tutorial on [inspecting telemetry data with Application Insights](./telemetry-with-app-insights.md).
 
-> [!IMPORTANT]
-> This feature is currently only available on Semantic Kernel Python. Support for other languages is coming soon.
-
 Prerequisites:
 
 - An Azure AI Foundry project. Follow this [guide](/azure/ai-studio/how-to/create-projects) to create one if you don't have one.
-- A serverless inference API. Follow this [guide](/azure/ai-studio/how-to/deploy-models-serverless) to create one if you don't have one.
-- Alternatively, you can attach an Azure OpenAI resource to the project, in which case you don't need to create a serverless API.
+- A [chat completion service](../../ai-services/chat-completion/index.md).
 
 ## Attach an Application Insights resource to the project
 
@@ -30,31 +26,11 @@ Go to the Azure AI Foundry project, select the **Tracing** tab on the left blade
 
 ![Attach an Application Insights resource to the project](../../../media/azure-ai-foundry-attach-app-insights.png)
 
-## Use the Azure AI Inference connector
+## Use an AI service of your choice
 
-We are going to replace the chat completion service with the Azure AI Inference connector. This connector will automatically send traces that can be visualized on the Azure AI Foundry Tracing UI.
+All Semantic Kernel [AI connectors](../../ai-services/chat-completion/index.md) emit GenAI telemetry data that can be visualized in the Azure AI Foundry Tracing UI.
 
-```python
-from semantic_kernel.connectors.ai.azure_ai_inference import AzureAIInferenceChatCompletion
-
-# Create an Azure AI Inference chat completion service with environment variables
-kernel.add_service(AzureAIInferenceChatCompletion(ai_model_id="my-deployment", service_id="my-service-id"))
-
-# If you are using an Azure OpenAI endpoint, you can do the following instead.
-from azure.ai.inference.aio import ChatCompletionsClient
-from azure.identity.aio import DefaultAzureCredential
-
-kernel.add_service(AzureAIInferenceChatCompletion(
-    ai_model_id="my-deployment",
-    client=ChatCompletionsClient(
-        endpoint=f"{str(endpoint).strip('/')}/openai/deployments/{deployment_name}",
-        credential=DefaultAzureCredential(),
-        credential_scopes=["https://cognitiveservices.azure.com/.default"],
-    ),
-))
-```
-
-Run the script again.
+Simply rerun the code from the [inspecting telemetry data with Application Insights](./telemetry-with-app-insights.md) tutorial.
 
 ## Visualize traces on Azure AI Foundry Tracing UI
 
