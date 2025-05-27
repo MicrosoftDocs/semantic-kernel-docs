@@ -26,3 +26,5 @@
   href: functions-markdown-migration-guide.md
 - name: AgentGroupChat to GroupChatOrchestration Migration Guide
   href: group-chat-orchestration-migration-guide.md
+- name: ITextEmbeddingGenerationService to IEmbeddingGenerator Migration Guide
+  href: text-embedding-obsolete-migration-guide.md
