@@ -133,7 +133,7 @@ Console.WriteLine($"Generated embedding with {embedding.Vector.Length} dimension
 
 1. **Method Names**: `GenerateEmbeddingAsync` becomes `GenerateAsync`
 2. **Return Type**: Instead of returning `ReadOnlyMemory<float>`, the new interface returns `GeneratedEmbeddings<Embedding<float>>`
-3. **Vector Access**: Access the embedding vector through the `.Vector` property instead of directly
+3. **Vector Access**: Access the embedding `ReadOnlyMemory<float>` through the `.Vector` property of the `Embedding<float>` class
 4. **Options**: The new interface accepts an optional `EmbeddingGenerationOptions` parameter for more control
 
 ## Multiple Embeddings Migration
