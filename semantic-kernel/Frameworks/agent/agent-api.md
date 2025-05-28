@@ -51,13 +51,13 @@ agent.InvokeAsync(new List<ChatMessageContent>()
 Semantic Kernel supports two non-streaming agent invocation methods that allows for passing messages in different ways. It is also possible to invoke the agent with no messages. This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
 
 > [!TIP]
-> All arguments passed to Agent invocation methods require the caller to pass them as keyword arguments.
+> All arguments passed to Agent invocation methods require the caller to pass them as keyword arguments, except for the first positional argument, `messages`. You may invoke with either a positional or a keyword argument for `messages`. For example, both `await agent.get_response("What is the capital of France?")` and `await agent.get_response(messages="What is the capital of France?")` are supported. All other parameters must be passed as keyword arguments.
 
 #### Using the `get_response()` method
 
 ```python
 # Invoke without any messages.
-await agent.get_response(messages=None)
+await agent.get_response()
 
 # Invoke with a string that will be used as a User message.
 await agent.get_response(messages="What is the capital of France?")
@@ -78,15 +78,15 @@ await agent.get_response(
 
 ```python
 # Invoke without any messages.
-async for response in agent.invoke(messages=None):
+async for response in agent.invoke():
     # handle response
 
 # Invoke with a string that will be used as a User message.
-async for response in agent.invoke(messages="What is the capital of France?"):
+async for response in agent.invoke("What is the capital of France?"):
     # handle response
 
 # Invoke with a ChatMessageContent object.
-async for response in agent.invoke(messages=ChatMessageContent(AuthorRole.USER, "What is the capital of France?")):
+async for response in agent.invoke(ChatMessageContent(AuthorRole.USER, "What is the capital of France?")):
     # handle response
 
 # Invoke with multiple ChatMessageContent objects.
@@ -165,11 +165,11 @@ Semantic Kernel supports one streaming agent invocation method that allows for p
 
 ```python
 # Invoke without any messages.
-async for response in agent.invoke_stream(messages=None):
+async for response in agent.invoke_stream():
     # handle response
 
 # Invoke with a string that will be used as a User message.
-async for response in agent.invoke_stream(messages="What is the capital of France?"):
+async for response in agent.invoke_stream("What is the capital of France?"):
     # handle response
 
 # Invoke with a ChatMessageContent object.
@@ -232,7 +232,7 @@ All invocation method keyword arguments allow passing an `AgentThread` parameter
 
 ```python
 # Invoke with an existing AgentThread.
-agent.get_response(messages="What is the capital of France?", thread=existing_agent_thread)
+agent.get_response("What is the capital of France?", thread=existing_agent_thread)
 ```
 
 All invocation methods also return the active `AgentThread` as part of the invoke response.
@@ -243,7 +243,7 @@ All invocation methods also return the active `AgentThread` as part of the invok
 The returned `AgentThread` is available on the individual response items of the invoke methods together with the response message.
 
 ```python
-response = await agent.get_response(messages="What is the capital of France?")
+response = await agent.get_response("What is the capital of France?")
 new_thread = response.thread
 response_message = response.message
 ```

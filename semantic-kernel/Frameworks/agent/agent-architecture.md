@@ -58,7 +58,7 @@ Stateful agents typically only work with a matching `AgentThread` implementation
 ## Agent Orchestration
 
 > [!IMPORTANT]
-> Agent Orchestrations are in the experimental stage. These patterns are under active development and may change significantly before advancing to the preview or release candidate stage.
+> Agent Orchestration features in the Agent Framework are in the experimental stage. They are under active development and may change significantly before advancing to the preview or release candidate stage.
 
 > [!NOTE]
 > If you have been using the [`AgentGroupChat`](../../support/archive/agent-chat.md) orchestration pattern, please note that it is no longer maintained. We recommend developers to use the new [`GroupChatOrchestration`](./agent-orchestration/group-chat.md) pattern. A migration guide is provided [here](../../support/migration/group-chat-orchestration-migration-guide.md).
@@ -132,6 +132,72 @@ An agent's role is primarily shaped by the instructions it receives, which dicta
 Additionally, an agent can be configured directly using a Prompt Template Configuration, providing developers with a structured and reusable way to define its behavior. This approach offers a powerful tool for standardizing and customizing agent instructions, ensuring consistency across various use cases while still maintaining dynamic adaptability.
 
 Learn more about how to create an agent with Semantic Kernel template [here](./agent-templates.md).
+
+## Declarative Spec
+
+::: zone pivot="programming-language-csharp"
+
+> The documentation on using declarative specs is coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+> [!IMPORTANT]
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
+
+### Registering Custom Agent Types
+
+To use a custom agent with the declarative YAML spec system, you must first register your agent class with the agent registry. This is required so that the `AgentRegistry` can recognize and construct your agent when parsing the `type:` field in the YAML spec.
+
+To register a custom agent type, use the `@register_agent_type` decorator:
+
+```python
+from semantic_kernel.agents import register_agent_type, Agent, DeclarativeSpecMixin
+
+@register_agent_type("custom_agent")
+class CustomAgent(DeclarativeSpecMixin, Agent):
+    ...
+```
+
+The string provided to the decorator (for example, `"custom_agent"`) must match the type: field in your YAML specification.
+
+Once registered, your custom agent can be instantiated using the declarative pattern, for example via `AgentRegistry.create_from_yaml(...)`.
+
+The `DeclarativeSpecMixin` adds support for methods such as `from_yaml`, `from_dict`, and `resolve_placeholders`, which allow your agent to be constructed from a YAML or dictionary specification:
+
+```python
+@classmethod
+async def from_yaml(cls, yaml_str: str, *, kernel=None, plugins=None, prompt_template_config=None, settings=None, extras=None, **kwargs):
+    # Resolves placeholders and loads YAML, then delegates to from_dict.
+    ...
+
+@classmethod
+async def from_dict(cls, data: dict, *, kernel=None, plugins=None, prompt_template_config=None, settings=None, **kwargs):
+    # Normalizes and passes spec fields to _from_dict.
+    ...
+
+@classmethod
+@abstractmethod
+async def _from_dict(cls, data: dict, *, kernel, prompt_template_config=None, **kwargs):
+    # Subclasses implement this to create the agent from a dict.
+    ...
+
+@classmethod
+def resolve_placeholders(cls, yaml_str: str, settings=None, extras=None) -> str:
+    # Optional: override this to customize how environment or runtime placeholders are resolved in YAML.
+    return yaml_str
+```
+> [!TIP]
+> Any custom agent must inherit from `DeclarativeSpecMixin` to enable YAML-based construction and must be registered with the registry using `@register_agent_type`.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> This feature is unavailable.
+
+::: zone-end
 
 ## Next steps
 

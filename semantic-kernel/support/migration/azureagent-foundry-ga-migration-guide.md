@@ -136,11 +136,27 @@ await agentsClient.VectorStores.DeleteVectorStoreAsync("<store id>");
 
 ## `AzureAIAgent`
 
-In Semantic Kernel Python 1.31.0+, `AzureAIAgent` packages have been updated following the Azure AI Foundry's move to GA. This necessitates minor adjustments for developers.
+In Semantic Kernel Python 1.31.0 and above, `AzureAIAgent` support has been updated to align with Azure AI Foundry's general availability. This update requires several changes for developers integrating with Foundry projects.
 
-The `project_connection_string` and its environment variable `AZURE_AI_AGENT_PROJECT_CONNECTION_STRING` have been removed. You must now configure an `endpoint` (`AZURE_AI_AGENT_ENDPOINT`). Find the `AzureAIAgent` endpoint on your Azure Foundry project page, formatted as: `https://<resource>.services.ai.azure.com/api/projects/<project-name>`.
+The `project_connection_string` and its environment variable `AZURE_AI_AGENT_PROJECT_CONNECTION_STRING` are no longer supported. Instead, you must configure an `endpoint` using the `AZURE_AI_AGENT_ENDPOINT` environment variable. The endpoint is found on your Azure Foundry project page and follows this format: `https://<resource>.services.ai.azure.com/api/projects/<project-name>`
 
-Additionally, as shown in the updated [getting started with AzureAIAgent samples](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/getting_started_with_agents/azure_ai_agent), several tool-related imports have shifted from `azure.ai.projects.models` to `azure.ai.agents.models`.
+Tool-related imports have also changed. Tools that were previously imported from `azure.ai.projects.models` must now be imported from `azure.ai.agents.models`. Refer to the updated [AzureAIAgent getting started samples](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/getting_started_with_agents/azure_ai_agent) or [AzureAIAgent concept samples](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/concepts/agents/azure_ai_agent) for current patterns.
+
+Follow the setup instructions in the official documentation: [Azure AI Agents Quickstart](/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal).
+
+### GA Foundry Project
+
+- Must be created on or after May 19, 2025.
+- Connect programmatically using the Foundry project's endpoint URL.
+- Requires Semantic Kernel version 1.31.0 or higher.
+- Uses packages `azure-ai-projects` version 1.0.0b11 or higher and `azure-ai-agents` version 1.0.0 or higher, installed via `pip install semantic-kernel[azure]`.
+
+### Pre-GA Foundry Project
+
+- Was created before May 19, 2025.
+- Connect programmatically using the Foundry project's connection string.
+- Requires Semantic Kernel versions below 1.31.0.
+- Uses package `azure-ai-projects` version 1.0.0b10 or lower.
 
 Updated Imports for Tools:
 
