@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 # Semantic Kernel Agent Orchestration Advanced Topics
 
 > [!IMPORTANT]
-> Agent Orchestrations are in the experimental stage. These patterns are under active development and may change significantly before advancing to the preview or release candidate stage.
+> Agent Orchestration features in the Agent Framework are in the experimental stage. They are under active development and may change significantly before advancing to the preview or release candidate stage.
 
 ## Runtime
 

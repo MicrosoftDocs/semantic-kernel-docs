@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 # Group Chat Orchestration
 
 > [!IMPORTANT]
-> Agent Orchestrations are in the experimental stage. These patterns are under active development and may change significantly before advancing to the preview or release candidate stage.
+> Agent Orchestration features in the Agent Framework are in the experimental stage. They are under active development and may change significantly before advancing to the preview or release candidate stage.
 
 Group chat orchestration models a collaborative conversation among agents, optionally including a human participant. A group chat manager coordinates the flow, determining which agent should respond next and when to request human input. This pattern is powerful for simulating meetings, debates, or collaborative problem-solving sessions.
 
