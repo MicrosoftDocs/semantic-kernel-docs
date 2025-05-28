@@ -234,7 +234,7 @@ chatHistory.Add(
             new FunctionResultContent(
                 functionName: "get_user_allergies",
                 pluginName: "User",
-                id: "0001",
+                callId: "0001",
                 result: "{ \"allergies\": [\"peanuts\", \"gluten\"] }"
             )
         ]
@@ -247,7 +247,7 @@ chatHistory.Add(
             new FunctionResultContent(
                 functionName: "get_user_allergies",
                 pluginName: "User",
-                id: "0002",
+                callId: "0002",
                 result: "{ \"allergies\": [\"dairy\", \"soy\"] }"
             )
         ]
