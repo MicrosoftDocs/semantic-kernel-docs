@@ -29,27 +29,23 @@ The transition to `Microsoft.Extensions.AI.IEmbeddingGenerator` brings several b
 
 ## Package Updates
 
-Before migrating your code, ensure you have the latest Semantic Kernel packages that support the new `IEmbeddingGenerator` interface. The new interface is available in the same connector packages, so no additional package references are required.
+Before migrating your code, ensure you have the Semantic Kernel `1.51.0` or later packages.
 
-## Service Registration Migration
+## Kernel Builder Migration
 
 ### Before: Using ITextEmbeddingGenerationService
 
 ```csharp
 using Microsoft.SemanticKernel;
+#pragma warning disable SKEXP0010
 
 // Create a kernel builder
 var builder = Kernel.CreateBuilder();
 
 // Add the OpenAI embedding service
-#pragma warning disable SKEXP0010
 builder.Services.AddOpenAITextEmbeddingGeneration(
     modelId: "text-embedding-ada-002",
     apiKey: "your-api-key");
-#pragma warning restore SKEXP0010
-
-// Build the kernel
-var kernel = builder.Build();
 ```
 
 ### After: Using IEmbeddingGenerator
@@ -65,9 +61,38 @@ var builder = Kernel.CreateBuilder();
 builder.Services.AddOpenAIEmbeddingGenerator(
     modelId: "text-embedding-ada-002",
     apiKey: "your-api-key");
+```
 
-// Build the kernel
-var kernel = builder.Build();
+## Dependency Injection / Service Collection Migration
+
+### Before: Using ITextEmbeddingGenerationService
+
+```csharp
+using Microsoft.SemanticKernel;
+#pragma warning disable SKEXP0010
+
+// Create or use an existing service collection (WebApplicationBuilder.Services)
+var services = new ServiceCollection();
+
+// Add the OpenAI embedding service
+services.AddOpenAITextEmbeddingGeneration(
+    modelId: "text-embedding-ada-002",
+    apiKey: "your-api-key");
+```
+
+### After: Using IEmbeddingGenerator
+
+```csharp
+using Microsoft.Extensions.AI;
+using Microsoft.SemanticKernel;
+
+// Create or use an existing service collection (WebApplicationBuilder.Services)
+var services = new ServiceCollection();
+
+// Add the OpenAI embedding generator
+services.AddOpenAIEmbeddingGenerator(
+    modelId: "text-embedding-ada-002",
+    apiKey: "your-api-key");
 ```
 
 ## Interface Usage Migration
@@ -256,16 +281,30 @@ var embedding = await embeddingService.GenerateEmbeddingAsync(text);
 ```csharp
 using Microsoft.Extensions.AI;
 
+// Example 1: Specify custom dimensions for the embedding
 var options = new EmbeddingGenerationOptions
 {
-    // Configure additional options as needed
-    AdditionalProperties = new Dictionary<string, object>
-    {
-        ["user"] = "user-123"
-    }
+    Dimensions = 512  // Request a smaller embedding size for efficiency
 };
 
 var embedding = await embeddingGenerator.GenerateAsync(text, options);
+
+// Example 2: Override the model for a specific request
+var modelOptions = new EmbeddingGenerationOptions
+{
+    ModelId = "text-embedding-3-large"  // Use a different model than the default
+};
+
+var largeEmbedding = await embeddingGenerator.GenerateAsync(text, modelOptions);
+
+// Example 3: Combine multiple options
+var combinedOptions = new EmbeddingGenerationOptions
+{
+    Dimensions = 1024,
+    ModelId = "text-embedding-3-small"
+};
+
+var customEmbedding = await embeddingGenerator.GenerateAsync(text, combinedOptions);
 ```
 
 ## Working with Vector Stores
@@ -289,6 +328,22 @@ await collection.UpsertAsync(new MyRecord
     Id = "1",
     Text = "This text will be automatically embedded"
 });
+
+internal class MyRecord
+{
+    [VectorStoreKey]
+    public string Id { get; set; }
+
+    [VectorStoreData]
+    public string Text { get; set; }
+
+    // Note that the vector property is typed as a string, and
+    // its value is derived from the Text property. The string
+    // value will however be converted to a vector on upsert and
+    // stored in the database as a vector.
+    [VectorStoreVector(1536)]
+    public string Embedding => this.Text;
+}
 ```
 
 ## Direct Service Instantiation
