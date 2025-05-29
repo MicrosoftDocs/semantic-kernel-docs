@@ -543,4 +543,4 @@ For an end-to-end example for a `OpenAIAssistantAgent`, see:
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Explore the Azure AI Agent](./azure-ai-agent.md)
+> [Explore the OpenAI Responses Agent](./responses-agent.md)

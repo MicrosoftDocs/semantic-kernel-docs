@@ -398,4 +398,4 @@ For practical examples of using a `CopilotStudioAgent`, see our code samples on 
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Explore Agent Orchestration](../agent-orchestration/index.md)
+> [Explore the OpenAI Assistant Agent](./assistant-agent.md)

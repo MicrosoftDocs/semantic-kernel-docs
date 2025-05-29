@@ -401,4 +401,4 @@ For details on how to wire up the agent, refer to the full code samples above.
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Explore the Copilot Studio Agent](./copilot-studio-agent.md)
+> [Explore Agent Orchestration](../agent-orchestration/index.md)

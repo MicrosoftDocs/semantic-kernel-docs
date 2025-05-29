@@ -1,10 +1,12 @@
-- name: Chat Completion Agent
-  href: chat-completion-agent.md
-- name: OpenAI Assistant Agent
-  href: assistant-agent.md
 - name: Azure AI Agent
   href: azure-ai-agent.md
-- name: OpenAI Responses Agent
-  href: responses-agent.md
+- name: Bedrock Agent
+  href: bedrock-agent.md
+- name: Chat Completion Agent
+  href: chat-completion-agent.md
 - name: Copilot Studio Agent
   href: copilot-studio-agent.md
+- name: OpenAI Assistant Agent
+  href: assistant-agent.md
+- name: OpenAI Responses Agent
+  href: responses-agent.md

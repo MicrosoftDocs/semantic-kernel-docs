@@ -593,4 +593,4 @@ For an end-to-end example for a `ChatCompletionAgent`, see:
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Explore the OpenAI Assistant Agent](./assistant-agent.md)
+> [Explore the Copilot Studio Agent](./copilot-studio-agent.md)

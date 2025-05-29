@@ -976,8 +976,7 @@ For details on how to wire up the agent, refer to the full code samples above.
 
 ::: zone-end
 
-
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Explore the OpenAI Responses Agent](./responses-agent.md)
+> [Explore the Bedrock Agent](./bedrock-agent.md)
