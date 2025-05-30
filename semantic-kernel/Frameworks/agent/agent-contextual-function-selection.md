@@ -129,19 +129,38 @@ The specified number is not meant to be precise; rather, it serves as an upper l
 Setting this value too low may prevent the agent from accessing all necessary functions, potentially leading to task failure.
 Conversely, setting it too high may overwhelm the agent with too many functions, which can result in hallucinations, excessive input token consumption, and suboptimal performance.
 
-Example:
 ```csharp
-agentThread.AIContextProviders.Add(
-    new ContextualFunctionProvider(
-        vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions { EmbeddingGenerator = embeddingGenerator }),
-        vectorDimensions: 1536,
-        functions: GetAvailableFunctions(),
-        maxNumberOfFunctions: 3 // Only the top 3 relevant functions are advertised
-    )
+// Create the provider with a list of functions and a maximum number of functions to return
+ContextualFunctionProvider provider = new (
+    vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions { EmbeddingGenerator = embeddingGenerator }),
+    vectorDimensions: 1536,
+    functions: [AIFunctionFactory.Create((string text) => $"Echo: {text}", "Echo")]
+    maxNumberOfFunctions: 3 // Only the top 3 relevant functions are advertised
 );
 ```
 
-## Context Size
+## Contextual Function Provider Options
+
+The provider can be configured using the `ContextualFunctionProviderOptions` class, which allows you to customize various aspects of how the provider operates:
+
+```csharp
+// Create options for the contextual function provider
+ContextualFunctionProviderOptions options = new ()
+{
+    ...
+};
+
+// Create the provider with options
+ContextualFunctionProvider provider = new (
+    vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions { EmbeddingGenerator = embeddingGenerator }),
+    vectorDimensions: 1536,
+    functions: [AIFunctionFactory.Create((string text) => $"Echo: {text}", "Echo")]
+    maxNumberOfFunctions: 3, // Only the top 3 relevant functions are advertised
+    options: options // Pass the options
+);
+```
+
+### Context Size
 
 The context size determines how many recent messages from previous agent invocations are included when forming the context for a new invocation. The provider collects all messages from previous invocations, up to the specified number, and prepends them to the new messages to form the context.
 
@@ -158,7 +177,7 @@ ContextualFunctionProviderOptions options = new ()
 };
 ```
 
-## Context Embedding Source Value
+### Context Embedding Source Value
 
 To perform contextual function selection, the provider needs to vectorize the current context so it can be compared with available functions in the vector store. By default, the provider creates this context embedding by concatenating all non-empty recent and new messages into a single string, which is then vectorized and used to search for relevant functions.
 
@@ -187,7 +206,7 @@ ContextualFunctionProviderOptions options = new()
 
 Customizing the context embedding can improve the relevance of function selection, especially in complex or highly specialized agent scenarios.
 
-## Function Embedding Source Value
+### Function Embedding Source Value
 
 The provider needs to vectorize each available function in order to compare it with the context and select the most relevant ones. By default, the provider creates a function embedding by concatenating the function's name and description into a single string, which is then vectorized and stored in the vector store.
 
@@ -195,8 +214,6 @@ You can customize this behavior using the `EmbeddingValueProvider` property of `
 
 - Add additional function metadata to the embedding source
 - Preprocess, filter, or reformat the function information before vectorization
-
-Example:
 
 ```csharp
 ContextualFunctionProviderOptions options = new()
