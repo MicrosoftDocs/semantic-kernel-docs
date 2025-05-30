@@ -131,7 +131,7 @@ ContextualFunctionProviderOptions options = new ()
 };
 ```
 
-## Customizing Context Embedding Source Value
+## Context Embedding Source Value
 
 To perform contextual function selection, the provider needs to vectorize the current context so it can be compared with available functions in the vector store. By default, the provider creates this context embedding by concatenating all non-empty recent and new messages into a single string, which is then vectorized and used to search for relevant functions.
 
@@ -160,7 +160,7 @@ ContextualFunctionProviderOptions options = new()
 
 Customizing the context embedding can improve the relevance of function selection, especially in complex or highly specialized agent scenarios.
 
-## Customizing Function Embedding Source Value
+## Function Embedding Source Value
 
 The provider needs to vectorize each available function in order to compare it with the context and select the most relevant ones. By default, the provider creates a function embedding by concatenating the function's name and description into a single string, which is then vectorized and stored in the vector store.
 
@@ -184,3 +184,17 @@ ContextualFunctionProviderOptions options = new()
 ```
 
 Customizing the function embedding source value can improve the accuracy of function selection, especially when your functions have rich, context-relevant metadata or when you want to focus the search on specific aspects of each function.
+
+## Vector Store
+
+The provider is primarily designed to work with in-memory vector stores, which offer simplicity. While other types of vector stores can be utilized, the responsibility 
+for handling data synchronization and consistency falls on the hosting application.
+
+Synchronization is necessary whenever the list of functions changes or when the source of function embeddings is modified. For instance, if an agent initially had three functions (f1, f2, f3) 
+that are vectorized and stored in a cloud vector store, and later f3 is removed from the agent's list of functions, the vector store must be updated to reflect only the current functions 
+the agent has (f1 and f2). Failing to update the vector store may result in irrelevant functions being returned as results. Similarly, if the data used for vectorization, 
+such as function names, descriptions, etc., changes, the vector store should be purged and repopulated with new embeddings based on the updated information.
+
+Managing data synchronization in external or distributed vector stores can be complex and prone to errors, especially in distributed applications where different services or instances 
+may operate independently and require consistent access to the same data. In contrast, using an in-memory store simplifies this process: when the function list or vectorization source 
+changes, the in-memory store can be easily recreated with the new set of functions and their embeddings, ensuring consistency with minimal effort.
