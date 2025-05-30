@@ -112,3 +112,21 @@ IReadOnlyList<AIFunction> GetAvailableFunctions()
 
 > [!TIP]
 > See a complete sample: [ChatCompletion_ContextualFunctionSelection.cs](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_ContextualFunctionSelection.cs)
+
+## Context Size
+
+The context size determines how many recent messages from previous agent invocations are included when forming the context for a new invocation. 
+The provider collects all messages from previous invocations, up to the specified number, and prepends them to the new messages of the new invocation to form the context.
+
+Using recent messages together with new messages is especially useful for tasks that require information from earlier steps in a conversation. 
+For example, if an agent provisions a resource in one invocation and deploys it in the next, the deployment step can access details from the provisioning step by including 
+recent messages in the context.
+
+The default value for the number of recent messages in context is 2, but this can be configured as needed by specifying the `NumberOfRecentMessagesInContext` property in the `ContextualFunctionProviderOptions`:
+
+```csharp
+ContextualFunctionProviderOptions options = new ()
+{
+    NumberOfRecentMessagesInContext = 1 // Only the last message will be included in the context
+};
+```
