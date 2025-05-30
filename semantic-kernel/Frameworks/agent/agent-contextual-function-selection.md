@@ -131,7 +131,7 @@ ContextualFunctionProviderOptions options = new ()
 };
 ```
 
-## Customizing Context Embedding Value
+## Customizing Context Embedding Source Value
 
 To perform contextual function selection, the provider needs to vectorize the current context so it can be compared with available functions in the vector store. By default, the provider creates this context embedding by concatenating all non-empty recent and new messages into a single string, which is then vectorized and used to search for relevant functions.
 
@@ -159,3 +159,28 @@ ContextualFunctionProviderOptions options = new()
 ```
 
 Customizing the context embedding can improve the relevance of function selection, especially in complex or highly specialized agent scenarios.
+
+## Customizing Function Embedding Source Value
+
+The provider needs to vectorize each available function in order to compare it with the context and select the most relevant ones. By default, the provider creates a function embedding by concatenating the function's name and description into a single string, which is then vectorized and stored in the vector store.
+
+You can customize this behavior using the `EmbeddingValueProvider` property of `ContextualFunctionProviderOptions`. This property allows you to specify a callback that receives the function and a cancellation token, and returns a string to be used as the source for the function embedding. This is useful if you want to:
+
+- Add additional function metadata to the embedding source
+- Preprocess, filter, or reformat the function information before vectorization
+
+Example:
+
+
+```csharp
+ContextualFunctionProviderOptions options = new()
+{
+    EmbeddingValueProvider = async (function, cancellationToken) =>
+    {
+        // Example: Use only the function name for embedding
+        return function.Name;
+    }
+};
+```
+
+Customizing the function embedding source value can improve the accuracy of function selection, especially when your functions have rich, context-relevant metadata or when you want to focus the search on specific aspects of each function.
