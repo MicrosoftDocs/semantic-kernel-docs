@@ -130,3 +130,32 @@ ContextualFunctionProviderOptions options = new ()
     NumberOfRecentMessagesInContext = 1 // Only the last message will be included in the context
 };
 ```
+
+## Customizing Context Embedding Value
+
+To perform contextual function selection, the provider needs to vectorize the current context so it can be compared with available functions in the vector store. By default, the provider creates this context embedding by concatenating all non-empty recent and new messages into a single string, which is then vectorized and used to search for relevant functions.
+
+In some scenarios, you may want to customize this behavior to:
+
+- Focus on specific message types (e.g., only user messages)
+- Exclude certain information from context
+- Preprocess or summarize the context before vectorization (e.g., apply prompt rewriting)
+
+To do this, you can assign a custom delegate to `ContextEmbeddingValueProvider`. This delegate receives the recent and new messages, and returns a string value to be used as a source for the context embedding:
+
+```csharp
+ContextualFunctionProviderOptions options = new()
+{
+    ContextEmbeddingValueProvider = async (recentMessages, newMessages, cancellationToken) =>
+    {
+        // Example: Only include user messages in the embedding
+        var allUserMessages = recentMessages.Concat(newMessages)
+            .Where(m => m.Role == "user")
+            .Select(m => m.Content)
+            .Where(content => !string.IsNullOrWhiteSpace(content));
+        return string.Join("\n", allUserMessages);
+    }
+};
+```
+
+Customizing the context embedding can improve the relevance of function selection, especially in complex or highly specialized agent scenarios.
