@@ -23,13 +23,15 @@ This approach addresses the challenge of function selection when dealing with la
 
 ## How Contextual Function Selection Works
 
-When an agent is configured with contextual function selection, it leverages a vector store and an embedding generator to semantically match the current conversation context (including previous messages, and user input) with the descriptions and names of available functions. The most relevant functions are then advertised to the AI model for invocation.
+When an agent is configured with contextual function selection, it leverages a vector store and an embedding generator to semantically match the current conversation context (including previous messages, and user input) with the descriptions and names of available functions. The most relevant functions, up to the specified limit, are then advertised to the AI model for invocation.
 
 This mechanism is especially useful for agents that have access to a broad set of plugins or tools, ensuring that only contextually appropriate actions are considered at each step.
 
-## Main Example
 
-The following conceptual example demonstrates how an agent can be configured to use contextual function selection. The agent is set up to summarize customer reviews, but only the most relevant functions are advertised to the AI model for each invocation.
+## Usage Example
+
+The following example demonstrates how an agent can be configured to use contextual function selection. The agent is set up to summarize customer reviews, but only the most relevant functions are advertised to the AI model for each invocation. The `GetAvailableFunctions` method intentionally includes a mix of relevant and irrelevant functions to highlight the benefits of contextual selection.
+
 
 ```csharp
 // Create an embedding generator for function vectorization
@@ -37,12 +39,12 @@ var embeddingGenerator = new AzureOpenAIClient(new Uri("<endpoint>"), new ApiKey
     .GetEmbeddingClient("<deployment-name>")
     .AsIEmbeddingGenerator();
 
-// Create kernel
+// Create kernel and register AzureOpenAI chat completion service
 var builder = Kernel.CreateBuilder();
 builder.AddAzureOpenAIChatCompletion("<deployment-name>", "<endpoint>", "<api-key>");
 var kernel = builder.Build();
 
-// Create the agent
+// Create a chat completion agent
 ChatCompletionAgent agent = new()
 {
     Name = "ReviewGuru",
@@ -51,27 +53,62 @@ ChatCompletionAgent agent = new()
     Arguments = new(new PromptExecutionSettings { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(options: new FunctionChoiceBehaviorOptions { RetainArgumentTypes = true }) })
 };
 
-// Register the contextual function provider
+// Create the agent thread and register the contextual function provider
 ChatHistoryAgentThread agentThread = new();
-var allAvailableFunctions = GetAvailableFunctions();
 
 agentThread.AIContextProviders.Add(
     new ContextualFunctionProvider(
         vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions() { EmbeddingGenerator = embeddingGenerator }),
         vectorDimensions: 1536,
-        functions: allAvailableFunctions,
+        functions: AvailableFunctions(),
         maxNumberOfFunctions: 3, // Only the top 3 relevant functions are advertised
         loggerFactory: LoggerFactory
     )
 );
 
+
 // Invoke the agent
 ChatMessageContent message = await agent.InvokeAsync("Get and summarize customer review.", agentThread).FirstAsync();
 Console.WriteLine(message.Content);
+
+// Output
+/*
+    Customer Reviews:
+    -----------------
+    1. John D. - ★★★★★
+       Comment: Great product and fast shipping!
+       Date: 2023-10-01
+
+    Summary:
+    --------
+    The reviews indicate high customer satisfaction,
+    highlighting product quality and shipping speed.
+
+    Available functions:
+    --------------------
+    - Tools-GetCustomerReviews
+    - Tools-Summarize
+    - Tools-CollectSentiments
+*/
+
+IReadOnlyList<AIFunction> GetAvailableFunctions()
+{
+    // Only a few functions are directly related to the prompt; the majority are unrelated to demonstrate the benefits of contextual filtering.
+    return new List<AIFunction>
+    {
+        // Relevant functions
+        AIFunctionFactory.Create(() => "[ { 'reviewer': 'John D.', 'date': '2023-10-01', 'rating': 5, 'comment': 'Great product and fast shipping!' } ]", "GetCustomerReviews"),
+        AIFunctionFactory.Create((string text) => "Summary generated based on input data: key points include customer satisfaction.", "Summarize"),
+        AIFunctionFactory.Create((string text) => "The collected sentiment is mostly positive.", "CollectSentiments"),
+
+        // Irrelevant functions
+        AIFunctionFactory.Create(() => "Current weather is sunny.", "GetWeather"),
+        AIFunctionFactory.Create(() => "Email sent.", "SendEmail"),
+        AIFunctionFactory.Create(() => "The current stock price is $123.45.", "GetStockPrice"),
+        AIFunctionFactory.Create(() => "The time is 12:00 PM.", "GetCurrentTime")
+    };
+}
 ```
 
 > [!TIP]
 > See a complete sample: [ChatCompletion_ContextualFunctionSelection.cs](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_ContextualFunctionSelection.cs)
-
-## Configuration Options
-
