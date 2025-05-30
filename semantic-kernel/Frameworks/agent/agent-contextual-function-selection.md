@@ -9,7 +9,6 @@ ms.date: 12/30/2024
 ms.service: semantic-kernel
 ---
 
-
 # Contextual Function Selection with Agents
 
 > [!IMPORTANT]
@@ -113,7 +112,6 @@ IReadOnlyList<AIFunction> GetAvailableFunctions()
 
 The provider is primarily designed to work with in-memory vector stores, which offer simplicity. While other types of vector stores can be used, the responsibility for handling data synchronization and consistency falls on the hosting application.
 
-
 Synchronization is necessary whenever the list of functions changes or when the source of function embeddings is modified. For example, if an agent initially has three functions (f1, f2, f3) that are vectorized and stored in a cloud vector store, and later f3 is removed from the agent's list of functions, the vector store must be updated to reflect only the current functions the agent has (f1 and f2). Failing to update the vector store may result in irrelevant functions being returned as results. Similarly, if the data used for vectorization such as function names, descriptions, etc. changes, the vector store should be purged and repopulated with new embeddings based on the updated information.
 
 Managing data synchronization in external or distributed vector stores can be complex and prone to errors, especially in distributed applications where different services or instances 
@@ -121,7 +119,6 @@ may operate independently and require consistent access to the same data. In con
 changes, the in-memory store can be easily recreated with the new set of functions and their embeddings, ensuring consistency with minimal effort.
 
 ## Specifying Functions
-   
 
 The contextual function provider must be supplied with a list of functions from which it can select the most relevant ones based on the current context. This is accomplished by providing a list of functions to the `functions` parameter of the `ContextualFunctionProvider` constructor.
    
@@ -145,7 +142,6 @@ agentThread.AIContextProviders.Add(
 ```
 
 ## Context Size
-
 
 The context size determines how many recent messages from previous agent invocations are included when forming the context for a new invocation. The provider collects all messages from previous invocations, up to the specified number, and prepends them to the new messages to form the context.
 
