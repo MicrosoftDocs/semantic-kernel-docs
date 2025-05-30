@@ -11,6 +11,8 @@ ms.service: semantic-kernel
 
 # Contextual Function Selection with Agents
 
+::: zone pivot="programming-language-csharp"
+
 > [!IMPORTANT]
 > This feature is in the experimental stage. Features at this stage are under active development and may change significantly before advancing to the preview or release candidate stage.
 
@@ -230,3 +232,21 @@ Customizing the function embedding source value can improve the accuracy of func
 
 ## Next steps
 [Explore the contextual function selection samples](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_ContextualFunctionSelection.cs)
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## Coming Soon
+
+More information coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+## Coming Soon
+
+More information coming soon.
+
+::: zone-end
