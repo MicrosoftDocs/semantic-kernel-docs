@@ -18,7 +18,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-Contextual Function Selection is an advanced capability in the Semantic Kernel Agent Framework that enables agents to dynamically select and advertise only the most relevant functions based on the current conversation context. Instead of exposing all available functions to the AI model, this feature uses Retrieval-Augmented Generation (RAG) to intelligently filter and present only those functions most pertinent to the user’s request.
+Contextual Function Selection is an advanced capability in the Semantic Kernel Agent Framework that enables agents to dynamically select and advertise only the most relevant functions based on the current conversation context. Instead of exposing all available functions to the AI model, this feature uses Retrieval-Augmented Generation (RAG) to filter and present only those functions most pertinent to the user’s request.
 
 This approach addresses the challenge of function selection when dealing with a large number of available functions, where AI models may otherwise struggle to choose the appropriate function, leading to confusion and suboptimal performance.
 
@@ -112,7 +112,7 @@ IReadOnlyList<AIFunction> GetAvailableFunctions()
 
 ## Vector Store
 
-The provider is primarily designed to work with in-memory vector stores, which offer simplicity. While other types of vector stores can be used, the responsibility for handling data synchronization and consistency falls on the hosting application.
+The provider is primarily designed to work with in-memory vector stores, which offer simplicity. However, if other types of vector stores are used, it is important to note that the responsibility for handling data synchronization and consistency falls on the hosting application.
 
 Synchronization is necessary whenever the list of functions changes or when the source of function embeddings is modified. For example, if an agent initially has three functions (f1, f2, f3) that are vectorized and stored in a cloud vector store, and later f3 is removed from the agent's list of functions, the vector store must be updated to reflect only the current functions the agent has (f1 and f2). Failing to update the vector store may result in irrelevant functions being returned as results. Similarly, if the data used for vectorization such as function names, descriptions, etc. changes, the vector store should be purged and repopulated with new embeddings based on the updated information.
 
@@ -128,7 +128,7 @@ In addition to the functions, you must also specify the maximum number of releva
 This parameter determines how many functions the provider will consider when selecting the most relevant ones for the current context.
 The specified number is not meant to be precise; rather, it serves as an upper limit that depends on the specific scenario.  
    
-Setting this value too low may prevent the agent from accessing all necessary functions, potentially leading to task failure.
+Setting this value too low may prevent the agent from accessing all the necessary functions for a scenario, potentially leading to the scenario failure.
 Conversely, setting it too high may overwhelm the agent with too many functions, which can result in hallucinations, excessive input token consumption, and suboptimal performance.
 
 ```csharp
@@ -136,7 +136,7 @@ Conversely, setting it too high may overwhelm the agent with too many functions,
 ContextualFunctionProvider provider = new (
     vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions { EmbeddingGenerator = embeddingGenerator }),
     vectorDimensions: 1536,
-    functions: [AIFunctionFactory.Create((string text) => $"Echo: {text}", "Echo")]
+    functions: [AIFunctionFactory.Create((string text) => $"Echo: {text}", "Echo"), <other funcitons>]
     maxNumberOfFunctions: 3 // Only the top 3 relevant functions are advertised
 );
 ```
@@ -154,10 +154,7 @@ ContextualFunctionProviderOptions options = new ()
 
 // Create the provider with options
 ContextualFunctionProvider provider = new (
-    vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions { EmbeddingGenerator = embeddingGenerator }),
-    vectorDimensions: 1536,
-    functions: [AIFunctionFactory.Create((string text) => $"Echo: {text}", "Echo")]
-    maxNumberOfFunctions: 3, // Only the top 3 relevant functions are advertised
+    ...
     options: options // Pass the options
 );
 ```
@@ -167,8 +164,7 @@ ContextualFunctionProvider provider = new (
 The context size determines how many recent messages from previous agent invocations are included when forming the context for a new invocation. The provider collects all messages from previous invocations, up to the specified number, and prepends them to the new messages to form the context.
 
 Using recent messages together with new messages is especially useful for tasks that require information from earlier steps in a conversation. 
-For example, if an agent provisions a resource in one invocation and deploys it in the next, the deployment step can access details from the provisioning step by including 
-recent messages in the context.
+For example, if an agent provisions a resource in one invocation and deploys it in the next, the deployment step can access details from the provisioning step to get provisioned resource information for the deployment.
 
 The default value for the number of recent messages in context is 2, but this can be configured as needed by specifying the `NumberOfRecentMessagesInContext` property in the `ContextualFunctionProviderOptions`:
 
