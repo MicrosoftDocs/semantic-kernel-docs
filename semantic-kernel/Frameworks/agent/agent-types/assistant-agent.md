@@ -68,10 +68,10 @@ dotnet add package Azure.Identity
 
 ::: zone pivot="programming-language-python"
 
-Install the `semantic-kernel` package with the optional Azure dependencies:
+Install the `semantic-kernel` package:
 
 ```bash
-pip install semantic-kernel[azure]
+pip install semantic-kernel
 ```
 
 ::: zone-end
