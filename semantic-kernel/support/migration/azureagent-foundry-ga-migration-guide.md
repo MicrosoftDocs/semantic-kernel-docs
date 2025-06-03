@@ -149,7 +149,10 @@ Follow the setup instructions in the official documentation: [Azure AI Agents Qu
 - Must be created on or after May 19, 2025.
 - Connect programmatically using the Foundry project's endpoint URL.
 - Requires Semantic Kernel version 1.31.0 or higher.
-- Uses packages `azure-ai-projects` version 1.0.0b11 or higher and `azure-ai-agents` version 1.0.0 or higher, installed via `pip install semantic-kernel[azure]`.
+- Uses packages `azure-ai-projects` version 1.0.0b11 or higher and `azure-ai-agents` version 1.0.0 or higher, installed via `pip install semantic-kernel`.
+
+> [!TIP]
+> As of Semantic Kernel version 1.32.1, the dependencies needed to use `AzureAIAgent` are included in the default installation. You no longer need to install the `azure` extra, running `pip install semantic-kernel` is sufficient.
 
 ### Pre-GA Foundry Project
 
