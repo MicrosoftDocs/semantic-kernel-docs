@@ -136,7 +136,7 @@ Conversely, setting it too high may overwhelm the agent with too many functions,
 ContextualFunctionProvider provider = new (
     vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions { EmbeddingGenerator = embeddingGenerator }),
     vectorDimensions: 1536,
-    functions: [AIFunctionFactory.Create((string text) => $"Echo: {text}", "Echo"), <other funcitons>]
+    functions: [AIFunctionFactory.Create((string text) => $"Echo: {text}", "Echo"), <other functions>]
     maxNumberOfFunctions: 3 // Only the top 3 relevant functions are advertised
 );
 ```
