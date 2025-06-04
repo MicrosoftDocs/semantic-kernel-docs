@@ -6,6 +6,8 @@
   href: agent-api.md
 - name: Configuring Agents with Plugins
   href: agent-functions.md
+- name: Contextual Function Selection
+  href: agent-contextual-function-selection.md
 - name: Create an Agent from a Template
   href: agent-templates.md
 - name: Streaming Agent Responses
