@@ -40,9 +40,9 @@ var embeddingGenerator = new AzureOpenAIClient(new Uri("<endpoint>"), new ApiKey
     .AsIEmbeddingGenerator();
 
 // Create kernel and register AzureOpenAI chat completion service
-var builder = Kernel.CreateBuilder();
-builder.AddAzureOpenAIChatCompletion("<deployment-name>", "<endpoint>", "<api-key>");
-var kernel = builder.Build();
+var kernel = Kernel.CreateBuilder()
+    .AddAzureOpenAIChatCompletion("<deployment-name>", "<endpoint>", "<api-key>");
+    .Build();
 
 // Create a chat completion agent
 ChatCompletionAgent agent = new()
