@@ -121,8 +121,60 @@ var options = new TextSearchProviderOptions
     SearchTime = TextSearchProviderOptions.RagBehavior.OnDemandFunctionCalling,
 };
 
-var provider = new TextSearchProvider(mockTextSearch.Object, options);
+var provider = new TextSearchProvider(mockTextSearch.Object, options: options);
 ```
+
+## TextSearchProvider options
+
+The `TextSearchProvider` can be configured with various options to customize its behavior. Options are provided using the `TextSearchProviderOptions` class to the `TextSearchProvider` constructor.
+
+### Top
+
+Specifies the maximum number of results to return from the similarity search.
+
+- **Default**: 3
+
+### SearchTime
+
+Controls when the text search is performed. Options include:
+
+- **BeforeAIInvoke**: A search is performed each time the model/agent is invoked, just before invocation, and the results are provided to the model/agent via the invocation context.
+- **OnDemandFunctionCalling**: A search may be performed by the model/agent on demand via function calling.
+
+### PluginFunctionName
+
+Specifies the name of the plugin method that will be made available for searching if `SearchTime` is set to `OnDemandFunctionCalling`.
+
+- **Default**: "Search"
+
+### PluginFunctionDescription
+
+Provides a description of the plugin method that will be made available for searching if `SearchTime` is set to `OnDemandFunctionCalling`.
+
+- **Default**: "Allows searching for additional information to help answer the user question."
+
+### ContextPrompt
+
+When providing the text chunks to the AI model on invocation, a prompt is required to indicate to the AI model what the text chunks are for and how they should be used.
+This setting allows overriding the default messaging that is built into the `TextSearchProvider`.
+
+### IncludeCitationsPrompt
+
+When providing the text chunks to the AI model on invocation, a prompt is required to tell to the AI model whether and how to do citations.
+This setting allows overriding the default messaging that is built into the `TextSearchProvider`.
+
+### ContextFormatter
+
+This optional callback can be used to completely customize the text that is produced by the `TextSearchProvider`.
+By default the `TextSearchProvider` will produce text that includes
+
+1. A prompt telling the AI model what the text chunks are for.
+2. The list of text chunks with source links and names.
+3. A prompt instructing the AI model about including citations.
+
+You can write your own output by implementing and providing this callback.
+
+**Note**: If this delegate is provided, the `ContextPrompt` and `IncludeCitationsPrompt` settings will not be used.
 
 ## Combining RAG with Other Providers
 

@@ -39,7 +39,7 @@ using var httpClient = new HttpClient()
 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", "<Your_Mem0_API_Key>");
 
 // Create a mem0 provider for the current user.
-var mem0Provider = new Mem0Provider(httpClient, new()
+var mem0Provider = new Mem0Provider(httpClient, options: new()
 {
     UserId = "U1"
 });
@@ -55,6 +55,28 @@ agentThread.AIContextProviders.Add(mem0Provider);
 ChatMessageContent response = await agent.InvokeAsync("Please retrieve my company report", agentThread).FirstAsync();
 Console.WriteLine(response.Content);
 ```
+
+### Mem0Provider options
+
+The `Mem0Provider` can be configured with various options to cutomize its behavior.
+Options are provided using the `Mem0ProviderOptions` class to the `Mem0Provider` constructor.
+
+#### Scoping Options
+
+mem0 provides the ability to scope memories by Application, Agent, Thread and User.
+
+Options are available to provide ids for these scopes, so that the memories can be stored in mem0 under these ids.
+See the `ApplicationId`, `AgentId`, `ThreadId` and `ThreadId` properties on `Mem0ProviderOptions`.
+
+In some cases you may want to use the thread id of the server side agent thread, when using a service based agent.
+The thread may however not have been created yet when the `Mem0Provider` object is being constructed.
+In this case, you can set the `ScopeToPerOperationThreadId` option to `true`, and the `Mem0Provider` will
+use the id of the `AgentThread` when it is available.
+
+#### Context Prompt
+
+The `ContextPrompt` option allows you to override the default prompt that is prefixed to memories.
+The prompt is used to contextualize the memories provided to the AI model, so that the AI model knows what they are and how to use them.
 
 ## Using Whiteboard Memory for Short-Term Context
 
@@ -83,6 +105,38 @@ Benefits of Whiteboard Memory
 
 - Short-Term Context: Retains key information about the goals of ongoing conversations.
 - Allows Chat History Truncation: Supports maintaining critical context if the chat history is truncated.
+
+### WhiteboardProvider options
+
+The `WhiteboardProvider` can be configured with various options to cutomize its behavior.
+Options are provided using the `WhiteboardProviderOptions` class to the `WhiteboardProvider` constructor.
+
+#### MaxWhiteboardMessages
+
+Specifies a maximum number of messages to retain on the whiteboard.
+When the maximum is reached, less valuable messages will be removed.
+
+#### ContextPrompt
+
+When providing the whiteboard contents to the AI model it's important to describe what the messages are for.
+This setting allows overriding the default messaging that is built into the `WhiteboardProvider`.
+
+#### WhiteboardEmptyPrompt
+
+When the whiteboard is empty, the `WhiteboardProvider` outputs a message saying that it is empty.
+This setting allows overriding the default messaging that is built into the `WhiteboardProvider`.
+
+#### MaintenancePromptTemplate
+
+The `WhiteboardProvider` uses an AI model to add/update/remove messages on the whiteboard.
+It has a built in prompt for making these updates.
+This setting allows overriding this built-in prompt.
+
+The following parameters can be used in the template:
+
+- `{{$maxWhiteboardMessages}}`: The maximum number of messages allowed on the whiteboard.
+- `{{$inputMessages}}`: The input messages to be added to the whiteboard.
+- `{{$currentWhiteboard}}`: The current state of the whiteboard.
 
 ## Combining mem0 and Whiteboard Memory
 
