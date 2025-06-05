@@ -66,7 +66,7 @@ Options are provided using the `Mem0ProviderOptions` class to the `Mem0Provider`
 mem0 provides the ability to scope memories by Application, Agent, Thread and User.
 
 Options are available to provide ids for these scopes, so that the memories can be stored in mem0 under these ids.
-See the `ApplicationId`, `AgentId`, `ThreadId` and `ThreadId` properties on `Mem0ProviderOptions`.
+See the `ApplicationId`, `AgentId`, `ThreadId` and `UserId` properties on `Mem0ProviderOptions`.
 
 In some cases you may want to use the thread id of the server side agent thread, when using a service based agent.
 The thread may however not have been created yet when the `Mem0Provider` object is being constructed.
