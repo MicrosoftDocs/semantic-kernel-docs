@@ -30,7 +30,7 @@ We also provide a `Microsoft.SemanticKernel.Data.TextSearchStore`, which provide
 
 The `TextSearchProvider` can be used with a `VectorStore` and `TextSearchStore` to store and search text documents.
 
-The following example demonstrates how to set up and use the `TextSearchProvider` with a `TextSearchStore` and `InMemoryVectorStore` for an agent for to do simple RAG over text.
+The following example demonstrates how to set up and use the `TextSearchProvider` with a `TextSearchStore` and `InMemoryVectorStore` for an agent to perform simple RAG over text.
 
 ```csharp
 // Create an embedding generator using Azure OpenAI.

@@ -58,7 +58,7 @@ Console.WriteLine(response.Content);
 
 ### Mem0Provider options
 
-The `Mem0Provider` can be configured with various options to cutomize its behavior.
+The `Mem0Provider` can be configured with various options to customize its behavior.
 Options are provided using the `Mem0ProviderOptions` class to the `Mem0Provider` constructor.
 
 #### Scoping Options
@@ -108,7 +108,7 @@ Benefits of Whiteboard Memory
 
 ### WhiteboardProvider options
 
-The `WhiteboardProvider` can be configured with various options to cutomize its behavior.
+The `WhiteboardProvider` can be configured with various options to customize its behavior.
 Options are provided using the `WhiteboardProviderOptions` class to the `WhiteboardProvider` constructor.
 
 #### MaxWhiteboardMessages
