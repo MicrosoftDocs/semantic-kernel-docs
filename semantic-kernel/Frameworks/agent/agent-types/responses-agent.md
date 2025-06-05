@@ -8,21 +8,25 @@ ms.author: evmattso
 ms.date: 04/02/2025
 ms.service: semantic-kernel
 ---
+
 # Exploring the Semantic Kernel `OpenAIResponsesAgent`
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage. The current `OpenAIResponsesAgent` is not supported as part of Semantic Kernel's `AgentGroupChat` patterns. Stayed tuned for updates.
-
-Detailed API documentation related to this discussion is available at:
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`AzureResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_responses_agent.azureresponsesagent)
-- [`OpenAIResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_responses_agent.openairesponsesagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_responses_agent.azureresponsesagent)
+> - [`OpenAIResponsesAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_responses_agent.openairesponsesagent)
 
 ::: zone-end
 
@@ -32,7 +36,6 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone-end
 
-
 ## What is a Responses Agent?
 
 The OpenAI Responses API is OpenAI's most advanced interface for generating model responses. It supports text and image inputs, and text outputs. You are able to create stateful interactions with the model, using the output of previous responses as input. It is also possible to extend the model's capabilities with built-in tools for file search, web search, computer use, and more.
@@ -40,13 +43,14 @@ The OpenAI Responses API is OpenAI's most advanced interface for generating mode
 - [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses)
 - [Responses API in Azure](/azure/ai-services/openai/how-to/responses?tabs=python-secure)
 
-
 ## Preparing Your Development Environment
 
 To proceed with developing an `OpenAIResponsesAgent`, configure your development environment with the appropriate packages.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -68,13 +72,14 @@ pip install semantic-kernel
 
 ::: zone-end
 
-
 ## Creating an `OpenAIResponsesAgent`
 
 Creating an `OpenAIResponsesAgent` requires first creating a client to be able to talk a remote service.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -89,19 +94,21 @@ AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=""
 Set the appropriate variable depending on which provider you're using.
 
 > [!TIP]
-> The minimum allowed Azure OpenAI api version is `2025-03-01-preview`. Please visit the following [link](azure/ai-services/openai/how-to/responses) to view region availability, model support, and further details. 
+> The minimum allowed Azure OpenAI api version is `2025-03-01-preview`. Please visit the following [link](azure/ai-services/openai/how-to/responses) to view region availability, model support, and further details.
 
 To create an `AzureResponsesAgent` to use with Azure OpenAI models:
 
 ```python
 from semantic_kernel.agents import AzureResponsesAgent
+from semantic_kernel.connectors.ai.open_ai import AzureOpenAISettings, OpenAISettings
+
 
 # Set up the client and model using Azure OpenAI Resources
-client, model = AzureResponsesAgent.setup_resources()
+client = AzureResponsesAgent.create_client()
 
 # Create the AzureResponsesAgent instance using the client and the model
 agent = AzureResponsesAgent(
-    ai_model_id=model,
+    ai_model_id=AzureOpenAISettings().responses_deployment_name,
     client=client,
     instructions="your instructions",
     name="name",
@@ -114,11 +121,11 @@ Alternatively, to create an `OpenAIResponsesAgent` to use with OpenAI models:
 from semantic_kernel.agents import OpenAIResponsesAgent
 
 # Set up the client and model using OpenAI Resources
-client, model = OpenAIResponsesAgent.setup_resources()
+client = OpenAIResponsesAgent.create_client()
 
 # Create the OpenAIResponsesAgent instance using the client and the model
 agent = OpenAIResponsesAgent(
-    ai_model_id=model,
+    ai_model_id=OpenAISettings().responses_model_id,
     client=client,
     instructions="your instructions",
     name="name",
@@ -136,7 +143,9 @@ agent = OpenAIResponsesAgent(
 ## Using an `OpenAIResponsesAgent`
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -154,11 +163,11 @@ You can invoke the `OpenAIResponsesAgent` without specifying an `AgentThread`, t
 from semantic_kernel.agents import AzureResponsesAgent
 
 # Set up the client and model using Azure OpenAI Resources
-client, model = AzureResponsesAgent.setup_resources()
+client = AzureResponsesAgent.create_client()
 
 # Create the AzureResponsesAgent instance using the client and the model
 agent = AzureResponsesAgent(
-    ai_model_id=model,
+    ai_model_id=AzureOpenAISettings().responses_deployment_name,
     client=client,
     instructions="your instructions",
     name="name",
@@ -185,6 +194,7 @@ for user_input in USER_INPUTS:
 # Delete the thread when it is no longer needed
 await thread.delete() if thread else None
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -198,7 +208,9 @@ await thread.delete() if thread else None
 The Semantic Kernel `OpenAIResponsesAgent` is designed to invoke an agent that fulfills user queries or questions. During invocation, the agent may execute tools to derive the final answer. To access intermediate messages produced during this process, callers can supply a callback function that handles instances of `FunctionCallContent` or `FunctionResultContent`.
 
 ::: zone pivot="programming-language-csharp"
+
 > The `OpenAIResponsesAgent` is coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -250,11 +262,11 @@ async def handle_intermediate_steps(message: ChatMessageContent) -> None:
 
 async def main():
     # 1. Create the client using Azure OpenAI resources and configuration
-    client, model = AzureResponsesAgent.setup_resources()
+    client = AzureResponsesAgent.create_client()
 
     # 2. Create a Semantic Kernel agent for the OpenAI Responses API
     agent = AzureResponsesAgent(
-        ai_model_id=model,
+        ai_model_id=AzureOpenAISettings().responses_deployment_name,
         client=client,
         name="Host",
         instructions="Answer questions about the menu.",
@@ -293,7 +305,7 @@ AuthorRole.USER: 'Hello'
 Host: Hi there! How can I assist you with the menu today?
 AuthorRole.USER: 'What is the special soup?'
 Function Call:> MenuPlugin-get_specials with arguments: {}
-Function Result:> 
+Function Result:>
         Special Soup: Clam Chowder
         Special Salad: Cobb Salad
         Special Drink: Chai Tea
@@ -317,5 +329,76 @@ Host: You're welcome! If you have any more questions, feel free to ask. Enjoy yo
 
 ::: zone-end
 
+## Declarative Spec
+
+::: zone pivot="programming-language-csharp"
+
+> The documentation on using declarative specs is coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+> [!IMPORTANT]
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
+
+The `OpenAIResponsesAgent` supports instantiation from a YAML declarative specification. The declarative approach allows you to define the agent's properties, instructions, model configuration, tools, and other options in a single, auditable document. This makes agent composition portable and easily managed across environments.
+
+> [!NOTE]
+> Any tools, functions, or plugins listed in the declarative YAML must be available to the agent at construction time. For kernel-based plugins, this means they must be registered in the Kernel. For built-in tools such as Code Interpreter or File Search, the correct configuration and credentials must be supplied. The agent loader will not create functions from scratch. If a required component is missing, agent creation will fail.
+
+### How to Use the Declarative Spec
+
+Rather than enumerate every possible YAML configuration, this section outlines the key principles and provides links to concept samples that show complete code for each tool type. Refer to these concept samples for end-to-end implementations of an `OpenAIResponsesAgent` with declarative specs:
+
+`AzureResponsesAgent` samples:
+
+- [File Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_responses/azure_openai_responses_agent_declarative_file_search.py)
+- [Function Plugin from a File](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_responses/azure_openai_responses_agent_declarative_function_calling_from_file.py)
+- [Prompt Template](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_responses/azure_openai_responses_agent_declarative_templating.py)
+
+`OpenAIResponsesAgent` samples:
+
+- [File Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_responses/openai_responses_agent_declarative_file_search.py)
+- [Function Plugin](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/getting_started_with_agents/openai_responses/step8_responses_agent_declarative.py)
+- [Function Plugin from a File](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_responses/openai_responses_agent_declarative_function_calling_from_file.py)
+- [Prompt Template](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_responses/openai_responses_agent_declarative_templating.py)
+- [Web Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_responses/openai_responses_agent_declarative_web_search.py)
+
+#### Example: Creating an AzureAIAgent from YAML
+
+A minimal YAML declarative spec might look like the following:
+
+```yaml
+type: openai_responses
+name: Host
+instructions: Respond politely to the user's questions.
+model:
+  id: ${OpenAI:ChatModelId}
+tools:
+  - id: MenuPlugin.get_specials
+    type: function
+  - id: MenuPlugin.get_item_price
+    type: function
+```
+
+For details on how to wire up the agent, refer to the full code samples above.
+
+### Key Points
+- Declarative specs allow defining agent structure, tools, and behavior in YAML.
+- All referenced tools and plugins must be registered or accessible at runtime.
+- Built-in tools such as Bing, File Search, and Code Interpreter require proper configuration and credentials (often via environment variables or explicit arguments).
+- For comprehensive examples, see the provided sample links which demonstrate practical scenarios, including plugin registration, Azure identity configuration, and advanced tool use.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> This feature is unavailable.
+
+::: zone-end
+
+## Next Steps
+
 > [!div class="nextstepaction"]
-> [Explore the Copilot Studio Agent](./copilot-studio-agent.md)
+> [Explore Agent Orchestration](../agent-orchestration/index.md)

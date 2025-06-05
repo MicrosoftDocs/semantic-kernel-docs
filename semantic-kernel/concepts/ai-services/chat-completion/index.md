@@ -903,6 +903,9 @@ pip install semantic-kernel[onnx]
 > [!TIP]
 > There are three methods to supply the required information to AI services. You may either provide the information directly through the constructor, set the necessary environment variables, or create a .env file within your project directory containing the environment variables. You can visit this page to find all the required environment variables for each AI service provider: <https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/setup/ALL_SETTINGS.md>
 
+> [!TIP]
+> The `OpenAIChatCompletion`, `AzureChatCompletion`, and `AzureAIInferenceChatCompletion` services allow you to configure an `instruction_role` keyword argument. This parameter controls how the system instructions are presented to the model and accepts either `"system"` or `"developer"`. When using a reasoning model, you should set `instruction_role="developer"`. Any `system` role messages found in the `ChatHistory` will be automatically mapped to the `developer` role before the request is sent to the model.
+
 # [Azure OpenAI](#tab/python-AzureOpenAI)
 
 ```python

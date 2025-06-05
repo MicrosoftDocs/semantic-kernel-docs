@@ -328,7 +328,7 @@ COPYWRITER_NAME = "Writer"
 
 ::: zone-end
 
-Defining the _Reviewer_ agent uses the pattern explored in [How-To: Chat Completion Agent](./example-chat-agent.md).
+Defining the _Reviewer_ agent uses the pattern explored in [How-To: Chat Completion Agent](./../../Frameworks/agent/examples/example-chat-agent.md).
 
 Here the _Reviewer_ is given the role of responding to user input, providing direction to the _Writer_ agent, and verifying result of the _Writer_ agent.
 

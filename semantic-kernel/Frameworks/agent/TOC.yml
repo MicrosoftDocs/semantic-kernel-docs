@@ -4,27 +4,21 @@
   href: agent-architecture.md
 - name: Common Agent Invocation API
   href: agent-api.md
-- name: Chat Completion Agent
-  href: chat-completion-agent.md
-- name: OpenAI Assistant Agent
-  href: assistant-agent.md
-- name: Azure AI Agent
-  href: azure-ai-agent.md
-- name: OpenAI Responses Agent
-  href: responses-agent.md
-- name: Copilot Studio Agent
-  href: copilot-studio-agent.md
-- name: Agent Collaboration
-  href: agent-chat.md
-- name: Create an Agent from a Template
-  href: agent-templates.md
 - name: Configuring Agents with Plugins
   href: agent-functions.md
+- name: Contextual Function Selection
+  href: agent-contextual-function-selection.md
+- name: Create an Agent from a Template
+  href: agent-templates.md
 - name: Streaming Agent Responses
   href: agent-streaming.md
 - name: Agent Memory
   href: agent-memory.md
 - name: Agent Text Search (RAG)
   href: agent-rag.md
+- name: Supported Agent Types
+  href: agent-types/TOC.yml
+- name: Agent Orchestration
+  href: agent-orchestration/TOC.yml
 - name: How-To with Agents
   href: examples/TOC.yml

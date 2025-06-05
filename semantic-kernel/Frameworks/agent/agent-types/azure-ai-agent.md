@@ -13,17 +13,21 @@ ms.service: semantic-kernel
 > [!IMPORTANT]
 > This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
-Detailed API documentation related to this discussion is available at:
-
 ::: zone pivot="programming-language-csharp"
 
-- [`AzureAIAgent`](/dotnet/api/microsoft.semantickernel.agents.azureai)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureAIAgent`](/dotnet/api/microsoft.semantickernel.agents.azureai)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`AzureAIAgent`](/python/api/semantic-kernel/semantic_kernel.agents.azure_ai.azure_ai_agent.azureaiagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureAIAgent`](/python/api/semantic-kernel/semantic_kernel.agents.azure_ai.azure_ai_agent.azureaiagent)
 
 ::: zone-end
 
@@ -43,7 +47,6 @@ To use an `AzureAIAgent`, an Azure AI Foundry Project must be utilized.  The fol
 - [The Azure AI Foundry SDK](/azure/ai-foundry/how-to/develop/sdk-overview)
 - [What is Azure AI Agent Service](/azure/ai-services/agents/overview)
 - [Quickstart: Create a new agent](/azure/ai-services/agents/quickstart)
-
 
 ## Preparing Your Development Environment
 
@@ -67,11 +70,12 @@ dotnet add package Azure.Identity
 
 ::: zone pivot="programming-language-python"
 
-Install the `semantic-kernel` package with the optional Azure dependencies:
+Install the `semantic-kernel` package:
 
 ```bash
-pip install semantic-kernel[azure]
+pip install semantic-kernel
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -80,14 +84,13 @@ pip install semantic-kernel[azure]
 
 ::: zone-end
 
-
 ## Configuring the AI Project Client
 
 Accessing an `AzureAIAgent` first requires the creation of a client that is configured for a specific Foundry Project, most commonly by providing your project endpoint ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 ```
 
@@ -140,7 +143,7 @@ To create an `AzureAIAgent`, you start by configuring and initializing the Found
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 // 1. Define an agent on the Azure AI agent service
@@ -153,6 +156,7 @@ PersistentAgent definition = await agentsClient.Administration.CreateAgentAsync(
 // 2. Create a Semantic Kernel agent based on the agent definition
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -199,7 +203,7 @@ The specifics of the _Azure AI Agent thread_ is abstracted away via the `Microso
 
 The `AzureAIAgent` currently only supports threads of type `AzureAIAgentThread`.
 
-```c#
+```csharp
 AzureAIAgentThread agentThread = new(agent.Client);
 try
 {
@@ -235,7 +239,7 @@ finally:
     await thread.delete() if thread else None
 ```
 
-Optionally, an agent may be invoked as: 
+Optionally, an agent may be invoked as:
 
 ```python
 for user_input in USER_INPUTS:
@@ -265,22 +269,26 @@ finally:
 An agent may also produce a streamed response:
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 ChatMessageContent message = new(AuthorRole.User, "<your user input>");
 await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread))
 {
     Console.Write(response.Content);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 for user_input in USER_INPUTS:
     await agent.add_chat_message(thread_id=thread.id, message=user_input)
     async for content in agent.invoke_stream(thread_id=thread.id):
         print(content.content, end="", flush=True)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -294,7 +302,8 @@ for user_input in USER_INPUTS:
 Semantic Kernel supports extending an `AzureAIAgent` with custom plugins for enhanced functionality:
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 KernelPlugin plugin = KernelPluginFactory.CreateFromType<YourPlugin>();
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
@@ -306,9 +315,11 @@ PersistentAgent definition = await agentsClient.Administration.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient, plugins: [plugin]);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.functions import kernel_function
 
@@ -331,6 +342,7 @@ async with (
             plugins=[SamplePlugin()]
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -347,13 +359,15 @@ An `AzureAIAgent` can leverage advanced tools such as:
 - [File Search](#file-search)
 - [OpenAPI integration](#openapi-integration)
 - [Azure AI Search integration](#azureai-search-integration)
+- [Bing Grounding](#bing-grounding)
 
 ### Code Interpreter
 
 Code Interpreter allows the agents to write and run Python code in a sandboxed execution environment ([Azure AI Agent Service Code Interpreter](/azure/ai-services/agents/how-to/tools/code-interpreter)).
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 PersistentAgent definition = await agentsClient.CreateAgentAsync(
@@ -373,9 +387,11 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import CodeInterpreterTool
 
@@ -390,6 +406,7 @@ async with (
             tool_resources=code_interpreter.resources,
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -404,7 +421,7 @@ File search augments agents with knowledge from outside its model ([Azure AI Age
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 PersistentAgent definition = await agentsClient.CreateAgentAsync(
@@ -424,9 +441,11 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import FileSearchTool
 
@@ -441,6 +460,7 @@ async with (
             tool_resources=file_search.resources,
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -454,7 +474,8 @@ async with (
 Connects your agent to an external API ([How to use Azure AI Agent Service with OpenAPI Specified Tools](/azure/ai-services/agents/how-to/tools/openapi-spec)).
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 string apiJsonSpecification = ...; // An Open API JSON specification
@@ -475,42 +496,45 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import OpenApiTool, OpenApiAnonymousAuthDetails
 
 async with (
-        DefaultAzureCredential() as creds,
-        AzureAIAgent.create_client(credential=creds) as client,
-    ):
-        openapi_spec_file_path = "sample/filepath/..."
-        with open(os.path.join(openapi_spec_file_path, "spec_one.json")) as file_one:
-            openapi_spec_one = json.loads(file_one.read())
-        with open(os.path.join(openapi_spec_file_path, "spec_two.json")) as file_two:
-            openapi_spec_two = json.loads(file_two.read())
+    DefaultAzureCredential() as creds,
+    AzureAIAgent.create_client(credential=creds) as client,
+):
+    openapi_spec_file_path = "sample/filepath/..."
+    with open(os.path.join(openapi_spec_file_path, "spec_one.json")) as file_one:
+        openapi_spec_one = json.loads(file_one.read())
+    with open(os.path.join(openapi_spec_file_path, "spec_two.json")) as file_two:
+        openapi_spec_two = json.loads(file_two.read())
 
-        # Note that connection or managed identity auth setup requires additional setup in Azure
-        auth = OpenApiAnonymousAuthDetails()
-        openapi_tool_one = OpenApiTool(
-            name="<name>",
-            spec=openapi_spec_one,
-            description="<description>",
-            auth=auth,
-        )
-        openapi_tool_two = OpenApiTool(
-            name="<name>",
-            spec=openapi_spec_two,
-            description="<description>",
-            auth=auth,
-        )
+    # Note that connection or managed identity auth setup requires additional setup in Azure
+    auth = OpenApiAnonymousAuthDetails()
+    openapi_tool_one = OpenApiTool(
+        name="<name>",
+        spec=openapi_spec_one,
+        description="<description>",
+        auth=auth,
+    )
+    openapi_tool_two = OpenApiTool(
+        name="<name>",
+        spec=openapi_spec_two,
+        description="<description>",
+        auth=auth,
+    )
 
-        agent_definition = await client.agents.create_agent(
-            model=ai_agent_settings.model_deployment_name,
-            tools=openapi_tool_one.definitions + openapi_tool_two.definitions,
-        )
+    agent_definition = await client.agents.create_agent(
+        model=ai_agent_settings.model_deployment_name,
+        tools=openapi_tool_one.definitions + openapi_tool_two.definitions,
+    )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -524,7 +548,8 @@ async with (
 Use an existing Azure AI Search index with with your agent ([Use an existing AI Search index](/azure/ai-services/agents/how-to/tools/azure-ai-search)).
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 PersistentAgentsClient client = AzureAIAgent.CreateAgentsClient("<your endpoint>", new AzureCliCredential());
 
 PersistentAgent definition = await agentsClient.CreateAgentAsync(
@@ -543,37 +568,97 @@ PersistentAgent definition = await agentsClient.CreateAgentAsync(
 
 AzureAIAgent agent = new(definition, agentsClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from azure.ai.projects.models import AzureAISearchTool, ConnectionType
 
 async with (
-        DefaultAzureCredential() as creds,
-        AzureAIAgent.create_client(credential=creds) as client,
-    ):
-        conn_list = await client.connections.list()
+    DefaultAzureCredential() as creds,
+    AzureAIAgent.create_client(credential=creds) as client,
+):
+    conn_list = await client.connections.list()
 
-        ai_search_conn_id = ""
-        for conn in conn_list:
-            if conn.connection_type == ConnectionType.AZURE_AI_SEARCH:
-                ai_search_conn_id = conn.id
-                break
+    ai_search_conn_id = ""
+    for conn in conn_list:
+        if conn.connection_type == ConnectionType.AZURE_AI_SEARCH:
+            ai_search_conn_id = conn.id
+            break
 
-        ai_search = AzureAISearchTool(
-            index_connection_id=ai_search_conn_id, 
-            index_name=AZURE_AI_SEARCH_INDEX_NAME,
-        )
+    ai_search = AzureAISearchTool(
+        index_connection_id=ai_search_conn_id, 
+        index_name=AZURE_AI_SEARCH_INDEX_NAME,
+    )
 
-        agent_definition = await client.agents.create_agent(
-            model=ai_agent_settings.model_deployment_name,
-            instructions="Answer questions using your index.",
-            tools=ai_search.definitions,
-            tool_resources=ai_search.resources,
-            headers={"x-ms-enable-preview": "true"},
-        )
+    agent_definition = await client.agents.create_agent(
+        model=ai_agent_settings.model_deployment_name,
+        instructions="Answer questions using your index.",
+        tools=ai_search.definitions,
+        tool_resources=ai_search.resources,
+        headers={"x-ms-enable-preview": "true"},
+    )
 ```
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> Feature currently unavailable in Java.
+
+::: zone-end
+
+### Bing Grounding
+
+::: zone pivot="programming-language-csharp"
+
+> Example coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+```python
+from azure.ai.agents.models import BingGroundingTool
+from azure.identity.aio import DefaultAzureCredential
+
+from semantic_kernel.agents import AzureAIAgent, AzureAIAgentSettings
+
+async with (
+    DefaultAzureCredential() as creds,
+    AzureAIAgent.create_client(credential=creds) as client,
+):
+    # 1. Enter your Bing Grounding Connection Name
+    bing_connection = await client.connections.get(connection_name="<your-bing-grounding-connection-name>")
+    conn_id = bing_connection.id
+
+    # 2. Initialize agent bing tool and add the connection id
+    bing_grounding = BingGroundingTool(connection_id=conn_id)
+
+    # 3. Create an agent with Bing grounding on the Azure AI agent service
+    agent_definition = await client.agents.create_agent(
+        name="BingGroundingAgent",
+        instructions="Use the Bing grounding tool to answer the user's question.",
+        model=AzureAIAgentSettings().model_deployment_name,
+        tools=bing_grounding.definitions,
+    )
+
+    # 4. Create a Semantic Kernel agent for the Azure AI agent
+    agent = AzureAIAgent(
+        client=client,
+        definition=agent_definition,
+    )
+```
+
+When using the Bing Grounding tool, the `FunctionCallContent` passed to the `on_intermediate_message` callback will have its function name set to `"bing_grounding"`. After the run completes, the `ChatMessageContent.items` list will include either `AnnotationContent` or `StreamingAnnotationContent`, depending on whether the invocation is standard or streaming. These annotation items contain information about the links the agent visited during the response, similar to the information present in the `FunctionCallContent`.
+
+For more information, see the following concept samples:
+- [AzureAIAgent with Bing Grounding](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_bing_grounding.py)
+- [AzureAIAgent Streaming with Bing Grounding](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_bing_grounding_streaming_with_message_callback.py)
+
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -588,7 +673,7 @@ An existing agent can be retrieved and reused by specifying its assistant ID:
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 PersistentAgent definition = await agentsClient.Administration.GetAgentAsync("<your agent id>");
 AzureAIAgent agent = new(definition, agentsClient);
 ```
@@ -596,10 +681,12 @@ AzureAIAgent agent = new(definition, agentsClient);
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 agent_definition = await client.agents.get_agent(assistant_id="your-agent-id")
 agent = AzureAIAgent(client=client, definition=agent_definition)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -614,33 +701,40 @@ Agents and their associated threads can be deleted when no longer needed:
 
 ::: zone pivot="programming-language-csharp"
 
-```c#
+```csharp
 await agentThread.DeleteAsync();
 await agentsClient.Administration.DeleteAgentAsync(agent.Id);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 await client.agents.delete_thread(thread.id)
 await client.agents.delete_agent(agent.id)
 ```
+
 ::: zone-end
 
 If working with a vector store or files, they may be deleted as well:
 
 ::: zone pivot="programming-language-csharp"
-```c#
+
+```csharp
 await agentsClient.VectorStores.DeleteVectorStoreAsync("<your store id>");
 await agentsClient.Files.DeleteFileAsync("<your file id>");
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 await client.agents.files.delete(file_id=file.id)
 await client.agents.vector_stores.delete(vector_store_id=vector_store.id)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -817,5 +911,72 @@ Agent: You're welcome! Enjoy your meal! 😊
 
 ::: zone-end
 
+## Declarative Spec
+
+::: zone pivot="programming-language-csharp"
+
+> The documentation on using declarative specs is coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+> [!IMPORTANT]
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
+
+The `AzureAIAgent` supports instantiation from a YAML declarative specification. The declarative approach allows you to define the agent's properties, instructions, model configuration, tools, and other options in a single, auditable document. This makes agent composition portable and easily managed across environments.
+
+> [!NOTE]
+> Any tools, functions, or plugins listed in the declarative YAML must be available to the agent at construction time. For kernel-based plugins, this means they must be registered in the Kernel. For built-in tools such as Bing Grounding, File Search, or OpenAPI tools, the correct configuration and credentials must be supplied. The agent loader will not create functions from scratch. If a required component is missing, agent creation will fail.
+
+### How to Use the Declarative Spec
+
+Rather than enumerate every possible YAML configuration, this section outlines the key principles and provides links to concept samples that show complete code for each tool type. Refer to these concept samples for end-to-end implementations of an `AzureAIAgent` with declarative specs:
+
+- [Function Plugin](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/getting_started_with_agents/azure_ai_agent/step8_azure_ai_agent_declarative.py)
+- [Function Plugin from a File](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_function_calling_from_file.py)
+- [AI Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_azure_ai_search.py)
+- [Bing Grounding](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_bing_grounding.py)
+- [Code Interpreter](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_code_interpreter.py)
+- [File Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_file_search.py)
+- [OpenAPI](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_openapi.py)
+- [Prompt Template](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_templating.py)
+- [Load from Existing Agent ID](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/azure_ai_agent/azure_ai_agent_declarative_with_existing_agent_id.py)
+
+#### Example: Creating an AzureAIAgent from YAML
+
+A minimal YAML declarative spec might look like the following:
+
+```yaml
+type: foundry_agent
+name: MyAgent
+instructions: Respond politely to the user's questions.
+model:
+  id: ${AzureAI:ChatModelId}
+tools:
+  - id: MenuPlugin.get_specials
+    type: function
+  - id: MenuPlugin.get_item_price
+    type: function
+```
+
+For details on how to wire up the agent, refer to the full code samples above.
+
+### Key Points
+- Declarative specs allow defining agent structure, tools, and behavior in YAML.
+- All referenced tools and plugins must be registered or accessible at runtime.
+- Built-in tools such as Bing, File Search, and Code Interpreter require proper configuration and credentials (often via environment variables or explicit arguments).
+- For comprehensive examples, see the provided sample links which demonstrate practical scenarios, including plugin registration, Azure identity configuration, and advanced tool use.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> This feature is unavailable.
+
+::: zone-end
+
+## Next Steps
+
 > [!div class="nextstepaction"]
-> [Explore the OpenAI Responses Agent](./responses-agent.md)
+> [Explore the Bedrock Agent](./bedrock-agent.md)
