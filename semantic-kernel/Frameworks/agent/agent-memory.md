@@ -16,29 +16,37 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The Semantic Kernel Agent Memory functionality is experimental, is subject to change and will only be finalized based on feedback and evaluation.
 
-## Using mem0 for Agent memory
+It's often important for an agent to remember important information.
+This information may be retained for the duration of a conversation or longer term to span multiple conversations.
+The information may be learned from interacting with a user and may be specific to that user.
 
-[mem0](https://mem0.ai) is a self-improving memory layer for LLM applications, enabling personalized AI experiences.
+We call this information memories.
 
-The `Microsoft.SemanticKernel.Memory.Mem0Provider` integrates with the mem0 service allowing agents to remember user preferences and context across multiple threads, enabling a seamless user experience.
+To capture and retain memories, we support components that can be used with an `AgentThread` to extract memories from any messages that are added to the thread, and provide those memories to the agent as needed.
 
-Each message added to the thread is sent to the mem0 service to extract memories.
-For each agent invocation, mem0 is queried for memories matching the provided user request, and any memories are added to the agent context for that invocation.
+## Using Mem0 for Agent memory
 
-The mem0 memory provider can be configured with a user id to allow storing memories about the user, long term, across multiple threads.
+[Mem0](https://mem0.ai) is a self-improving memory layer for LLM applications, enabling personalized AI experiences.
+
+The `Microsoft.SemanticKernel.Memory.Mem0Provider` integrates with the Mem0 service allowing agents to remember user preferences and context across multiple threads, enabling a seamless user experience.
+
+Each message added to the thread is sent to the Mem0 service to extract memories.
+For each agent invocation, Mem0 is queried for memories matching the provided user request, and any memories are added to the agent context for that invocation.
+
+The Mem0 memory provider can be configured with a user id to allow storing memories about the user, long term, across multiple threads.
 It can also be configured with a thread id or to use the thread id of the agent thread, to allow for short term memories that are only attached to a single thread.
 
 Here is an example of how to use this component.
 
 ```csharp
-// Create an HttpClient for the mem0 service.
+// Create an HttpClient for the Mem0 service.
 using var httpClient = new HttpClient()
 {
     BaseAddress = new Uri("https://api.mem0.ai")
 };
 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", "<Your_Mem0_API_Key>");
 
-// Create a mem0 provider for the current user.
+// Create a Mem0 provider for the current user.
 var mem0Provider = new Mem0Provider(httpClient, options: new()
 {
     UserId = "U1"
@@ -63,7 +71,7 @@ Options are provided using the `Mem0ProviderOptions` class to the `Mem0Provider`
 
 #### Scoping Options
 
-mem0 provides the ability to scope memories by Application, Agent, Thread and User.
+Mem0 provides the ability to scope memories by Application, Agent, Thread and User.
 
 Options are available to provide ids for these scopes, so that the memories can be stored in mem0 under these ids.
 See the `ApplicationId`, `AgentId`, `ThreadId` and `UserId` properties on `Mem0ProviderOptions`.
@@ -138,12 +146,12 @@ The following parameters can be used in the template:
 - `{{$inputMessages}}`: The input messages to be added to the whiteboard.
 - `{{$currentWhiteboard}}`: The current state of the whiteboard.
 
-## Combining mem0 and Whiteboard Memory
+## Combining Mem0 and Whiteboard Memory
 
-You can use both mem0 and whiteboard memory in the same agent to achieve a balance between long-term and short-term memory capabilities.
+You can use both Mem0 and whiteboard memory in the same agent to achieve a balance between long-term and short-term memory capabilities.
 
 ```csharp
-// Add both mem0 and whiteboard providers to the agent thread.
+// Add both Mem0 and whiteboard providers to the agent thread.
 agentThread.AIContextProviders.Add(mem0Provider);
 agentThread.AIContextProviders.Add(whiteboardProvider);
 
@@ -157,7 +165,7 @@ By combining these memory features, agents can provide a more personalized and c
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Explore the Agent with mem0 sample](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_Mem0.cs)
+> [Explore the Agent with Mem0 sample](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_Mem0.cs)
 > [Explore the Agent with Whiteboard sample](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Agents/ChatCompletion_Whiteboard.cs)
 
 ::: zone-end
