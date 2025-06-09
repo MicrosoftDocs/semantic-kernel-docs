@@ -12,6 +12,10 @@
   href: agent-templates.md
 - name: Streaming Agent Responses
   href: agent-streaming.md
+- name: Agent Memory
+  href: agent-memory.md
+- name: Agent Text Search (RAG)
+  href: agent-rag.md
 - name: Supported Agent Types
   href: agent-types/TOC.yml
 - name: Agent Orchestration
