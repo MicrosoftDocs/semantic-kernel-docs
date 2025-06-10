@@ -8,6 +8,7 @@ ms.author: evmattso
 ms.date: 05/20/2025
 ms.service: semantic-kernel
 ---
+
 # Exploring the Semantic Kernel `CopilotStudioAgent`
 
 > [!IMPORTANT]
@@ -60,6 +61,7 @@ To develop with the `CopilotStudioAgent`, you must have your environment and aut
 
 1. **Python 3.10 or higher**
 2. **Semantic Kernel** with Copilot Studio dependencies:
+
    - Until dependencies are broadly available on PyPI:
      ```bash
      pip install semantic-kernel
@@ -67,6 +69,7 @@ To develop with the `CopilotStudioAgent`, you must have your environment and aut
      ```
 
 3. **Microsoft Copilot Studio** agent:
+
    - Create an agent at [Microsoft Copilot Studio](https://copilotstudio.microsoft.com).
    - Publish your agent, and under `Settings → Advanced → Metadata` obtain:
      - `Schema Name` (used as `agent_identifier`)
@@ -85,6 +88,7 @@ COPILOT_STUDIO_AGENT_ENVIRONMENT_ID=<your-env-id>
 COPILOT_STUDIO_AGENT_AGENT_IDENTIFIER=<your-agent-id>
 COPILOT_STUDIO_AGENT_AUTH_MODE=interactive
 ```
+
 > [!TIP]
 > See [Power Platform API Authentication](/power-platform/admin/programmability-authentication-v2) for help with permissions.
 
@@ -108,7 +112,7 @@ You may rely on environment variables for most configuration, but can explicitly
 
 ::: zone pivot="programming-language-python"
 
-#### Basic Usage — Environment Variable Driven
+### Basic Usage — Environment Variable Driven
 
 ```python
 from semantic_kernel.agents import CopilotStudioAgent
@@ -118,9 +122,10 @@ agent = CopilotStudioAgent(
     instructions="You help answer questions about physics.",
 )
 ```
+
 No explicit client setup is required if your environment variables are set.
 
-#### Explicit Client Construction
+### Explicit Client Construction
 
 Override config or use custom identity:
 
@@ -141,6 +146,7 @@ agent = CopilotStudioAgent(
     instructions="You help answer custom questions.",
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -293,6 +299,7 @@ agent = CopilotStudioAgent(
     plugins=[SamplePlugin()],
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -317,11 +324,11 @@ A `CopilotStudioAgent` can leverage advanced Copilot Studio-enhanced abilities, 
 
 ::: zone pivot="programming-language-python"
 
-#### Knowledge Retrieval
+### Knowledge Retrieval
 
 No specific Python code is needed; knowledge sources must be configured in Copilot Studio. When user messages require facts from these sources, the agent will return information as appropriate.
 
-#### Web Search
+### Web Search
 
 Configure your Copilot within Studio to allow Bing Search. Then use as above. For more information about configuring Bing Search see the following [guide](/microsoft-copilot-studio/nlu-generative-answers-bing).
 
@@ -377,6 +384,7 @@ For practical examples of using a `CopilotStudioAgent`, see our code samples on 
 > Feature currently unavailable in Java.
 
 ::: zone-end
+
 ---
 
 **Notes:**
@@ -387,5 +395,7 @@ For practical examples of using a `CopilotStudioAgent`, see our code samples on 
 
 ---
 
+## Next Steps
+
 > [!div class="nextstepaction"]
-> [Explore Agent Collaboration in Agent Chat](./agent-chat.md)
+> [Explore the OpenAI Assistant Agent](./assistant-agent.md)

@@ -15,10 +15,9 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use the file-search tool of an [`OpenAIAssistantAgent`](../assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
+In this sample, we will explore how to use the file-search tool of an [`OpenAIAssistantAgent`](../agent-types/assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
-
 
 ## Getting Started
 
@@ -38,6 +37,7 @@ dotnet add package Microsoft.SemanticKernel
 dotnet add package Microsoft.SemanticKernel.Agents.OpenAI --prerelease
 ```
 
+> [!IMPORTANT]
 > If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
@@ -77,6 +77,7 @@ Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The
     </None>
   </ItemGroup>
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -99,7 +100,6 @@ Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Configuration
 
@@ -162,10 +162,11 @@ public class Settings
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
+The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run).
 
 Configure the following settings in your `.env` file for either Azure OpenAI or OpenAI:
 
@@ -192,7 +193,6 @@ Once configured, the respective AI service classes will pick up the required var
 
 ::: zone-end
 
-
 ## Coding
 
 The coding process for this sample involves:
@@ -216,16 +216,17 @@ Settings settings = new();
 
 AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
 ```
+
 ::: zone-end
 
-
 ::: zone pivot="programming-language-python"
-The class method `setup_resources()` on the Assistant Agent handles creating the client and returning it and the model to use based on the desired configuration. Pydantic settings are used to load environment variables first from environment variables or from the `.env` file. One may pass in the `api_key`, `api_version`, `deployment_name` or `endpoint`, which will take precedence over any environment variables configured.
+The static method `create_client()` on the Assistant Agent handles creating the client and returning it based on the desired configuration. Pydantic settings are used to load environment variables first from environment variables or from the `.env` file. One may pass in the `api_key`, `api_version`, `deployment_name` or `endpoint`, which will take precedence over any environment variables configured.
 
 ```python
 # Create the client using Azure OpenAI resources and configuration
-client, model = AzureAssistantAgent.setup_resources()
+client = AzureAssistantAgent.create_client()
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -246,17 +247,12 @@ VectorStoreClient storeClient = client.GetVectorStoreClient();
 CreateVectorStoreOperation operation = await storeClient.CreateVectorStoreAsync(waitUntilCompleted: true);
 string storeId = operation.VectorStoreId;
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-```python
-def get_filepath_for_filename(filename: str) -> str:
-    base_directory = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-        "resources",
-    )
-    return os.path.join(base_directory, filename)
 
+```python
 # Upload the files to the client
 file_ids: list[str] = []
 for path in [get_filepath_for_filename(filename) for filename in filenames]:
@@ -264,9 +260,17 @@ for path in [get_filepath_for_filename(filename) for filename in filenames]:
         file = await client.files.create(file=file, purpose="assistants")
         file_ids.append(file.id)
 
+vector_store = await client.vector_stores.create(
+    name="assistant_search",
+    file_ids=file_ids,
+)
+
 # Get the file search tool and resources
-file_search_tools, file_search_tool_resources = AzureAssistantAgent.configure_file_search_tool(file_ids=file_ids)
+file_search_tools, file_search_tool_resources = AzureAssistantAgent.configure_file_search_tool(
+    vector_store_ids=vector_store.id
+)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -287,9 +291,11 @@ private static readonly string[] _fileNames =
         "Grimms-The-White-Snake.txt",
     ];
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 filenames = [
     "Grimms-The-King-of-the-Golden-Mountain.txt",
@@ -297,6 +303,7 @@ filenames = [
     "Grimms-The-White-Snake.txt",
 ]
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -321,6 +328,7 @@ foreach (string fileName in _fileNames)
     fileReferences.Add(fileInfo.Id, fileInfo);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -356,13 +364,15 @@ Assistant assistant =
 // Create agent
 OpenAIAssistantAgent agent = new(assistant, assistantClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # Create the assistant definition
 definition = await client.beta.assistants.create(
-    model=model,
+    model=AzureOpenAISettings().chat_deployment_name,
     instructions="""
         The document store contains the text of fictional stories.
         Always analyze the document store to provide an answer to the user's question.
@@ -380,6 +390,7 @@ agent = AzureAssistantAgent(
     definition=definition,
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -395,6 +406,7 @@ At last, we are able to coordinate the interaction between the user and the `Age
 Let's also ensure the resources are removed at the end of execution to minimize unnecessary charges.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine("Creating thread...");
 OpenAIAssistantAgent agentThread = new();
@@ -422,12 +434,15 @@ finally
         ]);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
-print("Creating thread...")
-thread_id = await agent.create_thread()
+# If no thread is provided, a new thread will be
+# created and returned with the initial response
+thread: AssistantAgentThread = None
 
 try:
     is_complete: bool = False
@@ -435,12 +450,13 @@ try:
         # Processing occurs here
 
 finally:
-    print("Cleaning up resources...")
-    if agent is not None:
-        [await agent.delete_file(file_id) for file_id in agent.file_search_file_ids]
-        await agent.delete_thread(thread_id)
-        await agent.delete()
+    print("\nCleaning up resources...")
+    [await client.files.delete(file_id) for file_id in file_ids]
+    await client.vector_stores.delete(vector_store.id)
+    await thread.delete() if thread else None
+    await client.beta.assistants.delete(agent.id)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -452,6 +468,7 @@ finally:
 Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine();
 Console.Write("> ");
@@ -469,9 +486,11 @@ if (input.Trim().Equals("EXIT", StringComparison.OrdinalIgnoreCase))
 var message = new ChatMessageContent(AuthorRole.User, input);
 Console.WriteLine();
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 user_input = input("User:> ")
 if not user_input:
@@ -481,6 +500,7 @@ if user_input.lower() == "exit":
     is_complete = True
     break
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -492,16 +512,20 @@ if user_input.lower() == "exit":
 Before invoking the `Agent` response, let's add a helper method to reformat the unicode annotation brackets to ANSI brackets.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 private static string ReplaceUnicodeBrackets(this string content) =>
     content?.Replace('【', '[').Replace('】', ']');
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # No special handling required.
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -513,6 +537,7 @@ private static string ReplaceUnicodeBrackets(this string content) =>
 To generate an `Agent` response to user input, invoke the agent by specifying the message and agent thread. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 List<StreamingAnnotationContent> footnotes = [];
 await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(message, agentThread))
@@ -536,9 +561,11 @@ if (footnotes.Count > 0)
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 footnotes: list[StreamingAnnotationContent] = []
 async for response in agent.invoke_stream(messages=user_input, thread=thread):
@@ -556,6 +583,7 @@ if len(footnotes) > 0:
             f"(Index: {footnote.start_index} - {footnote.end_index})"
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -563,7 +591,6 @@ if len(footnotes) > 0:
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Final
 
@@ -576,6 +603,7 @@ Try using these suggested inputs:
 3. What is the moral in The White Snake?
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 using Azure.AI.OpenAI;
 using Azure.Identity;
@@ -720,20 +748,29 @@ public static class Program
         content?.Replace('【', '[').Replace('】', ']');
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
+# Copyright (c) Microsoft. All rights reserved.
+
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
+from semantic_kernel.connectors.ai.open_ai import AzureOpenAISettings
 from semantic_kernel.contents import StreamingAnnotationContent
 
 """
 The following sample demonstrates how to create a simple,
 OpenAI assistant agent that utilizes the vector store
 to answer questions based on the uploaded documents.
+
+This is the full code sample for the Semantic Kernel Learn Site: How-To: Open AI Assistant Agent File Search
+
+https://learn.microsoft.com/semantic-kernel/frameworks/agent/examples/example-assistant-search?pivots=programming-language-python
 """
 
 
@@ -754,7 +791,7 @@ filenames = [
 
 async def main():
     # Create the client using Azure OpenAI resources and configuration
-    client, model = AzureAssistantAgent.setup_resources()
+    client = AzureAssistantAgent.create_client()
 
     # Upload the files to the client
     file_ids: list[str] = []
@@ -763,7 +800,7 @@ async def main():
             file = await client.files.create(file=file, purpose="assistants")
             file_ids.append(file.id)
 
-    vector_store = await client.beta.vector_stores.create(
+    vector_store = await client.vector_stores.create(
         name="assistant_search",
         file_ids=file_ids,
     )
@@ -775,7 +812,7 @@ async def main():
 
     # Create the assistant definition
     definition = await client.beta.assistants.create(
-        model=model,
+        model=AzureOpenAISettings().chat_deployment_name,
         instructions="""
             The document store contains the text of fictional stories.
             Always analyze the document store to provide an answer to the user's question.
@@ -793,7 +830,7 @@ async def main():
         definition=definition,
     )
 
-    thread: AssistantAgentThread = None
+    thread: AssistantAgentThread | None = None
 
     try:
         is_complete: bool = False
@@ -806,13 +843,12 @@ async def main():
                 is_complete = True
                 break
 
-            await agent.add_chat_message(thread_id=thread.id, message=user_input)
-
             footnotes: list[StreamingAnnotationContent] = []
-            async for response in agent.invoke_stream(thread_id=thread.id):
+            async for response in agent.invoke_stream(messages=user_input, thread=thread):
                 footnotes.extend([item for item in response.items if isinstance(item, StreamingAnnotationContent)])
 
                 print(f"{response.content}", end="", flush=True)
+                thread = response.thread
 
             print()
 
@@ -826,7 +862,8 @@ async def main():
     finally:
         print("\nCleaning up resources...")
         [await client.files.delete(file_id) for file_id in file_ids]
-        await client.beta.threads.delete(thread.id)
+        await client.vector_stores.delete(vector_store.id)
+        await thread.delete() if thread else None
         await client.beta.assistants.delete(agent.id)
 
 
@@ -843,7 +880,7 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 ::: zone-end
 
+## Next Steps
 
 > [!div class="nextstepaction"]
-> [How to Coordinate Agent Collaboration using `AgentGroupChat`](./example-agent-collaboration.md)
-
+> [Agent Orchestration](./../agent-orchestration/index.md)

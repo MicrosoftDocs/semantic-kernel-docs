@@ -9,10 +9,9 @@ ms.date: 04/03/2025
 ms.service: semantic-kernel
 ---
 
-# The Semantic Kernel Common Agent API surface
+# The Semantic Kernel Common Agent API Surface
 
-Semantic Kernel agents share a common interface for invoking agents.
-This allows for common code to be written, that works against any agent type and allows for easily switching agents as required, without needing to change the bulk of your code.
+Semantic Kernel agents implement a unified interface for invocation, enabling shared code that operates seamlessly across different agent types. This design allows you to switch agents as needed without modifying the majority of your application logic.
 
 ## Invoking an agent
 
@@ -22,9 +21,7 @@ The Agent API surface supports both streaming and non-streaming invocation.
 
 ::: zone pivot="programming-language-csharp"
 
-Semantic Kernel supports four non-streaming agent invocation overloads that allows for passing messages in different ways.
-One of these also allows invoking the agent with no messages.
-This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
+Semantic Kernel supports four non-streaming agent invocation overloads that allows for passing messages in different ways. One of these also allows invoking the agent with no messages. This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
 
 ```csharp
 // Invoke without any parameters.
@@ -51,18 +48,16 @@ agent.InvokeAsync(new List<ChatMessageContent>()
 
 ::: zone pivot="programming-language-python"
 
-Semantic Kernel supports two non-streaming agent invocation methods that allows for passing messages in different ways.
-It is also possible to invoke the agent with no messages.
-This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
+Semantic Kernel supports two non-streaming agent invocation methods that allows for passing messages in different ways. It is also possible to invoke the agent with no messages. This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
 
 > [!TIP]
-> All arguments passed to Agent invocation methods require the caller to pass them as keyword arguments.
+> All arguments passed to Agent invocation methods require the caller to pass them as keyword arguments, except for the first positional argument, `messages`. You may invoke with either a positional or a keyword argument for `messages`. For example, both `await agent.get_response("What is the capital of France?")` and `await agent.get_response(messages="What is the capital of France?")` are supported. All other parameters must be passed as keyword arguments.
 
 #### Using the `get_response()` method
 
 ```python
 # Invoke without any messages.
-await agent.get_response(messages=None)
+await agent.get_response()
 
 # Invoke with a string that will be used as a User message.
 await agent.get_response(messages="What is the capital of France?")
@@ -83,15 +78,15 @@ await agent.get_response(
 
 ```python
 # Invoke without any messages.
-async for response in agent.invoke(messages=None):
+async for response in agent.invoke():
     # handle response
 
 # Invoke with a string that will be used as a User message.
-async for response in agent.invoke(messages="What is the capital of France?"):
+async for response in agent.invoke("What is the capital of France?"):
     # handle response
 
 # Invoke with a ChatMessageContent object.
-async for response in agent.invoke(messages=ChatMessageContent(AuthorRole.USER, "What is the capital of France?")):
+async for response in agent.invoke(ChatMessageContent(AuthorRole.USER, "What is the capital of France?")):
     # handle response
 
 # Invoke with multiple ChatMessageContent objects.
@@ -111,9 +106,7 @@ async for response in agent.invoke(
 
 ::: zone pivot="programming-language-java"
 
-Semantic Kernel supports three non-streaming agent invocation overloads that allows for passing messages in different ways.
-One of these also allows invoking the agent with no messages.
-This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
+Semantic Kernel supports three non-streaming agent invocation overloads that allows for passing messages in different ways. One of these also allows invoking the agent with no messages. This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
 
 ```java
 // Invoke without any parameters.
@@ -141,9 +134,7 @@ agent.invokeAsync(List.of(
 
 ::: zone pivot="programming-language-csharp"
 
-Semantic Kernel supports four streaming agent invocation overloads that allows for passing messages in different ways.
-One of these also allows invoking the agent with no messages.
-This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
+Semantic Kernel supports four streaming agent invocation overloads that allows for passing messages in different ways. One of these also allows invoking the agent with no messages. This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
 
 ```csharp
 // Invoke without any parameters.
@@ -170,17 +161,15 @@ agent.InvokeStreamingAsync(new List<ChatMessageContent>()
 
 ::: zone pivot="programming-language-python"
 
-Semantic Kernel supports one streaming agent invocation method that allows for passing messages in different ways.
-It is also possible to invoke the agent stream with no messages.
-This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
+Semantic Kernel supports one streaming agent invocation method that allows for passing messages in different ways. It is also possible to invoke the agent stream with no messages. This is valuable for scenarios where the agent instructions already have all the required context to provide a useful response.
 
 ```python
 # Invoke without any messages.
-async for response in agent.invoke_stream(messages=None):
+async for response in agent.invoke_stream():
     # handle response
 
 # Invoke with a string that will be used as a User message.
-async for response in agent.invoke_stream(messages="What is the capital of France?"):
+async for response in agent.invoke_stream("What is the capital of France?"):
     # handle response
 
 # Invoke with a ChatMessageContent object.
@@ -200,7 +189,6 @@ async for response in agent.invoke_stream(
 > [!IMPORTANT]
 > Invoking an agent without passing an `AgentThread` to the `invoke_stream()` method will create a new thread and return the new thread in the response.
 
-
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -213,8 +201,7 @@ async for response in agent.invoke_stream(
 
 ::: zone pivot="programming-language-csharp"
 
-All invocation method overloads allow passing an `AgentThread` parameter.
-This is useful for scenarios where you have an existing conversation with the agent that you want to continue.
+All invocation method overloads allow passing an `AgentThread` parameter. This is useful for scenarios where you have an existing conversation with the agent that you want to continue.
 
 ```csharp
 // Invoke with an existing AgentThread.
@@ -241,12 +228,11 @@ var resultMessage = result.Message;
 
 ::: zone pivot="programming-language-python"
 
-All invocation method keyword arguments allow passing an `AgentThread` parameter.
-This is useful for scenarios where you have an existing conversation with the agent that you want to continue.
+All invocation method keyword arguments allow passing an `AgentThread` parameter. This is useful for scenarios where you have an existing conversation with the agent that you want to continue.
 
 ```python
 # Invoke with an existing AgentThread.
-agent.get_response(messages="What is the capital of France?", existing_agent_thread)
+agent.get_response("What is the capital of France?", thread=existing_agent_thread)
 ```
 
 All invocation methods also return the active `AgentThread` as part of the invoke response.
@@ -257,7 +243,7 @@ All invocation methods also return the active `AgentThread` as part of the invok
 The returned `AgentThread` is available on the individual response items of the invoke methods together with the response message.
 
 ```python
-response = await agent.get_response(messages="What is the capital of France?")
+response = await agent.get_response("What is the capital of France?")
 new_thread = response.thread
 response_message = response.message
 ```
@@ -269,8 +255,7 @@ response_message = response.message
 
 ::: zone pivot="programming-language-java"
 
-Two invocation method overloads allow passing an `AgentThread` parameter.
-This is useful for scenarios where you have an existing conversation with the agent that you want to continue.
+Two invocation method overloads allow passing an `AgentThread` parameter. This is useful for scenarios where you have an existing conversation with the agent that you want to continue.
 
 ```java
 // Invoke with an existing AgentThread.
@@ -295,9 +280,9 @@ var resultMessage = result.getMessage();
 
 ::: zone-end
 
-### Invoking with Options
-
 ::: zone pivot="programming-language-csharp"
+
+### Invoking with Options
 
 All invocation method overloads allow passing an `AgentInvokeOptions` parameter.
 This options class allows providing any optional settings.
@@ -312,12 +297,12 @@ agent.InvokeAsync("What is the capital of France?", options: new()
 
 Here is the list of the supported options.
 
-|Option Property|Description|
-|-|-|
-|Kernel|Override the default kernel used by the agent for this invocation.|
-|KernelArguments|Override the default kernel arguments used by the agent for this invocation.|
-|AdditionalInstructions|Provide any instructions in addition to the original agent instruction set, that only apply for this invocation.|
-|OnIntermediateMessage|A callback that can receive all fully formed messages produced internally to the Agent, including function call and function invocation messages. This can also be used to receive full messages during a streaming invocation.|
+| Option Property        | Description                                                                                                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kernel                 | Override the default kernel used by the agent for this invocation.                                                                                                                                                              |
+| KernelArguments        | Override the default kernel arguments used by the agent for this invocation.                                                                                                                                                    |
+| AdditionalInstructions | Provide any instructions in addition to the original agent instruction set, that only apply for this invocation.                                                                                                                |
+| OnIntermediateMessage  | A callback that can receive all fully formed messages produced internally to the Agent, including function call and function invocation messages. This can also be used to receive full messages during a streaming invocation. |
 
 ::: zone-end
 
@@ -327,12 +312,14 @@ Here is the list of the supported options.
 
 ::: zone pivot="programming-language-java"
 
+### Invoking with Options
+
 One invocation method overloads allow passing an `AgentInvokeOptions` parameter.
 This options class allows providing any optional settings.
 
 ```java
 // Invoke with additional instructions via options.
-agent.invokeAsync("What is the capital of France?", 
+agent.invokeAsync("What is the capital of France?",
     null, // null AgentThread
     AgentInvokeOptions.builder()
         .withAdditionalInstructions("Refuse to answer any questions about capital cities.")
@@ -342,12 +329,12 @@ agent.invokeAsync("What is the capital of France?",
 
 Here is the list of the supported options.
 
-|Option Property|Description|
-|-|-|
-|Kernel|Override the default kernel used by the agent for this invocation.|
-|KernelArguments|Override the default kernel arguments used by the agent for this invocation.|
-|AdditionalInstructions|Provide any instructions in addition to the original agent instruction set, that only apply for this invocation.|
-|InvocationContext|Override the default invocation context the agent uses for this invocation.|
+| Option Property        | Description                                                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Kernel                 | Override the default kernel used by the agent for this invocation.                                               |
+| KernelArguments        | Override the default kernel arguments used by the agent for this invocation.                                     |
+| AdditionalInstructions | Provide any instructions in addition to the original agent instruction set, that only apply for this invocation. |
+| InvocationContext      | Override the default invocation context the agent uses for this invocation.                                      |
 
 ::: zone-end
 
@@ -389,5 +376,10 @@ agentThread.deleteAsync().block();
 > [!TIP]
 > For more information on agent threads see the [Agent Thread architecture section](./agent-architecture.md#agent-thread).
 
+## Next steps
+
 > [!div class="nextstepaction"]
-> [Explore the Chat Completion Agent](./chat-completion-agent.md)
+> [Configure agents with plugins](./agent-functions.md)
+
+> [!div class="nextstepaction"]
+> [Explore the Chat Completion Agent](./agent-types/chat-completion-agent.md)

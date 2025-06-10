@@ -13,17 +13,22 @@ ms.service: semantic-kernel
 > [!IMPORTANT]
 > Single-agent features, such as `OpenAIAssistantAgent`, are in the release candidate stage. These features are nearly complete and generally stable, though they may undergo minor refinements or optimizations before reaching full general availability.
 
-Detailed API documentation related to this discussion is available at:
-
 ::: zone pivot="programming-language-csharp"
-- [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantagent)
+
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`OpenAIAssistantAgent`](/dotnet/api/microsoft.semantickernel.agents.openai.openaiassistantagent)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-- [`AzureAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_assistant_agent.azureassistantagent)
-- [`OpenAIAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_agent.openaiassistantagent)
+> [!TIP]
+> Detailed API documentation related to this discussion is available at:
+>
+> - [`AzureAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.azure_assistant_agent.azureassistantagent)
+> - [`OpenAIAssistantAgent`](/python/api/semantic-kernel/semantic_kernel.agents.open_ai.open_ai_assistant_agent.openaiassistantagent)
 
 ::: zone-end
 
@@ -33,7 +38,6 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone-end
 
-
 ## What is an Assistant?
 
 The OpenAI Assistants API is a specialized interface designed for more advanced and interactive AI capabilities, enabling developers to create personalized and multi-step task-oriented agents. Unlike the Chat Completion API, which focuses on simple conversational exchanges, the Assistant API allows for dynamic, goal-driven interactions with additional features like code-interpreter and file-search.
@@ -42,10 +46,9 @@ The OpenAI Assistants API is a specialized interface designed for more advanced 
 - [OpenAI Assistant API](https://platform.openai.com/docs/api-reference/assistants)
 - [Assistant API in Azure](/azure/ai-services/openai/assistants-quickstart)
 
-
 ## Preparing Your Development Environment
 
-To proceed with developing an `OpenAIAIAssistantAgent`, configure your development environment with the appropriate packages.
+To proceed with developing an `OpenAIAssistantAgent`, configure your development environment with the appropriate packages.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -60,14 +63,15 @@ You may also want to include the `Azure.Identity` package:
 ```pwsh
 dotnet add package Azure.Identity
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-Install the `semantic-kernel` package with the optional Azure dependencies:
+Install the `semantic-kernel` package:
 
 ```bash
-pip install semantic-kernel[azure]
+pip install semantic-kernel
 ```
 
 ::: zone-end
@@ -78,12 +82,12 @@ pip install semantic-kernel[azure]
 
 ::: zone-end
 
-
 ## Creating an `OpenAIAssistantAgent`
 
 Creating an `OpenAIAssistant` requires first creating a client to be able to talk a remote service.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
 Assistant assistant =
@@ -93,18 +97,21 @@ Assistant assistant =
         instructions: "<agent instructions>");
 OpenAIAssistantAgent agent = new(assistant, client);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent, OpenAIAssistantAgent
+from semantic_kernel.connectors.ai.open_ai import AzureOpenAISettings, OpenAISettings
 
 # Set up the client and model using Azure OpenAI Resources
-client, model = AzureAssistantAgent.setup_resources()
+client = AzureAssistantAgent.create_client()
 
 # Define the assistant definition
 definition = await client.beta.assistants.create(
-    model=model,
+    model=AzureOpenAISettings().chat_deployment_name,
     instructions="<instructions>",
     name="<agent name>",
 )
@@ -118,11 +125,11 @@ agent = AzureAssistantAgent(
 # or
 
 # Set up the client and model using OpenAI Resources
-client, model = OpenAIAssistantAgent.setup_resources()
+client = OpenAIAssistantAgent.create_client()
 
 # Define the assistant definition
 definition = await client.beta.assistants.create(
-    model=model,
+    model=OpenAISettings().chat_model_id,
     instructions="<instructions>",
     name="<agent name>",
 )
@@ -133,6 +140,7 @@ agent = OpenAIAssistantAgent(
     definition=definition,
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -140,7 +148,6 @@ agent = OpenAIAssistantAgent(
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Retrieving an `OpenAIAssistantAgent`
 
@@ -155,18 +162,20 @@ AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAs
 Assistant assistant = await client.GetAssistantAsync("<assistant id>");
 OpenAIAssistantAgent agent = new(assistant, client);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # Using Azure OpenAI Resources
 
 # Create the client using Azure OpenAI resources and configuration
-client, model = AzureAssistantAgent.setup_resources()
+client = AzureAssistantAgent.create_client()
 
 # Create the assistant definition
 definition = await client.beta.assistants.create(
-    model=model,
+    model=AzureOpenAISettings().chat_deployment_name,
     name="<agent name>",
     instructions="<instructions>",
 )
@@ -183,6 +192,7 @@ agent = AzureAssistantAgent(
     definition=new_asst_definition,
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -190,7 +200,6 @@ agent = AzureAssistantAgent(
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Using an `OpenAIAssistantAgent`
 
@@ -201,6 +210,7 @@ The `OpenAIAssistantAgent` currently only supports threads of type `OpenAIAssist
 You can invoke the `OpenAIAssistantAgent` without specifying an `AgentThread`, to start a new thread and a new `AgentThread` will be returned as part of the response.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 
 // Define agent
@@ -250,6 +260,7 @@ AgentThread agentThread = new OpenAIAssistantAgentThread(client, "existing-threa
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
 
@@ -267,6 +278,7 @@ async for response in agent.invoke(messages="user input", thread=thread):
 # Delete the thread when it is no longer needed
 await thread.delete() if thread else None
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -274,7 +286,6 @@ await thread.delete() if thread else None
 > Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Deleting an `OpenAIAssistantAgent`
 
@@ -291,14 +302,17 @@ For .NET, the agent identifier is exposed as a `string` via the [`Agent.Id`](/do
 AssistantClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(...).GetAssistantClient();
 await client.DeleteAssistantAsync("<assistant id>");
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 await agent.delete()
 
 is_deleted = agent._is_deleted
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
@@ -324,8 +338,8 @@ import asyncio
 from typing import Annotated
 
 from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
-from semantic_kernel.contents import AuthorRole, FunctionCallContent, FunctionResultContent
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.connectors.ai.open_ai import AzureOpenAISettings
+from semantic_kernel.contents import AuthorRole, ChatMessageContent, FunctionCallContent, FunctionResultContent
 from semantic_kernel.functions import kernel_function
 
 
@@ -364,11 +378,11 @@ async def handle_intermediate_steps(message: ChatMessageContent) -> None:
 
 async def main():
     # Create the client using Azure OpenAI resources and configuration
-    client, model = AzureAssistantAgent.setup_resources()
+    client = AzureAssistantAgent.create_client()
 
     # Define the assistant definition
     definition = await client.beta.assistants.create(
-        model=model,
+        model=AzureOpenAISettings().chat_deployment_name,
         name="Host",
         instructions="Answer questions about the menu.",
     )
@@ -447,15 +461,86 @@ AuthorRole.ASSISTANT: You're welcome! If you have any more questions or need fur
 
 ::: zone-end
 
+## Declarative Spec
+
+::: zone pivot="programming-language-csharp"
+
+> The documentation on using declarative specs is coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+> [!IMPORTANT]
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
+
+The `OpenAIAssistantAgent` supports instantiation from a YAML declarative specification. The declarative approach allows you to define the agent's properties, instructions, model configuration, tools, and other options in a single, auditable document. This makes agent composition portable and easily managed across environments.
+
+> [!NOTE]
+> Any tools, functions, or plugins listed in the declarative YAML must be available to the agent at construction time. For kernel-based plugins, this means they must be registered in the Kernel. For built-in tools such as Code Interpreter or File Search, the correct configuration and credentials must be supplied. The agent loader will not create functions from scratch. If a required component is missing, agent creation will fail.
+
+### How to Use the Declarative Spec
+
+Rather than enumerate every possible YAML configuration, this section outlines the key principles and provides links to concept samples that show complete code for each tool type. Refer to these concept samples for end-to-end implementations of an `OpenAIAssistantAgent` with declarative specs:
+
+`AzureAssistantAgent` samples:
+
+- [Code Interpreter](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/azure_openai_assistant_declarative_code_interpreter.py)
+- [File Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/azure_openai_assistant_declarative_file_search.py)
+- [Function Plugin from a File](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/azure_openai_assistant_declarative_function_calling_from_file.py)
+- [Load from Existing Assistant ID](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/azure_openai_assistant_declarative_with_existing_agent_id.py)
+- [Prompt Template](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/azure_openai_assistant_declarative_templating.py)
+
+`OpenAIAssistantAgent` samples:
+
+- [Code Interpreter](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/openai_assistant_declarative_code_interpreter.py)
+- [File Search](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/openai_assistant_declarative_file_search.py)
+- [Function Plugin](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/getting_started_with_agents/openai_assistant/step6_assistant_declarative.py)
+- [Function Plugin from a File](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/openai_assistant_declarative_function_calling_from_file.py)
+- [Load from Existing Assistant ID](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/openai_assistant_declarative_with_existing_agent_id.py)
+- [Prompt Template](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/agents/openai_assistant/openai_assistant_declarative_templating.py)
+
+#### Example: Creating an AzureAIAgent from YAML
+
+A minimal YAML declarative spec might look like the following:
+
+```yaml
+type: openai_assistant
+name: Host
+instructions: Respond politely to the user's questions.
+model:
+  id: ${OpenAI:ChatModelId}
+tools:
+  - id: MenuPlugin.get_specials
+    type: function
+  - id: MenuPlugin.get_item_price
+    type: function
+```
+
+For details on how to wire up the agent, refer to the full code samples above.
+
+### Key Points
+- Declarative specs allow defining agent structure, tools, and behavior in YAML.
+- All referenced tools and plugins must be registered or accessible at runtime.
+- Built-in tools such as Bing, File Search, and Code Interpreter require proper configuration and credentials (often via environment variables or explicit arguments).
+- For comprehensive examples, see the provided sample links which demonstrate practical scenarios, including plugin registration, Azure identity configuration, and advanced tool use.
+
+::: zone-end
+
+::: zone pivot="programming-language-java"
+
+> This feature is unavailable.
+
+::: zone-end
 
 ## How-To
 
 For an end-to-end example for a `OpenAIAssistantAgent`, see:
 
-- [How-To: `OpenAIAssistantAgent` Code Interpreter](./examples/example-assistant-code.md)
-- [How-To: `OpenAIAssistantAgent` File Search](./examples/example-assistant-search.md)
+- [How-To: `OpenAIAssistantAgent` Code Interpreter](./../examples/example-assistant-code.md)
+- [How-To: `OpenAIAssistantAgent` File Search](./../examples/example-assistant-search.md)
 
+## Next Steps
 
 > [!div class="nextstepaction"]
-> [Explore the Azure AI Agent](./azure-ai-agent.md)
-
+> [Explore the OpenAI Responses Agent](./responses-agent.md)
