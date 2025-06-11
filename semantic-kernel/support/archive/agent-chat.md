@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 # Exploring Agent Collaboration in `AgentChat`
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are still under development and subject to change before advancing to the preview or release candidate stage.
+> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
 
 Detailed API documentation related to this discussion is available at:
 
@@ -24,21 +24,21 @@ Detailed API documentation related to this discussion is available at:
 
 ::: zone pivot="programming-language-python"
 
-- [`agent_chat`](/python/api/semantic-kernel/semantic_kernel.agents.group_chat.agent_chat)
-- [`agent_group_chat`](/python/api/semantic-kernel/semantic_kernel.agents.group_chat.agent_group_chat)
+- [`AgentChat`](/python/api/semantic-kernel/semantic_kernel.agents.group_chat.agent_chat.agentchat)
+- [`AgentGroupChat`](/python/api/semantic-kernel/semantic_kernel.agents.group_chat.agent_group_chat.agentgroupchat)
 
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 
 ## What is `AgentChat`?
 
-`AgentChat` provides a framework that enables interaction between multiple agents, even if they are of different types. This makes it possible for a [`ChatCompletionAgent`](./chat-completion-agent.md) and an [`OpenAIAssistantAgent`](./assistant-agent.md) to work together within the same conversation. `AgentChat` also defines entry points for initiating collaboration between agents, whether through multiple responses or a single agent response.
+`AgentChat` provides a framework that enables interaction between multiple agents, even if they are of different types. This makes it possible for a [`ChatCompletionAgent`](./../../Frameworks/agent/agent-types/chat-completion-agent.md) and an [`OpenAIAssistantAgent`](./../../Frameworks/agent/agent-types/assistant-agent.md) to work together within the same conversation. `AgentChat` also defines entry points for initiating collaboration between agents, whether through multiple responses or a single agent response.
 
 As an abstract class, `AgentChat` can be subclassed to support custom scenarios.
 
@@ -47,9 +47,9 @@ One such subclass, `AgentGroupChat`, offers a concrete implementation of `AgentC
 
 ## Creating an `AgentGroupChat`
 
-To create an `AgentGroupChat`, you may either specify the participating agents or create an empty chat and subsequently add agent participants.  Configuring the _Chat-Settings_ and _Strategies_ is also performed during `AgentGroupChat` initialization. These settings define how the conversation dynamics will function within the group.
+To create an `AgentGroupChat`, you may either specify the participating agents or create an empty chat and subsequently add agent participants.  Configuring the Chat-Settings and Strategies is also performed during `AgentGroupChat` initialization. These settings define how the conversation dynamics will function within the group.
 
-> Note: The default _Chat-Settings_ result in a conversation that is limited to a single response.  See [`AgentChat` Behavior](#defining-agentgroupchat-behavior) for details on configuring _Chat-Settings.
+> Note: The default Chat-Settings result in a conversation that is limited to a single response.  See [`AgentChat` Behavior](#defining-agentgroupchat-behavior) for details on configuring Chat-Settings.
 
 #### Creating an `AgentGroupChat` with an `Agent`:
 
@@ -77,7 +77,7 @@ chat = AgentGroupChat(agents=[agent1, agent2])
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -115,7 +115,7 @@ chat.add_agent(agent=agent2)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -146,7 +146,7 @@ await chat.add_chat_message(message="<message content>")
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -154,7 +154,7 @@ await chat.add_chat_message(message="<message content>")
 
 In a multi-turn invocation, the system must decide which agent responds next and when the conversation should end. In contrast, a single-turn invocation simply returns a response from the specified agent, allowing the caller to directly manage agent participation.
 
-After an agent participates in the `AgentChat` through a single-turn invocation, it is added to the set of _agents_ eligible for multi-turn invocation.
+After an agent participates in the `AgentChat` through a single-turn invocation, it is added to the set of agents eligible for multi-turn invocation.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -185,7 +185,7 @@ async for message in chat.invoke(agent)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -195,11 +195,11 @@ While agent collaboration requires that a system must be in place that not only 
 
 Agent responses are returned asynchronously as they are generated, allowing the conversation to unfold in real-time.
 
-> Note: In following sections, [Agent Selection](#agent-selection) and [Chat Termination](#chat-termination), will delve into the _Execution Settings_ in detail.  The default _Execution Settings_ employs sequential or round-robin selection and limits agent participation to a single turn.
+> Note: In following sections, [Agent Selection](#agent-selection) and [Chat Termination](#chat-termination), will delve into the Execution Settings in detail.  The default Execution Settings employs sequential or round-robin selection and limits agent participation to a single turn.
 
 ::: zone pivot="programming-language-csharp"
 
-.NET _Execution Settings_ API: [`AgentGroupChatSettings`](/dotnet/api/microsoft.semantickernel.agents.chat.agentgroupchatsettings)
+.NET Execution Settings API: [`AgentGroupChatSettings`](/dotnet/api/microsoft.semantickernel.agents.chat.agentgroupchatsettings)
 
 ```csharp
 // Define agents
@@ -244,7 +244,7 @@ async for response in chat.invoke():
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -276,11 +276,11 @@ history = await chat.get_chat_messages()
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
-Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifying an agent.  (For example: [`OpenAIAssistant`](./assistant-agent.md) versus [`ChatCompletionAgent`](./chat-completion-agent.md).)
+Since different agent types or configurations may maintain their own version of the conversation history, agent specific history is also available by specifying an agent.  (For example: [`OpenAIAssistant`](./../../Frameworks/agent/agent-types/assistant-agent.md) versus [`ChatCompletionAgent`](./../../Frameworks/agent/agent-types/chat-completion-agent.md).)
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -314,20 +314,20 @@ history2 = await chat.get_chat_messages(agent=agent2)
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 
 ## Defining `AgentGroupChat` Behavior
 
-Collaboration among agents to solve complex tasks is a core agentic pattern. To use this pattern effectively, a system must be in place that not only determines which agent should respond during each turn but also assesses when the conversation has achieved its intended goal. This requires managing agent selection and establishing clear criteria for conversation termination, ensuring seamless cooperation between agents toward a solution. Both of these aspects are governed by the _Execution Settings_ property.
+Collaboration among agents to solve complex tasks is a core agentic pattern. To use this pattern effectively, a system must be in place that not only determines which agent should respond during each turn but also assesses when the conversation has achieved its intended goal. This requires managing agent selection and establishing clear criteria for conversation termination, ensuring seamless cooperation between agents toward a solution. Both of these aspects are governed by the Execution Settings property.
 
 The following sections, [Agent Selection](#agent-selection) and [Chat Termination](#chat-termination), will delve into these considerations in detail.
 
 ### Agent Selection
 
-In multi-turn invocation, agent selection is guided by a _Selection Strategy_. This strategy is defined by a base class that can be extended to implement custom behaviors tailored to specific needs. For convenience, two predefined concrete _Selection Strategies_ are also available, offering ready-to-use approaches for handling agent selection during conversations.
+In multi-turn invocation, agent selection is guided by a Selection Strategy. This strategy is defined by a base class that can be extended to implement custom behaviors tailored to specific needs. For convenience, two predefined concrete Selection Strategies are also available, offering ready-to-use approaches for handling agent selection during conversations.
 
 If known, an initial agent may be specified to always take the first turn.  A history reducer may also be employed to limit token usage when using a strategy based on a `KernelFunction`.
 
@@ -337,7 +337,6 @@ If known, an initial agent may be specified to always take the first turn.  A hi
 - [`SelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.selectionstrategy)
 - [`SequentialSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.sequentialselectionstrategy)
 - [`KernelFunctionSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
-- [`Microsoft.SemanticKernel.Agents.History`](/dotnet/api/microsoft.semantickernel.agents.history)
 
 ```csharp
 // Define the agent names for use in the function template
@@ -409,6 +408,12 @@ AgentGroupChat chat =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Python Selection Strategy API:
+- [`SelectionStrategy` Base Class](/python/api/semantic-kernel/semantic_kernel.agents.strategies.selection.selection_strategy.selectionstrategy)
+- [`SequentialSelectionStrategy`](/python/api/semantic-kernel/semantic_kernel.agents.strategies.selection.sequential_selection_strategy.sequentialselectionstrategy)
+- [`KernelFunctionSelectionStrategy`](/python/api/semantic-kernel/semantic_kernel.agents.strategies.kernelfunctionselectionstrategy)
+
 ```python
 REVIEWER_NAME = "Reviewer"
 WRITER_NAME = "Writer"
@@ -461,26 +466,25 @@ chat = AgentGroupChat(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 
 ### Chat Termination
 
-In _multi-turn_ invocation, the _Termination Strategy_ dictates when the final turn takes place. This strategy ensures the conversation ends at the appropriate point.
+In multi-turn invocation, the Termination Strategy dictates when the final turn takes place. This strategy ensures the conversation ends at the appropriate point.
 
-This strategy is defined by a base class that can be extended to implement custom behaviors tailored to specific needs. For convenience, several predefined concrete _Selection Strategies_ are also available, offering ready-to-use approaches for defining termination criteria for an `AgentChat` conversations.
+This strategy is defined by a base class that can be extended to implement custom behaviors tailored to specific needs. For convenience, several predefined concrete Selection Strategies are also available, offering ready-to-use approaches for defining termination criteria for an `AgentChat` conversations.
 
 ::: zone pivot="programming-language-csharp"
 
-.NET Selection Strategy API:
+.NET Termination Strategy API:
 - [`TerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.terminationstrategy)
 - [`RegexTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.regexterminationstrategy)
 - [`KernelFunctionSelectionStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionselectionstrategy)
 - [`KernelFunctionTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.kernelfunctionterminationstrategy)
 - [`AggregatorTerminationStrategy`](/dotnet/api/microsoft.semantickernel.agents.chat.aggregatorterminationstrategy)
-- [`Microsoft.SemanticKernel.Agents.History`](/dotnet/api/microsoft.semantickernel.agents.history)
 
 ```csharp
 // Initialize a Kernel with a chat-completion service
@@ -516,7 +520,7 @@ KernelFunction terminationFunction =
 
 // Define the termination strategy
 KernelFunctionTerminationStrategy terminationStrategy = 
-  new(selectionFunction, kernel)
+  new(terminationFunction, kernel)
   {
       // Only the reviewer may give approval.
       Agents = [reviewerAgent],
@@ -542,6 +546,13 @@ AgentGroupChat chat =
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Python Termination Strategy API:
+- [`TerminationStrategy` Base Class](/python/api/semantic-kernel/semantic_kernel.agents.strategies.termination.termination_strategy.terminationstrategy)
+- [`KernelFunctionTerminationStrategy`](/python/api/semantic-kernel/semantic_kernel.agents.strategies.termination.kernel_function_termination_strategy.kernelfunctionterminationstrategy)
+- [`AggregatorTerminationStrategy`](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/agents/strategies/termination/aggregator_termination_strategy.py#L27)
+
+
 ```python
 REVIEWER_NAME = "Reviewer"
 WRITER_NAME = "Writer"
@@ -584,16 +595,16 @@ chat = AgentGroupChat(
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 
 ### Resetting Chat Completion State
 
-Regardless of whether `AgentGroupChat` is invoked using the single-turn or multi-turn approach, the state of the `AgentGroupChat` is updated to indicate it is _completed_ once the termination criteria is met. This ensures that the system recognizes when a conversation has fully concluded. To continue using an `AgentGroupChat` instance after it has reached the _Completed_ state, this state must be reset to allow further interactions. Without resetting, additional interactions or agent responses will not be possible.
+Regardless of whether `AgentGroupChat` is invoked using the single-turn or multi-turn approach, the state of the `AgentGroupChat` is updated to indicate it is completed once the termination criteria is met. This ensures that the system recognizes when a conversation has fully concluded. To continue using an `AgentGroupChat` instance after it has reached the _Completed_ state, this state must be reset to allow further interactions. Without resetting, additional interactions or agent responses will not be possible.
 
-In the case of a multi-turn invocation that reaches the maximum turn limit, the system will cease agent invocation but will not mark the instance as _completed_. This allows for the possibility of extending the conversation without needing to reset the _Completion_ state.
+In the case of a multi-turn invocation that reaches the maximum turn limit, the system will cease agent invocation but will not mark the instance as completed. This allows for the possibility of extending the conversation without needing to reset the Completion state.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -625,16 +636,16 @@ if chat.is_complete:
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 
 ### Clear Full Conversation State
 
-When done using an `AgentChat` where an [`OpenAIAssistant`](./assistant-agent.md) participated, it may be necessary to delete the remote _thread_ associated with the _assistant_. `AgentChat` supports resetting or clearing the entire conversation state, which includes deleting any remote _thread_ definition. This ensures that no residual conversation data remains linked to the assistant once the chat concludes.
+When done using an `AgentChat` where an [`OpenAIAssistant`](./../../Frameworks/agent/agent-types/assistant-agent.md) participated, it may be necessary to delete the remote thread associated with the assistant. `AgentChat` supports resetting or clearing the entire conversation state, which includes deleting any remote thread definition. This ensures that no residual conversation data remains linked to the assistant once the chat concludes.
 
-A full reset does not remove the _agents_ that had joined the `AgentChat` and leaves the `AgentChat` in a state where it can be reused. This allows for the continuation of interactions with the same agents without needing to reinitialize them, making future conversations more efficient.
+A full reset does not remove the agents that had joined the `AgentChat` and leaves the `AgentChat` in a state where it can be reused. This allows for the continuation of interactions with the same agents without needing to reinitialize them, making future conversations more efficient.
 
 ::: zone pivot="programming-language-csharp"
 ```csharp
@@ -658,7 +669,7 @@ await chat.reset()
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -667,8 +678,4 @@ await chat.reset()
 
 For an end-to-end example for using `AgentGroupChat` for `Agent` collaboration, see:
 
-- [How to Coordinate Agent Collaboration using `AgentGroupChat`](./examples/example-agent-collaboration.md)
-
-
-> [!div class="nextstepaction"]
-> [Create an Agent from a Template](./agent-templates.md)
+- [How to Coordinate Agent Collaboration using `AgentGroupChat`](./agent-chat-example.md)

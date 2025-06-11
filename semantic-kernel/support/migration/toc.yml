@@ -12,3 +12,19 @@
   href: kernel-events-and-filters-migration.md
 - name: Agent Framework Release Candidate Migration Guide
   href: agent-framework-rc-migration-guide.md
+- name: AzureAIAgent Foundry GA Migration Guide
+  href: azureagent-foundry-ga-migration-guide.md
+- name: Vector Store changes - March 2025
+  href: vectorstore-march-2025.md
+- name: Vector Store changes - April 2025
+  href: vectorstore-april-2025.md
+- name: Vector Store changes - May 2025
+  href: vectorstore-may-2025.md
+- name: Sessions Python Plugin Migration Guide - May 2025
+  href: sessions-python-plugin-migration-guide-2025.md
+- name: Functions.Markdown to Functions.Yaml Package Migration Guide
+  href: functions-markdown-migration-guide.md
+- name: AgentGroupChat to GroupChatOrchestration Migration Guide
+  href: group-chat-orchestration-migration-guide.md
+- name: ITextEmbeddingGenerationService to IEmbeddingGenerator Migration Guide
+  href: text-embedding-obsolete-migration-guide.md

@@ -1,5 +1,5 @@
 ---
-title: How-To&colon; `OpenAIAssistantAgent` File Search
+title: How-To use `OpenAIAssistantAgent` - File Search
 description: A step-by-step walk-through of defining and utilizing the file-search tool of an OpenAI Assistant Agent.
 zone_pivot_groups: programming-languages
 author: crickman
@@ -15,10 +15,9 @@ ms.service: semantic-kernel
 
 ## Overview
 
-In this sample, we will explore how to use the _file-search_ tool of an [`OpenAIAssistantAgent`](../assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
+In this sample, we will explore how to use the file-search tool of an [`OpenAIAssistantAgent`](../agent-types/assistant-agent.md) to complete comprehension tasks. The approach will be step-by-step, ensuring clarity and precision throughout the process. As part of the task, the agent will provide document citations within the response.
 
 Streaming will be used to deliver the agent's responses. This will provide real-time updates as the task progresses.
-
 
 ## Getting Started
 
@@ -38,7 +37,8 @@ dotnet add package Microsoft.SemanticKernel
 dotnet add package Microsoft.SemanticKernel.Agents.OpenAI --prerelease
 ```
 
-> If managing _NuGet_ packages in _Visual Studio_, ensure `Include prerelease` is checked.
+> [!IMPORTANT]
+> If managing NuGet packages in Visual Studio, ensure `Include prerelease` is checked.
 
 The project file (`.csproj`) should contain the following `PackageReference` definitions:
 
@@ -62,7 +62,7 @@ The `Agent Framework` is experimental and requires warning suppression.  This ma
   </PropertyGroup>
 ```
 
-Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The-Water-of-Life.txt` and `Grimms-The-White-Snake.txt` public domain content from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Resources).  Add these files in your project folder and configure to have them copied to the output directory:
+Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The-Water-of-Life.txt` and `Grimms-The-White-Snake.txt` public domain content from [Semantic Kernel `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/LearnResources/Resources).  Add these files in your project folder and configure to have them copied to the output directory:
 
 ```xml
   <ItemGroup>
@@ -77,6 +77,7 @@ Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The
     </None>
   </ItemGroup>
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -86,24 +87,23 @@ Start by creating a folder that will hold your script (`.py` file) and the sampl
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
 from semantic_kernel.contents import StreamingAnnotationContent
 ```
 
-Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The-Water-of-Life.txt` and `Grimms-The-White-Snake.txt` public domain content from [_Semantic Kernel_ `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources).  Add these files in your project folder.
+Additionally, copy the `Grimms-The-King-of-the-Golden-Mountain.txt`, `Grimms-The-Water-of-Life.txt` and `Grimms-The-White-Snake.txt` public domain content from [Semantic Kernel `LearnResources` Project](https://github.com/microsoft/semantic-kernel/tree/main/python/samples/learn_resources/resources).  Add these files in your project folder.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
-
 ## Configuration
 
-This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either _OpenAI_ or _Azure OpenAI_.
+This sample requires configuration setting in order to connect to remote services.  You will need to define settings for either OpenAI or Azure OpenAI.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -162,10 +162,11 @@ public class Settings
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run). 
+The quickest way to get started with the proper configuration to run the sample code is to create a `.env` file at the root of your project (where your script is run).
 
 Configure the following settings in your `.env` file for either Azure OpenAI or OpenAI:
 
@@ -188,10 +189,9 @@ Once configured, the respective AI service classes will pick up the required var
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Coding
 
@@ -209,32 +209,29 @@ Prior to creating an `OpenAIAssistantAgent`, ensure the configuration settings a
 
 ::: zone pivot="programming-language-csharp"
 
-Instantiate the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `OpenAIClientProvider` that will be used for the [Agent Definition](#agent-definition) as well as file-upload and the creation of a `VectorStore`.
+Instantiate the `Settings` class referenced in the previous [Configuration](#configuration) section.  Use the settings to also create an `AzureOpenAIClient` that will be used for the [Agent Definition](#agent-definition) as well as file-upload and the creation of a `VectorStore`.
 
 ```csharp
-
 Settings settings = new();
 
-OpenAIClientProvider clientProvider =
-    OpenAIClientProvider.ForAzureOpenAI(
-        new AzureCliCredential(),
-        new Uri(settings.AzureOpenAI.Endpoint));
+AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
 ```
+
 ::: zone-end
 
-
 ::: zone pivot="programming-language-python"
-The class method `setup_resources()` on the Assistant Agent handles creating the client and returning it and the model to use based on the desired configuration. Pydantic settings are used to load environment variables first from environment variables or from the `.env` file. One may pass in the `api_key`, `api_version`, `deployment_name` or `endpoint`, which will take precedence over any environment variables configured.
+The static method `create_client()` on the Assistant Agent handles creating the client and returning it based on the desired configuration. Pydantic settings are used to load environment variables first from environment variables or from the `.env` file. One may pass in the `api_key`, `api_version`, `deployment_name` or `endpoint`, which will take precedence over any environment variables configured.
 
 ```python
 # Create the client using Azure OpenAI resources and configuration
-client, model = AzureAssistantAgent.setup_resources()
+client = AzureAssistantAgent.create_client()
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -242,25 +239,20 @@ Now create an empty _Vector Store for use with the _File Search_ tool:
 
 ::: zone pivot="programming-language-csharp"
 
-Use the `OpenAIClientProvider` to access a `VectorStoreClient` and create a `VectorStore`.
+Use the `AzureOpenAIClient` to access a `VectorStoreClient` and create a `VectorStore`.
 
 ```csharp
 Console.WriteLine("Creating store...");
-VectorStoreClient storeClient = clientProvider.Client.GetVectorStoreClient();
+VectorStoreClient storeClient = client.GetVectorStoreClient();
 CreateVectorStoreOperation operation = await storeClient.CreateVectorStoreAsync(waitUntilCompleted: true);
 string storeId = operation.VectorStoreId;
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-```python
-def get_filepath_for_filename(filename: str) -> str:
-    base_directory = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-        "resources",
-    )
-    return os.path.join(base_directory, filename)
 
+```python
 # Upload the files to the client
 file_ids: list[str] = []
 for path in [get_filepath_for_filename(filename) for filename in filenames]:
@@ -268,14 +260,22 @@ for path in [get_filepath_for_filename(filename) for filename in filenames]:
         file = await client.files.create(file=file, purpose="assistants")
         file_ids.append(file.id)
 
+vector_store = await client.vector_stores.create(
+    name="assistant_search",
+    file_ids=file_ids,
+)
+
 # Get the file search tool and resources
-file_search_tools, file_search_tool_resources = AzureAssistantAgent.configure_file_search_tool(file_ids=file_ids)
+file_search_tools, file_search_tool_resources = AzureAssistantAgent.configure_file_search_tool(
+    vector_store_ids=vector_store.id
+)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -291,9 +291,11 @@ private static readonly string[] _fileNames =
         "Grimms-The-White-Snake.txt",
     ];
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 filenames = [
     "Grimms-The-King-of-the-Golden-Mountain.txt",
@@ -301,11 +303,12 @@ filenames = [
     "Grimms-The-White-Snake.txt",
 ]
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -317,7 +320,7 @@ Now upload those files and add them to the _Vector Store_ by using the previousl
 Dictionary<string, OpenAIFile> fileReferences = [];
 
 Console.WriteLine("Uploading files...");
-OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
+OpenAIFileClient fileClient = client.GetOpenAIFileClient();
 foreach (string fileName in _fileNames)
 {
     OpenAIFile fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
@@ -325,11 +328,12 @@ foreach (string fileName in _fileNames)
     fileReferences.Add(fileInfo.Id, fileInfo);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
@@ -339,35 +343,36 @@ We are now ready to instantiate an `OpenAIAssistantAgent`. The agent is configur
 
 ::: zone pivot="programming-language-csharp"
 
-We will utilize the `OpenAIClientProvider` again as part of creating the `OpenAIAssistantAgent`:
+We will utilize the `AzureOpenAIClient` again as part of creating the `OpenAIAssistantAgent`:
 
 ```csharp
-Console.WriteLine("Defining agent...");
-OpenAIAssistantAgent agent =
-    await OpenAIAssistantAgent.CreateAsync(
-        clientProvider,
-        new OpenAIAssistantDefinition(settings.AzureOpenAI.ChatModelDeployment)
-        {
-            Name = "SampleAssistantAgent",
-            Instructions =
+Console.WriteLine("Defining assistant...");
+Assistant assistant =
+    await assistantClient.CreateAssistantAsync(
+        settings.AzureOpenAI.ChatModelDeployment,
+        name: "SampleAssistantAgent",
+        instructions:
                 """
                 The document store contains the text of fictional stories.
                 Always analyze the document store to provide an answer to the user's question.
                 Never rely on your knowledge of stories not included in the document store.
                 Always format response using markdown.
                 """,
-            EnableFileSearch = true,
-            VectorStoreId = storeId,
-        },
-        new Kernel());
+        enableFileSearch: true,
+        vectorStoreId: storeId);
+
+// Create agent
+OpenAIAssistantAgent agent = new(assistant, assistantClient);
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # Create the assistant definition
 definition = await client.beta.assistants.create(
-    model=model,
+    model=AzureOpenAISettings().chat_deployment_name,
     instructions="""
         The document store contains the text of fictional stories.
         Always analyze the document store to provide an answer to the user's question.
@@ -385,24 +390,26 @@ agent = AzureAssistantAgent(
     definition=definition,
 )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 ### The _Chat_ Loop
 
-At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating an _Assistant Thread_ to maintain the conversation state and creating an empty loop.
+At last, we are able to coordinate the interaction between the user and the `Agent`.  Start by creating an `AgentThread` to maintain the conversation state and creating an empty loop.
 
 Let's also ensure the resources are removed at the end of execution to minimize unnecessary charges.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine("Creating thread...");
-string threadId = await agent.CreateThreadAsync();
+OpenAIAssistantAgent agentThread = new();
 
 Console.WriteLine("Ready!");
 
@@ -420,19 +427,22 @@ finally
     Console.WriteLine("Cleaning-up...");
     await Task.WhenAll(
         [
-            agent.DeleteThreadAsync(threadId),
-            agent.DeleteAsync(),
+            agentThread.DeleteAsync();
+            assistantClient.DeleteAssistantAsync(assistant.Id),
             storeClient.DeleteVectorStoreAsync(storeId),
             ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
         ]);
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
-print("Creating thread...")
-thread_id = await agent.create_thread()
+# If no thread is provided, a new thread will be
+# created and returned with the initial response
+thread: AssistantAgentThread = None
 
 try:
     is_complete: bool = False
@@ -440,23 +450,25 @@ try:
         # Processing occurs here
 
 finally:
-    print("Cleaning up resources...")
-    if agent is not None:
-        [await agent.delete_file(file_id) for file_id in agent.file_search_file_ids]
-        await agent.delete_thread(thread_id)
-        await agent.delete()
+    print("\nCleaning up resources...")
+    [await client.files.delete(file_id) for file_id in file_ids]
+    await client.vector_stores.delete(vector_store.id)
+    await thread.delete() if thread else None
+    await client.beta.assistants.delete(agent.id)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
-Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.  Valid input will be added to the _Assistant Thread_ as a _User_ message.
+Now let's capture user input within the previous loop.  In this case, empty input will be ignored and the term `EXIT` will signal that the conversation is completed.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 Console.WriteLine();
 Console.Write("> ");
@@ -471,12 +483,14 @@ if (input.Trim().Equals("EXIT", StringComparison.OrdinalIgnoreCase))
     break;
 }
 
-await agent.AddChatMessageAsync(threadId, new ChatMessageContent(AuthorRole.User, input));
+var message = new ChatMessageContent(AuthorRole.User, input);
 Console.WriteLine();
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 user_input = input("User:> ")
 if not user_input:
@@ -485,46 +499,48 @@ if not user_input:
 if user_input.lower() == "exit":
     is_complete = True
     break
-
-await agent.add_chat_message(
-    thread_id=thread_id, message=ChatMessageContent(role=AuthorRole.USER, content=user_input)
-)
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
 Before invoking the `Agent` response, let's add a helper method to reformat the unicode annotation brackets to ANSI brackets.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 private static string ReplaceUnicodeBrackets(this string content) =>
     content?.Replace('【', '[').Replace('】', ']');
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # No special handling required.
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
-To generate an `Agent` response to user input, invoke the agent by specifying the _Assistant Thread_. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
+To generate an `Agent` response to user input, invoke the agent by specifying the message and agent thread. In this example, we choose a streamed response and capture any associated _Citation Annotations_ for display at the end of the response cycle. Note each streamed chunk is being reformatted using the previous helper method.
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
 List<StreamingAnnotationContent> footnotes = [];
-await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(threadId))
+await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(message, agentThread))
 {
     // Capture annotations for footnotes
     footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
@@ -545,12 +561,15 @@ if (footnotes.Count > 0)
     }
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 footnotes: list[StreamingAnnotationContent] = []
-async for response in agent.invoke_stream(thread_id=thread_id):
+async for response in agent.invoke_stream(messages=user_input, thread=thread):
+    thread = response.thread
     footnotes.extend([item for item in response.items if isinstance(item, StreamingAnnotationContent)])
 
     print(f"{response.content}", end="", flush=True)
@@ -564,14 +583,14 @@ if len(footnotes) > 0:
             f"(Index: {footnote.start_index} - {footnote.end_index})"
         )
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
-
 
 ## Final
 
@@ -584,17 +603,21 @@ Try using these suggested inputs:
 3. What is the moral in The White Snake?
 
 ::: zone pivot="programming-language-csharp"
+
 ```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Agents.OpenAI;
+using Microsoft.SemanticKernel.ChatCompletion;
+using OpenAI.Assistants;
+using OpenAI.Files;
+using OpenAI.VectorStores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.Identity;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Agents.OpenAI;
-using Microsoft.SemanticKernel.ChatCompletion;
-using OpenAI.Files;
-using OpenAI.VectorStores;
 
 namespace AgentsSample;
 
@@ -616,21 +639,21 @@ public static class Program
         // Load configuration from environment variables or user secrets.
         Settings settings = new();
 
-        OpenAIClientProvider clientProvider =
-            OpenAIClientProvider.ForAzureOpenAI(
-                new AzureCliCredential(),
-                new Uri(settings.AzureOpenAI.Endpoint));
+        // Initialize the clients
+        AzureOpenAIClient client = OpenAIAssistantAgent.CreateAzureOpenAIClient(new AzureCliCredential(), new Uri(settings.AzureOpenAI.Endpoint));
+        //OpenAIClient client = OpenAIAssistantAgent.CreateOpenAIClient(new ApiKeyCredential(settings.OpenAI.ApiKey)));
+        AssistantClient assistantClient = client.GetAssistantClient();
+        OpenAIFileClient fileClient = client.GetOpenAIFileClient();
+        VectorStoreClient storeClient = client.GetVectorStoreClient();
 
+        // Create the vector store
         Console.WriteLine("Creating store...");
-        VectorStoreClient storeClient = clientProvider.Client.GetVectorStoreClient();
         CreateVectorStoreOperation operation = await storeClient.CreateVectorStoreAsync(waitUntilCompleted: true);
         string storeId = operation.VectorStoreId;
 
-        // Retain file references.
-        Dictionary<string, OpenAIFile> fileReferences = [];
-
+        // Upload files and retain file references.
         Console.WriteLine("Uploading files...");
-        OpenAIFileClient fileClient = clientProvider.Client.GetOpenAIFileClient();
+        Dictionary<string, OpenAIFile> fileReferences = [];
         foreach (string fileName in _fileNames)
         {
             OpenAIFile fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
@@ -638,28 +661,28 @@ public static class Program
             fileReferences.Add(fileInfo.Id, fileInfo);
         }
 
-
-        Console.WriteLine("Defining agent...");
-        OpenAIAssistantAgent agent =
-            await OpenAIAssistantAgent.CreateAsync(
-                clientProvider,
-                new OpenAIAssistantDefinition(settings.AzureOpenAI.ChatModelDeployment)
-                {
-                    Name = "SampleAssistantAgent",
-                    Instructions =
+        // Define assistant
+        Console.WriteLine("Defining assistant...");
+        Assistant assistant =
+            await assistantClient.CreateAssistantAsync(
+                settings.AzureOpenAI.ChatModelDeployment,
+                name: "SampleAssistantAgent",
+                instructions:
                         """
                         The document store contains the text of fictional stories.
                         Always analyze the document store to provide an answer to the user's question.
                         Never rely on your knowledge of stories not included in the document store.
                         Always format response using markdown.
                         """,
-                    EnableFileSearch = true,
-                    VectorStoreId = storeId,
-                },
-                new Kernel());
+                enableFileSearch: true,
+                vectorStoreId: storeId);
 
+        // Create agent
+        OpenAIAssistantAgent agent = new(assistant, assistantClient);
+
+        // Create the conversation thread
         Console.WriteLine("Creating thread...");
-        string threadId = await agent.CreateThreadAsync();
+        AssistantAgentThread agentThread = new();
 
         Console.WriteLine("Ready!");
 
@@ -681,11 +704,11 @@ public static class Program
                     break;
                 }
 
-                await agent.AddChatMessageAsync(threadId, new ChatMessageContent(AuthorRole.User, input));
+                var message = new ChatMessageContent(AuthorRole.User, input);
                 Console.WriteLine();
 
                 List<StreamingAnnotationContent> footnotes = [];
-                await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(threadId))
+                await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(message, agentThread))
                 {
                     // Capture annotations for footnotes
                     footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
@@ -713,8 +736,8 @@ public static class Program
             Console.WriteLine("Cleaning-up...");
             await Task.WhenAll(
                 [
-                    agent.DeleteThreadAsync(threadId),
-                    agent.DeleteAsync(),
+                    agentThread.DeleteAsync(),
+                    assistantClient.DeleteAssistantAsync(assistant.Id),
                     storeClient.DeleteVectorStoreAsync(storeId),
                     ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
                 ]);
@@ -725,22 +748,29 @@ public static class Program
         content?.Replace('【', '[').Replace('】', ']');
 }
 ```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
 ```python
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
 import os
 
-from semantic_kernel.agents.open_ai import AzureAssistantAgent
+from semantic_kernel.agents import AssistantAgentThread, AzureAssistantAgent
+from semantic_kernel.connectors.ai.open_ai import AzureOpenAISettings
 from semantic_kernel.contents import StreamingAnnotationContent
 
 """
 The following sample demonstrates how to create a simple,
 OpenAI assistant agent that utilizes the vector store
 to answer questions based on the uploaded documents.
+
+This is the full code sample for the Semantic Kernel Learn Site: How-To: Open AI Assistant Agent File Search
+
+https://learn.microsoft.com/semantic-kernel/frameworks/agent/examples/example-assistant-search?pivots=programming-language-python
 """
 
 
@@ -761,7 +791,7 @@ filenames = [
 
 async def main():
     # Create the client using Azure OpenAI resources and configuration
-    client, model = AzureAssistantAgent.setup_resources()
+    client = AzureAssistantAgent.create_client()
 
     # Upload the files to the client
     file_ids: list[str] = []
@@ -770,7 +800,7 @@ async def main():
             file = await client.files.create(file=file, purpose="assistants")
             file_ids.append(file.id)
 
-    vector_store = await client.beta.vector_stores.create(
+    vector_store = await client.vector_stores.create(
         name="assistant_search",
         file_ids=file_ids,
     )
@@ -782,7 +812,7 @@ async def main():
 
     # Create the assistant definition
     definition = await client.beta.assistants.create(
-        model=model,
+        model=AzureOpenAISettings().chat_deployment_name,
         instructions="""
             The document store contains the text of fictional stories.
             Always analyze the document store to provide an answer to the user's question.
@@ -800,8 +830,7 @@ async def main():
         definition=definition,
     )
 
-    print("Creating thread...")
-    thread = await client.beta.threads.create()
+    thread: AssistantAgentThread | None = None
 
     try:
         is_complete: bool = False
@@ -814,13 +843,12 @@ async def main():
                 is_complete = True
                 break
 
-            await agent.add_chat_message(thread_id=thread.id, message=user_input)
-
             footnotes: list[StreamingAnnotationContent] = []
-            async for response in agent.invoke_stream(thread_id=thread.id):
+            async for response in agent.invoke_stream(messages=user_input, thread=thread):
                 footnotes.extend([item for item in response.items if isinstance(item, StreamingAnnotationContent)])
 
                 print(f"{response.content}", end="", flush=True)
+                thread = response.thread
 
             print()
 
@@ -834,7 +862,8 @@ async def main():
     finally:
         print("\nCleaning up resources...")
         [await client.files.delete(file_id) for file_id in file_ids]
-        await client.beta.threads.delete(thread.id)
+        await client.vector_stores.delete(vector_store.id)
+        await thread.delete() if thread else None
         await client.beta.assistants.delete(agent.id)
 
 
@@ -847,11 +876,11 @@ You may find the full [code](https://github.com/microsoft/semantic-kernel/blob/m
 
 ::: zone pivot="programming-language-java"
 
-> Agents are currently unavailable in Java.
+> Feature currently unavailable in Java.
 
 ::: zone-end
 
+## Next Steps
 
 > [!div class="nextstepaction"]
-> [How to Coordinate Agent Collaboration using `AgentGroupChat`](./example-agent-collaboration.md)
-
+> [Agent Orchestration](./../agent-orchestration/index.md)

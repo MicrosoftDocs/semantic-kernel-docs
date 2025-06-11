@@ -2,7 +2,7 @@
 title: Inspection of telemetry data with Application Insights
 description: Send telemetry data to Application Insights
 zone_pivot_groups: programming-languages
-author: taochen
+author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
 ms.date: 09/12/2024
@@ -68,18 +68,18 @@ dotnet new console -n TelemetryApplicationInsightsQuickstart
 
 Navigate to the newly created project directory after the command completes.
 
-
 ### Install required packages
 
 - Semantic Kernel
-    ```console
-    dotnet add package Microsoft.SemanticKernel
-    ```
+
+  ```console
+  dotnet add package Microsoft.SemanticKernel
+  ```
 
 - OpenTelemetry Console Exporter
-    ```console
-    dotnet add package Azure.Monitor.OpenTelemetry.Exporter
-    ```
+  ```console
+  dotnet add package Azure.Monitor.OpenTelemetry.Exporter
+  ```
 
 ### Create a simple application with Semantic Kernel
 
@@ -182,6 +182,7 @@ python -m venv telemetry-application-insights-quickstart
 ```
 
 Activate the virtual environment.
+
 ```console
 telemetry-application-insights-quickstart\Scripts\activate
 ```
@@ -265,6 +266,7 @@ if __name__ == "__main__":
 Please refer to this [article](./telemetry-with-console.md#environment-variables) for more information on setting up the required environment variables to enable the kernel to emit spans for AI connectors.
 
 #### Code
+
 If you run the script now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `# Telemetry setup code goes here` comment with the following code:
 
 ```python
@@ -340,7 +342,7 @@ Please refer to this [article](./telemetry-with-console.md#add-telemetry-1) for 
 
 > [!NOTE]
 > Semantic Kernel Observability is not yet available for Java.
- 
+
 ::: zone-end
 
 ## Run
@@ -432,7 +434,6 @@ dependencies
 | project completion_token, prompt_token
 | summarize total_completion_tokens = sum(completion_token), total_prompt_tokens = sum(prompt_token)
 ```
-
 
 ```kusto
 // Retrieves all the prompts and completions and their corresponding token usage.

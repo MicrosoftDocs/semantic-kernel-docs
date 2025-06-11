@@ -10,8 +10,21 @@ ms.service: semantic-kernel
 ---
 # How to ingest data into a Vector Store using Semantic Kernel (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 This article will demonstrate how to create an application to
 
@@ -70,31 +83,31 @@ namespace SKVectorIngest;
 internal class TextParagraph
 {
     /// <summary>A unique key for the text paragraph.</summary>
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public required string Key { get; init; }
 
     /// <summary>A uri that points at the original location of the document containing the text.</summary>
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public required string DocumentUri { get; init; }
 
     /// <summary>The id of the paragraph from the document containing the text.</summary>
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public required string ParagraphId { get; init; }
 
     /// <summary>The text of the paragraph.</summary>
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public required string Text { get; init; }
 
     /// <summary>The embedding generated from the Text.</summary>
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> TextEmbedding { get; set; }
 }
 ```
 
-Note that we are passing the value `1536` to the `VectorStoreRecordVectorAttribute`. This is the dimension size of the vector and has to match the size of vector that your chosen embedding generator produces.
+Note that we are passing the value `1536` to the `VectorStoreVectorAttribute`. This is the dimension size of the vector and has to match the size of vector that your chosen embedding generator produces.
 
 > [!TIP]
-> For more information on how to annotate your data model and what additional options are available for each attribute, refer to [definining your data model](../../../concepts/vector-store-connectors/defining-your-data-model.md).
+> For more information on how to annotate your data model and what additional options are available for each attribute, refer to [defining your data model](../../../concepts/vector-store-connectors/defining-your-data-model.md).
 
 ## Read the paragraphs in the document
 
@@ -190,7 +203,7 @@ using Microsoft.SemanticKernel.Embeddings;
 
 namespace SKVectorIngest;
 
-internal class DataUploader(IVectorStore vectorStore, ITextEmbeddingGenerationService textEmbeddingGenerationService)
+internal class DataUploader(VectorStore vectorStore, ITextEmbeddingGenerationService textEmbeddingGenerationService)
 {
     /// <summary>
     /// Generate an embedding for each text paragraph and upload it to the specified collection.
@@ -201,7 +214,7 @@ internal class DataUploader(IVectorStore vectorStore, ITextEmbeddingGenerationSe
     public async Task GenerateEmbeddingsAndUpload(string collectionName, IEnumerable<TextParagraph> textParagraphs)
     {
         var collection = vectorStore.GetCollection<string, TextParagraph>(collectionName);
-        await collection.CreateCollectionIfNotExistsAsync();
+        await collection.EnsureCollectionExistsAsync();
 
         foreach (var paragraph in textParagraphs)
         {
@@ -243,6 +256,8 @@ var apiKey = "your-api-key";
 // Register Azure OpenAI text embedding generation service and Redis vector store.
 var builder = Kernel.CreateBuilder()
     .AddAzureOpenAITextEmbeddingGeneration(deploymentName, endpoint, apiKey)
+
+builder.Services
     .AddRedisVectorStore("localhost:6379");
 
 // Register the data uploader.

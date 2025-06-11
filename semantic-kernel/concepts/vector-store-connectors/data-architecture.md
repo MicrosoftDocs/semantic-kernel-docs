@@ -1,6 +1,7 @@
 ---
 title: The Semantic Kernel Vector Store data architecture (Preview)
 description: Defines the data architecture for Semantic Kernel, including the relationship between vector stores, collections and records.
+zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: conceptual
 ms.author: westey
@@ -9,8 +10,21 @@ ms.service: semantic-kernel
 ---
 # The Semantic Kernel Vector Store data architecture (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 Vector Store abstractions in Semantic Kernel are based on three main components: **vector stores**, **collections** and **records**.
 **Records** are contained by **collections**, and **collections** are contained by **vector stores**.
