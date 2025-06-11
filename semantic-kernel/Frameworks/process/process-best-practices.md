@@ -22,6 +22,14 @@ Organizing your project files in a logical and maintainable structure is crucial
 
 An organized structure not only simplifies navigation within the project but also enhances code reusability and facilitates collaboration among team members.
 
+### Kernel Instance Isolation
+
+> [!Important]
+> Do not share a single Kernel instance between the main Process Framework and any of its dependencies (such as agents, tools, or external services). 
+
+Sharing a Kernel across these components can result in unexpected recursive invocation patterns, including infinite loops, as functions registered in the Kernel may inadvertently invoke each other. For example, a Step may call a function that triggers an agent, which then re-invokes the same function, creating a non-terminating loop.
+
+To avoid this, instantiate separate Kernel objects for each independent agent, tool, or service used within your process. This ensures isolation between the Process Framework’s own functions and those required by dependencies, and prevents cross-invocation that could destabilize your workflow. This requirement reflects a current architectural constraint and may be revisited as the framework evolves.
 
 ### Common Pitfalls
 To ensure smooth implementation and operation of the Process Framework, be mindful of these common pitfalls to avoid:
