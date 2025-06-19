@@ -97,6 +97,21 @@ await runtime.stop_when_idle()
 
 ::: zone-end
 
+::: zone pivot="programming-language-csharp"
+
+## Preparing Your Development Environment
+
+Add the following packages to your project before you proceed:
+
+```pwsh
+dotnet add package Microsoft.SemanticKernel.Agents.Orchestration --prerelease
+dotnet add package Microsoft.SemanticKernel.Agents.Runtime.InProcess --prerelease
+```
+
+Depending on the agent types you use, you may also need to add the respective packages for the agents. Please refer to the [Agents Overview](../agent-architecture.md#agent-types-in-semantic-kernel) for more details.
+
+::: zone-end
+
 ## Next steps
 
 > [!div class="nextstepaction"]

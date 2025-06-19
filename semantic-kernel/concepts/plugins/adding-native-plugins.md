@@ -34,6 +34,9 @@ Below, we'll walk through the two different ways of providing your AI agent with
 
 The easiest way to create a native plugin is to start with a class and then add methods annotated with the `KernelFunction` attribute. It is also recommended to liberally use the `Description` annotation to provide the AI agent with the necessary information to understand the function.
 
+> [!TIP]
+> The following `LightsPlugin` uses the `LightModel` defined [here](./index.md#1-define-your-plugin).
+
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
@@ -81,14 +84,16 @@ public class LightsPlugin
 ::: zone pivot="programming-language-python"
 
 ```python
-from typing import List, Optional, Annotated
+from typing import Annotated
+
+from semantic_kernel.functions import kernel_function
 
 class LightsPlugin:
-    def __init__(self, lights: List[LightModel]):
+    def __init__(self, lights: list[LightModel]):
         self._lights = lights
 
     @kernel_function
-    async def get_lights(self) -> List[LightModel]:
+    async def get_lights(self) -> list[LightModel]:
         """Gets a list of lights and their current state."""
         return self._lights
 
@@ -96,7 +101,7 @@ class LightsPlugin:
     async def change_state(
         self,
         change_state: LightModel
-    ) -> Optional[LightModel]:
+    ) -> LightModel | None:
         """Changes the state of the light."""
         for light in self._lights:
             if light["id"] == change_state["id"]:
@@ -538,14 +543,16 @@ This approach eliminates the need to manually provide and update the return type
 When creating a plugin in Python, you can provide additional information about the functions in the `kernel_function` decorator. This information will be used by the AI agent to understand the functions better.
 
 ```python
-from typing import List, Optional, Annotated
+from typing import Annotated
+
+from semantic_kernel.functions import kernel_function
 
 class LightsPlugin:
-    def __init__(self, lights: List[LightModel]):
+    def __init__(self, lights: list[LightModel]):
         self._lights = lights
 
     @kernel_function(name="GetLights", description="Gets a list of lights and their current state")
-    async def get_lights(self) -> List[LightModel]:
+    async def get_lights(self) -> list[LightModel]:
         """Gets a list of lights and their current state."""
         return self._lights
 
@@ -553,7 +560,7 @@ class LightsPlugin:
     async def change_state(
         self,
         change_state: LightModel
-    ) -> Optional[LightModel]:
+    ) -> LightModel | None:
         """Changes the state of the light."""
         for light in self._lights:
             if light["id"] == change_state["id"]:
