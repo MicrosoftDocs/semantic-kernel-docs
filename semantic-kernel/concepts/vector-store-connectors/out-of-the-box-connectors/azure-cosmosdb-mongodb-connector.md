@@ -219,20 +219,20 @@ pip install semantic-kernel[azure, mongo]
 You can then create the vector store.
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBforMongoDBStore
+from semantic_kernel.connectors.azure_cosmos_db import CosmosMongoStore
 
 # If the right environment settings are set, namely AZURE_COSMOS_DB_MONGODB_CONNECTION_STRING and optionally AZURE_COSMOS_DB_MONGODB_DATABASE_NAME, this is enough to create the Store:
-store = AzureCosmosDBforMongoDBStore()
+store = CosmosMongoStore()
 ```
 
 Alternatively, you can also pass in your own mongodb client if you want to have more control over the client construction:
 
 ```python
 from pymongo import AsyncMongoClient
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBforMongoDBStore
+from semantic_kernel.connectors.azure_cosmos_db import CosmosMongoStore
 
 client = AsyncMongoClient(...)
-store = AzureCosmosDBforMongoDBStore(mongo_client=client)
+store = CosmosMongoStore(mongo_client=client)
 ```
 
 When a client is passed in, Semantic Kernel will not close the connection for you, so you need to ensure to close it, for instance with a `async with` statement.
@@ -240,12 +240,12 @@ When a client is passed in, Semantic Kernel will not close the connection for yo
 You can also create a collection directly, without the store.
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBforMongoDBCollection
+from semantic_kernel.connectors.azure_cosmos_db import CosmosMongoCollection
 
-# `hotel` is a class created with the @vectorstoremodel decorator
-collection = AzureCosmosDBforMongoDBCollection(
-    collection_name="my_collection",
-    data_model_type=hotel
+# `Hotel` is a class created with the @vectorstoremodel decorator
+collection = CosmosMongoCollection(
+    record_type=Hotel,
+    collection_name="my_collection"
 )
 ```
 

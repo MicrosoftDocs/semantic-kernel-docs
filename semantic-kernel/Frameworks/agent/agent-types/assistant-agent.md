@@ -290,7 +290,7 @@ await thread.delete() if thread else None
 ## Deleting an `OpenAIAssistantAgent`
 
 Since the assistant's definition is stored remotely, it will persist if not deleted.  
-Deleting an assistant definition may be performed directly with the `AssistantClient`.
+Deleting an assistant definition may be performed directly with the client.
 
 > Note: Attempting to use an agent instance after being deleted will result in a service exception.
 
@@ -308,9 +308,7 @@ await client.DeleteAssistantAsync("<assistant id>");
 ::: zone pivot="programming-language-python"
 
 ```python
-await agent.delete()
-
-is_deleted = agent._is_deleted
+await client.beta.assistants.delete(agent.id)
 ```
 
 ::: zone-end

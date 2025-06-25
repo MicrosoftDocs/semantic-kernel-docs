@@ -225,30 +225,30 @@ You can then create a PineconeStore instance and use it to create a collection.
 This will read the Pinecone API key from the environment variable `PINECONE_API_KEY`.
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeStore
+from semantic_kernel.connectors.pinecone import PineconeStore
 
 store = PineconeStore()
-collection = store.get_collection(collection_name="collection_name", data_model=DataModel)
+collection = store.get_collection(collection_name="collection_name", record_type=DataModel)
 ```
 
 It is possible to construct a direct reference to a named collection.
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeCollection
+from semantic_kernel.connectors.pinecone import PineconeCollection
 
-collection = PineconeCollection(collection_name="collection_name", data_model=DataModel)
+collection = PineconeCollection(collection_name="collection_name", record_type=DataModel)
 ```
 
 You can also create your own Pinecone client and pass it into the constructor.
 The client needs to be either `PineconeAsyncio` or `PineconeGRPC` (see [GRPC Support](#grpc-support)).
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeStore, PineconeCollection
+from semantic_kernel.connectors.pinecone import PineconeStore, PineconeCollection
 from pinecone import PineconeAsyncio
 
 client = PineconeAsyncio(api_key="your_api_key") 
 store = PineconeStore(client=client)
-collection = store.get_collection(collection_name="collection_name", data_model=DataModel)
+collection = store.get_collection(collection_name="collection_name", record_type=DataModel)
 ```
 
 ### GRPC support
@@ -256,20 +256,20 @@ collection = store.get_collection(collection_name="collection_name", data_model=
 We also support two options on the collection constructor, the first is to enable GRPC support:
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeCollection
+from semantic_kernel.connectors.pinecone import PineconeCollection
 
-collection = PineconeCollection(collection_name="collection_name", data_model=DataModel, use_grpc=True)
+collection = PineconeCollection(collection_name="collection_name", record_type=DataModel, use_grpc=True)
 ```
 
 Or with your own client:
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeStore
+from semantic_kernel.connectors.pinecone import PineconeStore
 from pinecone.grpc import PineconeGRPC
 
 client = PineconeGRPC(api_key="your_api_key")
 store = PineconeStore(client=client)
-collection = store.get_collection(collection_name="collection_name", data_model=DataModel)
+collection = store.get_collection(collection_name="collection_name", record_type=DataModel)
 ```
 
 ### Integrated Embeddings
@@ -279,27 +279,27 @@ The second is to use the integrated embeddings of Pinecone, this will check for 
 See [Pinecone docs](https://docs.pinecone.io/guides/indexes/create-an-index) and then the `Use integrated embeddings` sections.
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeCollection
+from semantic_kernel.connectors.pinecone import PineconeCollection
 
-collection = PineconeCollection(collection_name="collection_name", data_model=DataModel)
+collection = PineconeCollection(collection_name="collection_name", record_type=DataModel)
 ```
 
 Alternatively, when not settings the environment variable, you can pass the embed settings into the constructor:
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeCollection
+from semantic_kernel.connectors.pinecone import PineconeCollection
 
-collection = PineconeCollection(collection_name="collection_name", data_model=DataModel, embed_settings={"model": "multilingual-e5-large"})
+collection = PineconeCollection(collection_name="collection_name", record_type=DataModel, embed_settings={"model": "multilingual-e5-large"})
 ```
 
 This can include other details about the vector setup, like metric and field mapping.
-You can also pass the embed settings into the `create_collection` method, this will override the default settings set during initialization.
+You can also pass the embed settings into the `ensure_collection_exists` method, this will override the default settings set during initialization.
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeCollection
+from semantic_kernel.connectors.pinecone import PineconeCollection
 
-collection = PineconeCollection(collection_name="collection_name", data_model=DataModel)
-await collection.create_collection(embed_settings={"model": "multilingual-e5-large"})
+collection = PineconeCollection(collection_name="collection_name", record_type=DataModel)
+await collection.ensure_collection_exists(embed_settings={"model": "multilingual-e5-large"})
 ```
 
 > Important: GRPC and Integrated embeddings cannot be used together.
@@ -313,11 +313,11 @@ By default the Pinecone connector will pass `''` as the namespace for all operat
 Pinecone collection when constructing it and use this instead for all operations.
 
 ```python
-from semantic_kernel.connectors.memory.pinecone import PineconeCollection
+from semantic_kernel.connectors.pinecone import PineconeCollection
 
 collection = PineconeCollection(
     collection_name="collection_name", 
-    data_model=DataModel, 
+    record_type=DataModel, 
     namespace="seasidehotels"
 )
 ```

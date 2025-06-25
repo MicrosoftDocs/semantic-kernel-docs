@@ -61,6 +61,9 @@ Depending on what kind of data model you have, the steps are done in different w
 3. check if the record is a Pydantic model and use the `model_dump` of the model, see the note below for more info.
 4. loop through the fields in the definition and create the dictionary
 
+#### Optional: Embedding
+When you have a data model with a `embedding_generator` field, or the collection has an `embedding_generator` field, the embedding will be generated and added to the dictionary before it is serialized to the store model.
+
 #### Serialization Step 2: Dict to Store Model
 
 A method has to be supplied by the connector for converting the dictionary to the store model. This is done by the developer of the connector and is different for each store.
@@ -80,28 +83,6 @@ The deserialization is done in the reverse order, it tries these options:
 > [!NOTE]
 > #### Using Pydantic with built-in serialization
 > When you define you model using a Pydantic BaseModel, it will use the `model_dump` and `model_validate` methods to serialize and deserialize the data model to and from a dict. This is done by using the model_dump method without any parameters, if you want to control that, consider implementing the `ToDictMethodProtocol` on your data model, as that is tried first.
-
-## Serialization of vectors
-
-When you have a vector in your data model, it needs to either be a list of floats or list of ints, since that is what most stores need, if you want your class to store the vector in a different format, you can use the `serialize_function` and `deserialize_function` defined in the `VectorStoreRecordVectorField` annotation. For instance for a numpy array you can use the following annotation:
-
-```python
-import numpy as np
-
-vector: Annotated[
-    np.ndarray | None,
-    VectorStoreRecordVectorField(
-        dimensions=1536,
-        serialize_function=np.ndarray.tolist,
-        deserialize_function=np.array,
-    ),
-] = None
-```
-
-If you do use a vector store that can handle native numpy arrays and you don't want to have them converted back and forth, you should setup the [direct serialization and deserialization](#direct-serialization-data-model-to-store-model) methods for the model and that store.
-
-> [!NOTE]
-> This is only used when using the built-in serialization, when using the direct serialization you can handle the vector in any way you want.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"

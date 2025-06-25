@@ -15,8 +15,49 @@ ms.service: semantic-kernel
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-> [!WARNING]
-> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+There are two searches currently supported in the Semantic Kernel Vector Store abstractions:
+1. `search` -> see [Search](./vector-search.md)
+2. `hybrid_search`
+   1. This is search based on a text value and a vector, if the vector is not supplied, it will be generated using the `embedding_generator` field on the data model or record definition, or by the vector store itself.
+
+All searches can take a optional set of parameters:
+- `vector`: A vector used to search, can be supplied instead of the values, or in addition to the values for hybrid.
+- `top`: The number of results to return, defaults to 3.
+- `skip`: The number of results to skip, defaults to 0.
+- `include_vectors`: Whether to include the vectors in the results, defaults to `false`.
+- `filter`: A filter to apply to the results before the vector search is applied, defaults to `None`, in the form of a lambda expression: `lambda record: record.property == "value"`.
+- `vector_property_name`: The name of the vector property to use for the search, defaults to the first vector property found on the data model or record definition.
+- `additional_property_name`: The name of the additional field to use for the text search of the hybrid search.
+- `include_total_count`: Whether to include the total count of results in the search result, defaults to `false`.
+
+Assuming you have a collection that already contains data, you can easily search it. Here is an example using Azure AI Search.
+
+```python
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection, AzureAISearchStore
+
+# Create a Azure AI Search VectorStore object and choose an existing collection that already contains records.
+# Hotels is the data model decorated class.
+store = AzureAISearchStore()
+collection: AzureAISearchCollection[str, Hotels] = store.get_collection(Hotels, collection_name="skhotels")
+
+search_results = await collection.hybrid_search(
+    query, vector_property_name="vector", additional_property_name="description"
+)
+hotels = [record.record async for record in search_results.results]
+print(f"Found hotels: {hotels}")
+```
+
+> [!TIP]
+> For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
+
+### Filters
+
+The `filter` parameter can be used to provide a filter for filtering the records in the chosen collection. It is defined as a lambda expression, or a string of a lambda expression, e.g. `lambda record: record.property == "value"`.
+
+It is important to understand that these are not executed directly, rather they are parsed into the syntax matching the vector stores, the only exception to this is the `InMemoryCollection` which does execute the filter directly.
+
+Given this flexibility, it is important to review the documentation of a specific store to understand which filters are supported, for instance not all vector stores support negative filters (i.e. `lambda x: not x.value`), and that won't become apparent until the search is executed.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"

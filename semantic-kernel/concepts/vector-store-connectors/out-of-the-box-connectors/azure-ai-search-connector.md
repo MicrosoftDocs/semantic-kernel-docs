@@ -199,7 +199,7 @@ You can then create a vector store instance using the `AzureAISearchStore` class
 
 ```python
 
-from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchStore
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchStore
 
 vector_store = AzureAISearchStore()
 ```
@@ -208,7 +208,7 @@ You can also create the vector store with your own instance of the azure search 
 
 ```python
 from azure.search.documents.indexes import SearchIndexClient
-from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchStore
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchStore
 
 search_client = SearchIndexClient(endpoint="https://<your-search-service-name>.search.windows.net", credential="<your-search-service-key>")
 vector_store = AzureAISearchStore(search_index_client=search_client)
@@ -217,9 +217,12 @@ vector_store = AzureAISearchStore(search_index_client=search_client)
 You can also create a collection directly.
 
 ```python
-from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchCollection
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
 
-collection = AzureAISearchCollection(collection_name="skhotels", data_model_type=hotel)
+collection = AzureAISearchCollection(
+    record_type=hotel,
+    collection_name="skhotels"
+)
 ```
 
 ## Serialization

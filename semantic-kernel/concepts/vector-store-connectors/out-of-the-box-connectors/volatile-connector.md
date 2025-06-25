@@ -109,7 +109,7 @@ You can then create a vector store instance using the `VolatileStore` class.
 
 ```python
 
-from semantic_kernel.connectors.memory.volatile import VolatileStore
+from semantic_kernel.connectors.volatile import VolatileStore
 
 vector_store = VolatileStore()
 ```
@@ -117,9 +117,9 @@ vector_store = VolatileStore()
 You can also create a collection directly.
 
 ```python
-from semantic_kernel.connectors.memory.volatile import VolatileCollection
+from semantic_kernel.connectors.volatile import VolatileCollection
 
-collection = VolatileCollection(collection_name="skhotels", data_model_type=Hotel)
+collection = VolatileCollection(collection_name="skhotels", record_type=Hotel)
 ```
 
 ## Serialization
