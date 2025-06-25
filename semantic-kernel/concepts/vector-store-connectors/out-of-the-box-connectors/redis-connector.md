@@ -164,7 +164,7 @@ You can then create a vector store instance using the `RedisStore` class, this w
 
 ```python
 
-from semantic_kernel.connectors.memory.redis import RedisStore
+from semantic_kernel.connectors.redis import RedisStore
 
 vector_store = RedisStore()
 ```
@@ -173,7 +173,7 @@ You can also create the vector store with your own instance of the redis databas
 
 ```python
 from redis.asyncio.client import Redis
-from semantic_kernel.connectors.memory.redis import RedisStore
+from semantic_kernel.connectors.redis import RedisStore
 
 redis_database = Redis.from_url(url="https://<your-redis-service-name>")
 vector_store = RedisStore(redis_database=redis_database)
@@ -182,21 +182,21 @@ vector_store = RedisStore(redis_database=redis_database)
 You can also create a collection directly, but there are two types of collections, one for Hashes and one for JSON.
 
 ```python
-from semantic_kernel.connectors.memory.redis import RedisHashsetCollection, RedisJsonCollection
+from semantic_kernel.connectors.redis import RedisHashsetCollection, RedisJsonCollection
 
-hash_collection = RedisHashsetCollection(collection_name="skhotels", data_model_type=Hotel)
-json_collection = RedisJsonCollection(collection_name="skhotels", data_model_type=Hotel)
+hash_collection = RedisHashsetCollection(collection_name="skhotels", record_type=Hotel)
+json_collection = RedisJsonCollection(collection_name="skhotels", record_type=Hotel)
 ```
 
 When creating a collection from the vector store, you can pass in the collection type, as a enum: `RedisCollectionTypes`, the default is a hash collection.
     
 ```python
-from semantic_kernel.connectors.memory.redis import RedisStore, RedisCollectionTypes
+from semantic_kernel.connectors.redis import RedisStore, RedisCollectionTypes
 
 vector_store = RedisStore()
 collection = vector_store.get_collection(
     collection_name="skhotels", 
-    data_model_type=Hotel, 
+    record_type=Hotel, 
     collection_type=RedisCollectionTypes.JSON,
 )
 
@@ -296,9 +296,9 @@ await collection.GetAsync("myprefix_h1");
 ::: zone-end
 ::: zone pivot="programming-language-python"
 ```python
-from semantic_kernel.connectors.memory.redis import RedisJsonCollection
+from semantic_kernel.connectors.redis import RedisJsonCollection
 
-collection = RedisJsonCollection(collection_name="skhotels", data_model_type=hotel, prefix_collection_name_to_key_names=False)
+collection = RedisJsonCollection(collection_name="skhotels", record_type=hotel, prefix_collection_name_to_key_names=False)
 
 await collection.get("myprefix_h1")
 ```

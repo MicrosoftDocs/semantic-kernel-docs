@@ -325,6 +325,9 @@ This article provides guidance for anyone who wishes to build their own Vector S
 This article can be used by database providers who wish to build and maintain their own implementation,
 or for anyone who wishes to build and maintain an unofficial connector for a database that lacks support.
 
+In June 2025, the setup was updated see:
+1. [Vector Store Changes for Python June 2025](../../../support/migration/vectorstore-python-june-2025.md)
+
 If you wish to contribute your connector to the Semantic Kernel code base:
 
 1. Create an issue in the [Semantic Kernel Github repository](https://github.com/microsoft/semantic-kernel/issues).
@@ -332,7 +335,7 @@ If you wish to contribute your connector to the Semantic Kernel code base:
 
 ## Overview
 
-Vector Store connectors are implementations of the [Vector Store base classes](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/data/vector_storage) and optionally the [Vector Search base class and methods](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/data/vector_search). Some of the decisions that
+Vector Store connectors are implementations of the [Vector Store base classes](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/data/vector). Some of the decisions that
 were made when designing the Vector Store abstraction mean that a Vector Store connector requires certain
 features to provide users with a good experience.
 
@@ -343,9 +346,6 @@ This means that a connector has to be able to map from this data model to the st
 It also means that a connector may need to find out certain information about the record properties in order to know how
 to map each of these properties. E.g. some vector databases (such as Chroma, Qdrant and Weaviate) require vectors to be stored in a specific structure and non-vectors
 in a different structure, or require record keys to be stored in a specific field.
-
-At the same time, the Vector Store classes also provides a generic data model that allows a developer to work
-with a database without needing to create a custom data model.
 
 It is important for connectors to support different types of model and provide developers with flexibility around
 how they use the connector. The following section deep dives into each of these requirements.
@@ -358,63 +358,56 @@ In order to be considered a full implementation of the Vector Store abstractions
 
 The two core classes that need to be implemented are:
 1. VectorStore
-1. VectorStoreRecordCollection[TKey, TModel] or VectorSearchBase[TKey, TModel] (VectorSearchBase is a subclass of VectorStoreRecordCollection)
-
-Then when using VectorSearchBase, the following mixins can be used, at least one otherwise search is not available:
-
-1. VectorTextSearchMixin[TModel]
-1. VectorizableTextSearchMixin[TModel]
-1. VectorizedSearchMixin[TModel]
+1. VectorStoreCollection[TKey, TModel] and optionally VectorSearch[TKey, TModel]
 
 The naming convention should be:
-- {database type}VectorStore
-- {database type}VectorStoreRecordCollection or {database type}Collection
+- {database type}Store
+- {database type}Collection
 
 E.g.
-- MyDBVectorStore
-- MyDBVectorStoreRecordCollection or MyDBCollection
+- MyDBStore
+- MyDBCollection
 
-A `VectorStoreRecordCollection` is tied to a specific collection/index name in the database, that collection name should be passed to the constructor, or the `get_collection` method of the VectorStore.
+A `VectorStoreCollection` is tied to a specific collection/index name in the database, that collection name should be passed to the constructor, or the `get_collection` method of the VectorStore.
 
 These are the methods that need to be implemented:
 
 1. VectorStore
-   1. `VectorStore.get_collection` - This is a factory method that should return a new instance of the VectorStoreRecordCollection for the given collection name, it should not do checks to verify whether a collection exists or not. It should also store the collection in the internal dict `vector_record_collections` so that it can be retrieved later.
+   1. `VectorStore.get_collection` - This is a factory method that should return a new instance of the VectorStoreCollection for the given collection name, it should not do checks to verify whether a collection exists or not. It should also store the collection in the internal dict `vector_record_collections` so that it can be retrieved later.
    1. `VectorStore.list_collection_names` - This method should return a list of collection names that are available in the database.
-1. VectorStoreRecordCollection
-   1. `VectorStoreRecordCollection._inner_upsert` - This method takes a list of records and returns a list of keys that were updated or inserted, this method is called from the `upsert` and `upsert_batch` methods, those methods takes care of serialization.
-   2. `VectorStoreRecordCollection._inner_get` - This method takes a list of keys and returns a list of records, this method is called from the `get` and `get_batch` methods.
-   3. `VectorStoreRecordCollection._inner_delete` - This method takes a list of keys and deletes them from the database, this method is called from the `delete` and `delete_batch` methods.
-   4. `VectorStoreRecordCollection._serialize_dicts_to_store_models` - This method takes a list of dicts and returns a list of objects ready to be upserted, this method is called from the `upsert` and `upsert_batch` methods, check the [Serialization docs for more info](../serialization.md).
-   5. `VectorStoreRecordCollection._deserialize_store_models_to_dicts` - This method takes a list of objects from the store and returns a list of dicts, this method is called from the `get`, `get_batch` and optionally `search` methods, check the [Serialization docs for more info](../serialization.md)
-   6. `VectorStoreRecordCollection.create_collection` - This method should create a collection/index in the database, it should be able to parse a `VectorStoreRecordDefinition` and create the collection/index accordingly and also allow the user to supply their own definition, ready for that store, this allows the user to leverage every feature of the store, even ones we don't.
-   7. `VectorStoreRecordCollection.does_collection_exist` - This method should return a boolean indicating whether the collection exists or not.
-   8. `VectorStoreRecordCollection.delete_collection` - This method should delete the collection/index from the database.
-2. VectorSearchBase
-   1. `VectorSearchBase._inner_search` - This method should take the options, query text or vector and `KernelSearchResults` with a `VectorSearchResult` as the internal content, the `KernelSearchResults` is a Async Iterable to allow support for paging results, as search can return a large number of results (there is a helper util to take a list of results and return a `AsyncIterable`).
-   2. `VectorSearchBase._get_record_from_result` - This method should take the search result from the store and extract the actual content, this can also be as simple as returning the result.
-   3. `VectorSearchBase._get_score_from_result` - This method should take the search result from the store and extract the score, this is not always present as some databases don't return a score.
+1. VectorStoreCollection
+   1. `VectorStoreCollection._inner_upsert` - This method takes a list of records and returns a list of keys that were updated or inserted, this method is called from the `upsert` method, those methods takes care of serialization.
+   2. `VectorStoreCollection._inner_get` - This method takes a list of keys and returns a list of records, this method is called from the `get` method.
+   3. `VectorStoreCollection._inner_delete` - This method takes a list of keys and deletes them from the database, this method is called from the `delete` method.
+   4. `VectorStoreCollection._serialize_dicts_to_store_models` - This method takes a list of dicts and returns a list of objects ready to be upserted, this method is called from the `upsert` method, check the [Serialization docs for more info](../serialization.md), by this point a embedding is already generated when applicable.
+   5. `VectorStoreCollection._deserialize_store_models_to_dicts` - This method takes a list of objects from the store and returns a list of dicts, this method is called from the `get` and optionally `search` methods, check the [Serialization docs for more info](../serialization.md)
+   6. `VectorStoreCollection.ensure_collection_exists` - This method should create a collection/index in the database, it should be able to parse a `VectorStoreRecordDefinition` and create the collection/index accordingly and also allow the user to supply their own definition, ready for that store, this allows the user to leverage every feature of the store, even ones we don't. This method should first check if the collection exists, if it does not, it should create it, if it does exist, it should do nothing.
+   7. `VectorStoreCollection.collection_exists` - This method should return a boolean indicating whether the collection exists or not.
+   8. `VectorStoreCollection.ensure_collection_deleted` - This method should delete the collection/index from the database.
+2. VectorSearch
+   1. `VectorSearch._inner_search` - This method should take the query values or vector and options and search_type and return a `KernelSearchResults` with a `VectorSearchResult` as the internal content, the `KernelSearchResults` is a Async Iterable to allow support for paging results, as search can return a large number of results (there is a helper util to take a list of results and return a `AsyncIterable`). The search_type can be `vector` or `keyword_hybrid`, the first one is a pure vector search, the second one is a hybrid search that combines keyword and vector search, this is not supported in all vector stores, and the below mentioned `supported_search_types` class variable is be used to validate the search type and can also be inspected by users. There is a convenience function `_generate_vector_from_values` that can be used to generate a vector from the query values, for both search types.
+   2. `VectorSearch._get_record_from_result` - This method should take the search result from the store and extract the actual content, this can also be as simple as returning the result.
+   3. `VectorSearch._get_score_from_result` - This method should take the search result from the store and extract the score, this is not always present as some databases don't return a score.
+   4. `VectorSearch._lambda_parser` - This method should take a lambda expression as AST (`abstract syntax tree`) and parse it into a filter expression that can be used by the store, this is called from a built-in method called `_build_filter` which takes care of parsing a lambda expression or string into a AST, and returns the results, the _inner_search method will then use the results of `_build_filter` to filter the results from the store. If you do not want to use `_build_filter` you can just implement `_lambda_parser` with a `pass`. The best way to understand more about this method is to look at the ones built, for instance in Azure AI Search or MongoDB, as they are fairly complete.
 
 Some other optional items that can be implemented are:
-1. `VectorStoreRecordCollection._validate_data_model` - This method validates the data model, there is a default implementation that takes the `VectorStoreRecordDefinition` and validates the data model against it, with the values from the supported types (see below), but this can be overwritten to provide custom validation. A additional step can be added by doing `super()._validate_data_model()` to run the default validation first.
-1. `VectorStoreRecordCollection.supported_key_types` - This is a `classvar`, that should be a list of supported key types, this is used to validate the key type when creating a collection.
-2. `VectorStoreRecordCollection.supported_vector_types` - This is a `classvar`, that should be a list of supported vector types, this is used to validate the vector type when creating a collection.
-3. `Vector...__aenter__` and `Vector...__aexit__` - These methods should be implemented to allow the use of the `async with` statement, this is useful for managing connections and resources.
-4. `Vector...managed_client` - This is a helper property that can be used to indicate whether the current instance is managing the client or not, this is useful for the `__aenter__` and `__aexit__` methods and should be set based on the constructor arguments.
-5. `VectorSearchBase.options_class` - This is a property that returns the search options class, by default this is the `VectorSearchOptions` but can be overwritten to provide a custom options class. The public methods perform a check of the options type and do a cast if needed.
+1. `VectorStoreCollection._validate_data_model` - This method validates the data model, there is a default implementation that takes the `VectorStoreRecordDefinition` and validates the data model against it, with the values from the supported types (see below), but this can be overwritten to provide custom validation. A additional step can be added by doing `super()._validate_data_model()` to run the default validation first.
+1. `VectorStoreCollection.supported_key_types` - This is a `classvar`, that should be a list of supported key types, this is used to validate the key type when creating a collection.
+2. `VectorStoreCollection.supported_vector_types` - This is a `classvar`, that should be a list of supported vector types, this is used to validate the vector type when creating a collection.
+3. `VectorSearch.supported_search_types` - This is a `classvar`, that should be a list of supported search types, `vector` or `keyword_hybrid`, this is used to validate the search type when searching.
+3. `VectorStoreCollection.__aenter__` and `VectorStoreCollection.__aexit__` - These methods should be implemented to allow the use of the `async with` statement, this is useful for managing connections and resources.
+4. `VectorStoreCollection.managed_client` - This is a helper property that can be used to indicate whether the current instance is managing the client or not, this is useful for the `__aenter__` and `__aexit__` methods and should be set based on the constructor arguments.
+5. `VectorSearch.options_class` - This is a property that returns the search options class, by default this is the `VectorSearchOptions` but can be overwritten to provide a custom options class. The public methods perform a check of the options type and do a cast if needed.
 
 ### Collection / Index Creation
 Every store has it's own quirks when it comes to the way indexes/collections are defined and which features are supported. Most implementation use some kind of helper or util function to parse the `VectorStoreRecordDefinition` and create the collection/index definition. This includes mapping from the Semantic Kernel IndexKind and DistanceFunction to the store specific ones, and raising an error when a unsupported index or distance function is used. It is advised to use a dict to map between these so that it is easy to update and maintain over time.
 
-There are features in Semantic Kernel that are not available in the store and vice versa, for instance a data field might be marked as full text searchable in Semantic Kernel but the store might not make that distinction, in this case that setting is ignored. The inverse where there are settings available in the store but not in Semantic Kernel, a sensible default, with a clear docstring or comment on why that default is chosen, should be used and this is exactly the type of thing that a user might want to leverage the break glass feature for (supplying their own definition to the `create_collection` method).
+There are features in Semantic Kernel that are not available in the store and vice versa, for instance a data field might be marked as full text searchable in Semantic Kernel but the store might not make that distinction, in this case that setting is ignored. The inverse where there are settings available in the store but not in Semantic Kernel, a sensible default, with a clear docstring or comment on why that default is chosen, should be used and this is exactly the type of thing that a user might want to leverage the break glass feature for (supplying their own definition to the `ensure_collection_exists` method).
 
 ### Exceptions
 Most exceptions are raised with the Semantic Kernel specific types by the public methods, so the developer of the connector should not worry about it, this also makes sure that a user does not have to think about very specific exceptions from each connector. You should also not catch things only to re-raise, that is done once so that the stack trace does not become overly long.
 
 The vector store exceptions are all coming from the [vector_store_exceptions](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/exceptions/vector_store_exceptions.py).
-
-### Batching
-Each store and their client offers different methods and ways of working, we noticed that most either have a batch operation or it has both a single and batch operations, the only one that should be used in Semantic Kernel is the batch one because each of the _inner methods are called with a sequence of keys or records, this is to ensure that the store can optimize the operation as much as possible, without doubling the amount of code. This does mean that sometimes the _inner method will have to batch itself, this should then be done using `asyncio.gather` to ensure that the operations are done in parallel.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"

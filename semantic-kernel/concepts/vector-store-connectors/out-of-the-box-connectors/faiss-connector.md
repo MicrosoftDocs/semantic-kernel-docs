@@ -1,5 +1,5 @@
 ---
-title: Using the Semantic Kernel Faiss Vector Store connector (Preview)
+title: Using the Semantic Kernel Faiss VectorYou can then create a vector store instance using the `FaissStore` class.
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in an in-memory Faiss vector store.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
@@ -50,7 +50,7 @@ pip install semantic-kernel[faiss]
 In the snippets below, it is assumed that you have a data model class defined named 'DataModel'.
 
 ```python
-from semantic_kernel.connectors.memory.faiss import FaissStore
+from semantic_kernel.connectors.faiss import FaissStore
 
 vector_store = FaissStore()
 vector_collection = vector_store.get_collection("collection_name", DataModel)
@@ -59,9 +59,9 @@ vector_collection = vector_store.get_collection("collection_name", DataModel)
 It is possible to construct a direct reference to a named collection.
 
 ```python
-from semantic_kernel.connectors.memory.faiss import FaissCollection
+from semantic_kernel.connectors.faiss import FaissCollection
 
-vector_collection = FaissCollection("collection_name", DataModel)
+vector_collection = FaissCollection(DataModel, collection_name="collection_name")
 ```
 
 ## Custom indexes
@@ -80,12 +80,12 @@ To pass in your custom index, use either:
 
 import faiss
 
-from semantic_kernel.connectors.memory.faiss import FaissCollection
+from semantic_kernel.connectors.faiss import FaissCollection
 
 index = faiss.IndexHNSW(d=768, M=16, efConstruction=200) # or some other index
 vector_collection = FaissCollection(
+    record_type=DataModel, 
     collection_name="collection_name", 
-    data_model_type=DataModel, 
     indexes={"vector_field_name": index}
 )
 ```
@@ -96,18 +96,18 @@ or:
 
 import faiss
 
-from semantic_kernel.connectors.memory.faiss import FaissCollection
+from semantic_kernel.connectors.faiss import FaissCollection
 
 index = faiss.IndexHNSW(d=768, M=16, efConstruction=200) # or some other index
 vector_collection = FaissCollection(
+    record_type=DataModel,
     collection_name="collection_name", 
-    data_model_type=DataModel,
 )
-await vector_collection.create_collection(
+await vector_collection.ensure_collection_exists(
     indexes={"vector_field_name": index}
 )
 # or when you have only one vector field:
-await vector_collection.create_collection(
+await vector_collection.ensure_collection_exists(
     index=index
 )
 
