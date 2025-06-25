@@ -2,9 +2,9 @@
 title: Function calling with chat completion
 description: Learn how function calling works and how to optimize your code for the best performance.
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: conceptual
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
