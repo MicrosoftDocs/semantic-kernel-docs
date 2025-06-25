@@ -278,7 +278,7 @@ The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage
 | Feature Area                          | Support                                                                                                                                                           |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Azure Cosmos DB NoSQL Container                                                                                                                                   |
-| Supported key property types          | <ul><li>string</li><li>AzureCosmosDBNoSQLCompositeKey</li></ul>                                                                                                   |
+| Supported key property types          | <ul><li>string</li><li>CosmosNoSqlCompositeKey</li></ul>                                                                                                   |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and iterables of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                                                                                   |
 | Supported index types                 | <ul><li>Flat</li><li>QuantizedFlat</li><li>DiskAnn</li></ul>                                                                                                      |
@@ -309,17 +309,17 @@ And optionally:
 When this is not set, a `AsyncDefaultAzureCredential` is used to authenticate.
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLStore
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlStore
 
-vector_store = AzureCosmosDBNoSQLStore()
+vector_store = CosmosNoSqlStore()
 ```
 
 You can also supply these values in the constructor:
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLStore
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlStore
 
-vector_store = AzureCosmosDBNoSQLStore(
+vector_store = CosmosNoSqlStore(
     url="https://<your-account-name>.documents.azure.com:443/",
     key="<your-account-key>",
     database_name="<your-database-name>"
@@ -329,14 +329,14 @@ vector_store = AzureCosmosDBNoSQLStore(
 And you can pass in a CosmosClient instance, just make sure it is a async client.
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLStore
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlStore
 from azure.cosmos.aio import CosmosClient
 
 client = CosmosClient(
     url="https://<your-account-name>.documents.azure.com:443/",
     credential="<your-account-key>" or AsyncDefaultAzureCredential()
 )
-vector_store = AzureCosmosDBNoSQLStore(
+vector_store = CosmosNoSqlStore(
     client=client,
     database_name="<your-database-name>"
 )
@@ -347,20 +347,20 @@ The next step needs a data model, a variable called Hotels is used in the exampl
 With a store, you can get a collection:
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLStore
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlStore
 
-vector_store = AzureCosmosDBNoSQLStore()
-collection = vector_store.get_collection(collection_name="skhotels", data_model=Hotel)
+vector_store = CosmosNoSqlStore()
+collection = vector_store.get_collection(collection_name="skhotels", record_type=Hotel)
 ```
 
 It is possible to construct a direct reference to a named collection, this uses the same environment variables as above.
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLCollection
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlCollection
 
-collection = AzureCosmosDBNoSQLCollection(
+collection = CosmosNoSqlCollection(
+    record_type=Hotel,
     collection_name="skhotels",
-    data_model_type=Hotel,
 )
 ```
 
@@ -369,11 +369,11 @@ collection = AzureCosmosDBNoSQLCollection(
 In the Azure Cosmos DB for NoSQL connector, the partition key property defaults to the key property - `id`. You can also supply a value for the partition key in the constructor.
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLCollection
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlCollection
 
-collection = AzureCosmosDBNoSQLCollection(
+collection = CosmosNoSqlCollection(
+    record_type=Hotel,
     collection_name="skhotels",
-    data_model_type=Hotel,
     partition_key="hotel_name"
 )
 ```
@@ -381,40 +381,39 @@ collection = AzureCosmosDBNoSQLCollection(
 This can be a more complex key, when using the `PartitionKey` object:
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLCollection
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlCollection
 from azure.cosmos import PartitionKey
 
 partition_key = PartitionKey(path="/hotel_name")
-collection = AzureCosmosDBNoSQLCollection(
+collection = CosmosNoSqlCollection(
+    record_type=Hotel,
     collection_name="skhotels",
-    data_model_type=Hotel,
     partition_key=partition_key
 )
 ```
 
-The `AzureCosmosDBNoSQLVectorStoreRecordCollection` class supports two key types: `string` and `AzureCosmosDBNoSQLCompositeKey`. The `AzureCosmosDBNoSQLCompositeKey` consists of `key` and `partition_key`.
+The `CosmosNoSqlVectorStoreRecordCollection` class supports two key types: `string` and `CosmosNoSqlCompositeKey`. The `CosmosNoSqlCompositeKey` consists of `key` and `partition_key`.
 
-If the partition key property is not set (and the default key property is used), `string` keys can be used for operations with database records. However, if a partition key property is specified, it is recommended to use `AzureCosmosDBNoSQLCompositeKey` to provide both the key and partition key values to the `get` and `delete` methods.
+If the partition key property is not set (and the default key property is used), `string` keys can be used for operations with database records. However, if a partition key property is specified, it is recommended to use `CosmosNoSqlCompositeKey` to provide both the key and partition key values to the `get` and `delete` methods.
 
 ```python
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLCollection
-from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLCompositeKey
-from semantic_kernel.data import VectorStoreRecordDataField
+from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlCollection, CosmosNoSqlCompositeKey
+from semantic_kernel.data.vector import VectorStoreField
 
 @vectorstoremodel
-class data_model_type:
-    id: Annotated[str, VectorStoreRecordKeyField]
-    product_type: Annotated[str, VectorStoreRecordDataField()]
+class Record:
+    id: Annotated[str, VectorStoreField("key")]
+    product_type: Annotated[str, VectorStoreField("data")]
     ...
 
 collection = store.get_collection(
+    record_type=Record,
     collection_name=collection_name,
-    data_model=data_model_type,
     partition_key=PartitionKey(path="/product_type"),
 )
 
 # when there is data in the collection
-composite_key = AzureCosmosDBNoSQLCompositeKey(
+composite_key = CosmosNoSqlCompositeKey(
     key='key value', partition_key='partition key value'
 )
 # get a record, with the partition key
