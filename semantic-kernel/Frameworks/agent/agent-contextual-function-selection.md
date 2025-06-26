@@ -22,6 +22,10 @@ Contextual Function Selection is an advanced capability in the Semantic Kernel A
 
 This approach addresses the challenge of function selection when dealing with a large number of available functions, where AI models may otherwise struggle to choose the appropriate function, leading to confusion and suboptimal performance.
 
+> [!WARNING]
+> When using the `ContextualFunctionProvider`, the `UseImmutableKernel` setting on the agent has to be set to `true` as the feature requires cloning the kernel when invoking the agent.
+> Note that setting `UseImmutableKernel` to `true` will mean that any kernel data modifications done during the agent invocation by e.g. plugins, will not be retained after the invocation completes.
+
 ## How Contextual Function Selection Works
 
 When an agent is configured with contextual function selection, it leverages a vector store and an embedding generator to semantically match the current conversation context (including previous messages and user input) with the descriptions and names of available functions. The most relevant functions, up to the specified limit, are then advertised to the AI model for invocation.
@@ -50,7 +54,9 @@ ChatCompletionAgent agent = new()
     Name = "ReviewGuru",
     Instructions = "You are a friendly assistant that summarizes key points and sentiments from customer reviews. For each response, list available functions.",
     Kernel = kernel,
-    Arguments = new(new PromptExecutionSettings { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(options: new FunctionChoiceBehaviorOptions { RetainArgumentTypes = true }) })
+    Arguments = new(new PromptExecutionSettings { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(options: new FunctionChoiceBehaviorOptions { RetainArgumentTypes = true }) }),
+    // This setting must be set to true when using the ContextualFunctionProvider
+    UseImmutableKernel = true
 };
 
 // Create the agent thread and register the contextual function provider
