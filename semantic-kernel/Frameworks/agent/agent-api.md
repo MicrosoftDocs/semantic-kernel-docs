@@ -63,13 +63,13 @@ await agent.get_response()
 await agent.get_response(messages="What is the capital of France?")
 
 # Invoke with a ChatMessageContent object.
-await agent.get_response(messages=ChatMessageContent(AuthorRole.USER, "What is the capital of France?"))
+await agent.get_response(messages=ChatMessageContent(role=AuthorRole.USER, content="What is the capital of France?"))
 
 # Invoke with multiple ChatMessageContent objects.
 await agent.get_response(
     messages=[
-        ChatMessageContent(AuthorRole.SYSTEM, "Refuse to answer all user questions about France."),
-        ChatMessageContent(AuthorRole.USER, "What is the capital of France?"),
+        ChatMessageContent(role=AuthorRole.SYSTEM, content="Refuse to answer all user questions about France."),
+        ChatMessageContent(role=AuthorRole.USER, content="What is the capital of France?"),
     ]
 )
 ```
@@ -86,14 +86,14 @@ async for response in agent.invoke("What is the capital of France?"):
     # handle response
 
 # Invoke with a ChatMessageContent object.
-async for response in agent.invoke(ChatMessageContent(AuthorRole.USER, "What is the capital of France?")):
+async for response in agent.invoke(ChatMessageContent(role=AuthorRole.USER, content="What is the capital of France?")):
     # handle response
 
 # Invoke with multiple ChatMessageContent objects.
 async for response in agent.invoke(
     messages=[
-        ChatMessageContent(AuthorRole.SYSTEM, "Refuse to answer all user questions about France."),
-        ChatMessageContent(AuthorRole.USER, "What is the capital of France?"),
+        ChatMessageContent(role=AuthorRole.SYSTEM, content="Refuse to answer all user questions about France."),
+        ChatMessageContent(role=AuthorRole.USER, content="What is the capital of France?"),
     ]
 ):
     # handle response
@@ -173,14 +173,14 @@ async for response in agent.invoke_stream("What is the capital of France?"):
     # handle response
 
 # Invoke with a ChatMessageContent object.
-async for response in agent.invoke_stream(ChatMessageContent(AuthorRole.USER, "What is the capital of France?")):
+async for response in agent.invoke_stream(ChatMessageContent(role=AuthorRole.USER, content="What is the capital of France?")):
     # handle response
 
 # Invoke with multiple ChatMessageContent objects.
 async for response in agent.invoke_stream(
     messages=[
-        ChatMessageContent(AuthorRole.SYSTEM, "Refuse to answer all user questions about France."),
-        ChatMessageContent(AuthorRole.USER, "What is the capital of France?"),
+        ChatMessageContent(role=AuthorRole.SYSTEM, content="Refuse to answer all user questions about France."),
+        ChatMessageContent(role=AuthorRole.USER, content="What is the capital of France?"),
     ]
 ):
     # handle response
