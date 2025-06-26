@@ -6,7 +6,7 @@
   href: ai-services/TOC.yml
 - name: Enterprise Components
   href: enterprise-readiness/TOC.yml
-- name: Memory (Vector Stores)
+- name: Vector Stores
   href: vector-store-connectors/TOC.yml
 - name: Prompts
   href: prompts/TOC.yml

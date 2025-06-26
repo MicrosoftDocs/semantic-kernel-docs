@@ -57,7 +57,9 @@ ChatCompletionAgent agent = new()
 {
     Name = "FriendlyAssistant",
     Instructions = "You are a friendly assistant",
-    Kernel = kernel
+    Kernel = kernel,
+    // This setting must be set to true when using the on-demand RAG feature
+    UseImmutableKernel = true
 };
 
 // Create an agent thread and add the TextSearchProvider.
@@ -123,6 +125,10 @@ var options = new TextSearchProviderOptions
 
 var provider = new TextSearchProvider(mockTextSearch.Object, options: options);
 ```
+
+> [!WARNING]
+> When using the `TextSearchProvider` with `OnDemandFunctionCalling`, the `UseImmutableKernel` setting on the agent has to be set to `true` as the feature requires cloning the kernel when invoking the agent.
+> Note that setting `UseImmutableKernel` to `true` will mean that any kernel data modifications done during the agent invocation by e.g. plugins, will not be retained after the invocation completes.
 
 ## TextSearchProvider options
 
