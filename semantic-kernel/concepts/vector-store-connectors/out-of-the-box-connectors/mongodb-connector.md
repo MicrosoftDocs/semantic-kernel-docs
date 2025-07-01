@@ -188,7 +188,7 @@ pip install semantic-kernel[mongo]
 You can then create the vector store.
 
 ```python
-from semantic_kernel.connectors.memory.mongodb_atlas import MongoDBAtlasStore
+from semantic_kernel.connectors.mongodb import MongoDBAtlasStore
 
 # If the right environment settings are set, namely MONGODB_ATLAS_CONNECTION_STRING and optionally MONGODB_ATLAS_DATABASE_NAME and MONGODB_ATLAS_INDEX_NAME, this is enough to create the Store:
 store = MongoDBAtlasStore()
@@ -198,7 +198,7 @@ Alternatively, you can also pass in your own mongodb client if you want to have 
 
 ```python
 from pymongo import AsyncMongoClient
-from semantic_kernel.connectors.memory.mongodb_atlas import MongoDBAtlasStore
+from semantic_kernel.connectors.mongodb import MongoDBAtlasStore
 
 client = AsyncMongoClient(...)
 store = MongoDBAtlasStore(mongo_client=client)
@@ -209,12 +209,12 @@ When a client is passed in, Semantic Kernel will not close the connection for yo
 You can also create a collection directly, without the store.
 
 ```python
-from semantic_kernel.connectors.memory.mongodb_atlas import MongoDBAtlasCollection
+from semantic_kernel.connectors.mongodb import MongoDBAtlasCollection
 
 # `hotel` is a class created with the @vectorstoremodel decorator
 collection = MongoDBAtlasCollection(
+    record_type=hotel,
     collection_name="my_collection",
-    data_model_type=hotel
 )
 ```
 

@@ -168,7 +168,7 @@ In order for the store and collection to work, it needs a connection string, thi
 In the snippets below, it is assumed that you have a data model class defined named 'DataModel'.
 
 ```python
-from semantic_kernel.connectors.memory.sql_server import SqlServerStore
+from semantic_kernel.connectors.sql_server import SqlServerStore
 
 vector_store = SqlServerStore()
 
@@ -182,7 +182,7 @@ vector_collection = vector_store.get_collection("dbo.table_name", DataModel)
 It is possible to construct a direct reference to a named collection.
 
 ```python
-from semantic_kernel.connectors.memory.sql_server import SqlServerCollection
+from semantic_kernel.connectors.sql_server import SqlServerCollection
 
 vector_collection = SqlServerCollection("dbo.table_name", DataModel)
 ```
@@ -192,7 +192,7 @@ vector_collection = SqlServerCollection("dbo.table_name", DataModel)
 When you have specific requirements for the connection, you can also pass in a `pyodbc.Connection` object to the `SqlServerStore` constructor. This allows you to use a custom connection string or other connection options:
 
 ```python
-from semantic_kernel.connectors.memory.sql_server import SqlServerStore
+from semantic_kernel.connectors.sql_server import SqlServerStore
 import pyodbc
 
 # Create a connection to the SQL Server database
@@ -207,18 +207,18 @@ You will have to make sure to close the connection yourself, as the store or col
 
 The SQL Server connector is limited to the Flat index type.
 
-The `create_collection` method on the `SqlServerCollection` allows you to pass in a single or multiple custom queries to create the collection. The queries are executed in the order they are passed in, no results are returned.
+The `ensure_collection_exists` method on the `SqlServerCollection` allows you to pass in a single or multiple custom queries to create the collection. The queries are executed in the order they are passed in, no results are returned.
 
 If this is done, there is no guarantee that the other methods still work as expected. The connector is not aware of the custom queries and will not validate them.
 
 If the `DataModel` has `id`, `content`, and `vector` as fields, then for instance you could create the table like this in order to also create a index on the content field:
 
 ```python
-from semantic_kernel.connectors.memory.sql_server import SqlServerCollection
+from semantic_kernel.connectors.sql_server import SqlServerCollection
 
 # Create a collection with a custom query
 async with SqlServerCollection("dbo.table_name", DataModel) as collection:    
-    collection.create_collection(
+    collection.ensure_collection_exists(
         queries=["CREATE TABLE dbo.table_name (id INT PRIMARY KEY, content NVARCHAR(3000) NULL, vector VECTOR(1536) NULL ) PRIMARY KEY (id);",
         "CREATE INDEX idx_content ON dbo.table_name (content);"]
     )

@@ -255,35 +255,32 @@ sealed class Glossary
 
 ## Vector Search
 
-There are three searches currently supported in the Semantic Kernel Vector Store abstractions:
-1. `vectorized_search`
-   1. This is search based on a vector created in your code, the vector is passed in and used to search.
-2. `vectorizable_text_search`
-   1. This is search based on a text string that is vectorized by the vector store as part of the search, this is not always supported and often requires a specific setup of either the vector store or the index.
-3. `vector_text_search`
-   1. This is text search directly against the vector store, most stores support this and depending on the store it can be as simple as comparing values or more advanced keyword search.
+There are two searches currently supported in the Semantic Kernel Vector Store abstractions:
+1. `search` (vector search)
+   1. This is search based on a value that can be vectorized, by the `embedding_generator` field on the data model or record definition, or by the vector store itself. Or by directly supplying a vector.
+2. `hybrid_search` -> see [Hybrid Search](./hybrid-search.md)
 
-All searches can take a optional `VectorSearchOptions` instance as input. Each of the three searches have a Mixin class that needs to be part of it to surface the search methods and this always should be combined with the `VectorSearchBase[TKey, TRecord]` parent. 
-
-Note that `VectorSearchBase` inherits from `VectorStoreRecordCollection`, as it uses some of the same methods, for instance for serialization and deserialization.
+All searches can take a optional set of parameters:
+- `vector`: A vector used to search, can be supplied instead of the values, or in addition to the values for hybrid.
+- `top`: The number of results to return, defaults to 3.
+- `skip`: The number of results to skip, defaults to 0.
+- `include_vectors`: Whether to include the vectors in the results, defaults to `false`.
+- `filter`: A filter to apply to the results before the vector search is applied, defaults to `None`, in the form of a lambda expression: `lambda record: record.property == "value"`.
+- `vector_property_name`: The name of the vector property to use for the search, defaults to the first vector property found on the data model or record definition.
+- `include_total_count`: Whether to include the total count of results in the search result, defaults to `false`.
 
 Assuming you have a collection that already contains data, you can easily search it. Here is an example using Azure AI Search.
 
 ```python
-from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchCollection, AzureAISearchStore
-from semantic_kernel.data.vector_search import VectorSearchOptions
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection, AzureAISearchStore
 
 # Create a Azure AI Search VectorStore object and choose an existing collection that already contains records.
 # Hotels is the data model decorated class.
 store = AzureAISearchStore()
-collection: AzureAISearchCollection = store.get_collection("skhotels", Hotels)
+collection: AzureAISearchCollection[str, Hotels] = store.get_collection(Hotels, collection_name="skhotels")
 
-# Generate a vector for your search text.
-# Just showing a placeholder method here for brevity.
-vector = await generate_vector("I'm looking for a hotel where customer happiness is the priority.")
-
-search_results = await collection.vectorized_search(
-    vector=vector, options=VectorSearchOptions(vector_field_name="vector")
+search_results = await collection.search(
+    query, vector_property_name="vector"
 )
 hotels = [record.record async for record in search_results.results]
 print(f"Found hotels: {hotels}")
@@ -292,111 +289,13 @@ print(f"Found hotels: {hotels}")
 > [!TIP]
 > For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
 
-## Vector Search Options
+### Filters
 
-The following options can be provided using the `VectorSearchOptions` class.
+The `filter` parameter can be used to provide a filter for filtering the records in the chosen collection. It is defined as a lambda expression, or a string of a lambda expression, e.g. `lambda record: record.property == "value"`.
 
-### Vector Field Name
+It is important to understand that these are not executed directly, rather they are parsed into the syntax matching the vector stores, the only exception to this is the `InMemoryCollection` which does execute the filter directly.
 
-The `vector_field_name` option can be used to specify the name of the vector property to target during the search.
-If none is provided, the first vector found on the data model or specified in the record definition will be used.
-
-Note that when specifying the `vector_field_name`, use the name of the property as defined on the data model or in the record definition.
-Use this property name even if the property may be stored under a different name in the vector store. The storage name may e.g. be different
-because of custom serialization settings.
-
-```Python
-
-from semantic_kernel.data.vector_search import VectorSearchOptions
-from semantic_kernel.connectors.memory.in_memory import InMemoryVectorStore
-
-vector_store = InMemoryVectorStore()
-collection = vector_store.get_collection("skproducts", Product)
-
-# Create the vector search options and indicate that we want to search the FeatureListEmbedding property.
-vector_search_options = VectorSearchOptions(vector_field_name="feature_list_embedding")
-
-# This snippet assumes search_vector is already provided, having been created using the embedding model of your choice.
-search_result = await collection.vectorized_search(vector=search_vector, options=vector_search_options)
-products = [record async for record in search_result.results]
-
-```
-
-### Top and Skip
-
-The `top` and `skip` options allow you to limit the number of results to the Top n results and
-to skip a number of results from the top of the resultset.
-Top and Skip can be used to do paging if you wish to retrieve a large number of results using separate calls.
-
-```python
-# Create the vector search options and indicate that we want to skip the first 40 results and then get the next 20.
-vector_search_options = VectorSearchOptions(top=20, skip=40)
-
-# This snippet assumes `vector` is already provided, having been created using the embedding model of your choice.
-search_result = await collection.vectorized_search(vector=vector, options=vector_search_options)
-async for result in search_result.results:
-    print(result.record)
-```
-
-The default values for `top` is 3 and `skip` is 0.
-
-### Include Vectors
-
-The `include_vectors` option allows you to specify whether you wish to return vectors in the search results.
-If `false`, the vector properties on the returned model will be left null.
-Using `false` can significantly reduce the amount of data retrieved from the vector store during search,
-making searches more efficient.
-
-The default value for `include_vectors` is `false`.
-
-> [!TIP]
-> Make sure your data model allows the vector fields to be None! If not and you keep this to the default it might raise an error.
-
-### Filter
-
-The `filter` option can be used to provide a filter for filtering the records in the chosen collection
-before applying the vector search.
-
-This has multiple benefits:
-
-- Reduce latency and processing cost, since only records remaining after filtering need to be compared with the search vector and therefore fewer vector comparisons have to be done.
-- Limit the resultset for e.g. access control purposes, by excluding data that the user shouldn't have access to.
-
-Note that in order for fields to be used for filtering, many vector stores require those fields to be indexed first.
-Some vector stores will allow filtering using any field, but may optionally allow indexing to improve filtering performance.
-
-If creating a collection via the Semantic Kernel vector store abstractions and you wish to enable filtering on a field,
-set the `is_filterable` property to true when defining your data model or when creating your record definition.
-
-> [!TIP]
-> For more information on how to set the `is_filterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddatafield-parameters) or [VectorStoreRecordDataField configuration settings](./schema-with-record-definition.md).
-
-To create a filter use the `VectorSearchFilter` class. You can combine multiple filter clauses together in one `VectorSearchFilter`.
-All filter clauses are combined with `and`.
-Note that when providing a property name when constructing the filter, use the name of the property as defined on the data model or in the record definition.
-Use this property name even if the property may be stored under a different name in the vector store. The storage name may e.g. be different
-because of custom serialization settings.
-
-```python
-# Filter where category == 'External Definitions' and tags contain 'memory'.
-filter = VectorSearchFilter.equal_to('category', "External Definitions").any_tag_equal_to('tags', "memory")
-
-# Create the vector search options and set the filter on the options.
-vector_search_options = VectorSearchOptions(filter=filter)
-
-# This snippet assumes search_vector is already provided, having been created using the embedding model of your choice.
-search_result = await collection.vectorized_search(vector=search_vector, options=vector_search_options)
-```
-You can chain any number of filters together as shown above, and they will be combined with `and`.
-
-#### EqualTo filter clause
-
-Use `EqualTo` (class) or `.equal_to` ((class)method on the filter object) for a direct comparison between property and value.
-
-#### AnyTagEqualTo filter clause
-
-Use `AnyTagEqualTo`/`.any_tag_equal_to` to check if any of the strings, stored in a tag property in the vector store, contains a provided value.
-For a property to be considered a tag property, it needs to be a List, array or other enumerable of string.
+Given this flexibility, it is important to review the documentation of a specific store to understand which filters are supported, for instance not all vector stores support negative filters (i.e. `lambda x: not x.value`), and that won't become apparent until the search is executed.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
