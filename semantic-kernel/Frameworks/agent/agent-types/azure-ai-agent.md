@@ -393,7 +393,7 @@ AzureAIAgent agent = new(definition, agentsClient);
 ::: zone pivot="programming-language-python"
 
 ```python
-from azure.ai.projects.models import CodeInterpreterTool
+from azure.ai.agents.models import CodeInterpreterTool
 
 async with (
         DefaultAzureCredential() as creds,
@@ -447,7 +447,7 @@ AzureAIAgent agent = new(definition, agentsClient);
 ::: zone pivot="programming-language-python"
 
 ```python
-from azure.ai.projects.models import FileSearchTool
+from azure.ai.agents.models import FileSearchTool
 
 async with (
         DefaultAzureCredential() as creds,
@@ -502,7 +502,7 @@ AzureAIAgent agent = new(definition, agentsClient);
 ::: zone pivot="programming-language-python"
 
 ```python
-from azure.ai.projects.models import OpenApiTool, OpenApiAnonymousAuthDetails
+from azure.ai.agents.models import OpenApiTool, OpenApiAnonymousAuthDetails
 
 async with (
     DefaultAzureCredential() as creds,
@@ -574,7 +574,7 @@ AzureAIAgent agent = new(definition, agentsClient);
 ::: zone pivot="programming-language-python"
 
 ```python
-from azure.ai.projects.models import AzureAISearchTool, ConnectionType
+from azure.ai.agents.models import AzureAISearchTool, ConnectionType
 
 async with (
     DefaultAzureCredential() as creds,
