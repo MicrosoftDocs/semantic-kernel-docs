@@ -2,9 +2,9 @@
 title: How to quickly start with Semantic Kernel
 description: Follow along with Semantic Kernel's guides to quickly learn how to use the SDK
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: quickstart
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---

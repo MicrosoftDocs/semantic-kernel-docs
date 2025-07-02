@@ -171,8 +171,8 @@ To use the definition, pass it to the GetCollection method or a collection const
 ```python
 collection = vector_store.get_collection(
     collection_name="skhotels", 
-    data_model_type=pd.DataFrame, 
-    data_model_definition=hotel_definition,
+    record_type=pd.DataFrame, 
+    definition=hotel_definition,
 )
 ```
 

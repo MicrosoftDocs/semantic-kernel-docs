@@ -135,18 +135,18 @@ You can create the store and collections from there, or create the collections d
 In the snippets below, it is assumed that you have a data model class defined named 'DataModel'.
 
 ```python
-from semantic_kernel.connectors.memory.in_memory import InMemoryVectorStore
+from semantic_kernel.connectors.in_memory import InMemoryVectorStore
 
 vector_store = InMemoryVectorStore()
-vector_collection = vector_store.get_collection("collection_name", DataModel)
+vector_collection = vector_store.get_collection(record_type=DataModel, collection_name="collection_name")
 ```
 
 It is possible to construct a direct reference to a named collection.
 
 ```python
-from semantic_kernel.connectors.memory.in_memory import InMemoryCollection
+from semantic_kernel.connectors.in_memory import InMemoryCollection
 
-vector_collection = InMemoryCollection("collection_name", DataModel)
+vector_collection = InMemoryCollection(record_type=DataModel, collection_name="collection_name")
 ```
 
 ::: zone-end

@@ -2,9 +2,9 @@
 title: Supported languages for Semantic Kernel
 description: Learn which features are available for C#, Python, and Java.
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: reference
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---

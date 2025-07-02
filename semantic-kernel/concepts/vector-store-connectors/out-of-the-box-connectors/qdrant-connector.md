@@ -216,7 +216,7 @@ You can then create a vector store instance using the `QdrantStore` class, this 
 
 ```python
 
-from semantic_kernel.connectors.memory.qdrant import QdrantStore
+from semantic_kernel.connectors.qdrant import QdrantStore
 
 vector_store = QdrantStore()
 ```
@@ -225,7 +225,7 @@ You can also create the vector store with your own instance of the qdrant client
 
 ```python
 from qdrant_client.async_qdrant_client import AsyncQdrantClient
-from semantic_kernel.connectors.memory.qdrant import QdrantStore
+from semantic_kernel.connectors.qdrant import QdrantStore
 
 client = AsyncQdrantClient(host='localhost', port=6333)
 vector_store = QdrantStore(client=client)
@@ -234,9 +234,9 @@ vector_store = QdrantStore(client=client)
 You can also create a collection directly.
 
 ```python
-from semantic_kernel.connectors.memory.qdrant import QdrantCollection
+from semantic_kernel.connectors.qdrant import QdrantCollection
 
-collection = QdrantCollection(collection_name="skhotels", data_model_type=hotel)
+collection = QdrantCollection(collection_name="skhotels", record_type=hotel)
 ```
 
 ## Serialization
@@ -415,7 +415,7 @@ from semantic_kernel.connectors.memory.qdrant import QdrantCollection
 
 collection = QdrantCollection(
     collection_name="skhotels", 
-    data_model_type=Hotel, 
+    record_type=Hotel, 
     named_vectors=False,
 )
 ```
