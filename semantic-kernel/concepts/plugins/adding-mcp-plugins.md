@@ -118,8 +118,110 @@ All the MCP plugins have additional options:
 ::: zone-end
 ::: zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> MCP Documentation is coming soon for .Net.
+The simplest way to add a plugin using MCP with Semantic Kernel is using the `ModelContextProtocol-SemanticKernel` package. 
+
+### Add the package
+```
+dotnet add package ModelContextProtocol-SemanticKernel --version 0.3.0-preview-01
+```
+
+### Register a single function or tool
+Use the extension method to register a specific MCP function/tool.
+```
+// Stdio
+await kernel.Plugins.AddMcpFunctionsFromStdioServerAsync("GitHub", "npx", ["-y", "@modelcontextprotocol/server-github"]);
+
+// SSE
+await kernel.Plugins.AddMcpFunctionsFromSseServerAsync("GitHub", new Uri("http://localhost:12345"));
+```
+
+### Register MCP Server(s) from Claude Desktop configuration
+It's also possible to register all Stdio MCP Servers which are registered in Claude Desktop:
+```
+// Stdio MCP Tools defined in claude_desktop_config.json
+await kernel.Plugins.AddToolsFromClaudeDesktopConfigAsync();
+```
+
+### Full STDIO example
+```
+var builder = Kernel.CreateBuilder();
+builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
+
+builder.Services.AddOpenAIChatCompletion(
+    serviceId: "openai",
+    modelId: "gpt-4o-mini",
+    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")!);
+
+var kernel = builder.Build();
+
+// Add this line to enable MCP functions from a Stdio server named "Everything"
+await kernel.Plugins.AddMcpFunctionsFromStdioServerAsync("Everything", "npx", ["-y", "@modelcontextprotocol/server-github"]);
+
+var executionSettings = new OpenAIPromptExecutionSettings
+{
+    Temperature = 0,
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+};
+
+var prompt = "Please call the echo tool with the string 'Hello Stef!' and give me the response as-is.";
+var result = await kernel.InvokePromptAsync(prompt, new(executionSettings)).ConfigureAwait(false);
+Console.WriteLine($"\n\n{prompt}\n{result}");
+```
+Result:
+```
+Please call the echo tool with the string 'Hello Stef!' and give me the response as-is.
+Echo: Hello Stef!
+```
+
+### Full SSE example
+```
+var builder = Kernel.CreateBuilder();
+builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
+
+builder.Services.AddOpenAIChatCompletion(
+    serviceId: "openai",
+    modelId: "gpt-4o-mini",
+    apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")!);
+
+var kernel = builder.Build();
+
+// Add this line to enable MCP functions from a Sse server named "Github"
+// - Note that a server must be running at the specified URL
+await kernel.Plugins.AddMcpFunctionsFromSseServerAsync("GitHub", "http://localhost:12345");
+
+var executionSettings = new OpenAIPromptExecutionSettings
+{
+    Temperature = 0,
+    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+};
+
+var prompt = "Summarize the last 3 commits to the StefH/FluentBuilder repository.";
+var result = await kernel.InvokePromptAsync(prompt, new(executionSettings)).ConfigureAwait(false);
+Console.WriteLine($"\n\n{prompt}\n{result}");
+```
+
+Results:
+```
+Summarize the last 3 commits to the StefH/FluentBuilder repository.
+Here are the summaries of the last three commits to the `StefH/FluentBuilder` repository:
+
+1. **Commit [2293880](https://github.com/StefH/FluentBuilder/commit/229388090f50a39f489e30cb535f67f3705cf61f)** (January 30, 2025)
+   - **Author:** Stef Heyenrath
+   - **Message:** Update README.md
+   - **Details:** This commit updates the README.md file. The commit was verified and is valid.
+
+2. **Commit [ae27064](https://github.com/StefH/FluentBuilder/commit/ae2706424c3b75613bf5625091aa2649fb33ecde)** (November 6, 2024)
+   - **Author:** Stef Heyenrath
+   - **Message:** Update README.md
+   - **Details:** This commit also updates the README.md file. The commit was verified and is valid.
+
+3. **Commit [53096a8](https://github.com/StefH/FluentBuilder/commit/53096a8b54a1029532425bc727fdd831e9ed0092)** (October 20, 2024)
+   - **Author:** Stef Heyenrath
+   - **Message:** Update README.md
+   - **Details:** This commit updates the README.md file as well. The commit was verified and is valid.
+
+All three commits involve updates to the README.md file, reflecting ongoing improvements or changes to the documentation.
+```
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
