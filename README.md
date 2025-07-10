@@ -6,7 +6,7 @@ This is the GitHub repository for the technical product documentation for **Sema
 
 Thanks for your interest in contributing to the home of technical content for Microsoft products and services.
 
-To learn how to make contributions to the content in this repository, start with our [Docs contributor guide](/contribute).
+To learn how to make contributions to the content in this repository, start with our [Docs contributor guide](/semantic-kernel/support/contributing).
 
 ## Code of conduct
 
