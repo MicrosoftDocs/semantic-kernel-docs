@@ -14,7 +14,9 @@ ms.service: semantic-kernel
 > [!IMPORTANT]
 > Agent Orchestration features in the Agent Framework are in the experimental stage. They are under active development and may change significantly before advancing to the preview or release candidate stage.
 
-The concurrent pattern enables multiple agents to work on the same task in parallel. Each agent processes the input independently, and their results are collected and aggregated. This approach is well-suited for scenarios where diverse perspectives or solutions are valuable, such as brainstorming, ensemble reasoning, or voting systems.
+Concurrent orchestration enables multiple agents to work on the same task in parallel. Each agent processes the input independently, and their results are collected and aggregated. This approach is well-suited for scenarios where diverse perspectives or solutions are valuable, such as brainstorming, ensemble reasoning, or voting systems.
+
+To learn more about the pattern, such as when to use the pattern or when to avoid the pattern, see [Concurrent orchestration](/azure/architecture/ai-ml/guide/ai-agent-design-patterns#concurrent-orchestration).
 
 ## Common Use Cases
 
