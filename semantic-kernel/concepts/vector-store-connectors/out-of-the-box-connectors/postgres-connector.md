@@ -346,7 +346,7 @@ You can pass a `psycopg_pool` [AsyncConnectionPool](https://www.psycopg.org/psyc
 or use the `PostgresSettings` to create a connection pool from environment variables.
 
 ```python
-from semantic_kernel.connectors.memory.postgres import PostgresStore, PostgresSettings
+from semantic_kernel.connectors.postgres import PostgresStore, PostgresSettings
 
 settings = PostgresSettings()
 
@@ -363,9 +363,9 @@ You can also create a collection directly. The Collection itself is a context ma
 in a connection pool, the collection will create one using the `PostgresSettings` class.
 
 ```python
-from semantic_kernel.connectors.memory.postgres import PostgresCollection
+from semantic_kernel.connectors.postgres import PostgresCollection
 
-collection = PostgresCollection(collection_name="skhotels", data_model_type=Hotel)
+collection = PostgresCollection(collection_name="skhotels", record_type=Hotel)
 async with collection:  # This will create a connection pool using PostgresSettings
     ...
 ```
@@ -381,33 +381,33 @@ into a `dict` that can be serialized to Postgres rows.
 - The data model properties annotated as vectors will be mapped to a table column that has the pgvector `VECTOR` type in Postgres.
 
 ```python
+from typing import Annotated
 from pydantic import BaseModel
 
-from semantic_kernel.connectors.memory.postgres import PostgresCollection
-from semantic_kernel.data import (
+from semantic_kernel.connectors.postgres import PostgresCollection
+from semantic_kernel.data.vector import (
     DistanceFunction,
     IndexKind,
-    VectorStoreRecordDataField,
-    VectorStoreRecordKeyField,
-    VectorStoreRecordVectorField,
+    VectorStoreField,
     vectorstoremodel,
 )
 
 @vectorstoremodel
 class Hotel(BaseModel):
-    hotel_id: Annotated[int, VectorStoreRecordKeyField()]
-    hotel_name: Annotated[str, VectorStoreRecordDataField()]
-    hotel_description: Annotated[str, VectorStoreRecordDataField(has_embedding=True, embedding_property_name="hotel_description_embedding")]
+    hotel_id: Annotated[int, VectorStoreField("key")]
+    hotel_name: Annotated[str, VectorStoreField("data")]
+    hotel_description: Annotated[str, VectorStoreField("data")]
     hotel_description_embedding: Annotated[
         list[float] | None,
-        VectorStoreRecordVectorField(
-            index_kind=IndexKind.HNSW,
+        VectorStoreField(
+            "vector",
             dimensions=4,
+            index_kind=IndexKind.HNSW,
             distance_function=DistanceFunction.COSINE_SIMILARITY,
         ),
     ] = None
 
-collection = PostgresCollection(collection_name="Hotels", data_model_type=Hotel)
+collection = PostgresCollection(collection_name="Hotels", record_type=Hotel)
 
 async with collection:
     await collection.create_collection_if_not_exists()
@@ -519,7 +519,7 @@ class AsyncEntraConnection(AsyncConnection):
 You can use the custom connection class with the `PostgresSettings.get_connection_pool` method to create a connection pool.
 
 ```python
-from semantic_kernel.connectors.memory.postgres import PostgresSettings, PostgresStore
+from semantic_kernel.connectors.postgres import PostgresSettings, PostgresStore
 
 
 pool = await PostgresSettings().create_connection_pool(connection_class=AsyncEntraConnection)
