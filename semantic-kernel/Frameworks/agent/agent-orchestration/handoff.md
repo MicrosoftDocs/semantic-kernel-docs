@@ -14,7 +14,9 @@ ms.service: semantic-kernel
 > [!IMPORTANT]
 > Agent Orchestration features in the Agent Framework are in the experimental stage. They are under active development and may change significantly before advancing to the preview or release candidate stage.
 
-Handoff orchestration allows agents to transfer control to one another based on the context or user request. Each agent can “handoff” the conversation to another agent with the appropriate expertise, ensuring that the right agent handles each part of the task. This is particularly useful in customer support, expert systems, or any scenario requiring dynamic delegation.
+Handoff orchestration allows agents to transfer control to one another based on the context or user request. Each agent can "handoff" the conversation to another agent with the appropriate expertise, ensuring that the right agent handles each part of the task. This is particularly useful in customer support, expert systems, or any scenario requiring dynamic delegation.
+
+To learn more about the pattern, such as when to use the pattern or when to avoid the pattern in your workload, see [Handoff orchestration](/azure/architecture/ai-ml/guide/ai-agent-design-patterns#handoff-orchestration).
 
 ## Common Use Cases
 

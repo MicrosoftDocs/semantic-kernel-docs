@@ -24,6 +24,8 @@ The Magentic manager maintains a shared context, tracks progress, and adapts the
 > [!TIP]
 > The name "Magentic" comes from "Magentic-One". "Magentic-One" is a multi-agent system that includes a set of agents, such as the `WebSurfer` and `FileSurfer`. The Semantic Kernel Magentic orchestration is inspired by the Magentic-One system where the `Magentic` manager coordinates a team of specialized agents to solve complex tasks. However, it is not a direct implementation of the Magentic-One system and does not feature the agents from the Magentic-One system.
 
+To learn more about the pattern, such as when to use the pattern or when to avoid the pattern in your workload, see [Magentic orchestration](/azure/architecture/ai-ml/guide/ai-agent-design-patterns#magentic-orchestration).
+
 ## Common Use Cases
 
 A user requests a comprehensive report comparing the energy efficiency and CO₂ emissions of different machine learning models. The Magentic manager first assigns a research agent to gather relevant data, then delegates analysis and computation to a coder agent. The manager coordinates multiple rounds of research and computation, aggregates the findings, and produces a detailed, structured report as the final output.
