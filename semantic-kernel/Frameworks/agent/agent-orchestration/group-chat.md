@@ -16,6 +16,8 @@ ms.service: semantic-kernel
 
 Group chat orchestration models a collaborative conversation among agents, optionally including a human participant. A group chat manager coordinates the flow, determining which agent should respond next and when to request human input. This pattern is powerful for simulating meetings, debates, or collaborative problem-solving sessions.
 
+To learn more about the pattern, such as when to use the pattern or when to avoid the pattern in your workload, see [Group chat orchestration](/azure/architecture/ai-ml/guide/ai-agent-design-patterns#group-chat-orchestration).
+
 ## Common Use Cases
 
 Agents representing different departments discuss a business proposal, with a manager agent moderating the conversation and involving a human when needed:
