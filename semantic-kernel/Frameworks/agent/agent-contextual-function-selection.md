@@ -66,7 +66,7 @@ agentThread.AIContextProviders.Add(
     new ContextualFunctionProvider(
         vectorStore: new InMemoryVectorStore(new InMemoryVectorStoreOptions() { EmbeddingGenerator = embeddingGenerator }),
         vectorDimensions: 1536,
-        functions: AvailableFunctions(),
+        functions: GetAvailableFunctions(),
         maxNumberOfFunctions: 3, // Only the top 3 relevant functions are advertised
         loggerFactory: LoggerFactory
     )
