@@ -27,8 +27,7 @@
           "**/*.svg",
           "**/*.png",
           "**/*.jpg",
-          "**/*.gif",
-          "media/vector-store-data-ingestion-input.zip"
+          "**/*.gif"
         ],
         "exclude": [
           "**/obj/**",
@@ -44,12 +43,12 @@
     "externalReference": [],
     "globalMetadata": {
       "zone_pivot_group_filename:": "zone_pivot_group.json",
-      "uhfHeaderId": "MSDocsHeader-SemanticKernel",
-      "breadcrumb_path": "/semantic-kernel/breadcrumb/toc.json",
+      "uhfHeaderId": "MSDocsHeader-AgentFramework",
+      "breadcrumb_path": "/agent-framework/breadcrumb/toc.json",
       "feedback_system": "None"
     },
     "fileMetadata": {},
     "template": [],
-    "dest": "semantic-kernel"
+    "dest": "agent-framework"
   }
 }
