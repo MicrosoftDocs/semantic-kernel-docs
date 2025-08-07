@@ -5,3 +5,35 @@
   expanded: true
 - name: Migration Guide
   href: migration-guide/index.md
+- name: Installation
+  items:
+  - name: Install Agent Framework
+    href: agent-framework-installation.md
+  - name: Docker
+    href: agent-framework-docker.md
+- name: Getting Started
+  items:
+  - name: Overview
+    href: agent-framework-overview.md
+  - name: Create an agent
+    href: create-agent.md
+  - name: Human in the loop
+    href: human-input-agent.md
+  - name: Tool use
+    href: tool-use.md
+  - name: Chat termination
+    href: chat-termination.md
+  - name: Multi-agent Conversation Framework
+    href: multi-agent.md
+- name: Use Agent Framework
+  items:
+  - name: LLM Configuration
+    href: llm-configuration.md
+  - name: Agent Observability
+    href: agent-observability.md
+- name: Troubleshoot
+  items:
+  - name: FAQs
+    href: agent-framework-questions.md
+- name: API Reference Guide
+  items:
