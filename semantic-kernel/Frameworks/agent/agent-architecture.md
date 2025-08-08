@@ -203,3 +203,4 @@ def resolve_placeholders(cls, yaml_str: str, settings=None, extras=None) -> str:
 
 > [!div class="nextstepaction"]
 > [Explore the Common Agent Invocation API](./agent-api.md)
+
