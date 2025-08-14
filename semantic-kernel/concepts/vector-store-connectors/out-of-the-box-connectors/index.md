@@ -47,6 +47,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | Milvus                                                             |          Planned             |                                |                                   |
 | [MongoDB](./mongodb-connector.md)                                  |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
 | [Neon Serverless Postgres](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/neon1722366567200.neon_serverless_postgres_azure_prod) |Use [Postgres Connector](./postgres-connector.md)|      ✅               | Microsoft Semantic Kernel Project |
+[OracleDB](./oracledb-connector.md)                                  |             ✅              |               ✅               | Microsoft Semantic Kernel Project 
 | [Pinecone](./pinecone-connector.md)                                |             ✅              |               ❌               | Microsoft Semantic Kernel Project |
 | [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
 | [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
