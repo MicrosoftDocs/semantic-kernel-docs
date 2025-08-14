@@ -2,7 +2,7 @@
 title: Inspection of telemetry data with Aspire Dashboard
 description: Send telemetry data to Aspire Dashboard
 zone_pivot_groups: programming-languages
-author: taochen
+author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
 ms.date: 09/12/2024
@@ -11,9 +11,9 @@ ms.service: semantic-kernel
 
 # Inspection of telemetry data with Aspire Dashboard
 
-[Aspire Dashboard](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) is part of the [.NET Aspire](https://learn.microsoft.com/dotnet/aspire/get-started/aspire-overview) offering. The dashboard allows developers to monitor and inspect their distributed applications.
+[Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) is part of the [.NET Aspire](/dotnet/aspire/get-started/aspire-overview) offering. The dashboard allows developers to monitor and inspect their distributed applications.
 
-In this example, we will use the [standalone mode](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash) and learn how to export telemetry data to Aspire Dashboard, and inspect the data there.
+In this example, we will use the [standalone mode](/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash) and learn how to export telemetry data to Aspire Dashboard, and inspect the data there.
 
 ## Exporter
 
@@ -58,18 +58,18 @@ dotnet new console -n TelemetryAspireDashboardQuickstart
 
 Navigate to the newly created project directory after the command completes.
 
-
 ### Install required packages
 
 - Semantic Kernel
-    ```console
-    dotnet add package Microsoft.SemanticKernel
-    ```
+
+  ```console
+  dotnet add package Microsoft.SemanticKernel
+  ```
 
 - OpenTelemetry Console Exporter
-    ```console
-    dotnet add package OpenTelemetry.Exporter.OpenTelemetryProtocol
-    ```
+  ```console
+  dotnet add package OpenTelemetry.Exporter.OpenTelemetryProtocol
+  ```
 
 ### Create a simple application with Semantic Kernel
 
@@ -170,6 +170,7 @@ python -m venv telemetry-aspire-dashboard-quickstart
 ```
 
 Activate the virtual environment.
+
 ```console
 telemetry-aspire-dashboard-quickstart\Scripts\activate
 ```
@@ -250,6 +251,7 @@ if __name__ == "__main__":
 Please refer to this [article](./telemetry-with-console.md#environment-variables) for more information on setting up the required environment variables to enable the kernel to emit spans for AI connectors.
 
 #### Code
+
 If you run the script now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `# Telemetry setup code goes here` comment with the following code:
 
 ```python
@@ -325,12 +327,12 @@ Please refer to this [article](./telemetry-with-console.md#add-telemetry-1) for 
 
 > [!NOTE]
 > Semantic Kernel Observability is not yet available for Java.
- 
+
 ::: zone-end
 
 ## Start the Aspire Dashboard
 
-Follow the instructions [here](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
+Follow the instructions [here](/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
 
 ## Run
 
@@ -366,7 +368,7 @@ python telemetry_aspire_dashboard_quickstart.py
 After running the application, head over to the dashboard to inspect the telemetry data.
 
 > [!TIP]
-> Follow this [guide](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard interface.
+> Follow this [guide](/dotnet/aspire/fundamentals/dashboard/explore) to explore the Aspire Dashboard interface.
 
 ### Traces
 
@@ -383,7 +385,7 @@ In the trace details, you can see the span that represents the prompt function a
 
 ### Logs
 
-Head over to the `Structured` tab to view the logs emitted by the application. Please refer to this [guide](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/explore#structured-logs-page) on how to work with structured logs in the dashboard.
+Head over to the `Structured` tab to view the logs emitted by the application. Please refer to this [guide](/dotnet/aspire/fundamentals/dashboard/explore#structured-logs-page) on how to work with structured logs in the dashboard.
 
 ## Next steps
 

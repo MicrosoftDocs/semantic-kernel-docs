@@ -10,22 +10,38 @@ ms.service: semantic-kernel
 ---
 # Vector search using Semantic Kernel Vector Store connectors (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 Semantic Kernel provides vector search capabilities as part of its Vector Store abstractions. This supports filtering and many other options, which this article will explain in more detail.
 
 ::: zone pivot="programming-language-csharp"
 
+> [!TIP]
+> To see how you can search without generating embeddings yourself, see [Letting the Vector Store generate embeddings](./embedding-generation.md#letting-the-vector-store-generate-embeddings).
+
 ## Vector Search
 
-The `VectorizedSearchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions` class as input.
-This method is available on the following interfaces:
+The `SearchAsync` method allows searching using data that has already been vectorized. This method takes a vector and an optional `VectorSearchOptions<TRecord>` class as input.
+This method is available on the following types:
 
-1. `IVectorizedSearch<TRecord>`
-2. `IVectorStoreRecordCollection<TKey, TRecord>`
+1. `IVectorSearchable<TRecord>`
+2. `VectorStoreCollection<TKey, TRecord>`
 
-Note that `IVectorStoreRecordCollection<TKey, TRecord>` inherits from `IVectorizedSearch<TRecord>`.
+Note that `VectorStoreCollection<TKey, TRecord>` implements from `IVectorSearchable<TRecord>`.
 
 Assuming you have a collection that already contains data, you can easily search it. Here is an example using Qdrant.
 
@@ -41,17 +57,17 @@ async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string textToVectorize)
 }
 
 // Create a Qdrant VectorStore object and choose an existing collection that already contains records.
-IVectorStore vectorStore = new QdrantVectorStore(new QdrantClient("localhost"));
-IVectorStoreRecordCollection<ulong, Hotel> collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
+VectorStore vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClient: true);
+VectorStoreCollection<ulong, Hotel> collection = vectorStore.GetCollection<ulong, Hotel>("skhotels");
 
 // Generate a vector for your search text, using your chosen embedding generation implementation.
 ReadOnlyMemory<float> searchVector = await GenerateEmbeddingAsync("I'm looking for a hotel where customer happiness is the priority.");
 
-// Do the search, passing an options object with a Top value to limit resulst to the single top match.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+// Do the search, passing an options object with a Top value to limit results to the single top match.
+var searchResult = collection.SearchAsync(searchVector, top: 1);
 
 // Inspect the returned hotel.
-await foreach (var record in searchResult.Results)
+await foreach (var record in searchResult)
 {
     Console.WriteLine("Found hotel description: " + record.Record.Description);
     Console.WriteLine("Found record score: " + record.Score);
@@ -63,27 +79,24 @@ await foreach (var record in searchResult.Results)
 
 ## Supported Vector Types
 
-`VectorizedSearchAsync` takes a generic type as the vector parameter.
-The types of vectors supported y each data store vary.
+`SearchAsync` takes a generic type as the vector parameter.
+The types of vectors supported by each data store vary.
 See [the documentation for each connector](./out-of-the-box-connectors/index.md) for the list of supported vector types.
 
 It is also important for the search vector type to match the target vector that is being searched, e.g. if you have two vectors
 on the same record with different vector types, make sure that the search vector you supply matches the type of the specific vector
 you are targeting.
-See [VectorPropertyName](#vectorpropertyname) for how to pick a target vector if you have more than one per record.
+See [VectorProperty](#vectorproperty) for how to pick a target vector if you have more than one per record.
 
 ## Vector Search Options
 
-The following options can be provided using the `VectorSearchOptions` class.
+The following options can be provided using the `VectorSearchOptions<TRecord>` class.
 
-### VectorPropertyName
+### VectorProperty
 
-The `VectorPropertyName` option can be used to specify the name of the vector property to target during the search.
-If none is provided, the first vector found on the data model or specified in the record definition will be used.
-
-Note that when specifying the `VectorPropertyName`, use the name of the property as defined on the data model or in the record definition.
-Use this property name even if the property may be stored under a different name in the vector store. The storage name may e.g. be different
-because of custom serialization settings.
+The `VectorProperty` option can be used to specify the vector property to target during the search.
+If none is provided and the data model contains only one vector, that vector will be used.
+If the data model contains no vector or multiple vectors and `VectorProperty` is not provided, the search method will throw.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
@@ -93,29 +106,29 @@ var vectorStore = new InMemoryVectorStore();
 var collection = vectorStore.GetCollection<int, Product>("skproducts");
 
 // Create the vector search options and indicate that we want to search the FeatureListEmbedding property.
-var vectorSearchOptions = new VectorSearchOptions
+var vectorSearchOptions = new VectorSearchOptions<Product>
 {
-    VectorPropertyName = nameof(Product.FeatureListEmbedding)
+    VectorProperty = r => r.FeatureListEmbedding
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions).Results.ToListAsync();
+var searchResult = collection.SearchAsync(searchVector, top: 3, vectorSearchOptions);
 
 public sealed class Product
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public int Key { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Description { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public List<string> FeatureList { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> DescriptionEmbedding { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> FeatureListEmbedding { get; set; }
 }
 ```
@@ -127,24 +140,25 @@ to skip a number of results from the top of the resultset.
 Top and Skip can be used to do paging if you wish to retrieve a large number of results using separate calls.
 
 ```csharp
-// Create the vector search options and indicate that we want to skip the first 40 results and then get the next 20.
-var vectorSearchOptions = new VectorSearchOptions
+// Create the vector search options and indicate that we want to skip the first 40 results.
+var vectorSearchOptions = new VectorSearchOptions<Product>
 {
-    Top = 20,
     Skip = 40
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+// Here we pass top: 20 to indicate that we want to retrieve the next 20 results after skipping
+// the first 40
+var searchResult = collection.SearchAsync(searchVector, top: 20, vectorSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.FeatureList);
 }
 ```
 
-The default values for `Top` is 3 and `Skip` is 0.
+The default value `Skip` is 0.
 
 ### IncludeVectors
 
@@ -157,24 +171,24 @@ The default value for `IncludeVectors` is `false`.
 
 ```csharp
 // Create the vector search options and indicate that we want to include vectors in the search results.
-var vectorSearchOptions = new VectorSearchOptions
+var vectorSearchOptions = new VectorSearchOptions<Product>
 {
     IncludeVectors = true
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = collection.SearchAsync(searchVector, top: 3, vectorSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.FeatureList);
 }
 ```
 
-### VectorSearchFilter
+### Filter
 
-The `VectorSearchFilter` option can be used to provide a filter for filtering the records in the chosen collection
+The vector search filter option can be used to provide a filter for filtering the records in the chosen collection
 before applying the vector search.
 
 This has multiple benefits:
@@ -189,102 +203,84 @@ If creating a collection via the Semantic Kernel vector store abstractions and y
 set the `IsFilterable` property to true when defining your data model or when creating your record definition.
 
 > [!TIP]
-> For more information on how to set the `IsFilterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
+> For more information on how to set the `IsFilterable` property, refer to [VectorStoreDataAttribute parameters](./defining-your-data-model.md#vectorstoredataattribute-parameters) or [VectorStoreDataProperty configuration settings](./schema-with-record-definition.md#vectorstoredataproperty-configuration-settings).
 
-To create a filter use the `VectorSearchFilter` class. You can combine multiple filter clauses together in one `VectorSearchFilter`.
-All filter clauses are combined with `and`.
-Note that when providing a property name when constructing the filter, use the name of the property as defined on the data model or in the record definition.
-Use this property name even if the property may be stored under a different name in the vector store. The storage name may e.g. be different
-because of custom serialization settings.
+Filters are expressed using LINQ expressions based on the type of the data model.
+The set of LINQ expressions supported will vary depending on the functionality supported
+by each database, but all databases support a broad base of common expressions, e.g. equals,
+not equals, and, or, etc.
 
 ```csharp
-// Filter where Category == 'External Definitions' and Tags contain 'memory'.
-var filter = new VectorSearchFilter()
-    .EqualTo(nameof(Glossary.Category), "External Definitions")
-    .AnyTagEqualTo(nameof(Glossary.Tags), "memory");
-
 // Create the vector search options and set the filter on the options.
-var vectorSearchOptions = new VectorSearchOptions
+var vectorSearchOptions = new VectorSearchOptions<Glossary>
 {
-    Filter = filter
+    Filter = r => r.Category == "External Definitions" && r.Tags.Contains("memory")
 };
 
 // This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var searchResult = await collection.VectorizedSearchAsync(searchVector, vectorSearchOptions);
+var searchResult = collection.SearchAsync(searchVector, top: 3, vectorSearchOptions);
 
 // Iterate over the search results.
-await foreach (var result in searchResult.Results)
+await foreach (var result in searchResult)
 {
     Console.WriteLine(result.Record.Definition);
 }
 
 sealed class Glossary
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public ulong Key { get; set; }
 
-    // Category is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Category is marked as indexed, since we want to filter using this property.
+    [VectorStoreData(IsIndexed = true)]
     public string Category { get; set; }
 
-    // Tags is marked as filterable, since we want to filter using this property.
-    [VectorStoreRecordData(IsFilterable = true)]
+    // Tags is marked as indexed, since we want to filter using this property.
+    [VectorStoreData(IsIndexed = true)]
     public List<string> Tags { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Term { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Definition { get; set; }
 
-    [VectorStoreRecordVector(1536)]
+    [VectorStoreVector(1536)]
     public ReadOnlyMemory<float> DefinitionEmbedding { get; set; }
 }
 ```
-
-#### EqualTo filter clause
-
-Use `EqualTo` for a direct comparison between property and value.
-
-#### AnyTagEqualTo filter clause
-
-Use `AnyTagEqualTo` to check if any of the strings, stored in a tag property in the vector store, contains a provided value.
-For a property to be considered a tag property, it needs to be a List, array or other enumerable of string.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
 ## Vector Search
 
-There are three searches currently supported in the Semantic Kernel Vector Store abstractions:
-1. `vectorized_search`
-   1. This is search based on a vector created in your code, the vector is passed in and used to search.
-2. `vectorizable_text_search`
-   1. This is search based on a text string that is vectorized by the vector store as part of the search, this is not always supported and often requires a specific setup of either the vector store or the index.
-3. `vector_text_search`
-   1. This is text search directly against the vector store, most stores support this and depending on the store it can be as simple as comparing values or more advanced keyword search.
+There are two searches currently supported in the Semantic Kernel Vector Store abstractions:
+1. `search` (vector search)
+   1. This is search based on a value that can be vectorized, by the `embedding_generator` field on the data model or record definition, or by the vector store itself. Or by directly supplying a vector.
+2. `hybrid_search` -> see [Hybrid Search](./hybrid-search.md)
 
-All searches can take a optional `VectorSearchOptions` instance as input. Each of the three searches have a Mixin class that needs to be part of it to surface the search methods and this always should be combined with the `VectorSearchBase[TKey, TRecord]` parent. 
-
-Note that `VectorSearchBase` inherits from `VectorStoreRecordCollection`, as it uses some of the same methods, for instance for serialization and deserialization.
+All searches can take a optional set of parameters:
+- `vector`: A vector used to search, can be supplied instead of the values, or in addition to the values for hybrid.
+- `top`: The number of results to return, defaults to 3.
+- `skip`: The number of results to skip, defaults to 0.
+- `include_vectors`: Whether to include the vectors in the results, defaults to `false`.
+- `filter`: A filter to apply to the results before the vector search is applied, defaults to `None`, in the form of a lambda expression: `lambda record: record.property == "value"`.
+- `vector_property_name`: The name of the vector property to use for the search, defaults to the first vector property found on the data model or record definition.
+- `include_total_count`: Whether to include the total count of results in the search result, defaults to `false`.
 
 Assuming you have a collection that already contains data, you can easily search it. Here is an example using Azure AI Search.
 
 ```python
-from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchCollection, AzureAISearchStore
-from semantic_kernel.data.vector_search import VectorSearchOptions
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection, AzureAISearchStore
 
 # Create a Azure AI Search VectorStore object and choose an existing collection that already contains records.
 # Hotels is the data model decorated class.
 store = AzureAISearchStore()
-collection: AzureAISearchCollection = store.get_collection("skhotels", Hotels)
+collection: AzureAISearchCollection[str, Hotels] = store.get_collection(Hotels, collection_name="skhotels")
 
-# Generate a vector for your search text.
-# Just showing a placeholder method here for brevity.
-vector = await generate_vector("I'm looking for a hotel where customer happiness is the priority.")
-
-search_results = await collection.vectorized_search(
-    vector=vector, options=VectorSearchOptions(vector_field_name="vector")
+search_results = await collection.search(
+    query, vector_property_name="vector"
 )
 hotels = [record.record async for record in search_results.results]
 print(f"Found hotels: {hotels}")
@@ -293,111 +289,13 @@ print(f"Found hotels: {hotels}")
 > [!TIP]
 > For more information on how to generate embeddings see [embedding generation](./embedding-generation.md).
 
-## Vector Search Options
+### Filters
 
-The following options can be provided using the `VectorSearchOptions` class.
+The `filter` parameter can be used to provide a filter for filtering the records in the chosen collection. It is defined as a lambda expression, or a string of a lambda expression, e.g. `lambda record: record.property == "value"`.
 
-### Vector Field Name
+It is important to understand that these are not executed directly, rather they are parsed into the syntax matching the vector stores, the only exception to this is the `InMemoryCollection` which does execute the filter directly.
 
-The `vector_field_name` option can be used to specify the name of the vector property to target during the search.
-If none is provided, the first vector found on the data model or specified in the record definition will be used.
-
-Note that when specifying the `vector_field_name`, use the name of the property as defined on the data model or in the record definition.
-Use this property name even if the property may be stored under a different name in the vector store. The storage name may e.g. be different
-because of custom serialization settings.
-
-```Python
-
-from semantic_kernel.data.vector_search import VectorSearchOptions
-from semantic_kernel.connectors.memory.in_memory import InMemoryVectorStore
-
-vector_store = InMemoryVectorStore()
-collection = vector_store.get_collection("skproducts", Product)
-
-# Create the vector search options and indicate that we want to search the FeatureListEmbedding property.
-vector_search_options = VectorSearchOptions(vector_field_name="feature_list_embedding")
-
-# This snippet assumes search_vector is already provided, having been created using the embedding model of your choice.
-search_result = await collection.vectorized_search(vector=search_vector, options=vector_search_options)
-products = [record async for record in search_result.results]
-
-```
-
-### Top and Skip
-
-The `top` and `skip` options allow you to limit the number of results to the Top n results and
-to skip a number of results from the top of the resultset.
-Top and Skip can be used to do paging if you wish to retrieve a large number of results using separate calls.
-
-```python
-# Create the vector search options and indicate that we want to skip the first 40 results and then get the next 20.
-vector_search_options = VectorSearchOptions(top=20, skip=40)
-
-# This snippet assumes `vector` is already provided, having been created using the embedding model of your choice.
-search_result = await collection.vectorized_search(vector=vector, options=vector_search_options)
-async for result in search_result.results:
-    print(result.record)
-```
-
-The default values for `top` is 3 and `skip` is 0.
-
-### Include Vectors
-
-The `include_vectors` option allows you to specify whether you wish to return vectors in the search results.
-If `false`, the vector properties on the returned model will be left null.
-Using `false` can significantly reduce the amount of data retrieved from the vector store during search,
-making searches more efficient.
-
-The default value for `include_vectors` is `false`.
-
-> [!TIP]
-> Make sure your data model allows the vector fields to be None! If not and you keep this to the default it might raise an error.
-
-### Filter
-
-The `filter` option can be used to provide a filter for filtering the records in the chosen collection
-before applying the vector search.
-
-This has multiple benefits:
-
-- Reduce latency and processing cost, since only records remaining after filtering need to be compared with the search vector and therefore fewer vector comparisons have to be done.
-- Limit the resultset for e.g. access control purposes, by excluding data that the user shouldn't have access to.
-
-Note that in order for fields to be used for filtering, many vector stores require those fields to be indexed first.
-Some vector stores will allow filtering using any field, but may optionally allow indexing to improve filtering performance.
-
-If creating a collection via the Semantic Kernel vector store abstractions and you wish to enable filtering on a field,
-set the `is_filterable` property to true when defining your data model or when creating your record definition.
-
-> [!TIP]
-> For more information on how to set the `is_filterable` property, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
-
-To create a filter use the `VectorSearchFilter` class. You can combine multiple filter clauses together in one `VectorSearchFilter`.
-All filter clauses are combined with `and`.
-Note that when providing a property name when constructing the filter, use the name of the property as defined on the data model or in the record definition.
-Use this property name even if the property may be stored under a different name in the vector store. The storage name may e.g. be different
-because of custom serialization settings.
-
-```python
-# Filter where category == 'External Definitions' and tags contain 'memory'.
-filter = VectorSearchFilter.equal_to('category', "External Definitions").any_tag_equal_to('tags', "memory")
-
-# Create the vector search options and set the filter on the options.
-vector_search_options = VectorSearchOptions(filter=filter)
-
-# This snippet assumes search_vector is already provided, having been created using the embedding model of your choice.
-search_result = await collection.vectorized_search(vector=search_vector, options=vector_search_options)
-```
-You can chain any number of filters together as shown above, and they will be combined with `and`.
-
-#### EqualTo filter clause
-
-Use `EqualTo` (class) or `.equal_to` ((class)method on the filter object) for a direct comparison between property and value.
-
-#### AnyTagEqualTo filter clause
-
-Use `AnyTagEqualTo`/`.any_tag_equal_to` to check if any of the strings, stored in a tag property in the vector store, contains a provided value.
-For a property to be considered a tag property, it needs to be a List, array or other enumerable of string.
+Given this flexibility, it is important to review the documentation of a specific store to understand which filters are supported, for instance not all vector stores support negative filters (i.e. `lambda x: not x.value`), and that won't become apparent until the search is executed.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
@@ -601,7 +499,7 @@ If creating a collection via the Semantic Kernel vector store abstractions and y
 set the `IsFilterable` field to true when defining your data model or when creating your record definition.
 
 > [!TIP]
-> For more information on how to set the `IsFilterable` field, refer to [VectorStoreRecordDataAttribute parameters](./defining-your-data-model.md#vectorstorerecorddataattribute-parameters) or [VectorStoreRecordDataProperty configuration settings](./schema-with-record-definition.md#vectorstorerecorddataproperty-configuration-settings).
+> For more information on how to set the `IsFilterable` field, refer to [VectorStoreRecordData parameters](./defining-your-data-model.md#vectorstorerecorddata-parameters) or [VectorStoreRecordDataField configuration settings](./schema-with-record-definition.md#vectorstorerecorddatafield-configuration-settings).
 
 To create a filter use the `VectorSearchFilter` class. You can combine multiple filter clauses together in one `VectorSearchFilter`.
 All filter clauses are combined with `and`.

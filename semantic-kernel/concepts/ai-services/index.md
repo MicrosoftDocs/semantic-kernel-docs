@@ -1,9 +1,9 @@
 ---
 title: Add AI services to Semantic Kernel
 description: Learn how to bring multiple AI services to your Semantic Kernel project.
-author: matthewbolanos
+author: moonbox3
 ms.topic: conceptual
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
@@ -14,20 +14,22 @@ One of the main features of Semantic Kernel is its ability to add different AI s
 
 Within Semantic Kernel, there are interfaces for the most popular AI tasks. In the table below, you can see the services that are supported by each of the SDKs.
 
-| Services                          |  C#  | Python | Java | Notes |
-|-----------------------------------|:----:|:------:|:----:|-------|
-| [Chat completion](./chat-completion/index.md)                    | ✅ | ✅ | ✅ |
-| Text generation                  | ✅ | ✅ | ✅ |
-| Embedding generation (Experimental)     | ✅ | ✅ | ✅ |
-| Text-to-image  (Experimental)       | ✅ | ✅ | ❌ |
-| Image-to-text (Experimental)       | ✅ | ❌ | ❌ |
-| Text-to-audio (Experimental)       | ✅ | ✅ | ❌ | 
-| Audio-to-text (Experimental)       | ✅ | ✅ | ❌ | 
+| Services                                      |  C#   | Python | Java  | Notes |
+| --------------------------------------------- | :---: | :----: | :---: | ----- |
+| [Chat completion](./chat-completion/index.md) |   ✅   |   ✅    |   ✅   |
+| Text generation                               |   ✅   |   ✅    |   ✅   |
+| Embedding generation (Experimental)           |   ✅   |   ✅    |   ✅   |
+| Text-to-image  (Experimental)                 |   ✅   |   ✅    |   ❌   |
+| Image-to-text (Experimental)                  |   ✅   |   ❌    |   ❌   |
+| Text-to-audio (Experimental)                  |   ✅   |   ✅    |   ❌   |
+| Audio-to-text (Experimental)                  |   ✅   |   ✅    |   ❌   |
+| [Realtime](./realtime.md) (Experimental)      |   ❌   |   ✅    |   ❌   |
 
 > [!TIP]
 > In most scenarios, you will only need to add chat completion to your kernel, but to support multi-modal AI, you can add any of the above services to your kernel.
 
 ## Next steps
+
 To learn more about each of the services, please refer to the specific articles for each service type. In each of the articles we provide sample code for adding the service to the kernel across multiple AI service providers.
 
 > [!div class="nextstepaction"]

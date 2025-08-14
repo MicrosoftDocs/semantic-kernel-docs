@@ -2,9 +2,9 @@
 title: Function calling with chat completion
 description: Learn how function calling works and how to optimize your code for the best performance.
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: conceptual
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
@@ -206,6 +206,73 @@ kernel.add_plugin(OrderPizzaPlugin(pizza_service, user_context, payment_service)
 
 > [!NOTE]
 > Only functions with the `kernel_function` decorator will be serialized and sent to the model. This allows you to have helper functions that are not exposed to the model.
+
+## Reserved Parameter Names for Auto Function Calling
+
+When using auto function calling in KernelFunctions, certain parameter names are **reserved** and receive special handling. These reserved names allow you to automatically access key objects required for function execution.
+
+### Reserved Names
+
+The following parameter names are reserved:
+
+- `kernel`
+- `service`
+- `execution_settings`
+- `arguments`
+
+### How They Work
+
+During function invocation, the method [`gather_function_parameters`](https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/functions/kernel_function_from_method.py#L148) inspects each parameter. If the parameter's name matches one of the reserved names, it is populated with specific objects:
+
+- **`kernel`**: Injected with the kernel object.
+- **`service`**: Populated with the AI service selected based on the provided arguments.
+- **`execution_settings`**: Contains settings pertinent to the function's execution.
+- **`arguments`**: Receives the entire set of kernel arguments passed during invocation.
+
+This design ensures that these parameters are automatically managed, eliminating the need for manual extraction or assignment.
+
+### Example Usage
+
+Consider the following example:
+
+```python
+class SimplePlugin:
+    @kernel_function(name="GetWeather", description="Get the weather for a location.")
+    async def get_the_weather(self, location: str, arguments: KernelArguments) -> str:
+        # The 'arguments' parameter is reserved and automatically populated with KernelArguments.
+        return f"Received user input: {location}, the weather is nice!"
+```
+
+## Custom Reserved Parameter Names for Auto Function Calling
+
+You can also customize this behavior. In order to do that, you need to annotate the parameter you want to exclude from the function calling definition, like this:
+
+```python
+class SimplePlugin:
+    @kernel_function(name="GetWeather", description="Get the weather for a location.")
+    async def get_the_weather(self, location: str, special_arg: Annotated[str, {"include_in_function_choices": False}]) -> str:
+        # The 'special_arg' parameter is reserved and you need to ensure it either has a default value or gets passed.
+```
+
+When calling this function, make sure to pass the `special_arg` parameter, otherwise it will raise an error.
+
+```python
+response = await kernel.invoke_async(
+    plugin_name=...,
+    function_name="GetWeather",
+    location="Seattle",
+    special_arg="This is a special argument"
+)
+```
+
+Or add it to the `KernelArguments` object to use it with auto function calling in an agent like this:
+
+```python
+arguments = KernelArguments(special_arg="This is a special argument")
+response = await agent.get_response(
+    messages="what's the weather in Seattle?"
+    arguments=arguments)
+```
 
 ::: zone-end
 

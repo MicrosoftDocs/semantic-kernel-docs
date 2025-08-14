@@ -74,6 +74,9 @@ To use automatic function calling in Semantic Kernel, you need to do the followi
 2. Create an execution settings object that tells the AI to automatically call functions
 3. Invoke the chat completion service with the chat history and the kernel
 
+> [!TIP]
+> The following code sample uses the `LightsPlugin` defined [here](./plugins/adding-native-plugins.md#defining-a-plugin-using-a-class).
+
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
@@ -127,35 +130,29 @@ do {
 import asyncio
 
 from semantic_kernel import Kernel
-from semantic_kernel.functions import kernel_function
-from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.functions.kernel_arguments import KernelArguments
-
-from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
+from semantic_kernel.connectors.ai.open_ai import (
+    AzureChatCompletion,
     AzureChatPromptExecutionSettings,
 )
+from semantic_kernel.contents import ChatHistory
+from semantic_kernel.functions import kernel_function
 
 async def main():
     # 1. Create the kernel with the Lights plugin
     kernel = Kernel()
-    kernel.add_service(AzureChatCompletion(
-        deployment_name="your_models_deployment_name",
-        api_key="your_api_key",
-        base_url="your_base_url",
-    ))
+    kernel.add_service(AzureChatCompletion())
     kernel.add_plugin(
         LightsPlugin(),
         plugin_name="Lights",
     )
 
-    chat_completion : AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
+    chat_completion: AzureChatCompletion = kernel.get_service(type=ChatCompletionClientBase)
 
     # 2. Enable automatic function calling
     execution_settings = AzureChatPromptExecutionSettings()
-    execution_settings.function_call_behavior = FunctionChoiceBehavior.Auto()
+    execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
     # Create a history of the conversation
     history = ChatHistory()
@@ -173,12 +170,11 @@ async def main():
         history.add_user_message(userInput)
 
         # 3. Get the response from the AI with automatic function calling
-        result = (await chat_completion.get_chat_message_contents(
+        result = await chat_completion.get_chat_message_content(
             chat_history=history,
             settings=execution_settings,
             kernel=kernel,
-            arguments=KernelArguments(),
-        ))[0]
+        )
 
         # Print the results
         print("Assistant > " + str(result))
@@ -263,14 +259,16 @@ if __name__ == "__main__":
 
 When you use automatic function calling, all of the steps in the automatic planning loop are handled for you and added to the `ChatHistory` object. After the function calling loop is complete, you can inspect the `ChatHistory` object to see all of the function calls made and results provided by Semantic Kernel.
 
-## What about the Function Calling Stepwise and Handlebars planners?
+## What happened to the Stepwise and Handlebars planners?
 
-The Stepwise and Handlebars planners are still available in Semantic Kernel. However, we recommend using function calling for most tasks as it is more powerful and easier to use. Both the Stepwise and Handlebars planners will be deprecated in a future release of Semantic Kernel.
+The Stepwise and Handlebars planners have been deprecated and removed from the Semantic Kernel package. These planners are no longer supported in either Python, .NET, or Java.
 
-Learn how to [migrate Stepwise Planner to Auto Function Calling](../support/migration/stepwise-planner-migration-guide.md).
+We recommend using **function calling**, which is both more powerful and easier to use for most scenarios.
 
-> [!CAUTION]
-> If you are building a new AI agent, we recommend that you _not_ use the Stepwise or Handlebars planners. Instead, use function calling as it is more powerful and easier to use.
+To update existing solutions, follow our [Stepwise Planner Migration Guide](../support/migration/stepwise-planner-migration-guide.md).
+
+> [!TIP]
+> For new AI agents, use function calling instead of the deprecated planners. It offers better flexibility, built-in tool support, and a simpler development experience.
 
 ## Next steps
 Now that you understand how planners work in Semantic Kernel, you can learn more about how influence your AI agent so that they best plan and execute tasks on behalf of your users.

@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the Redis connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The Redis Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ## Overview
 
@@ -23,14 +39,16 @@ The connector has the following characteristics.
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Redis index with prefix set to `<collectionname>:`                                                                               |
 | Supported key property types      | string                                                                                                                           |
-| Supported data property types     | **When using Hashes:**<ul><li>string</li><li>int</li><li>uint</li><li>long</li><li>ulong</li><li>double</li><li>float</li><li>bool</li></ul>**When using JSON:**<br>Any types serializable to JSON|
-| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>ReadOnlyMemory\<double\></li></ul>                                                       |
+| Supported data property types     | **When using Hashes:**<ul><li>string</li><li>int</li><li>uint</li><li>long</li><li>ulong</li><li>double</li><li>float</li><li>bool</li></ul>|
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<double\></li><li>Embedding\<double\></li><li>double[]</li></ul>                                                       |
 | Supported index types             | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                              |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                        |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>                                 |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | **When using Hashes:** Yes<br>**When using JSON:** No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
+| IsIndexed supported?              | Yes                                                                                                                              |
+| IsFullTextIndexed supported?      | Yes                                                                                                                              |
+| StorageName supported?            | **When using Hashes:** Yes<br>**When using JSON:** No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
+| HybridSearch supported?           | No                                                                                                                               |
 
 ::: zone pivot="programming-language-csharp"
 
@@ -45,11 +63,13 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Redis --prerelease
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
-    .CreateBuilder()
+    .CreateBuilder();
+kernelBuilder.Services
     .AddRedisVectorStore("localhost:6379");
 ```
 
@@ -71,7 +91,7 @@ using StackExchange.Redis;
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
 kernelBuilder.Services.AddSingleton<IDatabase>(sp => ConnectionMultiplexer.Connect("localhost:6379").GetDatabase());
-kernelBuilder.AddRedisVectorStore();
+kernelBuilder.Services.AddRedisVectorStore();
 ```
 
 ```csharp
@@ -102,7 +122,7 @@ using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
 // Using Hashes.
-var hashesCollection = new RedisHashSetVectorStoreRecordCollection<Hotel>(
+var hashesCollection = new RedisHashSetCollection<string, Hotel>(
     ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
     "skhotelshashes");
 ```
@@ -112,7 +132,7 @@ using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
 // Using JSON.
-var jsonCollection = new RedisJsonVectorStoreRecordCollection<Hotel>(
+var jsonCollection = new RedisJsonCollection<string, Hotel>(
     ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
     "skhotelsjson");
 ```
@@ -144,7 +164,7 @@ You can then create a vector store instance using the `RedisStore` class, this w
 
 ```python
 
-from semantic_kernel.connectors.memory.redis import RedisStore
+from semantic_kernel.connectors.redis import RedisStore
 
 vector_store = RedisStore()
 ```
@@ -153,7 +173,7 @@ You can also create the vector store with your own instance of the redis databas
 
 ```python
 from redis.asyncio.client import Redis
-from semantic_kernel.connectors.memory.redis import RedisStore
+from semantic_kernel.connectors.redis import RedisStore
 
 redis_database = Redis.from_url(url="https://<your-redis-service-name>")
 vector_store = RedisStore(redis_database=redis_database)
@@ -162,21 +182,21 @@ vector_store = RedisStore(redis_database=redis_database)
 You can also create a collection directly, but there are two types of collections, one for Hashes and one for JSON.
 
 ```python
-from semantic_kernel.connectors.memory.redis import RedisHashsetCollection, RedisJsonCollection
+from semantic_kernel.connectors.redis import RedisHashsetCollection, RedisJsonCollection
 
-hash_collection = RedisHashsetCollection(collection_name="skhotels", data_model_type=Hotel)
-json_collection = RedisJsonCollection(collection_name="skhotels", data_model_type=Hotel)
+hash_collection = RedisHashsetCollection(collection_name="skhotels", record_type=Hotel)
+json_collection = RedisJsonCollection(collection_name="skhotels", record_type=Hotel)
 ```
 
 When creating a collection from the vector store, you can pass in the collection type, as a enum: `RedisCollectionTypes`, the default is a hash collection.
     
 ```python
-from semantic_kernel.connectors.memory.redis import RedisStore, RedisCollectionTypes
+from semantic_kernel.connectors.redis import RedisStore, RedisCollectionTypes
 
 vector_store = RedisStore()
 collection = vector_store.get_collection(
     collection_name="skhotels", 
-    data_model_type=Hotel, 
+    record_type=Hotel, 
     collection_type=RedisCollectionTypes.JSON,
 )
 
@@ -265,7 +285,7 @@ off the prefixing behavior and pass in the fully prefixed key to the record oper
 using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
-var collection = new RedisJsonVectorStoreRecordCollection<Hotel>(
+var collection = new RedisJsonCollection<string, Hotel>(
     ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
     "skhotelsjson",
     new() { PrefixCollectionNameToKeyNames = false });
@@ -276,9 +296,9 @@ await collection.GetAsync("myprefix_h1");
 ::: zone-end
 ::: zone pivot="programming-language-python"
 ```python
-from semantic_kernel.connectors.memory.redis import RedisJsonCollection
+from semantic_kernel.connectors.redis import RedisJsonCollection
 
-collection = RedisJsonCollection(collection_name="skhotels", data_model_type=hotel, prefix_collection_name_to_key_names=False)
+collection = RedisJsonCollection(collection_name="skhotels", record_type=hotel, prefix_collection_name_to_key_names=False)
 
 await collection.get("myprefix_h1")
 ```
@@ -310,11 +330,11 @@ and use that as the value.
 
 Usage of the `JsonPropertyNameAttribute` is supported if a different storage name to the
 data model property name is required. It is also possible to use a custom `JsonSerializerOptions` instance with a customized property naming policy. To enable this, the `JsonSerializerOptions`
-must be passed to the `RedisJsonVectorStoreRecordCollection` on construction.
+must be passed to the `RedisJsonCollection` on construction.
 
 ```csharp
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseUpper };
-var collection = new RedisJsonVectorStoreRecordCollection<Hotel>(
+var collection = new RedisJsonCollection<string, Hotel>(
     ConnectionMultiplexer.Connect("localhost:6379").GetDatabase(),
     "skhotelsjson",
     new() { JsonSerializerOptions = jsonSerializerOptions });
@@ -329,17 +349,17 @@ using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    [VectorStoreKey]
+    public string HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreData(IsIndexed = true)]
     public string HotelName { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION")]
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreData(IsFullTextIndexed = true)]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance, IndexKind.Hnsw)]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -356,25 +376,25 @@ This mapper will map each property to a field-value pair as supported by the Red
 For data properties and vector properties, you can provide override field names to use in storage that is different to the
 property names on the data model. This is not supported for keys, since keys cannot be named in Redis.
 
-Property name overriding is done by setting the `StoragePropertyName` option via the data model attributes or record definition.
+Property name overriding is done by setting the `StorageName` option via the data model attributes or record definition.
 
-Here is an example of a data model with `StoragePropertyName` set on its attributes and how these are set in Redis.
+Here is an example of a data model with `StorageName` set on its attributes and how these are set in Redis.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey]
-    public ulong HotelId { get; set; }
+    [VectorStoreKey]
+    public string HotelId { get; set; }
 
-    [VectorStoreRecordData(IsFilterable = true, StoragePropertyName = "hotel_name")]
+    [VectorStoreData(IsIndexed = true, StorageName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(IsFullTextSearchable = true, StoragePropertyName = "hotel_description")]
+    [VectorStoreData(IsFullTextIndexed = true, StorageName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction.CosineDistance, IndexKind.Hnsw, StoragePropertyName = "hotel_description_embedding")]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw, StorageName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

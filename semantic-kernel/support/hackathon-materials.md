@@ -1,9 +1,9 @@
 ---
 title: Hackathon materials for Semantic Kernel
 description: Host your own Semantic Kernel hackathon with these materials.
-author: matthewbolanos
+author: moonbox3
 ms.topic: sample
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/11/2023
 ms.service: semantic-kernel 
 ---

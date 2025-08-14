@@ -2,7 +2,7 @@
 title: Inspection of telemetry data with Application Insights
 description: Send telemetry data to Application Insights
 zone_pivot_groups: programming-languages
-author: taochen
+author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
 ms.date: 09/12/2024
@@ -11,9 +11,19 @@ ms.service: semantic-kernel
 
 # Inspection of telemetry data with Application Insights
 
-[Application Insights](https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview) is part of [Azure Monitor](https://learn.microsoft.com/azure/azure-monitor/overview), which is a comprehensive solution for collecting, analyzing, and acting on telemetry data from your cloud and on-premises environments. With Application Insights, you can monitor your application's performance, detect issues, and diagnose problems.
+[Application Insights](/azure/azure-monitor/app/app-insights-overview) is part of [Azure Monitor](/azure/azure-monitor/overview), which is a comprehensive solution for collecting, analyzing, and acting on telemetry data from your cloud and on-premises environments. With Application Insights, you can monitor your application's performance, detect issues, and diagnose problems.
 
 In this example, we will learn how to export telemetry data to Application Insights, and inspect the data in the Application Insights portal.
+
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> Semantic Kernel utilizes a .NET 8 feature called keyed services.
+> Application Insights has an issue with service registration, making it incompatible with keyed services.
+> If you are using Semantic Kernel with keyed services and encounter unexpected errors related to Application Insights dependency injection, you should register Application Insights before any keyed services to resolve this issue.
+> For more information see [microsoft/ApplicationInsights-dotnet#2879](https://github.com/microsoft/ApplicationInsights-dotnet/issues/2879)
+
+::: zone-end
 
 ## Exporter
 
@@ -24,7 +34,7 @@ Exporters are responsible for sending telemetry data to a destination. Read more
 ::: zone pivot="programming-language-csharp"
 
 - An Azure OpenAI chat completion deployment.
-- An Application Insights instance. Follow the [instructions](https://learn.microsoft.com/azure/azure-monitor/app/create-workspace-resource?tabs=bicep#create-a-workspace-based-resource) here to create a resource if you don't have one. Copy the [connection string](https://learn.microsoft.com/azure/azure-monitor/app/sdk-connection-string?tabs=dotnet5#find-your-connection-string) for later use.
+- An Application Insights instance. Follow the [instructions](/azure/azure-monitor/app/create-workspace-resource?tabs=bicep#create-a-workspace-based-resource) here to create a resource if you don't have one. Copy the [connection string](/azure/azure-monitor/app/sdk-connection-string?tabs=dotnet5#find-your-connection-string) for later use.
 - The latest [.Net SDK](https://dotnet.microsoft.com/download/dotnet) for your operating system.
 
 ::: zone-end
@@ -32,7 +42,7 @@ Exporters are responsible for sending telemetry data to a destination. Read more
 ::: zone pivot="programming-language-python"
 
 - An Azure OpenAI chat completion deployment.
-- An Application Insights instance. Follow the [instructions](https://learn.microsoft.com/azure/azure-monitor/app/create-workspace-resource?tabs=bicep#create-a-workspace-based-resource) here to create a resource if you don't have one. Copy the [connection string](https://learn.microsoft.com/azure/azure-monitor/app/sdk-connection-string?tabs=dotnet5#find-your-connection-string) for later use.
+- An Application Insights instance. Follow the [instructions](/azure/azure-monitor/app/create-workspace-resource?tabs=bicep#create-a-workspace-based-resource) here to create a resource if you don't have one. Copy the [connection string](/azure/azure-monitor/app/sdk-connection-string?tabs=dotnet5#find-your-connection-string) for later use.
 - [Python 3.10, 3.11, or 3.12](https://www.python.org/downloads/) installed on your machine.
 
 ::: zone-end
@@ -58,18 +68,18 @@ dotnet new console -n TelemetryApplicationInsightsQuickstart
 
 Navigate to the newly created project directory after the command completes.
 
-
 ### Install required packages
 
 - Semantic Kernel
-    ```console
-    dotnet add package Microsoft.SemanticKernel
-    ```
+
+  ```console
+  dotnet add package Microsoft.SemanticKernel
+  ```
 
 - OpenTelemetry Console Exporter
-    ```console
-    dotnet add package Azure.Monitor.OpenTelemetry.Exporter
-    ```
+  ```console
+  dotnet add package Azure.Monitor.OpenTelemetry.Exporter
+  ```
 
 ### Create a simple application with Semantic Kernel
 
@@ -172,6 +182,7 @@ python -m venv telemetry-application-insights-quickstart
 ```
 
 Activate the virtual environment.
+
 ```console
 telemetry-application-insights-quickstart\Scripts\activate
 ```
@@ -255,6 +266,7 @@ if __name__ == "__main__":
 Please refer to this [article](./telemetry-with-console.md#environment-variables) for more information on setting up the required environment variables to enable the kernel to emit spans for AI connectors.
 
 #### Code
+
 If you run the script now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `# Telemetry setup code goes here` comment with the following code:
 
 ```python
@@ -330,7 +342,7 @@ Please refer to this [article](./telemetry-with-console.md#add-telemetry-1) for 
 
 > [!NOTE]
 > Semantic Kernel Observability is not yet available for Java.
- 
+
 ::: zone-end
 
 ## Run
@@ -379,7 +391,7 @@ Hit refresh to see the latest transactions. When results appear, click on one of
 Toggle between the **View all** and **View timeline** button to see all traces and dependencies of the transaction in different views.
 
 > [!IMPORTANT]
-> [Traces](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete#trace) represent traditional log entries and [OpenTelemetry span events](https://opentelemetry.io/docs/concepts/signals/traces/#span-events). They are not the same as distributed traces. Dependencies represent the calls to (internal and external) components. Please refer to this [article](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete) for more information on the data model in Application Insights.
+> [Traces](/azure/azure-monitor/app/data-model-complete#trace) represent traditional log entries and [OpenTelemetry span events](https://opentelemetry.io/docs/concepts/signals/traces/#span-events). They are not the same as distributed traces. Dependencies represent the calls to (internal and external) components. Please refer to this [article](/azure/azure-monitor/app/data-model-complete) for more information on the data model in Application Insights.
 
 For this particular example, you should see two dependencies and multiple traces. The first dependency represents a kernel function that is created from the prompt. The second dependency represents the call to the Azure OpenAI chat completion model. When you expand the `chat.completion {your-deployment-name}` dependency, you should see the details of the call. A set of `gen_ai` attributes are attached to the dependency, which provides additional context about the call.
 
@@ -407,9 +419,9 @@ Click on them and you will see the prompt and the completion result under the cu
 
 ### Log analytics
 
-Transaction search is not the only way to inspect telemetry data. You can also use [**Log analytics**](https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview) to query and analyze the data. Navigate to the **Logs** under **Monitoring** to start.
+Transaction search is not the only way to inspect telemetry data. You can also use [**Log analytics**](/azure/azure-monitor/logs/log-analytics-overview) to query and analyze the data. Navigate to the **Logs** under **Monitoring** to start.
 
-Follow this [document](https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview#log-analytics-interface) to start exploring the log analytics interface.
+Follow this [document](/azure/azure-monitor/logs/log-analytics-overview#log-analytics-interface) to start exploring the log analytics interface.
 
 Below are some sample queries you can use for this example:
 
@@ -422,7 +434,6 @@ dependencies
 | project completion_token, prompt_token
 | summarize total_completion_tokens = sum(completion_token), total_prompt_tokens = sum(prompt_token)
 ```
-
 
 ```kusto
 // Retrieves all the prompts and completions and their corresponding token usage.

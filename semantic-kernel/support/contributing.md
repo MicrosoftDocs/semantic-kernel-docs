@@ -1,9 +1,9 @@
 ---
 title: How to contribute to Semantic Kernel
 description: Help improve Semantic Kernel by contributing to the project and docs. 
-author: matthewbolanos
+author: moonbox3
 ms.topic: contributor-guide
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 02/07/2023
 ms.service: semantic-kernel
 ---

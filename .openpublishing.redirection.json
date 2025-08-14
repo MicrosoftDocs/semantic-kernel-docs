@@ -746,6 +746,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path": "semantic-kernel/concepts/vector-store-connectors/generic-data-model.md",
+            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/dynamic-data-model.md",
+            "redirect_document_id": false
+        },
+        {
             "source_path": "semantic-kernel/how-to/vector-store-data-ingestion.md",
             "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/how-to/vector-store-data-ingestion",
             "redirect_document_id": false
@@ -761,16 +766,6 @@
             "redirect_document_id": false
         },
         {
-            "source_path": "semantic-kernel/how-to/vector-store-custom-mapper.md",
-            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/how-to/vector-store-custom-mapper",
-            "redirect_document_id": false
-        },
-        {
-            "source_path": "semantic-kernel/concepts/vector-store-connectors/vector-store-custom-mapper.md",
-            "redirect_url": "/semantic-kernel/concepts/vector-store-connectors/how-to/vector-store-custom-mapper",
-            "redirect_document_id": false
-        },
-        {
             "source_path": "semantic-kernel/get-started/hackathon-materials.md",
             "redirect_url": "/semantic-kernel/support/hackathon-materials",
             "redirect_document_id": false
@@ -782,17 +777,52 @@
         },
         {
             "source_path": "semantic-kernel/frameworks/agent/agent-framework.md",
-            "redirect_url": "semantic-kernel/frameworks/agent",
+            "redirect_url": "/semantic-kernel/frameworks/agent",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/Frameworks/agent/agents.md",
-            "redirect_url": "semantic-kernel/frameworks/agent",
+            "redirect_url": "/semantic-kernel/frameworks/agent",
             "redirect_document_id": false
         },
         {
             "source_path": "semantic-kernel/Frameworks/agent/personas.md",
-            "redirect_url": "semantic-kernel/frameworks/agent",
+            "redirect_url": "/semantic-kernel/frameworks/agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/assistant-agent.md",
+            "redirect_url": "/semantic-kernel/frameworks/agent/agent-types/assistant-agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/chat-completion-agent.md",
+            "redirect_url": "/semantic-kernel/frameworks/agent/agent-types/chat-completion-agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/azure-ai-agent.md",
+            "redirect_url": "/semantic-kernel/frameworks/agent/agent-types/azure-ai-agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/copilot-studio-agent.md",
+            "redirect_url": "/semantic-kernel/frameworks/agent/agent-types/copilot-studio-agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/responses-agent.md",
+            "redirect_url": "/semantic-kernel/frameworks/agent/agent-types/responses-agent",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/agent-chat.md",
+            "redirect_url": "/semantic-kernel/support/archive/agent-chat",
+            "redirect_document_id": false
+        },
+        {
+            "source_path": "semantic-kernel/Frameworks/agent/examples/example-agent-collaboration.md",
+            "redirect_url": "/semantic-kernel/support/archive/agent-chat-example",
             "redirect_document_id": false
         }
     ]

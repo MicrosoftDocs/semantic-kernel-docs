@@ -2,9 +2,9 @@
 title: Supported languages for Semantic Kernel
 description: Learn which features are available for C#, Python, and Java.
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: reference
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
@@ -41,13 +41,13 @@ In C#, there are several packages to help ensure that you only need to import th
 | `Microsoft.SemanticKernel.Connectors.Onnx` | The AI connector for Onnx |
 | `Microsoft.SemanticKernel.Connectors.OpenAI` | The AI connector for OpenAI |
 | `Microsoft.SemanticKernel.Connectors.AzureAISearch` | The vector store connector for Azure AI Search |
-| `Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB` | The vector store connector for Azure CosmosDB MongoDB |
-| `Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL` | The vector store connector for Azure CosmosDB NoSQL |
+| `Microsoft.SemanticKernel.Connectors.CosmosMongoDB` | The vector store connector for Azure CosmosDB MongoDB |
+| `Microsoft.SemanticKernel.Connectors.CosmosNoSql` | The vector store connector for Azure CosmosDB NoSQL |
 | `Microsoft.SemanticKernel.Connectors.MongoDB` | The vector store connector for MongoDB |
 | `Microsoft.SemanticKernel.Connectors.Pinecone` | The vector store connector for Pinecone |
 | `Microsoft.SemanticKernel.Connectors.Qdrant` | The vector store connector for Qdrant |
 | `Microsoft.SemanticKernel.Connectors.Redis` | The vector store connector for Redis |
-| `Microsoft.SemanticKernel.Connectors.Sqlite` | The vector store connector for Sqlite |
+| `Microsoft.SemanticKernel.Connectors.SqliteVec` | The vector store connector for Sqlite |
 | `Microsoft.SemanticKernel.Connectors.Weaviate` | The vector store connector for Weaviate |
 | `Microsoft.SemanticKernel.Plugins.OpenApi` (Experimental) | Enables loading plugins from OpenAPI specifications |
 | `Microsoft.SemanticKernel.PromptTemplates.Handlebars` | Enables the use of Handlebars templates for prompts |
@@ -209,7 +209,7 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 | Ollama                                    | ✅ | ✅ | ❌ | |
 | ONNX                                      | ✅ | ✅ | ❌ | |
 | OpenAI                                    | ✅ | ✅ | ✅ | |
-| Other endpoints that suppoprt OpenAI APIs | ✅ | ✅ | ✅ | Includes LLM Studio, etc. |
+| Other endpoints that support OpenAI APIs  | ✅ | ✅ | ✅ | Includes LLM Studio, etc. |
 
 ### Vector Store Connectors (Experimental)
 
