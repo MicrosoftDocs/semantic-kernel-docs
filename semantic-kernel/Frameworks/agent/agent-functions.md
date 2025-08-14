@@ -67,7 +67,7 @@ Any [Plugin](../../concepts/plugins/index.md) available to an `Agent` is managed
 > For a [`ChatCompletionAgent`](./agent-types/chat-completion-agent.md), the function calling mode must be explicitly enabled. [`OpenAIAssistant`](./agent-types/assistant-agent.md) agent is always based on automatic function calling.
 
 ```csharp
-// Factory method to product an agent with a specific role.
+// Factory method to produce an agent with a specific role.
 // Could be incorporated into DI initialization.
 ChatCompletionAgent CreateSpecificAgent(Kernel kernel, string credentials)
 {
