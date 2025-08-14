@@ -10,8 +10,24 @@ ms.service: semantic-kernel
 ---
 # Using the In-Memory connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> The In-Memory Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
@@ -27,13 +43,15 @@ The connector has the following characteristics.
 | Collection maps to                | In-memory dictionary                                                                                                             |
 | Supported key property types      | Any type that can be compared                                                                                                    |
 | Supported data property types     | Any type                                                                                                                         |
-| Supported vector property types   | ReadOnlyMemory\<float\>                                                                                                          |
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                             |
 | Supported index types             | Flat                                                                                                                             |
 | Supported distance functions      | <ul><li>CosineSimilarity</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                 |
+| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsFilterable supported?           | Yes                                                                                                                              |
-| IsFullTextSearchable supported?   | Yes                                                                                                                              |
-| StoragePropertyName supported?    | No, since storage is in-memory and data reuse is therefore not possible, custom naming is not applicable.                        |
+| IsIndexed supported?              | Yes                                                                                                                              |
+| IsFullTextIndexed supported?      | Yes                                                                                                                              |
+| StorageName supported?            | No, since storage is in-memory and data reuse is therefore not possible, custom naming is not applicable.                        |
+| HybridSearch supported?           | No                                                                                                                               |
 
 ## Getting started
 
@@ -46,15 +64,18 @@ dotnet add package Microsoft.SemanticKernel.Connectors.InMemory --prerelease
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel
-    .CreateBuilder()
+    .CreateBuilder();
+kernelBuilder.Services
     .AddInMemoryVectorStore();
 ```
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -75,35 +96,7 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using Microsoft.SemanticKernel.Connectors.InMemory;
 
-var collection = new InMemoryVectorStoreRecordCollection<string, Hotel>("skhotels");
-```
-
-## Key and Vector property lookup
-
-By default the In-Memory Vector Store connector will read the values of keys and vectors using
-reflection. The keys and vectors are assumed to be direct properties on the data model.
-
-If a data model is required that has a structure where keys and vectors are not direct properties
-of the data model, it is possible to supply functions to read the values of these.
-
-When using this, it is also required to supply a `VectorStoreRecordDefinition` so that information
-about vector dimension size and distance function can be communicated to the In-Memory vector store.
-
-```csharp
-var collection = new InMemoryVectorStoreRecordCollection<string, MyDataModel>(
-    "mydata",
-    new()
-    {
-        VectorStoreRecordDefinition = vectorStoreRecordDefinition,
-        KeyResolver = (record) => record.Key,
-        VectorResolver = (vectorName, record) => record.Vectors[vectorName]
-    });
-
-private class MyDataModel
-{
-    public string Key { get; set; }
-    public Dictionary<string, ReadOnlyMemory<float>> Vectors { get; set; }
-}
+var collection = new InMemoryCollection<string, Hotel>("skhotels");
 ```
 
 ::: zone-end
@@ -142,18 +135,18 @@ You can create the store and collections from there, or create the collections d
 In the snippets below, it is assumed that you have a data model class defined named 'DataModel'.
 
 ```python
-from semantic_kernel.connectors.memory.in_memory import InMemoryVectorStore
+from semantic_kernel.connectors.in_memory import InMemoryVectorStore
 
 vector_store = InMemoryVectorStore()
-vector_collection = vector_store.get_collection("collection_name", DataModel)
+vector_collection = vector_store.get_collection(record_type=DataModel, collection_name="collection_name")
 ```
 
 It is possible to construct a direct reference to a named collection.
 
 ```python
-from semantic_kernel.connectors.memory.in_memory import InMemoryCollection
+from semantic_kernel.connectors.in_memory import InMemoryCollection
 
-vector_collection = InMemoryCollection("collection_name", DataModel)
+vector_collection = InMemoryCollection(record_type=DataModel, collection_name="collection_name")
 ```
 
 ::: zone-end

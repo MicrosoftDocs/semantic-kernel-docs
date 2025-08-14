@@ -2,9 +2,9 @@
 title: Add chat completion services to Semantic Kernel
 description: Learn how to add gpt-4, Mistral, Google, and other chat completion services to your Semantic Kernel project.
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: conceptual
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/12/2023
 ms.service: semantic-kernel
 ---
@@ -150,6 +150,9 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Ollama --prerelease
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.Amazon --prerelease
 ```
+
+> [!NOTE]
+> Anthropic models are available on the Amazon Bedrock platform. To use Anthropic models, you will need to install the Amazon connector package.
 
 # [Amazon Bedrock](#tab/csharp-AmazonBedrock)
 
@@ -832,10 +835,76 @@ OpenAIChatCompletionService chatCompletionService = new (
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-To create a chat completion service, you need to import the necessary modules and create an instance of the service. Below are the steps to create a chat completion service for each AI service provider.
+
+To create a chat completion service, you need to install and import the necessary modules and create an instance of the service. Below are the steps to install and create a chat completion service for each AI service provider.
+
+## Installing the necessary packages
+
+# [Azure OpenAI](#tab/python-AzureOpenAI)
+
+The Semantic Kernel package comes with all the necessary packages to use Azure OpenAI. There are no additional packages required to use Azure OpenAI.
+
+# [OpenAI](#tab/python-OpenAI)
+
+The Semantic Kernel package comes with all the necessary packages to use OpenAI. There are no additional packages required to use OpenAI.
+
+# [Azure AI Inference](#tab/python-AzureAIInference)
+
+```bash
+pip install semantic-kernel[azure]
+```
+
+# [Anthropic](#tab/python-Anthropic)
+
+```bash
+pip install semantic-kernel[anthropic]
+```
+
+# [Amazon Bedrock](#tab/python-AmazonBedrock)
+
+```bash
+pip install semantic-kernel[aws]
+```
+
+# [Google AI](#tab/python-Google)
+
+```bash
+pip install semantic-kernel[google]
+```
+
+# [Vertex AI](#tab/python-VertexAI)
+
+```bash
+pip install semantic-kernel[google]
+```
+
+# [Mistral AI](#tab/python-MistralAI)
+
+```bash
+pip install semantic-kernel[mistralai]
+```
+
+# [Ollama](#tab/python-Ollama)
+
+```bash
+pip install semantic-kernel[ollama]
+```
+
+# [ONNX](#tab/python-ONNX)
+
+```bash
+pip install semantic-kernel[onnx]
+```
+
+---
+
+## Creating a chat completion service
 
 > [!TIP]
 > There are three methods to supply the required information to AI services. You may either provide the information directly through the constructor, set the necessary environment variables, or create a .env file within your project directory containing the environment variables. You can visit this page to find all the required environment variables for each AI service provider: <https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/setup/ALL_SETTINGS.md>
+
+> [!TIP]
+> The `OpenAIChatCompletion`, `AzureChatCompletion`, and `AzureAIInferenceChatCompletion` services allow you to configure an `instruction_role` keyword argument. This parameter controls how the system instructions are presented to the model and accepts either `"system"` or `"developer"`. When using a reasoning model, you should set `instruction_role="developer"`. Any `system` role messages found in the `ChatHistory` will be automatically mapped to the `developer` role before the request is sent to the model.
 
 # [Azure OpenAI](#tab/python-AzureOpenAI)
 
@@ -854,7 +923,7 @@ chat_completion_service = AzureChatCompletion(service_id="my-service-id")
 ```
 
 > [!NOTE]
-> The `AzureChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
+> The `AzureChatCompletion` service also supports [Microsoft Entra](/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
 
 # [OpenAI](#tab/python-OpenAI)
 
@@ -901,7 +970,7 @@ chat_completion_service = AzureAIInferenceChatCompletion(
 ```
 
 > [!NOTE]
-> The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
+> The `AzureAIInferenceChatCompletion` service also supports [Microsoft Entra](/entra/identity/authentication/overview-authentication) authentication. If you don't provide an API key, the service will attempt to authenticate using the Entra token.
 
 # [Anthropic](#tab/python-Anthropic)
 
@@ -1096,6 +1165,9 @@ chat_completion_service = kernel.get_service(type=ChatCompletionClientBase)
 
 # Retrieve the chat completion service by id
 chat_completion_service = kernel.get_service(service_id="my-service-id")
+
+# Retrieve the default inference settings
+execution_settings = kernel.get_prompt_execution_settings_from_service_id("my-service-id")
 ```
 
 ::: zone-end
@@ -1108,12 +1180,106 @@ ChatCompletionService chatCompletionService = kernel.getService(ChatCompletionSe
 
 ::: zone-end
 
+> [!TIP]
+> Adding the chat completion service to the kernel is not required if you don't need to use other services in the kernel. You can use the chat completion service directly in your code.
+
 ## Using chat completion services
 
 Now that you have a chat completion service, you can use it to generate responses from an AI agent. There are two main ways to use a chat completion service:
 
 - **Non-streaming**: You wait for the service to generate an entire response before returning it to the user.
 - **Streaming**: Individual chunks of the response are generated and returned to the user as they are created.
+
+::: zone pivot="programming-language-python"
+
+Before getting started, you will need to manually create an execution settings instance to use the chat completion service if you did not register the service with the kernel.
+
+# [Azure OpenAI](#tab/python-AzureOpenAI)
+
+```python
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatPromptExecutionSettings
+
+execution_settings = OpenAIChatPromptExecutionSettings()
+```
+
+# [OpenAI](#tab/python-OpenAI)
+
+```python
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatPromptExecutionSettings
+
+execution_settings = OpenAIChatPromptExecutionSettings()
+```
+
+# [Azure AI Inference](#tab/python-AzureAIInference)
+
+```python
+from semantic_kernel.connectors.ai.azure_ai_inference import AzureAIInferenceChatPromptExecutionSettings
+
+execution_settings = AzureAIInferenceChatPromptExecutionSettings()
+```
+
+# [Anthropic](#tab/python-Anthropic)
+
+```python
+from semantic_kernel.connectors.ai.anthropic import AnthropicChatPromptExecutionSettings
+
+execution_settings = AnthropicChatPromptExecutionSettings()
+```
+
+# [Amazon Bedrock](#tab/python-AmazonBedrock)
+
+```python
+from semantic_kernel.connectors.ai.bedrock import BedrockChatPromptExecutionSettings
+
+execution_settings = BedrockChatPromptExecutionSettings()
+```
+
+# [Google AI](#tab/python-Google)
+
+```python
+from semantic_kernel.connectors.ai.google.google_ai import GoogleAIChatPromptExecutionSettings
+
+execution_settings = GoogleAIChatPromptExecutionSettings()
+```
+
+# [Vertex AI](#tab/python-VertexAI)
+
+```python
+from semantic_kernel.connectors.ai.google.vertex_ai import VertexAIChatPromptExecutionSettings
+
+execution_settings = VertexAIChatPromptExecutionSettings()
+```
+
+# [Mistral AI](#tab/python-MistralAI)
+
+```python
+from semantic_kernel.connectors.ai.mistral_ai import MistralAIChatPromptExecutionSettings
+
+execution_settings = MistralAIChatPromptExecutionSettings()
+```
+
+# [Ollama](#tab/python-Ollama)
+
+```python
+from semantic_kernel.connectors.ai.ollama import OllamaChatPromptExecutionSettings
+
+execution_settings = OllamaChatPromptExecutionSettings()
+```
+
+# [ONNX](#tab/python-ONNX)
+
+```python
+from semantic_kernel.connectors.ai.onnx import OnnxGenAIPromptExecutionSettings
+
+execution_settings = OnnxGenAIPromptExecutionSettings()
+```
+
+---
+
+> [!TIP]
+> To see what you can configure in the execution settings, you can check the class definition in the [source code](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/ai) or check out the [API documentation](/python/api/semantic-kernel/semantic_kernel.connectors.ai).
+
+::: zone-end
 
 Below are the two ways you can use a chat completion service to generate responses.
 
@@ -1141,7 +1307,10 @@ var response = await chatCompletionService.GetChatMessageContentAsync(
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = await chat_completion.get_chat_message_content(chat_history=history)
+response = await chat_completion_service.get_chat_message_content(
+    chat_history=history,
+    settings=execution_settings,
+)
 ```
 
 ::: zone-end
@@ -1192,7 +1361,10 @@ await foreach (var chunk in response)
 chat_history = ChatHistory()
 chat_history.add_user_message("Hello, how are you?")
 
-response = chat_completion.get_streaming_chat_message_content(chat_history=history)
+response = chat_completion_service.get_streaming_chat_message_content(
+    chat_history=history,
+    settings=execution_settings,
+)
 
 async for chunk in response:
     print(chunk, end="")

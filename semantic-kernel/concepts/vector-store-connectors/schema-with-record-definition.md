@@ -10,8 +10,21 @@ ms.service: semantic-kernel
 ---
 # Defining your storage schema using a record definition (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+> [!WARNING]
+> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+
+::: zone-end
 
 ## Overview
 
@@ -22,7 +35,6 @@ Another way of providing this information is via record definitions, that can be
 This can be useful in multiple scenarios:
 
 - There may be a case where a developer wants to use the same data model with more than one configuration.
-- There may be a case where the developer wants to store data using a very different schema to the model and wants to supply a custom mapper for converting between the data model and storage schema.
 - There may be a case where a developer wants to use a built-in type, like a dict, or a optimized format like a dataframe and still wants to leverage the vector store functionality.
 
 ::: zone pivot="programming-language-csharp"
@@ -32,14 +44,14 @@ Here is an example of how to create a record definition.
 ```csharp
 using Microsoft.Extensions.VectorData;
 
-var hotelDefinition = new VectorStoreRecordDefinition
+var hotelDefinition = new VectorStoreCollectionDefinition
 {
-    Properties = new List<VectorStoreRecordProperty>
+    Properties = new List<VectorStoreProperty>
     {
-        new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
-        new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = true },
-        new VectorStoreRecordDataProperty("Description", typeof(string)) { IsFullTextSearchable = true },
-        new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw },
+        new VectorStoreKeyProperty("HotelId", typeof(ulong)),
+        new VectorStoreDataProperty("HotelName", typeof(string)) { IsIndexed = true },
+        new VectorStoreDataProperty("Description", typeof(string)) { IsFullTextIndexed = true },
+        new VectorStoreVectorProperty("DescriptionEmbedding", typeof(float), dimensions: 4) { DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
     }
 };
 ```
@@ -54,67 +66,68 @@ var collection = vectorStore.GetCollection<ulong, Hotel>("skhotels", hotelDefini
 
 ## Record Property configuration classes
 
-### VectorStoreRecordKeyProperty
+### VectorStoreKeyProperty
 
 Use this class to indicate that your property is the key of the record.
 
 ```csharp
-new VectorStoreRecordKeyProperty("HotelId", typeof(ulong)),
+new VectorStoreKeyProperty("HotelId", typeof(ulong)),
 ```
 
-#### VectorStoreRecordKeyProperty configuration settings
+#### VectorStoreKeyProperty configuration settings
 
 | Parameter                 | Required | Description                                                                                                                                                       |
 |---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| PropertyType              | Yes      | The type of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+| Name                      | Yes      | The name of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes.           |
+| Type                      | No       | The type of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes.           |
+| StorageName               | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
-> For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+> For more information on which connectors support `StorageName` and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
-### VectorStoreRecordDataProperty
+### VectorStoreDataProperty
 
 Use this class to indicate that your property contains general data that is not a key or a vector.
 
 ```csharp
-new VectorStoreRecordDataProperty("HotelName", typeof(string)) { IsFilterable = true },
+new VectorStoreDataProperty("HotelName", typeof(string)) { IsIndexed = true },
 ```
 
-#### VectorStoreRecordDataProperty configuration settings
+#### VectorStoreDataProperty configuration settings
 
 | Parameter                 | Required | Description                                                                                                                                                       |
 |---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| PropertyType              | Yes      | The type of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| IsFilterable              | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.           |
-| IsFullTextSearchable      | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                              |
-| StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+| Name                      | Yes      | The name of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes.           |
+| Type                      | No       | The type of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes.           |
+| IsIndexed                 | No       | Indicates whether the property should be indexed for filtering in cases where a database requires opting in to indexing per property. Default is false.           |
+| IsFullTextIndexed         | No       | Indicates whether the property should be indexed for full text search for databases that support full text search. Default is false.                              |
+| StorageName               | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
 
 > [!TIP]
-> For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+> For more information on which connectors support `StorageName` and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
-### VectorStoreRecordVectorProperty
+### VectorStoreVectorProperty
 
 Use this class to indicate that your property contains a vector.
 
 ```csharp
-new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(float)) { Dimensions = 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw },
+new VectorStoreVectorProperty("DescriptionEmbedding", typeof(float), dimensions: 4) { DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw },
 ```
 
-#### VectorStoreRecordVectorProperty configuration settings
+#### VectorStoreVectorProperty configuration settings
 
 | Parameter                 | Required | Description                                                                                                                                                       |
 |---------------------------|:--------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DataModelPropertyName     | Yes      | The name of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| PropertyType              | Yes      | The type of the property on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
-| Dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.      |
+| Name                      | Yes      | The name of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes.           |
+| Type                      | No       | The type of the property on the data model. Used by the mapper to automatically map between the storage schema and data model and for creating indexes.           |
+| Dimensions                | Yes      | The number of dimensions that the vector has. This is required for creating a vector index for a collection.                                                      |
 | IndexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                  |
-| DistanceFunction          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                     |
-| StoragePropertyName       | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+| DistanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                              |
+| StorageName               | No       | Can be used to supply an alternative name for the property in the database. Note that this parameter is not supported by all connectors, e.g. where alternatives like `JsonPropertyNameAttribute` is supported. |
+| EmbeddingGenerator        | No       | Allows specifying a `Microsoft.Extensions.AI.IEmbeddingGenerator` instance to use for generating embeddings automatically for the decorated property.             |
 
 > [!TIP]
-> For more information on which connectors support StoragePropertyName and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
+> For more information on which connectors support `StorageName` and what alternatives are available, refer to [the documentation for each connector](./out-of-the-box-connectors/index.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -158,8 +171,8 @@ To use the definition, pass it to the GetCollection method or a collection const
 ```python
 collection = vector_store.get_collection(
     collection_name="skhotels", 
-    data_model_type=pd.DataFrame, 
-    data_model_definition=hotel_definition,
+    record_type=pd.DataFrame, 
+    definition=hotel_definition,
 )
 ```
 
@@ -207,7 +220,7 @@ var collection = vectorStore.getCollection("skhotels",
 
 Use this class to indicate that your field is the key of the record.
 
-```csharp
+```java
 VectorStoreRecordKeyField.builder().withName("hotelId").withFieldType(String.class).build(),
 ```
 
@@ -250,7 +263,7 @@ VectorStoreRecordDataField.builder()
 
 Use this class to indicate that your field contains a vector.
 
-```csharp
+```java
 VectorStoreRecordVectorField.builder().withName("descriptionEmbedding")
     .withDimensions(4)
     .withIndexKind(IndexKind.HNSW)
@@ -266,7 +279,7 @@ VectorStoreRecordVectorField.builder().withName("descriptionEmbedding")
 | fieldType              | Yes      | The type of the field on the data model. Used by the built in mappers to automatically map between the storage schema and data model and for creating indexes. |
 | dimensions                | Yes for collection create, optional otherwise | The number of dimensions that the vector has. This is typically required when creating a vector index for a collection.      |
 | indexKind                 | No       | The type of index to index the vector with. Default varies by vector store type.                                                                                  |
-| distanceFunction          | No       | The type of distance function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                     |
+| distanceFunction          | No       | The type of function to use when doing vector comparison during vector search over this vector. Default varies by vector store type.                     |
 | storageName       | No       | Can be used to supply an alternative name for the field in the database. Note that this parameter is not supported by all connectors, e.g. where Jackson is used, in that case the storage name can be specified using Jackson annotations. |
 
 > [!TIP]

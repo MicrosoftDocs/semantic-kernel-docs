@@ -2,7 +2,7 @@
 title: More advanced scenarios for telemetry
 description: More advanced scenarios for telemetry
 zone_pivot_groups: programming-languages
-author: taochen
+author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
 ms.date: 09/12/2024
@@ -12,7 +12,7 @@ ms.service: semantic-kernel
 # More advanced scenarios for telemetry
 
 > [!NOTE]
-> This article will use [Aspire Dashboard](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) for illustration. If you prefer to use other tools, please refer to the documentation of the tool you are using on setup instructions.
+> This article will use [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) for illustration. If you prefer to use other tools, please refer to the documentation of the tool you are using on setup instructions.
 
 ## Auto Function Calling
 
@@ -228,7 +228,6 @@ We are going to create a simple Python script that uses Semantic Kernel to send 
 ```python
 import asyncio
 import logging
-from typing import Annotated
 
 from opentelemetry._logs import set_logger_provider
 from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
@@ -259,14 +258,14 @@ class BookingPlugin:
         name="find_available_rooms",
         description="Find available conference rooms for today.",
     )
-    def find_available_rooms(self,) -> Annotated[list[str], "A list of available rooms."]:
+    def find_available_rooms(self,) -> list[str]:
         return ["Room 101", "Room 201", "Room 301"]
 
     @kernel_function(
         name="book_room",
         description="Book a conference room.",
     )
-    def book_room(self, room: str) -> Annotated[str, "A confirmation message."]:
+    def book_room(self, room: str) -> str:
         return f"Room {room} booked."
 
 
@@ -376,7 +375,7 @@ Please refer to this [article](./telemetry-with-console.md#environment-variables
 
 ### Start the Aspire Dashboard
 
-Follow the instructions [here](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
+Follow the instructions [here](/dotnet/aspire/fundamentals/dashboard/standalone?tabs=bash#start-the-dashboard) to start the dashboard. Once the dashboard is running, open a browser and navigate to `http://localhost:18888` to access the dashboard.
 
 ### Run
 
@@ -556,7 +555,6 @@ Run the application again and observe the trace in the dashboard. You should see
 
 ::: zone-end
 
-
 ::: zone pivot="programming-language-python"
 
 Modify the `book_room` function in the Python code to simulate an error:
@@ -566,7 +564,7 @@ Modify the `book_room` function in the Python code to simulate an error:
     name="book_room",
     description="Book a conference room.",
 )
-async def book_room(self, room: str) -> Annotated[str, "A confirmation message."]:
+async def book_room(self, room: str) -> str:
     # Simulate a remote call to a booking system
     await asyncio.sleep(1)
 
@@ -582,7 +580,6 @@ Run the application again and observe the trace in the dashboard. You should see
 
 ::: zone-end
 
-
 ::: zone pivot="programming-language-java"
 
 > [!NOTE]
@@ -595,9 +592,3 @@ Run the application again and observe the trace in the dashboard. You should see
 In production, your services may get a large number of requests. Semantic Kernel will generate a large amount of telemetry data. some of which may not be useful for your use case and will introduce unnecessary costs to store the data. You can use the [sampling](https://opentelemetry.io/docs/concepts/sampling/) feature to reduce the amount of telemetry data that is collected.
 
 Observability in Semantic Kernel is constantly improving. You can find the latest updates and new features in the [GitHub repository](https://github.com/microsoft/semantic-kernel).
-
-
-
-
-
-

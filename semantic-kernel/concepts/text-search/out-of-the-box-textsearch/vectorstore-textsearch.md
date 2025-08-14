@@ -45,7 +45,7 @@ var collectionName = "records";
 
 // Get and create collection if it doesn't exist.
 var recordCollection = vectorStore.GetCollection<TKey, TRecord>(collectionName);
-await recordCollection.CreateCollectionIfNotExistsAsync().ConfigureAwait(false);
+await recordCollection.EnsureCollectionExistsAsync().ConfigureAwait(false);
 
 // TODO populate the record collection with your test data
 // Example https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Search/VectorStore_TextSearch.cs

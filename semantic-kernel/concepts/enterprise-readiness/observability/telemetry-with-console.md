@@ -2,7 +2,7 @@
 title: Inspection of telemetry data with the console
 description: Output telemetry data to the console for inspection
 zone_pivot_groups: programming-languages
-author: taochen
+author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
 ms.date: 09/12/2024
@@ -54,18 +54,18 @@ dotnet new console -n TelemetryConsoleQuickstart
 
 Navigate to the newly created project directory after the command completes.
 
-
 ### Install required packages
 
 - Semantic Kernel
-    ```console
-    dotnet add package Microsoft.SemanticKernel
-    ```
+
+  ```console
+  dotnet add package Microsoft.SemanticKernel
+  ```
 
 - OpenTelemetry Console Exporter
-    ```console
-    dotnet add package OpenTelemetry.Exporter.Console
-    ```
+  ```console
+  dotnet add package OpenTelemetry.Exporter.Console
+  ```
 
 ### Create a simple application with Semantic Kernel
 
@@ -172,6 +172,7 @@ python -m venv telemetry-console-quickstart
 ```
 
 Activate the virtual environment.
+
 ```console
 telemetry-console-quickstart\Scripts\activate
 ```
@@ -280,6 +281,7 @@ export SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE=true
 ---
 
 #### Code
+
 If you run the script now, you should expect to see a sentence explaining why the sky is blue. To observe the kernel via telemetry, replace the `# Telemetry setup code goes here` comment with the following code:
 
 ```python
@@ -354,7 +356,7 @@ Finally, we call the three functions to set up logging, tracing, and metrics. Th
 
 > [!NOTE]
 > Semantic Kernel Observability is not yet available for Java.
- 
+
 ::: zone-end
 
 ## Run
@@ -417,8 +419,9 @@ telemetry.sdk.version: 1.9.0
 ```
 
 There are two parts to each log record:
+
 - The log record itself: contains the timestamp and namespace at which the log record was generated, the severity and body of the log record, and any attributes associated with the log record.
-- The resource associated with the log record: contains information about the service, instance, and SDK used to generate the log record. 
+- The resource associated with the log record: contains information about the service, instance, and SDK used to generate the log record.
 
 ### Activities
 
@@ -459,6 +462,7 @@ Resource associated with Activity:
 ```
 
 There are two parts to each activity:
+
 - The activity itself: contains the span ID and parent span ID that APM tools use to build the traces, the duration of the activity, and any tags and events associated with the activity.
 - The resource associated with the activity: contains information about the service, instance, and SDK used to generate the activity.
 
@@ -478,7 +482,7 @@ Value: 16
 Here you can see the name, the description, the unit, the time range, the type, the value of the metric, and the meter that the metric belongs to.
 
 > [!NOTE]
-> The above metric is a Counter metric. For a full list of metric types, see [here](https://learn.microsoft.com/dotnet/core/diagnostics/metrics-instrumentation#types-of-instruments). Depending on the type of metric, the output may vary.
+> The above metric is a Counter metric. For a full list of metric types, see [here](/dotnet/core/diagnostics/metrics-instrumentation#types-of-instruments). Depending on the type of metric, the output may vary.
 
 ::: zone-end
 
@@ -684,6 +688,3 @@ Now that you have successfully output telemetry data to the console, you can lea
 
 > [!div class="nextstepaction"]
 > [Application Insights](telemetry-with-app-insights.md)
-
-> [!div class="nextstepaction"]
-> [Aspire Dashboard](telemetry-with-aspire-dashboard.md)

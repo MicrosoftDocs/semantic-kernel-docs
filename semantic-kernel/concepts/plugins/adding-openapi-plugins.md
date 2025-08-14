@@ -295,7 +295,7 @@ OpenAPI plugins can modify the state of the system using POST, PUT, or PATCH ope
 
 Semantic Kernel offers a few options for managing payload handling for OpenAPI plugins, depending on your specific scenario and API requirements.
    
-### Dynamic payload construction  
+### Dynamic payload construction
    
 Dynamic payload construction allows the payloads of OpenAPI operations to be created dynamically based on the payload schema and arguments provided by the LLM.
 This feature is enabled by default but can be disabled by setting the `EnableDynamicPayload` property to `false` in the `OpenApiFunctionExecutionParameters` object when adding an OpenAPI plugin.
@@ -330,13 +330,33 @@ To change the state of the light and get values for the payload properties, Sema
 In addition to providing operation metadata to the LLM, Semantic Kernel will perform the following steps:
 1. Handle the LLM call to the OpenAPI operation, constructing the payload based on the schema and provided by LLM property values.
 2. Send the HTTP request with the payload to the API.
-   
-Dynamic payload construction is best suited for APIs with relatively simple payload structures that have unique property names.
-If the payload has non-unique property names, consider the following alternatives:
-1. Provide a unique argument name for each non-unique property, using a method similar to that described in the [Handling OpenAPI plugin parameters](./adding-openapi-plugins.md#handling-openapi-plugin-parameters) section.
-2. Use namespaces to avoid naming conflicts, as outlined in the next section on [Payload namespacing](./adding-openapi-plugins.md#payload-namespacing).
-3. Disable dynamic payload construction and allow the LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
-   
+
+#### Limitations of dynamic payload construction
+Dynamic payload construction is most effective for APIs with relatively simple payload structures. It may not be reliably work or work at all, for APIs payloads exhibiting the following characteristics:
+- Payloads with non-unique property names regardless of the location of the properties. E.g., two properties named `id`, one for sender object and another for receiver object - ```json { "sender": { "id": ... }, "receiver": { "id": ... }}``` 
+- Payload schemas that use any of the composite keywords `oneOf`, `anyOf`, `allOf`.
+- Payload schemas with recursive references. E.g., ```json { "parent": { "child": { "$ref": "#parent" } } }```
+
+To handle payloads with non-unique property names, consider the following alternatives:
+- Provide a unique argument name for each non-unique property, using a method similar to that described in the [Handling OpenAPI plugin parameters](./adding-openapi-plugins.md#handling-openapi-plugin-parameters) section.
+- Use namespaces to avoid naming conflicts, as outlined in the next section on [Payload namespacing](./adding-openapi-plugins.md#payload-namespacing).
+- Disable dynamic payload construction and allow the LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
+
+If payloads schemas use any of the `oneOf`, `anyOf`, `allOf` composite keywords or recursive references, consider disabling dynamic payload construction and allow the 
+LLM to create the payload based on its schema, as explained in the [The payload parameter](./adding-openapi-plugins.md#the-payload-parameter) section.
+
+#### Note on the `oneOf` and `anyOf` Keywords
+The `anyOf` and `oneOf` keywords assume that a payload can be composed of properties defined by multiple schemas.
+The `anyOf` keyword allows a payload to include properties defined in one or more schemas, while `oneOf` restricts the payload to contain properties from only one schema among the many provided.
+For more information, you can refer to the [Swagger documentation on oneOf and anyOf](https://swagger.io/docs/specification/v3_0/data-models/oneof-anyof-allof-not/).
+
+With both `anyOf` and `oneOf` keywords, which offer alternatives to the payload structure, it's impossible to predict which alternative a caller will choose 
+when invoking operations that define payloads with these keywords. For example, it is not possible to determine in advance whether a caller will invoke an operation with a Dog or Cat object, or with an object composed of some or perhaps all properties from the PetByAge and PetByType schemas 
+described in the examples for `anyOf` and `oneOf` in the [Swagger documentation](https://swagger.io/docs/specification/v3_0/data-models/oneof-anyof-allof-not/).
+As a result, because there's no set of parameters known in advance that Semantic Kernel can use to create the a plugin function with for such operations, Semantic Kernel creates a function with only one [payload](./adding-openapi-plugins.md#the-payload-parameter) parameter 
+having a schema from the operation describing a multitude of possible alternatives, offloading the payload creation to the operation caller: LLM or calling code 
+that must have all the context to know which one of the available alternatives to invoke the function with. 
+
 ### Payload namespacing
 
 Payload namespacing helps prevent naming conflicts that can occur due to non-unique property names in OpenAPI plugin payloads.
@@ -659,7 +679,7 @@ static async Task AuthenticateRequestAsyncCallbackAsync(HttpRequestMessage reque
                 (RestApiSecurityScheme scheme, IList<string> scopes) = apiKeySchemes.First();
 
                 // Get the API key for the scheme and scopes from your app identity provider
-                var apiKey = await this.identityPropvider.GetApiKeyAsync(scheme, scopes);
+                var apiKey = await this.identityProvider.GetApiKeyAsync(scheme, scopes);
 
                 // Add the API key to the request headers
                 if (scheme.In == RestApiParameterLocation.Header)

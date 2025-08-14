@@ -2,9 +2,9 @@
 title: How to quickly start with Semantic Kernel
 description: Follow along with Semantic Kernel's guides to quickly learn how to use the SDK
 zone_pivot_groups: programming-languages
-author: matthewbolanos
+author: moonbox3
 ms.topic: quickstart
-ms.author: mabolan
+ms.author: evmattso
 ms.date: 07/11/2023
 ms.service: semantic-kernel
 ---
@@ -225,7 +225,7 @@ async def main():
 
     # Enable planning
     execution_settings = AzureChatPromptExecutionSettings()
-    execution_settings.function_call_behavior = FunctionChoiceBehavior.Auto()
+    execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
     # Create a history of the conversation
     history = ChatHistory()
@@ -300,11 +300,11 @@ To make it easier to get started building enterprise apps with Semantic Kernel, 
 
 In the following sections, we'll unpack the above sample by walking through steps **1**, **2**, **3**, **4**, **6**, **9**, and **10**. Everything you need to build a simple agent that is powered by an AI service and can run your code.
 
+  ::: zone pivot="programming-language-csharp,programming-language-python"
+
 - [Import packages](#1-import-packages)
 - [Add AI services](#2-add-ai-services)
-  ::: zone pivot="programming-language-csharp,programming-language-python"
 - [Enterprise components](#3-add-enterprise-services)
-  ::: zone-end
 - [Build the kernel](#4-build-the-kernel-and-retrieve-services)
 - Add memory (skipped)
 - [Add plugins](#6-add-plugins)
@@ -313,6 +313,22 @@ In the following sections, we'll unpack the above sample by walking through step
 - [Planning](#9-planning)
 - [Invoke](#10-invoke)
 
+  ::: zone-end
+
+  ::: zone pivot="programming-language-java"
+
+- [Import packages](#1-import-packages)
+- [Add AI services](#2-add-ai-services)
+- [Build the kernel](#4-build-the-kernel-and-retrieve-services)
+- Add memory (skipped)
+- [Add plugins](#6-add-plugins)
+- Create kernel arguments (skipped)
+- Create prompts (skipped)
+- [Planning](#9-planning)
+- [Invoke](#10-invoke)
+
+  ::: zone-end
+  
 ### 1) Import packages
 For this sample, we first started by importing the following packages:
 
@@ -502,7 +518,6 @@ public class LightsPlugin
 
    [KernelFunction("get_lights")]
    [Description("Gets a list of lights and their current state")]
-   [return: Description("An array of lights")]
    public async Task<List<LightModel>> GetLightsAsync()
    {
       return lights;
@@ -510,7 +525,6 @@ public class LightsPlugin
 
    [KernelFunction("change_state")]
    [Description("Changes the state of the light")]
-   [return: Description("The updated state of the light; will return null if the light does not exist")]
    public async Task<LightModel?> ChangeStateAsync(int id, bool isOn)
    {
       var light = lights.FirstOrDefault(light => light.Id == id);
@@ -561,7 +575,7 @@ class LightsPlugin:
     )
     def get_state(
         self,
-    ) -> Annotated[str, "the output is a string"]:
+    ) -> str:
         """Gets a list of lights and their current state."""
         return self.lights
 
@@ -573,7 +587,7 @@ class LightsPlugin:
         self,
         id: int,
         is_on: bool,
-    ) -> Annotated[str, "the output is a string"]:
+    ) -> str:
         """Changes the state of the light."""
         for light in self.lights:
             if light["id"] == id:
@@ -642,7 +656,7 @@ OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
 
 ```python
 execution_settings = AzureChatPromptExecutionSettings()
-execution_settings.function_call_behavior = FunctionChoiceBehavior.Auto()
+execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 ```
 
 ::: zone-end

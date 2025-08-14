@@ -17,7 +17,7 @@ Semantic Kernel provides a set of Memory Store abstractions where the primary in
 
 ## Memory Store vs Vector Store abstractions
 
-As part of an effort to evolve and expand the vector storage and search capbilities of Semantic Kernel, we have released a new set of abstractions to replace the Memory Store abstractions.
+As part of an effort to evolve and expand the vector storage and search capabilities of Semantic Kernel, we have released a new set of abstractions to replace the Memory Store abstractions.
 We are calling the replacement abstractions Vector Store abstractions.
 The purpose of both are similar, but their interfaces differ and the Vector Store abstractions provide expanded functionality.
 
@@ -25,7 +25,7 @@ The purpose of both are similar, but their interfaces differ and the Vector Stor
 
 |Characteristic|Legacy Memory Stores|Vector Stores|
 |-|-|-|
-|Main Interface|IMemoryStore|IVectorStore|
+|Main Interface|IMemoryStore|VectorStore|
 |Abstractions nuget package|Microsoft.SemanticKernel.Abstractions|Microsoft.Extensions.VectorData.Abstractions|
 |Naming Convention|{Provider}MemoryStore, e.g. RedisMemoryStore|{Provider}VectorStore, e.g. RedisVectorStore|
 |Supports record upsert, get and delete|Yes|Yes|
@@ -50,8 +50,8 @@ Semantic Kernel offers several Memory Store connectors to vector databases that 
 
 | Service                  | C# | Python |
 |--------------------------|:----:|:------:|
-| Vector Database in Azure Cosmos DB for NoSQL | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCosmosDBNoSQL) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb_no_sql) |
-| Vector Database in vCore-based Azure Cosmos DB for MongoDB | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureCosmosDBMongoDB) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb) |
+| Vector Database in Azure Cosmos DB for NoSQL | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.CosmosNoSql) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb_no_sql) |
+| Vector Database in vCore-based Azure Cosmos DB for MongoDB | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.CosmosMongoDB) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cosmosdb) |
 | Azure AI Search   | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.AzureAISearch) | [Python](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/memory/azure_cognitive_search) |
 | Azure PostgreSQL Server  | [C#](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Connectors/Connectors.Memory.Postgres) | |
 | Azure SQL Database       | [C#](https://github.com/kbeaugrand/SemanticKernel.Connectors.Memory.SqlServer) | |
@@ -70,7 +70,7 @@ Semantic Kernel offers several Memory Store connectors to vector databases that 
 
 ## Migrating from Memory Stores to Vector Stores
 
-If you wanted to migrate from using the Memory Store abstractions to the Vector Store abtractions there are various ways in which you can do this.
+If you wanted to migrate from using the Memory Store abstractions to the Vector Store abstractions there are various ways in which you can do this.
 
 ### Use the existing collection with the Vector Store abstractions
 
@@ -85,25 +85,25 @@ using Microsoft.Extensions.VectorData;
 
 class VectorStoreRecord
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public string Id { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Description { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Text { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public bool IsReference { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string ExternalSourceName { get; set; }
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string AdditionalMetadata { get; set; }
 
-    [VectorStoreRecordVector(VectorSize)]
+    [VectorStoreVector(VectorSize)]
     public ReadOnlyMemory<float> Embedding { get; set; }
 }
 ```
