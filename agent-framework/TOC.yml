@@ -27,7 +27,7 @@
     href: multi-agent.md
   - name: Managing State
     href: managing-state.md
-- name: Use Agent Framework
+- name: Configure Agents
   items:
   - name: LLM Configuration
     href: llm-configuration.md
