@@ -11,7 +11,7 @@
     href: agent-framework-installation.md
   - name: Docker
     href: agent-framework-docker.md
-- name: Getting Started
+- name: Tutorials
   items:
   - name: Overview
     href: agent-framework-overview.md
@@ -25,12 +25,26 @@
     href: chat-termination.md
   - name: Multi-agent Conversation Framework
     href: multi-agent.md
+  - name: Managing State
+    href: managing-state.md
 - name: Use Agent Framework
   items:
   - name: LLM Configuration
     href: llm-configuration.md
   - name: Agent Observability
     href: agent-observability.md
+- name: Agent Paterns
+  items:
+  - name: Overview
+    href: agent-patern-overview.md
+  - name: Concurrent
+    href: concurrent.md  
+  - name: Sequential
+    href: sequential.md  
+  - name: Group Chat
+    href: group-chat.md
+  - name: Handoff
+    href: Handoff.md  
 - name: Troubleshoot
   items:
   - name: FAQs
