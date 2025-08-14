@@ -40,9 +40,9 @@ In C#, there are several packages to help ensure that you only need to import th
 | `Microsoft.SemanticKernel.Connectors.Ollama` | The AI connector for Ollama |
 | `Microsoft.SemanticKernel.Connectors.Onnx` | The AI connector for Onnx |
 | `Microsoft.SemanticKernel.Connectors.OpenAI` | The AI connector for OpenAI |
-| `Microsoft.SemanticKernel.Connectors.AzureAISearch` | The vector store connector for AzureAISearch |
-| `Microsoft.SemanticKernel.Connectors.CosmosMongoDB` | The vector store connector for AzureCosmosDBMongoDB |
-| `Microsoft.SemanticKernel.Connectors.CosmosNoSql` | The vector store connector for AzureAISearch |
+| `Microsoft.SemanticKernel.Connectors.AzureAISearch` | The vector store connector for Azure AI Search |
+| `Microsoft.SemanticKernel.Connectors.CosmosMongoDB` | The vector store connector for Azure CosmosDB MongoDB |
+| `Microsoft.SemanticKernel.Connectors.CosmosNoSql` | The vector store connector for Azure CosmosDB NoSQL |
 | `Microsoft.SemanticKernel.Connectors.MongoDB` | The vector store connector for MongoDB |
 | `Microsoft.SemanticKernel.Connectors.Pinecone` | The vector store connector for Pinecone |
 | `Microsoft.SemanticKernel.Connectors.Qdrant` | The vector store connector for Qdrant |
