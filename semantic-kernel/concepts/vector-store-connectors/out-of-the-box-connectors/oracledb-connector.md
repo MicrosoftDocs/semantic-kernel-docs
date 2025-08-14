@@ -257,11 +257,11 @@ CREATE TABLE "MYSCHEMA"."Hotels"
 
 ## Learn More
 Refer to the following Oracle Database Vector Store connector resources to learn more:
-- [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs-uat.us.oracle.com/en/database/oracle/oracle-database/23/odpnt/oracle-database-vector-store-provider-classes-microsoft-vector-stores-and-semantic-kernel1.html)  
+- [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/oracle-database-vector-store-connector-semantic-kernel-classes.html)  
 Contains information on Oracle Database Vector Store connector classes for adding data, retrieving data, and performing vector search in the Oracle vector database.  
 -  Sample Code: Oracle Database Vector Store Connector for Semantic Kernel (.NET) 
     - Coming soon
-- [Documentation: Oracle Data Provider for .NET](https://docs-uat.us.oracle.com/en/database/oracle/oracle-database/23/odpnt/intro.html)  
+- [Documentation: Oracle Data Provider for .NET](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/intro.html)  
 Contains information on Oracle Data Provider for .NET (ODP.NET), the ADO.NET data provider for Oracle Database Vector Store connector.
 
 ::: zone-end
