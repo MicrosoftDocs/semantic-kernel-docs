@@ -33,6 +33,8 @@
     href: llm-configuration.md
   - name: Agent Observability
     href: agent-observability.md
+  - name: Agent2Agent Guidance
+    href: agent-guidance.md
 - name: Agent Paterns
   items:
   - name: Overview
@@ -45,9 +47,11 @@
     href: group-chat.md
   - name: Handoff
     href: Handoff.md  
-- name: Troubleshoot
+- name: Additional Information
   items:
   - name: FAQs
     href: agent-framework-questions.md
+  - name: Framework Best Practices
+    href: framework-best-practices.md
 - name: API Reference Guide
   items:
