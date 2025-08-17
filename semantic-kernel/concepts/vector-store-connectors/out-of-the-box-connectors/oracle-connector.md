@@ -1,3 +1,13 @@
+---
+title: Using the Semantic Kernel Oracle Database Vector Store connector (Preview)
+description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Oracle Database.
+zone_pivot_groups: programming-languages
+author: minal-agashe-oracle
+ms.topic: conceptual
+ms.author: 
+ms.date: 08/14/2025
+ms.service: semantic-kernel
+---
 # Using the Oracle Database Vector Store connector (Preview)
 
 ::: zone pivot="programming-language-csharp"
@@ -39,7 +49,7 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 | IsFullTextSearchable supported?          | No                                                                                                                                                                            |
 | StorageName supported?                | Yes                                                                                              |
 | HybridSearch supported?               | No                                                                                                                                                                         |
-| Restricted at least one vector                | Yes    |
+| Restricted at least one vector                | No    |
 | Allow multiple primary keys               | No |
 
 Vector data searches require Oracle Database 23ai. All other Oracle connector features are available using Oracle Database 19c or higher.
