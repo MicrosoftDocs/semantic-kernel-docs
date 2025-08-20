@@ -4,7 +4,7 @@ description: Contains information on how to use a Semantic Kernel Vector store c
 zone_pivot_groups: programming-languages
 author: minal-agashe-oracle
 ms.topic: conceptual
-ms.author: 
+ms.author: westey
 ms.date: 08/14/2025
 ms.service: semantic-kernel
 ---
