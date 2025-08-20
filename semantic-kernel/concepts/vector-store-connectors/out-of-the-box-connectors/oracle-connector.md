@@ -52,7 +52,8 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 | Restricted at least one vector                | No    |
 | Allow multiple primary keys               | No |
 
-Vector data searches require Oracle Database 23ai. All other Oracle connector features are available using Oracle Database 19c or higher.
+> [!IMPORTANT]
+> Vector data searches require Oracle Database 23ai. All other Oracle connector features are available using Oracle Database 19c or higher.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
