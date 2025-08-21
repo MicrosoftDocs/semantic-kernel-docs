@@ -9,4 +9,3 @@ ms.service: agent-framework
 ---
 
 # Introduction to Agent Framework
-
