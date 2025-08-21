@@ -43,14 +43,13 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<double\></li><li>Embedding\<double\></li><li>double[]</li><li>ReadOnlyMemory\<short\></li><li>Embedding\<short\></li><li>short[]</li><li>ReadOnlyMemory\<byte\></li><li>Embedding\<byte\></li><li>byte[]</li><li>BitArray</li><li>BinaryEmbedding</li></ul>                                                                                          |
 | Supported index types                 | <ul><li>Flat (default)</li><li>HNSW</li><li>IVF</li></ul>                                                                                                                                                                      |
 | Supported distance functions          | <ul><li>CosineDistance</li><ul><li>FLOAT32, FLOAT64, and INT8 vector default</li></ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>NegativeDotProductSimilarity</li><li>EuclideanDistance</li><li>EuclideanSquaredDistance</li><li>HammingDistance</li><ul><li>BINARY vector default</li></ul><li>ManhattanDistance</li><li>JaccardSimilarity</li></ul>                                                                                     |
-| Supported filter clauses              | <ul><li>==</li><li>!=</li><li><</li><li><=</li><li>></li><li>>=</li><li>List.Contains() <ul><li>Only when checking for the model property is in the list</li></ul></li></ul>                                                                                                                                                     |
-| Supports multiple vectors in a record | Yes                                                                                                                                                                           |
+| Supported filter clauses              | <ul><li>==</li><li>!=</li><li><</li><li><=</li><li>></li><li>>=</li><li>List.Contains() <ul><li>Only when checking if the model property is in the list</li></ul></li></ul>                                                                                                                                                     |
+| Supports zero, one, or multiple vectors in a record | Yes                                                                                                                                                                           |
 | IsIndexed supported?                  | Yes                                                                                                                                                                           |
 | IsFullTextSearchable supported?          | No                                                                                                                                                                            |
 | StorageName supported?                | Yes                                                                                              |
 | HybridSearch supported?               | No                                                                                                                                                                         |
-| Restricted at least one vector                | No    |
-| Allow multiple primary keys               | No |
+
 
 > [!IMPORTANT]
 > Vector data searches require Oracle Database 23ai. All other Oracle connector features are available using Oracle Database 19c or higher.
@@ -166,7 +165,7 @@ var collection = new OracleCollection<string, Hotel>(dataSource, "skhotels");
 ```csharp
 using Oracle.VectorData;
  
-var collection = new OracleCollection<string, Hotel>("<connection string>");
+var collection = new OracleCollection<string, Hotel>("<connection string>", "skhotels");
 ```
 
 ::: zone-end
