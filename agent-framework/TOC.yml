@@ -29,18 +29,16 @@
     href: multi-agent-scenarios.md
   - name: Workflow Orchestration
     href: workflow-orchestration.md
-- name: Agent Paterns
-  items:
-  - name: Overview
-    href: agent-patern-overview.md
-  - name: Concurrent
-    href: concurrent.md  
-  - name: Sequential
-    href: sequential.md  
-  - name: Group Chat
-    href: group-chat.md
-  - name: Handoff
-    href: Handoff.md  
+  - name: Agent Paterns
+    items:
+    - name: Concurrent
+      href: concurrent.md  
+    - name: Sequential
+      href: sequential.md  
+    - name: Group Chat
+      href: group-chat.md
+    - name: Handoff
+      href: Handoff.md  
 - name: Additional Information
   items:
   - name: FAQs
