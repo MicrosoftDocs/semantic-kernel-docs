@@ -6,39 +6,39 @@
 - name: Tutorials
   items:
   - name: Create an agent
-    href: create-agent.md
+    href: tutorials/create-agent.md
   - name: Human in the loop
-    href: human-input-agent.md
+    href: tutorials/human-input-agent.md
   - name: Tool use
-    href: tool-use.md
+    href: tutorials/tool-use.md
   - name: Chat termination
-    href: chat-termination.md
+    href: tutorials/chat-termination.md
   - name: Multi-agent Conversation Framework
-    href: multi-agent.md
+    href: tutorials/multi-agent.md
   - name: Managing State
-    href: managing-state.md
+    href: tutorials/managing-state.md
 - name: User Guide
   items:
   - name: LLM Configuration
-    href: llm-configuration.md
+    href: user-guide/llm-configuration.md
   - name: Agent Observability
-    href: agent-observability.md
+    href: user-guide/agent-observability.md
   - name: Agent2Agent Guidance
-    href: agent-guidance.md
+    href: user-guide/agent-guidance.md
   - name: Multi Agent Scenarios
-    href: multi-agent-scenarios.md
+    href: user-guide/multi-agent-scenarios.md
   - name: Workflow Orchestration
-    href: workflow-orchestration.md
+    href: user-guide/workflow-orchestration.md
   - name: Agent Paterns
     items:
     - name: Concurrent
-      href: concurrent.md  
+      href: user-guide/concurrent.md  
     - name: Sequential
-      href: sequential.md  
+      href: user-guide/sequential.md  
     - name: Group Chat
-      href: group-chat.md
+      href: user-guide/group-chat.md
     - name: Handoff
-      href: Handoff.md  
+      href: user-guide/Handoff.md  
 - name: Additional Information
   items:
   - name: FAQs
