@@ -3,18 +3,8 @@
 - name: Getting started
   href: get-started/TOC.yml
   expanded: true
-- name: Migration Guide
-  href: migration-guide/index.md
-- name: Installation
-  items:
-  - name: Install Agent Framework
-    href: agent-framework-installation.md
-  - name: Docker
-    href: agent-framework-docker.md
 - name: Tutorials
   items:
-  - name: Overview
-    href: agent-framework-overview.md
   - name: Create an agent
     href: create-agent.md
   - name: Human in the loop
@@ -27,7 +17,7 @@
     href: multi-agent.md
   - name: Managing State
     href: managing-state.md
-- name: Configure Agents
+- name: User Guide
   items:
   - name: LLM Configuration
     href: llm-configuration.md
@@ -35,6 +25,10 @@
     href: agent-observability.md
   - name: Agent2Agent Guidance
     href: agent-guidance.md
+  - name: Multi Agent Scenarios
+    href: multi-agent-scenarios.md
+  - name: Workflow Orchestration
+    href: workflow-orchestration.md
 - name: Agent Paterns
   items:
   - name: Overview
@@ -53,5 +47,7 @@
     href: agent-framework-questions.md
   - name: Framework Best Practices
     href: framework-best-practices.md
+- name: Migration Guide
+  href: migration-guide/index.md
 - name: API Reference Guide
   items:
