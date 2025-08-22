@@ -17,14 +17,18 @@ author:
 
 ## Understanding concurrent patterns
 
-## Implementation approaches
+## Define Your Agents
 
-## Synchronization strategies
+## Set Up the Concurrent Orchestration
 
-## Error handling in concurrent scenarios
+## Start the Runtime
 
-## Performance considerations
+## Invoke the Orchestration
 
-## Use cases
+## Collect Results
+
+## Collect Results
+
+## Sample output
 
 ## Related content
