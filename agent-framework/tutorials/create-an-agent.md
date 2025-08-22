@@ -17,12 +17,12 @@ author:
 
 ## Prerequisites
 
-## Create your first agent
+## Assistant Agent
 
-## Configure agent settings
+## Getting Results
 
-## Test your agent
+## Multi-Modal Input
 
-## Deploy your agent
+## Use tools
 
 ## Next steps
