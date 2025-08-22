@@ -17,14 +17,18 @@ author:
 
 ## Understanding group chat patterns
 
-## Implementation approaches
+## Define Your Agents
 
-## Moderation strategies
+## Observe Agent Responses
 
-## Turn management
+## Set Up the Group Chat Orchestration
 
-## Conflict resolution
+## Start the Runtime
 
-## Use cases
+## Invoke the Orchestration
+
+## Collect Results
+
+## Sample output
 
 ## Related content
