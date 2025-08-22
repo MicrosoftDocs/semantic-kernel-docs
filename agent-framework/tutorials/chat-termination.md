@@ -16,14 +16,11 @@ author:
 
 ## Prerequisites
 
-## Understanding termination patterns
+## Termination patterns
 
-## Configure automatic termination
+## Combine termination conditions
 
-## Implement custom termination logic
+## Implement custom termination condition
 
-## Handle graceful conversation endings
-
-## Test termination scenarios
 
 ## Next steps
