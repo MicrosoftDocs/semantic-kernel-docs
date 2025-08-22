@@ -17,16 +17,11 @@ author:
 
 ## Prerequisites
 
-## Understanding observability
+## Set up 
 
-## Configure monitoring
+## Telemetry Backend
 
-## Set up logging
+## Tracing an AgentChat
 
-## Track performance metrics
-
-## Implement alerting
-
-## Analyze agent behavior
 
 ## Related content
