@@ -18,14 +18,18 @@ author:
 
 ## Understanding sequential patterns
 
-## Implementation approaches
+## Define Your Agents
 
-## State management between steps
+## Observe Agent Responses
 
-## Error handling and recovery
+## Set up the sequential orchestration
 
-## Performance optimization
+## Start the Runtime
 
-## Use cases
+## Invoke the Orchestration
+
+## Collect Results
+
+## Sample output
 
 ## Related content
