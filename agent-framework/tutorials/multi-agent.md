@@ -17,16 +17,16 @@ author:
 
 ## Prerequisites
 
-## Understanding multi-agent frameworks
+## Create a multi-agent frameworks
 
-## Set up the conversation framework
+## Run multi-agent frameworks
 
-## Create multiple specialized agents
+## Observability
 
-## Configure agent interactions
+## Stopping and resetting a run
 
-## Implement conversation routing
+## Cancelling a run
 
-## Test multi-agent scenarios
+## Single Agent Framework
 
 ## Next steps
