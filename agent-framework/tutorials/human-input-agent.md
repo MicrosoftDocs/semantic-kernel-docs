@@ -17,10 +17,8 @@ author:
 
 ## Understanding human-in-the-loop patterns
 
-## Configure human approval workflows
+## Providing feedback during a run
 
-## Implement escalation triggers
-
-## Test the human workflow
+## Providing feedback in the next run
 
 ## Next steps
