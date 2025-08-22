@@ -17,16 +17,6 @@ author:
 
 ## Prerequisites
 
-## Common multi-agent scenarios
 
-## Customer service scenarios
-
-## Research and analysis scenarios
-
-## Creative collaboration scenarios
-
-## Decision-making scenarios
-
-## Implementation considerations
 
 ## Related content
