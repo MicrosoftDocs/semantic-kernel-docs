@@ -2,6 +2,8 @@
   href: overview/index.md
 - name: Getting started
   href: get-started/TOC.yml
+- name: Quickstart
+  href: quickstart.md
   expanded: true
 - name: Tutorials
   items:
