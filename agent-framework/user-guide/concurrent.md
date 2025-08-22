@@ -19,13 +19,11 @@ author:
 
 ## Define Your Agents
 
-## Set Up the Concurrent Orchestration
+## Set Up the concurrent orchestration
 
 ## Start the Runtime
 
 ## Invoke the Orchestration
-
-## Collect Results
 
 ## Collect Results
 
