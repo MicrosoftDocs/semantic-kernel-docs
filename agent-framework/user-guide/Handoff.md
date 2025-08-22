@@ -17,14 +17,18 @@ author:
 
 ## Understanding handoff patterns
 
-## Implementation approaches
+## Plugins
 
-## Context preservation
+## Agents
 
-## Handoff triggers
+## Define Handoff Relationships
 
-## Escalation strategies
+## Observe Agent Responses
 
-## Use cases
+## Human in the Loop
+
+## Set Up the Handoff Orchestration
+
+## Start the Runtime
 
 ## Related content
