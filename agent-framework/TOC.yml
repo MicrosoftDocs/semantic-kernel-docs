@@ -2,6 +2,52 @@
   href: overview/index.md
 - name: Getting started
   href: get-started/TOC.yml
+- name: Quickstart
+  href: quickstart.md
   expanded: true
+- name: Tutorials
+  items:
+  - name: Create an agent
+    href: tutorials/create-agent.md
+  - name: Human in the loop
+    href: tutorials/human-input-agent.md
+  - name: Tool use
+    href: tutorials/tool-use.md
+  - name: Chat termination
+    href: tutorials/chat-termination.md
+  - name: Multi-agent Conversation Framework
+    href: tutorials/multi-agent.md
+  - name: Managing State
+    href: tutorials/managing-state.md
+- name: User Guide
+  items:
+  - name: LLM Configuration
+    href: user-guide/llm-configuration.md
+  - name: Agent Observability
+    href: user-guide/agent-observability.md
+  - name: Agent2Agent Guidance
+    href: user-guide/agent-guidance.md
+  - name: Multi Agent Scenarios
+    href: user-guide/multi-agent-scenarios.md
+  - name: Workflow Orchestration
+    href: user-guide/workflow-orchestration.md
+  - name: Agent Paterns
+    items:
+    - name: Concurrent
+      href: user-guide/concurrent.md  
+    - name: Sequential
+      href: user-guide/sequential.md  
+    - name: Group Chat
+      href: user-guide/group-chat.md
+    - name: Handoff
+      href: user-guide/Handoff.md  
+- name: Additional Information
+  items:
+  - name: FAQs
+    href: agent-framework-questions.md
+  - name: Framework Best Practices
+    href: framework-best-practices.md
 - name: Migration Guide
   href: migration-guide/index.md
+- name: API Reference Guide
+  items:
