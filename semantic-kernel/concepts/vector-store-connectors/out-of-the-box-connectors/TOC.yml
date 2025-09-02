@@ -20,6 +20,8 @@
   href: jdbc-connector.md
 - name: MongoDB connector
   href: mongodb-connector.md
+- name: Oracle Database connector
+  href: oracle-connector.md
 - name: Pinecone connector
   href: pinecone-connector.md
 - name: Postgres connector
