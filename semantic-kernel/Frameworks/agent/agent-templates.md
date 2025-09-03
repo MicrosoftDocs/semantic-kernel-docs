@@ -62,12 +62,14 @@ Creating an agent with template parameters provides greater flexibility by allow
 // Initialize a Kernel with a chat-completion service
 Kernel kernel = ...;
 
+var instructions = "Tell a story about {{$topic}} that is {{$length}} sentences long.";
+
 ChatCompletionAgent agent =
-    new()
+    new(templateFactory: new KernelPromptTemplateFactory(),
+        templateConfig: new(instructions) { TemplateFormat = PromptTemplateConfig.SemanticKernelTemplateFormat })
     {
         Kernel = kernel,
         Name = "StoryTeller",
-        Instructions = "Tell a story about {{$topic}} that is {{$length}} sentences long.",
         Arguments = new KernelArguments()
         {
             { "topic", "Dog" },

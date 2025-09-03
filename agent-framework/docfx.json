@@ -45,7 +45,9 @@
       "zone_pivot_group_filename:": "zone_pivot_group.json",
       "uhfHeaderId": "MSDocsHeader-AgentFramework",
       "breadcrumb_path": "/agent-framework/breadcrumb/toc.json",
-      "feedback_system": "None"
+      "breadcrumb_path": "~/breadcrumb/agent-framework/toc.yml",
+      "feedback_system": "Standard",
+      "permissioned-type": "public"
     },
     "fileMetadata": {},
     "template": [],
