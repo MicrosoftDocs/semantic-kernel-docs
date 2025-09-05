@@ -1,15 +1,15 @@
 ---
 title: Tool use with Agent Framework
-titleSuffix: 
+titleSuffix: tool-use
 description: Learn how to enable tool use and function calling with AI agents in Agent Framework.
 manager: 
-ms.service: 
+ms.service: azure
 ms.custom:
 ms.topic: tutorial
 ms.date: 08/21/2025
-ms.reviewer: 
-ms.author: 
-author: 
+ms.reviewer: ssalgado
+ms.author: ssalgado
+author: ssalgadodev
 ---
 
 # Tool use with Agent Framework
