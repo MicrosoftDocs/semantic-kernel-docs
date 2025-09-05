@@ -64,8 +64,8 @@ More information coming soon.
 |Supported filter clauses|<ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>|
 |Collection maps to|SQL database table|
 |Supported key property types|<ul><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>String</li><li>UUID</li></ul>|
-|Supported data property types|<ul><li>byte/Byte</li><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>float/Float</li><li>double/Double</li><li>decimal/Decimal</li><li>DateTime</li><li>OffsetDataTime</li><li>Timestamp</li><li>String</li><li>UUID</li><li>List<of all above types></li></ul>|
-|Supported vector property types|<ul><li>String</li><li>Collection<Float></li><li>List<Float></li><li>Float[]</li><li>float[]</li></ul>|
+|Supported data property types|<ul><li>byte/Byte</li><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>float/Float</li><li>double/Double</li><li>decimal/Decimal</li><li>DateTime</li><li>OffsetDataTime</li><li>Timestamp</li><li>String</li><li>UUID</li><li>List(of all above types)</li></ul>|
+|Supported vector property types|<ul><li>String</li><li>Collection`<Float>`</li><li>List`<Float>`</li><li>Float[]</li><li>float[]</li></ul>|
 |Supported index types|<ul><li>HNSW</li><li>IVF</li></ul>|
 |Supported distance functions|<ul><li>DOT_PRODUCT</li><li>COSINE_SIMILARITY</li><li>COSINE_DISTANCE</li><li>EUCLIDEAN_DISTANCE</li></ul>|
 |Supports multiple vectors in a record|Yes|
@@ -391,15 +391,15 @@ The following table shows the default data property type mapping along with the 
 |OffsetDateTime|TIMESTAMP(7) WITH TIME ZONE|`resultSet.getTIMESTAMPTZ(name).offsetDateTimeValue()`|
 |String        |CLOB/NVARCHAR2(%s)|`resultSet.getString(name)`|
 |UUID          |RAW(16)           |`resultSet.getObject(name, java_type)`|
-|List<T>       |JSON              |`resultSet.getObject(name, java_type)`  Using `ojdbc-extensions-jackson-oson`|
+|List`<T>`       |JSON              |`resultSet.getObject(name, java_type)`  Using `ojdbc-extensions-jackson-oson`|
 
  Starting with Oracle Database 23ai, database vectors can be mapped to Java data types. Multiple vector columns are supported. The following table shows the default vector property type mapping:
 
 | Java Type        | Database Type
 | ------------- |:-------------:|
 | String          | VECTOR(%d, FLOAT32) |  
-|Collection<Float>|VECTOR(%d, FLOAT32)  |  
-|List<Float>      |VECTOR(%d, FLOAT32)  |  
+|Collection`<Float>`|VECTOR(%d, FLOAT32)  |  
+|List`<Float>`      |VECTOR(%d, FLOAT32)  |  
 |Float[]          |VECTOR(%d, FLOAT32)  |  
 |float[]          |VECTOR(%d, FLOAT32)  |  
 
