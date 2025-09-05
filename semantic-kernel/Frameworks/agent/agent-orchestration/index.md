@@ -22,9 +22,13 @@ Traditional single-agent systems are limited in their ability to handle complex,
 
 ## Orchestration Patterns
 
-Semantic Kernel supports several orchestration patterns, each designed for different collaboration scenarios. These patterns are available as part of the framework and can be easily extended or customized.
+Like well-known cloud design patterns, agent orchestration patterns are technology agnostic approaches to coordinating multiple agents to work together towards a common goal. To learn more about the patterns themselves, refer to the [AI agent orchestration patterns](/azure/architecture/ai-ml/guide/ai-agent-design-patterns) documentation.
 
-## Supported Orchestration Patterns
+<a name='supported-orchestration-patterns'></a>
+
+## Supported Orchestration Patterns in Semantic Kernel
+
+Semantic Kernel supports you by implementing these orchestration patterns directly in the SDK. These patterns are available as part of the framework and can be easily extended or customized so you can tune your agent collaboration scenario.
 
 | Pattern                       | Description                                                                                                                                                                         | Typical Use Case                                                      |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |

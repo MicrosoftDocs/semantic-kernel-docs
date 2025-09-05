@@ -50,8 +50,14 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 | StorageName supported?                | Yes                                                                                              |
 | HybridSearch supported?               | No                                                                                                                                                                         |
 
+<<<<<<< HEAD
 > [!IMPORTANT]
 > Vector data searches require Oracle Database 23ai or higher. All other Oracle connector features are available using Oracle Database 19c or higher.
+=======
+
+> [!IMPORTANT]
+> Vector data searches require Oracle Database 23ai. All other Oracle connector features are available using Oracle Database 19c or higher.
+>>>>>>> upstream/main
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -59,6 +65,7 @@ More information coming soon.
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
+<<<<<<< HEAD
 | Feature Area        | Support           |
 | ------------- |:-------------:|
 |Supported filter clauses|<ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>|
@@ -73,6 +80,9 @@ More information coming soon.
 |IsFullTextSearchable supported?| No|
 |StoragePropertyName supported?|No, use `@JsonProperty` instead|
 |HybridSearch supported?|No|
+=======
+More information coming soon.
+>>>>>>> upstream/main
 
 ::: zone-end
 
@@ -192,6 +202,7 @@ More information coming soon.
 
 ## Getting started
 
+<<<<<<< HEAD
 Set up Oracle Database Vector Store connector.
 
 ```java
@@ -257,12 +268,19 @@ public class VectorStoreWithOracle {
 }
 ```
 
+=======
+More information coming soon.
+>>>>>>> upstream/main
 ::: zone-end
 ::: zone pivot="programming-language-csharp"
 
 ## Data mapping
 
+<<<<<<< HEAD
 The Oracle Database Vector Store connector provides a default mapper when mapping data from the data model to storage. This mapper does a direct conversion of the data model properties list to the Oracle database columns to convert to the storage schema.
+=======
+The Oracle Database Vector Store connector provides a default mapper when mapping data from the data model to storage. This mapper does a direct conversion of the data model properties list to the Oracle database columns to convert to the storage schema.   
+>>>>>>> upstream/main
 
 The Oracle Database Vector Store connector supports data model annotations and record definitions.Using annotations, the information can be provided to the data model for creating indexes and database column mapping. Using [record definitions](../schema-with-record-definition.md), the information can be defined and supplied separately from the data model.
 
@@ -342,6 +360,7 @@ CREATE TABLE "MYSCHEMA"."Hotels"
 ```
 
 ## Learn More
+<<<<<<< HEAD
 
 Refer to the following Oracle Database Vector Store connector resources to learn more:
 
@@ -352,10 +371,18 @@ Describes key connector features, classes, and guides the reader through a sampl
 Contains information on Oracle Database Vector Store connector classes for adding data, retrieving data, and performing vector search in the Oracle vector database.  
 - Sample Code: Oracle Database Vector Store Connector for Semantic Kernel (.NET)
   - Coming soon
+=======
+Refer to the following Oracle Database Vector Store connector resources to learn more:
+- [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/oracle-database-vector-store-connector-semantic-kernel-classes.html)  
+Contains information on Oracle Database Vector Store connector classes for adding data, retrieving data, and performing vector search in the Oracle vector database.  
+-  Sample Code: Oracle Database Vector Store Connector for Semantic Kernel (.NET) 
+    - Coming soon
+>>>>>>> upstream/main
 - [Documentation: Oracle Data Provider for .NET](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/intro.html)  
 Contains information on Oracle Data Provider for .NET (ODP.NET), the ADO.NET data provider for Oracle Database Vector Store connector.
 
 ::: zone-end
+<<<<<<< HEAD
 ::: zone pivot="programming-language-java"
 
 ## Data mapping
@@ -404,3 +431,5 @@ The following table shows the default data property type mapping along with the 
 |float[]          |VECTOR(%d, FLOAT32)  |  
 
 ::: zone-end
+=======
+>>>>>>> upstream/main
