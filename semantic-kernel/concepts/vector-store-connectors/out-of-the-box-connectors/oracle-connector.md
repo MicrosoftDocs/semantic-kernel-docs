@@ -51,7 +51,7 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 | HybridSearch supported?               | No                                                                                                                                                                         |
 
 > [!IMPORTANT]
-> Vector data searches require Oracle Database 23ai. All other Oracle connector features are available using Oracle Database 19c or higher.
+> Vector data searches require Oracle Database 23ai or higher. All other Oracle connector features are available using Oracle Database 19c or higher.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -344,6 +344,8 @@ CREATE TABLE "MYSCHEMA"."Hotels"
 ## Learn More
 
 Refer to the following Oracle Database Vector Store connector resources to learn more:
+- [Introducing the Oracle Database Vector Store Connector for Semantic Kernel](https://medium.com/oracledevs/announcing-the-oracle-database-vector-store-connector-for-semantic-kernel-adb83e806d4e)  
+Describes key connector features, classes, and guides the reader through a sample AI vector search application using the connector.
 
 - [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/oracle-database-vector-store-connector-semantic-kernel-classes.html)  
 Contains information on Oracle Database Vector Store connector classes for adding data, retrieving data, and performing vector search in the Oracle vector database.  
