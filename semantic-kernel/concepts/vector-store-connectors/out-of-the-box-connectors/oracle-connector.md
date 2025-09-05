@@ -64,7 +64,7 @@ More information coming soon.
 |Supported filter clauses|<ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>|
 |Collection maps to|SQL database table|
 |Supported key property types|<ul><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>String</li><li>UUID</li></ul>|
-|Supported data property types|<ul><li>byte/Byte</li><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>float/Float</li><li>double/Double</li><li>decimal/Decimal</li><li>DateTime</li><li>OffsetDataTime</li><li>Timestamp</li><li>String</li><li>UUID</li><li>List(of all above types)</li></ul>|
+|Supported data property types|<ul><li>byte/Byte</li><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>float/Float</li><li>double/Double</li><li>decimal/Decimal</li><li>DateTime</li><li>OffsetDataTime</li><li>Timestamp</li><li>String</li><li>UUID</li><li>List`<of all above types>`</li></ul>|
 |Supported vector property types|<ul><li>String</li><li>Collection`<Float>`</li><li>List`<Float>`</li><li>Float[]</li><li>float[]</li></ul>|
 |Supported index types|<ul><li>HNSW</li><li>IVF</li></ul>|
 |Supported distance functions|<ul><li>DOT_PRODUCT</li><li>COSINE_SIMILARITY</li><li>COSINE_DISTANCE</li><li>EUCLIDEAN_DISTANCE</li></ul>|
