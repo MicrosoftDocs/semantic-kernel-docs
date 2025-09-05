@@ -344,6 +344,7 @@ CREATE TABLE "MYSCHEMA"."Hotels"
 ## Learn More
 
 Refer to the following Oracle Database Vector Store connector resources to learn more:
+
 - [Introducing the Oracle Database Vector Store Connector for Semantic Kernel](https://medium.com/oracledevs/announcing-the-oracle-database-vector-store-connector-for-semantic-kernel-adb83e806d4e)  
 Describes key connector features, classes, and guides the reader through a sample AI vector search application using the connector.
 
