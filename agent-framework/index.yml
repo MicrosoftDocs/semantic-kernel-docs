@@ -1,7 +1,8 @@
 ### YamlMime:Hub
 title: Agent Framework documentation
 summary: Learn to build robust, future-proof Agentic AI solutions that evolve with technological advancements.
-brand: agent-framework
+brand: azure
+ms.service: azure
 metadata:
   title: Agent Framework documentation
   description: Agent Framework documentation.
