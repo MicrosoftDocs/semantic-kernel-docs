@@ -3,8 +3,8 @@ items:
   href: index.yml
 - name: Overview
   href: overview/index.md
-- name: Getting started
-  href: get-started/TOC.yml
+- name: Quickstart
+  href: user-guide/quick-start
 - name: Quickstart
   href: quickstart.md
   expanded: true
