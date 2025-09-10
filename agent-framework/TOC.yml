@@ -22,12 +22,14 @@ items:
     href: tutorials/managing-state.md
 - name: User Guide
   items:
+  - name: Agent types
+    href: user-guide/agent-types.md
+  - name: Multi-Turn Conversations and Threading
+    href: user-guide/multi-turn-conversations.md
   - name: LLM Configuration
     href: user-guide/llm-configuration.md
   - name: Agent Observability
     href: user-guide/agent-observability.md
-  - name: Agent2Agent Guidance
-    href: user-guide/agent-guidance.md
   - name: Multi Agent Scenarios
     href: user-guide/multi-agent-scenarios.md
   - name: Workflow Orchestration
