@@ -3,8 +3,6 @@ items:
   href: index.yml
 - name: Overview
   href: overview/index.md
-- name: Quickstart
-  href: tutorials/quick-start.md
   expanded: true
 - name: Tutorials
   items:
@@ -22,10 +20,6 @@ items:
     href: tutorials/managing-state.md
 - name: User Guide
   items:
-  - name: Agent types
-    href: user-guide/agent-types.md
-  - name: Multi-Turn Conversations and Threading
-    href: user-guide/multi-turn-conversations.md
   - name: LLM Configuration
     href: user-guide/llm-configuration.md
   - name: Agent Observability
