@@ -6,6 +6,4 @@
     tocHref: /azure/ai-foundry/
     topicHref: /azure/ai-foundry/index
     items:
-    - name: Agent Framework
-      tocHref: /azure/ai-foundry/
-      topicHref: /semantic-kernel/agent-framework/index
+
