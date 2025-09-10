@@ -9,7 +9,7 @@ items:
 - name: Tutorials
   items:
   - name: Create an agent
-    href: tutorials/create-agent.md
+    href: tutorials/create-an-agent.md
   - name: Human in the loop
     href: tutorials/human-input-agent.md
   - name: Tool use
@@ -47,9 +47,9 @@ items:
 - name: Additional Information
   items:
   - name: FAQs
-    href: agent-framework-questions.md
+    href: 
   - name: Framework Best Practices
-    href: framework-best-practices.md
+    href: 
 - name: Migration Guide
   href: migration-guide/index.md
 - name: API Reference Guide
