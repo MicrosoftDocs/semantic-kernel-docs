@@ -1,3 +1,6 @@
+items:
+- name: Agent Framework
+  href: index.yml
 - name: Overview
   href: overview/index.md
 - name: Getting started
