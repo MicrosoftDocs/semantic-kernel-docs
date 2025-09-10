@@ -1,14 +1,13 @@
+items:
+- name: Agent Framework
+  href: index.yml
 - name: Overview
   href: overview/index.md
-- name: Getting started
-  href: get-started/TOC.yml
-- name: Quickstart
-  href: quickstart.md
   expanded: true
 - name: Tutorials
   items:
   - name: Create an agent
-    href: tutorials/create-agent.md
+    href: tutorials/create-an-agent.md
   - name: Human in the loop
     href: tutorials/human-input-agent.md
   - name: Tool use
@@ -25,8 +24,6 @@
     href: user-guide/llm-configuration.md
   - name: Agent Observability
     href: user-guide/agent-observability.md
-  - name: Agent2Agent Guidance
-    href: user-guide/agent-guidance.md
   - name: Multi Agent Scenarios
     href: user-guide/multi-agent-scenarios.md
   - name: Workflow Orchestration
@@ -44,9 +41,9 @@
 - name: Additional Information
   items:
   - name: FAQs
-    href: agent-framework-questions.md
+    href: 
   - name: Framework Best Practices
-    href: framework-best-practices.md
+    href: 
 - name: Migration Guide
   href: migration-guide/index.md
 - name: API Reference Guide
