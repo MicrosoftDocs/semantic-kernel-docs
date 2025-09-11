@@ -14,6 +14,7 @@ author:
 # Chat termination patterns for Agent Framework
 
 
+
 ## Prerequisites
 
 ## Termination patterns
