@@ -60,7 +60,7 @@ More information coming soon.
 ::: zone pivot="programming-language-java"
 
 | Feature Area        | Support           |
-| ------------- |:-------------:|
+| ------------- |-------------|
 |Supported filter clauses|<ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>|
 |Collection maps to|SQL database table|
 |Supported key property types|<ul><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>String</li><li>UUID</li></ul>|
