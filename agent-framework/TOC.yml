@@ -14,8 +14,6 @@ items:
     href: tutorials/tool-use.md
   - name: Chat termination
     href: tutorials/chat-termination.md
-  - name: Multi-agent Conversation Framework
-    href: tutorials/multi-agent.md
   - name: Managing State
     href: tutorials/managing-state.md
 - name: User Guide
@@ -24,20 +22,32 @@ items:
     href: user-guide/llm-configuration.md
   - name: Agent Observability
     href: user-guide/agent-observability.md
-  - name: Multi Agent Scenarios
-    href: user-guide/multi-agent-scenarios.md
-  - name: Workflow Orchestration
-    href: user-guide/workflow-orchestration.md
-  - name: Agent Paterns
+  - name: Workflows
     items:
-    - name: Concurrent
-      href: user-guide/concurrent.md  
-    - name: Sequential
-      href: user-guide/sequential.md  
-    - name: Group Chat
-      href: user-guide/group-chat.md
-    - name: Handoff
-      href: user-guide/Handoff.md  
+    - name: Core Concepts
+      items:
+      - name: Executors
+        href: user-guide/workflows/core-concepts/executors.md
+      - name: Edges
+        href: user-guide/workflows/core-concepts/edges.md
+      - name: Workflows
+        href: user-guide/workflows/core-concepts/workflows.md
+      - name: Events
+        href: user-guide/workflows/core-concepts/events.md
+    - name: Using Agents
+      href: user-guide/workflows/using-agents.md
+    - name: Workflows as Agents
+      href: user-guide/workflows/as-agents.md
+    - name: Request and Response
+      href: user-guide/workflows/request-and-response.md
+    - name: Shared States
+      href: user-guide/workflows/shared-states.md
+    - name: Checkpoints
+      href: user-guide/workflows/checkpointing.md
+    - name: Observability
+      href: user-guide/workflows/observability.md
+    - name: Visualization
+      href: user-guide/workflows/visualization.md
 - name: Additional Information
   items:
   - name: FAQs

@@ -1,6 +1,7 @@
 ---
 title: Microsoft Agent Framework Workflows: Shared States
 description: In-depth look at Shared States in Microsoft Agent Framework Workflows.
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -42,7 +43,7 @@ internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>(
 }
 ```
 
-:::
+::: zone-end
 
 ::: zone pivot="programming-language-python"
 

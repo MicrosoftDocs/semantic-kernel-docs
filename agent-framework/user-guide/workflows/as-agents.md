@@ -1,6 +1,7 @@
 ---
 title: Microsoft Agent Framework Workflows: Using workflows as Agents
 description: How to use workflows as Agents in Microsoft Agent Framework.
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen

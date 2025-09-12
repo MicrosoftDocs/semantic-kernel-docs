@@ -1,3 +1,13 @@
+---
+title: Microsoft Agent Framework Workflows Orchestrations
+description: In-depth look at Orchestrations in Microsoft Agent Framework Workflows.
+author: TaoChenOSU
+ms.topic: tutorial
+ms.author: taochen
+ms.date: 09/12/2025
+ms.service: agent-framework
+---
+
 # Microsoft Agent Framework Workflows Orchestrations
 
 Orchestrations are pre-built workflow patterns that allow developers to quickly create complex workflows by simply plugging in their own AI agents.

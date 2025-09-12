@@ -1,3 +1,14 @@
+---
+title: Microsoft Agent Framework Workflows Orchestrations: Handoff
+description: In-depth look at Handoff Orchestrations in Microsoft Agent Framework Workflows.
+zone_pivot_groups: programming-languages
+author: TaoChenOSU
+ms.topic: tutorial
+ms.author: taochen
+ms.date: 09/12/2025
+ms.service: agent-framework
+---
+
 # Microsoft Agent Framework Workflows Orchestrations: Handoff
 
 Handoff orchestration allows agents to transfer control to one another based on the context or user request. Each agent can "handoff" the conversation to another agent with the appropriate expertise, ensuring that the right agent handles each part of the task. This is particularly useful in customer support, expert systems, or any scenario requiring dynamic delegation.
