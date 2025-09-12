@@ -1,20 +1,20 @@
 - name: Overview
-  href: user-guide/workflows/overview.md
+  href: overview.md
 - name: Core Concepts
-  href: user-guide/workflows/core-concepts/TOC.yml
+  href: core-concepts/TOC.yml
 - name: Orchestrations
-  href: user-guide/workflows/orchestrations/TOC.yml
+  href: orchestrations/TOC.yml
 - name: Using Agents
-  href: user-guide/workflows/using-agents.md
+  href: using-agents.md
 - name: Workflows as Agents
-  href: user-guide/workflows/as-agents.md
+  href: as-agents.md
 - name: Request and Response
-  href: user-guide/workflows/request-and-response.md
+  href: request-and-response.md
 - name: Shared States
-  href: user-guide/workflows/shared-states.md
+  href: shared-states.md
 - name: Checkpoints
-  href: user-guide/workflows/checkpoints.md
+  href: checkpoints.md
 - name: Observability
-  href: user-guide/workflows/observability.md
+  href: observability.md
 - name: Visualization
-  href: user-guide/workflows/visualization.md
+  href: visualization.md
