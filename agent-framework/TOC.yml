@@ -23,7 +23,7 @@ items:
   - name: Agent Observability
     href: user-guide/agent-observability.md
   - name: Workflows
-    href: user-guide/workflows/TOC.md
+    href: user-guide/workflows/TOC.yml
 - name: Additional Information
   items:
   - name: FAQs
