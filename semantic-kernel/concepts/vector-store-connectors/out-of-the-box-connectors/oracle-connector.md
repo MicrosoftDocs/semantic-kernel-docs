@@ -42,7 +42,7 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 | Supported data property types         | <ul><li>bool</li><li>byte</li><li>short</li><li>int</li><li>decimal</li><li>long</li><li>float</li><li>double</li><li>DateTime</li><li>DateTimeOffset</li><li>TimeSpan</li><li>char</li><li>char[]</li><li>byte[]</li><li>String</li><li>Guid</li><li>*and nullable type of the above types*</i></li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<double\></li><li>Embedding\<double\></li><li>double[]</li><li>ReadOnlyMemory\<short\></li><li>Embedding\<short\></li><li>short[]</li><li>ReadOnlyMemory\<byte\></li><li>Embedding\<byte\></li><li>byte[]</li><li>BitArray</li><li>BinaryEmbedding</li></ul>                                                                                          |
 | Supported index types                 | <ul><li>Flat (default)</li><li>HNSW</li><li>IVF</li></ul>                                                                                                                                                                      |
-| Supported distance functions          | <ul><li>CosineDistance</li><ul><li>FLOAT32, FLOAT64, and INT8 vector default</li></ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>NegativeDotProductSimilarity</li><li>EuclideanDistance</li><li>EuclideanSquaredDistance</li><li>HammingDistance</li><ul><li>BINARY vector default</li></ul><li>ManhattanDistance</li><li>JaccardSimilarity</li></ul>                                                                                     |
+| Supported distance functions          | <ul><li>CosineDistance</li><ul><li>FLOAT32, FLOAT64, and INT8 vector default</li></ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>NegativeDotProductSimilarity</li><li>EuclideanDistance</li><li>EuclideanSquaredDistance</li><li>HammingDistance</li><ul><li>BINARY vector default</li></ul><li>ManhattanDistance</li><li>JaccardSimilarity<br> To use Jaccard similarity, set the DistanceFunction string to `JACCARD` or `JACCARDSIMILARITY` (for example, DistanceFunction = `JACCARDSIMILARITY`). This value is case sensitive. Jaccard similarity requires BINARY numeric format vectors. </li></ul>                                                                                     |
 | Supported filter clauses              | <ul><li>==</li><li>!=</li><li><</li><li><=</li><li>></li><li>>=</li><li>List.Contains() <ul><li>Only when checking if the model property is in the list</li></ul></li></ul>                                                                                                                                                     |
 | Supports zero, one, or multiple vectors in a record | Yes                                                                                                                                                                           |
 | IsIndexed supported?                  | Yes                                                                                                                                                                           |
@@ -266,7 +266,7 @@ The Oracle Database Vector Store connector provides a default mapper when mappin
 
 The Oracle Database Vector Store connector supports data model annotations and record definitions.Using annotations, the information can be provided to the data model for creating indexes and database column mapping. Using [record definitions](../schema-with-record-definition.md), the information can be defined and supplied separately from the data model.
 
-The following table shows the default primary key data type mapping between Oracle database and C#:
+The following table shows the default primary key data type mapping between Oracle Database and C#:
 
 | C# Data Type                          | Database Type                                                                                                                                                                       |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -361,10 +361,10 @@ The Oracle Database Vector Store connector provides a default mapper when mappin
 
 The Oracle Database Vector Store connector supports data model annotations and record definitions.Using annotations, the information can be provided to the data model for creating indexes and database column mapping. Using [record definitions](../schema-with-record-definition.md), the information can be defined and supplied separately from the data model.
 
-The following table shows the default primary key data type mapping between Oracle database and Java, along with the corresponding methods to retrieve data from a `ResultSet`:
+The following table shows the default primary key data type mapping between Oracle Database and Java, along with the corresponding methods to retrieve data from a `ResultSet`:
 
 | Java Type        | Database Type          | ResultSet Getter Method  |
-| ------------- |:-------------:| -----:|
+| ------------- |-------------| -----|
 | byte/Byte      | NUMBER(3) | `resultSet.getByte(name)`|
 | short/Short    | NUMBER(5)  |`resultSet.getShort(name)`|
 |int/Integer     | NUMBER(10) |`resultSet.getInt(name)`|
@@ -375,7 +375,7 @@ The following table shows the default primary key data type mapping between Orac
 The following table shows the default data property type mapping along with the corresponding methods to retrieve data from a `ResultSet`:
 
 | Java Type        | Database Type          | ResultSet Getter Method  |
-| ------------- |:-------------:| -----:|
+| ------------- |-------------| -----|
 | boolean     | BOOLEAN | `resultSet.getByte(name)`|
 |byte/Byte    |NUMBER(3)|`resultSet.getByte(name)`|
 |byte[]       |RAW(2000)|`resultSet.getBytes(name)`|
@@ -392,8 +392,8 @@ The following table shows the default data property type mapping along with the 
 
  Starting with Oracle Database 23ai, database vectors can be mapped to Java data types. Multiple vector columns are supported. The following table shows the default vector property type mapping:
 
-| Java Type        | Database Type
-| ------------- |:-------------:|
+| Java Type        | Database Type|
+| ------------- |-------------|
 | String          | VECTOR(%d, FLOAT32) |  
 |Collection`<Float>`|VECTOR(%d, FLOAT32)  |  
 |List`<Float>`      |VECTOR(%d, FLOAT32)  |  
