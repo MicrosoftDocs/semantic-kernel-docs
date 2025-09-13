@@ -44,4 +44,4 @@ Begin your journey with Microsoft Agent Framework Workflows by exploring our get
 
 ## Next Steps
 
-Dive deeper into the concepts and capabilities of Microsoft Agent Framework Workflows by continuing to the [Workflows Concepts](./concepts.md) page.
+Dive deeper into the concepts and capabilities of Microsoft Agent Framework Workflows by continuing to the [Workflows Concepts](./core-concepts/overview.md) page.

@@ -126,4 +126,4 @@ Coming soon...
 
 ## Next Step
 
-- [Learn about Workflows](../workflows.md) to understand how to build and execute workflows.
+- [Learn about Workflows](./workflows.md) to understand how to build and execute workflows.
