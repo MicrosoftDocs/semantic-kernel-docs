@@ -120,7 +120,7 @@ Coming soon...
 
 ## Checkpoints and Requests
 
-To learn more about checkpoints, please refer to this [page](./checkpointing.md).
+To learn more about checkpoints, please refer to this [page](./checkpoints.md).
 
 When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted, allowing the workflow to continue processing from where it left off.
 
@@ -129,4 +129,4 @@ When a checkpoint is created, pending requests are also saved as part of the che
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
 - [Learn how to use workflows as agents](./as-agents.md).
 - [Learn how to manage state](./shared-states.md) in workflows.
-- [Learn how to create checkpoints and resume from them](./checkpointing.md).
+- [Learn how to create checkpoints and resume from them](./checkpoints.md).
