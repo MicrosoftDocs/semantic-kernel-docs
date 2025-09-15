@@ -14,8 +14,6 @@ items:
     href: tutorials/tool-use.md
   - name: Chat termination
     href: tutorials/chat-termination.md
-  - name: Multi-agent Conversation Framework
-    href: tutorials/multi-agent.md
   - name: Managing State
     href: tutorials/managing-state.md
 - name: User Guide
@@ -24,20 +22,8 @@ items:
     href: user-guide/llm-configuration.md
   - name: Agent Observability
     href: user-guide/agent-observability.md
-  - name: Multi Agent Scenarios
-    href: user-guide/multi-agent-scenarios.md
-  - name: Workflow Orchestration
-    href: user-guide/workflow-orchestration.md
-  - name: Agent Paterns
-    items:
-    - name: Concurrent
-      href: user-guide/concurrent.md  
-    - name: Sequential
-      href: user-guide/sequential.md  
-    - name: Group Chat
-      href: user-guide/group-chat.md
-    - name: Handoff
-      href: user-guide/Handoff.md  
+  - name: Workflows
+    href: user-guide/workflows/TOC.yml
 - name: Additional Information
   items:
   - name: FAQs
