@@ -1,9 +1,10 @@
 ---
 title: Create and run a simple agent
 description: Create and run a simple agent
+zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
-ms.author: westey-m
+ms.author: westey
 ms.date: 09/15/2025
 ms.service: agent-framework
 ---
@@ -24,7 +25,7 @@ Before you begin, ensure you have the following prerequisites:
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - [Azure OpenAI service endpoint and deployment configured](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/create-resource)
 - [Azure CLI installed](https://learn.microsoft.com/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](https://learn.microsoft.com/cli/azure/authenticate-azure-cli)
-- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/role-based-access-control)
+- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/role-based-access-control)
 
 > [!IMPORTANT]
 > For this tutorial we are using Azure OpenAI for the Chat Completion service, but you can use any inference service that is compatible with [Microsoft.Extensions.AI.IChatClient](https://learn.microsoft.com/dotnet/api/microsoft.extensions.ai.ichatclient).
@@ -95,10 +96,10 @@ Console.WriteLine(await agent.RunAsync(message));
 ```
 
 ::: zone-end
+::: zone pivot="programming-language-python"
 
 Tutorial coming soon.
 
-::: zone pivot="programming-language-python"
 ::: zone-end
 
 ## Next steps
