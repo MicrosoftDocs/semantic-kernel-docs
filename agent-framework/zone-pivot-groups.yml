@@ -8,5 +8,3 @@ groups:
     title: C#
   - id: programming-language-python
     title: Python
-  - id: programming-language-java
-    title: Java
