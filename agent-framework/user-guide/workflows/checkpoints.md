@@ -171,7 +171,7 @@ Coming soon...
 
 ## Next Steps
 
-- [Learn how to use agents in workflows](./../using-agents.md) to build intelligent workflows.
-- [Learn how to use workflows as agents](./../as-agents.md).
-- [Learn how to handle requests and responses](./../request-and-response.md) in workflows.
-- [Learn how to manage state](./../shared-states.md) in workflows.
+- [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
+- [Learn how to use workflows as agents](./as-agents.md).
+- [Learn how to handle requests and responses](./request-and-response.md) in workflows.
+- [Learn how to manage state](./shared-states.md) in workflows.

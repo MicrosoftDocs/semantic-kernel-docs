@@ -105,7 +105,7 @@ internal sealed class CustomAgentExecutor : ReflectingExecutor<CustomAgentExecut
 
         // Render the input for the agent
         var agentInput = RenderInput(message, sharedState);
- 
+
         // Invoke the agent
         // Assume the agent is configured with structured outputs with type `CustomOutput`
         var response = await this._agent.RunAsync(agentInput);
