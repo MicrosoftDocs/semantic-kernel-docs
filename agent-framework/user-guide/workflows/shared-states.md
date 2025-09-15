@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows: Shared States
+title: Microsoft Agent Framework Workflows - Shared States
 description: In-depth look at Shared States in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows: Shared States
+# Microsoft Agent Framework Workflows - Shared States
 
 This document provides an overview of **Shared States** in the Microsoft Agent Framework Workflow system.
 

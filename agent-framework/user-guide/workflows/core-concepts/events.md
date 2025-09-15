@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows Core Concepts: Events
+title: Microsoft Agent Framework Workflows Core Concepts - Events
 description: In-depth look at Events in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows Core Concepts: Events
+# Microsoft Agent Framework Workflows Core Concepts - Events
 
 This document provides an in-depth look at the **Events** system of Workflows in the Microsoft Agent Framework.
 

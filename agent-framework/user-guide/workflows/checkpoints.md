@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows: Checkpoints
+title: Microsoft Agent Framework Workflows - Checkpoints
 description: In-depth look at Checkpoints in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows: Checkpoints
+# Microsoft Agent Framework Workflows - Checkpoints
 
 This page provides an overview of **Checkpoints** in the Microsoft Agent Framework Workflow system.
 

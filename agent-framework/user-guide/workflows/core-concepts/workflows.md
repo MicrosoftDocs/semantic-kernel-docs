@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows Core Concepts: Workflows
+title: Microsoft Agent Framework Workflows Core Concepts - Workflows
 description: In-depth look at Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows Core Concepts: Workflows
+# Microsoft Agent Framework Workflows Core Concepts - Workflows
 
 This document provides an in-depth look at the **Workflows** component of the Microsoft Agent Framework Workflow system.
 

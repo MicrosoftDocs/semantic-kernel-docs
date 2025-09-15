@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows Orchestrations: Magentic
+title: Microsoft Agent Framework Workflows Orchestrations - Magentic
 description: In-depth look at Magentic Orchestrations in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows Orchestrations: Magentic
+# Microsoft Agent Framework Workflows Orchestrations - Magentic
 
 Magentic orchestration is designed based on the [Magentic-One](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/magentic-one.html) system invented by AutoGen. It is a flexible, general-purpose multi-agent pattern designed for complex, open-ended tasks that require dynamic collaboration. In this pattern, a dedicated Magentic manager coordinates a team of specialized agents, selecting which agent should act next based on the evolving context, task progress, and agent capabilities.
 

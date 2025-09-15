@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows: Working with Agents
+title: Microsoft Agent Framework Workflows - Working with Agents
 description: In-depth look at Working with Agents in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows: Working with Agents
+# Microsoft Agent Framework Workflows - Working with Agents
 
 This page provides an overview of how to use **Agents** within the Microsoft Agent Framework Workflows.
 

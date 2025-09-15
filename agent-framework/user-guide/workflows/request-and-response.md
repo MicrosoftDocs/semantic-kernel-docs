@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows: Request and Response
+title: Microsoft Agent Framework Workflows - Request and Response
 description: In-depth look at Request and Response handling in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows: Request and Response
+# Microsoft Agent Framework Workflows - Request and Response
 
 This page provides an overview of how **Request and Response** handling works in the Microsoft Agent Framework Workflow system.
 

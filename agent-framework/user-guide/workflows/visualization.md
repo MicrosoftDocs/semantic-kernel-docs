@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows: Visualization
+title: Microsoft Agent Framework Workflows - Visualization
 description: In-depth look at Visualization in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows: Visualization
+# Microsoft Agent Framework Workflows - Visualization
 
 ::: zone pivot="programming-language-csharp"
 

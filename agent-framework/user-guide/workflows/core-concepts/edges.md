@@ -1,5 +1,5 @@
 ---
-title: Microsoft Agent Framework Workflows Core Concepts: Edges
+title: Microsoft Agent Framework Workflows Core Concepts - Edges
 description: In-depth look at Edges in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -9,7 +9,7 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows Core Concepts: Edges
+# Microsoft Agent Framework Workflows Core Concepts - Edges
 
 This document provides an in-depth look at the **Edges** component of the Microsoft Agent Framework Workflow system.
 
