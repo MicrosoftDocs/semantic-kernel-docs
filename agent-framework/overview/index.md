@@ -3,8 +3,8 @@ title: Introduction to Microsoft Agent Framework
 description: Learn about Microsoft Agent Framework
 author: markwallace
 ms.topic: reference
-ms.author: markwallace-microsoft
-ms.date: 
+ms.author: markwallace
+ms.date: 09/15/2015
 ms.service: agent-framework
 ---
 
@@ -24,7 +24,7 @@ An **AI agent** is a software entity designed to perform tasks autonomously or s
 
 Agents can send and receive messages, generating responses using a combination of models, tools, human inputs, or other customizable components.
 
-Agents are designed to work collaboratively, enabling complex workflows by interacting with each other.  The `Agent Framework` allows for the creation of both simple and sophisticated agents, enhancing modularity and ease of maintenance
+Agents are designed to work collaboratively, enabling complex workflows by interacting with each other.  The `Agent Framework` allows for the creation of both simple and sophisticated agents, enhancing modularity and ease of maintenance.
 
 ### What problems do AI agents solve?
 
@@ -32,7 +32,7 @@ AI agents offers several advantages for application development, particularly by
 
 Here are some of the key benefits:
 
-- **Modular Components**: Allows  developers to define various types of agents for specific tasks (e.g., data scraping, API interaction, or natural language processing). This makes it easier to adapt the application as requirements evolve or new technologies emerge.
+- **Modular Components**: Allows developers to define various types of agents for specific tasks (e.g., data scraping, API interaction, or natural language processing). This makes it easier to adapt the application as requirements evolve or new technologies emerge.
 
 - **Collaboration**: Multiple agents may "collaborate" on tasks. For example, one agent might handle data collection while another analyzes it and yet another uses the results to make decisions, creating a more sophisticated system with distributed intelligence.
 
