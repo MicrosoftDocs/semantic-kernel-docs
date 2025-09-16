@@ -1,8 +1,8 @@
 items:
 - name: Agent Framework
   href: index.yml
-- name: Overview
-  href: overview/index.md
+- name: Quickstart Guide
+  href: tutorials/quickstart.md
   expanded: true
 - name: Tutorials
   href: tutorials/TOC.yml
