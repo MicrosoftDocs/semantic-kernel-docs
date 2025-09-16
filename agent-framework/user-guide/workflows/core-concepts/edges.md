@@ -92,7 +92,18 @@ Route messages to different executors based on conditions:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-
+builder.AddSwitch(routerExecutor, switchBuilder => 
+    switchBuilder
+        .AddCase(
+            message => message.Priority < Priority.Normal,
+            executorA
+        )
+        .AddCase(
+            message => message.Priority < Priority.High,
+            executorB
+        )
+        .SetDefault(executorC)
+);
 ```
 
 ::: zone-end
@@ -100,7 +111,23 @@ Route messages to different executors based on conditions:
 ::: zone pivot="programming-language-python"
 
 ```python
-
+builder = WorkflowBuilder()
+builder.set_start_executor(router_executor)
+builder.add_switch_case_edge_group(
+    router_executor,
+    [
+        Case(
+            condition=lambda message: message.priority < Priority.NORMAL,
+            target=executor_a,
+        ),
+        Case(
+            condition=lambda message: message.priority < Priority.HIGH,
+            target=executor_b,
+        ),
+        Default(target=executor_c)
+    ],
+)
+workflow = builder.build()
 ```
 
 ::: zone-end
