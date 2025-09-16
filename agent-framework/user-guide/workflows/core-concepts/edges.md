@@ -41,7 +41,12 @@ builder.AddEdge(sourceExecutor, targetExecutor);
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+builder = WorkflowBuilder()
+builder.add_edge(source_executor, target_executor)
+builder.set_start_executor(source_executor)
+workflow = builder.build()
+```
 
 ::: zone-end
 
@@ -70,7 +75,33 @@ builder.AddEdge(
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+builder = WorkflowBuilder()
+builder.add_edge(spam_detector, email_processor, condition=lambda result: isinstance(result, SpamResult) and not result.is_spam)
+builder.add_edge(spam_detector, spam_handler, condition=lambda result: isinstance(result, SpamResult) and result.is_spam)
+builder.set_start_executor(spam_detector)
+workflow = builder.build()
+```
+
+::: zone-end
+
+#### Switch-case Edges
+
+Route messages to different executors based on conditions:
+
+::: zone pivot="programming-language-csharp"
+
+```csharp
+
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+```python
+
+```
 
 ::: zone-end
 
@@ -101,7 +132,26 @@ builder.AddFanOutEdge(
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+builder = WorkflowBuilder()
+builder.set_start_executor(splitter_executor)
+builder.add_fan_out_edges(splitter_executor, [worker1, worker2, worker3])
+workflow = builder.build()
+
+# Send to specific targets based on partitioner function
+builder = WorkflowBuilder()
+builder.set_start_executor(splitter_executor)
+builder.add_fan_out_edges(
+    splitter_executor,
+    [worker1, worker2, worker3],
+    selection_func=lambda message, target_ids: (
+        [0] if message.priority == Priority.HIGH else
+        [1, 2] if message.priority == Priority.NORMAL else
+        list(range(target_count))
+    )
+)
+workflow = builder.build()
+```
 
 ::: zone-end
 
@@ -120,7 +170,9 @@ builder.AddFanInEdge(aggregatorExecutor, sources: [worker1, worker2, worker3]);
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+builder.add_fan_in_edge([worker1, worker2, worker3], aggregator_executor)
+```
 
 ::: zone-end
 

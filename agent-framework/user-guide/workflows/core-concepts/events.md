@@ -35,6 +35,27 @@ ExecutorFailureEvent    // Executor encounters an error
 // Superstep events
 SuperStepStartedEvent   // Superstep begins
 SuperStepCompletedEvent // Superstep completes
+
+// Request events
+RequestInfoEvent        // A request is issued
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+```python
+# Workflow lifecycle events
+WorkflowStartedEvent    # Workflow execution begins
+WorkflowCompletedEvent  # Workflow reaches completion
+WorkflowErrorEvent      # Workflow encounters an error
+
+# Executor events
+ExecutorInvokeEvent     # Executor starts processing
+ExecutorCompleteEvent   # Executor finishes processing
+
+# Request events
+RequestInfoEvent        # A request is issued
 ```
 
 ::: zone-end
@@ -71,7 +92,20 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+async for event in workflow.run_stream(input_message):
+    match event:
+        case ExecutorInvokeEvent() as invoke:
+            print(f"Starting {invoke.executor_id}")
+        case ExecutorCompleteEvent() as complete:
+            print(f"Completed {complete.executor_id}: {complete.data}")
+        case WorkflowCompletedEvent() as finished:
+            print(f"Workflow finished: {finished.data}")
+            return
+        case WorkflowErrorEvent() as error:
+            print(f"Workflow error: {error.exception}")
+            return
+```
 
 ::: zone-end
 
@@ -98,7 +132,18 @@ internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("Cus
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+class CustomEvent(WorkflowEvent):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+class CustomExecutor(Executor):
+
+    @handler
+    async def handle(self, message: str, ctx: WorkflowContext[Any]) -> None:
+        await ctx.add_event(CustomEvent(f"Processing message: {message}"))
+        # Executor logic...
+```
 
 ::: zone-end
 

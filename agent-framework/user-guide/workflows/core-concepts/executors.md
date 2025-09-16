@@ -79,7 +79,59 @@ internal sealed class SampleExecutor() : ReflectingExecutor<SampleExecutor>("Sam
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+Executors inherit from the `Executor` base class. Each executor has a unique identifier and can handle specific message types using methods decorated with the `@handler` decorator. Handlers must have the proper annotation to specify the type of messages they can process.
+
+### Basic Executor Structure
+
+```python
+class UpperCase(Executor):
+
+    @handler
+    async def to_upper_case(self, text: str, ctx: WorkflowContext[str]) -> None:
+        """Convert the input to uppercase and forward it to the next node.
+
+        Note: The WorkflowContext is parameterized with the type this handler will
+        emit. Here WorkflowContext[str] means downstream nodes should expect str.
+        """
+        await ctx.send_message(text.upper())
+```
+
+It is possible to create an executor from a function by using the `@executor` decorator:
+
+```python
+@executor(id="upper_case_executor")
+async def upper_case(text: str, ctx: WorkflowContext[str]) -> None:
+    """Convert the input to uppercase and forward it to the next node.
+
+    Note: The WorkflowContext is parameterized with the type this handler will
+    emit. Here WorkflowContext[str] means downstream nodes should expect str.
+    """
+    await ctx.send_message(text.upper())
+```
+
+It is also possible to handle multiple input types by defining multiple handlers:
+
+```python
+class SampleExecutor(Executor):
+
+    @handler
+    async def to_upper_case(self, text: str, ctx: WorkflowContext[str]) -> None:
+        """Convert the input to uppercase and forward it to the next node.
+
+        Note: The WorkflowContext is parameterized with the type this handler will
+        emit. Here WorkflowContext[str] means downstream nodes should expect str.
+        """
+        await ctx.send_message(text.upper())
+
+    @handler
+    async def double_integer(self, number: int, ctx: WorkflowContext[int]) -> None:
+        """Double the input integer and forward it to the next node.
+
+        Note: The WorkflowContext is parameterized with the type this handler will
+        emit. Here WorkflowContext[int] means downstream nodes should expect int.
+        """
+        await ctx.send_message(number * 2)
+```
 
 ::: zone-end
 
