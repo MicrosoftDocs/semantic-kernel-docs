@@ -21,7 +21,7 @@ To add intelligence to your workflows, you can leverage AI agents as part of you
 
 ## Add an Agent Directly to a Workflow
 
-You can add an agent to your workflow via a edge:
+You can add agents to your workflow via edges:
 
 ```csharp
 // Create the agents first
@@ -67,7 +67,65 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
 
 ## Using the Built-in Agent Executor
 
-Coming soon...
+You can add agents to your workflow via edges:
+
+```python
+# Create the agents first
+chat_client = AzureChatClient(credential=AzureCliCredential())
+writer_agent: ChatAgent = chat_client.create_agent(
+    instructions=(
+        "You are an excellent content writer. You create new content and edit contents based on the feedback."
+    ),
+    name="writer_agent",
+)
+reviewer_agent = chat_client.create_agent(
+    instructions=(
+        "You are an excellent content reviewer."
+        "Provide actionable feedback to the writer about the provided content."
+        "Provide the feedback in the most concise manner possible."
+    ),
+    name="reviewer_agent",
+)
+
+# Build a workflow with the agents
+builder = WorkflowBuilder()
+builder.set_start_executor(writer_agent)
+builder.add_edge(writer_agent, reviewer_agent)
+workflow = builder.build()
+```
+
+### Running the Workflow
+
+Inside the workflow created above, the agents are actually wrapped inside an executor that handles the communication of the agent with other parts of the workflow. The executor can handle three message types:
+
+- `str`: A single chat message in string format
+- `ChatMessage`: A single chat message
+- `List<ChatMessage>`: A list of chat messages
+
+Whenever the executor receives a message of one of these types, it will trigger the agent to respond, and the response type will be an `AgentExecutorResponse` object. This class contains useful information about the agent's response, including:
+
+- `executor_id`: The ID of the executor that produced this response
+- `agent_run_response`: The full response from the agent
+- `full_conversation`: The full conversation history up to this point
+
+Two possible event type related to the agents' responses can be emitted when running the workflow:
+
+- `AgentRunUpdateEvent` containing chunks of the agent's response as they are generated in streaming mode.
+- `AgentRunEvent` containing the full response from the agent in non-streaming mode.
+
+> By default, agents are wrapped in executors that run in streaming mode. You can customize this behavior by creating a custom executor. See the next section for more details.
+
+```python
+last_executor_id = None
+async for event in workflow.run_streaming("Write a short blog post about AI agents."):
+    if isinstance(event, AgentRunUpdateEvent):
+        if event.executor_id != last_executor_id:
+            if last_executor_id is not None:
+                print()
+            print(f"{event.executor_id}:", end=" ", flush=True)
+            last_executor_id = event.executor_id
+        print(event.data, end="", flush=True)
+```
 
 ::: zone-end
 
@@ -120,7 +178,31 @@ internal sealed class CustomAgentExecutor : ReflectingExecutor<CustomAgentExecut
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+class Writer(Executor):
+
+    agent: ChatAgent
+
+    def __init__(self, chat_client: AzureChatClient, id: str = "writer"):
+        # Create a domain specific agent using your configured AzureChatClient.
+        agent = chat_client.create_agent(
+            instructions=(
+                "You are an excellent content writer. You create new content and edit contents based on the feedback."
+            ),
+        )
+        # Associate the agent with this executor node. The base Executor stores it on self.agent.
+        super().__init__(agent=agent, id=id)
+
+    @handler
+    async def handle(self, message: ChatMessage, ctx: WorkflowContext[list[ChatMessage]]) -> None:
+        """Handles a single chat message and forwards the accumulated messages to the next executor in the workflow."""
+        # Invoke the agent with the incoming message and get the response
+        messages: list[ChatMessage] = [message]
+        response = await self.agent.run(messages)
+        # Accumulate messages and send them to the next executor in the workflow.
+        messages.extend(response.messages)
+        await ctx.send_message(messages)
+```
 
 ::: zone-end
 
