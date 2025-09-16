@@ -13,5 +13,5 @@ ms.service: agent-framework
 ## Single Agent Tutorials
 
 - [Create and run a simple agent](./run-agent.md)
-- [Having a multi-turn conversation with an agent](./multi-turn-conversation.md)
+- [Multi-turn conversations with an agent](./multi-turn-conversation.md)
 - [Using function tools with an agent](./function-tools.md)
