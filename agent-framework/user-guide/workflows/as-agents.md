@@ -36,7 +36,10 @@ var workflowAgentThread = workflowAgent.GetNewThread();
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+workflow_agent = workflow.as_agent(name="Workflow Agent")
+workflow_agent_thread = workflow_agent.get_new_thread()
+```
 
 ::: zone-end
 
@@ -57,7 +60,10 @@ await foreach (var update in workflowAgent.RunStreamingAsync(input, workflowAgen
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+async for update in workflow_agent.run_streaming(input, workflow_agent_thread):
+    print(update)
+```
 
 ::: zone-end
 
