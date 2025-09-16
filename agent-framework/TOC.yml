@@ -5,17 +5,7 @@ items:
   href: overview/index.md
   expanded: true
 - name: Tutorials
-  items:
-  - name: Create an agent
-    href: tutorials/create-an-agent.md
-  - name: Human in the loop
-    href: tutorials/human-input-agent.md
-  - name: Tool use
-    href: tutorials/tool-use.md
-  - name: Chat termination
-    href: tutorials/chat-termination.md
-  - name: Managing State
-    href: tutorials/managing-state.md
+  href: tutorials/TOC.yml
 - name: User Guide
   items:
   - name: LLM Configuration
