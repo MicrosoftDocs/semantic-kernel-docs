@@ -50,9 +50,8 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 | StorageName supported?                | Yes                                                                                              |
 | HybridSearch supported?               | No                                                                                                                                                                         |
 
-
 > [!IMPORTANT]
-> Vector data searches require Oracle Database 23ai. All other Oracle connector features are available using Oracle Database 19c or higher.
+> Vector data searches require Oracle Database 23ai or higher. All other Oracle connector features are available using Oracle Database 19c or higher.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -60,7 +59,20 @@ More information coming soon.
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
-More information coming soon.
+| Feature Area        | Support           |
+| ------------- |-------------|
+|Supported filter clauses|<ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>|
+|Collection maps to|SQL database table|
+|Supported key property types|<ul><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>String</li><li>UUID</li></ul>|
+|Supported data property types|<ul><li>byte/Byte</li><li>short/Short</li><li>int/Integer</li><li>long/Long</li><li>float/Float</li><li>double/Double</li><li>decimal/Decimal</li><li>DateTime</li><li>OffsetDataTime</li><li>Timestamp</li><li>String</li><li>UUID</li><li>List`<of all above types>`</li></ul>|
+|Supported vector property types|<ul><li>String</li><li>Collection`<Float>`</li><li>List`<Float>`</li><li>Float[]</li><li>float[]</li></ul>|
+|Supported index types|<ul><li>HNSW</li><li>IVF</li></ul>|
+|Supported distance functions|<ul><li>DOT_PRODUCT</li><li>COSINE_SIMILARITY</li><li>COSINE_DISTANCE</li><li>EUCLIDEAN_DISTANCE</li></ul>|
+|Supports multiple vectors in a record|Yes|
+|IsIndexed support?|Yes|
+|IsFullTextSearchable supported?| No|
+|StoragePropertyName supported?|No, use `@JsonProperty` instead|
+|HybridSearch supported?|No|
 
 ::: zone-end
 
@@ -180,13 +192,77 @@ More information coming soon.
 
 ## Getting started
 
-More information coming soon.
+Set up Oracle Database Vector Store connector.
+
+```java
+// Copyright (c) Microsoft. All rights reserved.
+package com.microsoft.semantickernel.samples.syntaxexamples.memory;
+
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStore;
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStoreOptions;
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStoreRecordCollection;
+import com.microsoft.semantickernel.data.jdbc.JDBCVectorStoreRecordCollectionOptions;
+import com.microsoft.semantickernel.data.jdbc.oracle.OracleVectorStoreQueryProvider;
+import com.microsoft.semantickernel.data.vectorstorage.VectorStoreRecordCollection;
+import com.microsoft.semantickernel.samples.documentationexamples.data.index.Hotel;
+import java.sql.SQLException;
+import java.util.Collections;
+import oracle.jdbc.datasource.impl.OracleDataSource;
+
+public class VectorStoreWithOracle {
+
+    public static void main(String[] args) throws SQLException {
+        System.out.println("==============================================================");
+        System.out.println("============== Oracle Vector Store Example ===================");
+        System.out.println("==============================================================");
+
+        // Configure the data source
+        OracleDataSource dataSource = new OracleDataSource();
+        dataSource.setURL("jdbc:oracle:thin:@localhost:1521/FREEPDB1");
+        dataSource.setUser("scott");
+        dataSource.setPassword("tiger");
+
+        // Build a query provider
+        OracleVectorStoreQueryProvider queryProvider = OracleVectorStoreQueryProvider.builder()
+            .withDataSource(dataSource)
+            .build();
+
+        // Build a vector store
+        JDBCVectorStore vectorStore = JDBCVectorStore.builder()
+            .withDataSource(dataSource)
+            .withOptions(JDBCVectorStoreOptions.builder()
+                .withQueryProvider(queryProvider)
+                .build())
+            .build();
+
+        // Get a collection from the vector store
+        VectorStoreRecordCollection<String, Hotel> collection = vectorStore.getCollection(
+            "skhotels",
+            JDBCVectorStoreRecordCollectionOptions.<Hotel>builder()
+                .withRecordClass(Hotel.class)
+                .build());
+
+        // Create the collection if it doesn't exist yet.
+        collection.createCollectionAsync().block();
+
+        collection.upsertAsync(new Hotel("1",
+            "HotelOne",
+            "Desc for HotelOne",
+            Collections.emptyList(), Collections.emptyList()),
+            null)
+            .block();
+
+    }
+
+}
+```
+
 ::: zone-end
 ::: zone pivot="programming-language-csharp"
 
 ## Data mapping
 
-The Oracle Database Vector Store connector provides a default mapper when mapping data from the data model to storage. This mapper does a direct conversion of the data model properties list to the Oracle database columns to convert to the storage schema.   
+The Oracle Database Vector Store connector provides a default mapper when mapping data from the data model to storage. This mapper does a direct conversion of the data model properties list to the Oracle database columns to convert to the storage schema.
 
 The Oracle Database Vector Store connector supports data model annotations and record definitions.Using annotations, the information can be provided to the data model for creating indexes and database column mapping. Using [record definitions](../schema-with-record-definition.md), the information can be defined and supplied separately from the data model.
 
@@ -266,12 +342,62 @@ CREATE TABLE "MYSCHEMA"."Hotels"
 ```
 
 ## Learn More
+
 Refer to the following Oracle Database Vector Store connector resources to learn more:
-- [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/oracle-database-vector-store-connector-semantic-kernel-classes.html)  
+
+- [Introducing the Oracle Database Vector Store Connector for Semantic Kernel](https://medium.com/oracledevs/announcing-the-oracle-database-vector-store-connector-for-semantic-kernel-adb83e806d4e)  
+Describes key connector features, classes, and guides the reader through a sample AI vector search application using the connector.
+- [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/VSConnector4SKClasses.html)  
 Contains information on Oracle Database Vector Store connector classes for adding data, retrieving data, and performing vector search in the Oracle vector database.  
--  Sample Code: Oracle Database Vector Store Connector for Semantic Kernel (.NET) 
-    - Coming soon
 - [Documentation: Oracle Data Provider for .NET](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/intro.html)  
 Contains information on Oracle Data Provider for .NET (ODP.NET), the ADO.NET data provider for Oracle Database Vector Store connector.
+
+::: zone-end
+::: zone pivot="programming-language-java"
+
+## Data mapping
+
+The Oracle Database Vector Store connector provides a default mapper when mapping data from the data model to storage. This mapper does a direct conversion of the data model properties list to the Oracle database columns to convert to the storage schema.
+
+The Oracle Database Vector Store connector supports data model annotations and record definitions.Using annotations, the information can be provided to the data model for creating indexes and database column mapping. Using [record definitions](../schema-with-record-definition.md), the information can be defined and supplied separately from the data model.
+
+The following table shows the default primary key data type mapping between Oracle database and Java, along with the corresponding methods to retrieve data from a `ResultSet`:
+
+| Java Type        | Database Type          | ResultSet Getter Method  |
+| ------------- |:-------------:| -----:|
+| byte/Byte      | NUMBER(3) | `resultSet.getByte(name)`|
+| short/Short    | NUMBER(5)  |`resultSet.getShort(name)`|
+|int/Integer     | NUMBER(10) |`resultSet.getInt(name)`|
+|long/Long       |NUMBER(19)  |`resultSet.getLong(name)`|
+|String          |NVARCHAR2(2000)|`resultSet.getString(name)`|
+|UUID            |RAW(16)  |  `resultSet.getObject(name, java_type)`|
+
+The following table shows the default data property type mapping along with the corresponding methods to retrieve data from a `ResultSet`:
+
+| Java Type        | Database Type          | ResultSet Getter Method  |
+| ------------- |:-------------:| -----:|
+| boolean     | BOOLEAN | `resultSet.getByte(name)`|
+|byte/Byte    |NUMBER(3)|`resultSet.getByte(name)`|
+|byte[]       |RAW(2000)|`resultSet.getBytes(name)`|
+|short/Short  |NUMBER(5)|`resultSet.getShort(name)`|
+|int/Integer  |NUMBER(10)|`resultSet.getInt(name)`|
+|long/Long    |NUMBER(19)|`resultSet.getLong(name)`|
+|float/Float  |BINARY_FLOAT|`resultSet.getFloat(name)`|
+|double/Double|BINARY_DOUBLE|`resultSet.getDouble(name)`|
+|BigDecimal   |NUMBER(18,2)|`resultSet.getBigDecimal(name)`|
+|OffsetDateTime|TIMESTAMP(7) WITH TIME ZONE|`resultSet.getTIMESTAMPTZ(name).offsetDateTimeValue()`|
+|String        |CLOB/NVARCHAR2(%s)|`resultSet.getString(name)`|
+|UUID          |RAW(16)           |`resultSet.getObject(name, java_type)`|
+|List`<T>`       |JSON              |`resultSet.getObject(name, java_type)`  Using `ojdbc-extensions-jackson-oson`|
+
+ Starting with Oracle Database 23ai, database vectors can be mapped to Java data types. Multiple vector columns are supported. The following table shows the default vector property type mapping:
+
+| Java Type        | Database Type
+| ------------- |:-------------:|
+| String          | VECTOR(%d, FLOAT32) |  
+|Collection`<Float>`|VECTOR(%d, FLOAT32)  |  
+|List`<Float>`      |VECTOR(%d, FLOAT32)  |  
+|Float[]          |VECTOR(%d, FLOAT32)  |  
+|float[]          |VECTOR(%d, FLOAT32)  |  
 
 ::: zone-end
