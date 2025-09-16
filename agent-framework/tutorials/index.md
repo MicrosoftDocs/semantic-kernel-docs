@@ -10,7 +10,7 @@ ms.service: agent-framework
 
 # Agent Framework Tutorials
 
-## Single Agent Tutorials
+## Single Agent Tutorial
 
 - [Create and run a simple agent](./run-agent.md)
 - [Multi-turn conversations with an agent](./multi-turn-conversation.md)
