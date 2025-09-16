@@ -1,6 +1,6 @@
 ---
-title: Create and run a simple agent
-description: Create and run a simple agent
+title: Create and run an agent with Agent Framework
+description: Learn how to create and run an AI agent using Agent Framework
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -9,11 +9,11 @@ ms.date: 09/15/2025
 ms.service: agent-framework
 ---
 
-# Create and run a simple agent
+# Create and run an agent with Agent Framework
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial shows you how to create and run a simple agent, based on the Azure OpenAI Chat Completion service.
+This tutorial shows you how to create and run an agent with the Agent Framework, based on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
 > The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../user-guide/index.md) for more information on other agent types and how to construct them.

@@ -1,4 +1,16 @@
 - name: Index
   href: index.md
-- name: Create and run a simple agent
+- name: Create and run an agent
   href: run-agent.md
+- name: Multi-turn conversations with an agent
+  href: multi-turn-conversation.md
+- name: Using function tools with an agent
+  href: function-tools.md
+- name: Human in the loop
+  href: human-input-agent.md
+- name: Tool use
+  href: tool-use.md
+- name: Chat termination
+  href: chat-termination.md
+- name: Managing State
+  href: managing-state.md
