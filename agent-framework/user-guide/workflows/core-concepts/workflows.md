@@ -25,6 +25,8 @@ Workflows are constructed using the `WorkflowBuilder` class, which provides a fl
 
 ```csharp
 // Create executors
+using Microsoft.Agents.Workflows;
+
 var processor = new DataProcessor();
 var validator = new Validator();
 var formatter = new Formatter();
@@ -43,6 +45,8 @@ var workflow = builder.Build<string>(); // Specify input message type
 Workflows are constructed using the `WorkflowBuilder` class, which provides a fluent API for defining the workflow structure:
 
 ```python
+from agent_framework.workflow import WorkflowBuilder
+
 processor = DataProcessor()
 validator = Validator()
 formatter = Formatter()
@@ -55,8 +59,6 @@ builder.add_edge(validator, formatter)
 workflow = builder.build()
 ```
 
-Coming soon...
-
 ::: zone-end
 
 ### Workflow Execution
@@ -66,6 +68,8 @@ Workflows support both streaming and non-streaming execution modes:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+
 // Streaming execution - get events as they happen
 StreamingRun run = await InProcessExecution.StreamAsync(workflow, inputMessage);
 await foreach (WorkflowEvent evt in run.WatchStreamAsync())
@@ -97,6 +101,8 @@ foreach (WorkflowEvent evt in result.NewEvents)
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import WorkflowCompletedEvent
+
 # Streaming execution - get events as they happen
 async for event in workflow.run_stream(input_message):
     if isinstance(event, WorkflowCompletedEvent):

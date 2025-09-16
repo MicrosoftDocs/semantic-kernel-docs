@@ -38,6 +38,8 @@ Remember that workflows are executed in **supersteps**, as documented in the [co
 To enable check pointing, a `CheckpointManager` needs to be provided when creating a workflow run. A checkpoint then can be accessed via a `SuperStepCompletedEvent`.
 
 ```csharp
+using Microsoft.Agents.Workflows;
+
 // Create a checkpoint manager to manage checkpoints
 var checkpointManager = new CheckpointManager();
 // List to store checkpoint info for later use
@@ -68,6 +70,11 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().Confi
 To enable check pointing, a `CheckpointStorage` needs to be provided when creating a workflow. A checkpoint then can be accessed via the storage.
 
 ```python
+from agent_framework.workflow import (
+    InMemoryCheckpointStorage,
+    WorkflowBuilder,
+)
+
 # Create a checkpoint storage to manage checkpoints
 # There are different implementations of CheckpointStorage, such as InMemoryCheckpointStorage and FileCheckpointStorage.
 checkpoint_storage = InMemoryCheckpointStorage()
@@ -153,6 +160,8 @@ await foreach (WorkflowEvent evt in newCheckpointedRun.Run.WatchStreamAsync().Co
 Or you can rehydrate a new workflow instance from a checkpoint.
 
 ```python
+from agent_framework.workflow import WorkflowBuilder
+
 builder = WorkflowBuilder()
 builder.set_start_executor(start_executor)
 builder.add_edge(start_executor, executor_b)
@@ -179,6 +188,9 @@ async for event in workflow.run_stream_from_checkpoint(
 To ensure that the state of an executor is captured in a checkpoint, the executor must override the `OnCheckpointingAsync` method and save its state to the workflow context.
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("CustomExecutor"), IMessageHandler<string>
 {
     private const string StateKey = "CustomExecutorState";

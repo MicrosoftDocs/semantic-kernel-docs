@@ -24,6 +24,10 @@ To add intelligence to your workflows, you can leverage AI agents as part of you
 You can add agents to your workflow via edges:
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.AI.Agents;
+
 // Create the agents first
 AIAgent agentA = new ChatClientAgent(chatClient, instructions);
 AIAgent agentB = new ChatClientAgent(chatClient, instructions);
@@ -70,6 +74,10 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
 You can add agents to your workflow via edges:
 
 ```python
+from agent_framework.azure import AzureChatClient
+from agent_framework.workflow import WorkflowBuilder
+from azure.identity import AzureCliCredential
+
 # Create the agents first
 chat_client = AzureChatClient(credential=AzureCliCredential())
 writer_agent: ChatAgent = chat_client.create_agent(
@@ -179,6 +187,9 @@ internal sealed class CustomAgentExecutor : ReflectingExecutor<CustomAgentExecut
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework import ChatAgent, ChatMessage
+from agent_framework.workflow import Executor, WorkflowContext, handler
+
 class Writer(Executor):
 
     agent: ChatAgent

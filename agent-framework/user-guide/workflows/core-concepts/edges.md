@@ -33,6 +33,8 @@ The simplest form of connection between two executors:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+
 WorkflowBuilder builder = new(sourceExecutor);
 builder.AddEdge(sourceExecutor, targetExecutor);
 ```
@@ -42,6 +44,8 @@ builder.AddEdge(sourceExecutor, targetExecutor);
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import WorkflowBuilder
+
 builder = WorkflowBuilder()
 builder.add_edge(source_executor, target_executor)
 builder.set_start_executor(source_executor)
@@ -76,6 +80,8 @@ builder.AddEdge(
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import WorkflowBuilder
+
 builder = WorkflowBuilder()
 builder.add_edge(spam_detector, email_processor, condition=lambda result: isinstance(result, SpamResult) and not result.is_spam)
 builder.add_edge(spam_detector, spam_handler, condition=lambda result: isinstance(result, SpamResult) and result.is_spam)
@@ -111,6 +117,12 @@ builder.AddSwitch(routerExecutor, switchBuilder =>
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import (
+    Case,
+    Default,
+    WorkflowBuilder,
+)
+
 builder = WorkflowBuilder()
 builder.set_start_executor(router_executor)
 builder.add_switch_case_edge_group(
@@ -160,6 +172,8 @@ builder.AddFanOutEdge(
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import WorkflowBuilder
+
 builder = WorkflowBuilder()
 builder.set_start_executor(splitter_executor)
 builder.add_fan_out_edges(splitter_executor, [worker1, worker2, worker3])

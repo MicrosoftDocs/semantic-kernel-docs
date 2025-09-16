@@ -22,6 +22,9 @@ Shared States allow multiple executors within a workflow to access and modify co
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>("FileReadExecutor"), IMessageHandler<string, string>
 {
     /// <summary>
@@ -48,6 +51,12 @@ internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>(
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import (
+    Executor,
+    WorkflowContext,
+    handler,
+)
+
 class FileReadExecutor(Executor):
 
     @handler
@@ -69,6 +78,9 @@ class FileReadExecutor(Executor):
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class WordCountingExecutor() : ReflectingExecutor<WordCountingExecutor>("WordCountingExecutor"), IMessageHandler<string, int>
 {
     /// <summary>
@@ -93,6 +105,12 @@ internal sealed class WordCountingExecutor() : ReflectingExecutor<WordCountingEx
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import (
+    Executor,
+    WorkflowContext,
+    handler,
+)
+
 class WordCountingExecutor(Executor):
 
     @handler

@@ -24,6 +24,9 @@ Executors implement the `IMessageHandler<TInput>` or `IMessageHandler<TInput, TO
 ### Basic Executor Structure
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"), 
     IMessageHandler<string, string>
 {
@@ -84,6 +87,12 @@ Executors inherit from the `Executor` base class. Each executor has a unique ide
 ### Basic Executor Structure
 
 ```python
+from agent_framework.workflow import (
+    Executor,
+    WorkflowContext,
+    handler,
+)
+
 class UpperCase(Executor):
 
     @handler
@@ -99,6 +108,11 @@ class UpperCase(Executor):
 It is possible to create an executor from a function by using the `@executor` decorator:
 
 ```python
+from agent_framework.workflow import (
+    WorkflowContext,
+    executor,
+)
+
 @executor(id="upper_case_executor")
 async def upper_case(text: str, ctx: WorkflowContext[str]) -> None:
     """Convert the input to uppercase and forward it to the next node.

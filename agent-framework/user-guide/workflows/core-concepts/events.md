@@ -65,6 +65,8 @@ RequestInfoEvent        # A request is issued
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+
 await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 {
     switch (evt)
@@ -93,6 +95,13 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import (
+    ExecutorCompleteEvent,
+    ExecutorInvokeEvent,
+    WorkflowCompletedEvent,
+    WorkflowErrorEvent,
+)
+
 async for event in workflow.run_stream(input_message):
     match event:
         case ExecutorInvokeEvent() as invoke:
@@ -116,6 +125,9 @@ Users can define and emit custom events during workflow execution for enhanced o
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class CustomEvent(string message) : WorkflowEvent(message) { }
 
 internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("CustomExecutor"), IMessageHandler<string>
@@ -133,6 +145,13 @@ internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("Cus
 ::: zone pivot="programming-language-python"
 
 ```python
+from agent_framework.workflow import (
+    handler,
+    Executor,    
+    WorkflowContext,
+    WorkflowEvent,
+)
+
 class CustomEvent(WorkflowEvent):
     def __init__(self, message: str):
         super().__init__(message)
@@ -140,7 +159,7 @@ class CustomEvent(WorkflowEvent):
 class CustomExecutor(Executor):
 
     @handler
-    async def handle(self, message: str, ctx: WorkflowContext[Any]) -> None:
+    async def handle(self, message: str, ctx: WorkflowContext[str]) -> None:
         await ctx.add_event(CustomEvent(f"Processing message: {message}"))
         # Executor logic...
 ```
