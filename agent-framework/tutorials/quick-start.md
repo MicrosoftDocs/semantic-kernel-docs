@@ -6,8 +6,8 @@ ms.service: semantic-kernel
 ms.topic: tutorial
 ms.date: 09/04/2025
 ms.reviewer: ssalgado
-ms.author: 
-author: 
+author: TaoChenOSU
+ms.author: taochen
 ---
 
 # Microsoft Agent Framework Getting Started
