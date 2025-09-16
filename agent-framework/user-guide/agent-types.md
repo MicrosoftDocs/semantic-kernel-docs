@@ -3,12 +3,11 @@ title: Microsoft Agent Framework Agent Types
 titleSuffix: Azure AI Foundry
 description: Learn different Agent Framework agent types.
 ms.service: semantic-kernel
-ms.custom:
 ms.topic: tutorial
 ms.date: 09/04/2025
 ms.reviewer: ssalgado
-ms.author: 
-author: 
+author: TaoChenOSU
+ms.author: taochen
 ---
 
 # Microsoft Agent Framework Agent Types
