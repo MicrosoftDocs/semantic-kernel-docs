@@ -19,8 +19,6 @@ For example, when using a ChatClientAgent based on a foundry agent, the conversa
 
 The differences between the underlying threading models are abstracted away via the `AgentThread` type.
 
-## AgentThread lifecycle
-
 ### AgentThread Creation
 
 `AgentThread` instances can be created in two ways:
@@ -100,8 +98,6 @@ It is therefore considered unsafe to use an `AgentThread` instance that was crea
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-
-## AgentThread lifecycle
 
 ### AgentThread Creation
 
