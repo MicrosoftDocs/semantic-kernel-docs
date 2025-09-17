@@ -51,7 +51,7 @@ internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>(
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     Executor,
     WorkflowContext,
     handler,
@@ -105,7 +105,7 @@ internal sealed class WordCountingExecutor() : ReflectingExecutor<WordCountingEx
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     Executor,
     WorkflowContext,
     handler,

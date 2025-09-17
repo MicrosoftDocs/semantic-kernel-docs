@@ -45,7 +45,7 @@ var workflow = builder.Build<string>(); // Specify input message type
 Workflows are constructed using the `WorkflowBuilder` class, which provides a fluent API for defining the workflow structure:
 
 ```python
-from agent_framework.workflow import WorkflowBuilder
+from agent_framework import WorkflowBuilder
 
 processor = DataProcessor()
 validator = Validator()
@@ -101,7 +101,7 @@ foreach (WorkflowEvent evt in result.NewEvents)
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import WorkflowCompletedEvent
+from agent_framework import WorkflowCompletedEvent
 
 # Streaming execution - get events as they happen
 async for event in workflow.run_stream(input_message):

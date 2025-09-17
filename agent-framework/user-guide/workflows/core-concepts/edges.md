@@ -44,7 +44,7 @@ builder.AddEdge(sourceExecutor, targetExecutor);
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import WorkflowBuilder
+from agent_framework import WorkflowBuilder
 
 builder = WorkflowBuilder()
 builder.add_edge(source_executor, target_executor)
@@ -63,8 +63,8 @@ Edges that only activate when certain conditions are met:
 ```csharp
 // Route based on message content
 builder.AddEdge(
-    source: spamDetector, 
-    target: emailProcessor, 
+    source: spamDetector,
+    target: emailProcessor,
     condition: result => result is SpamResult spam && !spam.IsSpam
 );
 
@@ -80,7 +80,7 @@ builder.AddEdge(
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import WorkflowBuilder
+from agent_framework import WorkflowBuilder
 
 builder = WorkflowBuilder()
 builder.add_edge(spam_detector, email_processor, condition=lambda result: isinstance(result, SpamResult) and not result.is_spam)
@@ -98,7 +98,7 @@ Route messages to different executors based on conditions:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-builder.AddSwitch(routerExecutor, switchBuilder => 
+builder.AddSwitch(routerExecutor, switchBuilder =>
     switchBuilder
         .AddCase(
             message => message.Priority < Priority.Normal,
@@ -117,7 +117,7 @@ builder.AddSwitch(routerExecutor, switchBuilder =>
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     Case,
     Default,
     WorkflowBuilder,
@@ -172,7 +172,7 @@ builder.AddFanOutEdge(
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import WorkflowBuilder
+from agent_framework import WorkflowBuilder
 
 builder = WorkflowBuilder()
 builder.set_start_executor(splitter_executor)

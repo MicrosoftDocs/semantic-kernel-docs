@@ -70,7 +70,7 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().Confi
 To enable check pointing, a `CheckpointStorage` needs to be provided when creating a workflow. A checkpoint then can be accessed via the storage.
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     InMemoryCheckpointStorage,
     WorkflowBuilder,
 )
@@ -160,7 +160,7 @@ await foreach (WorkflowEvent evt in newCheckpointedRun.Run.WatchStreamAsync().Co
 Or you can rehydrate a new workflow instance from a checkpoint.
 
 ```python
-from agent_framework.workflow import WorkflowBuilder
+from agent_framework import WorkflowBuilder
 
 builder = WorkflowBuilder()
 builder.set_start_executor(start_executor)

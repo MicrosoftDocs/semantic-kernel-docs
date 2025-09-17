@@ -74,8 +74,8 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
 You can add agents to your workflow via edges:
 
 ```python
+from agent_framework import WorkflowBuilder
 from agent_framework.azure import AzureChatClient
-from agent_framework.workflow import WorkflowBuilder
 from azure.identity import AzureCliCredential
 
 # Create the agents first
@@ -187,8 +187,13 @@ internal sealed class CustomAgentExecutor : ReflectingExecutor<CustomAgentExecut
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework import ChatAgent, ChatMessage
-from agent_framework.workflow import Executor, WorkflowContext, handler
+from agent_framework import (
+    ChatAgent,
+    ChatMessage,
+    Executor,
+    WorkflowContext,
+    handler
+)
 
 class Writer(Executor):
 

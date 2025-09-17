@@ -27,7 +27,7 @@ Executors implement the `IMessageHandler<TInput>` or `IMessageHandler<TInput, TO
 using Microsoft.Agents.Workflows;
 using Microsoft.Agents.Workflows.Reflection;
 
-internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"), 
+internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"),
     IMessageHandler<string, string>
 {
     public async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
@@ -41,7 +41,7 @@ internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor
 It is possible to send messages manually without returning a value:
 
 ```csharp
-internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"), 
+internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"),
     IMessageHandler<string>
 {
     public async ValueTask HandleAsync(string message, IWorkflowContext context)
@@ -55,7 +55,7 @@ internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor
 It is also possible to handle multiple input types by implementing multiple interfaces:
 
 ```csharp
-internal sealed class SampleExecutor() : ReflectingExecutor<SampleExecutor>("SampleExecutor"), 
+internal sealed class SampleExecutor() : ReflectingExecutor<SampleExecutor>("SampleExecutor"),
     IMessageHandler<string, string>, IMessageHandler<int, int>
 {
     /// <summary>
@@ -87,7 +87,7 @@ Executors inherit from the `Executor` base class. Each executor has a unique ide
 ### Basic Executor Structure
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     Executor,
     WorkflowContext,
     handler,
@@ -108,7 +108,7 @@ class UpperCase(Executor):
 It is possible to create an executor from a function by using the `@executor` decorator:
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     WorkflowContext,
     executor,
 )

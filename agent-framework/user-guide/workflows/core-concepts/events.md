@@ -27,7 +27,7 @@ WorkflowStartedEvent    // Workflow execution begins
 WorkflowCompletedEvent  // Workflow reaches completion
 WorkflowErrorEvent      // Workflow encounters an error
 
-// Executor events  
+// Executor events
 ExecutorInvokeEvent     // Executor starts processing
 ExecutorCompleteEvent   // Executor finishes processing
 ExecutorFailureEvent    // Executor encounters an error
@@ -74,15 +74,15 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
         case ExecutorInvokeEvent invoke:
             Console.WriteLine($"Starting {invoke.ExecutorId}");
             break;
-            
+
         case ExecutorCompleteEvent complete:
             Console.WriteLine($"Completed {complete.ExecutorId}: {complete.Data}");
             break;
-            
+
         case WorkflowCompletedEvent finished:
             Console.WriteLine($"Workflow finished: {finished.Data}");
             return;
-            
+
         case WorkflowErrorEvent error:
             Console.WriteLine($"Workflow error: {error.Exception}");
             return;
@@ -95,7 +95,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     ExecutorCompleteEvent,
     ExecutorInvokeEvent,
     WorkflowCompletedEvent,
@@ -145,9 +145,9 @@ internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("Cus
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     handler,
-    Executor,    
+    Executor,
     WorkflowContext,
     WorkflowEvent,
 )

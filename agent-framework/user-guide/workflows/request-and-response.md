@@ -82,7 +82,7 @@ internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExe
 Requests and responses are handled via a special built-in executor called `RequestInfoExecutor`.
 
 ```python
-from agent_framework.workflow import RequestInfoExecutor
+from agent_framework import RequestInfoExecutor
 
 # Create a RequestInfoExecutor with an ID
 request_info_executor = RequestInfoExecutor(id="request-info-executor")
@@ -91,7 +91,7 @@ request_info_executor = RequestInfoExecutor(id="request-info-executor")
 Add the `RequestInfoExecutor` to a workflow.
 
 ```python
-from agent_framework.workflow import WorkflowBuilder
+from agent_framework import WorkflowBuilder
 
 executor_a = SomeExecutor()
 workflow_builder = WorkflowBuilder()
@@ -103,7 +103,7 @@ workflow = workflow_builder.build()
 Now, because in the workflow we have `executor_a` connected to the `request_info_executor` in both directions, `executor_a` needs to be able to send requests and receive responses via the `request_info_executor`. Here is what we need to do in `SomeExecutor` to send a request and receive a response.
 
 ```python
-from agent_framework.workflow import (
+from agent_framework import (
     Executor,
     RequestResponse,
     WorkflowContext,
@@ -185,7 +185,7 @@ await foreach (WorkflowEvent evt in handle.WatchStreamAsync().ConfigureAwait(fal
 The `RequestInfoExecutor` emits a `RequestInfoEvent` when it receives a request. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor that sent the original request.
 
 ```python
-from agent_framework.workflow import RequestInfoEvent
+from agent_framework import RequestInfoEvent
 
 while True:
     request_info_events : list[RequestInfoEvent] = []
@@ -197,7 +197,7 @@ while True:
         if isinstance(event, RequestInfoEvent):
             # Handle `RequestInfoEvent` from the workflow
             request_info_events.append(event)
-    
+
     if not request_info_events:
         break
 
