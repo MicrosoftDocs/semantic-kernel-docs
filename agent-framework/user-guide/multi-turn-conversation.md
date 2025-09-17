@@ -6,6 +6,7 @@ ms.service: semantic-kernel
 ms.topic: tutorial
 ms.date: 09/04/2025
 ms.reviewer: ssalgado
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.author: taochen
 ---
@@ -42,8 +43,7 @@ response = await agent.RunAsync("Hello, how are you?");
 ```
 
 ::: zone-end
-::: zone pivot="programming-language-python"
-::: zone-end
+
 
 ### AgentThread Storage
 
@@ -76,6 +76,30 @@ The Microsoft Agent Framework provides built-in support for managing multi-turn 
 For example, when using a `ChatAgent` based on a Foundry agent, the conversation history is persisted in the service. While when using a `ChatAgent` based on chat completion with gpt-4, the conversation history is in-memory and managed by the agent.
 
 The differences between the underlying threading models are abstracted away via the `AgentThread` type.
+
+## Agent/AgentThread relationship
+
+`AIAgent` instances are stateless and the same agent instance can be used with multiple `AgentThread` instances.
+
+Not all agents support all thread types though. For example if you are using a `ChatClientAgent` with the responses service, `AgentThread` instances created by this agent, will not work with a `ChatClientAgent` using the Foundry Agent service.
+This is because these services both support saving the conversation history in the service, and the `AgentThread`
+only has a reference to this service managed thread.
+
+It is therefore considered unsafe to use an `AgentThread` instance that was created by one agent with a different agent instance, unless you are aware of the underlying threading model and its implications.
+
+## Threading support by service / protocol
+
+| Service | Threading Support |
+|---------|--------------------|
+| Foundry Agents | Service managed persistent threads |
+| OpenAI Responses | Service managed persistent threads OR in-memory threads |
+| OpenAI ChatCompletion | In-memory threads |
+| OpenAI Assistants | Service managed threads |
+| A2A | Service managed threads |
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
 
 ## AgentThread lifecycle
 
@@ -196,30 +220,7 @@ async def foundry_multi_turn_example():
         print(f"Agent: {response3.text}")  # Should remember previous context
 ```
 
-For complete threading examples, see:
-- [Foundry with threads](../../../python/samples/getting_started/agents/foundry/foundry_with_thread.py)
-- [Custom message store](../../../python/samples/getting_started/threads/custom_chat_message_store_thread.py)
-- [Suspend and resume threads](../../../python/samples/getting_started/threads/suspend_resume_thread.py)
-
 
 ::: zone-end
 
-## Agent/AgentThread relationship
 
-`AIAgent` instances are stateless and the same agent instance can be used with multiple `AgentThread` instances.
-
-Not all agents support all thread types though. For example if you are using a `ChatClientAgent` with the responses service, `AgentThread` instances created by this agent, will not work with a `ChatClientAgent` using the Foundry Agent service.
-This is because these services both support saving the conversation history in the service, and the `AgentThread`
-only has a reference to this service managed thread.
-
-It is therefore considered unsafe to use an `AgentThread` instance that was created by one agent with a different agent instance, unless you are aware of the underlying threading model and its implications.
-
-## Threading support by service / protocol
-
-| Service | Threading Support |
-|---------|--------------------|
-| Foundry Agents | Service managed persistent threads |
-| OpenAI Responses | Service managed persistent threads OR in-memory threads |
-| OpenAI ChatCompletion | In-memory threads |
-| OpenAI Assistants | Service managed threads |
-| A2A | Service managed threads |
