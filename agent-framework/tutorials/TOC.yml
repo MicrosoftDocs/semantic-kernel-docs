@@ -6,6 +6,10 @@
   href: multi-turn-conversation.md
 - name: Using function tools with an agent
   href: function-tools.md
+- name: Using function tools with human in the loop approvals
+  href: function-tools-approvals.md
+- name: Producing Structured Output with agents
+  href: structured-output.md
 - name: Human in the loop
   href: human-input-agent.md
 - name: Tool use

@@ -15,3 +15,5 @@ ms.service: agent-framework
 - [Create and run a simple agent](./run-agent.md)
 - [Multi-turn conversations with an agent](./multi-turn-conversation.md)
 - [Using function tools with an agent](./function-tools.md)
+- [Using function tools with human in the loop approvals](./function-tools-approvals.md)
+- [Producing Structured Output with agents](./structured-output.md)
