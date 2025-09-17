@@ -6,6 +6,7 @@ ms.service: semantic-kernel
 ms.topic: tutorial
 ms.date: 09/04/2025
 ms.reviewer: ssalgado
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.author: taochen
 ---
@@ -21,10 +22,10 @@ This guide will help you get up and running quickly with a basic agent using the
 Before you begin, ensure you have the following:
 
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
-- An [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/) resource with a deployed model (e.g., `gpt-4o-mini`)
-- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) installed and authenticated (`az login`)
+- An [Azure OpenAI](/azure/ai-services/openai) resource with a deployed model (e.g., `gpt-4o-mini`)
+- [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
 
-**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively).
+**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
 
 ## Running a Basic Agent Sample
 
@@ -49,8 +50,6 @@ AIAgent agent = new AzureOpenAIClient(
 
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
-
-For more details and more advanced scenarios, see [Getting Started Steps](../../../dotnet/samples/GettingStartedSteps/).
 
 ## (Optional) Installing Packages
 
@@ -98,7 +97,7 @@ To download nightly builds follow the following steps:
     ```
 
     * If you place this file in your project folder make sure to have Git (or whatever source control you use) ignore it.
-    * For more information on where to store this file go [here](https://learn.microsoft.com/en-us/nuget/reference/nuget-config-file).
+    * For more information on where to store this file go [here](/nuget/reference/nuget-config-file).
 1. You can now add packages from the nightly build to your project.
     * E.g. use this command `dotnet add package Microsoft.Extensions.AI.Agents --version 0.0.1-nightly-250731.6-alpha`
 1. And the latest package release can be referenced in the project like this:
@@ -107,25 +106,18 @@ To download nightly builds follow the following steps:
 For more information see: <https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry>
 
 ::: zone-end
-::: zone pivot="programming-language-python"
-
-## Coming Soon
-
-::: zone-end
 
 ::: zone pivot="programming-language-python"
-
-This guide will help you get up and running quickly with a basic agent using the Agent Framework and Azure AI Foundry.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following:
 
 - [Python 3.9 or later](https://www.python.org/downloads/)
-- An [Azure AI Foundry](https://learn.microsoft.com/azure/ai-foundry/) project with a deployed model (e.g., `gpt-4o-mini`)
-- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) installed and authenticated (`az login`)
+- An [Azure AI Foundry](/azure/ai-foundry/) project with a deployed model (e.g., `gpt-4o-mini`)
+- [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
 
-**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI Foundry project. For more information, see the [Azure CLI documentation](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively).
+**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI Foundry project. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
 
 ## Running a Basic Agent Sample
 
@@ -135,7 +127,6 @@ Make sure to set the following environment variables:
 - `FOUNDRY_PROJECT_ENDPOINT`: Your Azure AI Foundry project endpoint
 - `FOUNDRY_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
 
-For detailed information about different ways to run examples and configure environment variables, see [Running Examples Guide](running_examples.md).
 
 ### Sample Code
 
@@ -162,7 +153,7 @@ if __name__ == "__main__":
 
 ## More Examples
 
-For more detailed examples and advanced scenarios, see the [Foundry Agent Examples](../../python/samples/getting_started/agents/foundry/README.md).
+For more detailed examples and advanced scenarios, see the [Foundry Agent Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/README.md).
 
 
 ::: zone-end
