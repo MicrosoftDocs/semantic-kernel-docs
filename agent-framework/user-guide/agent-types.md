@@ -6,6 +6,7 @@ ms.service: semantic-kernel
 ms.topic: tutorial
 ms.date: 09/04/2025
 ms.reviewer: ssalgado
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.author: taochen
 ---
@@ -40,8 +41,6 @@ using Microsoft.Extensions.AI;
 
 var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful assistant");
 ```
-
-For examples on how to construct `ChatClientAgents` with various `IChatClient` implementations, see the [Agent setup samples](../../../dotnet/samples/AgentSetup).
 
 ## Complex custom agents
 
@@ -101,9 +100,9 @@ async with AzureCliCredential() as credential:
 ```
 
 For detailed examples, see:
-- [Basic Foundry agent](../../../python/samples/getting_started/agents/foundry/foundry_basic.py)
-- [Foundry with explicit settings](../../../python/samples/getting_started/agents/foundry/foundry_with_explicit_settings.py)
-- [Using existing Foundry agent](../../../python/samples/getting_started/agents/foundry/foundry_with_existing_agent.py)
+- [Basic Foundry agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_basic.py)
+- [Foundry with explicit settings](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_explicit_settings.py)
+- [Using existing Foundry agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_existing_agent.py)
 
 ### Function Tools
 
@@ -129,7 +128,7 @@ async with (
 ```
 
 For complete examples with function tools, see:
-- [Foundry with function tools](../../../python/samples/getting_started/agents/foundry/foundry_with_function_tools.py)
+- [Foundry with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_function_tools.py)
 
 ### Streaming Responses
 
@@ -147,7 +146,7 @@ async for chunk in agent.run_stream("What's the weather like in Portland?"):
 ```
 
 For streaming examples, see:
-- [Foundry streaming examples](../../../python/samples/getting_started/agents/foundry/foundry_basic.py)
+- [Foundry streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_basic.py)
 
 ### Code Interpreter Tools
 
@@ -170,7 +169,7 @@ async with (
 ```
 
 For code interpreter examples, see:
-- [Foundry with code interpreter](../../../python/samples/getting_started/agents/foundry/foundry_with_code_interpreter.py)
+- [Foundry with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_code_interpreter.py)
 
 ## Custom agents
 
