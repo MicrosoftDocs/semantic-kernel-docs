@@ -38,6 +38,8 @@ Remember that workflows are executed in **supersteps**, as documented in the [co
 To enable check pointing, a `CheckpointManager` needs to be provided when creating a workflow run. A checkpoint then can be accessed via a `SuperStepCompletedEvent`.
 
 ```csharp
+using Microsoft.Agents.Workflows;
+
 // Create a checkpoint manager to manage checkpoints
 var checkpointManager = new CheckpointManager();
 // List to store checkpoint info for later use
@@ -65,7 +67,33 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().Confi
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+To enable check pointing, a `CheckpointStorage` needs to be provided when creating a workflow. A checkpoint then can be accessed via the storage.
+
+```python
+from agent_framework import (
+    InMemoryCheckpointStorage,
+    WorkflowBuilder,
+)
+
+# Create a checkpoint storage to manage checkpoints
+# There are different implementations of CheckpointStorage, such as InMemoryCheckpointStorage and FileCheckpointStorage.
+checkpoint_storage = InMemoryCheckpointStorage()
+
+# Build a workflow with checkpointing enabled
+builder = WorkflowBuilder()
+builder.set_start_executor(start_executor)
+builder.add_edge(start_executor, executor_b)
+builder.add_edge(executor_b, executor_c)
+builder.add_edge(executor_b, end_executor)
+workflow = builder.with_checkpointing(checkpoint_storage).build()
+
+# Run the workflow
+async for event in workflow.run_streaming(input):
+    ...
+
+# Access checkpoints from the storage
+checkpoints = await checkpoint_storage.list_checkpoints()
+```
 
 ::: zone-end
 
@@ -93,7 +121,14 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().Confi
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+You can resume a workflow from a specific checkpoint directly on the same workflow instance.
+
+```python
+# Assume we want to resume from the 6th checkpoint
+saved_checkpoint = checkpoints[5]
+async for event in workflow.run_stream_from_checkpoint(saved_checkpoint.checkpoint_id):
+    ...
+```
 
 ::: zone-end
 
@@ -122,7 +157,27 @@ await foreach (WorkflowEvent evt in newCheckpointedRun.Run.WatchStreamAsync().Co
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+Or you can rehydrate a new workflow instance from a checkpoint.
+
+```python
+from agent_framework import WorkflowBuilder
+
+builder = WorkflowBuilder()
+builder.set_start_executor(start_executor)
+builder.add_edge(start_executor, executor_b)
+builder.add_edge(executor_b, executor_c)
+builder.add_edge(executor_b, end_executor)
+# This workflow instance doesn't require checkpointing enabled.
+workflow = builder.build()
+
+# Assume we want to resume from the 6th checkpoint
+saved_checkpoint = checkpoints[5]
+async for event in workflow.run_stream_from_checkpoint(
+    saved_checkpoint.checkpoint_id,
+    checkpoint_storage,
+):
+    ...
+```
 
 ::: zone-end
 
@@ -133,6 +188,9 @@ Coming soon...
 To ensure that the state of an executor is captured in a checkpoint, the executor must override the `OnCheckpointingAsync` method and save its state to the workflow context.
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("CustomExecutor"), IMessageHandler<string>
 {
     private const string StateKey = "CustomExecutorState";

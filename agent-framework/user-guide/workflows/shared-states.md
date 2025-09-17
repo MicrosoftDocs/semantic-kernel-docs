@@ -22,6 +22,9 @@ Shared States allow multiple executors within a workflow to access and modify co
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>("FileReadExecutor"), IMessageHandler<string, string>
 {
     /// <summary>
@@ -47,7 +50,26 @@ internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>(
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+from agent_framework import (
+    Executor,
+    WorkflowContext,
+    handler,
+)
+
+class FileReadExecutor(Executor):
+
+    @handler
+    async def handle(self, file_path: str, ctx: WorkflowContext[str]):
+        # Read file content from embedded resource
+        with open(file_path, 'r') as file:
+            file_content = file.read()
+        # Store file content in a shared state for access by other executors
+        file_id = str(uuid.uuid4())
+        await ctx.set_shared_state(file_id, file_content)
+
+        await ctx.send_message(file_id)
+```
 
 ::: zone-end
 
@@ -56,6 +78,9 @@ Coming soon...
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
+using Microsoft.Agents.Workflows;
+using Microsoft.Agents.Workflows.Reflection;
+
 internal sealed class WordCountingExecutor() : ReflectingExecutor<WordCountingExecutor>("WordCountingExecutor"), IMessageHandler<string, int>
 {
     /// <summary>
@@ -79,7 +104,24 @@ internal sealed class WordCountingExecutor() : ReflectingExecutor<WordCountingEx
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+```python
+from agent_framework import (
+    Executor,
+    WorkflowContext,
+    handler,
+)
+
+class WordCountingExecutor(Executor):
+
+    @handler
+    async def handle(self, file_id: str, ctx: WorkflowContext[int]):
+        # Retrieve the file content from the shared state
+        file_content = await ctx.get_shared_state(file_id)
+        if file_content is None:
+            raise ValueError("File content state not found")
+
+        await ctx.send_message(len(file_content.split()))
+```
 
 ::: zone-end
 
