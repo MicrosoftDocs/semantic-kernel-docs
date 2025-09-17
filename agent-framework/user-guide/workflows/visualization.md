@@ -23,6 +23,9 @@ Coming soon...
 
 Workflow visualization is done via a `WorkflowViz` object that can be instantiated with a `Workflow` object. The `WorkflowViz` object can then generate visualizations in different formats, such as Graphviz DOT format or Mermaid diagram format.
 
+> [!TIP]
+> To export visualization images you also need to [install GraphViz](https://graphviz.org/download/).
+
 Creating a `WorkflowViz` object is straightforward:
 
 ```python
