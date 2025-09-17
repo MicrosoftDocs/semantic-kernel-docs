@@ -8,10 +8,10 @@ items:
   href: tutorials/TOC.yml
 - name: User Guide
   items:
-  - name: LLM Configuration
-    href: user-guide/llm-configuration.md
-  - name: Agent Observability
-    href: user-guide/agent-observability.md
+  - name: Agent Types
+    href: user-guide/agent-types.md
+  - name: Multiturn Conversation
+    href: user-guide/multi-turn-conversation.md
   - name: Workflows
     href: user-guide/workflows/TOC.yml
 - name: Additional Information
