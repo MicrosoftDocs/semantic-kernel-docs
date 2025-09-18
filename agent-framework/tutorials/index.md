@@ -17,3 +17,5 @@ ms.service: agent-framework
 - [Using function tools with an agent](./function-tools.md)
 - [Using function tools with human in the loop approvals](./function-tools-approvals.md)
 - [Producing Structured Output with agents](./structured-output.md)
+- [Persisting Conversations](./persisted-conversation.md)
+- [Adding telemetry to agents](./agent-telemetry.md)

@@ -93,3 +93,8 @@ Whenever you are using function tools with human in the loop approvals, remember
 Tutorial coming soon.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Producing Structured Output with agents](./structured-output.md)

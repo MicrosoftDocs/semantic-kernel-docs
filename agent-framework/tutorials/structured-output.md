@@ -72,9 +72,9 @@ This `ChatOptions` instance can be used when creating the agent.
 
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
-    new Uri(endpoint),
+    new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
-        .GetChatClient(deploymentName)
+        .GetChatClient("gpt-4o-mini")
         .CreateAIAgent(new ChatClientAgentOptions()
         {
             Name = "HelpfulAssistant",
@@ -110,3 +110,8 @@ personInfo = (await updates.ToAgentRunResponseAsync()).Deserialize<PersonInfo>(J
 Tutorial coming soon.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Persisting Conversations](./persisted-conversation.md)

@@ -57,8 +57,8 @@ using OpenAI;
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
-     .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+        .GetChatClient("gpt-4o-mini")
+        .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 ## Running the agent

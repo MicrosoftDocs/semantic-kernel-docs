@@ -60,3 +60,8 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 Tutorial coming soon.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Using function tools with human in the loop approvals](./function-tools-approvals.md)
