@@ -77,31 +77,39 @@ dotnet add package Microsoft.SemanticKernel.Connectors.PgVector --prerelease
 
 You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
 
-In this case, an instance of the `Npgsql.NpgsqlDataSource` class, which has vector capabilities enabled, will also be registered with the container.
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+
+var kernelBuilder = Kernel.CreateBuilder();
+kernelBuilder.Services.AddPostgresVectorStore("<Connection String>");
+```
+
+Where `<Connection String>` is a connection string to the Postgres instance, in the format that [Npgsql](https://www.npgsql.org/) expects, for example `Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres`.
+
+Extension methods that take no parameters are also provided. These require an instance of [NpgsqlDataSource](https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html) to be separately registered with the dependency injection container. Note that `UseVector` must be called on the builder to enable vector support via [pgvector-dotnet](https://github.com/pgvector/pgvector-dotnet?tab=readme-ov-file#npgsql-c):
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddPostgresVectorStore("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+builder.Services.AddPostgresVectorStore("<Connection String>");
 ```
-
-Extension methods that take no parameters are also provided. These require an instance of the `Npgsql.NpgsqlDataSource` class to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 using Npgsql;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<NpgsqlDataSource>(sp => 
 {
-    NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+    NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
     dataSourceBuilder.UseVector();
     return dataSourceBuilder.Build();
 });
-
 builder.Services.AddPostgresVectorStore();
 ```
 
@@ -111,17 +119,16 @@ You can construct a Postgres Vector Store instance directly with a custom data s
 using Microsoft.SemanticKernel.Connectors.PgVector;
 using Npgsql;
 
-NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
-var dataSource = dataSourceBuilder.Build();
-
-var connection = new PostgresVectorStore(dataSource, ownsDataSource: true);
+NpgsqlDataSource dataSource = dataSourceBuilder.Build();
+var vectorStore = new PostgresVectorStore(dataSource, ownsDataSource: true);
 ```
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.PgVector;
 
-var connection = new PostgresVectorStore("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+var connection = new PostgresVectorStore("<Connection String>");
 ```
 
 It is possible to construct a direct reference to a named collection with a custom data source or with a connection string.
@@ -130,7 +137,7 @@ It is possible to construct a direct reference to a named collection with a cust
 using Microsoft.SemanticKernel.Connectors.PgVector;
 using Npgsql;
 
-NpgsqlDataSourceBuilder dataSourceBuilder = new("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
 var dataSource = dataSourceBuilder.Build();
 
@@ -140,56 +147,419 @@ var collection = new PostgresCollection<string, Hotel>(dataSource, "skhotels", o
 ```csharp
 using Microsoft.SemanticKernel.Connectors.PgVector;
 
-var collection = new PostgresCollection<string, Hotel>("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;", "skhotels");
+var collection = new PostgresCollection<string, Hotel>("<Connection String>", "skhotels");
 ```
 
 ## Data mapping
 
-The Postgres Vector Store connector provides a default mapper when mapping from the data model to storage.
-This mapper does a direct conversion of the list of properties on the data model to the columns in Postgres.
+The Postgres connector provides a default mapper when mapping data from the data model to storage.
+The default mapper uses the model annotations or record definition to determine the type of each property and to map the model
+into a Dictionary that can be serialized to Postgres.
+
+- The data model property annotated as a key will be mapped to the PRIMARY KEY in the Postgres table.
+- The data model properties annotated as data will be mapped to a table column in Postgres.
+- The data model properties annotated as vectors will be mapped to a table column that has the pgvector `VECTOR` type in Postgres.
 
 ### Property name override
 
-You can provide override property names to use in storage that is different to the property names on the data model.
-The property name override is done by setting the `StorageName` option via the data model property attributes or record definition.
+You can provide override field names to use in storage that is different from the
+property names on the data model. This allows you to match table column names even
+if they don't match the property names on the data model.
 
-Here is an example of a data model with `StorageName` set on its attributes and how that will be represented in a Postgres command.
+The property name override is done by setting the `StorageName` option via the data model attributes or record definition.
+
+Here is an example of a data model with `StorageName` set on its attributes and how it will be represented in Postgres as a table, assuming the Collection name is `Hotels`.
 
 ```csharp
+using System;
 using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreKey]
+    [VectorStoreKey(StorageName = "hotel_id")]
     public int HotelId { get; set; }
 
     [VectorStoreData(StorageName = "hotel_name")]
-    public string? HotelName { get; set; }
+    public string HotelName { get; set; }
 
     [VectorStoreData(StorageName = "hotel_description")]
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
-    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw, StorageName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
 ```sql
-CREATE TABLE public."Hotels" (
-    "HotelId" INTEGER NOT NULL,
-    "hotel_name" TEXT ,
-    "hotel_description" TEXT ,
-    "DescriptionEmbedding" VECTOR(4) ,
-    PRIMARY KEY ("HotelId")
+CREATE TABLE IF NOT EXISTS public."Hotels" (
+    "hotel_id" INTEGER PRIMARY KEY NOT NULL,
+    hotel_name TEXT,
+    hotel_description TEXT,
+    hotel_description_embedding VECTOR(4)
 );
 ```
+
+## Vector indexing
+
+The `hotel_description_embedding` in the above `Hotel` model is a vector property with `IndexKind.HNSW` 
+indexing. This index will be created automatically when the collection is created. 
+HNSW is the only index type supported for index creation. IVFFlat index building requires that data already 
+exist in the table at index creation time, and so it is not appropriate for the creation of an empty table. 
+You are free to create and modify indexes on tables outside of the connector, which will 
+be used by the connector when performing queries.
+
+## Using with Entra Authentication
+
+Azure Database for PostgreSQL provides the ability to connect to your database using [Entra authentication](/azure/postgresql/flexible-server/concepts-azure-ad-authentication).
+This removes the need to store a username and password in your connection string.
+To use Entra authentication for an Azure DB for PostgreSQL database, you can use the following Npgsql extension method and set a connection string that does not have a username or password:
+
+```csharp
+using System.Text;
+using System.Text.Json;
+using Azure.Core;
+using Azure.Identity;
+using Npgsql;
+
+namespace Program;
+
+public static class NpgsqlDataSourceBuilderExtensions
+{
+    private static readonly TokenRequestContext s_azureDBForPostgresTokenRequestContext = new(["https://ossrdbms-aad.database.windows.net/.default"]);
+
+    public static NpgsqlDataSourceBuilder UseEntraAuthentication(this NpgsqlDataSourceBuilder dataSourceBuilder, TokenCredential? credential = default)
+    {
+        credential ??= new DefaultAzureCredential();
+
+        if (dataSourceBuilder.ConnectionStringBuilder.Username == null)
+        {
+            var token = credential.GetToken(s_azureDBForPostgresTokenRequestContext, default);
+            SetUsernameFromToken(dataSourceBuilder, token.Token);
+        }
+
+        SetPasswordProvider(dataSourceBuilder, credential, s_azureDBForPostgresTokenRequestContext);
+
+        return dataSourceBuilder;
+    }
+
+    public static async Task<NpgsqlDataSourceBuilder> UseEntraAuthenticationAsync(this NpgsqlDataSourceBuilder dataSourceBuilder, TokenCredential? credential = default, CancellationToken cancellationToken = default)
+    {
+        credential ??= new DefaultAzureCredential();
+
+        if (dataSourceBuilder.ConnectionStringBuilder.Username == null)
+        {
+            var token = await credential.GetTokenAsync(s_azureDBForPostgresTokenRequestContext, cancellationToken).ConfigureAwait(false);
+            SetUsernameFromToken(dataSourceBuilder, token.Token);
+        }
+
+        SetPasswordProvider(dataSourceBuilder, credential, s_azureDBForPostgresTokenRequestContext);
+
+        return dataSourceBuilder;
+    }
+
+    private static void SetPasswordProvider(NpgsqlDataSourceBuilder dataSourceBuilder, TokenCredential credential, TokenRequestContext tokenRequestContext)
+    {
+        dataSourceBuilder.UsePasswordProvider(_ =>
+        {
+            var token = credential.GetToken(tokenRequestContext, default);
+            return token.Token;
+        }, async (_, ct) =>
+        {
+            var token = await credential.GetTokenAsync(tokenRequestContext, ct).ConfigureAwait(false);
+            return token.Token;
+        });
+    }
+
+    private static void SetUsernameFromToken(NpgsqlDataSourceBuilder dataSourceBuilder, string token)
+    {
+        var username = TryGetUsernameFromToken(token);
+
+        if (username != null)
+        {
+            dataSourceBuilder.ConnectionStringBuilder.Username = username;
+        }
+        else
+        {
+            throw new Exception("Could not determine username from token claims");
+        }
+    }
+
+    private static string? TryGetUsernameFromToken(string jwtToken)
+    {
+        // Split the token into its parts (Header, Payload, Signature)
+        var tokenParts = jwtToken.Split('.');
+        if (tokenParts.Length != 3)
+        {
+            return null;
+        }
+
+        // The payload is the second part, Base64Url encoded
+        var payload = tokenParts[1];
+
+        // Add padding if necessary
+        payload = AddBase64Padding(payload);
+
+        // Decode the payload from Base64Url
+        var decodedBytes = Convert.FromBase64String(payload);
+        var decodedPayload = Encoding.UTF8.GetString(decodedBytes);
+
+        // Parse the decoded payload as JSON
+        var payloadJson = JsonSerializer.Deserialize<JsonElement>(decodedPayload);
+
+        // Try to get the username from 'upn', 'preferred_username', or 'unique_name' claims
+        if (payloadJson.TryGetProperty("upn", out var upn))
+        {
+            return upn.GetString();
+        }
+        else if (payloadJson.TryGetProperty("preferred_username", out var preferredUsername))
+        {
+            return preferredUsername.GetString();
+        }
+        else if (payloadJson.TryGetProperty("unique_name", out var uniqueName))
+        {
+            return uniqueName.GetString();
+        }
+
+        return null;
+    }
+
+    private static string AddBase64Padding(string base64) => (base64.Length % 4) switch
+    {
+        2 => base64 + "==",
+        3 => base64 + "=",
+        _ => base64,
+    };
+}
+```
+
+Now you can use the `UseEntraAuthentication` method to set up the connection string for the Postgres connector:
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.Postgres;
+
+var connectionString = "Host=mydb.postgres.database.azure.com;Port=5432;Database=postgres;SSL Mode=Require;";  // No Username or Password
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+dataSourceBuilder.UseEntraAuthentication();
+dataSourceBuilder.UseVector();
+var dataSource = dataSourceBuilder.Build();
+
+var vectorStore = new PostgresVectorStore(dataSource, ownsDataSource: true);
+```
+
+By default, the `UseEntraAuthentication` method uses the [DefaultAzureCredential](/dotnet/api/azure.identity.defaultazurecredential) to authenticate with Azure AD. You can also provide a custom `TokenCredential` implementation if needed.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## Getting started
 
-More info coming soon.
+Install semantic kernel with the Postgres extras, which includes the [Postgres client](https://github.com/Postgres/Postgres-client).
+
+```cli
+pip install semantic-kernel[postgres]
+```
+
+You can then create a vector store instance using the `PostgresStore` class.
+You can pass a `psycopg_pool` [AsyncConnectionPool](https://www.psycopg.org/psycopg3/docs/api/pool.html#psycopg_pool.AsyncConnectionPool) directly,
+or use the `PostgresSettings` to create a connection pool from environment variables.
+
+```python
+from semantic_kernel.connectors.postgres import PostgresStore, PostgresSettings
+
+settings = PostgresSettings()
+
+pool = await settings.create_connection_pool()
+async with pool:
+    vector_store = PostgresStore(connection_pool=pool)
+    ...
+```
+
+You can set `POSTGRES_CONNECTION_STRING` in your environment, or the environment variables `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`, and optionally `PGSSLMODE` as defined for [libpq](https://www.postgresql.org/docs/current/libpq-envars.html).
+These values will be used by the `PostgresSettings` class to create a connection pool.
+
+You can also create a collection directly. The Collection itself is a context manager, so you can use it in a `with` block. If you don't pass
+in a connection pool, the collection will create one using the `PostgresSettings` class.
+
+```python
+from semantic_kernel.connectors.postgres import PostgresCollection
+
+collection = PostgresCollection(collection_name="skhotels", record_type=Hotel)
+async with collection:  # This will create a connection pool using PostgresSettings
+    ...
+```
+
+## Data mapping
+
+The Postgres connector provides a default mapper when mapping data from the data model to storage.
+The default mapper uses the model annotations or record definition to determine the type of each property and to map the model
+into a `dict` that can be serialized to Postgres rows.
+
+- The data model property annotated as a key will be mapped to the PRIMARY KEY in the Postgres table.
+- The data model properties annotated as data will be mapped to a table column in Postgres.
+- The data model properties annotated as vectors will be mapped to a table column that has the pgvector `VECTOR` type in Postgres.
+
+```python
+from typing import Annotated
+from pydantic import BaseModel
+
+from semantic_kernel.connectors.postgres import PostgresCollection
+from semantic_kernel.data.vector import (
+    DistanceFunction,
+    IndexKind,
+    VectorStoreField,
+    vectorstoremodel,
+)
+
+@vectorstoremodel
+class Hotel(BaseModel):
+    hotel_id: Annotated[int, VectorStoreField("key")]
+    hotel_name: Annotated[str, VectorStoreField("data")]
+    hotel_description: Annotated[str, VectorStoreField("data")]
+    hotel_description_embedding: Annotated[
+        list[float] | None,
+        VectorStoreField(
+            "vector",
+            dimensions=4,
+            index_kind=IndexKind.HNSW,
+            distance_function=DistanceFunction.COSINE_SIMILARITY,
+        ),
+    ] = None
+
+collection = PostgresCollection(collection_name="Hotels", record_type=Hotel)
+
+async with collection:
+    await collection.ensure_collection_exists()
+```
+
+```sql
+CREATE TABLE IF NOT EXISTS public."Hotels" (
+    "hotel_id" INTEGER NOT NULL,
+    "hotel_name" TEXT,
+    "hotel_description" TEXT,
+    "hotel_description_embedding" VECTOR(4)
+    PRIMARY KEY ("hotel_id")
+);
+```
+
+
+## Vector indexing
+
+The `hotel_description_embedding` in the above `Hotel` model is a vector property with `IndexKind.HNSW` 
+indexing. This index will be created automatically when the collection is created. 
+HNSW is the only index type supported for index creation. IVFFlat index building requires that data already 
+exist in the table at index creation time, and so it is not appropriate for the creation of an empty table. 
+You are free to create and modify indexes on tables outside of the connector, which will 
+be used by the connector when performing queries.
+
+## Using with Entra Authentication
+
+Azure Database for PostgreSQL provides the ability to connect to your database using [Entra authentication](/azure/postgresql/flexible-server/concepts-azure-ad-authentication).
+This removes the need to store a username and password in your connection string.
+To use Entra authentication for an Azure DB for PostgreSQL database, you can use the following custom AsyncConnection class:
+
+```python
+import base64
+import json
+import logging
+from functools import lru_cache
+
+from azure.core.credentials import TokenCredential
+from azure.core.credentials_async import AsyncTokenCredential
+from azure.identity import DefaultAzureCredential
+from psycopg import AsyncConnection
+
+AZURE_DB_FOR_POSTGRES_SCOPE = "https://ossrdbms-aad.database.windows.net/.default"
+
+logger = logging.getLogger(__name__)
+
+async def get_entra_token_async(credential: AsyncTokenCredential) -> str:
+    """Get the password from Entra using the provided credential."""
+    logger.info("Acquiring Entra token for postgres password")
+
+    async with credential:
+        cred = await credential.get_token(AZURE_DB_FOR_POSTGRES_SCOPE)
+        return cred.token
+
+def get_entra_token(credential: TokenCredential | None) -> str:
+    """Get the password from Entra using the provided credential."""
+    logger.info("Acquiring Entra token for postgres password")
+    credential = credential or get_default_azure_credentials()
+
+    return credential.get_token(AZURE_DB_FOR_POSTGRES_SCOPE).token
+
+@lru_cache(maxsize=1)
+def get_default_azure_credentials() -> DefaultAzureCredential:
+    """Get the default Azure credentials.
+
+    This method caches the credentials to avoid creating new instances.
+    """
+    return DefaultAzureCredential()
+
+def decode_jwt(token):
+    """Decode the JWT payload to extract claims."""
+    payload = token.split(".")[1]
+    padding = "=" * (4 - len(payload) % 4)
+    decoded_payload = base64.urlsafe_b64decode(payload + padding)
+    return json.loads(decoded_payload)
+
+async def get_entra_conninfo(credential: TokenCredential | AsyncTokenCredential | None) -> dict[str, str]:
+    """Fetches a token returns the username and token."""
+    # Fetch a new token and extract the username
+    if isinstance(credential, AsyncTokenCredential):
+        token = await get_entra_token_async(credential)
+    else:
+        token = get_entra_token(credential)
+    claims = decode_jwt(token)
+    username = claims.get("upn") or claims.get("preferred_username") or claims.get("unique_name")
+    if not username:
+        raise ValueError("Could not extract username from token. Have you logged in?")
+
+    return {"user": username, "password": token}
+
+class AsyncEntraConnection(AsyncConnection):
+    """Asynchronous connection class for using Entra auth with Azure DB for PostgreSQL."""
+
+    @classmethod
+    async def connect(cls, *args, **kwargs):
+        """Establish an asynchronous connection using Entra auth with Azure DB for PostgreSQL."""
+        credential = kwargs.pop("credential", None)
+        if credential and not isinstance(credential, (TokenCredential, AsyncTokenCredential)):
+            raise ValueError("credential must be a TokenCredential or AsyncTokenCredential")
+        if not kwargs.get("user") or not kwargs.get("password"):
+            credential = credential or get_default_azure_credentials()
+            entra_conninfo = await get_entra_conninfo(credential)
+            if kwargs.get("user"):
+                entra_conninfo.pop("user", None)
+            kwargs.update(entra_conninfo)
+        return await super().connect(*args, **kwargs)
+```
+
+You can use the custom connection class with the `PostgresSettings.get_connection_pool` method to create a connection pool.
+
+```python
+from semantic_kernel.connectors.postgres import PostgresSettings, PostgresStore
+
+
+pool = await PostgresSettings().create_connection_pool(connection_class=AsyncEntraConnection)
+async with pool:
+    vector_store = PostgresStore(connection_pool=pool)
+    ...
+```
+
+By default, the `AsyncEntraConnection` class uses the [DefaultAzureCredential](/python/api/azure-identity/azure.identity.defaultazurecredential) to authenticate with Azure AD. 
+You can also provide another `TokenCredential` in the kwargs if needed:
+
+```python
+from azure.identity import ManagedIdentityCredential
+
+
+pool = await PostgresSettings().create_connection_pool(
+    connection_class=AsyncEntraConnection, credential=ManagedIdentityCredential()
+)
+async with pool:
+    vector_store = PostgresStore(connection_pool=pool)
+    ...
+```
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
