@@ -20,7 +20,7 @@ productDirectory:
     - title: Getting Started
       imageSrc: /agent-framework/media/Getting-started.svg
       links:
-        - url: /agent-framework/overview/index
+        - url: /agent-framework/overview/agent-framework-overview
           text: Introduction to Agent Framework
     - title: Quick Start
       imageSrc: /agent-framework/media/Quick-start.svg
