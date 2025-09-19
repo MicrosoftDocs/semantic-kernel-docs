@@ -5,7 +5,7 @@ author: markwallace
 ms.topic: reference
 ms.author: markwallace
 ms.date: 09/15/2015
-ms.service: agent-framework
+ms.service: semantic-kernel
 ---
 
 # Introduction to Agent Framework
