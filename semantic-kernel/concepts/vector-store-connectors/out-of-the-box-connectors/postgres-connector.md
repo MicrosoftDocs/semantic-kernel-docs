@@ -90,16 +90,27 @@ Extension methods that take no parameters are also provided. These require an in
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
+
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddPostgresVectorStore("<Connection String>");
+```
+
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 using Npgsql;
 
-var kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.Services.AddSingleton<NpgsqlDataSource>(sp => 
+// Using IServiceCollection with ASP.NET Core.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<NpgsqlDataSource>(sp => 
 {
     NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
     dataSourceBuilder.UseVector();
     return dataSourceBuilder.Build();
 });
-kernelBuilder.Services.AddPostgresVectorStore();
+builder.Services.AddPostgresVectorStore();
 ```
 
 You can construct a Postgres Vector Store instance directly with a custom data source or with a connection string.
@@ -110,14 +121,14 @@ using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
-using NpgsqlDataSource dataSource = dataSourceBuilder.Build();
-var vectorStore = new PostgresVectorStore(dataSource);
+NpgsqlDataSource dataSource = dataSourceBuilder.Build();
+var vectorStore = new PostgresVectorStore(dataSource, ownsDataSource: true);
 ```
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.PgVector;
 
-var connection = new PostgresVectorStore("Host=localhost;Port=5432;Username=postgres;Password=example;Database=postgres;");
+var connection = new PostgresVectorStore("<Connection String>");
 ```
 
 It is possible to construct a direct reference to a named collection with a custom data source or with a connection string.
@@ -128,8 +139,15 @@ using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
-using NpgsqlDataSource dataSource = dataSourceBuilder.Build();
-var collection = new PostgresVectorStoreRecordCollection<int, Hotel>(dataSource, "skhotels");
+var dataSource = dataSourceBuilder.Build();
+
+var collection = new PostgresCollection<string, Hotel>(dataSource, "skhotels", ownsDataSource: true);
+```
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.PgVector;
+
+var collection = new PostgresCollection<string, Hotel>("<Connection String>", "skhotels");
 ```
 
 ## Data mapping
@@ -158,16 +176,16 @@ using Microsoft.Extensions.VectorData;
 
 public class Hotel
 {
-    [VectorStoreRecordKey(StorageName = "hotel_id")]
+    [VectorStoreKey(StorageName = "hotel_id")]
     public int HotelId { get; set; }
 
-    [VectorStoreRecordData(StorageName = "hotel_name")]
+    [VectorStoreData(StorageName = "hotel_name")]
     public string HotelName { get; set; }
 
-    [VectorStoreRecordData(StorageName = "hotel_description")]
+    [VectorStoreData(StorageName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction: DistanceFunction.CosineDistance, IndexKind: IndexKind.Hnsw, StorageName = "hotel_description_embedding")]
+    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw, StorageName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -323,9 +341,9 @@ var connectionString = "Host=mydb.postgres.database.azure.com;Port=5432;Database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 dataSourceBuilder.UseEntraAuthentication();
 dataSourceBuilder.UseVector();
-using var dataSource = dataSourceBuilder.Build();
+var dataSource = dataSourceBuilder.Build();
 
-var vectorStore = new PostgresVectorStore(dataSource);
+var vectorStore = new PostgresVectorStore(dataSource, ownsDataSource: true);
 ```
 
 By default, the `UseEntraAuthentication` method uses the [DefaultAzureCredential](/dotnet/api/azure.identity.defaultazurecredential) to authenticate with Azure AD. You can also provide a custom `TokenCredential` implementation if needed.
