@@ -26,19 +26,82 @@ Concurrent orchestration enables multiple agents to work on the same task in par
 
 ::: zone pivot="programming-language-csharp"
 
+In concurrent orchestration, multiple agents work on the same task simultaneously. Here's how to create translation agents that work concurrently:
+
 ```csharp
-// Define the agents
-ChatClientAgent physicist =
-    this.CreateAgent(
-        instructions: "You are an expert in physics. You answer questions from a physics perspective.",
-        description: "An expert in physics");
-ChatClientAgent chemist =
-    this.CreateAgent(
-        instructions: "You are an expert in chemistry. You answer questions from a chemistry perspective.",
-        description: "An expert in chemistry");
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.Workflows;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.AI.Agents;
+
+// Set up the Azure OpenAI client
+var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
+    throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
+var client = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
+    .GetChatClient(deploymentName)
+    .AsIChatClient();
+
+// Create translation agents for concurrent processing
+var translationAgents = (from lang in (string[])["French", "Spanish", "English"]
+                         select GetTranslationAgent(lang, client));
+
+// Build concurrent workflow
+var workflow = AgentWorkflowBuilder.BuildConcurrent(translationAgents);
+
+// Run the workflow
+var messages = new List<ChatMessage> { new(ChatRole.User, "Hello, world!") };
+var result = await RunWorkflowAsync(workflow, messages);
+
+// Helper method to create translation agents
+static ChatClientAgent GetTranslationAgent(string targetLanguage, IChatClient chatClient) =>
+    new(chatClient,
+        $"You are a translation assistant who only responds in {targetLanguage}. Respond to any " +
+        $"input by outputting the name of the input language and then translating the input to {targetLanguage}.");
+
+// Helper method to run workflow and handle events
+static async Task<List<ChatMessage>> RunWorkflowAsync(
+    Workflow<List<ChatMessage>> workflow,
+    List<ChatMessage> messages)
+{
+    StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
+    await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+
+    await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+    {
+        if (evt is AgentRunUpdateEvent e)
+        {
+            Console.WriteLine($"{e.ExecutorId}: {e.Data}");
+        }
+        else if (evt is WorkflowCompletedEvent completed)
+        {
+            return (List<ChatMessage>)completed.Data!;
+        }
+    }
+
+    return new List<ChatMessage>();
+}
 ```
 
-More coming soon...
+## Key Features
+
+- **AgentWorkflowBuilder.BuildConcurrent()**: Creates a concurrent workflow from a collection of agents
+- **Parallel Execution**: All agents process the input simultaneously
+- **Automatic Aggregation**: Results from all agents are automatically collected
+- **Event Streaming**: Real-time monitoring of agent progress through `AgentRunUpdateEvent`
+
+## Sample Output
+
+```plaintext
+French_Agent: English detected. Bonjour, le monde !
+Spanish_Agent: English detected. ¡Hola, mundo!
+English_Agent: English detected. Hello, world!
+```
 
 ::: zone-end
 
