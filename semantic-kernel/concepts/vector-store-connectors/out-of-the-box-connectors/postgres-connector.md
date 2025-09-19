@@ -428,7 +428,7 @@ class Hotel(BaseModel):
 collection = PostgresCollection(collection_name="Hotels", record_type=Hotel)
 
 async with collection:
-    await collection.create_collection_if_not_exists()
+    await collection.ensure_collection_exists()
 ```
 
 ```sql
