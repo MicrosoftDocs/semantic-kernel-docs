@@ -61,7 +61,7 @@ pip install semantic-kernel[chroma]
 You can then create the vector store.
 
 ```python
-from semantic_kernel.connectors.memory.chroma import ChromaStore
+from semantic_kernel.connectors.chroma import ChromaStore
 
 store = ChromaStore()
 ```
@@ -70,7 +70,7 @@ Alternatively, you can also pass in your own mongodb client if you want to have 
 
 ```python
 from chromadb import Client
-from semantic_kernel.connectors.memory.chroma import ChromaStore
+from semantic_kernel.connectors.chroma import ChromaStore
 
 client = Client(...)
 store = ChromaStore(client=client)
@@ -79,12 +79,12 @@ store = ChromaStore(client=client)
 You can also create a collection directly, without the store.
 
 ```python
-from semantic_kernel.connectors.memory.chroma import ChromaCollection
+from semantic_kernel.connectors.chroma import ChromaCollection
 
 # `hotel` is a class created with the @vectorstoremodel decorator
 collection = ChromaCollection(
+    record_type=hotel,
     collection_name="my_collection",
-    data_model_type=hotel
 )
 ```
 

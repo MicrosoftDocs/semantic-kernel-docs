@@ -94,7 +94,7 @@ AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=""
 Set the appropriate variable depending on which provider you're using.
 
 > [!TIP]
-> The minimum allowed Azure OpenAI api version is `2025-03-01-preview`. Please visit the following [link](azure/ai-services/openai/how-to/responses) to view region availability, model support, and further details.
+> The minimum allowed Azure OpenAI api version is `2025-03-01-preview`. Please visit the following [link](/azure/ai-services/openai/how-to/responses) to view region availability, model support, and further details.
 
 To create an `AzureResponsesAgent` to use with Azure OpenAI models:
 

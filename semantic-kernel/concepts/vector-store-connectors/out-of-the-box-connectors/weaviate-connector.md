@@ -252,7 +252,7 @@ If you want to use embedded:
 These should be set exclusively, so only one set of the above is present, otherwise it will raise an exception.
 
 ```python
-from semantic_kernel.connectors.memory.weaviate import WeaviateStore
+from semantic_kernel.connectors.weaviate import WeaviateStore
 
 store = WeaviateStore()
 ```
@@ -261,7 +261,7 @@ Alternatively, you can also pass in your own mongodb client if you want to have 
 
 ```python
 import weaviate
-from semantic_kernel.connectors.memory.weaviate import WeaviateStore
+from semantic_kernel.connectors.weaviate import WeaviateStore
 
 client = weaviate.WeaviateAsyncClient(...)
 store = WeaviateStore(async_client=client)
@@ -270,12 +270,12 @@ store = WeaviateStore(async_client=client)
 You can also create a collection directly, without the store.
 
 ```python
-from semantic_kernel.connectors.memory.weaviate import WeaviateCollection
+from semantic_kernel.connectors.weaviate import WeaviateCollection
 
 # `hotel` is a class created with the @vectorstoremodel decorator
 collection = WeaviateCollection(
     collection_name="my_collection",
-    data_model_type=hotel
+    record_type=hotel
 )
 ```
 
