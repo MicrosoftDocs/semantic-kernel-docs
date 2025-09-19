@@ -17,6 +17,13 @@ In sequential orchestration, agents are organized in a pipeline. Each agent proc
 
 ## What You'll Learn
 
+- How to create a sequential pipeline of agents
+- How to chain agents where each builds upon the previous output
+- How to mix agents with custom executors for specialized tasks
+- How to track the conversation flow through the pipeline
+
+## Define Your Agents
+
 ::: zone pivot="programming-language-csharp"
 
 Coming soon...
@@ -25,6 +32,154 @@ Coming soon...
 
 ::: zone pivot="programming-language-python"
 
-Coming soon...
+In sequential orchestration, each agent processes the task in turn, with output flowing from one to the next. Let's start by defining agents for a two-stage process:
+
+```python
+from agent_framework.azure import AzureChatClient
+from azure.identity import AzureCliCredential
+
+# 1) Create agents using AzureChatClient
+chat_client = AzureChatClient(credential=AzureCliCredential())
+
+writer = chat_client.create_agent(
+    instructions=(
+        "You are a concise copywriter. Provide a single, punchy marketing sentence based on the prompt."
+    ),
+    name="writer",
+)
+
+reviewer = chat_client.create_agent(
+    instructions=(
+        "You are a thoughtful reviewer. Give brief feedback on the previous assistant message."
+    ),
+    name="reviewer",
+)
+```
+
+## Set Up the Sequential Orchestration
+
+The `SequentialBuilder` class creates a pipeline where agents process tasks in order. Each agent sees the full conversation history and adds their response:
+
+```python
+from agent_framework import SequentialBuilder
+
+# 2) Build sequential workflow: writer -> reviewer
+workflow = SequentialBuilder().participants([writer, reviewer]).build()
+```
+
+## Run the Sequential Workflow
+
+Execute the workflow and collect the final conversation showing each agent's contribution:
+
+```python
+from agent_framework import ChatMessage, WorkflowCompletedEvent
+
+# 3) Run and print final conversation
+completion: WorkflowCompletedEvent | None = None
+async for event in workflow.run_stream("Write a tagline for a budget-friendly eBike."):
+    if isinstance(event, WorkflowCompletedEvent):
+        completion = event
+
+if completion:
+    print("===== Final Conversation =====")
+    messages: list[ChatMessage] | Any = completion.data
+    for i, msg in enumerate(messages, start=1):
+        name = msg.author_name or ("assistant" if msg.role == Role.ASSISTANT else "user")
+        print(f"{'-' * 60}\n{i:02d} [{name}]\n{msg.text}")
+```
+
+## Sample Output
+
+```plaintext
+===== Final Conversation =====
+------------------------------------------------------------
+01 [user]
+Write a tagline for a budget-friendly eBike.
+------------------------------------------------------------
+02 [writer]
+Ride farther, spend less—your affordable eBike adventure starts here.
+------------------------------------------------------------
+03 [reviewer]
+This tagline clearly communicates affordability and the benefit of extended travel, making it
+appealing to budget-conscious consumers. It has a friendly and motivating tone, though it could
+be slightly shorter for more punch. Overall, a strong and effective suggestion!
+```
+
+## Advanced: Mixing Agents with Custom Executors
+
+Sequential orchestration supports mixing agents with custom executors for specialized processing. This is useful when you need custom logic that doesn't require an LLM:
+
+### Define a Custom Executor
+
+```python
+from agent_framework import Executor, WorkflowContext, handler
+from agent_framework import ChatMessage, Role
+
+class Summarizer(Executor):
+    """Simple summarizer: consumes full conversation and appends an assistant summary."""
+
+    @handler
+    async def summarize(
+        self,
+        conversation: list[ChatMessage],
+        ctx: WorkflowContext[list[ChatMessage]]
+    ) -> None:
+        users = sum(1 for m in conversation if m.role == Role.USER)
+        assistants = sum(1 for m in conversation if m.role == Role.ASSISTANT)
+        summary = ChatMessage(
+            role=Role.ASSISTANT,
+            text=f"Summary -> users:{users} assistants:{assistants}"
+        )
+        await ctx.send_message(list(conversation) + [summary])
+```
+
+### Build a Mixed Sequential Workflow
+
+```python
+# Create a content agent
+content = chat_client.create_agent(
+    instructions="Produce a concise paragraph answering the user's request.",
+    name="content",
+)
+
+# Build sequential workflow: content -> summarizer
+summarizer = Summarizer(id="summarizer")
+workflow = SequentialBuilder().participants([content, summarizer]).build()
+```
+
+### Sample Output with Custom Executor
+
+```plaintext
+------------------------------------------------------------
+01 [user]
+Explain the benefits of budget eBikes for commuters.
+------------------------------------------------------------
+02 [content]
+Budget eBikes offer commuters an affordable, eco-friendly alternative to cars and public transport.
+Their electric assistance reduces physical strain and allows riders to cover longer distances quickly,
+minimizing travel time and fatigue. Budget models are low-cost to maintain and operate, making them accessible
+for a wider range of people. Additionally, eBikes help reduce traffic congestion and carbon emissions,
+supporting greener urban environments. Overall, budget eBikes provide cost-effective, efficient, and
+sustainable transportation for daily commuting needs.
+------------------------------------------------------------
+03 [assistant]
+Summary -> users:1 assistants:1
+```
+
+## Key Concepts
+
+- **Shared Context**: Each participant receives the full conversation history, including all previous messages
+- **Order Matters**: Agents execute strictly in the order specified in the `participants()` list
+- **Flexible Participants**: You can mix agents and custom executors in any order
+- **Conversation Flow**: Each agent/executor appends to the conversation, building a complete dialogue
+
+## Notes on Internal Adapters
+
+Sequential orchestration includes small adapter nodes for input normalization ("input-conversation"), agent-response conversion ("to-conversation:<participant>"), and completion ("complete"). These may appear as ExecutorInvoke/Completed events in the stream but can be safely ignored when focusing on agent progress.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Magentic Orchestration](./magentic.md)
