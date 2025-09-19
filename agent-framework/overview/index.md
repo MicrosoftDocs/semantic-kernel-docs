@@ -9,12 +9,16 @@ ms.service: agent-framework
 ---
 
 # Introduction to Agent Framework
+
 The Microsoft Agent Framework is a lightweight, open-source development kit that lets you easily build **AI agents** and **multi-agent workflows**.
 
 There are two concepts that will be introduced here:
 
 1. [AI Agents](#ai-agents)
 1. [Multi-Agent Workflows](#multi-agent-workflows)
+
+> [!IMPORTANT]
+> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications. 
 
 ## AI Agents
 
