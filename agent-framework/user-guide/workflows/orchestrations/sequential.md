@@ -173,10 +173,6 @@ Summary -> users:1 assistants:1
 - **Flexible Participants**: You can mix agents and custom executors in any order
 - **Conversation Flow**: Each agent/executor appends to the conversation, building a complete dialogue
 
-## Notes on Internal Adapters
-
-Sequential orchestration includes small adapter nodes for input normalization ("input-conversation"), agent-response conversion ("to-conversation:<participant>"), and completion ("complete"). These may appear as ExecutorInvoke/Completed events in the stream but can be safely ignored when focusing on agent progress.
-
 ::: zone-end
 
 ## Next steps
