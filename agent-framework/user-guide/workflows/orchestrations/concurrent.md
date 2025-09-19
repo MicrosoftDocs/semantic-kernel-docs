@@ -44,6 +44,8 @@ More coming soon...
 
 ::: zone pivot="programming-language-python"
 
+Agents are specialized entities that can process tasks. Here, we define three agents: a research expert, a marketing expert, and a legal expert.
+
 ```python
 from agent_framework.azure import AzureChatClient
 
@@ -77,7 +79,7 @@ legal = chat_client.create_agent(
 
 ## Set Up the Concurrent Orchestration
 
-The ConcurrentBuilder class allows you to construct a workflow to run multiple agents in parallel. You pass the list of agents as participants.
+The `ConcurrentBuilder` class allows you to construct a workflow to run multiple agents in parallel. You pass the list of agents as participants.
 
 ```python
 from agent_framework import ConcurrentBuilder
@@ -162,3 +164,8 @@ Sample Output:
 ```
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Sequential Orchestration](./sequential.md)
