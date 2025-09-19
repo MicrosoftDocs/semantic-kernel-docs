@@ -34,7 +34,9 @@ While agent-as-tools is commonly considered as a multi-agent pattern and it may 
 
 ::: zone pivot="programming-language-csharp"
 
-In handoff orchestration, agents can transfer control to one another based on context. Here's how to create specialized agents and configure handoff rules:
+In handoff orchestration, agents can transfer control to one another based on context, allowing for dynamic routing and specialized expertise handling.
+
+## Set Up the Azure OpenAI Client
 
 ```csharp
 using System;
@@ -46,15 +48,21 @@ using Microsoft.Agents.Workflows;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.AI.Agents;
 
-// Set up the Azure OpenAI client
+// 1) Set up the Azure OpenAI client
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
     throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 var client = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
     .GetChatClient(deploymentName)
     .AsIChatClient();
+```
 
-// Create specialized agents
+## Define Your Specialized Agents
+
+Create domain-specific agents and a triage agent for routing:
+
+```csharp
+// 2) Create specialized agents
 ChatClientAgent historyTutor = new(client,
     "You provide assistance with historical queries. Explain important events and context clearly. Only respond about history.",
     "history_tutor",
@@ -73,10 +81,10 @@ ChatClientAgent triageAgent = new(client,
 
 ## Configure Handoff Rules
 
-Use `AgentWorkflowBuilder` to define which agents can hand off to which other agents:
+Define which agents can hand off to which other agents:
 
 ```csharp
-// Build handoff workflow with routing rules
+// 3) Build handoff workflow with routing rules
 var workflow = AgentWorkflowBuilder.StartHandoffWith(triageAgent)
     .WithHandoff(triageAgent, [mathTutor, historyTutor])  // Triage can route to either specialist
     .WithHandoff(mathTutor, triageAgent)                 // Math tutor can return to triage
@@ -86,9 +94,10 @@ var workflow = AgentWorkflowBuilder.StartHandoffWith(triageAgent)
 
 ## Run Interactive Handoff Workflow
 
-Handle multi-turn conversations where agents can dynamically hand off control:
+Handle multi-turn conversations with dynamic agent switching:
 
 ```csharp
+// 4) Process multi-turn conversations
 List<ChatMessage> messages = new();
 
 while (true)
@@ -97,19 +106,11 @@ while (true)
     string userInput = Console.ReadLine()!;
     messages.Add(new(ChatRole.User, userInput));
 
-    // Process the conversation through the handoff workflow
-    var result = await RunWorkflowAsync(workflow, messages);
-    messages.AddRange(result);
-}
-
-// Helper method to run workflow and handle events
-static async Task<List<ChatMessage>> RunWorkflowAsync(
-    Workflow<List<ChatMessage>> workflow,
-    List<ChatMessage> messages)
-{
+    // Execute workflow and process events
     StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
     await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
+    List<ChatMessage> newMessages = new();
     await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
     {
         if (evt is AgentRunUpdateEvent e)
@@ -118,37 +119,40 @@ static async Task<List<ChatMessage>> RunWorkflowAsync(
         }
         else if (evt is WorkflowCompletedEvent completed)
         {
-            return (List<ChatMessage>)completed.Data!;
+            newMessages = (List<ChatMessage>)completed.Data!;
+            break;
         }
     }
 
-    return new List<ChatMessage>();
+    // Add new messages to conversation history
+    messages.AddRange(newMessages.Skip(messages.Count));
 }
 ```
-
-## Key Features
-
-- **AgentWorkflowBuilder.StartHandoffWith()**: Defines the initial agent for the workflow
-- **WithHandoff()**: Configures handoff rules between agents
-- **Dynamic Routing**: Agents can decide which agent should handle the next interaction
-- **Context Preservation**: Full conversation history is maintained across handoffs
-- **Multi-turn Support**: Supports ongoing conversations with agent switching
 
 ## Sample Interaction
 
 ```plaintext
 Q: What is the derivative of x^2?
 triage_agent: This is a math question. I'll hand this off to the math tutor.
-math_tutor: The derivative of x^2 is 2x. Using the power rule, we bring down the exponent...
+math_tutor: The derivative of x^2 is 2x. Using the power rule, we bring down the exponent (2) and multiply it by the coefficient (1), then reduce the exponent by 1: d/dx(x^2) = 2x^(2-1) = 2x.
 
 Q: Tell me about World War 2
 triage_agent: This is a history question. I'll hand this off to the history tutor.
-history_tutor: World War 2 was a global conflict from 1939 to 1945...
+history_tutor: World War 2 was a global conflict from 1939 to 1945. It began when Germany invaded Poland and involved most of the world's nations. Key events included the Holocaust, Pearl Harbor attack, D-Day invasion, and ended with atomic bombs on Japan.
 
 Q: Can you help me with calculus integration?
 triage_agent: This is another math question. I'll route this to the math tutor.
-math_tutor: I'd be happy to help with calculus integration...
+math_tutor: I'd be happy to help with calculus integration! Integration is the reverse of differentiation. The basic power rule for integration is: ∫x^n dx = x^(n+1)/(n+1) + C, where C is the constant of integration.
 ```
+
+## Key Concepts
+
+- **Dynamic Routing**: Agents can decide which agent should handle the next interaction based on context
+- **AgentWorkflowBuilder.StartHandoffWith()**: Defines the initial agent that starts the workflow
+- **WithHandoff()**: Configures handoff rules between specific agents
+- **Context Preservation**: Full conversation history is maintained across all handoffs
+- **Multi-turn Support**: Supports ongoing conversations with seamless agent switching
+- **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
 
 ::: zone-end
 

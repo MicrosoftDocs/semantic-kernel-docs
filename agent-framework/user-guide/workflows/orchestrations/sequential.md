@@ -26,7 +26,9 @@ In sequential orchestration, agents are organized in a pipeline. Each agent proc
 
 ::: zone pivot="programming-language-csharp"
 
-In sequential orchestration, agents are organized in a pipeline where each agent processes the task in turn. Here's how to create translation agents that work sequentially:
+In sequential orchestration, agents are organized in a pipeline where each agent processes the task in turn, passing output to the next agent in the sequence.
+
+## Set Up the Azure OpenAI Client
 
 ```csharp
 using System;
@@ -39,61 +41,88 @@ using Microsoft.Agents.Workflows;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.AI.Agents;
 
-// Set up the Azure OpenAI client
+// 1) Set up the Azure OpenAI client
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
     throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 var client = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
     .GetChatClient(deploymentName)
     .AsIChatClient();
+```
 
-// Create translation agents for sequential processing
-var translationAgents = (from lang in (string[])["French", "Spanish", "English"]
-                         select GetTranslationAgent(lang, client));
+## Define Your Agents
 
-// Build sequential workflow
-var workflow = AgentWorkflowBuilder.BuildSequential(translationAgents);
+Create specialized agents that will work in sequence:
 
-// Run the workflow
-var messages = new List<ChatMessage> { new(ChatRole.User, "Hello, world!") };
-var result = await RunWorkflowAsync(workflow, messages);
-
-// Helper method to create translation agents
+```csharp
+// 2) Helper method to create translation agents
 static ChatClientAgent GetTranslationAgent(string targetLanguage, IChatClient chatClient) =>
     new(chatClient,
         $"You are a translation assistant who only responds in {targetLanguage}. Respond to any " +
         $"input by outputting the name of the input language and then translating the input to {targetLanguage}.");
 
-// Helper method to run workflow and handle events
-static async Task<List<ChatMessage>> RunWorkflowAsync(
-    Workflow<List<ChatMessage>> workflow,
-    List<ChatMessage> messages)
+// Create translation agents for sequential processing
+var translationAgents = (from lang in (string[])["French", "Spanish", "English"]
+                         select GetTranslationAgent(lang, client));
+```
+
+## Set Up the Sequential Orchestration
+
+Build the workflow using `AgentWorkflowBuilder`:
+
+```csharp
+// 3) Build sequential workflow
+var workflow = AgentWorkflowBuilder.BuildSequential(translationAgents);
+```
+
+## Run the Sequential Workflow
+
+Execute the workflow and process the events:
+
+```csharp
+// 4) Run the workflow
+var messages = new List<ChatMessage> { new(ChatRole.User, "Hello, world!") };
+
+StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
+await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+
+List<ChatMessage> result = new();
+await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
-    await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
-
-    await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+    if (evt is AgentRunUpdateEvent e)
     {
-        if (evt is AgentRunUpdateEvent e)
-        {
-            Console.WriteLine($"{e.ExecutorId}: {e.Data}");
-        }
-        else if (evt is WorkflowCompletedEvent completed)
-        {
-            return (List<ChatMessage>)completed.Data!;
-        }
+        Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
+    else if (evt is WorkflowCompletedEvent completed)
+    {
+        result = (List<ChatMessage>)completed.Data!;
+        break;
+    }
+}
 
-    return new List<ChatMessage>();
+// Display final result
+foreach (var message in result)
+{
+    Console.WriteLine($"{message.Role}: {message.Content}");
 }
 ```
 
-## Key Features
+## Sample Output
 
-- **AgentWorkflowBuilder.BuildSequential()**: Creates a sequential workflow from a collection of agents
-- **ChatClientAgent**: Represents an agent backed by a chat client
-- **StreamingRun**: Provides real-time execution with event streaming
-- **WorkflowEvent handling**: Monitor agent progress and completion
+```plaintext
+French_Translation: User: Hello, world!
+French_Translation: Assistant: English detected. Bonjour, le monde !
+Spanish_Translation: Assistant: French detected. ¡Hola, mundo!
+English_Translation: Assistant: Spanish detected. Hello, world!
+```
+
+## Key Concepts
+
+- **Sequential Processing**: Each agent processes the output of the previous agent in order
+- **AgentWorkflowBuilder.BuildSequential()**: Creates a pipeline workflow from a collection of agents
+- **ChatClientAgent**: Represents an agent backed by a chat client with specific instructions
+- **StreamingRun**: Provides real-time execution with event streaming capabilities
+- **Event Handling**: Monitor agent progress through `AgentRunUpdateEvent` and completion through `WorkflowCompletedEvent`
 
 ::: zone-end
 
