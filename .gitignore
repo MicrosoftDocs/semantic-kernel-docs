@@ -8,3 +8,8 @@ _repo.*/
 .openpublishing.buildcore.ps1
 .DS_Store
 /.vs
+
+# AI
+
+.claude/
+WARP.md
