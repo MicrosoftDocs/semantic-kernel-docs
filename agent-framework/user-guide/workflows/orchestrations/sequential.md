@@ -50,8 +50,6 @@ var client = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
     .AsIChatClient();
 ```
 
-## Define Your Agents
-
 Create specialized agents that will work in sequence:
 
 ```csharp

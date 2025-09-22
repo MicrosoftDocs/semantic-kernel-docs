@@ -30,8 +30,6 @@ While agent-as-tools is commonly considered as a multi-agent pattern and it may 
 - How to build interactive workflows with dynamic agent routing
 - How to handle multi-turn conversations with agent switching
 
-## Define Your Specialized Agents
-
 ::: zone pivot="programming-language-csharp"
 
 In handoff orchestration, agents can transfer control to one another based on context, allowing for dynamic routing and specialized expertise handling.

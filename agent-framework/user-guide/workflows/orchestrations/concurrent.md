@@ -22,8 +22,6 @@ Concurrent orchestration enables multiple agents to work on the same task in par
 - How to orchestrate these agents to work concurrently on a single task
 - How to collect and process the results
 
-## Define Your Agents
-
 ::: zone pivot="programming-language-csharp"
 
 In concurrent orchestration, multiple agents work on the same task simultaneously and independently, providing diverse perspectives on the same input.
