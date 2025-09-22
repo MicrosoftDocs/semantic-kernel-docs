@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/src/agent-framework/**)"
-    ],
-    "deny": [],
-    "ask": []
-  }
-}
