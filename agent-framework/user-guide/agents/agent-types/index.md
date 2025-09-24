@@ -17,12 +17,10 @@ The Microsoft Agent Framework provides support for several types of agents to ac
 
 All agents are derived from a common base class, `AIAgent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
 
-Let's dive into each agent type in more detail.
+> [!IMPORTANT]
+> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications.
 
 ::: zone pivot="programming-language-csharp"
-
-> [!IMPORTANT]
-> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications. 
 
 ## Simple agents based on inference services
 
@@ -38,12 +36,24 @@ These agents support a wide range of functionality out of the box:
 
 To create one of these agents, simply construct a `ChatClientAgent` using the ChatClient implementation of your choice.
 
-
 ```csharp
 using Microsoft.Extensions.AI;
 
 var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful assistant");
 ```
+
+For detailed documentation, see:
+
+|Underlying Inference Service|Description|Service Chat History storage supported|External Chat History storage supported|
+|---|---|---|---|
+|[Azure AI Foundry Agent](./foundry-agent.md)|An agent class that uses the Azure AI Foundry Agents Service as it's backend.|Yes|No|
+|[Azure OpenAI ChatCompletion](./azure-openai-chatcompletion-agent.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
+|[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
+|[OpenAI ChatCompletion](./openai-chatcompletion-agent.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
+|[OpenAI Responses](./openai-responses-agent.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
+|[OpenAI Assistants](./openai-assistants-agent.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
+|Ollama|An agent that uses the Ollama service.|Yes|No|
+|Any other ChatClient|You can also use any other ChatClient implementation to create a ChatClientAgent.|Varies|Varies|
 
 ## Complex custom agents
 
@@ -58,7 +68,6 @@ such as A2A.
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
-
 
 ## Simple agents based on inference services
 
@@ -103,6 +112,7 @@ async with AzureCliCredential() as credential:
 ```
 
 For detailed examples, see:
+
 - [Basic Foundry agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_basic.py)
 - [Foundry with explicit settings](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_explicit_settings.py)
 - [Using existing Foundry agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_existing_agent.py)
@@ -131,6 +141,7 @@ async with (
 ```
 
 For complete examples with function tools, see:
+
 - [Foundry with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_function_tools.py)
 
 ### Streaming Responses
@@ -149,6 +160,7 @@ async for chunk in agent.run_stream("What's the weather like in Portland?"):
 ```
 
 For streaming examples, see:
+
 - [Foundry streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_basic.py)
 
 ### Code Interpreter Tools
@@ -172,6 +184,7 @@ async with (
 ```
 
 For code interpreter examples, see:
+
 - [Foundry with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_code_interpreter.py)
 
 ## Custom agents
