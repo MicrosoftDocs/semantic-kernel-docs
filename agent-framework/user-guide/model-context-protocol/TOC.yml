@@ -1,0 +1,4 @@
+- name: Overview
+  href: index.md
+- name: Foundry Agents with MCP
+  href: foundry-agents-mcp.md
