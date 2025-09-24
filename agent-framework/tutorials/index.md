@@ -23,5 +23,5 @@ These samples cover the essential capabilities of the Agent Framework. You'll le
 - [Using function tools with human in the loop approvals](./agents/function-tools-approvals.md)
 - [Producing Structured Output with agents](./agents/structured-output.md)
 - [Persisting Conversations](./agents/persisted-conversation.md)
-- [Adding telemetry to agents](./agents/agent-telemetry.md)
+- [Enabling observability to agents](./agents/agent-telemetry.md)
 
