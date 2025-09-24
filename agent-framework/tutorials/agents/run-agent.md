@@ -16,7 +16,7 @@ ms.service: semantic-kernel
 This tutorial shows you how to create and run an agent with the Agent Framework, based on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../../user-guide/index.md) for more information on other agent types and how to construct them.
+> The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../../user-guide/overview.md) for more information on other agent types and how to construct them.
 
 ## Prerequisites
 

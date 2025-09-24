@@ -79,7 +79,7 @@ AIAgent agent3 = await persistentAgentsClient.GetAIAgentAsync("<agent-id>");
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-See the [Agent getting started tutorials](../../../tutorials/index.md#agent-getting-started-tutorials) for more information on how to run and interact with agents.
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

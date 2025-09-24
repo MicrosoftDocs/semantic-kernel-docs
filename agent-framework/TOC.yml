@@ -9,19 +9,13 @@ items:
 - name: User Guide
   items:
   - name: Overview
-    href: user-guide/index.md
+    href: user-guide/overview.md
   - name: Agents
     href: user-guide/agents/TOC.yml
   - name: Model Context Protocol
     href: user-guide/model-context-protocol/TOC.yml
   - name: Workflows
     href: user-guide/workflows/TOC.yml
-- name: Additional Information
-  items:
-  - name: FAQs
-    href: 
-  - name: Framework Best Practices
-    href: 
 - name: Migration Guide
   href: migration-guide/index.md
 - name: API Reference Guide
