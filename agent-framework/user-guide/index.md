@@ -1,6 +1,6 @@
 ---
-title: Agent Framework Tutorials
-description: Agent Framework Tutorials
+title: Agent Framework User Guide
+description: Agent Framework User Guide
 author: markwallace-microsoft
 ms.topic: tutorial
 ms.author: markwallace

@@ -16,19 +16,19 @@ ms.service: semantic-kernel
 This tutorial shows you how to create and run an agent with the Agent Framework, based on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../user-guide/index.md) for more information on other agent types and how to construct them.
+> The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../../user-guide/index.md) for more information on other agent types and how to construct them.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following prerequisites:
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- [Azure OpenAI service endpoint and deployment configured](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/create-resource)
-- [Azure CLI installed](https://learn.microsoft.com/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](https://learn.microsoft.com/cli/azure/authenticate-azure-cli)
-- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/role-based-access-control)
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource)
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
+- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
 
 > [!IMPORTANT]
-> For this tutorial we are using Azure OpenAI for the Chat Completion service, but you can use any inference service that is compatible with [Microsoft.Extensions.AI.IChatClient](https://learn.microsoft.com/dotnet/api/microsoft.extensions.ai.ichatclient).
+> For this tutorial we are using Azure OpenAI for the Chat Completion service, but you can use any inference service that is compatible with [Microsoft.Extensions.AI.IChatClient](/dotnet/api/microsoft.extensions.ai.ichatclient).
 
 ## Installing Nuget packages
 
