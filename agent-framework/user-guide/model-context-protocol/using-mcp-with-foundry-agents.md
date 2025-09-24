@@ -1,6 +1,7 @@
 ---
-title: Model Context Protocol
-description: Using MCP with Agent Framework
+title: MCP and Foundry Agents
+description: Using MCP with Foundry Agents
+zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
 ms.author: markwallace
