@@ -10,10 +10,8 @@ items:
   items:
   - name: Overview
     href: user-guide/index.md
-  - name: Agent Types
-    href: user-guide/agent-types.md
-  - name: Multiturn Conversation
-    href: user-guide/multi-turn-conversation.md
+  - name: Agents
+    href: user-guide/agents/TOC.yml
   - name: Model Context Protocol
     href: user-guide/model-context-protocol/TOC.yml
   - name: Workflows
