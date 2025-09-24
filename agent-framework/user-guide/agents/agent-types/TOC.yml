@@ -3,11 +3,11 @@
 - name: Azure AI Foundry Agents
   href: azure-ai-foundry-agent.md
 - name: Azure OpenAI ChatCompletion Agents
-  href: azure-openai-chatcompletion-agent.md
+  href: azure-openai-chat-completion-agent.md
 - name: Azure OpenAI Responses Agents
   href: azure-openai-responses-agent.md
 - name: OpenAI ChatCompletion Agents
-  href: openai-chatcompletion-agent.md
+  href: openai-chat-completion-agent.md
 - name: OpenAI Responses Agents
   href: openai-responses-agent.md
 - name: OpenAI Assistants Agents
