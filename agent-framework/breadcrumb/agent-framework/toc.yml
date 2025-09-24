@@ -6,6 +6,9 @@
     tocHref: /azure/ai-foundry/
     topicHref: /azure/ai-foundry/index
     items:
+    - name: Microsoft Agent Framework
+      tocHref: /agent-framework/
+      topicHref: /agent-framework/overview/agent-framework-overview.md
     
 
 
