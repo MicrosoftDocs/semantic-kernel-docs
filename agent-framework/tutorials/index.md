@@ -13,9 +13,12 @@ ms.service: agent-framework
 ## Single Agent Tutorial
 
 - [Create and run a simple agent](./run-agent.md)
+- [Using images with an agent](./images.md)
 - [Multi-turn conversations with an agent](./multi-turn-conversation.md)
 - [Using function tools with an agent](./function-tools.md)
 - [Using function tools with human in the loop approvals](./function-tools-approvals.md)
 - [Producing Structured Output with agents](./structured-output.md)
+- [Using an agent as a function tool](./agent-as-function-tool.md)
+- [Exposing an agent as an MCP tool](./agent-as-mcp-tool.md)
 - [Persisting Conversations](./persisted-conversation.md)
 - [Adding telemetry to agents](./agent-telemetry.md)

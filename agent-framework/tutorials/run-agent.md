@@ -105,4 +105,4 @@ Tutorial coming soon.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Having a multi-turn conversation with an agent](./multi-turn-conversation.md)
+> [Using images with an agent](./images.md)

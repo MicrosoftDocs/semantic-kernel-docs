@@ -114,4 +114,4 @@ Tutorial coming soon.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Persisting Conversations](./persisted-conversation.md)
+> [Using an agent as a function tool](./agent-as-function-tool.md)
