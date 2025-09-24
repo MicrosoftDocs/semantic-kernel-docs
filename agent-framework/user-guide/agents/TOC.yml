@@ -1,6 +1,6 @@
 - name: Overview
   href: index.md
 - name: Agent Types
-  href: agent-types.md
+  href: agent-types/TOC.yml
 - name: Multi-Turn Conversations and Threading
   href: multi-turn-conversation.md
