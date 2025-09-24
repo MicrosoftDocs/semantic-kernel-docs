@@ -1,11 +1,12 @@
 ---
 title: Using an agent as a function tool
 description: Learn how to use an agent as a function tool
+zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
+ms.author: westey
 ms.date: 09/24/2025
 ms.service: semantic-kernel
-zone_pivot_groups: programming-languages
 ---
 
 # Using an agent as a function tool
