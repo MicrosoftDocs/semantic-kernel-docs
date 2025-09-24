@@ -46,7 +46,7 @@ For detailed documentation, see:
 
 |Underlying Inference Service|Description|Service Chat History storage supported|External Chat History storage supported|
 |---|---|---|---|
-|[Azure AI Foundry Agent](./foundry-agent.md)|An agent class that uses the Azure AI Foundry Agents Service as it's backend.|Yes|No|
+|[Azure AI Foundry Agent](./azure-ai-foundry-agent.md)|An agent class that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
 |[Azure OpenAI ChatCompletion](./azure-openai-chatcompletion-agent.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
 |[OpenAI ChatCompletion](./openai-chatcompletion-agent.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|

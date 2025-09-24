@@ -34,7 +34,7 @@ using Azure.Identity;
 using Microsoft.Extensions.AI.Agents;
 
 var persistentAgentsClient = new PersistentAgentsClient(
-    "https://<myresource>.services.ai.azure.com/api/projects/<myproject>"
+    "https://<myresource>.services.ai.azure.com/api/projects/<myproject>",
     new AzureCliCredential());
 ```
 
@@ -84,6 +84,6 @@ See the [Agent getting started tutorials](../../../tutorials/index.md#agent-gett
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Documentation coming soon
+Documentation coming soon.
 
 ::: zone-end
