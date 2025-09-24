@@ -1,15 +1,15 @@
 ---
-title: Adding telemetry to Agents
+title: Enabling observability for Agents
 description: Enable OpenTelemetry for an agent so agent interactions are automatically logged
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/18/2025
-ms.service: agent-framework
+ms.service: semantic-kernel
 ---
 
-# Adding telemetry to Agents
+# Enabling observability for Agents
 
 ::: zone pivot="programming-language-csharp"
 

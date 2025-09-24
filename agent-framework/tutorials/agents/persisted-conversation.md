@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/18/2025
-ms.service: agent-framework
+ms.service: semantic-kernel
 ---
 
 # Persisting and Resuming Agent Conversations
@@ -87,4 +87,4 @@ Tutorial coming soon.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Adding telemetry to agents](./agent-telemetry.md)
+> [Enabling observability for agents](./enable-observability.md)
