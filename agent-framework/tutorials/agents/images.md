@@ -1,0 +1,65 @@
+---
+title: Using images with an agent
+description: Learn how to use images with an agent
+zone_pivot_groups: programming-languages
+author: westey-m
+ms.topic: tutorial
+ms.author: westey
+ms.date: 09/24/2025
+ms.service: semantic-kernel
+---
+
+# Using images with an agent
+
+::: zone pivot="programming-language-csharp"
+
+This tutorial shows you how to use images with an agent, allowing the agent to analyze and respond to image content.
+
+## Prerequisites
+
+For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+
+## Passing images to the agent
+
+You can send images to an agent by creating a `ChatMessage` that includes both text and image content. The agent can then analyze the image and respond accordingly.
+
+First, create an `AIAgent` that is able to analyze images.
+
+```csharp
+AIAgent agent = new AzureOpenAIClient(
+    new Uri("https://<myresource>.openai.azure.com"),
+    new AzureCliCredential())
+    .GetChatClient("gpt-4o")
+    .CreateAIAgent(
+        name: "VisionAgent",
+        instructions: "You are a helpful agent that can analyze images");
+```
+
+Next, create a `ChatMessage` that contains both a text prompt and an image URL. Use `TextContent` for the text and `UriContent` for the image.
+
+```csharp
+ChatMessage message = new(ChatRole.User, [
+    new TextContent("What do you see in this image?"),
+    new UriContent("https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg", "image/jpeg")
+]);
+```
+
+Run the agent with the message. You can use streaming to receive the response as it is generated.
+
+```csharp
+Console.WriteLine(await agent.RunAsync(message));
+```
+
+This will print the agent's analysis of the image to the console.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+Tutorial coming soon.
+
+::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Having a multi-turn conversation with an agent](./multi-turn-conversation.md)

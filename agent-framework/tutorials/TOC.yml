@@ -1,4 +1,6 @@
-- name: Index
-  href: index.md
-- name: Create and run a simple agent
-  href: run-agent.md
+- name: Overview
+  href: overview.md
+- name: Agents
+  href: agents/TOC.yml
+- name: Workflows
+  href: workflows/TOC.yml

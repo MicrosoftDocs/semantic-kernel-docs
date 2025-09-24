@@ -1,0 +1,36 @@
+### YamlMime:Hub
+title: Agent Framework documentation
+summary: Learn to build robust, future-proof Agentic AI solutions that evolve with technological advancements.
+brand: semantic-kernel
+metadata:
+  title: Agent Framework documentation
+  description: Agent Framework documentation.
+  ms.topic: hub-page
+  ms.date: 09/05/2025
+  ms.service: azure
+  searchScope: []
+  titleSuffix: ""
+  ms.author: ssalgado
+  author: ssalgadodev
+  ms.manager: nitinme
+  hide_bc: true
+
+productDirectory:
+    items:
+    - title: Getting Started
+      imageSrc: /agent-framework/media/getting-started.svg
+      links:
+        - url: /agent-framework/overview/agent-framework-overview
+          text: Introduction to Agent Framework
+    - title: Quick Start
+      imageSrc: /agent-framework/media/quick-start.svg
+      links:
+        - url: /agent-framework/get-started/quick-start-guide
+          text: Learn how to use Agent Framework
+        - url: /agent-framework/get-started/detailed-samples
+          text: Check out samples for Agent Framework
+    - title: Migration Guide
+      imageSrc: /agent-framework/media/migration-guide.svg
+      links:
+        - url: /agent-framework/migration-guide/index
+          text: Migrate from Semantic Kernel to Agent Framework
