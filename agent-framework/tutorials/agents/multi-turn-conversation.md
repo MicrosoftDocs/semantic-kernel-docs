@@ -16,7 +16,7 @@ ms.service: semantic-kernel
 This tutorial step shows you how to have a multi-turn conversation with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../user-guide/index.md) for more information on other agent types and how to construct them.
+> The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../../user-guide/index.md) for more information on other agent types and how to construct them.
 
 ## Prerequisites
 
