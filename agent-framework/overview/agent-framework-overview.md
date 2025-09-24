@@ -4,7 +4,7 @@ description: Learn about Microsoft Agent Framework
 author: markwallace
 ms.topic: reference
 ms.author: markwallace
-ms.date: 09/15/2015
+ms.date: 09/15/2025
 ms.service: semantic-kernel
 ---
 
