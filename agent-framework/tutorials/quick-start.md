@@ -150,6 +150,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+
 ## More Examples
 
 For more detailed examples and advanced scenarios, see the [Foundry Agent Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/README.md).
