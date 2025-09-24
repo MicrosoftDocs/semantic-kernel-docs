@@ -5,7 +5,7 @@ author:
 ms.topic: reference
 ms.author: 
 ms.date: 
-ms.service: agent-framework
+ms.service: semantic-kernel
 ---
 
 # Migration Guide

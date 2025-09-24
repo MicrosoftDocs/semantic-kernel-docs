@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/18/2025
-ms.service: agent-framework
+ms.service: semantic-kernel
 ---
 
 # Enabling observability for Agents
