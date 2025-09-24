@@ -18,19 +18,19 @@ metadata:
 productDirectory:
     items:
     - title: Getting Started
-      imageSrc: /agent-framework/media/Getting-started.svg
+      imageSrc: /agent-framework/media/getting-started.svg
       links:
         - url: /agent-framework/overview/agent-framework-overview
           text: Introduction to Agent Framework
     - title: Quick Start
-      imageSrc: /agent-framework/media/Quick-start.svg
+      imageSrc: /agent-framework/media/quick-start.svg
       links:
         - url: /agent-framework/get-started/quick-start-guide
           text: Learn how to use Agent Framework
         - url: /agent-framework/get-started/detailed-samples
           text: Check out samples for Agent Framework
     - title: Migration Guide
-      imageSrc: /agent-framework/media/Migration-guide.svg
+      imageSrc: /agent-framework/media/migration-guide.svg
       links:
         - url: /agent-framework/migration-guide/index
           text: Migrate from Semantic Kernel to Agent Framework
