@@ -26,5 +26,5 @@ These samples cover the essential capabilities of the Agent Framework. You'll le
 - [Using an agent as a function tool](./agents/agent-as-function-tool.md)
 - [Exposing an agent as an MCP tool](./agents/agent-as-mcp-tool.md)
 - [Persisting Conversations](./agents/persisted-conversation.md)
-- [Enabling observability to agents](./agents/agent-telemetry.md)
+- [Enabling observability to agents](./agents/enable-observability.md)
 
