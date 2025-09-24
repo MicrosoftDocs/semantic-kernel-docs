@@ -12,6 +12,6 @@
   href: structured-output.md
 - name: Persisting conversations
   href: persisted-conversation.md
-- name: Adding telemetry to agents
-  href: agent-telemetry.md
+- name: Enabling observability for agents
+  href: enable-observability.md
 

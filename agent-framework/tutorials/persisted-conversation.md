@@ -87,4 +87,4 @@ Tutorial coming soon.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Adding telemetry to agents](./agent-telemetry.md)
+> [Enabling observability for agents](./enable-observability.md)
