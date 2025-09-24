@@ -21,6 +21,9 @@ Let's dive into each agent type in more detail.
 
 ::: zone pivot="programming-language-csharp"
 
+> [!IMPORTANT]
+> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications. 
+
 ## Simple agents based on inference services
 
 The agent framework makes it easy to create simple agents based on many different inference services.

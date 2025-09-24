@@ -14,11 +14,4 @@
   href: persisted-conversation.md
 - name: Enabling observability for agents
   href: enable-observability.md
-- name: Human in the loop
-  href: human-input-agent.md
-- name: Tool use
-  href: tool-use.md
-- name: Chat termination
-  href: chat-termination.md
-- name: Managing State
-  href: managing-state.md
+
