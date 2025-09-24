@@ -42,7 +42,8 @@ using Microsoft.Extensions.AI;
 var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful assistant");
 ```
 
-For detailed documentation, see:
+For many popular services, we also have helpers to make creating these agents even easier.
+See the documentation for each service, for more information:
 
 |Underlying Inference Service|Description|Service Chat History storage supported|External Chat History storage supported|
 |---|---|---|---|
@@ -62,7 +63,7 @@ The agent framework provides the `AgentProtocol` base type, which when subclasse
 
 ## Remote agents
 
-The agent framework provides out of the box `AgentProtocol` subclasses for common service hosted agent protocols,
+The agent framework provides out of the box `AIAgent` implementations for common service hosted agent protocols,
 such as A2A.
 
 ::: zone-end
