@@ -8,6 +8,8 @@ items:
   href: tutorials/TOC.yml
 - name: User Guide
   items:
+  - name: Overview
+    href: user-guide/index.md
   - name: Agent Types
     href: user-guide/agent-types.md
   - name: Multiturn Conversation

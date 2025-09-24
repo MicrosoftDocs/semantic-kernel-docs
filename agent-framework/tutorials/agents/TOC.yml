@@ -1,0 +1,15 @@
+- name: Create and run an agent
+  href: run-agent.md
+- name: Multi-turn conversations with an agent
+  href: multi-turn-conversation.md
+- name: Using function tools with an agent
+  href: function-tools.md
+- name: Using function tools with human in the loop approvals
+  href: function-tools-approvals.md
+- name: Producing Structured Output with agents
+  href: structured-output.md
+- name: Persisting conversations
+  href: persisted-conversation.md
+- name: Adding telemetry to agents
+  href: agent-telemetry.md
+
