@@ -23,9 +23,11 @@ Add the required NuGet packages to your project.
 dotnet add package Microsoft.Extensions.AI.Agents.A2A --prerelease
 ```
 
-## Creating an A2A Agent
+## Creating an A2A Agent using the well known agent card location
 
-You can create an agent that connects to a remote A2A service using the `A2ACardResolver` class.
+First, let's look at a scenarios where we use the well known agent card location.
+We pass the root URI of the A2A agent host to the `A2ACardResolver` constructor
+and the resolver will look for the agent card at `https://your-a2a-agent-host/.well-known/agent-card.json`.
 
 First, create an `A2ACardResolver` with the URI of the remote A2A agent host.
 
@@ -35,13 +37,29 @@ using A2A;
 using Microsoft.Extensions.AI.Agents;
 using Microsoft.Extensions.AI.Agents.A2A;
 
-A2ACardResolver agentCardResolver = new(new Uri("https://a2a.example.com/agent/card"));
+A2ACardResolver agentCardResolver = new(new Uri("https://your-a2a-agent-host"));
 ```
 
 Create an instance of the `AIAgent` for the remote A2A agent using the `GetAIAgentAsync` helper method.
 
 ```csharp
 AIAgent agent = await agentCardResolver.GetAIAgentAsync();
+```
+
+## Creating an A2A Agent using the Direct Configuration / Private Discovery mechanism
+
+It is also possible to point directly at the agent card URL if the host supports the Direct Configuration / Private Discovery mechanism.
+
+In this case we construct an `A2AClient` directly with the URL of the agent card.
+
+```csharp
+A2AClient a2aClient = new(new Uri("https://your-a2a-agent-host/echo"));
+```
+
+And then we can create an instance of the `AIAgent` using the `GetAIAgent` method.
+
+```csharp
+AIAgent agent = a2aClient.GetAIAgent();
 ```
 
 ::: zone-end
