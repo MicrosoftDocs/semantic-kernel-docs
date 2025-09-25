@@ -32,7 +32,7 @@ Before you begin, ensure you have the following prerequisites:
 
 ## Installing Nuget packages
 
-To use the AgentFramework with Azure OpenAI, you need to install the following NuGet packages:
+To use the Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
 ```powershell
 dotnet add package Azure.Identity

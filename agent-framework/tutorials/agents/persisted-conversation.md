@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/18/2025
+ms.date: 09/25/2025
 ms.service: semantic-kernel
 ---
 
@@ -87,4 +87,4 @@ Tutorial coming soon.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Enabling observability for agents](./enable-observability.md)
+> [Third Party chat history storage](./third-party-chat-history-storage.md)

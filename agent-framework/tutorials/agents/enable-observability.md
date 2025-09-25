@@ -120,7 +120,7 @@ Because he wanted to improve his "arrr-ticulation"! ?????
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Having a multi-turn conversation with an agent](./multi-turn-conversation.md)
+> [Persisting conversations](./persisted-conversation.md)
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
