@@ -45,9 +45,9 @@ var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful ass
 For many popular services, we also have helpers to make creating these agents even easier.
 See the documentation for each service, for more information:
 
-|Underlying Inference Service|Description|Service Chat History storage supported|External Chat History storage supported|
+|Underlying Inference Service|Description|Service Chat History storage supported|Custom Chat History storage supported|
 |---|---|---|---|
-|[Azure AI Foundry Agent](./azure-ai-foundry-agent.md)|An agent class that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
+|[Azure AI Foundry Agent](./azure-ai-foundry-agent.md)|An agent that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
 |[Azure OpenAI ChatCompletion](./azure-openai-chat-completion-agent.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
 |[OpenAI ChatCompletion](./openai-chat-completion-agent.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
@@ -58,12 +58,21 @@ See the documentation for each service, for more information:
 ## Complex custom agents
 
 It is also possible to create fully custom agents, that are not just wrappers around a ChatClient.
-The agent framework provides the `AgentProtocol` base type, which when subclassed allows for complete control over the agent's behavior and capabilities.
+The agent framework provides the `AIAgent` base type.
+This base type is the core abstraction for all agents, which when subclassed allows for complete control over the agent's behavior and capabilities.
 
-## Remote agents
+See the documentation for [Custom Agents](./custom-agent.md) for more information.
+
+## Proxies for remote agents
 
 The agent framework provides out of the box `AIAgent` implementations for common service hosted agent protocols,
-such as A2A.
+such as A2A. This way you can easily connect to and use remote agents from your application.
+
+See the documentation for each agent type, for more information:
+
+|Protocol|Description|
+|---|---|
+|[A2A](./a2a-agent.md)|An agent that serves as a proxy to a remote agent via the A2A protocol.|
 
 ::: zone-end
 
