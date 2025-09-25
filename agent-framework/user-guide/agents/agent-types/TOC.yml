@@ -12,6 +12,8 @@
   href: openai-responses-agent.md
 - name: OpenAI Assistants Agents
   href: openai-assistants-agent.md
+- name: Agent based on any IChatClient
+  href: chat-client-agent.md
 - name: A2A Agents
   href: a2a-agent.md
 - name: Custom Agents
