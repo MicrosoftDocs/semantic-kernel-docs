@@ -1,3 +1,6 @@
-- name: '<please enter product name here>'
-  tocHref: /
-  topicHref: /
+- name: Microsoft Agent Framework
+  tocHref: /agent-framework/
+  topicHref: /agent-framework/index
+    
+
+
