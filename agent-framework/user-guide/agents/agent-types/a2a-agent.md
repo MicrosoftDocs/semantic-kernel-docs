@@ -48,7 +48,7 @@ AIAgent agent = await agentCardResolver.GetAIAgentAsync();
 
 ## Creating an A2A Agent using the Direct Configuration / Private Discovery mechanism
 
-It is also possible to point directly at the agent card URL if the host supports the Direct Configuration / Private Discovery mechanism.
+It is also possible to point directly at the agent URL if it's known to us. This can be useful for tightly coupled systems, private agents, or development purposes, where clients are directly configured with Agent Card information and agent URL."
 
 In this case we construct an `A2AClient` directly with the URL of the agent card.
 
