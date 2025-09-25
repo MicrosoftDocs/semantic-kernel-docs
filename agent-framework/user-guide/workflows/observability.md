@@ -58,6 +58,8 @@ For example:
 
 ![Span Relationships](./resources/images/workflow-trace.png)
 
+::: zone-end
+
 ## Next Steps
 
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
