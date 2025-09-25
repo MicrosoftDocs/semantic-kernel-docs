@@ -53,7 +53,7 @@ See the documentation for each service, for more information:
 |[OpenAI ChatCompletion](./openai-chat-completion-agent.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
 |[OpenAI Responses](./openai-responses-agent.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
 |[OpenAI Assistants](./openai-assistants-agent.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
-|[Any other ChatClient](./chat-client-agent.md)|You can also use any other ChatClient implementation to create an agent.|Varies|Varies|
+|[Any other ChatClient](./chat-client-agent.md)|You can also use any other [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation to create an agent.|Varies|Varies|
 
 ## Complex custom agents
 

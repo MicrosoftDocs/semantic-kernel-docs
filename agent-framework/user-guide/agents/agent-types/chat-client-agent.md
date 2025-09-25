@@ -13,7 +13,7 @@ ms.service: semantic-kernel
 
 ::: zone pivot="programming-language-csharp"
 
-The Microsoft Agent Framework supports creating agents for any inference service that provides an `IChatClient` implementation. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
+The Microsoft Agent Framework supports creating agents for any inference service that provides a [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
 
 In this document, we will use Ollama as an example.
 
