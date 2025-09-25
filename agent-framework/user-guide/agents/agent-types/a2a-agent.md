@@ -50,7 +50,7 @@ AIAgent agent = await agentCardResolver.GetAIAgentAsync();
 
 It is also possible to point directly at the agent URL if it's known to us. This can be useful for tightly coupled systems, private agents, or development purposes, where clients are directly configured with Agent Card information and agent URL."
 
-In this case we construct an `A2AClient` directly with the URL of the agent card.
+In this case we construct an `A2AClient` directly with the URL of the agent.
 
 ```csharp
 A2AClient a2aClient = new(new Uri("https://your-a2a-agent-host/echo"));
