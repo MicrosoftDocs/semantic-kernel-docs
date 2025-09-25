@@ -147,6 +147,46 @@ class SampleExecutor(Executor):
         await ctx.send_message(number * 2)
 ```
 
+### The `WorkflowContext` Object
+
+The `WorkflowContext` object provides methods for the handler to interact with the workflow during execution. The `WorkflowContext` is parameterized with the type of messages the handler will emit and the type of outputs it can yield.
+
+The most commonly used method is `send_message`, which allows the handler to send messages to connected executors.
+
+```python
+from agent_framework import WorkflowContext
+
+class SomeHandler(Executor):
+
+    @handler
+    async def some_handler(message: str, ctx: WorkflowContext[str]) -> None:
+        await ctx.send_message("Hello, World!")
+```
+
+A handler can use `yield_output` to produce outputs that will be considered as workflow outputs and be returned/streamed to the caller as an output event:
+
+```python
+from agent_framework import WorkflowContext
+
+class SomeHandler(Executor):
+
+    @handler
+    async def some_handler(message: str, ctx: WorkflowContext[Never, str]) -> None:
+        await ctx.yield_output("Hello, World!")
+```
+
+If a handler neither sends messages nor yields outputs, no type parameter is needed for `WorkflowContext`:
+
+```python
+from agent_framework import WorkflowContext
+
+class SomeHandler(Executor):
+
+    @handler
+    async def some_handler(message: str, ctx: WorkflowContext) -> None:
+        print("Doing some work...")
+```
+
 ::: zone-end
 
 ## Next Step
