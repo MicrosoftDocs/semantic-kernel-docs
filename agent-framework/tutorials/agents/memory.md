@@ -20,7 +20,7 @@ This tutorial shows how to add memory to an agent by implementing an `AIContextP
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](../run-agent.md) step in this tutorial.
+For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ## Creating an AIContextProvider
 

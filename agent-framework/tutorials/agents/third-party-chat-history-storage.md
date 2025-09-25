@@ -21,7 +21,7 @@ Where services do not require chat history to be stored in the service, it is po
 
 ## Prerequisites
 
-For prerequisites, see the [Create and run a simple agent](../run-agent.md) step in this tutorial.
+For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ## Installing Nuget packages
 
