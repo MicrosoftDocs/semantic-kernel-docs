@@ -13,10 +13,10 @@ ms.service: semantic-kernel
 
 The Microsoft Agent Framework supports building custom agents by inheriting from the `AIAgent` class and implementing the required methods.
 
+::: zone pivot="programming-language-csharp"
+
 This document shows how to build a simple custom agent that parrots back user input in upper case.
 In most cases building your own agent will involve more complex logic and integration with an AI service.
-
-::: zone pivot="programming-language-csharp"
 
 ## Getting Started
 
