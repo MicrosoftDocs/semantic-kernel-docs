@@ -78,4 +78,4 @@ Tutorial coming soon.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Persisting Conversations](./persisted-conversation.md)
+> [Enabling observability for agents](./enable-observability.md)

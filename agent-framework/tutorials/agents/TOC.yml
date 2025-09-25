@@ -14,8 +14,11 @@
   href: agent-as-function-tool.md
 - name: Exposing an agent as an MCP tool
   href: agent-as-mcp-tool.md
-- name: Persisting conversations
-  href: persisted-conversation.md
 - name: Enabling observability for agents
   href: enable-observability.md
-
+- name: Persisting conversations
+  href: persisted-conversation.md
+- name: Third Party chat history storage
+  href: third-party-chat-history-storage.md
+- name: Adding memory to agents
+  href: memory.md
