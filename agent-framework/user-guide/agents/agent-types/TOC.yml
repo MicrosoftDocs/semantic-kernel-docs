@@ -12,3 +12,7 @@
   href: openai-responses-agent.md
 - name: OpenAI Assistants Agents
   href: openai-assistants-agent.md
+- name: A2A Agents
+  href: a2a-agent.md
+- name: Custom Agents
+  href: custom-agent.md
