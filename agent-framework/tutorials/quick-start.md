@@ -112,19 +112,19 @@ For more information see: <https://docs.github.com/en/packages/working-with-a-gi
 
 Before you begin, ensure you have the following:
 
-- [Python 3.9 or later](https://www.python.org/downloads/)
-- An [Azure AI Foundry](/azure/ai-foundry/) project with a deployed model (e.g., `gpt-4o-mini`)
+- [Python 3.10 or later](https://www.python.org/downloads/)
+- An [Azure AI](/azure/ai-foundry/) project with a deployed model (e.g., `gpt-4o-mini`)
 - [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
 
-**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI Foundry project. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
+**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI project. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
 
 ## Running a Basic Agent Sample
 
-This sample demonstrates how to create and use a simple AI agent with Azure AI Foundry as the backend. It will create a basic agent using `ChatAgent` with `FoundryChatClient` and custom instructions.
+This sample demonstrates how to create and use a simple AI agent with Azure AI as the backend. It will create a basic agent using `ChatAgent` with `AzureAIAgentClient` and custom instructions.
 
 Make sure to set the following environment variables:
-- `FOUNDRY_PROJECT_ENDPOINT`: Your Azure AI Foundry project endpoint
-- `FOUNDRY_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
+- `AZURE_AI_PROJECT_ENDPOINT`: Your Azure AI project endpoint
+- `AZURE_AI_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
 
 
 ### Sample Code
@@ -132,14 +132,14 @@ Make sure to set the following environment variables:
 ```python
 import asyncio
 from agent_framework import ChatAgent
-from agent_framework.foundry import FoundryChatClient
+from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
         ChatAgent(
-            chat_client=FoundryChatClient(async_credential=credential),
+            chat_client=AzureAIAgentClient(async_credential=credential),
             instructions="You are good at telling jokes."
         ) as agent,
     ):
@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
 ## More Examples
 
-For more detailed examples and advanced scenarios, see the [Foundry Agent Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/README.md).
+For more detailed examples and advanced scenarios, see the [Azure AI Agent Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/README.md).
 
 
 ::: zone-end

@@ -95,13 +95,13 @@ To create one of these agents, simply construct a `ChatAgent` using the chat cli
 
 ```python
 from agent_framework import ChatAgent
-from agent_framework.foundry import FoundryChatClient
-from azure.identity.aio import AzureCliCredential
+from agent_framework.azure import AzureAIAgentClient
+from azure.identity.aio import DefaultAzureCredential
 
 async with (
-    AzureCliCredential() as credential,
+    DefaultAzureCredential() as credential,
     ChatAgent(
-        chat_client=FoundryChatClient(async_credential=credential),
+        chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant"
     ) as agent
 ):
@@ -111,20 +111,28 @@ async with (
 Alternatively, you can use the convenience method on the chat client:
 
 ```python
-from agent_framework.foundry import FoundryChatClient
-from azure.identity.aio import AzureCliCredential
+from agent_framework.azure import AzureAIAgentClient
+from azure.identity.aio import DefaultAzureCredential
 
-async with AzureCliCredential() as credential:
-    agent = FoundryChatClient(async_credential=credential).create_agent(
+async with DefaultAzureCredential() as credential:
+    agent = AzureAIAgentClient(async_credential=credential).create_agent(
         instructions="You are a helpful assistant"
     )
 ```
 
-For detailed examples, see:
+For detailed examples, see the agent-specific documentation sections below.
 
-- [Basic Foundry agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_basic.py)
-- [Foundry with explicit settings](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_explicit_settings.py)
-- [Using existing Foundry agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_existing_agent.py)
+### Supported Agent Types
+
+|Underlying Inference Service|Description|Service Chat History storage supported|Custom Chat History storage supported|
+|---|---|---|---|
+|[Azure AI Agent](./azure-ai-foundry-agent.md)|An agent that uses the Azure AI Agents Service as its backend.|Yes|No|
+|[Azure OpenAI Chat Completion](./azure-openai-chat-completion-agent.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|Yes|
+|[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
+|[OpenAI Chat Completion](./openai-chat-completion-agent.md)|An agent that uses the OpenAI Chat Completion service.|No|Yes|
+|[OpenAI Responses](./openai-responses-agent.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
+|[OpenAI Assistants](./openai-assistants-agent.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
+|[Any other ChatClient](./chat-client-agent.md)|You can also use any other chat client implementation to create an agent.|Varies|Varies|
 
 ### Function Tools
 
@@ -133,15 +141,16 @@ You can provide function tools to agents for enhanced capabilities:
 ```python
 from typing import Annotated
 from pydantic import Field
-from azure.identity.aio import AzureCliCredential
+from azure.identity.aio import DefaultAzureCredential
+from agent_framework.azure import AzureAIAgentClient
 
 def get_weather(location: Annotated[str, Field(description="The location to get the weather for.")]) -> str:
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny with a high of 25°C."
 
 async with (
-    AzureCliCredential() as credential,
-    FoundryChatClient(async_credential=credential).create_agent(
+    DefaultAzureCredential() as credential,
+    AzureAIAgentClient(async_credential=credential).create_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather
     ) as agent
@@ -151,7 +160,9 @@ async with (
 
 For complete examples with function tools, see:
 
-- [Foundry with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_function_tools.py)
+- [Azure AI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_function_tools.py)
+- [Azure OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_openai_with_function_tools.py)
+- [OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_with_function_tools.py)
 
 ### Streaming Responses
 
@@ -170,21 +181,23 @@ async for chunk in agent.run_stream("What's the weather like in Portland?"):
 
 For streaming examples, see:
 
-- [Foundry streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_basic.py)
+- [Azure AI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_basic.py)
+- [Azure OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_openai_basic.py)
+- [OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_basic.py)
 
 ### Code Interpreter Tools
 
-Foundry agents support hosted code interpreter tools for executing Python code:
+Azure AI agents support hosted code interpreter tools for executing Python code:
 
 ```python
 from agent_framework import ChatAgent, HostedCodeInterpreterTool
-from agent_framework.foundry import FoundryChatClient
-from azure.identity.aio import AzureCliCredential
+from agent_framework.azure import AzureAIAgentClient
+from azure.identity.aio import DefaultAzureCredential
 
 async with (
-    AzureCliCredential() as credential,
+    DefaultAzureCredential() as credential,
     ChatAgent(
-        chat_client=FoundryChatClient(async_credential=credential),
+        chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant that can execute Python code.",
         tools=HostedCodeInterpreterTool()
     ) as agent
@@ -194,7 +207,9 @@ async with (
 
 For code interpreter examples, see:
 
-- [Foundry with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/foundry_with_code_interpreter.py)
+- [Azure AI with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_code_interpreter.py)
+- [Azure OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_assistants_client/azure_assistants_with_code_interpreter.py)
+- [OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai_assistants_client/openai_assistants_with_code_interpreter.py)
 
 ## Custom agents
 

@@ -9,7 +9,7 @@ ms.date: 09/15/2025
 ms.service: semantic-kernel
 ---
 
-# Producing Structured Output with agents
+# Producing Structured Output with Agents
 
 ::: zone pivot="programming-language-csharp"
 
@@ -28,7 +28,7 @@ The `ChatClientAgent` is built on top of any `Microsoft.Extensions.AI.IChatClien
 The `ChatClientAgent` uses the support for structured output that is provided by the underlying chat client.
 
 When creating the agent, we have the option to provide the default `ChatOptions` instance to use for the underlying chat client.
-This `ChatOptions` instance allows us to pick a preferred [`ChatResponseFormat`](https://learn.microsoft.com/dotnet/api/microsoft.extensions.ai.chatresponseformat).
+This `ChatOptions` instance allows us to pick a preferred [`ChatResponseFormat`](/dotnet/api/microsoft.extensions.ai.chatresponseformat).
 
 Various options are supported:
 
@@ -107,7 +107,86 @@ personInfo = (await updates.ToAgentRunResponseAsync()).Deserialize<PersonInfo>(J
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Tutorial coming soon.
+This tutorial step shows you how to produce structured output with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
+
+> [!IMPORTANT]
+> Not all agent types support structured output. The `ChatAgent` supports structured output when used with compatible chat clients.
+
+## Prerequisites
+
+For prerequisites and installing packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+
+## Creating the agent with structured output
+
+The `ChatAgent` is built on top of any chat client implementation that supports structured output.
+The `ChatAgent` uses the `response_format` parameter to specify the desired output schema.
+
+When creating or running the agent, we can provide a Pydantic model that defines the structure of the expected output.
+
+Various response formats are supported based on the underlying chat client capabilities.
+
+Let's look at an example of creating an agent that produces structured output in the form of a JSON object that conforms to a Pydantic model schema.
+
+First, define a Pydantic model that represents the structure of the output you want from the agent:
+
+```python
+from pydantic import BaseModel
+
+class PersonInfo(BaseModel):
+    """Information about a person."""
+    name: str | None = None
+    age: int | None = None
+    occupation: str | None = None
+```
+
+Now we can create an agent using the Azure OpenAI Chat Client:
+
+```python
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+# Create the agent using Azure OpenAI Chat Client
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    name="HelpfulAssistant",
+    instructions="You are a helpful assistant that extracts person information from text."
+)
+```
+
+Now we can run the agent with some textual information and specify the structured output format using the `response_format` parameter:
+
+```python
+response = await agent.run(
+    "Please provide information about John Smith, who is a 35-year-old software engineer.", 
+    response_format=PersonInfo
+)
+```
+
+The agent response will contain the structured output in the `value` property, which can be accessed directly as a Pydantic model instance:
+
+```python
+if response.value:
+    person_info = response.value
+    print(f"Name: {person_info.name}, Age: {person_info.age}, Occupation: {person_info.occupation}")
+else:
+    print("No structured data found in response")
+```
+
+When streaming, the agent response is streamed as a series of updates. To get the structured output, we need to collect all the updates and then access the final response value:
+
+```python
+from agent_framework import AgentRunResponse
+
+# Get structured response from streaming agent using AgentRunResponse.from_agent_response_generator
+# This method collects all streaming updates and combines them into a single AgentRunResponse
+final_response = await AgentRunResponse.from_agent_response_generator(
+    agent.run_stream(query, response_format=PersonInfo),
+    output_format_type=PersonInfo,
+)
+
+if final_response.value:
+    person_info = final_response.value
+    print(f"Name: {person_info.name}, Age: {person_info.age}, Occupation: {person_info.occupation}")
+```
 
 ::: zone-end
 
