@@ -176,16 +176,13 @@ When streaming, the agent response is streamed as a series of updates. To get th
 ```python
 from agent_framework import AgentRunResponse
 
-# Stream the response
-updates = []
-async for update in agent.run_stream(
-    "Please provide information about John Smith, who is a 35-year-old software engineer.",
-    response_format=PersonInfo
-):
-    updates.append(update)
+# Get structured response from streaming agent using AgentRunResponse.from_agent_response_generator
+# This method collects all streaming updates and combines them into a single AgentRunResponse
+final_response = await AgentRunResponse.from_agent_response_generator(
+    agent.run_stream(query, response_format=PersonInfo),
+    output_format_type=PersonInfo,
+)
 
-# Combine updates into final response
-final_response = AgentRunResponse.from_agent_run_response_updates(updates)
 if final_response.value:
     person_info = final_response.value
     print(f"Name: {person_info.name}, Age: {person_info.age}, Occupation: {person_info.occupation}")
