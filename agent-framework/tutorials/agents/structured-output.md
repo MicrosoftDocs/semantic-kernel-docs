@@ -28,7 +28,7 @@ The `ChatClientAgent` is built on top of any `Microsoft.Extensions.AI.IChatClien
 The `ChatClientAgent` uses the support for structured output that is provided by the underlying chat client.
 
 When creating the agent, we have the option to provide the default `ChatOptions` instance to use for the underlying chat client.
-This `ChatOptions` instance allows us to pick a preferred [`ChatResponseFormat`](https://learn.microsoft.com/dotnet/api/microsoft.extensions.ai.chatresponseformat).
+This `ChatOptions` instance allows us to pick a preferred [`ChatResponseFormat`](/dotnet/api/microsoft.extensions.ai.chatresponseformat).
 
 Various options are supported:
 

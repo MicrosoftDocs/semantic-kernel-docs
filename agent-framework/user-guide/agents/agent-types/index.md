@@ -126,16 +126,12 @@ For detailed examples, see the agent-specific documentation sections below.
 
 |Underlying Inference Service|Description|Service Chat History storage supported|Custom Chat History storage supported|
 |---|---|---|---|
-|[Azure AI Agent](./azure-ai-agent.md)|An agent that uses the Azure AI Agents Service as its backend.|Yes|No|
+|[Azure AI Agent](./azure-ai-foundry-agent.md)|An agent that uses the Azure AI Agents Service as its backend.|Yes|No|
 |[Azure OpenAI Chat Completion](./azure-openai-chat-completion-agent.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|Yes|
 |[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
-|[Azure OpenAI Assistants](./azure-openai-assistants-agent.md)|An agent that uses the Azure OpenAI Assistants service.|Yes|No|
 |[OpenAI Chat Completion](./openai-chat-completion-agent.md)|An agent that uses the OpenAI Chat Completion service.|No|Yes|
 |[OpenAI Responses](./openai-responses-agent.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
 |[OpenAI Assistants](./openai-assistants-agent.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
-|[Anthropic](./anthropic-agent.md)|An agent that uses Anthropic Claude models.|No|Yes|
-|[Google](./google-agent.md)|An agent that uses Google Gemini models.|No|Yes|
-|[Copilot Studio](./copilot-studio-agent.md)|An agent that connects to Microsoft Copilot Studio.|Yes|No|
 |[Any other ChatClient](./chat-client-agent.md)|You can also use any other chat client implementation to create an agent.|Varies|Varies|
 
 ### Function Tools
