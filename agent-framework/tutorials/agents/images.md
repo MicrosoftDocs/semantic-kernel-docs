@@ -89,6 +89,27 @@ message = ChatMessage(
 )
 ```
 
+You can also load an image from your local file system using `DataContent`:
+
+```python
+from agent_framework import ChatMessage, TextContent, DataContent, Role
+
+# Load image from local file
+with open("path/to/your/image.jpg", "rb") as f:
+    image_bytes = f.read()
+
+message = ChatMessage(
+    role=Role.USER, 
+    contents=[
+        TextContent(text="What do you see in this image?"),
+        DataContent(
+            data=image_bytes,
+            media_type="image/jpeg"
+        )
+    ]
+)
+```
+
 Run the agent with the message. You can use streaming to receive the response as it is generated.
 
 ```python
