@@ -2,9 +2,9 @@
 title: Enabling observability for Agents
 description: Enable OpenTelemetry for an agent so agent interactions are automatically logged
 zone_pivot_groups: programming-languages
-author: westey-m, dmytrostruk
+author: westey-m
 ms.topic: tutorial
-ms.author: westey, dmytrostruk
+ms.author: westey
 ms.date: 09/18/2025
 ms.service: semantic-kernel
 ---

@@ -2,9 +2,9 @@
 title: Create and run an agent with Agent Framework
 description: Learn how to create and run an AI agent using Agent Framework
 zone_pivot_groups: programming-languages
-author: westey-m, dmytrostruk
+author: westey-m
 ms.topic: tutorial
-ms.author: westey, dmytrostruk
+ms.author: westey
 ms.date: 09/15/2025
 ms.service: semantic-kernel
 ---

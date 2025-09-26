@@ -2,9 +2,9 @@
 title: Using function tools with an agent
 description: Learn how to use function tools with an agent
 zone_pivot_groups: programming-languages
-author: westey-m, dmytrostruk
+author: westey-m
 ms.topic: tutorial
-ms.author: westey, dmytrostruk
+ms.author: westey
 ms.date: 09/15/2025
 ms.service: semantic-kernel
 ---
