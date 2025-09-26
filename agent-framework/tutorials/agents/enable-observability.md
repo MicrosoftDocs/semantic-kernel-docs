@@ -2,9 +2,9 @@
 title: Enabling observability for Agents
 description: Enable OpenTelemetry for an agent so agent interactions are automatically logged
 zone_pivot_groups: programming-languages
-author: westey-m
+author: westey-m, dmytrostruk
 ms.topic: tutorial
-ms.author: westey
+ms.author: westey, dmytrostruk
 ms.date: 09/18/2025
 ms.service: semantic-kernel
 ---
@@ -125,6 +125,105 @@ Because he wanted to improve his "arrr-ticulation"! ?????
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Tutorial coming soon.
+This tutorial shows how to enable OpenTelemetry on an agent so that interactions with the agent are automatically logged and exported.
+In this tutorial, output is written to the console using the OpenTelemetry console exporter.
+
+## Prerequisites
+
+For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+
+## Installing packages
+
+To use the Agent Framework with Azure OpenAI, you need to install the following packages:
+
+```bash
+pip install agent-framework azure-identity
+```
+
+To also add OpenTelemetry support, with support for writing to the console, install these additional packages:
+
+```bash
+pip install opentelemetry-sdk opentelemetry-exporter-console
+```
+
+## Enable OpenTelemetry in your app
+
+The agent framework provides a convenient `setup_observability` function that configures OpenTelemetry with sensible defaults.
+By default, it exports to the console if no specific exporter is configured.
+
+```python
+import asyncio
+from agent_framework.observability import setup_observability
+
+# Enable agent framework telemetry with console output (default behavior)
+setup_observability(enable_sensitive_data=True)
+```
+
+## Create and run the agent
+
+Create an agent using the agent framework. The observability will be automatically enabled for the agent.
+
+```python
+from agent_framework import ChatAgent
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+# Create the agent - telemetry is automatically enabled
+agent = ChatAgent(
+    chat_client=AzureOpenAIChatClient(
+        credential=AzureCliCredential(),
+        model="gpt-4o-mini"
+    ),
+    name="Joker",
+    instructions="You are good at telling jokes."
+)
+
+# Run the agent
+result = await agent.run("Tell me a joke about a pirate.")
+print(result.text)
+```
+
+The console exporter will show trace data on the console similar to the following:
+
+```text
+{
+    "name": "invoke_agent Joker",
+    "context": {
+        "trace_id": "0xf2258b51421fe9cf4c0bd428c87b1ae4",
+        "span_id": "0x2cad6fc139dcf01d",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.CLIENT",
+    "parent_id": null,
+    "start_time": "2025-09-25T11:00:48.663688Z",
+    "end_time": "2025-09-25T11:00:57.271389Z",
+    "status": {
+        "status_code": "UNSET"
+    },
+    "attributes": {
+        "gen_ai.operation.name": "invoke_agent",
+        "gen_ai.system": "openai",
+        "gen_ai.agent.id": "Joker",
+        "gen_ai.agent.name": "Joker",
+        "gen_ai.request.instructions": "You are good at telling jokes.",
+        "gen_ai.response.id": "chatcmpl-CH6fgKwMRGDtGNO3H88gA3AG2o7c5",
+        "gen_ai.usage.input_tokens": 26,
+        "gen_ai.usage.output_tokens": 29
+    }
+}
+```
+
+Followed by the text response from the agent:
+
+```text
+Why did the pirate go to school?
+
+Because he wanted to improve his "arrr-ticulation"! ⛵
+```
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Persisting conversations](./persisted-conversation.md)
 
 ::: zone-end

@@ -2,18 +2,18 @@
 title: Using function tools with an agent
 description: Learn how to use function tools with an agent
 zone_pivot_groups: programming-languages
-author: westey-m
+author: westey-m, dmytrostruk
 ms.topic: tutorial
-ms.author: westey
+ms.author: westey, dmytrostruk
 ms.date: 09/15/2025
 ms.service: semantic-kernel
 ---
 
 # Using function tools with an agent
 
-::: zone pivot="programming-language-csharp"
-
 This tutorial step shows you how to use function tools with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
+
+::: zone pivot="programming-language-csharp"
 
 > [!IMPORTANT]
 > Not all agent types support function tools. Some may only support custom built-in tools, without allowing the caller to provide their own functions. In this step we are using a `ChatClientAgent`, which does support function tools.
@@ -57,7 +57,56 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Tutorial coming soon.
+> [!IMPORTANT]
+> Not all agent types support function tools. Some may only support custom built-in tools, without allowing the caller to provide their own functions. In this step we are using agents created via chat clients, which do support function tools.
+
+## Prerequisites
+
+For prerequisites and installing Python packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+
+## Creating the agent with function tools
+
+Function tools are just custom code that you want the agent to be able to call when needed.
+You can turn any Python function into a function tool by passing it to the agent's `tools` parameter when creating the agent.
+
+If you need to provide additional descriptions about the function or its parameters to the agent, so that it can more accurately choose between different functions, you can use Python's type annotations with `Annotated` and Pydantic's `Field` to provide descriptions.
+
+Here is an example of a simple function tool that fakes getting the weather for a given location.
+It uses type annotations to provide additional descriptions about the function and its location parameter to the agent.
+
+```python
+from typing import Annotated
+from pydantic import Field
+
+def get_weather(
+    location: Annotated[str, Field(description="The location to get the weather for.")],
+) -> str:
+    """Get the weather for a given location."""
+    return f"The weather in {location} is cloudy with a high of 15°C."
+```
+
+When creating the agent, we can now provide the function tool to the agent, by passing it to the `tools` parameter.
+
+```python
+import asyncio
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    instructions="You are a helpful assistant",
+    tools=get_weather
+)
+```
+
+Now we can just run the agent as normal, and the agent will be able to call the `get_weather` function tool when needed.
+
+```python
+async def main():
+    result = await agent.run("What is the weather like in Amsterdam?")
+    print(result.text)
+
+asyncio.run(main())
+```
 
 ::: zone-end
 

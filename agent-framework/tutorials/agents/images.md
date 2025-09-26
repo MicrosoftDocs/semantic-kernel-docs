@@ -2,22 +2,22 @@
 title: Using images with an agent
 description: Learn how to use images with an agent
 zone_pivot_groups: programming-languages
-author: westey-m
+author: westey-m, dmytrostruk
 ms.topic: tutorial
-ms.author: westey
+ms.author: westey, dmytrostruk
 ms.date: 09/24/2025
 ms.service: semantic-kernel
 ---
 
 # Using images with an agent
 
-::: zone pivot="programming-language-csharp"
-
 This tutorial shows you how to use images with an agent, allowing the agent to analyze and respond to image content.
 
 ## Prerequisites
 
 For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+
+::: zone pivot="programming-language-csharp"
 
 ## Passing images to the agent
 
@@ -55,7 +55,51 @@ This will print the agent's analysis of the image to the console.
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Tutorial coming soon.
+## Passing images to the agent
+
+You can send images to an agent by creating a `ChatMessage` that includes both text and image content. The agent can then analyze the image and respond accordingly.
+
+First, create an agent that is able to analyze images.
+
+```python
+import asyncio
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    name="VisionAgent",
+    instructions="You are a helpful agent that can analyze images"
+)
+```
+
+Next, create a `ChatMessage` that contains both a text prompt and an image URL. Use `TextContent` for the text and `UriContent` for the image.
+
+```python
+from agent_framework import ChatMessage, TextContent, UriContent, Role
+
+message = ChatMessage(
+    role=Role.USER, 
+    contents=[
+        TextContent(text="What do you see in this image?"),
+        UriContent(
+            uri="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+            media_type="image/jpeg"
+        )
+    ]
+)
+```
+
+Run the agent with the message. You can use streaming to receive the response as it is generated.
+
+```python
+async def main():
+    result = await agent.run(message)
+    print(result.text)
+
+asyncio.run(main())
+```
+
+This will print the agent's analysis of the image to the console.
 
 ::: zone-end
 
