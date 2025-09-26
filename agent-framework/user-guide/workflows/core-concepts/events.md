@@ -47,7 +47,7 @@ RequestInfoEvent        // A request is issued
 ```python
 # Workflow lifecycle events
 WorkflowStartedEvent    # Workflow execution begins
-WorkflowCompletedEvent  # Workflow reaches completion
+WorkflowOutputEvent     # Workflow produces an output
 WorkflowErrorEvent      # Workflow encounters an error
 
 # Executor events
@@ -98,7 +98,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 from agent_framework import (
     ExecutorCompleteEvent,
     ExecutorInvokeEvent,
-    WorkflowCompletedEvent,
+    WorkflowOutputEvent,
     WorkflowErrorEvent,
 )
 
@@ -108,8 +108,8 @@ async for event in workflow.run_stream(input_message):
             print(f"Starting {invoke.executor_id}")
         case ExecutorCompleteEvent() as complete:
             print(f"Completed {complete.executor_id}: {complete.data}")
-        case WorkflowCompletedEvent() as finished:
-            print(f"Workflow finished: {finished.data}")
+        case WorkflowOutputEvent() as output:
+            print(f"Workflow produced output: {output.data}")
             return
         case WorkflowErrorEvent() as error:
             print(f"Workflow error: {error.exception}")
