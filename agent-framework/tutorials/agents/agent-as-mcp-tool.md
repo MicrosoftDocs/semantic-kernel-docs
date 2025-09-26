@@ -39,29 +39,20 @@ AIAgent agent = new AzureOpenAIClient(
         .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
-Turn the agent into a function tool. This function tool will be used as the implementation of the MCP tool.
+Turn the agent into a function tool and then an MCP tool. The agent name and description will be used as the mcp tool name and description.
 
 ```csharp
-var agentAsAIFunction = agent.AsAIFunction();
+McpServerTool tool = McpServerTool.Create(agent.AsAIFunction());
 ```
 
-Setup the MCP server to listen for incoming requests over standard input/output and expose the function tool as an MCP tool:
+Setup the MCP server to listen for incoming requests over standard input/output and expose the MCP tool:
 
 ```csharp
 HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
-    .WithTools([
-        McpServerTool.Create(
-            agentAsAIFunction,
-            new McpServerToolCreateOptions()
-            {
-                Title = agent.Name,
-                Name = agent.Name,
-                Description = agent.Description
-            })
-    ]);
+    .WithTools([tool]);
 
 await builder.Build().RunAsync();
 ```

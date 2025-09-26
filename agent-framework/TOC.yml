@@ -17,6 +17,6 @@ items:
   - name: Workflows
     href: user-guide/workflows/TOC.yml
 - name: Migration Guide
-  href: migration-guide/index.md
+  href: migration-guide/TOC.yml
 - name: API Reference Guide
   items:
