@@ -127,7 +127,6 @@ Decorators provide explicit middleware type declaration without requiring type a
 - You don't use type annotations
 - You need explicit middleware type declaration
 - You want to prevent type mismatches
-- You're working with dynamic middleware registration
 
 ```python
 from agent_framework import agent_middleware, function_middleware, chat_middleware
