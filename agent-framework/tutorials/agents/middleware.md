@@ -28,11 +28,13 @@ Function-based middleware is the simplest way to implement middleware using asyn
 
 Agent middleware intercepts and modifies agent run execution. It uses the `AgentRunContext` which contains:
 
+- `agent`: The agent being invoked
 - `messages`: List of chat messages in the conversation
+- `is_streaming`: Boolean indicating if the response is streaming
 - `metadata`: Dictionary for storing additional data between middleware
 - `result`: The agent's response (can be modified)
 - `terminate`: Flag to stop further processing
-- `is_streaming`: Boolean indicating if the response is streaming
+- `kwargs`: Additional keyword arguments passed to the agent run method
 
 The `next` callable continues the middleware chain or executes the agent if it's the last middleware.
 
@@ -58,9 +60,12 @@ async def logging_agent_middleware(
 
 Function middleware intercepts function calls within agents. It uses the `FunctionInvocationContext` which contains:
 
-- `function`: Function metadata (name, description, parameters)
-- `arguments`: Dictionary of arguments passed to the function
+- `function`: The function being invoked
+- `arguments`: The validated arguments for the function
+- `metadata`: Dictionary for storing additional data between middleware
 - `result`: The function's return value (can be modified)
+- `terminate`: Flag to stop further processing
+- `kwargs`: Additional keyword arguments passed to the chat method that invoked this function
 
 The `next` callable continues to the next middleware or executes the actual function.
 
@@ -86,9 +91,14 @@ async def logging_function_middleware(
 
 Chat middleware intercepts chat requests sent to AI models. It uses the `ChatContext` which contains:
 
+- `chat_client`: The chat client being invoked
 - `messages`: List of messages being sent to the AI service
+- `chat_options`: The options for the chat request
+- `is_streaming`: Boolean indicating if this is a streaming invocation
+- `metadata`: Dictionary for storing additional data between middleware
 - `result`: The chat response from the AI (can be modified)
-- `terminate`: Flag to stop processing
+- `terminate`: Flag to stop further processing
+- `kwargs`: Additional keyword arguments passed to the chat client
 
 The `next` callable continues to the next middleware or sends the request to the AI service.
 
