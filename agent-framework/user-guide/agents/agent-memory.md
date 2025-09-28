@@ -1,6 +1,6 @@
 ---
 title: Agent Memory
-description: Learn how to use memory with Agent Framework 
+description: Learn how to use memory with Agent Framework
 zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
