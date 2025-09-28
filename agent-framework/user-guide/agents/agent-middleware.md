@@ -1,6 +1,6 @@
 ---
 title: Agent Middleware
-description: Learn how to create middleware with Agent Framework 
+description: Learn how to create middleware with Agent Framework
 zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
