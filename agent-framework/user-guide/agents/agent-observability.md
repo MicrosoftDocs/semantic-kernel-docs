@@ -1,6 +1,6 @@
 ---
 title: Agent Observability
-description: Learn how to use observability with Agent Framework 
+description: Learn how to use observability with Agent Framework  
 zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
