@@ -1,6 +1,6 @@
 ---
 title: Running Agents
-description: Learn how to run agents with Agent Framework 
+description: Learn how to run agents with Agent Framework
 zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
