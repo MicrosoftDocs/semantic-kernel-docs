@@ -53,7 +53,7 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 
 ## (Optional) Installing Packages
 
-Packages will be published to [NuGet](https://www.nuget.org/) when the Agent Framework public preview is released. 
+Packages will be published to [NuGet](https://www.nuget.org/) when the Agent Framework public preview is released.
 In the meantime nightly builds of the Agent Framework are available [here](https://github.com/orgs/microsoft/packages?repo_name=agent-framework).
 
 To download nightly builds follow the following steps:
@@ -77,7 +77,7 @@ To download nightly builds follow the following steps:
         <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
         <add key="github" value="https://nuget.pkg.github.com/microsoft/index.json" />
       </packageSources>
-    
+
       <packageSourceMapping>
         <packageSource key="nuget.org">
           <package pattern="*" />
@@ -86,7 +86,7 @@ To download nightly builds follow the following steps:
           <package pattern="*nightly"/>
         </packageSource>
       </packageSourceMapping>
-    
+
       <packageSourceCredentials>
         <github>
             <add key="Username" value="<Your GitHub Id>" />
@@ -113,7 +113,7 @@ For more information see: <https://docs.github.com/en/packages/working-with-a-gi
 
 Before you begin, ensure you have the following:
 
-- [Python 3.9 or later](https://www.python.org/downloads/)
+- [Python 3.10 or later](https://www.python.org/downloads/)
 - An [Azure AI Foundry](/azure/ai-foundry/) project with a deployed model (e.g., `gpt-4o-mini`)
 - [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
 
@@ -121,35 +121,34 @@ Before you begin, ensure you have the following:
 
 ## Running a Basic Agent Sample
 
-This sample demonstrates how to create and use a simple AI agent with Azure AI Foundry as the backend. It will create a basic agent using `ChatAgent` with `FoundryChatClient` and custom instructions.
+This sample demonstrates how to create and use a simple AI agent with Azure AI Foundry as the backend. It will create a basic agent using `ChatAgent` with `AzureAIAgentClient` and custom instructions.
 
 Make sure to set the following environment variables:
-- `FOUNDRY_PROJECT_ENDPOINT`: Your Azure AI Foundry project endpoint
-- `FOUNDRY_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
+- `AZURE_AI_PROJECT_ENDPOINT`: Your Azure AI Foundry project endpoint
+- `AZURE_AI_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
 
 
 ### Sample Code
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
-from agent_framework.foundry import FoundryChatClient
+from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
-        ChatAgent(
-            chat_client=FoundryChatClient(async_credential=credential),
+        AzureAIAgentClient(async_credential=credential).create_agent(
             instructions="You are good at telling jokes."
         ) as agent,
     ):
-        result = await agent.run("Tell me a joke about a pirate.")
-        print(result.text)
+        print(await agent.run("Tell me a joke about a pirate.").text)
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+This creates a basic agent with instructions. You can also customize the agent further by using other keywords, some are exposed on the `create_agent` methods, all the arguments are documented in the ChatAgent.
 
 ## More Examples
 

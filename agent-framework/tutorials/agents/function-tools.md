@@ -124,6 +124,44 @@ async def main():
 asyncio.run(main())
 ```
 
+## Creating a class with multiple function tools
+
+You can also create a class that contains multiple function tools as methods.
+This can be useful for organizing related functions together or when you want to pass state between them.
+
+```python
+
+class WeatherTools:
+    def __init__(self):
+        self.last_location = None
+
+    def get_weather(
+        self,
+        location: Annotated[str, Field(description="The location to get the weather for.")],
+    ) -> str:
+        """Get the weather for a given location."""
+        return f"The weather in {location} is cloudy with a high of 15°C."
+
+    def get_weather_details(self) -> int:
+        """Get the detailed weather for the last requested location."""
+        if self.last_location is None:
+            return "No location specified yet."
+        return f"The detailed weather in {self.last_location} is cloudy with a high of 15°C, low of 7°C, and 60% humidity."
+
+```
+
+When creating the agent, we can now provide all the methods of the class as functions:
+
+```python
+tools = WeatherTools()
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    instructions="You are a helpful assistant",
+    tools=[tools.get_weather, tools.get_weather_details]
+)
+```
+
+You can also decorate the functions with the same `ai_function` decorator as before.
+
 ::: zone-end
 
 ## Next steps

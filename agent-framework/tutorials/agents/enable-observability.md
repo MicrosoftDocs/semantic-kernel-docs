@@ -134,16 +134,10 @@ For prerequisites, see the [Create and run a simple agent](./run-agent.md) step 
 
 ## Installing packages
 
-To use the Agent Framework with Azure OpenAI, you need to install the following packages:
+To use the Agent Framework with Azure OpenAI, you need to install the following packages, this also installs all the OpenTelemetry dependencies:
 
 ```bash
 pip install agent-framework
-```
-
-To also add OpenTelemetry support, with support for writing to the console, install these additional packages:
-
-```bash
-pip install opentelemetry-sdk opentelemetry-exporter-console
 ```
 
 ## Enable OpenTelemetry in your app
