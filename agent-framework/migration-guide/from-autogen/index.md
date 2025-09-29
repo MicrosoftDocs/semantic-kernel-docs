@@ -8,7 +8,6 @@ ms.date: 09/29/2025
 ms.service: semantic-kernel
 ---
 
-
 # AutoGen to Microsoft Agent Framework Migration Guide
 
 A comprehensive guide for migrating from AutoGen to the Microsoft Agent Framework Python SDK.
@@ -746,45 +745,32 @@ The diagram below contrasts AutoGen's control-flow GraphFlow (left) with Agent F
 
 ```mermaid
 flowchart LR
-  %% Styles
-  classDef agent fill:#e8f0fe,stroke:#6b8bd3,stroke-width:1px,color:#1a3d7a;
-  classDef exec fill:#e6ffed,stroke:#34a853,stroke-width:1px,color:#0b5126;
-  classDef note fill:#fff5e6,stroke:#f4b400,stroke-width:1px,color:#6b4e00;
 
-  subgraph G1[AutoGen: GraphFlow (control-flow; agents as nodes)]
+  subgraph AutoGenGraphFlow
     direction TB
     U[User / Task] --> A[Agent A]
-    A -->|condition: success| B[Agent B]
-    A -->|condition: retry| C[Agent C]
-    %% Broadcast semantics
-    A -. broadcast message .-> B
-    A -. broadcast message .-> C
-    class A,B,C agent
+    A -->|success| B[Agent B]
+    A -->|retry| C[Agent C]
+    A -. broadcast .- B
+    A -. broadcast .- C
   end
 
-  subgraph G2[Agent Framework: Workflow (data-flow; executors as nodes)]
+  subgraph AgentFrameworkWorkflow
     direction TB
-    I[Input Data] --> E1{{Executor 1}}
-    E1 -->|str| E2{{Executor 2}}
-    E1 -->|image| E3{{Executor 3}}
-    E3 -->|str| E2
-    E2 -->|yield_output| OUT[(Final Output)]
-    class E1,E2,E3 exec
-
-    %% Executor types note
-    EXNote[Executors = Agent | Function | Sub-workflow]:::note
-    EXNote --- E1
+    I[Input] --> E1[Executor 1]
+    E1 -->|"str"| E2[Executor 2]
+    E1 -->|"image"| E3[Executor 3]
+    E3 -->|"str"| E2
+    E2 --> OUT[(Final Output)]
   end
 
-  %% Request/Response gate (human-in-the-loop)
-  R[Request/Response Gate]:::note
-  E2 -. may request info .-> R
-  R -. resume with response .-> E2
+  R[Request / Response Gate]
+  E2 -. request .-> R
+  R -. resume .-> E2
 
-  %% Checkpointing
-  CP[Checkpoint]:::note
-  E1 -. checkpoint .-> CP
-  CP -. resume .-> E1
+  CP[Checkpoint]
+  E1 -. save .-> CP
+  CP -. load .-> E1
 ```
 
 In practice:
