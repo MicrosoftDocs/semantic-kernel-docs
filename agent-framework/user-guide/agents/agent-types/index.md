@@ -25,7 +25,7 @@ All agents are derived from a common base class, `AIAgent`, which provides a con
 ## Simple agents based on inference services
 
 The agent framework makes it easy to create simple agents based on many different inference services.
-Any inference service that provides a ChatClient implementation can be used to build these agents.
+Any inference service that provides an [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation can be used to build these agents. The `Microsoft.Agents.AI.ChatClientAgent` is the agent class used to provide an agent for any `IChatClient` implementation.
 
 These agents support a wide range of functionality out of the box:
 
