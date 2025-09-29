@@ -72,7 +72,7 @@ async def main():
     async with AzureAIAgentClient(async_credential=credential).create_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
-        middleware=[logging_agent_middleware],  # Add your middleware here
+        middleware=logging_agent_middleware,  # Add your middleware here
     ) as agent:
         result = await agent.run("Hello!")
         print(result.text)
