@@ -43,7 +43,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-## Step 2: Create Your First Middleware
+## Step 2: Create Your Middleware
 
 Create a simple logging middleware to see when your agent runs:
 
