@@ -73,7 +73,7 @@ Since not all content returned is the result, it's important to look for specifi
 ::: zone pivot="programming-language-csharp"
 
 To extract the text result from a response, all `TextContent` items from all `ChatMessages` items need to be aggregated.
-To simplify this, we provide a `Text` property on all response types that aggregate this all `TextContent`.
+To simplify this, we provide a `Text` property on all response types that aggregates all `TextContent`.
 
 For the non-streaming case, everything is returned in one `AgentRunResponse` object.
 `AgentRunResponse` allows access to the produced messages via the `Messages` property.

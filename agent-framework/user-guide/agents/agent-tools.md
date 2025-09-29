@@ -80,7 +80,7 @@ await agent.RunAsync(
 
 Where the underlying service supports built-in tools, they can be provided using the same mechanisms as described above.
 
-The IChatClient implementation for the underlying service, should expose an `AITool` derived class that can be used to
+The IChatClient implementation for the underlying service should expose an `AITool` derived class that can be used to
 configure the built-in tool.
 
 E.g, when creating an Azure AI Foundry Agent, you can provide a `CodeInterpreterToolDefinition` to enable the code interpreter
