@@ -37,8 +37,10 @@ agent = ChatAgent(
     instructions="You are a helpful assistant."
 )
 
-thread = agent.get_new_thread()
 # Conversation history is maintained in memory for this thread
+thread = agent.get_new_thread()
+
+response = await agent.run("Hello, my name is Alice", thread=thread)
 ```
 
 ### Persistent Message Stores
