@@ -1,7 +1,7 @@
 ---
 title: AutoGen to Microsoft Agent Framework Migration Guide
 description: A comprehensive guide for migrating from AutoGen to the Microsoft Agent Framework Python SDK.
-author: Eric Zhu
+author: ekzhu
 ms.topic: reference
 ms.author: ekzhu
 ms.date: 09/29/2025
