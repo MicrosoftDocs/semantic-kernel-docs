@@ -166,3 +166,8 @@ For more detailed examples and advanced scenarios, see the [Azure AI Agent Examp
 
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Create and run agents](./agents/run-agent.md)
