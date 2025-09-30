@@ -15,7 +15,7 @@ The Microsoft Agent Framework is a lightweight, open-source development kit that
 There are two concepts that will be introduced here:
 
 1. [AI Agents](#ai-agents)
-1. [Multi-Agent Workflows](#multi-agent-workflows)
+2. [Workflows](#workflows)
 
 > [!IMPORTANT]
 > If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications. 
@@ -54,4 +54,25 @@ Using an AI agent for application development provides advantages that are espec
 
 - **Interactive and Goal-Oriented**: If your application involves goal-driven behavior (e.g., completing tasks autonomously or interacting with users to achieve specific objectives), agent-based frameworks are a better choice. Examples include virtual assistants, game AI, and task planners.
 
-## Multi-Agent Workflows
+## Workflows
+
+### What is a Workflow?
+
+A **workflow** is a predefined sequence of operations that can include AI agents as components while maintaining consistency and reliability. Workflows are designed to handle complex and long-running business processes that may involve multiple agents, human interactions, and integrations with external systems.
+
+The flow of a workflow is explicitly defined, allowing for more control over the execution path. Workflows can include conditional routing, parallel processing, and dynamic execution paths.
+
+### What problems do Workflows solve?
+
+Workflows provide a structured way to manage complex processes that involve multiple steps, decision points, and interactions with various systems or agents. The types of tasks workflows are designed to handle often require more than one AI agent.
+
+Here are some of the key benefits of `Agent Framework` workflows:
+
+- **Modularity**: Workflows can be broken down into smaller, reusable components, making it easier to manage and update individual parts of the process.
+- **Agent Integration**: Workflows can incorporate multiple AI agents with non-agentic components, allowing for sophisticated orchestration of tasks.
+- **Type Safety**: Strong typing ensures messages flow correctly between components, with comprehensive validation that prevents runtime errors.
+- **Flexible Control Flow**: Graph-based architecture allows for intuitive modeling of complex workflows with `executors` and `edges`. Conditional routing, parallel processing, and dynamic execution paths are all supported.
+- **External Integration**: Built-in request/response patterns for seamless integration with external APIs, and human-in-the-loop scenarios.
+- **Checkpointing**: Save workflow states via checkpoints, enabling recovery and resumption of long-running processes on server sides.
+- **Multi-Agent Orchestration**: Built-in patterns for coordinating multiple AI agents, including sequential, concurrent, hand-off, and magentic.
+- **Composability**: Workflows can be nested or combined to create more complex processes, allowing for scalability and adaptability.
