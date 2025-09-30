@@ -81,5 +81,5 @@ Here are some of the key benefits of `Agent Framework` workflows:
 
 > [!div class="nextstepaction"]
 > [Quickstart Guide](../tutorials/quick-start.md)
->  [Migration Guide from Semantic Kernel](../migration-guide/from-semantic-kernel/index.md)
->[Migration Guide from AutoGen](../migration-guide/from-autogen/index.md)
+> [Migration Guide from Semantic Kernel](../migration-guide/from-semantic-kernel/index.md)
+> [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md)
