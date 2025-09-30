@@ -26,7 +26,7 @@ You'll create a workflow that:
 
 ## Prerequisites
 
-- .NET 8.0 or later
+- .NET 9.0 or later
 - Agent Framework NuGet package: `Microsoft.Agents.AI.Workflows`
 - Azure OpenAI access with an endpoint and deployment configured
 
@@ -214,7 +214,7 @@ You'll create a workflow that:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework Core installed: `pip install agent-framework`
+- Agent Framework Core installed: `pip install agent-framework-core`
 
 ## Step 1: Import Required Dependencies
 
