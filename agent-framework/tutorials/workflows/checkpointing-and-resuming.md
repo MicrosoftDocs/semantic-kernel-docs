@@ -15,9 +15,13 @@ This tutorial demonstrates how to implement checkpointing and resuming in workfl
 
 ::: zone pivot="programming-language-csharp"
 
+Coming soon.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Coming soon.
 
 ::: zone-end
 
