@@ -11,7 +11,7 @@ ms.service: semantic-kernel
 
 # Agent Observability
 
-Observability is a key aspect of building reliable and maintainable systems. Agent Framework provide built-in support for observability, allowing you to monitor the behavior of your agents.
+Observability is a key aspect of building reliable and maintainable systems. Agent Framework provides built-in support for observability, allowing you to monitor the behavior of your agents.
 
 This guide will walk you through the steps to enable observability with Agent Framework to help you understand how your agents are performing and diagnose any issues that may arise.
 
