@@ -1655,3 +1655,7 @@ The Agent Framework provides samples across several other important areas:
 - **Multimodal Input**: [Multimodal samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/multimodal_input) - Working with images and other media types
 - **Context Providers**: [Context Provider samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/context_providers) - External context integration patterns
 
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Quickstart](../tutorials/quick-start.md)
