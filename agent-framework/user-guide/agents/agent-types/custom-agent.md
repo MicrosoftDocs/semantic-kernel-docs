@@ -23,7 +23,7 @@ In most cases building your own agent will involve more complex logic and integr
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.Agents
+dotnet add package Microsoft.Agents.AI.Abstractions --prerelease
 ```
 
 ## Creating a Custom Agent

@@ -20,7 +20,7 @@ The Microsoft Agent Framework supports creating agents that use the [Azure OpenA
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 dotnet add package Azure.AI.OpenAI
 dotnet add package Azure.Identity
 ```
@@ -33,7 +33,7 @@ As a first step you need to create a client to connect to the Azure OpenAI servi
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 using OpenAI;
 
 AzureOpenAIClient client = new AzureOpenAIClient(

@@ -48,9 +48,6 @@ using System;
 using OpenTelemetry;
 using OpenTelemetry.Trace;
 
-// Enable agent framework telemetry
-AppContext.SetSwitch("Microsoft.Extensions.AI.Agents.EnableTelemetry", true);
-
 // Create a TracerProvider that exports to the console
 using var tracerProvider = Sdk.CreateTracerProviderBuilder()
     .AddSource("agent-telemetry-source")
@@ -68,7 +65,7 @@ that we used above, when we created the tracer provider.
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 
 // Create the agent and enable OpenTelemetry instrumentation
 AIAgent agent = new AzureOpenAIClient(

@@ -23,7 +23,7 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI Assi
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
 ## Creating an OpenAI Assistants Agent
@@ -32,7 +32,7 @@ As a first step you need to create a client to connect to the OpenAI service.
 
 ```csharp
 using System;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 using OpenAI;
 
 OpenAIClient client = new OpenAIClient("<your_api_key>");

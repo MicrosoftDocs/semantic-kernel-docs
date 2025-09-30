@@ -20,7 +20,7 @@ The Microsoft Agent Framework supports using a remote agent that is exposed via 
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.Agents.A2A --prerelease
+dotnet add package Microsoft.Agents.AI.A2A --prerelease
 ```
 
 ## Creating an A2A Agent using the well known agent card location
@@ -34,8 +34,8 @@ First, create an `A2ACardResolver` with the URI of the remote A2A agent host.
 ```csharp
 using System;
 using A2A;
-using Microsoft.Extensions.AI.Agents;
-using Microsoft.Extensions.AI.Agents.A2A;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.A2A;
 
 A2ACardResolver agentCardResolver = new(new Uri("https://your-a2a-agent-host"));
 ```

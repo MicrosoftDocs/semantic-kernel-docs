@@ -22,7 +22,7 @@ In this document, we will use Ollama as an example.
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.Agents
+dotnet add package Microsoft.Agents.AI --prerelease
 ```
 
 You will also need to add the package for the specific `IChatClient` implementation you want to use. In this example, we will use [OllamaSharp](https://www.nuget.org/packages/OllamaSharp/).
@@ -40,7 +40,7 @@ First, create an `OllamaApiClient` to access the Ollama service.
 
 ```csharp
 using System;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 using OllamaSharp;
 
 using OllamaApiClient chatClient = new(new Uri("http://localhost:11434"), "phi3");

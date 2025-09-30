@@ -26,7 +26,7 @@ You can add agents to your workflow via edges:
 ```csharp
 using Microsoft.Agents.Workflows;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 
 // Create the agents first
 AIAgent agentA = new ChatClientAgent(chatClient, instructions);
