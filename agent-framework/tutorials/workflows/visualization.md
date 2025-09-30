@@ -9,15 +9,17 @@ ms.date: 09/29/2025
 ms.service: semantic-kernel
 ---
 
+# Visualizing Workflows
+
 ::: zone pivot="programming-language-csharp"
 
-Coming soon.
+Tutorial coming soon.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-# Overview
+## Overview
 
 The Agent Framework provides powerful visualization capabilities for workflows through the `WorkflowViz` class. This allows you to generate visual diagrams of your workflow structure in multiple formats including Mermaid flowcharts, GraphViz DOT diagrams, and exported image files (SVG, PNG, PDF).
 

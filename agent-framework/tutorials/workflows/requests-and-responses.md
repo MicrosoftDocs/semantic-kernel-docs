@@ -174,7 +174,7 @@ private static int ReadIntegerFromConsole(string prompt)
 }
 ```
 
-## .NET Implementation Concepts
+## Implementation Concepts
 
 ### RequestInfoEvent Flow
 
@@ -204,7 +204,7 @@ private static int ReadIntegerFromConsole(string prompt)
 
 6. **Loop Continuation**: The process repeats until the correct number is guessed.
 
-### .NET Framework Benefits
+### Framework Benefits
 
 - **Type Safety**: Strong typing ensures request-response contracts are maintained
 - **Event-Driven**: Rich event system provides visibility into workflow execution

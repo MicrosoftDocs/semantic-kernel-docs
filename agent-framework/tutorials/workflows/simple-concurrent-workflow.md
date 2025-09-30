@@ -26,7 +26,7 @@ You'll create a workflow that:
 
 ## Prerequisites
 
-- .NET 8.0 or later
+- .NET 9.0 or later
 - Agent Framework NuGet package: `Microsoft.Agents.AI.Workflows`
 - Azure OpenAI access with an endpoint and deployment configured
 
