@@ -807,9 +807,9 @@ workflow = (WorkflowBuilder()
 
 For detailed workflow examples, see:
 
-- [Workflow Basics](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/_start-here/step1_executors_and_edges.py) - Introduction to executors and edges
-- [Agents in Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/_start-here/step2_agents_in_a_workflow.py) - Integrating agents in workflows
-- [Workflow Streaming](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/_start-here/step3_streaming.py) - Real-time workflow execution
+- [Workflow Basics](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/_start-here/step1_executors_and_edges.py) - Introduction to executors and edges
+- [Agents in Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/_start-here/step2_agents_in_a_workflow.py) - Integrating agents in workflows
+- [Workflow Streaming](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/_start-here/step3_streaming.py) - Real-time workflow execution
 
 **Benefits:**
 
@@ -1148,8 +1148,8 @@ async def sequential_example():
 
 For detailed orchestration examples, see:
 
-- [Sequential Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/sequential_agents.py) - Round-robin style agent execution
-- [Sequential Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/sequential_custom_executors.py) - Custom executor patterns
+- [Sequential Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/sequential_agents.py) - Round-robin style agent execution
+- [Sequential Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/sequential_custom_executors.py) - Custom executor patterns
 
 For concurrent execution patterns, Agent Framework also provides:
 
@@ -1172,9 +1172,9 @@ async def concurrent_example():
 
 For concurrent execution examples, see:
 
-- [Concurrent Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/concurrent_agents.py) - Parallel agent execution
-- [Concurrent Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/concurrent_custom_executors.py) - Custom parallel patterns
-- [Concurrent with Custom Aggregator](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/concurrent_custom_aggregator.py) - Result aggregation patterns
+- [Concurrent Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_agents.py) - Parallel agent execution
+- [Concurrent Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_custom_executors.py) - Custom parallel patterns
+- [Concurrent with Custom Aggregator](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_custom_aggregator.py) - Result aggregation patterns
 
 #### MagenticOneGroupChat Pattern
 
@@ -1270,9 +1270,9 @@ workflow = (MagenticBuilder()
 
 For detailed Magentic examples, see:
 
-- [Basic Magentic Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/magentic.py) - Standard orchestrated multi-agent workflow
-- [Magentic with Checkpointing](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/magentic_checkpoint.py) - Persistent orchestrated workflows
-- [Magentic Human Plan Update](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/magentic_human_plan_update.py) - Human-in-the-loop planning
+- [Basic Magentic Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic.py) - Standard orchestrated multi-agent workflow
+- [Magentic with Checkpointing](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_checkpoint.py) - Persistent orchestrated workflows
+- [Magentic Human Plan Update](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_human_plan_update.py) - Human-in-the-loop planning
 
 #### Future Patterns
 
@@ -1388,8 +1388,8 @@ async def run_with_human_input():
 
 For human-in-the-loop workflow examples, see:
 
-- [Guessing Game with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/human-in-the-loop/guessing_game_with_human_input.py) - Interactive workflow with user feedback
-- [Workflow as Agent with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/agents/workflow_as_agent_human_in_the_loop.py) - Nested workflows with human interaction
+- [Guessing Game with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/human-in-the-loop/guessing_game_with_human_input.py) - Interactive workflow with user feedback
+- [Workflow as Agent with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/agents/workflow_as_agent_human_in_the_loop.py) - Nested workflows with human interaction
 
 ### Checkpointing and Resuming Workflows
 
@@ -1557,10 +1557,10 @@ async def resume_with_responses_example():
 
 For comprehensive checkpointing examples, see:
 
-- [Checkpoint with Resume](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/checkpoint/checkpoint_with_resume.py) - Basic checkpointing and interactive resume
-- [Checkpoint with Human-in-the-Loop](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/checkpoint/checkpoint_with_human_in_the_loop.py) - Persistent workflows with human approval gates
-- [Sub-workflow Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/checkpoint/sub_workflow_checkpoint.py) - Checkpointing nested workflows
-- [Magentic Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/orchestration/magentic_checkpoint.py) - Checkpointing orchestrated multi-agent workflows
+- [Checkpoint with Resume](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/checkpoint/checkpoint_with_resume.py) - Basic checkpointing and interactive resume
+- [Checkpoint with Human-in-the-Loop](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/checkpoint/checkpoint_with_human_in_the_loop.py) - Persistent workflows with human approval gates
+- [Sub-workflow Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/checkpoint/sub_workflow_checkpoint.py) - Checkpointing nested workflows
+- [Magentic Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_checkpoint.py) - Checkpointing orchestrated multi-agent workflows
 
 ---
 
@@ -1654,3 +1654,4 @@ The Agent Framework provides samples across several other important areas:
 - **Threads**: [Thread samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/threads) - Managing conversation state and context
 - **Multimodal Input**: [Multimodal samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/multimodal_input) - Working with images and other media types
 - **Context Providers**: [Context Provider samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/context_providers) - External context integration patterns
+
