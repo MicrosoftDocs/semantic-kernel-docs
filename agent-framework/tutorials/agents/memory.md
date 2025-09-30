@@ -126,11 +126,9 @@ internal sealed class UserInfoMemory : AIContextProvider
         });
     }
 
-    public override ValueTask<JsonElement?> SerializeAsync(
-        JsonSerializerOptions? jsonSerializerOptions = null,
-        CancellationToken cancellationToken = default)
+    public override JsonElement Serialize(JsonSerializerOptions? jsonSerializerOptions = null)
     {
-        return new ValueTask<JsonElement?>(JsonSerializer.SerializeToElement(this.UserInfo, jsonSerializerOptions));
+        return JsonSerializer.SerializeToElement(this.UserInfo, jsonSerializerOptions);
     }
 }
 ```
@@ -169,7 +167,7 @@ Console.WriteLine(await agent.RunAsync("My name is Ruaidhrí", thread));
 Console.WriteLine(await agent.RunAsync("I am 20 years old", thread));
 
 // Access the memory component via the thread's GetService method.
-var userInfo = deserializedThread.GetService<UserInfoMemory>()?.UserInfo;
+var userInfo = thread.GetService<UserInfoMemory>()?.UserInfo;
 Console.WriteLine($"MEMORY - User Name: {userInfo?.UserName}");
 Console.WriteLine($"MEMORY - User Age: {userInfo?.UserAge}");
 ```

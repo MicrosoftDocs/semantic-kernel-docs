@@ -27,6 +27,8 @@ Before you begin, ensure you have the following prerequisites:
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
 - [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
 
+> [!NOTE]
+> The Microsoft Agent Framework is supported with all actively supported versions of .net. For the purposes of this sample we are recommending the .NET 8.0 SDK or higher.
 > [!IMPORTANT]
 > For this tutorial we are using Azure OpenAI for the Chat Completion service, but you can use any inference service that is compatible with [Microsoft.Extensions.AI.IChatClient](/dotnet/api/microsoft.extensions.ai.ichatclient).
 
@@ -38,7 +40,7 @@ To use the Microsoft Agent Framework with Azure OpenAI, you need to install the 
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Extensions.AI.OpenAI
-dotnet add package Microsoft.Agents.OpenAI
+dotnet add package Microsoft.Agents.AI.OpenAI
 ```
 
 ## Creating the agent
@@ -51,6 +53,7 @@ dotnet add package Microsoft.Agents.OpenAI
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OpenAI;
 
