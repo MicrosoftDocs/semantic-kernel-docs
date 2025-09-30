@@ -15,7 +15,7 @@ Checkpointing allows workflows to save their state at specific points and resume
 
 ::: zone pivot="programming-language-csharp"
 
-## Key Components (.NET)
+## Key Components
 
 ### CheckpointManager
 
@@ -31,7 +31,7 @@ var checkpointManager = CheckpointManager.Default;
 var checkpointManager = CheckpointManager.CreateJson(store, customOptions);
 ```
 
-### Enabling Checkpointing (.NET)
+### Enabling Checkpointing
 
 Enable checkpointing when executing workflows using `InProcessExecution`:
 
@@ -47,9 +47,9 @@ Checkpointed<StreamingRun> checkpointedRun = await InProcessExecution
     .StreamAsync(workflow, NumberSignal.Init, checkpointManager);
 ```
 
-## State Persistence (.NET)
+## State Persistence
 
-### Executor State (.NET)
+### Executor State
 
 Executors can persist local state that survives checkpoints using the `ReflectingExecutor` base class:
 
@@ -114,7 +114,7 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync())
 }
 ```
 
-## Working with Checkpoints (.NET)
+## Working with Checkpoints
 
 ### Accessing Checkpoint Information
 
@@ -148,9 +148,9 @@ CheckpointInfo checkpointInfo = await checkpointManager.CommitCheckpointAsync(ru
 Checkpoint restoredCheckpoint = await checkpointManager.LookupCheckpointAsync(runId, checkpointInfo);
 ```
 
-## Resuming from Checkpoints (.NET)
+## Resuming from Checkpoints
 
-### Streaming Resume (.NET)
+### Streaming Resume
 
 Resume execution from a checkpoint and stream events in real-time:
 
@@ -176,7 +176,7 @@ await foreach (WorkflowEvent evt in resumedRun.Run.WatchStreamAsync())
 }
 ```
 
-### Non-Streaming Resume (.NET)
+### Non-Streaming Resume
 
 Resume and wait for completion:
 
@@ -278,7 +278,7 @@ if (checkpoints.Count > 0)
 }
 ```
 
-## Complete Example Pattern (.NET)
+## Complete Example Pattern
 
 Here's a comprehensive checkpointing workflow pattern:
 
@@ -373,7 +373,7 @@ public static class CheckpointingExample
 }
 ```
 
-## Key Benefits (.NET)
+## Key Benefits
 
 - **Fault Tolerance**: Workflows can recover from failures by resuming from the last checkpoint
 - **Long-Running Processes**: Break long workflows into manageable segments with automatic checkpoint boundaries
@@ -382,7 +382,7 @@ public static class CheckpointingExample
 - **Portability**: Checkpoints can be restored to new workflow instances (rehydration)
 - **Automatic Management**: Checkpoints are created automatically at super step boundaries
 
-### Running the Example (.NET)
+### Running the Example
 
 For the complete working implementation, see the [CheckpointAndResume sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Workflows/Checkpoint/CheckpointAndResume).
 
