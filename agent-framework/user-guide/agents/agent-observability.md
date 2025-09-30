@@ -139,7 +139,46 @@ The metrics that are created are:
 - For function invocation during the `execute_tool` operations:
     - `agent_framework.function.invocation.duration` (histogram): This metric measures the duration of each function execution, in seconds.
 
-# Getting started
+## Example trace output
+
+When you run an agent with observability enabled, you'll see trace data similar to the following console output:
+
+```text
+{
+    "name": "invoke_agent Joker",
+    "context": {
+        "trace_id": "0xf2258b51421fe9cf4c0bd428c87b1ae4",
+        "span_id": "0x2cad6fc139dcf01d",
+        "trace_state": "[]"
+    },
+    "kind": "SpanKind.CLIENT",
+    "parent_id": null,
+    "start_time": "2025-09-25T11:00:48.663688Z",
+    "end_time": "2025-09-25T11:00:57.271389Z",
+    "status": {
+        "status_code": "UNSET"
+    },
+    "attributes": {
+        "gen_ai.operation.name": "invoke_agent",
+        "gen_ai.system": "openai",
+        "gen_ai.agent.id": "Joker",
+        "gen_ai.agent.name": "Joker",
+        "gen_ai.request.instructions": "You are good at telling jokes.",
+        "gen_ai.response.id": "chatcmpl-CH6fgKwMRGDtGNO3H88gA3AG2o7c5",
+        "gen_ai.usage.input_tokens": 26,
+        "gen_ai.usage.output_tokens": 29
+    }
+}
+```
+
+This trace shows:
+- **Trace and span identifiers**: For correlating related operations
+- **Timing information**: When the operation started and ended
+- **Agent metadata**: Agent ID, name, and instructions
+- **Model information**: The AI system used (OpenAI) and response ID
+- **Token usage**: Input and output token counts for cost tracking
+
+## Getting started
 
 We have a number of samples in our repository that demonstrate these capabilities, see the [observability samples folder ](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) on Github. That includes samples for using zero-code telemetry as well.
 
