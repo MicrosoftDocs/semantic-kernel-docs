@@ -31,7 +31,7 @@ from azure.identity.aio import AzureCliCredential
 
 async def main():
     credential = AzureCliCredential()
-    
+
     async with AzureAIAgentClient(async_credential=credential).create_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
@@ -48,16 +48,18 @@ if __name__ == "__main__":
 Create a simple logging middleware to see when your agent runs:
 
 ```python
+from agent_framework import AgentRunContext
+
 async def logging_agent_middleware(
     context: AgentRunContext,
     next: Callable[[AgentRunContext], Awaitable[None]],
 ) -> None:
     """Simple middleware that logs agent execution."""
     print("Agent starting...")
-    
+
     # Continue to agent execution
     await next(context)
-    
+
     print("Agent finished!")
 ```
 
@@ -68,7 +70,7 @@ Add the middleware when creating your agent:
 ```python
 async def main():
     credential = AzureCliCredential()
-    
+
     async with AzureAIAgentClient(async_credential=credential).create_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
@@ -83,6 +85,8 @@ async def main():
 If your agent uses functions, you can intercept function calls:
 
 ```python
+from agent_framework import FunctionInvocationContext
+
 def get_time():
     """Get the current time."""
     from datetime import datetime
@@ -94,9 +98,9 @@ async def logging_function_middleware(
 ) -> None:
     """Middleware that logs function calls."""
     print(f"Calling function: {context.function.name}")
-    
+
     await next(context)
-    
+
     print(f"Function result: {context.result}")
 
 # Add both the function and middleware to your agent
