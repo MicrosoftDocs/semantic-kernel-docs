@@ -80,4 +80,6 @@ Here are some of the key benefits of `Agent Framework` workflows:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Create and run agents](./tutorials/agents/run-agent.md)
+> [Quickstart](../tutorials/quick-start.md)
+>[Migration Guide from Semantic Kernel](../migration-guide/from-semantic-kernel/index.md)
+>[Migration Guide from AutoGen](../migration-guide/from-auto-genl/index.md)
