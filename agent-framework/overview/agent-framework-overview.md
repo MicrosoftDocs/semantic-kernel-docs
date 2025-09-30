@@ -76,3 +76,8 @@ Here are some of the key benefits of `Agent Framework` workflows:
 - **Checkpointing**: Save workflow states via checkpoints, enabling recovery and resumption of long-running processes on server sides.
 - **Multi-Agent Orchestration**: Built-in patterns for coordinating multiple AI agents, including sequential, concurrent, hand-off, and magentic.
 - **Composability**: Workflows can be nested or combined to create more complex processes, allowing for scalability and adaptability.
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Create and run agents](./tutorials/agents/run-agent.md)
