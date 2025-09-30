@@ -17,7 +17,7 @@ Coming soon.
 
 ::: zone pivot="programming-language-python"
 
-## Overview
+# Overview
 
 The Agent Framework provides powerful visualization capabilities for workflows through the `WorkflowViz` class. This allows you to generate visual diagrams of your workflow structure in multiple formats including Mermaid flowcharts, GraphViz DOT diagrams, and exported image files (SVG, PNG, PDF).
 
