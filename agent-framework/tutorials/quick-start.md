@@ -26,6 +26,16 @@ Before you begin, ensure you have the following:
 
 **Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
 
+## Installing Packages
+
+Packages will be published to [NuGet Gallery | icrosoft.Agent.AI](https://www.nuget.org/packages/Microsoft.Agent.AI). 
+
+To add Microsoft Agent Framework packages to your project, use this command:
+
+```
+dotnet add package Microsoft.Agents.AI --version 1.0.0-preview.251001
+```
+
 ## Running a Basic Agent Sample
 
 This sample demonstrates how to create and use a simple AI agent with Azure OpenAI as the backend. It will create a basic agent using `AzureOpenAIClient` with `gpt-4o-mini` and custom instructions.
@@ -38,8 +48,7 @@ Make sure to replace `https://your-resource.openai.azure.com/` with the endpoint
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Extensions.AI.Agents;
-using OpenAI;
+using Microsoft.Agents.AI;
 
 AIAgent agent = new AzureOpenAIClient(
   new Uri("https://your-resource.openai.azure.com/"),
@@ -50,10 +59,9 @@ AIAgent agent = new AzureOpenAIClient(
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
-## (Optional) Installing Packages
+## (Optional) Installing Nightly Packages
 
-Packages will be published to [NuGet](https://www.nuget.org/) when the Agent Framework public preview is released. 
-In the meantime nightly builds of the Agent Framework are available [here](https://github.com/orgs/microsoft/packages?repo_name=agent-framework).
+If you need to get a package containing the latest enhancements or fixes nightly builds of the Agent Framework are available [here](https://github.com/orgs/microsoft/packages?repo_name=agent-framework).
 
 To download nightly builds follow the following steps:
 
@@ -98,9 +106,9 @@ To download nightly builds follow the following steps:
     * If you place this file in your project folder make sure to have Git (or whatever source control you use) ignore it.
     * For more information on where to store this file go [here](/nuget/reference/nuget-config-file).
 1. You can now add packages from the nightly build to your project.
-    * E.g. use this command `dotnet add package Microsoft.Extensions.AI.Agents --version 0.0.1-nightly-250731.6-alpha`
+    * E.g. use this command `dotnet add package Microsoft.Agents.AI --version 1.0.0-nightly-250930.11-preview.250930`
 1. And the latest package release can be referenced in the project like this:
-    * `<PackageReference Include="Microsoft.Extensions.AI.Agents" Version="*-*" />`
+    * `<PackageReference Include="Microsoft.Agents.AI" Version="*-*" />`
 
 For more information see: <https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry>
 
