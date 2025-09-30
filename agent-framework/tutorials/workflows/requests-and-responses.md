@@ -261,7 +261,7 @@ You'll create an interactive number guessing game workflow that demonstrates req
 First, install the required packages:
 
 ```bash
-pip install agent-framework[azure]
+pip install agent-framework-core
 pip install azure-identity
 pip install pydantic
 ```

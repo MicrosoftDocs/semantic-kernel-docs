@@ -214,7 +214,7 @@ You'll create a workflow that:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework Core installed: `pip install agent-framework`
+- Agent Framework Core installed: `pip install agent-framework-core`
 
 ## Step 1: Import Required Dependencies
 
