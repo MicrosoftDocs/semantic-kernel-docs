@@ -309,4 +309,4 @@ The agent framework supports all the abovementioned services via a single agent 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Quickstart](../tutorials/quick-start.md)
+> [Quickstart](../../tutorials/quick-start.md)

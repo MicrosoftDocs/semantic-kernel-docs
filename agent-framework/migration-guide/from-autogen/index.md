@@ -1658,4 +1658,4 @@ The Agent Framework provides samples across several other important areas:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Quickstart](../tutorials/quick-start.md)
+> [Quickstart](../../tutorials/quick-start.md)
