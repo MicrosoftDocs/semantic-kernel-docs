@@ -15,7 +15,117 @@ Middleware in the Agent Framework provides a powerful way to intercept, modify, 
 
 ::: zone pivot="programming-language-csharp"
 
-Documentation coming soon.
+The Agent Framework can be customized using three different types of middleware:
+
+1. Agent Run middleware: Allows interception of all agent runs, so that input and output can be inspected and/or modified as needed.
+1. Function calling middleware: Allows interception of all function calls executed by the agent, so that input and output can be inspected and modified as needed.
+1. `IChatClient` middleware: Allows interception of calls to an `IChatClient` implementation, where an agent is using `IChatClient` for inference calls, e.g. when using `ChatClientAgent`.
+
+All the types of middleware are implemented via a function callback, and when multiple middleware instances of the same type are registered, they form a chain,
+where each middleware instance is expected to call the next in the chain, via a provided `next` `Func`.
+
+Agent run and function calling middleware types can be registered on an agent, by using the agent builder with an existing agent object.
+
+```csharp
+var middlewareEnabledAgent = originalAgent
+    .AsBuilder()
+        .Use(CustomAgentRunMiddleware)
+        .Use(CustomFunctionCallingMiddleware)
+    .Build();
+```
+
+`IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
+
+```csharp
+var chatClient = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
+    .GetChatClient(deploymentName)
+    .AsIChatClient();
+
+var middlewareEnabledChatClient = chatClient
+    .AsBuilder()
+        .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
+    .Build();
+
+var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You are a helpful assistant.");
+```
+
+`IChatClient` middleware can also be registered using a factory method when constructing
+ an agent via one of the helper methods on SDK clients.
+
+```csharp
+var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
+    .GetChatClient(deploymentName)
+    .CreateAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
+        .AsBuilder()
+            .Use(getResponseFunc: ChatClientMiddleware, getStreamingResponseFunc: null)
+        .Build());
+```
+
+## Agent Run Middleware
+
+Here is an example of agent run middleware, that can inspect and/or modify the input and output from the agent run.
+
+```csharp
+async Task<AgentRunResponse> PIIMiddleware(IEnumerable<ChatMessage> messages, AgentThread? thread, AgentRunOptions? options, AIAgent innerAgent, CancellationToken cancellationToken)
+{
+    Console.WriteLine(messages.Count());
+
+    var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
+
+    Console.WriteLine(response.Messages.Count);
+
+    return response;
+}
+```
+
+## Function calling middleware
+
+> [!NOTE]
+> Function calling middleware is currently only supported with an `AIAgent` that uses `Microsoft.Extensions.AI.FunctionInvokingChatClient`, e.g. `ChatClientAgent`.
+
+Here is an example of function calling middleware, that can inspect and/or modify the function being called, and the result from the function call.
+
+```csharp
+async ValueTask<object?> CustomFunctionCallingMiddleware(
+    AIAgent agent,
+    FunctionInvocationContext context,
+    Func<FunctionInvocationContext, CancellationToken, ValueTask<object?>> next,
+    CancellationToken cancellationToken)
+{
+    Console.WriteLine($"Function Name: {context!.Function.Name}");
+    var result = await next(context, cancellationToken);
+    Console.WriteLine($"Function Call Result: {result}");
+
+    return result;
+}
+```
+
+It is possible to terminate the function call loop with function calling middleware by setting the provided `FunctionInvocationContext.Terminate` to true.
+This will prevent the function calling loop from issuing a request to the inference service containing the function call results after function invocation.
+If there were more than one function available for invocation during this iteration, it may also prevent any remaining functions from being executed.
+
+> [!WARNING]
+> Terminating the function call loop may result in your thread being left in an inconsistent state, e.g. containing function call content with no function result content.
+> This may result in the thread being unusable for further runs.
+
+## IChatClient middleware
+
+Here is an example of chat client middleware, that can inspect and/or modify the input and output for the request to the inference service that the chat client provides.
+
+```csharp
+async Task<ChatResponse> CustomChatClientMiddleware(IEnumerable<ChatMessage> messages, ChatOptions? options, IChatClient innerChatClient, CancellationToken cancellationToken)
+{
+    Console.WriteLine(messages.Count());
+    var response = await innerChatClient.GetResponseAsync(messages, options, cancellationToken);
+    Console.WriteLine(response.Messages.Count);
+
+    return response;
+}
+```
+
+> [!NOTE]
+> For more information about `IChatClient` middleware, see [Custom IChatClient middleware](/dotnet/ai/microsoft-extensions-ai#custom-ichatclient-middleware)
+> in the Microsoft.Extensions.AI documentation.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
