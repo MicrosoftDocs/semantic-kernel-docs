@@ -10,7 +10,5 @@
   href: requests-and-responses.md
 - name: Checkpointing and resuming workflows
   href: checkpointing-and-resuming.md
-- name: Shared state in workflows
-  href: shared-state.md
 - name: Visualizing workflows
   href: visualization.md
