@@ -1,6 +1,7 @@
 ---
 title: Checkpointing and Resuming Workflows
 description: Learn how to implement checkpointing and resuming in workflows using the Agent Framework.
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -23,4 +24,4 @@ This tutorial demonstrates how to implement checkpointing and resuming in workfl
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Learn about shared state in workflows](shared-state.md)
+> [Learn about Workflow Visualization](visualization.md)
