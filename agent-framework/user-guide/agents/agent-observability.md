@@ -71,7 +71,7 @@ The easiest way to enable OpenTelemetry is to set the following environment vari
     Be careful with this setting, as it may expose sensitive data in your logs.
 - OTLP_ENDPOINT
     Default is `None`, set to your host for otel, often: `http://localhost:4317`
-    This can be used for any compliant OTLP endpoint, such as [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), [Aspire Dashboard](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) or any other OTLP compliant endpoint.
+    This can be used for any compliant OTLP endpoint, such as [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) or any other OTLP compliant endpoint.
 - APPLICATIONINSIGHTS_CONNECTION_STRING
     Default is `None`, set to your Application Insights connection string to export to Azure Monitor.
     You can find the connection string in the Azure portal, in the "Overview" section of your Application Insights resource.
