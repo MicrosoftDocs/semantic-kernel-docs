@@ -46,6 +46,9 @@ var agent = new ChatClientAgent(
 ).WithOpenTelemetry(sourceName: "MyApplication", enableSensitiveData: true);    // Enable OpenTelemetry instrumentation with sensitive data
 ```
 
+> [!IMPORTANT]
+> When you enable observability for your chat clients and agents, you may see duplicated information, especially when sensitive data is enabled. The chat context (including prompts and responses) that is captured by both the chat client and the agent will be included in both spans. Depending on your needs, you may choose to enable observability only on the chat client or only on the agent to avoid duplication. See the [GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) for more details on the attributes captured for LLM and Agents.
+
 > [!NOTE]
 > Only enable sensitive data in development or testing environments, as it may expose user information in production logs and traces. Sensitive data includes prompts, responses, function call arguments, and results.
 
@@ -76,13 +79,14 @@ var resourceBuilder = ResourceBuilder
 using var tracerProvider = Sdk.CreateTracerProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddSource(SourceName)
-    .AddSource("Microsoft.Extensions.AI") // Listen to the Microsoft.Extensions.AI source for chat client telemetry
+    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry
+    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry
     .AddAzureMonitorTraceExporter(options => options.ConnectionString = applicationInsightsConnectionString)
     .Build();
 ```
 
 > [!TIP]
-> Depending on your backend, you can use different exporters, see the [OpenTelemetry .NET documentation](https://opentelemetry.io/docs/instrumentation/net/exporters/) for more information.
+> Depending on your backend, you can use different exporters, see the [OpenTelemetry .NET documentation](https://opentelemetry.io/docs/instrumentation/net/exporters/) for more information. For local development, consider using the [Aspire Dashboard](#aspire-dashboard).
 
 #### Metrics
 
@@ -135,20 +139,22 @@ using var loggerFactory = LoggerFactory.Create(builder =>
     .SetMinimumLevel(LogLevel.Debug);
 });
 
-// Use the logger factory for the chat client
-var instrumentedChatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient() // Converts a native OpenAI SDK ChatClient into a Microsoft.Extensions.AI.IChatClient
-    .AsBuilder()
-    .UseOpenTelemetry(    // Enable OpenTelemetry instrumentation with sensitive data
-        loggerFactory: loggerFactory,
-        sourceName: "MyApplication",
-        configure: (cfg) => cfg.EnableSensitiveData = true
-    )
-    .Build();
-
 // Create a logger instance for your application
 var logger = loggerFactory.CreateLogger<Program>();
+```
+
+## Aspire Dashboard
+
+Consider using the Aspire Dashboard as a quick way to visualize your traces and metrics during development. To Learn more, see [Aspire Dashboard documentation](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/overview). The Aspire Dashboard receives data via an OpenTelemetry Collector, which you can add to your tracer provider as follows:
+
+```csharp
+using var tracerProvider = Sdk.CreateTracerProviderBuilder()
+    .SetResourceBuilder(resourceBuilder)
+    .AddSource(SourceName)
+    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry
+    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry
+    .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
+    .Build();
 ```
 
 ## Getting started
