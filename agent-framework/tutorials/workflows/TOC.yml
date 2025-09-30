@@ -2,6 +2,8 @@
   href: simple-sequential-workflow.md
 - name: Create a simple concurrent workflow
   href: simple-concurrent-workflow.md
+- name: Agents in workflows
+  href: agents-in-workflows.md
 - name: Create a workflow with branching logic
   href: workflow-with-branching-logic.md
 - name: Handle requests and responses in workflows
