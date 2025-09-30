@@ -31,6 +31,7 @@ A comprehensive guide for migrating from AutoGen to the Microsoft Agent Framewor
   - [MCP Server Support](#mcp-server-support)
   - [Agent-as-a-Tool Pattern](#agent-as-a-tool-pattern)
   - [Middleware (Agent Framework Feature)](#middleware-agent-framework-feature)
+  - [Custom Agents](#custom-agents)
 - [Multi-Agent Feature Mapping](#multi-agent-feature-mapping)
   - [Programming Model Overview](#programming-model-overview)
   - [Workflow vs GraphFlow](#workflow-vs-graphflow)
@@ -142,10 +143,10 @@ from agent_framework.openai import OpenAIChatClient
 from agent_framework.azure import AzureOpenAIChatClient
 
 # OpenAI (reads API key from environment)
-client = OpenAIChatClient(ai_model_id="gpt-5")
+client = OpenAIChatClient(model_id="gpt-5")
 
 # Azure OpenAI (uses environment or default credentials; see samples for auth options)
-client = AzureOpenAIChatClient(ai_model_id="gpt-5")
+client = AzureOpenAIChatClient(model_id="gpt-5")
 ```
 
 For detailed examples, see:
@@ -163,10 +164,10 @@ from agent_framework.azure import AzureOpenAIResponsesClient
 from agent_framework.openai import OpenAIResponsesClient
 
 # Azure OpenAI with Responses API
-azure_responses_client = AzureOpenAIResponsesClient(ai_model_id="gpt-5")
+azure_responses_client = AzureOpenAIResponsesClient(model_id="gpt-5")
 
 # OpenAI with Responses API
-openai_responses_client = OpenAIResponsesClient(ai_model_id="gpt-5")
+openai_responses_client = OpenAIResponsesClient(model_id="gpt-5")
 ```
 
 For Responses API examples, see:
@@ -217,7 +218,7 @@ def get_time() -> str:
     return "Current time: 2:30 PM"
 
 # Create client
-client = OpenAIChatClient(ai_model_id="gpt-5")
+client = OpenAIChatClient(model_id="gpt-5")
 
 async def example():
     # Direct creation
@@ -461,7 +462,7 @@ from agent_framework import ChatAgent, HostedCodeInterpreterTool, HostedWebSearc
 from agent_framework.azure import AzureOpenAIChatClient
 
 # Azure OpenAI client with a model that supports hosted tools
-client = AzureOpenAIChatClient(ai_model_id="gpt-5")
+client = AzureOpenAIChatClient(model_id="gpt-5")
 
 # Code execution tool
 code_tool = HostedCodeInterpreterTool()
@@ -507,7 +508,7 @@ from agent_framework import ChatAgent, MCPStdioTool, MCPStreamableHTTPTool, MCPW
 from agent_framework.openai import OpenAIChatClient
 
 # Create client for the example
-client = OpenAIChatClient(ai_model_id="gpt-5")
+client = OpenAIChatClient(model_id="gpt-5")
 
 # Stdio MCP server
 mcp_tool = MCPStdioTool(
@@ -648,6 +649,93 @@ For detailed middleware examples, see:
 - [Class-based Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/class_based_middleware.py) - Object-oriented middleware
 - [Exception Handling Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/exception_handling_with_middleware.py) - Error handling patterns
 - [Shared State Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/shared_state_middleware.py) - State management across agents
+
+### Custom Agents
+
+Sometimes you don’t want a model-backed agent at all—you want a deterministic or API-backed agent with custom logic. Both frameworks support building custom agents, but the patterns differ.
+
+#### AutoGen: Subclass BaseChatAgent
+
+```python
+from typing import Sequence
+from autogen_agentchat.agents import BaseChatAgent
+from autogen_agentchat.base import Response
+from autogen_agentchat.messages import BaseChatMessage, TextMessage, StopMessage
+from autogen_core import CancellationToken
+
+class StaticAgent(BaseChatAgent):
+    def __init__(self, name: str = "static", description: str = "Static responder") -> None:
+        super().__init__(name, description)
+
+    @property
+    def produced_message_types(self) -> Sequence[type[BaseChatMessage]]:  # Which message types this agent produces
+        return (TextMessage,)
+
+    async def on_messages(self, messages: Sequence[BaseChatMessage], cancellation_token: CancellationToken) -> Response:
+        # Always return a static response
+        return Response(chat_message=TextMessage(content="Hello from AutoGen custom agent", source=self.name))
+```
+
+Notes:
+
+- Implement `on_messages(...)` and return a `Response` with a chat message.
+- Optionally implement `on_reset(...)` to clear internal state between runs.
+
+#### Agent Framework: Extend BaseAgent (thread-aware)
+
+```python
+from collections.abc import AsyncIterable
+from typing import Any
+from agent_framework import (
+    AgentRunResponse,
+    AgentRunResponseUpdate,
+    AgentThread,
+    BaseAgent,
+    ChatMessage,
+    Role,
+    TextContent,
+)
+
+class StaticAgent(BaseAgent):
+    async def run(
+        self,
+        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        *,
+        thread: AgentThread | None = None,
+        **kwargs: Any,
+    ) -> AgentRunResponse:
+        # Build a static reply
+        reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
+
+        # Persist conversation to the provided AgentThread (if any)
+        if thread is not None:
+            normalized = self._normalize_messages(messages)
+            await self._notify_thread_of_new_messages(thread, normalized, reply)
+
+        return AgentRunResponse(messages=[reply])
+
+    async def run_stream(
+        self,
+        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        *,
+        thread: AgentThread | None = None,
+        **kwargs: Any,
+    ) -> AsyncIterable[AgentRunResponseUpdate]:
+        # Stream the same static response in a single chunk for simplicity
+        yield AgentRunResponseUpdate(contents=[TextContent(text="Hello from AF custom agent")], role=Role.ASSISTANT)
+
+        # Notify thread of input and the complete response once streaming ends
+        if thread is not None:
+            reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
+            normalized = self._normalize_messages(messages)
+            await self._notify_thread_of_new_messages(thread, normalized, reply)
+```
+
+Notes:
+
+- `AgentThread` maintains conversation state externally; use `agent.get_new_thread()` and pass it to `run`/`run_stream`.
+- Call `self._notify_thread_of_new_messages(thread, input_messages, response_messages)` so the thread has both sides of the exchange.
+- See the full sample: [Custom Agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/custom/custom_agent.py)
 
 ---
 
@@ -1169,7 +1257,7 @@ workflow = (MagenticBuilder()
                analyst=analyst_agent
            )
            .with_standard_manager(
-               chat_client=OpenAIChatClient(ai_model_id="gpt-5"),
+               chat_client=OpenAIChatClient(model_id="gpt-5"),
                max_round_count=15,      # Limit total rounds
                max_stall_count=2,       # Prevent infinite loops
                max_reset_count=1,       # Allow one reset on failure
@@ -1525,7 +1613,7 @@ setup_observability(
 )
 
 # Create client for the example
-client = OpenAIChatClient(ai_model_id="gpt-5")
+client = OpenAIChatClient(model_id="gpt-5")
 
 async def observability_example():
     # Observability is automatically applied to all agents and workflows
