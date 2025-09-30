@@ -28,9 +28,11 @@ Before you begin, ensure you have the following:
 **Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you
 have an api key and do not wish to use role based authentication, in which case `az login` is not required.
 
-## Installing nuget packages
+## Running a Basic Agent Sample
 
-Install the following nuget packages into your application.
+This sample demonstrates how to create and use a simple AI agent with Azure OpenAI Chat Completion as the backend. It will create a basic agent using `AzureOpenAIClient` with `gpt-4o-mini` and custom instructions.
+
+First, install the following nuget packages into your application.
 
 ```powershell
 dotnet add package Azure.AI.OpenAI
@@ -38,13 +40,9 @@ dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.OpenAI
 ```
 
-## Running a Basic Agent Sample
-
-This sample demonstrates how to create and use a simple AI agent with Azure OpenAI Chat Completion as the backend. It will create a basic agent using `AzureOpenAIClient` with `gpt-4o-mini` and custom instructions.
+### Sample Code
 
 Make sure to replace `https://your-resource.openai.azure.com/` with the endpoint of your Azure OpenAI resource.
-
-### Sample Code
 
 ```csharp
 using System;
