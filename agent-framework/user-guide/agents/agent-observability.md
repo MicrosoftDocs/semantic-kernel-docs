@@ -178,7 +178,7 @@ This trace shows:
 - **Model information**: The AI system used (OpenAI) and response ID
 - **Token usage**: Input and output token counts for cost tracking
 
-# Getting started
+## Getting started
 
 We have a number of samples in our repository that demonstrate these capabilities, see the [observability samples folder ](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) on Github. That includes samples for using zero-code telemetry as well.
 
