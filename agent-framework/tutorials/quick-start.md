@@ -95,6 +95,7 @@ To download nightly builds follow the following steps:
         </packageSource>
         <packageSource key="github">
           <package pattern="*nightly"/>
+          <package pattern="Microsoft.Agents.AI" />
         </packageSource>
       </packageSourceMapping>
     
@@ -110,7 +111,7 @@ To download nightly builds follow the following steps:
     * If you place this file in your project folder make sure to have Git (or whatever source control you use) ignore it.
     * For more information on where to store this file go [here](/nuget/reference/nuget-config-file).
 1. You can now add packages from the nightly build to your project.
-    * E.g. use this command `dotnet add package Microsoft.Agents.AI --version 1.0.0-nightly-250930.11-preview.250930`
+    * E.g. use this command `dotnet add package Microsoft.Agents.AI`
 1. And the latest package release can be referenced in the project like this:
     * `<PackageReference Include="Microsoft.Agents.AI" Version="*-*" />`
 
