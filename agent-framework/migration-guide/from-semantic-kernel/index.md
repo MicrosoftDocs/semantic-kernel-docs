@@ -629,6 +629,4 @@ response = await agent.run(user_input, thread, max_tokens=1000, frequency_penalt
 
 > Note: The above is specific to a `ChatAgent`, because other agents may have different options, they should all accepts `messages` as a parameter, since that is defined in the `AgentProtocol`.
 
-For more samples of converting Semantic Kernel to Agent Framework see the [Agent Framework samples repository](https://github.com/microsoft/agent-framework/tree/main/python/samples/semantic-kernel-migration)
-
 ::: zone-end
