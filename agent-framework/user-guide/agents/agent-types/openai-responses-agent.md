@@ -296,4 +296,4 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [OpenAI Assistant Agents](./openai-assistants-completion-agent.md)
+> [OpenAI Assistant Agents](./openai-assistants-agent.md)
