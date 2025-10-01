@@ -297,7 +297,7 @@ Semantic kernel provides specific agent classes for various services, e.g.
 
 #### Agent Framework
 
-The agent framework supports all the abovementioned services via a single agent type, `ChatClientAgent`.
+The agent framework supports all the above mentioned services via a single agent type, `ChatClientAgent`.
 
 `ChatClientAgent` can be used to build agents using any underlying service that provides an SDK implementing the `Microsoft.Extensions.AI.IChatClient` interface.
 
@@ -354,7 +354,14 @@ Every agent in Semantic Kernel depends on a `Kernel` instance and will have
 an empty `Kernel` if not provided.
 
 ```python
-# TODO: Add Semantic Kernel example
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+
+agent = ChatCompletionAgent(
+    service=OpenAIChatCompletion(),
+    name="Support",
+    instructions="Answer in one sentence.",
+)
 ```
 
 
@@ -385,7 +392,9 @@ The direct method, exposes all possible parameters you can set for your agent, w
 The caller has to know the thread type and create it manually.
 
 ```python
-# TODO: Add thread creation examples
+from semantic_kernel.agents import ChatHistoryAgentThread
+
+thread = ChatHistoryAgentThread()
 ```
 
 #### Agent Framework
@@ -416,7 +425,8 @@ If you require thread deletion and the provider allows this, the caller **should
 
 i.e: OpenAI Assistants Provider
 ```python
-# TODO: Add thread deletion via provider SDK example
+# OpenAI Assistants threads have self-deletion method in SK
+await thread.delete_async()
 ```
 
 ### 5. Tool Registration
@@ -431,7 +441,19 @@ In semantic kernel to expose a function as a tool you must:
 4. Pass the `Kernel` to the agent.
 
 ```python
-# TODO: Add SK tool registration example
+from semantic_kernel.functions import kernel_function
+
+class SpecialsPlugin:
+    @kernel_function(name="specials", description="List daily specials")
+    def specials(self) -> str:
+        return "Clam chowder, Cobb salad, Chai tea"
+
+agent = ChatCompletionAgent(
+    service=OpenAIChatCompletion(),
+    name="Host",
+    instructions="Answer menu questions accurately.",
+    plugins=[SpecialsPlugin()],
+)
 ```
 
 #### Agent Framework
@@ -508,16 +530,26 @@ Key differences can be seen in the method names from `invoke` to `run`, return t
 
 #### Semantic Kernel
 
-The Non-Streaming uses an async iterator pattern for returning multiple agent messages.
+The Non-Streaming invoke uses an async iterator pattern for returning multiple agent messages.
 
 ```python
-# TODO: Add SK non-streaming invocation example
+async for response in agent.invoke(
+    messages=user_input,
+    thread=thread,
+):
+    print(f"# {response.role}: {response}")
+    thread = response.thread
+```
+And we had a convenience method to get the final response:
+```python
+response = await agent.get_response(messages="How do I reset my bike tire?", thread=thread)
+print(f"# {response.role}: {response}")
 ```
 
 #### Agent Framework
 
-The Non-Streaming returns a single `AgentRunResponse` with the agent response that can contain multiple messages.
-The text result of the run is available in `response.text` or `str(AgentRunResponse)`.
+The Non-Streaming run returns a single `AgentRunResponse` with the agent response that can contain multiple messages.
+The text result of the run is available in `response.text` or `str(response)`.
 All messages created as part of the response are returned in the `response.messages` list.
 This may include tool call messages, function results, reasoning updates and final results.
 
@@ -536,14 +568,19 @@ Key differences in the method names from `invoke` to `run_stream`, return types 
 #### Semantic Kernel
 
 ```python
-# TODO: Add SK streaming invocation example
+async for update in agent.invoke_stream(
+    messages="Draft a 2 sentence blurb.",
+    thread=thread,
+):
+    if update.message:
+        print(update.message.content, end="", flush=True)
 ```
 
 #### Agent Framework
 
 Similar streaming API pattern with the key difference being that it returns `AgentRunResponseUpdate` objects including more agent related information per update.
 
-All contents produced by any service underlying the Agent are returned. The textual result of the agent is available by concatenating the `response.text` values. And you can gather the updates up to a full response if needed.
+All contents produced by any service underlying the Agent are returned. The final result of the agent is available by combining the `update` values into a single response.
 
 ```python
 from agent_framework import AgentRunResponse
@@ -551,7 +588,7 @@ agent = ...
 updates = []
 async for update in agent.run_stream(user_input, thread):
     updates.append(update)
-    print(update.text)  # Update is str() friendly
+    print(update.text)
 
 full_response = AgentRunResponse.from_agent_run_response_updates(updates)
 print("Full agent response:", full_response.text)
@@ -572,12 +609,17 @@ print("Full agent response:", full_response.text)
 **Problem**: Complex options setup in SK
 
 ```python
-# TODO: Add SK options configuration example
+from semantic_kernel.connectors.ai.open_ai import OpenAIPromptExecutionSettings
+
+settings = OpenAIPromptExecutionSettings(max_tokens=1000)
+arguments = KernelArguments(settings)
+
+response = await agent.get_response(user_input, thread=thread, arguments=arguments)
 ```
 
 **Solution**: Simplified options in AF
 
-In agent framework, we allow the passing of all parameters directly to the relevant methods, so that you do not have to import anything extra, or create any options objects, unless you want to. Internally we use a `ChatOptions` object, that you can also create and pass in if you want to. This is also created in a `ChatAgent` to hold the options and can be overridden per call.
+In agent framework, we allow the passing of all parameters directly to the relevant methods, so that you do not have to import anything extra, or create any options objects, unless you want to. Internally we use a `ChatOptions` object for `ChatClients` and `ChatAgents`, that you can also create and pass in if you want to. This is also created in a `ChatAgent` to hold the options and can be overridden per call.
 
 ```python
 agent = ...
