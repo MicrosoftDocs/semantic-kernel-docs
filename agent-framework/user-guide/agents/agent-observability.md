@@ -6,7 +6,7 @@ author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Agent Observability

@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: reference
 ms.author: westey
 ms.date: 09/25/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Semantic Kernel to Agent Framework Migration Samples

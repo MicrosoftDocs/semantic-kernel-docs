@@ -5,7 +5,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/15/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Using function tools with human in the loop approvals

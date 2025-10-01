@@ -1,7 +1,7 @@
 ---
 title: Quick Start
 description: Quick start guide for the Agent Framework.
-ms.service: semantic-kernel
+ms.service: agent-framework
 ms.topic: tutorial
 ms.date: 09/04/2025
 ms.reviewer: ssalgado
