@@ -351,4 +351,4 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Running Agents](./running-agents.md)
+> [Running Agents](../running-agents.md)
