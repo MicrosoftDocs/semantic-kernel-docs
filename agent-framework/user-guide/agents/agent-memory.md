@@ -230,6 +230,9 @@ class DatabaseMessageStore(ChatMessageStoreProtocol):
             self.connection_string = serialized_store_state["connection_string"]
 ```
 
+> [!TIP]
+> For a detailed example on how to create a custom message store, see the [Storing Chat History in 3rd Party Storage](../../tutorials/agents/third-party-chat-history-storage.md) tutorial.
+
 ### Context Providers (Dynamic Memory)
 Context providers enable sophisticated memory patterns by injecting relevant context before each agent invocation:
 
@@ -262,6 +265,9 @@ class UserPreferencesMemory(ContextProvider):
         # Implement preference extraction logic
         pass
 ```
+
+> [!TIP]
+> For a detailed example on how to create a custom memory component, see the [Adding Memory to an Agent](../../tutorials/agents/memory.md) tutorial.
 
 #### External Memory Services
 The framework supports integration with specialized memory services like Mem0:

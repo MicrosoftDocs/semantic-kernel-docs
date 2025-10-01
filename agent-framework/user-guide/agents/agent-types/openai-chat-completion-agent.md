@@ -50,6 +50,12 @@ AIAgent agent = chatCompletionClient.CreateAIAgent(
     name: "Joker");
 ```
 
+## Using the Agent
+
+The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
@@ -171,10 +177,10 @@ async def streaming_example():
     print()  # New line after streaming
 ```
 
-::: zone-end
-
 ## Using the Agent
 
-The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+The agent is a standard `BaseAgent` and supports all standard agent operations.
 
 See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+
+::: zone-end

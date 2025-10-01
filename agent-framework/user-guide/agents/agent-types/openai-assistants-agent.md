@@ -81,6 +81,12 @@ You can reuse existing OpenAI Assistants by retrieving them using their IDs.
 AIAgent agent3 = await assistantClient.GetAIAgentAsync("<agent-id>");
 ```
 
+## Using the Agent
+
+The agent is a standard `AIAgent` and supports all standard agent operations.
+
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
@@ -247,10 +253,10 @@ async def streaming_example():
         print()  # New line after streaming is complete
 ```
 
-::: zone-end
-
 ## Using the Agent
 
-The agent is a standard `AIAgent` and supports all standard agent operations.
+The agent is a standard `BaseAgent` and supports all standard agent operations.
 
 See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+
+::: zone-end
