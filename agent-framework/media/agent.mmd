@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant User
+    participant Agent
+    participant LLM
+    participant Tools/MCP
+
+    User->>Agent: User Message
+    Agent->>Agent: Initialize with Prompt Instruction
+
+    rect rgb(240, 248, 255)
+        Note over Agent,Tools/MCP: Agentic Loop (iterative until task complete)
+
+        Agent->>LLM: Send Request + Prompt + Context
+        LLM->>LLM: Process & Decide Next Action
+
+        alt Tool/MCP Call Required
+            LLM->>Agent: Return Tool/MCP Call Request
+            Agent->>Tools/MCP: Execute Tool/MCP Function
+            Tools/MCP->>Agent: Return Result
+            Agent->>LLM: Send Tool Result + Updated Context
+            Note over Agent,LLM: Loop continues with tool results
+        else Task Complete
+            LLM->>Agent: Return Final Response
+        end
+    end
+
+    Agent->>User: Final Response

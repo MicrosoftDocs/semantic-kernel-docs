@@ -1,72 +1,156 @@
 ---
 title: Introduction to Microsoft Agent Framework
 description: Learn about Microsoft Agent Framework
-author: markwallace
+author: ekzhu
 ms.topic: reference
-ms.author: markwallace
-ms.date: 09/15/2025
+ms.author: ekzhu
+ms.date: 10/01/2025
 ms.service: semantic-kernel
 ---
 
-# Introduction to Agent Framework
+# Microsoft Agent Framework
 
-The Microsoft Agent Framework is a lightweight, open-source development kit that lets you easily build **AI agents** and **multi-agent workflows**.
+The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework)
+is an open-source development kit for building **AI agents** and **multi-agent workflows**
+with support for .NET and Python.
+It is a significant evolution from the [Semantic Kernel](https://github.com/microsoft/semantic-kernel)
+and [AutoGen](https://github.com/microsoft/autogen) projects, combining the best features of both while introducing new capabilities. It is developed by the same teams behind those projects,
+and designed to be the unified foundation going forward.
 
-There are two concepts that will be introduced here:
+The Agent Framework offers two primary categories of capabilities:
 
-1. [AI Agents](#ai-agents)
-2. [Workflows](#workflows)
+- [AI Agents](#ai-agents): single agents that use LLMs to process inputs,
+  use tools and MCP servers to perform actions, and generate responses. Agents support
+  different model providers including Azure OpenAI, OpenAI, and Azure AI.
+- [Workflows](#workflows): graph-based workflows that connect multiple agents
+  and functions to perform complex, multi-step tasks. Workflows support type-based routing,
+  nesting, checkpointing, and request/response pattern for human-in-the-loop scenarios.
+
+The framework also provides foundational building
+blocks such as model clients, for both Chat Completion and Responses, to work with models,
+agent thread for state management, context providers for agent memory,
+middleware for intercepting agent actions, and MCP server clients for tool integration.
+Together, these components give you the flexibility and power to build
+interactive, robust and safe AI applications.
+
+## Why another agent framework?
+
+[Semantic Kernel](https://github.com/microsoft/semantic-kernel)
+and [AutoGen](https://github.com/microsoft/autogen) have been very successful
+in pioneering the concept of AI agents and multi-agent orchestration.
+Agent Framework is a direct descendant of these two projects created by the
+creators of both. It takes the simplicity of AutoGen's abstractions for single
+agent and multi-agent patterns, and combines with the enterprise-grade features
+of Semantic Kernel such as thread-based state management, type safety, filters,
+telemetry, and extensive model and embedding support. Beyond just merging the two,
+Agent Framework also introduces workflows to give developers more control over
+the execution path of multi-agent scenarios, and a robust state management system
+for long-running processes and human-in-the-loop scenarios.
+It is fair to say that Agent Framework is the next generation of
+both Semantic Kernel and AutoGen.
+
+To learn more about migrating from either Semantic Kernel or AutoGen,
+see the [Migration Guide from Semantic Kernel](../migration-guide/from-semantic-kernel/index.md)
+and [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md).
+
+Both Semantic Kernel and AutoGen have benefited significantly from the open-source community,
+and we expect the same for Agent Framework. The Microsoft Agent Framework will continue to welcome contributions from the open-source community, and improve over time with new features and capabilities.
+
+> [!NOTE]
+> Microsoft Agent Framework is currently in public preview. Please submit
+> any feedback or issues on the [GitHub repository](https://github.com/microsoft/agent-framework).
 
 > [!IMPORTANT]
-> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications. 
+> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications.
+
+## Installation
+
+Python:
+
+```bash
+pip install agent-framework
+```
+
+.NET:
+
+```bash
+dotnet add package Microsoft.Agents.AI
+```
 
 ## AI Agents
 
 ### What is an AI agent?
 
-An **AI agent** is a software entity designed to perform tasks autonomously or semi-autonomously by receiving input, processing information, and taking actions to achieve specific goals.
+An **AI agent** is an entity that uses an LLM to process user inputs, make decisions,
+and perform actions using [tools](../user-guide/agents/agent-tools.md) or [MCP servers](../user-guide/model-context-protocol/index.md).
+and generate responses.
+The following diagram illustrates the core components and their interactions in an AI agent:
 
-Agents can send and receive messages, generating responses using a combination of models, tools, human inputs, or other customizable components.
+![AI Agent Diagram](../media/agent.svg)
 
-Agents are designed to work collaboratively, enabling complex workflows by interacting with each other.  The `Agent Framework` allows for the creation of both simple and sophisticated agents, enhancing modularity and ease of maintenance.
-
-### What problems do AI agents solve?
-
-AI agents offer several advantages for application development, particularly by enabling the creation of modular AI components that are able to collaborate to reduce manual intervention in complex tasks. AI agents can operate autonomously or semi-autonomously, making them powerful tools for a range of applications.
-
-Here are some of the key benefits:
-
-- **Modular Components**: Allows developers to separate agents for specific tasks (e.g., data scraping, API interaction, or natural language processing). This separation makes it easier to adapt the application as requirements evolve or new technologies emerge.
-
-- **Collaboration**: Multiple agents may "collaborate" on tasks. For example, one agent might handle data collection while another analyzes it and yet another uses the results to make decisions, creating a more sophisticated system with distributed intelligence.
-
-- **Human-Agent Collaboration**: Human-in-the-loop interactions allow agents to work alongside humans to augment decision-making processes. For instance, agents might prepare data analyses that humans can review and fine-tune, thus improving productivity.
-
-- **Process Orchestration**: Agents can coordinate different tasks across systems, tools, and APIs, helping to automate end-to-end processes like application deployments, cloud orchestration, or even creative processes like writing and design.
+Note that an AI agent can also be added with additional components such as
+[thread](../user-guide/agents/multi-turn-conversation.md),
+[context provider](../user-guide/agents/agent-memory.md),
+and [middleware](../user-guide/agents/agent-middleware.md)
+to enhance its capabilities.
 
 ### When to use an AI agent?
 
-Using an AI agent for application development provides advantages that are especially beneficial for certain types of applications. While LLM's are often used as tools to perform specific tasks (e.g., classification, prediction, or recognition), agents introduce more autonomy, flexibility, and interactivity into the development process.
+AI agents are suitable for applications that require autonomous decision-making,
+ad-hoc planning, trial-and-error exploration, and conversation-based user interactions.
+It is particularly useful for scenarios when the input task is unstructured and cannot be
+easily defined in advance.
 
-- **Autonomy and Decision-Making**: If your application requires entities that can make independent decisions and adapt to changing conditions (e.g., robotic systems, autonomous vehicles, smart environments), an AI agent is preferable.
+Here are some common scenarios where AI agents excel:
 
-- **Multi-Agent Collaboration**: If your application involves complex systems that require multiple independent components to work together (e.g., supply chain management, distributed computing, or swarm robotics), agents provide built-in mechanisms for coordination and communication.
+- **Customer Support**: AI agents can handle multi-modal queries (text, voice, images)
+  from customers, use tools to look up information, and provide natural language responses.
+- **Education and Tutoring**: AI agents can leverage external knowledge bases to provide
+  personalized tutoring and answer student questions.
+- **Code Generation and Debugging**: for software developers, AI agents can assist with
+  implementation, code reviews and debugging by using various programming tools and environments.
+- **Research Assistance**: for researchers and analysts, AI agents can search the web,
+  summarize documents, and piece together information from multiple sources.
 
-- **Interactive and Goal-Oriented**: If your application involves goal-driven behavior (e.g., completing tasks autonomously or interacting with users to achieve specific objectives), agent-based frameworks are a better choice. Examples include virtual assistants, game AI, and task planners.
+The key is that AI agents are designed to operate in a dynamic and underspecified
+setting, where the exact sequence of steps to fulfill a user request is not known
+in advance and may require exploration and close collaboration with users.
+
+### When not to use an AI agent?
+
+AI agents are not well-suited for tasks that are highly structured and require
+strict adherence to predefined rules.
+If your application anticipates a specific kind of input and has a well-defined
+sequence of operations to perform, using AI agents may introduce unnecessary
+uncertainty, latency and cost.
+
+_If you can write a function to handle the task, do that instead of using an AI agent. You can use AI to help you write that function._
+
+A single AI agent may also struggle with complex tasks that involve multiple steps
+and decision points. Such tasks may also require using a huge number of tools (e.g., over 20)
+that are not feasible for a single agent to manage.
+
+In these cases, consider using workflows instead.
 
 ## Workflows
 
 ### What is a Workflow?
 
-A **workflow** is a predefined sequence of operations that can include AI agents as components while maintaining consistency and reliability. Workflows are designed to handle complex and long-running business processes that may involve multiple agents, human interactions, and integrations with external systems.
+A **workflow** can express a predefined sequence of operations that can include AI agents as components while maintaining consistency and reliability. Workflows are designed to handle complex and long-running processes that may involve multiple agents, human interactions and integrations with external systems.
 
-The flow of a workflow is explicitly defined, allowing for more control over the execution path. Workflows can include conditional routing, parallel processing, and dynamic execution paths.
+The flow of a workflow can be explicitly defined, allowing for more control over the execution path. The following diagram illustrates an example of a workflow that connects two AI agents and a function:
+
+![Workflow Diagram](../media/workflow.svg)
+
+Workflows can also express dynamic sequences by making use of
+conditional routing, model-based decision making, and concurrent
+execution. This is how our [orchestration patterns](../user-guide//workflows/orchestrations/overview.md) are implemented.
 
 ### What problems do Workflows solve?
 
 Workflows provide a structured way to manage complex processes that involve multiple steps, decision points, and interactions with various systems or agents. The types of tasks workflows are designed to handle often require more than one AI agent.
 
-Here are some of the key benefits of `Agent Framework` workflows:
+Here are some of the key benefits of Agent Framework workflows:
 
 - **Modularity**: Workflows can be broken down into smaller, reusable components, making it easier to manage and update individual parts of the process.
 - **Agent Integration**: Workflows can incorporate multiple AI agents with non-agentic components, allowing for sophisticated orchestration of tasks.
@@ -79,7 +163,4 @@ Here are some of the key benefits of `Agent Framework` workflows:
 
 ## Next steps
 
-> [!div class="nextstepaction"]
-> [Quickstart Guide](../tutorials/quick-start.md)
-> [Migration Guide from Semantic Kernel](../migration-guide/from-semantic-kernel/index.md)
-> [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md)
+> [!div class="nextstepaction"] > [Quickstart Guide](../tutorials/quick-start.md) > [Migration Guide from Semantic Kernel](../migration-guide/from-semantic-kernel/index.md) > [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md)
