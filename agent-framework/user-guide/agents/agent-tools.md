@@ -288,3 +288,8 @@ result = await agent.run(
 > Tool support varies by service provider. Some services like Azure AI support hosted tools natively, while others may require different approaches. Always check your service provider's documentation for specific tool capabilities.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Multi-turn Conversation](./multi-turn-conversation.md)
