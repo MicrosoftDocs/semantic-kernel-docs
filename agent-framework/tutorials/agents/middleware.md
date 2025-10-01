@@ -6,7 +6,7 @@ author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
 ms.date: 09/29/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Adding Middleware to Agents

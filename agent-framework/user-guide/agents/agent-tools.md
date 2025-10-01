@@ -6,7 +6,7 @@ author: markwallace
 ms.topic: reference
 ms.author: markwallace
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Agent Tools

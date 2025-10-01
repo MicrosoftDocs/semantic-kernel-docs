@@ -6,7 +6,7 @@ author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/29/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Checkpointing and Resuming Workflows

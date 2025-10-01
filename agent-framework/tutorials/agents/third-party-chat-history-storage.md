@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/25/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Storing Chat History in 3rd Party Storage

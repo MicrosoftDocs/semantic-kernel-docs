@@ -6,7 +6,7 @@ author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/12/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Microsoft Agent Framework Workflows Core Concepts - Edges
