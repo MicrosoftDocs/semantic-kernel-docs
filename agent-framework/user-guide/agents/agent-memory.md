@@ -318,3 +318,8 @@ await agent.run("What's my name?", thread=restored_thread)
 ```
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Agent Observability](./agent-observability.md)
