@@ -15,12 +15,6 @@ Observability provides insights into the internal state and behavior of workflow
 
 Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/semconv/gen-ai/), Agent Framework Workflows emits additional spans, logs, and metrics to provide deeper insights into workflow execution. These observability features help developers understand the flow of messages, the performance of executors, and any errors that may occur.
 
-::: zone pivot="programming-language-csharp"
-
-Coming soon...
-
-::: zone-end
-
 ::: zone pivot="programming-language-python"
 
 ## Enable Observability

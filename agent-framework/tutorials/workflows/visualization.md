@@ -11,12 +11,6 @@ ms.service: semantic-kernel
 
 # Visualizing Workflows
 
-::: zone pivot="programming-language-csharp"
-
-Tutorial coming soon.
-
-::: zone-end
-
 ::: zone pivot="programming-language-python"
 
 ## Overview

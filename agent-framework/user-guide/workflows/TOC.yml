@@ -12,4 +12,9 @@
   href: request-and-response.md
 - name: Shared States
   href: shared-states.md
-  
+- name: Checkpoints
+  href: checkpoints.md
+- name: Observability
+  href: observability.md
+- name: Visualization
+  href: visualization.md

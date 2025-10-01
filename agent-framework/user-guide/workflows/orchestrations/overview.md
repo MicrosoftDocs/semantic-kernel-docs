@@ -22,6 +22,7 @@ Traditional single-agent systems are limited in their ability to handle complex,
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | [Concurrent](./concurrent.md) | Broadcasts a task to all agents, collects results independently.                                                                                                                    | Parallel analysis, independent subtasks, ensemble decision making.    |
 | [Sequential](./sequential.md) | Passes the result from one agent to the next in a defined order.                                                                                                                    | Step-by-step workflows, pipelines, multi-stage processing.            |
+| [Handoff](./handoff.md)       | Dynamically passes control between agents based on context or rules.                                                                                                                | Dynamic workflows, escalation, fallback, or expert handoff scenarios. |
 | [Magentic](./magentic.md)     | Inspired by [MagenticOne](https://www.microsoft.com/en-us/research/articles/magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/). | Complex, generalist multi-agent collaboration.                        |
 
 ## Next Steps

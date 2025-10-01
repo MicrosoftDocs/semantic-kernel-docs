@@ -10,3 +10,5 @@
   href: requests-and-responses.md
 - name: Checkpointing and resuming workflows
   href: checkpointing-and-resuming.md
+- name: Visualizing workflows
+  href: visualization.md

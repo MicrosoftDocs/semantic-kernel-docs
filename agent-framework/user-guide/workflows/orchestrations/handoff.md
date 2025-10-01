@@ -154,12 +154,6 @@ math_tutor: I'd be happy to help with calculus integration! Integration is the r
 
 ::: zone-end
 
-::: zone pivot="programming-language-python"
-
-Coming soon...
-
-::: zone-end
-
 ## Next steps
 
 > [!div class="nextstepaction"]

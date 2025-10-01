@@ -82,11 +82,6 @@ await builder.Build().RunAsync();
 This will start an MCP server that exposes the agent as a tool over the MCP protocol.
 
 ::: zone-end
-::: zone pivot="programming-language-python"
-
-Tutorial coming soon.
-
-::: zone-end
 
 ## Next steps
 

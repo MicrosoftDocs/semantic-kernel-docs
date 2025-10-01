@@ -4,5 +4,7 @@
   href: concurrent.md
 - name: Sequential
   href: sequential.md
+- name: Handoff
+  href: handoff.md
 - name: Magentic
   href: magentic.md

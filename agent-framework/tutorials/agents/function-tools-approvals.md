@@ -98,11 +98,6 @@ Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
 Whenever you are using function tools with human in the loop approvals, remember to check for `FunctionApprovalRequestContent` instances in the response, after each agent run, until all function calls have been approved or rejected.
 
 ::: zone-end
-::: zone pivot="programming-language-python"
-
-Tutorial coming soon.
-
-::: zone-end
 
 ## Next steps
 
