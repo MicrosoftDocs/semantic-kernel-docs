@@ -56,7 +56,7 @@ and [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md).
 Both Semantic Kernel and AutoGen have benefited significantly from the open-source community,
 and we expect the same for Agent Framework. The Microsoft Agent Framework will continue to welcome contributions from the open-source community, and improve over time with new features and capabilities.
 
-> [!NOTE]
+> [!IMPORTANT]
 > Microsoft Agent Framework is currently in public preview. Please submit
 > any feedback or issues on the [GitHub repository](https://github.com/microsoft/agent-framework).
 
