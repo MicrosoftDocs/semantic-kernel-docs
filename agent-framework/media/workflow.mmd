@@ -1,0 +1,20 @@
+sequenceDiagram
+    participant User
+    participant Agent A
+    participant Agent B
+    participant Function C
+
+    User->>Agent A: Initial Input Task
+
+    rect rgb(240, 248, 255)
+        Note over Agent A,Function C: Workflow Execution
+
+        Agent A->>Agent A: Process Task
+        Agent A->>Agent B: Sub-task
+
+        Agent B->>Agent B: Process Task
+        Agent B->>Function C: Sub-task
+
+        Function C->>Function C: Execute
+        Function C->>User: Final Output
+    end
