@@ -236,5 +236,7 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 
 ::: zone-end
 
+## Next steps
+
 > [!div class="nextstepaction"]
 > [OpenAI Chat Completion Agents](./openai-chat-completion-agent.md)
