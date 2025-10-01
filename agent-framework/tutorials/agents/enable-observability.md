@@ -73,7 +73,9 @@ AIAgent agent = new AzureOpenAIClient(
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
         .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker")
-        .WithOpenTelemetry(sourceName: "agent-telemetry-source");
+        .AsBuilder()
+        .UseOpenTelemetry(sourceName: "agent-telemetry-source")
+        .Build();
 ```
 
 Run the agent and print the text response. The console exporter will show trace data on the console.

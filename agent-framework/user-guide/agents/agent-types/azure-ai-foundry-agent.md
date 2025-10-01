@@ -20,6 +20,7 @@ The Microsoft Agent Framework supports creating agents that use the [Azure AI Fo
 Add the Agents Azure AI NuGet package to your project.
 
 ```powershell
+dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
 ```
 
