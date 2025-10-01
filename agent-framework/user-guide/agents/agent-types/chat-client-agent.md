@@ -150,5 +150,7 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 
 ::: zone-end
 
+## Next steps
+
 > [!div class="nextstepaction"]
 > [Agent2Agent](./a2a-agent.md)
