@@ -30,17 +30,21 @@ Before you begin, ensure you have the following:
 **Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you
 have an api key and do not wish to use role based authentication, in which case `az login` is not required.
 
-## Running a Basic Agent Sample
+## Installing Packages
 
-This sample demonstrates how to create and use a simple AI agent with Azure OpenAI Chat Completion as the backend. It will create a basic agent using `AzureOpenAIClient` with `gpt-4o-mini` and custom instructions.
+Packages will be published to [NuGet Gallery | Microsoft.Agent.AI](https://www.nuget.org/packages/Microsoft.Agent.AI). 
 
-First, install the following nuget packages into your application.
+First, add the following Microsoft Agent Framework NuGet packages into your application, using the following commands:
 
 ```powershell
 dotnet add package Azure.AI.OpenAI
 dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.OpenAI
 ```
+
+## Running a Basic Agent Sample
+
+This sample demonstrates how to create and use a simple AI agent with Azure OpenAI Chat Completion as the backend. It will create a basic agent using `AzureOpenAIClient` with `gpt-4o-mini` and custom instructions.
 
 ### Sample Code
 
@@ -62,10 +66,9 @@ AIAgent agent = new AzureOpenAIClient(
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
-## (Optional) Installing Packages
+## (Optional) Installing Nightly Packages
 
-Packages will be published to [NuGet](https://www.nuget.org/) when the Agent Framework public preview is released. 
-In the meantime nightly builds of the Agent Framework are available [here](https://github.com/orgs/microsoft/packages?repo_name=agent-framework).
+If you need to get a package containing the latest enhancements or fixes nightly builds of the Agent Framework are available [here](https://github.com/orgs/microsoft/packages?repo_name=agent-framework).
 
 To download nightly builds follow the following steps:
 
@@ -95,6 +98,7 @@ To download nightly builds follow the following steps:
         </packageSource>
         <packageSource key="github">
           <package pattern="*nightly"/>
+          <package pattern="Microsoft.Agents.AI" />
         </packageSource>
       </packageSourceMapping>
     
@@ -110,7 +114,7 @@ To download nightly builds follow the following steps:
     * If you place this file in your project folder make sure to have Git (or whatever source control you use) ignore it.
     * For more information on where to store this file go [here](/nuget/reference/nuget-config-file).
 1. You can now add packages from the nightly build to your project.
-    * E.g. use this command `dotnet add package Microsoft.Agents.AI --version 0.0.1-nightly-250731.6-alpha`
+    * E.g. use this command `dotnet add package Microsoft.Agents.AI`
 1. And the latest package release can be referenced in the project like this:
     * `<PackageReference Include="Microsoft.Agents.AI" Version="*-*" />`
 
