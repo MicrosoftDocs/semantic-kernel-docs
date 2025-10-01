@@ -25,10 +25,12 @@ Before you begin, ensure you have the following prerequisites:
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource)
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
-- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
+- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
 
+> [!NOTE]
+> The Microsoft Agent Framework is supported with all actively supported versions of .net. For the purposes of this sample we are recommending the .NET 8.0 SDK or higher.
 > [!IMPORTANT]
-> For this tutorial we are using Azure OpenAI for the Chat Completion service, but you can use any inference service that is compatible with [Microsoft.Extensions.AI.IChatClient](/dotnet/api/microsoft.extensions.ai.ichatclient).
+> For this tutorial we are using Azure OpenAI for the Chat Completion service, but you can use any inference service that provides a [Microsoft.Extensions.AI.IChatClient](/dotnet/api/microsoft.extensions.ai.ichatclient) implementation.
 
 ## Installing Nuget packages
 
@@ -38,12 +40,12 @@ To use the Microsoft Agent Framework with Azure OpenAI, you need to install the 
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Extensions.AI.OpenAI
-dotnet add package Microsoft.Agents.OpenAI
+dotnet add package Microsoft.Agents.AI.OpenAI
 ```
 
 ## Creating the agent
 
-- First we create create a client for Azure OpenAI, by providing the Azure OpenAI endpoint and using the same login as was used when authenticating with the Azure CLI in the [Prerequisites](#prerequisites) step.
+- First we create a client for Azure OpenAI, by providing the Azure OpenAI endpoint and using the same login as was used when authenticating with the Azure CLI in the [Prerequisites](#prerequisites) step.
 - Then we get a chat client for communicating with the chat completion service, where we also specify the specific model deployment to use. Use one of the deployments that you created in the [Prerequisites](#prerequisites) step.
 - Finally we create the agent, providing instructions and a name for the agent.
 
@@ -51,6 +53,7 @@ dotnet add package Microsoft.Agents.OpenAI
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OpenAI;
 
@@ -64,16 +67,24 @@ AIAgent agent = new AzureOpenAIClient(
 ## Running the agent
 
 To run the agent, call the `RunAsync` method on the agent instance, providing the user input.
-The agent will return a response object, and calling `.ToString()` or `.Text` on this response object, provides the text result from the agent.
+The agent will return an `AgentRunResponse` object, and calling `.ToString()` or `.Text` on this response object, provides the text result from the agent.
 
 ```csharp
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
+Sample output:
+
+```text
+Why did the pirate go to school?
+
+Because he wanted to improve his "arrr-ticulation"! 🏴‍☠️
+```
+
 ## Running the agent with streaming
 
 To run the agent with streaming, call the `RunStreamingAsync` method on the agent instance, providing the user input.
-The agent will stream a list of update objects, and calling `.ToString()` or `.Text` on each update object provides the part of the text result contained in that update.
+The agent will return a stream `AgentRunResponseUpdate` objects, and calling `.ToString()` or `.Text` on each update object provides the part of the text result contained in that update.
 
 ```csharp
 await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pirate."))
@@ -82,17 +93,70 @@ await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pir
 }
 ```
 
-## Running the agent with a ChatMessage
+Sample output:
+
+```text
+Why
+ did
+ the
+ pirate
+ go
+ to
+ school
+?
+
+
+To
+ improve
+ his
+ "
+ar
+rrrr
+rr
+tic
+ulation
+!"
+```
+
+## Running the agent with ChatMessages
 
 Instead of a simple string, you can also provide one or more `ChatMessage` objects to the `RunAsync` and `RunStreamingAsync` methods.
+
+Here is an example with a single user message:
 
 ```csharp
 ChatMessage message = new(ChatRole.User, [
     new TextContent("Tell me a joke about this image?"),
-    new UriContent("https://samplesite.org/clown.jpg", "image/jpeg")
+    new UriContent("https://upload.wikimedia.org/wikipedia/commons/1/11/Joseph_Grimaldi.jpg", "image/jpeg")
 ]);
 
 Console.WriteLine(await agent.RunAsync(message));
+```
+
+Sample output:
+
+```text
+Why did the clown bring a bottle of sparkling water to the show?
+
+Because he wanted to make a splash!
+```
+
+Here is an example with a system and user message:
+
+```csharp
+ChatMessage systemMessage = new(
+    ChatRole.System,
+    """If the user asks you to tell a joke, refuse to do so, explaining that you are not a clown.
+    Offer the user an interesting fact instead.""");
+ChatMessage userMessage = new(ChatRole.User, "Tell me a joke about a pirate.");
+
+Console.WriteLine(await agent.RunAsync([systemMessage, userMessage]));
+```
+
+Sample output:
+
+```text
+I’m not a clown, but I can share an interesting fact! Did you know that pirates often revised the Jolly Roger flag? Depending on the pirate captain, it could feature different symbols like skulls, bones, or hourglasses, each representing their unique approach to piracy.
 ```
 
 ::: zone-end
@@ -110,7 +174,7 @@ Before you begin, ensure you have the following prerequisites:
 - [Python 3.10 or later](https://www.python.org/downloads/)
 - [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource)
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
-- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
+- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
 
 > [!IMPORTANT]
 > For this tutorial we are using Azure OpenAI for the Chat Completion service, but you can use any inference service that is compatible with the Agent Framework's chat client protocol.

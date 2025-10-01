@@ -20,7 +20,7 @@ The Microsoft Agent Framework supports creating agents that use the [Azure AI Fo
 Add the Agents Azure AI NuGet package to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.Agents.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
 ```
 
 ## Creating Azure AI Foundry Agents
@@ -31,7 +31,7 @@ As a first step you need to create a client to connect to the Azure AI Foundry A
 using System;
 using Azure.AI.Agents.Persistent;
 using Azure.Identity;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 
 var persistentAgentsClient = new PersistentAgentsClient(
     "https://<myresource>.services.ai.azure.com/api/projects/<myproject>",
@@ -331,8 +331,13 @@ asyncio.run(main())
 
 ## Using the Agent
 
-Azure AI Foundry agents are standard `ChatAgent` instances and support all standard agent operations.
+The agent is a standard `BaseAgent` and supports all standard agent operations.
 
 See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [OpenAI ChatCompletion Agents](./azure-openai-chat-completion-agent.md)

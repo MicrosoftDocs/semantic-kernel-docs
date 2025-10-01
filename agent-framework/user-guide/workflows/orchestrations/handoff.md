@@ -44,7 +44,7 @@ using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.Workflows;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 
 // 1) Set up the Azure OpenAI client
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
@@ -159,3 +159,8 @@ math_tutor: I'd be happy to help with calculus integration! Integration is the r
 Coming soon...
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Magnetic Orchestration](./magentic.md)

@@ -20,7 +20,7 @@ The Microsoft Agent Framework supports creating agents that use the [Azure OpenA
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 dotnet add package Azure.AI.OpenAI
 dotnet add package Azure.Identity
 ```
@@ -33,7 +33,7 @@ As a first step you need to create a client to connect to the Azure OpenAI servi
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 using OpenAI;
 
 AzureOpenAIClient client = new AzureOpenAIClient(
@@ -54,7 +54,63 @@ Finally, create the agent using the `CreateAIAgent` extension method on the `Cha
 AIAgent agent = chatCompletionClient.CreateAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
+
+## Agent Features
+
+### Function Tools
+
+You can provide custom function tools to Azure OpenAI ChatCompletion agents:
+
+```csharp
+using System;
+using System.ComponentModel;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using OpenAI;
+
+var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
+
+[Description("Get the weather for a given location.")]
+static string GetWeather([Description("The location to get the weather for.")] string location)
+    => $"The weather in {location} is cloudy with a high of 15°C.";
+
+// Create the chat client and agent, and provide the function tool to the agent.
+AIAgent agent = new AzureOpenAIClient(
+    new Uri(endpoint),
+    new AzureCliCredential())
+     .GetChatClient(deploymentName)
+     .CreateAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
+
+// Non-streaming agent interaction with function tools.
+Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?"));
+```
+
+### Streaming Responses
+
+Get responses as they are generated using streaming:
+
+```csharp
+AIAgent agent = chatCompletionClient.CreateAIAgent(
+    instructions: "You are good at telling jokes.",
+    name: "Joker");
+// Invoke the agent with streaming support.
+await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pirate."))
+{
+    Console.Write(update);
+}
+```
+
+## Using the Agent
+
+The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -199,10 +255,15 @@ async def main():
 asyncio.run(main())
 ```
 
-::: zone-end
-
 ## Using the Agent
 
-The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+The agent is a standard `BaseAgent` and supports all standard agent operations.
 
 See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+
+::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [OpenAI Response Agents](./azure-openai-responses-agent.md)

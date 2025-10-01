@@ -23,7 +23,9 @@ Before you begin, ensure you have the following:
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
 - [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource) with a deployed model (e.g., `gpt-4o-mini`)
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated](/cli/azure/authenticate-azure-cli) (`az login`)
-- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
+- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
+
+**Note**: The Microsoft Agent Framework is supported with all actively supported versions of .Net. For the purposes of this sample we are recommending the .NET 8.0 SDK or higher.
 
 **Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you
 have an api key and do not wish to use role based authentication, in which case `az login` is not required.
@@ -37,7 +39,7 @@ First, add the following Microsoft Agent Framework NuGet packages into your appl
 ```powershell
 dotnet add package Azure.AI.OpenAI
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.OpenAI
+dotnet add package Microsoft.Agents.AI.OpenAI
 ```
 
 ## Running a Basic Agent Sample
@@ -53,6 +55,7 @@ using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
+using OpenAI;
 
 AIAgent agent = new AzureOpenAIClient(
   new Uri("https://your-resource.openai.azure.com/"),
@@ -169,3 +172,8 @@ For more detailed examples and advanced scenarios, see the [Azure AI Agent Examp
 
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Create and run agents](./agents/run-agent.md)

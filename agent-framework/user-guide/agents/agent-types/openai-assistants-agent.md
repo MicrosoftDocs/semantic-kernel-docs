@@ -23,7 +23,7 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI Assi
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
 ## Creating an OpenAI Assistants Agent
@@ -32,7 +32,7 @@ As a first step you need to create a client to connect to the OpenAI service.
 
 ```csharp
 using System;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 using OpenAI;
 
 OpenAIClient client = new OpenAIClient("<your_api_key>");
@@ -80,6 +80,12 @@ You can reuse existing OpenAI Assistants by retrieving them using their IDs.
 ```csharp
 AIAgent agent3 = await assistantClient.GetAIAgentAsync("<agent-id>");
 ```
+
+## Using the Agent
+
+The agent is a standard `AIAgent` and supports all standard agent operations.
+
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -247,10 +253,15 @@ async def streaming_example():
         print()  # New line after streaming is complete
 ```
 
-::: zone-end
-
 ## Using the Agent
 
-The agent is a standard `AIAgent` and supports all standard agent operations.
+The agent is a standard `BaseAgent` and supports all standard agent operations.
 
 See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+
+::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Chat Client Agents](./chat-client-agent.md)

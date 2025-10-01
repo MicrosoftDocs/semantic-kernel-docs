@@ -41,6 +41,10 @@ Let's look at an example of creating an agent that produces structured output in
 The easiest way to produce the schema is to define a C# class that represents the structure of the output you want from the agent, and then use the `AIJsonUtilities.CreateJsonSchema` method to create a schema from the type.
 
 ```csharp
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.AI;
+
 public class PersonInfo
 {
     [JsonPropertyName("name")]
@@ -59,6 +63,8 @@ JsonElement schema = AIJsonUtilities.CreateJsonSchema(typeof(PersonInfo));
 We can then create a `ChatOptions` instance that uses this schema for the response format.
 
 ```csharp
+using Microsoft.Extensions.AI;
+
 ChatOptions chatOptions = new()
 {
     ResponseFormat = ChatResponseFormatJson.ForJsonSchema(
@@ -71,6 +77,12 @@ ChatOptions chatOptions = new()
 This `ChatOptions` instance can be used when creating the agent.
 
 ```csharp
+using System;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using OpenAI;
+
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())

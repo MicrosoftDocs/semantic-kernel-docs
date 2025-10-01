@@ -251,3 +251,9 @@ for message in response.messages:
 ```
 
 ::: zone-end
+
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Agent Tools](./agent-tools.md)

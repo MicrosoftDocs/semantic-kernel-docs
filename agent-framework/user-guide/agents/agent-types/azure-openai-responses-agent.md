@@ -20,7 +20,7 @@ The Microsoft Agent Framework supports creating agents that use the [Azure OpenA
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 dotnet add package Azure.AI.OpenAI
 dotnet add package Azure.Identity
 ```
@@ -33,7 +33,7 @@ As a first step you need to create a client to connect to the Azure OpenAI servi
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 using OpenAI;
 
 AzureOpenAIClient client = new AzureOpenAIClient(
@@ -55,6 +55,12 @@ AIAgent agent = responseClient.CreateAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 ```
+
+## Using the Agent
+
+The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -222,10 +228,15 @@ async def main():
 asyncio.run(main())
 ```
 
-::: zone-end
-
 ## Using the Agent
 
-The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+The agent is a standard `BaseAgent` and supports all standard agent operations.
 
 See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+
+::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [OpenAI Chat Completion Agents](./openai-chat-completion-agent.md)

@@ -217,3 +217,8 @@ async def multi_turn_example():
 
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Agent Middleware](./agent-middleware.md)
