@@ -32,7 +32,7 @@ To use the Microsoft Agent Framework with Azure OpenAI, you need to install the 
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Extensions.AI.OpenAI
-dotnet add package Microsoft.Agents.OpenAI
+dotnet add package Microsoft.Agents.AI.OpenAI
 ```
 
 In addition to this, we will use the in-memory vector store to store chat messages and a utility package for async LINQ operations.
@@ -140,10 +140,9 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
         return messages;
     }
 
-    public override ValueTask<JsonElement?> SerializeStateAsync(
-        JsonSerializerOptions? jsonSerializerOptions = null,
-        CancellationToken cancellationToken = default) =>
-            new(JsonSerializer.SerializeToElement(this.ThreadDbKey));
+    public override JsonElement Serialize(JsonSerializerOptions? jsonSerializerOptions = null) =>
+        // We have to serialize the thread id, so that on deserialization we can retrieve the messages using the same thread id.
+        JsonSerializer.SerializeToElement(this.ThreadDbKey);
 
     private sealed class ChatHistoryItem
     {

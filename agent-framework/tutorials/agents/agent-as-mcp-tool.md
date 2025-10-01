@@ -29,7 +29,7 @@ First, create an agent that we will expose as an MCP tool.
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Extensions.AI;
+using Microsoft.Agents.AI;
 using OpenAI;
 
 AIAgent agent = new AzureOpenAIClient(
@@ -42,12 +42,17 @@ AIAgent agent = new AzureOpenAIClient(
 Turn the agent into a function tool and then an MCP tool. The agent name and description will be used as the mcp tool name and description.
 
 ```csharp
+using ModelContextProtocol.Server;
+
 McpServerTool tool = McpServerTool.Create(agent.AsAIFunction());
 ```
 
 Setup the MCP server to listen for incoming requests over standard input/output and expose the MCP tool:
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services
     .AddMcpServer()
