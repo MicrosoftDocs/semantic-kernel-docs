@@ -41,8 +41,8 @@ You'll create an email processing workflow that demonstrates conditional routing
 First, install the required packages for your .NET project:
 
 ```bash
-dotnet add package Microsoft.Agents.AI.Workflows
-dotnet add package Microsoft.Agents.AI.Workflows.Reflection
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+dotnet add package Microsoft.Agents.AI.Workflows.Reflection --prerelease
 dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Extensions.AI
 dotnet add package Azure.Identity

@@ -31,8 +31,7 @@ To use the Microsoft Agent Framework with Azure OpenAI, you need to install the 
 ```powershell
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
-dotnet add package Microsoft.Extensions.AI.OpenAI
-dotnet add package Microsoft.Agents.AI.OpenAI
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
 In addition to this, we will use the in-memory vector store to store chat messages and a utility package for async LINQ operations.

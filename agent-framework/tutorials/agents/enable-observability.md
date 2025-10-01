@@ -27,8 +27,7 @@ To use the AgentFramework with Azure OpenAI, you need to install the following N
 ```powershell
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
-dotnet add package Microsoft.Extensions.AI.OpenAI
-dotnet add package Microsoft.Agents.AI.OpenAI
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
 To also add OpenTelemetry support, with support for writing to the console, install these additional packages:
