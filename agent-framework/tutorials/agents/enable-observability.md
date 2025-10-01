@@ -344,7 +344,3 @@ For more advanced observability scenarios and examples, see the [Agent Observabi
 
 ::: zone-end
 
-## Next steps
-
-> [!div class="nextstepaction"]
-> [Adding Middleware to Agents](./middleware.md)
