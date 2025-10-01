@@ -32,7 +32,7 @@ have an api key and do not wish to use role based authentication, in which case 
 
 ## Installing Packages
 
-Packages will be published to [NuGet Gallery | Microsoft.Agent.AI](https://www.nuget.org/packages/Microsoft.Agents.AI). 
+Packages will be published to [NuGet Gallery | MicrosoftAgentFramework](https://www.nuget.org/profiles/MicrosoftAgentFramework). 
 
 First, add the following Microsoft Agent Framework NuGet packages into your application, using the following commands:
 
