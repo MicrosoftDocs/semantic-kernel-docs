@@ -150,3 +150,7 @@ Coming soon.
 
 To learn more refer to the [Azure AI Foundry Model Context Protocol documentation](/azure/ai-foundry/agents/how-to/tools/model-context-protocol).
 
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Using workflows as Agents](../workflows/as-agents.md)

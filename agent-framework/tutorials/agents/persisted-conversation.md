@@ -26,6 +26,12 @@ For prerequisites and installing nuget packages, see the [Create and run a simpl
 Create an agent and obtain a new thread that will hold the conversation state.
 
 ```csharp
+using System;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using OpenAI;
+
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
@@ -46,8 +52,11 @@ Call the SerializeAsync method on the thread to serialize it to a JsonElement.
 It can then be converted to a string for storage and saved to a database, blob storage, or file.
 
 ```csharp
+using System.IO;
+using System.Text.Json;
+
 // Serialize the thread state
-JsonElement serializedThread = await thread.SerializeAsync();
+JsonElement serializedThread = thread.Serialize();
 string serializedJson = JsonSerializer.Serialize(serializedThread, JsonSerializerOptions.Web);
 
 // Example: save to a local file (replace with DB or blob storage in production)

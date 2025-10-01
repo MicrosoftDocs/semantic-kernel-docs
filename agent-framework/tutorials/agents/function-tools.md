@@ -33,6 +33,8 @@ Here is an example of a simple function tool that fakes getting the weather for 
 It is decorated with description attributes to provide additional descriptions about itself and its location parameter to the agent.
 
 ```csharp
+using System.ComponentModel;
+
 [Description("Get the weather for a given location.")]
 static string GetWeather([Description("The location to get the weather for.")] string location)
     => $"The weather in {location} is cloudy with a high of 15°C.";
@@ -41,6 +43,13 @@ static string GetWeather([Description("The location to get the weather for.")] s
 When creating the agent, we can now provide the function tool to the agent, by passing a list of tools to the `CreateAIAgent` method.
 
 ```csharp
+using System;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using OpenAI;
+
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())

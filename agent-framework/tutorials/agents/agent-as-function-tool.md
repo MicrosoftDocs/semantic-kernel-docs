@@ -27,6 +27,8 @@ First, create a function tool as a C# method, and decorate it with descriptions 
 This tool will be used by our agent that is exposed as a function.
 
 ```csharp
+using System.ComponentModel;
+
 [Description("Get the weather for a given location.")]
 static string GetWeather([Description("The location to get the weather for.")] string location)
     => $"The weather in {location} is cloudy with a high of 15°C.";
@@ -35,6 +37,13 @@ static string GetWeather([Description("The location to get the weather for.")] s
 Create an `AIAgent` that uses the function tool.
 
 ```csharp
+using System;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using OpenAI;
+
 AIAgent weatherAgent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())

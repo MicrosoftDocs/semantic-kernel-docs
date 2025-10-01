@@ -145,7 +145,7 @@ var logger = loggerFactory.CreateLogger<Program>();
 
 ## Aspire Dashboard
 
-Consider using the Aspire Dashboard as a quick way to visualize your traces and metrics during development. To Learn more, see [Aspire Dashboard documentation](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard/overview). The Aspire Dashboard receives data via an OpenTelemetry Collector, which you can add to your tracer provider as follows:
+Consider using the Aspire Dashboard as a quick way to visualize your traces and metrics during development. To Learn more, see [Aspire Dashboard documentation](/dotnet/aspire/fundamentals/dashboard/overview). The Aspire Dashboard receives data via an OpenTelemetry Collector, which you can add to your tracer provider as follows:
 
 ```csharp
 using var tracerProvider = Sdk.CreateTracerProviderBuilder()
@@ -333,3 +333,8 @@ This trace shows:
 We have a number of samples in our repository that demonstrate these capabilities, see the [observability samples folder](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) on Github. That includes samples for using zero-code telemetry as well.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Using MCP Tools](../model-context-protocol/using-mcp-tools.md)
