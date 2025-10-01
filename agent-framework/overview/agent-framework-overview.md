@@ -137,13 +137,16 @@ In these cases, consider using workflows instead.
 
 A **workflow** can express a predefined sequence of operations that can include AI agents as components while maintaining consistency and reliability. Workflows are designed to handle complex and long-running processes that may involve multiple agents, human interactions and integrations with external systems.
 
-The flow of a workflow can be explicitly defined, allowing for more control over the execution path. The following diagram illustrates an example of a workflow that connects two AI agents and a function:
+The execution sequence of a workflow can be explicitly defined, allowing for more control over the execution path. The following diagram illustrates an example of a workflow that connects two AI agents and a function:
 
 ![Workflow Diagram](../media/workflow.svg)
 
 Workflows can also express dynamic sequences by making use of
 conditional routing, model-based decision making, and concurrent
-execution. This is how our [orchestration patterns](../user-guide//workflows/orchestrations/overview.md) are implemented.
+execution. This is how our [multi-agent orchestration patterns](../user-guide//workflows/orchestrations/overview.md) are implemented.
+The orchestration patterns provide mechanisms to coordinate multiple agents
+to work on complex tasks that require multiple steps and decision points,
+addressing the limitations of single agents.
 
 ### What problems do Workflows solve?
 
@@ -154,7 +157,7 @@ Here are some of the key benefits of Agent Framework workflows:
 - **Modularity**: Workflows can be broken down into smaller, reusable components, making it easier to manage and update individual parts of the process.
 - **Agent Integration**: Workflows can incorporate multiple AI agents with non-agentic components, allowing for sophisticated orchestration of tasks.
 - **Type Safety**: Strong typing ensures messages flow correctly between components, with comprehensive validation that prevents runtime errors.
-- **Flexible Control Flow**: Graph-based architecture allows for intuitive modeling of complex workflows with `executors` and `edges`. Conditional routing, parallel processing, and dynamic execution paths are all supported.
+- **Flexible Flow**: Graph-based architecture allows for intuitive modeling of complex workflows with `executors` and `edges`. Conditional routing, parallel processing, and dynamic execution paths are all supported.
 - **External Integration**: Built-in request/response patterns for seamless integration with external APIs, and human-in-the-loop scenarios.
 - **Checkpointing**: Save workflow states via checkpoints, enabling recovery and resumption of long-running processes on server sides.
 - **Multi-Agent Orchestration**: Built-in patterns for coordinating multiple AI agents, including sequential, concurrent, hand-off, and magentic.
