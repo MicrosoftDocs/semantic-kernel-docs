@@ -18,6 +18,6 @@ See the [Agent Framework repository](https://github.com/microsoft/agent-framewor
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Samples coming soon.
+See the [Agent Framework repository](https://github.com/microsoft/agent-framework/tree/main/python/samples/semantic-kernel-migration) for detailed per agent type code samples showing the the Agent Framework equivalent code for Semantic Kernel features.
 
 ::: zone-end
