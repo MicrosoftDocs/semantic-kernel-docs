@@ -145,8 +145,10 @@ Here is an example with a system and user message:
 ```csharp
 ChatMessage systemMessage = new(
     ChatRole.System,
-    """If the user asks you to tell a joke, refuse to do so, explaining that you are not a clown.
-    Offer the user an interesting fact instead.""");
+    """
+    If the user asks you to tell a joke, refuse to do so, explaining that you are not a clown.
+    Offer the user an interesting fact instead.
+    """);
 ChatMessage userMessage = new(ChatRole.User, "Tell me a joke about a pirate.");
 
 Console.WriteLine(await agent.RunAsync([systemMessage, userMessage]));
