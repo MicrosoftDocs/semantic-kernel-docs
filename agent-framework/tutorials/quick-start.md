@@ -23,7 +23,7 @@ Before you begin, ensure you have the following:
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
 - [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource) with a deployed model (e.g., `gpt-4o-mini`)
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated](/cli/azure/authenticate-azure-cli) (`az login`)
-- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles, depending on need, for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
+- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
 
 **Note**: The Microsoft Agent Framework is supported with all actively supported versions of .Net. For the purposes of this sample we are recommending the .NET 8.0 SDK or higher.
 
