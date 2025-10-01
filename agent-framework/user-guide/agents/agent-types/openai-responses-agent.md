@@ -292,3 +292,8 @@ The agent is a standard `BaseAgent` and supports all standard agent operations.
 See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [OpenAI Assistant Agents](./openai-assistants-agent.md)

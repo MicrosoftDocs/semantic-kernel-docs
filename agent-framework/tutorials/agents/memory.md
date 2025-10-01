@@ -355,3 +355,8 @@ if __name__ == "__main__":
 ```
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Create a simple workflow](../workflows/simple-sequential-workflow.md)
