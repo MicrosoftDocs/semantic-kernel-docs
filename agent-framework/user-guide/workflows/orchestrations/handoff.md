@@ -163,4 +163,4 @@ Coming soon...
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Magnetic Orchestration](./magnetic.md)
+> [Magnetic Orchestration](./magentic.md)
