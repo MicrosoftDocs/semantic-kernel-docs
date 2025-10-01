@@ -16,13 +16,16 @@ ms.service: semantic-kernel
 This tutorial shows how to enable OpenTelemetry on an agent so that interactions with the agent are automatically logged and exported.
 In this tutorial, output is written to the console using the OpenTelemetry console exporter.
 
+> [!NOTE]
+> See [Semantic Conventions for GenAI agent and framework spans](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-agent-spans/) from Open Telemetry for more information about the standards followed by the Microsoft Agent Framework.
+
 ## Prerequisites
 
 For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ## Installing Nuget packages
 
-To use the AgentFramework with Azure OpenAI, you need to install the following NuGet packages:
+To use the Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
 ```powershell
 dotnet add package Azure.Identity
@@ -39,8 +42,8 @@ dotnet add package OpenTelemetry.Exporter.Console
 
 ## Enable OpenTelemetry in your app
 
-Enable the agent framework telemetry and create an OpenTelemetry TracerProvider that exports to the console.
-Note that the tracerProvider must remain alive while you run the agent so traces are exported.
+Enable the agent framework telemetry and create an OpenTelemetry `TracerProvider` that exports to the console.
+Note that the `TracerProvider` must remain alive while you run the agent so traces are exported.
 
 ```csharp
 using System;
@@ -56,7 +59,7 @@ using var tracerProvider = Sdk.CreateTracerProviderBuilder()
 
 ## Create and instrument the agent
 
-Create an agent, then call `WithOpenTelemetry` to provide a source name.
+Create an agent, and using the builder pattern, call `UseOpenTelemetry` to provide a source name.
 Note that the string literal "agent-telemetry-source" is the OpenTelemetry source name
 that we used above, when we created the tracer provider.
 

@@ -29,7 +29,7 @@ dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-To add support for hosting a tool over the Model Context Protocol (MCP), all add the following Nuget packages
+To add support for hosting a tool over the Model Context Protocol (MCP), add the following Nuget packages
 
 ```powershell
 dotnet add package Microsoft.Extensions.Hosting --prerelease
