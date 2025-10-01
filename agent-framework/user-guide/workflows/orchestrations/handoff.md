@@ -1,7 +1,6 @@
 ---
 title: Microsoft Agent Framework Workflows Orchestrations - Handoff
 description: In-depth look at Handoff Orchestrations in Microsoft Agent Framework Workflows.
-zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -29,8 +28,6 @@ While agent-as-tools is commonly considered as a multi-agent pattern and it may 
 - How to configure handoff rules between agents
 - How to build interactive workflows with dynamic agent routing
 - How to handle multi-turn conversations with agent switching
-
-::: zone pivot="programming-language-csharp"
 
 In handoff orchestration, agents can transfer control to one another based on context, allowing for dynamic routing and specialized expertise handling.
 
@@ -151,14 +148,6 @@ math_tutor: I'd be happy to help with calculus integration! Integration is the r
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Multi-turn Support**: Supports ongoing conversations with seamless agent switching
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-
-Coming soon...
-
-::: zone-end
 
 ## Next steps
 

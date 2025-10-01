@@ -1,7 +1,6 @@
 ---
 title: Workflow Visualization
 description: Learn how to visualize workflows using the Agent Framework.
-zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -11,13 +10,6 @@ ms.service: semantic-kernel
 
 # Visualizing Workflows
 
-::: zone pivot="programming-language-csharp"
-
-Tutorial coming soon.
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
 
 ## Overview
 
@@ -312,5 +304,3 @@ if os.getenv("CI"):
 ### Running the Example
 
 For the complete working implementation with visualization, see the [Concurrent with Visualization sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/visualization/concurrent_with_visualization.py).
-
-::: zone-end

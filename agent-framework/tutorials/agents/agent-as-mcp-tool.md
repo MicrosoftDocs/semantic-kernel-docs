@@ -1,7 +1,6 @@
 ---
 title: Exposing an agent as an MCP tool
 description: Learn how to expose an agent as a tool over the MCP protocol
-zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
@@ -10,8 +9,6 @@ ms.service: semantic-kernel
 ---
 
 # Exposing an agent as an MCP tool
-
-::: zone pivot="programming-language-csharp"
 
 This tutorial shows you how to expose an agent as a tool over the Model Context Protocol (MCP), so it can be used by other systems that support MCP tools.
 
@@ -80,13 +77,6 @@ await builder.Build().RunAsync();
 ```
 
 This will start an MCP server that exposes the agent as a tool over the MCP protocol.
-
-::: zone-end
-::: zone pivot="programming-language-python"
-
-Tutorial coming soon.
-
-::: zone-end
 
 ## Next steps
 
