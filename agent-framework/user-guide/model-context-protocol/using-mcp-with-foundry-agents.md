@@ -158,7 +158,7 @@ from azure.identity.aio import AzureCliCredential
 from agent_framework.azure import AzureAIAgentClient
 
 # Required environment variables
-os.environ["AZURE_AI_PROJECT_ENDPOINT"] = "https://<your-project>.cognitiveservices.azure.com"
+os.environ["AZURE_AI_PROJECT_ENDPOINT"] = "https://<your-project>.services.ai.azure.com/api/projects/<project-id>"
 os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"] = "gpt-4o-mini"  # Optional, defaults to this
 ```
 
