@@ -132,3 +132,8 @@ The full source code and instructions to run this sample is available [here](htt
 Coming soon.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Using workflows as Agents](../workflows/as-agents.md)
