@@ -1,7 +1,6 @@
 ---
 title: Using function tools with human in the loop approvals
 description: Learn how to use function tools with human in the loop approvals
-zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
@@ -11,7 +10,6 @@ ms.service: semantic-kernel
 
 # Using function tools with human in the loop approvals
 
-::: zone pivot="programming-language-csharp"
 
 This tutorial step shows you how to use function tools that require human approval with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
@@ -29,8 +27,18 @@ When using functions, it's possible to indicate for each function, whether it re
 This is done by wrapping the `AIFunction` instance in an `ApprovalRequiredAIFunction` instance.
 
 Here is an example of a simple function tool that fakes getting the weather for a given location.
+For simplicity we are also listing all required usings for this sample here.
 
 ```csharp
+using System;
+using System.ComponentModel;
+using System.Linq;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using OpenAI;
+
 [Description("Get the weather for a given location.")]
 static string GetWeather([Description("The location to get the weather for.")] string location)
     => $"The weather in {location} is cloudy with a high of 15°C.";
@@ -86,13 +94,6 @@ Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
 ```
 
 Whenever you are using function tools with human in the loop approvals, remember to check for `FunctionApprovalRequestContent` instances in the response, after each agent run, until all function calls have been approved or rejected.
-
-::: zone-end
-::: zone pivot="programming-language-python"
-
-Tutorial coming soon.
-
-::: zone-end
 
 ## Next steps
 

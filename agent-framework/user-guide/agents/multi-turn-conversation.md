@@ -106,7 +106,7 @@ It is therefore considered unsafe to use an `AgentThread` instance that was crea
 1. By calling `get_new_thread()` on the agent.
 1. By running the agent and not providing an `AgentThread`. In this case the agent will create a throwaway `AgentThread` with an underlying thread which will only be used for the duration of the run.
 
-Some underlying threads may be persistently created in an underlying service, where the service requires this, e.g. Foundry Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
+Some underlying threads may be persistently created in an underlying service, where the service requires this, e.g. Azure AI Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
 
 ```python
 # Create a new thread.
@@ -147,35 +147,34 @@ response = await agent.run("Hello, how are you?", thread=resumed_thread)
 For in-memory threads, you can provide a custom message store implementation to control how messages are stored and retrieved:
 
 ```python
-from agent_framework import AgentThread, ChatMessageList, ChatAgent
-from agent_framework.foundry import FoundryChatClient
+from agent_framework import AgentThread, ChatMessageStore, ChatAgent
+from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
-# Using the default in-memory message store
-thread = AgentThread(message_store=ChatMessageList())
-
-# Or let the agent create one automatically
-thread = agent.get_new_thread()
+class CustomStore(ChatMessageStore):
+    # Implement custom storage logic here
+    pass
 
 # You can also provide a custom message store factory when creating the agent
 def custom_message_store_factory():
-    return ChatMessageList()  # or your custom implementation
+    return CustomStore()  # or your custom implementation
 
 async with AzureCliCredential() as credential:
     agent = ChatAgent(
-        chat_client=FoundryChatClient(async_credential=credential),
+        chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant",
         chat_message_store_factory=custom_message_store_factory
     )
+    # Or let the agent create one automatically
+    thread = agent.get_new_thread()
+    # thread.message_store is not a instance of CustomStore
 ```
 
 ## Agent/AgentThread relationship
 
-`AIAgent` instances are stateless and the same agent instance can be used with multiple `AgentThread` instances.
+`Agents` are stateless and the same agent instance can be used with multiple `AgentThread` instances.
 
-Not all agents support all thread types though. For example if you are using a `ChatAgent` with the responses service, `AgentThread` instances created by this agent, will not work with a `ChatAgent` using the Foundry Agent service.
-This is because these services both support saving the conversation history in the service, and the `AgentThread`
-only has a reference to this service managed thread.
+Not all agents support all thread types though. For example if you are using a `ChatAgent` with the OpenAI Responses service and `store=True`, `AgentThread` instances used by this agent, will not work with a `ChatAgent` using the Azure AI Agent service, because the thread_ids are not compatible.
 
 It is therefore considered unsafe to use an `AgentThread` instance that was created by one agent with a different agent instance, unless you are aware of the underlying threading model and its implications.
 
@@ -184,15 +183,15 @@ It is therefore considered unsafe to use an `AgentThread` instance that was crea
 Here's a complete example showing how to maintain context across multiple interactions:
 
 ```python
-from agent_framework import ChatAgent, AgentThread
-from agent_framework.foundry import FoundryChatClient
+from agent_framework import ChatAgent
+from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
-async def foundry_multi_turn_example():
+async def multi_turn_example():
     async with (
         AzureCliCredential() as credential,
         ChatAgent(
-            chat_client=FoundryChatClient(async_credential=credential),
+            chat_client=AzureAIAgentClient(async_credential=credential),
             instructions="You are a helpful assistant"
         ) as agent
     ):
@@ -219,4 +218,7 @@ async def foundry_multi_turn_example():
 
 ::: zone-end
 
+## Next steps
 
+> [!div class="nextstepaction"]
+> [Agent Middleware](./agent-middleware.md)

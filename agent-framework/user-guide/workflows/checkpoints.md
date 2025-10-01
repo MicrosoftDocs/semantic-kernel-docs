@@ -221,12 +221,6 @@ protected override async ValueTask OnCheckpointRestoredAsync(IWorkflowContext co
 
 ::: zone-end
 
-::: zone pivot="programming-language-python"
-
-Coming soon...
-
-::: zone-end
-
 ## Next Steps
 
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.

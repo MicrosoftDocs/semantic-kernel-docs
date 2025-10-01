@@ -37,7 +37,7 @@ using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.Workflows;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 
 // 1) Set up the Azure OpenAI client
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??

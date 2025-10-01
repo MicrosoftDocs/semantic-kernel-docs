@@ -16,6 +16,8 @@
   href: agent-as-mcp-tool.md
 - name: Enabling observability for agents
   href: enable-observability.md
+- name: Adding middleware to agents
+  href: middleware.md
 - name: Persisting conversations
   href: persisted-conversation.md
 - name: Third Party chat history storage

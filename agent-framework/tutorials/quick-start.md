@@ -21,24 +21,40 @@ This guide will help you get up and running quickly with a basic agent using the
 Before you begin, ensure you have the following:
 
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
-- An [Azure OpenAI](/azure/ai-services/openai) resource with a deployed model (e.g., `gpt-4o-mini`)
-- [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
+- [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource) with a deployed model (e.g., `gpt-4o-mini`)
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated](/cli/azure/authenticate-azure-cli) (`az login`)
+- [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
 
-**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
+**Note**: The Microsoft Agent Framework is supported with all actively supported versions of .Net. For the purposes of this sample we are recommending the .NET 8.0 SDK or higher.
+
+**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you
+have an api key and do not wish to use role based authentication, in which case `az login` is not required.
+
+## Installing Packages
+
+Packages will be published to [NuGet Gallery | Microsoft.Agent.AI](https://www.nuget.org/packages/Microsoft.Agent.AI). 
+
+First, add the following Microsoft Agent Framework NuGet packages into your application, using the following commands:
+
+```powershell
+dotnet add package Azure.AI.OpenAI
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+```
 
 ## Running a Basic Agent Sample
 
-This sample demonstrates how to create and use a simple AI agent with Azure OpenAI as the backend. It will create a basic agent using `AzureOpenAIClient` with `gpt-4o-mini` and custom instructions.
-
-Make sure to replace `https://your-resource.openai.azure.com/` with the endpoint of your Azure OpenAI resource.
+This sample demonstrates how to create and use a simple AI agent with Azure OpenAI Chat Completion as the backend. It will create a basic agent using `AzureOpenAIClient` with `gpt-4o-mini` and custom instructions.
 
 ### Sample Code
+
+Make sure to replace `https://your-resource.openai.azure.com/` with the endpoint of your Azure OpenAI resource.
 
 ```csharp
 using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Extensions.AI.Agents;
+using Microsoft.Agents.AI;
 using OpenAI;
 
 AIAgent agent = new AzureOpenAIClient(
@@ -50,10 +66,9 @@ AIAgent agent = new AzureOpenAIClient(
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
-## (Optional) Installing Packages
+## (Optional) Installing Nightly Packages
 
-Packages will be published to [NuGet](https://www.nuget.org/) when the Agent Framework public preview is released. 
-In the meantime nightly builds of the Agent Framework are available [here](https://github.com/orgs/microsoft/packages?repo_name=agent-framework).
+If you need to get a package containing the latest enhancements or fixes nightly builds of the Agent Framework are available [here](https://github.com/orgs/microsoft/packages?repo_name=agent-framework).
 
 To download nightly builds follow the following steps:
 
@@ -83,6 +98,7 @@ To download nightly builds follow the following steps:
         </packageSource>
         <packageSource key="github">
           <package pattern="*nightly"/>
+          <package pattern="Microsoft.Agents.AI" />
         </packageSource>
       </packageSourceMapping>
     
@@ -98,9 +114,9 @@ To download nightly builds follow the following steps:
     * If you place this file in your project folder make sure to have Git (or whatever source control you use) ignore it.
     * For more information on where to store this file go [here](/nuget/reference/nuget-config-file).
 1. You can now add packages from the nightly build to your project.
-    * E.g. use this command `dotnet add package Microsoft.Extensions.AI.Agents --version 0.0.1-nightly-250731.6-alpha`
+    * E.g. use this command `dotnet add package Microsoft.Agents.AI --prerelease`
 1. And the latest package release can be referenced in the project like this:
-    * `<PackageReference Include="Microsoft.Extensions.AI.Agents" Version="*-*" />`
+    * `<PackageReference Include="Microsoft.Agents.AI" Version="*-*" />`
 
 For more information see: <https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry>
 
@@ -112,19 +128,19 @@ For more information see: <https://docs.github.com/en/packages/working-with-a-gi
 
 Before you begin, ensure you have the following:
 
-- [Python 3.9 or later](https://www.python.org/downloads/)
-- An [Azure AI Foundry](/azure/ai-foundry/) project with a deployed model (e.g., `gpt-4o-mini`)
+- [Python 3.10 or later](https://www.python.org/downloads/)
+- An [Azure AI](/azure/ai-foundry/) project with a deployed model (e.g., `gpt-4o-mini`)
 - [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
 
-**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI Foundry project. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
+**Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI project. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
 
 ## Running a Basic Agent Sample
 
-This sample demonstrates how to create and use a simple AI agent with Azure AI Foundry as the backend. It will create a basic agent using `ChatAgent` with `FoundryChatClient` and custom instructions.
+This sample demonstrates how to create and use a simple AI agent with Azure AI as the backend. It will create a basic agent using `ChatAgent` with `AzureAIAgentClient` and custom instructions.
 
 Make sure to set the following environment variables:
-- `FOUNDRY_PROJECT_ENDPOINT`: Your Azure AI Foundry project endpoint
-- `FOUNDRY_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
+- `AZURE_AI_PROJECT_ENDPOINT`: Your Azure AI project endpoint
+- `AZURE_AI_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
 
 
 ### Sample Code
@@ -132,14 +148,14 @@ Make sure to set the following environment variables:
 ```python
 import asyncio
 from agent_framework import ChatAgent
-from agent_framework.foundry import FoundryChatClient
+from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
         ChatAgent(
-            chat_client=FoundryChatClient(async_credential=credential),
+            chat_client=AzureAIAgentClient(async_credential=credential),
             instructions="You are good at telling jokes."
         ) as agent,
     ):
@@ -152,7 +168,12 @@ if __name__ == "__main__":
 
 ## More Examples
 
-For more detailed examples and advanced scenarios, see the [Foundry Agent Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/foundry/README.md).
+For more detailed examples and advanced scenarios, see the [Azure AI Agent Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/README.md).
 
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Create and run agents](./agents/run-agent.md)
