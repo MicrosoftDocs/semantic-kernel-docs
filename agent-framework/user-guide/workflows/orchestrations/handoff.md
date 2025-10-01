@@ -159,3 +159,8 @@ math_tutor: I'd be happy to help with calculus integration! Integration is the r
 Coming soon...
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Magnetic Orchestration](./magnetic.md)
