@@ -339,7 +339,7 @@ from agent_framework import ChatMessage, ChatAgent
 ### 2. Agent Type Consolidation
 
 #### Semantic Kernel
-Semantic Kernel provides specific agent classes for various services, e.g. ChatCompletionAgent, AzureAIAgent, OpenAIAssistantAgent, etc. See [Agent types in Semantic Kernel](/semantic-kernel/frameworks/agents/agent-types/azure-ai-agent).
+Semantic Kernel provides specific agent classes for various services, e.g. ChatCompletionAgent, AzureAIAgent, OpenAIAssistantAgent, etc. See [Agent types in Semantic Kernel](../../../semantic-kernel/frameworks/agents/agent-types/azure-ai-agent.md).
 
 #### Agent Framework
 In Agent Framework the majority of agents are built using the `ChatAgent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion and OpenAI Responses. We currently have two other agents, `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
