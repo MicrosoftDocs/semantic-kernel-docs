@@ -25,12 +25,18 @@ productDirectory:
     - title: Quick Start
       imageSrc: /agent-framework/media/quick-start.svg
       links:
-        - url: /agent-framework/get-started/quick-start-guide
+        - url: /agent-framework/tutorials/quick-start
+          text: Agent Framework Quick Start
+        - url: /agent-framework/tutorials/overview
           text: Learn how to use Agent Framework
-        - url: /agent-framework/get-started/detailed-samples
-          text: Check out samples for Agent Framework
+        - url: https://github.com/microsoft/agent-framework/tree/main/python/samples
+          text: Check out Python samples for Agent Framework
+        - url: https://github.com/microsoft/agent-framework/tree/main/dotnet/samples
+          text: Check out C# samples for Agent Framework
     - title: Migration Guide
       imageSrc: /agent-framework/media/migration-guide.svg
       links:
-        - url: /agent-framework/migration-guide/index
+        - url: /agent-framework/migration-guide/from-autogen/index
+          text: Migrate from Autogen to Agent Framework
+        - url: /agent-framework/migration-guide/from-semantic-kernel/index
           text: Migrate from Semantic Kernel to Agent Framework
