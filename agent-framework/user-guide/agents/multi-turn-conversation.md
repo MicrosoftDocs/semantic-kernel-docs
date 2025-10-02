@@ -2,7 +2,7 @@
 title: Microsoft Agent Framework Multi-Turn Conversations and Threading
 titleSuffix: Azure AI Foundry
 description: Learn Agent Framework Multi-Turn Conversations and Threading.
-ms.service: semantic-kernel
+ms.service: agent-framework
 ms.topic: tutorial
 ms.date: 09/04/2025
 ms.reviewer: ssalgado

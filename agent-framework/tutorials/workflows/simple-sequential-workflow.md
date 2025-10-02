@@ -6,7 +6,7 @@ author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/29/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Create a Simple Sequential Workflow
@@ -63,7 +63,7 @@ Create an executor that converts text to uppercase:
 internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"), 
     IMessageHandler<string, string>
 {
-    public ValueTask<string> HandleAsync(string input, CancellationToken cancellationToken = default)
+    public ValueTask<string> HandleAsync(string input, IWorkflowContext context)
     {
         // Convert input to uppercase and pass to next executor
         return ValueTask.FromResult(input.ToUpper());
@@ -89,7 +89,7 @@ Create an executor that reverses the text:
 internal sealed class ReverseTextExecutor() : ReflectingExecutor<ReverseTextExecutor>("ReverseTextExecutor"), 
     IMessageHandler<string, string>
 {
-    public ValueTask<string> HandleAsync(string input, CancellationToken cancellationToken = default)
+    public ValueTask<string> HandleAsync(string input, IWorkflowContext context)
     {
         // Reverse the input text
         return ValueTask.FromResult(new string(input.Reverse().ToArray()));

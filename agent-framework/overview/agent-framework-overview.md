@@ -5,7 +5,7 @@ author: ekzhu
 ms.topic: reference
 ms.author: ekzhu
 ms.date: 10/01/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Microsoft Agent Framework
