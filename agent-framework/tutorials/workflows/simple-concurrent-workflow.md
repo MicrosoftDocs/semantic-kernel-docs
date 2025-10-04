@@ -352,7 +352,7 @@ if __name__ == "__main__":
 
 ## Complete Implementation
 
-For the complete working implementation of this concurrent workflow, see the [aggregate_results_of_different_types.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/parallelism/aggregate_results_of_different_types.py) sample in the Agent Framework repository.
+For the complete working implementation of this concurrent workflow, see the [aggregate_results_of_different_types.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/parallelism/aggregate_results_of_different_types.py) sample in the Agent Framework repository.
 
 ::: zone-end
 
