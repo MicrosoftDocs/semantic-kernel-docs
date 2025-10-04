@@ -361,7 +361,7 @@ The workflow will process the input "hello world" through both executors and dis
 
 ## Complete Example
 
-For the complete, ready-to-run implementation, see the [sequential_streaming.py sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/control-flow/sequential_streaming.py) in the Agent Framework repository.
+For the complete, ready-to-run implementation, see the [sequential_streaming.py sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/control-flow/sequential_streaming.py) in the Agent Framework repository.
 
 This sample includes:
 
