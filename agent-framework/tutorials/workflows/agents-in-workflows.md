@@ -317,7 +317,7 @@ if __name__ == "__main__":
 
 ## Complete Implementation
 
-For the complete working implementation of this Azure AI agents workflow, see the [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/agents/azure_ai_agents_streaming.py) sample in the Agent Framework repository.
+For the complete working implementation of this Azure AI agents workflow, see the [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/agents/azure_ai_agents_streaming.py) sample in the Agent Framework repository.
 
 ::: zone-end
 
