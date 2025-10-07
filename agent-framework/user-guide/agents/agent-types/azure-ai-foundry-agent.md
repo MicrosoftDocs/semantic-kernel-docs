@@ -340,4 +340,4 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [OpenAI ChatCompletion Agents](./azure-openai-chat-completion-agent.md)
+> [Response Agents](./openai-responses-agent.md)
