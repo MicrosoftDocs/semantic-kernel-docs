@@ -68,11 +68,11 @@ many important features came from external contributors.
 [Microsoft Agent Framework](https://github.com/microsoft/agent-framework)
 is a new multi-language SDK for building AI agents and workflows using LLMs.
 It represents a significant evolution of the ideas pioneered in AutoGen
-and incorporates lessons learned from real-world usage. It is developed
-by the core AutoGen team and Semantic Kernel team at Microsoft,
+and incorporates lessons learned from real-world usage. It's developed
+by the core AutoGen and Semantic Kernel teams at Microsoft,
 and is designed to be a new foundation for building AI applications going forward.
 
-What follows is a practical migration path: we’ll start by grounding on what stays the same and what changes at a glance, then cover model client setup, single‑agent features, and finally multi‑agent orchestration with concrete code side‑by‑side. Along the way, links to runnable samples in the Agent Framework repo help you validate each step.
+This guide describes a practical migration path: it starts by covering what stays the same and what changes at a glance. Then, it covers model client setup, single‑agent features, and finally multi‑agent orchestration with concrete code side‑by‑side. Along the way, links to runnable samples in the Agent Framework repo help you validate each step.
 
 ## Key Similarities and Differences
 
@@ -277,10 +277,10 @@ Stateless by default: quick demo
 ```python
 # Without a thread (two independent invocations)
 r1 = await agent.run("What's 2+2?")
-print(r1.text)  # e.g., "4"
+print(r1.text)  # for example, "4"
 
 r2 = await agent.run("What about that number times 10?")
-print(r2.text)  # Likely ambiguous without prior context; may not be "40"
+print(r2.text)  # Likely ambiguous without prior context; cannot be "40"
 
 # With a thread (shared context across calls)
 thread = agent.get_new_thread()
@@ -487,9 +487,10 @@ Requirements and caveats:
 
 - Hosted tools are only available on models/accounts that support them. Verify entitlements and model support for your provider before enabling these tools.
 - Configuration differs by provider; follow the prerequisites in each sample for setup and permissions.
-- Not every model supports every hosted tool (e.g., web search vs code interpreter). Choose a compatible model in your environment.
+- Not every model supports every hosted tool (for example, web search vs code interpreter). Choose a compatible model in your environment.
 
-**Note**: AutoGen supports local code execution tools, but this feature is planned for future Agent Framework versions.
+> [!NOTE]
+> AutoGen supports local code execution tools, but this feature is planned for future Agent Framework versions.
 
 **Key Difference**: Agent Framework handles tool iteration automatically at the agent level. Unlike AutoGen's `max_tool_iterations` parameter, Agent Framework agents continue tool execution until completion by default, with built-in safety mechanisms to prevent infinite loops.
 
@@ -599,7 +600,7 @@ coordinator = ChatAgent(
 )
 ```
 
-Explicit migration note: In AutoGen, set `parallel_tool_calls=False` on the coordinator’s model client when wrapping agents as tools to avoid concurrency issues when invoking the same agent instance.
+Explicit migration note: In AutoGen, set `parallel_tool_calls=False` on the coordinator's model client when wrapping agents as tools to avoid concurrency issues when invoking the same agent instance.
 In Agent Framework, `as_tool()` does not require disabling parallel tool calls
 as agents are stateless by default.
 
@@ -652,7 +653,7 @@ For detailed middleware examples, see:
 
 ### Custom Agents
 
-Sometimes you don’t want a model-backed agent at all—you want a deterministic or API-backed agent with custom logic. Both frameworks support building custom agents, but the patterns differ.
+Sometimes you don't want a model-backed agent at all—you want a deterministic or API-backed agent with custom logic. Both frameworks support building custom agents, but the patterns differ.
 
 #### AutoGen: Subclass BaseChatAgent
 
@@ -739,7 +740,7 @@ Notes:
 
 ---
 
-Next, let’s look at multi‑agent orchestration—the area where the frameworks differ most.
+Next, let's look at multi‑agent orchestration—the area where the frameworks differ most.
 
 ## Multi-Agent Feature Mapping
 
@@ -1033,8 +1034,8 @@ workflow = (
 
 What to notice:
 
-- GraphFlow broadcasts messages and uses conditional transitions. Join behavior is configured via target‑side `activation` and per‑edge `activation_group`/`activation_condition` (e.g., group both edges into `join_d` with `activation_condition="any"`).
-- Workflow routes data explicitly; use `target_id` to select downstream executors. Join behavior lives in the receiving executor (e.g., yield on first input vs wait for all), or via orchestration builders/aggregators.
+- GraphFlow broadcasts messages and uses conditional transitions. Join behavior is configured via target‑side `activation` and per‑edge `activation_group`/`activation_condition` (for example, group both edges into `join_d` with `activation_condition="any"`).
+- Workflow routes data explicitly; use `target_id` to select downstream executors. Join behavior lives in the receiving executor (for example, yield on first input vs wait for all), or via orchestration builders/aggregators.
 - Executors in Workflow are free‑form: wrap a `ChatAgent`, a function, or a sub‑workflow and mix them within the same graph.
 
 #### Key Differences
