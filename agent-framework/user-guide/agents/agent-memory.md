@@ -48,6 +48,38 @@ IList<ChatMessage>? messages = thread.GetService<IList<ChatMessage>>();
 > [!NOTE]
 > Retrieving messages from the `AgentThread` object in this way will only work if in-memory storage is being used.
 
+##### Chat History reduction with In-Memory storage
+
+The built-in `InMemoryChatMessageStore` that is used by default when the underlying service does not support in-service storage,
+can be configured with a reducer to manage the size of the chat history.
+This is useful to avoid exceeding the context size limits of the underlying service.
+
+The `InMemoryChatMessageStore` can take an optional `Microsoft.Extensions.AI.IChatReducer` implementation to reduce the size of the chat history.
+It also allows you to configure the event during which the reducer is invoked, either after a message is added to the chat history
+or before the chat history is returned for the next invocation.
+
+To configure the `InMemoryChatMessageStore` with a reducer, you can provide a factory to construct a new `InMemoryChatMessageStore`
+for each new `AgentThread` and pass it a reducer of your choice. The `InMemoryChatMessageStore` can also be passed an optional trigger event
+which can be set to either `InMemoryChatMessageStore.ChatReducerTriggerEvent.AfterMessageAdded` or `InMemoryChatMessageStore.ChatReducerTriggerEvent.BeforeMessagesRetrieval`.
+
+```csharp
+AIAgent agent = new OpenAIClient("<your_api_key>")
+    .GetChatClient(modelName)
+    .CreateAIAgent(new ChatClientAgentOptions
+    {
+        Name = JokerName,
+        Instructions = JokerInstructions,
+        ChatMessageStoreFactory = ctx => new InMemoryChatMessageStore(
+            new MessageCountingChatReducer(2),
+            ctx.SerializedState,
+            ctx.JsonSerializerOptions,
+            InMemoryChatMessageStore.ChatReducerTriggerEvent.AfterMessageAdded)
+    });
+```
+
+> [!NOTE]
+> This feature is only supported when using the `InMemoryChatMessageStore`. When a service has in-service chat history storage, it is up to the service itself to manage the size of the chat history. Similarly, when using 3rd party storage (see below), it is up to the 3rd party storage solution to manage the chat history size. If you provide a `ChatMessageStoreFactory` for a message store but you use a service with built-in chat history storage, the factory will not be used.
+
 #### Inference service chat history storage
 
 When using a service that requires in-service storage of chat history, the Agent Framework will storage the id of the remote chat history in the `AgentThread` object.
