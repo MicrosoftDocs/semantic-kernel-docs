@@ -340,4 +340,4 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Response Agents](./openai-responses-agent.md)
+> [Azure AI Foundry Models based Agents](./azure-ai-foundry-models.md)
