@@ -29,7 +29,7 @@ Add the required NuGet packages to your project.
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an OpenAI ChatCompletion Agent
+## Creating an OpenAI ChatCompletion Agent with Foundry Models
 
 As a first step you need to create a client to connect to the OpenAI service.
 
