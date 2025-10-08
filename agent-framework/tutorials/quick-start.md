@@ -1,6 +1,6 @@
 ---
-title: Quick Start
-description: Quick start guide for the Agent Framework.
+title: Microsoft Agent Framework Quick Start
+description: Quick Start guide for the Agent Framework.
 ms.service: agent-framework
 ms.topic: tutorial
 ms.date: 09/04/2025
