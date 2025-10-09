@@ -15,7 +15,6 @@ ms.service: agent-framework
 
 This tutorial shows how to store agent chat history in external storage by implementing a custom `ChatMessageStore` and using it with a `ChatClientAgent`.
 
-
 By default, when using `ChatClientAgent`, chat history is stored either in memory in the `AgentThread` object or the underlying inference service, if the service supports it.
 
 Where services do not require chat history to be stored in the service, it is possible to provide a custom store for persisting chat history instead of relying on the default in-memory behavior.
@@ -24,24 +23,24 @@ Where services do not require chat history to be stored in the service, it is po
 
 For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Installing Nuget packages
+## Install NuGet packages
 
-To use the Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
+To use Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
-```powershell
+```dotnetcli
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-In addition to this, we will use the in-memory vector store to store chat messages and a utility package for async LINQ operations.
+In addition, you'll use the in-memory vector store to store chat messages and a utility package for async LINQ operations.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.SemanticKernel.Connectors.InMemory --prerelease
 dotnet add package System.Linq.Async
 ```
 
-## Creating a custom ChatMessage Store
+## Create a custom ChatMessage Store
 
 To create a custom `ChatMessageStore`, you need to implement the abstract `ChatMessageStore` class and provide implementations for the required methods.
 
@@ -52,7 +51,7 @@ The most important methods to implement are:
 - `AddMessagesAsync` - called to add new messages to the store.
 - `GetMessagesAsync` - called to retrieve the messages from the store.
 
-`GetMessagesAsync` should return the messages in ascending chronological order. All messages returned by it will be used by the `ChatClientAgent` when making calls to the underlying `IChatClient`.  It's therefore important that this method considers the limits of the underlying model, and only returns as many messages as can be handled by the model.
+`GetMessagesAsync` should return the messages in ascending chronological order. All messages returned by it will be used by the `ChatClientAgent` when making calls to the underlying <xref:Microsoft.Extensions.AI.IChatClient>.  It's therefore important that this method considers the limits of the underlying model, and only returns as many messages as can be handled by the model.
 
 Any chat history reduction logic, such as summarization or trimming, should be done before returning messages from `GetMessagesAsync`.
 
@@ -60,15 +59,15 @@ Any chat history reduction logic, such as summarization or trimming, should be d
 
 `ChatMessageStore` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
 
-While the actual messages making up the chat history are stored externally, the `ChatMessageStore` instance may need to store keys or other state to identify the chat history in the external store.
+While the actual messages making up the chat history are stored externally, the `ChatMessageStore` instance might need to store keys or other state to identify the chat history in the external store.
 
-To allow persisting threads, you need to implement the `SerializeStateAsync` method of the `ChatMessageStore` class. You also need to provide a constructor that takes a `JsonElement` parameter, which can be used to deserialize the state when resuming a thread.
+To allow persisting threads, you need to implement the `SerializeStateAsync` method of the `ChatMessageStore` class. You also need to provide a constructor that takes a <xref:System.Text.Json.JsonElement> parameter, which can be used to deserialize the state when resuming a thread.
 
 ### Sample ChatMessageStore implementation
 
-Let's look at a sample implementation that stores chat messages in a vector store.
+The following sample implementation stores chat messages in a vector store.
 
-In `AddMessagesAsync` it upserts messages into the vector store, using a unique key for each message.
+`AddMessagesAsync` upserts messages into the vector store, using a unique key for each message.
 
 `GetMessagesAsync` retrieves the messages for the current thread from the vector store, orders them by timestamp, and returns them in ascending order.
 
@@ -140,7 +139,7 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
     }
 
     public override JsonElement Serialize(JsonSerializerOptions? jsonSerializerOptions = null) =>
-        // We have to serialize the thread id, so that on deserialization we can retrieve the messages using the same thread id.
+        // We have to serialize the thread id, so that on deserialization you can retrieve the messages using the same thread id.
         JsonSerializer.SerializeToElement(this.ThreadDbKey);
 
     private sealed class ChatHistoryItem
@@ -198,7 +197,7 @@ Where services do not require or are not capable of the chat history to be store
 
 For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating a custom ChatMessage Store
+## Create a custom ChatMessage Store
 
 To create a custom `ChatMessageStore`, you need to implement the `ChatMessageStore` protocol and provide implementations for the required methods.
 
@@ -217,15 +216,15 @@ Any chat history reduction logic, such as summarization or trimming, should be d
 
 `ChatMessageStore` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
 
-While the actual messages making up the chat history are stored externally, the `ChatMessageStore` instance may need to store keys or other state to identify the chat history in the external store.
+While the actual messages making up the chat history are stored externally, the `ChatMessageStore` instance might need to store keys or other state to identify the chat history in the external store.
 
 To allow persisting threads, you need to implement the `serialize_state` and `deserialize_state` methods of the `ChatMessageStore` protocol. These methods allow the store's state to be persisted and restored when resuming a thread.
 
 ### Sample ChatMessageStore implementation
 
-Let's look at a sample implementation that stores chat messages in Redis using the Redis Lists data structure.
+The following sample implementation stores chat messages in Redis using the Redis Lists data structure.
 
-In `add_messages` it stores messages in Redis using RPUSH to append them to the end of the list in chronological order.
+In `add_messages`, it stores messages in Redis using RPUSH to append them to the end of the list in chronological order.
 
 `list_messages` retrieves the messages for the current thread from Redis using LRANGE, and returns them in ascending chronological order.
 
@@ -266,7 +265,7 @@ class RedisChatMessageStore:
         """Initialize the Redis chat message store.
 
         Args:
-            redis_url: Redis connection URL (e.g., "redis://localhost:6379").
+            redis_url: Redis connection URL (for example, "redis://localhost:6379").
             thread_id: Unique identifier for this conversation thread.
                       If not provided, a UUID will be auto-generated.
             key_prefix: Prefix for Redis keys to namespace different applications.

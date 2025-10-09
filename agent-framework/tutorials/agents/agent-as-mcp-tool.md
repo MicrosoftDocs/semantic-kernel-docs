@@ -8,7 +8,7 @@ ms.date: 09/24/2025
 ms.service: agent-framework
 ---
 
-# Exposing an agent as an MCP tool
+# Expose an agent as an MCP tool
 
 This tutorial shows you how to expose an agent as a tool over the Model Context Protocol (MCP), so it can be used by other systems that support MCP tools.
 
@@ -16,28 +16,28 @@ This tutorial shows you how to expose an agent as a tool over the Model Context 
 
 For prerequisites see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Installing Nuget packages
+## Install NuGet packages
 
-To use the Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
+To use Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
-```powershell
+```dotnetcli
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-To add support for hosting a tool over the Model Context Protocol (MCP), add the following Nuget packages
+To add support for hosting a tool over the Model Context Protocol (MCP), add the following NuGet packages
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Extensions.Hosting --prerelease
 dotnet add package ModelContextProtocol --prerelease
 ```
 
-## Exposing an agent as an MCP tool
+## Expose an agent as an MCP tool
 
 You can expose an `AIAgent` as an MCP tool by wrapping it in a function and using `McpServerTool`. You then need to register it with an MCP server. This allows the agent to be invoked as a tool by any MCP-compatible client.
 
-First, create an agent that we will expose as an MCP tool.
+First, create an agent that you'll expose as an MCP tool.
 
 ```csharp
 using System;

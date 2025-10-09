@@ -19,15 +19,14 @@ The caller of the agent is then responsible for getting the required input from 
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating the agent with function tools
+## Create the agent with function tools
 
 When using functions, it's possible to indicate for each function, whether it requires human approval before being executed.
 This is done by wrapping the `AIFunction` instance in an `ApprovalRequiredAIFunction` instance.
 
 Here is an example of a simple function tool that fakes getting the weather for a given location.
-For simplicity we are also listing all required usings for this sample here.
 
 ```csharp
 using System;
@@ -51,7 +50,7 @@ AIFunction weatherFunction = AIFunctionFactory.Create(GetWeather);
 AIFunction approvalRequiredWeatherFunction = new ApprovalRequiredAIFunction(weatherFunction);
 ```
 
-When creating the agent, we can now provide the approval requiring function tool to the agent, by passing a list of tools to the `CreateAIAgent` method.
+When creating the agent, you can now provide the approval requiring function tool to the agent, by passing a list of tools to the `CreateAIAgent` method.
 
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
@@ -61,8 +60,8 @@ AIAgent agent = new AzureOpenAIClient(
      .CreateAIAgent(instructions: "You are a helpful assistant", tools: [approvalRequiredWeatherFunction]);
 ```
 
-Since we now have a function that requires approval, the agent may respond with a request for approval, instead of executing the function directly and returning the result.
-We can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
+Since you now have a function that requires approval, the agent might respond with a request for approval, instead of executing the function directly and returning the result.
+You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
 
 ```csharp
 AgentThread thread = agent.GetNewThread();
@@ -76,14 +75,14 @@ var functionApprovalRequests = response.Messages
 
 If there are any function approval requests, the detail of the function call including name and arguments can be found in the `FunctionCall` property on the `FunctionApprovalRequestContent` instance.
 This can be shown to the user, so that they can decide whether to approve or reject the function call.
-For our example, we will assume there is one request.
+For this example, assume there is one request.
 
 ```csharp
 FunctionApprovalRequestContent requestContent = functionApprovalRequests.First();
 Console.WriteLine($"We require approval to execute '{requestContent.FunctionCall.Name}'");
 ```
 
-Once the user has provided their input, we can create a `FunctionApprovalResponseContent` instance using the `CreateResponse` method on the `FunctionApprovalRequestContent`.
+Once the user has provided their input, you can create a `FunctionApprovalResponseContent` instance using the `CreateResponse` method on the `FunctionApprovalRequestContent`.
 Pass `true` to approve the function call, or `false` to reject it.
 
 The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same thread object to get the result back from the agent.

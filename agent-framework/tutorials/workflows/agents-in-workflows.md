@@ -1,6 +1,6 @@
 ---
 title: Agents in Workflows
-description: Learn how to integrate agents into workflows using the Agent Framework.
+description: Learn how to integrate agents into workflows using Agent Framework.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Agents in Workflows
 
-This tutorial demonstrates how to integrate AI agents into workflows using the Agent Framework. You'll learn to create workflows that leverage the power of specialized AI agents for content creation, review, and other collaborative tasks.
+This tutorial demonstrates how to integrate AI agents into workflows using Agent Framework. You'll learn to create workflows that leverage the power of specialized AI agents for content creation, review, and other collaborative tasks.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -217,7 +217,7 @@ async def create_azure_ai_agent() -> tuple[Callable[..., Awaitable[Any]], Callab
     """
     stack = AsyncExitStack()
     cred = await stack.enter_async_context(AzureCliCredential())
-    
+
     client = await stack.enter_async_context(AzureAIAgentClient(async_credential=cred))
 
     async def agent(**kwargs: Any) -> Any:
@@ -244,7 +244,7 @@ async def main() -> None:
                 "You are an excellent content writer. You create new content and edit contents based on the feedback."
             ),
         )
-        
+
         # Create a Reviewer agent that provides feedback
         reviewer = await agent(
             name="Reviewer",
@@ -317,7 +317,7 @@ if __name__ == "__main__":
 
 ## Complete Implementation
 
-For the complete working implementation of this Azure AI agents workflow, see the [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/agents/azure_ai_agents_streaming.py) sample in the Agent Framework repository.
+For the complete working implementation of this Azure AI agents workflow, see the [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/agents/azure_ai_agents_streaming.py) sample in the Agent Framework repository.
 
 ::: zone-end
 

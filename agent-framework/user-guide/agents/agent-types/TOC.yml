@@ -2,6 +2,8 @@
   href: index.md
 - name: Azure AI Foundry Agents
   href: azure-ai-foundry-agent.md
+- name: Azure AI Foundry Models Agents
+  href: azure-ai-foundry-models.md
 - name: Azure OpenAI ChatCompletion Agents
   href: azure-openai-chat-completion-agent.md
 - name: Azure OpenAI Responses Agents

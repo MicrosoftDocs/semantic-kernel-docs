@@ -1,7 +1,7 @@
 items:
 - name: Agent Framework
   href: overview/agent-framework-overview.md
-- name: Quickstart Guide
+- name: Quick Start Guide
   href: tutorials/quick-start.md
   expanded: true
 - name: Tutorials

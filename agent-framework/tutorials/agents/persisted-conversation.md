@@ -19,7 +19,7 @@ When hosting an agent in a service or even in a client application, you often wa
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ## Persisting and resuming the conversation
 
@@ -65,9 +65,9 @@ await File.WriteAllTextAsync(filePath, serializedJson);
 ```
 
 Load the persisted JSON from storage and recreate the AgentThread instance from it.
-Note that the thread must be deserialized using an agent instance. This should be the
+The thread must be deserialized using an agent instance. This should be the
 same agent type that was used to create the original thread.
-This is because agents may have their own thread types and may construct threads with
+This is because agents might have their own thread types and might construct threads with
 additional functionality that is specific to that agent type.
 
 ```csharp
@@ -147,9 +147,9 @@ with open(file_path, "w") as f:
 ```
 
 Load the persisted JSON from storage and recreate the AgentThread instance from it.
-Note that the thread must be deserialized using an agent instance. This should be the
+The thread must be deserialized using an agent instance. This should be the
 same agent type that was used to create the original thread.
-This is because agents may have their own thread types and may construct threads with
+This is because agents might have their own thread types and might construct threads with
 additional functionality that is specific to that agent type.
 
 ```python

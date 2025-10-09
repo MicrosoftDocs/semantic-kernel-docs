@@ -1,6 +1,6 @@
 ---
 title: Workflow Visualization
-description: Learn how to visualize workflows using the Agent Framework.
+description: Learn how to visualize workflows using Agent Framework.
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -111,19 +111,19 @@ try:
     # Export as SVG (vector format, recommended)
     svg_file = viz.export(format="svg")
     print(f"SVG exported to: {svg_file}")
-    
+
     # Export as PNG (raster format)
     png_file = viz.export(format="png")
     print(f"PNG exported to: {png_file}")
-    
+
     # Export as PDF (vector format)
     pdf_file = viz.export(format="pdf")
     print(f"PDF exported to: {pdf_file}")
-    
+
     # Export raw DOT file
     dot_file = viz.export(format="dot")
     print(f"DOT file exported to: {dot_file}")
-    
+
 except ImportError:
     print("Install 'viz' extra and GraphViz for image export:")
     print("pip install agent-framework[viz]")
