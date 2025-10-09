@@ -30,6 +30,13 @@ Before you begin, ensure you have the following:
 **Note**: This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you
 have an api key and do not wish to use role based authentication, in which case `az login` is not required.
 
+## Create a project
+
+```powershell
+cd (mkdir "AgentFrameworkQuickStart")
+dotnet new console
+```
+
 ## Installing Packages
 
 Packages will be published to [NuGet Gallery | MicrosoftAgentFramework](https://www.nuget.org/profiles/MicrosoftAgentFramework). 
