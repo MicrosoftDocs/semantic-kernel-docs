@@ -154,7 +154,7 @@ Here are some of the key benefits of Agent Framework workflows:
 - **Flexible Flow**: Graph-based architecture allows for intuitive modeling of complex workflows with `executors` and `edges`. Conditional routing, parallel processing, and dynamic execution paths are all supported.
 - **External Integration**: Built-in request/response patterns enable seamless integration with external APIs and support human-in-the-loop scenarios.
 - **Checkpointing**: Save workflow states via checkpoints, enabling recovery and resumption of long-running processes on the server side.
-- **Multi-Agent Orchestration**: Built-in patterns for coordinating multiple AI agents, including sequential, concurrent, hand-off, and Magentic.
+- **Multi-Agent Orchestration**: Built-in patterns for coordinating multiple AI agents, including sequential, concurrent, hand-off, and Magentic (orchestrated).
 - **Composability**: Workflows can be nested or combined to create more complex processes, allowing for scalability and adaptability.
 
 ## Next steps
