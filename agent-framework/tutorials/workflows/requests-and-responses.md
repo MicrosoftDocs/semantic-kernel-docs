@@ -483,7 +483,7 @@ async def run_interactive_workflow(workflow):
 
 ### Running the Example
 
-For the complete working implementation, see the [Human-in-the-Loop Guessing Game sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/human-in-the-loop/guessing_game_with_human_input.py).
+For the complete working implementation, see the [Human-in-the-Loop Guessing Game sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/human-in-the-loop/guessing_game_with_human_input.py).
 
 ### How It Works
 
