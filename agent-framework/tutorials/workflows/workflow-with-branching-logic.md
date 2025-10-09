@@ -605,7 +605,7 @@ if __name__ == "__main__":
 
 ### Complete Implementation
 
-For the complete working implementation, see the [edge_condition.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/control-flow/edge_condition.py) sample in the Agent Framework repository.
+For the complete working implementation, see the [edge_condition.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/control-flow/edge_condition.py) sample in the Agent Framework repository.
 
 ::: zone-end
 
