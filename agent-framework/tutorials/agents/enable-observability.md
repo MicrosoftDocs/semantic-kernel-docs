@@ -17,17 +17,17 @@ This tutorial shows how to enable OpenTelemetry on an agent so that interactions
 In this tutorial, output is written to the console using the OpenTelemetry console exporter.
 
 > [!NOTE]
-> See [Semantic Conventions for GenAI agent and framework spans](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-agent-spans/) from Open Telemetry for more information about the standards followed by the Microsoft Agent Framework.
+> For more information about the standards followed by Microsoft Agent Framework, see [Semantic Conventions for GenAI agent and framework spans](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-agent-spans/) from Open Telemetry.
 
 ## Prerequisites
 
 For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Installing Nuget packages
+## Install NuGet packages
 
-To use the Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
+To use Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
-```powershell
+```dotnetcli
 dotnet add package Azure.Identity
 dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
@@ -35,15 +35,15 @@ dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 
 To also add OpenTelemetry support, with support for writing to the console, install these additional packages:
 
-```powershell
+```dotnetcli
 dotnet add package OpenTelemetry
 dotnet add package OpenTelemetry.Exporter.Console
 ```
 
 ## Enable OpenTelemetry in your app
 
-Enable the agent framework telemetry and create an OpenTelemetry `TracerProvider` that exports to the console.
-Note that the `TracerProvider` must remain alive while you run the agent so traces are exported.
+Enable Agent Framework telemetry and create an OpenTelemetry `TracerProvider` that exports to the console.
+The `TracerProvider` must remain alive while you run the agent so traces are exported.
 
 ```csharp
 using System;
@@ -60,8 +60,8 @@ using var tracerProvider = Sdk.CreateTracerProviderBuilder()
 ## Create and instrument the agent
 
 Create an agent, and using the builder pattern, call `UseOpenTelemetry` to provide a source name.
-Note that the string literal "agent-telemetry-source" is the OpenTelemetry source name
-that we used above, when we created the tracer provider.
+Note that the string literal `agent-telemetry-source` is the OpenTelemetry source name
+that you used when you created the tracer provider.
 
 ```csharp
 using System;
@@ -134,9 +134,9 @@ In this tutorial, output is written to the console using the OpenTelemetry conso
 
 For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Installing packages
+## Install packages
 
-To use the Agent Framework with Azure OpenAI, you need to install the following packages. The agent framework automatically includes all necessary OpenTelemetry dependencies:
+To use Agent Framework with Azure OpenAI, you need to install the following packages. Agent Framework automatically includes all necessary OpenTelemetry dependencies:
 
 ```bash
 pip install agent-framework
@@ -154,14 +154,14 @@ opentelemetry-semantic-conventions-ai
 
 ## Enable OpenTelemetry in your app
 
-The agent framework provides a convenient `setup_observability` function that configures OpenTelemetry with sensible defaults.
+Agent Frameworkagent framework provides a convenient `setup_observability` function that configures OpenTelemetry with sensible defaults.
 By default, it exports to the console if no specific exporter is configured.
 
 ```python
 import asyncio
 from agent_framework.observability import setup_observability
 
-# Enable agent framework telemetry with console output (default behavior)
+# Enable Agent Framework telemetry with console output (default behavior)
 setup_observability(enable_sensitive_data=True)
 ```
 
@@ -171,7 +171,7 @@ The `setup_observability` function accepts the following parameters to customize
 
 - **`enable_otel`** (bool, optional): Enables OpenTelemetry tracing and metrics. Default is `False` when using environment variables only, but is assumed `True` when calling `setup_observability()` programmatically. When using environment variables, set `ENABLE_OTEL=true`.
 
-- **`enable_sensitive_data`** (bool, optional): Controls whether sensitive data like prompts, responses, function call arguments, and results are included in traces. Default is `False`. Set to `True` to see actual prompts and responses in your traces. **Warning**: Be careful with this setting as it may expose sensitive data in your logs. Can also be set via `ENABLE_SENSITIVE_DATA=true` environment variable.
+- **`enable_sensitive_data`** (bool, optional): Controls whether sensitive data like prompts, responses, function call arguments, and results are included in traces. Default is `False`. Set to `True` to see actual prompts and responses in your traces. **Warning**: Be careful with this setting as it might expose sensitive data in your logs. Can also be set via `ENABLE_SENSITIVE_DATA=true` environment variable.
 
 - **`otlp_endpoint`** (str, optional): The OTLP endpoint URL for exporting telemetry data. Default is `None`. Commonly set to `http://localhost:4317`. This creates an OTLPExporter for spans, metrics, and logs. Can be used with any OTLP-compliant endpoint such as [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash), or other OTLP endpoints. Can also be set via `OTLP_ENDPOINT` environment variable.
 
@@ -242,7 +242,7 @@ counter.add(1, {"key": "value"})
 
 ## Create and run the agent
 
-Create an agent using the agent framework. The observability will be automatically enabled for the agent once `setup_observability` has been called.
+Create an agent using Agent Framework. The observability will be automatically enabled for the agent once `setup_observability` has been called.
 
 ```python
 from agent_framework import ChatAgent
@@ -304,7 +304,7 @@ Because he wanted to improve his "arrr-ticulation"! ⛵
 
 ## Understanding the telemetry output
 
-Once observability is enabled, the agent framework automatically creates the following spans:
+Once observability is enabled, Agent Framework automatically creates the following spans:
 
 - **`invoke_agent <agent_name>`**: The top-level span for each agent invocation. Contains all other spans as children and includes metadata like agent ID, name, and instructions.
 

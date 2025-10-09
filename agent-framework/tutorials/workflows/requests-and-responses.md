@@ -1,6 +1,6 @@
 ---
 title: Handle Requests and Responses in Workflows
-description: Learn how to handle requests and responses in workflows using the Agent Framework.
+description: Learn how to handle requests and responses in workflows using Agent Framework.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Handle Requests and Responses in Workflows
 
-This tutorial demonstrates how to handle requests and responses in workflows using the Agent Framework Workflows. You'll learn how to create interactive workflows that can pause execution to request input from external sources (like humans or other systems) and then resume once a response is provided.
+This tutorial demonstrates how to handle requests and responses in workflows using Agent Framework Workflows. You'll learn how to create interactive workflows that can pause execution to request input from external sources (like humans or other systems) and then resume once a response is provided.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -251,7 +251,7 @@ You'll create an interactive number guessing game workflow that demonstrates req
 #### Request-Response Flow
 
 1. Workflow sends a `RequestInfoMessage` to `RequestInfoExecutor`
-2. `RequestInfoExecutor` emits a `RequestInfoEvent` 
+2. `RequestInfoExecutor` emits a `RequestInfoEvent`
 3. External system (human, API, etc.) processes the request
 4. Response is sent back via `send_responses_streaming()`
 5. Workflow resumes with the response data
@@ -320,7 +320,7 @@ The turn manager coordinates the flow between the AI agent and human:
 ```python
 class TurnManager(Executor):
     """Coordinates turns between the AI agent and human player.
-    
+
     Responsibilities:
     - Start the game by requesting the agent's first guess
     - Process agent responses and request human feedback
@@ -429,11 +429,11 @@ async def run_interactive_workflow(workflow):
         # First iteration uses run_stream("start")
         # Subsequent iterations use send_responses_streaming with pending responses
         stream = (
-            workflow.send_responses_streaming(pending_responses) 
-            if pending_responses 
+            workflow.send_responses_streaming(pending_responses)
+            if pending_responses
             else workflow.run_stream("start")
         )
-        
+
         # Collect events for this turn
         events = [event async for event in stream]
         pending_responses = None
@@ -470,7 +470,7 @@ async def run_interactive_workflow(workflow):
             for req_id, prompt in requests:
                 print(f"\n🤖 {prompt}")
                 answer = input("👤 Enter higher/lower/correct/exit: ").lower()
-                
+
                 if answer == "exit":
                     print("👋 Exiting...")
                     return

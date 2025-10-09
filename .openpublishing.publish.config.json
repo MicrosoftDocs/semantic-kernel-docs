@@ -10,7 +10,10 @@
       "type_mapping": {
         "Conceptual": "Content"
       },
-      "build_entry_point": "docs"
+      "build_entry_point": "docs",
+      "xref_query_tags": [
+        "/dotnet"
+      ]
     },
     {
       "docset_name": "semantic-kernel",

@@ -1,6 +1,6 @@
 ---
 title: Checkpointing and Resuming Workflows
-description: Learn how to implement checkpointing and resuming in workflows using the Agent Framework.
+description: Learn how to implement checkpointing and resuming in workflows using Agent Framework.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -57,7 +57,7 @@ Executors can persist local state that survives checkpoints using the `Reflectin
 internal sealed class GuessNumberExecutor : ReflectingExecutor<GuessNumberExecutor>, IMessageHandler<NumberSignal>
 {
     private static readonly StateKey StateKey = new("GuessNumberExecutor.State");
-    
+
     public int LowerBound { get; private set; }
     public int UpperBound { get; private set; }
 
@@ -106,7 +106,7 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync())
                 Console.WriteLine($"Checkpoint created at step {checkpoints.Count}.");
             }
             break;
-            
+
         case WorkflowOutputEvent workflowOutputEvt:
             Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
             break;
@@ -168,7 +168,7 @@ await foreach (WorkflowEvent evt in resumedRun.Run.WatchStreamAsync())
         case ExecutorCompletedEvent executorCompletedEvt:
             Console.WriteLine($"Executor {executorCompletedEvt.ExecutorId} completed.");
             break;
-            
+
         case WorkflowOutputEvent workflowOutputEvt:
             Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
             return;
@@ -247,7 +247,7 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync())
             ExternalResponse response = HandleExternalRequest(requestInputEvt.Request);
             await checkpointedRun.Run.SendResponseAsync(response);
             break;
-            
+
         case SuperStepCompletedEvent superStepCompletedEvt:
             // Save checkpoint after each interaction
             CheckpointInfo? checkpoint = superStepCompletedEvt.CompletionInfo!.Checkpoint;
@@ -257,7 +257,7 @@ await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync())
                 Console.WriteLine($"Checkpoint created after human interaction.");
             }
             break;
-            
+
         case WorkflowOutputEvent workflowOutputEvt:
             Console.WriteLine($"Workflow completed: {workflowOutputEvt.Data}");
             return;
@@ -269,7 +269,7 @@ if (checkpoints.Count > 0)
 {
     var selectedCheckpoint = checkpoints[1]; // Select specific checkpoint
     await checkpointedRun.RestoreCheckpointAsync(selectedCheckpoint);
-    
+
     // Continue from that point
     await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync())
     {
@@ -311,7 +311,7 @@ public static class CheckpointingExample
                 case ExecutorCompletedEvent executorEvt:
                     Console.WriteLine($"Executor {executorEvt.ExecutorId} completed.");
                     break;
-                    
+
                 case SuperStepCompletedEvent superStepEvt:
                     var checkpoint = superStepEvt.CompletionInfo!.Checkpoint;
                     if (checkpoint is not null)
@@ -320,7 +320,7 @@ public static class CheckpointingExample
                         Console.WriteLine($"Checkpoint {checkpoints.Count} created.");
                     }
                     break;
-                    
+
                 case WorkflowOutputEvent outputEvt:
                     Console.WriteLine($"Workflow completed: {outputEvt.Data}");
                     goto FinishExecution;
@@ -354,7 +354,7 @@ public static class CheckpointingExample
         {
             var newWorkflow = await WorkflowHelper.GetWorkflowAsync();
             var rehydrationCheckpoint = checkpoints[3];
-            
+
             Console.WriteLine("Rehydrating from checkpoint 4 with new workflow instance...");
 
             Checkpointed<StreamingRun> newRun = await InProcessExecution
@@ -433,7 +433,7 @@ class UpperCaseExecutor(Executor):
     @handler
     async def to_upper_case(self, text: str, ctx: WorkflowContext[str]) -> None:
         result = text.upper()
-        
+
         # Persist executor-local state for checkpoints
         prev = await ctx.get_state() or {}
         count = int(prev.get("count", 0)) + 1
@@ -442,7 +442,7 @@ class UpperCaseExecutor(Executor):
             "last_input": text,
             "last_output": result,
         })
-        
+
         # Send result to next executor
         await ctx.send_message(result)
 ```
@@ -458,7 +458,7 @@ class ProcessorExecutor(Executor):
         # Write to shared state for cross-executor visibility
         await ctx.set_shared_state("original_input", text)
         await ctx.set_shared_state("processed_output", text.upper())
-        
+
         await ctx.send_message(text.upper())
 ```
 
@@ -489,7 +489,7 @@ from agent_framework import RequestInfoExecutor
 for checkpoint in checkpoints:
     # Get human-readable summary
     summary = RequestInfoExecutor.checkpoint_summary(checkpoint)
-    
+
     print(f"Checkpoint: {summary.checkpoint_id}")
     print(f"Iteration: {summary.iteration_count}")
     print(f"Status: {summary.status}")
@@ -511,7 +511,7 @@ async for event in workflow.run_stream_from_checkpoint(
     checkpoint_storage=checkpoint_storage
 ):
     print(f"Resumed Event: {event}")
-    
+
     if isinstance(event, WorkflowOutputEvent):
         print(f"Final Result: {event.data}")
         break
@@ -563,27 +563,27 @@ async def select_and_resume_checkpoint(workflow, storage):
     if not checkpoints:
         print("No checkpoints available")
         return
-    
+
     # Sort and display options
     sorted_cps = sorted(checkpoints, key=lambda cp: cp.timestamp)
     print("Available checkpoints:")
     for i, cp in enumerate(sorted_cps):
         summary = RequestInfoExecutor.checkpoint_summary(cp)
         print(f"[{i}] {summary.checkpoint_id[:8]}... iter={summary.iteration_count}")
-    
+
     # Get user selection
     try:
         idx = int(input("Enter checkpoint index: "))
         selected = sorted_cps[idx]
-        
+
         # Resume from selected checkpoint
         print(f"Resuming from checkpoint: {selected.checkpoint_id}")
         async for event in workflow.run_stream_from_checkpoint(
-            selected.checkpoint_id, 
+            selected.checkpoint_id,
             checkpoint_storage=storage
         ):
             print(f"Event: {event}")
-            
+
     except (ValueError, IndexError):
         print("Invalid selection")
 ```
@@ -596,7 +596,7 @@ Here's a typical checkpointing workflow pattern:
 import asyncio
 from pathlib import Path
 from agent_framework import (
-    WorkflowBuilder, FileCheckpointStorage, 
+    WorkflowBuilder, FileCheckpointStorage,
     WorkflowOutputEvent, RequestInfoExecutor
 )
 
@@ -605,7 +605,7 @@ async def main():
     checkpoint_dir = Path("./checkpoints")
     checkpoint_dir.mkdir(exist_ok=True)
     storage = FileCheckpointStorage(checkpoint_dir)
-    
+
     # Build workflow with checkpointing
     workflow = (
         WorkflowBuilder()
@@ -614,23 +614,23 @@ async def main():
         .with_checkpointing(storage)
         .build()
     )
-    
+
     # Initial run
     print("Running workflow...")
     async for event in workflow.run_stream("input data"):
         print(f"Event: {event}")
-    
+
     # List and inspect checkpoints
     checkpoints = await storage.list_checkpoints()
     for cp in sorted(checkpoints, key=lambda c: c.timestamp):
         summary = RequestInfoExecutor.checkpoint_summary(cp)
         print(f"Checkpoint: {summary.checkpoint_id[:8]}... iter={summary.iteration_count}")
-    
+
     # Resume from a checkpoint
     if checkpoints:
         latest = max(checkpoints, key=lambda cp: cp.timestamp)
         print(f"Resuming from: {latest.checkpoint_id}")
-        
+
         async for event in workflow.run_stream_from_checkpoint(latest.checkpoint_id):
             print(f"Resumed: {event}")
 

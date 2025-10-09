@@ -34,7 +34,7 @@ using Microsoft.SemanticKernel.Agents;
 ### Agent Framework
 
 Agent Framework namespaces are under `Microsoft.Agents.AI`.
-Agent Framework uses the core AI message and content types from [Microsoft.Extensions.AI](/dotnet/api/microsoft.extensions.ai) for communication between components.
+Agent Framework uses the core AI message and content types from <xref:Microsoft.Extensions.AI> for communication between components.
 
 ```csharp
 using Microsoft.Extensions.AI;

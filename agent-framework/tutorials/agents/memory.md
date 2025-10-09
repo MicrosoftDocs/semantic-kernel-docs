@@ -15,14 +15,14 @@ ms.service: agent-framework
 This tutorial shows how to add memory to an agent by implementing an `AIContextProvider` and attaching it to the agent.
 
 > [!IMPORTANT]
-> Not all agent types support `AIContextProvider`. In this step we are using a `ChatClientAgent`, which does support `AIContextProvider`.
+> Not all agent types support `AIContextProvider`. This step uses a `ChatClientAgent`, which does support `AIContextProvider`.
 
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating an AIContextProvider
+## Create an AIContextProvider
 
 `AIContextProvider` is an abstract class that you can inherit from, and which can be associated with the `AgentThread` for a `ChatClientAgent`.
 It allows you to:
@@ -42,15 +42,15 @@ The `AIContextProvider` class has two methods that you can override to run custo
 
 `AIContextProvider` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
 
-The `AIContextProvider` instance may have its own state that needs to be persisted between invocations of the agent. E.g. a memory component that remembers information about the user may have memories as part of its state.
+The `AIContextProvider` instance might have its own state that needs to be persisted between invocations of the agent. For example, a memory component that remembers information about the user might have memories as part of its state.
 
 To allow persisting threads, you need to implement the `SerializeAsync` method of the `AIContextProvider` class. You also need to provide a constructor that takes a `JsonElement` parameter, which can be used to deserialize the state when resuming a thread.
 
 ### Sample AIContextProvider implementation
 
-Let's look at an example of a custom memory component that remembers a user's name and age, and provides it to the agent before each invocation.
+The following example of a custom memory component remembers a user's name and age and provides it to the agent before each invocation.
 
-First we'll create a model class to hold the memories.
+First, create a model class to hold the memories.
 
 ```csharp
 internal sealed class UserInfo
@@ -60,7 +60,7 @@ internal sealed class UserInfo
 }
 ```
 
-Then we can implement the `AIContextProvider` to manage the memories.
+Then you can implement the `AIContextProvider` to manage the memories.
 The `UserInfoMemory` class below contains the following behavior:
 
 1. It uses a `IChatClient` to look for the user's name and age in user messages when new messages are added to the thread at the end of each run.
@@ -178,13 +178,13 @@ Console.WriteLine($"MEMORY - User Age: {userInfo?.UserAge}");
 This tutorial shows how to add memory to an agent by implementing a `ContextProvider` and attaching it to the agent.
 
 > [!IMPORTANT]
-> Not all agent types support `ContextProvider`. In this step we are using a `ChatAgent`, which does support `ContextProvider`.
+> Not all agent types support `ContextProvider`. This step uses a `ChatAgent`, which does support `ContextProvider`.
 
 ## Prerequisites
 
 For prerequisites and installing packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating a ContextProvider
+## Create a ContextProvider
 
 `ContextProvider` is an abstract class that you can inherit from, and which can be associated with an `AgentThread` for a `ChatAgent`.
 It allows you to:
@@ -204,15 +204,15 @@ The `ContextProvider` class has two methods that you can override to run custom 
 
 `ContextProvider` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
 
-The `ContextProvider` instance may have its own state that needs to be persisted between invocations of the agent. E.g. a memory component that remembers information about the user may have memories as part of its state.
+The `ContextProvider` instance might have its own state that needs to be persisted between invocations of the agent. For example, a memory component that remembers information about the user might have memories as part of its state.
 
 To allow persisting threads, you need to implement serialization for the `ContextProvider` class. You also need to provide a constructor that can restore state from serialized data when resuming a thread.
 
 ### Sample ContextProvider implementation
 
-Let's look at an example of a custom memory component that remembers a user's name and age, and provides it to the agent before each invocation.
+The following example of a custom memory component remembers a user's name and age and provides it to the agent before each invocation.
 
-First we'll create a model class to hold the memories.
+First, create a model class to hold the memories.
 
 ```python
 from pydantic import BaseModel
@@ -222,7 +222,7 @@ class UserInfo(BaseModel):
     age: int | None = None
 ```
 
-Then we can implement the `ContextProvider` to manage the memories.
+Then you can implement the `ContextProvider` to manage the memories.
 The `UserInfoMemory` class below contains the following behavior:
 
 1. It uses a chat client to look for the user's name and age in user messages when new messages are added to the thread at the end of each run.

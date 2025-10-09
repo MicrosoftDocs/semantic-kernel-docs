@@ -17,11 +17,11 @@ Learn how to add middleware to your agents in a few simple steps. Middleware all
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ## Step 1: Create a Simple Agent
 
-First, let's create a basic agent with a function tool.
+First, create a basic agent with a function tool.
 
 ```csharp
 using System;
@@ -46,8 +46,8 @@ AIAgent baseAgent = new AzureOpenAIClient(
 
 ## Step 2: Create Your Agent Run Middleware
 
-Next, we'll create a function that will get invoked for each agent run.
-It allows us to inspect the input and output from the agent.
+Next, create a function that will get invoked for each agent run.
+It allows you to inspect the input and output from the agent.
 
 Unless the intention is to use the middleware to stop executing the run, the function
 should call `RunAsync` on the provided `innerAgent`.
@@ -72,8 +72,7 @@ async Task<AgentRunResponse> CustomAgentRunMiddleware(
 
 ## Step 3: Add Agent Run Middleware to Your Agent
 
-To add this middleware function to the `baseAgent` we created in step 1,
-we should use the builder pattern.
+To add this middleware function to the `baseAgent` you created in step 1, use the builder pattern.
 This creates a new agent that has the middleware applied.
 The original `baseAgent` is not modified.
 
@@ -87,13 +86,12 @@ var middlewareEnabledAgent = baseAgent
 ## Step 4: Create Function calling Middleware
 
 > [!NOTE]
-> Function calling middleware is currently only supported with an `AIAgent` that uses `Microsoft.Extensions.AI.FunctionInvokingChatClient`, e.g. `ChatClientAgent`.
+> Function calling middleware is currently only supported with an `AIAgent` that uses <xref:Microsoft.Extensions.AI.FunctionInvokingChatClient>, for example, `ChatClientAgent`.
 
-We can also create middleware that gets called for each function tool that is invoked.
-Here is an example of function calling middleware, that can inspect and/or modify the function being called, and the result from the function call.
+You can also create middleware that gets called for each function tool that's invoked.
+Here's an example of function-calling middleware that can inspect and/or modify the function being called and the result from the function call.
 
-Unless the intention is to use the middleware to not execute the function tool, the middleware
-should call the provided `next` `Func`.
+Unless the intention is to use the middleware to not execute the function tool, the middleware should call the provided `next` `Func`.
 
 ```csharp
 async ValueTask<object?> CustomFunctionCallingMiddleware(
@@ -112,7 +110,7 @@ async ValueTask<object?> CustomFunctionCallingMiddleware(
 
 ## Step 5: Add Function calling Middleware to Your Agent
 
-Same as with adding agent run middleware, we can add function calling middleware as follows:
+Same as with adding agent-run middleware, you can add function calling middleware as follows:
 
 ```csharp
 var middlewareEnabledAgent = baseAgent
@@ -130,10 +128,10 @@ await middlewareEnabledAgent.RunAsync("What's the current time?");
 
 ## Step 6: Create Chat Client Middleware
 
-For agents that are built using `IChatClient` developers may want to intercept calls going from the agent to the `IChatClient`.
-In this case it is possible to use middleware for the `IChatClient`.
+For agents that are built using <xref:Microsoft.Extensions.AI.IChatClient>, you might want to intercept calls going from the agent to the `IChatClient`.
+In this case, it's possible to use middleware for the `IChatClient`.
 
-Here is an example of chat client middleware, that can inspect and/or modify the input and output for the request to the inference service that the chat client provides.
+Here is an example of chat client middleware that can inspect and/or modify the input and output for the request to the inference service that the chat client provides.
 
 ```csharp
 async Task<ChatResponse> CustomChatClientMiddleware(
@@ -151,12 +149,11 @@ async Task<ChatResponse> CustomChatClientMiddleware(
 ```
 
 > [!NOTE]
-> For more information about `IChatClient` middleware, see [Custom IChatClient middleware](/dotnet/ai/microsoft-extensions-ai#custom-ichatclient-middleware)
-> in the Microsoft.Extensions.AI documentation.
+> For more information about `IChatClient` middleware, see [Custom IChatClient middleware](/dotnet/ai/microsoft-extensions-ai#custom-ichatclient-middleware).
 
 ## Step 7: Add Chat client Middleware to an `IChatClient`
 
-To add middleware to your `IChatClient`, you can use the builder pattern.
+To add middleware to your <xref:Microsoft.Extensions.AI.IChatClient>, you can use the builder pattern.
 After adding the middleware, you can use the `IChatClient` with your agent as usual.
 
 ```csharp
@@ -189,7 +186,7 @@ var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
 
 ## Step 1: Create a Simple Agent
 
-First, let's create a basic agent:
+First, create a basic agent:
 
 ```python
 import asyncio
@@ -294,11 +291,11 @@ result = await agent.run(
 
 ## What's Next?
 
-For more advanced scenarios, check out the [Agent Middleware User Guide](../../user-guide/agents/agent-middleware.md) which covers:
+For more advanced scenarios, see the [Agent Middleware User Guide](../../user-guide/agents/agent-middleware.md), which covers:
 
-- Different types of middleware (agent, function, chat)
-- Class-based middleware for complex scenarios
-- Middleware termination and result overrides
-- Advanced middleware patterns and best practices
+- Different types of middleware (agent, function, chat).
+- Class-based middleware for complex scenarios.
+- Middleware termination and result overrides.
+- Advanced middleware patterns and best practices.
 
 ::: zone-end

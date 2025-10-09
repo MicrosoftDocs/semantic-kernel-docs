@@ -1,6 +1,6 @@
 ---
 title: Create a Simple Concurrent Workflow
-description: Learn how to create a simple concurrent workflow using the Agent Framework.
+description: Learn how to create a simple concurrent workflow using Agent Framework.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Create a Simple Concurrent Workflow
 
-This tutorial demonstrates how to create a concurrent workflow using the Agent Framework. You'll learn to implement fan-out and fan-in patterns that enable parallel processing, allowing multiple executors or agents to work simultaneously and then aggregate their results.
+This tutorial demonstrates how to create a concurrent workflow using Agent Framework. You'll learn to implement fan-out and fan-in patterns that enable parallel processing, allowing multiple executors or agents to work simultaneously and then aggregate their results.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,7 +19,7 @@ This tutorial demonstrates how to create a concurrent workflow using the Agent F
 
 You'll create a workflow that:
 
-- Takes a question as input (e.g., "What is temperature?")
+- Takes a question as input (for example, "What is temperature?")
 - Sends the same question to two expert AI agents simultaneously (Physicist and Chemist)
 - Collects and combines responses from both agents into a single output
 - Demonstrates concurrent execution with AI agents using fan-out/fan-in patterns
@@ -51,7 +51,7 @@ public static class Program
     private static async Task Main()
     {
         // Set up the Azure OpenAI client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? 
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
             throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
@@ -69,7 +69,7 @@ Create two specialized AI agents that will provide expert perspectives:
             name: "Physicist",
             instructions: "You are an expert in physics. You answer questions from a physics perspective."
         );
-        
+
         ChatClientAgent chemist = new(
             chatClient,
             name: "Chemist",
@@ -138,7 +138,7 @@ internal sealed class ConcurrentAggregationExecutor() :
 
         if (this._messages.Count == 2)
         {
-            var formattedMessages = string.Join(Environment.NewLine, 
+            var formattedMessages = string.Join(Environment.NewLine,
                 this._messages.Select(m => $"{m.AuthorName}: {m.Text}"));
             await context.YieldOutputAsync(formattedMessages);
         }
@@ -179,18 +179,18 @@ Run the workflow and capture the streaming output:
 
 ## How It Works
 
-1. **Fan-Out**: The `ConcurrentStartExecutor` receives the input question and the fan-out edge sends it to both the Physicist and Chemist agents simultaneously
-2. **Parallel Processing**: Both AI agents process the same question concurrently, each providing their expert perspective
-3. **Fan-In**: The `ConcurrentAggregationExecutor` collects `ChatMessage` responses from both agents
-4. **Aggregation**: Once both responses are received, the aggregator combines them into a formatted output
+1. **Fan-Out**: The `ConcurrentStartExecutor` receives the input question and the fan-out edge sends it to both the Physicist and Chemist agents simultaneously.
+2. **Parallel Processing**: Both AI agents process the same question concurrently, each providing their expert perspective.
+3. **Fan-In**: The `ConcurrentAggregationExecutor` collects `ChatMessage` responses from both agents.
+4. **Aggregation**: Once both responses are received, the aggregator combines them into a formatted output.
 
 ## Key Concepts
 
-- **Fan-Out Edges**: Use `AddFanOutEdge()` to distribute the same input to multiple executors or agents
-- **Fan-In Edges**: Use `AddFanInEdge()` to collect results from multiple source executors
-- **AI Agent Integration**: AI agents can be used directly as executors in workflows
-- **ReflectingExecutor**: Base class for creating custom executors with automatic message handling
-- **Streaming Execution**: Use `StreamAsync()` to get real-time updates as the workflow progresses
+- **Fan-Out Edges**: Use `AddFanOutEdge()` to distribute the same input to multiple executors or agents.
+- **Fan-In Edges**: Use `AddFanInEdge()` to collect results from multiple source executors.
+- **AI Agent Integration**: AI agents can be used directly as executors in workflows.
+- **ReflectingExecutor**: Base class for creating custom executors with automatic message handling.
+- **Streaming Execution**: Use `StreamAsync()` to get real-time updates as the workflow progresses.
 
 ## Complete Implementation
 
@@ -218,7 +218,7 @@ You'll create a workflow that:
 
 ## Step 1: Import Required Dependencies
 
-Start by importing the necessary components from the Agent Framework:
+Start by importing the necessary components from Agent Framework:
 
 ```python
 import asyncio

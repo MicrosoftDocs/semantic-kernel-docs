@@ -1,6 +1,6 @@
 ---
 title: Create a Workflow with Branching Logic
-description: Learn how to create a workflow with branching logic using the Agent Framework.
+description: Learn how to create a workflow with branching logic using Agent Framework.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Create a Workflow with Branching Logic
 
-In this tutorial, you will learn how to create a workflow with branching logic using the Agent Framework. Branching logic allows your workflow to make decisions based on certain conditions, enabling more complex and dynamic behavior.
+In this tutorial, you will learn how to create a workflow with branching logic using Agent Framework. Branching logic allows your workflow to make decisions based on certain conditions, enabling more complex and dynamic behavior.
 
 ## Conditional Edges
 
@@ -23,24 +23,24 @@ Conditional edges allow your workflow to make routing decisions based on the con
 
 You'll create an email processing workflow that demonstrates conditional routing:
 
-- A spam detection agent that analyzes incoming emails and returns structured JSON
-- Conditional edges that route emails to different handlers based on classification
-- A legitimate email handler that drafts professional responses  
-- A spam handler that marks suspicious emails
-- Shared state management to persist email data between workflow steps
+- A spam detection agent that analyzes incoming emails and returns structured JSON.
+- Conditional edges that route emails to different handlers based on classification.
+- A legitimate email handler that drafts professional responses.
+- A spam handler that marks suspicious emails.
+- Shared state management to persist email data between workflow steps.
 
 ### Prerequisites
 
-- .NET 9.0 or later
-- Azure OpenAI deployment with structured output support
-- Azure CLI authentication configured (`az login`)
-- Basic understanding of C# and async programming
+- .NET 9.0 or later.
+- Azure OpenAI deployment with structured output support.
+- Azure CLI authentication configured (`az login`).
+- Basic understanding of C# and async programming.
 
 ### Setting Up the Environment
 
 First, install the required packages for your .NET project:
 
-```bash
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.Workflows --prerelease
 dotnet add package Microsoft.Agents.AI.Workflows.Reflection --prerelease
 dotnet add package Azure.AI.OpenAI
@@ -269,7 +269,7 @@ public static class Program
     private static async Task Main()
     {
         // Set up the Azure OpenAI client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") 
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
             ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
@@ -299,7 +299,7 @@ public static class Program
         string emailContent = "Congratulations! You've won $1,000,000! Click here to claim your prize now!";
         StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, emailContent));
         await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
-        
+
         await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
         {
             if (evt is WorkflowOutputEvent outputEvent)
@@ -491,10 +491,10 @@ async def to_email_assistant_request(
     """Transform spam detection response into a request for the email assistant."""
     # Parse the detection result and extract the email content for the assistant
     detection = DetectionResult.model_validate_json(response.agent_run_response.text)
-    
+
     # Create a new request for the email assistant with the original email content
     request = AgentExecutorRequest(
-        messages=[ChatMessage(Role.USER, text=detection.email_content)], 
+        messages=[ChatMessage(Role.USER, text=detection.email_content)],
         should_respond=True
     )
     await ctx.send_message(request)
@@ -529,7 +529,7 @@ async def main() -> None:
         chat_client.create_agent(
             instructions=(
                 "You are an email assistant that helps users draft professional responses to emails. "
-                "Your input may be a JSON object that includes 'email_content'; base your reply on that content. "
+                "Your input might be a JSON object that includes 'email_content'; base your reply on that content. "
                 "Return JSON with a single field 'response' containing the drafted reply."
             ),
             response_format=EmailResponse,
@@ -621,7 +621,7 @@ The previous conditional edges example demonstrated two-way routing (spam vs. le
 
 You'll extend the email processing workflow to handle three decision paths:
 
-- **NotSpam** → Email Assistant → Send Email  
+- **NotSpam** → Email Assistant → Send Email
 - **Spam** → Handle Spam Executor
 - **Uncertain** → Handle Uncertain Executor (default case)
 
@@ -699,7 +699,7 @@ Create a reusable condition factory that generates predicates for each spam deci
 /// </summary>
 /// <param name="expectedDecision">The expected spam detection decision</param>
 /// <returns>A function that evaluates whether a message meets the expected result</returns>
-private static Func<object?, bool> GetCondition(SpamDecision expectedDecision) => 
+private static Func<object?, bool> GetCondition(SpamDecision expectedDecision) =>
     detectionResult => detectionResult is DetectionResult result && result.spamDecision == expectedDecision;
 ```
 
@@ -959,7 +959,7 @@ The switch-case pattern scales much better as the number of routing decisions gr
 When you run this workflow with ambiguous email content:
 
 ```text
-Email marked as uncertain: This email contains promotional language but may be from a legitimate business contact, requiring human review for proper classification.
+Email marked as uncertain: This email contains promotional language but might be from a legitimate business contact, requiring human review for proper classification.
 ```
 
 Try changing the email content to something clearly spam or clearly legitimate to see the different routing paths in action.
@@ -980,7 +980,7 @@ The previous conditional edges example demonstrated two-way routing (spam vs. le
 
 You'll extend the email processing workflow to handle three decision paths:
 
-- **NotSpam** → Email Assistant → Send Email  
+- **NotSpam** → Email Assistant → Send Email
 - **Spam** → Mark as Spam
 - **Uncertain** → Flag for Manual Review (default case)
 
@@ -995,20 +995,20 @@ from typing import Literal
 
 class DetectionResultAgent(BaseModel):
     """Structured output returned by the spam detection agent."""
-    
+
     # The agent classifies the email into one of three categories
     spam_decision: Literal["NotSpam", "Spam", "Uncertain"]
     reason: str
 
 class EmailResponse(BaseModel):
     """Structured output returned by the email assistant agent."""
-    
+
     response: str
 
 @dataclass
 class DetectionResult:
     """Internal typed payload used for routing and downstream handling."""
-    
+
     spam_decision: str
     reason: str
     email_id: str
@@ -1016,7 +1016,7 @@ class DetectionResult:
 @dataclass
 class Email:
     """In memory record of the email content stored in shared state."""
-    
+
     email_id: str
     email_content: str
 ```
@@ -1028,11 +1028,11 @@ Create a reusable condition factory that generates predicates for each spam deci
 ```python
 def get_case(expected_decision: str):
     """Factory that returns a predicate matching a specific spam_decision value."""
-    
+
     def condition(message: Any) -> bool:
         # Only match when the upstream payload is a DetectionResult with the expected decision
         return isinstance(message, DetectionResult) and message.spam_decision == expected_decision
-    
+
     return condition
 ```
 
@@ -1053,12 +1053,12 @@ CURRENT_EMAIL_ID_KEY = "current_email_id"
 @executor(id="store_email")
 async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
     """Store email content once and pass around a lightweight ID reference."""
-    
+
     # Persist the raw email content in shared state
     new_email = Email(email_id=str(uuid4()), email_content=email_text)
     await ctx.set_shared_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
     await ctx.set_shared_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
-    
+
     # Forward email to spam detection agent
     await ctx.send_message(
         AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=new_email.email_content)], should_respond=True)
@@ -1067,26 +1067,26 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
 @executor(id="to_detection_result")
 async def to_detection_result(response: AgentExecutorResponse, ctx: WorkflowContext[DetectionResult]) -> None:
     """Transform agent response into a typed DetectionResult with email ID."""
-    
+
     # Parse the agent's structured JSON output
     parsed = DetectionResultAgent.model_validate_json(response.agent_run_response.text)
     email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
-    
+
     # Create typed message for switch-case routing
     await ctx.send_message(DetectionResult(
-        spam_decision=parsed.spam_decision, 
-        reason=parsed.reason, 
+        spam_decision=parsed.spam_decision,
+        reason=parsed.reason,
         email_id=email_id
     ))
 
 @executor(id="submit_to_email_assistant")
 async def submit_to_email_assistant(detection: DetectionResult, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
     """Handle NotSpam emails by forwarding to the email assistant."""
-    
+
     # Guard against misrouting
     if detection.spam_decision != "NotSpam":
         raise RuntimeError("This executor should only handle NotSpam messages.")
-    
+
     # Retrieve original email content from shared state
     email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
     await ctx.send_message(
@@ -1096,14 +1096,14 @@ async def submit_to_email_assistant(detection: DetectionResult, ctx: WorkflowCon
 @executor(id="finalize_and_send")
 async def finalize_and_send(response: AgentExecutorResponse, ctx: WorkflowContext[Never, str]) -> None:
     """Parse email assistant response and yield final output."""
-    
+
     parsed = EmailResponse.model_validate_json(response.agent_run_response.text)
     await ctx.yield_output(f"Email sent: {parsed.response}")
 
 @executor(id="handle_spam")
 async def handle_spam(detection: DetectionResult, ctx: WorkflowContext[Never, str]) -> None:
     """Handle confirmed spam emails."""
-    
+
     if detection.spam_decision == "Spam":
         await ctx.yield_output(f"Email marked as spam: {detection.reason}")
     else:
@@ -1112,7 +1112,7 @@ async def handle_spam(detection: DetectionResult, ctx: WorkflowContext[Never, st
 @executor(id="handle_uncertain")
 async def handle_uncertain(detection: DetectionResult, ctx: WorkflowContext[Never, str]) -> None:
     """Handle uncertain classifications that need manual review."""
-    
+
     if detection.spam_decision == "Uncertain":
         # Include original content for human review
         email: Email | None = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
@@ -1130,7 +1130,7 @@ Update the spam detection agent to be less confident and return three-way classi
 ```python
 async def main():
     chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
-    
+
     # Enhanced spam detection agent with three-way classification
     spam_detection_agent = AgentExecutor(
         chat_client.create_agent(
@@ -1144,7 +1144,7 @@ async def main():
         ),
         id="spam_detection_agent",
     )
-    
+
     # Email assistant remains the same
     email_assistant_agent = AgentExecutor(
         chat_client.create_agent(
@@ -1194,7 +1194,7 @@ Run the workflow with ambiguous email content that demonstrates the three-way ro
         "Hey there, I noticed you might be interested in our latest offer—no pressure, but it expires soon. "
         "Let me know if you'd like more details."
     )
-    
+
     # Execute and display results
     events = await workflow.run(email)
     outputs = events.get_outputs()
@@ -1217,7 +1217,7 @@ Run the workflow with ambiguous email content that demonstrates the three-way ro
 
 ```python
 .add_edge(detector, handler_a, condition=lambda x: x.result == "A")
-.add_edge(detector, handler_b, condition=lambda x: x.result == "B")  
+.add_edge(detector, handler_b, condition=lambda x: x.result == "B")
 .add_edge(detector, handler_c, condition=lambda x: x.result == "C")
 ```
 
@@ -1459,7 +1459,7 @@ internal sealed class EmailSummaryExecutor : ReflectingExecutor<EmailSummaryExec
         // Generate summary for long emails
         var response = await this._emailSummaryAgent.RunAsync(email!.EmailContent);
         var emailSummary = JsonSerializer.Deserialize<EmailSummary>(response.Text);
-        
+
         // Enrich the analysis result with the summary
         message.EmailSummary = emailSummary!.Summary;
 
@@ -1619,14 +1619,14 @@ public static class Program
         )
         // Email assistant branch
         .AddEdge(emailAssistantExecutor, sendEmailExecutor)
-        
+
         // Database persistence: conditional routing
         .AddEdge<AnalysisResult>(
             emailAnalysisExecutor,
             databaseAccessExecutor,
             condition: analysisResult => analysisResult?.EmailLength <= LongEmailThreshold) // Short emails
         .AddEdge(emailSummaryExecutor, databaseAccessExecutor) // Long emails with summary
-        
+
         .WithOutputFrom(handleUncertainExecutor, handleSpamExecutor, sendEmailExecutor);
 
         var workflow = builder.Build();
@@ -1739,24 +1739,24 @@ Extend the data models to support email length analysis and summarization:
 ```python
 class AnalysisResultAgent(BaseModel):
     """Enhanced structured output from email analysis agent."""
-    
+
     spam_decision: Literal["NotSpam", "Spam", "Uncertain"]
     reason: str
 
 class EmailResponse(BaseModel):
     """Response from email assistant."""
-    
+
     response: str
 
 class EmailSummaryModel(BaseModel):
     """Summary generated by email summary agent."""
-    
+
     summary: str
 
 @dataclass
 class AnalysisResult:
     """Internal analysis result with email metadata for routing decisions."""
-    
+
     spam_decision: str
     reason: str
     email_length: int  # Used for conditional routing
@@ -1766,7 +1766,7 @@ class AnalysisResult:
 @dataclass
 class Email:
     """Email content stored in shared state."""
-    
+
     email_id: str
     email_content: str
 
@@ -1785,24 +1785,24 @@ LONG_EMAIL_THRESHOLD = 100
 
 def select_targets(analysis: AnalysisResult, target_ids: list[str]) -> list[str]:
     """Intelligent routing based on spam decision and email characteristics."""
-    
+
     # Target order: [handle_spam, submit_to_email_assistant, summarize_email, handle_uncertain]
     handle_spam_id, submit_to_email_assistant_id, summarize_email_id, handle_uncertain_id = target_ids
-    
+
     if analysis.spam_decision == "Spam":
         # Route only to spam handler
         return [handle_spam_id]
-    
+
     elif analysis.spam_decision == "NotSpam":
         # Always route to email assistant
         targets = [submit_to_email_assistant_id]
-        
+
         # Conditionally add summarizer for long emails
         if analysis.email_length > LONG_EMAIL_THRESHOLD:
             targets.append(summarize_email_id)
-        
+
         return targets
-    
+
     else:  # Uncertain
         # Route only to uncertain handler
         return [handle_uncertain_id]
@@ -1826,11 +1826,11 @@ CURRENT_EMAIL_ID_KEY = "current_email_id"
 @executor(id="store_email")
 async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
     """Store email and initiate analysis."""
-    
+
     new_email = Email(email_id=str(uuid4()), email_content=email_text)
     await ctx.set_shared_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
     await ctx.set_shared_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
-    
+
     await ctx.send_message(
         AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=new_email.email_content)], should_respond=True)
     )
@@ -1838,11 +1838,11 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
 @executor(id="to_analysis_result")
 async def to_analysis_result(response: AgentExecutorResponse, ctx: WorkflowContext[AnalysisResult]) -> None:
     """Transform agent response into enriched analysis result."""
-    
+
     parsed = AnalysisResultAgent.model_validate_json(response.agent_run_response.text)
     email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
     email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{email_id}")
-    
+
     # Create enriched analysis result with email length for routing decisions
     await ctx.send_message(
         AnalysisResult(
@@ -1857,10 +1857,10 @@ async def to_analysis_result(response: AgentExecutorResponse, ctx: WorkflowConte
 @executor(id="submit_to_email_assistant")
 async def submit_to_email_assistant(analysis: AnalysisResult, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
     """Handle legitimate emails by forwarding to email assistant."""
-    
+
     if analysis.spam_decision != "NotSpam":
         raise RuntimeError("This executor should only handle NotSpam messages.")
-    
+
     email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
         AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
@@ -1869,14 +1869,14 @@ async def submit_to_email_assistant(analysis: AnalysisResult, ctx: WorkflowConte
 @executor(id="finalize_and_send")
 async def finalize_and_send(response: AgentExecutorResponse, ctx: WorkflowContext[Never, str]) -> None:
     """Final step for email assistant branch."""
-    
+
     parsed = EmailResponse.model_validate_json(response.agent_run_response.text)
     await ctx.yield_output(f"Email sent: {parsed.response}")
 
 @executor(id="summarize_email")
 async def summarize_email(analysis: AnalysisResult, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
     """Generate summary for long emails (parallel branch)."""
-    
+
     # Only called for long NotSpam emails by selection function
     email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
@@ -1886,11 +1886,11 @@ async def summarize_email(analysis: AnalysisResult, ctx: WorkflowContext[AgentEx
 @executor(id="merge_summary")
 async def merge_summary(response: AgentExecutorResponse, ctx: WorkflowContext[AnalysisResult]) -> None:
     """Merge summary back into analysis result for database persistence."""
-    
+
     summary = EmailSummaryModel.model_validate_json(response.agent_run_response.text)
     email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
     email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{email_id}")
-    
+
     # Create analysis result with summary for database storage
     await ctx.send_message(
         AnalysisResult(
@@ -1905,7 +1905,7 @@ async def merge_summary(response: AgentExecutorResponse, ctx: WorkflowContext[An
 @executor(id="handle_spam")
 async def handle_spam(analysis: AnalysisResult, ctx: WorkflowContext[Never, str]) -> None:
     """Handle spam emails (single target like switch-case)."""
-    
+
     if analysis.spam_decision == "Spam":
         await ctx.yield_output(f"Email marked as spam: {analysis.reason}")
     else:
@@ -1914,7 +1914,7 @@ async def handle_spam(analysis: AnalysisResult, ctx: WorkflowContext[Never, str]
 @executor(id="handle_uncertain")
 async def handle_uncertain(analysis: AnalysisResult, ctx: WorkflowContext[Never, str]) -> None:
     """Handle uncertain emails (single target like switch-case)."""
-    
+
     if analysis.spam_decision == "Uncertain":
         email: Email | None = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
         await ctx.yield_output(
@@ -1926,7 +1926,7 @@ async def handle_uncertain(analysis: AnalysisResult, ctx: WorkflowContext[Never,
 @executor(id="database_access")
 async def database_access(analysis: AnalysisResult, ctx: WorkflowContext[Never, str]) -> None:
     """Simulate database persistence with custom events."""
-    
+
     await asyncio.sleep(0.05)  # Simulate DB operation
     await ctx.add_event(DatabaseEvent(f"Email {analysis.email_id} saved to database."))
 ```
@@ -1938,7 +1938,7 @@ Create agents for analysis, assistance, and summarization:
 ```python
 async def main() -> None:
     chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
-    
+
     # Enhanced analysis agent
     email_analysis_agent = AgentExecutor(
         chat_client.create_agent(
@@ -1951,7 +1951,7 @@ async def main() -> None:
         ),
         id="email_analysis_agent",
     )
-    
+
     # Email assistant (same as before)
     email_assistant_agent = AgentExecutor(
         chat_client.create_agent(
@@ -1962,7 +1962,7 @@ async def main() -> None:
         ),
         id="email_assistant_agent",
     )
-    
+
     # New: Email summary agent for long emails
     email_summary_agent = AgentExecutor(
         chat_client.create_agent(
@@ -1983,27 +1983,27 @@ Construct the workflow with sophisticated routing and parallel processing:
         .set_start_executor(store_email)
         .add_edge(store_email, email_analysis_agent)
         .add_edge(email_analysis_agent, to_analysis_result)
-        
+
         # Multi-selection edge group: intelligent fan-out based on content
         .add_multi_selection_edge_group(
             to_analysis_result,
             [handle_spam, submit_to_email_assistant, summarize_email, handle_uncertain],
             selection_func=select_targets,
         )
-        
+
         # Email assistant branch (always for NotSpam)
         .add_edge(submit_to_email_assistant, email_assistant_agent)
         .add_edge(email_assistant_agent, finalize_and_send)
-        
+
         # Summary branch (only for long NotSpam emails)
         .add_edge(summarize_email, email_summary_agent)
         .add_edge(email_summary_agent, merge_summary)
-        
+
         # Database persistence: conditional routing
-        .add_edge(to_analysis_result, database_access, 
+        .add_edge(to_analysis_result, database_access,
                  condition=lambda r: r.email_length <= LONG_EMAIL_THRESHOLD)  # Short emails
         .add_edge(merge_summary, database_access)  # Long emails with summary
-        
+
         .build()
     )
 ```
@@ -2026,7 +2026,7 @@ Run the workflow and observe parallel execution through custom events:
     Best regards,
     Alex
     """
-    
+
     # Stream events to see parallel execution
     async for event in workflow.run_stream(email):
         if isinstance(event, DatabaseEvent):
