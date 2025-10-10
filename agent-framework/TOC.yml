@@ -19,4 +19,5 @@ items:
 - name: Migration Guide
   href: migration-guide/TOC.yml
 - name: API Reference Guide
-  items:
+  href: api-docs/TOC.yml
+  expanded: true
