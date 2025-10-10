@@ -1,4 +1,4 @@
-- name: C# API reference
+- name: .NET API reference
   href: /dotnet/api/microsoft.agents.ai
 - name: Python API reference
   href: /python/api/agent-framework
