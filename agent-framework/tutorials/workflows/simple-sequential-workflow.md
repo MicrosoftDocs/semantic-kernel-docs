@@ -33,29 +33,30 @@ The workflow demonstrates core concepts like:
 
 ## Prerequisites
 
-- .NET 9.0 or later
-- Microsoft.Agents.AI.Workflows NuGet package
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
 - No external AI services required for this basic example
 
 ## Step-by-Step Implementation
 
 The following sections show how to build the sequential workflow step by step.
 
-### Step 1: Add Required Using Statements
+### Step 1: Create your project and install Microsoft.Agents.AI.Workflows NuGet package
 
-First, add the necessary using statements:
+```dotnetcli
+dotnet new console -o sequential-workflow && cd sequential-workflow
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+```
+
+### Step 2: Define the Uppercase Executor
+
+Define an executor that converts text to uppercase:
 
 ```csharp
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI.Workflows;
-```
 
-### Step 2: Create the Uppercase Executor
-
-Create an executor that converts text to uppercase:
-
-```csharp
 /// <summary>
 /// First executor: converts input text to uppercase.
 /// </summary>
@@ -75,11 +76,10 @@ internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor
 - Inherits from `ReflectingExecutor<T>` for basic executor functionality
 - Implements `IMessageHandler<string, string>` - takes string input, produces string output
 - The `HandleAsync` method processes the input and returns the result
-- Result is automatically passed to the next connected executor
 
-### Step 3: Create the Reverse Text Executor
+### Step 3: Define the Reverse Text Executor
 
-Create an executor that reverses the text:
+Define an executor that reverses the text:
 
 ```csharp
 /// <summary>
@@ -121,7 +121,7 @@ var workflow = builder.Build();
 
 - `WorkflowBuilder` constructor takes the starting executor
 - `AddEdge()` creates a directed connection from uppercase to reverse
-- `WithOutputFrom()` specifies which executor produces the final workflow output
+- `WithOutputFrom()` specifies which executors produce a workflow outputs
 - `Build()` creates the immutable workflow
 
 ### Step 5: Execute the Workflow
@@ -133,9 +133,14 @@ Run the workflow and observe the results:
 await using Run run = await InProcessExecution.RunAsync(workflow, "Hello, World!");
 foreach (WorkflowEvent evt in run.NewEvents)
 {
-    if (evt is ExecutorCompletedEvent executorComplete)
+    switch (evt)
     {
-        Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
+        case ExecutorCompletedEvent executorComplete:
+            Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
+            break;
+        case WorkflowOutputEvent workflowOutput:
+            Console.WriteLine($"Workflow '{workflowOutput.SourceId}' outputs: {workflowOutput.Data}");
+            break;
     }
 }
 ```
