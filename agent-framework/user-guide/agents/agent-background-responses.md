@@ -27,11 +27,11 @@ Background responses use a **continuation token** mechanism to handle long-runni
 1. **Immediate completion**: The agent completes the task quickly and returns the final response without a continuation token
 2. **Background processing**: The agent starts processing in the background and returns a continuation token instead of the final result
 
-The continuation token contains all necessary information to either poll for completion using the non-streaming `RunAsync` method or resume an interrupted stream with `RunStreamingAsync`. When the continuation token is `null`, the operation is complete - this happens when a background response has completed, failed, or cannot proceed further (for example, when user input is required).
-
-## Enabling Background Responses
+The continuation token contains all necessary information to either poll for completion using the non-streaming agent API or resume an interrupted stream with streaming agent API. When the continuation token is `null`, the operation is complete - this happens when a background response has completed, failed, or cannot proceed further (for example, when user input is required).
 
 ::: zone pivot="programming-language-csharp"
+
+## Enabling Background Responses
 
 To enable background responses, set the `AllowBackgroundResponses` property to `true` in the `AgentRunOptions`:
 
@@ -42,21 +42,12 @@ AgentRunOptions options = new()
 };
 ```
 
-::: zone-end
-::: zone pivot="programming-language-python"
-
-Background responses support in Python is coming soon. This feature is currently available in the .NET implementation of Agent Framework.
-
-::: zone-end
-
 > [!NOTE]
 > Currently, only agents that use the OpenAI Responses API support background responses: [OpenAI Responses Agent](agent-types/openai-responses-agent.md) and [Azure OpenAI Responses Agent](agent-types/azure-openai-responses-agent.md).
 
-Some agents may not allow explicit control over background responses. These agents can decide autonomously whether to initiate a background response based on the complexity of the operation, regardless of the `AllowBackgroundResponses` setting. An example is the A2A agent.
+Some agents may not allow explicit control over background responses. These agents can decide autonomously whether to initiate a background response based on the complexity of the operation, regardless of the `AllowBackgroundResponses` setting.
 
 ## Non-Streaming Background Responses
-
-::: zone pivot="programming-language-csharp"
 
 For non-streaming scenarios, when you initially run an agent, it may or may not return a continuation token. If no continuation token is returned, it means the operation has completed. If a continuation token is returned, it indicates that the agent has initiated a background response that is still processing and will require polling to retrieve the final result:
 
@@ -72,8 +63,11 @@ AgentRunResponse response = await agent.RunAsync("What is the weather like in Am
 // Continue to poll until the final response is received
 while (response.ContinuationToken is not null)
 {
+        // Wait before polling again.
+    await Task.Delay(TimeSpan.FromSeconds(2));
+
     options.ContinuationToken = response.ContinuationToken;
-    response = await agent.RunAsync([], options: options);
+    response = await agent.RunAsync(options: options);
 }
 
 Console.WriteLine(response.Text);
@@ -85,19 +79,9 @@ Console.WriteLine(response.Text);
 - If no continuation token is returned, the operation is complete and the response contains the final result
 - If a continuation token is returned, the agent has started a background process that requires polling
 - Use the continuation token from the previous response in subsequent polling calls
-- Pass an empty message array (`[]`) when polling with a continuation token
 - When `ContinuationToken` is `null`, the operation is complete
 
-::: zone-end
-::: zone pivot="programming-language-python"
-
-Background responses support in Python is coming soon. This feature is currently available in the .NET implementation of Agent Framework.
-
-::: zone-end
-
 ## Streaming Background Responses
-
-::: zone pivot="programming-language-csharp"
 
 In streaming scenarios, background responses work much like regular streaming responses - the agent streams all updates back to consumers in real-time. However, the key difference is that if the original stream gets interrupted, agents support stream resumption through continuation tokens. Each update includes a continuation token that captures the current state, allowing the stream to be resumed from exactly where it left off by passing this token to subsequent streaming API calls:
 
@@ -121,7 +105,7 @@ await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pir
 
 // Resume from interruption point captured by the continuation token
 options.ContinuationToken = latestReceivedUpdate?.ContinuationToken;
-await foreach (var update in agent.RunStreamingAsync([], options: options))
+await foreach (var update in agent.RunStreamingAsync(options: options))
 {
     Console.Write(update.Text);
 }
@@ -132,9 +116,9 @@ await foreach (var update in agent.RunStreamingAsync([], options: options))
 - Each `AgentRunResponseUpdate` contains a continuation token that can be used for resumption
 - Store the continuation token from the last received update before interruption
 - Use the stored continuation token to resume the stream from the interruption point
-- Pass an empty message array (`[]`) when resuming with a continuation token
 
 ::: zone-end
+
 ::: zone pivot="programming-language-python"
 
 Background responses support in Python is coming soon. This feature is currently available in the .NET implementation of Agent Framework.
