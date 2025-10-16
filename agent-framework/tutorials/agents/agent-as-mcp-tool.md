@@ -88,7 +88,7 @@ This tutorial shows you how to expose an agent as a tool over the Model Context 
 
 ## Install Python packages
 
-To use Microsoft Agent Framework with Azure OpenAI, you need to install the following Python packages:
+To use Microsoft Agent Framework, you need to install the following Python package:
 
 ```bash
 pip install agent-framework
