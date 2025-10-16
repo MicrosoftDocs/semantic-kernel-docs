@@ -121,7 +121,8 @@ await foreach (var update in agent.RunStreamingAsync(options: options))
 
 ::: zone pivot="programming-language-python"
 
-Background responses support in Python is coming soon. This feature is currently available in the .NET implementation of Agent Framework.
+> [!NOTE]
+> Background responses support in Python is coming soon. This feature is currently available in the .NET implementation of Agent Framework.
 
 ::: zone-end
 
