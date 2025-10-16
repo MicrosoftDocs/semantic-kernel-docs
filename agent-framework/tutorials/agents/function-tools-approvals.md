@@ -99,7 +99,7 @@ Whenever you are using function tools with human in the loop approvals, remember
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-This tutorial step shows you how to use function tools that require human approval with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
+This tutorial step shows you how to use function tools that require human approval with an agent.
 
 When agents require any user input, for example to approve a function call, this is referred to as a human-in-the-loop pattern.
 An agent run that requires user input, will complete with a response that indicates what input is required from the user, instead of completing with a final answer.
