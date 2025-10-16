@@ -2,7 +2,7 @@
 title: Agent Background Responses
 description: Learn how to handle long-running operations with background responses in Agent Framework
 zone_pivot_groups: programming-languages
-author: semenshi
+author: sergeymenshykh
 ms.topic: reference
 ms.author: semenshi
 ms.date: 10/16/2025
