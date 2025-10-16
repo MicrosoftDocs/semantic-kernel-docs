@@ -86,13 +86,9 @@ This will start an MCP server that exposes the agent as a tool over the MCP prot
 
 This tutorial shows you how to expose an agent as a tool over the Model Context Protocol (MCP), so it can be used by other systems that support MCP tools.
 
-## Install Python packages
+## Prerequisites
 
-To use Microsoft Agent Framework, you need to install the following Python package:
-
-```bash
-pip install agent-framework
-```
+For prerequisites and installing Python packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ## Expose an agent as an MCP server
 
