@@ -22,12 +22,12 @@ Background responses are particularly useful for:
 
 ## How Background Responses Work
 
-When background responses are enabled, the agent may return a continuation token instead of waiting for the complete response. This token contains all necessary details to:
+Background responses use a **continuation token** mechanism to handle long-running operations. When you send a request to an agent with background responses enabled, one of two things happens:
 
-- Poll for the completion of a background response using the non-streaming `RunAsync` method
-- Resume a streamed background response with the `RunStreamingAsync` method if the stream is interrupted
+1. **Immediate completion**: The agent completes the task quickly and returns the final response without a continuation token
+2. **Background processing**: The agent starts processing in the background and returns a continuation token instead of the final result
 
-When a background response has completed, failed, or cannot proceed further (for example, when user input is required), the continuation token will be `null`, signaling that processing is complete.
+The continuation token contains all necessary information to either poll for completion using the non-streaming `RunAsync` method or resume an interrupted stream with `RunStreamingAsync`. When the continuation token is `null`, the operation is complete - this happens when a background response has completed, failed, or cannot proceed further (for example, when user input is required).
 
 ## Enabling Background Responses
 
@@ -58,7 +58,7 @@ Some agents may not allow explicit control over background responses. These agen
 
 ::: zone pivot="programming-language-csharp"
 
-For non-streaming scenarios, when you initially run an agent, it may or may not return a continuation token. If no continuation token is returned, it means the operation has completed successfully. If a continuation token is returned, it indicates that the agent has initiated a background response that is still processing and will require polling to retrieve the final result:
+For non-streaming scenarios, when you initially run an agent, it may or may not return a continuation token. If no continuation token is returned, it means the operation has completed. If a continuation token is returned, it indicates that the agent has initiated a background response that is still processing and will require polling to retrieve the final result:
 
 ```csharp
 AgentRunOptions options = new()
@@ -99,7 +99,7 @@ Background responses support in Python is coming soon. This feature is currently
 
 ::: zone pivot="programming-language-csharp"
 
-In streaming scenarios, background responses work much like regular streaming responses — the agent streams all updates back to consumers in real-time. However, the key difference is that if the original stream gets interrupted, agents support stream resumption through continuation tokens. Each update includes a continuation token that captures the current state, allowing the stream to be resumed from exactly where it left off by passing this token to subsequent streaming API calls:
+In streaming scenarios, background responses work much like regular streaming responses - the agent streams all updates back to consumers in real-time. However, the key difference is that if the original stream gets interrupted, agents support stream resumption through continuation tokens. Each update includes a continuation token that captures the current state, allowing the stream to be resumed from exactly where it left off by passing this token to subsequent streaming API calls:
 
 ```csharp
 AgentRunOptions options = new()
