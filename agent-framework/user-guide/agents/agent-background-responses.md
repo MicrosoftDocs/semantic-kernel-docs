@@ -57,8 +57,10 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
+AgentThread thread = agent.GetNewThread();
+
 // Get initial response - may return with or without a continuation token
-AgentRunResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", options: options);
+AgentRunResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread, options);
 
 // Continue to poll until the final response is received
 while (response.ContinuationToken is not null)
@@ -67,7 +69,7 @@ while (response.ContinuationToken is not null)
     await Task.Delay(TimeSpan.FromSeconds(2));
 
     options.ContinuationToken = response.ContinuationToken;
-    response = await agent.RunAsync(options: options);
+    response = await agent.RunAsync(thread, options);
 }
 
 Console.WriteLine(response.Text);
@@ -91,9 +93,11 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
+AgentThread thread = agent.GetNewThread();
+
 AgentRunResponseUpdate? latestReceivedUpdate = null;
 
-await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pirate.", options: options))
+await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pirate.", thread, options))
 {
     Console.Write(update.Text);
     
@@ -105,7 +109,7 @@ await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pir
 
 // Resume from interruption point captured by the continuation token
 options.ContinuationToken = latestReceivedUpdate?.ContinuationToken;
-await foreach (var update in agent.RunStreamingAsync(options: options))
+await foreach (var update in agent.RunStreamingAsync(thread, options))
 {
     Console.Write(update.Text);
 }
