@@ -49,7 +49,6 @@ First, add the necessary using statements:
 using System;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 ```
 
 ### Step 2: Create the Uppercase Executor
@@ -63,7 +62,7 @@ Create an executor that converts text to uppercase:
 internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"),
     IMessageHandler<string, string>
 {
-    public ValueTask<string> HandleAsync(string input, IWorkflowContext context)
+    public ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Convert input to uppercase and pass to next executor
         return ValueTask.FromResult(input.ToUpper());
@@ -89,7 +88,7 @@ Create an executor that reverses the text:
 internal sealed class ReverseTextExecutor() : ReflectingExecutor<ReverseTextExecutor>("ReverseTextExecutor"),
     IMessageHandler<string, string>
 {
-    public ValueTask<string> HandleAsync(string input, IWorkflowContext context)
+    public ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Reverse the input text
         return ValueTask.FromResult(new string(input.Reverse().ToArray()));
@@ -131,7 +130,7 @@ Run the workflow and observe the results:
 
 ```csharp
 // Execute the workflow with input data
-Run run = await InProcessExecution.RunAsync(workflow, "Hello, World!");
+await using Run run = await InProcessExecution.RunAsync(workflow, "Hello, World!");
 foreach (WorkflowEvent evt in run.NewEvents)
 {
     if (evt is ExecutorCompletedEvent executorComplete)

@@ -43,7 +43,7 @@ var workflow = await WorkflowHelper.GetWorkflowAsync();
 var checkpointManager = CheckpointManager.Default;
 
 // Execute with checkpointing enabled
-Checkpointed<StreamingRun> checkpointedRun = await InProcessExecution
+await using Checkpointed<StreamingRun> checkpointedRun = await InProcessExecution
     .StreamAsync(workflow, NumberSignal.Init, checkpointManager);
 ```
 
@@ -51,20 +51,24 @@ Checkpointed<StreamingRun> checkpointedRun = await InProcessExecution
 
 ### Executor State
 
-Executors can persist local state that survives checkpoints using the `ReflectingExecutor` base class:
+Executors can persist local state that survives checkpoints using the `Executor<T>` base class:
 
 ```csharp
-internal sealed class GuessNumberExecutor : ReflectingExecutor<GuessNumberExecutor>, IMessageHandler<NumberSignal>
+internal sealed class GuessNumberExecutor : Executor<NumberSignal>
 {
-    private static readonly StateKey StateKey = new("GuessNumberExecutor.State");
+    private const string StateKey = "GuessNumberExecutor.State";
 
     public int LowerBound { get; private set; }
     public int UpperBound { get; private set; }
 
-    public async ValueTask HandleAsync(NumberSignal message, IWorkflowContext context)
+    public GuessNumberExecutor() : base("GuessNumber")
+    {
+    }
+
+    public override async ValueTask HandleAsync(NumberSignal message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         int guess = (LowerBound + UpperBound) / 2;
-        await context.SendMessageAsync(guess);
+        await context.SendMessageAsync(guess, cancellationToken);
     }
 
     /// <summary>
@@ -72,7 +76,7 @@ internal sealed class GuessNumberExecutor : ReflectingExecutor<GuessNumberExecut
     /// This must be overridden to save any state that is needed to resume the executor.
     /// </summary>
     protected override ValueTask OnCheckpointingAsync(IWorkflowContext context, CancellationToken cancellationToken = default) =>
-        context.QueueStateUpdateAsync(StateKey, (LowerBound, UpperBound));
+        context.QueueStateUpdateAsync(StateKey, (LowerBound, UpperBound), cancellationToken);
 
     /// <summary>
     /// Restore the state of the executor from a checkpoint.
@@ -80,7 +84,7 @@ internal sealed class GuessNumberExecutor : ReflectingExecutor<GuessNumberExecut
     /// </summary>
     protected override async ValueTask OnCheckpointRestoredAsync(IWorkflowContext context, CancellationToken cancellationToken = default)
     {
-        var state = await context.ReadStateAsync<(int, int)>(StateKey);
+        var state = await context.ReadStateAsync<(int, int)>(StateKey, cancellationToken);
         (LowerBound, UpperBound) = state;
     }
 }
@@ -158,7 +162,7 @@ Resume execution from a checkpoint and stream events in real-time:
 // Resume from a specific checkpoint with streaming
 CheckpointInfo savedCheckpoint = checkpoints[checkpointIndex];
 
-Checkpointed<StreamingRun> resumedRun = await InProcessExecution
+await using Checkpointed<StreamingRun> resumedRun = await InProcessExecution
     .ResumeStreamAsync(workflow, savedCheckpoint, checkpointManager, runId);
 
 await foreach (WorkflowEvent evt in resumedRun.Run.WatchStreamAsync())
@@ -218,7 +222,7 @@ Create a new workflow instance from a checkpoint:
 var newWorkflow = await WorkflowHelper.GetWorkflowAsync();
 
 // Resume with the new instance from a saved checkpoint
-Checkpointed<StreamingRun> newCheckpointedRun = await InProcessExecution
+await using Checkpointed<StreamingRun> newCheckpointedRun = await InProcessExecution
     .ResumeStreamAsync(newWorkflow, savedCheckpoint, checkpointManager, originalRunId);
 
 await foreach (WorkflowEvent evt in newCheckpointedRun.Run.WatchStreamAsync())
@@ -300,7 +304,7 @@ public static class CheckpointingExample
         Console.WriteLine("Starting workflow with checkpointing...");
 
         // Execute workflow with checkpointing
-        Checkpointed<StreamingRun> checkpointedRun = await InProcessExecution
+        await using Checkpointed<StreamingRun> checkpointedRun = await InProcessExecution
             .StreamAsync(workflow, NumberSignal.Init, checkpointManager);
 
         // Monitor execution and collect checkpoints
@@ -357,7 +361,7 @@ public static class CheckpointingExample
 
             Console.WriteLine("Rehydrating from checkpoint 4 with new workflow instance...");
 
-            Checkpointed<StreamingRun> newRun = await InProcessExecution
+            await using Checkpointed<StreamingRun> newRun = await InProcessExecution
                 .ResumeStreamAsync(newWorkflow, rehydrationCheckpoint, checkpointManager, checkpointedRun.Run.RunId);
 
             await foreach (WorkflowEvent evt in newRun.Run.WatchStreamAsync())

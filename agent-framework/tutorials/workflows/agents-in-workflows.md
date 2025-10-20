@@ -59,7 +59,7 @@ public static class Program
     {
         // Set up the Azure Foundry client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT")
-            ?? throw new InvalidOperationException("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
+            ?? throw new Exception("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
         var model = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_MODEL_ID") ?? "gpt-4o-mini";
         var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
 ```
@@ -116,11 +116,11 @@ Connect the agents in a sequential workflow using the WorkflowBuilder:
 
 ## Step 6: Execute with Streaming
 
-Run the workflow with streaming to observe real-time updates from both agents:
+Run the workflow with streaming to observe real-time updates from all agents:
 
 ```csharp
         // Execute the workflow
-        StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, "Hello World!"));
+        await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, "Hello World!"));
 
         // Must send the turn token to trigger the agents.
         // The agents are wrapped as executors. When they receive messages,

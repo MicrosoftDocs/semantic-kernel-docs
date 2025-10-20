@@ -15,17 +15,17 @@ This tutorial demonstrates how to handle requests and responses in workflows usi
 
 ::: zone pivot="programming-language-csharp"
 
-In .NET, human-in-the-loop workflows use `InputPort` and external request handling to pause execution and gather user input. This pattern enables interactive workflows where the system can request information from external sources during execution.
+In .NET, human-in-the-loop workflows use `RequestPort` and external request handling to pause execution and gather user input. This pattern enables interactive workflows where the system can request information from external sources during execution.
 
 ## Key Components
 
-### InputPort and External Requests
+### RequestPort and External Requests
 
-An `InputPort` acts as a bridge between the workflow and external input sources. When the workflow needs input, it generates a `RequestInfoEvent` that your application handles:
+A `RequestPort` acts as a bridge between the workflow and external input sources. When the workflow needs input, it generates a `RequestInfoEvent` that your application handles:
 
 ```csharp
-// Create an InputPort for handling human input requests
-InputPort numberInputPort = InputPort.Create<NumberSignal, int>("GuessNumber");
+// Create a RequestPort for handling human input requests
+RequestPort numberInputPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
 ```
 
 ### Signal Types
@@ -52,31 +52,31 @@ Create executors that process user input and provide feedback:
 /// <summary>
 /// Executor that judges the guess and provides feedback.
 /// </summary>
-internal sealed class JudgeExecutor() : ReflectingExecutor<JudgeExecutor>("Judge"), IMessageHandler<int>
+internal sealed class JudgeExecutor : Executor<int>, IMessageHandler<int>
 {
     private readonly int _targetNumber;
     private int _tries;
 
-    public JudgeExecutor(int targetNumber) : this()
+    public JudgeExecutor(int targetNumber) : base("Judge")
     {
         _targetNumber = targetNumber;
     }
 
-    public async ValueTask HandleAsync(int message, IWorkflowContext context)
+    public override async ValueTask HandleAsync(int message, IWorkflowContext context, CancellationToken cancellationToken)
     {
         _tries++;
         if (message == _targetNumber)
         {
-            await context.YieldOutputAsync($"{_targetNumber} found in {_tries} tries!")
+            await context.YieldOutputAsync($"{_targetNumber} found in {_tries} tries!", cancellationToken)
                          .ConfigureAwait(false);
         }
         else if (message < _targetNumber)
         {
-            await context.SendMessageAsync(NumberSignal.Below).ConfigureAwait(false);
+            await context.SendMessageAsync(NumberSignal.Below, cancellationToken).ConfigureAwait(false);
         }
         else
         {
-            await context.SendMessageAsync(NumberSignal.Above).ConfigureAwait(false);
+            await context.SendMessageAsync(NumberSignal.Above, cancellationToken).ConfigureAwait(false);
         }
     }
 }
@@ -87,18 +87,21 @@ internal sealed class JudgeExecutor() : ReflectingExecutor<JudgeExecutor>("Judge
 Connect the InputPort and executor in a feedback loop:
 
 ```csharp
-internal static ValueTask<Workflow<NumberSignal>> GetWorkflowAsync()
+internal static class WorkflowHelper
 {
-    // Create the executors
-    InputPort numberInputPort = InputPort.Create<NumberSignal, int>("GuessNumber");
-    JudgeExecutor judgeExecutor = new(42);
+    internal static ValueTask<Workflow<NumberSignal>> GetWorkflowAsync()
+    {
+        // Create the executors
+        RequestPort numberInputPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
+        JudgeExecutor judgeExecutor = new(42);
 
-    // Build the workflow by connecting executors in a loop
-    return new WorkflowBuilder(numberInputPort)
-        .AddEdge(numberInputPort, judgeExecutor)
-        .AddEdge(judgeExecutor, numberInputPort)
-        .WithOutputFrom(judgeExecutor)
-        .BuildAsync<NumberSignal>();
+        // Build the workflow by connecting executors in a loop
+        return new WorkflowBuilder(numberInputPort)
+            .AddEdge(numberInputPort, judgeExecutor)
+            .AddEdge(judgeExecutor, numberInputPort)
+            .WithOutputFrom(judgeExecutor)
+            .BuildAsync<NumberSignal>();
+    }
 }
 ```
 
@@ -113,7 +116,7 @@ private static async Task Main()
     var workflow = await WorkflowHelper.GetWorkflowAsync().ConfigureAwait(false);
 
     // Execute the workflow
-    StreamingRun handle = await InProcessExecution.StreamAsync(workflow, NumberSignal.Init).ConfigureAwait(false);
+    await using StreamingRun handle = await InProcessExecution.StreamAsync(workflow, NumberSignal.Init).ConfigureAwait(false);
     await foreach (WorkflowEvent evt in handle.WatchStreamAsync().ConfigureAwait(false))
     {
         switch (evt)
@@ -140,23 +143,20 @@ Process different types of input requests:
 ```csharp
 private static ExternalResponse HandleExternalRequest(ExternalRequest request)
 {
-    if (request.DataIs<NumberSignal>())
+    switch (request.DataAs<NumberSignal?>())
     {
-        switch (request.DataAs<NumberSignal>())
-        {
-            case NumberSignal.Init:
-                int initialGuess = ReadIntegerFromConsole("Please provide your initial guess: ");
-                return request.CreateResponse(initialGuess);
-            case NumberSignal.Above:
-                int lowerGuess = ReadIntegerFromConsole("You previously guessed too large. Please provide a new guess: ");
-                return request.CreateResponse(lowerGuess);
-            case NumberSignal.Below:
-                int higherGuess = ReadIntegerFromConsole("You previously guessed too small. Please provide a new guess: ");
-                return request.CreateResponse(higherGuess);
-        }
+        case NumberSignal.Init:
+            int initialGuess = ReadIntegerFromConsole("Please provide your initial guess: ");
+            return request.CreateResponse(initialGuess);
+        case NumberSignal.Above:
+            int lowerGuess = ReadIntegerFromConsole("You previously guessed too large. Please provide a new guess: ");
+            return request.CreateResponse(lowerGuess);
+        case NumberSignal.Below:
+            int higherGuess = ReadIntegerFromConsole("You previously guessed too small. Please provide a new guess: ");
+            return request.CreateResponse(higherGuess);
+        default:
+            throw new ArgumentException("Unexpected request type.");
     }
-
-    throw new NotSupportedException($"Request {request.PortInfo.RequestType} is not supported");
 }
 
 private static int ReadIntegerFromConsole(string prompt)
@@ -179,7 +179,7 @@ private static int ReadIntegerFromConsole(string prompt)
 ### RequestInfoEvent Flow
 
 1. **Workflow Execution**: The workflow processes until it needs external input
-2. **Request Generation**: InputPort generates a `RequestInfoEvent` with the request details
+2. **Request Generation**: RequestPort generates a `RequestInfoEvent` with the request details
 3. **External Handling**: Your application catches the event and gathers user input
 4. **Response Submission**: Send an `ExternalResponse` back to continue the workflow
 5. **Workflow Resumption**: The workflow continues processing with the provided input
@@ -192,9 +192,9 @@ private static int ReadIntegerFromConsole(string prompt)
 
 ### Implementation Flow
 
-1. **Workflow Initialization**: The workflow starts by sending a `NumberSignal.Init` to the InputPort.
+1. **Workflow Initialization**: The workflow starts by sending a `NumberSignal.Init` to the RequestPort.
 
-2. **Request Generation**: The InputPort generates a `RequestInfoEvent` requesting an initial guess from the user.
+2. **Request Generation**: The RequestPort generates a `RequestInfoEvent` requesting an initial guess from the user.
 
 3. **Workflow Pause**: The workflow pauses and waits for external input while the application handles the request.
 
@@ -210,7 +210,7 @@ private static int ReadIntegerFromConsole(string prompt)
 - **Event-Driven**: Rich event system provides visibility into workflow execution
 - **Pausable Execution**: Workflows can pause indefinitely while waiting for external input
 - **State Management**: Workflow state is preserved across pause-resume cycles
-- **Flexible Integration**: InputPorts can integrate with any external input source (UI, API, console, etc.)
+- **Flexible Integration**: RequestPorts can integrate with any external input source (UI, API, console, etc.)
 
 ### Complete Sample
 
