@@ -25,6 +25,7 @@ First, create a basic agent with a function tool.
 
 ```csharp
 using System;
+using System.ComponentModel;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
@@ -56,6 +57,11 @@ This sample middleware just inspects the input and output from the agent run and
 outputs the number of messages passed into and out of the agent.
 
 ```csharp
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
 async Task<AgentRunResponse> CustomAgentRunMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
@@ -63,9 +69,9 @@ async Task<AgentRunResponse> CustomAgentRunMiddleware(
     AIAgent innerAgent,
     CancellationToken cancellationToken)
 {
-    Console.WriteLine(messages.Count());
+    Console.WriteLine($"Input: {messages.Count()}");
     var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
-    Console.WriteLine(response.Messages.Count);
+    Console.WriteLine($"Output: {response.Messages.Count}");
     return response;
 }
 ```
@@ -79,8 +85,15 @@ The original `baseAgent` is not modified.
 ```csharp
 var middlewareEnabledAgent = baseAgent
     .AsBuilder()
-        .Use(CustomAgentRunMiddleware)
+        .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: null)
     .Build();
+```
+
+Now, when executing the agent with a query, the middleware should get invoked,
+outputting the number of input messages and the number of response messages.
+
+```csharp
+Console.WriteLine(await middlewareEnabledAgent.RunAsync("What's the current time?"));
 ```
 
 ## Step 4: Create Function calling Middleware
@@ -94,6 +107,9 @@ Here's an example of function-calling middleware that can inspect and/or modify 
 Unless the intention is to use the middleware to not execute the function tool, the middleware should call the provided `next` `Func`.
 
 ```csharp
+using System.Threading;
+using System.Threading.Tasks;
+
 async ValueTask<object?> CustomFunctionCallingMiddleware(
     AIAgent agent,
     FunctionInvocationContext context,
@@ -123,7 +139,7 @@ Now, when executing the agent with a query that invokes a function, the middlewa
 outputting the function name and call result.
 
 ```csharp
-await middlewareEnabledAgent.RunAsync("What's the current time?");
+Console.WriteLine(await middlewareEnabledAgent.RunAsync("What's the current time?"));
 ```
 
 ## Step 6: Create Chat Client Middleware
@@ -134,15 +150,20 @@ In this case, it's possible to use middleware for the `IChatClient`.
 Here is an example of chat client middleware that can inspect and/or modify the input and output for the request to the inference service that the chat client provides.
 
 ```csharp
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
 async Task<ChatResponse> CustomChatClientMiddleware(
     IEnumerable<ChatMessage> messages,
     ChatOptions? options,
     IChatClient innerChatClient,
     CancellationToken cancellationToken)
 {
-    Console.WriteLine(messages.Count());
+    Console.WriteLine($"Input: {messages.Count()}");
     var response = await innerChatClient.GetResponseAsync(messages, options, cancellationToken);
-    Console.WriteLine(response.Messages.Count);
+    Console.WriteLine($"Output: {response.Messages.Count}");
 
     return response;
 }
@@ -158,7 +179,7 @@ After adding the middleware, you can use the `IChatClient` with your agent as us
 
 ```csharp
 var chatClient = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
-    .GetChatClient(deploymentName)
+    .GetChatClient("gpt-4o-mini")
     .AsIChatClient();
 
 var middlewareEnabledChatClient = chatClient
@@ -173,8 +194,8 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
  an agent via one of the helper methods on SDK clients.
 
 ```csharp
-var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
+var agent = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
+    .GetChatClient("gpt-4o-mini")
     .CreateAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
         .AsBuilder()
             .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)

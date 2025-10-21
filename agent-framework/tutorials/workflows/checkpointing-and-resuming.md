@@ -452,9 +452,9 @@ class UpperCaseExecutor(Executor):
         result = text.upper()
 
         # Persist executor-local state for checkpoints
-        prev = await ctx.get_state() or {}
+        prev = await ctx.get_executor_state() or {}
         count = int(prev.get("count", 0)) + 1
-        await ctx.set_state({
+        await ctx.set_executor_state({
             "count": count,
             "last_input": text,
             "last_output": result,
