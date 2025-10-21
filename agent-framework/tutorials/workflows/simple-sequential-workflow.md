@@ -123,7 +123,7 @@ var workflow = builder.Build();
 
 - `WorkflowBuilder` constructor takes the starting executor
 - `AddEdge()` creates a directed connection from uppercase to reverse
-- `WithOutputFrom()` specifies which executors produce a workflow outputs
+- `WithOutputFrom()` specifies which executors produce workflow outputs
 - `Build()` creates the immutable workflow
 
 ### Step 5: Execute the Workflow
