@@ -33,11 +33,10 @@ dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-In addition, you'll use the in-memory vector store to store chat messages and a utility package for async LINQ operations.
+In addition, you'll use the in-memory vector store to store chat messages.
 
 ```dotnetcli
 dotnet add package Microsoft.SemanticKernel.Connectors.InMemory --prerelease
-dotnet add package System.Linq.Async
 ```
 
 ## Create a custom ChatMessage Store
@@ -83,6 +82,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.InMemory;
@@ -127,13 +127,18 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
     {
         var collection = this._vectorStore.GetCollection<string, ChatHistoryItem>("ChatHistory");
         await collection.EnsureCollectionExistsAsync(cancellationToken);
-        var records = await collection
+        var records = collection
             .GetAsync(
                 x => x.ThreadId == this.ThreadDbKey, 10,
                 new() { OrderBy = x => x.Descending(y => y.Timestamp) },
-                cancellationToken)
-            .ToListAsync(cancellationToken);
-        var messages = records.ConvertAll(x => JsonSerializer.Deserialize<ChatMessage>(x.SerializedMessage!)!);
+                cancellationToken);
+
+        List<ChatMessage> messages = [];
+        await foreach (var record in records)
+        {
+            messages.Add(JsonSerializer.Deserialize<ChatMessage>(record.SerializedMessage!)!);
+        }
+        
         messages.Reverse();
         return messages;
     }
@@ -165,6 +170,10 @@ To use the custom `ChatMessageStore`, you need to provide a `ChatMessageStoreFac
 When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `ChatMessageStoreFactory` in addition to all other agent options.
 
 ```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using OpenAI;
+
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())

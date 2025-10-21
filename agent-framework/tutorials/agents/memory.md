@@ -27,9 +27,9 @@ For prerequisites and installing NuGet packages, see the [Create and run a simpl
 `AIContextProvider` is an abstract class that you can inherit from, and which can be associated with the `AgentThread` for a `ChatClientAgent`.
 It allows you to:
 
-1. run custom logic before and after the agent invokes the underlying inference service
-1. provide additional context to the agent before it invokes the underlying inference service
-1. inspect all messages provided to and produced by the agent
+1. Run custom logic before and after the agent invokes the underlying inference service.
+1. Provide additional context to the agent before it invokes the underlying inference service.
+1. Inspect all messages provided to and produced by the agent.
 
 ### Pre and post invocation events
 
@@ -63,12 +63,20 @@ internal sealed class UserInfo
 Then you can implement the `AIContextProvider` to manage the memories.
 The `UserInfoMemory` class below contains the following behavior:
 
-1. It uses a `IChatClient` to look for the user's name and age in user messages when new messages are added to the thread at the end of each run.
+1. It uses an `IChatClient` to look for the user's name and age in user messages when new messages are added to the thread at the end of each run.
 1. It provides any current memories to the agent before each invocation.
-1. If not memories are available, it instructs the agent to ask the user for the missing information, and not to answer any questions until the information is provided.
+1. If no memories are available, it instructs the agent to ask the user for the missing information, and not to answer any questions until the information is provided.
 1. It also implements serialization to allow persisting the memories as part of the thread state.
 
 ```csharp
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
 internal sealed class UserInfoMemory : AIContextProvider
 {
     private readonly IChatClient _chatClient;
@@ -140,6 +148,12 @@ To use the custom `AIContextProvider`, you need to provide an `AIContextProvider
 When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `AIContextProviderFactory` in addition to all other agent options.
 
 ```csharp
+using System;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using OpenAI.Chat;
+using OpenAI;
+
 ChatClient chatClient = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
@@ -189,9 +203,9 @@ For prerequisites and installing packages, see the [Create and run a simple agen
 `ContextProvider` is an abstract class that you can inherit from, and which can be associated with an `AgentThread` for a `ChatAgent`.
 It allows you to:
 
-1. run custom logic before and after the agent invokes the underlying inference service
-1. provide additional context to the agent before it invokes the underlying inference service
-1. inspect all messages provided to and produced by the agent
+1. Run custom logic before and after the agent invokes the underlying inference service.
+1. Provide additional context to the agent before it invokes the underlying inference service.
+1. Inspect all messages provided to and produced by the agent.
 
 ### Pre and post invocation events
 
