@@ -31,19 +31,19 @@ You'll create an email processing workflow that demonstrates conditional routing
 
 ### Prerequisites
 
-- .NET 9.0 or later.
-- Azure OpenAI deployment with structured output support.
-- Azure CLI authentication configured (`az login`).
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later.
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource).
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli).
 - Basic understanding of C# and async programming.
+- A new console application.
 
-### Setting Up the Environment
+### Install NuGet packages
 
 First, install the required packages for your .NET project:
 
 ```dotnetcli
-dotnet add package Azure.AI.OpenAI
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI --prerelease
 dotnet add package Microsoft.Agents.AI.Workflows --prerelease
 dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
 ```

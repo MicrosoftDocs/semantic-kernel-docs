@@ -29,14 +29,25 @@ You'll create a workflow that:
 
 ## Prerequisites
 
-- .NET 9.0 or later
-- Agent Framework installed via NuGet
-- Azure Foundry project configured with proper environment variables
-- Azure CLI authentication: `az login`
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- Azure Foundry service endpoint and deployment configured
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
+- A new console application
 
-## Step 1: Import Required Dependencies
+## Step 1: Install NuGet packages
 
-Start by importing the necessary components for Azure Foundry agents and workflows:
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Azure.AI.Agents.Persistent --prerelease
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+```
+
+## Step 2: Set Up Azure Foundry Client
+
+Configure the Azure Foundry client with environment variables and authentication:
 
 ```csharp
 using System;
@@ -46,20 +57,13 @@ using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
-```
 
-## Step 2: Set Up Azure Foundry Client
-
-Configure the Azure Foundry client with environment variables and authentication:
-
-```csharp
 public static class Program
 {
     private static async Task Main()
     {
         // Set up the Azure Foundry client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT")
-            ?? throw new Exception("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT") ?? throw new Exception("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
         var model = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_MODEL_ID") ?? "gpt-4o-mini";
         var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
 ```

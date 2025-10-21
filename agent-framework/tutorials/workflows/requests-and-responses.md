@@ -17,6 +17,22 @@ This tutorial demonstrates how to handle requests and responses in workflows usi
 
 In .NET, human-in-the-loop workflows use `RequestPort` and external request handling to pause execution and gather user input. This pattern enables interactive workflows where the system can request information from external sources during execution.
 
+## Prerequisites
+
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later.
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource).
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli).
+- Basic understanding of C# and async programming.
+- A new console application.
+
+### Install NuGet packages
+
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+```
+
 ## Key Components
 
 ### RequestPort and External Requests
@@ -25,7 +41,7 @@ A `RequestPort` acts as a bridge between the workflow and external input sources
 
 ```csharp
 // Create a RequestPort for handling human input requests
-RequestPort numberInputPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
+RequestPort numberRequestPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
 ```
 
 ### Signal Types
@@ -84,7 +100,7 @@ internal sealed class JudgeExecutor : Executor<int>, IMessageHandler<int>
 
 ## Building the Workflow
 
-Connect the InputPort and executor in a feedback loop:
+Connect the RequestPort and executor in a feedback loop:
 
 ```csharp
 internal static class WorkflowHelper
@@ -92,13 +108,13 @@ internal static class WorkflowHelper
     internal static ValueTask<Workflow<NumberSignal>> GetWorkflowAsync()
     {
         // Create the executors
-        RequestPort numberInputPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
+        RequestPort numberRequestPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
         JudgeExecutor judgeExecutor = new(42);
 
         // Build the workflow by connecting executors in a loop
-        return new WorkflowBuilder(numberInputPort)
-            .AddEdge(numberInputPort, judgeExecutor)
-            .AddEdge(judgeExecutor, numberInputPort)
+        return new WorkflowBuilder(numberRequestPort)
+            .AddEdge(numberRequestPort, judgeExecutor)
+            .AddEdge(judgeExecutor, numberRequestPort)
             .WithOutputFrom(judgeExecutor)
             .BuildAsync<NumberSignal>();
     }
@@ -222,7 +238,7 @@ This pattern enables building sophisticated interactive applications where users
 
 ::: zone pivot="programming-language-python"
 
-### What You'll Build
+## What You'll Build
 
 You'll create an interactive number guessing game workflow that demonstrates request-response patterns:
 
@@ -231,16 +247,16 @@ You'll create an interactive number guessing game workflow that demonstrates req
 - A turn manager that coordinates between the agent and human interactions
 - Interactive console input/output for real-time feedback
 
-### Prerequisites
+## Prerequisites
 
 - Python 3.10 or later
 - Azure OpenAI deployment configured
 - Azure CLI authentication configured (`az login`)
 - Basic understanding of Python async programming
 
-### Key Concepts
+## Key Concepts
 
-#### RequestInfoExecutor
+### RequestInfoExecutor
 
 `RequestInfoExecutor` is a specialized workflow component that:
 - Pauses workflow execution to request external information
@@ -248,7 +264,7 @@ You'll create an interactive number guessing game workflow that demonstrates req
 - Resumes execution after receiving a correlated response
 - Preserves request-response correlation via unique request IDs
 
-#### Request-Response Flow
+### Request-Response Flow
 
 1. Workflow sends a `RequestInfoMessage` to `RequestInfoExecutor`
 2. `RequestInfoExecutor` emits a `RequestInfoEvent`
@@ -256,7 +272,7 @@ You'll create an interactive number guessing game workflow that demonstrates req
 4. Response is sent back via `send_responses_streaming()`
 5. Workflow resumes with the response data
 
-### Setting Up the Environment
+## Setting Up the Environment
 
 First, install the required packages:
 
@@ -266,7 +282,7 @@ pip install azure-identity
 pip install pydantic
 ```
 
-### Define Request and Response Models
+## Define Request and Response Models
 
 Start by defining the data structures for request-response communication:
 
@@ -378,7 +394,7 @@ class TurnManager(Executor):
         await ctx.send_message(AgentExecutorRequest(messages=[user_msg], should_respond=True))
 ```
 
-### Build the Workflow
+## Build the Workflow
 
 Create the main workflow that connects all components:
 
@@ -481,11 +497,11 @@ async def run_interactive_workflow(workflow):
     print(f"\n🎉 {workflow_output}")
 ```
 
-### Running the Example
+## Running the Example
 
 For the complete working implementation, see the [Human-in-the-Loop Guessing Game sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/human-in-the-loop/guessing_game_with_human_input.py).
 
-### How It Works
+## How It Works
 
 1. **Workflow Initialization**: The workflow starts with the `TurnManager` requesting an initial guess from the AI agent.
 
@@ -499,7 +515,7 @@ For the complete working implementation, see the [Human-in-the-Loop Guessing Gam
 
 6. **Resume and Continue**: The workflow resumes, the `TurnManager` processes the human feedback, and either ends the game or sends another request to the agent.
 
-### Key Benefits
+## Key Benefits
 
 - **Structured Communication**: Type-safe request and response models prevent runtime errors
 - **Correlation**: Request IDs ensure responses are matched to the correct requests

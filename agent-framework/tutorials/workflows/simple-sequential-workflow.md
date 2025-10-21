@@ -35,15 +35,17 @@ The workflow demonstrates core concepts like:
 
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
 - No external AI services required for this basic example
+- A new console application
 
 ## Step-by-Step Implementation
 
 The following sections show how to build the sequential workflow step by step.
 
-### Step 1: Create your project and install Microsoft.Agents.AI.Workflows NuGet package
+### Step 1: Install NuGet packages
+
+First, install the required packages for your .NET project:
 
 ```dotnetcli
-dotnet new console -o sequential-workflow && cd sequential-workflow
 dotnet add package Microsoft.Agents.AI.Workflows --prerelease
 ```
 
@@ -166,7 +168,7 @@ Executors implement `IMessageHandler<TInput, TOutput>`:
 - **TOutput**: The type of data this executor produces
 - **HandleAsync**: The method that processes the input and returns the output
 
-### Workflow Builder Pattern
+### .NET Workflow Builder Pattern
 
 The `WorkflowBuilder` provides a fluent API for constructing workflows:
 
@@ -181,8 +183,6 @@ During execution, you can observe these event types:
 
 - `ExecutorCompletedEvent` - When an executor finishes processing
 - `WorkflowOutputEvent` - Contains the final workflow result (for streaming execution)
-
-### .NET Workflow Builder Pattern
 
 ## Running the .NET Example
 

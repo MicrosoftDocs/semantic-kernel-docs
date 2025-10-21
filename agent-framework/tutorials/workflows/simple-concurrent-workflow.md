@@ -26,12 +26,23 @@ You'll create a workflow that:
 
 ## Prerequisites
 
-- .NET 9.0 or later
-- Agent Framework NuGet package: `Microsoft.Agents.AI.Workflows`
-- Azure OpenAI access with an endpoint and deployment configured
-- Azure CLI authentication: `az login`
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource)
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
+- A new console application
 
-## Step 1: Setup Dependencies and Azure OpenAI
+## Step 1: Install NuGet packages
+
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+```
+
+## Step 2: Setup Dependencies and Azure OpenAI
 
 Start by setting up your project with the required NuGet packages and Azure OpenAI client:
 
@@ -51,14 +62,13 @@ public static class Program
     private static async Task Main()
     {
         // Set up the Azure OpenAI client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
-            throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
             .GetChatClient(deploymentName).AsIChatClient();
 ```
 
-## Step 2: Create Expert AI Agents
+## Step 3: Create Expert AI Agents
 
 Create two specialized AI agents that will provide expert perspectives:
 
@@ -77,7 +87,7 @@ Create two specialized AI agents that will provide expert perspectives:
         );
 ```
 
-## Step 3: Create the Start Executor
+## Step 4: Create the Start Executor
 
 Create an executor that initiates the concurrent processing by sending input to multiple agents:
 
@@ -114,7 +124,7 @@ internal sealed class ConcurrentStartExecutor() :
 }
 ```
 
-## Step 4: Create the Aggregation Executor
+## Step 5: Create the Aggregation Executor
 
 Create an executor that collects and combines responses from multiple agents:
 
@@ -155,7 +165,7 @@ internal sealed class ConcurrentAggregationExecutor() :
 }
 ```
 
-## Step 5: Build the Workflow
+## Step 6: Build the Workflow
 
 Connect the executors and agents using fan-out and fan-in edge patterns:
 
@@ -168,7 +178,7 @@ Connect the executors and agents using fan-out and fan-in edge patterns:
             .Build();
 ```
 
-## Step 6: Execute the Workflow
+## Step 7: Execute the Workflow
 
 Run the workflow and capture the streaming output:
 
