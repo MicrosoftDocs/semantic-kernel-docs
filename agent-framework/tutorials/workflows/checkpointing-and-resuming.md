@@ -15,7 +15,20 @@ Checkpointing allows workflows to save their state at specific points and resume
 
 ::: zone pivot="programming-language-csharp"
 
+## Prerequisites
+
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
+- A new console application
+
 ## Key Components
+
+## Install NuGet packages
+
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+```
 
 ### CheckpointManager
 
