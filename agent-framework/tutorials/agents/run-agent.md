@@ -38,8 +38,8 @@ Before you begin, ensure you have the following prerequisites:
 To use Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
 ```dotnetcli
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
-dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 

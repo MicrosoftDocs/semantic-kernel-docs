@@ -31,21 +31,21 @@ You'll create an email processing workflow that demonstrates conditional routing
 
 ### Prerequisites
 
-- .NET 9.0 or later.
-- Azure OpenAI deployment with structured output support.
-- Azure CLI authentication configured (`az login`).
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download).
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource).
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli).
 - Basic understanding of C# and async programming.
+- A new console application.
 
-### Setting Up the Environment
+### Install NuGet packages
 
 First, install the required packages for your .NET project:
 
 ```dotnetcli
-dotnet add package Microsoft.Agents.AI.Workflows --prerelease
-dotnet add package Microsoft.Agents.AI.Workflows.Reflection --prerelease
-dotnet add package Azure.AI.OpenAI
-dotnet add package Microsoft.Extensions.AI
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
 ```
 
 ### Define Data Models
@@ -164,13 +164,12 @@ Create the workflow executors that handle different stages of email processing:
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 using System.Text.Json;
 
 /// <summary>
 /// Executor that detects spam using an AI agent.
 /// </summary>
-internal sealed class SpamDetectionExecutor : ReflectingExecutor<SpamDetectionExecutor>, IMessageHandler<ChatMessage, DetectionResult>
+internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionResult>
 {
     private readonly AIAgent _spamDetectionAgent;
 
@@ -179,7 +178,7 @@ internal sealed class SpamDetectionExecutor : ReflectingExecutor<SpamDetectionEx
         this._spamDetectionAgent = spamDetectionAgent;
     }
 
-    public async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context)
+    public override async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Generate a random email ID and store the email content to shared state
         var newEmail = new Email
@@ -201,7 +200,7 @@ internal sealed class SpamDetectionExecutor : ReflectingExecutor<SpamDetectionEx
 /// <summary>
 /// Executor that assists with email responses using an AI agent.
 /// </summary>
-internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistantExecutor>, IMessageHandler<DetectionResult, EmailResponse>
+internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailResponse>
 {
     private readonly AIAgent _emailAssistantAgent;
 
@@ -210,11 +209,11 @@ internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistant
         this._emailAssistantAgent = emailAssistantAgent;
     }
 
-    public async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context)
+    public override async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.IsSpam)
         {
-            throw new InvalidOperationException("This executor should only handle non-spam messages.");
+            throw new ArgumentException("This executor should only handle non-spam messages.");
         }
 
         // Retrieve the email content from shared state
@@ -232,18 +231,22 @@ internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistant
 /// <summary>
 /// Executor that sends emails.
 /// </summary>
-internal sealed class SendEmailExecutor() : ReflectingExecutor<SendEmailExecutor>("SendEmailExecutor"), IMessageHandler<EmailResponse>
+internal sealed class SendEmailExecutor : Executor<EmailResponse>
 {
-    public async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context) =>
+    public SendEmailExecutor() : base("SendEmailExecutor") { }
+
+    public override async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
         await context.YieldOutputAsync($"Email sent: {message.Response}");
 }
 
 /// <summary>
 /// Executor that handles spam messages.
 /// </summary>
-internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecutor>("HandleSpamExecutor"), IMessageHandler<DetectionResult>
+internal sealed class HandleSpamExecutor : Executor<DetectionResult>
 {
-    public async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context)
+    public HandleSpamExecutor() : base("HandleSpamExecutor") { }
+
+    public override async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.IsSpam)
         {
@@ -251,7 +254,7 @@ internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecut
         }
         else
         {
-            throw new InvalidOperationException("This executor should only handle spam messages.");
+            throw new ArgumentException("This executor should only handle spam messages.");
         }
     }
 }
@@ -270,7 +273,7 @@ public static class Program
     {
         // Set up the Azure OpenAI client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
-            ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+            ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
             .GetChatClient(deploymentName).AsIChatClient();
@@ -749,7 +752,7 @@ Implement executors that handle the three-way routing with shared state manageme
 /// <summary>
 /// Executor that detects spam using an AI agent with three-way classification.
 /// </summary>
-internal sealed class SpamDetectionExecutor : ReflectingExecutor<SpamDetectionExecutor>, IMessageHandler<ChatMessage, DetectionResult>
+internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionResult>
 {
     private readonly AIAgent _spamDetectionAgent;
 
@@ -758,7 +761,7 @@ internal sealed class SpamDetectionExecutor : ReflectingExecutor<SpamDetectionEx
         this._spamDetectionAgent = spamDetectionAgent;
     }
 
-    public async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context)
+    public override async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Generate a random email ID and store the email content in shared state
         var newEmail = new Email
@@ -780,7 +783,7 @@ internal sealed class SpamDetectionExecutor : ReflectingExecutor<SpamDetectionEx
 /// <summary>
 /// Executor that assists with email responses using an AI agent.
 /// </summary>
-internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistantExecutor>, IMessageHandler<DetectionResult, EmailResponse>
+internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailResponse>
 {
     private readonly AIAgent _emailAssistantAgent;
 
@@ -789,11 +792,11 @@ internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistant
         this._emailAssistantAgent = emailAssistantAgent;
     }
 
-    public async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context)
+    public override async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
-            throw new InvalidOperationException("This executor should only handle non-spam messages.");
+            throw new ArgumentException("This executor should only handle non-spam messages.");
         }
 
         // Retrieve the email content from shared state
@@ -810,18 +813,22 @@ internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistant
 /// <summary>
 /// Executor that sends emails.
 /// </summary>
-internal sealed class SendEmailExecutor() : ReflectingExecutor<SendEmailExecutor>("SendEmailExecutor"), IMessageHandler<EmailResponse>
+internal sealed class SendEmailExecutor : Executor<EmailResponse>
 {
-    public async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context) =>
+    public SendEmailExecutor() : base("SendEmailExecutor") { }
+
+    public override async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
         await context.YieldOutputAsync($"Email sent: {message.Response}").ConfigureAwait(false);
 }
 
 /// <summary>
 /// Executor that handles spam messages.
 /// </summary>
-internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecutor>("HandleSpamExecutor"), IMessageHandler<DetectionResult>
+internal sealed class HandleSpamExecutor : Executor<DetectionResult>
 {
-    public async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context)
+    public HandleSpamExecutor() : base("HandleSpamExecutor") { }
+
+    public override async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
@@ -829,7 +836,7 @@ internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecut
         }
         else
         {
-            throw new InvalidOperationException("This executor should only handle spam messages.");
+            throw new ArgumentException("This executor should only handle spam messages.");
         }
     }
 }
@@ -837,9 +844,11 @@ internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecut
 /// <summary>
 /// Executor that handles uncertain emails requiring manual review.
 /// </summary>
-internal sealed class HandleUncertainExecutor() : ReflectingExecutor<HandleUncertainExecutor>("HandleUncertainExecutor"), IMessageHandler<DetectionResult>
+internal sealed class HandleUncertainExecutor : Executor<DetectionResult>
 {
-    public async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context)
+    public HandleUncertainExecutor() : base("HandleUncertainExecutor") { }
+
+    public override async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Uncertain)
         {
@@ -848,7 +857,7 @@ internal sealed class HandleUncertainExecutor() : ReflectingExecutor<HandleUncer
         }
         else
         {
-            throw new InvalidOperationException("This executor should only handle uncertain spam decisions.");
+            throw new ArgumentException("This executor should only handle uncertain spam decisions.");
         }
     }
 }
@@ -864,7 +873,7 @@ public static class Program
     private static async Task Main()
     {
         // Set up the Azure OpenAI client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential()).GetChatClient(deploymentName).AsIChatClient();
 
@@ -1358,7 +1367,7 @@ private static Func<AnalysisResult?, int, IEnumerable<int>> GetPartitioner()
                 return [3]; // Route only to uncertain handler (index 3)
             }
         }
-        throw new InvalidOperationException("Invalid analysis result.");
+        throw new ArgumentException("Invalid analysis result.");
     };
 }
 ```
@@ -1378,7 +1387,7 @@ Implement executors that handle the advanced analysis and routing:
 /// <summary>
 /// Executor that analyzes emails using an AI agent with enhanced analysis.
 /// </summary>
-internal sealed class EmailAnalysisExecutor : ReflectingExecutor<EmailAnalysisExecutor>, IMessageHandler<ChatMessage, AnalysisResult>
+internal sealed class EmailAnalysisExecutor : Executor<ChatMessage, AnalysisResult>
 {
     private readonly AIAgent _emailAnalysisAgent;
 
@@ -1387,7 +1396,7 @@ internal sealed class EmailAnalysisExecutor : ReflectingExecutor<EmailAnalysisEx
         this._emailAnalysisAgent = emailAnalysisAgent;
     }
 
-    public async ValueTask<AnalysisResult> HandleAsync(ChatMessage message, IWorkflowContext context)
+    public override async ValueTask<AnalysisResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Generate a random email ID and store the email content
         var newEmail = new Email
@@ -1412,7 +1421,7 @@ internal sealed class EmailAnalysisExecutor : ReflectingExecutor<EmailAnalysisEx
 /// <summary>
 /// Executor that assists with email responses using an AI agent.
 /// </summary>
-internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistantExecutor>, IMessageHandler<AnalysisResult, EmailResponse>
+internal sealed class EmailAssistantExecutor : Executor<AnalysisResult, EmailResponse>
 {
     private readonly AIAgent _emailAssistantAgent;
 
@@ -1421,11 +1430,11 @@ internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistant
         this._emailAssistantAgent = emailAssistantAgent;
     }
 
-    public async ValueTask<EmailResponse> HandleAsync(AnalysisResult message, IWorkflowContext context)
+    public override async ValueTask<EmailResponse> HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
-            throw new InvalidOperationException("This executor should only handle non-spam messages.");
+            throw new ArgumentException("This executor should only handle non-spam messages.");
         }
 
         // Retrieve the email content from shared state
@@ -1442,7 +1451,7 @@ internal sealed class EmailAssistantExecutor : ReflectingExecutor<EmailAssistant
 /// <summary>
 /// Executor that summarizes emails using an AI agent for long emails.
 /// </summary>
-internal sealed class EmailSummaryExecutor : ReflectingExecutor<EmailSummaryExecutor>, IMessageHandler<AnalysisResult, AnalysisResult>
+internal sealed class EmailSummaryExecutor : Executor<AnalysisResult, AnalysisResult>
 {
     private readonly AIAgent _emailSummaryAgent;
 
@@ -1451,7 +1460,7 @@ internal sealed class EmailSummaryExecutor : ReflectingExecutor<EmailSummaryExec
         this._emailSummaryAgent = emailSummaryAgent;
     }
 
-    public async ValueTask<AnalysisResult> HandleAsync(AnalysisResult message, IWorkflowContext context)
+    public override async ValueTask<AnalysisResult> HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Read the email content from shared state
         var email = await context.ReadStateAsync<Email>(message.EmailId, scopeName: EmailStateConstants.EmailStateScope);
@@ -1470,18 +1479,22 @@ internal sealed class EmailSummaryExecutor : ReflectingExecutor<EmailSummaryExec
 /// <summary>
 /// Executor that sends emails.
 /// </summary>
-internal sealed class SendEmailExecutor() : ReflectingExecutor<SendEmailExecutor>("SendEmailExecutor"), IMessageHandler<EmailResponse>
+internal sealed class SendEmailExecutor : Executor<EmailResponse>
 {
-    public async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context) =>
+    public SendEmailExecutor() : base("SendEmailExecutor") { }
+
+    public override async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
         await context.YieldOutputAsync($"Email sent: {message.Response}");
 }
 
 /// <summary>
 /// Executor that handles spam messages.
 /// </summary>
-internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecutor>("HandleSpamExecutor"), IMessageHandler<AnalysisResult>
+internal sealed class HandleSpamExecutor : Executor<AnalysisResult>
 {
-    public async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context)
+    public HandleSpamExecutor() : base("HandleSpamExecutor") { }
+
+    public override async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
@@ -1489,7 +1502,7 @@ internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecut
         }
         else
         {
-            throw new InvalidOperationException("This executor should only handle spam messages.");
+            throw new ArgumentException("This executor should only handle spam messages.");
         }
     }
 }
@@ -1497,9 +1510,11 @@ internal sealed class HandleSpamExecutor() : ReflectingExecutor<HandleSpamExecut
 /// <summary>
 /// Executor that handles uncertain messages requiring manual review.
 /// </summary>
-internal sealed class HandleUncertainExecutor() : ReflectingExecutor<HandleUncertainExecutor>("HandleUncertainExecutor"), IMessageHandler<AnalysisResult>
+internal sealed class HandleUncertainExecutor : Executor<AnalysisResult>
 {
-    public async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context)
+    public HandleUncertainExecutor() : base("HandleUncertainExecutor") { }
+
+    public override async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Uncertain)
         {
@@ -1508,7 +1523,7 @@ internal sealed class HandleUncertainExecutor() : ReflectingExecutor<HandleUncer
         }
         else
         {
-            throw new InvalidOperationException("This executor should only handle uncertain spam decisions.");
+            throw new ArgumentException("This executor should only handle uncertain spam decisions.");
         }
     }
 }
@@ -1516,9 +1531,11 @@ internal sealed class HandleUncertainExecutor() : ReflectingExecutor<HandleUncer
 /// <summary>
 /// Executor that handles database access with custom events.
 /// </summary>
-internal sealed class DatabaseAccessExecutor() : ReflectingExecutor<DatabaseAccessExecutor>("DatabaseAccessExecutor"), IMessageHandler<AnalysisResult>
+internal sealed class DatabaseAccessExecutor : Executor<AnalysisResult>
 {
-    public async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context)
+    public DatabaseAccessExecutor() : base("DatabaseAccessExecutor") { }
+
+    public override async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Simulate database operations
         await context.ReadStateAsync<Email>(message.EmailId, scopeName: EmailStateConstants.EmailStateScope);
@@ -1582,12 +1599,10 @@ Construct the workflow with sophisticated routing and parallel processing:
 ```csharp
 public static class Program
 {
-    private const int LongEmailThreshold = 100;
-
     private static async Task Main()
     {
         // Set up the Azure OpenAI client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential()).GetChatClient(deploymentName).AsIChatClient();
 
@@ -1624,7 +1639,7 @@ public static class Program
         .AddEdge<AnalysisResult>(
             emailAnalysisExecutor,
             databaseAccessExecutor,
-            condition: analysisResult => analysisResult?.EmailLength <= LongEmailThreshold) // Short emails
+            condition: analysisResult => analysisResult?.EmailLength <= EmailProcessingConstants.LongEmailThreshold) // Short emails
         .AddEdge(emailSummaryExecutor, databaseAccessExecutor) // Long emails with summary
 
         .WithOutputFrom(handleUncertainExecutor, handleSpamExecutor, sendEmailExecutor);

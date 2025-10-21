@@ -15,17 +15,33 @@ This tutorial demonstrates how to handle requests and responses in workflows usi
 
 ::: zone pivot="programming-language-csharp"
 
-In .NET, human-in-the-loop workflows use `InputPort` and external request handling to pause execution and gather user input. This pattern enables interactive workflows where the system can request information from external sources during execution.
+In .NET, human-in-the-loop workflows use `RequestPort` and external request handling to pause execution and gather user input. This pattern enables interactive workflows where the system can request information from external sources during execution.
+
+## Prerequisites
+
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download).
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource).
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli).
+- Basic understanding of C# and async programming.
+- A new console application.
+
+### Install NuGet packages
+
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+```
 
 ## Key Components
 
-### InputPort and External Requests
+### RequestPort and External Requests
 
-An `InputPort` acts as a bridge between the workflow and external input sources. When the workflow needs input, it generates a `RequestInfoEvent` that your application handles:
+A `RequestPort` acts as a bridge between the workflow and external input sources. When the workflow needs input, it generates a `RequestInfoEvent` that your application handles:
 
 ```csharp
-// Create an InputPort for handling human input requests
-InputPort numberInputPort = InputPort.Create<NumberSignal, int>("GuessNumber");
+// Create a RequestPort for handling human input requests
+RequestPort numberRequestPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
 ```
 
 ### Signal Types
@@ -52,31 +68,31 @@ Create executors that process user input and provide feedback:
 /// <summary>
 /// Executor that judges the guess and provides feedback.
 /// </summary>
-internal sealed class JudgeExecutor() : ReflectingExecutor<JudgeExecutor>("Judge"), IMessageHandler<int>
+internal sealed class JudgeExecutor : Executor<int>, IMessageHandler<int>
 {
     private readonly int _targetNumber;
     private int _tries;
 
-    public JudgeExecutor(int targetNumber) : this()
+    public JudgeExecutor(int targetNumber) : base("Judge")
     {
         _targetNumber = targetNumber;
     }
 
-    public async ValueTask HandleAsync(int message, IWorkflowContext context)
+    public override async ValueTask HandleAsync(int message, IWorkflowContext context, CancellationToken cancellationToken)
     {
         _tries++;
         if (message == _targetNumber)
         {
-            await context.YieldOutputAsync($"{_targetNumber} found in {_tries} tries!")
+            await context.YieldOutputAsync($"{_targetNumber} found in {_tries} tries!", cancellationToken)
                          .ConfigureAwait(false);
         }
         else if (message < _targetNumber)
         {
-            await context.SendMessageAsync(NumberSignal.Below).ConfigureAwait(false);
+            await context.SendMessageAsync(NumberSignal.Below, cancellationToken).ConfigureAwait(false);
         }
         else
         {
-            await context.SendMessageAsync(NumberSignal.Above).ConfigureAwait(false);
+            await context.SendMessageAsync(NumberSignal.Above, cancellationToken).ConfigureAwait(false);
         }
     }
 }
@@ -84,21 +100,24 @@ internal sealed class JudgeExecutor() : ReflectingExecutor<JudgeExecutor>("Judge
 
 ## Building the Workflow
 
-Connect the InputPort and executor in a feedback loop:
+Connect the RequestPort and executor in a feedback loop:
 
 ```csharp
-internal static ValueTask<Workflow<NumberSignal>> GetWorkflowAsync()
+internal static class WorkflowHelper
 {
-    // Create the executors
-    InputPort numberInputPort = InputPort.Create<NumberSignal, int>("GuessNumber");
-    JudgeExecutor judgeExecutor = new(42);
+    internal static ValueTask<Workflow<NumberSignal>> GetWorkflowAsync()
+    {
+        // Create the executors
+        RequestPort numberRequestPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
+        JudgeExecutor judgeExecutor = new(42);
 
-    // Build the workflow by connecting executors in a loop
-    return new WorkflowBuilder(numberInputPort)
-        .AddEdge(numberInputPort, judgeExecutor)
-        .AddEdge(judgeExecutor, numberInputPort)
-        .WithOutputFrom(judgeExecutor)
-        .BuildAsync<NumberSignal>();
+        // Build the workflow by connecting executors in a loop
+        return new WorkflowBuilder(numberRequestPort)
+            .AddEdge(numberRequestPort, judgeExecutor)
+            .AddEdge(judgeExecutor, numberRequestPort)
+            .WithOutputFrom(judgeExecutor)
+            .BuildAsync<NumberSignal>();
+    }
 }
 ```
 
@@ -113,7 +132,7 @@ private static async Task Main()
     var workflow = await WorkflowHelper.GetWorkflowAsync().ConfigureAwait(false);
 
     // Execute the workflow
-    StreamingRun handle = await InProcessExecution.StreamAsync(workflow, NumberSignal.Init).ConfigureAwait(false);
+    await using StreamingRun handle = await InProcessExecution.StreamAsync(workflow, NumberSignal.Init).ConfigureAwait(false);
     await foreach (WorkflowEvent evt in handle.WatchStreamAsync().ConfigureAwait(false))
     {
         switch (evt)
@@ -140,23 +159,20 @@ Process different types of input requests:
 ```csharp
 private static ExternalResponse HandleExternalRequest(ExternalRequest request)
 {
-    if (request.DataIs<NumberSignal>())
+    switch (request.DataAs<NumberSignal?>())
     {
-        switch (request.DataAs<NumberSignal>())
-        {
-            case NumberSignal.Init:
-                int initialGuess = ReadIntegerFromConsole("Please provide your initial guess: ");
-                return request.CreateResponse(initialGuess);
-            case NumberSignal.Above:
-                int lowerGuess = ReadIntegerFromConsole("You previously guessed too large. Please provide a new guess: ");
-                return request.CreateResponse(lowerGuess);
-            case NumberSignal.Below:
-                int higherGuess = ReadIntegerFromConsole("You previously guessed too small. Please provide a new guess: ");
-                return request.CreateResponse(higherGuess);
-        }
+        case NumberSignal.Init:
+            int initialGuess = ReadIntegerFromConsole("Please provide your initial guess: ");
+            return request.CreateResponse(initialGuess);
+        case NumberSignal.Above:
+            int lowerGuess = ReadIntegerFromConsole("You previously guessed too large. Please provide a new guess: ");
+            return request.CreateResponse(lowerGuess);
+        case NumberSignal.Below:
+            int higherGuess = ReadIntegerFromConsole("You previously guessed too small. Please provide a new guess: ");
+            return request.CreateResponse(higherGuess);
+        default:
+            throw new ArgumentException("Unexpected request type.");
     }
-
-    throw new NotSupportedException($"Request {request.PortInfo.RequestType} is not supported");
 }
 
 private static int ReadIntegerFromConsole(string prompt)
@@ -179,7 +195,7 @@ private static int ReadIntegerFromConsole(string prompt)
 ### RequestInfoEvent Flow
 
 1. **Workflow Execution**: The workflow processes until it needs external input
-2. **Request Generation**: InputPort generates a `RequestInfoEvent` with the request details
+2. **Request Generation**: RequestPort generates a `RequestInfoEvent` with the request details
 3. **External Handling**: Your application catches the event and gathers user input
 4. **Response Submission**: Send an `ExternalResponse` back to continue the workflow
 5. **Workflow Resumption**: The workflow continues processing with the provided input
@@ -192,9 +208,9 @@ private static int ReadIntegerFromConsole(string prompt)
 
 ### Implementation Flow
 
-1. **Workflow Initialization**: The workflow starts by sending a `NumberSignal.Init` to the InputPort.
+1. **Workflow Initialization**: The workflow starts by sending a `NumberSignal.Init` to the RequestPort.
 
-2. **Request Generation**: The InputPort generates a `RequestInfoEvent` requesting an initial guess from the user.
+2. **Request Generation**: The RequestPort generates a `RequestInfoEvent` requesting an initial guess from the user.
 
 3. **Workflow Pause**: The workflow pauses and waits for external input while the application handles the request.
 
@@ -210,7 +226,7 @@ private static int ReadIntegerFromConsole(string prompt)
 - **Event-Driven**: Rich event system provides visibility into workflow execution
 - **Pausable Execution**: Workflows can pause indefinitely while waiting for external input
 - **State Management**: Workflow state is preserved across pause-resume cycles
-- **Flexible Integration**: InputPorts can integrate with any external input source (UI, API, console, etc.)
+- **Flexible Integration**: RequestPorts can integrate with any external input source (UI, API, console, etc.)
 
 ### Complete Sample
 
@@ -222,7 +238,7 @@ This pattern enables building sophisticated interactive applications where users
 
 ::: zone pivot="programming-language-python"
 
-### What You'll Build
+## What You'll Build
 
 You'll create an interactive number guessing game workflow that demonstrates request-response patterns:
 
@@ -231,16 +247,16 @@ You'll create an interactive number guessing game workflow that demonstrates req
 - A turn manager that coordinates between the agent and human interactions
 - Interactive console input/output for real-time feedback
 
-### Prerequisites
+## Prerequisites
 
 - Python 3.10 or later
 - Azure OpenAI deployment configured
 - Azure CLI authentication configured (`az login`)
 - Basic understanding of Python async programming
 
-### Key Concepts
+## Key Concepts
 
-#### RequestInfoExecutor
+### RequestInfoExecutor
 
 `RequestInfoExecutor` is a specialized workflow component that:
 - Pauses workflow execution to request external information
@@ -248,7 +264,7 @@ You'll create an interactive number guessing game workflow that demonstrates req
 - Resumes execution after receiving a correlated response
 - Preserves request-response correlation via unique request IDs
 
-#### Request-Response Flow
+### Request-Response Flow
 
 1. Workflow sends a `RequestInfoMessage` to `RequestInfoExecutor`
 2. `RequestInfoExecutor` emits a `RequestInfoEvent`
@@ -256,7 +272,7 @@ You'll create an interactive number guessing game workflow that demonstrates req
 4. Response is sent back via `send_responses_streaming()`
 5. Workflow resumes with the response data
 
-### Setting Up the Environment
+## Setting Up the Environment
 
 First, install the required packages:
 
@@ -266,7 +282,7 @@ pip install azure-identity
 pip install pydantic
 ```
 
-### Define Request and Response Models
+## Define Request and Response Models
 
 Start by defining the data structures for request-response communication:
 
@@ -378,7 +394,7 @@ class TurnManager(Executor):
         await ctx.send_message(AgentExecutorRequest(messages=[user_msg], should_respond=True))
 ```
 
-### Build the Workflow
+## Build the Workflow
 
 Create the main workflow that connects all components:
 
@@ -481,11 +497,11 @@ async def run_interactive_workflow(workflow):
     print(f"\n🎉 {workflow_output}")
 ```
 
-### Running the Example
+## Running the Example
 
 For the complete working implementation, see the [Human-in-the-Loop Guessing Game sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/human-in-the-loop/guessing_game_with_human_input.py).
 
-### How It Works
+## How It Works
 
 1. **Workflow Initialization**: The workflow starts with the `TurnManager` requesting an initial guess from the AI agent.
 
@@ -499,7 +515,7 @@ For the complete working implementation, see the [Human-in-the-Loop Guessing Gam
 
 6. **Resume and Continue**: The workflow resumes, the `TurnManager` processes the human feedback, and either ends the game or sends another request to the agent.
 
-### Key Benefits
+## Key Benefits
 
 - **Structured Communication**: Type-safe request and response models prevent runtime errors
 - **Correlation**: Request IDs ensure responses are matched to the correct requests
