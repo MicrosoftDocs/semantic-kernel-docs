@@ -39,7 +39,7 @@ Packages will be published to [NuGet Gallery | MicrosoftAgentFramework](https://
 First, add the following Microsoft Agent Framework NuGet packages into your application, using the following commands:
 
 ```dotnetcli
-dotnet add package Azure.AI.OpenAI
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
