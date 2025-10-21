@@ -33,7 +33,7 @@ The workflow demonstrates core concepts like:
 
 ## Prerequisites
 
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
 - No external AI services required for this basic example
 - A new console application
 

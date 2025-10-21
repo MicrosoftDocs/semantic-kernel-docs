@@ -19,7 +19,7 @@ In .NET, human-in-the-loop workflows use `RequestPort` and external request hand
 
 ## Prerequisites
 
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later.
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download).
 - [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource).
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli).
 - Basic understanding of C# and async programming.

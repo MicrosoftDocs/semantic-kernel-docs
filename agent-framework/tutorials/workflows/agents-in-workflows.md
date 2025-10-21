@@ -29,7 +29,7 @@ You'll create a workflow that:
 
 ## Prerequisites
 
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
 - Azure Foundry service endpoint and deployment configured
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
 - A new console application
