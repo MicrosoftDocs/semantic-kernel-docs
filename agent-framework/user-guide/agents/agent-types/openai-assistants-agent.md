@@ -39,10 +39,12 @@ OpenAIClient client = new OpenAIClient("<your_api_key>");
 ```
 
 OpenAI supports multiple services that all provide model calling capabilities.
-We need to pick the Assistants service to create an Assistants based agent.
+We will use the Assistants client to create an Assistants based agent.
 
 ```csharp
+#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
 var assistantClient = client.GetAssistantClient();
+#pragma warning restore OPENAI001
 ```
 
 To use the OpenAI Assistants service, you need create an assistant resource in the service.
@@ -60,6 +62,9 @@ var createResult = await assistantClient.CreateAssistantAsync(
 
 // Retrieve the assistant as an AIAgent
 AIAgent agent1 = await assistantClient.GetAIAgentAsync(createResult.Value.Id);
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent1.RunAsync("Tell me a joke about a pirate."));
 ```
 
 ### Using the Agent Framework helpers

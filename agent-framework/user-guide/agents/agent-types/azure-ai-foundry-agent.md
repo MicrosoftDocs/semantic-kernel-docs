@@ -11,13 +11,13 @@ ms.service: agent-framework
 
 # Azure AI Foundry Agents
 
-The Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service.
+The Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service, you can create persistent service-based agent instances with service-managed conversation threads.
 
 ::: zone pivot="programming-language-csharp"
 
 ## Getting Started
 
-Add the Agents Azure AI NuGet package to your project.
+Add the required NuGet packages to your project.
 
 ```powershell
 dotnet add package Azure.Identity
@@ -55,6 +55,9 @@ var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync
 
 // Retrieve the agent that was just created as an AIAgent using its ID
 AIAgent agent1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent1.RunAsync("Tell me a joke about a pirate."));
 ```
 
 ### Using the Agent Framework helpers
@@ -341,4 +344,4 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Azure AI Foundry Models based Agents](./azure-ai-foundry-models.md)
+> [Azure AI Foundry Models based Agents](./azure-ai-foundry-models-chat-completion-agent.md)

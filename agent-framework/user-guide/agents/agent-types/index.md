@@ -34,7 +34,7 @@ These agents support a wide range of functionality out of the box:
 1. Custom service provided tools (e.g. MCP, Code Execution)
 1. Structured output
 
-To create one of these agents, simply construct a `ChatClientAgent` using the ChatClient implementation of your choice.
+To create one of these agents, simply construct a `ChatClientAgent` using the `IChatClient` implementation of your choice.
 
 ```csharp
 using Microsoft.Agents.AI;
@@ -48,17 +48,18 @@ See the documentation for each service, for more information:
 |Underlying Inference Service|Description|Service Chat History storage supported|Custom Chat History storage supported|
 |---|---|---|---|
 |[Azure AI Foundry Agent](./azure-ai-foundry-agent.md)|An agent that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
-|[Azure AI Foundry Models](./azure-ai-foundry-models.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend.|No|Yes|
+|[Azure AI Foundry Models ChatCompletion](./azure-ai-foundry-models-chat-completion-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via ChatCompletion.|No|Yes|
+|[Azure AI Foundry Models Responses](./azure-ai-foundry-models-responses-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|No|Yes|
 |[Azure OpenAI ChatCompletion](./azure-openai-chat-completion-agent.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
 |[OpenAI ChatCompletion](./openai-chat-completion-agent.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
 |[OpenAI Responses](./openai-responses-agent.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
 |[OpenAI Assistants](./openai-assistants-agent.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
-|[Any other ChatClient](./chat-client-agent.md)|You can also use any other [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation to create an agent.|Varies|Varies|
+|[Any other `IChatClient`](./chat-client-agent.md)|You can also use any other [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation to create an agent.|Varies|Varies|
 
 ## Complex custom agents
 
-It is also possible to create fully custom agents, that are not just wrappers around a ChatClient.
+It is also possible to create fully custom agents, that are not just wrappers around an `IChatClient`.
 The agent framework provides the `AIAgent` base type.
 This base type is the core abstraction for all agents, which when subclassed allows for complete control over the agent's behavior and capabilities.
 
