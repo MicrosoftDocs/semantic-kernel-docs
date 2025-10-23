@@ -974,9 +974,9 @@ async def join_any(msg: str, ctx: WorkflowContext[Never, str]) -> None:
 
 @executor(id="join_all")
 async def join_all(msg: str, ctx: WorkflowContext[str, str]) -> None:
-    state = await ctx.get_state() or {"items": []}
+    state = await ctx.get_executor_state() or {"items": []}
     state["items"].append(msg)
-    await ctx.set_state(state)
+    await ctx.set_executor_state(state)
     if len(state["items"]) >= 2:
         await ctx.yield_output(" | ".join(state["items"]))  # ALL join
 
@@ -1404,7 +1404,7 @@ AutoGen's `Team` abstraction does not provide built-in checkpointing capabilitie
 
 Agent Framework provides comprehensive checkpointing through `FileCheckpointStorage` and the `with_checkpointing()` method on `WorkflowBuilder`. Checkpoints capture:
 
-- **Executor state**: Local state for each executor using `ctx.set_state()`
+- **Executor state**: Local state for each executor using `ctx.set_executor_state()`
 - **Shared state**: Cross-executor state using `ctx.set_shared_state()`
 - **Message queues**: Pending messages between executors
 - **Workflow position**: Current execution progress and next steps
@@ -1424,9 +1424,9 @@ class ProcessingExecutor(Executor):
         print(f"Processing: '{data}' -> '{result}'")
 
         # Persist executor-local state
-        prev_state = await ctx.get_state() or {}
+        prev_state = await ctx.get_executor_state() or {}
         count = prev_state.get("count", 0) + 1
-        await ctx.set_state({
+        await ctx.set_executor_state({
             "count": count,
             "last_input": data,
             "last_output": result

@@ -21,15 +21,15 @@ In this tutorial, output is written to the console using the OpenTelemetry conso
 
 ## Prerequisites
 
-For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites, see the [Create and run a simple agent](./run-agent.md#prerequisites) step in this tutorial.
 
 ## Install NuGet packages
 
-To use Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
+To use Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
 ```dotnetcli
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
-dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
@@ -98,20 +98,24 @@ Activity.Kind:               Client
 Activity.StartTime:          2025-09-18T11:00:48.6636883Z
 Activity.Duration:           00:00:08.6077009
 Activity.Tags:
-    gen_ai.operation.name: invoke_agent
-    gen_ai.system: openai
-    gen_ai.agent.id: e1370f89-3ca8-4278-bce0-3a3a2b22f407
+    gen_ai.operation.name: chat
+    gen_ai.request.model: gpt-4o-mini
+    gen_ai.provider.name: openai
+    server.address: <myresource>.openai.azure.com
+    server.port: 443
+    gen_ai.agent.id: 19e310a72fba4cc0b257b4bb8921f0c7
     gen_ai.agent.name: Joker
-    gen_ai.request.instructions: You are good at telling jokes.
+    gen_ai.response.finish_reasons: ["stop"]
     gen_ai.response.id: chatcmpl-CH6fgKwMRGDtGNO3H88gA3AG2o7c5
+    gen_ai.response.model: gpt-4o-mini-2024-07-18
     gen_ai.usage.input_tokens: 26
     gen_ai.usage.output_tokens: 29
 Instrumentation scope (ActivitySource):
-    Name: c8aeb104-0ce7-49b3-bf45-d71e5bf782d1
+    Name: agent-telemetry-source
 Resource associated with Activity:
     telemetry.sdk.name: opentelemetry
     telemetry.sdk.language: dotnet
-    telemetry.sdk.version: 1.12.0
+    telemetry.sdk.version: 1.13.1
     service.name: unknown_service:Agent_Step08_Telemetry
 
 Why did the pirate go to school?

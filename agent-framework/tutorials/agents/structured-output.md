@@ -30,15 +30,15 @@ The `ChatClientAgent` uses the support for structured output that's provided by 
 When creating the agent, you have the option to provide the default <xref:Microsoft.Extensions.AI.ChatOptions> instance to use for the underlying chat client.
 This `ChatOptions` instance allows you to pick a preferred <xref:Microsoft.Extensions.AI.ChatResponseFormat>.
 
-Various options are supported:
+Various options for `ResponseFormat` are available:
 
-- <xref:Microsoft.Extensions.AI.ChatResponseFormat.Text?displayProperty=nameWithType>: The response will be plain text.
-- <xref:Microsoft.Extensions.AI.ChatResponseFormat.Json?displayProperty=nameWithType>: The response will be a JSON object without any particular schema.
-- <xref:Microsoft.Extensions.AI.ChatResponseFormatJson>: The response will be a JSON object that conforms to the provided schema.
+- A built-in <xref:Microsoft.Extensions.AI.ChatResponseFormat.Text?displayProperty=nameWithType> property: The response will be plain text.
+- A built-in <xref:Microsoft.Extensions.AI.ChatResponseFormat.Json?displayProperty=nameWithType> property: The response will be a JSON object without any particular schema.
+- A custom <xref:Microsoft.Extensions.AI.ChatResponseFormatJson> instance: The response will be a JSON object that conforms to a specific schema.
 
 This example creates an agent that produces structured output in the form of a JSON object that conforms to a specific schema.
 
-The easiest way to produce the schema is to define a C# class that represents the structure of the output you want from the agent, and then use the `AIJsonUtilities.CreateJsonSchema` method to create a schema from the type.
+The easiest way to produce the schema is to define a type that represents the structure of the output you want from the agent, and then use the `AIJsonUtilities.CreateJsonSchema` method to create a schema from the type.
 
 ```csharp
 using System.Text.Json;
@@ -47,13 +47,8 @@ using Microsoft.Extensions.AI;
 
 public class PersonInfo
 {
-    [JsonPropertyName("name")]
     public string? Name { get; set; }
-
-    [JsonPropertyName("age")]
     public int? Age { get; set; }
-
-    [JsonPropertyName("occupation")]
     public string? Occupation { get; set; }
 }
 
@@ -67,7 +62,7 @@ using Microsoft.Extensions.AI;
 
 ChatOptions chatOptions = new()
 {
-    ResponseFormat = ChatResponseFormatJson.ForJsonSchema(
+    ResponseFormat = ChatResponseFormat.ForJsonSchema(
         schema: schema,
         schemaName: "PersonInfo",
         schemaDescription: "Information about a person including their name, age, and occupation")

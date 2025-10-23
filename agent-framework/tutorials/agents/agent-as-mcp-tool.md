@@ -17,19 +17,19 @@ This tutorial shows you how to expose an agent as a tool over the Model Context 
 
 ## Prerequisites
 
-For prerequisites see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites see the [Create and run a simple agent](./run-agent.md#prerequisites) step in this tutorial.
 
 ## Install NuGet packages
 
 To use Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
 ```dotnetcli
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
-dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-To add support for hosting a tool over the Model Context Protocol (MCP), add the following NuGet packages
+To also add support for hosting a tool over the Model Context Protocol (MCP), add the following NuGet packages
 
 ```dotnetcli
 dotnet add package Microsoft.Extensions.Hosting --prerelease
@@ -69,6 +69,7 @@ Setup the MCP server to listen for incoming requests over standard input/output 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ModelContextProtocol.Server;
 
 HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services

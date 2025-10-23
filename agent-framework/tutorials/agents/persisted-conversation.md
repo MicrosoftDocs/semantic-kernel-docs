@@ -48,7 +48,7 @@ Run the agent, passing in the thread, so that the `AgentThread` includes this ex
 Console.WriteLine(await agent.RunAsync("Tell me a short pirate joke.", thread));
 ```
 
-Call the SerializeAsync method on the thread to serialize it to a JsonElement.
+Call the `Serialize` method on the thread to serialize it to a JsonElement.
 It can then be converted to a string for storage and saved to a database, blob storage, or file.
 
 ```csharp
@@ -56,8 +56,7 @@ using System.IO;
 using System.Text.Json;
 
 // Serialize the thread state
-JsonElement serializedThread = thread.Serialize();
-string serializedJson = JsonSerializer.Serialize(serializedThread, JsonSerializerOptions.Web);
+string serializedJson = thread.Serialize(JsonSerializerOptions.Web).GetRawText();
 
 // Example: save to a local file (replace with DB or blob storage in production)
 string filePath = Path.Combine(Path.GetTempPath(), "agent_thread.json");
@@ -73,10 +72,10 @@ additional functionality that is specific to that agent type.
 ```csharp
 // Read persisted JSON
 string loadedJson = await File.ReadAllTextAsync(filePath);
-JsonElement reloaded = JsonSerializer.Deserialize<JsonElement>(loadedJson);
+JsonElement reloaded = JsonSerializer.Deserialize<JsonElement>(loadedJson, JsonSerializerOptions.Web);
 
 // Deserialize the thread into an AgentThread tied to the same agent type
-AgentThread resumedThread = agent.DeserializeThread(reloaded);
+AgentThread resumedThread = agent.DeserializeThread(reloaded, JsonSerializerOptions.Web);
 ```
 
 Use the resumed thread to continue the conversation.

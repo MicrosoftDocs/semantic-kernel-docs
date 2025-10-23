@@ -22,7 +22,7 @@ This tutorial shows you how to create and run an agent with Agent Framework, bas
 
 Before you begin, ensure you have the following prerequisites:
 
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
 - [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource)
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
 - [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
@@ -38,8 +38,8 @@ Before you begin, ensure you have the following prerequisites:
 To use Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
 ```dotnetcli
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
-dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 

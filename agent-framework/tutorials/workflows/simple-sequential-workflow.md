@@ -33,37 +33,39 @@ The workflow demonstrates core concepts like:
 
 ## Prerequisites
 
-- .NET 9.0 or later
-- Microsoft.Agents.AI.Workflows NuGet package
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
 - No external AI services required for this basic example
+- A new console application
 
 ## Step-by-Step Implementation
 
 The following sections show how to build the sequential workflow step by step.
 
-### Step 1: Add Required Using Statements
+### Step 1: Install NuGet packages
 
-First, add the necessary using statements:
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+```
+
+### Step 2: Define the Uppercase Executor
+
+Define an executor that converts text to uppercase:
 
 ```csharp
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
-```
 
-### Step 2: Create the Uppercase Executor
-
-Create an executor that converts text to uppercase:
-
-```csharp
 /// <summary>
 /// First executor: converts input text to uppercase.
 /// </summary>
 internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"),
     IMessageHandler<string, string>
 {
-    public ValueTask<string> HandleAsync(string input, IWorkflowContext context)
+    public ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Convert input to uppercase and pass to next executor
         return ValueTask.FromResult(input.ToUpper());
@@ -76,11 +78,10 @@ internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor
 - Inherits from `ReflectingExecutor<T>` for basic executor functionality
 - Implements `IMessageHandler<string, string>` - takes string input, produces string output
 - The `HandleAsync` method processes the input and returns the result
-- Result is automatically passed to the next connected executor
 
-### Step 3: Create the Reverse Text Executor
+### Step 3: Define the Reverse Text Executor
 
-Create an executor that reverses the text:
+Define an executor that reverses the text:
 
 ```csharp
 /// <summary>
@@ -89,7 +90,7 @@ Create an executor that reverses the text:
 internal sealed class ReverseTextExecutor() : ReflectingExecutor<ReverseTextExecutor>("ReverseTextExecutor"),
     IMessageHandler<string, string>
 {
-    public ValueTask<string> HandleAsync(string input, IWorkflowContext context)
+    public ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Reverse the input text
         return ValueTask.FromResult(new string(input.Reverse().ToArray()));
@@ -122,7 +123,7 @@ var workflow = builder.Build();
 
 - `WorkflowBuilder` constructor takes the starting executor
 - `AddEdge()` creates a directed connection from uppercase to reverse
-- `WithOutputFrom()` specifies which executor produces the final workflow output
+- `WithOutputFrom()` specifies which executors produce workflow outputs
 - `Build()` creates the immutable workflow
 
 ### Step 5: Execute the Workflow
@@ -131,12 +132,17 @@ Run the workflow and observe the results:
 
 ```csharp
 // Execute the workflow with input data
-Run run = await InProcessExecution.RunAsync(workflow, "Hello, World!");
+await using Run run = await InProcessExecution.RunAsync(workflow, "Hello, World!");
 foreach (WorkflowEvent evt in run.NewEvents)
 {
-    if (evt is ExecutorCompletedEvent executorComplete)
+    switch (evt)
     {
-        Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
+        case ExecutorCompletedEvent executorComplete:
+            Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
+            break;
+        case WorkflowOutputEvent workflowOutput:
+            Console.WriteLine($"Workflow '{workflowOutput.SourceId}' outputs: {workflowOutput.Data}");
+            break;
     }
 }
 ```
@@ -162,7 +168,7 @@ Executors implement `IMessageHandler<TInput, TOutput>`:
 - **TOutput**: The type of data this executor produces
 - **HandleAsync**: The method that processes the input and returns the output
 
-### Workflow Builder Pattern
+### .NET Workflow Builder Pattern
 
 The `WorkflowBuilder` provides a fluent API for constructing workflows:
 
@@ -177,8 +183,6 @@ During execution, you can observe these event types:
 
 - `ExecutorCompletedEvent` - When an executor finishes processing
 - `WorkflowOutputEvent` - Contains the final workflow result (for streaming execution)
-
-### .NET Workflow Builder Pattern
 
 ## Running the .NET Example
 
