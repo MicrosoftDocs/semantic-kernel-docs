@@ -13,6 +13,9 @@ ms.service: agent-framework
 
 The Microsoft Agent Framework supports background responses for handling long-running operations that may take time to complete. This feature enables agents to start processing a request and return a continuation token that can be used to poll for results or resume interrupted streams.
 
+> [!TIP]
+> For a complete working example, see the [Background Responses sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Agents/Agent_Step17_BackgroundResponses/Program.cs).
+
 ## When to Use Background Responses
 
 Background responses are particularly useful for:
@@ -52,6 +55,12 @@ Some agents may not allow explicit control over background responses. These agen
 For non-streaming scenarios, when you initially run an agent, it may or may not return a continuation token. If no continuation token is returned, it means the operation has completed. If a continuation token is returned, it indicates that the agent has initiated a background response that is still processing and will require polling to retrieve the final result:
 
 ```csharp
+AIAgent agent = new AzureOpenAIClient(
+    new Uri("https://<myresource>.openai.azure.com"),
+    new AzureCliCredential())
+    .GetOpenAIResponseClient("<deployment-name>")
+    .CreateAIAgent();
+
 AgentRunOptions options = new()
 {
     AllowBackgroundResponses = true
@@ -60,7 +69,7 @@ AgentRunOptions options = new()
 AgentThread thread = agent.GetNewThread();
 
 // Get initial response - may return with or without a continuation token
-AgentRunResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread, options);
+AgentRunResponse response = await agent.RunAsync("Write a very long novel about otters in space.", thread, options);
 
 // Continue to poll until the final response is received
 while (response.ContinuationToken is not null)
@@ -88,6 +97,12 @@ Console.WriteLine(response.Text);
 In streaming scenarios, background responses work much like regular streaming responses - the agent streams all updates back to consumers in real-time. However, the key difference is that if the original stream gets interrupted, agents support stream resumption through continuation tokens. Each update includes a continuation token that captures the current state, allowing the stream to be resumed from exactly where it left off by passing this token to subsequent streaming API calls:
 
 ```csharp
+AIAgent agent = new AzureOpenAIClient(
+    new Uri("https://<myresource>.openai.azure.com"),
+    new AzureCliCredential())
+    .GetOpenAIResponseClient("<deployment-name>")
+    .CreateAIAgent();
+
 AgentRunOptions options = new()
 {
     AllowBackgroundResponses = true
@@ -97,7 +112,7 @@ AgentThread thread = agent.GetNewThread();
 
 AgentRunResponseUpdate? latestReceivedUpdate = null;
 
-await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pirate.", thread, options))
+await foreach (var update in agent.RunStreamingAsync("Write a very long novel about otters in space.", thread, options))
 {
     Console.Write(update.Text);
     
