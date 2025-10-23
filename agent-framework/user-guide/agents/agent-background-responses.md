@@ -74,7 +74,7 @@ AgentRunResponse response = await agent.RunAsync("Write a very long novel about 
 // Continue to poll until the final response is received
 while (response.ContinuationToken is not null)
 {
-        // Wait before polling again.
+    // Wait before polling again.
     await Task.Delay(TimeSpan.FromSeconds(2));
 
     options.ContinuationToken = response.ContinuationToken;
