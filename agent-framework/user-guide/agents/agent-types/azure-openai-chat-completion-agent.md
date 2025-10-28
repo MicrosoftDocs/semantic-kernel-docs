@@ -20,9 +20,9 @@ The Microsoft Agent Framework supports creating agents that use the [Azure OpenA
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
-dotnet add package Azure.AI.OpenAI
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
 ## Creating an Azure OpenAI ChatCompletion Agent
@@ -99,6 +99,7 @@ Get responses as they are generated using streaming:
 AIAgent agent = chatCompletionClient.CreateAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
+
 // Invoke the agent with streaming support.
 await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pirate."))
 {

@@ -1,6 +1,6 @@
 ---
-title: Azure AI Foundry Models Agents
-description: Learn how to use the Microsoft Agent Framework with Azure AI Foundry Models service.
+title: Azure AI Foundry Models ChatCompletion Agents
+description: Learn how to use the Microsoft Agent Framework with Azure AI Foundry Models service via OpenAI ChatCompletion API.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,8 +11,9 @@ ms.service: agent-framework
 
 # Azure AI Foundry Models Agents
 
+The Microsoft Agent Framework supports creating agents using models deployed with Azure AI Foundry Models via an OpenAI Chat Completion compatible API, and therefore the OpenAI client libraries can be used to access Foundry models.
+
 [Azure AI Foundry supports deploying](/azure/ai-foundry/foundry-models/how-to/create-model-deployments?pivots=ai-foundry-portal) a wide range of models, including open source models.
-Microsoft Agent Framework can create agents that use these models.
 
 > [!NOTE]
 > The capabilities of these models may limit the functionality of the agents. For example, many open source models do not support function calling and therefore any agent based on such models will not be able to use function tools.
@@ -21,11 +22,10 @@ Microsoft Agent Framework can create agents that use these models.
 
 ## Getting Started
 
-Foundry supports accessing models via an OpenAI Chat Completion compatible API, and therefore the OpenAI client libraries can be used to access Foundry models.
-
 Add the required NuGet packages to your project.
 
 ```powershell
+dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
@@ -37,24 +37,18 @@ Since the code is not using the default OpenAI service, the URI of the OpenAI co
 
 ```csharp
 using System;
+using System.ClientModel.Primitives;
+using Azure.Identity;
 using Microsoft.Agents.AI;
 using OpenAI;
 
-var clientOptions = new OpenAIClientOptions() { Endpoint = new Uri("https://ai-foundry-<your-resource>.services.ai.azure.com/openai/v1/") };
-```
+var clientOptions = new OpenAIClientOptions() { Endpoint = new Uri("https://<myresource>.services.ai.azure.com/openai/v1/") };
 
-There are different options for constructing the `OpenAIClient` depending on the desired authentication method. Let's look at two common options.
-
-The first option uses an API key.
-
-```csharp
-OpenAIClient client = new OpenAIClient(new ApiKeyCredential("<your_api_key>"), clientOptions);
-```
-
-The second option uses token based authentication, and here it is using the Azure CLI credential to get a token.
-
-```csharp
+#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
 OpenAIClient client = new OpenAIClient(new BearerTokenPolicy(new AzureCliCredential(), "https://ai.azure.com/.default"), clientOptions);
+#pragma warning restore OPENAI001
+// You can optionally authenticate with an API key
+// OpenAIClient client = new OpenAIClient(new ApiKeyCredential("<your_api_key>"), clientOptions);
 ```
 
 A client for chat completions can then be created using the model deployment name.
@@ -69,13 +63,16 @@ Finally, the agent can be created using the `CreateAIAgent` extension method on 
 AIAgent agent = chatCompletionClient.CreateAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
 ## Using the Agent
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md)
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -87,4 +84,4 @@ More docs coming soon.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Azure OpenAI ChatCompletion Agents](./azure-openai-chat-completion-agent.md)
+> [Azure OpenAI ChatCompletion Agents](./azure-ai-foundry-models-responses-agent.md)

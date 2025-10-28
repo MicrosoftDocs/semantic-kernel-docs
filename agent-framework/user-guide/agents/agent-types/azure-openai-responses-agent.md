@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Azure OpenAI Responses Agents
 
-The Microsoft Agent Framework supports creating agents that use the [Azure OpenAI responses](/azure/ai-foundry/openai/how-to/responses) service.
+The Microsoft Agent Framework supports creating agents that use the [Azure OpenAI Responses](/azure/ai-foundry/openai/how-to/responses) service.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -20,9 +20,9 @@ The Microsoft Agent Framework supports creating agents that use the [Azure OpenA
 Add the required NuGet packages to your project.
 
 ```powershell
-dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
-dotnet add package Azure.AI.OpenAI
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
 ## Creating an Azure OpenAI Responses Agent
@@ -37,7 +37,7 @@ using Microsoft.Agents.AI;
 using OpenAI;
 
 AzureOpenAIClient client = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
+    new Uri("https://<myresource>.openai.azure.com/openai/v1/"),
     new AzureCliCredential());
 ```
 
@@ -45,7 +45,9 @@ Azure OpenAI supports multiple services that all provide model calling capabilit
 We need to pick the Responses service to create a Responses based agent.
 
 ```csharp
+#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
 var responseClient = client.GetOpenAIResponseClient("gpt-4o-mini");
+#pragma warning restore OPENAI001
 ```
 
 Finally, create the agent using the `CreateAIAgent` extension method on the `ResponseClient`.
@@ -54,6 +56,9 @@ Finally, create the agent using the `CreateAIAgent` extension method on the `Res
 AIAgent agent = responseClient.CreateAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
 ## Using the Agent
