@@ -62,11 +62,9 @@ To develop with the `CopilotStudioAgent`, you must have your environment and aut
 1. **Python 3.10 or higher**
 2. **Semantic Kernel** with Copilot Studio dependencies:
 
-   - Until dependencies are broadly available on PyPI:
-     ```bash
-     pip install semantic-kernel
-     pip install --extra-index-url https://test.pypi.org/simple microsoft-agents-core microsoft-agents-copilotstudio-client
-     ```
+```bash
+pip install semantic-kernel[copilotstudio]
+```
 
 3. **Microsoft Copilot Studio** agent:
 
