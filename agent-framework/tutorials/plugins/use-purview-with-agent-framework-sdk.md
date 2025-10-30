@@ -34,7 +34,7 @@ Before you begin, ensure you have:
 
 In your agent's workflow middleware pipeline, you can add Microsoft Purview policy middleware to intercept prompts and responses to determine if they meet the policies set up in Microsoft Purview. The Agent Framework SDK is capable of intercepting agent-to-agent or end-user chat client prompts and responses.
 
-The following code sample demonstrates how to add the Microsoft Purview policy middleware to your agent code. If you are new to Agent Framework, see [Create and run an agent with Agent Framework](/agent-framework/tutorials/agents/run-agent?pivots=programming-language-python).
+The following code sample demonstrates how to add the Microsoft Purview policy middleware to your agent code. If you're new to Agent Framework, see [Create and run an agent with Agent Framework](/agent-framework/tutorials/agents/run-agent?pivots=programming-language-python).
 
 ### [C#](#tab/csharp)
 
@@ -95,5 +95,5 @@ Now that you added the above code to your agent, perform the following steps to 
 ## Resources
 
 - [PyPI Package: Microsoft Agent Framework - Purview Integration (Python)](https://pypi.org/project/agent-framework-purview/).
-- [Github: Microsoft Agent Framework – Purview Integration (Python) source code](https://github.com/microsoft/agent-framework/tree/main/python/packages/purview).
+- [GitHub: Microsoft Agent Framework – Purview Integration (Python) source code](https://github.com/microsoft/agent-framework/tree/main/python/packages/purview).
 - [Code Sample: Purview Policy Enforcement Sample (Python)](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/purview_agent).
