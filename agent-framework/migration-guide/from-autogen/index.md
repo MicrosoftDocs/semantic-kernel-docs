@@ -1521,8 +1521,8 @@ async def checkpoint_resume_example():
 
         # Create new workflow instance and resume
         new_workflow = create_workflow(checkpoint_storage)
-        async for event in new_workflow.run_stream_from_checkpoint(
-            chosen_checkpoint_id,
+        async for event in new_workflow.run_stream(
+            checkpoint_id=chosen_checkpoint_id,
             checkpoint_storage=checkpoint_storage
         ):
             print(f"Resumed event: {event}")
@@ -1539,8 +1539,8 @@ Checkpointing works seamlessly with human-in-the-loop workflows, allowing workfl
 async def resume_with_pending_requests_example():
     # Resume from checkpoint - pending requests will be re-emitted
     request_info_events = []
-    async for event in workflow.run_stream_from_checkpoint(
-        checkpoint_id,
+    async for event in workflow.run_stream(
+        checkpoint_id=checkpoint_id,
         checkpoint_storage=checkpoint_storage
     ):
         if isinstance(event, RequestInfoEvent):

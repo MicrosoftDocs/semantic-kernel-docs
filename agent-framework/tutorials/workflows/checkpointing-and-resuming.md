@@ -522,7 +522,7 @@ Resume execution and stream events in real-time:
 
 ```python
 # Resume from a specific checkpoint
-async for event in workflow.run_stream_from_checkpoint(
+async for event in workflow.run_stream(
     checkpoint_id="checkpoint-id",
     checkpoint_storage=checkpoint_storage
 ):
@@ -539,7 +539,7 @@ Resume and get all results at once:
 
 ```python
 # Resume and wait for completion
-result = await workflow.run_from_checkpoint(
+result = await workflow.run(
     checkpoint_id="checkpoint-id",
     checkpoint_storage=checkpoint_storage
 )
@@ -556,7 +556,7 @@ When resuming from a checkpoint that contains pending requests, the workflow wil
 ```python
 request_info_events = []
 # Resume from checkpoint - pending requests will be re-emitted
-async for event in workflow.run_stream_from_checkpoint(
+async for event in workflow.run_stream(
     checkpoint_id="checkpoint-id",
     checkpoint_storage=checkpoint_storage
 ):
@@ -578,7 +578,7 @@ async for event in workflow.send_responses_streaming(responses):
         print(f"Workflow completed: {event.data}")
 ```
 
-If resuming from a checkpoint with pending requests that have already been responded to, you still need to call `run_stream_from_checkpoint()` to continue the workflow followed by `send_responses_streaming()` with the pre-supplied responses.
+If resuming from a checkpoint with pending requests that have already been responded to, you still need to call `run_stream()` to continue the workflow followed by `send_responses_streaming()` with the pre-supplied responses.
 
 ## Interactive Checkpoint Selection
 
@@ -606,7 +606,7 @@ async def select_and_resume_checkpoint(workflow, storage):
 
         # Resume from selected checkpoint
         print(f"Resuming from checkpoint: {selected.checkpoint_id}")
-        async for event in workflow.run_stream_from_checkpoint(
+        async for event in workflow.run_stream(
             selected.checkpoint_id,
             checkpoint_storage=storage
         ):
@@ -662,7 +662,7 @@ async def main():
         latest = max(checkpoints, key=lambda cp: cp.timestamp)
         print(f"Resuming from: {latest.checkpoint_id}")
 
-        async for event in workflow.run_stream_from_checkpoint(latest.checkpoint_id):
+        async for event in workflow.run_stream(latest.checkpoint_id):
             print(f"Resumed: {event}")
 
 if __name__ == "__main__":
