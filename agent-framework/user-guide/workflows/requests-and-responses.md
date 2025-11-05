@@ -79,76 +79,57 @@ internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExe
 
 ::: zone pivot="programming-language-python"
 
-Requests and responses are handled via a special built-in executor called `RequestInfoExecutor`.
+Executors can send requests using `ctx.request_info()` and handle responses with `@response_handler`.
 
 ```python
-from agent_framework import RequestInfoExecutor
-
-# Create a RequestInfoExecutor with an ID
-request_info_executor = RequestInfoExecutor(id="request-info-executor")
-```
-
-Add the `RequestInfoExecutor` to a workflow.
-
-```python
-from agent_framework import WorkflowBuilder
+from agent_framework import response_handler, WorkflowBuilder
 
 executor_a = SomeExecutor()
+executor_b = SomeOtherExecutor()
 workflow_builder = WorkflowBuilder()
-workflow_builder.set_start_executor(request_info_executor)
-workflow_builder.add_edge(request_info_executor, executor_a)
+workflow_builder.set_start_executor(executor_a)
+workflow_builder.add_edge(executor_a, executor_b)
 workflow = workflow_builder.build()
 ```
 
-Now, because in the workflow we have `executor_a` connected to the `request_info_executor` in both directions, `executor_a` needs to be able to send requests and receive responses via the `request_info_executor`. Here is what we need to do in `SomeExecutor` to send a request and receive a response.
+`executor_a` can send requests and receive responses directly using built-in capabilities.
 
 ```python
 from agent_framework import (
     Executor,
-    RequestResponse,
     WorkflowContext,
     handler,
+    response_handler,
 )
 
 class SomeExecutor(Executor):
 
     @handler
-    async def handle(
+    async def handle_data(
         self,
-        request: RequestResponse[CustomRequestType, CustomResponseType],
-        context: WorkflowContext[CustomResponseType],
+        data: OtherDataType,
+        context: WorkflowContext,
     ):
-        # Process the response...
+        # Process the message...
         ...
-        # Send a request
-        await context.send_message(CustomRequestType(...))
-```
+        # Send a request using the API
+        await context.request_info(
+            request_data=CustomRequestType(...),
+            response_type=CustomResponseType
+        )
 
-Alternatively, `SomeExecutor` can separate the request sending and response handling into two handlers.
-
-```python
-class SomeExecutor(Executor):
-
-    @handler
+    @response_handler
     async def handle_response(
         self,
-        response: CustomResponseType[CustomRequestType, CustomResponseType],
+        original_request: CustomRequestType,
+        response: CustomResponseType,
         context: WorkflowContext,
     ):
         # Process the response...
         ...
-
-    @handler
-    async def handle_other_data(
-        self,
-        data: OtherDataType,
-        context: WorkflowContext[CustomRequestType],
-    ):
-        # Process the message...
-        ...
-        # Send a request
-        await context.send_message(CustomRequestType(...))
 ```
+
+The `@response_handler` decorator automatically registers the method to handle responses for the specified request and response types.
 
 ::: zone-end
 
@@ -182,7 +163,7 @@ await foreach (WorkflowEvent evt in handle.WatchStreamAsync().ConfigureAwait(fal
 
 ::: zone pivot="programming-language-python"
 
-The `RequestInfoExecutor` emits a `RequestInfoEvent` when it receives a request. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor that sent the original request.
+Executors can send requests directly without needing a separate component. When an executor calls `ctx.request_info()`, the workflow emits a `RequestInfoEvent`. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor's `@response_handler` method.
 
 ```python
 from agent_framework import RequestInfoEvent
@@ -213,7 +194,7 @@ while True:
 
 To learn more about checkpoints, please refer to this [page](./checkpoints.md).
 
-When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted, allowing the workflow to continue processing from where it left off.
+When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You cannot provide responses directly during the resume operation - instead, you must listen for the re-emitted events and respond using the standard response mechanism.
 
 ## Next Steps
 

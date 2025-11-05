@@ -43,7 +43,7 @@ A comprehensive guide for migrating from AutoGen to the Microsoft Agent Framewor
     - [MagenticOneGroupChat Pattern](#magenticonegroupchat-pattern)
     - [Future Patterns](#future-patterns)
   - [Human-in-the-Loop with Request Response](#human-in-the-loop-with-request-response)
-    - [Agent Framework RequestInfoExecutor](#agent-framework-requestinfoexecutor)
+    - [Agent Framework Request-Response API](#agent-framework-request-response-api)
     - [Running Human-in-the-Loop Workflows](#running-human-in-the-loop-workflows)
   - [Checkpointing and Resuming Workflows](#checkpointing-and-resuming-workflows)
     - [Agent Framework Checkpointing](#agent-framework-checkpointing)
@@ -1290,61 +1290,62 @@ A key new feature in Agent Framework's `Workflow` is the concept of **request an
 
 AutoGen's `Team` abstraction runs continuously once started and doesn't provide built-in mechanisms to pause execution for human input. Any human-in-the-loop functionality requires custom implementations outside the framework.
 
-#### Agent Framework RequestInfoExecutor
+#### Agent Framework Request-Response API
 
-Agent Framework provides `RequestInfoExecutor` - a workflow-native bridge that pauses the graph at a request for information, emits a `RequestInfoEvent` with a typed payload, and resumes execution only after the application supplies a matching `RequestResponse`.
+Agent Framework provides built-in request-response capabilities where any executor can send requests using `ctx.request_info()` and handle responses with the `@response_handler` decorator.
 
 ```python
 from agent_framework import (
-    RequestInfoExecutor, RequestInfoEvent, RequestInfoMessage,
-    RequestResponse, WorkflowBuilder, WorkflowContext, executor
+    RequestInfoEvent, WorkflowBuilder, WorkflowContext, 
+    Executor, handler, response_handler
 )
 from dataclasses import dataclass
-from typing_extensions import Never
 
 # Assume we have agent_executor defined elsewhere
 
 # Define typed request payload
 @dataclass
-class ApprovalRequest(RequestInfoMessage):
+class ApprovalRequest:
     """Request human approval for agent output."""
     content: str = ""
     agent_name: str = ""
 
 # Workflow executor that requests human approval
-@executor(id="reviewer")
-async def approval_executor(
-    agent_response: str,
-    ctx: WorkflowContext[ApprovalRequest]
-) -> None:
-    # Request human input with structured data
-    approval_request = ApprovalRequest(
-        content=agent_response,
-        agent_name="writer_agent"
-    )
-    await ctx.send_message(approval_request)
+class ReviewerExecutor(Executor):
+    
+    @handler
+    async def review_content(
+        self,
+        agent_response: str,
+        ctx: WorkflowContext
+    ) -> None:
+        # Request human input with structured data
+        approval_request = ApprovalRequest(
+            content=agent_response,
+            agent_name="writer_agent"
+        )
+        await ctx.request_info(request_data=approval_request, response_type=str)
+    
+    @response_handler
+    async def handle_approval_response(
+        self,
+        original_request: ApprovalRequest,
+        decision: str,
+        ctx: WorkflowContext
+    ) -> None:
+        decision_lower = decision.strip().lower()
+        original_content = original_request.content
 
-# Human feedback handler
-@executor(id="processor")
-async def process_approval(
-    feedback: RequestResponse[ApprovalRequest, str],
-    ctx: WorkflowContext[Never, str]
-) -> None:
-    decision = feedback.data.strip().lower()
-    original_content = feedback.original_request.content
-
-    if decision == "approved":
-        await ctx.yield_output(f"APPROVED: {original_content}")
-    else:
-        await ctx.yield_output(f"REVISION NEEDED: {decision}")
+        if decision_lower == "approved":
+            await ctx.yield_output(f"APPROVED: {original_content}")
+        else:
+            await ctx.yield_output(f"REVISION NEEDED: {decision}")
 
 # Build workflow with human-in-the-loop
-hitl_executor = RequestInfoExecutor(id="request_approval")
+reviewer = ReviewerExecutor(id="reviewer")
 
 workflow = (WorkflowBuilder()
-           .add_edge(agent_executor, approval_executor)
-           .add_edge(approval_executor, hitl_executor)
-           .add_edge(hitl_executor, process_approval)
+           .add_edge(agent_executor, reviewer)
            .set_start_executor(agent_executor)
            .build())
 ```
@@ -1468,11 +1469,16 @@ async def checkpoint_example():
 Agent Framework provides APIs to list, inspect, and resume from specific checkpoints:
 
 ```python
-from agent_framework import (
-    RequestInfoExecutor, FileCheckpointStorage, WorkflowBuilder,
-    Executor, WorkflowContext, handler
-)
 from typing_extensions import Never
+
+from agent_framework import (
+    Executor,
+    FileCheckpointStorage,
+    WorkflowContext,
+    WorkflowBuilder,
+    get_checkpoint_summary,
+    handler,
+)
 
 class UpperCaseExecutor(Executor):
     @handler
@@ -1506,10 +1512,8 @@ async def checkpoint_resume_example():
 
     # Display checkpoint information
     for checkpoint in checkpoints:
-        summary = RequestInfoExecutor.checkpoint_summary(checkpoint)
+        summary = get_checkpoint_summary(checkpoint)
         print(f"Checkpoint {summary.checkpoint_id}: iteration={summary.iteration_count}")
-        print(f"  Shared state: {checkpoint.shared_state}")
-        print(f"  Executor states: {list(checkpoint.executor_states.keys())}")
 
     # Resume from a specific checkpoint
     if checkpoints:
@@ -1528,19 +1532,28 @@ async def checkpoint_resume_example():
 
 **Checkpoint with Human-in-the-Loop Integration:**
 
-Checkpointing works seamlessly with human-in-the-loop workflows, allowing workflows to be paused for human input and resumed later:
+Checkpointing works seamlessly with human-in-the-loop workflows, allowing workflows to be paused for human input and resumed later. When resuming from a checkpoint that contains pending requests, those requests will be re-emitted as events:
 
 ```python
 # Assume we have workflow, checkpoint_id, and checkpoint_storage from previous examples
-async def resume_with_responses_example():
-    # Resume with pre-supplied human responses
-    responses = {"request_id_123": "approved"}
-
+async def resume_with_pending_requests_example():
+    # Resume from checkpoint - pending requests will be re-emitted
+    request_info_events = []
     async for event in workflow.run_stream_from_checkpoint(
         checkpoint_id,
-        checkpoint_storage=checkpoint_storage,
-        responses=responses  # Pre-supply human responses
+        checkpoint_storage=checkpoint_storage
     ):
+        if isinstance(event, RequestInfoEvent):
+            request_info_events.append(event)
+
+    # Handle re-emitted pending request
+    responses = {}
+    for event in request_info_events:
+        response = handle_request(event.data)
+        responses[event.request_id] = response
+
+    # Send response back to workflow
+    async for event in workflow.send_responses_streaming(responses):
         print(f"Event: {event}")
 ```
 

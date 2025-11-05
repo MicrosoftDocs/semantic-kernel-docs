@@ -501,18 +501,17 @@ sorted_checkpoints = sorted(all_checkpoints, key=lambda cp: cp.timestamp)
 Access checkpoint metadata and state:
 
 ```python
-from agent_framework import RequestInfoExecutor
+from agent_framework import get_checkpoint_summary
 
 for checkpoint in checkpoints:
     # Get human-readable summary
-    summary = RequestInfoExecutor.checkpoint_summary(checkpoint)
+    summary = get_checkpoint_summary(checkpoint)
 
     print(f"Checkpoint: {summary.checkpoint_id}")
     print(f"Iteration: {summary.iteration_count}")
     print(f"Status: {summary.status}")
     print(f"Messages: {len(checkpoint.messages)}")
     print(f"Shared State: {checkpoint.shared_state}")
-    print(f"Executor States: {list(checkpoint.executor_states.keys())}")
 ```
 
 ## Resuming from Checkpoints
@@ -550,24 +549,36 @@ outputs = result.get_outputs()
 print(f"Final outputs: {outputs}")
 ```
 
-### Resume with Responses
+### Resume with Pending Requests
 
-For workflows with pending requests, provide responses during resume:
+When resuming from a checkpoint that contains pending requests, the workflow will re-emit those request events, allowing you to capture and respond to them:
 
 ```python
-# Resume with pre-supplied responses for RequestInfoExecutor
-responses = {
-    "request-id-1": "user response data",
-    "request-id-2": "another response"
-}
-
+request_info_events = []
+# Resume from checkpoint - pending requests will be re-emitted
 async for event in workflow.run_stream_from_checkpoint(
     checkpoint_id="checkpoint-id",
-    checkpoint_storage=checkpoint_storage,
-    responses=responses  # Inject responses during resume
+    checkpoint_storage=checkpoint_storage
 ):
-    print(f"Event: {event}")
+    if isinstance(event, RequestInfoEvent):
+        # Capture re-emitted pending requests
+        print(f"Pending request re-emitted: {event.request_id}")
+        request_info_events.append(event)
+
+# Handle the request and provide response
+# If responses are already provided, no need to handle them again
+responses = {}
+for event in request_info_events:
+    response = handle_request(event.data)
+    responses[event.request_id] = response
+
+# Send response back to workflow
+async for event in workflow.send_responses_streaming(responses):
+    if isinstance(event, WorkflowOutputEvent):
+        print(f"Workflow completed: {event.data}")
 ```
+
+If resuming from a checkpoint with pending requests that have already been responded to, you still need to call `run_stream_from_checkpoint()` to continue the workflow followed by `send_responses_streaming()` with the pre-supplied responses.
 
 ## Interactive Checkpoint Selection
 
@@ -585,7 +596,7 @@ async def select_and_resume_checkpoint(workflow, storage):
     sorted_cps = sorted(checkpoints, key=lambda cp: cp.timestamp)
     print("Available checkpoints:")
     for i, cp in enumerate(sorted_cps):
-        summary = RequestInfoExecutor.checkpoint_summary(cp)
+        summary = get_checkpoint_summary(cp)
         print(f"[{i}] {summary.checkpoint_id[:8]}... iter={summary.iteration_count}")
 
     # Get user selection
@@ -612,9 +623,12 @@ Here's a typical checkpointing workflow pattern:
 ```python
 import asyncio
 from pathlib import Path
+
 from agent_framework import (
-    WorkflowBuilder, FileCheckpointStorage,
-    WorkflowOutputEvent, RequestInfoExecutor
+    FileCheckpointStorage,
+    WorkflowBuilder,
+    WorkflowOutputEvent,
+    get_checkpoint_summary
 )
 
 async def main():
@@ -640,7 +654,7 @@ async def main():
     # List and inspect checkpoints
     checkpoints = await storage.list_checkpoints()
     for cp in sorted(checkpoints, key=lambda c: c.timestamp):
-        summary = RequestInfoExecutor.checkpoint_summary(cp)
+        summary = get_checkpoint_summary(cp)
         print(f"Checkpoint: {summary.checkpoint_id[:8]}... iter={summary.iteration_count}")
 
     # Resume from a checkpoint
@@ -659,7 +673,7 @@ if __name__ == "__main__":
 
 - **Fault Tolerance**: Workflows can recover from failures by resuming from the last checkpoint
 - **Long-Running Processes**: Break long workflows into manageable segments with checkpoint boundaries
-- **Human-in-the-Loop**: Pause for human input and resume later with responses
+- **Human-in-the-Loop**: Pause for human input and resume later - pending requests are re-emitted upon resume
 - **Debugging**: Inspect workflow state at specific points and resume execution for testing
 - **Resource Management**: Stop and restart workflows based on resource availability
 
