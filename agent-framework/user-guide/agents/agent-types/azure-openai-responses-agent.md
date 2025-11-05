@@ -37,7 +37,7 @@ using Microsoft.Agents.AI;
 using OpenAI;
 
 AzureOpenAIClient client = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com/openai/v1/"),
+    new Uri("https://<myresource>.openai.azure.com/"),
     new AzureCliCredential());
 ```
 

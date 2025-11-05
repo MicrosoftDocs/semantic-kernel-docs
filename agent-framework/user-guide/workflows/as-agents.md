@@ -70,6 +70,6 @@ async for update in workflow_agent.run_streaming(input, workflow_agent_thread):
 ## Next Steps
 
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
-- [Learn how to handle requests and responses](./request-and-response.md) in workflows.
+- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to manage state](./shared-states.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).

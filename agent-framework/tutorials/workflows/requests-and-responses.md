@@ -243,8 +243,8 @@ This pattern enables building sophisticated interactive applications where users
 You'll create an interactive number guessing game workflow that demonstrates request-response patterns:
 
 - An AI agent that makes intelligent guesses
-- A `RequestInfoExecutor` that pauses the workflow to request human input
-- A turn manager that coordinates between the agent and human interactions
+- Executors that can directly send requests using the `request_info` API
+- A turn manager that coordinates between the agent and human interactions using `@response_handler`
 - Interactive console input/output for real-time feedback
 
 ## Prerequisites
@@ -256,21 +256,23 @@ You'll create an interactive number guessing game workflow that demonstrates req
 
 ## Key Concepts
 
-### RequestInfoExecutor
+### Requests-and-Responses Capabilities
 
-`RequestInfoExecutor` is a specialized workflow component that:
-- Pauses workflow execution to request external information
-- Emits a `RequestInfoEvent` with typed payload
-- Resumes execution after receiving a correlated response
-- Preserves request-response correlation via unique request IDs
+Executors have built-in requests-and-responses capabilities that enable human-in-the-loop interactions:
+
+- Call `ctx.request_info(request_data=request_data, response_type=response_type)` to send requests
+- Use the `@response_handler` decorator to handle responses
+- Define custom request/response types without inheritance requirements
 
 ### Request-Response Flow
 
-1. Workflow sends a `RequestInfoMessage` to `RequestInfoExecutor`
-2. `RequestInfoExecutor` emits a `RequestInfoEvent`
+Executors can send requests directly using `ctx.request_info()` and handle responses using the `@response_handler` decorator:
+
+1. Executor calls `ctx.request_info(request_data=request_data, response_type=response_type)`
+2. Workflow emits a `RequestInfoEvent` with the request data
 3. External system (human, API, etc.) processes the request
 4. Response is sent back via `send_responses_streaming()`
-5. Workflow resumes with the response data
+5. Workflow resumes and delivers the response to the executor's `@response_handler` method
 
 ## Setting Up the Environment
 
@@ -298,9 +300,6 @@ from agent_framework import (
     ChatMessage,
     Executor,
     RequestInfoEvent,
-    RequestInfoExecutor,
-    RequestInfoMessage,
-    RequestResponse,
     Role,
     WorkflowBuilder,
     WorkflowContext,
@@ -308,12 +307,13 @@ from agent_framework import (
     WorkflowRunState,
     WorkflowStatusEvent,
     handler,
+    response_handler,
 )
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 @dataclass
-class HumanFeedbackRequest(RequestInfoMessage):
+class HumanFeedbackRequest:
     """Request message for human feedback in the guessing game."""
     prompt: str = ""
     guess: int | None = None
@@ -323,7 +323,8 @@ class GuessOutput(BaseModel):
     guess: int
 ```
 
-The `HumanFeedbackRequest` inherits from `RequestInfoMessage`, which provides:
+The `HumanFeedbackRequest` is a simple dataclass for structured request payloads:
+
 - Strong typing for request payloads
 - Forward-compatible validation
 - Clear correlation semantics with responses
@@ -356,7 +357,7 @@ class TurnManager(Executor):
     async def on_agent_response(
         self,
         result: AgentExecutorResponse,
-        ctx: WorkflowContext[HumanFeedbackRequest],
+        ctx: WorkflowContext,
     ) -> None:
         """Handle the agent's guess and request human guidance."""
         # Parse structured model output (defensive default if agent didn't reply)
@@ -369,18 +370,23 @@ class TurnManager(Executor):
             "Type one of: higher (your number is higher than this guess), "
             "lower (your number is lower than this guess), correct, or exit."
         )
-        await ctx.send_message(HumanFeedbackRequest(prompt=prompt, guess=last_guess))
+        # Send a request using the request_info API
+        await ctx.request_info(
+            request_data=HumanFeedbackRequest(prompt=prompt, guess=last_guess),
+            response_type=str
+        )
 
-    @handler
+    @response_handler
     async def on_human_feedback(
         self,
-        feedback: RequestResponse[HumanFeedbackRequest, str],
+        original_request: HumanFeedbackRequest,
+        feedback: str,
         ctx: WorkflowContext[AgentExecutorRequest, str],
     ) -> None:
         """Continue the game or finish based on human feedback."""
-        reply = (feedback.data or "").strip().lower()
+        reply = feedback.strip().lower()
         # Use the correlated request's guess to avoid extra state reads
-        last_guess = getattr(feedback.original_request, "guess", None)
+        last_guess = original_request.guess
 
         if reply == "correct":
             await ctx.yield_output(f"Guessed correctly: {last_guess}")
@@ -415,7 +421,6 @@ async def main() -> None:
     # Create workflow components
     turn_manager = TurnManager(id="turn_manager")
     agent_exec = AgentExecutor(agent=agent, id="agent")
-    request_info_executor = RequestInfoExecutor(id="request_info")
 
     # Build the workflow graph
     workflow = (
@@ -423,8 +428,6 @@ async def main() -> None:
         .set_start_executor(turn_manager)
         .add_edge(turn_manager, agent_exec)  # Ask agent to make/adjust a guess
         .add_edge(agent_exec, turn_manager)  # Agent's response goes back to coordinator
-        .add_edge(turn_manager, request_info_executor)  # Ask human for guidance
-        .add_edge(request_info_executor, turn_manager)  # Feed human guidance back to coordinator
         .build()
     )
 
@@ -507,13 +510,13 @@ For the complete working implementation, see the [Human-in-the-Loop Guessing Gam
 
 2. **Agent Response**: The AI agent makes a guess and returns structured JSON, which flows back to the `TurnManager`.
 
-3. **Human Request**: The `TurnManager` processes the agent's guess and sends a `HumanFeedbackRequest` to the `RequestInfoExecutor`.
+3. **Human Request**: The `TurnManager` processes the agent's guess and calls `ctx.request_info()` with a `HumanFeedbackRequest`.
 
-4. **Workflow Pause**: The `RequestInfoExecutor` emits a `RequestInfoEvent` and the workflow pauses, waiting for human input.
+4. **Workflow Pause**: The workflow emits a `RequestInfoEvent` and continues until no further actions can be taken, then waits for human input.
 
 5. **Human Response**: The external application collects human input and sends responses back using `send_responses_streaming()`.
 
-6. **Resume and Continue**: The workflow resumes, the `TurnManager` processes the human feedback, and either ends the game or sends another request to the agent.
+6. **Resume and Continue**: The workflow resumes, the `TurnManager`'s `@response_handler` method processes the human feedback, and either ends the game or sends another request to the agent.
 
 ## Key Benefits
 

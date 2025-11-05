@@ -8,8 +8,8 @@
   href: using-agents.md
 - name: Workflows as Agents
   href: as-agents.md
-- name: Request and Response
-  href: request-and-response.md
+- name: Requests and Responses
+  href: requests-and-responses.md
 - name: Shared States
   href: shared-states.md
 - name: Checkpoints

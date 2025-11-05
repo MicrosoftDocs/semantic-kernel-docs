@@ -225,6 +225,6 @@ class Writer(Executor):
 ## Next Steps
 
 - [Learn how to use workflows as agents](./as-agents.md).
-- [Learn how to handle requests and responses](./request-and-response.md) in workflows.
+- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to manage state](./shared-states.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
