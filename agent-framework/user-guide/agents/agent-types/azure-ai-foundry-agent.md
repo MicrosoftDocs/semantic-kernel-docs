@@ -106,7 +106,7 @@ Alternatively, you can provide these values directly in your code.
 Add the Agent Framework Azure AI package to your project:
 
 ```bash
-pip install agent-framework[azure-ai]
+pip install agent-framework-azure-ai
 ```
 
 ## Getting Started
@@ -219,7 +219,7 @@ async def main():
     async with (
         AzureCliCredential() as credential,
         AIProjectClient(
-            endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"], 
+            endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
             credential=credential
         ) as project_client,
     ):

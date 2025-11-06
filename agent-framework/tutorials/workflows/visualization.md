@@ -40,7 +40,7 @@ For basic text output (Mermaid and DOT), no additional dependencies are needed. 
 
 ```bash
 # Install the viz extra
-pip install agent-framework[viz]
+pip install agent-framework graphviz
 
 # Install GraphViz binaries (required for image export)
 # On Ubuntu/Debian:
