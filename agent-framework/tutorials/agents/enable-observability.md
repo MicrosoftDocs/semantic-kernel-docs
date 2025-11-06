@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/18/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Enabling observability for Agents
@@ -16,31 +16,34 @@ ms.service: semantic-kernel
 This tutorial shows how to enable OpenTelemetry on an agent so that interactions with the agent are automatically logged and exported.
 In this tutorial, output is written to the console using the OpenTelemetry console exporter.
 
+> [!NOTE]
+> For more information about the standards followed by Microsoft Agent Framework, see [Semantic Conventions for GenAI agent and framework spans](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-agent-spans/) from Open Telemetry.
+
 ## Prerequisites
 
-For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites, see the [Create and run a simple agent](./run-agent.md#prerequisites) step in this tutorial.
 
-## Installing Nuget packages
+## Install NuGet packages
 
-To use the AgentFramework with Azure OpenAI, you need to install the following NuGet packages:
+To use Microsoft Agent Framework with Azure OpenAI, you need to install the following NuGet packages:
 
-```powershell
+```dotnetcli
+dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
-dotnet add package Azure.AI.OpenAI
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
 To also add OpenTelemetry support, with support for writing to the console, install these additional packages:
 
-```powershell
+```dotnetcli
 dotnet add package OpenTelemetry
 dotnet add package OpenTelemetry.Exporter.Console
 ```
 
 ## Enable OpenTelemetry in your app
 
-Enable the agent framework telemetry and create an OpenTelemetry TracerProvider that exports to the console.
-Note that the tracerProvider must remain alive while you run the agent so traces are exported.
+Enable Agent Framework telemetry and create an OpenTelemetry `TracerProvider` that exports to the console.
+The `TracerProvider` must remain alive while you run the agent so traces are exported.
 
 ```csharp
 using System;
@@ -56,9 +59,9 @@ using var tracerProvider = Sdk.CreateTracerProviderBuilder()
 
 ## Create and instrument the agent
 
-Create an agent, then call `WithOpenTelemetry` to provide a source name.
-Note that the string literal "agent-telemetry-source" is the OpenTelemetry source name
-that we used above, when we created the tracer provider.
+Create an agent, and using the builder pattern, call `UseOpenTelemetry` to provide a source name.
+Note that the string literal `agent-telemetry-source` is the OpenTelemetry source name
+that you used when you created the tracer provider.
 
 ```csharp
 using System;
@@ -73,7 +76,9 @@ AIAgent agent = new AzureOpenAIClient(
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
         .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker")
-        .WithOpenTelemetry(sourceName: "agent-telemetry-source");
+        .AsBuilder()
+        .UseOpenTelemetry(sourceName: "agent-telemetry-source")
+        .Build();
 ```
 
 Run the agent and print the text response. The console exporter will show trace data on the console.
@@ -93,20 +98,24 @@ Activity.Kind:               Client
 Activity.StartTime:          2025-09-18T11:00:48.6636883Z
 Activity.Duration:           00:00:08.6077009
 Activity.Tags:
-    gen_ai.operation.name: invoke_agent
-    gen_ai.system: openai
-    gen_ai.agent.id: e1370f89-3ca8-4278-bce0-3a3a2b22f407
+    gen_ai.operation.name: chat
+    gen_ai.request.model: gpt-4o-mini
+    gen_ai.provider.name: openai
+    server.address: <myresource>.openai.azure.com
+    server.port: 443
+    gen_ai.agent.id: 19e310a72fba4cc0b257b4bb8921f0c7
     gen_ai.agent.name: Joker
-    gen_ai.request.instructions: You are good at telling jokes.
+    gen_ai.response.finish_reasons: ["stop"]
     gen_ai.response.id: chatcmpl-CH6fgKwMRGDtGNO3H88gA3AG2o7c5
+    gen_ai.response.model: gpt-4o-mini-2024-07-18
     gen_ai.usage.input_tokens: 26
     gen_ai.usage.output_tokens: 29
 Instrumentation scope (ActivitySource):
-    Name: c8aeb104-0ce7-49b3-bf45-d71e5bf782d1
+    Name: agent-telemetry-source
 Resource associated with Activity:
     telemetry.sdk.name: opentelemetry
     telemetry.sdk.language: dotnet
-    telemetry.sdk.version: 1.12.0
+    telemetry.sdk.version: 1.13.1
     service.name: unknown_service:Agent_Step08_Telemetry
 
 Why did the pirate go to school?
@@ -129,9 +138,9 @@ In this tutorial, output is written to the console using the OpenTelemetry conso
 
 For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Installing packages
+## Install packages
 
-To use the Agent Framework with Azure OpenAI, you need to install the following packages. The agent framework automatically includes all necessary OpenTelemetry dependencies:
+To use Agent Framework with Azure OpenAI, you need to install the following packages. Agent Framework automatically includes all necessary OpenTelemetry dependencies:
 
 ```bash
 pip install agent-framework
@@ -141,22 +150,26 @@ The following OpenTelemetry packages are included by default:
 ```text
 opentelemetry-api
 opentelemetry-sdk
-azure-monitor-opentelemetry
-azure-monitor-opentelemetry-exporter
 opentelemetry-exporter-otlp-proto-grpc
 opentelemetry-semantic-conventions-ai
 ```
 
+If you want to export to Azure Monitor (Application Insights), you also need to install the `azure-monitor-opentelemetry` package:
+
+```bash
+pip install azure-monitor-opentelemetry
+```
+
 ## Enable OpenTelemetry in your app
 
-The agent framework provides a convenient `setup_observability` function that configures OpenTelemetry with sensible defaults.
+Agent Frameworkagent framework provides a convenient `setup_observability` function that configures OpenTelemetry with sensible defaults.
 By default, it exports to the console if no specific exporter is configured.
 
 ```python
 import asyncio
 from agent_framework.observability import setup_observability
 
-# Enable agent framework telemetry with console output (default behavior)
+# Enable Agent Framework telemetry with console output (default behavior)
 setup_observability(enable_sensitive_data=True)
 ```
 
@@ -166,15 +179,18 @@ The `setup_observability` function accepts the following parameters to customize
 
 - **`enable_otel`** (bool, optional): Enables OpenTelemetry tracing and metrics. Default is `False` when using environment variables only, but is assumed `True` when calling `setup_observability()` programmatically. When using environment variables, set `ENABLE_OTEL=true`.
 
-- **`enable_sensitive_data`** (bool, optional): Controls whether sensitive data like prompts, responses, function call arguments, and results are included in traces. Default is `False`. Set to `True` to see actual prompts and responses in your traces. **Warning**: Be careful with this setting as it may expose sensitive data in your logs. Can also be set via `ENABLE_SENSITIVE_DATA=true` environment variable.
+- **`enable_sensitive_data`** (bool, optional): Controls whether sensitive data like prompts, responses, function call arguments, and results are included in traces. Default is `False`. Set to `True` to see actual prompts and responses in your traces. **Warning**: Be careful with this setting as it might expose sensitive data in your logs. Can also be set via `ENABLE_SENSITIVE_DATA=true` environment variable.
 
 - **`otlp_endpoint`** (str, optional): The OTLP endpoint URL for exporting telemetry data. Default is `None`. Commonly set to `http://localhost:4317`. This creates an OTLPExporter for spans, metrics, and logs. Can be used with any OTLP-compliant endpoint such as [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash), or other OTLP endpoints. Can also be set via `OTLP_ENDPOINT` environment variable.
 
-- **`applicationinsights_connection_string`** (str, optional): Azure Application Insights connection string for exporting to Azure Monitor. Default is `None`. Creates AzureMonitorTraceExporter, AzureMonitorMetricExporter, and AzureMonitorLogExporter. You can find this connection string in the Azure portal under the "Overview" section of your Application Insights resource. Can also be set via `APPLICATIONINSIGHTS_CONNECTION_STRING` environment variable.
+- **`applicationinsights_connection_string`** (str, optional): Azure Application Insights connection string for exporting to Azure Monitor. Default is `None`. Creates AzureMonitorTraceExporter, AzureMonitorMetricExporter, and AzureMonitorLogExporter. You can find this connection string in the Azure portal under the "Overview" section of your Application Insights resource. Can also be set via `APPLICATIONINSIGHTS_CONNECTION_STRING` environment variable. Requires installation of the `azure-monitor-opentelemetry` package.
 
 - **`vs_code_extension_port`** (int, optional): Port number for the AI Toolkit or Azure AI Foundry VS Code extension. Default is `4317`. Allows integration with VS Code extensions for local development and debugging. Can also be set via `VS_CODE_EXTENSION_PORT` environment variable.
 
 - **`exporters`** (list, optional): Custom list of OpenTelemetry exporters for advanced scenarios. Default is `None`. Allows you to provide your own configured exporters when the standard options don't meet your needs.
+
+> [!IMPORTANT]
+> When no exporters (either through parameters or environment variables or as explicit exporters) are provided, the console exporter is configured by default for local debugging.
 
 ### Setup options
 
@@ -198,6 +214,7 @@ setup_observability()  # Reads from environment variables
 ```python
 from agent_framework.observability import setup_observability
 
+# note that ENABLE_OTEL is implied to be True when calling setup_observability programmatically
 setup_observability(
     enable_sensitive_data=True,
     otlp_endpoint="http://localhost:4317",
@@ -237,7 +254,7 @@ counter.add(1, {"key": "value"})
 
 ## Create and run the agent
 
-Create an agent using the agent framework. The observability will be automatically enabled for the agent once `setup_observability` has been called.
+Create an agent using Agent Framework. The observability will be automatically enabled for the agent once `setup_observability` has been called.
 
 ```python
 from agent_framework import ChatAgent
@@ -299,7 +316,7 @@ Because he wanted to improve his "arrr-ticulation"! ⛵
 
 ## Understanding the telemetry output
 
-Once observability is enabled, the agent framework automatically creates the following spans:
+Once observability is enabled, Agent Framework automatically creates the following spans:
 
 - **`invoke_agent <agent_name>`**: The top-level span for each agent invocation. Contains all other spans as children and includes metadata like agent ID, name, and instructions.
 
@@ -318,7 +335,7 @@ The following metrics are also collected:
 
 ## Azure AI Foundry integration
 
-If you're using Azure AI Foundry, there's a convenient method for automatic setup:
+If you're using Azure AI Foundry clients, there's a convenient method for automatic setup:
 
 ```python
 from agent_framework.azure import AzureAIAgentClient
@@ -326,14 +343,29 @@ from azure.identity import AzureCliCredential
 
 agent_client = AzureAIAgentClient(
     credential=AzureCliCredential(),
-    project_endpoint="https://<your-project>.foundry.azure.com"
+    # endpoint and model_deployment_name can be taken from environment variables
+    # project_endpoint="https://<your-project>.foundry.azure.com"
+    # model_deployment_name="<your-deployment-name>"
 )
 
 # Automatically configures observability with Application Insights
 await agent_client.setup_azure_ai_observability()
 ```
 
-This method retrieves the Application Insights connection string from your Azure AI Foundry project and calls `setup_observability` automatically.
+This method retrieves the Application Insights connection string from your Azure AI Foundry project and calls `setup_observability` automatically. If you want to use Foundry Telemetry with other types of agents, you can do the same thing with:
+```python
+from agent_framework.observability import setup_observability
+from azure.ai.projects import AIProjectClient
+from azure.identity import AzureCliCredential
+
+project_client = AIProjectClient(endpoint, credential=AzureCliCredential())
+conn_string = project_client.telemetry.get_application_insights_connection_string()
+setup_observability(applicationinsights_connection_string=conn_string)
+```
+Also see the [relevant Foundry documentation](/azure/ai-foundry/how-to/develop/trace-agents-sdk).
+
+> [!NOTE]
+> When using Azure Monitor for your telemetry, you need to install the `azure-monitor-opentelemetry` package explicitly, as it is not included by default with Agent Framework.
 
 ## Next steps
 
@@ -343,4 +375,3 @@ For more advanced observability scenarios and examples, see the [Agent Observabi
 > [Persisting conversations](./persisted-conversation.md)
 
 ::: zone-end
-

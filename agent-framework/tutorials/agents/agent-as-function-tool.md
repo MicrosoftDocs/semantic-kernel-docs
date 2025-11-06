@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Using an agent as a function tool
@@ -17,14 +17,14 @@ This tutorial shows you how to use an agent as a function tool, so that one agen
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating and using an agent as a function tool
+## Create and use an agent as a function tool
 
 You can use an `AIAgent` as a function tool by calling `.AsAIFunction()` on the agent and providing it as a tool to another agent. This allows you to compose agents and build more advanced workflows.
 
 First, create a function tool as a C# method, and decorate it with descriptions if needed.
-This tool will be used by our agent that is exposed as a function.
+This tool will be used by your agent that's exposed as a function.
 
 ```csharp
 using System.ComponentModel;
@@ -80,11 +80,11 @@ This tutorial shows you how to use an agent as a function tool, so that one agen
 
 For prerequisites and installing packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating and using an agent as a function tool
+## Create and use an agent as a function tool
 
 You can use a `ChatAgent` as a function tool by calling `.as_tool()` on the agent and providing it as a tool to another agent. This allows you to compose agents and build more advanced workflows.
 
-First, create a function tool that will be used by our agent that is exposed as a function.
+First, create a function tool that will be used by your agent that's exposed as a function.
 
 ```python
 from typing import Annotated
@@ -134,7 +134,7 @@ You can also customize the tool name, description, and argument name when conver
 weather_tool = weather_agent.as_tool(
     name="WeatherLookup",
     description="Look up weather information for any location",
-    arg_name="query", 
+    arg_name="query",
     arg_description="The weather query or location"
 )
 

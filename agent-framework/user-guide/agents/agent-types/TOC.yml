@@ -1,7 +1,13 @@
 - name: Overview
   href: index.md
+- name: Anthropic Agents
+  href: anthropic-agent.md
 - name: Azure AI Foundry Agents
   href: azure-ai-foundry-agent.md
+- name: Azure AI Foundry Models Agents via ChatCompletion
+  href: azure-ai-foundry-models-chat-completion-agent.md
+- name: Azure AI Foundry Models Agents via Responses
+  href: azure-ai-foundry-models-responses-agent.md
 - name: Azure OpenAI ChatCompletion Agents
   href: azure-openai-chat-completion-agent.md
 - name: Azure OpenAI Responses Agents

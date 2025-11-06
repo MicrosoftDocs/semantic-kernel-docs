@@ -6,7 +6,7 @@ author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
 ms.date: 09/29/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Agent Middleware
@@ -57,7 +57,7 @@ var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
     .GetChatClient(deploymentName)
     .CreateAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
         .AsBuilder()
-            .Use(getResponseFunc: ChatClientMiddleware, getStreamingResponseFunc: null)
+            .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
         .Build());
 ```
 
@@ -66,14 +66,16 @@ var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
 Here is an example of agent run middleware, that can inspect and/or modify the input and output from the agent run.
 
 ```csharp
-async Task<AgentRunResponse> PIIMiddleware(IEnumerable<ChatMessage> messages, AgentThread? thread, AgentRunOptions? options, AIAgent innerAgent, CancellationToken cancellationToken)
+async Task<AgentRunResponse> CustomAgentRunMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentThread? thread,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    CancellationToken cancellationToken)
 {
     Console.WriteLine(messages.Count());
-
     var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
-
     Console.WriteLine(response.Messages.Count);
-
     return response;
 }
 ```
@@ -113,7 +115,11 @@ If there were more than one function available for invocation during this iterat
 Here is an example of chat client middleware, that can inspect and/or modify the input and output for the request to the inference service that the chat client provides.
 
 ```csharp
-async Task<ChatResponse> CustomChatClientMiddleware(IEnumerable<ChatMessage> messages, ChatOptions? options, IChatClient innerChatClient, CancellationToken cancellationToken)
+async Task<ChatResponse> CustomChatClientMiddleware(
+    IEnumerable<ChatMessage> messages,
+    ChatOptions? options,
+    IChatClient innerChatClient,
+    CancellationToken cancellationToken)
 {
     Console.WriteLine(messages.Count());
     var response = await innerChatClient.GetResponseAsync(messages, options, cancellationToken);

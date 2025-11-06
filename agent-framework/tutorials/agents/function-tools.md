@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/15/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Using function tools with an agent
@@ -16,13 +16,13 @@ This tutorial step shows you how to use function tools with an agent, where the 
 ::: zone pivot="programming-language-csharp"
 
 > [!IMPORTANT]
-> Not all agent types support function tools. Some may only support custom built-in tools, without allowing the caller to provide their own functions. In this step we are using a `ChatClientAgent`, which does support function tools.
+> Not all agent types support function tools. Some might only support custom built-in tools, without allowing the caller to provide their own functions. This step uses a `ChatClientAgent`, which does support function tools.
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating the agent with function tools
+## Create the agent with function tools
 
 Function tools are just custom code that you want the agent to be able to call when needed.
 You can turn any C# method into a function tool, by using the `AIFunctionFactory.Create` method to create an `AIFunction` instance from the method.
@@ -40,7 +40,7 @@ static string GetWeather([Description("The location to get the weather for.")] s
     => $"The weather in {location} is cloudy with a high of 15°C.";
 ```
 
-When creating the agent, we can now provide the function tool to the agent, by passing a list of tools to the `CreateAIAgent` method.
+When creating the agent, you can now provide the function tool to the agent, by passing a list of tools to the `CreateAIAgent` method.
 
 ```csharp
 using System;
@@ -57,7 +57,7 @@ AIAgent agent = new AzureOpenAIClient(
      .CreateAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
 ```
 
-Now we can just run the agent as normal, and the agent will be able to call the `GetWeather` function tool when needed.
+Now you can just run the agent as normal, and the agent will be able to call the `GetWeather` function tool when needed.
 
 ```csharp
 Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?"));
@@ -67,13 +67,13 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 ::: zone pivot="programming-language-python"
 
 > [!IMPORTANT]
-> Not all agent types support function tools. Some may only support custom built-in tools, without allowing the caller to provide their own functions. In this step we are using agents created via chat clients, which do support function tools.
+> Not all agent types support function tools. Some might only support custom built-in tools, without allowing the caller to provide their own functions. This step uses agents created via chat clients, which do support function tools.
 
 ## Prerequisites
 
 For prerequisites and installing Python packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Creating the agent with function tools
+## Create the agent with function tools
 
 Function tools are just custom code that you want the agent to be able to call when needed.
 You can turn any Python function into a function tool by passing it to the agent's `tools` parameter when creating the agent.
@@ -110,7 +110,7 @@ def get_weather(
 
 If you don't specify the `name` and `description` parameters in the `ai_function` decorator, the framework will automatically use the function's name and docstring as fallbacks.
 
-When creating the agent, we can now provide the function tool to the agent, by passing it to the `tools` parameter.
+When creating the agent, you can now provide the function tool to the agent, by passing it to the `tools` parameter.
 
 ```python
 import asyncio
@@ -123,7 +123,7 @@ agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
 )
 ```
 
-Now we can just run the agent as normal, and the agent will be able to call the `get_weather` function tool when needed.
+Now you can just run the agent as normal, and the agent will be able to call the `get_weather` function tool when needed.
 
 ```python
 async def main():
@@ -133,7 +133,7 @@ async def main():
 asyncio.run(main())
 ```
 
-## Creating a class with multiple function tools
+## Create a class with multiple function tools
 
 You can also create a class that contains multiple function tools as methods.
 This can be useful for organizing related functions together or when you want to pass state between them.
@@ -159,7 +159,7 @@ class WeatherTools:
 
 ```
 
-When creating the agent, we can now provide all the methods of the class as functions:
+When creating the agent, you can now provide all the methods of the class as functions:
 
 ```python
 tools = WeatherTools()

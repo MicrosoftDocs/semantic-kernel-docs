@@ -1,12 +1,11 @@
 ---
 title: Microsoft Agent Framework Workflows - Observability
 description: In-depth look at Observability in Microsoft Agent Framework Workflows.
-zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/12/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Microsoft Agent Framework Workflows - Observability
@@ -14,14 +13,6 @@ ms.service: semantic-kernel
 Observability provides insights into the internal state and behavior of workflows during execution. This includes logging, metrics, and tracing capabilities that help monitor and debug workflows.
 
 Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/semconv/gen-ai/), Agent Framework Workflows emits additional spans, logs, and metrics to provide deeper insights into workflow execution. These observability features help developers understand the flow of messages, the performance of executors, and any errors that may occur.
-
-::: zone pivot="programming-language-csharp"
-
-Coming soon...
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
 
 ## Enable Observability
 
@@ -58,11 +49,9 @@ For example:
 
 ![Span Relationships](./resources/images/workflow-trace.png)
 
-::: zone-end
-
 ## Next Steps
 
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
-- [Learn how to handle requests and responses](./request-and-response.md) in workflows.
+- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to manage state](./shared-states.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).

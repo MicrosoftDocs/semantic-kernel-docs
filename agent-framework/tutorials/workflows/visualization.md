@@ -1,23 +1,15 @@
 ---
 title: Workflow Visualization
-description: Learn how to visualize workflows using the Agent Framework.
-zone_pivot_groups: programming-languages
+description: Learn how to visualize workflows using Agent Framework.
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/29/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Visualizing Workflows
 
-::: zone pivot="programming-language-csharp"
-
-Tutorial coming soon.
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
 
 ## Overview
 
@@ -48,7 +40,7 @@ For basic text output (Mermaid and DOT), no additional dependencies are needed. 
 
 ```bash
 # Install the viz extra
-pip install agent-framework[viz]
+pip install agent-framework graphviz
 
 # Install GraphViz binaries (required for image export)
 # On Ubuntu/Debian:
@@ -119,19 +111,19 @@ try:
     # Export as SVG (vector format, recommended)
     svg_file = viz.export(format="svg")
     print(f"SVG exported to: {svg_file}")
-    
+
     # Export as PNG (raster format)
     png_file = viz.export(format="png")
     print(f"PNG exported to: {png_file}")
-    
+
     # Export as PDF (vector format)
     pdf_file = viz.export(format="pdf")
     print(f"PDF exported to: {pdf_file}")
-    
+
     # Export raw DOT file
     dot_file = viz.export(format="dot")
     print(f"DOT file exported to: {dot_file}")
-    
+
 except ImportError:
     print("Install 'viz' extra and GraphViz for image export:")
     print("pip install agent-framework[viz]")
@@ -312,5 +304,3 @@ if os.getenv("CI"):
 ### Running the Example
 
 For the complete working implementation with visualization, see the [Concurrent with Visualization sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/visualization/concurrent_with_visualization.py).
-
-::: zone-end

@@ -6,7 +6,7 @@ author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Agent Observability
@@ -337,4 +337,4 @@ We have a number of samples in our repository that demonstrate these capabilitie
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Using MCP Tools](../model-context-protocol/using-mcp-tools.md)
+> [Background Responses](./agent-background-responses.md)

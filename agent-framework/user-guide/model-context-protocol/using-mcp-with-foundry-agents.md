@@ -6,7 +6,7 @@ author: markwallace
 ms.topic: reference
 ms.author: markwallace
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Using MCP tools with Foundry Agents
@@ -144,11 +144,107 @@ await persistentAgentsClient.Administration.DeleteAgentAsync(agent.Id);
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Coming soon.
+## Python Azure AI Foundry MCP Integration
+
+Azure AI Foundry provides seamless integration with Model Context Protocol (MCP) servers through the Python Agent Framework. The service manages the MCP server hosting and execution, eliminating infrastructure management while providing secure, controlled access to external tools.
+
+### Environment Setup
+
+Configure your Azure AI Foundry project credentials through environment variables:
+
+```python
+import os
+from azure.identity.aio import AzureCliCredential
+from agent_framework.azure import AzureAIAgentClient
+
+# Required environment variables
+os.environ["AZURE_AI_PROJECT_ENDPOINT"] = "https://<your-project>.services.ai.azure.com/api/projects/<project-id>"
+os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"] = "gpt-4o-mini"  # Optional, defaults to this
+```
+
+### Basic MCP Integration
+
+Create an Azure AI Foundry agent with hosted MCP tools:
+
+```python
+import asyncio
+from agent_framework import HostedMCPTool
+from agent_framework.azure import AzureAIAgentClient
+from azure.identity.aio import AzureCliCredential
+
+async def basic_foundry_mcp_example():
+    """Basic example of Azure AI Foundry agent with hosted MCP tools."""
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentClient(async_credential=credential) as chat_client,
+    ):
+        # Enable Azure AI observability (optional but recommended)
+        await chat_client.setup_azure_ai_observability()
+        
+        # Create agent with hosted MCP tool
+        agent = chat_client.create_agent(
+            name="MicrosoftLearnAgent", 
+            instructions="You answer questions by searching Microsoft Learn content only.",
+            tools=HostedMCPTool(
+                name="Microsoft Learn MCP",
+                url="https://learn.microsoft.com/api/mcp",
+            ),
+        )
+        
+        # Simple query without approval workflow
+        result = await agent.run(
+            "Please summarize the Azure AI Agent documentation related to MCP tool calling?"
+        )
+        print(result)
+
+if __name__ == "__main__":
+    asyncio.run(basic_foundry_mcp_example())
+```
+
+### Multi-Tool MCP Configuration
+
+Use multiple hosted MCP tools with a single agent:
+
+```python
+async def multi_tool_mcp_example():
+    """Example using multiple hosted MCP tools."""
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentClient(async_credential=credential) as chat_client,
+    ):
+        await chat_client.setup_azure_ai_observability()
+        
+        # Create agent with multiple MCP tools
+        agent = chat_client.create_agent(
+            name="MultiToolAgent",
+            instructions="You can search documentation and access GitHub repositories.",
+            tools=[
+                HostedMCPTool(
+                    name="Microsoft Learn MCP",
+                    url="https://learn.microsoft.com/api/mcp",
+                    approval_mode="never_require",  # Auto-approve documentation searches
+                ),
+                HostedMCPTool(
+                    name="GitHub MCP", 
+                    url="https://api.github.com/mcp",
+                    approval_mode="always_require",  # Require approval for GitHub operations
+                    headers={"Authorization": "Bearer github-token"},
+                ),
+            ],
+        )
+        
+        result = await agent.run(
+            "Find Azure documentation and also check the latest commits in microsoft/semantic-kernel"
+        )
+        print(result)
+
+if __name__ == "__main__":
+    asyncio.run(multi_tool_mcp_example())
+```
+
+The Python Agent Framework provides seamless integration with Azure AI Foundry's hosted MCP capabilities, enabling secure and scalable access to external tools while maintaining the flexibility and control needed for production applications.
 
 ::: zone-end
-
-To learn more refer to the [Azure AI Foundry Model Context Protocol documentation](/azure/ai-foundry/agents/how-to/tools/model-context-protocol).
 
 ## Next steps
 

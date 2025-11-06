@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/15/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Multi-turn conversations with an agent
@@ -14,7 +14,7 @@ ms.service: semantic-kernel
 This tutorial step shows you how to have a multi-turn conversation with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> The agent framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. See the [Agent Framework user guide](../../user-guide/overview.md) for more information on other agent types and how to construct them.
+> Agent Framework supports many different types of agents. This tutorial uses an agent based on a Chat Completion service, but all other agent types are run in the same way. For more information on other agent types and how to construct them, see the [Agent Framework user guide](../../user-guide/overview.md).
 
 ## Prerequisites
 
@@ -43,7 +43,7 @@ Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell
 This will maintain the conversation state between the calls, and the agent will be able to refer to previous input and response messages in the conversation when responding to new input.
 
 > [!IMPORTANT]
-> The type of service that is used by the `AIAgent` will determine how conversation history is stored. E.g. when using a ChatCompletion service, like in this example, the conversation history is stored in the AgentThread object and sent to the service on each call. When using the Azure AI Agent service on the other hand, the conversation history is stored in the Azure AI Agent service and only a reference to the conversation is sent to the service on each call.
+> The type of service that is used by the `AIAgent` will determine how conversation history is stored. For example, when using a ChatCompletion service, like in this example, the conversation history is stored in the AgentThread object and sent to the service on each call. When using the Azure AI Agent service on the other hand, the conversation history is stored in the Azure AI Agent service and only a reference to the conversation is sent to the service on each call.
 
 ## Single agent with multiple conversations
 
@@ -80,7 +80,7 @@ You can then pass this thread object to the `run` and `run_stream` methods on th
 async def main():
     result1 = await agent.run("Tell me a joke about a pirate.", thread=thread)
     print(result1.text)
-    
+
     result2 = await agent.run("Now add some emojis to the joke and tell it in the voice of a pirate's parrot.", thread=thread)
     print(result2.text)
 
@@ -90,7 +90,7 @@ asyncio.run(main())
 This will maintain the conversation state between the calls, and the agent will be able to refer to previous input and response messages in the conversation when responding to new input.
 
 > [!IMPORTANT]
-> The type of service that is used by the agent will determine how conversation history is stored. E.g. when using a Chat Completion service, like in this example, the conversation history is stored in the AgentThread object and sent to the service on each call. When using the Azure AI Agent service on the other hand, the conversation history is stored in the Azure AI Agent service and only a reference to the conversation is sent to the service on each call.
+> The type of service that is used by the agent will determine how conversation history is stored. For example, when using a Chat Completion service, like in this example, the conversation history is stored in the AgentThread object and sent to the service on each call. When using the Azure AI Agent service on the other hand, the conversation history is stored in the Azure AI Agent service and only a reference to the conversation is sent to the service on each call.
 
 ## Single agent with multiple conversations
 
@@ -102,16 +102,16 @@ The conversations will be fully independent of each other, since the agent does 
 async def main():
     thread1 = agent.get_new_thread()
     thread2 = agent.get_new_thread()
-    
+
     result1 = await agent.run("Tell me a joke about a pirate.", thread=thread1)
     print(result1.text)
-    
+
     result2 = await agent.run("Tell me a joke about a robot.", thread=thread2)
     print(result2.text)
-    
+
     result3 = await agent.run("Now add some emojis to the joke and tell it in the voice of a pirate's parrot.", thread=thread1)
     print(result3.text)
-    
+
     result4 = await agent.run("Now add some emojis to the joke and tell it in the voice of a robot.", thread=thread2)
     print(result4.text)
 

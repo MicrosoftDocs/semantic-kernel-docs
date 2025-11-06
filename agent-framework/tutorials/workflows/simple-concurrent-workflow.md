@@ -1,17 +1,17 @@
 ---
 title: Create a Simple Concurrent Workflow
-description: Learn how to create a simple concurrent workflow using the Agent Framework.
+description: Learn how to create a simple concurrent workflow using Agent Framework.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/29/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Create a Simple Concurrent Workflow
 
-This tutorial demonstrates how to create a concurrent workflow using the Agent Framework. You'll learn to implement fan-out and fan-in patterns that enable parallel processing, allowing multiple executors or agents to work simultaneously and then aggregate their results.
+This tutorial demonstrates how to create a concurrent workflow using Agent Framework. You'll learn to implement fan-out and fan-in patterns that enable parallel processing, allowing multiple executors or agents to work simultaneously and then aggregate their results.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,18 +19,30 @@ This tutorial demonstrates how to create a concurrent workflow using the Agent F
 
 You'll create a workflow that:
 
-- Takes a question as input (e.g., "What is temperature?")
+- Takes a question as input (for example, "What is temperature?")
 - Sends the same question to two expert AI agents simultaneously (Physicist and Chemist)
 - Collects and combines responses from both agents into a single output
 - Demonstrates concurrent execution with AI agents using fan-out/fan-in patterns
 
 ## Prerequisites
 
-- .NET 9.0 or later
-- Agent Framework NuGet package: `Microsoft.Agents.AI.Workflows`
-- Azure OpenAI access with an endpoint and deployment configured
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource)
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
+- A new console application
 
-## Step 1: Setup Dependencies and Azure OpenAI
+## Step 1: Install NuGet packages
+
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+```
+
+## Step 2: Setup Dependencies and Azure OpenAI
 
 Start by setting up your project with the required NuGet packages and Azure OpenAI client:
 
@@ -43,7 +55,6 @@ using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 using Microsoft.Extensions.AI;
 
 public static class Program
@@ -51,14 +62,13 @@ public static class Program
     private static async Task Main()
     {
         // Set up the Azure OpenAI client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? 
-            throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
             .GetChatClient(deploymentName).AsIChatClient();
 ```
 
-## Step 2: Create Expert AI Agents
+## Step 3: Create Expert AI Agents
 
 Create two specialized AI agents that will provide expert perspectives:
 
@@ -69,7 +79,7 @@ Create two specialized AI agents that will provide expert perspectives:
             name: "Physicist",
             instructions: "You are an expert in physics. You answer questions from a physics perspective."
         );
-        
+
         ChatClientAgent chemist = new(
             chatClient,
             name: "Chemist",
@@ -77,7 +87,7 @@ Create two specialized AI agents that will provide expert perspectives:
         );
 ```
 
-## Step 3: Create the Start Executor
+## Step 4: Create the Start Executor
 
 Create an executor that initiates the concurrent processing by sending input to multiple agents:
 
@@ -92,22 +102,29 @@ The `ConcurrentStartExecutor` implementation:
 /// Executor that starts the concurrent processing by sending messages to the agents.
 /// </summary>
 internal sealed class ConcurrentStartExecutor() :
-    ReflectingExecutor<ConcurrentStartExecutor>("ConcurrentStartExecutor"),
-    IMessageHandler<string>
+    Executor<string>("ConcurrentStartExecutor")
 {
     /// <summary>
-    /// Handles the input string and forwards it to connected agents.
+    /// Starts the concurrent processing by sending messages to the agents.
     /// </summary>
-    /// <param name="message">The input message to process</param>
-    /// <param name="context">Workflow context for sending messages</param>
-    public async ValueTask HandleAsync(string message, IWorkflowContext context)
+    /// <param name="message">The user message to process</param>
+    /// <param name="context">Workflow context for accessing workflow services and adding events</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
+    /// The default is <see cref="CancellationToken.None"/>.</param>
+    /// <returns>A task representing the asynchronous operation</returns>
+    public override async ValueTask HandleAsync(string message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
-        await context.SendMessageAsync(new ChatMessage(ChatRole.User, message));
+        // Broadcast the message to all connected agents. Receiving agents will queue
+        // the message but will not start processing until they receive a turn token.
+        await context.SendMessageAsync(new ChatMessage(ChatRole.User, message), cancellationToken);
+        
+        // Broadcast the turn token to kick off the agents.
+        await context.SendMessageAsync(new TurnToken(emitEvents: true), cancellationToken);
     }
 }
 ```
 
-## Step 4: Create the Aggregation Executor
+## Step 5: Create the Aggregation Executor
 
 Create an executor that collects and combines responses from multiple agents:
 
@@ -122,8 +139,7 @@ The `ConcurrentAggregationExecutor` implementation:
 /// Executor that aggregates the results from the concurrent agents.
 /// </summary>
 internal sealed class ConcurrentAggregationExecutor() :
-    ReflectingExecutor<ConcurrentAggregationExecutor>("ConcurrentAggregationExecutor"),
-    IMessageHandler<ChatMessage>
+    Executor<ChatMessage>("ConcurrentAggregationExecutor")
 {
     private readonly List<ChatMessage> _messages = [];
 
@@ -132,21 +148,24 @@ internal sealed class ConcurrentAggregationExecutor() :
     /// </summary>
     /// <param name="message">The message from the agent</param>
     /// <param name="context">Workflow context for accessing workflow services and adding events</param>
-    public async ValueTask HandleAsync(ChatMessage message, IWorkflowContext context)
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
+    /// The default is <see cref="CancellationToken.None"/>.</param>
+    /// <returns>A task representing the asynchronous operation</returns>
+    public override async ValueTask HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         this._messages.Add(message);
 
         if (this._messages.Count == 2)
         {
-            var formattedMessages = string.Join(Environment.NewLine, 
+            var formattedMessages = string.Join(Environment.NewLine,
                 this._messages.Select(m => $"{m.AuthorName}: {m.Text}"));
-            await context.YieldOutputAsync(formattedMessages);
+            await context.YieldOutputAsync(formattedMessages, cancellationToken);
         }
     }
 }
 ```
 
-## Step 5: Build the Workflow
+## Step 6: Build the Workflow
 
 Connect the executors and agents using fan-out and fan-in edge patterns:
 
@@ -159,14 +178,14 @@ Connect the executors and agents using fan-out and fan-in edge patterns:
             .Build();
 ```
 
-## Step 6: Execute the Workflow
+## Step 7: Execute the Workflow
 
 Run the workflow and capture the streaming output:
 
 ```csharp
         // Execute the workflow in streaming mode
-        StreamingRun run = await InProcessExecution.StreamAsync(workflow, "What is temperature?");
-        await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+        await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, "What is temperature?");
+        await foreach (WorkflowEvent evt in run.WatchStreamAsync())
         {
             if (evt is WorkflowOutputEvent output)
             {
@@ -179,22 +198,23 @@ Run the workflow and capture the streaming output:
 
 ## How It Works
 
-1. **Fan-Out**: The `ConcurrentStartExecutor` receives the input question and the fan-out edge sends it to both the Physicist and Chemist agents simultaneously
-2. **Parallel Processing**: Both AI agents process the same question concurrently, each providing their expert perspective
-3. **Fan-In**: The `ConcurrentAggregationExecutor` collects `ChatMessage` responses from both agents
-4. **Aggregation**: Once both responses are received, the aggregator combines them into a formatted output
+1. **Fan-Out**: The `ConcurrentStartExecutor` receives the input question and the fan-out edge sends it to both the Physicist and Chemist agents simultaneously.
+2. **Parallel Processing**: Both AI agents process the same question concurrently, each providing their expert perspective.
+3. **Fan-In**: The `ConcurrentAggregationExecutor` collects `ChatMessage` responses from both agents.
+4. **Aggregation**: Once both responses are received, the aggregator combines them into a formatted output.
 
 ## Key Concepts
 
-- **Fan-Out Edges**: Use `AddFanOutEdge()` to distribute the same input to multiple executors or agents
-- **Fan-In Edges**: Use `AddFanInEdge()` to collect results from multiple source executors
-- **AI Agent Integration**: AI agents can be used directly as executors in workflows
-- **ReflectingExecutor**: Base class for creating custom executors with automatic message handling
-- **Streaming Execution**: Use `StreamAsync()` to get real-time updates as the workflow progresses
+- **Fan-Out Edges**: Use `AddFanOutEdge()` to distribute the same input to multiple executors or agents.
+- **Fan-In Edges**: Use `AddFanInEdge()` to collect results from multiple source executors.
+- **AI Agent Integration**: AI agents can be used directly as executors in workflows.
+- **Executor Base Class**: Custom executors inherit from `Executor<TInput>` and override the `HandleAsync` method.
+- **Turn Tokens**: Use `TurnToken` to signal agents to begin processing queued messages.
+- **Streaming Execution**: Use `StreamAsync()` to get real-time updates as the workflow progresses.
 
 ## Complete Implementation
 
-For the complete working implementation of this concurrent workflow with AI agents, see the [Concurrent/Program.cs](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Workflows/Concurrent/Program.cs) sample in the Agent Framework repository.
+For the complete working implementation of this concurrent workflow with AI agents, see the [Concurrent/Program.cs](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Workflows/Concurrent/Concurrent/Program.cs) sample in the Agent Framework repository.
 
 ::: zone-end
 
@@ -218,7 +238,7 @@ You'll create a workflow that:
 
 ## Step 1: Import Required Dependencies
 
-Start by importing the necessary components from the Agent Framework:
+Start by importing the necessary components from Agent Framework:
 
 ```python
 import asyncio
@@ -352,7 +372,7 @@ if __name__ == "__main__":
 
 ## Complete Implementation
 
-For the complete working implementation of this concurrent workflow, see the [aggregate_results_of_different_types.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/parallelism/aggregate_results_of_different_types.py) sample in the Agent Framework repository.
+For the complete working implementation of this concurrent workflow, see the [aggregate_results_of_different_types.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/parallelism/aggregate_results_of_different_types.py) sample in the Agent Framework repository.
 
 ::: zone-end
 

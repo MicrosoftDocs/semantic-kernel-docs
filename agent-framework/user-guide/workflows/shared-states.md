@@ -6,7 +6,7 @@ author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/12/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Microsoft Agent Framework Workflows - Shared States
@@ -129,5 +129,5 @@ class WordCountingExecutor(Executor):
 
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
 - [Learn how to use workflows as agents](./as-agents.md).
-- [Learn how to handle requests and responses](./request-and-response.md) in workflows.
+- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).

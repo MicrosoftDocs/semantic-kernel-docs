@@ -6,7 +6,7 @@ author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/12/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Microsoft Agent Framework Workflows - Checkpoints
@@ -126,7 +126,7 @@ You can resume a workflow from a specific checkpoint directly on the same workfl
 ```python
 # Assume we want to resume from the 6th checkpoint
 saved_checkpoint = checkpoints[5]
-async for event in workflow.run_stream_from_checkpoint(saved_checkpoint.checkpoint_id):
+async for event in workflow.run_stream(checkpoint_id=saved_checkpoint.checkpoint_id):
     ...
 ```
 
@@ -172,9 +172,9 @@ workflow = builder.build()
 
 # Assume we want to resume from the 6th checkpoint
 saved_checkpoint = checkpoints[5]
-async for event in workflow.run_stream_from_checkpoint(
-    saved_checkpoint.checkpoint_id,
-    checkpoint_storage,
+async for event in workflow.run_stream
+    checkpoint_id=saved_checkpoint.checkpoint_id,
+    checkpoint_storage=checkpoint_storage,
 ):
     ...
 ```
@@ -221,15 +221,9 @@ protected override async ValueTask OnCheckpointRestoredAsync(IWorkflowContext co
 
 ::: zone-end
 
-::: zone pivot="programming-language-python"
-
-Coming soon...
-
-::: zone-end
-
 ## Next Steps
 
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
 - [Learn how to use workflows as agents](./as-agents.md).
-- [Learn how to handle requests and responses](./request-and-response.md) in workflows.
+- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to manage state](./shared-states.md) in workflows.

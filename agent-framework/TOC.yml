@@ -1,7 +1,7 @@
 items:
 - name: Agent Framework
   href: overview/agent-framework-overview.md
-- name: Quickstart Guide
+- name: Quick Start Guide
   href: tutorials/quick-start.md
   expanded: true
 - name: Tutorials
@@ -16,7 +16,10 @@ items:
     href: user-guide/model-context-protocol/TOC.yml
   - name: Workflows
     href: user-guide/workflows/TOC.yml
+- name: Support
+  href: support/TOC.yml
 - name: Migration Guide
   href: migration-guide/TOC.yml
 - name: API Reference Guide
-  items:
+  href: api-docs/TOC.yml
+  expanded: true

@@ -5,25 +5,21 @@ author: ekzhu
 ms.topic: reference
 ms.author: ekzhu
 ms.date: 10/01/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Microsoft Agent Framework
 
-The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework)
+[Microsoft Agent Framework](https://github.com/microsoft/agent-framework)
 is an open-source development kit for building **AI agents** and **multi-agent workflows**
 for .NET and Python.
-It brings together and extends ideas from the [Semantic Kernel](https://github.com/microsoft/semantic-kernel)
+It brings together and extends ideas from [Semantic Kernel](https://github.com/microsoft/semantic-kernel)
 and [AutoGen](https://github.com/microsoft/autogen) projects, combining their strengths while adding new capabilities. Built by the same teams, it is the unified foundation for building AI agents going forward.
 
-The Agent Framework offers two primary categories of capabilities:
+Agent Framework offers two primary categories of capabilities:
 
-- [AI Agents](#ai-agents): individual agents that use LLMs to process user inputs,
-  call tools and MCP servers to perform actions, and generate responses. Agents support
-  model providers including Azure OpenAI, OpenAI, and Azure AI.
-- [Workflows](#workflows): graph-based workflows that connect multiple agents
-  and functions to perform complex, multi-step tasks. Workflows support type-based routing,
-  nesting, checkpointing, and request/response patterns for human-in-the-loop scenarios.
+- [AI agents](#ai-agents): Individual agents that use LLMs to process user inputs, call tools and MCP servers to perform actions, and generate responses. Agents support model providers including Azure OpenAI, OpenAI, and Azure AI.
+- [Workflows](#workflows): Graph-based workflows that connect multiple agents and functions to perform complex, multi-step tasks. Workflows support type-based routing, nesting, checkpointing, and request/response patterns for human-in-the-loop scenarios.
 
 The framework also provides foundational building
 blocks, including model clients (chat completions and responses), an agent thread for state management, context providers for agent memory,
@@ -37,10 +33,10 @@ interactive, robust, and safe AI applications.
 and [AutoGen](https://github.com/microsoft/autogen) pioneered the concepts of AI agents and multi-agent orchestration.
 The Agent Framework is the direct successor, created by the same teams. It combines AutoGen's simple abstractions for single- and multi-agent patterns with Semantic Kernel's enterprise-grade features such as thread-based state management, type safety, filters,
 telemetry, and extensive model and embedding support. Beyond merging the two,
-the Agent Framework introduces workflows that give developers explicit control over
+Agent Framework introduces workflows that give developers explicit control over
 multi-agent execution paths, plus a robust state management system
 for long-running and human-in-the-loop scenarios.
-In short, the Agent Framework is the next generation of
+In short, Agent Framework is the next generation of
 both Semantic Kernel and AutoGen.
 
 To learn more about migrating from either Semantic Kernel or AutoGen,
@@ -48,13 +44,13 @@ see the [Migration Guide from Semantic Kernel](../migration-guide/from-semantic-
 and [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md).
 
 Both Semantic Kernel and AutoGen have benefited significantly from the open-source community,
-and we expect the same for the Agent Framework. The Microsoft Agent Framework will continue to welcome contributions and will keep improving with new features and capabilities.
+and the same is expected for Agent Framework. Microsoft Agent Framework welcomes contributions and will keep improving with new features and capabilities.
 
 > [!NOTE]
 > Microsoft Agent Framework is currently in public preview. Please submit any feedback or issues on the [GitHub repository](https://github.com/microsoft/agent-framework).
 
 > [!IMPORTANT]
-> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications.
+> If you use Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization's Azure compliance and geographic boundaries and any related implications.
 
 ## Installation
 
@@ -66,7 +62,7 @@ pip install agent-framework
 
 .NET:
 
-```bash
+```dotnetcli
 dotnet add package Microsoft.Agents.AI
 ```
 
@@ -107,20 +103,20 @@ Here are some common scenarios where AI agents excel:
 
 The key is that AI agents are designed to operate in a dynamic and underspecified
 setting, where the exact sequence of steps to fulfill a user request is not known
-in advance and may require exploration and close collaboration with users.
+in advance and might require exploration and close collaboration with users.
 
 ### When not to use an AI agent?
 
 AI agents are not well-suited for tasks that are highly structured and require
 strict adherence to predefined rules.
 If your application anticipates a specific kind of input and has a well-defined
-sequence of operations to perform, using AI agents may introduce unnecessary
+sequence of operations to perform, using AI agents might introduce unnecessary
 uncertainty, latency, and cost.
 
 _If you can write a function to handle the task, do that instead of using an AI agent. You can use AI to help you write that function._
 
-A single AI agent may struggle with complex tasks that involve multiple steps
-and decision points. Such tasks may require a large number of tools (e.g., over 20),
+A single AI agent might struggle with complex tasks that involve multiple steps
+and decision points. Such tasks might require a large number of tools (for example, over 20),
 which a single agent cannot feasibly manage.
 
 In these cases, consider using workflows instead.
@@ -129,7 +125,7 @@ In these cases, consider using workflows instead.
 
 ### What is a Workflow?
 
-A **workflow** can express a predefined sequence of operations that can include AI agents as components while maintaining consistency and reliability. Workflows are designed to handle complex and long-running processes that may involve multiple agents, human interactions, and integrations with external systems.
+A **workflow** can express a predefined sequence of operations that can include AI agents as components while maintaining consistency and reliability. Workflows are designed to handle complex and long-running processes that might involve multiple agents, human interactions, and integrations with external systems.
 
 The execution sequence of a workflow can be explicitly defined, allowing for more control over the execution path. The following diagram illustrates an example of a workflow that connects two AI agents and a function:
 
@@ -137,7 +133,7 @@ The execution sequence of a workflow can be explicitly defined, allowing for mor
 
 Workflows can also express dynamic sequences using
 conditional routing, model-based decision making, and concurrent
-execution. This is how our [multi-agent orchestration patterns](../user-guide/workflows/orchestrations/overview.md) are implemented.
+execution. This is how [multi-agent orchestration patterns](../user-guide/workflows/orchestrations/overview.md) are implemented.
 The orchestration patterns provide mechanisms to coordinate multiple agents
 to work on complex tasks that require multiple steps and decision points,
 addressing the limitations of single agents.

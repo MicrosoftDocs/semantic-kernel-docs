@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # OpenAI ChatCompletion Agents
@@ -48,6 +48,9 @@ Finally, create the agent using the `CreateAIAgent` extension method on the `Cha
 AIAgent agent = chatCompletionClient.CreateAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
 ## Using the Agent

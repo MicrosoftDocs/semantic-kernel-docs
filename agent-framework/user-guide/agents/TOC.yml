@@ -14,3 +14,5 @@
   href: agent-memory.md
 - name: Agent Observability
   href: agent-observability.md
+- name: Agent Background Responses
+  href: agent-background-responses.md

@@ -6,7 +6,7 @@ author: markwallace
 ms.topic: reference
 ms.author: markwallace
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Using MCP tools with Agents
@@ -129,7 +129,122 @@ The full source code and instructions to run this sample is available [here](htt
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Coming soon.
+The Python Agent Framework provides comprehensive support for integrating with Model Context Protocol (MCP) servers through multiple connection types. This allows your agents to access external tools and services seamlessly.
+
+## MCP Tool Types
+
+The Agent Framework supports three types of MCP connections:
+
+### MCPStdioTool - Local MCP Servers
+
+Use `MCPStdioTool` to connect to MCP servers that run as local processes using standard input/output:
+
+```python
+import asyncio
+from agent_framework import ChatAgent, MCPStdioTool
+from agent_framework.openai import OpenAIChatClient
+
+async def local_mcp_example():
+    """Example using a local MCP server via stdio."""
+    async with (
+        MCPStdioTool(
+            name="calculator", 
+            command="uvx", 
+            args=["mcp-server-calculator"]
+        ) as mcp_server,
+        ChatAgent(
+            chat_client=OpenAIChatClient(),
+            name="MathAgent",
+            instructions="You are a helpful math assistant that can solve calculations.",
+        ) as agent,
+    ):
+        result = await agent.run(
+            "What is 15 * 23 + 45?", 
+            tools=mcp_server
+        )
+        print(result)
+
+if __name__ == "__main__":
+    asyncio.run(local_mcp_example())
+```
+
+### MCPStreamableHTTPTool - HTTP/SSE MCP Servers
+
+Use `MCPStreamableHTTPTool` to connect to MCP servers over HTTP with Server-Sent Events:
+
+```python
+import asyncio
+from agent_framework import ChatAgent, MCPStreamableHTTPTool
+from agent_framework.azure import AzureAIAgentClient
+from azure.identity.aio import AzureCliCredential
+
+async def http_mcp_example():
+    """Example using an HTTP-based MCP server."""
+    async with (
+        AzureCliCredential() as credential,
+        MCPStreamableHTTPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+            headers={"Authorization": "Bearer your-token"},
+        ) as mcp_server,
+        ChatAgent(
+            chat_client=AzureAIAgentClient(async_credential=credential),
+            name="DocsAgent",
+            instructions="You help with Microsoft documentation questions.",
+        ) as agent,
+    ):
+        result = await agent.run(
+            "How to create an Azure storage account using az cli?",
+            tools=mcp_server
+        )
+        print(result)
+
+if __name__ == "__main__":
+    asyncio.run(http_mcp_example())
+```
+
+### MCPWebsocketTool - WebSocket MCP Servers
+
+Use `MCPWebsocketTool` to connect to MCP servers over WebSocket connections:
+
+```python
+import asyncio
+from agent_framework import ChatAgent, MCPWebsocketTool
+from agent_framework.openai import OpenAIChatClient
+
+async def websocket_mcp_example():
+    """Example using a WebSocket-based MCP server."""
+    async with (
+        MCPWebsocketTool(
+            name="realtime-data",
+            url="wss://api.example.com/mcp",
+        ) as mcp_server,
+        ChatAgent(
+            chat_client=OpenAIChatClient(),
+            name="DataAgent",
+            instructions="You provide real-time data insights.",
+        ) as agent,
+    ):
+        result = await agent.run(
+            "What is the current market status?",
+            tools=mcp_server
+        )
+        print(result)
+
+if __name__ == "__main__":
+    asyncio.run(websocket_mcp_example())
+```
+
+## Popular MCP Servers
+
+Common MCP servers you can use with Python Agent Framework:
+
+- **Calculator**: `uvx mcp-server-calculator` - Mathematical computations
+- **Filesystem**: `uvx mcp-server-filesystem` - File system operations  
+- **GitHub**: `npx @modelcontextprotocol/server-github` - GitHub repository access
+- **SQLite**: `uvx mcp-server-sqlite` - Database operations
+
+Each server provides different tools and capabilities that extend your agent's functionality while maintaining the security and standardization benefits of the Model Context Protocol.
 
 ::: zone-end
 

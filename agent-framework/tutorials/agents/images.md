@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/24/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Using images with an agent
@@ -15,7 +15,7 @@ This tutorial shows you how to use images with an agent, allowing the agent to a
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -78,7 +78,7 @@ Next, create a `ChatMessage` that contains both a text prompt and an image URL. 
 from agent_framework import ChatMessage, TextContent, UriContent, Role
 
 message = ChatMessage(
-    role=Role.USER, 
+    role=Role.USER,
     contents=[
         TextContent(text="What do you see in this image?"),
         UriContent(
@@ -99,7 +99,7 @@ with open("path/to/your/image.jpg", "rb") as f:
     image_bytes = f.read()
 
 message = ChatMessage(
-    role=Role.USER, 
+    role=Role.USER,
     contents=[
         TextContent(text="What do you see in this image?"),
         DataContent(

@@ -6,7 +6,7 @@ author: westey-m
 ms.topic: tutorial
 ms.author: westey
 ms.date: 09/25/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Agent based on any IChatClient
@@ -53,6 +53,9 @@ AIAgent agent = new ChatClientAgent(
     chatClient,
     instructions: "You are good at telling jokes.",
     name: "Joker");
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
 > [!IMPORTANT]

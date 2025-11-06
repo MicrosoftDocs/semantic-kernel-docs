@@ -1,25 +1,16 @@
 ---
 title: Microsoft Agent Framework Workflows - Visualization
 description: In-depth look at Visualization in Microsoft Agent Framework Workflows.
-zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/12/2025
-ms.service: semantic-kernel
+ms.service: agent-framework
 ---
 
 # Microsoft Agent Framework Workflows - Visualization
 
 Sometimes a workflow that has multiple executors and complex interactions can be hard to understand from just reading the code. Visualization can help you see the structure of the workflow more clearly, so that you can verify that it has the intended design.
-
-::: zone pivot="programming-language-csharp"
-
-Coming soon...
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
 
 Workflow visualization is done via a `WorkflowViz` object that can be instantiated with a `Workflow` object. The `WorkflowViz` object can then generate visualizations in different formats, such as Graphviz DOT format or Mermaid diagram format.
 
@@ -76,5 +67,3 @@ flowchart TD
 or in Graphviz DOT format:
 
 ![Workflow Diagram](./resources/images/workflow-viz.svg)
-
-::: zone-end
