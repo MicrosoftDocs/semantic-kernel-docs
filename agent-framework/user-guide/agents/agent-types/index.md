@@ -78,7 +78,7 @@ See the documentation for each agent type, for more information:
 
 ## Azure and OpenAI SDK Options Reference
 
-When using Azure AI Foundry, Azure OpenAI, or OpenAI services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each.
+When using Azure AI Foundry, Azure OpenAI, or OpenAI services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each. Make sure to replace `<resource>` and `<project>` with your actual resource and project names.
 
 | AI Service | SDK | Nuget | Url |
 |------------------|-----|-------|-----|
