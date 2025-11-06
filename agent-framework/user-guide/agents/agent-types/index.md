@@ -76,7 +76,7 @@ See the documentation for each agent type, for more information:
 |---|---|
 |[A2A](./a2a-agent.md)|An agent that serves as a proxy to a remote agent via the A2A protocol.|
 
-## Azure and OpenAI Options Reference
+## Azure and OpenAI SDK Options Reference
 
 When using Azure AI Foundry, Azure OpenAI, or OpenAI services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each.
 
