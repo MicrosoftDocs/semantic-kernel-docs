@@ -458,8 +458,7 @@ This middleware approach allows you to implement sophisticated response transfor
 
 ::: zone-end
 
-
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Memory](./agent-memory.md)
+> [Agent Retrieval Augmented Generation (RAG)](./agent-rag.md)
