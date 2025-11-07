@@ -1,0 +1,579 @@
+---
+title: Human-in-the-Loop with AG-UI
+description: Learn how to implement approval workflows for tool execution using AG-UI protocol
+zone_pivot_groups: programming-languages
+author: moonbox3
+ms.topic: tutorial
+ms.author: evmattso
+ms.date: 11/07/2025
+ms.service: agent-framework
+---
+
+# Human-in-the-Loop with AG-UI
+
+::: zone pivot="programming-language-csharp"
+
+Coming soon.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+This tutorial shows you how to implement human-in-the-loop workflows with AG-UI, where users must approve tool executions before they are performed. This is essential for sensitive operations like financial transactions, data modifications, or actions that have significant consequences.
+
+## Prerequisites
+
+Before you begin, ensure you have completed the [Backend Tool Rendering](backend-tool-rendering.md) tutorial and understand:
+
+- How to create function tools
+- How AG-UI streams tool events
+- Basic server and client setup
+
+## What is Human-in-the-Loop?
+
+Human-in-the-Loop (HITL) is a pattern where the agent requests user approval before executing certain operations. With AG-UI:
+
+- The agent generates tool calls as usual
+- Instead of executing immediately, the server sends approval requests to the client
+- The client displays the request and prompts the user
+- The user approves or rejects the action
+- The server receives the response and proceeds accordingly
+
+### Benefits
+
+- **Safety**: Prevent unintended actions from being executed
+- **Transparency**: Users see exactly what the agent wants to do
+- **Control**: Users have final say over sensitive operations
+- **Compliance**: Meet regulatory requirements for human oversight
+
+## Marking Tools for Approval
+
+To require approval for a tool, use the `approval_mode` parameter in the `@ai_function` decorator:
+
+```python
+from agent_framework import ai_function
+from typing import Annotated
+from pydantic import Field
+
+
+@ai_function(approval_mode="always_require")
+def send_email(
+    to: Annotated[str, Field(description="Email recipient address")],
+    subject: Annotated[str, Field(description="Email subject line")],
+    body: Annotated[str, Field(description="Email body content")],
+) -> str:
+    """Send an email to the specified recipient."""
+    # Send email logic here
+    return f"Email sent to {to} with subject '{subject}'"
+
+
+@ai_function(approval_mode="always_require")
+def delete_file(
+    filepath: Annotated[str, Field(description="Path to the file to delete")],
+) -> str:
+    """Delete a file from the filesystem."""
+    # Delete file logic here
+    return f"File {filepath} has been deleted"
+```
+
+### Approval Modes
+
+- **`always_require`**: Always request approval before execution
+- **`never_require`**: Never request approval (default behavior)
+- **`conditional`**: Request approval based on certain conditions (custom logic)
+
+## Creating a Server with Human-in-the-Loop
+
+Here's a complete server implementation with approval-required tools:
+
+```python
+"""AG-UI server with human-in-the-loop."""
+
+import os
+from typing import Annotated
+
+from agent_framework import ChatAgent, ai_function
+from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework_ag_ui import AgentFrameworkAgent, add_agent_framework_fastapi_endpoint
+from fastapi import FastAPI
+from pydantic import Field
+
+
+# Tools that require approval
+@ai_function(approval_mode="always_require")
+def transfer_money(
+    from_account: Annotated[str, Field(description="Source account number")],
+    to_account: Annotated[str, Field(description="Destination account number")],
+    amount: Annotated[float, Field(description="Amount to transfer")],
+    currency: Annotated[str, Field(description="Currency code")] = "USD",
+) -> str:
+    """Transfer money between accounts."""
+    return f"Transferred {amount} {currency} from {from_account} to {to_account}"
+
+
+@ai_function(approval_mode="always_require")
+def cancel_subscription(
+    subscription_id: Annotated[str, Field(description="Subscription identifier")],
+) -> str:
+    """Cancel a subscription."""
+    return f"Subscription {subscription_id} has been cancelled"
+
+
+# Regular tools (no approval required)
+@ai_function
+def check_balance(
+    account: Annotated[str, Field(description="Account number")],
+) -> str:
+    """Check account balance."""
+    # Simulated balance check
+    return f"Account {account} balance: $5,432.10 USD"
+
+
+# Read configuration
+endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
+deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
+
+if not endpoint or not deployment_name:
+    raise ValueError("AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME are required")
+
+# Create agent with tools
+agent = ChatAgent(
+    name="BankingAssistant",
+    instructions="You are a banking assistant. Help users with their banking needs. Always confirm details before performing transfers.",
+    chat_client=AzureOpenAIChatClient(
+        endpoint=endpoint,
+        deployment_name=deployment_name,
+    ),
+    tools=[transfer_money, cancel_subscription, check_balance],
+)
+
+# Wrap agent to enable human-in-the-loop
+wrapped_agent = AgentFrameworkAgent(
+    agent=agent,
+    require_confirmation=True,  # Enable human-in-the-loop
+)
+
+# Create FastAPI app
+app = FastAPI(title="AG-UI Banking Assistant")
+add_agent_framework_fastapi_endpoint(app, wrapped_agent, "/")
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8888)
+```
+
+### Key Concepts
+
+- **`AgentFrameworkAgent` wrapper**: Enables AG-UI protocol features like human-in-the-loop
+- **`require_confirmation=True`**: Activates approval workflow for marked tools
+- **Tool-level control**: Only tools marked with `approval_mode="always_require"` will request approval
+
+## Understanding Approval Events
+
+When a tool requires approval, the client receives these events:
+
+### Approval Request Event
+
+```python
+{
+    "type": "APPROVAL_REQUEST",
+    "approvalId": "approval_abc123",
+    "steps": [
+        {
+            "toolCallId": "call_xyz789",
+            "toolCallName": "transfer_money",
+            "arguments": {
+                "from_account": "1234567890",
+                "to_account": "0987654321",
+                "amount": 500.00,
+                "currency": "USD"
+            }
+        }
+    ],
+    "message": "Do you approve the following actions?"
+}
+```
+
+### Approval Response Format
+
+The client must send an approval response:
+
+```python
+# Approve
+{
+    "type": "APPROVAL_RESPONSE",
+    "approvalId": "approval_abc123",
+    "approved": True
+}
+
+# Reject
+{
+    "type": "APPROVAL_RESPONSE",
+    "approvalId": "approval_abc123",
+    "approved": False
+}
+```
+
+## Client with Approval Support
+
+Here's a client that handles approval requests:
+
+```python
+"""AG-UI client with human-in-the-loop support."""
+
+import asyncio
+import json
+import os
+
+import httpx
+
+
+class AGUIClient:
+    """AG-UI client with approval handling."""
+
+    def __init__(self, server_url: str):
+        self.server_url = server_url
+        self.thread_id: str | None = None
+
+    async def send_message(self, message: str):
+        """Send a message and handle responses including approval requests."""
+        request_data = {
+            "messages": [
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": message},
+            ]
+        }
+
+        if self.thread_id:
+            request_data["thread_id"] = self.thread_id
+
+        async with httpx.AsyncClient(timeout=120.0) as client:
+            async with client.stream(
+                "POST",
+                self.server_url,
+                json=request_data,
+                headers={"Accept": "text/event-stream"},
+            ) as response:
+                response.raise_for_status()
+
+                async for line in response.aiter_lines():
+                    if line.startswith("data: "):
+                        data = line[6:]
+                        try:
+                            event = json.loads(data)
+                            yield event
+
+                            if event.get("type") == "RUN_STARTED" and not self.thread_id:
+                                self.thread_id = event.get("threadId")
+
+                        except json.JSONDecodeError:
+                            continue
+
+    async def send_approval_response(self, approval_id: str, approved: bool):
+        """Send an approval response to the server."""
+        request_data = {
+            "type": "APPROVAL_RESPONSE",
+            "approvalId": approval_id,
+            "approved": approved,
+        }
+
+        if self.thread_id:
+            request_data["thread_id"] = self.thread_id
+
+        async with httpx.AsyncClient(timeout=120.0) as client:
+            async with client.stream(
+                "POST",
+                self.server_url,
+                json=request_data,
+                headers={"Accept": "text/event-stream"},
+            ) as response:
+                response.raise_for_status()
+
+                async for line in response.aiter_lines():
+                    if line.startswith("data: "):
+                        data = line[6:]
+                        try:
+                            event = json.loads(data)
+                            yield event
+                        except json.JSONDecodeError:
+                            continue
+
+
+def display_approval_request(steps: list) -> None:
+    """Display approval request details to the user."""
+    print("\n\033[93m" + "=" * 60 + "\033[0m")
+    print("\033[93mAPPROVAL REQUIRED\033[0m")
+    print("\033[93m" + "=" * 60 + "\033[0m")
+    
+    for i, step in enumerate(steps, 1):
+        print(f"\nAction {i}:")
+        print(f"  Tool: \033[95m{step.get('toolCallName', 'unknown')}\033[0m")
+        print(f"  Arguments:")
+        for key, value in step.get("arguments", {}).items():
+            print(f"    {key}: {value}")
+    
+    print("\n\033[93m" + "=" * 60 + "\033[0m")
+
+
+async def main():
+    """Main client loop with approval handling."""
+    server_url = os.environ.get("AGUI_SERVER_URL", "http://127.0.0.1:8888/")
+    print(f"Connecting to AG-UI server at: {server_url}\n")
+
+    client = AGUIClient(server_url)
+
+    try:
+        while True:
+            message = input("\nUser (:q or quit to exit): ")
+            if not message.strip():
+                continue
+
+            if message.lower() in (":q", "quit"):
+                break
+
+            print()
+            pending_approval = None
+
+            async for event in client.send_message(message):
+                event_type = event.get("type", "")
+
+                if event_type == "RUN_STARTED":
+                    print("\033[93m[Run Started]\033[0m")
+
+                elif event_type == "TEXT_MESSAGE_CONTENT":
+                    print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
+
+                elif event_type == "TOOL_CALL_START":
+                    tool_name = event.get("toolCallName", "unknown")
+                    print(f"\n\033[95m[Calling Tool: {tool_name}]\033[0m")
+
+                elif event_type == "TOOL_CALL_RESULT":
+                    content = event.get("content", "")
+                    print(f"\033[94m[Tool Result: {content}]\033[0m")
+
+                elif event_type == "APPROVAL_REQUEST":
+                    pending_approval = event
+                    steps = event.get("steps", [])
+                    display_approval_request(steps)
+                    break  # Exit the loop to handle approval
+
+                elif event_type == "RUN_FINISHED":
+                    print(f"\n\033[92m[Run Finished]\033[0m")
+
+                elif event_type == "RUN_ERROR":
+                    error_msg = event.get("message", "Unknown error")
+                    print(f"\n\033[91m[Error: {error_msg}]\033[0m")
+
+            # Handle approval request
+            if pending_approval:
+                approval_id = pending_approval.get("approvalId")
+                user_choice = input("\nApprove this action? (yes/no): ").strip().lower()
+                approved = user_choice in ("yes", "y")
+
+                print(f"\n\033[93m[Sending approval response: {approved}]\033[0m\n")
+
+                async for event in client.send_approval_response(approval_id, approved):
+                    event_type = event.get("type", "")
+
+                    if event_type == "TEXT_MESSAGE_CONTENT":
+                        print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
+
+                    elif event_type == "TOOL_CALL_RESULT":
+                        content = event.get("content", "")
+                        print(f"\033[94m[Tool Result: {content}]\033[0m")
+
+                    elif event_type == "RUN_FINISHED":
+                        print(f"\n\033[92m[Run Finished]\033[0m")
+
+                    elif event_type == "RUN_ERROR":
+                        error_msg = event.get("message", "Unknown error")
+                        print(f"\n\033[91m[Error: {error_msg}]\033[0m")
+
+            print()
+
+    except KeyboardInterrupt:
+        print("\n\nExiting...")
+    except Exception as e:
+        print(f"\n\033[91mError: {e}\033[0m")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Example Interaction
+
+With the server and client running:
+
+```
+User (:q or quit to exit): Transfer $500 from account 1234567890 to account 0987654321
+
+[Run Started]
+============================================================
+APPROVAL REQUIRED
+============================================================
+
+Action 1:
+  Tool: transfer_money
+  Arguments:
+    from_account: 1234567890
+    to_account: 0987654321
+    amount: 500.0
+    currency: USD
+
+============================================================
+
+Approve this action? (yes/no): yes
+
+[Sending approval response: True]
+
+[Tool Result: Transferred 500.0 USD from 1234567890 to 0987654321]
+The transfer of $500 from account 1234567890 to account 0987654321 has been completed successfully.
+[Run Finished]
+```
+
+If the user rejects:
+
+```
+Approve this action? (yes/no): no
+
+[Sending approval response: False]
+
+I understand. The transfer has been cancelled and no money was moved.
+[Run Finished]
+```
+
+## Custom Confirmation Messages
+
+You can customize the approval messages by providing a custom confirmation strategy:
+
+```python
+from typing import Any
+from agent_framework_ag_ui import AgentFrameworkAgent, ConfirmationStrategy
+
+
+class BankingConfirmationStrategy(ConfirmationStrategy):
+    """Custom confirmation messages for banking operations."""
+    
+    def on_approval_accepted(self, steps: list[dict[str, Any]]) -> str:
+        """Message when user approves the action."""
+        tool_name = steps[0].get("toolCallName", "action")
+        return f"Thank you for confirming. Proceeding with {tool_name}..."
+    
+    def on_approval_rejected(self, steps: list[dict[str, Any]]) -> str:
+        """Message when user rejects the action."""
+        return "Action cancelled. No changes have been made to your account."
+    
+    def on_state_confirmed(self) -> str:
+        """Message when state changes are confirmed."""
+        return "Changes confirmed and applied."
+    
+    def on_state_rejected(self) -> str:
+        """Message when state changes are rejected."""
+        return "Changes discarded."
+
+
+# Use custom strategy
+wrapped_agent = AgentFrameworkAgent(
+    agent=agent,
+    require_confirmation=True,
+    confirmation_strategy=BankingConfirmationStrategy(),
+)
+```
+
+## Best Practices
+
+### Clear Tool Descriptions
+
+Provide detailed descriptions so users understand what they're approving:
+
+```python
+@ai_function(approval_mode="always_require")
+def delete_database(
+    database_name: Annotated[str, Field(description="Name of the database to permanently delete")],
+) -> str:
+    """
+    Permanently delete a database and all its contents.
+    
+    WARNING: This action cannot be undone. All data in the database will be lost.
+    Use with extreme caution.
+    """
+    # Implementation
+    pass
+```
+
+### Granular Approval
+
+Request approval for individual sensitive actions rather than batching:
+
+```python
+# Good: Individual approval per transfer
+@ai_function(approval_mode="always_require")
+def transfer_money(...): pass
+
+# Avoid: Batching multiple sensitive operations
+# Users should approve each operation separately
+```
+
+### Informative Arguments
+
+Use descriptive parameter names and provide context:
+
+```python
+@ai_function(approval_mode="always_require")
+def purchase_item(
+    item_name: Annotated[str, Field(description="Name of the item to purchase")],
+    quantity: Annotated[int, Field(description="Number of items to purchase")],
+    price_per_item: Annotated[float, Field(description="Price per item in USD")],
+    total_cost: Annotated[float, Field(description="Total cost including tax and shipping")],
+) -> str:
+    """Purchase items from the store."""
+    pass
+```
+
+### Timeout Handling
+
+Set appropriate timeouts for approval requests:
+
+```python
+# Client side
+async with httpx.AsyncClient(timeout=120.0) as client:  # 2 minutes for user to respond
+    # Handle approval
+    pass
+```
+
+## Selective Approval
+
+You can mix tools that require approval with those that don't:
+
+```python
+# No approval needed for read-only operations
+@ai_function
+def get_account_balance(...): pass
+
+@ai_function
+def list_transactions(...): pass
+
+# Approval required for write operations
+@ai_function(approval_mode="always_require")
+def transfer_funds(...): pass
+
+@ai_function(approval_mode="always_require")
+def close_account(...): pass
+```
+
+## Next Steps
+
+Now that you understand human-in-the-loop, you can:
+
+- **[Learn State Management](state-management.md)**: Manage shared state with approval workflows
+- **[Explore Advanced Patterns](../../tutorials/agents/function-tools-approvals.md)**: Learn more about approval patterns in Agent Framework
+
+## Additional Resources
+
+- [AG-UI Overview](index.md)
+- [Backend Tool Rendering](backend-tool-rendering.md)
+- [Function Tools with Approvals](../../tutorials/agents/function-tools-approvals.md)
+
+::: zone-end
