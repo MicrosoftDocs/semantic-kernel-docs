@@ -23,7 +23,438 @@ By the end of this tutorial, you'll have:
 
 ::: zone pivot="programming-language-csharp"
 
-Coming soon.
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- .NET 8.0 or later
+- [Azure OpenAI service endpoint and deployment configured](/azure/ai-foundry/openai/how-to/create-resource)
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated](/cli/azure/authenticate-azure-cli)
+- User has the `Cognitive Services OpenAI Contributor` role for the Azure OpenAI resource
+
+> [!NOTE]
+> These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Azure AI Foundry](/azure/ai-foundry/how-to/deploy-models-openai).
+
+> [!NOTE]
+> These samples use `DefaultAzureCredential` for authentication. Make sure you're authenticated with Azure (e.g., via `az login`). For more information, see the [Azure Identity documentation](/dotnet/api/overview/azure/identity-readme).
+
+> [!WARNING]
+> The AG-UI protocol is still under development and subject to change. We will keep these samples updated as the protocol evolves.
+
+## Step 1: Creating an AG-UI Server
+
+The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using ASP.NET Core.
+
+### Install Required Packages
+
+Install the necessary packages for the server:
+
+```bash
+dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore
+```
+
+This will automatically install the required dependencies including `Microsoft.Extensions.AI`.
+
+### Server Code
+
+Create a file named `Program.cs`:
+
+```csharp
+// Copyright (c) Microsoft. All rights reserved.
+
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+using Microsoft.Extensions.AI;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient().AddLogging();
+var app = builder.Build();
+
+string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"] 
+    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"] 
+    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
+
+// Create the AI agent
+var agent = new AzureOpenAIClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
+    .CreateAIAgent(
+        name: "AGUIAssistant",
+        instructions: "You are a helpful assistant.");
+
+// Map the AG-UI agent endpoint
+app.MapAGUI("/", agent);
+
+await app.RunAsync();
+```
+
+### Key Concepts
+
+- **`MapAGUI`**: Extension method that registers the AG-UI endpoint with automatic request/response handling and SSE streaming
+- **`CreateAIAgent`**: Creates an Agent Framework agent from a chat client
+- **ASP.NET Core Integration**: Uses ASP.NET Core's native async support for streaming responses
+- **Instructions**: The agent is created with default instructions, which can be overridden by client messages
+- **Configuration**: `AzureOpenAIClient` with `DefaultAzureCredential` provides secure authentication
+
+### Configure and Run the Server
+
+Set the required environment variables:
+
+```bash
+export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
+export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+```
+
+Run the server:
+
+```bash
+dotnet run --urls "http://127.0.0.1:8888"
+```
+
+The server will start listening on `http://127.0.0.1:8888`.
+
+## Step 2: Creating an AG-UI Client
+
+The AG-UI client connects to the remote server and displays streaming responses.
+
+### Install Required Packages
+
+Install the AG-UI client library:
+
+```bash
+dotnet add package Microsoft.Agents.AI.AGUI
+```
+
+### Client Code
+
+Create a file named `Program.cs`:
+
+```csharp
+// Copyright (c) Microsoft. All rights reserved.
+
+using System.CommandLine;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.AGUI;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
+var rootCommand = new RootCommand("AGUIClient");
+rootCommand.SetAction((_, ct) => HandleCommandsAsync(ct));
+return await rootCommand.Parse(args).InvokeAsync();
+
+static async Task HandleCommandsAsync(CancellationToken cancellationToken)
+{
+    // Set up logging
+    using var loggerFactory = LoggerFactory.Create(builder =>
+    {
+        builder.AddConsole();
+        builder.SetMinimumLevel(LogLevel.Information);
+    });
+    var logger = loggerFactory.CreateLogger("AGUIClient");
+
+    // Get server URL from configuration or use default
+    var configRoot = new ConfigurationBuilder()
+        .AddEnvironmentVariables()
+        .Build();
+    
+    string serverUrl = configRoot["AGUI_SERVER_URL"] ?? "http://127.0.0.1:8888";
+    
+    logger.LogInformation("Connecting to AG-UI server at: {ServerUrl}", serverUrl);
+
+    // Create the AG-UI client agent
+    using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+    
+    var agent = new AGUIAgent(
+        id: "agui-client",
+        description: "AG-UI Client Agent",
+        httpClient: httpClient,
+        endpoint: serverUrl);
+
+    var thread = agent.GetNewThread();
+    var messages = new List<ChatMessage>
+    {
+        new(ChatRole.System, "You are a helpful assistant.")
+    };
+
+    try
+    {
+        while (true)
+        {
+            // Get user input
+            Console.Write("\nUser (:q or quit to exit): ");
+            string? message = Console.ReadLine();
+            
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                Console.WriteLine("Request cannot be empty.");
+                continue;
+            }
+
+            if (message is ":q" or "quit")
+            {
+                break;
+            }
+
+            messages.Add(new ChatMessage(ChatRole.User, message));
+
+            // Stream the response
+            bool isFirstUpdate = true;
+            string? threadId = null;
+            
+            await foreach (var update in agent.RunStreamingAsync(messages, thread, cancellationToken: cancellationToken))
+            {
+                var chatUpdate = update.AsChatResponseUpdate();
+                
+                // First update indicates run started
+                if (isFirstUpdate)
+                {
+                    threadId = chatUpdate.ConversationId;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
+                    Console.ResetColor();
+                    isFirstUpdate = false;
+                }
+                
+                // Display streaming text content
+                foreach (var content in update.Contents)
+                {
+                    if (content is TextContent textContent)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write(textContent.Text);
+                        Console.ResetColor();
+                    }
+                    else if (content is ErrorContent errorContent)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n[Error: {errorContent.Message}]");
+                        Console.ResetColor();
+                    }
+                }
+            }
+            
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
+            Console.ResetColor();
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred");
+    }
+}
+```
+
+### Key Concepts
+
+- **Server-Sent Events (SSE)**: The protocol uses SSE for streaming responses
+- **AGUIAgent**: Client class that connects to AG-UI servers
+- **RunStreamingAsync**: Streams responses as `AgentRunResponseUpdate` objects
+- **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ConversationId` and `ResponseId`
+- **Thread Management**: The `AGUIAgentThread` maintains conversation context across requests
+- **Content Types**: Responses include `TextContent` for messages and `ErrorContent` for errors
+
+### Configure and Run the Client
+
+Optionally set a custom server URL:
+
+```bash
+export AGUI_SERVER_URL="http://127.0.0.1:8888"
+```
+
+Run the client (in a separate terminal):
+
+```bash
+dotnet run
+```
+
+## Step 3: Testing the Complete System
+
+With both the server and client running, you can now test the complete system.
+
+### Expected Output
+
+```
+$ dotnet run
+info: AGUIClient[0]
+      Connecting to AG-UI server at: http://127.0.0.1:8888
+
+User (:q or quit to exit): What is 2 + 2?
+
+[Run Started - Thread: thread_abc123, Run: run_xyz789]
+2 + 2 equals 4.
+[Run Finished - Thread: thread_abc123]
+
+User (:q or quit to exit): Tell me a fun fact about space
+
+[Run Started - Thread: thread_abc123, Run: run_def456]
+Here's a fun fact: A day on Venus is longer than its year! Venus takes
+about 243 Earth days to rotate once on its axis, but only about 225 Earth
+days to orbit the Sun.
+[Run Finished - Thread: thread_abc123]
+
+User (:q or quit to exit): :q
+```
+
+### Color-Coded Output
+
+The client displays different content types with distinct colors:
+
+- **Yellow**: Run started notifications
+- **Cyan**: Agent text responses (streamed in real-time)
+- **Green**: Run completion notifications
+- **Red**: Error messages
+
+## How It Works
+
+### Server-Side Flow
+
+1. Client sends HTTP POST request with messages
+2. ASP.NET Core endpoint receives the request via `MapAGUI`
+3. Agent processes the messages using Agent Framework
+4. Responses are converted to AG-UI events
+5. Events are streamed back as Server-Sent Events (SSE)
+6. Connection closes when the run completes
+
+### Client-Side Flow
+
+1. `AGUIAgent` sends HTTP POST request to server endpoint
+2. Server responds with SSE stream
+3. Client parses incoming events into `AgentRunResponseUpdate` objects
+4. Each update is displayed based on its content type
+5. `ConversationId` is captured for conversation continuity
+6. Stream completes when run finishes
+
+### Protocol Details
+
+The AG-UI protocol uses:
+
+- HTTP POST for sending requests
+- Server-Sent Events (SSE) for streaming responses
+- JSON for event serialization
+- Thread IDs (as `ConversationId`) for maintaining conversation context
+- Run IDs (as `ResponseId`) for tracking individual executions
+
+## Common Patterns
+
+### Custom Server Configuration
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add CORS for web clients
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+var app = builder.Build();
+app.UseCors();
+
+app.MapAGUI("/agent", agent);
+```
+
+### Multiple Agents
+
+```csharp
+var weatherAgent = weatherChatClient.CreateAIAgent(name: "weather", instructions: "...");
+var financeAgent = financeChatClient.CreateAIAgent(name: "finance", instructions: "...");
+
+app.MapAGUI("/weather", weatherAgent);
+app.MapAGUI("/finance", financeAgent);
+```
+
+### Error Handling
+
+```csharp
+try
+{
+    await foreach (var update in agent.RunStreamingAsync(messages, thread))
+    {
+        foreach (var content in update.Contents)
+        {
+            if (content is ErrorContent errorContent)
+            {
+                Console.WriteLine($"Error: {errorContent.Message}");
+                // Handle error appropriately
+            }
+        }
+    }
+}
+catch (HttpRequestException ex)
+{
+    Console.WriteLine($"HTTP error: {ex.Message}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Unexpected error: {ex.Message}");
+}
+```
+
+## Troubleshooting
+
+### Connection Refused
+
+Ensure the server is running before starting the client:
+
+```bash
+# Terminal 1
+dotnet run --urls "http://127.0.0.1:8888"
+
+# Terminal 2 (after server starts)
+dotnet run
+```
+
+### Authentication Errors
+
+Make sure you're authenticated with Azure:
+
+```bash
+az login
+```
+
+Verify you have the correct role assignment on the Azure OpenAI resource.
+
+### Streaming Not Working
+
+Check that your client timeout is sufficient:
+
+```csharp
+var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+```
+
+For long-running agents, increase the timeout accordingly.
+
+### Thread Context Lost
+
+The client automatically manages thread continuity. If context is lost:
+
+1. Check that `ConversationId` is being captured from response updates
+2. Ensure the same thread instance is used across messages
+3. Verify the server is receiving the thread information in subsequent requests
+
+## Next Steps
+
+Now that you understand the basics of AG-UI, you can:
+
+- **[Add Backend Tools](backend-tool-rendering.md)**: Create custom function tools for your domain
+- **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations
+- **[Manage State](state-management.md)**: Implement shared state for generative UI applications
+
+## Additional Resources
+
+- [AG-UI Overview](index.md)
+- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [AG-UI Protocol Specification](https://docs.ag-ui.com/)
 
 ::: zone-end
 

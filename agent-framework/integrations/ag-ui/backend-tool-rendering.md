@@ -13,7 +13,379 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-Coming soon.
+This tutorial shows you how to add function tools to your AG-UI agents. Function tools are custom C# methods that the agent can call to perform specific tasks like retrieving data, performing calculations, or interacting with external systems. With AG-UI, these tools execute on the backend and their results are automatically streamed to the client.
+
+## Prerequisites
+
+Before you begin, ensure you have completed the [Getting Started](getting-started.md) tutorial and have:
+
+- .NET 8.0 or later
+- `Microsoft.Agents.AI.Hosting.AGUI.AspNetCore` package installed
+- Azure OpenAI service configured
+- Basic understanding of AG-UI server and client setup
+
+## What is Backend Tool Rendering?
+
+Backend tool rendering means:
+
+- Function tools are defined on the server
+- The AI agent decides when to call these tools
+- Tools execute on the backend (server-side)
+- Tool call events and results are streamed to the client in real-time
+- The client receives updates about tool execution progress
+
+This approach provides:
+
+- **Security**: Sensitive operations stay on the server
+- **Consistency**: All clients use the same tool implementations
+- **Transparency**: Clients can display tool execution progress
+- **Flexibility**: Update tools without changing client code
+
+## Creating Function Tools
+
+### Basic Function Tool
+
+You can turn any C# method into a tool using `AIFunctionFactory.Create`:
+
+```csharp
+using System.ComponentModel;
+using Microsoft.Extensions.AI;
+
+[Description("Get the current weather for a location.")]
+static string GetWeather([Description("The city")] string location)
+{
+    // In a real application, you would call a weather API
+    return $"The weather in {location} is sunny with a temperature of 22°C.";
+}
+
+var weatherTool = AIFunctionFactory.Create(GetWeather);
+```
+
+### Key Concepts
+
+- **`AIFunctionFactory.Create`**: Converts a method into an `AIFunction` tool
+- **`[Description]` attributes**: Provide descriptions to help the agent understand the function and parameters
+- **Type annotations**: Provide type information for parameters
+- **Return value**: The result returned to the agent (and streamed to the client)
+
+### Multiple Function Tools
+
+You can provide multiple tools to give the agent more capabilities:
+
+```csharp
+using System.ComponentModel;
+using Microsoft.Extensions.AI;
+
+[Description("Get the current weather for a location.")]
+static string GetWeather([Description("The city")] string location)
+{
+    return $"The weather in {location} is sunny with a temperature of 22°C.";
+}
+
+[Description("Get the weather forecast for a location.")]
+static object GetForecast(
+    [Description("The city")] string location,
+    [Description("Number of days to forecast")] int days = 3)
+{
+    return new
+    {
+        location,
+        days,
+        forecast = new[]
+        {
+            new { day = 1, weather = "Sunny", high = 24, low = 18 },
+            new { day = 2, weather = "Partly cloudy", high = 22, low = 17 },
+            new { day = 3, weather = "Rainy", high = 19, low = 15 }
+        }
+    };
+}
+
+var tools = new AITool[]
+{
+    AIFunctionFactory.Create(GetWeather),
+    AIFunctionFactory.Create(GetForecast)
+};
+```
+
+## Creating an AG-UI Server with Function Tools
+
+Here's a complete server implementation with function tools:
+
+```csharp
+// Copyright (c) Microsoft. All rights reserved.
+
+using System.ComponentModel;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+using Microsoft.Extensions.AI;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient().AddLogging();
+var app = builder.Build();
+
+string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"] 
+    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"] 
+    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
+
+// Define function tools
+[Description("Get the current weather for a location.")]
+static string GetWeather([Description("The city")] string location)
+{
+    // Simulated weather data
+    return $"The weather in {location} is sunny with a temperature of 22°C.";
+}
+
+[Description("Search for restaurants in a location.")]
+static object SearchRestaurants(
+    [Description("The city to search in")] string location,
+    [Description("Type of cuisine")] string cuisine = "any")
+{
+    // Simulated restaurant data
+    return new
+    {
+        location,
+        cuisine,
+        results = new[]
+        {
+            new
+            {
+                name = "The Golden Fork",
+                cuisine = cuisine == "any" ? "Italian" : cuisine,
+                rating = 4.5,
+                address = $"123 Main St, {location}"
+            },
+            new
+            {
+                name = "Spice Haven",
+                cuisine = cuisine == "any" ? "Indian" : cuisine,
+                rating = 4.7,
+                address = $"456 Oak Ave, {location}"
+            },
+            new
+            {
+                name = "Green Leaf",
+                cuisine = cuisine == "any" ? "Vegetarian" : cuisine,
+                rating = 4.3,
+                address = $"789 Elm Rd, {location}"
+            }
+        }
+    };
+}
+
+// Create tools array
+var tools = new AITool[]
+{
+    AIFunctionFactory.Create(GetWeather),
+    AIFunctionFactory.Create(SearchRestaurants)
+};
+
+// Create the AI agent with tools
+var agent = new AzureOpenAIClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
+    .CreateAIAgent(
+        name: "AGUIAssistant",
+        instructions: "You are a helpful assistant with access to weather and restaurant information.",
+        tools: tools);
+
+// Map the AG-UI agent endpoint
+app.MapAGUI("/", agent);
+
+await app.RunAsync();
+```
+
+### Key Concepts
+
+- **Tool Definition**: Methods decorated with `[Description]` attributes
+- **`AIFunctionFactory.Create`**: Converts methods into tool definitions
+- **`CreateAIAgent` with tools**: Registers tools with the agent
+- **Server-side execution**: Tools execute in the server process
+- **Automatic streaming**: Tool calls and results are streamed to clients
+
+### Running the Server
+
+Set environment variables and run:
+
+```bash
+export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
+export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+dotnet run --urls "http://127.0.0.1:8888"
+```
+
+## Observing Tool Calls in the Client
+
+When using the AG-UI client from the Getting Started tutorial, tool execution is automatically handled by the agent. The client displays the final results:
+
+```csharp
+User (:q or quit to exit): What's the weather like in Amsterdam?
+
+[Run Started - Thread: thread_abc123, Run: run_xyz789]
+The weather in Amsterdam is sunny with a temperature of 22°C.
+[Run Finished - Thread: thread_abc123]
+```
+
+The client doesn't need special handling for tools - it just receives the agent's final response after tool execution completes.
+
+## How Tool Rendering Works
+
+### Server-Side Flow
+
+1. Client sends message: "What's the weather in Amsterdam?"
+2. Agent analyzes request and decides to call `GetWeather`
+3. Server executes `GetWeather("Amsterdam")`
+4. Server receives tool result: "The weather in Amsterdam is sunny..."
+5. Agent formulates final response incorporating the tool result
+6. Final response is streamed to client as text
+
+### Client-Side Experience
+
+From the client's perspective:
+
+1. Sends user message to server
+2. Receives streaming text response
+3. Displays final answer (no tool-specific handling needed)
+
+The AG-UI protocol handles all tool execution details internally, providing a seamless experience.
+
+## Common Patterns
+
+### Async Function Tools
+
+For I/O-bound operations, use async tools:
+
+```csharp
+[Description("Fetch weather data from an API.")]
+static async Task<string> GetWeatherAsync([Description("The city")] string location)
+{
+    // Simulate async API call
+    await Task.Delay(100);
+    return $"The weather in {location} is sunny with a temperature of 22°C.";
+}
+
+var weatherTool = AIFunctionFactory.Create(GetWeatherAsync);
+```
+
+### Tools with Complex Return Types
+
+Return structured data when appropriate:
+
+```csharp
+[Description("Get detailed weather information.")]
+static object GetDetailedWeather([Description("The city")] string location)
+{
+    return new
+    {
+        location,
+        current = new
+        {
+            temperature = 22,
+            conditions = "Sunny",
+            humidity = 65,
+            windSpeed = 15
+        },
+        forecast = new[]
+        {
+            new { day = "Monday", high = 24, low = 18 },
+            new { day = "Tuesday", high = 22, low = 17 }
+        }
+    };
+}
+```
+
+### Error Handling in Tools
+
+Handle errors gracefully within tools:
+
+```csharp
+[Description("Get weather with error handling.")]
+static string GetWeatherSafe([Description("The city")] string location)
+{
+    try
+    {
+        if (string.IsNullOrWhiteSpace(location))
+        {
+            return "Error: Location cannot be empty.";
+        }
+
+        // Simulate weather lookup
+        return $"The weather in {location} is sunny.";
+    }
+    catch (Exception ex)
+    {
+        return $"Error retrieving weather: {ex.Message}";
+    }
+}
+```
+
+## Testing Your Tools
+
+You can test the agent with tools using curl:
+
+```bash
+curl -X POST http://127.0.0.1:8888/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {
+        "role": "user",
+        "content": "What is the weather in Amsterdam and can you find Italian restaurants there?"
+      }
+    ]
+  }'
+```
+
+Expected response (streamed as SSE events):
+
+```
+event: run_started
+data: {"threadId":"thread_abc","runId":"run_123"}
+
+event: text_message_content
+data: {"delta":"The weather in Amsterdam is sunny with a temperature of 22°C."}
+
+event: text_message_content  
+data: {"delta":" I found some Italian restaurants: The Golden Fork (4.5 stars) at 123 Main St."}
+
+event: run_finished
+data: {"threadId":"thread_abc","runId":"run_123"}
+```
+
+## Troubleshooting
+
+### Tools Not Being Called
+
+1. Ensure descriptions are clear and relevant
+2. Verify the agent's instructions encourage tool usage
+3. Check that tool signatures match expected parameter types
+
+### Tool Execution Errors
+
+1. Add try-catch blocks in tool implementations
+2. Return error messages as strings rather than throwing exceptions
+3. Log errors on the server for debugging
+
+### Complex Return Values Not Working
+
+1. Use anonymous objects or serializable types
+2. Avoid circular references in return values
+3. Test tools independently before integrating
+
+## Next Steps
+
+Now that you can add function tools, you can:
+
+- **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations
+- **[Manage State](state-management.md)**: Implement shared state for generative UI applications
+- **[Test with Dojo](testing-with-dojo.md)**: Use AG-UI's Dojo app to test your agents
+
+## Additional Resources
+
+- [AG-UI Overview](index.md)
+- [Getting Started Tutorial](getting-started.md)
+- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
 
 ::: zone-end
 
