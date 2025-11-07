@@ -42,7 +42,7 @@ Before you begin, ensure you have the following:
 > These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Azure AI Foundry](/azure/ai-foundry/how-to/deploy-models-openai).
 
 > [!NOTE]
-> These samples use `DefaultAzureCredential` for authentication. Make sure you're authenticated with Azure (e.g., via `az login`). For more information, see the [Azure Identity documentation](https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential).
+> These samples use `DefaultAzureCredential` for authentication. Make sure you're authenticated with Azure (e.g., via `az login`). For more information, see the [Azure Identity documentation](/python/api/azure-identity/azure.identity.defaultazurecredential).
 
 > [!WARNING]
 > The AG-UI protocol is still under development and subject to change. We will keep these samples updated as the protocol evolves.
@@ -56,14 +56,16 @@ The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using Fas
 Install the necessary packages for the server:
 
 ```bash
-pip install agent-framework-ag-ui agent-framework-core fastapi uvicorn
+pip install agent-framework-ag-ui
 ```
 
 Or using uv:
 
 ```bash
-uv pip install agent-framework-ag-ui agent-framework-core fastapi uvicorn
+uv pip install agent-framework-ag-ui
 ```
+
+This will automatically install `agent-framework-core`, `fastapi`, and `uvicorn` as dependencies.
 
 ### Server Code
 
@@ -82,11 +84,17 @@ from fastapi import FastAPI
 # Read required configuration
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
+# Note: a token may also be used in place of the api_key using:
+# from azure.identity import AzureCliCredential
+# chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+api_key = os.environ.get("AZURE_OPENAI_API_KEY")
 
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT environment variable is required")
 if not deployment_name:
     raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
+if not api_key:
+    raise ValueError("AZURE_OPENAI_API_KEY environment variable is required")
 
 # Create the AI agent
 agent = ChatAgent(
@@ -95,6 +103,7 @@ agent = ChatAgent(
     chat_client=AzureOpenAIChatClient(
         endpoint=endpoint,
         deployment_name=deployment_name,
+        api_key=api_key,
     ),
 )
 
@@ -368,7 +377,7 @@ data: {"type":"TEXT_MESSAGE_START","messageId":"...","role":"assistant"}
 
 data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"...","delta":"The"}
 
-data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"...","delta":" capital"}
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"...","delta":" answer"}
 
 ...
 

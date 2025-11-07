@@ -132,35 +132,6 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 | Tool approval mode | Human-in-the-Loop | Approval requests/responses via protocol |
 | Conversation history | Thread Management | `threadId` maintains context across requests |
 
-## Quick Start Example
-
-Here's a minimal example showing how to expose an Agent Framework agent via AG-UI:
-
-```python
-from fastapi import FastAPI
-from agent_framework import ChatAgent
-from agent_framework.azure import AzureOpenAIChatClient
-from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
-
-# Create your agent
-agent = ChatAgent(
-    name="my_assistant",
-    instructions="You are a helpful assistant.",
-    chat_client=AzureOpenAIChatClient(
-        endpoint="https://your-resource.openai.azure.com/",
-        deployment_name="gpt-4o-mini",
-    ),
-)
-
-# Create FastAPI app and add AG-UI endpoint
-app = FastAPI()
-add_agent_framework_fastapi_endpoint(app, agent, "/")
-
-# Run with: uvicorn main:app --reload
-```
-
-The agent is now accessible at `http://localhost:8888/` and accepts AG-UI protocol requests.
-
 ## Installation
 
 Install the AG-UI integration package:
