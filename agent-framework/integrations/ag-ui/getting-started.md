@@ -39,7 +39,7 @@ Before you begin, ensure you have the following:
 - User has the `Cognitive Services OpenAI Contributor` role for the Azure OpenAI resource
 
 > [!NOTE]
-> These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Azure AI Foundry](https://learn.microsoft.com/azure/ai-foundry/how-to/deploy-models-openai).
+> These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Azure AI Foundry](/azure/ai-foundry/how-to/deploy-models-openai).
 
 > [!NOTE]
 > These samples use `DefaultAzureCredential` for authentication. Make sure you're authenticated with Azure (e.g., via `az login`). For more information, see the [Azure Identity documentation](https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential).
@@ -318,11 +318,10 @@ With both the server and client running, you can now test the complete system.
 $ python client.py
 Connecting to AG-UI server at: http://127.0.0.1:8888/
 
-User (:q or quit to exit): What is the capital of France?
+User (:q or quit to exit): What is 2 + 2?
 
 [Run Started - Thread: abc123, Run: xyz789]
-The capital of France is Paris. It is known for its rich history, culture,
-and iconic landmarks such as the Eiffel Tower and the Louvre Museum.
+2 + 2 equals 4.
 [Run Finished - Thread: abc123, Run: xyz789]
 
 User (:q or quit to exit): Tell me a fun fact about space
@@ -355,7 +354,7 @@ curl -N http://127.0.0.1:8888/ \
   -H "Accept: text/event-stream" \
   -d '{
     "messages": [
-      {"role": "user", "content": "What is the capital of France?"}
+      {"role": "user", "content": "What is 2 + 2?"}
     ]
   }'
 ```

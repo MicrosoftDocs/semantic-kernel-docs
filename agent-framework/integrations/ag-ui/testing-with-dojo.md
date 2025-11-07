@@ -1,10 +1,12 @@
 ---
 title: Testing with AG-UI Dojo
 description: Learn how to test your Microsoft Agent Framework agents with AG-UI's Dojo application
+zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.date: 11/07/2025
 ms.author: evmattso
+ms.service: agent-framework
 ---
 
 # Testing with AG-UI Dojo
