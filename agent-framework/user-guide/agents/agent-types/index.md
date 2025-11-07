@@ -76,6 +76,82 @@ See the documentation for each agent type, for more information:
 |---|---|
 |[A2A](./a2a-agent.md)|An agent that serves as a proxy to a remote agent via the A2A protocol.|
 
+## Azure and OpenAI SDK Options Reference
+
+When using Azure AI Foundry, Azure OpenAI, or OpenAI services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each. Make sure to replace `<resource>` and `<project>` with your actual resource and project names.
+
+| AI Service | SDK | Nuget | Url |
+|------------------|-----|-------|-----|
+| [Azure AI Foundry Models](https://learn.microsoft.com/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
+| [Azure AI Foundry Models](https://learn.microsoft.com/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
+| [Azure AI Foundry Models](https://learn.microsoft.com/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
+| [Azure AI Foundry Agents](https://learn.microsoft.com/azure/ai-foundry/agents/overview) | Azure AI Persistent Agents SDK | [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
+| [Azure OpenAI](https://learn.microsoft.com/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
+| [Azure OpenAI](https://learn.microsoft.com/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
+| OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
+
+1. [Upgrading from Azure OpenAI to Azure AI Foundry](https://learn.microsoft.com/azure/ai-foundry/how-to/upgrade-azure-openai)
+1. We recommend using the OpenAI SDK.
+1. While we recommend using the OpenAI SDK to access Azure AI Foundry models, Azure AI Foundry Models support models from many different vendors, not just OpenAI. All these models are supported via the OpenAI SDK.
+
+### Using the OpenAI SDK
+
+As shown in the table above, the OpenAI SDK can be used to connect to multiple services.
+Depending on the service you are connecting to, you may need to set a custom URL when creating the `OpenAIClient`.
+You can also use different authentication mechanisms depending on the service.
+
+If a custom URL is required (see table above), you can set it via the OpenAIClientOptions.
+
+```csharp
+var clientOptions = new OpenAIClientOptions() { Endpoint = new Uri(serviceUrl) };
+```
+
+It's possible to use an API key when creating the client.
+
+```csharp
+OpenAIClient client = new OpenAIClient(new ApiKeyCredential(apiKey), clientOptions);
+```
+
+When using an Azure Service, it's also possible to use Azure credentials instead of an API key.
+
+```csharp
+OpenAIClient client = new OpenAIClient(new BearerTokenPolicy(new AzureCliCredential(), "https://ai.azure.com/.default"), clientOptions)
+```
+
+Once you have created the OpenAIClient, you can get a sub client for the specific service you want to use and then create an `AIAgent` from that.
+
+```csharp
+AIAgent agent = client
+    .GetChatClient(model)
+    .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+```
+
+### Using the Azure OpenAI SDK
+
+This SDK can be used to connect to both Azure OpenAI and Azure AI Foundry Models services.
+Either way, you will need to supply the correct service URL when creating the `AzureOpenAIClient`.
+See the table above for the correct URL to use.
+
+```csharp
+AIAgent agent = new AzureOpenAIClient(
+    new Uri(serviceUrl),
+    new AzureCliCredential())
+     .GetChatClient(deploymentName)
+     .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+```
+
+### Using the Azure AI Persistent Agents SDK
+
+This SDK is only supported with the Azure AI Foundry Agents service. See the table above for the correct URL to use.
+
+```csharp
+var persistentAgentsClient = new PersistentAgentsClient(serviceUrl, new AzureCliCredential());
+AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
+    model: deploymentName,
+    name: "Joker",
+    instructions: "You are good at telling jokes.");
+```
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"

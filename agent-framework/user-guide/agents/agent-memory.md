@@ -15,21 +15,22 @@ Agent memory is a crucial capability that allows agents to maintain context acro
 
 ::: zone pivot="programming-language-csharp"
 
-## Memory Types
-
 The Agent Framework supports several types of memory to accommodate different use cases, including managing chat history as part of short term memory and providing extension points for extracting, storing and injecting long term memories into agents.
 
-### Chat History (short term memory)
+## Chat History (short term memory)
 
 Various chat history storage options are supported by the Agent Framework. The available options vary by agent type and the underlying service(s) used to build the agent.
 
-E.g. where an agent is built using a service that only supports storage of chat history in the service, the Agent Framework must respect what the service requires.
+Here are the two main scenarios supported:
 
-#### In-memory chat history storage
+1. **In-memory storage**: Agent is built on a service that does not support in-service storage of chat history (e.g. OpenAI Chat Completion). The Agent Framework will by default store the full chat history in-memory in the `AgentThread` object, but developers can provide a custom `ChatMessageStore` implementation to store chat history in a 3rd party store if required.
+1. **In-service storage**: Agent is built on a service that requires in-service storage of chat history (e.g. Azure AI Foundry Persistent Agents). The Agent Framework will store the id of the remote chat history in the `AgentThread` object and no other chat history storage options are supported.
 
-When using a service that does not support in-service storage of chat history, the Agent Framework will store chat history in-memory in the `AgentThread` object by default. In this case the full chat history stored in the thread object, plus any new messages, will be provided to the underlying service on each agent run.
+### In-memory chat history storage
 
-E.g, when using OpenAI Chat Completion as the underlying service for agents, the following code will result in the thread object containing the chat history from the agent run.
+When using a service that does not support in-service storage of chat history, the Agent Framework will default to storing chat history in-memory in the `AgentThread` object. In this case, the full chat history that is stored in the thread object, plus any new messages, will be provided to the underlying service on each agent run. This allows for a natural conversational experience with the agent, where the caller only provides the new user message, and the agent only returns new answers, but the agent has access to the full conversation history and will use it when generating its response.
+
+When using OpenAI Chat Completion as the underlying service for agents, the following code will result in the thread object containing the chat history from the agent run.
 
 ```csharp
 AIAgent agent = new OpenAIClient("<your_api_key>")
@@ -48,7 +49,7 @@ IList<ChatMessage>? messages = thread.GetService<IList<ChatMessage>>();
 > [!NOTE]
 > Retrieving messages from the `AgentThread` object in this way will only work if in-memory storage is being used.
 
-##### Chat History reduction with In-Memory storage
+#### Chat History reduction with In-Memory storage
 
 The built-in `InMemoryChatMessageStore` that is used by default when the underlying service does not support in-service storage,
 can be configured with a reducer to manage the size of the chat history.
@@ -80,9 +81,9 @@ AIAgent agent = new OpenAIClient("<your_api_key>")
 > [!NOTE]
 > This feature is only supported when using the `InMemoryChatMessageStore`. When a service has in-service chat history storage, it is up to the service itself to manage the size of the chat history. Similarly, when using 3rd party storage (see below), it is up to the 3rd party storage solution to manage the chat history size. If you provide a `ChatMessageStoreFactory` for a message store but you use a service with built-in chat history storage, the factory will not be used.
 
-#### Inference service chat history storage
+### Inference service chat history storage
 
-When using a service that requires in-service storage of chat history, the Agent Framework will storage the id of the remote chat history in the `AgentThread` object.
+When using a service that requires in-service storage of chat history, the Agent Framework will store the id of the remote chat history in the `AgentThread` object.
 
 E.g, when using OpenAI Responses with store=true as the underlying service for agents, the following code will result in the thread object containing the last response id returned by the service.
 
@@ -99,7 +100,7 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread)
 > Therefore, depending on the mode that the service is used in, the Agent Framework will either default to storing the full chat history in memory, or storing an id reference
 > to the service stored chat history.
 
-#### 3rd party chat history storage
+### 3rd party chat history storage
 
 When using a service that does not support in-service storage of chat history, the Agent Framework allows developers to replace the default in-memory storage of chat history with 3rd party chat history storage. The developer is required to provide a subclass of the base abstract `ChatMessageStore` class.
 
@@ -134,7 +135,7 @@ AIAgent agent = new AzureOpenAIClient(
 > [!TIP]
 > For a detailed example on how to create a custom message store, see the [Storing Chat History in 3rd Party Storage](../../tutorials/agents/third-party-chat-history-storage.md) tutorial.
 
-### Long term memory
+## Long term memory
 
 The Agent Framework allows developers to provide custom components that can extract memories or provide memories to an agent.
 
@@ -143,7 +144,7 @@ To implement such a memory component, the developer needs to subclass the `AICon
 > [!TIP]
 > For a detailed example on how to create a custom memory component, see the [Adding Memory to an Agent](../../tutorials/agents/memory.md) tutorial.
 
-### AgentThread Serialization
+## AgentThread Serialization
 
 It is important to be able to persist an `AgentThread` object between agent invocations. This allows for situations where a user may ask a question of the agent, and take a long time to ask follow up questions. This allows the `AgentThread` state to survive service or app restarts.
 
@@ -159,6 +160,10 @@ JsonElement serializedThreadState = thread.Serialize();
 AgentThread resumedThread = AIAgent.DeserializeThread(serializedThreadState);
 ```
 
+> [!NOTE]
+> `AgentThread` objects may contain more than just chat history, e.g. context providers may also store state in the thread object. Therefore, it is important to always serialize, store and deserialize the entire `AgentThread` object to ensure that all state is preserved.
+> [!IMPORTANT]
+> Always treat `AgentThread` objects as opaque objects, unless you are very sure of the internals. The contents may vary not just by agent type, but also by service type and configuration.
 > [!WARNING]
 > Deserializing a thread with a different agent than that which originally created it, or with an agent that has a different configuration than the original agent, may result in errors or unexpected behavior.
 
