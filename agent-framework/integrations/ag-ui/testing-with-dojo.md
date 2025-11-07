@@ -13,11 +13,11 @@ ms.service: agent-framework
 
 The [AG-UI Dojo application](https://github.com/ag-oss/ag-ui/tree/main/apps/dojo) provides an interactive environment to test and explore Microsoft Agent Framework agents that implement the AG-UI protocol. Dojo offers a visual interface to connect to your agents and interact with all 7 AG-UI features.
 
+:::zone pivot="programming-language-python"
+
 ## Prerequisites
 
 Before you begin, ensure you have:
-
-:::zone pivot="programming-language-python"
 
 - Python 3.10 or higher
 - [uv](https://docs.astral.sh/uv/) for dependency management
@@ -70,21 +70,11 @@ AZURE_OPENAI_API_KEY=your_api_key_here
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=your_deployment_here
 ```
 
-:::zone-end
-
-:::zone pivot="programming-language-csharp"
-
-Coming soon.
-
-:::zone-end
-
 ## Running the Dojo Application
 
 ### 1. Start the Backend Server
 
 In the examples directory, start the backend server with the example agents:
-
-:::zone pivot="programming-language-python"
 
 ```bash
 cd integrations/microsoft-agent-framework/python/examples
@@ -92,14 +82,6 @@ uv run dev
 ```
 
 The server will start on `http://localhost:8888` by default.
-
-:::zone-end
-
-:::zone pivot="programming-language-csharp"
-
-Coming soon.
-
-:::zone-end
 
 ### 2. Start the Dojo Frontend
 
@@ -118,22 +100,10 @@ The Dojo frontend will be available at `http://localhost:3000`.
 1. Open `http://localhost:3000` in your browser
 2. Configure the server URL to `http://localhost:8888`
 
-:::zone pivot="programming-language-python"
-
 3. Select "Microsoft Agent Framework (Python)" from the dropdown
 4. Start exploring the example agents
 
-:::zone-end
-
-:::zone pivot="programming-language-csharp"
-
-Coming soon.
-
-:::zone-end
-
 ## Available Example Agents
-
-:::zone pivot="programming-language-python"
 
 The integration examples demonstrate all 7 AG-UI features through different agent endpoints:
 
@@ -147,19 +117,9 @@ The integration examples demonstrate all 7 AG-UI features through different agen
 | `/shared_state` | Feature 6: Shared State | Agent with bidirectional state synchronization |
 | `/predictive_state_updates` | Feature 7: Predictive State Updates | Agent with predictive state updates during tool execution |
 
-:::zone-end
-
-:::zone pivot="programming-language-csharp"
-
-Coming soon.
-
-:::zone-end
-
 ## Testing Your Own Agents
 
 To test your own agents with Dojo:
-
-:::zone pivot="programming-language-python"
 
 ### 1. Create Your Agent
 
@@ -213,17 +173,7 @@ if __name__ == "__main__":
 4. Your agent will appear in the endpoint dropdown as "my_agent"
 5. Select it and start testing
 
-:::zone-end
-
-:::zone pivot="programming-language-csharp"
-
-Coming soon.
-
-:::zone-end
-
 ## Project Structure
-
-:::zone pivot="programming-language-python"
 
 The AG-UI repository's integration examples follow this structure:
 
@@ -243,14 +193,6 @@ integrations/microsoft-agent-framework/python/examples/
 └── README.md                          # Integration examples documentation
 ```
 
-:::zone-end
-
-:::zone pivot="programming-language-csharp"
-
-Coming soon.
-
-:::zone-end
-
 ## Troubleshooting
 
 ### Server Connection Issues
@@ -268,18 +210,7 @@ If your agent doesn't appear in the Dojo dropdown:
 
 - Verify the agent endpoint is registered correctly
 - Check server logs for any startup errors
-
-:::zone pivot="programming-language-python"
-
 - Ensure the `add_agent_framework_fastapi_endpoint` call completed successfully
-
-:::zone-end
-
-:::zone pivot="programming-language-csharp"
-
-Coming soon.
-
-:::zone-end
 
 ### Environment Variable Issues
 
@@ -292,12 +223,7 @@ If you see authentication errors:
 
 ## Next Steps
 
-:::zone pivot="programming-language-python"
-
 - Explore the [example agents](https://github.com/ag-oss/ag-ui/tree/main/integrations/microsoft-agent-framework/python/examples/agents) to see implementation patterns
-
-:::zone-end
-
 - Learn about [Backend Tool Rendering](backend-tool-rendering.md) to customize tool UIs
 - Implement [Human-in-the-Loop](human-in-the-loop.md) workflows for approval flows
 - Add [State Management](state-management.md) for complex interactive experiences
@@ -308,14 +234,12 @@ If you see authentication errors:
 - [AG-UI GitHub Repository](https://github.com/ag-oss/ag-ui)
 - [Dojo Application](https://github.com/ag-oss/ag-ui/tree/main/apps/dojo)
 
-:::zone pivot="programming-language-python"
-
 - [Microsoft Agent Framework Integration Examples](https://github.com/ag-oss/ag-ui/tree/main/integrations/microsoft-agent-framework)
 
 :::zone-end
 
-:::zone pivot="programming-language-csharp"
+::: zone pivot="programming-language-csharp"
 
 Coming soon.
 
-:::zone-end
+::: zone-end
