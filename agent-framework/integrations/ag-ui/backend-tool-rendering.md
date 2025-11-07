@@ -61,7 +61,7 @@ from agent_framework import ai_function
 
 @ai_function
 def get_weather(
-    location: Annotated[str, Field(description="The city and country, e.g., 'London, UK'")],
+    location: Annotated[str, Field(description="The city")],
 ) -> str:
     """Get the current weather for a location."""
     # In a real application, you would call a weather API
@@ -87,7 +87,7 @@ from agent_framework import ai_function
 
 @ai_function
 def get_weather(
-    location: Annotated[str, Field(description="The city and country")],
+    location: Annotated[str, Field(description="The city.")],
 ) -> str:
     """Get the current weather for a location."""
     return f"The weather in {location} is sunny with a temperature of 22°C."
@@ -95,7 +95,7 @@ def get_weather(
 
 @ai_function
 def get_forecast(
-    location: Annotated[str, Field(description="The city and country")],
+    location: Annotated[str, Field(description="The city.")],
     days: Annotated[int, Field(description="Number of days to forecast")] = 3,
 ) -> dict[str, Any]:
     """Get the weather forecast for a location."""
@@ -130,7 +130,7 @@ from pydantic import Field
 # Define function tools
 @ai_function
 def get_weather(
-    location: Annotated[str, Field(description="The city and country, e.g., 'Paris, France'")],
+    location: Annotated[str, Field(description="The city")],
 ) -> str:
     """Get the current weather for a location."""
     # Simulated weather data
@@ -364,7 +364,7 @@ Handle errors gracefully in your tools:
 ```python
 @ai_function
 def get_weather(
-    location: Annotated[str, Field(description="The city and country")],
+    location: Annotated[str, Field(description="The city.")],
 ) -> str:
     """Get the current weather for a location."""
     try:
@@ -437,7 +437,7 @@ class WeatherTools:
     @ai_function
     def get_current_weather(
         self,
-        location: Annotated[str, Field(description="The city and country")],
+        location: Annotated[str, Field(description="The city.")],
     ) -> str:
         """Get current weather for a location."""
         # Use self.api_key to call API
@@ -446,7 +446,7 @@ class WeatherTools:
     @ai_function
     def get_forecast(
         self,
-        location: Annotated[str, Field(description="The city and country")],
+        location: Annotated[str, Field(description="The city.")],
         days: Annotated[int, Field(description="Number of days")] = 3,
     ) -> dict[str, Any]:
         """Get weather forecast for a location."""
