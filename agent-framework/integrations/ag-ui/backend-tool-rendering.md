@@ -76,60 +76,118 @@ You can provide multiple tools to give the agent more capabilities:
 using System.ComponentModel;
 using Microsoft.Extensions.AI;
 
+// Simple tool returning a string
 [Description("Get the current weather for a location.")]
 static string GetWeather([Description("The city")] string location)
 {
     return $"The weather in {location} is sunny with a temperature of 22°C.";
 }
 
-[Description("Get the weather forecast for a location.")]
-static object GetForecast(
-    [Description("The city")] string location,
-    [Description("Number of days to forecast")] int days = 3)
+// Complex tool with request/response types
+internal sealed class WeatherForecastRequest
 {
-    return new
+    public string Location { get; set; } = string.Empty;
+}
+
+internal sealed class WeatherForecastResponse
+{
+    public string Location { get; set; } = string.Empty;
+    public string Conditions { get; set; } = string.Empty;
+    public int TemperatureC { get; set; }
+}
+
+[Description("Get the weather forecast for a location.")]
+static WeatherForecastResponse GetForecast(
+    [Description("The weather forecast request")] WeatherForecastRequest request)
+{
+    return new WeatherForecastResponse
     {
-        location,
-        days,
-        forecast = new[]
-        {
-            new { day = 1, weather = "Sunny", high = 24, low = 18 },
-            new { day = 2, weather = "Partly cloudy", high = 22, low = 17 },
-            new { day = 3, weather = "Rainy", high = 19, low = 15 }
-        }
+        Location = request.Location,
+        Conditions = "Sunny",
+        TemperatureC = 22
     };
 }
 
-var tools = new AITool[]
-{
+AITool[] tools =
+[
     AIFunctionFactory.Create(GetWeather),
-    AIFunctionFactory.Create(GetForecast)
-};
+    AIFunctionFactory.Create(
+        GetForecast,
+        serializerOptions: Step3SampleJsonSerializerContext.Default.Options)
+];
 ```
 
 ## Creating an AG-UI Server with Function Tools
 
-Here's a complete server implementation with function tools:
+Here's a complete server implementation with function tools that demonstrates both simple (string return) and complex (typed object return) patterns:
 
 ```csharp
 // Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
-var app = builder.Build();
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.TypeInfoResolverChain.Add(Step3SampleJsonSerializerContext.Default));
+builder.Services.AddAGUI();
 
-string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"] 
+WebApplication app = builder.Build();
+
+string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"] 
+string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
+// Define request/response types for tools
+internal sealed class WeatherForecastRequest
+{
+    public string Location { get; set; } = string.Empty;
+}
+
+internal sealed class WeatherForecastResponse
+{
+    public string Location { get; set; } = string.Empty;
+    public string Conditions { get; set; } = string.Empty;
+    public int TemperatureC { get; set; }
+}
+
+internal sealed class RestaurantSearchRequest
+{
+    public string Location { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = "any";
+}
+
+internal sealed class RestaurantSearchResponse
+{
+    public string Location { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = string.Empty;
+    public RestaurantInfo[] Results { get; set; } = [];
+}
+
+internal sealed class RestaurantInfo
+{
+    public string Name { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = string.Empty;
+    public double Rating { get; set; }
+    public string Address { get; set; } = string.Empty;
+}
+
+// JSON serialization context for source generation
+[JsonSerializable(typeof(WeatherForecastRequest))]
+[JsonSerializable(typeof(WeatherForecastResponse))]
+[JsonSerializable(typeof(RestaurantSearchRequest))]
+[JsonSerializable(typeof(RestaurantSearchResponse))]
+internal sealed partial class Step3SampleJsonSerializerContext : JsonSerializerContext;
+
 // Define function tools
+
+// Simple tool that returns a string
 [Description("Get the current weather for a location.")]
 static string GetWeather([Description("The city")] string location)
 {
@@ -137,59 +195,81 @@ static string GetWeather([Description("The city")] string location)
     return $"The weather in {location} is sunny with a temperature of 22°C.";
 }
 
+// Complex tool with typed request/response
 [Description("Search for restaurants in a location.")]
-static object SearchRestaurants(
-    [Description("The city to search in")] string location,
-    [Description("Type of cuisine")] string cuisine = "any")
+static RestaurantSearchResponse SearchRestaurants(
+    [Description("The restaurant search request")] RestaurantSearchRequest request)
 {
     // Simulated restaurant data
-    return new
+    string cuisine = request.Cuisine == "any" ? "Italian" : request.Cuisine;
+
+    return new RestaurantSearchResponse
     {
-        location,
-        cuisine,
-        results = new[]
-        {
-            new
+        Location = request.Location,
+        Cuisine = request.Cuisine,
+        Results =
+        [
+            new RestaurantInfo
             {
-                name = "The Golden Fork",
-                cuisine = cuisine == "any" ? "Italian" : cuisine,
-                rating = 4.5,
-                address = $"123 Main St, {location}"
+                Name = "The Golden Fork",
+                Cuisine = cuisine,
+                Rating = 4.5,
+                Address = $"123 Main St, {request.Location}"
             },
-            new
+            new RestaurantInfo
             {
-                name = "Spice Haven",
-                cuisine = cuisine == "any" ? "Indian" : cuisine,
-                rating = 4.7,
-                address = $"456 Oak Ave, {location}"
+                Name = "Spice Haven",
+                Cuisine = cuisine == "Italian" ? "Indian" : cuisine,
+                Rating = 4.7,
+                Address = $"456 Oak Ave, {request.Location}"
             },
-            new
+            new RestaurantInfo
             {
-                name = "Green Leaf",
-                cuisine = cuisine == "any" ? "Vegetarian" : cuisine,
-                rating = 4.3,
-                address = $"789 Elm Rd, {location}"
+                Name = "Green Leaf",
+                Cuisine = "Vegetarian",
+                Rating = 4.3,
+                Address = $"789 Elm Rd, {request.Location}"
             }
-        }
+        ]
+    };
+}
+
+// Another tool with typed request/response
+[Description("Get the weather forecast for a location.")]
+static WeatherForecastResponse GetForecast(
+    [Description("The weather forecast request")] WeatherForecastRequest request)
+{
+    // Simulated forecast data
+    return new WeatherForecastResponse
+    {
+        Location = request.Location,
+        Conditions = "Sunny",
+        TemperatureC = 22
     };
 }
 
 // Create tools array
-var tools = new AITool[]
-{
+AITool[] tools =
+[
     AIFunctionFactory.Create(GetWeather),
-    AIFunctionFactory.Create(SearchRestaurants)
-};
+    AIFunctionFactory.Create(
+        SearchRestaurants,
+        serializerOptions: Step3SampleJsonSerializerContext.Default.Options),
+    AIFunctionFactory.Create(
+        GetForecast,
+        serializerOptions: Step3SampleJsonSerializerContext.Default.Options)
+];
 
 // Create the AI agent with tools
-var agent = new AzureOpenAIClient(
+IChatClient chatClient = new AzureOpenAIClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .CreateAIAgent(
-        name: "AGUIAssistant",
-        instructions: "You are a helpful assistant with access to weather and restaurant information.",
-        tools: tools);
+    .GetChatClient(deploymentName);
+
+AIAgent agent = chatClient.CreateAIAgent(
+    name: "AGUIAssistant",
+    instructions: "You are a helpful assistant with access to weather and restaurant information.",
+    tools: tools);
 
 // Map the AG-UI agent endpoint
 app.MapAGUI("/", agent);
@@ -200,7 +280,11 @@ await app.RunAsync();
 ### Key Concepts
 
 - **Tool Definition**: Methods decorated with `[Description]` attributes
+- **Request/Response Types**: Explicit classes for type safety with complex tools
+- **JSON Serialization Context**: Source-generated serialization for performance and trimming
+- **`ConfigureHttpJsonOptions`**: Registers the serialization context with ASP.NET Core
 - **`AIFunctionFactory.Create`**: Converts methods into tool definitions
+- **`serializerOptions` parameter**: Required for tools with complex types
 - **`CreateAIAgent` with tools**: Registers tools with the agent
 - **Server-side execution**: Tools execute in the server process
 - **Automatic streaming**: Tool calls and results are streamed to clients
@@ -212,7 +296,7 @@ Set environment variables and run:
 ```bash
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
 export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
-dotnet run --urls "http://127.0.0.1:8888"
+dotnet run --urls http://localhost:8888
 ```
 
 ## Observing Tool Calls in the Client
@@ -270,29 +354,57 @@ var weatherTool = AIFunctionFactory.Create(GetWeatherAsync);
 
 ### Tools with Complex Return Types
 
-Return structured data when appropriate:
+Return structured data using explicit types for better type safety:
 
 ```csharp
-[Description("Get detailed weather information.")]
-static object GetDetailedWeather([Description("The city")] string location)
+internal sealed class WeatherDetails
 {
-    return new
+    public string Location { get; set; } = string.Empty;
+    public CurrentConditions Current { get; set; } = new();
+    public ForecastDay[] Forecast { get; set; } = [];
+}
+
+internal sealed class CurrentConditions
+{
+    public int Temperature { get; set; }
+    public string Conditions { get; set; } = string.Empty;
+    public int Humidity { get; set; }
+    public int WindSpeed { get; set; }
+}
+
+internal sealed class ForecastDay
+{
+    public string Day { get; set; } = string.Empty;
+    public int High { get; set; }
+    public int Low { get; set; }
+}
+
+[Description("Get detailed weather information.")]
+static WeatherDetails GetDetailedWeather(
+    [Description("The weather request")] WeatherRequest request)
+{
+    return new WeatherDetails
     {
-        location,
-        current = new
+        Location = request.Location,
+        Current = new CurrentConditions
         {
-            temperature = 22,
-            conditions = "Sunny",
-            humidity = 65,
-            windSpeed = 15
+            Temperature = 22,
+            Conditions = "Sunny",
+            Humidity = 65,
+            WindSpeed = 15
         },
-        forecast = new[]
-        {
-            new { day = "Monday", high = 24, low = 18 },
-            new { day = "Tuesday", high = 22, low = 17 }
-        }
+        Forecast =
+        [
+            new ForecastDay { Day = "Monday", High = 24, Low = 18 },
+            new ForecastDay { Day = "Tuesday", High = 22, Low = 17 }
+        ]
     };
 }
+
+// Remember to add types to serialization context
+[JsonSerializable(typeof(WeatherDetails))]
+[JsonSerializable(typeof(WeatherRequest))]
+internal sealed partial class Step3SampleJsonSerializerContext : JsonSerializerContext;
 ```
 
 ### Error Handling in Tools
