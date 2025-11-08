@@ -13,7 +13,17 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-Coming soon.
+> [!NOTE]
+> Human-in-the-Loop (HITL) support with approval workflows is planned for a future release of the C# AG-UI framework. This feature requires `CONFIRMATION_REQUESTED` and `CONFIRMATION_RESPONSE` events that are not yet implemented in the current version.
+>
+> The Python implementation below demonstrates the pattern. Once HITL support is added to the C# framework, the implementation will follow a similar pattern using:
+> - Tool-level approval requirements
+> - Confirmation request/response events
+> - Client approval handling
+>
+> For now, if you need approval workflows in C#, consider implementing custom validation logic before tool execution or using the Python AG-UI implementation.
+
+See the **Python** tab below for a complete working example of human-in-the-loop workflows with AG-UI.
 
 ::: zone-end
 

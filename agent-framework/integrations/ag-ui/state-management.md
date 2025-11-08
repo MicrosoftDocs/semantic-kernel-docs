@@ -43,7 +43,169 @@ State management is valuable for:
 
 ::: zone pivot="programming-language-csharp"
 
-Coming soon.
+## Creating State-Aware Agents in C#
+
+### Define Your State Model
+
+First, define classes for your state structure:
+
+```csharp
+using System.Text.Json.Serialization;
+
+namespace RecipeAssistant;
+
+// State response wrapper
+internal sealed class RecipeResponse
+{
+    [JsonPropertyName("recipe")]
+    public RecipeState Recipe { get; set; } = new();
+}
+
+// Recipe state model
+internal sealed class RecipeState
+{
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
+
+    [JsonPropertyName("cuisine")]
+    public string Cuisine { get; set; } = string.Empty;
+
+    [JsonPropertyName("ingredients")]
+    public List<string> Ingredients { get; set; } = [];
+
+    [JsonPropertyName("steps")]
+    public List<string> Steps { get; set; } = [];
+
+    [JsonPropertyName("prep_time_minutes")]
+    public int PrepTimeMinutes { get; set; }
+
+    [JsonPropertyName("cook_time_minutes")]
+    public int CookTimeMinutes { get; set; }
+
+    [JsonPropertyName("skill_level")]
+    public string SkillLevel { get; set; } = string.Empty;
+}
+
+// JSON serialization context
+[JsonSerializable(typeof(RecipeResponse))]
+[JsonSerializable(typeof(RecipeState))]
+internal sealed partial class RecipeSerializerContext : JsonSerializerContext;
+```
+
+### Configure Agent with JSON Schema
+
+Use middleware to enhance JSON response format with schema definitions:
+
+```csharp
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using OpenAI;
+using ChatResponseFormat = Microsoft.Extensions.AI.ChatResponseFormat;
+
+AIAgent CreateRecipeAgent()
+{
+    string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
+        ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+    string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME")
+        ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
+
+    AzureOpenAIClient azureClient = new AzureOpenAIClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential());
+
+    var chatClient = azureClient.GetChatClient(deploymentName);
+
+    // Create base agent
+    AIAgent baseAgent = chatClient.AsIChatClient().CreateAIAgent(
+        name: "RecipeAgent",
+        instructions: """
+            You are a helpful recipe assistant. When users ask you to create or suggest a recipe,
+            respond with a complete RecipeResponse JSON object that includes:
+            - recipe.title: The recipe name
+            - recipe.cuisine: Type of cuisine (e.g., Italian, Mexican, Japanese)
+            - recipe.ingredients: Array of ingredient strings with quantities
+            - recipe.steps: Array of cooking instruction strings
+            - recipe.prep_time_minutes: Preparation time in minutes
+            - recipe.cook_time_minutes: Cooking time in minutes
+            - recipe.skill_level: One of "beginner", "intermediate", or "advanced"
+
+            Always include all fields in the response. Be creative and helpful.
+            """);
+
+    // Wrap with middleware to configure JSON schema output for state management
+    return baseAgent
+        .AsBuilder()
+        .Use(runFunc: null, runStreamingFunc: ConfigureStateMiddleware)
+        .Build();
+}
+
+// Middleware that configures JSON schema response format for state
+static IAsyncEnumerable<AgentRunResponseUpdate> ConfigureStateMiddleware(
+    IEnumerable<Microsoft.Extensions.AI.ChatMessage> messages,
+    AgentThread? thread,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    CancellationToken cancellationToken)
+{
+    // Configure structured JSON output with schema when JSON response format is requested
+    if (options is ChatClientAgentRunOptions chatRunOptions &&
+        chatRunOptions.ChatOptions?.ResponseFormat == ChatResponseFormat.Json)
+    {
+        // Set the JSON schema response format to ensure structured state output
+        chatRunOptions.ChatOptions.ResponseFormat = ChatResponseFormat.ForJsonSchema<RecipeResponse>(
+            schemaName: "RecipeResponse",
+            schemaDescription: "A structured recipe with title, skill level, cooking time, ingredients, and instructions");
+    }
+
+    return innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken);
+}
+```
+
+> [!NOTE]
+> The C# implementation uses a type alias to resolve ambiguity between `Microsoft.Extensions.AI.ChatResponseFormat` and `OpenAI.Chat.ChatResponseFormat`:
+> ```csharp
+> using ChatResponseFormat = Microsoft.Extensions.AI.ChatResponseFormat;
+> ```
+
+### Map the Agent Endpoint
+
+```csharp
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient().AddLogging();
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.TypeInfoResolverChain.Add(RecipeSerializerContext.Default));
+builder.Services.AddAGUI();
+
+WebApplication app = builder.Build();
+
+AIAgent recipeAgent = CreateRecipeAgent();
+app.MapAGUI("/", recipeAgent);
+
+await app.RunAsync();
+```
+
+### Key Concepts
+
+- **Structured State Models**: Define C# classes for your state structure with JSON property names
+- **JSON Schema Response Format**: Use `ChatResponseFormat.ForJsonSchema<T>()` to ensure structured output
+- **Middleware Pattern**: Enhance JSON response format with schema when configured
+- **STATE_SNAPSHOT Events**: Framework automatically emits state snapshots when structured output is returned
+- **Response Format Configuration**: State management is controlled by setting `ChatOptions.ResponseFormat`
+
+### How It Works
+
+1. Client sends request with `ChatOptions.ResponseFormat = ChatResponseFormat.Json` configured
+2. Middleware detects JSON response format and enhances it with the schema
+3. Agent processes the request and returns structured JSON matching your state model
+4. Framework automatically sends STATE_SNAPSHOT event with the returned JSON
+5. Client receives and displays/updates state
+
+> [!TIP]
+> The middleware pattern allows you to conditionally apply schemas based on response format configuration rather than analyzing message content. This matches the Python implementation's approach where state management is declaratively configured through response format settings.
 
 ::: zone-end
 
