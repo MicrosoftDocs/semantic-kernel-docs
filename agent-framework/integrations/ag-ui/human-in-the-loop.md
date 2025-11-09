@@ -13,17 +13,331 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> Human-in-the-Loop (HITL) support with approval workflows is planned for a future release of the C# AG-UI framework. This feature requires `CONFIRMATION_REQUESTED` and `CONFIRMATION_RESPONSE` events that are not yet implemented in the current version.
->
-> The Python implementation below demonstrates the pattern. Once HITL support is added to the C# framework, the implementation will follow a similar pattern using:
-> - Tool-level approval requirements
-> - Confirmation request/response events
-> - Client approval handling
->
-> For now, if you need approval workflows in C#, consider implementing custom validation logic before tool execution or using the Python AG-UI implementation.
+This tutorial demonstrates how to implement human-in-the-loop approval workflows with AG-UI in C#. The C# implementation uses Microsoft.Extensions.AI's `ApprovalRequiredAIFunction` and translates approval requests into AG-UI "client tool calls" that the client handles and responds to.
 
-See the **Python** tab below for a complete working example of human-in-the-loop workflows with AG-UI.
+## Overview
+
+The C# AG-UI approval pattern works as follows:
+
+1. **Server**: Wraps functions with `ApprovalRequiredAIFunction` to mark them as requiring approval
+2. **Middleware**: Intercepts `FunctionApprovalRequestContent` from the agent and converts it to a client tool call
+3. **Client**: Receives the tool call, displays approval UI, and sends the approval response as a tool result
+4. **Middleware**: Unwraps the approval response and converts it to `FunctionApprovalResponseContent`
+5. **Agent**: Continues execution with the user's approval decision
+
+## Prerequisites
+
+- Azure OpenAI resource with a deployed model
+- Environment variables:
+  - `AZURE_OPENAI_ENDPOINT`
+  - `AZURE_OPENAI_DEPLOYMENT_NAME`
+- Understanding of [Backend Tool Rendering](backend-tool-rendering.md)
+
+## Server Implementation
+
+### Define Approval-Required Tools
+
+Create functions and wrap them with `ApprovalRequiredAIFunction`:
+
+```csharp
+using System.ComponentModel;
+using Microsoft.Extensions.AI;
+
+[Description("Send an email to a recipient.")]
+static string SendEmail(
+    [Description("The email address to send to")] string to,
+    [Description("The subject line")] string subject,
+    [Description("The email body")] string body)
+{
+    return $"Email sent to {to} with subject '{subject}'";
+}
+
+[Description("Transfer money between accounts.")]
+static string TransferMoney(
+    [Description("Source account number")] string fromAccount,
+    [Description("Destination account number")] string toAccount,
+    [Description("Amount to transfer")] decimal amount)
+{
+    return $"Transferred ${amount:F2} from account {fromAccount} to account {toAccount}";
+}
+
+// Create approval-required tools
+AITool[] tools =
+[
+    new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail)),
+    new ApprovalRequiredAIFunction(AIFunctionFactory.Create(TransferMoney)),
+    AIFunctionFactory.Create(CheckBalance) // Regular tool, no approval needed
+];
+```
+
+### Create Approval Models
+
+Define models for the approval request and response:
+
+```csharp
+using System.Text.Json.Serialization;
+
+public sealed class ApprovalRequest
+{
+    [JsonPropertyName("approval_id")]
+    public required string ApprovalId { get; init; }
+
+    [JsonPropertyName("function_name")]
+    public required string FunctionName { get; init; }
+
+    [JsonPropertyName("function_arguments")]
+    public required string FunctionArguments { get; init; }
+
+    [JsonPropertyName("message")]
+    public string? Message { get; init; }
+}
+
+public sealed class ApprovalResponse
+{
+    [JsonPropertyName("approval_id")]
+    public required string ApprovalId { get; init; }
+
+    [JsonPropertyName("approved")]
+    public required bool Approved { get; init; }
+}
+```
+
+### Implement Approval Middleware
+
+Create middleware that translates between Microsoft.Extensions.AI approval types and AG-UI protocol:
+
+```csharp
+using System.Text.Json;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+AIAgent agent = baseAgent
+    .AsBuilder()
+    .Use(runFunc: null, runStreamingFunc: HandleApprovalRequestsMiddleware)
+    .Build();
+
+static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentThread? thread,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken)
+{
+    // Check if we have an approval response from the client
+    FunctionApprovalResponseContent? approvalResponse = messages
+        .SelectMany(m => m.Contents)
+        .OfType<FunctionResultContent>()
+        .Where(frc => frc.CallId.StartsWith("approval_"))
+        .Select(frc => DeserializeApprovalResponse(frc, messages))
+        .FirstOrDefault(x => x != null);
+
+    // If we have an approval response, inject it into the message stream
+    IEnumerable<ChatMessage> modifiedMessages = messages;
+    if (approvalResponse != null)
+    {
+        modifiedMessages = ReplaceToolResultWithApprovalResponse(messages, approvalResponse);
+    }
+
+    // Run the agent and intercept any approval requests
+    await foreach (AgentRunResponseUpdate update in innerAgent.RunStreamingAsync(
+        modifiedMessages, thread, options, cancellationToken))
+    {
+        // Check if this update contains a FunctionApprovalRequestContent
+        FunctionApprovalRequestContent? approvalRequest = update.Contents
+            .OfType<FunctionApprovalRequestContent>()
+            .FirstOrDefault();
+
+        if (approvalRequest != null)
+        {
+            // Convert the approval request to a "client tool call"
+            FunctionCallContent functionCall = approvalRequest.FunctionCall;
+            string approvalId = $"approval_{functionCall.CallId}";
+
+            ApprovalRequest approvalData = new()
+            {
+                ApprovalId = approvalId,
+                FunctionName = functionCall.Name,
+                FunctionArguments = functionCall.Arguments?.ToString() ?? "{}",
+                Message = $"Approve execution of '{functionCall.Name}'?"
+            };
+
+            string approvalJson = JsonSerializer.Serialize(approvalData);
+
+            // Yield a tool call update that represents the approval request
+            yield return new AgentRunResponseUpdate(ChatRole.Assistant, [
+                new FunctionCallContent(
+                    callId: approvalId,
+                    name: "request_approval",
+                    arguments: new Dictionary<string, object?> { ["request"] = approvalJson })
+            ]);
+
+            // Yield a message indicating we're waiting for approval
+            yield return new AgentRunResponseUpdate(
+                ChatRole.Assistant,
+                $"\n\n[Waiting for approval to execute {functionCall.Name}...]");
+        }
+        else
+        {
+            yield return update;
+        }
+    }
+}
+```
+
+## Client Implementation
+
+### Handle Approval Requests
+
+The client detects tool calls named `"request_approval"` and prompts the user:
+
+```csharp
+using System.Text.Json;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.AGUI;
+using Microsoft.Extensions.AI;
+
+// Track pending approvals
+Dictionary<string, (string callId, ApprovalRequest request)> pendingApprovals = [];
+
+await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(
+    messages, thread, cancellationToken: cancellationToken))
+{
+    foreach (AIContent content in update.Contents)
+    {
+        if (content is FunctionCallContent toolCall && toolCall.Name == "request_approval")
+        {
+            // Extract and parse the approval request
+            string argsJson = toolCall.Arguments?.TryGetValue("request", out object? requestObj) == true
+                ? requestObj?.ToString() ?? "{}"
+                : "{}";
+                
+            ApprovalRequest? approvalRequest = JsonSerializer.Deserialize<ApprovalRequest>(argsJson);
+
+            if (approvalRequest != null)
+            {
+                pendingApprovals[toolCall.CallId] = (toolCall.CallId, approvalRequest);
+                DisplayApprovalRequest(approvalRequest);
+            }
+        }
+        else if (content is TextContent textContent)
+        {
+            Console.Write(textContent.Text);
+        }
+    }
+}
+```
+
+### Send Approval Response
+
+After getting user input, send the approval response as a tool result:
+
+```csharp
+foreach ((string callId, ApprovalRequest request) in pendingApprovals.Values)
+{
+    // Get user approval
+    Console.Write("\nApprove this action? (yes/no): ");
+    string? userInput = Console.ReadLine();
+    bool approved = userInput?.ToUpperInvariant() is "YES" or "Y";
+
+    // Create approval response
+    ApprovalResponse response = new()
+    {
+        ApprovalId = request.ApprovalId,
+        Approved = approved
+    };
+
+    string responseJson = JsonSerializer.Serialize(response);
+
+    // Add the tool result to messages
+    messages.Add(new ChatMessage(
+        ChatRole.Tool,
+        [new FunctionResultContent(callId, responseJson)]));
+
+    // Continue the conversation with the approval response
+    await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(
+        messages, thread, cancellationToken: cancellationToken))
+    {
+        // Process the continued response...
+    }
+}
+```
+
+## Example Interaction
+
+```
+User (:q or quit to exit): Send an email to user@example.com about the meeting
+
+[Run Started - Thread: thread_abc123, Run: run_xyz789]
+
+============================================================
+APPROVAL REQUIRED
+============================================================
+
+Function: SendEmail
+Arguments: {"to":"user@example.com","subject":"Meeting","body":"..."}
+Message: Approve execution of 'SendEmail'?
+
+============================================================
+
+[Waiting for approval to execute SendEmail...]
+[Run Finished - Thread: thread_abc123]
+
+Approve this action? (yes/no): yes
+
+[Sending approval response: APPROVED]
+
+[Run Resumed - Thread: thread_abc123]
+Email sent to user@example.com with subject 'Meeting'
+[Run Finished]
+```
+
+## Complete Sample Code
+
+For a complete working example, see:
+
+- **Server**: [AGUI_Step05_ServerWithApprovals](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/AGUI/AGUI_Step05_ServerWithApprovals)
+- **Client**: [AGUI_Step05_ClientWithApprovals](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/AGUI/AGUI_Step05_ClientWithApprovals)
+
+## Key Concepts
+
+### Client Tool Pattern
+
+The C# implementation uses a "client tool call" pattern:
+
+- **Approval Request** → Tool call named `"request_approval"` with approval details
+- **Approval Response** → Tool result containing the user's decision
+- **Middleware** → Translates between Microsoft.Extensions.AI types and AG-UI protocol
+
+This allows the standard `ApprovalRequiredAIFunction` pattern to work across the HTTP+SSE boundary while maintaining consistency with the agent framework's approval model.
+
+### Middleware Responsibilities
+
+The middleware handles:
+
+1. **Outbound**: Converting `FunctionApprovalRequestContent` to client tool calls
+2. **Inbound**: Converting tool results back to `FunctionApprovalResponseContent`
+3. **Thread Management**: Correlating approval requests with responses via approval IDs
+
+### Approval ID Format
+
+Approval IDs use the format `approval_{originalCallId}` to:
+
+- Identify approval responses vs regular tool results
+- Correlate approval responses with their original function calls
+- Prevent ID collisions with regular tool calls
+
+## Best Practices
+
+1. **Descriptive Tools**: Provide clear descriptions so users understand what they're approving
+2. **Granular Approval**: Request approval for individual sensitive actions
+3. **Informative Arguments**: Use descriptive parameter names with good documentation
+4. **Timeout Handling**: Set appropriate timeouts for approval requests (e.g., 120 seconds)
+5. **Selective Approval**: Mix approval-required and non-approval tools appropriately
+
+## Next Steps
+
+- **[Learn State Management](state-management.md)**: Manage shared state with approval workflows
+- **[Explore Function Tools](../../tutorials/agents/function-tools-approvals.md)**: Learn more about approval patterns in Agent Framework
 
 ::: zone-end
 
