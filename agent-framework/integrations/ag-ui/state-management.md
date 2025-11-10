@@ -92,19 +92,135 @@ internal sealed class RecipeState
 internal sealed partial class RecipeSerializerContext : JsonSerializerContext;
 ```
 
-### Configure Agent with JSON Schema
+### Implement State Management Middleware
 
-Use middleware to enhance JSON response format with schema definitions:
+Create middleware that handles state management by detecting when the client sends state and coordinating the agent's responses:
+
+```csharp
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+internal sealed class SharedStateAgent : DelegatingAIAgent
+{
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+
+    public SharedStateAgent(AIAgent innerAgent, JsonSerializerOptions jsonSerializerOptions)
+        : base(innerAgent)
+    {
+        this._jsonSerializerOptions = jsonSerializerOptions;
+    }
+
+    public override Task<AgentRunResponse> RunAsync(
+        IEnumerable<ChatMessage> messages,
+        AgentThread? thread = null,
+        AgentRunOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        return this.RunStreamingAsync(messages, thread, options, cancellationToken)
+            .ToAgentRunResponseAsync(cancellationToken);
+    }
+
+    public override async IAsyncEnumerable<AgentRunResponseUpdate> RunStreamingAsync(
+        IEnumerable<ChatMessage> messages,
+        AgentThread? thread = null,
+        AgentRunOptions? options = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        // Check if the client sent state in the request
+        if (options is not ChatClientAgentRunOptions { ChatOptions.AdditionalProperties: { } properties } chatRunOptions ||
+            !properties.TryGetValue("ag_ui_state", out JsonElement state))
+        {
+            // No state management requested, pass through to inner agent
+            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, thread, options, cancellationToken).ConfigureAwait(false))
+            {
+                yield return update;
+            }
+            yield break;
+        }
+
+        // First run: Generate structured state update
+        var firstRunOptions = new ChatClientAgentRunOptions
+        {
+            ChatOptions = chatRunOptions.ChatOptions.Clone(),
+            AllowBackgroundResponses = chatRunOptions.AllowBackgroundResponses,
+            ContinuationToken = chatRunOptions.ContinuationToken,
+            ChatClientFactory = chatRunOptions.ChatClientFactory,
+        };
+
+        // Configure JSON schema response format for structured state output
+        firstRunOptions.ChatOptions.ResponseFormat = ChatResponseFormat.ForJsonSchema<RecipeResponse>(
+            schemaName: "RecipeResponse",
+            schemaDescription: "A response containing a recipe with title, skill level, cooking time, preferences, ingredients, and instructions");
+
+        // Add current state to the conversation
+        ChatMessage stateUpdateMessage = new(
+            ChatRole.System,
+            [
+                new TextContent("Here is the current state in JSON format:"),
+                new TextContent(state.GetRawText()),
+                new TextContent("The new state is:")
+            ]);
+
+        var firstRunMessages = messages.Append(stateUpdateMessage);
+
+        // Collect all updates from first run
+        var allUpdates = new List<AgentRunResponseUpdate>();
+        await foreach (var update in this.InnerAgent.RunStreamingAsync(firstRunMessages, thread, firstRunOptions, cancellationToken).ConfigureAwait(false))
+        {
+            allUpdates.Add(update);
+
+            // Yield all non-text updates (tool calls, etc.)
+            bool hasNonTextContent = update.Contents.Any(c => c is not TextContent);
+            if (hasNonTextContent)
+            {
+                yield return update;
+            }
+        }
+
+        var response = allUpdates.ToAgentRunResponse();
+
+        // Try to deserialize the structured state response
+        if (response.TryDeserialize(this._jsonSerializerOptions, out JsonElement stateSnapshot))
+        {
+            // Serialize and emit as STATE_SNAPSHOT via DataContent
+            byte[] stateBytes = JsonSerializer.SerializeToUtf8Bytes(
+                stateSnapshot,
+                this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)));
+            yield return new AgentRunResponseUpdate
+            {
+                Contents = [new DataContent(stateBytes, "application/json")]
+            };
+        }
+        else
+        {
+            yield break;
+        }
+
+        // Second run: Generate user-friendly summary
+        var secondRunMessages = messages.Concat(response.Messages).Append(
+            new ChatMessage(
+                ChatRole.System,
+                [new TextContent("Please provide a concise summary of the state changes in at most two sentences.")]));
+
+        await foreach (var update in this.InnerAgent.RunStreamingAsync(secondRunMessages, thread, options, cancellationToken).ConfigureAwait(false))
+        {
+            yield return update;
+        }
+    }
+}
+```
+
+### Configure the Agent with State Management
 
 ```csharp
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using OpenAI;
-using ChatResponseFormat = Microsoft.Extensions.AI.ChatResponseFormat;
 
-AIAgent CreateRecipeAgent()
+AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
 {
     string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
         ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
@@ -134,40 +250,10 @@ AIAgent CreateRecipeAgent()
             Always include all fields in the response. Be creative and helpful.
             """);
 
-    // Wrap with middleware to configure JSON schema output for state management
-    return baseAgent
-        .AsBuilder()
-        .Use(runFunc: null, runStreamingFunc: ConfigureStateMiddleware)
-        .Build();
-}
-
-// Middleware that configures JSON schema response format for state
-static IAsyncEnumerable<AgentRunResponseUpdate> ConfigureStateMiddleware(
-    IEnumerable<Microsoft.Extensions.AI.ChatMessage> messages,
-    AgentThread? thread,
-    AgentRunOptions? options,
-    AIAgent innerAgent,
-    CancellationToken cancellationToken)
-{
-    // Configure structured JSON output with schema when JSON response format is requested
-    if (options is ChatClientAgentRunOptions chatRunOptions &&
-        chatRunOptions.ChatOptions?.ResponseFormat == ChatResponseFormat.Json)
-    {
-        // Set the JSON schema response format to ensure structured state output
-        chatRunOptions.ChatOptions.ResponseFormat = ChatResponseFormat.ForJsonSchema<RecipeResponse>(
-            schemaName: "RecipeResponse",
-            schemaDescription: "A structured recipe with title, skill level, cooking time, ingredients, and instructions");
-    }
-
-    return innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken);
+    // Wrap with state management middleware
+    return new SharedStateAgent(baseAgent, jsonSerializerOptions);
 }
 ```
-
-> [!NOTE]
-> The C# implementation uses a type alias to resolve ambiguity between `Microsoft.Extensions.AI.ChatResponseFormat` and `OpenAI.Chat.ChatResponseFormat`:
-> ```csharp
-> using ChatResponseFormat = Microsoft.Extensions.AI.ChatResponseFormat;
-> ```
 
 ### Map the Agent Endpoint
 
@@ -182,7 +268,8 @@ builder.Services.AddAGUI();
 
 WebApplication app = builder.Build();
 
-AIAgent recipeAgent = CreateRecipeAgent();
+var jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
+AIAgent recipeAgent = CreateRecipeAgent(jsonOptions.SerializerOptions);
 app.MapAGUI("/", recipeAgent);
 
 await app.RunAsync();
@@ -190,22 +277,25 @@ await app.RunAsync();
 
 ### Key Concepts
 
+- **State Detection**: Middleware checks for `ag_ui_state` in `ChatOptions.AdditionalProperties` to detect when the client is requesting state management
+- **Two-Phase Response**: First generates structured state (JSON schema), then generates a user-friendly summary
 - **Structured State Models**: Define C# classes for your state structure with JSON property names
 - **JSON Schema Response Format**: Use `ChatResponseFormat.ForJsonSchema<T>()` to ensure structured output
-- **Middleware Pattern**: Enhance JSON response format with schema when configured
-- **STATE_SNAPSHOT Events**: Framework automatically emits state snapshots when structured output is returned
-- **Response Format Configuration**: State management is controlled by setting `ChatOptions.ResponseFormat`
+- **STATE_SNAPSHOT Events**: Emitted as `DataContent` with `application/json` media type, which the AG-UI framework automatically converts to STATE_SNAPSHOT events
+- **State Context**: Current state is injected as a system message to provide context to the agent
 
 ### How It Works
 
-1. Client sends request with `ChatOptions.ResponseFormat = ChatResponseFormat.Json` configured
-2. Middleware detects JSON response format and enhances it with the schema
-3. Agent processes the request and returns structured JSON matching your state model
-4. Framework automatically sends STATE_SNAPSHOT event with the returned JSON
-5. Client receives and displays/updates state
+1. Client sends request with state in `ChatOptions.AdditionalProperties["ag_ui_state"]`
+2. Middleware detects state and performs first run with JSON schema response format
+3. Middleware adds current state as context in a system message
+4. Agent generates structured state update matching your state model
+5. Middleware serializes state and emits as `DataContent` (becomes STATE_SNAPSHOT event)
+6. Middleware performs second run to generate user-friendly summary
+7. Client receives both the state snapshot and the natural language summary
 
 > [!TIP]
-> The middleware pattern allows you to conditionally apply schemas based on response format configuration rather than analyzing message content. This matches the Python implementation's approach where state management is declaratively configured through response format settings.
+> The two-phase approach separates state management from user communication. The first phase ensures structured, reliable state updates while the second phase provides natural language feedback to the user.
 
 ::: zone-end
 

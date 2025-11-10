@@ -4,6 +4,8 @@
   href: getting-started.md
 - name: Backend Tool Rendering
   href: backend-tool-rendering.md
+- name: Frontend Tool Rendering
+  href: frontend-tools.md
 - name: Human-in-the-Loop
   href: human-in-the-loop.md
 - name: State Management

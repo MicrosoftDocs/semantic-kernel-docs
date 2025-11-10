@@ -13,7 +13,7 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial demonstrates how to implement human-in-the-loop approval workflows with AG-UI in C#. The C# implementation uses Microsoft.Extensions.AI's `ApprovalRequiredAIFunction` and translates approval requests into AG-UI "client tool calls" that the client handles and responds to.
+This tutorial demonstrates how to implement human-in-the-loop approval workflows with AG-UI in .NET. The .NET implementation uses Microsoft.Extensions.AI's `ApprovalRequiredAIFunction` and translates approval requests into AG-UI "client tool calls" that the client handles and responds to.
 
 ## Overview
 
@@ -35,9 +35,9 @@ The C# AG-UI approval pattern works as follows:
 
 ## Server Implementation
 
-### Define Approval-Required Tools
+### Define Approval-Required Tool
 
-Create functions and wrap them with `ApprovalRequiredAIFunction`:
+Create a function and wrap it with `ApprovalRequiredAIFunction`:
 
 ```csharp
 using System.ComponentModel;
@@ -52,22 +52,8 @@ static string SendEmail(
     return $"Email sent to {to} with subject '{subject}'";
 }
 
-[Description("Transfer money between accounts.")]
-static string TransferMoney(
-    [Description("Source account number")] string fromAccount,
-    [Description("Destination account number")] string toAccount,
-    [Description("Amount to transfer")] decimal amount)
-{
-    return $"Transferred ${amount:F2} from account {fromAccount} to account {toAccount}";
-}
-
-// Create approval-required tools
-AITool[] tools =
-[
-    new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail)),
-    new ApprovalRequiredAIFunction(AIFunctionFactory.Create(TransferMoney)),
-    AIFunctionFactory.Create(CheckBalance) // Regular tool, no approval needed
-];
+// Create approval-required tool
+AITool[] tools = [new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail))];
 ```
 
 ### Create Approval Models
@@ -86,7 +72,7 @@ public sealed class ApprovalRequest
     public required string FunctionName { get; init; }
 
     [JsonPropertyName("function_arguments")]
-    public required string FunctionArguments { get; init; }
+    public JsonElement? FunctionArguments { get; init; }
 
     [JsonPropertyName("message")]
     public string? Message { get; init; }
@@ -100,6 +86,13 @@ public sealed class ApprovalResponse
     [JsonPropertyName("approved")]
     public required bool Approved { get; init; }
 }
+
+[JsonSerializable(typeof(ApprovalRequest))]
+[JsonSerializable(typeof(ApprovalResponse))]
+[JsonSerializable(typeof(Dictionary<string, object?>))]
+internal partial class ApprovalJsonContext : JsonSerializerContext
+{
+}
 ```
 
 ### Implement Approval Middleware
@@ -107,119 +100,141 @@ public sealed class ApprovalResponse
 Create middleware that translates between Microsoft.Extensions.AI approval types and AG-UI protocol:
 
 ```csharp
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
 
-AIAgent agent = baseAgent
+// Get JsonSerializerOptions from the configured HTTP JSON options
+var jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
+
+var agent = baseAgent
     .AsBuilder()
-    .Use(runFunc: null, runStreamingFunc: HandleApprovalRequestsMiddleware)
+    .Use(runFunc: null, runStreamingFunc: (messages, thread, options, innerAgent, cancellationToken) =>
+        HandleApprovalRequestsMiddleware(
+            messages,
+            thread,
+            options,
+            innerAgent,
+            jsonOptions.SerializerOptions,
+            cancellationToken))
     .Build();
 
 static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMiddleware(
-    IEnumerable<Microsoft.Extensions.AI.ChatMessage> messages,
+    IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
     AIAgent innerAgent,
-    [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken)
+    JsonSerializerOptions jsonSerializerOptions,
+    [EnumeratorCancellation] CancellationToken cancellationToken)
 {
-    // Look for "request_approval" tool calls and their matching results
-    var approvalToolCalls = new Dictionary<string, FunctionCallContent>();
-    FunctionResultContent? approvalResult = null;
+    // Process incoming approval responses from client
+    var modifiedMessages = ProcessIncomingFunctionApprovals(messages, jsonSerializerOptions);
 
-    foreach (var message in messages)
+    // Run the agent and intercept any approval requests
+    await foreach (var update in innerAgent.RunStreamingAsync(
+        modifiedMessages, thread, options, cancellationToken))
     {
-        foreach (var content in message.Contents)
+        // Check if we need to convert approval request to client tool call
+        await foreach (var processedUpdate in ProcessFunctionApprovalRequests(update, jsonSerializerOptions))
         {
-            // Track approval tool calls by their call ID
-            if (content is FunctionCallContent toolCall && toolCall.Name == "request_approval")
-            {
-                approvalToolCalls[toolCall.CallId] = toolCall;
-            }
-            // Look for tool results that match approval tool calls
-            else if (content is FunctionResultContent result && approvalToolCalls.ContainsKey(result.CallId))
-            {
-                approvalResult = result;
-            }
+            yield return processedUpdate;
         }
     }
 
-    // If we found an approval response, convert it to FunctionApprovalResponseContent
-    var modifiedMessages = messages;
-    if (approvalResult != null)
+    // Local function to process incoming approval responses
+    static IEnumerable<ChatMessage> ProcessIncomingFunctionApprovals(
+        IEnumerable<ChatMessage> messages,
+        JsonSerializerOptions jsonSerializerOptions)
     {
-        // Deserialize the approval response
-        var response = JsonSerializer.Deserialize<ApprovalResponse>(
-            approvalResult.Result?.ToString() ?? "{}",
-            Step5SampleJsonSerializerContext.Default.Options);
+        // Look for "request_approval" tool calls and their matching results
+        Dictionary<string, FunctionCallContent> approvalToolCalls = [];
+        FunctionResultContent? approvalResult = null;
 
-        if (response != null)
+        foreach (var message in messages)
         {
-            // Extract the original function call details from the approval request
-            var originalToolCall = approvalToolCalls[approvalResult.CallId];
-
-            if (originalToolCall.Arguments?.TryGetValue("request", out var requestObj) == true)
+            foreach (var content in message.Contents)
             {
-                var approvalRequest = JsonSerializer.Deserialize<ApprovalRequest>(
-                    requestObj?.ToString() ?? "{}",
-                    Step5SampleJsonSerializerContext.Default.Options);
-
-                if (approvalRequest != null)
+                if (content is FunctionCallContent { Name: "request_approval" } toolCall)
                 {
-                    // Reconstruct the original function call from captured details
-                    var argumentsDict = new Dictionary<string, object?>();
-                    if (!string.IsNullOrEmpty(approvalRequest.FunctionArguments))
-                    {
-                        using var doc = JsonDocument.Parse(approvalRequest.FunctionArguments);
-                        foreach (var property in doc.RootElement.EnumerateObject())
-                        {
-                            argumentsDict[property.Name] = property.Value.Clone();
-                        }
-                    }
-
-                    var originalFunctionCall = new FunctionCallContent(
-                        callId: response.ApprovalId,
-                        name: approvalRequest.FunctionName,
-                        arguments: argumentsDict);
-
-                    var functionApprovalResponse = new FunctionApprovalResponseContent(
-                        response.ApprovalId,
-                        response.Approved,
-                        originalFunctionCall);
-
-                    // Replace the tool result message with the approval response
-                    var newMessages = new List<Microsoft.Extensions.AI.ChatMessage>();
-                    foreach (var message in messages)
-                    {
-                        var hasApprovalResult = false;
-                        foreach (var content in message.Contents)
-                        {
-                            if (content is FunctionResultContent frc && frc.CallId == approvalResult.CallId)
-                            {
-                                hasApprovalResult = true;
-                                break;
-                            }
-                        }
-
-                        if (hasApprovalResult)
-                        {
-                            newMessages.Add(new Microsoft.Extensions.AI.ChatMessage(
-                                Microsoft.Extensions.AI.ChatRole.User,
-                                [functionApprovalResponse]));
-                        }
-                        else
-                        {
-                            newMessages.Add(message);
-                        }
-                    }
-                    modifiedMessages = newMessages;
+                    approvalToolCalls[toolCall.CallId] = toolCall;
+                }
+                else if (content is FunctionResultContent result && approvalToolCalls.ContainsKey(result.CallId))
+                {
+                    approvalResult = result;
                 }
             }
         }
+
+        // If no approval response found, return messages unchanged
+        if (approvalResult == null)
+        {
+            return messages;
+        }
+
+        // Deserialize the approval response
+        if ((approvalResult.Result as JsonElement?)?.Deserialize(jsonSerializerOptions.GetTypeInfo(typeof(ApprovalResponse))) is not ApprovalResponse response)
+        {
+            return messages;
+        }
+
+        // Extract the original function call details from the approval request
+        var originalToolCall = approvalToolCalls[approvalResult.CallId];
+
+        if (originalToolCall.Arguments?.TryGetValue("request", out JsonElement request) != true ||
+            request.Deserialize(jsonSerializerOptions.GetTypeInfo(typeof(ApprovalRequest))) is not ApprovalRequest approvalRequest)
+        {
+            return messages;
+        }
+
+        // Deserialize the function arguments from JsonElement
+        var functionArguments = approvalRequest.FunctionArguments is { } args
+            ? (Dictionary<string, object?>?)args.Deserialize(
+                jsonSerializerOptions.GetTypeInfo(typeof(Dictionary<string, object?>)))
+            : null;
+
+        var originalFunctionCall = new FunctionCallContent(
+            callId: response.ApprovalId,
+            name: approvalRequest.FunctionName,
+            arguments: functionArguments);
+
+        var functionApprovalResponse = new FunctionApprovalResponseContent(
+            response.ApprovalId,
+            response.Approved,
+            originalFunctionCall);
+
+        // Replace the tool result message with the approval response
+        List<ChatMessage> newMessages = [];
+        foreach (var message in messages)
+        {
+            var hasApprovalResult = false;
+            foreach (var content in message.Contents)
+            {
+                if (content is FunctionResultContent { CallId: var callId } && callId == approvalResult.CallId)
+                {
+                    hasApprovalResult = true;
+                    break;
+                }
+            }
+
+            if (hasApprovalResult)
+            {
+                newMessages.Add(new ChatMessage(ChatRole.User, [functionApprovalResponse]));
+            }
+            else
+            {
+                newMessages.Add(message);
+            }
+        }
+
+        return newMessages;
     }
 
-    // Run the agent and intercept any approval requests
-    await foreach (var update in innerAgent.RunStreamingAsync(modifiedMessages, thread, options, cancellationToken))
+    // Local function to process outgoing approval requests
+    static async IAsyncEnumerable<AgentRunResponseUpdate> ProcessFunctionApprovalRequests(
+        AgentRunResponseUpdate update,
+        JsonSerializerOptions jsonSerializerOptions)
     {
         // Check if this update contains a FunctionApprovalRequestContent
         FunctionApprovalRequestContent? approvalRequestContent = null;
@@ -232,125 +247,197 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMidd
             }
         }
 
-        if (approvalRequestContent != null)
-        {
-            // Convert the approval request to a "client tool call"
-            var functionCall = approvalRequestContent.FunctionCall;
-            var approvalId = approvalRequestContent.Id;
-
-            // Serialize the function arguments as JSON string
-            var argsJson = "{}";
-            if (functionCall.Arguments?.Count > 0)
-            {
-                argsJson = JsonSerializer.Serialize(functionCall.Arguments);
-            }
-
-            var approvalData = new ApprovalRequest
-            {
-                ApprovalId = approvalId,
-                FunctionName = functionCall.Name,
-                FunctionArguments = argsJson,
-                Message = $"Approve execution of '{functionCall.Name}'?"
-            };
-
-            var approvalJson = JsonSerializer.Serialize(approvalData, Step5SampleJsonSerializerContext.Default.Options);
-
-            // Yield a tool call update that represents the approval request
-            yield return new AgentRunResponseUpdate(ChatRole.Assistant, [
-                new FunctionCallContent(
-                    callId: approvalId,
-                    name: "request_approval",
-                    arguments: new Dictionary<string, object?> { ["request"] = approvalJson })
-            ]);
-
-            // Yield a message indicating we're waiting for approval
-            yield return new AgentRunResponseUpdate(
-                ChatRole.Assistant,
-                $"\n\n[Waiting for approval to execute {functionCall.Name}...]");
-        }
-        else
+        // If no approval request, yield the update unchanged
+        if (approvalRequestContent == null)
         {
             yield return update;
+            yield break;
         }
+
+        // Convert the approval request to a "client tool call"
+        var functionCall = approvalRequestContent.FunctionCall;
+        var approvalId = approvalRequestContent.Id;
+
+        // Serialize the function arguments as JsonElement
+        var argsElement = functionCall.Arguments?.Count > 0
+            ? JsonSerializer.SerializeToElement(functionCall.Arguments, jsonSerializerOptions.GetTypeInfo(typeof(IDictionary<string, object?>)))
+            : (JsonElement?)null;
+
+        var approvalData = new ApprovalRequest
+        {
+            ApprovalId = approvalId,
+            FunctionName = functionCall.Name,
+            FunctionArguments = argsElement,
+            Message = $"Approve execution of '{functionCall.Name}'?"
+        };
+
+        var approvalJson = JsonSerializer.Serialize(approvalData, jsonSerializerOptions.GetTypeInfo(typeof(ApprovalRequest)));
+
+        // Yield a tool call update that represents the approval request
+        yield return new AgentRunResponseUpdate(ChatRole.Assistant, [
+            new FunctionCallContent(
+                callId: approvalId,
+                name: "request_approval",
+                arguments: new Dictionary<string, object?> { ["request"] = approvalJson })
+        ]);
     }
 }
 ```
 
 ## Client Implementation
 
-### Handle Approval Requests
+## Client Implementation
 
-The client detects tool calls named `"request_approval"` and prompts the user:
+### Implement Client-Side Middleware
+
+The client wraps the agent with middleware that translates `"request_approval"` tool calls to `FunctionApprovalRequestContent`:
 
 ```csharp
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
 
-// Track pending approvals
-Dictionary<string, (string callId, ApprovalRequest request)> pendingApprovals = [];
+// Get JsonSerializerOptions from the client
+var jsonSerializerOptions = agent.ChatOptions?.JsonSerializerOptions ?? JsonSerializerOptions.Default;
 
-await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(
-    messages, thread, cancellationToken: cancellationToken))
+// Wrap the agent with approval middleware
+var wrappedAgent = agent
+    .AsBuilder()
+    .Use(runFunc: null, runStreamingFunc: (messages, thread, options, innerAgent, cancellationToken) =>
+        HandleApprovalRequestsClientMiddleware(
+            messages,
+            thread,
+            options,
+            innerAgent,
+            jsonSerializerOptions,
+            cancellationToken))
+    .Build();
+
+static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsClientMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentThread? thread,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    JsonSerializerOptions jsonSerializerOptions,
+    [EnumeratorCancellation] CancellationToken cancellationToken)
 {
-    foreach (AIContent content in update.Contents)
+    await foreach (var update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
     {
-        if (content is FunctionCallContent toolCall && toolCall.Name == "request_approval")
+        // Check if this update contains a "request_approval" tool call
+        FunctionCallContent? approvalToolCall = null;
+        foreach (var content in update.Contents)
         {
-            // Extract and parse the approval request
-            string argsJson = toolCall.Arguments?.TryGetValue("request", out object? requestObj) == true
-                ? requestObj?.ToString() ?? "{}"
-                : "{}";
-                
-            ApprovalRequest? approvalRequest = JsonSerializer.Deserialize<ApprovalRequest>(argsJson);
-
-            if (approvalRequest != null)
+            if (content is FunctionCallContent { Name: "request_approval" } toolCall)
             {
-                pendingApprovals[toolCall.CallId] = (toolCall.CallId, approvalRequest);
-                DisplayApprovalRequest(approvalRequest);
+                approvalToolCall = toolCall;
+                break;
             }
         }
-        else if (content is TextContent textContent)
+
+        // If no approval tool call, yield the update unchanged
+        if (approvalToolCall == null)
         {
-            Console.Write(textContent.Text);
+            yield return update;
+            continue;
         }
+
+        // Extract and parse the approval request
+        if (approvalToolCall.Arguments?.TryGetValue("request", out JsonElement request) != true ||
+            request.Deserialize(jsonSerializerOptions.GetTypeInfo(typeof(ApprovalRequest))) is not ApprovalRequest approvalRequest)
+        {
+            yield return update;
+            continue;
+        }
+
+        // Deserialize the function arguments from JsonElement
+        var functionArguments = approvalRequest.FunctionArguments is { } args
+            ? (Dictionary<string, object?>?)args.Deserialize(
+                jsonSerializerOptions.GetTypeInfo(typeof(Dictionary<string, object?>)))
+            : null;
+
+        var originalFunctionCall = new FunctionCallContent(
+            callId: approvalRequest.ApprovalId,
+            name: approvalRequest.FunctionName,
+            arguments: functionArguments);
+
+        // Convert to FunctionApprovalRequestContent
+        yield return new AgentRunResponseUpdate(ChatRole.Assistant, [
+            new FunctionApprovalRequestContent(
+                approvalRequest.ApprovalId,
+                originalFunctionCall)
+        ]);
     }
 }
 ```
 
-### Send Approval Response
+### Handle Approval Requests and Send Responses
 
-After getting user input, send the approval response as a tool result:
+The consuming code processes approval requests and automatically continues until no more approvals are needed:
 
 ```csharp
-foreach ((string callId, ApprovalRequest request) in pendingApprovals.Values)
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.AGUI;
+using Microsoft.Extensions.AI;
+
+List<AIContent> approvalResponses = [];
+
+do
 {
-    // Get user approval
-    Console.Write("\nApprove this action? (yes/no): ");
-    string? userInput = Console.ReadLine();
-    bool approved = userInput?.ToUpperInvariant() is "YES" or "Y";
-
-    // Create approval response
-    ApprovalResponse response = new()
-    {
-        ApprovalId = request.ApprovalId,
-        Approved = approved
-    };
-
-    string responseJson = JsonSerializer.Serialize(response);
-
-    // Add the tool result to messages
-    messages.Add(new ChatMessage(
-        ChatRole.Tool,
-        [new FunctionResultContent(callId, responseJson)]));
-
-    // Continue the conversation with the approval response
-    await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(
+    approvalResponses.Clear();
+    
+    await foreach (AgentRunResponseUpdate update in wrappedAgent.RunStreamingAsync(
         messages, thread, cancellationToken: cancellationToken))
     {
-        // Process the continued response...
+        foreach (AIContent content in update.Contents)
+        {
+            if (content is FunctionApprovalRequestContent approvalRequest)
+            {
+                DisplayApprovalRequest(approvalRequest);
+                
+                // Get user approval immediately
+                Console.Write($"\nApprove '{approvalRequest.FunctionCall.Name}'? (yes/no): ");
+                string? userInput = Console.ReadLine();
+                bool approved = userInput?.ToUpperInvariant() is "YES" or "Y";
+
+                // Create and collect approval response
+                var approvalResponse = approvalRequest.CreateResponse(approved);
+                approvalResponses.Add(approvalResponse);
+            }
+            else if (content is TextContent textContent)
+            {
+                Console.Write(textContent.Text);
+            }
+        }
     }
+
+    // If we collected approval responses, add them to messages for next iteration
+    if (approvalResponses.Count > 0)
+    {
+        messages.Add(new ChatMessage(ChatRole.User, approvalResponses.ToArray()));
+    }
+}
+while (approvalResponses.Count > 0);
+
+static void DisplayApprovalRequest(FunctionApprovalRequestContent approvalRequest)
+{
+    Console.WriteLine();
+    Console.WriteLine("============================================================");
+    Console.WriteLine("APPROVAL REQUIRED");
+    Console.WriteLine("============================================================");
+    Console.WriteLine($"Function: {approvalRequest.FunctionCall.Name}");
+    
+    if (approvalRequest.FunctionCall.Arguments != null)
+    {
+        Console.WriteLine("Arguments:");
+        foreach (var arg in approvalRequest.FunctionCall.Arguments)
+        {
+            Console.WriteLine($"  {arg.Key} = {arg.Value}");
+        }
+    }
+    
+    Console.WriteLine("============================================================");
 }
 ```
 
@@ -413,14 +500,6 @@ The middleware identifies approval-related messages by:
 - **Argument Extraction**: Deserializing approval data from the tool call's `arguments["request"]` field
 
 This approach avoids string prefix manipulation and properly tracks the relationship between approval requests and responses.
-
-## Best Practices
-
-1. **Descriptive Tools**: Provide clear descriptions so users understand what they're approving
-2. **Granular Approval**: Request approval for individual sensitive actions
-3. **Informative Arguments**: Use descriptive parameter names with good documentation
-4. **Timeout Handling**: Set appropriate timeouts for approval requests (e.g., 120 seconds)
-5. **Selective Approval**: Mix approval-required and non-approval tools appropriately
 
 ## Next Steps
 

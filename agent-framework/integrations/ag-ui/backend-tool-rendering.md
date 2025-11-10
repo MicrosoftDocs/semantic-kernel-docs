@@ -34,92 +34,9 @@ Backend tool rendering means:
 - Tool call events and results are streamed to the client in real-time
 - The client receives updates about tool execution progress
 
-This approach provides:
-
-- **Security**: Sensitive operations stay on the server
-- **Consistency**: All clients use the same tool implementations
-- **Transparency**: Clients can display tool execution progress
-- **Flexibility**: Update tools without changing client code
-
-## Creating Function Tools
-
-### Basic Function Tool
-
-You can turn any C# method into a tool using `AIFunctionFactory.Create`:
-
-```csharp
-using System.ComponentModel;
-using Microsoft.Extensions.AI;
-
-[Description("Get the current weather for a location.")]
-static string GetWeather([Description("The city")] string location)
-{
-    // In a real application, you would call a weather API
-    return $"The weather in {location} is sunny with a temperature of 22°C.";
-}
-
-var weatherTool = AIFunctionFactory.Create(GetWeather);
-```
-
-### Key Concepts
-
-- **`AIFunctionFactory.Create`**: Converts a method into an `AIFunction` tool
-- **`[Description]` attributes**: Provide descriptions to help the agent understand the function and parameters
-- **Type annotations**: Provide type information for parameters
-- **Return value**: The result returned to the agent (and streamed to the client)
-
-### Multiple Function Tools
-
-You can provide multiple tools to give the agent more capabilities:
-
-```csharp
-using System.ComponentModel;
-using Microsoft.Extensions.AI;
-
-// Simple tool returning a string
-[Description("Get the current weather for a location.")]
-static string GetWeather([Description("The city")] string location)
-{
-    return $"The weather in {location} is sunny with a temperature of 22°C.";
-}
-
-// Complex tool with request/response types
-internal sealed class WeatherForecastRequest
-{
-    public string Location { get; set; } = string.Empty;
-}
-
-internal sealed class WeatherForecastResponse
-{
-    public string Location { get; set; } = string.Empty;
-    public string Conditions { get; set; } = string.Empty;
-    public int TemperatureC { get; set; }
-}
-
-[Description("Get the weather forecast for a location.")]
-static WeatherForecastResponse GetForecast(
-    [Description("The weather forecast request")] WeatherForecastRequest request)
-{
-    return new WeatherForecastResponse
-    {
-        Location = request.Location,
-        Conditions = "Sunny",
-        TemperatureC = 22
-    };
-}
-
-AITool[] tools =
-[
-    AIFunctionFactory.Create(GetWeather),
-    AIFunctionFactory.Create(
-        GetForecast,
-        serializerOptions: Step3SampleJsonSerializerContext.Default.Options)
-];
-```
-
 ## Creating an AG-UI Server with Function Tools
 
-Here's a complete server implementation with function tools that demonstrates both simple (string return) and complex (typed object return) patterns:
+Here's a complete server implementation demonstrating how to register tools with complex parameter types:
 
 ```csharp
 // Copyright (c) Microsoft. All rights reserved.
@@ -128,13 +45,16 @@ using System.ComponentModel;
 using System.Text.Json.Serialization;
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
+using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
 builder.Services.ConfigureHttpJsonOptions(options =>
-    options.SerializerOptions.TypeInfoResolverChain.Add(Step3SampleJsonSerializerContext.Default));
+    options.SerializerOptions.TypeInfoResolverChain.Add(SampleJsonSerializerContext.Default));
 builder.Services.AddAGUI();
 
 WebApplication app = builder.Build();
@@ -144,19 +64,7 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-// Define request/response types for tools
-internal sealed class WeatherForecastRequest
-{
-    public string Location { get; set; } = string.Empty;
-}
-
-internal sealed class WeatherForecastResponse
-{
-    public string Location { get; set; } = string.Empty;
-    public string Conditions { get; set; } = string.Empty;
-    public int TemperatureC { get; set; }
-}
-
+// Define request/response types for the tool
 internal sealed class RestaurantSearchRequest
 {
     public string Location { get; set; } = string.Empty;
@@ -179,23 +87,11 @@ internal sealed class RestaurantInfo
 }
 
 // JSON serialization context for source generation
-[JsonSerializable(typeof(WeatherForecastRequest))]
-[JsonSerializable(typeof(WeatherForecastResponse))]
 [JsonSerializable(typeof(RestaurantSearchRequest))]
 [JsonSerializable(typeof(RestaurantSearchResponse))]
-internal sealed partial class Step3SampleJsonSerializerContext : JsonSerializerContext;
+internal sealed partial class SampleJsonSerializerContext : JsonSerializerContext;
 
-// Define function tools
-
-// Simple tool that returns a string
-[Description("Get the current weather for a location.")]
-static string GetWeather([Description("The city")] string location)
-{
-    // Simulated weather data
-    return $"The weather in {location} is sunny with a temperature of 22°C.";
-}
-
-// Complex tool with typed request/response
+// Define the function tool
 [Description("Search for restaurants in a location.")]
 static RestaurantSearchResponse SearchRestaurants(
     [Description("The restaurant search request")] RestaurantSearchRequest request)
@@ -234,41 +130,26 @@ static RestaurantSearchResponse SearchRestaurants(
     };
 }
 
-// Another tool with typed request/response
-[Description("Get the weather forecast for a location.")]
-static WeatherForecastResponse GetForecast(
-    [Description("The weather forecast request")] WeatherForecastRequest request)
-{
-    // Simulated forecast data
-    return new WeatherForecastResponse
-    {
-        Location = request.Location,
-        Conditions = "Sunny",
-        TemperatureC = 22
-    };
-}
+// Get JsonSerializerOptions from the configured HTTP JSON options
+Microsoft.AspNetCore.Http.Json.JsonOptions jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
 
-// Create tools array
+// Create tool with serializer options
 AITool[] tools =
 [
-    AIFunctionFactory.Create(GetWeather),
     AIFunctionFactory.Create(
         SearchRestaurants,
-        serializerOptions: Step3SampleJsonSerializerContext.Default.Options),
-    AIFunctionFactory.Create(
-        GetForecast,
-        serializerOptions: Step3SampleJsonSerializerContext.Default.Options)
+        serializerOptions: jsonOptions.SerializerOptions)
 ];
 
 // Create the AI agent with tools
-IChatClient chatClient = new AzureOpenAIClient(
+ChatClient chatClient = new AzureOpenAIClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
     .GetChatClient(deploymentName);
 
-AIAgent agent = chatClient.CreateAIAgent(
+ChatClientAgent agent = chatClient.AsIChatClient().CreateAIAgent(
     name: "AGUIAssistant",
-    instructions: "You are a helpful assistant with access to weather and restaurant information.",
+    instructions: "You are a helpful assistant with access to restaurant information.",
     tools: tools);
 
 // Map the AG-UI agent endpoint
@@ -279,15 +160,11 @@ await app.RunAsync();
 
 ### Key Concepts
 
-- **Tool Definition**: Methods decorated with `[Description]` attributes
-- **Request/Response Types**: Explicit classes for type safety with complex tools
-- **JSON Serialization Context**: Source-generated serialization for performance and trimming
-- **`ConfigureHttpJsonOptions`**: Registers the serialization context with ASP.NET Core
-- **`AIFunctionFactory.Create`**: Converts methods into tool definitions
-- **`serializerOptions` parameter**: Required for tools with complex types
-- **`CreateAIAgent` with tools**: Registers tools with the agent
 - **Server-side execution**: Tools execute in the server process
-- **Automatic streaming**: Tool calls and results are streamed to clients
+- **Automatic streaming**: Tool calls and results are streamed to clients in real-time
+
+> [!IMPORTANT]
+> When creating tools with complex parameter types (objects, arrays, etc.), you must provide the `serializerOptions` parameter to `AIFunctionFactory.Create()`. The serializer options should be obtained from the application's configured `JsonOptions` via `IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>` to ensure consistency with the rest of the application's JSON serialization.
 
 ### Running the Server
 
@@ -301,194 +178,102 @@ dotnet run --urls http://localhost:8888
 
 ## Observing Tool Calls in the Client
 
-When using the AG-UI client from the Getting Started tutorial, tool execution is automatically handled by the agent. The client displays the final results:
+The basic client from the Getting Started tutorial displays the agent's final text response. However, you can extend it to observe tool calls and results as they're streamed from the server.
+
+### Displaying Tool Execution Details
+
+To see tool calls and results in real-time, extend the client's streaming loop to handle `FunctionCallContent` and `FunctionResultContent`:
 
 ```csharp
+// Inside the streaming loop from getting-started.md
+await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(messages, thread))
+{
+    ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
+
+    // ... existing run started code ...
+
+    // Display streaming content
+    foreach (AIContent content in update.Contents)
+    {
+        switch (content)
+        {
+            case TextContent textContent:
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(textContent.Text);
+                Console.ResetColor();
+                break;
+
+            case FunctionCallContent functionCallContent:
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"\n[Function Call - Name: {functionCallContent.Name}]");
+                
+                // Display individual parameters
+                if (functionCallContent.Arguments != null)
+                {
+                    foreach (var kvp in functionCallContent.Arguments)
+                    {
+                        Console.WriteLine($"  Parameter: {kvp.Key} = {kvp.Value}");
+                    }
+                }
+                Console.ResetColor();
+                break;
+
+            case FunctionResultContent functionResultContent:
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine($"\n[Function Result - CallId: {functionResultContent.CallId}]");
+                
+                if (functionResultContent.Exception != null)
+                {
+                    Console.WriteLine($"  Exception: {functionResultContent.Exception}");
+                }
+                else
+                {
+                    Console.WriteLine($"  Result: {functionResultContent.Result}");
+                }
+                Console.ResetColor();
+                break;
+
+            case ErrorContent errorContent:
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n[Error: {errorContent.Message}]");
+                Console.ResetColor();
+                break;
+        }
+    }
+}
+```
+
+### Expected Output with Tool Calls
+
+When the agent calls backend tools, you'll see:
+
+```
 User (:q or quit to exit): What's the weather like in Amsterdam?
 
 [Run Started - Thread: thread_abc123, Run: run_xyz789]
-The weather in Amsterdam is sunny with a temperature of 22°C.
+
+[Function Call - Name: SearchRestaurants]
+  Parameter: Location = Amsterdam
+  Parameter: Cuisine = any
+
+[Function Result - CallId: call_def456]
+  Result: {"Location":"Amsterdam","Cuisine":"any","Results":[...]}
+
+The weather in Amsterdam is sunny with a temperature of 22°C. Here are some 
+great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
 [Run Finished - Thread: thread_abc123]
 ```
 
-The client doesn't need special handling for tools - it just receives the agent's final response after tool execution completes.
+### Key Concepts
 
-## How Tool Rendering Works
-
-### Server-Side Flow
-
-1. Client sends message: "What's the weather in Amsterdam?"
-2. Agent analyzes request and decides to call `GetWeather`
-3. Server executes `GetWeather("Amsterdam")`
-4. Server receives tool result: "The weather in Amsterdam is sunny..."
-5. Agent formulates final response incorporating the tool result
-6. Final response is streamed to client as text
-
-### Client-Side Experience
-
-From the client's perspective:
-
-1. Sends user message to server
-2. Receives streaming text response
-3. Displays final answer (no tool-specific handling needed)
-
-The AG-UI protocol handles all tool execution details internally, providing a seamless experience.
-
-## Common Patterns
-
-### Async Function Tools
-
-For I/O-bound operations, use async tools:
-
-```csharp
-[Description("Fetch weather data from an API.")]
-static async Task<string> GetWeatherAsync([Description("The city")] string location)
-{
-    // Simulate async API call
-    await Task.Delay(100);
-    return $"The weather in {location} is sunny with a temperature of 22°C.";
-}
-
-var weatherTool = AIFunctionFactory.Create(GetWeatherAsync);
-```
-
-### Tools with Complex Return Types
-
-Return structured data using explicit types for better type safety:
-
-```csharp
-internal sealed class WeatherDetails
-{
-    public string Location { get; set; } = string.Empty;
-    public CurrentConditions Current { get; set; } = new();
-    public ForecastDay[] Forecast { get; set; } = [];
-}
-
-internal sealed class CurrentConditions
-{
-    public int Temperature { get; set; }
-    public string Conditions { get; set; } = string.Empty;
-    public int Humidity { get; set; }
-    public int WindSpeed { get; set; }
-}
-
-internal sealed class ForecastDay
-{
-    public string Day { get; set; } = string.Empty;
-    public int High { get; set; }
-    public int Low { get; set; }
-}
-
-[Description("Get detailed weather information.")]
-static WeatherDetails GetDetailedWeather(
-    [Description("The weather request")] WeatherRequest request)
-{
-    return new WeatherDetails
-    {
-        Location = request.Location,
-        Current = new CurrentConditions
-        {
-            Temperature = 22,
-            Conditions = "Sunny",
-            Humidity = 65,
-            WindSpeed = 15
-        },
-        Forecast =
-        [
-            new ForecastDay { Day = "Monday", High = 24, Low = 18 },
-            new ForecastDay { Day = "Tuesday", High = 22, Low = 17 }
-        ]
-    };
-}
-
-// Remember to add types to serialization context
-[JsonSerializable(typeof(WeatherDetails))]
-[JsonSerializable(typeof(WeatherRequest))]
-internal sealed partial class Step3SampleJsonSerializerContext : JsonSerializerContext;
-```
-
-### Error Handling in Tools
-
-Handle errors gracefully within tools:
-
-```csharp
-[Description("Get weather with error handling.")]
-static string GetWeatherSafe([Description("The city")] string location)
-{
-    try
-    {
-        if (string.IsNullOrWhiteSpace(location))
-        {
-            return "Error: Location cannot be empty.";
-        }
-
-        // Simulate weather lookup
-        return $"The weather in {location} is sunny.";
-    }
-    catch (Exception ex)
-    {
-        return $"Error retrieving weather: {ex.Message}";
-    }
-}
-```
-
-## Testing Your Tools
-
-You can test the agent with tools using curl:
-
-```bash
-curl -X POST http://127.0.0.1:8888/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messages": [
-      {
-        "role": "user",
-        "content": "What is the weather in Amsterdam and can you find Italian restaurants there?"
-      }
-    ]
-  }'
-```
-
-Expected response (streamed as SSE events):
-
-```
-event: run_started
-data: {"threadId":"thread_abc","runId":"run_123"}
-
-event: text_message_content
-data: {"delta":"The weather in Amsterdam is sunny with a temperature of 22°C."}
-
-event: text_message_content  
-data: {"delta":" I found some Italian restaurants: The Golden Fork (4.5 stars) at 123 Main St."}
-
-event: run_finished
-data: {"threadId":"thread_abc","runId":"run_123"}
-```
-
-## Troubleshooting
-
-### Tools Not Being Called
-
-1. Ensure descriptions are clear and relevant
-2. Verify the agent's instructions encourage tool usage
-3. Check that tool signatures match expected parameter types
-
-### Tool Execution Errors
-
-1. Add try-catch blocks in tool implementations
-2. Return error messages as strings rather than throwing exceptions
-3. Log errors on the server for debugging
-
-### Complex Return Values Not Working
-
-1. Use anonymous objects or serializable types
-2. Avoid circular references in return values
-3. Test tools independently before integrating
+- **`FunctionCallContent`**: Represents a tool being called with its `Name` and `Arguments` (parameter key-value pairs)
+- **`FunctionResultContent`**: Contains the tool's `Result` or `Exception`, identified by `CallId`
 
 ## Next Steps
 
 Now that you can add function tools, you can:
 
+- **[Frontend tools](frontend-tools.md)**: Add frontend tools.
 - **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations
 - **[Manage State](state-management.md)**: Implement shared state for generative UI applications
 - **[Test with Dojo](testing-with-dojo.md)**: Use AG-UI's Dojo app to test your agents
