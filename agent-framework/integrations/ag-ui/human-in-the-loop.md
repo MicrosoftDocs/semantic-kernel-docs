@@ -117,51 +117,143 @@ AIAgent agent = baseAgent
     .Build();
 
 static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMiddleware(
-    IEnumerable<ChatMessage> messages,
+    IEnumerable<Microsoft.Extensions.AI.ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
     AIAgent innerAgent,
     [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken)
 {
-    // Check if we have an approval response from the client
-    FunctionApprovalResponseContent? approvalResponse = messages
-        .SelectMany(m => m.Contents)
-        .OfType<FunctionResultContent>()
-        .Where(frc => frc.CallId.StartsWith("approval_"))
-        .Select(frc => DeserializeApprovalResponse(frc, messages))
-        .FirstOrDefault(x => x != null);
+    // Look for "request_approval" tool calls and their matching results
+    var approvalToolCalls = new Dictionary<string, FunctionCallContent>();
+    FunctionResultContent? approvalResult = null;
 
-    // If we have an approval response, inject it into the message stream
-    IEnumerable<ChatMessage> modifiedMessages = messages;
-    if (approvalResponse != null)
+    foreach (var message in messages)
     {
-        modifiedMessages = ReplaceToolResultWithApprovalResponse(messages, approvalResponse);
+        foreach (var content in message.Contents)
+        {
+            // Track approval tool calls by their call ID
+            if (content is FunctionCallContent toolCall && toolCall.Name == "request_approval")
+            {
+                approvalToolCalls[toolCall.CallId] = toolCall;
+            }
+            // Look for tool results that match approval tool calls
+            else if (content is FunctionResultContent result && approvalToolCalls.ContainsKey(result.CallId))
+            {
+                approvalResult = result;
+            }
+        }
+    }
+
+    // If we found an approval response, convert it to FunctionApprovalResponseContent
+    var modifiedMessages = messages;
+    if (approvalResult != null)
+    {
+        // Deserialize the approval response
+        var response = JsonSerializer.Deserialize<ApprovalResponse>(
+            approvalResult.Result?.ToString() ?? "{}",
+            Step5SampleJsonSerializerContext.Default.Options);
+
+        if (response != null)
+        {
+            // Extract the original function call details from the approval request
+            var originalToolCall = approvalToolCalls[approvalResult.CallId];
+
+            if (originalToolCall.Arguments?.TryGetValue("request", out var requestObj) == true)
+            {
+                var approvalRequest = JsonSerializer.Deserialize<ApprovalRequest>(
+                    requestObj?.ToString() ?? "{}",
+                    Step5SampleJsonSerializerContext.Default.Options);
+
+                if (approvalRequest != null)
+                {
+                    // Reconstruct the original function call from captured details
+                    var argumentsDict = new Dictionary<string, object?>();
+                    if (!string.IsNullOrEmpty(approvalRequest.FunctionArguments))
+                    {
+                        using var doc = JsonDocument.Parse(approvalRequest.FunctionArguments);
+                        foreach (var property in doc.RootElement.EnumerateObject())
+                        {
+                            argumentsDict[property.Name] = property.Value.Clone();
+                        }
+                    }
+
+                    var originalFunctionCall = new FunctionCallContent(
+                        callId: response.ApprovalId,
+                        name: approvalRequest.FunctionName,
+                        arguments: argumentsDict);
+
+                    var functionApprovalResponse = new FunctionApprovalResponseContent(
+                        response.ApprovalId,
+                        response.Approved,
+                        originalFunctionCall);
+
+                    // Replace the tool result message with the approval response
+                    var newMessages = new List<Microsoft.Extensions.AI.ChatMessage>();
+                    foreach (var message in messages)
+                    {
+                        var hasApprovalResult = false;
+                        foreach (var content in message.Contents)
+                        {
+                            if (content is FunctionResultContent frc && frc.CallId == approvalResult.CallId)
+                            {
+                                hasApprovalResult = true;
+                                break;
+                            }
+                        }
+
+                        if (hasApprovalResult)
+                        {
+                            newMessages.Add(new Microsoft.Extensions.AI.ChatMessage(
+                                Microsoft.Extensions.AI.ChatRole.User,
+                                [functionApprovalResponse]));
+                        }
+                        else
+                        {
+                            newMessages.Add(message);
+                        }
+                    }
+                    modifiedMessages = newMessages;
+                }
+            }
+        }
     }
 
     // Run the agent and intercept any approval requests
-    await foreach (AgentRunResponseUpdate update in innerAgent.RunStreamingAsync(
-        modifiedMessages, thread, options, cancellationToken))
+    await foreach (var update in innerAgent.RunStreamingAsync(modifiedMessages, thread, options, cancellationToken))
     {
         // Check if this update contains a FunctionApprovalRequestContent
-        FunctionApprovalRequestContent? approvalRequest = update.Contents
-            .OfType<FunctionApprovalRequestContent>()
-            .FirstOrDefault();
+        FunctionApprovalRequestContent? approvalRequestContent = null;
+        foreach (var content in update.Contents)
+        {
+            if (content is FunctionApprovalRequestContent request)
+            {
+                approvalRequestContent = request;
+                break;
+            }
+        }
 
-        if (approvalRequest != null)
+        if (approvalRequestContent != null)
         {
             // Convert the approval request to a "client tool call"
-            FunctionCallContent functionCall = approvalRequest.FunctionCall;
-            string approvalId = $"approval_{functionCall.CallId}";
+            var functionCall = approvalRequestContent.FunctionCall;
+            var approvalId = approvalRequestContent.Id;
 
-            ApprovalRequest approvalData = new()
+            // Serialize the function arguments as JSON string
+            var argsJson = "{}";
+            if (functionCall.Arguments?.Count > 0)
+            {
+                argsJson = JsonSerializer.Serialize(functionCall.Arguments);
+            }
+
+            var approvalData = new ApprovalRequest
             {
                 ApprovalId = approvalId,
                 FunctionName = functionCall.Name,
-                FunctionArguments = functionCall.Arguments?.ToString() ?? "{}",
+                FunctionArguments = argsJson,
                 Message = $"Approve execution of '{functionCall.Name}'?"
             };
 
-            string approvalJson = JsonSerializer.Serialize(approvalData);
+            var approvalJson = JsonSerializer.Serialize(approvalData, Step5SampleJsonSerializerContext.Default.Options);
 
             // Yield a tool call update that represents the approval request
             yield return new AgentRunResponseUpdate(ChatRole.Assistant, [
@@ -291,13 +383,6 @@ Email sent to user@example.com with subject 'Meeting'
 [Run Finished]
 ```
 
-## Complete Sample Code
-
-For a complete working example, see:
-
-- **Server**: [AGUI_Step05_ServerWithApprovals](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/AGUI/AGUI_Step05_ServerWithApprovals)
-- **Client**: [AGUI_Step05_ClientWithApprovals](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/AGUI/AGUI_Step05_ClientWithApprovals)
-
 ## Key Concepts
 
 ### Client Tool Pattern
@@ -314,17 +399,20 @@ This allows the standard `ApprovalRequiredAIFunction` pattern to work across the
 
 The middleware handles:
 
-1. **Outbound**: Converting `FunctionApprovalRequestContent` to client tool calls
-2. **Inbound**: Converting tool results back to `FunctionApprovalResponseContent`
-3. **Thread Management**: Correlating approval requests with responses via approval IDs
+1. **Outbound**: Converting `FunctionApprovalRequestContent` to client tool calls named `"request_approval"`
+2. **Inbound**: Tracking approval tool calls by CallId and converting their results to `FunctionApprovalResponseContent`
+3. **Thread Management**: Correlating approval requests with responses via call IDs
+4. **Function Call Reconstruction**: Capturing and restoring complete function call details (name, arguments) for approval flow
 
-### Approval ID Format
+### Tool Call Matching
 
-Approval IDs use the format `approval_{originalCallId}` to:
+The middleware identifies approval-related messages by:
 
-- Identify approval responses vs regular tool results
-- Correlate approval responses with their original function calls
-- Prevent ID collisions with regular tool calls
+- **Tool Call Name**: Looking for tool calls with `Name == "request_approval"`
+- **CallId Correlation**: Matching `FunctionResultContent` to `FunctionCallContent` using the same CallId
+- **Argument Extraction**: Deserializing approval data from the tool call's `arguments["request"]` field
+
+This approach avoids string prefix manipulation and properly tracks the relationship between approval requests and responses.
 
 ## Best Practices
 
