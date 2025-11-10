@@ -82,15 +82,15 @@ When using Azure AI Foundry, Azure OpenAI, or OpenAI services, you have various 
 
 | AI Service | SDK | Nuget | Url |
 |------------------|-----|-------|-----|
-| [Azure AI Foundry Models](https://learn.microsoft.com/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
-| [Azure AI Foundry Models](https://learn.microsoft.com/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
-| [Azure AI Foundry Models](https://learn.microsoft.com/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
-| [Azure AI Foundry Agents](https://learn.microsoft.com/azure/ai-foundry/agents/overview) | Azure AI Persistent Agents SDK | [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
-| [Azure OpenAI](https://learn.microsoft.com/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
-| [Azure OpenAI](https://learn.microsoft.com/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
+| [Azure AI Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
+| [Azure AI Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
+| [Azure AI Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
+| [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Persistent Agents SDK | [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
+| [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
+| [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
 | OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
 
-1. [Upgrading from Azure OpenAI to Azure AI Foundry](https://learn.microsoft.com/azure/ai-foundry/how-to/upgrade-azure-openai)
+1. [Upgrading from Azure OpenAI to Azure AI Foundry](/azure/ai-foundry/how-to/upgrade-azure-openai)
 1. We recommend using the OpenAI SDK.
 1. While we recommend using the OpenAI SDK to access Azure AI Foundry models, Azure AI Foundry Models support models from many different vendors, not just OpenAI. All these models are supported via the OpenAI SDK.
 
