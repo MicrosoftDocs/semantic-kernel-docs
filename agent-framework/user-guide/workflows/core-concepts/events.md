@@ -24,13 +24,16 @@ There are built-in events that provide observability into the workflow execution
 ```csharp
 // Workflow lifecycle events
 WorkflowStartedEvent    // Workflow execution begins
-WorkflowCompletedEvent  // Workflow reaches completion
+WorkflowOutputEvent     // Workflow outputs data
 WorkflowErrorEvent      // Workflow encounters an error
+WorkflowWarningEvent    // Workflow encountered a warning
 
 // Executor events
-ExecutorInvokeEvent     // Executor starts processing
-ExecutorCompleteEvent   // Executor finishes processing
-ExecutorFailureEvent    // Executor encounters an error
+ExecutorInvokedEvent    // Executor starts processing
+ExecutorCompletedEvent  // Executor finishes processing
+ExecutorFailedEvent     // Executor encounters an error
+AgentRunResponseEvent   // An agent run produces output
+AgentRunUpdateEvent     // An agent run produces a streaming update
 
 // Superstep events
 SuperStepStartedEvent   // Superstep begins
@@ -65,22 +68,22 @@ RequestInfoEvent        # A request is issued
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 
 await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 {
     switch (evt)
     {
-        case ExecutorInvokeEvent invoke:
+        case ExecutorInvokedEvent invoke:
             Console.WriteLine($"Starting {invoke.ExecutorId}");
             break;
 
-        case ExecutorCompleteEvent complete:
+        case ExecutorCompletedEvent complete:
             Console.WriteLine($"Completed {complete.ExecutorId}: {complete.Data}");
             break;
 
-        case WorkflowCompletedEvent finished:
-            Console.WriteLine($"Workflow finished: {finished.Data}");
+        case WorkflowOutputEvent output:
+            Console.WriteLine($"Workflow output: {output.Data}");
             return;
 
         case WorkflowErrorEvent error:

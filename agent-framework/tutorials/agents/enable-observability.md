@@ -162,7 +162,7 @@ pip install azure-monitor-opentelemetry
 
 ## Enable OpenTelemetry in your app
 
-Agent Frameworkagent framework provides a convenient `setup_observability` function that configures OpenTelemetry with sensible defaults.
+Agent Framework provides a convenient `setup_observability` function that configures OpenTelemetry with sensible defaults.
 By default, it exports to the console if no specific exporter is configured.
 
 ```python
