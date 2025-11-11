@@ -173,8 +173,8 @@ async def web_search_example():
     # Configure location for better search results
     additional_properties = {
         "user_location": {
-            "country": "US", # Country/region code
-            "city": "Seattle",
+            "country": "your-country", # Country/region code
+            "city": "your-city",
         }
     }
     
