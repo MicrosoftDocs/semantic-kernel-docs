@@ -97,7 +97,7 @@ Agent Framework supports using Semantic Kernel's VectorStore collections to prov
 ### Creating a Search Tool from VectorStore
 
 The `create_search_function` method from a Semantic Kernel VectorStore collection returns a `KernelFunction` that can be converted to an Agent Framework tool using `.as_agent_framework_tool()`.
-Use [the vector store connectors documentation](semantic-kernel/concepts/vector-store-connectors/index.md) to learn how to set up different vector store collections.
+Use [the vector store connectors documentation](/semantic-kernel/concepts/vector-store-connectors/index.md) to learn how to set up different vector store collections.
 
 ```python
 from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
@@ -201,7 +201,7 @@ search_function = collection.create_search_function(
 )
 ```
 
-For the full details on the parameters available for `create_search_function`, see the [Semantic Kernel documentation](semantic-kernel/concepts/vector-store-connectors/index.md).
+For the full details on the parameters available for `create_search_function`, see the [Semantic Kernel documentation](/semantic-kernel/concepts/vector-store-connectors/index.md).
 
 ### Using Multiple Search Functions
 
