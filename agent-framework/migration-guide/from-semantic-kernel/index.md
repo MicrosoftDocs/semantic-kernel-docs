@@ -528,6 +528,167 @@ print("Plugin state:", plugin.state)
 
 This mechanism is also useful for tools that need additional input that cannot be supplied by the LLM, such as connections, secrets, etc.
 
+### Compatibility: Using KernelFunction as Agent Framework tools
+
+If you have existing Semantic Kernel code with `KernelFunction` instances (either from prompts or from methods), you can convert them to Agent Framework tools using the `.as_agent_framework_tool` method.
+
+> [!IMPORTANT]
+> This feature requires `semantic-kernel` version 1.38 or higher.
+
+#### Using KernelFunction from a prompt template
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.functions import KernelFunctionFromPrompt
+from semantic_kernel.prompt_template import KernelPromptTemplate, PromptTemplateConfig
+from semantic_kernel.core_plugins import TimePlugin
+from agent_framework.openai import OpenAIResponsesClient
+
+# Create a kernel with services and plugins
+kernel = Kernel()
+kernel.add_service(OpenAIChatCompletion(service_id="default"))
+kernel.add_plugin(TimePlugin(), "time")
+
+# Create a function from a prompt template that uses plugin functions
+function_definition = """
+Today is: {{time.date}}
+Current time is: {{time.time}}
+
+Answer to the following questions using JSON syntax, including the data used.
+Is it morning, afternoon, evening, or night (morning/afternoon/evening/night)?
+Is it weekend time (weekend/not weekend)?
+"""
+
+prompt_template_config = PromptTemplateConfig(template=function_definition)
+prompt_template = KernelPromptTemplate(prompt_template_config=prompt_template_config)
+
+# Create a KernelFunction from the prompt
+kernel_function = KernelFunctionFromPrompt(
+    description="Determine the kind of day based on the current time and date.",
+    plugin_name="TimePlugin",
+    prompt_execution_settings=OpenAIChatPromptExecutionSettings(service_id="default", max_tokens=100),
+    function_name="kind_of_day",
+    prompt_template=prompt_template,
+)
+
+# Convert the KernelFunction to an Agent Framework tool
+agent_tool = kernel_function.as_agent_framework_tool(kernel=kernel)
+
+# Use the tool with an Agent Framework agent
+agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(tools=agent_tool)
+response = await agent.run("What kind of day is it?")
+print(response.text)
+```
+
+#### Using KernelFunction from a method
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.functions import kernel_function
+from agent_framework.openai import OpenAIResponsesClient
+
+# Create a kernel
+kernel = Kernel()
+kernel.add_service(OpenAIChatCompletion(service_id="default"))
+
+# Create a plugin class with kernel functions
+class WeatherPlugin:
+    @kernel_function(name="get_weather", description="Get the weather for a location")
+    def get_weather(self, location: str) -> str:
+        return f"The weather in {location} is sunny."
+
+# Add the plugin to the kernel
+kernel.add_plugin(WeatherPlugin(), "weather")
+
+# Get the KernelFunction and convert it to an Agent Framework tool
+weather_function = kernel.plugins["weather"]["get_weather"]
+agent_tool = weather_function.as_agent_framework_tool(kernel=kernel)
+
+# Use the tool with an Agent Framework agent
+agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(tools=agent_tool)
+response = await agent.run("What's the weather in Seattle?")
+print(response.text)
+```
+
+#### Using VectorStore with create_search_function
+
+You can also use Semantic Kernel's VectorStore integrations with Agent Framework. The `create_search_function` method from a vector store collection returns a `KernelFunction` that can be converted to an Agent Framework tool.
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAITextEmbedding
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
+from semantic_kernel.functions import KernelParameterMetadata
+from agent_framework.openai import OpenAIResponsesClient
+
+# Define your data model
+class HotelSampleClass:
+    HotelId: str
+    HotelName: str
+    Description: str
+    # ... other fields
+
+# Create an Azure AI Search collection
+collection = AzureAISearchCollection[str, HotelSampleClass](
+    record_type=HotelSampleClass,
+    embedding_generator=OpenAITextEmbedding()
+)
+
+# Create a kernel (needed for the conversion)
+kernel = Kernel()
+kernel.add_service(OpenAIChatCompletion(service_id="default"))
+
+async with collection:
+    await collection.ensure_collection_exists()
+    # Load your records into the collection
+    # await collection.upsert(records)
+
+    # Create a search function from the collection
+    search_function = collection.create_search_function(
+        description="A hotel search engine, allows searching for hotels in specific cities.",
+        search_type="keyword_hybrid",
+        filter=lambda x: x.Address.Country == "USA",
+        parameters=[
+            KernelParameterMetadata(
+                name="query",
+                description="What to search for.",
+                type="str",
+                is_required=True,
+                type_object=str,
+            ),
+            KernelParameterMetadata(
+                name="city",
+                description="The city that you want to search for a hotel in.",
+                type="str",
+                type_object=str,
+            ),
+            KernelParameterMetadata(
+                name="top",
+                description="Number of results to return.",
+                type="int",
+                default_value=5,
+                type_object=int,
+            ),
+        ],
+        string_mapper=lambda x: f"(hotel_id: {x.record.HotelId}) {x.record.HotelName} - {x.record.Description}",
+    )
+
+    # Convert the search function to an Agent Framework tool
+    search_tool = search_function.as_agent_framework_tool(kernel=kernel)
+
+    # Use the tool with an Agent Framework agent
+    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
+        instructions="You are a travel agent that helps people find hotels.",
+        tools=search_tool
+    )
+    response = await agent.run("Find me a hotel in Seattle")
+    print(response.text)
+```
+
+This pattern works with any Semantic Kernel VectorStore connector (Azure AI Search, Qdrant, Pinecone, etc.), allowing you to leverage your existing vector search infrastructure with Agent Framework agents.
+
+This compatibility layer allows you to gradually migrate your code from Semantic Kernel to Agent Framework, reusing your existing `KernelFunction` implementations while taking advantage of Agent Framework's simplified agent creation and execution patterns.
+
 ## 6. Agent Non-Streaming Invocation
 
 Key differences can be seen in the method names from `invoke` to `run`, return types (for example, `AgentRunResponse`) and parameters.

@@ -87,7 +87,212 @@ The `TextSearchProvider` class supports the following options via the `TextSearc
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-More info coming soon.
+## Using Semantic Kernel VectorStore with Agent Framework
+
+Agent Framework supports using Semantic Kernel's VectorStore collections to provide RAG capabilities to agents. This is achieved through the bridge functionality that converts Semantic Kernel search functions into Agent Framework tools.
+
+> [!IMPORTANT]
+> This feature requires `semantic-kernel` version 1.38 or higher.
+
+### Creating a Search Tool from VectorStore
+
+The `create_search_function` method from a Semantic Kernel VectorStore collection returns a `KernelFunction` that can be converted to an Agent Framework tool using `.as_agent_framework_tool()`.
+
+```python
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAITextEmbedding
+from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
+from semantic_kernel.functions import KernelParameterMetadata
+from agent_framework.openai import OpenAIResponsesClient
+
+# Define your data model
+class SupportArticle:
+    article_id: str
+    title: str
+    content: str
+    category: str
+    # ... other fields
+
+# Create an Azure AI Search collection
+collection = AzureAISearchCollection[str, SupportArticle](
+    record_type=SupportArticle,
+    embedding_generator=OpenAITextEmbedding()
+)
+
+# Create a kernel (required for the conversion)
+kernel = Kernel()
+kernel.add_service(OpenAIChatCompletion(service_id="default"))
+
+async with collection:
+    await collection.ensure_collection_exists()
+    # Load your knowledge base articles into the collection
+    # await collection.upsert(articles)
+
+    # Create a search function from the collection
+    search_function = collection.create_search_function(
+        function_name="search_knowledge_base",
+        description="Search the knowledge base for support articles and product information.",
+        search_type="keyword_hybrid",
+        parameters=[
+            KernelParameterMetadata(
+                name="query",
+                description="The search query to find relevant information.",
+                type="str",
+                is_required=True,
+                type_object=str,
+            ),
+            KernelParameterMetadata(
+                name="top",
+                description="Number of results to return.",
+                type="int",
+                default_value=3,
+                type_object=int,
+            ),
+        ],
+        string_mapper=lambda x: f"[{x.record.category}] {x.record.title}: {x.record.content}",
+    )
+
+    # Convert the search function to an Agent Framework tool
+    search_tool = search_function.as_agent_framework_tool(kernel=kernel)
+
+    # Create an agent with the search tool
+    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
+        instructions="You are a helpful support specialist. Use the search tool to find relevant information before answering questions. Always cite your sources.",
+        tools=search_tool
+    )
+
+    # Use the agent with RAG capabilities
+    response = await agent.run("How do I return a product?")
+    print(response.text)
+```
+
+### Customizing Search Behavior
+
+You can customize the search function with various options:
+
+```python
+# Create a search function with filtering and custom formatting
+search_function = collection.create_search_function(
+    function_name="search_support_articles",
+    description="Search for support articles in specific categories.",
+    search_type="keyword_hybrid",
+    # Apply filters to restrict search scope
+    filter=lambda x: x.is_published == True,
+    parameters=[
+        KernelParameterMetadata(
+            name="query",
+            description="What to search for in the knowledge base.",
+            type="str",
+            is_required=True,
+            type_object=str,
+        ),
+        KernelParameterMetadata(
+            name="category",
+            description="Filter by category: returns, shipping, products, or billing.",
+            type="str",
+            type_object=str,
+        ),
+        KernelParameterMetadata(
+            name="top",
+            description="Maximum number of results to return.",
+            type="int",
+            default_value=5,
+            type_object=int,
+        ),
+    ],
+    # Customize how results are formatted for the agent
+    string_mapper=lambda x: f"Article: {x.record.title}\nCategory: {x.record.category}\nContent: {x.record.content}\nSource: {x.record.article_id}",
+)
+```
+
+### Using Multiple Search Functions
+
+You can provide multiple search tools to an agent for different knowledge domains:
+
+```python
+# Create search functions for different knowledge bases
+product_search = product_collection.create_search_function(
+    function_name="search_products",
+    description="Search for product information and specifications.",
+    search_type="semantic_hybrid",
+    string_mapper=lambda x: f"{x.record.name}: {x.record.description}",
+).as_agent_framework_tool(kernel=kernel)
+
+policy_search = policy_collection.create_search_function(
+    function_name="search_policies",
+    description="Search for company policies and procedures.",
+    search_type="keyword_hybrid",
+    string_mapper=lambda x: f"Policy: {x.record.title}\n{x.record.content}",
+).as_agent_framework_tool(kernel=kernel)
+
+# Create an agent with multiple search tools
+agent = chat_client.create_agent(
+    instructions="You are a support agent. Use the appropriate search tool to find information before answering. Cite your sources.",
+    tools=[product_search, policy_search]
+)
+```
+
+You can also create multiple search functions from the same collection with different descriptions and parameters to provide specialized search capabilities:
+
+```python
+# Create multiple search functions from the same collection
+# Generic search for broad queries
+general_search = support_collection.create_search_function(
+    function_name="search_all_articles",
+    description="Search all support articles for general information.",
+    search_type="semantic_hybrid",
+    parameters=[
+        KernelParameterMetadata(
+            name="query",
+            description="The search query.",
+            type="str",
+            is_required=True,
+            type_object=str,
+        ),
+    ],
+    string_mapper=lambda x: f"{x.record.title}: {x.record.content}",
+).as_agent_framework_tool(kernel=kernel)
+
+# Detailed lookup for specific article IDs
+detail_lookup = support_collection.create_search_function(
+    function_name="get_article_details",
+    description="Get detailed information for a specific article by its ID.",
+    search_type="keyword",
+    top=1,
+    parameters=[
+        KernelParameterMetadata(
+            name="article_id",
+            description="The specific article ID to retrieve.",
+            type="str",
+            is_required=True,
+            type_object=str,
+        ),
+    ],
+    string_mapper=lambda x: f"Title: {x.record.title}\nFull Content: {x.record.content}\nLast Updated: {x.record.updated_date}",
+).as_agent_framework_tool(kernel=kernel)
+
+# Create an agent with both search functions
+agent = chat_client.create_agent(
+    instructions="You are a support agent. Use search_all_articles for general queries and get_article_details when you need full details about a specific article.",
+    tools=[general_search, detail_lookup]
+)
+```
+
+This approach allows the agent to choose the most appropriate search strategy based on the user's query.
+
+### Supported VectorStore Connectors
+
+This pattern works with any Semantic Kernel VectorStore connector, including:
+
+- Azure AI Search (`AzureAISearchCollection`)
+- Qdrant (`QdrantCollection`)
+- Pinecone (`PineconeCollection`)
+- Redis (`RedisCollection`)
+- Weaviate (`WeaviateCollection`)
+- In-Memory (`InMemoryVectorStoreCollection`)
+- And more
+
+Each connector provides the same `create_search_function` method that can be bridged to Agent Framework tools, allowing you to choose the vector database that best fits your needs.
 
 ::: zone-end
 
