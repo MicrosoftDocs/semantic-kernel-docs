@@ -708,101 +708,32 @@ The client must send an approval response:
 
 ## Client with Approval Support
 
-Here's a client that handles approval requests:
+Here's a client using `AGUIChatClient` that handles approval requests:
 
 ```python
 """AG-UI client with human-in-the-loop support."""
 
 import asyncio
-import json
 import os
 
-import httpx
+from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework_ag_ui import AGUIChatClient
 
 
-class AGUIClient:
-    """AG-UI client with approval handling."""
-
-    def __init__(self, server_url: str):
-        self.server_url = server_url
-        self.thread_id: str | None = None
-
-    async def send_message(self, message: str):
-        """Send a message and handle responses including approval requests."""
-        request_data = {
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": message},
-            ]
-        }
-
-        if self.thread_id:
-            request_data["thread_id"] = self.thread_id
-
-        async with httpx.AsyncClient(timeout=120.0) as client:
-            async with client.stream(
-                "POST",
-                self.server_url,
-                json=request_data,
-                headers={"Accept": "text/event-stream"},
-            ) as response:
-                response.raise_for_status()
-
-                async for line in response.aiter_lines():
-                    if line.startswith("data: "):
-                        data = line[6:]
-                        try:
-                            event = json.loads(data)
-                            yield event
-
-                            if event.get("type") == "RUN_STARTED" and not self.thread_id:
-                                self.thread_id = event.get("threadId")
-
-                        except json.JSONDecodeError:
-                            continue
-
-    async def send_approval_response(self, approval_id: str, approved: bool):
-        """Send an approval response to the server."""
-        request_data = {
-            "type": "APPROVAL_RESPONSE",
-            "approvalId": approval_id,
-            "approved": approved,
-        }
-
-        if self.thread_id:
-            request_data["thread_id"] = self.thread_id
-
-        async with httpx.AsyncClient(timeout=120.0) as client:
-            async with client.stream(
-                "POST",
-                self.server_url,
-                json=request_data,
-                headers={"Accept": "text/event-stream"},
-            ) as response:
-                response.raise_for_status()
-
-                async for line in response.aiter_lines():
-                    if line.startswith("data: "):
-                        data = line[6:]
-                        try:
-                            event = json.loads(data)
-                            yield event
-                        except json.JSONDecodeError:
-                            continue
-
-
-def display_approval_request(steps: list) -> None:
+def display_approval_request(update) -> None:
     """Display approval request details to the user."""
     print("\n\033[93m" + "=" * 60 + "\033[0m")
     print("\033[93mAPPROVAL REQUIRED\033[0m")
     print("\033[93m" + "=" * 60 + "\033[0m")
     
-    for i, step in enumerate(steps, 1):
-        print(f"\nAction {i}:")
-        print(f"  Tool: \033[95m{step.get('toolCallName', 'unknown')}\033[0m")
-        print(f"  Arguments:")
-        for key, value in step.get("arguments", {}).items():
-            print(f"    {key}: {value}")
+    # Display tool call details from update contents
+    for i, content in enumerate(update.contents, 1):
+        if isinstance(content, ToolCallContent):
+            print(f"\nAction {i}:")
+            print(f"  Tool: \033[95m{content.name}\033[0m")
+            print(f"  Arguments:")
+            for key, value in (content.arguments or {}).items():
+                print(f"    {key}: {value}")
     
     print("\n\033[93m" + "=" * 60 + "\033[0m")
 
@@ -812,7 +743,18 @@ async def main():
     server_url = os.environ.get("AGUI_SERVER_URL", "http://127.0.0.1:8888/")
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
-    client = AGUIClient(server_url)
+    # Create AG-UI chat client
+    chat_client = AGUIChatClient(server_url=server_url)
+    
+    # Create agent with the chat client
+    agent = ChatAgent(
+        name="ClientAgent",
+        chat_client=chat_client,
+        instructions="You are a helpful assistant.",
+    )
+
+    # Get a thread for conversation continuity
+    thread = agent.get_new_thread()
 
     try:
         while True:
@@ -823,30 +765,15 @@ async def main():
             if message.lower() in (":q", "quit"):
                 break
 
-            print()
-            pending_approval = None
+            print("\nAssistant: ", end="", flush=True)
+            pending_approval_update = None
 
-            async for event in client.send_message(message):
-                event_type = event.get("type", "")
-
-                if event_type == "RUN_STARTED":
-                    print("\033[93m[Run Started]\033[0m")
-
-                elif event_type == "TEXT_MESSAGE_CONTENT":
-                    print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
-
-                elif event_type == "TOOL_CALL_START":
-                    tool_name = event.get("toolCallName", "unknown")
-                    print(f"\n\033[95m[Calling Tool: {tool_name}]\033[0m")
-
-                elif event_type == "TOOL_CALL_RESULT":
-                    content = event.get("content", "")
-                    print(f"\033[94m[Tool Result: {content}]\033[0m")
-
-                elif event_type == "APPROVAL_REQUEST":
-                    pending_approval = event
-                    steps = event.get("steps", [])
-                    display_approval_request(steps)
+            async for update in agent.run_stream(message, thread=thread):
+                # Check if this is an approval request
+                # (Approval requests are detected by specific metadata or content markers)
+                if update.additional_properties and update.additional_properties.get("requires_approval"):
+                    pending_approval_update = update
+                    display_approval_request(update)
                     break  # Exit the loop to handle approval
 
                 elif event_type == "RUN_FINISHED":

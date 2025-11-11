@@ -489,68 +489,16 @@ When the agent calls a tool, the client receives several events:
 
 ## Enhanced Client for Tool Events
 
-Here's an enhanced client that displays tool execution:
+Here's an enhanced client using `AGUIChatClient` that displays tool execution:
 
 ```python
 """AG-UI client with tool event handling."""
 
 import asyncio
-import json
 import os
 
-import httpx
-
-
-class AGUIClient:
-    """AG-UI client with tool event support."""
-
-    def __init__(self, server_url: str):
-        self.server_url = server_url
-        self.thread_id: str | None = None
-
-    async def send_message(self, message: str):
-        """Send a message and handle streaming response with tool events."""
-        request_data = {
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": message},
-            ]
-        }
-
-        if self.thread_id:
-            request_data["thread_id"] = self.thread_id
-
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            async with client.stream(
-                "POST",
-                self.server_url,
-                json=request_data,
-                headers={"Accept": "text/event-stream"},
-            ) as response:
-                response.raise_for_status()
-
-                current_tool_args = {}
-
-                async for line in response.aiter_lines():
-                    if line.startswith("data: "):
-                        data = line[6:]
-                        try:
-                            event = json.loads(data)
-                            yield event
-
-                            # Capture thread_id
-                            if event.get("type") == "RUN_STARTED" and not self.thread_id:
-                                self.thread_id = event.get("threadId")
-
-                            # Track tool arguments
-                            if event.get("type") == "TOOL_CALL_ARGS":
-                                tool_id = event.get("toolCallId")
-                                if tool_id not in current_tool_args:
-                                    current_tool_args[tool_id] = ""
-                                current_tool_args[tool_id] += event.get("delta", "")
-
-                        except json.JSONDecodeError:
-                            continue
+from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework_ag_ui import AGUIChatClient
 
 
 async def main():
@@ -558,7 +506,18 @@ async def main():
     server_url = os.environ.get("AGUI_SERVER_URL", "http://127.0.0.1:8888/")
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
-    client = AGUIClient(server_url)
+    # Create AG-UI chat client
+    chat_client = AGUIChatClient(server_url=server_url)
+    
+    # Create agent with the chat client
+    agent = ChatAgent(
+        name="ClientAgent",
+        chat_client=chat_client,
+        instructions="You are a helpful assistant.",
+    )
+
+    # Get a thread for conversation continuity
+    thread = agent.get_new_thread()
 
     try:
         while True:
@@ -569,32 +528,21 @@ async def main():
             if message.lower() in (":q", "quit"):
                 break
 
-            print()
-            async for event in client.send_message(message):
-                event_type = event.get("type", "")
+            print("\nAssistant: ", end="", flush=True)
+            async for update in agent.run_stream(message, thread=thread):
+                # Display text content
+                if update.text:
+                    print(f"\033[96m{update.text}\033[0m", end="", flush=True)
+                
+                # Display tool calls and results
+                for content in update.contents:
+                    if isinstance(content, ToolCallContent):
+                        print(f"\n\033[95m[Calling tool: {content.name}]\033[0m")
+                    elif isinstance(content, ToolResultContent):
+                        result_text = content.result if isinstance(content.result, str) else str(content.result)
+                        print(f"\033[94m[Tool result: {result_text}]\033[0m")
 
-                if event_type == "RUN_STARTED":
-                    print(f"\033[93m[Run Started]\033[0m")
-
-                elif event_type == "TEXT_MESSAGE_CONTENT":
-                    print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
-
-                elif event_type == "TOOL_CALL_START":
-                    tool_name = event.get("toolCallName", "unknown")
-                    print(f"\n\033[95m[Tool Call: {tool_name}]\033[0m")
-
-                elif event_type == "TOOL_CALL_RESULT":
-                    content = event.get("content", "")
-                    print(f"\033[94m[Tool Result: {content}]\033[0m")
-
-                elif event_type == "RUN_FINISHED":
-                    print(f"\n\033[92m[Run Finished]\033[0m")
-
-                elif event_type == "RUN_ERROR":
-                    error_msg = event.get("message", "Unknown error")
-                    print(f"\n\033[91m[Error: {error_msg}]\033[0m")
-
-            print()
+            print("\n")
 
     except KeyboardInterrupt:
         print("\n\nExiting...")

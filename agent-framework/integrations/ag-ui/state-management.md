@@ -301,41 +301,62 @@ await app.RunAsync();
 
 ::: zone pivot="programming-language-python"
 
+## Define State Models
+
+First, define Pydantic models for your state structure. This ensures type safety and validation:
+
+```python
+from enum import Enum
+from pydantic import BaseModel, Field
+
+
+class SkillLevel(str, Enum):
+    """The skill level required for the recipe."""
+    BEGINNER = "Beginner"
+    INTERMEDIATE = "Intermediate"
+    ADVANCED = "Advanced"
+
+
+class CookingTime(str, Enum):
+    """The cooking time of the recipe."""
+    FIVE_MIN = "5 min"
+    FIFTEEN_MIN = "15 min"
+    THIRTY_MIN = "30 min"
+    FORTY_FIVE_MIN = "45 min"
+    SIXTY_PLUS_MIN = "60+ min"
+
+
+class Ingredient(BaseModel):
+    """An ingredient with its details."""
+    icon: str = Field(..., description="Emoji icon representing the ingredient (e.g., 🥕)")
+    name: str = Field(..., description="Name of the ingredient")
+    amount: str = Field(..., description="Amount or quantity of the ingredient")
+
+
+class Recipe(BaseModel):
+    """A complete recipe."""
+    title: str = Field(..., description="The title of the recipe")
+    skill_level: SkillLevel = Field(..., description="The skill level required")
+    special_preferences: list[str] = Field(
+        default_factory=list, description="Dietary preferences (e.g., Vegetarian, Gluten-free)"
+    )
+    cooking_time: CookingTime = Field(..., description="The estimated cooking time")
+    ingredients: list[Ingredient] = Field(..., description="Complete list of ingredients")
+    instructions: list[str] = Field(..., description="Step-by-step cooking instructions")
+```
+
 ## State Schema
 
 Define a state schema to specify the structure and types of your state:
 
 ```python
 state_schema = {
-    "recipe": {
-        "type": "object",
-        "properties": {
-            "name": {"type": "string"},
-            "cuisine": {"type": "string"},
-            "ingredients": {
-                "type": "array",
-                "items": {"type": "string"}
-            },
-            "steps": {
-                "type": "array",
-                "items": {"type": "string"}
-            },
-            "prep_time": {"type": "number"},
-            "cook_time": {"type": "number"}
-        }
-    },
-    "user_preferences": {
-        "type": "object",
-        "properties": {
-            "dietary_restrictions": {
-                "type": "array",
-                "items": {"type": "string"}
-            },
-            "skill_level": {"type": "string"}
-        }
-    }
+    "recipe": {"type": "object", "description": "The current recipe"},
 }
 ```
+
+> [!NOTE]
+> The state schema uses a simple format with `type` and optional `description`. The actual structure is defined by your Pydantic models.
 
 ## Predictive State Updates
 
@@ -343,181 +364,161 @@ Predictive state updates stream tool arguments to the state as the LLM generates
 
 ```python
 predict_state_config = {
-    "recipe": {
-        "tool": "create_recipe",
-        "tool_argument": "recipe_data"
-    },
-    "user_preferences": {
-        "tool": "update_preferences",
-        "tool_argument": "preferences"
-    }
+    "recipe": {"tool": "update_recipe", "tool_argument": "recipe"},
 }
 ```
 
-This configuration maps state fields to tool arguments. When the agent calls a tool, the arguments stream to the corresponding state field in real-time.
+This configuration maps the `recipe` state field to the `recipe` argument of the `update_recipe` tool. When the agent calls the tool, the arguments stream to the state in real-time as the LLM generates them.
 
-## Creating a Server with State Management
+## Define State Update Tool
+
+Create a tool function that accepts your Pydantic model:
+
+```python
+from agent_framework import ai_function
+
+
+@ai_function
+def update_recipe(recipe: Recipe) -> str:
+    """Update the recipe with new or modified content.
+
+    You MUST write the complete recipe with ALL fields, even when changing only a few items.
+    When modifying an existing recipe, include ALL existing ingredients and instructions plus your changes.
+    NEVER delete existing data - only add or modify.
+
+    Args:
+        recipe: The complete recipe object with all details
+
+    Returns:
+        Confirmation that the recipe was updated
+    """
+    return "Recipe updated."
+```
+
+> [!IMPORTANT]
+> The tool function's parameter name (`recipe`) must match the `tool_argument` in your `predict_state_config`.
+
+## Create the Agent with State Management
 
 Here's a complete server implementation with state management:
 
 ```python
 """AG-UI server with state management."""
 
-import os
-from typing import Annotated, Any
-
-from agent_framework import ChatAgent, ai_function
+from agent_framework import ChatAgent
 from agent_framework.azure import AzureOpenAIChatClient
-from agent_framework_ag_ui import AgentFrameworkAgent, add_agent_framework_fastapi_endpoint
+from agent_framework_ag_ui import (
+    AgentFrameworkAgent,
+    RecipeConfirmationStrategy,
+    add_agent_framework_fastapi_endpoint,
+)
 from fastapi import FastAPI
-from pydantic import Field
 
-
-# Define tools that update state
-@ai_function
-def create_recipe(
-    recipe_data: Annotated[
-        dict[str, Any],
-        Field(description="Recipe data including name, cuisine, ingredients, and steps")
-    ],
-) -> str:
-    """Create a new recipe with the provided details."""
-    name = recipe_data.get("name", "Untitled Recipe")
-    return f"Recipe '{name}' created successfully!"
-
-
-@ai_function
-def update_preferences(
-    preferences: Annotated[
-        dict[str, Any],
-        Field(description="User preferences including dietary restrictions and skill level")
-    ],
-) -> str:
-    """Update user preferences."""
-    restrictions = preferences.get("dietary_restrictions", [])
-    return f"Preferences updated. Dietary restrictions: {', '.join(restrictions) if restrictions else 'none'}"
-
-
-@ai_function
-def search_recipes(
-    cuisine: Annotated[str, Field(description="Type of cuisine to search for")],
-    dietary_restrictions: Annotated[list[str], Field(description="Dietary restrictions to consider")] = None,
-) -> list[dict[str, Any]]:
-    """Search for recipes matching criteria."""
-    # Simulated recipe search
-    return [
-        {
-            "name": "Pasta Carbonara",
-            "cuisine": "Italian",
-            "prep_time": 10,
-            "cook_time": 20
-        },
-        {
-            "name": "Margherita Pizza",
-            "cuisine": "Italian",
-            "prep_time": 15,
-            "cook_time": 12
-        }
-    ]
-
-
-# Read configuration
-endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-deployment_name = os.environ.get("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME")
-# Note: a token may also be used in place of the api_key
-api_key = os.environ.get("AZURE_OPENAI_API_KEY")
-
-if not endpoint or not deployment_name or not api_key:
-    raise ValueError("AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_CHAT_DEPLOYMENT_NAME and AZURE_OPENAI_API_KEY are required")
-
-# Create agent
+# Create the chat agent with tools
 agent = ChatAgent(
-    name="RecipeAssistant",
-    instructions="""You are a helpful recipe assistant. Help users find and create recipes.
-    When creating recipes, always include name, cuisine, ingredients (as array), steps (as array), 
-    prep_time (in minutes), and cook_time (in minutes).""",
-    chat_client=AzureOpenAIChatClient(
-        endpoint=endpoint,
-        deployment_name=deployment_name,
-        api_key=api_key,
-    ),
-    tools=[create_recipe, update_preferences, search_recipes],
+    name="recipe_agent",
+    instructions="""You are a helpful recipe assistant that creates and modifies recipes.
+
+    CRITICAL RULES:
+    1. You will receive the current recipe state in the system context
+    2. To update the recipe, you MUST use the update_recipe tool
+    3. When modifying a recipe, ALWAYS include ALL existing data plus your changes in the tool call
+    4. NEVER delete existing ingredients or instructions - only add or modify
+    5. After calling the tool, provide a brief conversational message (1-2 sentences)
+
+    When creating a NEW recipe:
+    - Provide all required fields: title, skill_level, cooking_time, ingredients, instructions
+    - Use actual emojis for ingredient icons (🥕 🧄 🧅 🍅 🌿 🍗 🥩 🧀)
+    - Leave special_preferences empty unless specified
+    - Message: "Here's your recipe!" or similar
+
+    When MODIFYING or IMPROVING an existing recipe:
+    - Include ALL existing ingredients + any new ones
+    - Include ALL existing instructions + any new/modified ones
+    - Update other fields as needed
+    - Message: Explain what you improved (e.g., "I upgraded the ingredients to premium quality")
+    - When asked to "improve", enhance with:
+      * Better ingredients (upgrade quality, add complementary flavors)
+      * More detailed instructions
+      * Professional techniques
+      * Adjust skill_level if complexity changes
+      * Add relevant special_preferences
+
+    Example improvements:
+    - Upgrade "chicken" → "organic free-range chicken breast"
+    - Add herbs: basil, oregano, thyme
+    - Add aromatics: garlic, shallots
+    - Add finishing touches: lemon zest, fresh parsley
+    - Make instructions more detailed and professional
+    """,
+    chat_client=AzureOpenAIChatClient(),
+    tools=[update_recipe],
 )
 
-# Define state schema
-state_schema = {
-    "recipe": {
-        "type": "object",
-        "properties": {
-            "name": {"type": "string"},
-            "cuisine": {"type": "string"},
-            "ingredients": {"type": "array", "items": {"type": "string"}},
-            "steps": {"type": "array", "items": {"type": "string"}},
-            "prep_time": {"type": "number"},
-            "cook_time": {"type": "number"}
-        }
-    },
-    "user_preferences": {
-        "type": "object",
-        "properties": {
-            "dietary_restrictions": {"type": "array", "items": {"type": "string"}},
-            "skill_level": {"type": "string"}
-        }
-    }
-}
-
-# Configure predictive state updates
-predict_state_config = {
-    "recipe": {"tool": "create_recipe", "tool_argument": "recipe_data"},
-    "user_preferences": {"tool": "update_preferences", "tool_argument": "preferences"}
-}
-
 # Wrap agent with state management
-wrapped_agent = AgentFrameworkAgent(
+recipe_agent = AgentFrameworkAgent(
     agent=agent,
-    state_schema=state_schema,
-    predict_state_config=predict_state_config,
-    require_confirmation=False,  # Set to True to require approval for state changes
+    name="RecipeAgent",
+    description="Creates and modifies recipes with streaming state updates",
+    state_schema={
+        "recipe": {"type": "object", "description": "The current recipe"},
+    },
+    predict_state_config={
+        "recipe": {"tool": "update_recipe", "tool_argument": "recipe"},
+    },
+    confirmation_strategy=RecipeConfirmationStrategy(),
 )
 
 # Create FastAPI app
 app = FastAPI(title="AG-UI Recipe Assistant")
-add_agent_framework_fastapi_endpoint(app, wrapped_agent, "/")
+add_agent_framework_fastapi_endpoint(app, recipe_agent, "/")
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="127.0.0.1", port=8888)
 ```
 
 ### Key Concepts
 
-- **State Schema**: Defines the structure and types of state fields
+- **Pydantic Models**: Define structured state with type safety and validation
+- **State Schema**: Simple format specifying state field types
 - **Predictive State Config**: Maps state fields to tool arguments for streaming updates
-- **State Injection**: State is automatically injected as system messages to provide context to the agent
-- **Bidirectional Sync**: Client and server both maintain and update state
+- **State Injection**: Current state is automatically injected as system messages to provide context
+- **Complete Updates**: Tools must write the complete state, not just deltas
+- **Confirmation Strategy**: Customize approval messages for your domain (recipe, document, task planning, etc.)
 
 ## Understanding State Events
 
 ### State Snapshot Event
 
-A complete snapshot of the current state:
+A complete snapshot of the current state, emitted when the tool completes:
 
-```python
+```json
 {
     "type": "STATE_SNAPSHOT",
     "snapshot": {
         "recipe": {
-            "name": "Pasta Carbonara",
-            "cuisine": "Italian",
-            "ingredients": ["pasta", "eggs", "bacon", "parmesan"],
-            "steps": ["Boil pasta", "Cook bacon", "Mix eggs and cheese", "Combine"],
-            "prep_time": 10,
-            "cook_time": 20
-        },
-        "user_preferences": {
-            "dietary_restrictions": ["gluten-free"],
-            "skill_level": "beginner"
+            "title": "Classic Pasta Carbonara",
+            "skill_level": "Intermediate",
+            "special_preferences": ["Authentic Italian"],
+            "cooking_time": "30 min",
+            "ingredients": [
+                {"icon": "🍝", "name": "Spaghetti", "amount": "400g"},
+                {"icon": "🥓", "name": "Guanciale or bacon", "amount": "200g"},
+                {"icon": "🥚", "name": "Egg yolks", "amount": "4"},
+                {"icon": "🧀", "name": "Pecorino Romano", "amount": "100g grated"},
+                {"icon": "🧂", "name": "Black pepper", "amount": "To taste"}
+            ],
+            "instructions": [
+                "Bring a large pot of salted water to boil",
+                "Cut guanciale into small strips and fry until crispy",
+                "Beat egg yolks with grated Pecorino and black pepper",
+                "Cook spaghetti until al dente",
+                "Reserve 1 cup pasta water, then drain pasta",
+                "Remove pan from heat, add hot pasta to guanciale",
+                "Quickly stir in egg mixture, adding pasta water to create creamy sauce",
+                "Serve immediately with extra Pecorino and black pepper"
+            ]
         }
     }
 }
@@ -525,29 +526,35 @@ A complete snapshot of the current state:
 
 ### State Delta Event
 
-Incremental state updates using JSON Patch format:
+Incremental state updates using JSON Patch format, emitted as the LLM streams tool arguments:
 
-```python
+```json
 {
     "type": "STATE_DELTA",
     "delta": [
         {
             "op": "replace",
-            "path": "/recipe/name",
-            "value": "Spaghetti Carbonara"
-        },
-        {
-            "op": "add",
-            "path": "/recipe/ingredients/-",
-            "value": "black pepper"
+            "path": "/recipe",
+            "value": {
+                "title": "Classic Pasta Carbonara",
+                "skill_level": "Intermediate",
+                "cooking_time": "30 min",
+                "ingredients": [
+                    {"icon": "🍝", "name": "Spaghetti", "amount": "400g"}
+                ],
+                "instructions": ["Bring a large pot of salted water to boil"]
+            }
         }
     ]
 }
 ```
 
-## Client with State Management
+> [!NOTE]
+> State delta events stream in real-time as the LLM generates the tool arguments, providing optimistic UI updates. The final state snapshot is emitted when the tool completes execution.
 
-Here's a client that handles state events:
+## Client Implementation
+
+The `agent_framework_ag_ui` package provides `AGUIChatClient` for connecting to AG-UI servers, bringing Python client experience to parity with .NET:
 
 ```python
 """AG-UI client with state management."""
@@ -557,100 +564,31 @@ import json
 import os
 from typing import Any
 
-import httpx
 import jsonpatch
-
-
-class AGUIClient:
-    """AG-UI client with state management."""
-
-    def __init__(self, server_url: str):
-        self.server_url = server_url
-        self.thread_id: str | None = None
-        self.state: dict[str, Any] = {}
-
-    def apply_state_snapshot(self, snapshot: dict[str, Any]) -> None:
-        """Apply a complete state snapshot."""
-        self.state = snapshot.copy()
-
-    def apply_state_delta(self, delta: list[dict[str, Any]]) -> None:
-        """Apply incremental state changes using JSON Patch."""
-        patch = jsonpatch.JsonPatch(delta)
-        self.state = patch.apply(self.state)
-
-    async def send_message(self, message: str):
-        """Send a message and handle state events."""
-        request_data = {
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": message},
-            ]
-        }
-
-        if self.thread_id:
-            request_data["thread_id"] = self.thread_id
-
-        # Include current state in request
-        if self.state:
-            request_data["state"] = self.state
-
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            async with client.stream(
-                "POST",
-                self.server_url,
-                json=request_data,
-                headers={"Accept": "text/event-stream"},
-            ) as response:
-                response.raise_for_status()
-
-                async for line in response.aiter_lines():
-                    if line.startswith("data: "):
-                        data = line[6:]
-                        try:
-                            event = json.loads(data)
-                            yield event
-
-                            # Handle state events
-                            if event.get("type") == "STATE_SNAPSHOT":
-                                self.apply_state_snapshot(event.get("snapshot", {}))
-
-                            elif event.get("type") == "STATE_DELTA":
-                                self.apply_state_delta(event.get("delta", []))
-
-                            # Capture thread_id
-                            if event.get("type") == "RUN_STARTED" and not self.thread_id:
-                                self.thread_id = event.get("threadId")
-
-                        except json.JSONDecodeError:
-                            continue
-
-
-def display_state(state: dict[str, Any]) -> None:
-    """Display the current state."""
-    if not state:
-        return
-    
-    print("\n\033[94m" + "=" * 60 + "\033[0m")
-    print("\033[94mCURRENT STATE\033[0m")
-    print("\033[94m" + "=" * 60 + "\033[0m")
-    
-    for key, value in state.items():
-        print(f"\n{key}:")
-        if isinstance(value, dict):
-            for k, v in value.items():
-                print(f"  {k}: {v}")
-        else:
-            print(f"  {value}")
-    
-    print("\n\033[94m" + "=" * 60 + "\033[0m")
+from agent_framework import ChatAgent, ChatMessage, Role
+from agent_framework_ag_ui import AGUIChatClient
 
 
 async def main():
-    """Main client loop with state management."""
+    """Example client with state tracking."""
     server_url = os.environ.get("AGUI_SERVER_URL", "http://127.0.0.1:8888/")
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
-    client = AGUIClient(server_url)
+    # Create AG-UI chat client
+    chat_client = AGUIChatClient(server_url=server_url)
+    
+    # Wrap with ChatAgent for convenient API
+    agent = ChatAgent(
+        name="ClientAgent",
+        chat_client=chat_client,
+        instructions="You are a helpful assistant.",
+    )
+
+    # Get a thread for conversation continuity
+    thread = agent.get_new_thread()
+    
+    # Track state locally
+    state: dict[str, Any] = {}
 
     try:
         while True:
@@ -662,68 +600,94 @@ async def main():
                 break
 
             if message.lower() == ":state":
-                display_state(client.state)
+                print(f"\nCurrent state: {json.dumps(state, indent=2)}")
                 continue
 
             print()
-            async for event in client.send_message(message):
-                event_type = event.get("type", "")
+            # Stream the agent response with state
+            async for update in agent.run_stream(message, thread=thread):
+                # Handle text content
+                if update.text:
+                    print(update.text, end="", flush=True)
+                
+                # Handle state updates
+                for content in update.contents:
+                    # STATE_SNAPSHOT events come as DataContent with application/json
+                    if hasattr(content, 'media_type') and content.media_type == 'application/json':
+                        # Parse state snapshot
+                        state_data = json.loads(content.data.decode() if isinstance(content.data, bytes) else content.data)
+                        state = state_data
+                        print("\n[State Snapshot Received]")
+                    
+                    # STATE_DELTA events are handled similarly
+                    # Apply JSON Patch deltas to maintain state
+                    if hasattr(content, 'delta') and content.delta:
+                        patch = jsonpatch.JsonPatch(content.delta)
+                        state = patch.apply(state)
+                        print("\n[State Delta Applied]")
 
-                if event_type == "RUN_STARTED":
-                    print("\033[93m[Run Started]\033[0m")
-
-                elif event_type == "TEXT_MESSAGE_CONTENT":
-                    print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
-
-                elif event_type == "STATE_SNAPSHOT":
-                    print(f"\n\033[94m[State Snapshot Received]\033[0m")
-
-                elif event_type == "STATE_DELTA":
-                    print(f"\n\033[94m[State Updated]\033[0m")
-
-                elif event_type == "TOOL_CALL_START":
-                    tool_name = event.get("toolCallName", "unknown")
-                    print(f"\n\033[95m[Calling Tool: {tool_name}]\033[0m")
-
-                elif event_type == "TOOL_CALL_RESULT":
-                    content = event.get("content", "")
-                    print(f"\033[94m[Tool Result: {content}]\033[0m")
-
-                elif event_type == "RUN_FINISHED":
-                    print(f"\n\033[92m[Run Finished]\033[0m")
-                    # Display final state
-                    display_state(client.state)
-
-                elif event_type == "RUN_ERROR":
-                    error_msg = event.get("message", "Unknown error")
-                    print(f"\n\033[91m[Error: {error_msg}]\033[0m")
-
+            print(f"\n\nCurrent state: {json.dumps(state, indent=2)}")
             print()
 
     except KeyboardInterrupt:
         print("\n\nExiting...")
-    except Exception as e:
-        print(f"\n\033[91mError: {e}\033[0m")
 
 
 if __name__ == "__main__":
-    # Install jsonpatch: pip install jsonpatch
+    # Install dependencies: pip install agent-framework-ag-ui jsonpatch
     asyncio.run(main())
 ```
+
+### Key Benefits
+
+The `AGUIChatClient` provides:
+
+- **Simplified Connection**: Automatic handling of HTTP/SSE communication
+- **Thread Management**: Built-in thread ID tracking for conversation continuity
+- **Agent Integration**: Works seamlessly with `ChatAgent` for familiar API
+- **State Handling**: Automatic parsing of state events from the server
+- **Parity with .NET**: Consistent experience across languages
+
+> [!TIP]
+> Use `AGUIChatClient` with `ChatAgent` to get the full benefit of the agent framework's features like conversation history, tool execution, and middleware support.
+
+## Using Confirmation Strategies
+
+The `confirmation_strategy` parameter allows you to customize approval messages for your domain:
+
+```python
+from agent_framework_ag_ui import RecipeConfirmationStrategy
+
+recipe_agent = AgentFrameworkAgent(
+    agent=agent,
+    state_schema={"recipe": {"type": "object", "description": "The current recipe"}},
+    predict_state_config={"recipe": {"tool": "update_recipe", "tool_argument": "recipe"}},
+    confirmation_strategy=RecipeConfirmationStrategy(),
+)
+```
+
+Available strategies:
+- `DefaultConfirmationStrategy()` - Generic messages for any agent
+- `RecipeConfirmationStrategy()` - Recipe-specific messages
+- `DocumentWriterConfirmationStrategy()` - Document editing messages
+- `TaskPlannerConfirmationStrategy()` - Task planning messages
+
+You can also create custom strategies by inheriting from `ConfirmationStrategy` and implementing the required methods.
 
 ## Example Interaction
 
 With the server and client running:
 
 ```
-User (:q to quit, :state to show state): I want to make an Italian recipe with pasta, eggs, bacon, and cheese
+User (:q to quit, :state to show state): I want to make a classic Italian pasta carbonara
 
 [Run Started]
-[Calling Tool: create_recipe]
+[Calling Tool: update_recipe]
 [State Updated]
-[Tool Result: Recipe 'Pasta Carbonara' created successfully!]
-I've created a Pasta Carbonara recipe for you! It's an Italian classic that takes 10 minutes 
-to prep and 20 minutes to cook.
+[State Updated]
+[State Updated]
+[Tool Result: Recipe updated.]
+Here's your recipe!
 [Run Finished]
 
 ============================================================
@@ -731,188 +695,237 @@ CURRENT STATE
 ============================================================
 
 recipe:
-  name: Pasta Carbonara
-  cuisine: Italian
-  ingredients: ['pasta', 'eggs', 'bacon', 'parmesan', 'black pepper']
-  steps: ['Boil pasta', 'Cook bacon', 'Mix eggs and cheese', 'Combine all ingredients']
-  prep_time: 10
-  cook_time: 20
-
-============================================================
-
-User (:q to quit, :state to show state): :state
-
-============================================================
-CURRENT STATE
-============================================================
-
-recipe:
-  name: Pasta Carbonara
-  cuisine: Italian
-  ingredients: ['pasta', 'eggs', 'bacon', 'parmesan', 'black pepper']
-  steps: ['Boil pasta', 'Cook bacon', 'Mix eggs and cheese', 'Combine all ingredients']
-  prep_time: 10
-  cook_time: 20
+  title: Classic Pasta Carbonara
+  skill_level: Intermediate
+  special_preferences: ['Authentic Italian']
+  cooking_time: 30 min
+  ingredients:
+    - 🍝 Spaghetti: 400g
+    - 🥓 Guanciale or bacon: 200g
+    - 🥚 Egg yolks: 4
+    - 🧀 Pecorino Romano: 100g grated
+    - 🧂 Black pepper: To taste
+  instructions:
+    1. Bring a large pot of salted water to boil
+    2. Cut guanciale into small strips and fry until crispy
+    3. Beat egg yolks with grated Pecorino and black pepper
+    4. Cook spaghetti until al dente
+    5. Reserve 1 cup pasta water, then drain pasta
+    6. Remove pan from heat, add hot pasta to guanciale
+    7. Quickly stir in egg mixture, adding pasta water to create creamy sauce
+    8. Serve immediately with extra Pecorino and black pepper
 
 ============================================================
 ```
+
+> [!TIP]
+> Use the `:state` command to view the current state at any time during the conversation.
 
 ## Predictive State Updates in Action
 
-When using predictive state updates, the client receives `STATE_DELTA` events as the LLM generates tool arguments, before the tool executes:
+When using predictive state updates with `predict_state_config`, the client receives `STATE_DELTA` events as the LLM generates tool arguments in real-time, before the tool executes:
 
-```python
-# Agent starts generating tool call for create_recipe
-# Client receives STATE_DELTA events as arguments stream:
+```json
+// Agent starts generating tool call for update_recipe
+// Client receives STATE_DELTA events as the recipe argument streams:
 
-# First delta - recipe name appears
-STATE_DELTA: [{"op": "replace", "path": "/recipe/name", "value": "Pasta"}]
+// First delta - partial recipe with title
+{
+  "type": "STATE_DELTA",
+  "delta": [{"op": "replace", "path": "/recipe", "value": {"title": "Classic Pasta"}}]
+}
 
-# Second delta - full name
-STATE_DELTA: [{"op": "replace", "path": "/recipe/name", "value": "Pasta Carbonara"}]
+// Second delta - title complete with more fields
+{
+  "type": "STATE_DELTA",
+  "delta": [{"op": "replace", "path": "/recipe", "value": {
+    "title": "Classic Pasta Carbonara",
+    "skill_level": "Intermediate"
+  }}]
+}
 
-# Third delta - cuisine added
-STATE_DELTA: [{"op": "replace", "path": "/recipe/cuisine", "value": "Italian"}]
+// Third delta - ingredients starting to appear
+{
+  "type": "STATE_DELTA",
+  "delta": [{"op": "replace", "path": "/recipe", "value": {
+    "title": "Classic Pasta Carbonara",
+    "skill_level": "Intermediate",
+    "cooking_time": "30 min",
+    "ingredients": [
+      {"icon": "🍝", "name": "Spaghetti", "amount": "400g"}
+    ]
+  }}]
+}
 
-# Fourth delta - first ingredient
-STATE_DELTA: [{"op": "add", "path": "/recipe/ingredients", "value": ["pasta"]}]
-
-# ... and so on as the LLM generates the full tool call
+// ... more deltas as the LLM generates the complete recipe
 ```
 
-This enables the client to show optimistic UI updates in real-time as the agent is thinking.
+This enables the client to show optimistic UI updates in real-time as the agent is thinking, providing immediate feedback to users.
 
 ## State with Human-in-the-Loop
 
-You can combine state management with approval workflows:
+You can combine state management with approval workflows by setting `require_confirmation=True`:
 
 ```python
-wrapped_agent = AgentFrameworkAgent(
+recipe_agent = AgentFrameworkAgent(
     agent=agent,
-    state_schema=state_schema,
-    predict_state_config=predict_state_config,
+    state_schema={"recipe": {"type": "object", "description": "The current recipe"}},
+    predict_state_config={"recipe": {"tool": "update_recipe", "tool_argument": "recipe"}},
     require_confirmation=True,  # Require approval for state changes
+    confirmation_strategy=RecipeConfirmationStrategy(),
 )
 ```
 
 When enabled:
 
-1. State updates stream as the agent generates tool arguments (predictive updates)
-2. Agent requests approval before executing the tool
-3. If approved, the tool executes and state is finalized
-4. If rejected, the state changes are rolled back
+1. State updates stream as the agent generates tool arguments (predictive updates via `STATE_DELTA` events)
+2. Agent requests approval before executing the tool (via `FUNCTION_APPROVAL_REQUEST` event)
+3. If approved, the tool executes and final state is emitted (via `STATE_SNAPSHOT` event)
+4. If rejected, the predictive state changes are discarded
 
 ## Advanced State Patterns
 
-### Partial State Updates
+### Complex State with Multiple Fields
 
-Update only specific fields:
+You can manage multiple state fields with different tools:
+
+```python
+from pydantic import BaseModel
+
+
+class TaskStep(BaseModel):
+    """A single task step."""
+    description: str
+    status: str = "pending"
+    estimated_duration: str = "5 min"
+
+
+@ai_function
+def generate_task_steps(steps: list[TaskStep]) -> str:
+    """Generate task steps for a given task."""
+    return f"Generated {len(steps)} steps."
+
+
+@ai_function
+def update_preferences(preferences: dict[str, Any]) -> str:
+    """Update user preferences."""
+    return "Preferences updated."
+
+
+# Configure with multiple state fields
+agent_with_multiple_state = AgentFrameworkAgent(
+    agent=agent,
+    state_schema={
+        "steps": {"type": "array", "description": "List of task steps"},
+        "preferences": {"type": "object", "description": "User preferences"},
+    },
+    predict_state_config={
+        "steps": {"tool": "generate_task_steps", "tool_argument": "steps"},
+        "preferences": {"tool": "update_preferences", "tool_argument": "preferences"},
+    },
+)
+```
+
+### Using Wildcard Tool Arguments
+
+When a tool returns complex nested data, use `"*"` to map all tool arguments to state:
 
 ```python
 @ai_function
-def update_recipe_name(
-    new_name: Annotated[str, Field(description="New recipe name")],
-) -> str:
-    """Update just the recipe name."""
-    return f"Recipe name updated to '{new_name}'"
+def create_document(title: str, content: str, metadata: dict[str, Any]) -> str:
+    """Create a document with title, content, and metadata."""
+    return "Document created."
 
-# Configure to update only the name field
+
+# Map all tool arguments to document state
 predict_state_config = {
-    "recipe.name": {"tool": "update_recipe_name", "tool_argument": "new_name"}
+    "document": {"tool": "create_document", "tool_argument": "*"}
 }
 ```
 
-### Complex State Structures
-
-Support nested objects and arrays:
-
-```python
-state_schema = {
-    "project": {
-        "type": "object",
-        "properties": {
-            "metadata": {
-                "type": "object",
-                "properties": {
-                    "title": {"type": "string"},
-                    "created_at": {"type": "string"},
-                    "tags": {"type": "array", "items": {"type": "string"}}
-                }
-            },
-            "tasks": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "id": {"type": "string"},
-                        "title": {"type": "string"},
-                        "status": {"type": "string"},
-                        "assignee": {"type": "string"}
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-### Client-Initiated State Updates
-
-Clients can send state updates to the server:
-
-```python
-# Include updated state in request
-request_data = {
-    "messages": [...],
-    "state": {
-        "user_preferences": {
-            "dietary_restrictions": ["vegetarian"],
-            "skill_level": "advanced"
-        }
-    }
-}
-```
+This maps the entire tool call (all arguments) to the `document` state field.
 
 ## Best Practices
 
-### Schema Design
+### Use Pydantic Models
 
-- Keep state schemas focused and minimal
-- Use descriptive property names
-- Provide appropriate type constraints
-- Consider validation requirements
-
-### Predictive Updates
-
-- Map state fields to corresponding tool arguments accurately
-- Handle partial updates gracefully in the client UI
-- Provide visual indicators for optimistic updates
-
-### State Persistence
-
-Consider persisting state for session continuity:
+Define structured models for type safety:
 
 ```python
-# Server-side: Store state per thread_id
-thread_states = {}
-
-def get_thread_state(thread_id: str) -> dict:
-    return thread_states.get(thread_id, {})
-
-def update_thread_state(thread_id: str, state: dict):
-    thread_states[thread_id] = state
+class Recipe(BaseModel):
+    """Use Pydantic models for structured, validated state."""
+    title: str
+    skill_level: SkillLevel
+    ingredients: list[Ingredient]
+    instructions: list[str]
 ```
 
-### Error Handling
+Benefits:
+- **Type Safety**: Automatic validation of data types
+- **Documentation**: Field descriptions serve as documentation
+- **IDE Support**: Auto-completion and type checking
+- **Serialization**: Automatic JSON conversion
 
-Handle state synchronization errors gracefully:
+### Complete State Updates
+
+Always write the complete state, not just deltas:
 
 ```python
-try:
-    client.apply_state_delta(delta)
-except jsonpatch.JsonPatchException as e:
-    print(f"Failed to apply state update: {e}")
-    # Request full state snapshot
+@ai_function
+def update_recipe(recipe: Recipe) -> str:
+    """
+    You MUST write the complete recipe with ALL fields.
+    When modifying a recipe, include ALL existing ingredients and 
+    instructions plus your changes. NEVER delete existing data.
+    """
+    return "Recipe updated."
+```
+
+This ensures state consistency and proper predictive updates.
+
+### Match Parameter Names
+
+Ensure tool parameter names match `tool_argument` configuration:
+
+```python
+# Tool parameter name
+def update_recipe(recipe: Recipe) -> str:  # Parameter name: 'recipe'
+    ...
+
+# Must match in predict_state_config
+predict_state_config = {
+    "recipe": {"tool": "update_recipe", "tool_argument": "recipe"}  # Same name
+}
+```
+
+### Provide Context in Instructions
+
+Include clear instructions about state management:
+
+```python
+agent = ChatAgent(
+    instructions="""
+    CRITICAL RULES:
+    1. You will receive the current recipe state in the system context
+    2. To update the recipe, you MUST use the update_recipe tool
+    3. When modifying a recipe, ALWAYS include ALL existing data plus your changes
+    4. NEVER delete existing ingredients or instructions - only add or modify
+    """,
+    ...
+)
+```
+
+### Use Confirmation Strategies
+
+Customize approval messages for your domain:
+
+```python
+from agent_framework_ag_ui import RecipeConfirmationStrategy
+
+recipe_agent = AgentFrameworkAgent(
+    agent=agent,
+    confirmation_strategy=RecipeConfirmationStrategy(),  # Domain-specific messages
+)
 ```
 
 ## Next Steps

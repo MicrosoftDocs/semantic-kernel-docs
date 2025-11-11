@@ -487,10 +487,11 @@ The AG-UI client connects to the remote server and displays streaming responses.
 
 ### Install Required Packages
 
-Install the HTTP client library:
+The AG-UI package is already installed, which includes the `AGUIChatClient`:
 
 ```bash
-pip install httpx
+# Already installed with agent-framework-ag-ui
+pip install agent-framework-ag-ui
 ```
 
 ### Client Code
@@ -501,69 +502,10 @@ Create a file named `client.py`:
 """AG-UI client example."""
 
 import asyncio
-import json
 import os
-from typing import AsyncIterator
 
-import httpx
-
-
-class AGUIClient:
-    """Simple AG-UI protocol client."""
-
-    def __init__(self, server_url: str):
-        """Initialize the client.
-
-        Args:
-            server_url: The AG-UI server endpoint URL
-        """
-        self.server_url = server_url
-        self.thread_id: str | None = None
-
-    async def send_message(self, message: str) -> AsyncIterator[dict]:
-        """Send a message and stream the response.
-
-        Args:
-            message: The user message to send
-
-        Yields:
-            AG-UI events from the server
-        """
-        # Prepare the request
-        request_data = {
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": message},
-            ]
-        }
-
-        # Include thread_id if we have one (for conversation continuity)
-        if self.thread_id:
-            request_data["thread_id"] = self.thread_id
-
-        # Stream the response
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            async with client.stream(
-                "POST",
-                self.server_url,
-                json=request_data,
-                headers={"Accept": "text/event-stream"},
-            ) as response:
-                response.raise_for_status()
-
-                async for line in response.aiter_lines():
-                    # Parse Server-Sent Events format
-                    if line.startswith("data: "):
-                        data = line[6:]  # Remove "data: " prefix
-                        try:
-                            event = json.loads(data)
-                            yield event
-
-                            # Capture thread_id from RUN_STARTED event
-                            if event.get("type") == "RUN_STARTED" and not self.thread_id:
-                                self.thread_id = event.get("threadId")
-                        except json.JSONDecodeError:
-                            continue
+from agent_framework import ChatAgent
+from agent_framework_ag_ui import AGUIChatClient
 
 
 async def main():
@@ -572,7 +514,18 @@ async def main():
     server_url = os.environ.get("AGUI_SERVER_URL", "http://127.0.0.1:8888/")
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
-    client = AGUIClient(server_url)
+    # Create AG-UI chat client
+    chat_client = AGUIChatClient(server_url=server_url)
+    
+    # Create agent with the chat client
+    agent = ChatAgent(
+        name="ClientAgent",
+        chat_client=chat_client,
+        instructions="You are a helpful assistant.",
+    )
+
+    # Get a thread for conversation continuity
+    thread = agent.get_new_thread()
 
     try:
         while True:
@@ -585,30 +538,14 @@ async def main():
             if message.lower() in (":q", "quit"):
                 break
 
-            # Send message and display streaming response
-            print("\n", end="")
-            async for event in client.send_message(message):
-                event_type = event.get("type", "")
+            # Stream the agent response
+            print("\nAssistant: ", end="", flush=True)
+            async for update in agent.run_stream(message, thread=thread):
+                # Print text content as it streams
+                if update.text:
+                    print(f"\033[96m{update.text}\033[0m", end="", flush=True)
 
-                if event_type == "RUN_STARTED":
-                    thread_id = event.get("threadId", "")
-                    run_id = event.get("runId", "")
-                    print(f"\033[93m[Run Started - Thread: {thread_id}, Run: {run_id}]\033[0m")
-
-                elif event_type == "TEXT_MESSAGE_CONTENT":
-                    # Stream text content in cyan
-                    print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
-
-                elif event_type == "RUN_FINISHED":
-                    thread_id = event.get("threadId", "")
-                    run_id = event.get("runId", "")
-                    print(f"\n\033[92m[Run Finished - Thread: {thread_id}, Run: {run_id}]\033[0m")
-
-                elif event_type == "RUN_ERROR":
-                    error_message = event.get("message", "Unknown error")
-                    print(f"\n\033[91m[Run Error - Message: {error_message}]\033[0m")
-
-            print()
+            print("\n")
 
     except KeyboardInterrupt:
         print("\n\nExiting...")
