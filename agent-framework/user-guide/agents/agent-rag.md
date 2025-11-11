@@ -290,7 +290,7 @@ This pattern works with any Semantic Kernel VectorStore connector, including:
 - In-Memory (`InMemoryVectorStoreCollection`)
 - And more
 
-Each connector provides the same `create_search_function` method that can be bridged to Agent Framework tools, allowing you to choose the vector database that best fits your needs. See [the full list here](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors)
+Each connector provides the same `create_search_function` method that can be bridged to Agent Framework tools, allowing you to choose the vector database that best fits your needs. See [the full list here](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors).
 
 ::: zone-end
 
