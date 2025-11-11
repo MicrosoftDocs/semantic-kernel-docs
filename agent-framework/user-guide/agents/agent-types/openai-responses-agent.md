@@ -381,7 +381,7 @@ async def web_search_example():
     # Configure location for better search results
     additional_properties = {
         "user_location": {
-            "country": "US",
+            "country": "US", # Country/region code
             "city": "Seattle",
         }
     }
