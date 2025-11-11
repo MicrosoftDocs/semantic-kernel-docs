@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: reference
 ms.author: westey
-ms.date: 09/25/2025
+ms.date: 11/11/2025
 ms.service: agent-framework
 ---
 
