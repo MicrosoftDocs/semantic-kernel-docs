@@ -540,14 +540,14 @@ If you have existing Semantic Kernel code with `KernelFunction` instances (eithe
 ```python
 from semantic_kernel import Kernel
 from semantic_kernel.functions import KernelFunctionFromPrompt
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAIChatPromptExecutionSettings
 from semantic_kernel.prompt_template import KernelPromptTemplate, PromptTemplateConfig
-from semantic_kernel.core_plugins import TimePlugin
 from agent_framework.openai import OpenAIResponsesClient
 
 # Create a kernel with services and plugins
 kernel = Kernel()
+# will get the api_key and model_id from the environment
 kernel.add_service(OpenAIChatCompletion(service_id="default"))
-kernel.add_plugin(TimePlugin(), "time")
 
 # Create a function from a prompt template that uses plugin functions
 function_definition = """
@@ -583,26 +583,16 @@ print(response.text)
 #### Using KernelFunction from a method
 
 ```python
-from semantic_kernel import Kernel
 from semantic_kernel.functions import kernel_function
 from agent_framework.openai import OpenAIResponsesClient
 
-# Create a kernel
-kernel = Kernel()
-kernel.add_service(OpenAIChatCompletion(service_id="default"))
-
 # Create a plugin class with kernel functions
-class WeatherPlugin:
-    @kernel_function(name="get_weather", description="Get the weather for a location")
-    def get_weather(self, location: str) -> str:
-        return f"The weather in {location} is sunny."
-
-# Add the plugin to the kernel
-kernel.add_plugin(WeatherPlugin(), "weather")
+@kernel_function(name="get_weather", description="Get the weather for a location")
+def get_weather(self, location: str) -> str:
+    return f"The weather in {location} is sunny."
 
 # Get the KernelFunction and convert it to an Agent Framework tool
-weather_function = kernel.plugins["weather"]["get_weather"]
-agent_tool = weather_function.as_agent_framework_tool(kernel=kernel)
+agent_tool = get_weather.as_agent_framework_tool()
 
 # Use the tool with an Agent Framework agent
 agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(tools=agent_tool)
@@ -616,7 +606,7 @@ You can also use Semantic Kernel's VectorStore integrations with Agent Framework
 
 ```python
 from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAITextEmbedding
+from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
 from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
 from semantic_kernel.functions import KernelParameterMetadata
 from agent_framework.openai import OpenAIResponsesClient
@@ -633,10 +623,6 @@ collection = AzureAISearchCollection[str, HotelSampleClass](
     record_type=HotelSampleClass,
     embedding_generator=OpenAITextEmbedding()
 )
-
-# Create a kernel (needed for the conversion)
-kernel = Kernel()
-kernel.add_service(OpenAIChatCompletion(service_id="default"))
 
 async with collection:
     await collection.ensure_collection_exists()
@@ -674,7 +660,7 @@ async with collection:
     )
 
     # Convert the search function to an Agent Framework tool
-    search_tool = search_function.as_agent_framework_tool(kernel=kernel)
+    search_tool = search_function.as_agent_framework_tool()
 
     # Use the tool with an Agent Framework agent
     agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(

@@ -97,10 +97,10 @@ Agent Framework supports using Semantic Kernel's VectorStore collections to prov
 ### Creating a Search Tool from VectorStore
 
 The `create_search_function` method from a Semantic Kernel VectorStore collection returns a `KernelFunction` that can be converted to an Agent Framework tool using `.as_agent_framework_tool()`.
+Use [the vector store connectors documentation](semantic-kernel/concepts/vector-store-connectors/index.md) to learn how to set up different vector store collections.
 
 ```python
-from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAITextEmbedding
+from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
 from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
 from semantic_kernel.functions import KernelParameterMetadata
 from agent_framework.openai import OpenAIResponsesClient
@@ -118,10 +118,6 @@ collection = AzureAISearchCollection[str, SupportArticle](
     record_type=SupportArticle,
     embedding_generator=OpenAITextEmbedding()
 )
-
-# Create a kernel (required for the conversion)
-kernel = Kernel()
-kernel.add_service(OpenAIChatCompletion(service_id="default"))
 
 async with collection:
     await collection.ensure_collection_exists()
@@ -153,7 +149,7 @@ async with collection:
     )
 
     # Convert the search function to an Agent Framework tool
-    search_tool = search_function.as_agent_framework_tool(kernel=kernel)
+    search_tool = search_function.as_agent_framework_tool()
 
     # Create an agent with the search tool
     agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
@@ -205,6 +201,8 @@ search_function = collection.create_search_function(
 )
 ```
 
+For the full details on the parameters available for `create_search_function`, see the [Semantic Kernel documentation](semantic-kernel/concepts/vector-store-connectors/index.md).
+
 ### Using Multiple Search Functions
 
 You can provide multiple search tools to an agent for different knowledge domains:
@@ -216,14 +214,14 @@ product_search = product_collection.create_search_function(
     description="Search for product information and specifications.",
     search_type="semantic_hybrid",
     string_mapper=lambda x: f"{x.record.name}: {x.record.description}",
-).as_agent_framework_tool(kernel=kernel)
+).as_agent_framework_tool()
 
 policy_search = policy_collection.create_search_function(
     function_name="search_policies",
     description="Search for company policies and procedures.",
     search_type="keyword_hybrid",
     string_mapper=lambda x: f"Policy: {x.record.title}\n{x.record.content}",
-).as_agent_framework_tool(kernel=kernel)
+).as_agent_framework_tool()
 
 # Create an agent with multiple search tools
 agent = chat_client.create_agent(
@@ -251,7 +249,7 @@ general_search = support_collection.create_search_function(
         ),
     ],
     string_mapper=lambda x: f"{x.record.title}: {x.record.content}",
-).as_agent_framework_tool(kernel=kernel)
+).as_agent_framework_tool()
 
 # Detailed lookup for specific article IDs
 detail_lookup = support_collection.create_search_function(
@@ -269,7 +267,7 @@ detail_lookup = support_collection.create_search_function(
         ),
     ],
     string_mapper=lambda x: f"Title: {x.record.title}\nFull Content: {x.record.content}\nLast Updated: {x.record.updated_date}",
-).as_agent_framework_tool(kernel=kernel)
+).as_agent_framework_tool()
 
 # Create an agent with both search functions
 agent = chat_client.create_agent(
