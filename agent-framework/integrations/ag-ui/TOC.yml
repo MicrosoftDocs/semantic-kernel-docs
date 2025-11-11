@@ -10,5 +10,7 @@
   href: human-in-the-loop.md
 - name: State Management
   href: state-management.md
+- name: Security Considerations
+  href: security-considerations.md
 - name: Testing with Dojo
   href: testing-with-dojo.md
