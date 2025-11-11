@@ -410,32 +410,29 @@ import os
 from agent_framework import ChatAgent
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
+from azure.identity import AzureCliCredential
 from fastapi import FastAPI
 
 # Read required configuration
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
-# Note: a token may also be used in place of the api_key using:
-# from azure.identity import AzureCliCredential
-# chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
-api_key = os.environ.get("AZURE_OPENAI_API_KEY")
 
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT environment variable is required")
 if not deployment_name:
     raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
-if not api_key:
-    raise ValueError("AZURE_OPENAI_API_KEY environment variable is required")
+
+chat_client = AzureOpenAIChatClient(
+    credential=AzureCliCredential(),
+    endpoint=endpoint,
+    deployment_name=deployment_name,    
+)
 
 # Create the AI agent
 agent = ChatAgent(
     name="AGUIAssistant",
     instructions="You are a helpful assistant.",
-    chat_client=AzureOpenAIChatClient(
-        endpoint=endpoint,
-        deployment_name=deployment_name,
-        api_key=api_key,
-    ),
+    chat_client=chat_client,
 )
 
 # Create FastAPI app

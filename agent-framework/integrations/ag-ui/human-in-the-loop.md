@@ -584,6 +584,7 @@ from typing import Annotated
 from agent_framework import ChatAgent, ai_function
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import AgentFrameworkAgent, add_agent_framework_fastapi_endpoint
+from azure.identity import AzureCliCredential
 from fastapi import FastAPI
 from pydantic import Field
 
@@ -618,21 +619,26 @@ def check_balance(
     return f"Account {account} balance: $5,432.10 USD"
 
 
-# Read configuration
+# Read required configuration
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
 
-if not endpoint or not deployment_name:
-    raise ValueError("AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME are required")
+if not endpoint:
+    raise ValueError("AZURE_OPENAI_ENDPOINT environment variable is required")
+if not deployment_name:
+    raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
+
+chat_client = AzureOpenAIChatClient(
+    credential=AzureCliCredential(),
+    endpoint=endpoint,
+    deployment_name=deployment_name,    
+)
 
 # Create agent with tools
 agent = ChatAgent(
     name="BankingAssistant",
     instructions="You are a banking assistant. Help users with their banking needs. Always confirm details before performing transfers.",
-    chat_client=AzureOpenAIChatClient(
-        endpoint=endpoint,
-        deployment_name=deployment_name,
-    ),
+    chat_client=chat_client,
     tools=[transfer_money, cancel_subscription, check_balance],
 )
 

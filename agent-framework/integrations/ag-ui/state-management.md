@@ -412,6 +412,7 @@ from agent_framework_ag_ui import (
     RecipeConfirmationStrategy,
     add_agent_framework_fastapi_endpoint,
 )
+from azure.identity import AzureCliCredential
 from fastapi import FastAPI
 
 # Create the chat agent with tools
@@ -451,7 +452,11 @@ agent = ChatAgent(
     - Add finishing touches: lemon zest, fresh parsley
     - Make instructions more detailed and professional
     """,
-    chat_client=AzureOpenAIChatClient(),
+    chat_client=AzureOpenAIChatClient(
+        credential=AzureCliCredential(),
+        endpoint=endpoint,
+        deployment_name=deployment_name,    
+    ),
     tools=[update_recipe],
 )
 

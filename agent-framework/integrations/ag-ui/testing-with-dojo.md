@@ -70,6 +70,9 @@ AZURE_OPENAI_API_KEY=your_api_key_here
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=your_deployment_here
 ```
 
+> [!NOTE]
+> If using `DefaultAzureCredential`, in place for an `api_key` for authentication, make sure you're authenticated with Azure (e.g., via `az login`). For more information, see the [Azure Identity documentation](/python/api/azure-identity/azure.identity.defaultazurecredential).
+
 ## Running the Dojo Application
 
 ### 1. Start the Backend Server
