@@ -170,21 +170,13 @@ Enable real-time web search capabilities:
 from agent_framework import HostedWebSearchTool
 
 async def web_search_example():
-    # Configure location for better search results
-    additional_properties = {
-        "user_location": {
-            "country": "your-country", # Country/region code
-            "city": "your-city",
-        }
-    }
-    
     agent = OpenAIChatClient(model_id="gpt-4o-search-preview").create_agent(
         name="SearchBot",
         instructions="You are a helpful assistant that can search the web for current information.",
-        tools=HostedWebSearchTool(additional_properties=additional_properties),
+        tools=HostedWebSearchTool(),
     )
 
-    result = await agent.run("What's the current weather in Seattle?")
+    result = await agent.run("What are the latest developments in artificial intelligence?")
     print(result.text)
 ```
 
