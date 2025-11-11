@@ -295,7 +295,7 @@ This tutorial shows you how to add function tools to your AG-UI agents. Function
 Before you begin, ensure you have completed the [Getting Started](getting-started.md) tutorial and have:
 
 - Python 3.10 or later
-- `agent-framework-ag-ui`, `agent-framework-core`, `fastapi`, and `uvicorn` installed
+- `agent-framework-ag-ui` installed
 - Azure OpenAI service configured
 - Basic understanding of AG-UI server and client setup
 
