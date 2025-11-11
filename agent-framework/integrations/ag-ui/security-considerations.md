@@ -31,21 +31,7 @@ Security vulnerabilities can arise from:
 
 The primary trust boundary in AG-UI is between the client and the AG-UI server. However, the security model depends on whether the client itself is trusted or untrusted:
 
-```mermaid
-graph LR
-    A[End User<br/>UNTRUSTED] -->|Limited Input| B[Trusted Frontend<br/>Server]
-    B -->|Controlled AG-UI<br/>Protocol| C[AG-UI Server<br/>TRUSTED]
-    C --> D[LLM]
-    C --> E[Tool Execution]
-    C --> F[Data Access]
-    
-    style A fill:#ffcccc
-    style B fill:#ffffcc
-    style C fill:#ccffcc
-    style D fill:#ccffcc
-    style E fill:#ccffcc
-    style F fill:#ccffcc
-```
+![Trust Boundaries Diagram](trust-boundaries.png)
 
 **Recommended Architecture:**
 - **End User (Untrusted)**: Provides only limited, well-defined input (e.g., user message text, simple preferences)
