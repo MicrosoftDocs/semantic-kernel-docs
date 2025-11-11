@@ -190,4 +190,4 @@ Implement approval workflows for high-risk tool operations. <!-- For detailed im
 
 <!-- - Review the [Human-in-the-Loop](human-in-the-loop.md) guide for implementing approval workflows -->
 <!-- - Explore [State Management](state-management.md) for secure state handling patterns -->
-- Test your security controls using [Testing with Dojo](testing-with-dojo.md)
+<!-- - Test your security controls using [Testing with Dojo](testing-with-dojo.md) -->
