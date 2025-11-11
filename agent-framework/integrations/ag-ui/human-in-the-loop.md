@@ -286,8 +286,6 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMidd
 
 ## Client Implementation
 
-## Client Implementation
-
 ### Implement Client-Side Middleware
 
 The client wraps the agent with middleware that translates `"request_approval"` tool calls to `FunctionApprovalRequestContent`:
