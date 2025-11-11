@@ -19,7 +19,7 @@ Before you begin, ensure you understand:
 
 - [Getting Started with AG-UI](getting-started.md)
 - [Backend Tool Rendering](backend-tool-rendering.md)
-- [Human-in-the-Loop](human-in-the-loop.md)
+<!-- - [Human-in-the-Loop](human-in-the-loop.md) -->
 
 ## What is State Management?
 
@@ -979,6 +979,6 @@ You've now learned all the core AG-UI features! Next you can:
 - [AG-UI Overview](index.md)
 - [Getting Started](getting-started.md)
 - [Backend Tool Rendering](backend-tool-rendering.md)
-- [Human-in-the-Loop](human-in-the-loop.md)
+<!-- - [Human-in-the-Loop](human-in-the-loop.md) -->
 
 ::: zone-end

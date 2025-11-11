@@ -228,8 +228,8 @@ If you see authentication errors:
 
 - Explore the [example agents](https://github.com/ag-oss/ag-ui/tree/main/integrations/microsoft-agent-framework/python/examples/agents) to see implementation patterns
 - Learn about [Backend Tool Rendering](backend-tool-rendering.md) to customize tool UIs
-- Implement [Human-in-the-Loop](human-in-the-loop.md) workflows for approval flows
-- Add [State Management](state-management.md) for complex interactive experiences
+<!-- - Implement [Human-in-the-Loop](human-in-the-loop.md) workflows for approval flows -->
+<!-- - Add [State Management](state-management.md) for complex interactive experiences -->
 
 ## Additional Resources
 

@@ -631,7 +631,7 @@ The server middleware must remove approval protocol messages after processing:
 
 ## Next Steps
 
-- **[Learn State Management](state-management.md)**: Manage shared state with approval workflows
+<!-- - **[Learn State Management](state-management.md)**: Manage shared state with approval workflows -->
 - **[Explore Function Tools](../../tutorials/agents/function-tools-approvals.md)**: Learn more about approval patterns in Agent Framework
 
 ::: zone-end

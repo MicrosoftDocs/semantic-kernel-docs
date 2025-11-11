@@ -136,8 +136,8 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
-4. **[State Management](state-management.md)**: Synchronize state between client and server
+<!-- 3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows -->
+<!-- 4. **[State Management](state-management.md)**: Synchronize state between client and server -->
 
 ## Additional Resources
 
@@ -244,8 +244,8 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
-4. **[State Management](state-management.md)**: Synchronize state between client and server
+<!-- 3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows -->
+<!-- 4. **[State Management](state-management.md)**: Synchronize state between client and server -->
 
 ## Additional Resources
 

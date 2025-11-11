@@ -347,8 +347,8 @@ The AG-UI protocol uses:
 Now that you understand the basics of AG-UI, you can:
 
 - **[Add Backend Tools](backend-tool-rendering.md)**: Create custom function tools for your domain
-- **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations
-- **[Manage State](state-management.md)**: Implement shared state for generative UI applications
+<!-- - **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations -->
+<!-- - **[Manage State](state-management.md)**: Implement shared state for generative UI applications -->
 
 ## Additional Resources
 
@@ -780,8 +780,8 @@ The client automatically manages thread continuity. If context is lost:
 Now that you understand the basics of AG-UI, you can:
 
 - **[Add Backend Tools](backend-tool-rendering.md)**: Create custom function tools for your domain
-- **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations
-- **[Manage State](state-management.md)**: Implement shared state for generative UI applications
+<!-- - **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations -->
+<!-- - **[Manage State](state-management.md)**: Implement shared state for generative UI applications -->
 
 ## Additional Resources
 

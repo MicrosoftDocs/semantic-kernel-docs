@@ -189,12 +189,12 @@ Filter sensitive information from tool execution results before streaming to cli
 
 ### Human-in-the-Loop for Sensitive Operations
 
-Implement approval workflows for high-risk tool operations. For detailed implementation guidance, see [Human-in-the-Loop](human-in-the-loop.md).
+Implement approval workflows for high-risk tool operations. <!-- For detailed implementation guidance, see [Human-in-the-Loop](human-in-the-loop.md). -->
 
 ## Additional Resources
 
-- [Human-in-the-Loop](human-in-the-loop.md) - Implement approval workflows for sensitive operations
-- [State Management](state-management.md) - Best practices for state synchronization
+<!-- - [Human-in-the-Loop](human-in-the-loop.md) - Implement approval workflows for sensitive operations -->
+<!-- - [State Management](state-management.md) - Best practices for state synchronization -->
 - [Backend Tool Rendering](backend-tool-rendering.md) - Secure tool implementation patterns
 - [Microsoft Security Development Lifecycle (SDL)](https://www.microsoft.com/en-us/securityengineering/sdl) - Comprehensive security engineering practices
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) - Common web application security risks
@@ -202,6 +202,6 @@ Implement approval workflows for high-risk tool operations. For detailed impleme
 
 ## Next Steps
 
-- Review the [Human-in-the-Loop](human-in-the-loop.md) guide for implementing approval workflows
-- Explore [State Management](state-management.md) for secure state handling patterns
+<!-- - Review the [Human-in-the-Loop](human-in-the-loop.md) guide for implementing approval workflows -->
+<!-- - Explore [State Management](state-management.md) for secure state handling patterns -->
 - Test your security controls using [Testing with Dojo](testing-with-dojo.md)

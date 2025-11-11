@@ -274,8 +274,8 @@ great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
 Now that you can add function tools, you can:
 
 - **[Frontend tools](frontend-tools.md)**: Add frontend tools.
-- **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations
-- **[Manage State](state-management.md)**: Implement shared state for generative UI applications
+<!-- - **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations -->
+<!-- - **[Manage State](state-management.md)**: Implement shared state for generative UI applications -->
 - **[Test with Dojo](testing-with-dojo.md)**: Use AG-UI's Dojo app to test your agents
 
 ## Additional Resources
@@ -699,8 +699,8 @@ agent = ChatAgent(
 
 Now that you understand backend tool rendering, you can:
 
-- **[Add Human-in-the-Loop](human-in-the-loop.md)**: Require user approval before executing sensitive tools
-- **[Manage State](state-management.md)**: Share state between client and server for richer interactions
+<!-- - **[Add Human-in-the-Loop](human-in-the-loop.md)**: Require user approval before executing sensitive tools -->
+<!-- - **[Manage State](state-management.md)**: Share state between client and server for richer interactions -->
 - **[Create Advanced Tools](../../tutorials/agents/function-tools.md)**: Learn more about creating function tools with Agent Framework
 
 ## Additional Resources

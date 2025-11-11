@@ -180,8 +180,8 @@ The server doesn't need special configuration to support frontend tools. Use the
 
 Now that you understand frontend tools, you can:
 
-- **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows before tool execution
-- **[Manage State](state-management.md)**: Share state between client and server
+<!-- - **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows before tool execution -->
+<!-- - **[Manage State](state-management.md)**: Share state between client and server -->
 - **[Combine with Backend Tools](backend-tool-rendering.md)**: Use both frontend and backend tools together
 
 ## Additional Resources
@@ -563,8 +563,8 @@ async def capture_photo() -> str:
 ## Next Steps
 
 - **[Backend Tool Rendering](backend-tool-rendering.md)**: Combine with server-side tools
-- **[Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows
-- **[State Management](state-management.md)**: Share state between client and server
+<!-- - **[Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows -->
+<!-- - **[State Management](state-management.md)**: Share state between client and server -->
 
 ## Additional Resources
 
