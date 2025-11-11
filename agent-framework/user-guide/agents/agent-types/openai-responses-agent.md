@@ -248,6 +248,183 @@ async def tools_example():
     print(result.text)
 ```
 
+### Code Interpreter
+
+Enable your assistant to execute Python code:
+
+```python
+from agent_framework import HostedCodeInterpreterTool
+
+async def code_interpreter_example():
+    agent = OpenAIResponsesClient().create_agent(
+        instructions="You are a helpful assistant that can write and execute Python code.",
+        tools=HostedCodeInterpreterTool(),
+    )
+
+    result = await agent.run("Calculate the factorial of 100 using Python code.")
+    print(result.text)
+```
+
+#### Code Interpreter with File Upload
+
+For data analysis tasks, you can upload files and analyze them with code:
+
+```python
+import tempfile
+
+async def code_interpreter_with_files_example():
+    client = OpenAIResponsesClient()
+    
+    # Create sample CSV data
+    csv_data = """name,department,salary,years_experience
+Alice Johnson,Engineering,95000,5
+Bob Smith,Sales,75000,3
+Carol Williams,Engineering,105000,8
+"""
+    
+    # Upload file for analysis
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as temp_file:
+        temp_file.write(csv_data)
+        temp_file_path = temp_file.name
+
+    with open(temp_file_path, "rb") as file:
+        uploaded_file = await client.client.files.create(
+            file=file,
+            purpose="assistants",
+        )
+
+    agent = client.create_agent(
+        name="DataAnalyst",
+        instructions="You are a data analyst that can write and execute Python code.",
+        tools=HostedCodeInterpreterTool(file_ids=[uploaded_file.id]),
+    )
+
+    result = await agent.run("Analyze the salary data and create a summary by department.")
+    print(result.text)
+
+    # Cleanup
+    await client.client.files.delete(uploaded_file.id)
+```
+
+### Thread Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+from agent_framework import AgentThread
+
+async def thread_example():
+    agent = OpenAIResponsesClient().create_agent(
+        name="Assistant",
+        instructions="You are a helpful assistant.",
+    )
+
+    # Create a persistent thread for conversation context
+    async with AgentThread() as thread:
+        # First interaction
+        result1 = await agent.run("My name is Alice", thread=thread)
+        print(f"Agent: {result1.text}")
+
+        # Second interaction - agent remembers the context
+        result2 = await agent.run("What's my name?", thread=thread)
+        print(f"Agent: {result2.text}")  # Should remember "Alice"
+```
+
+### File Search
+
+Enable your agent to search through uploaded documents and files:
+
+```python
+from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
+
+async def file_search_example():
+    client = OpenAIResponsesClient()
+    
+    # Create a vector store with documents
+    file = await client.client.files.create(
+        file=("knowledge.txt", b"The weather today is sunny with a high of 75F."),
+        purpose="user_data"
+    )
+    vector_store = await client.client.vector_stores.create(
+        name="knowledge_base",
+        expires_after={"anchor": "last_active_at", "days": 1},
+    )
+    await client.client.vector_stores.files.create_and_poll(
+        vector_store_id=vector_store.id, 
+        file_id=file.id
+    )
+
+    agent = client.create_agent(
+        name="KnowledgeBot",
+        instructions="You are a helpful assistant that can search through documents.",
+        tools=HostedFileSearchTool(
+            vector_stores=[HostedVectorStoreContent(vector_store_id=vector_store.id)]
+        ),
+    )
+
+    result = await agent.run("What does the document say about weather?")
+    print(result.text)
+
+    # Cleanup
+    await client.client.vector_stores.delete(vector_store.id)
+    await client.client.files.delete(file.id)
+```
+
+### Web Search
+
+Enable real-time web search capabilities:
+
+```python
+from agent_framework import HostedWebSearchTool
+
+async def web_search_example():
+    # Configure location for better search results
+    additional_properties = {
+        "user_location": {
+            "country": "US",
+            "city": "Seattle",
+        }
+    }
+    
+    agent = OpenAIResponsesClient().create_agent(
+        name="SearchBot",
+        instructions="You are a helpful assistant that can search the web for current information.",
+        tools=HostedWebSearchTool(additional_properties=additional_properties),
+    )
+
+    result = await agent.run("What's the current weather in Seattle?")
+    print(result.text)
+```
+
+### Image Analysis
+
+Analyze and understand images with multi-modal capabilities:
+
+```python
+from agent_framework import ChatMessage, TextContent, UriContent
+
+async def image_analysis_example():
+    agent = OpenAIResponsesClient().create_agent(
+        name="VisionAgent",
+        instructions="You are a helpful agent that can analyze images.",
+    )
+
+    # Create message with both text and image content
+    message = ChatMessage(
+        role="user",
+        contents=[
+            TextContent(text="What do you see in this image?"),
+            UriContent(
+                uri="your-image-uri",
+                media_type="image/jpeg",
+            ),
+        ],
+    )
+
+    result = await agent.run(message)
+    print(result.text)
+```
+
 ### Image Generation
 
 Generate images using the Responses API:
@@ -273,20 +450,47 @@ async def image_generation_example():
             print(f"Image generated: {content.uri}")
 ```
 
-### Code Interpreter
+### Model Context Protocol (MCP) Tools
 
-Enable your assistant to execute Python code:
+#### Local MCP Tools
+
+Connect to local MCP servers for extended capabilities:
 
 ```python
-from agent_framework import HostedCodeInterpreterTool
+from agent_framework import MCPStreamableHTTPTool
 
-async def code_interpreter_example():
+async def local_mcp_example():
     agent = OpenAIResponsesClient().create_agent(
-        instructions="You are a helpful assistant that can write and execute Python code.",
-        tools=HostedCodeInterpreterTool(),
+        name="DocsAgent",
+        instructions="You are a helpful assistant that can help with Microsoft documentation.",
+        tools=MCPStreamableHTTPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+        ),
     )
 
-    result = await agent.run("Calculate the factorial of 100 using Python code.")
+    result = await agent.run("How do I create an Azure storage account using az cli?")
+    print(result.text)
+```
+
+#### Hosted MCP Tools
+
+Use hosted MCP tools for extended capabilities:
+
+```python
+from agent_framework import HostedMCPTool
+
+async def hosted_mcp_example():
+    agent = OpenAIResponsesClient().create_agent(
+        name="DocsBot",
+        instructions="You are a helpful assistant with access to various tools.",
+        tools=HostedMCPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+        ),
+    )
+
+    result = await agent.run("How do I create an Azure storage account?")
     print(result.text)
 ```
 

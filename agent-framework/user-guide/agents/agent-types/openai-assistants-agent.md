@@ -242,6 +242,100 @@ async def code_interpreter_example():
         print(result.text)
 ```
 
+### File Search
+
+Enable your assistant to search through uploaded documents:
+
+```python
+from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
+
+async def file_search_example():
+    client = OpenAIAssistantsClient()
+    
+    # Create a vector store with documents
+    file = await client.client.files.create(
+        file=("knowledge.txt", b"The weather today is sunny with a high of 75F."),
+        purpose="user_data"
+    )
+    vector_store = await client.client.vector_stores.create(
+        name="knowledge_base",
+        expires_after={"anchor": "last_active_at", "days": 1},
+    )
+    await client.client.vector_stores.files.create_and_poll(
+        vector_store_id=vector_store.id, 
+        file_id=file.id
+    )
+
+    try:
+        async with client.create_agent(
+            name="KnowledgeBot",
+            instructions="You are a helpful assistant that searches files in a knowledge base.",
+            tools=HostedFileSearchTool(
+                vector_stores=[HostedVectorStoreContent(vector_store_id=vector_store.id)]
+            ),
+        ) as agent:
+            result = await agent.run("What does the document say about weather?")
+            print(result.text)
+    finally:
+        # Cleanup
+        await client.client.vector_stores.delete(vector_store.id)
+        await client.client.files.delete(file.id)
+```
+
+### Thread Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+from agent_framework import AgentThread
+
+async def thread_example():
+    async with OpenAIAssistantsClient().create_agent(
+        name="Assistant",
+        instructions="You are a helpful assistant.",
+    ) as agent:
+        # Create a persistent thread for conversation context
+        async with AgentThread() as thread:
+            # First interaction
+            result1 = await agent.run("My name is Alice", thread=thread)
+            print(f"Agent: {result1.text}")
+
+            # Second interaction - agent remembers the context
+            result2 = await agent.run("What's my name?", thread=thread)
+            print(f"Agent: {result2.text}")  # Should remember "Alice"
+```
+
+### Working with Existing Assistants
+
+You can reuse existing OpenAI assistants by providing their IDs:
+
+```python
+from openai import AsyncOpenAI
+
+async def existing_assistant_example():
+    # Create OpenAI client directly
+    client = AsyncOpenAI()
+    
+    # Create or get an existing assistant
+    assistant = await client.beta.assistants.create(
+        model="gpt-4o-mini",
+        name="WeatherAssistant",
+        instructions="You are a weather forecasting assistant."
+    )
+    
+    try:
+        # Use the existing assistant with Agent Framework
+        async with OpenAIAssistantsClient(
+            async_client=client,
+            assistant_id=assistant.id
+        ).create_agent() as agent:
+            result = await agent.run("What's the weather like in Seattle?")
+            print(result.text)
+    finally:
+        # Clean up the assistant
+        await client.beta.assistants.delete(assistant.id)
+```
+
 ### Streaming Responses
 
 Get responses as they are generated for better user experience:

@@ -162,6 +162,77 @@ async def tools_example():
     print(result.text)
 ```
 
+### Web Search
+
+Enable real-time web search capabilities:
+
+```python
+from agent_framework import HostedWebSearchTool
+
+async def web_search_example():
+    # Configure location for better search results
+    additional_properties = {
+        "user_location": {
+            "country": "US",
+            "city": "Seattle",
+        }
+    }
+    
+    agent = OpenAIChatClient(model_id="gpt-4o-search-preview").create_agent(
+        name="SearchBot",
+        instructions="You are a helpful assistant that can search the web for current information.",
+        tools=HostedWebSearchTool(additional_properties=additional_properties),
+    )
+
+    result = await agent.run("What's the current weather in Seattle?")
+    print(result.text)
+```
+
+### Model Context Protocol (MCP) Tools
+
+Connect to local MCP servers for extended capabilities:
+
+```python
+from agent_framework import MCPStreamableHTTPTool
+
+async def local_mcp_example():
+    agent = OpenAIChatClient().create_agent(
+        name="DocsAgent",
+        instructions="You are a helpful assistant that can help with Microsoft documentation.",
+        tools=MCPStreamableHTTPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+        ),
+    )
+
+    result = await agent.run("How do I create an Azure storage account using az cli?")
+    print(result.text)
+```
+
+### Thread Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+from agent_framework import AgentThread
+
+async def thread_example():
+    agent = OpenAIChatClient().create_agent(
+        name="Assistant",
+        instructions="You are a helpful assistant.",
+    )
+
+    # Create a persistent thread for conversation context
+    async with AgentThread() as thread:
+        # First interaction
+        result1 = await agent.run("My name is Alice", thread=thread)
+        print(f"Agent: {result1.text}")
+
+        # Second interaction - agent remembers the context
+        result2 = await agent.run("What's my name?", thread=thread)
+        print(f"Agent: {result2.text}")  # Should remember "Alice"
+```
+
 ### Streaming Responses
 
 Get responses as they are generated for better user experience:
