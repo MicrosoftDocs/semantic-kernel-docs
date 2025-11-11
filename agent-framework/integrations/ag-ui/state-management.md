@@ -89,6 +89,7 @@ internal sealed class RecipeState
 // JSON serialization context
 [JsonSerializable(typeof(RecipeResponse))]
 [JsonSerializable(typeof(RecipeState))]
+[JsonSerializable(typeof(System.Text.Json.JsonElement))]
 internal sealed partial class RecipeSerializerContext : JsonSerializerContext;
 ```
 
@@ -130,9 +131,29 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
     {
         // Check if the client sent state in the request
         if (options is not ChatClientAgentRunOptions { ChatOptions.AdditionalProperties: { } properties } chatRunOptions ||
-            !properties.TryGetValue("ag_ui_state", out JsonElement state))
+            !properties.TryGetValue("ag_ui_state", out object? stateObj) ||
+            stateObj is not JsonElement state ||
+            state.ValueKind != JsonValueKind.Object)
         {
             // No state management requested, pass through to inner agent
+            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, thread, options, cancellationToken).ConfigureAwait(false))
+            {
+                yield return update;
+            }
+            yield break;
+        }
+
+        // Check if state has properties (not empty {})
+        bool hasProperties = false;
+        foreach (JsonProperty _ in state.EnumerateObject())
+        {
+            hasProperties = true;
+            break;
+        }
+
+        if (!hasProperties)
+        {
+            // Empty state - treat as no state
             await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, thread, options, cancellationToken).ConfigureAwait(false))
             {
                 yield return update;
@@ -154,12 +175,12 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
             schemaName: "RecipeResponse",
             schemaDescription: "A response containing a recipe with title, skill level, cooking time, preferences, ingredients, and instructions");
 
-        // Add current state to the conversation
+        // Add current state to the conversation - state is already a JsonElement
         ChatMessage stateUpdateMessage = new(
             ChatRole.System,
             [
                 new TextContent("Here is the current state in JSON format:"),
-                new TextContent(state.GetRawText()),
+                new TextContent(JsonSerializer.Serialize(state, this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)))),
                 new TextContent("The new state is:")
             ]);
 
@@ -296,6 +317,18 @@ await app.RunAsync();
 
 > [!TIP]
 > The two-phase approach separates state management from user communication. The first phase ensures structured, reliable state updates while the second phase provides natural language feedback to the user.
+
+### Client Implementation (C#)
+
+> [!IMPORTANT]
+> The C# client implementation is not included in this tutorial. The server-side state management is complete, but clients need to:
+> 1. Initialize state with an empty object (not null): `RecipeState? currentState = new RecipeState();`
+> 2. Send state as `DataContent` in a `ChatRole.System` message
+> 3. Receive state snapshots as `DataContent` with `mediaType = "application/json"`
+>
+> The AG-UI hosting layer automatically extracts state from `DataContent` and places it in `ChatOptions.AdditionalProperties["ag_ui_state"]` as a `JsonElement`.
+
+For a complete client implementation example, see the Python client pattern below which demonstrates the full bidirectional state flow.
 
 ::: zone-end
 
