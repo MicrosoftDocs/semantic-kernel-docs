@@ -2,6 +2,7 @@
 title: Security Considerations for AG-UI
 description: Essential security guidelines for building secure AG-UI applications with input validation, authentication, and data protection
 author: moonbox3
+ms.topic: reference
 ms.author: evmattso
 ms.date: 11/11/2025
 ms.service: agent-framework
@@ -183,7 +184,7 @@ Implement approval workflows for high-risk tool operations. <!-- For detailed im
 - [Backend Tool Rendering](backend-tool-rendering.md) - Secure tool implementation patterns
 - [Microsoft Security Development Lifecycle (SDL)](https://www.microsoft.com/en-us/securityengineering/sdl) - Comprehensive security engineering practices
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) - Common web application security risks
-- [Azure Security Best Practices](azure/security/fundamentals/best-practices-and-patterns) - Cloud security guidance
+- [Azure Security Best Practices](/azure/security/fundamentals/best-practices-and-patterns) - Cloud security guidance
 
 ## Next Steps
 
