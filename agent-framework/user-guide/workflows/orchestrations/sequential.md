@@ -272,4 +272,4 @@ Summary -> users:1 assistants:1
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Group Chat Orchestration](./group_chat.md)
+> [Group Chat Orchestration](./group-chat.md)
