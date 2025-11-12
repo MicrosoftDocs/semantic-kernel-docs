@@ -150,10 +150,11 @@ excellence without compromise.
 ## Set Up the Chat Client
 
 ```python
-from agent_framework.openai import OpenAIChatClient
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
 
-# Initialize the OpenAI chat client
-chat_client = OpenAIChatClient(model_id="gpt-4o-mini")
+# Initialize the Azure OpenAI chat client
+chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
 ```
 
 ## Define Your Agents
