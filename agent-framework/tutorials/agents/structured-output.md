@@ -104,7 +104,7 @@ var response = await agent.RunAsync("Please provide information about John Smith
 The agent response can then be deserialized into the `PersonInfo` class using the `Deserialize<T>` method on the response object.
 
 ```csharp
-var personInfo = response.Deserialize<PersonInfo>(JsonSerializerOptions.Web);
+var personInfo = JsonSerializer.Deserialize<PersonInfo>(response.ToString(), new JsonSerializerOptions(JsonSerializerDefaults.Web));
 Console.WriteLine($"Name: {personInfo.Name}, Age: {personInfo.Age}, Occupation: {personInfo.Occupation}");
 ```
 
