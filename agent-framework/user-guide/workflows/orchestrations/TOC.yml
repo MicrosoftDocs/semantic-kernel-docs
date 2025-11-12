@@ -4,6 +4,8 @@
   href: concurrent.md
 - name: Sequential
   href: sequential.md
+- name: Group Chat
+  href: group_chat.md
 - name: Handoff
   href: handoff.md
 - name: Magentic
