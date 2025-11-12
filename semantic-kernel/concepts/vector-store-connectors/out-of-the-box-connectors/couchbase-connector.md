@@ -14,6 +14,8 @@ ms.service: semantic-kernel
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
+::: zone pivot="programming-language-csharp"
+
 ## Overview
 
 The Couchbase Vector Store connector can be used to access and manage data in Couchbase. The connector has the
@@ -32,8 +34,6 @@ following characteristics.
 | IsFullTextIndexed supported?          | Yes                                                                                                                                                                                                                                  |
 | StoragePropertyName supported?        | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                                                                                    |
 | HybridSearch supported?               | Yes                                                                                                                                                                                                                                  |
-
-::: zone pivot="programming-language-csharp"
 
 ## Getting Started
 
@@ -61,7 +61,6 @@ var kernelBuilder = Kernel
 ```
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Couchbase.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -79,7 +78,6 @@ builder.Services.AddCouchbaseVectorStore(
 The vector store defaults to using Hyperscale indexes. You can specify a different index type by passing `CouchbaseVectorStoreOptions`:
 
 ```csharp
-using Microsoft.SemanticKernel;
 using Couchbase.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -96,19 +94,7 @@ builder.Services.AddCouchbaseVectorStore(
         IndexType = CouchbaseIndexType.Hyperscale
     });
 
-// Option 2: Use Search/FTS index
-builder.Services.AddCouchbaseVectorStore(
-    connectionString: "couchbases://your-cluster-address",
-    username: "username",
-    password: "password",
-    bucketName: "bucket-name",
-    scopeName: "scope-name",
-    options: new CouchbaseVectorStoreOptions 
-    { 
-        IndexType = CouchbaseIndexType.Search
-    });
-
-// Option 3: Use Composite index
+// Option 2: Use Composite index
 builder.Services.AddCouchbaseVectorStore(
     connectionString: "couchbases://your-cluster-address",
     username: "username",
@@ -118,6 +104,18 @@ builder.Services.AddCouchbaseVectorStore(
     options: new CouchbaseVectorStoreOptions 
     { 
         IndexType = CouchbaseIndexType.Composite
+    });
+
+// Option 3: Use Search vector index
+builder.Services.AddCouchbaseVectorStore(
+    connectionString: "couchbases://your-cluster-address",
+    username: "username",
+    password: "password",
+    bucketName: "bucket-name",
+    scopeName: "scope-name",
+    options: new CouchbaseVectorStoreOptions 
+    { 
+        IndexType = CouchbaseIndexType.Search
     });
 ```
 
@@ -157,7 +155,6 @@ kernelBuilder.Services.AddCouchbaseVectorStore();
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using Couchbase.KeyValue;
 using Couchbase;
 
@@ -210,24 +207,6 @@ var vectorStore = new CouchbaseVectorStore(scope);
 
 It is possible to construct a direct reference to a named collection.
 
-### Using Search Collection (FTS Index)
-
-For Full-Text Search indexes and hybrid search scenarios:
-
-```csharp
-using Couchbase.SemanticKernel;
-using Couchbase;
-using Couchbase.KeyValue;
-
-var cluster = await Cluster.ConnectAsync(clusterOptions);
-var bucket = await cluster.BucketAsync("bucket-name");
-var scope = bucket.Scope("scope-name");
-
-var collection = new CouchbaseSearchCollection<string, Hotel>(
-    scope,
-    "skhotels");
-```
-
 ### Using Query Collection (Hyperscale or Composite Index)
 
 For high-performance vector search with Hyperscale indexes:
@@ -254,20 +233,29 @@ var collectionComposite = new CouchbaseQueryCollection<string, Hotel>(
     indexType: CouchbaseIndexType.Composite);
 ```
 
+### Using Search Collection (Seach Vector Index)
+
+For hybrid search scenarios combining full-text search:
+
+```csharp
+using Couchbase.SemanticKernel;
+using Couchbase;
+using Couchbase.KeyValue;
+
+var cluster = await Cluster.ConnectAsync(clusterOptions);
+var bucket = await cluster.BucketAsync("bucket-name");
+var scope = bucket.Scope("scope-name");
+
+var collection = new CouchbaseSearchCollection<string, Hotel>(
+    scope,
+    "skhotels");
+```
+
 ### Index Type Comparison
 
 Couchbase offers three types of indexes for vector search:
 
-**Search (FTS) - Full-Text Search Index**
-
-- Best for hybrid searches combining full-text search with vector similarity
-- Allows semantic search alongside traditional keyword matching
-- Supports geospatial searches in addition to vector and text
-- **Use when:** You need to combine traditional keyword search with vector similarity search in the same query
-- **Ideal for:** E-commerce product search, travel recommendations, content discovery with multiple search criteria
-- **Requires:** Couchbase Server 7.6+ or Capella
-
-**Hyperscale Vector Index**
+**Hyperscale Vector Indexes**
 
 - Best for pure vector searches - content discovery, recommendations, semantic search
 - High performance with low memory footprint - designed to scale to billions of vectors
@@ -276,7 +264,7 @@ Couchbase offers three types of indexes for vector search:
 - **Ideal for:** Large-scale semantic search, recommendation systems, content discovery
 - **Requires:** Couchbase Server 8.0+ or Capella
 
-**Composite Vector Index**
+**Composite Vector Indexes**
 
 - Best for filtered vector searches - combines vector search with scalar value filtering
 - Efficient pre-filtering - scalar attributes reduce the vector comparison scope
@@ -284,11 +272,21 @@ Couchbase offers three types of indexes for vector search:
 - **Ideal for:** Compliance-based filtering, user-specific searches, time-bounded queries
 - **Requires:** Couchbase Server 8.0+ or Capella
 
+**Search Vector Indexes**
+
+- Best for hybrid searches combining full-text search with vector similarity
+- Allows semantic search alongside traditional keyword matching
+- Supports geospatial searches in addition to vector and text
+- **Use when:** You need to combine traditional keyword search with vector similarity search in the same query
+- **Ideal for:** E-commerce product search, travel recommendations, content discovery with multiple search criteria
+- **Requires:** Couchbase Server 7.6+ or Capella
+
 **Choosing the Right Index Type:**
 
-- Start with **Hyperscale** for pure vector searches and large datasets (scales to billions)
-- Use **Search (FTS)** for hybrid search combining text and vectors
-- Choose **Composite** when scalar filters significantly reduce your search space (works well for tens of millions to billions of vectors)
+- Start with **Hyperscale Index** for pure vector searches and large datasets (scales to billions)
+- Choose **Composite Index** when scalar filters significantly reduce your search space (works well for tens of millions to billions of vectors)
+- Use **Search Vector Index** for hybrid search combining text and vectors
+
 
 [Detailed comparison of vector index types](https://docs.couchbase.com/server/current/vector-index/use-vector-indexes.html)
 ## Data mapping
