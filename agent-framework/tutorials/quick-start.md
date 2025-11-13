@@ -33,8 +33,8 @@ have an api key and do not wish to use role based authentication, in which case 
 ## Create a project
 
 ```powershell
-cd (mkdir "AgentFrameworkQuickStart")
-dotnet new console
+dotnet new console -o AgentFrameworkQuickStart
+cd AgentFrameworkQuickStart
 ```
 
 ## Installing Packages
