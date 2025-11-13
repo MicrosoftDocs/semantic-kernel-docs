@@ -17,7 +17,6 @@ Microsoft Purview provides enterprise-grade data security, compliance, and gover
 - **Prevent sensitive data leaks**: Inline blocking of sensitive content based on Data Loss Prevention (DLP) policies.
 - **Enable governance**: Log AI interactions in Purview for Audit, Communication Compliance, Insider Risk Management, eDiscovery, and Data Lifecycle Management.
 - **Accelerate adoption**: Enterprise customers require compliance for AI apps. Purview integration unblocks deployment.
-- **Multi-agent orchestration**: Works with Semantic Kernel and AutoGen via Agent Framework.
 
 ## Prerequisites
 
