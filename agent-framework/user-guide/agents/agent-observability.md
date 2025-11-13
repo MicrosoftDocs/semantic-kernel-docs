@@ -167,13 +167,11 @@ See a full example of an agent with OpenTelemetry enabled in the [Agent Framewor
 
 ## Enable Observability
 
-To enable observability in your python application, you do not need to install anything extra, by default the following package are installed:
+To enable observability in your python application, in most cases you do not need to install anything extra, by default the following package are installed:
 
 ```text
 "opentelemetry-api",
 "opentelemetry-sdk",
-"azure-monitor-opentelemetry",
-"azure-monitor-opentelemetry-exporter",
 "opentelemetry-exporter-otlp-proto-grpc",
 "opentelemetry-semantic-conventions-ai",
 ```
@@ -220,7 +218,7 @@ The easiest way to enable observability for your application is to set the follo
     This can be used for any compliant OTLP endpoint, such as [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/overview?tabs=bash) or any other OTLP compliant endpoint.
 - APPLICATIONINSIGHTS_CONNECTION_STRING
     Default is `None`, set to your Application Insights connection string to export to Azure Monitor.
-    You can find the connection string in the Azure portal, in the "Overview" section of your Application Insights resource.
+    You can find the connection string in the Azure portal, in the "Overview" section of your Application Insights resource. This will require the `azure-monitor-opentelemetry-exporter` package to be installed.
 - VS_CODE_EXTENSION_PORT
     Default is `4317`, set to the port the AI Toolkit or AzureAI Foundry VS Code extension is running on.
 
@@ -260,6 +258,14 @@ Azure AI Foundry has built-in support for tracing, with a really great visualiza
 
 When you have a Azure AI Foundry project setup with a Application Insights resource, you can do the following:
 
+1) Install the `azure-monitor-opentelemetry-exporter` package:
+
+```bash
+pip install azure-monitor-opentelemetry-exporter>=1.0.0b41
+```
+
+2) Then you can setup observability for your Azure AI Foundry project as follows:
+
 ```python
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity import AzureCliCredential
@@ -269,7 +275,22 @@ agent_client = AzureAIAgentClient(credential=AzureCliCredential(), project_endpo
 await agent_client.setup_azure_ai_observability()
 ```
 
-This is a convenience method, that will use the project client, to get the Application Insights connection string, and then call `setup_observability` with that connection string.
+This is a convenience method, that will use the project client, to get the Application Insights connection string, and then call `setup_observability` with that connection string, overriding any existing connection string set via environment variable.
+
+### Zero-code instrumentation
+
+Because we use the standard OpenTelemetry SDK, you can also use zero-code instrumentation to instrument your application, run you code like this:
+
+```bash
+opentelemetry-instrument \
+    --traces_exporter console,otlp \
+    --metrics_exporter console \
+    --service_name your-service-name \
+    --exporter_otlp_endpoint 0.0.0.0:4317 \
+    python agent_framework_app.py
+```
+
+See the [OpenTelemetry Zero-code Python documentation](https://opentelemetry.io/docs/zero-code/python/) for more information and details of the environment variables used.
 
 ## Spans and metrics
 
@@ -288,7 +309,7 @@ The metrics that are created are:
 - For function invocation during the `execute_tool` operations:
     - `agent_framework.function.invocation.duration` (histogram): This metric measures the duration of each function execution, in seconds.
 
-## Example trace output
+### Example trace output
 
 When you run an agent with observability enabled, you'll see trace data similar to the following console output:
 
@@ -328,7 +349,7 @@ This trace shows:
 - **Model information**: The AI system used (OpenAI) and response ID
 - **Token usage**: Input and output token counts for cost tracking
 
-## Getting started
+## Samples
 
 We have a number of samples in our repository that demonstrate these capabilities, see the [observability samples folder](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) on Github. That includes samples for using zero-code telemetry as well.
 
