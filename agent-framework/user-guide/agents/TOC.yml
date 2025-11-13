@@ -8,7 +8,11 @@
   href: multi-turn-conversation.md
 - name: Agent Middleware
   href: agent-middleware.md
+- name: Agent Retrieval Augmented Generation (RAG)
+  href: agent-rag.md
 - name: Agent Memory
   href: agent-memory.md
 - name: Agent Observability
   href: agent-observability.md
+- name: Agent Background Responses
+  href: agent-background-responses.md

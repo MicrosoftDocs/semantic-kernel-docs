@@ -39,7 +39,9 @@ OpenAI supports multiple services that all provide model calling capabilities.
 We need to pick the Responses service to create a Responses based agent.
 
 ```csharp
+#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
 var responseClient = client.GetOpenAIResponseClient("gpt-4o-mini");
+#pragma warning restore OPENAI001
 ```
 
 Finally, create the agent using the `CreateAIAgent` extension method on the `ResponseClient`.
@@ -48,6 +50,9 @@ Finally, create the agent using the `CreateAIAgent` extension method on the `Res
 AIAgent agent = responseClient.CreateAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
 ## Using the Agent

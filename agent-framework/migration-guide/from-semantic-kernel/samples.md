@@ -13,7 +13,7 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-See the [Agent Framework repository](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/SemanticKernelMigration) for detailed per agent type code samples showing the the Agent Framework equivalent code for Semantic Kernel features.
+See the [Semantic Kernel repository](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/samples/AgentFrameworkMigration) for detailed per agent type code samples showing the the Agent Framework equivalent code for Semantic Kernel features.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

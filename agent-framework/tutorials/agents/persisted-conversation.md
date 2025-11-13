@@ -19,7 +19,7 @@ When hosting an agent in a service or even in a client application, you often wa
 
 ## Prerequisites
 
-For prerequisites and installing nuget packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
 ## Persisting and resuming the conversation
 
@@ -48,7 +48,7 @@ Run the agent, passing in the thread, so that the `AgentThread` includes this ex
 Console.WriteLine(await agent.RunAsync("Tell me a short pirate joke.", thread));
 ```
 
-Call the SerializeAsync method on the thread to serialize it to a JsonElement.
+Call the `Serialize` method on the thread to serialize it to a JsonElement.
 It can then be converted to a string for storage and saved to a database, blob storage, or file.
 
 ```csharp
@@ -56,8 +56,7 @@ using System.IO;
 using System.Text.Json;
 
 // Serialize the thread state
-JsonElement serializedThread = thread.Serialize();
-string serializedJson = JsonSerializer.Serialize(serializedThread, JsonSerializerOptions.Web);
+string serializedJson = thread.Serialize(JsonSerializerOptions.Web).GetRawText();
 
 // Example: save to a local file (replace with DB or blob storage in production)
 string filePath = Path.Combine(Path.GetTempPath(), "agent_thread.json");
@@ -65,18 +64,18 @@ await File.WriteAllTextAsync(filePath, serializedJson);
 ```
 
 Load the persisted JSON from storage and recreate the AgentThread instance from it.
-Note that the thread must be deserialized using an agent instance. This should be the
+The thread must be deserialized using an agent instance. This should be the
 same agent type that was used to create the original thread.
-This is because agents may have their own thread types and may construct threads with
+This is because agents might have their own thread types and might construct threads with
 additional functionality that is specific to that agent type.
 
 ```csharp
 // Read persisted JSON
 string loadedJson = await File.ReadAllTextAsync(filePath);
-JsonElement reloaded = JsonSerializer.Deserialize<JsonElement>(loadedJson);
+JsonElement reloaded = JsonSerializer.Deserialize<JsonElement>(loadedJson, JsonSerializerOptions.Web);
 
 // Deserialize the thread into an AgentThread tied to the same agent type
-AgentThread resumedThread = agent.DeserializeThread(reloaded);
+AgentThread resumedThread = agent.DeserializeThread(reloaded, JsonSerializerOptions.Web);
 ```
 
 Use the resumed thread to continue the conversation.
@@ -147,9 +146,9 @@ with open(file_path, "w") as f:
 ```
 
 Load the persisted JSON from storage and recreate the AgentThread instance from it.
-Note that the thread must be deserialized using an agent instance. This should be the
+The thread must be deserialized using an agent instance. This should be the
 same agent type that was used to create the original thread.
-This is because agents may have their own thread types and may construct threads with
+This is because agents might have their own thread types and might construct threads with
 additional functionality that is specific to that agent type.
 
 ```python
