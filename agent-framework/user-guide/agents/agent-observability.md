@@ -337,4 +337,4 @@ We have a number of samples in our repository that demonstrate these capabilitie
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Using MCP Tools](../model-context-protocol/using-mcp-tools.md)
+> [Background Responses](./agent-background-responses.md)

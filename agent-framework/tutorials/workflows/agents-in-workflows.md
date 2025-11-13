@@ -1,6 +1,6 @@
 ---
 title: Agents in Workflows
-description: Learn how to integrate agents into workflows using the Agent Framework.
+description: Learn how to integrate agents into workflows using Agent Framework.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Agents in Workflows
 
-This tutorial demonstrates how to integrate AI agents into workflows using the Agent Framework. You'll learn to create workflows that leverage the power of specialized AI agents for content creation, review, and other collaborative tasks.
+This tutorial demonstrates how to integrate AI agents into workflows using Agent Framework. You'll learn to create workflows that leverage the power of specialized AI agents for content creation, review, and other collaborative tasks.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -29,14 +29,25 @@ You'll create a workflow that:
 
 ## Prerequisites
 
-- .NET 9.0 or later
-- Agent Framework installed via NuGet
-- Azure Foundry project configured with proper environment variables
-- Azure CLI authentication: `az login`
+- [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
+- Azure Foundry service endpoint and deployment configured
+- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
+- A new console application
 
-## Step 1: Import Required Dependencies
+## Step 1: Install NuGet packages
 
-Start by importing the necessary components for Azure Foundry agents and workflows:
+First, install the required packages for your .NET project:
+
+```dotnetcli
+dotnet add package Azure.AI.Agents.Persistent --prerelease
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.Workflows --prerelease
+```
+
+## Step 2: Set Up Azure Foundry Client
+
+Configure the Azure Foundry client with environment variables and authentication:
 
 ```csharp
 using System;
@@ -46,20 +57,13 @@ using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
-```
 
-## Step 2: Set Up Azure Foundry Client
-
-Configure the Azure Foundry client with environment variables and authentication:
-
-```csharp
 public static class Program
 {
     private static async Task Main()
     {
         // Set up the Azure Foundry client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT")
-            ?? throw new InvalidOperationException("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT") ?? throw new Exception("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
         var model = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_MODEL_ID") ?? "gpt-4o-mini";
         var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
 ```
@@ -116,11 +120,11 @@ Connect the agents in a sequential workflow using the WorkflowBuilder:
 
 ## Step 6: Execute with Streaming
 
-Run the workflow with streaming to observe real-time updates from both agents:
+Run the workflow with streaming to observe real-time updates from all agents:
 
 ```csharp
         // Execute the workflow
-        StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, "Hello World!"));
+        await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, "Hello World!"));
 
         // Must send the turn token to trigger the agents.
         // The agents are wrapped as executors. When they receive messages,
@@ -217,7 +221,7 @@ async def create_azure_ai_agent() -> tuple[Callable[..., Awaitable[Any]], Callab
     """
     stack = AsyncExitStack()
     cred = await stack.enter_async_context(AzureCliCredential())
-    
+
     client = await stack.enter_async_context(AzureAIAgentClient(async_credential=cred))
 
     async def agent(**kwargs: Any) -> Any:
@@ -244,7 +248,7 @@ async def main() -> None:
                 "You are an excellent content writer. You create new content and edit contents based on the feedback."
             ),
         )
-        
+
         # Create a Reviewer agent that provides feedback
         reviewer = await agent(
             name="Reviewer",
@@ -317,7 +321,7 @@ if __name__ == "__main__":
 
 ## Complete Implementation
 
-For the complete working implementation of this Azure AI agents workflow, see the [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflow/agents/azure_ai_agents_streaming.py) sample in the Agent Framework repository.
+For the complete working implementation of this Azure AI agents workflow, see the [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/agents/azure_ai_agents_streaming.py) sample in the Agent Framework repository.
 
 ::: zone-end
 

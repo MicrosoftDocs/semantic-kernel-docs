@@ -18,12 +18,13 @@ Traditional single-agent systems are limited in their ability to handle complex,
 
 ## Supported Orchestrations
 
-| Pattern                       | Description                                                                                                                                                                         | Typical Use Case                                                      |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| [Concurrent](./concurrent.md) | Broadcasts a task to all agents, collects results independently.                                                                                                                    | Parallel analysis, independent subtasks, ensemble decision making.    |
-| [Sequential](./sequential.md) | Passes the result from one agent to the next in a defined order.                                                                                                                    | Step-by-step workflows, pipelines, multi-stage processing.            |
-| [Handoff](./handoff.md)       | Dynamically passes control between agents based on context or rules.                                                                                                                | Dynamic workflows, escalation, fallback, or expert handoff scenarios. |
-| [Magentic](./magentic.md)     | Inspired by [MagenticOne](https://www.microsoft.com/en-us/research/articles/magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/). | Complex, generalist multi-agent collaboration.                        |
+| Pattern                           | Description                                                                                                                                                                         | Typical Use Case                                                      |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| [Concurrent](./concurrent.md)     | Broadcasts a task to all agents, collects results independently.                                                                                                                    | Parallel analysis, independent subtasks, ensemble decision making.    |
+| [Sequential](./sequential.md)     | Passes the result from one agent to the next in a defined order.                                                                                                                    | Step-by-step workflows, pipelines, multi-stage processing.            |
+| [Group Chat](./group-chat.md)     | Coordinates multiple agents in a collaborative conversation with a manager controlling speaker selection and flow.                                                                   | Iterative refinement, collaborative problem-solving, content review.  |
+| [Handoff](./handoff.md)           | Dynamically passes control between agents based on context or rules.                                                                                                                | Dynamic workflows, escalation, fallback, or expert handoff scenarios. |
+| [Magentic](./magentic.md)         | Inspired by [MagenticOne](https://www.microsoft.com/en-us/research/articles/magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/). | Complex, generalist multi-agent collaboration.                        |
 
 ## Next Steps
 

@@ -126,7 +126,7 @@ You can resume a workflow from a specific checkpoint directly on the same workfl
 ```python
 # Assume we want to resume from the 6th checkpoint
 saved_checkpoint = checkpoints[5]
-async for event in workflow.run_stream_from_checkpoint(saved_checkpoint.checkpoint_id):
+async for event in workflow.run_stream(checkpoint_id=saved_checkpoint.checkpoint_id):
     ...
 ```
 
@@ -172,9 +172,9 @@ workflow = builder.build()
 
 # Assume we want to resume from the 6th checkpoint
 saved_checkpoint = checkpoints[5]
-async for event in workflow.run_stream_from_checkpoint(
-    saved_checkpoint.checkpoint_id,
-    checkpoint_storage,
+async for event in workflow.run_stream
+    checkpoint_id=saved_checkpoint.checkpoint_id,
+    checkpoint_storage=checkpoint_storage,
 ):
     ...
 ```
@@ -225,5 +225,5 @@ protected override async ValueTask OnCheckpointRestoredAsync(IWorkflowContext co
 
 - [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
 - [Learn how to use workflows as agents](./as-agents.md).
-- [Learn how to handle requests and responses](./request-and-response.md) in workflows.
+- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to manage state](./shared-states.md) in workflows.

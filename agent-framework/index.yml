@@ -17,16 +17,16 @@ metadata:
 
 productDirectory:
     items:
-    - title: Getting Started
-      imageSrc: /agent-framework/media/getting-started.svg
+    - title: Overview
+      imageSrc: /agent-framework/media/overview.svg
       links:
         - url: /agent-framework/overview/agent-framework-overview
           text: Introduction to Agent Framework
-    - title: Quick Start
+    - title: Get Started
       imageSrc: /agent-framework/media/quick-start.svg
       links:
         - url: /agent-framework/tutorials/quick-start
-          text: Agent Framework Quick Start
+          text: Agent Framework Quick-Start Guide
         - url: /agent-framework/tutorials/overview
           text: Learn how to use Agent Framework
         - url: https://github.com/microsoft/agent-framework/tree/main/python/samples
