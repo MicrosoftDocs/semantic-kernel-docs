@@ -6,6 +6,7 @@ ms.topic: tutorial
 ms.author: taochen
 ms.date: 09/12/2025
 ms.service: agent-framework
+zone_pivot_groups: programming-languages
 ---
 
 # Microsoft Agent Framework Workflows Orchestrations - Handoff
@@ -30,6 +31,8 @@ While agent-as-tools is commonly considered as a multi-agent pattern and it may 
 - How to handle multi-turn conversations with agent switching
 
 In handoff orchestration, agents can transfer control to one another based on context, allowing for dynamic routing and specialized expertise handling.
+
+::: zone pivot="programming-language-csharp"
 
 ## Set Up the Azure OpenAI Client
 
@@ -140,14 +143,197 @@ triage_agent: This is another math question. I'll route this to the math tutor.
 math_tutor: I'd be happy to help with calculus integration! Integration is the reverse of differentiation. The basic power rule for integration is: ∫x^n dx = x^(n+1)/(n+1) + C, where C is the constant of integration.
 ```
 
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## Set Up the Chat Client
+
+```python
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+# Initialize the Azure OpenAI chat client
+chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+```
+
+## Define Your Specialized Agents
+
+Create domain-specific agents with a coordinator for routing:
+
+```python
+# Create triage/coordinator agent
+triage_agent = chat_client.create_agent(
+    instructions=(
+        "You are frontline support triage. Read the latest user message and decide whether "
+        "to hand off to refund_agent, order_agent, or support_agent. Provide a brief natural-language "
+        "response for the user. When delegation is required, call the matching handoff tool "
+        "(`handoff_to_refund_agent`, `handoff_to_order_agent`, or `handoff_to_support_agent`)."
+    ),
+    name="triage_agent",
+)
+
+# Create specialist agents
+refund_agent = chat_client.create_agent(
+    instructions=(
+        "You handle refund workflows. Ask for any order identifiers you require and outline the refund steps."
+    ),
+    name="refund_agent",
+)
+
+order_agent = chat_client.create_agent(
+    instructions=(
+        "You resolve shipping and fulfillment issues. Clarify the delivery problem and describe the actions "
+        "you will take to remedy it."
+    ),
+    name="order_agent",
+)
+
+support_agent = chat_client.create_agent(
+    instructions=(
+        "You are a general support agent. Offer empathetic troubleshooting and gather missing details if the "
+        "issue does not match other specialists."
+    ),
+    name="support_agent",
+)
+```
+
+## Configure Handoff Rules
+
+Build the handoff workflow using `HandoffBuilder`:
+
+```python
+from agent_framework import HandoffBuilder
+
+# Build the handoff workflow
+workflow = (
+    HandoffBuilder(
+        name="customer_support_handoff",
+        participants=[triage_agent, refund_agent, order_agent, support_agent],
+    )
+    .set_coordinator("triage_agent")
+    .with_termination_condition(
+        # Terminate after a certain number of user messages
+        lambda conv: sum(1 for msg in conv if msg.role.value == "user") >= 10
+    )
+    .build()
+)
+```
+
+For more advanced routing, you can configure specialist-to-specialist handoffs:
+
+```python
+# Enable return-to-previous and add specialist-to-specialist handoffs
+workflow = (
+    HandoffBuilder(
+        name="advanced_handoff",
+        participants=[coordinator, technical, account, billing],
+    )
+    .set_coordinator(coordinator)
+    .add_handoff(coordinator, [technical, account, billing])  # Coordinator routes to all specialists
+    .add_handoff(technical, [billing, account])  # Technical can route to billing or account
+    .add_handoff(account, [technical, billing])  # Account can route to technical or billing
+    .add_handoff(billing, [technical, account])  # Billing can route to technical or account
+    .enable_return_to_previous(True)  # User inputs route directly to current specialist
+    .build()
+)
+```
+
+## Run Interactive Handoff Workflow
+
+Handle multi-turn conversations with user input requests:
+
+```python
+from agent_framework import RequestInfoEvent, HandoffUserInputRequest, WorkflowOutputEvent
+
+# Start workflow with initial user message
+events = [event async for event in workflow.run_stream("I need help with my order")]
+
+# Process events and collect pending input requests
+pending_requests = []
+for event in events:
+    if isinstance(event, RequestInfoEvent):
+        pending_requests.append(event)
+        request_data = event.data
+        print(f"Agent {request_data.awaiting_agent_id} is awaiting your input")
+        for msg in request_data.conversation[-3:]:
+            print(f"{msg.author_name}: {msg.text}")
+
+# Interactive loop: respond to requests
+while pending_requests:
+    user_input = input("You: ")
+    
+    # Send responses to all pending requests
+    responses = {req.request_id: user_input for req in pending_requests}
+    events = [event async for event in workflow.send_responses_streaming(responses)]
+    
+    # Process new events
+    pending_requests = []
+    for event in events:
+        if isinstance(event, RequestInfoEvent):
+            pending_requests.append(event)
+        elif isinstance(event, WorkflowOutputEvent):
+            print("Workflow completed!")
+            conversation = event.data
+            for msg in conversation:
+                print(f"{msg.author_name}: {msg.text}")
+```
+
+## Sample Interaction
+
+```plaintext
+User: I need help with my order
+
+triage_agent: I'd be happy to help you with your order. Could you please provide more details about the issue?
+
+User: My order 1234 arrived damaged
+
+triage_agent: I'm sorry to hear that your order arrived damaged. I will connect you with a specialist.
+
+support_agent: I'm sorry about the damaged order. To assist you better, could you please:
+- Describe the damage
+- Would you prefer a replacement or refund?
+
+User: I'd like a refund
+
+triage_agent: I'll connect you with the refund specialist.
+
+refund_agent: I'll process your refund for order 1234. Here's what will happen next:
+1. Verification of the damaged items
+2. Refund request submission
+3. Return instructions if needed
+4. Refund processing within 5-10 business days
+
+Could you provide photos of the damage to expedite the process?
+```
+
+::: zone-end
+
 ## Key Concepts
 
+::: zone pivot="programming-language-csharp"
+
 - **Dynamic Routing**: Agents can decide which agent should handle the next interaction based on context
-- **AgentWorkflowBuilder.CreateHandoffBuilderWith()**: Defines the initial agent that starts the workflow
+- **AgentWorkflowBuilder.StartHandoffWith()**: Defines the initial agent that starts the workflow
 - **WithHandoff()** and **WithHandoffs()**: Configures handoff rules between specific agents
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Multi-turn Support**: Supports ongoing conversations with seamless agent switching
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+- **Dynamic Routing**: Agents can decide which agent should handle the next interaction based on context
+- **HandoffBuilder**: Creates workflows with automatic handoff tool registration
+- **set_coordinator()**: Defines which agent receives user input first
+- **add_handoff()**: Configures specific handoff relationships between agents
+- **enable_return_to_previous()**: Routes user inputs directly to the current specialist, skipping coordinator re-evaluation
+- **Context Preservation**: Full conversation history is maintained across all handoffs
+- **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
+- **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
+
+::: zone-end
 
 ## Next steps
 
