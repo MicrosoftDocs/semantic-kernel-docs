@@ -24,3 +24,9 @@
   href: third-party-chat-history-storage.md
 - name: Adding memory to agents
   href: memory.md
+- name: Durable agents
+  items:
+  - name: Create and run a durable agent
+    href: create-and-run-durable-agent.md
+  - name: Orchestrate durable agents
+    href: orchestrate-durable-agents.md
