@@ -338,4 +338,4 @@ Could you provide photos of the damage to expedite the process?
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Magnetic Orchestration](./magentic.md)
+> [Magentic Orchestration](./magentic.md)
