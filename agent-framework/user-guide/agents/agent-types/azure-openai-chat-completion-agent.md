@@ -233,6 +233,84 @@ async def main():
 asyncio.run(main())
 ```
 
+### Web Search
+
+Access real-time information using the hosted web search tool:
+
+```python
+import asyncio
+from agent_framework import ChatAgent, HostedWebSearchTool
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+async def main():
+    async with ChatAgent(
+        chat_client=AzureOpenAIChatClient(credential=AzureCliCredential()),
+        instructions="You are a helpful assistant that can search the web for current information.",
+        tools=HostedWebSearchTool(
+            description="Search the web for current information"
+        )
+    ) as agent:
+        result = await agent.run("What are the latest developments in artificial intelligence?")
+        print(result.text)
+
+asyncio.run(main())
+```
+
+### MCP (Model Context Protocol) Tools
+
+Connect to external services and APIs using MCP tools:
+
+```python
+import asyncio
+from agent_framework import ChatAgent, HostedMCPTool
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+async def main():
+    async with ChatAgent(
+        chat_client=AzureOpenAIChatClient(credential=AzureCliCredential()),
+        instructions="You are a helpful assistant that can search Microsoft documentation.",
+        tools=HostedMCPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+            approval_mode="never_require"  # Auto-approve for documentation searches
+        )
+    ) as agent:
+        result = await agent.run("How do I create an Azure storage account using Azure CLI?")
+        print(result.text)
+
+asyncio.run(main())
+```
+
+### Using Threads for Context Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+import asyncio
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+async def main():
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+        instructions="You are a helpful programming assistant."
+    )
+    
+    # Create a new thread for conversation context
+    thread = agent.get_new_thread()
+    
+    # First interaction
+    result1 = await agent.run("I'm working on a Python web application.", thread=thread, store=True)
+    print(f"Assistant: {result1.text}")
+    
+    # Second interaction - context is preserved
+    result2 = await agent.run("What framework should I use?", thread=thread, store=True)
+    print(f"Assistant: {result2.text}")
+
+asyncio.run(main())
+```
+
 ### Streaming Responses
 
 Get responses as they are generated using streaming:
