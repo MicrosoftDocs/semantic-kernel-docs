@@ -38,10 +38,12 @@ The following code sample demonstrates how to add the Microsoft Purview policy m
 ### [C#](#tab/csharp)
 
 ```csharp
-using AgentFramework;
-using AgentFramework.Azure;
-using AgentFramework.Microsoft;
+using Azure.AI.OpenAI;
+using Azure.Core;
 using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Purview;
+using Microsoft.Extensions.AI;
 
 var chatClient = new AzureOpenAIChatClient();
 var purviewMiddleware = new PurviewPolicyMiddleware(
