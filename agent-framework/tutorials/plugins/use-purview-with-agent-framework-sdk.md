@@ -1,6 +1,7 @@
 ---
 title: Use Microsoft Purview SDK with Agent Framework
 description: Learn how to integrate Microsoft Purview SDK for data security and governance in your Agent Framework project
+zone_pivot_groups: programming-languages
 author: reezaali149
 ms.topic: conceptual
 ms.author: v-reezaali
@@ -35,7 +36,7 @@ In your agent's workflow middleware pipeline, you can add Microsoft Purview poli
 
 The following code sample demonstrates how to add the Microsoft Purview policy middleware to your agent code. If you're new to Agent Framework, see [Create and run an agent with Agent Framework](/agent-framework/tutorials/agents/run-agent?pivots=programming-language-python).
 
-### [C#](#tab/csharp)
+::: zone pivot="programming-language-csharp"
 
 ```csharp
 using Azure.AI.OpenAI;
@@ -58,7 +59,8 @@ var response = await agent.RunAsync(new ChatMessage(Role.User, "Summarize zero t
 Console.WriteLine(response);
 ```
 
-### [Python](#tab/python)
+::: zone-end
+::: zone pivot="programming-language-python"
 
 ```python
 import asyncio
@@ -84,6 +86,8 @@ async def main():
 asyncio.run(main())
 ```
 
+::: zone-end
+
 ---
 
 ## Next steps
@@ -95,6 +99,17 @@ Now that you added the above code to your agent, perform the following steps to 
 
 ## Resources
 
+::: zone pivot="programming-language-csharp"
+
+- Nuget: [Microsoft.Agents.AI.Purview](https://www.nuget.org/packages/Microsoft.Agents.AI.Purview/)
+- Github: [Microsoft.Agents.AI.Purview](https://github.com/microsoft/agent-framework/tree/main/dotnet/src/Microsoft.Agents.AI.Purview)
+- Sample: [AgentWithPurview](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/Purview/AgentWithPurview)
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
 - [PyPI Package: Microsoft Agent Framework - Purview Integration (Python)](https://pypi.org/project/agent-framework-purview/).
 - [GitHub: Microsoft Agent Framework – Purview Integration (Python) source code](https://github.com/microsoft/agent-framework/tree/main/python/packages/purview).
 - [Code Sample: Purview Policy Enforcement Sample (Python)](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/purview_agent).
+
+::: zone-end
