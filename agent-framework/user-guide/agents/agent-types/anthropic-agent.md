@@ -120,6 +120,9 @@ async def foundry_example():
     print(result.text)
 ```
 
+> Note:
+> This requires `anthropic>=0.74.0` to be installed.
+
 ## Agent Features
 
 ### Function Tools
