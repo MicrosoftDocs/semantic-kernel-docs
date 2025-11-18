@@ -39,51 +39,72 @@ The following code sample demonstrates how to add the Microsoft Purview policy m
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Azure.AI.OpenAI;
-using Azure.Core;
-using Azure.Identity;
-using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.Purview;
-using Microsoft.Extensions.AI;
 
-var chatClient = new AzureOpenAIChatClient();
-var purviewMiddleware = new PurviewPolicyMiddleware(
-    new InteractiveBrowserCredential(),
-    new PurviewSettings { AppName = "My Secure Agent" }
-);
+using Azure.AI.OpenAI; 
+using Azure.Core; 
+using Azure.Identity; 
+using Microsoft.Agents.AI; 
+using Microsoft.Agents.AI.Purview; 
+using Microsoft.Extensions.AI; 
+using OpenAI; 
 
-var agent = new ChatAgent(chatClient, "You are a secure assistant.");
-agent.AddMiddleware(purviewMiddleware);
+string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set."); 
+string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini"; 
+string purviewClientAppId = Environment.GetEnvironmentVariable("PURVIEW_CLIENT_APP_ID") ?? throw new InvalidOperationException("PURVIEW_CLIENT_APP_ID is not set."); 
 
-var response = await agent.RunAsync(new ChatMessage(Role.User, "Summarize zero trust in one sentence."));
+TokenCredential browserCredential = new InteractiveBrowserCredential( 
+    new InteractiveBrowserCredentialOptions 
+    { 
+        ClientId = purviewClientAppId 
+    }); 
+
+AIAgent agent = new AzureOpenAIClient(
+    new Uri(endpoint), 
+    new AzureCliCredential()) 
+    .GetChatClient(deploymentName) 
+    .CreateAIAgent("You are a secure assistant.") 
+    .AsBuilder() 
+    .WithPurview(browserCredential, new PurviewSettings("My Secure Agent")) 
+    .Build(); 
+
+AgentRunResponse response = await agent.RunAsync("Summarize zero trust in one sentence.").ConfigureAwait(false); 
 Console.WriteLine(response);
+
 ```
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
 ```python
-import asyncio
-from agent_framework import ChatAgent, ChatMessage, Role
+import asyncio 
+import os 
+from agent_framework import ChatAgent, ChatMessage, Role 
 from agent_framework.azure import AzureOpenAIChatClient
-from agent_framework.microsoft import PurviewPolicyMiddleware, PurviewSettings
-from azure.identity import InteractiveBrowserCredential
+from agent_framework.microsoft import PurviewPolicyMiddleware, PurviewSettings 
+from azure.identity import AzureCliCredential, InteractiveBrowserCredential 
 
-async def main():
-    chat_client = AzureOpenAIChatClient()
-    purview_middleware = PurviewPolicyMiddleware(
-        credential=InteractiveBrowserCredential(),
+# Set default environment variables if not already set 
+os.environ.setdefault("AZURE_OPENAI_ENDPOINT", "<azureOpenAIEndpoint>") 
+os.environ.setdefault("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME", "<azureOpenAIChatDeploymentName>") 
+
+async def main(): 
+    chat_client = AzureOpenAIChatClient(credential=AzureCliCredential()) 
+    purview_middleware = PurviewPolicyMiddleware( 
+        credential=InteractiveBrowserCredential( 
+            client_id="<clientId>", 
+        ), 
         settings=PurviewSettings(app_name="My Secure Agent")
-    )
-    agent = ChatAgent(
-        chat_client=chat_client,
-        instructions="You are a secure assistant.",
-        middleware=[purview_middleware]
-    )
-    response = await agent.run(ChatMessage(role=Role.USER, text="Summarize zero trust in one sentence."))
-    print(response)
+    ) 
+    agent = ChatAgent( 
+        chat_client=chat_client, 
+        instructions="You are a secure assistant.", 
+        middleware=[purview_middleware] 
+    ) 
+    response = await agent.run(ChatMessage(role=Role.USER, text="Summarize zero trust in one sentence.")) 
+    print(response) 
 
-asyncio.run(main())
+  if __name__ == "__main__": 
+    asyncio.run(main())
 ```
 
 ::: zone-end
