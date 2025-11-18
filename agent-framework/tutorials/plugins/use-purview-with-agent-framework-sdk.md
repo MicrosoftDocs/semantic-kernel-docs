@@ -115,7 +115,7 @@ async def main():
 
 Now that you added the above code to your agent, perform the following steps to test the integration of Microsoft Purview into your code:
 
-1. **Entra registration**: Register your agent and add the required Microsoft Graph permissions ([ProtectionScopes.Compute.All](/graph/api/userprotectionscopecontainer-compute?view=graph-rest-1.0), [ContentActivity.Write](/graph/api/activitiescontainer-post-contentactivities?view=graph-rest-1.0&tabs=http), [Content.Process.All](/graph/api/userdatasecurityandgovernance-processcontent?view=graph-rest-1.0&tabs=http)) to the Service Principal. For more information, see [Register an application in Microsoft Entra ID](/entra/identity-platform/quickstart-register-app) and [dataSecurityAndGovernance resource type](/graph/api/resources/datasecurityandgovernance). You'll need the Microsoft Entra app ID in the next step.
+1. **Entra registration**: Register your agent and add the required Microsoft Graph permissions ([ProtectionScopes.Compute.All](/graph/api/userprotectionscopecontainer-compute), [ContentActivity.Write](/graph/api/activitiescontainer-post-contentactivities), [Content.Process.All](/graph/api/userdatasecurityandgovernance-processcontent)) to the Service Principal. For more information, see [Register an application in Microsoft Entra ID](/entra/identity-platform/quickstart-register-app) and [dataSecurityAndGovernance resource type](/graph/api/resources/datasecurityandgovernance). You'll need the Microsoft Entra app ID in the next step.
 1. **Purview policies**: Configure Purview policies using the Microsoft Entra app ID to enable agent communications data to flow into Purview. For more information, see [Configure Microsoft Purview](/purview/developer/configurepurview).
 
 ## Resources
