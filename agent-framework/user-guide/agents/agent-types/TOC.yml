@@ -20,6 +20,12 @@
   href: openai-assistants-agent.md
 - name: Agent based on any IChatClient
   href: chat-client-agent.md
+- name: Durable Agents
+  items:
+    - name: Create a Durable Agent
+      href: durable-agent/create-durable-agent.md
+    - name: Durable Agent Features
+      href: durable-agent/features.md
 - name: A2A Agents
   href: a2a-agent.md
 - name: Custom Agents
