@@ -207,7 +207,7 @@ async def main():
     )
     
     result = await agent.run("What's the weather like in Paris today?")
-    weather_data = result.structured_output
+    weather_data = result.value
     print(f"Location: {weather_data.location}")
     print(f"Temperature: {weather_data.temperature}°C")
     print(f"Condition: {weather_data.condition}")
