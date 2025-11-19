@@ -94,6 +94,35 @@ async def explicit_config_example():
     print(result.text)
 ```
 
+### Using Anthropic on Foundry
+
+After you've setup Anthropic on Foundry, ensure you have the following environment variables set:
+
+```bash
+ANTHROPIC_FOUNDRY_API_KEY="your-foundry-api-key"
+ANTHROPIC_FOUNDRY_RESOURCE="your-foundry-resource-name"
+```
+Then create the agent as follows:
+
+```python
+from agent_framework.anthropic import AnthropicClient
+from anthropic import AsyncAnthropicFoundry
+
+async def foundry_example():
+    agent = AnthropicClient(
+        anthropic_client=AsyncAnthropicFoundry()
+    ).create_agent(
+        name="FoundryAgent",
+        instructions="You are a helpful assistant using Anthropic on Foundry.",
+    )
+
+    result = await agent.run("How do I use Anthropic on Foundry?")
+    print(result.text)
+```
+
+> Note:
+> This requires `anthropic>=0.74.0` to be installed.
+
 ## Agent Features
 
 ### Function Tools
