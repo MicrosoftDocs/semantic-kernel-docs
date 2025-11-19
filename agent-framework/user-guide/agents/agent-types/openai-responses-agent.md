@@ -250,7 +250,7 @@ async def tools_example():
 
 ### Code Interpreter
 
-Enable your assistant to execute Python code:
+Enable your agent to execute Python code:
 
 ```python
 from agent_framework import HostedCodeInterpreterTool
@@ -314,20 +314,24 @@ Maintain conversation context across multiple interactions:
 from agent_framework import AgentThread
 
 async def thread_example():
-    agent = OpenAIResponsesClient().create_agent(
+    async with OpenAIResponsesClient().create_agent(
         name="Assistant",
         instructions="You are a helpful assistant.",
-    )
+    ) as agent:
+        # Create a persistent thread for conversation context
+        thread = agent.get_new_thread()
 
-    # Create a persistent thread for conversation context
-    async with AgentThread() as thread:
         # First interaction
-        result1 = await agent.run("My name is Alice", thread=thread)
-        print(f"Agent: {result1.text}")
+        first_query = "My name is Alice"
+        print(f"User: {first_query}")
+        first_result = await agent.run(first_query, thread=thread)
+        print(f"Agent: {first_result.text}")
 
         # Second interaction - agent remembers the context
-        result2 = await agent.run("What's my name?", thread=thread)
-        print(f"Agent: {result2.text}")  # Should remember "Alice"
+        second_query = "What's my name?"
+        print(f"User: {second_query}")
+        second_result = await agent.run(second_query, thread=thread)
+        print(f"Agent: {second_result.text}")  # Should remember "Alice"
 ```
 
 ### File Search

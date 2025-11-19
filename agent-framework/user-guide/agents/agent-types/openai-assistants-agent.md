@@ -295,14 +295,19 @@ async def thread_example():
         instructions="You are a helpful assistant.",
     ) as agent:
         # Create a persistent thread for conversation context
-        async with AgentThread() as thread:
-            # First interaction
-            result1 = await agent.run("My name is Alice", thread=thread)
-            print(f"Agent: {result1.text}")
+        thread = agent.get_new_thread()
 
-            # Second interaction - agent remembers the context
-            result2 = await agent.run("What's my name?", thread=thread)
-            print(f"Agent: {result2.text}")  # Should remember "Alice"
+        # First interaction
+        first_query = "My name is Alice"
+        print(f"User: {first_query}")
+        first_result = await agent.run(first_query, thread=thread)
+        print(f"Agent: {first_result.text}")
+
+        # Second interaction - agent remembers the context
+        second_query = "What's my name?"
+        print(f"User: {second_query}")
+        second_result = await agent.run(second_query, thread=thread)
+        print(f"Agent: {second_result.text}")  # Should remember "Alice"
 ```
 
 ### Working with Existing Assistants
