@@ -267,59 +267,174 @@ async def main():
 asyncio.run(main())
 ```
 
-### File Search
+#### Code Interpreter with File Upload
 
-Enable document search capabilities using the hosted file search tool:
+For data analysis tasks, you can upload files and analyze them with code:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, HostedFileSearchTool, HostedVectorStoreContent
+import os
+import tempfile
+from agent_framework import ChatAgent, HostedCodeInterpreterTool
+from agent_framework.azure import AzureOpenAIResponsesClient
+from azure.identity import AzureCliCredential
+from openai import AsyncAzureOpenAI
+
+async def create_sample_file_and_upload(openai_client: AsyncAzureOpenAI) -> tuple[str, str]:
+    """Create a sample CSV file and upload it to Azure OpenAI."""
+    csv_data = """name,department,salary,years_experience
+Alice Johnson,Engineering,95000,5
+Bob Smith,Sales,75000,3
+Carol Williams,Engineering,105000,8
+David Brown,Marketing,68000,2
+Emma Davis,Sales,82000,4
+Frank Wilson,Engineering,88000,6
+"""
+    
+    # Create temporary CSV file
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as temp_file:
+        temp_file.write(csv_data)
+        temp_file_path = temp_file.name
+
+    # Upload file to Azure OpenAI
+    print("Uploading file to Azure OpenAI...")
+    with open(temp_file_path, "rb") as file:
+        uploaded_file = await openai_client.files.create(
+            file=file,
+            purpose="assistants",  # Required for code interpreter
+        )
+
+    print(f"File uploaded with ID: {uploaded_file.id}")
+    return temp_file_path, uploaded_file.id
+
+async def cleanup_files(openai_client: AsyncAzureOpenAI, temp_file_path: str, file_id: str) -> None:
+    """Clean up both local temporary file and uploaded file."""
+    # Clean up: delete the uploaded file
+    await openai_client.files.delete(file_id)
+    print(f"Cleaned up uploaded file: {file_id}")
+
+    # Clean up temporary local file
+    os.unlink(temp_file_path)
+    print(f"Cleaned up temporary file: {temp_file_path}")
+
+async def main():
+    print("=== Azure OpenAI Code Interpreter with File Upload ===")
+
+    # Initialize Azure OpenAI client for file operations
+    credential = AzureCliCredential()
+
+    async def get_token():
+        token = credential.get_token("https://cognitiveservices.azure.com/.default")
+        return token.token
+
+    openai_client = AsyncAzureOpenAI(
+        azure_ad_token_provider=get_token,
+        api_version="2024-05-01-preview",
+    )
+
+    temp_file_path, file_id = await create_sample_file_and_upload(openai_client)
+
+    # Create agent using Azure OpenAI Responses client
+    async with ChatAgent(
+        chat_client=AzureOpenAIResponsesClient(credential=credential),
+        instructions="You are a helpful assistant that can analyze data files using Python code.",
+        tools=HostedCodeInterpreterTool(inputs=[{"file_id": file_id}]),
+    ) as agent:
+        # Test the code interpreter with the uploaded file
+        query = "Analyze the employee data in the uploaded CSV file. Calculate average salary by department."
+        print(f"User: {query}")
+        result = await agent.run(query)
+        print(f"Agent: {result.text}")
+
+    await cleanup_files(openai_client, temp_file_path, file_id)
+
+asyncio.run(main())
+```
+
+### Model Context Protocol (MCP) Tools
+
+#### Local MCP Tools
+
+Connect to local MCP servers for extended capabilities:
+
+```python
+import asyncio
+from agent_framework import ChatAgent, MCPStreamableHTTPTool
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    # Create a vector store content reference
-    vector_store = HostedVectorStoreContent(vector_store_id="vs_123")
+    """Example showing local MCP tools for Azure OpenAI Responses Agent."""
+    # Create Azure OpenAI Responses client
+    responses_client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
+    
+    # Create agent
+    agent = responses_client.create_agent(
+        name="DocsAgent",
+        instructions="You are a helpful assistant that can help with Microsoft documentation questions.",
+    )
+
+    # Connect to the MCP server (Streamable HTTP)
+    async with MCPStreamableHTTPTool(
+        name="Microsoft Learn MCP",
+        url="https://learn.microsoft.com/api/mcp",
+    ) as mcp_tool:
+        # First query — expect the agent to use the MCP tool if it helps
+        first_query = "How to create an Azure storage account using az cli?"
+        first_result = await agent.run(first_query, tools=mcp_tool)
+        print("\n=== Answer 1 ===\n", first_result.text)
+
+        # Follow-up query (connection is reused)
+        second_query = "What is Microsoft Agent Framework?"
+        second_result = await agent.run(second_query, tools=mcp_tool)
+        print("\n=== Answer 2 ===\n", second_result.text)
+
+asyncio.run(main())
+```
+
+#### Hosted MCP Tools
+
+Use hosted MCP tools with approval workflows:
+
+```python
+import asyncio
+from agent_framework import ChatAgent, HostedMCPTool
+from agent_framework.azure import AzureOpenAIResponsesClient
+from azure.identity import AzureCliCredential
+
+async def main():
+    """Example showing hosted MCP tools without approvals."""
+    credential = AzureCliCredential()
     
     async with ChatAgent(
-        chat_client=AzureOpenAIResponsesClient(credential=AzureCliCredential()),
-        instructions="You are a helpful assistant that can search through files.",
-        tools=HostedFileSearchTool(
-            inputs=vector_store,
-            max_results=10
-        )
+        chat_client=AzureOpenAIResponsesClient(credential=credential),
+        name="DocsAgent",
+        instructions="You are a helpful assistant that can help with microsoft documentation questions.",
+        tools=HostedMCPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+            # Auto-approve all function calls for seamless experience
+            approval_mode="never_require",
+        ),
     ) as agent:
-        result = await agent.run("Find information about quarterly reports")
-        print(result.text)
+        # First query
+        first_query = "How to create an Azure storage account using az cli?"
+        print(f"User: {first_query}")
+        first_result = await agent.run(first_query)
+        print(f"Agent: {first_result.text}\n")
+        
+        print("\n=======================================\n")
+        
+        # Second query
+        second_query = "What is Microsoft Agent Framework?"
+        print(f"User: {second_query}")
+        second_result = await agent.run(second_query)
+        print(f"Agent: {second_result.text}\n")
 
 asyncio.run(main())
 ```
 
-### Web Search
-
-Access real-time information using the hosted web search tool:
-
-```python
-import asyncio
-from agent_framework import ChatAgent, HostedWebSearchTool
-from agent_framework.azure import AzureOpenAIResponsesClient
-from azure.identity import AzureCliCredential
-
-async def main():
-    async with ChatAgent(
-        chat_client=AzureOpenAIResponsesClient(credential=AzureCliCredential()),
-        instructions="You are a helpful assistant that can search the web for current information.",
-        tools=HostedWebSearchTool(
-            description="Search the web for current information"
-        )
-    ) as agent:
-        result = await agent.run("What are the latest developments in artificial intelligence?")
-        print(result.text)
-
-asyncio.run(main())
-```
-
-### Image Analysis and Generation
+### Image Analysis
 
 Azure OpenAI Responses agents support multimodal interactions including image analysis:
 
@@ -330,53 +445,30 @@ from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIResponsesClient(
-        deployment_name="gpt-4o",  # Use vision-capable model
-        credential=AzureCliCredential()
-    ).create_agent(
-        instructions="You are a helpful assistant that can analyze images."
+    print("=== Azure Responses Agent with Image Analysis ===")
+
+    # Create an Azure Responses agent with vision capabilities
+    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
+        name="VisionAgent",
+        instructions="You are a helpful agent that can analyze images.",
     )
-    
+
     # Create a message with both text and image content
-    message = ChatMessage(
+    user_message = ChatMessage(
         role="user",
         contents=[
             TextContent(text="What do you see in this image?"),
             UriContent(
-                uri="https://example.com/image.jpg",
-                media_type="image/jpeg"
-            )
-        ]
+                uri="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                media_type="image/jpeg",
+            ),
+        ],
     )
-    
-    result = await agent.run(message)
-    print(result.text)
 
-asyncio.run(main())
-```
-
-### MCP (Model Context Protocol) Tools
-
-Connect to external services and APIs using MCP tools:
-
-```python
-import asyncio
-from agent_framework import ChatAgent, HostedMCPTool
-from agent_framework.azure import AzureOpenAIResponsesClient
-from azure.identity import AzureCliCredential
-
-async def main():
-    async with ChatAgent(
-        chat_client=AzureOpenAIResponsesClient(credential=AzureCliCredential()),
-        instructions="You are a helpful assistant that can search Microsoft documentation.",
-        tools=HostedMCPTool(
-            name="Microsoft Learn MCP",
-            url="https://learn.microsoft.com/api/mcp",
-            approval_mode="never_require"  # Auto-approve for documentation searches
-        )
-    ) as agent:
-        result = await agent.run("How do I create an Azure storage account using Azure CLI?")
-        print(result.text)
+    # Get the agent's response
+    print("User: What do you see in this image? [Image provided]")
+    result = await agent.run(user_message)
+    print(f"Agent: {result.text}")
 
 asyncio.run(main())
 ```
