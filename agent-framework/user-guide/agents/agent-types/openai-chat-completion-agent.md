@@ -206,27 +206,26 @@ async def local_mcp_example():
 Maintain conversation context across multiple interactions:
 
 ```python
-from agent_framework import AgentThread
-
 async def thread_example():
-    async with OpenAIChatClient().create_agent(
-        name="Assistant",
+    agent = OpenAIChatClient().create_agent(
+        name="Agent",
         instructions="You are a helpful assistant.",
-    ) as agent:
-        # Create a persistent thread for conversation context
-        thread = agent.get_new_thread()
+    )
 
-        # First interaction
-        first_query = "My name is Alice"
-        print(f"User: {first_query}")
-        first_result = await agent.run(first_query, thread=thread)
-        print(f"Agent: {first_result.text}")
+    # Create a persistent thread for conversation context
+    thread = agent.get_new_thread()
 
-        # Second interaction - agent remembers the context
-        second_query = "What's my name?"
-        print(f"User: {second_query}")
-        second_result = await agent.run(second_query, thread=thread)
-        print(f"Agent: {second_result.text}")  # Should remember "Alice"
+    # First interaction
+    first_query = "My name is Alice"
+    print(f"User: {first_query}")
+    first_result = await agent.run(first_query, thread=thread)
+    print(f"Agent: {first_result.text}")
+
+    # Second interaction - agent remembers the context
+    second_query = "What's my name?"
+    print(f"User: {second_query}")
+    second_result = await agent.run(second_query, thread=thread)
+    print(f"Agent: {second_result.text}")  # Should remember "Alice"
 ```
 
 ### Streaming Responses
@@ -239,8 +238,8 @@ async def streaming_example():
         name="StoryTeller",
         instructions="You are a creative storyteller.",
     )
-
-    print("Assistant: ", end="", flush=True)
+    
+    print("Agent: ", end="", flush=True)
     async for chunk in agent.run_stream("Tell me a short story about AI."):
         if chunk.text:
             print(chunk.text, end="", flush=True)

@@ -97,6 +97,7 @@ Import the required classes from the Agent Framework:
 
 ```python
 import asyncio
+from agent_framework import ChatAgent
 from agent_framework.openai import OpenAIResponsesClient
 ```
 
@@ -147,7 +148,7 @@ async def streaming_example():
         instructions="You are a creative storyteller.",
     )
 
-    print("Assistant: ", end="", flush=True)
+    print("Agent: ", end="", flush=True)
     async for chunk in agent.run_stream("Tell me a short story about AI."):
         if chunk.text:
             print(chunk.text, end="", flush=True)
@@ -172,7 +173,7 @@ async def reasoning_example():
         reasoning={"effort": "high", "summary": "detailed"},
     )
 
-    print("Assistant: ", end="", flush=True)
+    print("Agent: ", end="", flush=True)
     async for chunk in agent.run_stream("Solve: 3x + 11 = 14"):
         if chunk.contents:
             for content in chunk.contents:
@@ -270,40 +271,62 @@ async def code_interpreter_example():
 For data analysis tasks, you can upload files and analyze them with code:
 
 ```python
+import os
 import tempfile
+from agent_framework import HostedCodeInterpreterTool
+from openai import AsyncOpenAI
 
 async def code_interpreter_with_files_example():
-    client = OpenAIResponsesClient()
+    print("=== OpenAI Code Interpreter with File Upload ===")
+
+    # Create the OpenAI client for file operations
+    openai_client = AsyncOpenAI()
     
     # Create sample CSV data
     csv_data = """name,department,salary,years_experience
 Alice Johnson,Engineering,95000,5
 Bob Smith,Sales,75000,3
 Carol Williams,Engineering,105000,8
+David Brown,Marketing,68000,2
+Emma Davis,Sales,82000,4
+Frank Wilson,Engineering,88000,6
 """
     
-    # Upload file for analysis
+    # Create temporary CSV file
     with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as temp_file:
         temp_file.write(csv_data)
         temp_file_path = temp_file.name
 
+    # Upload file to OpenAI
+    print("Uploading file to OpenAI...")
     with open(temp_file_path, "rb") as file:
-        uploaded_file = await client.client.files.create(
+        uploaded_file = await openai_client.files.create(
             file=file,
-            purpose="assistants",
+            purpose="assistants",  # Required for code interpreter
         )
 
-    agent = client.create_agent(
-        name="DataAnalyst",
-        instructions="You are a data analyst that can write and execute Python code.",
-        tools=HostedCodeInterpreterTool(file_ids=[uploaded_file.id]),
+    print(f"File uploaded with ID: {uploaded_file.id}")
+
+    # Create agent using OpenAI Responses client
+    agent = ChatAgent(
+        chat_client=OpenAIResponsesClient(),
+        instructions="You are a helpful assistant that can analyze data files using Python code.",
+        tools=HostedCodeInterpreterTool(inputs=[{"file_id": uploaded_file.id}]),
     )
 
-    result = await agent.run("Analyze the salary data and create a summary by department.")
-    print(result.text)
+    # Test the code interpreter with the uploaded file
+    query = "Analyze the employee data in the uploaded CSV file. Calculate average salary by department."
+    print(f"User: {query}")
+    result = await agent.run(query)
+    print(f"Agent: {result.text}")
 
-    # Cleanup
-    await client.client.files.delete(uploaded_file.id)
+    # Clean up: delete the uploaded file
+    await openai_client.files.delete(uploaded_file.id)
+    print(f"Cleaned up uploaded file: {uploaded_file.id}")
+
+    # Clean up temporary local file
+    os.unlink(temp_file_path)
+    print(f"Cleaned up temporary file: {temp_file_path}")
 ```
 
 ### Thread Management
@@ -311,27 +334,26 @@ Carol Williams,Engineering,105000,8
 Maintain conversation context across multiple interactions:
 
 ```python
-from agent_framework import AgentThread
-
 async def thread_example():
-    async with OpenAIResponsesClient().create_agent(
-        name="Assistant",
+    agent = OpenAIResponsesClient().create_agent(
+        name="Agent",
         instructions="You are a helpful assistant.",
-    ) as agent:
-        # Create a persistent thread for conversation context
-        thread = agent.get_new_thread()
+    )
 
-        # First interaction
-        first_query = "My name is Alice"
-        print(f"User: {first_query}")
-        first_result = await agent.run(first_query, thread=thread)
-        print(f"Agent: {first_result.text}")
+    # Create a persistent thread for conversation context
+    thread = agent.get_new_thread()
 
-        # Second interaction - agent remembers the context
-        second_query = "What's my name?"
-        print(f"User: {second_query}")
-        second_result = await agent.run(second_query, thread=thread)
-        print(f"Agent: {second_result.text}")  # Should remember "Alice"
+    # First interaction
+    first_query = "My name is Alice"
+    print(f"User: {first_query}")
+    first_result = await agent.run(first_query, thread=thread)
+    print(f"Agent: {first_result.text}")
+
+    # Second interaction - agent remembers the context
+    second_query = "What's my name?"
+    print(f"User: {second_query}")
+    second_result = await agent.run(second_query, thread=thread)
+    print(f"Agent: {second_result.text}")  # Should remember "Alice"
 ```
 
 ### File Search
@@ -344,30 +366,44 @@ from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
 async def file_search_example():
     client = OpenAIResponsesClient()
     
-    # Create a vector store with documents
+    # Create a file with sample content
     file = await client.client.files.create(
-        file=("knowledge.txt", b"The weather today is sunny with a high of 75F."),
+        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), 
         purpose="user_data"
     )
+    
+    # Create a vector store for document storage
     vector_store = await client.client.vector_stores.create(
         name="knowledge_base",
         expires_after={"anchor": "last_active_at", "days": 1},
     )
-    await client.client.vector_stores.files.create_and_poll(
+    
+    # Add file to vector store and wait for processing
+    result = await client.client.vector_stores.files.create_and_poll(
         vector_store_id=vector_store.id, 
         file_id=file.id
     )
+    
+    # Check if processing was successful
+    if result.last_error is not None:
+        raise Exception(f"Vector store file processing failed with status: {result.last_error.message}")
 
-    agent = client.create_agent(
-        name="KnowledgeBot",
-        instructions="You are a helpful assistant that can search through documents.",
-        tools=HostedFileSearchTool(
-            vector_stores=[HostedVectorStoreContent(vector_store_id=vector_store.id)]
-        ),
+    # Create vector store content reference
+    vector_store_content = HostedVectorStoreContent(vector_store_id=vector_store.id)
+
+    # Create agent with file search capability
+    agent = ChatAgent(
+        chat_client=client,
+        instructions="You are a helpful assistant that can search through files to find information.",
+        tools=[HostedFileSearchTool(inputs=vector_store_content)],
     )
 
-    result = await agent.run("What does the document say about weather?")
-    print(result.text)
+    # Test the file search
+    message = "What is the weather today? Do a file search to find the answer."
+    print(f"User: {message}")
+    
+    response = await agent.run(message)
+    print(f"Agent: {response}")
 
     # Cleanup
     await client.client.vector_stores.delete(vector_store.id)

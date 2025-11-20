@@ -249,37 +249,52 @@ Enable your assistant to search through uploaded documents:
 ```python
 from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
 
-async def file_search_example():
-    client = OpenAIAssistantsClient()
-    
-    # Create a vector store with documents
+async def create_vector_store(client: OpenAIAssistantsClient) -> tuple[str, HostedVectorStoreContent]:
+    """Create a vector store with sample documents."""
     file = await client.client.files.create(
-        file=("knowledge.txt", b"The weather today is sunny with a high of 75F."),
+        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), 
         purpose="user_data"
     )
     vector_store = await client.client.vector_stores.create(
         name="knowledge_base",
         expires_after={"anchor": "last_active_at", "days": 1},
     )
-    await client.client.vector_stores.files.create_and_poll(
+    result = await client.client.vector_stores.files.create_and_poll(
         vector_store_id=vector_store.id, 
         file_id=file.id
     )
+    if result.last_error is not None:
+        raise Exception(f"Vector store file processing failed with status: {result.last_error.message}")
 
-    try:
-        async with client.create_agent(
-            name="KnowledgeBot",
-            instructions="You are a helpful assistant that searches files in a knowledge base.",
-            tools=HostedFileSearchTool(
-                vector_stores=[HostedVectorStoreContent(vector_store_id=vector_store.id)]
-            ),
-        ) as agent:
-            result = await agent.run("What does the document say about weather?")
-            print(result.text)
-    finally:
-        # Cleanup
-        await client.client.vector_stores.delete(vector_store.id)
-        await client.client.files.delete(file.id)
+    return file.id, HostedVectorStoreContent(vector_store_id=vector_store.id)
+
+async def delete_vector_store(client: OpenAIAssistantsClient, file_id: str, vector_store_id: str) -> None:
+    """Delete the vector store after using it."""
+    await client.client.vector_stores.delete(vector_store_id=vector_store_id)
+    await client.client.files.delete(file_id=file_id)
+
+async def file_search_example():
+    print("=== OpenAI Assistants Client Agent with File Search Example ===\n")
+
+    client = OpenAIAssistantsClient()
+    async with ChatAgent(
+        chat_client=client,
+        instructions="You are a helpful assistant that searches files in a knowledge base.",
+        tools=HostedFileSearchTool(),
+    ) as agent:
+        query = "What is the weather today? Do a file search to find the answer."
+        file_id, vector_store = await create_vector_store(client)
+
+        print(f"User: {query}")
+        print("Agent: ", end="", flush=True)
+        async for chunk in agent.run_stream(
+            query, tool_resources={"file_search": {"vector_store_ids": [vector_store.vector_store_id]}}
+        ):
+            if chunk.text:
+                print(chunk.text, end="", flush=True)
+        print()  # New line after streaming
+        
+        await delete_vector_store(client, file_id, vector_store.vector_store_id)
 ```
 
 ### Thread Management
@@ -287,8 +302,6 @@ async def file_search_example():
 Maintain conversation context across multiple interactions:
 
 ```python
-from agent_framework import AgentThread
-
 async def thread_example():
     async with OpenAIAssistantsClient().create_agent(
         name="Assistant",
