@@ -21,7 +21,7 @@ Agent Framework integrates with [OpenTelemetry](https://opentelemetry.io/), and 
 
 ::: zone pivot="programming-language-csharp"
 
-## Enable Observability
+## Enable Observability (C#)
 
 To enable observability for your chat client, you need to build the chat client as follows:
 
@@ -165,7 +165,7 @@ See a full example of an agent with OpenTelemetry enabled in the [Agent Framewor
 
 ::: zone pivot="programming-language-python"
 
-## Enable Observability
+## Enable Observability (Python)
 
 To enable observability in your python application, in most cases you do not need to install anything extra, by default the following package are installed:
 

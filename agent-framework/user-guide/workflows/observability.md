@@ -22,13 +22,13 @@ Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/se
 
 ::: zone pivot="programming-language-csharp"
 
-Please refer to [Enabling Observability](https://learn.microsoft.com/agent-framework/user-guide/agents/agent-observability?pivots=programming-language-csharp#enable-observability) for instructions on enabling observability in your applications.
+Please refer to [Enabling Observability](../agents/agent-observability.md#enable-observability-c) for instructions on enabling observability in your applications.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-Please refer to [Enabling Observability](https://learn.microsoft.com/agent-framework/user-guide/agents/agent-observability?pivots=programming-language-python#enable-observability-1) for instructions on enabling observability in your applications.
+Please refer to [Enabling Observability](../agents/agent-observability.md#enable-observability-python) for instructions on enabling observability in your applications.
 
 ::: zone-end
 
