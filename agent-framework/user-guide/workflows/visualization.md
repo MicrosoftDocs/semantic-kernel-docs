@@ -40,14 +40,16 @@ To create an image file from the DOT format, you can use GraphViz tools with the
 dotnet run | tail -n +20 | dot -Tpng -o workflow.png
 ```
 
+> [!TIP]
+> To export visualization images you need to [install GraphViz](https://graphviz.org/download/).
+
+For a complete working implementation with visualization, see the [Visualization sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/Visualization).
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
 Workflow visualization is done via a `WorkflowViz` object that can be instantiated with a `Workflow` object. The `WorkflowViz` object can then generate visualizations in different formats, such as Graphviz DOT format or Mermaid diagram format.
-
-> [!TIP]
-> To export visualization images you also need to [install GraphViz](https://graphviz.org/download/).
 
 Creating a `WorkflowViz` object is straightforward:
 
@@ -75,7 +77,22 @@ print(viz.to_mermaid())
 print(viz.to_digraph())
 # Export to a file
 print(viz.export(format="svg"))
+# Different formats are also supported
+print(viz.export(format="png"))
+print(viz.export(format="pdf"))
+print(viz.export(format="dot"))
+# Export with custom filenames
+print(viz.export(format="svg", filename="my_workflow.svg"))
+# Convenience methods
+print(viz.save_svg("workflow.svg"))
+print(viz.save_png("workflow.png"))
+print(viz.save_pdf("workflow.pdf"))
 ```
+
+> [!TIP]
+> For basic text output (Mermaid and DOT), no additional dependencies are needed. For image export, you need to install the `graphviz` Python package by running: `pip install graphviz>=0.20.0` and [install GraphViz](https://graphviz.org/download/).
+
+For a complete working implementation with visualization, see the [Concurrent with Visualization sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/visualization/concurrent_with_visualization.py).
 
 ::: zone-end
 
@@ -101,3 +118,23 @@ flowchart TD
 or in Graphviz DOT format:
 
 ![Workflow Diagram](./resources/images/workflow-viz.svg)
+
+## Visualization Features
+
+### Node Styling
+
+- **Start executors**: Green background with "(Start)" label
+- **Regular executors**: Blue background with executor ID
+- **Fan-in nodes**: Golden background with ellipse shape (DOT) or double circles (Mermaid)
+
+### Edge Styling
+
+- **Normal edges**: Solid arrows
+- **Conditional edges**: Dashed/dotted arrows with "conditional" labels
+- **Fan-out/Fan-in**: Automatic routing through intermediate nodes
+
+### Layout Options
+
+- **Top-down layout**: Clear hierarchical flow visualization
+- **Subgraph clustering**: Nested workflows shown as grouped clusters
+- **Automatic positioning**: GraphViz handles optimal node placement

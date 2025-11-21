@@ -26,10 +26,18 @@ In this tutorial, you'll create a workflow with two executors:
 
 The workflow demonstrates core concepts like:
 
-- Creating custom executors that implement `IMessageHandler<TInput, TOutput>`
+- Creating a custom executor with one handler
+- Creating a custom executor from a function
 - Using `WorkflowBuilder` to connect executors with edges
 - Processing data through sequential steps
 - Observing workflow execution through events
+
+### Concepts Covered
+
+- [Executors](../../user-guide/workflows/core-concepts/executors.md)
+- [Direct Edges](../../user-guide/workflows/core-concepts/edges.md#direct-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
+- [Events](../../user-guide/workflows/core-concepts/events.md)
 
 ## Prerequisites
 
@@ -62,22 +70,14 @@ using Microsoft.Agents.AI.Workflows;
 /// <summary>
 /// First executor: converts input text to uppercase.
 /// </summary>
-internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"),
-    IMessageHandler<string, string>
-{
-    public ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
-    {
-        // Convert input to uppercase and pass to next executor
-        return ValueTask.FromResult(input.ToUpper());
-    }
-}
+Func<string, string> uppercaseFunc = s => s.ToUpperInvariant();
+var uppercase = uppercaseFunc.BindExecutor("UppercaseExecutor");
 ```
 
 **Key Points:**
 
-- Inherits from `ReflectingExecutor<T>` for basic executor functionality
-- Implements `IMessageHandler<string, string>` - takes string input, produces string output
-- The `HandleAsync` method processes the input and returns the result
+- Create a function that takes a string and returns the uppercase version
+- Use `BindExecutor()` to create an executor from the function
 
 ### Step 3: Define the Reverse Text Executor
 
@@ -87,32 +87,28 @@ Define an executor that reverses the text:
 /// <summary>
 /// Second executor: reverses the input text and completes the workflow.
 /// </summary>
-internal sealed class ReverseTextExecutor() : ReflectingExecutor<ReverseTextExecutor>("ReverseTextExecutor"),
-    IMessageHandler<string, string>
+internal sealed class ReverseTextExecutor() : Executor<string, string>("ReverseTextExecutor")
 {
-    public ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
+    public override ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Reverse the input text
         return ValueTask.FromResult(new string(input.Reverse().ToArray()));
     }
 }
+
+ReverseTextExecutor reverse = new();
 ```
 
 **Key Points:**
 
-- Same pattern as the first executor.
-- Reverses the string using LINQ's `Reverse()` method.
-- This will be the final executor in the workflow.
+- Create a class that inherits from `Executor<TInput, TOutput>`
+- Implement `HandleAsync()` to process the input and return the output
 
 ### Step 4: Build and Connect the Workflow
 
 Connect the executors using `WorkflowBuilder`:
 
 ```csharp
-// Create the executors
-UppercaseExecutor uppercase = new();
-ReverseTextExecutor reverse = new();
-
 // Build the workflow by connecting executors sequentially
 WorkflowBuilder builder = new(uppercase);
 builder.AddEdge(uppercase, reverse).WithOutputFrom(reverse);
@@ -140,9 +136,6 @@ foreach (WorkflowEvent evt in run.NewEvents)
         case ExecutorCompletedEvent executorComplete:
             Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
             break;
-        case WorkflowOutputEvent workflowOutput:
-            Console.WriteLine($"Workflow '{workflowOutput.SourceId}' outputs: {workflowOutput.Data}");
-            break;
     }
 }
 ```
@@ -162,7 +155,11 @@ The input "Hello, World!" is first converted to uppercase ("HELLO, WORLD!"), the
 
 ### Executor Interface
 
-Executors implement `IMessageHandler<TInput, TOutput>`:
+Executors from functions:
+
+- Use `BindExecutor()` to create an executor from a function
+
+Executors implement `Executor<TInput, TOutput>`:
 
 - **TInput**: The type of data this executor accepts
 - **TOutput**: The type of data this executor produces
@@ -182,16 +179,6 @@ The `WorkflowBuilder` provides a fluent API for constructing workflows:
 During execution, you can observe these event types:
 
 - `ExecutorCompletedEvent` - When an executor finishes processing
-- `WorkflowOutputEvent` - Contains the final workflow result (for streaming execution)
-
-## Running the .NET Example
-
-1. Create a new console application
-2. Install the `Microsoft.Agents.AI.Workflows` NuGet package
-3. Combine all the code snippets from the steps above into your `Program.cs`
-4. Run the application
-
-The workflow will process your input through both executors and display the results.
 
 ## Complete .NET Example
 
@@ -222,6 +209,13 @@ The workflow demonstrates core concepts like:
 - Yielding final output with `ctx.yield_output()`
 - Streaming events for real-time observability
 
+### Concepts Covered
+
+- [Executors](../../user-guide/workflows/core-concepts/executors.md)
+- [Direct Edges](../../user-guide/workflows/core-concepts/edges.md#direct-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
+- [Events](../../user-guide/workflows/core-concepts/events.md)
+
 ## Prerequisites
 
 - Python 3.10 or later
@@ -244,27 +238,35 @@ from agent_framework import WorkflowBuilder, WorkflowContext, WorkflowOutputEven
 
 ### Step 2: Create the First Executor
 
-Create an executor that converts text to uppercase using the `@executor` decorator:
+Create an executor that converts text to uppercase by implementing an executor with a handler method:
 
 ```python
-@executor(id="upper_case_executor")
-async def to_upper_case(text: str, ctx: WorkflowContext[str]) -> None:
-    """Transform the input to uppercase and forward it to the next step."""
-    result = text.upper()
+class UpperCase(Executor):
+    def __init__(self, id: str):
+        super().__init__(id=id)
 
-    # Send the intermediate result to the next executor
-    await ctx.send_message(result)
+    @handler
+    async def to_upper_case(self, text: str, ctx: WorkflowContext[str]) -> None:
+        """Convert the input to uppercase and forward it to the next node.
+
+        Note: The WorkflowContext is parameterized with the type this handler will
+        emit. Here WorkflowContext[str] means downstream nodes should expect str.
+        """
+        result = text.upper()
+
+        # Send the result to the next executor in the workflow.
+        await ctx.send_message(result)
 ```
 
 **Key Points:**
 
 - The `@executor` decorator registers this function as a workflow node
-- `WorkflowContext[str]` indicates this executor sends a string downstream
+- `WorkflowContext[str]` indicates this executor sends a string downstream by specifying the first type parameter
 - `ctx.send_message()` passes data to the next step
 
 ### Step 3: Create the Second Executor
 
-Create an executor that reverses the text and yields the final output:
+Create an executor that reverses the text and yields the final output from a method decorated with `@executor`:
 
 ```python
 @executor(id="reverse_text_executor")
@@ -278,7 +280,7 @@ async def reverse_text(text: str, ctx: WorkflowContext[Never, str]) -> None:
 
 **Key Points:**
 
-- `WorkflowContext[Never, str]` indicates this is a terminal executor
+- `WorkflowContext[Never, str]` indicates this is a terminal executor that does not send any messages by specifying `Never` as the first type parameter but produce workflow outputs by specifying `str` as the second parameter
 - `ctx.yield_output()` provides the final workflow result
 - The workflow completes when it becomes idle
 
@@ -287,10 +289,12 @@ async def reverse_text(text: str, ctx: WorkflowContext[Never, str]) -> None:
 Connect the executors using `WorkflowBuilder`:
 
 ```python
+upper_case = UpperCase(id="upper_case_executor")
+
 workflow = (
     WorkflowBuilder()
-    .add_edge(to_upper_case, reverse_text)
-    .set_start_executor(to_upper_case)
+    .add_edge(upper_case, reverse_text)
+    .set_start_executor(upper_case)
     .build()
 )
 ```
@@ -355,17 +359,9 @@ The `WorkflowBuilder` provides a fluent API for constructing workflows:
 - **set_start_executor()**: Defines the workflow entry point
 - **build()**: Finalizes and returns an immutable workflow object
 
-## Running the Example
-
-1. Combine all the code snippets from the steps above into a single Python file
-2. Save it as `sequential_workflow.py`
-3. Run with: `python sequential_workflow.py`
-
-The workflow will process the input "hello world" through both executors and display the streaming events.
-
 ## Complete Example
 
-For the complete, ready-to-run implementation, see the [sequential_streaming.py sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/control-flow/sequential_streaming.py) in the Agent Framework repository.
+For the complete, ready-to-run implementation, see the [sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/_start-here/step1_executors_and_edges.py) in the Agent Framework repository.
 
 This sample includes:
 

@@ -13,6 +13,10 @@ ms.service: agent-framework
 
 This tutorial demonstrates how to handle requests and responses in workflows using Agent Framework Workflows. You'll learn how to create interactive workflows that can pause execution to request input from external sources (like humans or other systems) and then resume once a response is provided.
 
+## Concepts Covered
+
+- [Requests and Responses](../../user-guide/workflows/requests-and-responses.md)
+
 ::: zone pivot="programming-language-csharp"
 
 In .NET, human-in-the-loop workflows use `RequestPort` and external request handling to pause execution and gather user input. This pattern enables interactive workflows where the system can request information from external sources during execution.
@@ -68,12 +72,12 @@ Create executors that process user input and provide feedback:
 /// <summary>
 /// Executor that judges the guess and provides feedback.
 /// </summary>
-internal sealed class JudgeExecutor : Executor<int>, IMessageHandler<int>
+internal sealed class JudgeExecutor : Executor<int>("Judge")
 {
     private readonly int _targetNumber;
     private int _tries;
 
-    public JudgeExecutor(int targetNumber) : base("Judge")
+    public JudgeExecutor(int targetNumber) : this()
     {
         _targetNumber = targetNumber;
     }
