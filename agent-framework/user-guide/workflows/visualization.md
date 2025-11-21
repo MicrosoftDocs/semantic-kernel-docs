@@ -1,6 +1,7 @@
 ---
 title: Microsoft Agent Framework Workflows - Visualization
 description: In-depth look at Visualization in Microsoft Agent Framework Workflows.
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -11,6 +12,37 @@ ms.service: agent-framework
 # Microsoft Agent Framework Workflows - Visualization
 
 Sometimes a workflow that has multiple executors and complex interactions can be hard to understand from just reading the code. Visualization can help you see the structure of the workflow more clearly, so that you can verify that it has the intended design.
+
+::: zone pivot="programming-language-csharp"
+
+Workflow visualization can be achieved via extension methods on the `Workflow` class: `ToMermaidString()`, and `ToDotString()`, which generate Mermaid diagram format and Graphviz DOT format respectively.
+
+```csharp
+using Microsoft.Agents.AI.Workflows;
+
+// Create a workflow with a fan-out and fan-in pattern
+var workflow = new WorkflowBuilder()
+    .SetStartExecutor(dispatcher)
+    .AddFanOutEdges(dispatcher, [researcher, marketer, legal])
+    .AddFanInEdges([researcher, marketer, legal], aggregator)
+    .Build();
+
+// Mermaid diagram
+Console.WriteLine(workflow.ToMermaidString());
+
+// DiGraph string
+Console.WriteLine(workflow.ToDotString());
+```
+
+To create an image file from the DOT format, you can use GraphViz tools with the following command:
+
+```bash
+dotnet run | tail -n +20 | dot -Tpng -o workflow.png
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
 
 Workflow visualization is done via a `WorkflowViz` object that can be instantiated with a `Workflow` object. The `WorkflowViz` object can then generate visualizations in different formats, such as Graphviz DOT format or Mermaid diagram format.
 
@@ -44,6 +76,8 @@ print(viz.to_digraph())
 # Export to a file
 print(viz.export(format="svg"))
 ```
+
+::: zone-end
 
 The exported diagram will look similar to the following for the example workflow:
 
