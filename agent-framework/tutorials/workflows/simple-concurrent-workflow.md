@@ -24,6 +24,14 @@ You'll create a workflow that:
 - Collects and combines responses from both agents into a single output
 - Demonstrates concurrent execution with AI agents using fan-out/fan-in patterns
 
+### Concepts Covered
+
+- [Executors](../../user-guide/workflows/core-concepts/executors.md)
+- [Fan-out Edges](../../user-guide/workflows/core-concepts/edges.md#fan-out-edges)
+- [Fan-in Edges](../../user-guide/workflows/core-concepts/edges.md#fan-in-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
+- [Events](../../user-guide/workflows/core-concepts/events.md)
+
 ## Prerequisites
 
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
@@ -101,8 +109,7 @@ The `ConcurrentStartExecutor` implementation:
 /// <summary>
 /// Executor that starts the concurrent processing by sending messages to the agents.
 /// </summary>
-internal sealed class ConcurrentStartExecutor() :
-    Executor<string>("ConcurrentStartExecutor")
+internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentStartExecutor")
 {
     /// <summary>
     /// Starts the concurrent processing by sending messages to the agents.
@@ -139,7 +146,7 @@ The `ConcurrentAggregationExecutor` implementation:
 /// Executor that aggregates the results from the concurrent agents.
 /// </summary>
 internal sealed class ConcurrentAggregationExecutor() :
-    Executor<ChatMessage>("ConcurrentAggregationExecutor")
+    Executor<List<ChatMessage>>("ConcurrentAggregationExecutor")
 {
     private readonly List<ChatMessage> _messages = [];
 
@@ -151,9 +158,9 @@ internal sealed class ConcurrentAggregationExecutor() :
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
     /// The default is <see cref="CancellationToken.None"/>.</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public override async ValueTask HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    public override async ValueTask HandleAsync(List<ChatMessage> message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
-        this._messages.Add(message);
+        this._messages.AddRange(message);
 
         if (this._messages.Count == 2)
         {
@@ -230,6 +237,14 @@ You'll create a workflow that:
 - Distributes the list to two parallel executors (one calculating average, one calculating sum)
 - Aggregates the different result types (float and int) into a final output
 - Demonstrates how the framework handles different result types from concurrent executors
+
+### Concepts Covered
+
+- [Executors](../../user-guide/workflows/core-concepts/executors.md)
+- [Fan-out Edges](../../user-guide/workflows/core-concepts/edges.md#fan-out-edges)
+- [Fan-in Edges](../../user-guide/workflows/core-concepts/edges.md#fan-in-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
+- [Events](../../user-guide/workflows/core-concepts/events.md)
 
 ## Prerequisites
 
