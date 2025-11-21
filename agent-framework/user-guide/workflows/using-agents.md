@@ -151,7 +151,7 @@ Sometimes you may want to customize how AI agents are integrated into a workflow
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-internal sealed class CustomAgentExecutor : ReflectingExecutor<CustomAgentExecutor>, IMessageHandler<CustomInput, CustomOutput>
+internal sealed class CustomAgentExecutor : Executor<CustomInput, CustomOutput>("CustomAgentExecutor")
 {
     private readonly AIAgent _agent;
 

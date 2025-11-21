@@ -41,7 +41,7 @@ var workflow = new WorkflowBuilder(inputPort)
 Now, because in the workflow we have `executorA` connected to the `inputPort` in both directions, `executorA` needs to be able to send requests and receive responses via the `inputPort`. Here is what we need to do in `SomeExecutor` to send a request and receive a response.
 
 ```csharp
-internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExecutor"), IMessageHandler<CustomResponseType>
+internal sealed class SomeExecutor() : Executor<CustomResponseType>("SomeExecutor")
 {
     public async ValueTask HandleAsync(CustomResponseType message, IWorkflowContext context)
     {
@@ -56,15 +56,22 @@ internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExe
 Alternatively, `SomeExecutor` can separate the request sending and response handling into two handlers.
 
 ```csharp
-internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExecutor"), IMessageHandler<CustomResponseType>, IMessageHandler<OtherDataType>
+internal sealed class SomeExecutor() : Executor("SomeExecutor")
 {
-    public async ValueTask HandleAsync(CustomResponseType message, IWorkflowContext context)
+    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
+    {
+        return routeBuilder
+            .AddHandler<CustomResponseType>(this.HandleCustomResponseAsync)
+            .AddHandler<OtherDataType>(this.HandleOtherDataAsync);
+    }
+
+    public async ValueTask HandleCustomResponseAsync(CustomResponseType message, IWorkflowContext context)
     {
         // Process the response...
         ...
     }
 
-    public async ValueTask HandleAsync(OtherDataType message, IWorkflowContext context)
+    public async ValueTask HandleOtherDataAsync(OtherDataType message, IWorkflowContext context)
     {
         // Process the message...
         ...
@@ -151,9 +158,9 @@ await foreach (WorkflowEvent evt in handle.WatchStreamAsync().ConfigureAwait(fal
             await handle.SendResponseAsync(response).ConfigureAwait(false);
             break;
 
-        case WorkflowCompletedEvent workflowCompleteEvt:
+        case WorkflowOutputEvent workflowOutputEvt:
             // The workflow has completed successfully
-            Console.WriteLine($"Workflow completed with result: {workflowCompleteEvt.Data}");
+            Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
             return;
     }
 }

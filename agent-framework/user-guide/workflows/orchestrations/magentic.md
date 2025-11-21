@@ -125,7 +125,7 @@ workflow = (
 Execute a complex task that requires multiple agents working together:
 
 ```python
-from agent_framework import WorkflowCompletedEvent
+from agent_framework import WorkflowOutputEvent
 
 task = (
     "I am preparing a report on the energy efficiency of different machine learning model architectures. "
@@ -136,13 +136,13 @@ task = (
     "per task type (image classification, text classification, and text generation)."
 )
 
-completion_event = None
+output_evt = None
 async for event in workflow.run_stream(task):
-    if isinstance(event, WorkflowCompletedEvent):
-        completion_event = event
+    if isinstance(event, WorkflowOutputEvent):
+        output_evt = event
 
-if completion_event is not None:
-    data = getattr(completion_event, "data", None)
+if output_evt is not None:
+    data = output_evt.data
     preview = getattr(data, "text", None) or (str(data) if data is not None else "")
     print(f"Workflow completed with result:\n\n{preview}")
 ```
@@ -179,15 +179,15 @@ workflow = (
 ### Handle Plan Review Requests
 
 ```python
-completion_event: WorkflowCompletedEvent | None = None
+output_evt: WorkflowOutputEvent | None = None
 pending_request: RequestInfoEvent | None = None
 
 while True:
     # Run until completion or review request
     if pending_request is None:
         async for event in workflow.run_stream(task):
-            if isinstance(event, WorkflowCompletedEvent):
-                completion_event = event
+            if isinstance(event, WorkflowOutputEvent):
+                output_evt = event
 
             if isinstance(event, RequestInfoEvent) and event.request_type is MagenticPlanReviewRequest:
                 pending_request = event
@@ -196,7 +196,7 @@ while True:
                     print(f"\n=== PLAN REVIEW REQUEST ===\n{review_req.plan_text}\n")
 
     # Check if completed
-    if completion_event is not None:
+    if output_evt is not None:
         break
 
     # Respond to plan review
@@ -212,8 +212,8 @@ while True:
         # )
 
         async for event in workflow.send_responses_streaming({pending_request.request_id: reply}):
-            if isinstance(event, WorkflowCompletedEvent):
-                completion_event = event
+            if isinstance(event, WorkflowOutputEvent):
+                output_evt = event
             elif isinstance(event, RequestInfoEvent):
                 # Another review cycle if needed
                 pending_request = event
@@ -283,7 +283,7 @@ from agent_framework import (
     MagenticCallbackMode,
     MagenticFinalResultEvent,
     MagenticOrchestratorMessageEvent,
-    WorkflowCompletedEvent,
+    WorkflowOutputEvent,
 )
 from agent_framework.openai import OpenAIChatClient, OpenAIResponsesClient
 
@@ -379,15 +379,15 @@ async def main() -> None:
 
     # Run the workflow
     try:
-        completion_event = None
+        output_evt = None
         async for event in workflow.run_stream(task):
             print(f"Event: {event}")
 
-            if isinstance(event, WorkflowCompletedEvent):
-                completion_event = event
+            if isinstance(event, WorkflowOutputEvent):
+                output_evt = event
 
-        if completion_event is not None:
-            data = getattr(completion_event, "data", None)
+        if output_evt is not None:
+            data = output_evt.data
             preview = getattr(data, "text", None) or (str(data) if data is not None else "")
             print(f"Workflow completed with result:\n\n{preview}")
 

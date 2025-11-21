@@ -115,9 +115,9 @@ while (true)
         {
             Console.WriteLine($"{e.ExecutorId}: {e.Data}");
         }
-        else if (evt is WorkflowCompletedEvent completed)
+        else if (evt is WorkflowOutputEvent outputEvt)
         {
-            newMessages = (List<ChatMessage>)completed.Data!;
+            newMessages = (List<ChatMessage>)outputEvt.Data!;
             break;
         }
     }

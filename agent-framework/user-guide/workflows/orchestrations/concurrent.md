@@ -91,9 +91,9 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
     {
         Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
-    else if (evt is WorkflowCompletedEvent completed)
+    else if (evt is WorkflowOutputEvent outputEvt)
     {
-        result = (List<ChatMessage>)completed.Data!;
+        result = (List<ChatMessage>)outputEvt.Data!;
         break;
     }
 }
@@ -180,17 +180,17 @@ workflow = ConcurrentBuilder().participants([researcher, marketer, legal]).build
 ## Run the Concurrent Workflow and Collect the Results
 
 ```python
-from agent_framework import ChatMessage, WorkflowCompletedEvent
+from agent_framework import ChatMessage, WorkflowOutputEvent
 
 # 3) Run with a single prompt, stream progress, and pretty-print the final combined messages
-completion: WorkflowCompletedEvent | None = None
+output_evt: WorkflowOutputEvent  | None = None
 async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowCompletedEvent):
-        completion = event
+    if isinstance(event, WorkflowOutputEvent):
+        output_evt = event
 
-if completion:
+if output_evt:
     print("===== Final Aggregated Conversation (messages) =====")
-    messages: list[ChatMessage] | Any = completion.data
+    messages: list[ChatMessage] | Any = output_evt.data
     for i, msg in enumerate(messages, start=1):
         name = msg.author_name if msg.author_name else "user"
         print(f"{'-' * 60}\n\n{i:02d} [{name}]:\n{msg.text}")
@@ -362,14 +362,14 @@ workflow = (
     .build()
 )
 
-completion: WorkflowCompletedEvent | None = None
+output_evt: WorkflowOutputEvent | None = None
 async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowCompletedEvent):
-        completion = event
+    if isinstance(event, WorkflowOutputEvent):
+        output_evt = event
 
-if completion:
+if output_evt:
     print("===== Final Consolidated Output =====")
-    print(completion.data)
+    print(output_evt.data)
 ```
 
 ### Sample Output with Custom Aggregator
