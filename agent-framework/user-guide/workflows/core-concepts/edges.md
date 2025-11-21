@@ -154,10 +154,10 @@ Distribute messages from one executor to multiple targets:
 // Send to all targets
 builder.AddFanOutEdge(splitterExecutor, targets: [worker1, worker2, worker3]);
 
-// Send to specific targets based on partitioner function
+// Send to specific targets based on target selector function
 builder.AddFanOutEdge(
     source: routerExecutor,
-    partitioner: (message, targetCount) => message.Priority switch
+    targetSelector: (message, targetCount) => message.Priority switch
     {
         Priority.High => [0], // Route to first worker only
         Priority.Normal => [1, 2], // Route to workers 2 and 3

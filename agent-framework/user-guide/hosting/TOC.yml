@@ -1,0 +1,6 @@
+- name: Overview
+  href: index.md
+- name: A2A Integration
+  href: agent-to-agent-integration.md
+- name: OpenAI Integration
+  href: openai-integration.md
