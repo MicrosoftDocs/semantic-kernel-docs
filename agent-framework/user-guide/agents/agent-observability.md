@@ -268,11 +268,17 @@ pip install azure-monitor-opentelemetry-exporter>=1.0.0b41
 
 ```python
 from agent_framework.azure import AzureAIAgentClient
+from agent_framework.observability import setup_observability
+from azure.ai.projects.aio import AIProjectClient
 from azure.identity import AzureCliCredential
 
-agent_client = AzureAIAgentClient(credential=AzureCliCredential(), project_endpoint="https://<your-project>.foundry.azure.com")
-
-await agent_client.setup_azure_ai_observability()
+async def main():
+     async with AIProjectClient(credential=AzureCliCredential(), project_endpoint="https://<your-project>.foundry.azure.com") as project_client:
+        try:
+            conn_string = await project_client.telemetry.get_application_insights_connection_string()
+            setup_observability(applicationinsights_connection_string=conn_string, enable_sensitive_data=True)
+        except ResourceNotFoundError:
+            print("No Application Insights connection string found for the Azure AI Project.")
 ```
 
 This is a convenience method, that will use the project client, to get the Application Insights connection string, and then call `setup_observability` with that connection string, overriding any existing connection string set via environment variable.
