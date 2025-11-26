@@ -261,7 +261,7 @@ When you have a Azure AI Foundry project setup with a Application Insights resou
 1) Install the `azure-monitor-opentelemetry-exporter` package:
 
 ```bash
-pip install azure-monitor-opentelemetry-exporter>=1.0.0b41
+pip install azure-monitor-opentelemetry-exporter>=1.0.0b41 --pre
 ```
 
 2) Then you can setup observability for your Azure AI Foundry project as follows:

@@ -186,7 +186,7 @@ Before you begin, ensure you have the following prerequisites:
 To use Microsoft Agent Framework with Azure OpenAI, you need to install the following Python packages:
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 ## Create the agent

@@ -48,7 +48,7 @@ The Agent Framework AG-UI integration supports all 7 AG-UI protocol features:
 
 ## Build agent UIs with CopilotKit
 
-[CopilotKit](https://copilotkit.ai/) provides rich UI components for building agent user interfaces based on the standard AG-UI protocol. CopilotKit supports streaming chat interfaces, frontend & backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see a examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application. 
+[CopilotKit](https://copilotkit.ai/) provides rich UI components for building agent user interfaces based on the standard AG-UI protocol. CopilotKit supports streaming chat interfaces, frontend & backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see a examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application.
 
 CopilotKit helps you focus on your agent’s capabilities while delivering a polished user experience without reinventing the wheel.
 To learn more about getting started with Microsoft Agent Framework and CopilotKit, see the [Microsoft Agent Framework integration for CopilotKit](https://docs.copilotkit.ai/microsoft-agent-framework) documentation.
@@ -233,7 +233,7 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 Install the AG-UI integration package:
 
 ```bash
-pip install agent-framework-ag-ui
+pip install agent-framework-ag-ui --pre
 ```
 
 This installs both the core agent framework and AG-UI integration components.

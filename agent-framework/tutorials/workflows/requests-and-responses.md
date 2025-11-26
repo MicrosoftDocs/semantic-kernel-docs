@@ -283,9 +283,8 @@ Executors can send requests directly using `ctx.request_info()` and handle respo
 First, install the required packages:
 
 ```bash
-pip install agent-framework-core
+pip install agent-framework-core --pre
 pip install azure-identity
-pip install pydantic
 ```
 
 ## Define Request and Response Models

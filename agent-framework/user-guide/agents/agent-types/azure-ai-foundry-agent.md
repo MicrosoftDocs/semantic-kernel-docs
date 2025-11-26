@@ -106,7 +106,7 @@ Alternatively, you can provide these values directly in your code.
 Add the Agent Framework Azure AI package to your project:
 
 ```bash
-pip install agent-framework-azure-ai
+pip install agent-framework-azure-ai --pre
 ```
 
 ## Getting Started

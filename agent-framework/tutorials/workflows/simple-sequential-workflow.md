@@ -219,7 +219,7 @@ The workflow demonstrates core concepts like:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework Core Python package installed: `pip install agent-framework-core`
+- Agent Framework Core Python package installed: `pip install agent-framework-core --pre`
 - No external AI services required for this basic example
 
 ## Step-by-Step Implementation

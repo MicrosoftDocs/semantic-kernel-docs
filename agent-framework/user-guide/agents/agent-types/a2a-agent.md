@@ -76,7 +76,7 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 Add the required Python packages to your project.
 
 ```bash
-pip install agent-framework-a2a
+pip install agent-framework-a2a --pre
 ```
 
 ## Creating an A2A Agent

@@ -143,7 +143,7 @@ For prerequisites, see the [Create and run a simple agent](./run-agent.md) step 
 To use Agent Framework with Azure OpenAI, you need to install the following packages. Agent Framework automatically includes all necessary OpenTelemetry dependencies:
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 The following OpenTelemetry packages are included by default:

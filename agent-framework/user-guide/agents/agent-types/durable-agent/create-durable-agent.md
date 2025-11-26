@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Durable Agents
 
-The durable task extension for Microsoft Agent Framework enables you to build stateful AI agents and multi-agent deterministic orchestrations in a serverless environment on Azure. 
+The durable task extension for Microsoft Agent Framework enables you to build stateful AI agents and multi-agent deterministic orchestrations in a serverless environment on Azure.
 
 [Azure Functions](/azure/azure-functions/functions-overview) is a serverless compute service that lets you run code on-demand without managing infrastructure. The durable task extension for Microsoft Agent Framework builds on this foundation to provide durable state management, meaning your agent's conversation history and execution state are reliably persisted and survive failures, restarts, and long-running operations.
 
@@ -50,8 +50,7 @@ In a Python Azure Functions project, install the required Python packages.
 
 ```bash
 pip install azure-identity
-pip install agent-framework
-pip install agent-framework-azurefunctions
+pip install agent-framework-azurefunctions --pre
 ```
 
 ::: zone-end
@@ -155,7 +154,7 @@ curl -X POST https://your-function-app.azurewebsites.net/api/agents/Joker/run \
 # HTTP/1.1 200 OK
 # Content-Type: text/plain
 # x-ms-thread-id: @dafx-joker@263fa373-fa01-4705-abf2-5a114c2bb87d
-# 
+#
 # Why don't pirates shower before they walk the plank? Because they'll just wash up on shore later!
 
 # Second interaction - continue the same thread with context

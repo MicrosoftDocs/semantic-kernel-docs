@@ -386,7 +386,7 @@ You'll create an email processing workflow that demonstrates conditional routing
 ### Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework-core`
+- Agent Framework installed: `pip install agent-framework-core --pre`
 - Azure OpenAI service configured with proper environment variables
 - Azure CLI authentication: `az login`
 

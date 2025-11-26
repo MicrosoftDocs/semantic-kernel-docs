@@ -69,7 +69,7 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 ## Configuration
@@ -205,7 +205,7 @@ async def structured_output_example():
 
     # Non-streaming structured output
     result = await agent.run("Tell me about Paris, France", response_format=CityInfo)
-    
+
     if result.value:
         city_data = result.value
         print(f"City: {city_data.city}")
@@ -216,7 +216,7 @@ async def structured_output_example():
         agent.run_stream("Tell me about Tokyo, Japan", response_format=CityInfo),
         output_format_type=CityInfo,
     )
-    
+
     if structured_result.value:
         tokyo_data = structured_result.value
         print(f"City: {tokyo_data.city}")
@@ -266,7 +266,7 @@ async def image_generation_example():
     )
 
     result = await agent.run("Generate an image of a sunset over the ocean.")
-    
+
     # Check for generated images in the response
     for content in result.contents:
         if isinstance(content, (DataContent, UriContent)):

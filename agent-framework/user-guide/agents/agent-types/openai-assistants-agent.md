@@ -100,7 +100,7 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 ## Configuration
@@ -175,14 +175,14 @@ from openai import AsyncOpenAI
 async def existing_assistant_example():
     # Create OpenAI client directly
     client = AsyncOpenAI()
-    
+
     # Create or get an existing assistant
     assistant = await client.beta.assistants.create(
         model="gpt-4o-mini",
         name="WeatherAssistant",
         instructions="You are a weather forecasting assistant."
     )
-    
+
     try:
         # Use the existing assistant with Agent Framework
         async with ChatAgent(
