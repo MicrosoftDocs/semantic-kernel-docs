@@ -1,0 +1,29 @@
+items:
+- name: Agent Framework
+  href: overview/agent-framework-overview.md
+- name: Quick Start Guide
+  href: tutorials/quick-start.md
+  expanded: true
+- name: Tutorials
+  href: tutorials/TOC.yml
+- name: User Guide
+  items:
+  - name: Overview
+    href: user-guide/overview.md
+  - name: Agents
+    href: user-guide/agents/TOC.yml
+  - name: Model Context Protocol
+    href: user-guide/model-context-protocol/TOC.yml
+  - name: Workflows
+    href: user-guide/workflows/TOC.yml
+- name: Integrations
+  items:
+  - name: AG-UI
+    href: integrations/ag-ui/TOC.yml
+- name: Support
+  href: support/TOC.yml
+- name: Migration Guide
+  href: migration-guide/TOC.yml
+- name: API Reference Guide
+  href: api-docs/TOC.yml
+  expanded: true

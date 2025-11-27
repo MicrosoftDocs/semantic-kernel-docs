@@ -1,0 +1,26 @@
+- name: Create and run an agent
+  href: run-agent.md
+- name: Using images with an agent
+  href: images.md
+- name: Multi-turn conversations with an agent
+  href: multi-turn-conversation.md
+- name: Using function tools with an agent
+  href: function-tools.md
+- name: Using function tools with human in the loop approvals
+  href: function-tools-approvals.md
+- name: Producing Structured Output with agents
+  href: structured-output.md
+- name: Using an agent as a function tool
+  href: agent-as-function-tool.md
+- name: Exposing an agent as an MCP tool
+  href: agent-as-mcp-tool.md
+- name: Enabling observability for agents
+  href: enable-observability.md
+- name: Adding middleware to agents
+  href: middleware.md
+- name: Persisting conversations
+  href: persisted-conversation.md
+- name: Third Party chat history storage
+  href: third-party-chat-history-storage.md
+- name: Adding memory to agents
+  href: memory.md

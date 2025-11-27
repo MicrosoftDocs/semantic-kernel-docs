@@ -1,0 +1,12 @@
+- name: Overview
+  href: overview.md
+- name: Concurrent
+  href: concurrent.md
+- name: Sequential
+  href: sequential.md
+- name: Group Chat
+  href: group-chat.md
+- name: Handoff
+  href: handoff.md
+- name: Magentic
+  href: magentic.md
