@@ -55,7 +55,25 @@ The Oracle Database Vector Store Connector can be used to access and manage data
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
-More information coming soon.
+
+ Feature Area  | Support  |
+|---------------|----------|
+| Collection maps to | An Oracle Database table |
+| Supported key property types | <ul><li>str</li><li>int</li><li>uuid.UUID</li></ul> |
+| Supported data property types | <ul><li>str</li><li>int</li><li>long</li><li>float</li><li>bool</li><li>decimal</li><li>byte</li><li>bytes</li><li>uuid.UUID</li><li>datetime.date</li><li>datetime.datetime</li><li>datetime.timedelta</li><li>list[str]</li><li>dict[str, Any]</li><li>list[dict[str, Any]]</li></ul> |
+| Supported vector property types | <ul><li>list[float]</li><li>numpy array</li></ul> |
+| Supported index types | <ul><li>HNSW</li><li>IVF</li></ul> |
+| Supported distance functions | <ul><li>COSINE_DISTANCE</li><li>EUCLIDEAN_DISTANCE</li><li>EUCLIDEAN_SQUARED_DISTANCE</li><li>DOT_PROD</li><li>HAMMING</li><li>MANHATTAN</li><li>DEFAULT</li></ul> |
+| Supported filter clauses | Python lambdas with comparisons, boolean operators, string methods (startswith, endswith), between, and datetime, translated to SQL with bind variables |
+| IsIndexed supported? | Yes |
+| IsFullTextSearchable supported? | No |
+| StoragePropertyName supported? | Yes |
+| HybridSearch supported? | No |
+
+> [!IMPORTANT]
+> Vector data searches require Oracle Database 23ai or later. All other Oracle connector features are available using Oracle Database 19c or later.
+> Also, python-oracledb 3.3 or later is required.
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
@@ -92,7 +110,7 @@ You can add the vector store to the `IServiceCollection` dependency injection co
 using Microsoft.SemanticKernel;
 using Oracle.VectorData;
 using Microsoft.Extensions.DependencyInjection;
- 
+
 // Using Kernel Builder.
 var builder = Kernel.CreateBuilder();
 builder.Services.AddOracleVectorStore("<connection string>");
@@ -102,7 +120,7 @@ builder.Services.AddOracleVectorStore("<connection string>");
 using Microsoft.AspNetCore.Builder;
 using Oracle.VectorData;
 using Microsoft.Extensions.DependencyInjection;
- 
+
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOracleVectorStore("<connection string>");
@@ -115,15 +133,15 @@ using Microsoft.SemanticKernel;
 using Oracle.VectorData;
 using Microsoft.Extensions.DependencyInjection;
 using Oracle.ManagedDataAccess.Client;
- 
+
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
 builder.Services.AddSingleton<OracleDataSource>(sp =>
 {
-    OracleDataSourceBuilder dataSourceBuilder = new("<connection string>");  
+    OracleDataSourceBuilder dataSourceBuilder = new("<connection string>");
     return dataSourceBuilder.Build();
 });
- 
+
 builder.Services.AddOracleVectorStore();
 ```
 
@@ -132,15 +150,15 @@ using Microsoft.AspNetCore.Builder;
 using Oracle.VectorData;
 using Microsoft.Extensions.DependencyInjection;
 using Oracle.ManagedDataAccess.Client;
- 
+
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<OracleDataSource>(sp =>
 {
-    OracleDataSourceBuilder dataSourceBuilder = new("<connection string>");  
+    OracleDataSourceBuilder dataSourceBuilder = new("<connection string>");
     return dataSourceBuilder.Build();
 });
- 
+
 builder.Services.AddOracleVectorStore();
 ```
 
@@ -149,16 +167,16 @@ You can construct an Oracle Database Vector Store instance directly with a custo
 ```csharp
 using Oracle.VectorData;
 using Oracle.ManagedDataAccess.Client;
- 
+
 OracleDataSourceBuilder dataSourceBuilder = new("<connection string>");
 var dataSource = dataSourceBuilder.Build();
- 
+
 var connection = new OracleVectorStore(dataSource);
 ```
 
 ```csharp
 using Oracle.VectorData;
- 
+
 var connection = new OracleVectorStore("<connection string>");
 ```
 
@@ -167,16 +185,16 @@ It is possible to construct a direct reference to a named collection with a cust
 ```csharp
 using Oracle.VectorData;
 using Oracle.ManagedDataAccess.Client;
- 
+
 OracleDataSourceBuilder dataSourceBuilder = new("<connection string>");
 var dataSource = dataSourceBuilder.Build();
- 
+
 var collection = new OracleCollection<string, Hotel>(dataSource, "skhotels");
 ```
 
 ```csharp
 using Oracle.VectorData;
- 
+
 var collection = new OracleCollection<string, Hotel>("<connection string>", "skhotels");
 ```
 
@@ -186,7 +204,50 @@ var collection = new OracleCollection<string, Hotel>("<connection string>", "skh
 
 ## Getting started
 
-More information coming soon.
+Install python-oracledb:
+
+```cli
+pip install python-oracledb
+```
+
+Install semantic kernel:
+
+```cli
+pip install semantic-kernel
+```
+
+Import the OracleSettings, OracleStore, and OracleCollection classes.
+
+```python
+from semantic_kernel.connectors.oracle import OracleSettings, OracleStore, OracleCollection
+```
+
+The OracleSettings class holds the configuration required to create an asynchronous connection to Oracle Database. The OracleStore class is used to store and retrieve data, while the OracleCollection class manages and searches records within a collection. Use these classes to set up the Oracle Vector Store.
+
+```python
+# Read the environment settings
+oracle_settings = OracleSettings()
+
+# Create a connection pool
+pool = await oracle_settings.create_connection_pool(
+    wallet_location=<wallet_location>,
+    wallet_password=<wallet_password>)
+
+# Create an Oracle Vector Store
+store = OracleStore(
+    connection_pool=pool,
+)
+
+# Get a collection
+collection = await store.get_collection(
+    record_type=HotelSample,
+    collection_name=Hotel,
+    embedding_generator=text_embedding)
+
+# Create a collection if it does not exist
+await collection.ensure_collection_exists()
+```
+
 ::: zone-end
 ::: zone pivot="programming-language-java"
 
@@ -314,18 +375,18 @@ Here is a data model with `StorageName` set code sample and how that will be rep
 
 ```csharp
 using Microsoft.Extensions.VectorData;
- 
+
 public class Hotel
 {
     [VectorStoreKey]
     public long HotelId { get; set; }
- 
+
     [VectorStoreData(StorageName = "hotel_name")]
     public string? HotelName { get; set; }
- 
+
     [VectorStoreData(StorageName = "hotel_description")]
     public string? Description { get; set; }
- 
+
     [VectorStoreVector(Dimensions: 384, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
@@ -345,12 +406,58 @@ CREATE TABLE "MYSCHEMA"."Hotels"
 
 Refer to the following Oracle Database Vector Store connector resources to learn more:
 
-- [Introducing the Oracle Database Vector Store Connector for Semantic Kernel](https://medium.com/oracledevs/announcing-the-oracle-database-vector-store-connector-for-semantic-kernel-adb83e806d4e)  
+- [Introducing the Oracle Database Vector Store Connector for Semantic Kernel](https://medium.com/oracledevs/announcing-the-oracle-database-vector-store-connector-for-semantic-kernel-adb83e806d4e)
 Describes key connector features, classes, and guides the reader through a sample AI vector search application using the connector.
-- [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/VSConnector4SKClasses.html)  
-Contains information on Oracle Database Vector Store connector classes for adding data, retrieving data, and performing vector search in the Oracle vector database.  
-- [Documentation: Oracle Data Provider for .NET](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/intro.html)  
+- [Documentation: Oracle Database Vector Store Connector Classes for Semantic Kernel (.NET) APIs](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/VSConnector4SKClasses.html)
+Contains information on Oracle Database Vector Store connector classes for adding data, retrieving data, and performing vector search in the Oracle vector database.
+- [Documentation: Oracle Data Provider for .NET](https://docs.oracle.com/en/database/oracle/oracle-database/23/odpnt/intro.html)
 Contains information on Oracle Data Provider for .NET (ODP.NET), the ADO.NET data provider for Oracle Database Vector Store connector.
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+## Data Mapping
+
+The Oracle Database Vector Store connector provides a default mapper when mapping from the data model to storage. This mapper does a direct conversion of the list of properties on the data model to the Oracle Database columns to convert to the storage schema.
+
+The Oracle Database Vector Store connector supports data model annotations and record definitions. Using annotations, the information can be provided to the data model for creating indexes and database column mapping. Using [record definitions](../schema-with-record-definition.md), the information can be defined and supplied separately from the data model.
+
+The following table shows the default primary key data type mapping between Oracle Database and Python:
+
+| Python Type               | Oracle SQL Type |
+|---------------------------|-----------------|
+| str                       | VARCHAR(n), Using str(n) in the type option sets the Oracle VARCHAR length to n. If n is not specified, the default length is 4000. |
+| int                       | NUMBER(10)      |
+| byte                      | NUMBER(3)       |
+| long                      | NUMBER(19)      |
+| decimal                   | NUMBER          |
+| float                     | BINARY_FLOAT    |
+| double                    | BINARY_DOUBLE   |
+| bool                      | BOOLEAN         |
+| UUID                      | RAW(16)         |
+| date                      | DATE            |
+| datetime.datetime         | TIMESTAMP       |
+| datetime.timedelta        | INTERVAL DAY TO SECOND |
+| clob                      | CLOB, can be specified explicitly, not a native Python type |
+| blob                      | BLOB, can be specified explicitly, not a native Python type |
+| list[str], dict[str, Any] | JSON            |
+| list[dict[str, Any]]      | JSON            |
+| bytes                     | RAW(2000)       |
+
+Starting with Oracle Database 23ai, database vectors can be mapped to Python data types. Multiple vector columns are supported. The following table shows the default vector property type mapping:
+
+| Python Type | Database Type  |
+|-------------|----------------|
+| uint8       | BINARY         |
+| int8        | INT8           |
+| float       | FLOAT64        |
+| float32     | FLOAT32        |
+| float64     | FLOAT64        |
+| binary      | BINARY         |
+
+## Learn More
+Refer to the following resources to learn more:
+- [Documentation: python-oracledb](https://python-oracledb.readthedocs.io/en/latest/index.html)
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
@@ -394,10 +501,10 @@ The following table shows the default data property type mapping along with the 
 
 | Java Type        | Database Type|
 | ------------- |-------------|
-| String          | VECTOR(%d, FLOAT32) |  
-|Collection`<Float>`|VECTOR(%d, FLOAT32)  |  
-|List`<Float>`      |VECTOR(%d, FLOAT32)  |  
-|Float[]          |VECTOR(%d, FLOAT32)  |  
-|float[]          |VECTOR(%d, FLOAT32)  |  
+| String          | VECTOR(%d, FLOAT32) |
+|Collection`<Float>`|VECTOR(%d, FLOAT32)  |
+|List`<Float>`      |VECTOR(%d, FLOAT32)  |
+|Float[]          |VECTOR(%d, FLOAT32)  |
+|float[]          |VECTOR(%d, FLOAT32)  |
 
 ::: zone-end
