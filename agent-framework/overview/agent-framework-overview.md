@@ -54,13 +54,13 @@ and the same is expected for Agent Framework. Microsoft Agent Framework welcomes
 
 ## Installation
 
-Python:
+:::no-loc text="Python:":::
 
 ```bash
 pip install agent-framework
 ```
 
-.NET:
+:::no-loc text=".NET:":::
 
 ```dotnetcli
 dotnet add package Microsoft.Agents.AI
