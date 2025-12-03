@@ -29,7 +29,7 @@ Agent run and function calling middleware types can be registered on an agent, b
 ```csharp
 var middlewareEnabledAgent = originalAgent
     .AsBuilder()
-        .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: null)
+        .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: CustomAgentRunStreamingMiddleware)
         .Use(CustomFunctionCallingMiddleware)
     .Build();
 ```
@@ -83,6 +83,30 @@ async Task<AgentRunResponse> CustomAgentRunMiddleware(
     var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
     Console.WriteLine(response.Messages.Count);
     return response;
+}
+```
+
+## Agent Run Streaming Middleware
+
+Here is an example of agent run streaming middleware, that can inspect and/or modify the input and output from the agent streaming run.
+
+```csharp
+async IAsyncEnumerable<AgentRunResponseUpdate> CustomAgentRunStreamingMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentThread? thread,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    [EnumeratorCancellation] CancellationToken cancellationToken)
+{
+    Console.WriteLine(messages.Count());
+    List<AgentRunResponseUpdate> updates = [];
+    await foreach (var update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
+    {
+        updates.Add(update);
+        yield return update;
+    }
+
+    Console.WriteLine(updates.ToAgentRunResponse().Messages.Count);
 }
 ```
 
