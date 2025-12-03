@@ -29,10 +29,16 @@ Agent run and function calling middleware types can be registered on an agent, b
 ```csharp
 var middlewareEnabledAgent = originalAgent
     .AsBuilder()
-        .Use(CustomAgentRunMiddleware)
+        .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: null)
         .Use(CustomFunctionCallingMiddleware)
     .Build();
 ```
+
+> [!IMPORTANT]
+> Ideally both `runFunc` and `runStreamingFunc` should be provided, when providing just the non-streaming middleware, the agent will use it for both streaming and non-streaming invocations and this will block the streaming to run in non-streaming mode to suffice the middleware expectations.
+
+> [!NOTE]
+> There's an additional overload `Use(sharedFunc: ...)` that allows you to provide the same middleware for non-streaming and streaming without blocking the streaming, however, the shared middleware won't be able intercept or override the output, make this the best option only for scenarios where you only need to inspect/modify the input before it reaches the agent.
 
 `IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
 
