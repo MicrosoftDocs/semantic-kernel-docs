@@ -124,7 +124,7 @@ internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentSt
         // Broadcast the message to all connected agents. Receiving agents will queue
         // the message but will not start processing until they receive a turn token.
         await context.SendMessageAsync(new ChatMessage(ChatRole.User, message), cancellationToken);
-        
+
         // Broadcast the turn token to kick off the agents.
         await context.SendMessageAsync(new TurnToken(emitEvents: true), cancellationToken);
     }
@@ -249,7 +249,7 @@ You'll create a workflow that:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework Core installed: `pip install agent-framework-core`
+- Agent Framework Core installed: `pip install agent-framework-core --pre`
 
 ## Step 1: Import Required Dependencies
 

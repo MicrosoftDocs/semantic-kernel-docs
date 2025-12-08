@@ -77,14 +77,14 @@ The Microsoft Agent Framework supports creating agents for any inference service
 Add the required Python packages to your project.
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 You may also need to add packages for specific chat client implementations you want to use:
 
 ```bash
 # For Azure AI
-pip install agent-framework-azure-ai
+pip install agent-framework-azure-ai --pre
 
 # For custom implementations
 # Install any required dependencies for your custom client

@@ -202,7 +202,7 @@ You'll create a workflow that:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework-azure-ai`
+- Agent Framework installed: `pip install agent-framework-azure-ai --pre`
 - Azure AI Agent Service configured with proper environment variables
 - Azure CLI authentication: `az login`
 

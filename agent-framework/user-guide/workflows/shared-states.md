@@ -25,7 +25,7 @@ Shared States allow multiple executors within a workflow to access and modify co
 using Microsoft.Agents.Workflows;
 using Microsoft.Agents.Workflows.Reflection;
 
-internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>("FileReadExecutor"), IMessageHandler<string, string>
+internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExecutor")
 {
     /// <summary>
     /// Reads a file and stores its content in a shared state.
@@ -81,7 +81,7 @@ class FileReadExecutor(Executor):
 using Microsoft.Agents.Workflows;
 using Microsoft.Agents.Workflows.Reflection;
 
-internal sealed class WordCountingExecutor() : ReflectingExecutor<WordCountingExecutor>("WordCountingExecutor"), IMessageHandler<string, int>
+internal sealed class WordCountingExecutor() : Executor<string, int>("WordCountingExecutor")
 {
     /// <summary>
     /// Counts the number of words in the file content stored in a shared state.

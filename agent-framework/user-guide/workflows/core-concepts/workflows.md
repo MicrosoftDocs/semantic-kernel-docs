@@ -79,9 +79,9 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
         Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
     }
 
-    if (evt is WorkflowCompletedEvent completed)
+    if (evt is WorkflowOutputEvent outputEvt)
     {
-        Console.WriteLine($"Workflow completed: {completed.Data}");
+        Console.WriteLine($"Workflow completed: {outputEvt.Data}");
     }
 }
 
@@ -89,9 +89,9 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 Run result = await InProcessExecution.RunAsync(workflow, inputMessage);
 foreach (WorkflowEvent evt in result.NewEvents)
 {
-    if (evt is WorkflowCompletedEvent completed)
+    if (evt is WorkflowOutputEvent outputEvt)
     {
-        Console.WriteLine($"Final result: {completed.Data}");
+        Console.WriteLine($"Final result: {outputEvt.Data}");
     }
 }
 ```
@@ -101,16 +101,16 @@ foreach (WorkflowEvent evt in result.NewEvents)
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework import WorkflowCompletedEvent
+from agent_framework import WorkflowOutputEvent
 
 # Streaming execution - get events as they happen
 async for event in workflow.run_stream(input_message):
-    if isinstance(event, WorkflowCompletedEvent):
+    if isinstance(event, WorkflowOutputEvent):
         print(f"Workflow completed: {event.data}")
 
 # Non-streaming execution - wait for completion
 events = await workflow.run(input_message)
-print(f"Final result: {events.get_completed_event()}")
+print(f"Final result: {events.get_outputs()}")
 ```
 
 ::: zone-end

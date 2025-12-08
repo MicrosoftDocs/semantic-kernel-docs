@@ -1,6 +1,6 @@
 ---
-title: Agent Memory
-description: Learn how to use memory with Agent Framework
+title: Agent Chat History and Memory
+description: Learn how to use chat history and memory with Agent Framework
 zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
@@ -9,15 +9,13 @@ ms.date: 09/24/2025
 ms.service: agent-framework
 ---
 
-# Agent Memory
+# Agent Chat History and Memory
 
-Agent memory is a crucial capability that allows agents to maintain context across conversations, remember user preferences, and provide personalized experiences. The Agent Framework provides multiple memory mechanisms to suit different use cases, from simple in-memory storage to persistent databases and specialized memory services.
+Agent chat history and memory are crucial capabilities that allow agents to maintain context across conversations, remember user preferences, and provide personalized experiences. The Agent Framework provides multiple features to suit different use cases, from simple in-memory chat message storage to persistent databases and specialized memory services.
 
 ::: zone pivot="programming-language-csharp"
 
-The Agent Framework supports several types of memory to accommodate different use cases, including managing chat history as part of short term memory and providing extension points for extracting, storing and injecting long term memories into agents.
-
-## Chat History (short term memory)
+## Chat History
 
 Various chat history storage options are supported by the Agent Framework. The available options vary by agent type and the underlying service(s) used to build the agent.
 

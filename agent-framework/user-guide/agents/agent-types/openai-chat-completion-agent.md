@@ -67,7 +67,7 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 ## Configuration

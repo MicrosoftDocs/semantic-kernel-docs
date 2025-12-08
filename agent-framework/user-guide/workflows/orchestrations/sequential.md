@@ -91,9 +91,9 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
     {
         Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
-    else if (evt is WorkflowCompletedEvent completed)
+    else if (evt is WorkflowOutputEvent outputEvt)
     {
-        result = (List<ChatMessage>)completed.Data!;
+        result = (List<ChatMessage>)outputEvt.Data!;
         break;
     }
 }
@@ -120,7 +120,7 @@ English_Translation: Assistant: Spanish detected. Hello, world!
 - **AgentWorkflowBuilder.BuildSequential()**: Creates a pipeline workflow from a collection of agents
 - **ChatClientAgent**: Represents an agent backed by a chat client with specific instructions
 - **StreamingRun**: Provides real-time execution with event streaming capabilities
-- **Event Handling**: Monitor agent progress through `AgentRunUpdateEvent` and completion through `WorkflowCompletedEvent`
+- **Event Handling**: Monitor agent progress through `AgentRunUpdateEvent` and completion through `WorkflowOutputEvent`
 
 ::: zone-end
 
@@ -166,17 +166,17 @@ workflow = SequentialBuilder().participants([writer, reviewer]).build()
 Execute the workflow and collect the final conversation showing each agent's contribution:
 
 ```python
-from agent_framework import ChatMessage, WorkflowCompletedEvent
+from agent_framework import ChatMessage, WorkflowOutputEvent
 
 # 3) Run and print final conversation
-completion: WorkflowCompletedEvent | None = None
+output_evt: WorkflowOutputEvent | None = None
 async for event in workflow.run_stream("Write a tagline for a budget-friendly eBike."):
-    if isinstance(event, WorkflowCompletedEvent):
-        completion = event
+    if isinstance(event, WorkflowOutputEvent):
+        output_evt = event
 
-if completion:
+if output_evt:
     print("===== Final Conversation =====")
-    messages: list[ChatMessage] | Any = completion.data
+    messages: list[ChatMessage] | Any = output_evt.data
     for i, msg in enumerate(messages, start=1):
         name = msg.author_name or ("assistant" if msg.role == Role.ASSISTANT else "user")
         print(f"{'-' * 60}\n{i:02d} [{name}]\n{msg.text}")

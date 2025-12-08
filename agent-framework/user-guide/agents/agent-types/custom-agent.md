@@ -160,7 +160,7 @@ In most cases building your own agent will involve more complex logic and integr
 Add the required Python packages to your project.
 
 ```bash
-pip install agent-framework-core
+pip install agent-framework-core --pre
 ```
 
 ## Creating a Custom Agent
@@ -176,7 +176,7 @@ from typing import Any
 
 class MyCustomAgent(AgentProtocol):
     """A custom agent that implements the AgentProtocol directly."""
-    
+
     @property
     def id(self) -> str:
         """Returns the ID of the agent."""

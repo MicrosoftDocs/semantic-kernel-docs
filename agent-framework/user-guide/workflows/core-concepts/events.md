@@ -52,10 +52,18 @@ RequestInfoEvent        // A request is issued
 WorkflowStartedEvent    # Workflow execution begins
 WorkflowOutputEvent     # Workflow produces an output
 WorkflowErrorEvent      # Workflow encounters an error
+WorkflowWarningEvent    # Workflow encountered a warning
 
 # Executor events
-ExecutorInvokeEvent     # Executor starts processing
-ExecutorCompleteEvent   # Executor finishes processing
+ExecutorInvokedEvent    # Executor starts processing
+ExecutorCompletedEvent  # Executor finishes processing
+ExecutorFailedEvent     # Executor encounters an error
+AgentRunEvent           # An agent run produces output
+AgentRunUpdateEvent     # An agent run produces a streaming update
+
+# Superstep events
+SuperStepStartedEvent   # Superstep begins
+SuperStepCompletedEvent # Superstep completes
 
 # Request events
 RequestInfoEvent        # A request is issued

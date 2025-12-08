@@ -93,7 +93,7 @@ export AZURE_OPENAI_API_KEY="<your-api-key>"  # If not using Azure CLI authentic
 Add the Agent Framework package to your project:
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 ## Getting Started
@@ -124,7 +124,7 @@ async def main():
         instructions="You are good at telling jokes.",
         name="Joker"
     )
-    
+
     result = await agent.run("Tell me a joke about a pirate.")
     print(result.text)
 
@@ -150,7 +150,7 @@ async def main():
         instructions="You are good at telling jokes.",
         name="Joker"
     )
-    
+
     result = await agent.run("Tell me a joke about a pirate.")
     print(result.text)
 
@@ -181,7 +181,7 @@ async def main():
         instructions="You are a helpful weather assistant.",
         tools=get_weather
     )
-    
+
     result = await agent.run("What's the weather like in Seattle?")
     print(result.text)
 
@@ -223,7 +223,7 @@ async def main():
     agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
         instructions="You are a helpful assistant."
     )
-    
+
     print("Agent: ", end="", flush=True)
     async for chunk in agent.run_stream("Tell me a short story about a robot"):
         if chunk.text:

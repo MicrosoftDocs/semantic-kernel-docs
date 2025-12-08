@@ -29,10 +29,16 @@ Agent run and function calling middleware types can be registered on an agent, b
 ```csharp
 var middlewareEnabledAgent = originalAgent
     .AsBuilder()
-        .Use(CustomAgentRunMiddleware)
+        .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: CustomAgentRunStreamingMiddleware)
         .Use(CustomFunctionCallingMiddleware)
     .Build();
 ```
+
+> [!IMPORTANT]
+> Ideally both `runFunc` and `runStreamingFunc` should be provided, when providing just the non-streaming middleware, the agent will use it for both streaming and non-streaming invocations and this will block the streaming to run in non-streaming mode to suffice the middleware expectations.
+
+> [!NOTE]
+> There's an additional overload `Use(sharedFunc: ...)` that allows you to provide the same middleware for non-streaming and streaming without blocking the streaming, however, the shared middleware won't be able intercept or override the output, make this the best option only for scenarios where you only need to inspect/modify the input before it reaches the agent.
 
 `IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
 
@@ -77,6 +83,30 @@ async Task<AgentRunResponse> CustomAgentRunMiddleware(
     var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
     Console.WriteLine(response.Messages.Count);
     return response;
+}
+```
+
+## Agent Run Streaming Middleware
+
+Here is an example of agent run streaming middleware, that can inspect and/or modify the input and output from the agent streaming run.
+
+```csharp
+async IAsyncEnumerable<AgentRunResponseUpdate> CustomAgentRunStreamingMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentThread? thread,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    [EnumeratorCancellation] CancellationToken cancellationToken)
+{
+    Console.WriteLine(messages.Count());
+    List<AgentRunResponseUpdate> updates = [];
+    await foreach (var update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
+    {
+        updates.Add(update);
+        yield return update;
+    }
+
+    Console.WriteLine(updates.ToAgentRunResponse().Messages.Count);
 }
 ```
 

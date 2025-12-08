@@ -17,7 +17,14 @@ The Microsoft Agent Framework provides built-in support for managing multi-turn 
 
 For example, when using a ChatClientAgent based on a foundry agent, the conversation history is persisted in the service. While, when using a ChatClientAgent based on chat completion with gpt-4.1 the conversation history is in-memory and managed by the agent.
 
-The differences between the underlying threading models are abstracted away via the `AgentThread` type.
+The `AgentThread` type is the abstraction that represents a conversation thread with an agent.
+`AIAgent` instances are stateless and the same agent instance can be used with multiple `AgentThread` instances. All state is therefore preserved in the `AgentThread`.
+An `AgentThread` can both represent chat history plus any other state that the agent needs to preserve across multiple interactions.
+The chat history may be stored in the thread itself, or remotely, with the `AgentThread` only containing a reference to the remote chat history.
+The `AgentThread` state may also include memories or references to memories stored remotely.
+
+> [!TIP]
+> To learn more about Chat History and Memory in the Agent Framework, see [Agent Chat History and Memory](./agent-memory.md).
 
 ### AgentThread Creation
 
@@ -41,7 +48,6 @@ response = await agent.RunAsync("Hello, how are you?");
 ```
 
 ::: zone-end
-
 
 ### AgentThread Storage
 
@@ -214,7 +220,6 @@ async def multi_turn_example():
         response3 = await agent.run("What did we talk about?", thread=new_thread)
         print(f"Agent: {response3.text}")  # Should remember previous context
 ```
-
 
 ::: zone-end
 

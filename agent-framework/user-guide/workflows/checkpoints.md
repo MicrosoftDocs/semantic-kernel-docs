@@ -110,9 +110,9 @@ CheckpointInfo savedCheckpoint = checkpoints[5];
 await checkpointedRun.RestoreCheckpointAsync(savedCheckpoint, CancellationToken.None).ConfigureAwait(false);
 await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is WorkflowCompletedEvent workflowCompletedEvt)
+    if (evt is WorkflowOutputEvent workflowOutputEvt)
     {
-        Console.WriteLine($"Workflow completed with result: {workflowCompletedEvt.Data}");
+        Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
     }
 }
 ```
@@ -146,9 +146,9 @@ Checkpointed<StreamingRun> newCheckpointedRun = await InProcessExecution
     .ConfigureAwait(false);
 await foreach (WorkflowEvent evt in newCheckpointedRun.Run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is WorkflowCompletedEvent workflowCompletedEvt)
+    if (evt is WorkflowOutputEvent workflowOutputEvt)
     {
-        Console.WriteLine($"Workflow completed with result: {workflowCompletedEvt.Data}");
+        Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
     }
 }
 ```
@@ -191,7 +191,7 @@ To ensure that the state of an executor is captured in a checkpoint, the executo
 using Microsoft.Agents.Workflows;
 using Microsoft.Agents.Workflows.Reflection;
 
-internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("CustomExecutor"), IMessageHandler<string>
+internal sealed class CustomExecutor() : Executor<string>("CustomExecutor")
 {
     private const string StateKey = "CustomExecutorState";
 
@@ -217,6 +217,34 @@ protected override async ValueTask OnCheckpointRestoredAsync(IWorkflowContext co
 {
     this.messages = await context.ReadStateAsync<List<string>>(StateKey).ConfigureAwait(false);
 }
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+To ensure that the state of an executor is captured in a checkpoint, the executor must override the `on_checkpoint_save` method and save its state to the workflow context.
+
+```python
+class CustomExecutor(Executor):
+    def __init__(self, id: str) -> None:
+        super().__init__(id=id)
+        self._messages: list[str] = []
+
+    @handler
+    async def handle(self, message: str, ctx: WorkflowContext):
+        self._messages.append(message)
+        # Executor logic...
+
+    async def on_checkpoint_save(self) -> dict[str, Any]:
+        return {"messages": self._messages}
+```
+
+Also, to ensure the state is correctly restored when resuming from a checkpoint, the executor must override the `on_checkpoint_restore` method and load its state from the workflow context.
+
+```python
+async def on_checkpoint_restore(self, state: dict[str, Any]) -> None:
+    self._messages = state.get("messages", [])
 ```
 
 ::: zone-end
