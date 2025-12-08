@@ -29,6 +29,8 @@ While agent-as-tools is commonly considered as a multi-agent pattern and it may 
 - How to configure handoff rules between agents
 - How to build interactive workflows with dynamic agent routing
 - How to handle multi-turn conversations with agent switching
+- How to implement tool approval for sensitive operations (HITL)
+- How to use checkpointing for durable handoff workflows
 
 In handoff orchestration, agents can transfer control to one another based on context, allowing for dynamic routing and specialized expertise handling.
 
@@ -279,6 +281,172 @@ while pending_requests:
                 print(f"{msg.author_name}: {msg.text}")
 ```
 
+## Advanced: Tool Approval in Handoff Workflows
+
+Handoff workflows can include agents with tools that require human approval before execution. This is useful for sensitive operations like processing refunds, making purchases, or executing irreversible actions.
+
+### Define Tools with Approval Required
+
+```python
+from typing import Annotated
+from agent_framework import ai_function
+
+@ai_function(approval_mode="always_require")
+def submit_refund(
+    refund_description: Annotated[str, "Description of the refund reason"],
+    amount: Annotated[str, "Refund amount"],
+    order_id: Annotated[str, "Order ID for the refund"],
+) -> str:
+    """Submit a refund request for manual review before processing."""
+    return f"Refund recorded for order {order_id} (amount: {amount}): {refund_description}"
+```
+
+### Create Agents with Approval-Required Tools
+
+```python
+from agent_framework import ChatAgent
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+client = AzureOpenAIChatClient(credential=AzureCliCredential())
+
+triage_agent = client.create_agent(
+    name="triage_agent",
+    instructions=(
+        "You are a customer service triage agent. Listen to customer issues and determine "
+        "if they need refund help or order tracking. Use handoff_to_refund_agent or "
+        "handoff_to_order_agent to transfer them."
+    ),
+)
+
+refund_agent = client.create_agent(
+    name="refund_agent",
+    instructions=(
+        "You are a refund specialist. Help customers with refund requests. "
+        "When the user confirms they want a refund and supplies order details, "
+        "call submit_refund to record the request."
+    ),
+    tools=[submit_refund],
+)
+
+order_agent = client.create_agent(
+    name="order_agent",
+    instructions="You are an order tracking specialist. Help customers track their orders.",
+)
+```
+
+### Handle Both User Input and Tool Approval Requests
+
+```python
+from agent_framework import (
+    FunctionApprovalRequestContent,
+    HandoffBuilder,
+    HandoffUserInputRequest,
+    RequestInfoEvent,
+    WorkflowOutputEvent,
+)
+
+workflow = (
+    HandoffBuilder(
+        name="support_with_approvals",
+        participants=[triage_agent, refund_agent, order_agent],
+    )
+    .set_coordinator("triage_agent")
+    .build()
+)
+
+pending_requests: list[RequestInfoEvent] = []
+
+# Start workflow
+async for event in workflow.run_stream("My order 12345 arrived damaged. I need a refund."):
+    if isinstance(event, RequestInfoEvent):
+        pending_requests.append(event)
+
+# Process pending requests - could be user input OR tool approval
+while pending_requests:
+    responses: dict[str, object] = {}
+    
+    for request in pending_requests:
+        if isinstance(request.data, HandoffUserInputRequest):
+            # Agent needs user input
+            print(f"Agent {request.data.awaiting_agent_id} asks:")
+            for msg in request.data.conversation[-2:]:
+                print(f"  {msg.author_name}: {msg.text}")
+            
+            user_input = input("You: ")
+            responses[request.request_id] = user_input
+            
+        elif isinstance(request.data, FunctionApprovalRequestContent):
+            # Agent wants to call a tool that requires approval
+            func_call = request.data.function_call
+            args = func_call.parse_arguments() or {}
+            
+            print(f"\nTool approval requested: {func_call.name}")
+            print(f"Arguments: {args}")
+            
+            approval = input("Approve? (y/n): ").strip().lower() == "y"
+            responses[request.request_id] = request.data.create_response(approved=approval)
+    
+    # Send all responses and collect new requests
+    pending_requests = []
+    async for event in workflow.send_responses_streaming(responses):
+        if isinstance(event, RequestInfoEvent):
+            pending_requests.append(event)
+        elif isinstance(event, WorkflowOutputEvent):
+            print("\nWorkflow completed!")
+```
+
+### With Checkpointing for Durable Workflows
+
+For long-running workflows where tool approvals may happen hours or days later, use checkpointing:
+
+```python
+from agent_framework import FileCheckpointStorage
+
+storage = FileCheckpointStorage(storage_path="./checkpoints")
+
+workflow = (
+    HandoffBuilder(
+        name="durable_support",
+        participants=[triage_agent, refund_agent, order_agent],
+    )
+    .set_coordinator("triage_agent")
+    .with_checkpointing(storage)
+    .build()
+)
+
+# Initial run - workflow pauses when approval is needed
+pending_requests = []
+async for event in workflow.run_stream("I need a refund for order 12345"):
+    if isinstance(event, RequestInfoEvent):
+        pending_requests.append(event)
+
+# Process can exit here - checkpoint is saved automatically
+
+# Later: Resume from checkpoint and provide approval
+checkpoints = await storage.list_checkpoints()
+latest = sorted(checkpoints, key=lambda c: c.timestamp, reverse=True)[0]
+
+# Step 1: Restore checkpoint to reload pending requests
+restored_requests = []
+async for event in workflow.run_stream(checkpoint_id=latest.checkpoint_id):
+    if isinstance(event, RequestInfoEvent):
+        restored_requests.append(event)
+
+# Step 2: Send responses
+responses = {}
+for req in restored_requests:
+    if isinstance(req.data, FunctionApprovalRequestContent):
+        responses[req.request_id] = req.data.create_response(approved=True)
+    elif isinstance(req.data, HandoffUserInputRequest):
+        responses[req.request_id] = "Yes, please process the refund."
+
+async for event in workflow.send_responses_streaming(responses):
+    if isinstance(event, WorkflowOutputEvent):
+        print("Refund workflow completed!")
+```
+```
+
 ## Sample Interaction
 
 ```plaintext
@@ -331,6 +499,9 @@ Could you provide photos of the damage to expedite the process?
 - **enable_return_to_previous()**: Routes user inputs directly to the current specialist, skipping coordinator re-evaluation
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
+- **Tool Approval**: Use `@ai_function(approval_mode="always_require")` for sensitive operations that need human approval
+- **FunctionApprovalRequestContent**: Emitted when an agent calls a tool requiring approval; use `create_response(approved=...)` to respond
+- **Checkpointing**: Use `with_checkpointing()` for durable workflows that can pause and resume across process restarts
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
 
 ::: zone-end
