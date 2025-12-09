@@ -127,7 +127,7 @@ class WordCountingExecutor(Executor):
 
 ## Next Steps
 
-- [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
-- [Learn how to use workflows as agents](./as-agents.md).
-- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
+- [Learn how to monitor workflows](./observability.md).
+- [Learn about state isolation in workflows](./state-isolation.md).
+- [Learn how to visualize workflows](./visualization.md).
