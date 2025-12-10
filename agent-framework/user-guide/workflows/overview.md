@@ -18,8 +18,17 @@ Microsoft Agent Framework Workflows empowers you to build intelligent automation
 
 While an AI agent and a workflow can involve multiple steps to achieve a goal, they serve different purposes and operate at different levels of abstraction:
 
-- **AI Agent**: An AI agent is typically driven by a large language model (LLM) and it has access to various tools to help it accomplish tasks. The steps an agent takes are dynamic and determined by the LLM based on the context of the conversation and the tools available. <img src="./resources/images/ai-agent.png" alt="AI Agent" width="380" />
-- **Workflow**: A workflow, on the other hand, is a predefined sequence of operations that can include AI agents as components. Workflows are designed to handle complex business processes that may involve multiple agents, human interactions, and integrations with external systems. The flow of a workflow is explicitly defined, allowing for more control over the execution path. <img src="./resources/images/workflows-overview.png" alt="Workflows Overview" width="580" />
+- **AI Agent**: An AI agent is typically driven by a large language model (LLM) and it has access to various tools to help it accomplish tasks. The steps an agent takes are dynamic and determined by the LLM based on the context of the conversation and the tools available.
+
+  <p align="center">
+    <img src="./resources/images/ai-agent.png" alt="AI Agent" width="380" />
+  </p>
+
+- **Workflow**: A workflow, on the other hand, is a predefined sequence of operations that can include AI agents as components. Workflows are designed to handle complex business processes that may involve multiple agents, human interactions, and integrations with external systems. The flow of a workflow is explicitly defined, allowing for more control over the execution path.
+
+  <p align="center">
+    <img src="./resources/images/workflows-overview.png" alt="Workflows Overview" width="580" />
+  </p>
 
 ## Key Features
 
@@ -40,7 +49,7 @@ While an AI agent and a workflow can involve multiple steps to achieve a goal, t
 Begin your journey with Microsoft Agent Framework Workflows by exploring our getting started samples:
 
 - [C# Getting Started Sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows)
-- [Python Getting Started Sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/workflow)
+- [Python Getting Started Sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/workflows)
 
 ## Next Steps
 
