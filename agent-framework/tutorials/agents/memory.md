@@ -246,7 +246,10 @@ The `UserInfoMemory` class below contains the following behavior:
 
 ```python
 
-from agent_framework import ContextProvider, Context, InvokedContext, InvokingContext, ChatAgent, ChatClientProtocol
+from collections.abc import MutableSequence, Sequence
+from typing import Any
+
+from agent_framework import ContextProvider, Context, ChatAgent, ChatClientProtocol, ChatMessage, ChatOptions
 
 
 class UserInfoMemory(ContextProvider):
@@ -255,7 +258,6 @@ class UserInfoMemory(ContextProvider):
 
         If you pass in kwargs, they will be attempted to be used to create a UserInfo object.
         """
-
         self._chat_client = chat_client
         if user_info:
             self.user_info = user_info
@@ -272,22 +274,28 @@ class UserInfoMemory(ContextProvider):
         **kwargs: Any,
     ) -> None:
         """Extract user information from messages after each agent call."""
+        # Ensure request_messages is a list
+        messages_list = [request_messages] if isinstance(request_messages, ChatMessage) else list(request_messages)
+        
         # Check if we need to extract user info from user messages
-        user_messages = [msg for msg in request_messages if hasattr(msg, "role") and msg.role.value == "user"]
+        user_messages = [msg for msg in messages_list if msg.role.value == "user"]
 
         if (self.user_info.name is None or self.user_info.age is None) and user_messages:
             try:
                 # Use the chat client to extract structured information
                 result = await self._chat_client.get_response(
-                    messages=request_messages,
+                    messages=messages_list,
                     chat_options=ChatOptions(
-                        instructions="Extract the user's name and age from the message if present. If not present return nulls.",
+                        instructions=(
+                            "Extract the user's name and age from the message if present. "
+                            "If not present return nulls."
+                        ),
                         response_format=UserInfo,
                     ),
                 )
 
                 # Update user info with extracted data
-                if result.value:
+                if result.value and isinstance(result.value, UserInfo):
                     if self.user_info.name is None and result.value.name:
                         self.user_info.name = result.value.name
                     if self.user_info.age is None and result.value.age:
@@ -336,7 +344,7 @@ from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with AzureCliCredential() as credential:
-        chat_client = AzureAIAgentClient(async_credential=credential)
+        chat_client = AzureAIAgentClient(credential=credential)  # ← Changed from async_credential
 
         # Create the memory provider
         memory_provider = UserInfoMemory(chat_client)
@@ -355,11 +363,12 @@ async def main():
             print(await agent.run("I am 20 years old", thread=thread))
 
             # Access the memory component via the thread's context_providers attribute and inspect the memories
-            user_info_memory = thread.context_provider.providers[0]
-            if user_info_memory:
-                print()
-                print(f"MEMORY - User Name: {user_info_memory.user_info.name}")
-                print(f"MEMORY - User Age: {user_info_memory.user_info.age}")
+            if thread.context_provider:
+                user_info_memory = thread.context_provider.providers[0]
+                if isinstance(user_info_memory, UserInfoMemory):
+                    print()
+                    print(f"MEMORY - User Name: {user_info_memory.user_info.name}")
+                    print(f"MEMORY - User Age: {user_info_memory.user_info.age}")
 
 
 if __name__ == "__main__":
