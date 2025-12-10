@@ -1,0 +1,12 @@
+- name: Overview
+  href: index.md
+- name: Directory Discovery
+  href: directory-discovery.md
+- name: API Reference
+  href: api-reference.md
+- name: Tracing & Observability
+  href: tracing.md
+- name: Security & Deployment
+  href: security.md
+- name: Samples
+  href: samples.md

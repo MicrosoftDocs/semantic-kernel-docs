@@ -1,6 +1,6 @@
 ---
 title: Create a Workflow with Branching Logic
-description: Learn how to create a workflow with branching logic using Agent Framework.
+description: Learn how to create a workflow with branching logic.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial

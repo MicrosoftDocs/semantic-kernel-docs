@@ -18,6 +18,8 @@ items:
     href: user-guide/workflows/TOC.yml
   - name: Hosting
     href: user-guide/hosting/TOC.yml
+  - name: DevUI
+    href: user-guide/devui/TOC.yml
 - name: Integrations
   items:
   - name: AG-UI

@@ -1,6 +1,6 @@
 ---
 title: Create a Simple Sequential Workflow
-description: Learn how to create a simple sequential workflow using Agent Framework.
+description: Learn how to create a simple sequential workflow.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial

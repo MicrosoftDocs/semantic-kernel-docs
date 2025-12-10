@@ -1,6 +1,6 @@
 ---
 title: Checkpointing and Resuming Workflows
-description: Learn how to implement checkpointing and resuming in workflows using Agent Framework.
+description: Learn how to implement checkpointing and resuming in workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -676,3 +676,8 @@ if __name__ == "__main__":
 For the complete working implementation, see the [Checkpoint with Resume sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/checkpoint/checkpoint_with_resume.py).
 
 ::: zone-end
+
+## Next Steps
+
+> [!div class="nextstepaction"]
+> [Learn about using factories in workflow builders](./workflow-builder-with-factories.md)

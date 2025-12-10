@@ -1,6 +1,6 @@
 ---
 title: Create a Simple Concurrent Workflow
-description: Learn how to create a simple concurrent workflow using Agent Framework.
+description: Learn how to create a simple concurrent workflow.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial

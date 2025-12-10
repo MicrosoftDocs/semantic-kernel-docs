@@ -1,6 +1,6 @@
 ---
 title: Agents in Workflows
-description: Learn how to integrate agents into workflows using Agent Framework.
+description: Learn how to integrate agents into workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial

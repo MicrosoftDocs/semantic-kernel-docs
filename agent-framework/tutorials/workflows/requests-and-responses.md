@@ -1,6 +1,6 @@
 ---
 title: Handle Requests and Responses in Workflows
-description: Learn how to handle requests and responses in workflows using Agent Framework.
+description: Learn how to handle requests and responses in workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial

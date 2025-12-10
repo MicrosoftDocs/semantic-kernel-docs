@@ -10,3 +10,5 @@
   href: requests-and-responses.md
 - name: Checkpointing and resuming workflows
   href: checkpointing-and-resuming.md
+- name: Register factories to workflow builder
+  href: workflow-builder-with-factories.md
