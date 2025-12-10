@@ -344,7 +344,7 @@ from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with AzureCliCredential() as credential:
-        chat_client = AzureAIAgentClient(credential=credential)  # ← Changed from async_credential
+        chat_client = AzureAIAgentClient(credential=credential)
 
         # Create the memory provider
         memory_provider = UserInfoMemory(chat_client)
