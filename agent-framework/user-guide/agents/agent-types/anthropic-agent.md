@@ -2,9 +2,9 @@
 title: Anthropic Agents
 description: Learn how to use the Microsoft Agent Framework with Anthropic's Claude models.
 zone_pivot_groups: programming-languages
-author: eavanvalkenburg, rogerbarreto
+author:  rogerbarreto
 ms.topic: tutorial
-ms.author: edvan, rbarreto
+ms.author: rbarreto
 ms.date: 12/12/2025
 ms.service: agent-framework
 ---
