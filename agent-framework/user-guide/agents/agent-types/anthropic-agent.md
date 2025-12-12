@@ -2,10 +2,10 @@
 title: Anthropic Agents
 description: Learn how to use the Microsoft Agent Framework with Anthropic's Claude models.
 zone_pivot_groups: programming-languages
-author: eavanvalkenburg
+author: eavanvalkenburg, rogerbarreto
 ms.topic: tutorial
-ms.author: edvan
-ms.date: 11/05/2025
+ms.author: edvan, rbarreto
+ms.date: 12/12/2025
 ms.service: agent-framework
 ---
 
@@ -15,7 +15,136 @@ The Microsoft Agent Framework supports creating agents that use [Anthropic's Cla
 
 ::: zone pivot="programming-language-csharp"
 
-Coming soon...
+## Getting Started
+
+Add the required NuGet packages to your project.
+
+```powershell
+dotnet add package Microsoft.Agents.AI.Anthropic --prerelease
+```
+
+If you're using Azure Foundry, also add:
+
+```powershell
+dotnet add package Anthropic.Foundry --prerelease
+dotnet add package Azure.Identity
+```
+
+## Configuration
+
+### Environment Variables
+
+Set up the required environment variables for Anthropic authentication:
+
+```powershell
+# Required for Anthropic API access
+$env:ANTHROPIC_API_KEY="your-anthropic-api-key"
+$env:ANTHROPIC_DEPLOYMENT_NAME="claude-haiku-4-5"  # or your preferred model
+```
+
+You can get an API key from the [Anthropic Console](https://console.anthropic.com/).
+
+### For Azure Foundry with API Key
+
+```powershell
+$env:ANTHROPIC_RESOURCE="your-foundry-resource-name"  # Subdomain before .services.ai.azure.com
+$env:ANTHROPIC_API_KEY="your-anthropic-api-key"
+$env:ANTHROPIC_DEPLOYMENT_NAME="claude-haiku-4-5"
+```
+
+### For Azure Foundry with Azure CLI
+
+```powershell
+$env:ANTHROPIC_RESOURCE="your-foundry-resource-name"  # Subdomain before .services.ai.azure.com
+$env:ANTHROPIC_DEPLOYMENT_NAME="claude-haiku-4-5"
+```
+
+> [!NOTE]
+> When using Azure Foundry with Azure CLI, make sure you're logged in with `az login` and have access to the Azure Foundry resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
+
+## Creating an Anthropic Agent
+
+### Basic Agent Creation (Anthropic Public API)
+
+The simplest way to create an Anthropic agent using the public API:
+
+```csharp
+var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+var deploymentName = Environment.GetEnvironmentVariable("ANTHROPIC_DEPLOYMENT_NAME") ?? "claude-haiku-4-5";
+
+AnthropicClient client = new() { APIKey = apiKey };
+
+AIAgent agent = client.CreateAIAgent(
+    model: deploymentName,
+    name: "HelpfulAssistant",
+    instructions: "You are a helpful assistant.");
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent.RunAsync("Hello, how can you help me?"));
+```
+
+### Using Anthropic on Azure Foundry with API Key
+
+After you've set up Anthropic on Azure Foundry, you can use it with API key authentication:
+
+```csharp
+var resource = Environment.GetEnvironmentVariable("ANTHROPIC_RESOURCE");
+var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+var deploymentName = Environment.GetEnvironmentVariable("ANTHROPIC_DEPLOYMENT_NAME") ?? "claude-haiku-4-5";
+
+AnthropicClient client = new AnthropicFoundryClient(
+    new AnthropicFoundryApiKeyCredentials(apiKey, resource));
+
+AIAgent agent = client.CreateAIAgent(
+    model: deploymentName,
+    name: "FoundryAgent",
+    instructions: "You are a helpful assistant using Anthropic on Azure Foundry.");
+
+Console.WriteLine(await agent.RunAsync("How do I use Anthropic on Foundry?"));
+```
+
+### Using Anthropic on Azure Foundry with Azure Credentials (Azure Cli Credential example)
+
+For environments where Azure Credentials are preferred:
+
+```csharp
+var resource = Environment.GetEnvironmentVariable("ANTHROPIC_RESOURCE");
+var deploymentName = Environment.GetEnvironmentVariable("ANTHROPIC_DEPLOYMENT_NAME") ?? "claude-haiku-4-5";
+
+AnthropicClient client = new AnthropicFoundryClient(
+    new AnthropicAzureTokenCredential(new AzureCliCredential(), resource));
+
+AIAgent agent = client.CreateAIAgent(
+    model: deploymentName,
+    name: "FoundryAgent",
+    instructions: "You are a helpful assistant using Anthropic on Azure Foundry.");
+
+Console.WriteLine(await agent.RunAsync("How do I use Anthropic on Foundry?"));
+
+/// <summary>
+/// Provides methods for invoking the Azure hosted Anthropic models using <see cref="TokenCredential"/> types.
+/// </summary>
+public sealed class AnthropicAzureTokenCredential(TokenCredential tokenCredential, string resourceName) : IAnthropicFoundryCredentials
+{
+    /// <inheritdoc/>
+    public string ResourceName { get; } = resourceName;
+
+    /// <inheritdoc/>
+    public void Apply(HttpRequestMessage requestMessage)
+    {
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue(
+                scheme: "bearer",
+                parameter: tokenCredential.GetToken(new TokenRequestContext(scopes: ["https://ai.azure.com/.default"]), CancellationToken.None)
+                    .Token);
+    }
+}
+```
+
+## Using the Agent
+
+The agent is a standard `AIAgent` and supports all standard agent operations.
+
+See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
