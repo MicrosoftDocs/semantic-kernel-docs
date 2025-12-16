@@ -369,7 +369,7 @@ Also see the [relevant Foundry documentation](/azure/ai-foundry/how-to/develop/t
 
 ## Next steps
 
-For more advanced observability scenarios and examples, see the [Agent Observability user guide](../../user-guide/agents/agent-observability.md) and the [observability samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) in the GitHub repository.
+For more advanced observability scenarios and examples, see the [Observability user guide](../../user-guide/observability.md) and the [Observability samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) in the GitHub repository.
 
 > [!div class="nextstepaction"]
 > [Persisting conversations](./persisted-conversation.md)
