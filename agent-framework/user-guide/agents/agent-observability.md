@@ -373,7 +373,7 @@ enable_instrumentation()
 
 ### Aspire Dashboard
 
-For local development without Azure setup, you can use the [Aspire Dashboard](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/standalone) which runs locally via Docker and provides an excellent telemetry viewing experience.
+For local development without Azure setup, you can use the [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/standalone) which runs locally via Docker and provides an excellent telemetry viewing experience.
 
 #### Setting up Aspire Dashboard with Docker
 
@@ -401,7 +401,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 
 Or include them in your `.env` file and run your sample.
 
-Once your sample finishes running, navigate to <http://localhost:18888> in a web browser to see the telemetry data. Follow the [Aspire Dashboard exploration guide](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/explore) to authenticate to the dashboard and start exploring your traces, logs, and metrics.
+Once your sample finishes running, navigate to <http://localhost:18888> in a web browser to see the telemetry data. Follow the [Aspire Dashboard exploration guide](/dotnet/aspire/fundamentals/dashboard/explore) to authenticate to the dashboard and start exploring your traces, logs, and metrics.
 
 ## Spans and metrics
 
