@@ -165,21 +165,28 @@ See a full example of an agent with OpenTelemetry enabled in the [Agent Framewor
 
 ::: zone pivot="programming-language-python"
 
-## Enable Observability (Python)
+## Dependencies
 
+### Included packages
 To enable observability in your Python application, the following OpenTelemetry packages are installed by default:
 
 ```text
-"opentelemetry-api",
-"opentelemetry-sdk",
-"opentelemetry-semantic-conventions-ai",
+[opentelemetry-api](https://pypi.org/project/opentelemetry-api/)
+[opentelemetry-sdk](https://pypi.org/project/opentelemetry-sdk/)
+[opentelemetry-semantic-conventions-ai](https://pypi.org/project/opentelemetry-semantic-conventions-ai/)
 ```
 
-We do not install exporters by default to prevent unnecessary dependencies. Depending on your needs:
-- For Application Insights: install `azure-monitor-opentelemetry`
-- For Aspire Dashboard or other OTLP compatible backends: install `opentelemetry-exporter-otlp-proto-grpc`
-- For HTTP protocol support: install `opentelemetry-exporter-otlp-proto-http`
+### Not included packages
+We do not install exporters by default to prevent unnecessary dependencies and potential issues with auto instrumentation. There is a large variety of exporters available for different backends, so you can choose the ones that best fit your needs.
 
+Some common exporters you may want to install based on your needs:
+- For gRPC protocol support: install `opentelemetry-exporter-otlp-proto-grpc`
+- For HTTP protocol support: install `opentelemetry-exporter-otlp-proto-http`
+- For Azure Application Insights: install `azure-monitor-opentelemetry`
+
+Use the [OpenTelemetry Registry](https://opentelemetry.io/ecosystem/registry/?language=python&component=instrumentation) to find more exporters and instrumentation packages.
+
+## Enable Observability (Python)
 ### Five patterns for configuring observability
 
 We've identified multiple ways to configure observability in your application, depending on your needs:
