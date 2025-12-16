@@ -244,21 +244,21 @@ class DatabaseMessageStore(ChatMessageStoreProtocol):
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
         self._messages: list[ChatMessage] = []
-    
+
     async def add_messages(self, messages: Sequence[ChatMessage]) -> None:
         """Add messages to database."""
         # Implement database insertion logic
         self._messages.extend(messages)
-    
+
     async def list_messages(self) -> list[ChatMessage]:
         """Retrieve messages from database."""
         # Implement database query logic
         return self._messages
-    
+
     async def serialize(self, **kwargs: Any) -> Any:
         """Serialize store state for persistence."""
         return {"connection_string": self.connection_string}
-    
+
     async def update_from_state(self, serialized_store_state: Any, **kwargs: Any) -> None:
         """Update store from serialized state."""
         if serialized_store_state:
@@ -280,7 +280,7 @@ from typing import Any
 class UserPreferencesMemory(ContextProvider):
     def __init__(self):
         self.preferences = {}
-    
+
     async def invoking(self, messages: ChatMessage | MutableSequence[ChatMessage], **kwargs: Any) -> Context:
         """Provide user preferences before each invocation."""
         if self.preferences:
@@ -288,7 +288,7 @@ class UserPreferencesMemory(ContextProvider):
             instructions = f"User preferences: {preferences_text}"
             return Context(instructions=instructions)
         return Context()
-    
+
     async def invoked(
         self,
         request_messages: ChatMessage | Sequence[ChatMessage],
@@ -357,4 +357,4 @@ await agent.run("What's my name?", thread=restored_thread)
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Observability](./agent-observability.md)
+> [Agent Tools](./agent-tools.md)

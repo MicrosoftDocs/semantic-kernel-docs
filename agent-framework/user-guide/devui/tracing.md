@@ -111,7 +111,7 @@ Without an OTLP endpoint, traces are captured locally and displayed only in the 
 
 For more details on Agent Framework observability:
 
-- [Agent Observability](../agents/agent-observability.md) - Comprehensive guide to agent tracing
+- [Observability](../observability.md) - Comprehensive guide to agent tracing
 - [Workflow Observability](../workflows/observability.md) - Workflow-specific tracing
 
 ## Next Steps

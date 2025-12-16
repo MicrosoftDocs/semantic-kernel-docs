@@ -80,7 +80,7 @@ Python agents support passing keyword arguments to customize each run. The speci
 Common options for `ChatAgent` include:
 
 - `max_tokens`: Maximum number of tokens to generate
-- `temperature`: Controls randomness in response generation  
+- `temperature`: Controls randomness in response generation
 - `model`: Override the model for this specific run
 - `tools`: Add additional tools for this run only
 - `response_format`: Specify the response format (e.g., structured output)
@@ -171,7 +171,7 @@ of the result contained in the update, and drill into the detail via the `conten
 async for update in agent.run_stream("What is the weather like in Amsterdam?"):
     print(f"Update text: {update.text}")
     print(f"Content count: {len(update.contents)}")
-    
+
     # Access individual content items
     for content in update.contents:
         if hasattr(content, 'text'):
@@ -256,4 +256,4 @@ for message in response.messages:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Tools](./agent-tools.md)
+> [Multi-Turn Conversations and Threading](./multi-turn-conversation.md)

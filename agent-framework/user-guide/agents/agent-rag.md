@@ -297,4 +297,4 @@ Each connector provides the same `create_search_function` method that can be bri
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Chat History and Memory](./agent-memory.md)
+> [Agent Middleware](./agent-middleware.md)

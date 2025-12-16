@@ -162,7 +162,7 @@ result1 = await agent.run(
 
 # Use different tools for different runs
 result2 = await agent.run(
-    "What's the current time?", 
+    "What's the current time?",
     tools=[get_time]  # Different tool for this query
 )
 
@@ -292,4 +292,4 @@ result = await agent.run(
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Multi-turn Conversation](./multi-turn-conversation.md)
+> [Agent Retrieval Augmented Generation](./agent-rag.md)
