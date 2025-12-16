@@ -365,7 +365,7 @@ async def main():
 
 
 #### Configure azure monitor and optionally enable instrumentation:
-For non-Azure AI projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](/azure/ai-foundry/control-plane/register-custom-agent?view=foundry).
+For non-Azure AI projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](/azure/ai-foundry/control-plane/register-custom-agent).
 
 Then run your agent with the same _OpenTelemetry agent ID_ as registered in Foundry, and configure azure monitor as follows:
 
