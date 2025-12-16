@@ -337,7 +337,7 @@ See the [OpenTelemetry spec](https://opentelemetry.io/docs/specs/otel/configurat
 
 Microsoft Foundry has built-in support for tracing with visualization for your spans.
 
-Make sure you have your Foundry configured with a Azure Monitor instance, for details see [Foundry docs](/azure/ai-foundry/how-to/monitor-applications?view=foundry-classic)
+Make sure you have your Foundry configured with a Azure Monitor instance, see [details](/azure/ai-foundry/how-to/monitor-applications)
 
 #### Install the `azure-monitor-opentelemetry` package:
 
@@ -365,7 +365,7 @@ async def main():
 
 
 #### Configure azure monitor and optionally enable instrumentation:
-For non-Azure AI projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](azure/ai-foundry/control-plane/register-custom-agent?view=foundry).
+For non-Azure AI projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](/azure/ai-foundry/control-plane/register-custom-agent?view=foundry).
 
 Then run your agent with the same _OpenTelemetry agent ID_ as registered in Foundry, and configure azure monitor as follows:
 
