@@ -174,8 +174,8 @@ To enable observability in your Python application, the following OpenTelemetry 
 - [opentelemetry-semantic-conventions-ai](https://pypi.org/project/opentelemetry-semantic-conventions-ai/)
 
 
-### Not included packages
-We do not install exporters by default to prevent unnecessary dependencies and potential issues with auto instrumentation. There is a large variety of exporters available for different backends, so you can choose the ones that best fit your needs.
+### Exporters
+We do *not* install exporters by default to prevent unnecessary dependencies and potential issues with auto instrumentation. There is a large variety of exporters available for different backends, so you can choose the ones that best fit your needs.
 
 Some common exporters you may want to install based on your needs:
 - For gRPC protocol support: install `opentelemetry-exporter-otlp-proto-grpc`
