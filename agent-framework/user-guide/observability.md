@@ -333,11 +333,20 @@ The `configure_otel_providers()` function automatically reads standard OpenTelem
 
 See the [OpenTelemetry spec](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/) for more details.
 
-### Azure AI Foundry setup
+### Microsoft Foundry setup
 
-Azure AI Foundry has built-in support for tracing with visualization for your spans.
+Microsoft Foundry has built-in support for tracing with visualization for your spans.
 
-For Azure AI projects, use the `client.configure_azure_monitor()` method:
+Make sure you have your Foundry configured with a Azure Monitor instance, for details see [Foundry docs](/azure/ai-foundry/how-to/monitor-applications?view=foundry-classic)
+
+#### Install the `azure-monitor-opentelemetry` package:
+
+```bash
+pip install azure-monitor-opentelemetry
+```
+
+#### Configure observability directly from the `AzureAIClient`:
+For Azure AI Foundry projects, you can configure observability directly from the `AzureAIClient`:
 
 ```python
 from agent_framework.azure import AzureAIClient
@@ -354,15 +363,11 @@ async def main():
         await client.configure_azure_monitor(enable_live_metrics=True)
 ```
 
-For non-Azure AI projects with Application Insights:
 
-1) Install the `azure-monitor-opentelemetry` package:
+#### Configure azure monitor and optionally enable instrumentation:
+For non-Azure AI projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](azure/ai-foundry/control-plane/register-custom-agent?view=foundry).
 
-```bash
-pip install azure-monitor-opentelemetry
-```
-
-2) Configure observability:
+Then run your agent with the same _OpenTelemetry agent ID_ as registered in Foundry, and configure azure monitor as follows:
 
 ```python
 from azure.monitor.opentelemetry import configure_azure_monitor
@@ -373,7 +378,17 @@ configure_azure_monitor(
     resource=create_resource(),
     enable_live_metrics=True,
 )
+# optional if you do not have ENABLE_INSTRUMENTATION in env vars
 enable_instrumentation()
+
+# Create your agent with the same OpenTelemetry agent ID as registered in Foundry
+agent = ChatAgent(
+    chat_client=...,
+    name="My Agent",
+    instructions="You are a helpful assistant.",
+    id="<OpenTelemetry agent ID>"
+)
+# use the agent as normal
 ```
 
 ### Aspire Dashboard
