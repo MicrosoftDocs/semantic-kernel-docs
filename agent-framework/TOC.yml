@@ -20,6 +20,8 @@ items:
     href: user-guide/hosting/TOC.yml
   - name: DevUI
     href: user-guide/devui/TOC.yml
+  - name: Observability
+    href: user-guide/observability.md
 - name: Integrations
   items:
   - name: AG-UI

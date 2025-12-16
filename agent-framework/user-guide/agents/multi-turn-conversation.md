@@ -226,4 +226,4 @@ async def multi_turn_example():
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Middleware](./agent-middleware.md)
+> [Agent Memory](./agent-memory.md)

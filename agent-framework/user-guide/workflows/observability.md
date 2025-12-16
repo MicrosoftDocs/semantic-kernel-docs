@@ -14,7 +14,7 @@ ms.service: agent-framework
 Observability provides insights into the internal state and behavior of workflows during execution. This includes logging, metrics, and tracing capabilities that help monitor and debug workflows.
 
 > [!TIP]
-> Observability is a framework-wide feature and is not limited to workflows. For more information, refer to [Agent Observability](../agents/agent-observability.md).
+> Observability is a framework-wide feature and is not limited to workflows. For more information, refer to [Observability](../observability.md).
 
 Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/semconv/gen-ai/), Agent Framework Workflows emits additional spans, logs, and metrics to provide deeper insights into workflow execution. These observability features help developers understand the flow of messages, the performance of executors, and any errors that may occur.
 
@@ -22,13 +22,13 @@ Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/se
 
 ::: zone pivot="programming-language-csharp"
 
-Please refer to [Enabling Observability](../agents/agent-observability.md#enable-observability-c) for instructions on enabling observability in your applications.
+Please refer to [Enabling Observability](../observability.md#enable-observability-c) for instructions on enabling observability in your applications.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-Please refer to [Enabling Observability](../agents/agent-observability.md#enable-observability-python) for instructions on enabling observability in your applications.
+Please refer to [Enabling Observability](../observability.md#enable-observability-python) for instructions on enabling observability in your applications.
 
 ::: zone-end
 
