@@ -363,6 +363,9 @@ async def main():
         await client.configure_azure_monitor(enable_live_metrics=True)
 ```
 
+> [!TIP]
+> The arguments for `client.configure_azure_monitor()` are passed through to the underlying `configure_azure_monitor()` function from the `azure-monitor-opentelemetry` package, see [documentation](/python/api/overview/azure/monitor-opentelemetry-readme#usage) for details, we take care of setting the connection string and resource.
+
 
 #### Configure azure monitor and optionally enable instrumentation:
 For non-Azure AI projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](/azure/ai-foundry/control-plane/register-custom-agent).
