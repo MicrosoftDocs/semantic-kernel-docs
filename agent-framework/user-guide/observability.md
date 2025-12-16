@@ -1,5 +1,5 @@
 ---
-title: Agent Observability
+title: Observability
 description: Learn how to use observability with Agent Framework
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
@@ -470,8 +470,3 @@ This trace shows:
 We have a number of samples in our repository that demonstrate these capabilities, see the [observability samples folder](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) on Github. That includes samples for using zero-code telemetry as well.
 
 ::: zone-end
-
-## Next steps
-
-> [!div class="nextstepaction"]
-> [Background Responses](./agent-background-responses.md)
