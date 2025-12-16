@@ -9,7 +9,7 @@ ms.date: 12/16/2025
 ms.service: agent-framework
 ---
 
-# Agent Observability
+# Observability
 
 Observability is a key aspect of building reliable and maintainable systems. Agent Framework provides built-in support for observability, allowing you to monitor the behavior of your agents.
 
