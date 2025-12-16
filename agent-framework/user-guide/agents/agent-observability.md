@@ -169,12 +169,10 @@ See a full example of an agent with OpenTelemetry enabled in the [Agent Framewor
 
 ### Included packages
 To enable observability in your Python application, the following OpenTelemetry packages are installed by default:
+- [opentelemetry-api](https://pypi.org/project/opentelemetry-api/)
+- [opentelemetry-sdk](https://pypi.org/project/opentelemetry-sdk/)
+- [opentelemetry-semantic-conventions-ai](https://pypi.org/project/opentelemetry-semantic-conventions-ai/)
 
-```text
-[opentelemetry-api](https://pypi.org/project/opentelemetry-api/)
-[opentelemetry-sdk](https://pypi.org/project/opentelemetry-sdk/)
-[opentelemetry-semantic-conventions-ai](https://pypi.org/project/opentelemetry-semantic-conventions-ai/)
-```
 
 ### Not included packages
 We do not install exporters by default to prevent unnecessary dependencies and potential issues with auto instrumentation. There is a large variety of exporters available for different backends, so you can choose the ones that best fit your needs.
