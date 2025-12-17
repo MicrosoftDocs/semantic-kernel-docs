@@ -24,7 +24,7 @@ To add intelligence to your workflows, you can leverage AI agents as part of you
 You can add agents to your workflow via edges:
 
 ```csharp
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 using Microsoft.Agents.AI;
 

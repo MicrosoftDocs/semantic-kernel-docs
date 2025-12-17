@@ -136,8 +136,8 @@ Users can define and emit custom events during workflow execution for enhanced o
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
 internal sealed class CustomEvent(string message) : WorkflowEvent(message) { }
 
