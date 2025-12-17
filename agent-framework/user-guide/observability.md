@@ -13,7 +13,7 @@ ms.service: agent-framework
 
 Observability is a key aspect of building reliable and maintainable systems. Agent Framework provides built-in support for observability, allowing you to monitor the behavior of your agents.
 
-This guide will walk you through the steps to enable observability with Agent Framework to help you understand how your agents are performing and diagnose any issues that may arise.
+This guide will walk you through the steps to enable observability with Agent Framework to help you understand how your agents are performing and diagnose any issues that might arise.
 
 ## OpenTelemetry Integration
 
@@ -47,10 +47,10 @@ var agent = new ChatClientAgent(
 ```
 
 > [!IMPORTANT]
-> When you enable observability for your chat clients and agents, you may see duplicated information, especially when sensitive data is enabled. The chat context (including prompts and responses) that is captured by both the chat client and the agent will be included in both spans. Depending on your needs, you may choose to enable observability only on the chat client or only on the agent to avoid duplication. See the [GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) for more details on the attributes captured for LLM and Agents.
+> When you enable observability for your chat clients and agents, you might see duplicated information, especially when sensitive data is enabled. The chat context (including prompts and responses) that is captured by both the chat client and the agent will be included in both spans. Depending on your needs, you might choose to enable observability only on the chat client or only on the agent to avoid duplication. See the [GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) for more details on the attributes captured for LLM and Agents.
 
 > [!NOTE]
-> Only enable sensitive data in development or testing environments, as it may expose user information in production logs and traces. Sensitive data includes prompts, responses, function call arguments, and results.
+> Only enable sensitive data in development or testing environments, as it might expose user information in production logs and traces. Sensitive data includes prompts, responses, function call arguments, and results.
 
 ### Configuration
 
@@ -79,14 +79,14 @@ var resourceBuilder = ResourceBuilder
 using var tracerProvider = Sdk.CreateTracerProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddSource(SourceName)
-    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry
-    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry
+    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry.
+    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry.
     .AddAzureMonitorTraceExporter(options => options.ConnectionString = applicationInsightsConnectionString)
     .Build();
 ```
 
 > [!TIP]
-> Depending on your backend, you can use different exporters, see the [OpenTelemetry .NET documentation](https://opentelemetry.io/docs/instrumentation/net/exporters/) for more information. For local development, consider using the [Aspire Dashboard](#aspire-dashboard).
+> Depending on your backend, you can use different exporters. For more information, see the [OpenTelemetry .NET documentation](https://opentelemetry.io/docs/instrumentation/net/exporters/). For local development, consider using the [Aspire Dashboard](#aspire-dashboard).
 
 #### Metrics
 
@@ -151,8 +151,8 @@ Consider using the Aspire Dashboard as a quick way to visualize your traces and 
 using var tracerProvider = Sdk.CreateTracerProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddSource(SourceName)
-    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry
-    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry
+    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry.
+    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry.
     .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
     .Build();
 ```
@@ -307,7 +307,7 @@ These are wrappers of the OpenTelemetry API that return a tracer or meter from t
 The following environment variables control Agent Framework observability:
 
 - `ENABLE_INSTRUMENTATION` - Default is `false`, set to `true` to enable OpenTelemetry instrumentation.
-- `ENABLE_SENSITIVE_DATA` - Default is `false`, set to `true` to enable logging of sensitive data (prompts, responses, function call arguments and results). Be careful with this setting as it may expose sensitive data.
+- `ENABLE_SENSITIVE_DATA` - Default is `false`, set to `true` to enable logging of sensitive data (prompts, responses, function call arguments, and results). Be careful with this setting as it might expose sensitive data.
 - `ENABLE_CONSOLE_EXPORTERS` - Default is `false`, set to `true` to enable console output for telemetry.
 - `VS_CODE_EXTENSION_PORT` - Port for AI Toolkit or Azure AI Foundry VS Code extension integration.
 
@@ -396,7 +396,7 @@ agent = ChatAgent(
 
 ### Aspire Dashboard
 
-For local development without Azure setup, you can use the [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/standalone) which runs locally via Docker and provides an excellent telemetry viewing experience.
+For local development without Azure setup, you can use the [Aspire Dashboard](/dotnet/aspire/fundamentals/dashboard/standalone), which runs locally via Docker and provides an excellent telemetry viewing experience.
 
 #### Setting up Aspire Dashboard with Docker
 
@@ -409,7 +409,8 @@ docker run --rm -it -d \
     mcr.microsoft.com/dotnet/aspire-dashboard:latest
 ```
 
-This will start the dashboard with:
+This command will start the dashboard with:
+
 - **Web UI**: Available at <http://localhost:18888>
 - **OTLP endpoint**: Available at `http://localhost:4317` for your applications to send telemetry data
 
@@ -437,11 +438,11 @@ Once everything is setup, you will start seeing spans and metrics being created 
 The metrics that are created are:
 
 - For the chat client and `chat` operations:
-    - `gen_ai.client.operation.duration` (histogram): This metric measures the duration of each operation, in seconds.
-    - `gen_ai.client.token.usage` (histogram): This metric measures the token usage, in number of tokens.
+  - `gen_ai.client.operation.duration` (histogram): This metric measures the duration of each operation, in seconds.
+  - `gen_ai.client.token.usage` (histogram): This metric measures the token usage, in number of tokens.
 
 - For function invocation during the `execute_tool` operations:
-    - `agent_framework.function.invocation.duration` (histogram): This metric measures the duration of each function execution, in seconds.
+  - `agent_framework.function.invocation.duration` (histogram): This metric measures the duration of each function execution, in seconds.
 
 ### Example trace output
 
@@ -485,6 +486,6 @@ This trace shows:
 
 ## Samples
 
-We have a number of samples in our repository that demonstrate these capabilities, see the [observability samples folder](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability) on Github. That includes samples for using zero-code telemetry as well.
+There are a number of samples in the `microsoft/agent-framework` repository that demonstrate these capabilities. For more information, see the [observability samples folder](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/observability). That folder includes samples for using zero-code telemetry as well.
 
 ::: zone-end

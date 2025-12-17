@@ -13,7 +13,7 @@ ms.service: agent-framework
 
 Magentic orchestration is designed based on the [Magentic-One](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/magentic-one.html) system invented by AutoGen. It is a flexible, general-purpose multi-agent pattern designed for complex, open-ended tasks that require dynamic collaboration. In this pattern, a dedicated Magentic manager coordinates a team of specialized agents, selecting which agent should act next based on the evolving context, task progress, and agent capabilities.
 
-The Magentic manager maintains a shared context, tracks progress, and adapts the workflow in real time. This enables the system to break down complex problems, delegate subtasks, and iteratively refine solutions through agent collaboration. The orchestration is especially well-suited for scenarios where the solution path is not known in advance and may require multiple rounds of reasoning, research, and computation.
+The Magentic manager maintains a shared context, tracks progress, and adapts the workflow in real time. This enables the system to break down complex problems, delegate subtasks, and iteratively refine solutions through agent collaboration. The orchestration is especially well-suited for scenarios where the solution path is not known in advance and might require multiple rounds of reasoning, research, and computation.
 
 ![Magentic Orchestration](../resources/images/orchestration-magentic.png)
 
@@ -104,7 +104,7 @@ from agent_framework import (
 task = (
     "I am preparing a report on the energy efficiency of different machine learning model architectures. "
     "Compare the estimated training and inference energy consumption of ResNet-50, BERT-base, and GPT-2 "
-    "on standard datasets (e.g., ImageNet for ResNet, GLUE for BERT, WebText for GPT-2). "
+    "on standard datasets (for example, ImageNet for ResNet, GLUE for BERT, WebText for GPT-2). "
     "Then, estimate the CO2 emissions associated with each, assuming training on an Azure Standard_NC6s_v3 "
     "VM for 24 hours. Provide tables for clarity, and recommend the most energy-efficient model "
     "per task type (image classification, text classification, and text generation)."
@@ -446,7 +446,7 @@ async def main() -> None:
     task = (
         "I am preparing a report on the energy efficiency of different machine learning model architectures. "
         "Compare the estimated training and inference energy consumption of ResNet-50, BERT-base, and GPT-2 "
-        "on standard datasets (e.g., ImageNet for ResNet, GLUE for BERT, WebText for GPT-2). "
+        "on standard datasets (for example, ImageNet for ResNet, GLUE for BERT, WebText for GPT-2). "
         "Then, estimate the CO2 emissions associated with each, assuming training on an Azure Standard_NC6s_v3 "
         "VM for 24 hours. Provide tables for clarity, and recommend the most energy-efficient model "
         "per task type (image classification, text classification, and text generation)."
