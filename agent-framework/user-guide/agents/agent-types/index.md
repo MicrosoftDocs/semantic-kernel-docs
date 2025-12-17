@@ -11,28 +11,28 @@ author: TaoChenOSU
 ms.author: taochen
 ---
 
-# Microsoft Agent Framework Agent Types
+# Microsoft Agent Framework agent types
 
 The Microsoft Agent Framework provides support for several types of agents to accommodate different use cases and requirements.
 
 All agents are derived from a common base class, `AIAgent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
 
 > [!IMPORTANT]
-> If you use the Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization’s Azure compliance and geographic boundaries and any related implications.
+> If you use Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization's Azure compliance and geographic boundaries and any related implications.
 
 ::: zone pivot="programming-language-csharp"
 
 ## Simple agents based on inference services
 
-The agent framework makes it easy to create simple agents based on many different inference services.
-Any inference service that provides an [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation can be used to build these agents. The `Microsoft.Agents.AI.ChatClientAgent` is the agent class used to provide an agent for any `IChatClient` implementation.
+Agent Framework makes it easy to create simple agents based on many different inference services.
+Any inference service that provides a [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation can be used to build these agents. The `Microsoft.Agents.AI.ChatClientAgent` is the agent class used to provide an agent for any <xref:Microsoft.Extensions.AI.IChatClient> implementation.
 
 These agents support a wide range of functionality out of the box:
 
-1. Function calling
-1. Multi-turn conversations with local chat history management or service provided chat history management
-1. Custom service provided tools (e.g. MCP, Code Execution)
-1. Structured output
+1. Function calling.
+1. Multi-turn conversations with local chat history management or service provided chat history management.
+1. Custom service provided tools (for example, MCP, Code Execution).
+1. Structured output.
 
 To create one of these agents, simply construct a `ChatClientAgent` using the `IChatClient` implementation of your choice.
 
@@ -42,11 +42,10 @@ using Microsoft.Agents.AI;
 var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful assistant");
 ```
 
-For many popular services, we also have helpers to make creating these agents even easier.
-See the documentation for each service, for more information:
+To make creating these agents even easier, Agent Framework provides helpers for many popular services. For more information, see the documentation for each service.
 
-|Underlying Inference Service|Description|Service Chat History storage supported|Custom Chat History storage supported|
-|---|---|---|---|
+| Underlying inference service | Description | Service chat history storage support | Custom chat history storage support |
+|------------------------------|-------------|--------------------------------------|-------------------------------------|
 |[Azure AI Foundry Agent](./azure-ai-foundry-agent.md)|An agent that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
 |[Azure AI Foundry Models ChatCompletion](./azure-ai-foundry-models-chat-completion-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via ChatCompletion.|No|Yes|
 |[Azure AI Foundry Models Responses](./azure-ai-foundry-models-responses-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|No|Yes|
@@ -59,22 +58,22 @@ See the documentation for each service, for more information:
 
 ## Complex custom agents
 
-It is also possible to create fully custom agents, that are not just wrappers around an `IChatClient`.
+It's also possible to create fully custom agents that aren't just wrappers around an `IChatClient`.
 The agent framework provides the `AIAgent` base type.
-This base type is the core abstraction for all agents, which when subclassed allows for complete control over the agent's behavior and capabilities.
+This base type is the core abstraction for all agents, which, when subclassed, allows for complete control over the agent's behavior and capabilities.
 
-See the documentation for [Custom Agents](./custom-agent.md) for more information.
+For more information, see the documentation for [Custom Agents](./custom-agent.md).
 
 ## Proxies for remote agents
 
-The agent framework provides out of the box `AIAgent` implementations for common service hosted agent protocols,
+Agent Framework provides out of the box `AIAgent` implementations for common service hosted agent protocols,
 such as A2A. This way you can easily connect to and use remote agents from your application.
 
 See the documentation for each agent type, for more information:
 
-|Protocol|Description|
-|---|---|
-|[A2A](./a2a-agent.md)|An agent that serves as a proxy to a remote agent via the A2A protocol.|
+| Protocol              | Description                                                             |
+|-----------------------|-------------------------------------------------------------------------|
+| [A2A](./a2a-agent.md) | An agent that serves as a proxy to a remote agent via the A2A protocol. |
 
 ## Azure and OpenAI SDK Options Reference
 
@@ -158,14 +157,14 @@ AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
 
 ## Simple agents based on inference services
 
-The agent framework makes it easy to create simple agents based on many different inference services.
+Agent Framework makes it easy to create simple agents based on many different inference services.
 Any inference service that provides a chat client implementation can be used to build these agents.
 
 These agents support a wide range of functionality out of the box:
 
 1. Function calling
 1. Multi-turn conversations with local chat history management or service provided chat history management
-1. Custom service provided tools (e.g. MCP, Code Execution)
+1. Custom service provided tools (for example, MCP, Code Execution)
 1. Structured output
 1. Streaming responses
 

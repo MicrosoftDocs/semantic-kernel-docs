@@ -1,6 +1,6 @@
 ---
 title: OpenAI Responses Agents
-description: Learn how to use the Microsoft Agent Framework with OpenAI Responses service.
+description: Learn how to use Microsoft Agent Framework with OpenAI Responses service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # OpenAI Responses Agents
 
-The Microsoft Agent Framework supports creating agents that use the [OpenAI responses](https://platform.openai.com/docs/api-reference/responses/create) service.
+Microsoft Agent Framework supports creating agents that use the [OpenAI responses](https://platform.openai.com/docs/api-reference/responses/create) service.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,11 +19,11 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI resp
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an OpenAI Responses Agent
+## Create an OpenAI Responses Agent
 
 As a first step you need to create a client to connect to the OpenAI service.
 
@@ -35,8 +35,8 @@ using OpenAI;
 OpenAIClient client = new OpenAIClient("<your_api_key>");
 ```
 
-OpenAI supports multiple services that all provide model calling capabilities.
-We need to pick the Responses service to create a Responses based agent.
+OpenAI supports multiple services that all provide model-calling capabilities.
+Pick the Responses service to create a Responses based agent.
 
 ```csharp
 #pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
@@ -59,7 +59,7 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -93,14 +93,14 @@ OPENAI_RESPONSES_MODEL_ID=gpt-4o
 
 ## Getting Started
 
-Import the required classes from the Agent Framework:
+Import the required classes from Agent Framework:
 
 ```python
 import asyncio
 from agent_framework.openai import OpenAIResponsesClient
 ```
 
-## Creating an OpenAI Responses Agent
+## Create an OpenAI Responses Agent
 
 ### Basic Agent Creation
 
@@ -294,7 +294,7 @@ async def code_interpreter_example():
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 
