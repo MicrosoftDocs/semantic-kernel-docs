@@ -49,7 +49,42 @@
       "feedback_system": "Standard",
       "permissioned-type": "public"
     },
-    "fileMetadata": {},
+    "fileMetadata": {
+      "ms.collection": {
+        "api-docs/**/*.md": "ce-skilling-ai-copilot",
+        "api-docs/**/*.yml": "ce-skilling-ai-copilot",
+        "integrations/**/*.md": "ce-skilling-ai-copilot",
+        "integrations/**/*.yml": "ce-skilling-ai-copilot",
+        "migration-guide/**/*.md": "ce-skilling-ai-copilot",
+        "migration-guide/**/*.yml": "ce-skilling-ai-copilot",
+        "overview/**/*.md": "ce-skilling-ai-copilot",
+        "overview/**/*.yml": "ce-skilling-ai-copilot",
+        "support/**/*.md": "ce-skilling-ai-copilot",
+        "support/**/*.yml": "ce-skilling-ai-copilot",
+        "tutorials/**/*.md": "ce-skilling-ai-copilot",
+        "tutorials/**/*.yml": "ce-skilling-ai-copilot",
+        "user-guide/**/*.md": "ce-skilling-ai-copilot",
+        "user-guide/**/*.yml": "ce-skilling-ai-copilot",
+        "index.yml": "ce-skilling-ai-copilot"        
+      },
+      "ms.update-cycle": {
+        "api-docs/**/*.md": "180-days",
+        "api-docs/**/*.yml": "180-days",
+        "integrations/**/*.md": "180-days",
+        "integrations/**/*.yml": "180-days",
+        "migration-guide/**/*.md": "180-days",
+        "migration-guide/**/*.yml": "180-days",
+        "overview/**/*.md": "180-days",
+        "overview/**/*.yml": "180-days",
+        "support/**/*.md": "180-days",
+        "support/**/*.yml": "180-days",
+        "tutorials/**/*.md": "180-days",
+        "tutorials/**/*.yml": "180-days",
+        "user-guide/**/*.md": "180-days",
+        "user-guide/**/*.yml": "180-days",
+        "index.yml": "180-days"
+      }
+    },
     "template": [],
     "dest": "agent-framework"
   }
