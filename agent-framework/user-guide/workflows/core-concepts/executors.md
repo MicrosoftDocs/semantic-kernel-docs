@@ -24,8 +24,8 @@ Executors inherit from the `Executor<TInput, TOutput>` base class. Each executor
 ### Basic Executor Structure
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
 internal sealed class UppercaseExecutor() : Executor<string, string>("UppercaseExecutor")
 {

@@ -22,8 +22,8 @@ Shared States allow multiple executors within a workflow to access and modify co
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
 internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExecutor")
 {
@@ -78,8 +78,8 @@ class FileReadExecutor(Executor):
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
 internal sealed class WordCountingExecutor() : Executor<string, int>("WordCountingExecutor")
 {

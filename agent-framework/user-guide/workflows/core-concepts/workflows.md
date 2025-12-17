@@ -25,7 +25,7 @@ Workflows are constructed using the `WorkflowBuilder` class, which provides a fl
 
 ```csharp
 // Create executors
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 
 var processor = new DataProcessor();
 var validator = new Validator();
@@ -68,7 +68,7 @@ Workflows support both streaming and non-streaming execution modes:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 
 // Streaming execution - get events as they happen
 StreamingRun run = await InProcessExecution.StreamAsync(workflow, inputMessage);

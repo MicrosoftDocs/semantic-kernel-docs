@@ -33,7 +33,7 @@ The simplest form of connection between two executors:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 
 WorkflowBuilder builder = new(sourceExecutor);
 builder.AddEdge(sourceExecutor, targetExecutor);

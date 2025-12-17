@@ -38,7 +38,7 @@ Remember that workflows are executed in **supersteps**, as documented in the [co
 To enable check pointing, a `CheckpointManager` needs to be provided when creating a workflow run. A checkpoint then can be accessed via a `SuperStepCompletedEvent`.
 
 ```csharp
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 
 // Create a checkpoint manager to manage checkpoints
 var checkpointManager = new CheckpointManager();
@@ -188,8 +188,8 @@ async for event in workflow.run_stream
 To ensure that the state of an executor is captured in a checkpoint, the executor must override the `OnCheckpointingAsync` method and save its state to the workflow context.
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
 internal sealed class CustomExecutor() : Executor<string>("CustomExecutor")
 {
