@@ -803,7 +803,7 @@ import os
 
 # Create service
 embedding_service = VoyageAIMultimodalEmbedding(
-    ai_model_id="voyage-multimodal-3",
+    ai_model_id="voyage-multimodal-3",  # Options: voyage-multimodal-3, voyage-multimodal-3.5
     api_key=os.getenv("VOYAGE_API_KEY"),
 )
 
@@ -1032,7 +1032,7 @@ VoyageAIClient client = new VoyageAIClient(System.getenv("VOYAGE_API_KEY"));
 VoyageAIMultimodalEmbeddingGenerationService service =
     VoyageAIMultimodalEmbeddingGenerationService.builder()
         .withClient(client)
-        .withModelId("voyage-multimodal-3")
+        .withModelId("voyage-multimodal-3")  // Options: voyage-multimodal-3, voyage-multimodal-3.5
         .build();
 
 // Generate embeddings for text (also supports images)
