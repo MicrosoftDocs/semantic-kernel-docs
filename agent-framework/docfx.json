@@ -21,6 +21,23 @@
         ]
       }
     ],
+    "ms.update-cycle": {
+      "agent-framework/api-docs/*.md": "180-days",
+      "agent-framework/api-docs/*.yml": "180-days",
+      "agent-framework/tutorials/**/*.md": "180-days",
+      "agent-framework/tutorials/**/*.yml": "180-days",
+      "agent-framework/migration-guide/**/*.md": "180-days",
+      "agent-framework/migration-guide/**/*.yml": "180-days",
+      "agent-framework/overview/*.md": "180-days",
+      "agent-framework/overview/*.yml": "180-days",
+      "agent-framework/user-guide/**/*.md": "180-days",
+      "agent-framework/user-guide/**/*.yml": "180-days",
+      "agent-framework/integrations/*.md": "180-days",
+      "agent-framework/integrations/*.yml": "180-days",
+      "agent-framework/support/**/*.md": "180-days",
+      "agent-framework/support/**/*.yml": "180-days"
+    },
+  
     "resource": [
       {
         "files": [
