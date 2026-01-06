@@ -235,31 +235,31 @@ def agent_orchestration_workflow(context: df.DurableOrchestrationContext):
     Returns a dictionary with the original response and translations.
     """
     input_text = context.get_input()
-    
+
     # Step 1: Get the main agent's response
     main_agent = app.get_agent(context, "MyDurableAgent")
     main_response = yield main_agent.run(input_text)
-    agent_response = main_response.get("response", "")
-    
+    agent_response = main_response.text
+
     # Step 2: Fan out - get the translation agents and run them concurrently
     french_agent = app.get_agent(context, "FrenchTranslator")
     spanish_agent = app.get_agent(context, "SpanishTranslator")
-    
+
     parallel_tasks = [
         french_agent.run(agent_response),
         spanish_agent.run(agent_response)
     ]
-    
+
     # Step 3: Wait for both translation tasks to complete (fan-in)
-    translations = yield context.task_all(parallel_tasks)
-    
+    translations = yield context.task_all(parallel_tasks) # type: ignore
+
     # Step 4: Combine results into a dictionary
     result = {
         "original": agent_response,
-        "french": translations[0].get("response", ""),
-        "spanish": translations[1].get("response", "")
+        "french": translations[0].text,
+        "spanish": translations[1].text
     }
-    
+
     return result
 ```
 
