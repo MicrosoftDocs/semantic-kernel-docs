@@ -1,6 +1,6 @@
 ---
 title: Azure OpenAI ChatCompletion Agents
-description: Learn how to use the Microsoft Agent Framework with Azure OpenAI ChatCompletion service.
+description: Learn how to use Microsoft Agent Framework with Azure OpenAI ChatCompletion service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Azure OpenAI ChatCompletion Agents
 
-The Microsoft Agent Framework supports creating agents that use the [Azure OpenAI ChatCompletion](/azure/ai-foundry/openai/how-to/chatgpt) service.
+Microsoft Agent Framework supports creating agents that use the [Azure OpenAI ChatCompletion](/azure/ai-foundry/openai/how-to/chatgpt) service.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,13 +19,13 @@ The Microsoft Agent Framework supports creating agents that use the [Azure OpenA
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an Azure OpenAI ChatCompletion Agent
+## Create an Azure OpenAI ChatCompletion Agent
 
 As a first step you need to create a client to connect to the Azure OpenAI service.
 
@@ -42,7 +42,7 @@ AzureOpenAIClient client = new AzureOpenAIClient(
 ```
 
 Azure OpenAI supports multiple services that all provide model calling capabilities.
-We need to pick the ChatCompletion service to create a ChatCompletion based agent.
+Pick the ChatCompletion service to create a ChatCompletion based agent.
 
 ```csharp
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
@@ -111,7 +111,7 @@ await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pir
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -154,7 +154,7 @@ from azure.identity import AzureCliCredential
 credential = AzureCliCredential()
 ```
 
-## Creating an Azure OpenAI ChatCompletion Agent
+## Create an Azure OpenAI ChatCompletion Agent
 
 ### Basic Agent Creation
 
@@ -260,7 +260,7 @@ asyncio.run(main())
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 

@@ -13,7 +13,7 @@ ms.author: taochen
 
 # Microsoft Agent Framework Multi-Turn Conversations and Threading
 
-The Microsoft Agent Framework provides built-in support for managing multi-turn conversations with AI agents. This includes maintaining context across multiple interactions. Different agent types and underlying services that are used to build agents may support different threading types, and the agent framework abstracts these differences away, providing a consistent interface for developers.
+The Microsoft Agent Framework provides built-in support for managing multi-turn conversations with AI agents. This includes maintaining context across multiple interactions. Different agent types and underlying services that are used to build agents might support different threading types, and Agent Framework abstracts these differences away, providing a consistent interface for developers.
 
 For example, when using a ChatClientAgent based on a foundry agent, the conversation history is persisted in the service. While, when using a ChatClientAgent based on chat completion with gpt-4.1 the conversation history is in-memory and managed by the agent.
 
@@ -33,7 +33,7 @@ The `AgentThread` state may also include memories or references to memories stor
 1. By calling `GetNewThread` on the agent.
 1. By running the agent and not providing an `AgentThread`. In this case the agent will create a throwaway `AgentThread` with an underlying thread which will only be used for the duration of the run.
 
-Some underlying threads may be persistently created in an underlying service, where the service requires this, e.g. Foundry Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
+Some underlying threads might be persistently created in an underlying service, where the service requires this, for example, Foundry Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -75,7 +75,7 @@ AgentThread resumedThread = await agent.DeserializeThreadAsync(serializedThread)
 var response = await agent.RunAsync("Hello, how are you?", resumedThread);
 ```
 
-The Microsoft Agent Framework provides built-in support for managing multi-turn conversations with AI agents. This includes maintaining context across multiple interactions. Different agent types and underlying services that are used to build agents may support different threading types, and the Agent Framework abstracts these differences away, providing a consistent interface for developers.
+The Microsoft Agent Framework provides built-in support for managing multi-turn conversations with AI agents. This includes maintaining context across multiple interactions. Different agent types and underlying services that are used to build agents might support different threading types, and Agent Framework abstracts these differences away, providing a consistent interface for developers.
 
 For example, when using a `ChatAgent` based on a Foundry agent, the conversation history is persisted in the service. While when using a `ChatAgent` based on chat completion with gpt-4, the conversation history is in-memory and managed by the agent.
 
@@ -112,7 +112,7 @@ It is therefore considered unsafe to use an `AgentThread` instance that was crea
 1. By calling `get_new_thread()` on the agent.
 1. By running the agent and not providing an `AgentThread`. In this case the agent will create a throwaway `AgentThread` with an underlying thread which will only be used for the duration of the run.
 
-Some underlying threads may be persistently created in an underlying service, where the service requires this, e.g. Azure AI Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
+Some underlying threads might be persistently created in an underlying service, where the service requires this, for example, Azure AI Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
 
 ```python
 # Create a new thread.

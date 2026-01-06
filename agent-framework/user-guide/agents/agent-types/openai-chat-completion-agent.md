@@ -1,6 +1,6 @@
 ---
 title: OpenAI ChatCompletion Agents
-description: Learn how to use the Microsoft Agent Framework with OpenAI ChatCompletion service.
+description: Learn how to use Microsoft Agent Framework with OpenAI ChatCompletion service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # OpenAI ChatCompletion Agents
 
-The Microsoft Agent Framework supports creating agents that use the [OpenAI ChatCompletion](https://platform.openai.com/docs/api-reference/chat/create) service.
+Microsoft Agent Framework supports creating agents that use the [OpenAI ChatCompletion](https://platform.openai.com/docs/api-reference/chat/create) service.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,11 +19,11 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI Chat
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an OpenAI ChatCompletion Agent
+## Create an OpenAI ChatCompletion Agent
 
 As a first step you need to create a client to connect to the OpenAI service.
 
@@ -35,8 +35,8 @@ using OpenAI;
 OpenAIClient client = new OpenAIClient("<your_api_key>");
 ```
 
-OpenAI supports multiple services that all provide model calling capabilities.
-We need to pick the ChatCompletion service to create a ChatCompletion based agent.
+OpenAI supports multiple services that all provide model-calling capabilities.
+Pick the ChatCompletion service to create a ChatCompletion based agent.
 
 ```csharp
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
@@ -57,7 +57,7 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -91,7 +91,7 @@ OPENAI_CHAT_MODEL_ID=gpt-4o-mini
 
 ## Getting Started
 
-Import the required classes from the Agent Framework:
+Import the required classes from Agent Framework:
 
 ```python
 import asyncio
@@ -99,7 +99,7 @@ from agent_framework import ChatAgent
 from agent_framework.openai import OpenAIChatClient
 ```
 
-## Creating an OpenAI ChatCompletion Agent
+## Create an OpenAI ChatCompletion Agent
 
 ### Basic Agent Creation
 
@@ -184,7 +184,7 @@ async def streaming_example():
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 

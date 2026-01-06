@@ -1,6 +1,6 @@
 ---
 title: OpenAI Assistants Agents
-description: Learn how to use the Microsoft Agent Framework with OpenAI Assistants service.
+description: Learn how to use Microsoft Agent Framework with OpenAI Assistants service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # OpenAI Assistants Agents
 
-The Microsoft Agent Framework supports creating agents that use the [OpenAI Assistants](https://platform.openai.com/docs/api-reference/assistants/createAssistant) service.
+Microsoft Agent Framework supports creating agents that use the [OpenAI Assistants](https://platform.openai.com/docs/api-reference/assistants/createAssistant) service.
 
 > [!WARNING]
 > The OpenAI Assistants API is deprecated and will be shut down. For more information see the [OpenAI documentation](https://platform.openai.com/docs/assistants/migration).
@@ -22,11 +22,11 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI Assi
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an OpenAI Assistants Agent
+## Create an OpenAI Assistants Agent
 
 As a first step you need to create a client to connect to the OpenAI service.
 
@@ -38,8 +38,8 @@ using OpenAI;
 OpenAIClient client = new OpenAIClient("<your_api_key>");
 ```
 
-OpenAI supports multiple services that all provide model calling capabilities.
-We will use the Assistants client to create an Assistants based agent.
+OpenAI supports multiple services that all provide model-calling capabilities.
+This example uses the Assistants client to create an Assistants-based agent.
 
 ```csharp
 #pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
@@ -67,7 +67,7 @@ AIAgent agent1 = await assistantClient.GetAIAgentAsync(createResult.Value.Id);
 Console.WriteLine(await agent1.RunAsync("Tell me a joke about a pirate."));
 ```
 
-### Using the Agent Framework helpers
+### Using Agent Framework helpers
 
 You can also create and return an `AIAgent` in one step:
 
@@ -90,7 +90,7 @@ AIAgent agent3 = await assistantClient.GetAIAgentAsync("<agent-id>");
 
 The agent is a standard `AIAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -124,7 +124,7 @@ OPENAI_CHAT_MODEL_ID=gpt-4o-mini
 
 ## Getting Started
 
-Import the required classes from the Agent Framework:
+Import the required classes from Agent Framework:
 
 ```python
 import asyncio
@@ -132,7 +132,7 @@ from agent_framework import ChatAgent
 from agent_framework.openai import OpenAIAssistantsClient
 ```
 
-## Creating an OpenAI Assistants Agent
+## Create an OpenAI Assistants Agent
 
 ### Basic Agent Creation
 
@@ -262,7 +262,7 @@ async def streaming_example():
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 
