@@ -17,10 +17,10 @@ The Microsoft Agent Framework provides built-in support for managing multi-turn 
 
 For example, when using a ChatClientAgent based on a foundry agent, the conversation history is persisted in the service. While, when using a ChatClientAgent based on chat completion with gpt-4.1 the conversation history is in-memory and managed by the agent.
 
-The `AgentThread` type is the abstraction that represents a conversation thread with an agent.
+The `AgentThread` type is the abstraction that represents conversation history and other state of an agent.
 `AIAgent` instances are stateless and the same agent instance can be used with multiple `AgentThread` instances. All state is therefore preserved in the `AgentThread`.
 An `AgentThread` can both represent chat history plus any other state that the agent needs to preserve across multiple interactions.
-The chat history may be stored in the thread itself, or remotely, with the `AgentThread` only containing a reference to the remote chat history.
+The conversation history may be stored in the `AgentThread` object itself, or remotely, with the `AgentThread` only containing a reference to the remote conversation history.
 The `AgentThread` state may also include memories or references to memories stored remotely.
 
 > [!TIP]
@@ -31,9 +31,9 @@ The `AgentThread` state may also include memories or references to memories stor
 `AgentThread` instances can be created in two ways:
 
 1. By calling `GetNewThread` on the agent.
-1. By running the agent and not providing an `AgentThread`. In this case the agent will create a throwaway `AgentThread` with an underlying thread which will only be used for the duration of the run.
+1. By running the agent and not providing an `AgentThread`. In this case the agent will create a throwaway `AgentThread` which will only be used for the duration of the run.
 
-Some underlying threads might be persistently created in an underlying service, where the service requires this, for example, Foundry Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
+Some underlying service stored conversations/threads/responses might be persistently created in an underlying service, where the service requires this, for example, Foundry Agents or OpenAI Responses. Any cleanup or deletion of these is the responsibility of the user.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -54,7 +54,7 @@ response = await agent.RunAsync("Hello, how are you?");
 `AgentThread` instances can be serialized and stored for later use. This allows for the preservation of conversation context across different sessions or service calls.
 
 For cases where the conversation history is stored in a service, the serialized `AgentThread` will contain an
-id of the thread in the service.
+id that points to the conversation history in the service.
 For cases where the conversation history is managed in-memory, the serialized `AgentThread` will contain the messages
 themselves.
 
@@ -85,21 +85,20 @@ The differences between the underlying threading models are abstracted away via 
 
 `AIAgent` instances are stateless and the same agent instance can be used with multiple `AgentThread` instances.
 
-Not all agents support all thread types though. For example if you are using a `ChatClientAgent` with the responses service, `AgentThread` instances created by this agent, will not work with a `ChatClientAgent` using the Foundry Agent service.
-This is because these services both support saving the conversation history in the service, and the `AgentThread`
-only has a reference to this service managed thread.
+Not all agents support all `AgentThread` types though. For example if you are using a `ChatClientAgent` with the responses service, `AgentThread` instances created by this agent, will not work with a `ChatClientAgent` using the Foundry Agent service.
+This is because these services both support saving the conversation history in the service, and while the two `AgentThread` instances will have references to each service stored conversation, the id from the responses service cannot be used with the Foundry Agent service, and vice versa.
 
 It is therefore considered unsafe to use an `AgentThread` instance that was created by one agent with a different agent instance, unless you are aware of the underlying threading model and its implications.
 
-## Threading support by service / protocol
+## Conversation history support by service / protocol
 
-| Service | Threading Support |
+| Service | Conversation History Support |
 |---------|--------------------|
-| Foundry Agents | Service managed persistent threads |
-| OpenAI Responses | Service managed persistent threads OR in-memory threads |
-| OpenAI ChatCompletion | In-memory threads |
-| OpenAI Assistants | Service managed threads |
-| A2A | Service managed threads |
+| Foundry Agents | Service stored persistent conversation history |
+| OpenAI Responses | Service stored response chains OR in-memory conversation history |
+| OpenAI ChatCompletion | In-memory conversation history |
+| OpenAI Assistants | Service stored persistent conversation history |
+| A2A | Service stored persistent conversation history |
 
 ::: zone-end
 
@@ -112,7 +111,7 @@ It is therefore considered unsafe to use an `AgentThread` instance that was crea
 1. By calling `get_new_thread()` on the agent.
 1. By running the agent and not providing an `AgentThread`. In this case the agent will create a throwaway `AgentThread` with an underlying thread which will only be used for the duration of the run.
 
-Some underlying threads might be persistently created in an underlying service, where the service requires this, for example, Azure AI Agents or OpenAI Responses. Any cleanup or deletion of these threads is the responsibility of the user.
+Some underlying service stored conversations/threads/responses might be persistently created in an underlying service, where the service requires this, for example, Azure AI Agents or OpenAI Responses. Any cleanup or deletion of these is the responsibility of the user.
 
 ```python
 # Create a new thread.
@@ -129,7 +128,7 @@ response = await agent.run("Hello, how are you?")
 `AgentThread` instances can be serialized and stored for later use. This allows for the preservation of conversation context across different sessions or service calls.
 
 For cases where the conversation history is stored in a service, the serialized `AgentThread` will contain an
-id of the thread in the service.
+id that points to the conversation history in the service.
 For cases where the conversation history is managed in-memory, the serialized `AgentThread` will contain the messages
 themselves.
 
@@ -180,7 +179,8 @@ async with AzureCliCredential() as credential:
 
 `Agents` are stateless and the same agent instance can be used with multiple `AgentThread` instances.
 
-Not all agents support all thread types though. For example if you are using a `ChatAgent` with the OpenAI Responses service and `store=True`, `AgentThread` instances used by this agent, will not work with a `ChatAgent` using the Azure AI Agent service, because the thread_ids are not compatible.
+Not all agents support all `AgentThread` types though. For example if you are using a `ChatAgent` with the OpenAI Responses service and `store=True`, `AgentThread` instances used by this agent, will not work with a `ChatAgent` using the Azure AI Agent service.
+This is because these services both support saving the conversation history in the service, and while the two `AgentThread` instances will have references to each service stored conversation, the id from the OpenAI Responses service cannot be used with the Foundry Agent service, and vice versa.
 
 It is therefore considered unsafe to use an `AgentThread` instance that was created by one agent with a different agent instance, unless you are aware of the underlying threading model and its implications.
 

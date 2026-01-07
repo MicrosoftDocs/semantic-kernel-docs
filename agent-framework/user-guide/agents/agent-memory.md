@@ -67,7 +67,7 @@ AIAgent agent = new OpenAIClient("<your_api_key>")
     .CreateAIAgent(new ChatClientAgentOptions
     {
         Name = JokerName,
-        Instructions = JokerInstructions,
+        ChatOptions = new() { Instructions = JokerInstructions },
         ChatMessageStoreFactory = ctx => new InMemoryChatMessageStore(
             new MessageCountingChatReducer(2),
             ctx.SerializedState,
@@ -114,19 +114,19 @@ Here is an example showing how to pass the custom implementation of `ChatMessage
 AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
     new AzureCliCredential())
-     .GetChatClient(deploymentName)
-     .CreateAIAgent(new ChatClientAgentOptions
-     {
-         Name = JokerName,
-         Instructions = JokerInstructions,
-         ChatMessageStoreFactory = ctx =>
-         {
-             // Create a new chat message store for this agent that stores the messages in a custom store.
-             // Each thread must get its own copy of the CustomMessageStore, since the store
-             // also contains the ID that the thread is stored under.
-             return new CustomMessageStore(vectorStore, ctx.SerializedState, ctx.JsonSerializerOptions);
-         }
-     });
+    .GetChatClient(deploymentName)
+    .CreateAIAgent(new ChatClientAgentOptions
+    {
+        Name = JokerName,
+        ChatOptions = new() { Instructions = JokerInstructions },
+        ChatMessageStoreFactory = ctx =>
+        {
+            // Create a new chat message store for this agent that stores the messages in a custom store.
+            // Each thread must get its own copy of the CustomMessageStore, since the store
+            // also contains the ID that the thread is stored under.
+            return new CustomMessageStore(vectorStore, ctx.SerializedState, ctx.JsonSerializerOptions);
+        }
+    });
 ```
 
 > [!TIP]
