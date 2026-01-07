@@ -233,6 +233,34 @@ async def main():
 asyncio.run(main())
 ```
 
+### Using Threads for Context Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+import asyncio
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+async def main():
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+        instructions="You are a helpful programming assistant."
+    )
+    
+    # Create a new thread for conversation context
+    thread = agent.get_new_thread()
+    
+    # First interaction
+    result1 = await agent.run("I'm working on a Python web application.", thread=thread, store=True)
+    print(f"Assistant: {result1.text}")
+    
+    # Second interaction - context is preserved
+    result2 = await agent.run("What framework should I use?", thread=thread, store=True)
+    print(f"Assistant: {result2.text}")
+
+asyncio.run(main())
+```
+
 ### Streaming Responses
 
 Get responses as they are generated using streaming:
