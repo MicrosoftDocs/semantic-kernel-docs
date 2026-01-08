@@ -1,6 +1,6 @@
 ---
 title: OpenAI Responses Agents
-description: Learn how to use the Microsoft Agent Framework with OpenAI Responses service.
+description: Learn how to use Microsoft Agent Framework with OpenAI Responses service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # OpenAI Responses Agents
 
-The Microsoft Agent Framework supports creating agents that use the [OpenAI responses](https://platform.openai.com/docs/api-reference/responses/create) service.
+Microsoft Agent Framework supports creating agents that use the [OpenAI responses](https://platform.openai.com/docs/api-reference/responses/create) service.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,11 +19,11 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI resp
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an OpenAI Responses Agent
+## Create an OpenAI Responses Agent
 
 As a first step you need to create a client to connect to the OpenAI service.
 
@@ -35,8 +35,8 @@ using OpenAI;
 OpenAIClient client = new OpenAIClient("<your_api_key>");
 ```
 
-OpenAI supports multiple services that all provide model calling capabilities.
-We need to pick the Responses service to create a Responses based agent.
+OpenAI supports multiple services that all provide model-calling capabilities.
+Pick the Responses service to create a Responses based agent.
 
 ```csharp
 #pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
@@ -59,7 +59,7 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -93,14 +93,15 @@ OPENAI_RESPONSES_MODEL_ID=gpt-4o
 
 ## Getting Started
 
-Import the required classes from the Agent Framework:
+Import the required classes from Agent Framework:
 
 ```python
 import asyncio
+from agent_framework import ChatAgent
 from agent_framework.openai import OpenAIResponsesClient
 ```
 
-## Creating an OpenAI Responses Agent
+## Create an OpenAI Responses Agent
 
 ### Basic Agent Creation
 
@@ -147,7 +148,7 @@ async def streaming_example():
         instructions="You are a creative storyteller.",
     )
 
-    print("Assistant: ", end="", flush=True)
+    print("Agent: ", end="", flush=True)
     async for chunk in agent.run_stream("Tell me a short story about AI."):
         if chunk.text:
             print(chunk.text, end="", flush=True)
@@ -172,7 +173,7 @@ async def reasoning_example():
         reasoning={"effort": "high", "summary": "detailed"},
     )
 
-    print("Assistant: ", end="", flush=True)
+    print("Agent: ", end="", flush=True)
     async for chunk in agent.run_stream("Solve: 3x + 11 = 14"):
         if chunk.contents:
             for content in chunk.contents:
@@ -248,6 +249,214 @@ async def tools_example():
     print(result.text)
 ```
 
+### Code Interpreter
+
+Enable your agent to execute Python code:
+
+```python
+from agent_framework import HostedCodeInterpreterTool
+
+async def code_interpreter_example():
+    agent = OpenAIResponsesClient().create_agent(
+        instructions="You are a helpful assistant that can write and execute Python code.",
+        tools=HostedCodeInterpreterTool(),
+    )
+
+    result = await agent.run("Calculate the factorial of 100 using Python code.")
+    print(result.text)
+```
+
+#### Code Interpreter with File Upload
+
+For data analysis tasks, you can upload files and analyze them with code:
+
+```python
+import os
+import tempfile
+from agent_framework import HostedCodeInterpreterTool
+from openai import AsyncOpenAI
+
+async def code_interpreter_with_files_example():
+    print("=== OpenAI Code Interpreter with File Upload ===")
+
+    # Create the OpenAI client for file operations
+    openai_client = AsyncOpenAI()
+    
+    # Create sample CSV data
+    csv_data = """name,department,salary,years_experience
+Alice Johnson,Engineering,95000,5
+Bob Smith,Sales,75000,3
+Carol Williams,Engineering,105000,8
+David Brown,Marketing,68000,2
+Emma Davis,Sales,82000,4
+Frank Wilson,Engineering,88000,6
+"""
+    
+    # Create temporary CSV file
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as temp_file:
+        temp_file.write(csv_data)
+        temp_file_path = temp_file.name
+
+    # Upload file to OpenAI
+    print("Uploading file to OpenAI...")
+    with open(temp_file_path, "rb") as file:
+        uploaded_file = await openai_client.files.create(
+            file=file,
+            purpose="assistants",  # Required for code interpreter
+        )
+
+    print(f"File uploaded with ID: {uploaded_file.id}")
+
+    # Create agent using OpenAI Responses client
+    agent = ChatAgent(
+        chat_client=OpenAIResponsesClient(),
+        instructions="You are a helpful assistant that can analyze data files using Python code.",
+        tools=HostedCodeInterpreterTool(inputs=[{"file_id": uploaded_file.id}]),
+    )
+
+    # Test the code interpreter with the uploaded file
+    query = "Analyze the employee data in the uploaded CSV file. Calculate average salary by department."
+    print(f"User: {query}")
+    result = await agent.run(query)
+    print(f"Agent: {result.text}")
+
+    # Clean up: delete the uploaded file
+    await openai_client.files.delete(uploaded_file.id)
+    print(f"Cleaned up uploaded file: {uploaded_file.id}")
+
+    # Clean up temporary local file
+    os.unlink(temp_file_path)
+    print(f"Cleaned up temporary file: {temp_file_path}")
+```
+
+### Thread Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+async def thread_example():
+    agent = OpenAIResponsesClient().create_agent(
+        name="Agent",
+        instructions="You are a helpful assistant.",
+    )
+
+    # Create a persistent thread for conversation context
+    thread = agent.get_new_thread()
+
+    # First interaction
+    first_query = "My name is Alice"
+    print(f"User: {first_query}")
+    first_result = await agent.run(first_query, thread=thread)
+    print(f"Agent: {first_result.text}")
+
+    # Second interaction - agent remembers the context
+    second_query = "What's my name?"
+    print(f"User: {second_query}")
+    second_result = await agent.run(second_query, thread=thread)
+    print(f"Agent: {second_result.text}")  # Should remember "Alice"
+```
+
+### File Search
+
+Enable your agent to search through uploaded documents and files:
+
+```python
+from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
+
+async def file_search_example():
+    client = OpenAIResponsesClient()
+    
+    # Create a file with sample content
+    file = await client.client.files.create(
+        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), 
+        purpose="user_data"
+    )
+    
+    # Create a vector store for document storage
+    vector_store = await client.client.vector_stores.create(
+        name="knowledge_base",
+        expires_after={"anchor": "last_active_at", "days": 1},
+    )
+    
+    # Add file to vector store and wait for processing
+    result = await client.client.vector_stores.files.create_and_poll(
+        vector_store_id=vector_store.id, 
+        file_id=file.id
+    )
+    
+    # Check if processing was successful
+    if result.last_error is not None:
+        raise Exception(f"Vector store file processing failed with status: {result.last_error.message}")
+
+    # Create vector store content reference
+    vector_store_content = HostedVectorStoreContent(vector_store_id=vector_store.id)
+
+    # Create agent with file search capability
+    agent = ChatAgent(
+        chat_client=client,
+        instructions="You are a helpful assistant that can search through files to find information.",
+        tools=[HostedFileSearchTool(inputs=vector_store_content)],
+    )
+
+    # Test the file search
+    message = "What is the weather today? Do a file search to find the answer."
+    print(f"User: {message}")
+    
+    response = await agent.run(message)
+    print(f"Agent: {response}")
+
+    # Cleanup
+    await client.client.vector_stores.delete(vector_store.id)
+    await client.client.files.delete(file.id)
+```
+
+### Web Search
+
+Enable real-time web search capabilities:
+
+```python
+from agent_framework import HostedWebSearchTool
+
+async def web_search_example():
+    agent = OpenAIResponsesClient().create_agent(
+        name="SearchBot",
+        instructions="You are a helpful assistant that can search the web for current information.",
+        tools=HostedWebSearchTool(),
+    )
+
+    result = await agent.run("What are the latest developments in artificial intelligence?")
+    print(result.text)
+```
+
+### Image Analysis
+
+Analyze and understand images with multi-modal capabilities:
+
+```python
+from agent_framework import ChatMessage, TextContent, UriContent
+
+async def image_analysis_example():
+    agent = OpenAIResponsesClient().create_agent(
+        name="VisionAgent",
+        instructions="You are a helpful agent that can analyze images.",
+    )
+
+    # Create message with both text and image content
+    message = ChatMessage(
+        role="user",
+        contents=[
+            TextContent(text="What do you see in this image?"),
+            UriContent(
+                uri="your-image-uri",
+                media_type="image/jpeg",
+            ),
+        ],
+    )
+
+    result = await agent.run(message)
+    print(result.text)
+```
+
 ### Image Generation
 
 Generate images using the Responses API:
@@ -273,20 +482,47 @@ async def image_generation_example():
             print(f"Image generated: {content.uri}")
 ```
 
-### Code Interpreter
+### Model Context Protocol (MCP) Tools
 
-Enable your assistant to execute Python code:
+#### Local MCP Tools
+
+Connect to local MCP servers for extended capabilities:
 
 ```python
-from agent_framework import HostedCodeInterpreterTool
+from agent_framework import MCPStreamableHTTPTool
 
-async def code_interpreter_example():
+async def local_mcp_example():
     agent = OpenAIResponsesClient().create_agent(
-        instructions="You are a helpful assistant that can write and execute Python code.",
-        tools=HostedCodeInterpreterTool(),
+        name="DocsAgent",
+        instructions="You are a helpful assistant that can help with Microsoft documentation.",
+        tools=MCPStreamableHTTPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+        ),
     )
 
-    result = await agent.run("Calculate the factorial of 100 using Python code.")
+    result = await agent.run("How do I create an Azure storage account using az cli?")
+    print(result.text)
+```
+
+#### Hosted MCP Tools
+
+Use hosted MCP tools for extended capabilities:
+
+```python
+from agent_framework import HostedMCPTool
+
+async def hosted_mcp_example():
+    agent = OpenAIResponsesClient().create_agent(
+        name="DocsBot",
+        instructions="You are a helpful assistant with access to various tools.",
+        tools=HostedMCPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+        ),
+    )
+
+    result = await agent.run("How do I create an Azure storage account?")
     print(result.text)
 ```
 
@@ -294,7 +530,7 @@ async def code_interpreter_example():
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 

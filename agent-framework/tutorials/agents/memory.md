@@ -17,7 +17,6 @@ This tutorial shows how to add memory to an agent by implementing an `AIContextP
 > [!IMPORTANT]
 > Not all agent types support `AIContextProvider`. This step uses a `ChatClientAgent`, which does support `AIContextProvider`.
 
-
 ## Prerequisites
 
 For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
@@ -161,7 +160,7 @@ ChatClient chatClient = new AzureOpenAIClient(
 
 AIAgent agent = chatClient.CreateAIAgent(new ChatClientAgentOptions()
 {
-    Instructions = "You are a friendly assistant. Always address the user by their name.",
+    ChatOptions = new() { Instructions = "You are a friendly assistant. Always address the user by their name." },
     AIContextProviderFactory = ctx => new UserInfoMemory(
         chatClient.AsIChatClient(),
         ctx.SerializedState,

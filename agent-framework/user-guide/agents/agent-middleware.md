@@ -11,15 +11,15 @@ ms.service: agent-framework
 
 # Agent Middleware
 
-Middleware in the Agent Framework provides a powerful way to intercept, modify, and enhance agent interactions at various stages of execution. You can use middleware to implement cross-cutting concerns such as logging, security validation, error handling, and result transformation without modifying your core agent or function logic.
+Middleware in Agent Framework provides a powerful way to intercept, modify, and enhance agent interactions at various stages of execution. You can use middleware to implement cross-cutting concerns such as logging, security validation, error handling, and result transformation without modifying your core agent or function logic.
 
 ::: zone pivot="programming-language-csharp"
 
-The Agent Framework can be customized using three different types of middleware:
+Agent Framework can be customized using three different types of middleware:
 
 1. Agent Run middleware: Allows interception of all agent runs, so that input and output can be inspected and/or modified as needed.
 1. Function calling middleware: Allows interception of all function calls executed by the agent, so that input and output can be inspected and modified as needed.
-1. `IChatClient` middleware: Allows interception of calls to an `IChatClient` implementation, where an agent is using `IChatClient` for inference calls, e.g. when using `ChatClientAgent`.
+1. <xref:Microsoft.Extensions.AI.IChatClient> middleware: Allows interception of calls to an `IChatClient` implementation, where an agent is using `IChatClient` for inference calls, for example, when using `ChatClientAgent`.
 
 All the types of middleware are implemented via a function callback, and when multiple middleware instances of the same type are registered, they form a chain,
 where each middleware instance is expected to call the next in the chain, via a provided `next` `Func`.
@@ -35,10 +35,10 @@ var middlewareEnabledAgent = originalAgent
 ```
 
 > [!IMPORTANT]
-> Ideally both `runFunc` and `runStreamingFunc` should be provided, when providing just the non-streaming middleware, the agent will use it for both streaming and non-streaming invocations and this will block the streaming to run in non-streaming mode to suffice the middleware expectations.
+> Ideally both `runFunc` and `runStreamingFunc` should be provided. When providing just the non-streaming middleware, the agent will use it for both streaming and non-streaming invocations. Streaming will only run in non-streaming mode to suffice the middleware expectations.
 
 > [!NOTE]
-> There's an additional overload `Use(sharedFunc: ...)` that allows you to provide the same middleware for non-streaming and streaming without blocking the streaming, however, the shared middleware won't be able intercept or override the output, make this the best option only for scenarios where you only need to inspect/modify the input before it reaches the agent.
+> There's an additional overload, `Use(sharedFunc: ...)`, that allows you to provide the same middleware for non-streaming and streaming without blocking the streaming. However, the shared middleware won't be able to intercept or override the output. This overload should be used for scenarios where you only need to inspect or modify the input before it reaches the agent.
 
 `IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
 
@@ -113,7 +113,7 @@ async IAsyncEnumerable<AgentRunResponseUpdate> CustomAgentRunStreamingMiddleware
 ## Function calling middleware
 
 > [!NOTE]
-> Function calling middleware is currently only supported with an `AIAgent` that uses `Microsoft.Extensions.AI.FunctionInvokingChatClient`, e.g. `ChatClientAgent`.
+> Function calling middleware is currently only supported with an `AIAgent` that uses <xref:Microsoft.Extensions.AI.FunctionInvokingChatClient>, for example, `ChatClientAgent`.
 
 Here is an example of function calling middleware, that can inspect and/or modify the function being called, and the result from the function call.
 
@@ -134,11 +134,11 @@ async ValueTask<object?> CustomFunctionCallingMiddleware(
 
 It is possible to terminate the function call loop with function calling middleware by setting the provided `FunctionInvocationContext.Terminate` to true.
 This will prevent the function calling loop from issuing a request to the inference service containing the function call results after function invocation.
-If there were more than one function available for invocation during this iteration, it may also prevent any remaining functions from being executed.
+If there were more than one function available for invocation during this iteration, it might also prevent any remaining functions from being executed.
 
 > [!WARNING]
-> Terminating the function call loop may result in your thread being left in an inconsistent state, e.g. containing function call content with no function result content.
-> This may result in the thread being unusable for further runs.
+> Terminating the function call loop might result in your thread being left in an inconsistent state, for example, containing function call content with no function result content.
+> This might result in the thread being unusable for further runs.
 
 ## IChatClient middleware
 
@@ -160,8 +160,7 @@ async Task<ChatResponse> CustomChatClientMiddleware(
 ```
 
 > [!NOTE]
-> For more information about `IChatClient` middleware, see [Custom IChatClient middleware](/dotnet/ai/microsoft-extensions-ai#custom-ichatclient-middleware)
-> in the Microsoft.Extensions.AI documentation.
+> For more information about `IChatClient` middleware, see [Custom IChatClient middleware](/dotnet/ai/microsoft-extensions-ai#custom-ichatclient-middleware).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -451,6 +450,7 @@ async def blocking_middleware(
 Middleware can override results in both non-streaming and streaming scenarios, allowing you to modify or completely replace agent responses.
 
 The result type in `context.result` depends on whether the agent invocation is streaming or non-streaming:
+
 - **Non-streaming**: `context.result` contains an `AgentRunResponse` with the complete response
 - **Streaming**: `context.result` contains an async generator that yields `AgentRunResponseUpdate` chunks
 

@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Microsoft Agent Framework Workflows Core Concepts - Events
 
-This document provides an in-depth look at the **Events** system of Workflows in the Microsoft Agent Framework.
+This document provides an in-depth look at the **Events** system of Workflows in Microsoft Agent Framework.
 
 ## Overview
 

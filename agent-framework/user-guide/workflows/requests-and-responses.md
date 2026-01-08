@@ -38,7 +38,7 @@ var workflow = new WorkflowBuilder(inputPort)
     .Build<CustomRequestType>();
 ```
 
-Now, because in the workflow we have `executorA` connected to the `inputPort` in both directions, `executorA` needs to be able to send requests and receive responses via the `inputPort`. Here is what we need to do in `SomeExecutor` to send a request and receive a response.
+Now, because in the workflow `executorA` is connected to the `inputPort` in both directions, `executorA` needs to be able to send requests and receive responses via the `inputPort`. Here's what you need to do in `SomeExecutor` to send a request and receive a response.
 
 ```csharp
 internal sealed class SomeExecutor() : Executor<CustomResponseType>("SomeExecutor")
@@ -199,7 +199,7 @@ while True:
 
 ## Checkpoints and Requests
 
-To learn more about checkpoints, please refer to this [page](./checkpoints.md).
+To learn more about checkpoints, see [Checkpoints](./checkpoints.md).
 
 When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You cannot provide responses directly during the resume operation - instead, you must listen for the re-emitted events and respond using the standard response mechanism.
 

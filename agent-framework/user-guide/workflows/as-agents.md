@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Microsoft Agent Framework Workflows - Using Workflows as Agents
 
-This document provides an overview of how to use **Workflows as Agents** in the Microsoft Agent Framework.
+This document provides an overview of how to use **Workflows as Agents** in Microsoft Agent Framework.
 
 ## Overview
 
@@ -41,7 +41,7 @@ When you convert a workflow to an agent:
 
 To use a workflow as an agent, the workflow's start executor must be able to handle `IEnumerable<ChatMessage>` as input. This is automatically satisfied when using `ChatClientAgent` or other agent-based executors.
 
-## Creating a Workflow Agent
+## Create a Workflow Agent
 
 Use the `AsAgent()` extension method to convert any compatible workflow into an agent:
 

@@ -126,7 +126,7 @@ English_Translation: Assistant: Spanish detected. Hello, world!
 
 ::: zone pivot="programming-language-python"
 
-In sequential orchestration, each agent processes the task in turn, with output flowing from one to the next. Let's start by defining agents for a two-stage process:
+In sequential orchestration, each agent processes the task in turn, with output flowing from one to the next. Start by defining agents for a two-stage process:
 
 ```python
 from agent_framework.azure import AzureChatClient

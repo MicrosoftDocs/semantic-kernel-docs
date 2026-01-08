@@ -14,9 +14,9 @@ ms.service: agent-framework
 Observability provides insights into the internal state and behavior of workflows during execution. This includes logging, metrics, and tracing capabilities that help monitor and debug workflows.
 
 > [!TIP]
-> Observability is a framework-wide feature and is not limited to workflows. For more information, refer to [Observability](../observability.md).
+> Observability is a framework-wide feature and is not limited to workflows. For more information, see [Observability](../observability.md).
 
-Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/semconv/gen-ai/), Agent Framework Workflows emits additional spans, logs, and metrics to provide deeper insights into workflow execution. These observability features help developers understand the flow of messages, the performance of executors, and any errors that may occur.
+Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/semconv/gen-ai/), Agent Framework Workflows emits additional spans, logs, and metrics to provide deeper insights into workflow execution. These observability features help developers understand the flow of messages, the performance of executors, and any errors that might occur.
 
 ## Enable Observability
 
@@ -34,13 +34,13 @@ Please refer to [Enabling Observability](../observability.md#enable-observabilit
 
 ## Workflow Spans
 
-| Span Name                        | Description                                      |
-|----------------------------------|--------------------------------------------------|
-| `workflow.build`                 | For each workflow build                          |
-| `workflow.run`                   | For each workflow execution                      |
-| `message.send`                   | For each message sent to an executor             |
-| `executor.process`               | For each executor processing a message           |
-| `edge_group.process`             | For each edge group processing a message         |
+| Span Name            | Description                              |
+|----------------------|------------------------------------------|
+| `workflow.build`     | For each workflow build                  |
+| `workflow.run`       | For each workflow execution              |
+| `message.send`       | For each message sent to an executor     |
+| `executor.process`   | For each executor processing a message   |
+| `edge_group.process` | For each edge group processing a message |
 
 ### Links between Spans
 

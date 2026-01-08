@@ -1,6 +1,6 @@
 ---
 title: OpenAI ChatCompletion Agents
-description: Learn how to use the Microsoft Agent Framework with OpenAI ChatCompletion service.
+description: Learn how to use Microsoft Agent Framework with OpenAI ChatCompletion service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # OpenAI ChatCompletion Agents
 
-The Microsoft Agent Framework supports creating agents that use the [OpenAI ChatCompletion](https://platform.openai.com/docs/api-reference/chat/create) service.
+Microsoft Agent Framework supports creating agents that use the [OpenAI ChatCompletion](https://platform.openai.com/docs/api-reference/chat/create) service.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,11 +19,11 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI Chat
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an OpenAI ChatCompletion Agent
+## Create an OpenAI ChatCompletion Agent
 
 As a first step you need to create a client to connect to the OpenAI service.
 
@@ -35,8 +35,8 @@ using OpenAI;
 OpenAIClient client = new OpenAIClient("<your_api_key>");
 ```
 
-OpenAI supports multiple services that all provide model calling capabilities.
-We need to pick the ChatCompletion service to create a ChatCompletion based agent.
+OpenAI supports multiple services that all provide model-calling capabilities.
+Pick the ChatCompletion service to create a ChatCompletion based agent.
 
 ```csharp
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
@@ -57,7 +57,7 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -91,7 +91,7 @@ OPENAI_CHAT_MODEL_ID=gpt-4o-mini
 
 ## Getting Started
 
-Import the required classes from the Agent Framework:
+Import the required classes from Agent Framework:
 
 ```python
 import asyncio
@@ -99,7 +99,7 @@ from agent_framework import ChatAgent
 from agent_framework.openai import OpenAIChatClient
 ```
 
-## Creating an OpenAI ChatCompletion Agent
+## Create an OpenAI ChatCompletion Agent
 
 ### Basic Agent Creation
 
@@ -162,6 +162,72 @@ async def tools_example():
     print(result.text)
 ```
 
+### Web Search
+
+Enable real-time web search capabilities:
+
+```python
+from agent_framework import HostedWebSearchTool
+
+async def web_search_example():
+    agent = OpenAIChatClient(model_id="gpt-4o-search-preview").create_agent(
+        name="SearchBot",
+        instructions="You are a helpful assistant that can search the web for current information.",
+        tools=HostedWebSearchTool(),
+    )
+
+    result = await agent.run("What are the latest developments in artificial intelligence?")
+    print(result.text)
+```
+
+### Model Context Protocol (MCP) Tools
+
+Connect to local MCP servers for extended capabilities:
+
+```python
+from agent_framework import MCPStreamableHTTPTool
+
+async def local_mcp_example():
+    agent = OpenAIChatClient().create_agent(
+        name="DocsAgent",
+        instructions="You are a helpful assistant that can help with Microsoft documentation.",
+        tools=MCPStreamableHTTPTool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+        ),
+    )
+
+    result = await agent.run("How do I create an Azure storage account using az cli?")
+    print(result.text)
+```
+
+### Thread Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+async def thread_example():
+    agent = OpenAIChatClient().create_agent(
+        name="Agent",
+        instructions="You are a helpful assistant.",
+    )
+
+    # Create a persistent thread for conversation context
+    thread = agent.get_new_thread()
+
+    # First interaction
+    first_query = "My name is Alice"
+    print(f"User: {first_query}")
+    first_result = await agent.run(first_query, thread=thread)
+    print(f"Agent: {first_result.text}")
+
+    # Second interaction - agent remembers the context
+    second_query = "What's my name?"
+    print(f"User: {second_query}")
+    second_result = await agent.run(second_query, thread=thread)
+    print(f"Agent: {second_result.text}")  # Should remember "Alice"
+```
+
 ### Streaming Responses
 
 Get responses as they are generated for better user experience:
@@ -172,8 +238,8 @@ async def streaming_example():
         name="StoryTeller",
         instructions="You are a creative storyteller.",
     )
-
-    print("Assistant: ", end="", flush=True)
+    
+    print("Agent: ", end="", flush=True)
     async for chunk in agent.run_stream("Tell me a short story about AI."):
         if chunk.text:
             print(chunk.text, end="", flush=True)
@@ -184,7 +250,7 @@ async def streaming_example():
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 

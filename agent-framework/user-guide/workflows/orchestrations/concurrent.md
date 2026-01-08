@@ -132,7 +132,7 @@ Assistant: English detected. Hello, world!
 
 ::: zone pivot="programming-language-python"
 
-Agents are specialized entities that can process tasks. Here, we define three agents: a research expert, a marketing expert, and a legal expert.
+Agents are specialized entities that can process tasks. The following code defines three agents: a research expert, a marketing expert, and a legal expert.
 
 ```python
 from agent_framework.azure import AzureChatClient
@@ -245,7 +245,7 @@ Sample Output:
     **1. Regulatory Compliance**
     - Verify that the electric bike meets all applicable federal, state, and local regulations
         regarding e-bike classification, speed limits, power output, and safety features.
-    - Ensure necessary certifications (e.g., UL certification for batteries, CE markings if sold internationally) are obtained.
+    - Ensure necessary certifications (for example, UL certification for batteries, CE markings if sold internationally) are obtained.
 
     **2. Product Safety**
     - Include consumer safety warnings regarding use, battery handling, charging protocols, and age restrictions.
