@@ -11,11 +11,11 @@ ms.service: agent-framework
 
 # Running Agents
 
-The base Agent abstraction exposes various options for running the agent. Callers can choose to supply zero, one or many input messages. Callers can also choose between streaming and non-streaming. Let's dig into the different usage scenarios.
+The base Agent abstraction exposes various options for running the agent. Callers can choose to supply zero, one, or many input messages. Callers can also choose between streaming and non-streaming. Let's dig into the different usage scenarios.
 
 ## Streaming and non-streaming
 
-The Microsoft Agent Framework supports both streaming and non-streaming methods for running an agent.
+Microsoft Agent Framework supports both streaming and non-streaming methods for running an agent.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -64,7 +64,7 @@ Agents can vary significantly and therefore there aren't really common customiza
 For cases where the caller knows the type of the agent they are working with, it is possible to pass type specific options to allow customizing the run.
 
 For example, here the agent is a `ChatClientAgent` and it is possible to pass a `ChatClientAgentRunOptions` object that inherits from `AgentRunOptions`.
-This allows the caller to provide custom `ChatOptions` that are merged with any agent level options before being passed to the `IChatClient` that
+This allows the caller to provide custom <xref:Microsoft.Extensions.AI.ChatOptions> that are merged with any agent level options before being passed to the `IChatClient` that
 the `ChatClientAgent` is built on.
 
 ```csharp
@@ -80,10 +80,10 @@ Python agents support passing keyword arguments to customize each run. The speci
 Common options for `ChatAgent` include:
 
 - `max_tokens`: Maximum number of tokens to generate
-- `temperature`: Controls randomness in response generation  
+- `temperature`: Controls randomness in response generation
 - `model`: Override the model for this specific run
 - `tools`: Add additional tools for this run only
-- `response_format`: Specify the response format (e.g., structured output)
+- `response_format`: Specify the response format (for example, structured output)
 
 ```python
 # Run with custom options
@@ -111,7 +111,7 @@ When both agent-level defaults and run-level options are provided, the run-level
 ## Response types
 
 Both streaming and non-streaming responses from agents contain all content produced by the agent.
-Content may include data that is not the result (i.e. the answer to the user question) from the agent.
+Content might include data that is not the result (that is, the answer to the user question) from the agent.
 Examples of other data returned include function tool calls, results from function tool calls, reasoning text, status updates, and many more.
 
 Since not all content returned is the result, it's important to look for specific content types when trying to isolate the result from the other content.
@@ -119,7 +119,7 @@ Since not all content returned is the result, it's important to look for specifi
 ::: zone pivot="programming-language-csharp"
 
 To extract the text result from a response, all `TextContent` items from all `ChatMessages` items need to be aggregated.
-To simplify this, we provide a `Text` property on all response types that aggregates all `TextContent`.
+To simplify this, a `Text` property is available on all response types that aggregates all `TextContent`.
 
 For the non-streaming case, everything is returned in one `AgentRunResponse` object.
 `AgentRunResponse` allows access to the produced messages via the `Messages` property.
@@ -131,7 +131,7 @@ Console.WriteLine(response.Messages.Count);
 ```
 
 For the streaming case, `AgentRunResponseUpdate` objects are streamed as they are produced.
-Each update may contain a part of the result from the agent, and also various other content items.
+Each update might contain a part of the result from the agent, and also various other content items.
 Similar to the non-streaming case, it is possible to use the `Text` property to get the portion
 of the result contained in the update, and drill into the detail via the `Contents` property.
 
@@ -150,7 +150,7 @@ For the non-streaming case, everything is returned in one `AgentRunResponse` obj
 `AgentRunResponse` allows access to the produced messages via the `messages` property.
 
 To extract the text result from a response, all `TextContent` items from all `ChatMessage` items need to be aggregated.
-To simplify this, we provide a `text` property on all response types that aggregates all `TextContent`.
+To simplify this, a `Text` property is available on all response types that aggregates all `TextContent`.
 
 ```python
 response = await agent.run("What is the weather like in Amsterdam?")
@@ -163,7 +163,7 @@ for message in response.messages:
 ```
 
 For the streaming case, `AgentRunResponseUpdate` objects are streamed as they are produced.
-Each update may contain a part of the result from the agent, and also various other content items.
+Each update might contain a part of the result from the agent, and also various other content items.
 Similar to the non-streaming case, it is possible to use the `text` property to get the portion
 of the result contained in the update, and drill into the detail via the `contents` property.
 
@@ -171,7 +171,7 @@ of the result contained in the update, and drill into the detail via the `conten
 async for update in agent.run_stream("What is the weather like in Amsterdam?"):
     print(f"Update text: {update.text}")
     print(f"Content count: {len(update.contents)}")
-    
+
     # Access individual content items
     for content in update.contents:
         if hasattr(content, 'text'):
@@ -186,21 +186,21 @@ Input and output from agents are represented as messages. Messages are subdivide
 
 ::: zone pivot="programming-language-csharp"
 
-The Microsoft Agent Framework uses the message and content types provided by the `Microsoft.Extensions.AI` abstractions.
+The Microsoft Agent Framework uses the message and content types provided by the <xref:Microsoft.Extensions.AI> abstractions.
 Messages are represented by the `ChatMessage` class and all content classes inherit from the base `AIContent` class.
 
 Various `AIContent` subclasses exist that are used to represent different types of content. Some are provided as
-part of the base `Microsoft.Extensions.AI` abstractions, but providers can also add their own types, where needed.
+part of the base <xref:Microsoft.Extensions.AI> abstractions, but providers can also add their own types, where needed.
 
-Here are some popular types from `Microsoft.Extensions.AI`:
+Here are some popular types from <xref:Microsoft.Extensions.AI>:
 
-|Type|Description|
-|---|---|
-|TextContent|Textual content that can be both input, e.g. from a user or developer, and output from the agent. Typically contains the text result from an agent.|
-|DataContent|Binary content that can be both input and output. Can be used to pass image, audio or video data to and from the agent (where supported).|
-|UriContent|A url that typically points at hosted content such as an image, audio or video.|
-|FunctionCallContent|A request by an inference service to invoke a function tool.|
-|FunctionResultContent|The result of a function tool invocation.|
+| Type                                       | Description |
+|--------------------------------------------|-------------|
+| <xref:Microsoft.Extensions.AI.TextContent> | Textual content that can be both input, for example, from a user or developer, and output from the agent. Typically contains the text result from an agent. |
+| <xref:Microsoft.Extensions.AI.DataContent> | Binary content that can be both input and output. Can be used to pass image, audio or video data to and from the agent (where supported). |
+| <xref:Microsoft.Extensions.AI.UriContent> |A URL that typically points at hosted content such as an image, audio or video. |
+| <xref:Microsoft.Extensions.AI.FunctionCallContent> | A request by an inference service to invoke a function tool. |
+| <xref:Microsoft.Extensions.AI.FunctionResultContent> | The result of a function tool invocation. |
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -213,7 +213,7 @@ Various `BaseContent` subclasses exist that are used to represent different type
 |Type|Description|
 |---|---|
 |`TextContent`|Textual content that can be both input and output from the agent. Typically contains the text result from an agent.|
-|`DataContent`|Binary content represented as a data URI (e.g., base64-encoded images). Can be used to pass binary data to and from the agent.|
+|`DataContent`|Binary content represented as a data URI (for example, base64-encoded images). Can be used to pass binary data to and from the agent.|
 |`UriContent`|A URI that points to hosted content such as an image, audio file, or document.|
 |`FunctionCallContent`|A request by an AI service to invoke a function tool.|
 |`FunctionResultContent`|The result of a function tool invocation.|
@@ -256,4 +256,4 @@ for message in response.messages:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Tools](./agent-tools.md)
+> [Multi-Turn Conversations and Threading](./multi-turn-conversation.md)

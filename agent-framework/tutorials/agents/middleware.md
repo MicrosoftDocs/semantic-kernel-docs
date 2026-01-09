@@ -217,7 +217,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     credential = AzureCliCredential()
 
-    async with AzureAIAgentClient(async_credential=credential).create_agent(
+    async with AzureAIAgentClient(credential=credential).create_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
     ) as agent:
@@ -256,7 +256,7 @@ Add the middleware when creating your agent:
 async def main():
     credential = AzureCliCredential()
 
-    async with AzureAIAgentClient(async_credential=credential).create_agent(
+    async with AzureAIAgentClient(credential=credential).create_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
         middleware=logging_agent_middleware,  # Add your middleware here
@@ -289,7 +289,7 @@ async def logging_function_middleware(
     print(f"Function result: {context.result}")
 
 # Add both the function and middleware to your agent
-async with AzureAIAgentClient(async_credential=credential).create_agent(
+async with AzureAIAgentClient(credential=credential).create_agent(
     name="TimeAgent",
     instructions="You can tell the current time.",
     tools=[get_time],

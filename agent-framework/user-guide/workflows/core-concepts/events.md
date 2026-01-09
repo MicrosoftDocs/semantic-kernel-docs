@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Microsoft Agent Framework Workflows Core Concepts - Events
 
-This document provides an in-depth look at the **Events** system of Workflows in the Microsoft Agent Framework.
+This document provides an in-depth look at the **Events** system of Workflows in Microsoft Agent Framework.
 
 ## Overview
 
@@ -52,10 +52,18 @@ RequestInfoEvent        // A request is issued
 WorkflowStartedEvent    # Workflow execution begins
 WorkflowOutputEvent     # Workflow produces an output
 WorkflowErrorEvent      # Workflow encounters an error
+WorkflowWarningEvent    # Workflow encountered a warning
 
 # Executor events
-ExecutorInvokeEvent     # Executor starts processing
-ExecutorCompleteEvent   # Executor finishes processing
+ExecutorInvokedEvent    # Executor starts processing
+ExecutorCompletedEvent  # Executor finishes processing
+ExecutorFailedEvent     # Executor encounters an error
+AgentRunEvent           # An agent run produces output
+AgentRunUpdateEvent     # An agent run produces a streaming update
+
+# Superstep events
+SuperStepStartedEvent   # Superstep begins
+SuperStepCompletedEvent # Superstep completes
 
 # Request events
 RequestInfoEvent        # A request is issued
@@ -128,8 +136,8 @@ Users can define and emit custom events during workflow execution for enhanced o
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
 internal sealed class CustomEvent(string message) : WorkflowEvent(message) { }
 
@@ -176,3 +184,6 @@ class CustomExecutor(Executor):
 - [Learn how to handle requests and responses](./../requests-and-responses.md) in workflows.
 - [Learn how to manage state](./../shared-states.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./../checkpoints.md).
+- [Learn how to monitor workflows](./../observability.md).
+- [Learn about state isolation in workflows](./../state-isolation.md).
+- [Learn how to visualize workflows](./../visualization.md).

@@ -1,6 +1,6 @@
 ---
 title: OpenAI Assistants Agents
-description: Learn how to use the Microsoft Agent Framework with OpenAI Assistants service.
+description: Learn how to use Microsoft Agent Framework with OpenAI Assistants service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # OpenAI Assistants Agents
 
-The Microsoft Agent Framework supports creating agents that use the [OpenAI Assistants](https://platform.openai.com/docs/api-reference/assistants/createAssistant) service.
+Microsoft Agent Framework supports creating agents that use the [OpenAI Assistants](https://platform.openai.com/docs/api-reference/assistants/createAssistant) service.
 
 > [!WARNING]
 > The OpenAI Assistants API is deprecated and will be shut down. For more information see the [OpenAI documentation](https://platform.openai.com/docs/assistants/migration).
@@ -22,11 +22,11 @@ The Microsoft Agent Framework supports creating agents that use the [OpenAI Assi
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 ```
 
-## Creating an OpenAI Assistants Agent
+## Create an OpenAI Assistants Agent
 
 As a first step you need to create a client to connect to the OpenAI service.
 
@@ -38,8 +38,8 @@ using OpenAI;
 OpenAIClient client = new OpenAIClient("<your_api_key>");
 ```
 
-OpenAI supports multiple services that all provide model calling capabilities.
-We will use the Assistants client to create an Assistants based agent.
+OpenAI supports multiple services that all provide model-calling capabilities.
+This example uses the Assistants client to create an Assistants-based agent.
 
 ```csharp
 #pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
@@ -67,7 +67,7 @@ AIAgent agent1 = await assistantClient.GetAIAgentAsync(createResult.Value.Id);
 Console.WriteLine(await agent1.RunAsync("Tell me a joke about a pirate."));
 ```
 
-### Using the Agent Framework helpers
+### Using Agent Framework helpers
 
 You can also create and return an `AIAgent` in one step:
 
@@ -90,7 +90,7 @@ AIAgent agent3 = await assistantClient.GetAIAgentAsync("<agent-id>");
 
 The agent is a standard `AIAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -100,7 +100,7 @@ See the [Agent getting started tutorials](../../../tutorials/overview.md) for mo
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
 ## Configuration
@@ -124,7 +124,7 @@ OPENAI_CHAT_MODEL_ID=gpt-4o-mini
 
 ## Getting Started
 
-Import the required classes from the Agent Framework:
+Import the required classes from Agent Framework:
 
 ```python
 import asyncio
@@ -132,7 +132,7 @@ from agent_framework import ChatAgent
 from agent_framework.openai import OpenAIAssistantsClient
 ```
 
-## Creating an OpenAI Assistants Agent
+## Create an OpenAI Assistants Agent
 
 ### Basic Agent Creation
 
@@ -175,14 +175,14 @@ from openai import AsyncOpenAI
 async def existing_assistant_example():
     # Create OpenAI client directly
     client = AsyncOpenAI()
-    
+
     # Create or get an existing assistant
     assistant = await client.beta.assistants.create(
         model="gpt-4o-mini",
         name="WeatherAssistant",
         instructions="You are a weather forecasting assistant."
     )
-    
+
     try:
         # Use the existing assistant with Agent Framework
         async with ChatAgent(
@@ -242,6 +242,118 @@ async def code_interpreter_example():
         print(result.text)
 ```
 
+### File Search
+
+Enable your assistant to search through uploaded documents:
+
+```python
+from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
+
+async def create_vector_store(client: OpenAIAssistantsClient) -> tuple[str, HostedVectorStoreContent]:
+    """Create a vector store with sample documents."""
+    file = await client.client.files.create(
+        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), 
+        purpose="user_data"
+    )
+    vector_store = await client.client.vector_stores.create(
+        name="knowledge_base",
+        expires_after={"anchor": "last_active_at", "days": 1},
+    )
+    result = await client.client.vector_stores.files.create_and_poll(
+        vector_store_id=vector_store.id, 
+        file_id=file.id
+    )
+    if result.last_error is not None:
+        raise Exception(f"Vector store file processing failed with status: {result.last_error.message}")
+
+    return file.id, HostedVectorStoreContent(vector_store_id=vector_store.id)
+
+async def delete_vector_store(client: OpenAIAssistantsClient, file_id: str, vector_store_id: str) -> None:
+    """Delete the vector store after using it."""
+    await client.client.vector_stores.delete(vector_store_id=vector_store_id)
+    await client.client.files.delete(file_id=file_id)
+
+async def file_search_example():
+    print("=== OpenAI Assistants Client Agent with File Search Example ===\n")
+
+    client = OpenAIAssistantsClient()
+    async with ChatAgent(
+        chat_client=client,
+        instructions="You are a helpful assistant that searches files in a knowledge base.",
+        tools=HostedFileSearchTool(),
+    ) as agent:
+        query = "What is the weather today? Do a file search to find the answer."
+        file_id, vector_store = await create_vector_store(client)
+
+        print(f"User: {query}")
+        print("Agent: ", end="", flush=True)
+        async for chunk in agent.run_stream(
+            query, tool_resources={"file_search": {"vector_store_ids": [vector_store.vector_store_id]}}
+        ):
+            if chunk.text:
+                print(chunk.text, end="", flush=True)
+        print()  # New line after streaming
+        
+        await delete_vector_store(client, file_id, vector_store.vector_store_id)
+```
+
+### Thread Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+async def thread_example():
+    async with OpenAIAssistantsClient().create_agent(
+        name="Assistant",
+        instructions="You are a helpful assistant.",
+    ) as agent:
+        # Create a persistent thread for conversation context
+        thread = agent.get_new_thread()
+
+        # First interaction
+        first_query = "My name is Alice"
+        print(f"User: {first_query}")
+        first_result = await agent.run(first_query, thread=thread)
+        print(f"Agent: {first_result.text}")
+
+        # Second interaction - agent remembers the context
+        second_query = "What's my name?"
+        print(f"User: {second_query}")
+        second_result = await agent.run(second_query, thread=thread)
+        print(f"Agent: {second_result.text}")  # Should remember "Alice"
+```
+
+### Working with Existing Assistants
+
+You can reuse existing OpenAI assistants by providing their IDs:
+
+```python
+from openai import AsyncOpenAI
+
+async def existing_assistant_example():
+    # Create OpenAI client directly
+    client = AsyncOpenAI()
+    
+    # Create or get an existing assistant
+    assistant = await client.beta.assistants.create(
+        model="gpt-4o-mini",
+        name="WeatherAssistant",
+        instructions="You are a weather forecasting assistant."
+    )
+    
+    try:
+        # Use the existing assistant with Agent Framework
+        async with OpenAIAssistantsClient(
+            async_client=client,
+            assistant_id=assistant.id
+        ).create_agent() as agent:
+            result = await agent.run("What's the weather like in Seattle?")
+            print(result.text)
+    finally:
+        # Clean up the assistant
+        await client.beta.assistants.delete(assistant.id)
+```
+
 ### Streaming Responses
 
 Get responses as they are generated for better user experience:
@@ -262,7 +374,7 @@ async def streaming_example():
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 

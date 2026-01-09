@@ -11,7 +11,10 @@ ms.service: semantic-kernel
 # Exploring Agent Collaboration in `AgentChat`
 
 > [!IMPORTANT]
-> This feature is in the experimental stage. Features at this stage are under development and subject to change before advancing to the preview or release candidate stage.
+> This is an archived document.
+
+> [!IMPORTANT]
+> This feature is in the experimental stage but no longer maintained. For a replacement, see the [Group Chat Orchestration](./../../Frameworks/agent/agent-orchestration/group-chat.md) and the migration guide [Migrating from AgentChat to Group Chat Orchestration](./../migration/group-chat-orchestration-migration-guide.md).
 
 Detailed API documentation related to this discussion is available at:
 

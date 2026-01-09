@@ -1,6 +1,6 @@
 ---
 title: Agents in Workflows
-description: Learn how to integrate agents into workflows using Agent Framework.
+description: Learn how to integrate agents into workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -26,6 +26,12 @@ You'll create a workflow that:
 - Connects agents in a sequential workflow pipeline
 - Streams real-time updates as agents process requests
 - Demonstrates proper resource cleanup for Azure Foundry agents
+
+### Concepts Covered
+
+- [Agents in Workflows](../../user-guide/workflows/using-agents.md)
+- [Direct Edges](../../user-guide/workflows/core-concepts/edges.md#direct-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
 
 ## Prerequisites
 
@@ -68,18 +74,7 @@ public static class Program
         var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
 ```
 
-## Step 3: Create Specialized Azure Foundry Agents
-
-Create three translation agents using the helper method:
-
-```csharp
-        // Create agents
-        AIAgent frenchAgent = await GetTranslationAgentAsync("French", persistentAgentsClient, model);
-        AIAgent spanishAgent = await GetTranslationAgentAsync("Spanish", persistentAgentsClient, model);
-        AIAgent englishAgent = await GetTranslationAgentAsync("English", persistentAgentsClient, model);
-```
-
-## Step 4: Create Agent Factory Method
+## Step 3: Create Agent Factory Method
 
 Implement a helper method to create Azure Foundry agents with specific instructions:
 
@@ -104,6 +99,17 @@ Implement a helper method to create Azure Foundry agents with specific instructi
         return await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
     }
 }
+```
+
+## Step 4: Create Specialized Azure Foundry Agents
+
+Create three translation agents using the helper method:
+
+```csharp
+        // Create agents
+        AIAgent frenchAgent = await GetTranslationAgentAsync("French", persistentAgentsClient, model);
+        AIAgent spanishAgent = await GetTranslationAgentAsync("Spanish", persistentAgentsClient, model);
+        AIAgent englishAgent = await GetTranslationAgentAsync("English", persistentAgentsClient, model);
 ```
 
 ## Step 5: Build the Workflow
@@ -187,10 +193,16 @@ You'll create a workflow that:
 - Streams real-time updates as agents process requests
 - Demonstrates proper async context management for Azure AI clients
 
+### Concepts Covered
+
+- [Agents in Workflows](../../user-guide/workflows/using-agents.md)
+- [Direct Edges](../../user-guide/workflows/core-concepts/edges.md#direct-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
+
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework-azure-ai`
+- Agent Framework installed: `pip install agent-framework-azure-ai --pre`
 - Azure AI Agent Service configured with proper environment variables
 - Azure CLI authentication: `az login`
 

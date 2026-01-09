@@ -11,15 +11,15 @@ ms.service: agent-framework
 
 # Agent Middleware
 
-Middleware in the Agent Framework provides a powerful way to intercept, modify, and enhance agent interactions at various stages of execution. You can use middleware to implement cross-cutting concerns such as logging, security validation, error handling, and result transformation without modifying your core agent or function logic.
+Middleware in Agent Framework provides a powerful way to intercept, modify, and enhance agent interactions at various stages of execution. You can use middleware to implement cross-cutting concerns such as logging, security validation, error handling, and result transformation without modifying your core agent or function logic.
 
 ::: zone pivot="programming-language-csharp"
 
-The Agent Framework can be customized using three different types of middleware:
+Agent Framework can be customized using three different types of middleware:
 
 1. Agent Run middleware: Allows interception of all agent runs, so that input and output can be inspected and/or modified as needed.
 1. Function calling middleware: Allows interception of all function calls executed by the agent, so that input and output can be inspected and modified as needed.
-1. `IChatClient` middleware: Allows interception of calls to an `IChatClient` implementation, where an agent is using `IChatClient` for inference calls, e.g. when using `ChatClientAgent`.
+1. <xref:Microsoft.Extensions.AI.IChatClient> middleware: Allows interception of calls to an `IChatClient` implementation, where an agent is using `IChatClient` for inference calls, for example, when using `ChatClientAgent`.
 
 All the types of middleware are implemented via a function callback, and when multiple middleware instances of the same type are registered, they form a chain,
 where each middleware instance is expected to call the next in the chain, via a provided `next` `Func`.
@@ -29,10 +29,16 @@ Agent run and function calling middleware types can be registered on an agent, b
 ```csharp
 var middlewareEnabledAgent = originalAgent
     .AsBuilder()
-        .Use(CustomAgentRunMiddleware)
+        .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: CustomAgentRunStreamingMiddleware)
         .Use(CustomFunctionCallingMiddleware)
     .Build();
 ```
+
+> [!IMPORTANT]
+> Ideally both `runFunc` and `runStreamingFunc` should be provided. When providing just the non-streaming middleware, the agent will use it for both streaming and non-streaming invocations. Streaming will only run in non-streaming mode to suffice the middleware expectations.
+
+> [!NOTE]
+> There's an additional overload, `Use(sharedFunc: ...)`, that allows you to provide the same middleware for non-streaming and streaming without blocking the streaming. However, the shared middleware won't be able to intercept or override the output. This overload should be used for scenarios where you only need to inspect or modify the input before it reaches the agent.
 
 `IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
 
@@ -80,10 +86,34 @@ async Task<AgentRunResponse> CustomAgentRunMiddleware(
 }
 ```
 
+## Agent Run Streaming Middleware
+
+Here is an example of agent run streaming middleware, that can inspect and/or modify the input and output from the agent streaming run.
+
+```csharp
+async IAsyncEnumerable<AgentRunResponseUpdate> CustomAgentRunStreamingMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentThread? thread,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    [EnumeratorCancellation] CancellationToken cancellationToken)
+{
+    Console.WriteLine(messages.Count());
+    List<AgentRunResponseUpdate> updates = [];
+    await foreach (var update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
+    {
+        updates.Add(update);
+        yield return update;
+    }
+
+    Console.WriteLine(updates.ToAgentRunResponse().Messages.Count);
+}
+```
+
 ## Function calling middleware
 
 > [!NOTE]
-> Function calling middleware is currently only supported with an `AIAgent` that uses `Microsoft.Extensions.AI.FunctionInvokingChatClient`, e.g. `ChatClientAgent`.
+> Function calling middleware is currently only supported with an `AIAgent` that uses <xref:Microsoft.Extensions.AI.FunctionInvokingChatClient>, for example, `ChatClientAgent`.
 
 Here is an example of function calling middleware, that can inspect and/or modify the function being called, and the result from the function call.
 
@@ -104,11 +134,11 @@ async ValueTask<object?> CustomFunctionCallingMiddleware(
 
 It is possible to terminate the function call loop with function calling middleware by setting the provided `FunctionInvocationContext.Terminate` to true.
 This will prevent the function calling loop from issuing a request to the inference service containing the function call results after function invocation.
-If there were more than one function available for invocation during this iteration, it may also prevent any remaining functions from being executed.
+If there were more than one function available for invocation during this iteration, it might also prevent any remaining functions from being executed.
 
 > [!WARNING]
-> Terminating the function call loop may result in your thread being left in an inconsistent state, e.g. containing function call content with no function result content.
-> This may result in the thread being unusable for further runs.
+> Terminating the function call loop might result in your thread being left in an inconsistent state, for example, containing function call content with no function result content.
+> This might result in the thread being unusable for further runs.
 
 ## IChatClient middleware
 
@@ -130,8 +160,7 @@ async Task<ChatResponse> CustomChatClientMiddleware(
 ```
 
 > [!NOTE]
-> For more information about `IChatClient` middleware, see [Custom IChatClient middleware](/dotnet/ai/microsoft-extensions-ai#custom-ichatclient-middleware)
-> in the Microsoft.Extensions.AI documentation.
+> For more information about `IChatClient` middleware, see [Custom IChatClient middleware](/dotnet/ai/microsoft-extensions-ai#custom-ichatclient-middleware).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -164,10 +193,10 @@ async def logging_agent_middleware(
     """Agent middleware that logs execution timing."""
     # Pre-processing: Log before agent execution
     print("[Agent] Starting execution")
-    
+
     # Continue to next middleware or agent execution
     await next(context)
-    
+
     # Post-processing: Log after agent execution
     print("[Agent] Execution completed")
 ```
@@ -195,10 +224,10 @@ async def logging_function_middleware(
     """Function middleware that logs function execution."""
     # Pre-processing: Log before function execution
     print(f"[Function] Calling {context.function.name}")
-    
+
     # Continue to next middleware or function execution
     await next(context)
-    
+
     # Post-processing: Log after function execution
     print(f"[Function] {context.function.name} completed")
 ```
@@ -228,10 +257,10 @@ async def logging_chat_middleware(
     """Chat middleware that logs AI interactions."""
     # Pre-processing: Log before AI call
     print(f"[Chat] Sending {len(context.messages)} messages to AI")
-    
+
     # Continue to next middleware or AI service
     await next(context)
-    
+
     # Post-processing: Log after AI response
     print("[Chat] AI response received")
 ```
@@ -282,7 +311,7 @@ from agent_framework import AgentMiddleware, AgentRunContext
 
 class LoggingAgentMiddleware(AgentMiddleware):
     """Agent middleware that logs execution."""
-    
+
     async def process(
         self,
         context: AgentRunContext,
@@ -290,10 +319,10 @@ class LoggingAgentMiddleware(AgentMiddleware):
     ) -> None:
         # Pre-processing: Log before agent execution
         print("[Agent Class] Starting execution")
-        
+
         # Continue to next middleware or agent execution
         await next(context)
-        
+
         # Post-processing: Log after agent execution
         print("[Agent Class] Execution completed")
 ```
@@ -307,7 +336,7 @@ from agent_framework import FunctionMiddleware, FunctionInvocationContext
 
 class LoggingFunctionMiddleware(FunctionMiddleware):
     """Function middleware that logs function execution."""
-    
+
     async def process(
         self,
         context: FunctionInvocationContext,
@@ -315,10 +344,10 @@ class LoggingFunctionMiddleware(FunctionMiddleware):
     ) -> None:
         # Pre-processing: Log before function execution
         print(f"[Function Class] Calling {context.function.name}")
-        
+
         # Continue to next middleware or function execution
         await next(context)
-        
+
         # Post-processing: Log after function execution
         print(f"[Function Class] {context.function.name} completed")
 ```
@@ -332,7 +361,7 @@ from agent_framework import ChatMiddleware, ChatContext
 
 class LoggingChatMiddleware(ChatMiddleware):
     """Chat middleware that logs AI interactions."""
-    
+
     async def process(
         self,
         context: ChatContext,
@@ -340,10 +369,10 @@ class LoggingChatMiddleware(ChatMiddleware):
     ) -> None:
         # Pre-processing: Log before AI call
         print(f"[Chat Class] Sending {len(context.messages)} messages to AI")
-        
+
         # Continue to next middleware or AI service
         await next(context)
-        
+
         # Post-processing: Log after AI response
         print("[Chat Class] AI response received")
 ```
@@ -368,10 +397,10 @@ async with AzureAIAgentClient(async_credential=credential).create_agent(
         TimingFunctionMiddleware(),  # Applies to all runs
     ],
 ) as agent:
-    
+
     # This run uses agent-level middleware only
     result1 = await agent.run("What's the weather in Seattle?")
-    
+
     # This run uses agent-level + run-level middleware
     result2 = await agent.run(
         "What's the weather in Portland?",
@@ -379,7 +408,7 @@ async with AzureAIAgentClient(async_credential=credential).create_agent(
             logging_chat_middleware,
         ]
     )
-    
+
     # This run uses agent-level middleware only (no run-level)
     result3 = await agent.run("What's the weather in Vancouver?")
 ```
@@ -406,7 +435,7 @@ async def blocking_middleware(
             print("Request blocked by middleware")
             context.terminate = True
             return
-    
+
     # If no issues, continue normally
     await next(context)
 ```
@@ -421,6 +450,7 @@ async def blocking_middleware(
 Middleware can override results in both non-streaming and streaming scenarios, allowing you to modify or completely replace agent responses.
 
 The result type in `context.result` depends on whether the agent invocation is streaming or non-streaming:
+
 - **Non-streaming**: `context.result` contains an `AgentRunResponse` with the complete response
 - **Streaming**: `context.result` contains an async generator that yields `AgentRunResponseUpdate` chunks
 
@@ -428,14 +458,14 @@ You can use `context.is_streaming` to differentiate between these scenarios and 
 
 ```python
 async def weather_override_middleware(
-    context: AgentRunContext, 
+    context: AgentRunContext,
     next: Callable[[AgentRunContext], Awaitable[None]]
 ) -> None:
     """Middleware that overrides weather results for both streaming and non-streaming."""
-    
+
     # Execute the original agent logic
     await next(context)
-    
+
     # Override results if present
     if context.result is not None:
         custom_message_parts = [
@@ -444,13 +474,13 @@ async def weather_override_middleware(
             "22°C with gentle breezes. ",
             "Great day for outdoor activities!"
         ]
-        
+
         if context.is_streaming:
             # Streaming override
             async def override_stream() -> AsyncIterable[AgentRunResponseUpdate]:
                 for chunk in custom_message_parts:
                     yield AgentRunResponseUpdate(contents=[TextContent(text=chunk)])
-            
+
             context.result = override_stream()
         else:
             # Non-streaming override
@@ -467,4 +497,4 @@ This middleware approach allows you to implement sophisticated response transfor
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Retrieval Augmented Generation (RAG)](./agent-rag.md)
+> [Agent Background Responses](./agent-background-responses.md)

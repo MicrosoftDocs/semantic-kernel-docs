@@ -38,7 +38,7 @@ Remember that workflows are executed in **supersteps**, as documented in the [co
 To enable check pointing, a `CheckpointManager` needs to be provided when creating a workflow run. A checkpoint then can be accessed via a `SuperStepCompletedEvent`.
 
 ```csharp
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 
 // Create a checkpoint manager to manage checkpoints
 var checkpointManager = new CheckpointManager();
@@ -110,9 +110,9 @@ CheckpointInfo savedCheckpoint = checkpoints[5];
 await checkpointedRun.RestoreCheckpointAsync(savedCheckpoint, CancellationToken.None).ConfigureAwait(false);
 await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is WorkflowCompletedEvent workflowCompletedEvt)
+    if (evt is WorkflowOutputEvent workflowOutputEvt)
     {
-        Console.WriteLine($"Workflow completed with result: {workflowCompletedEvt.Data}");
+        Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
     }
 }
 ```
@@ -146,9 +146,9 @@ Checkpointed<StreamingRun> newCheckpointedRun = await InProcessExecution
     .ConfigureAwait(false);
 await foreach (WorkflowEvent evt in newCheckpointedRun.Run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is WorkflowCompletedEvent workflowCompletedEvt)
+    if (evt is WorkflowOutputEvent workflowOutputEvt)
     {
-        Console.WriteLine($"Workflow completed with result: {workflowCompletedEvt.Data}");
+        Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
     }
 }
 ```
@@ -188,10 +188,10 @@ async for event in workflow.run_stream
 To ensure that the state of an executor is captured in a checkpoint, the executor must override the `OnCheckpointingAsync` method and save its state to the workflow context.
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("CustomExecutor"), IMessageHandler<string>
+internal sealed class CustomExecutor() : Executor<string>("CustomExecutor")
 {
     private const string StateKey = "CustomExecutorState";
 
@@ -221,9 +221,36 @@ protected override async ValueTask OnCheckpointRestoredAsync(IWorkflowContext co
 
 ::: zone-end
 
+::: zone pivot="programming-language-python"
+
+To ensure that the state of an executor is captured in a checkpoint, the executor must override the `on_checkpoint_save` method and save its state to the workflow context.
+
+```python
+class CustomExecutor(Executor):
+    def __init__(self, id: str) -> None:
+        super().__init__(id=id)
+        self._messages: list[str] = []
+
+    @handler
+    async def handle(self, message: str, ctx: WorkflowContext):
+        self._messages.append(message)
+        # Executor logic...
+
+    async def on_checkpoint_save(self) -> dict[str, Any]:
+        return {"messages": self._messages}
+```
+
+Also, to ensure the state is correctly restored when resuming from a checkpoint, the executor must override the `on_checkpoint_restore` method and load its state from the workflow context.
+
+```python
+async def on_checkpoint_restore(self, state: dict[str, Any]) -> None:
+    self._messages = state.get("messages", [])
+```
+
+::: zone-end
+
 ## Next Steps
 
-- [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
-- [Learn how to use workflows as agents](./as-agents.md).
-- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
-- [Learn how to manage state](./shared-states.md) in workflows.
+- [Learn how to monitor workflows](./observability.md).
+- [Learn about state isolation in workflows](./state-isolation.md).
+- [Learn how to visualize workflows](./visualization.md).

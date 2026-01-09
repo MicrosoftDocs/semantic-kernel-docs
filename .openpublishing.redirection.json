@@ -824,6 +824,16 @@
             "source_path": "semantic-kernel/Frameworks/agent/examples/example-agent-collaboration.md",
             "redirect_url": "/semantic-kernel/support/archive/agent-chat-example",
             "redirect_document_id": false
+        },
+        {
+            "source_path": "agent-framework/tutorials/workflows/visualization.md",
+            "redirect_url": "/agent-framework/user-guide/workflows/visualization",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "agent-framework/user-guide/agents/agent-observability.md",
+            "redirect_url": "/agent-framework/user-guide/observability",
+            "redirect_document_id": true
         }
     ]
 }
