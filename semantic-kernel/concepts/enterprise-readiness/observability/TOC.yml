@@ -9,6 +9,6 @@
 - name: 'Example: Azure AI Foundry Tracing'
   href: telemetry-with-azure-ai-foundry-tracing.md
 - name: 'Example: MLflow Tracing'
-  href: mlflow.mdx
+  href: telemetry-with-mlflow.mdx
 - name: 'Advanced telemetry with Semantic Kernel'
   href: telemetry-advanced.md
