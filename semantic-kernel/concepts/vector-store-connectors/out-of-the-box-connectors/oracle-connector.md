@@ -210,10 +210,10 @@ Install python-oracledb:
 pip install python-oracledb
 ```
 
-Install semantic kernel:
+Install the Oracle Database Vector Store connector:
 
 ```cli
-pip install semantic-kernel
+pip install semantic-kernel[oracledb]
 ```
 
 Import the OracleSettings, OracleStore, and OracleCollection classes.
