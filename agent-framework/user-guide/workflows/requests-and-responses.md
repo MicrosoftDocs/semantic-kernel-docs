@@ -38,10 +38,10 @@ var workflow = new WorkflowBuilder(inputPort)
     .Build<CustomRequestType>();
 ```
 
-Now, because in the workflow we have `executorA` connected to the `inputPort` in both directions, `executorA` needs to be able to send requests and receive responses via the `inputPort`. Here is what we need to do in `SomeExecutor` to send a request and receive a response.
+Now, because in the workflow `executorA` is connected to the `inputPort` in both directions, `executorA` needs to be able to send requests and receive responses via the `inputPort`. Here's what you need to do in `SomeExecutor` to send a request and receive a response.
 
 ```csharp
-internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExecutor"), IMessageHandler<CustomResponseType>
+internal sealed class SomeExecutor() : Executor<CustomResponseType>("SomeExecutor")
 {
     public async ValueTask HandleAsync(CustomResponseType message, IWorkflowContext context)
     {
@@ -56,15 +56,22 @@ internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExe
 Alternatively, `SomeExecutor` can separate the request sending and response handling into two handlers.
 
 ```csharp
-internal sealed class SomeExecutor() : ReflectingExecutor<SomeExecutor>("SomeExecutor"), IMessageHandler<CustomResponseType>, IMessageHandler<OtherDataType>
+internal sealed class SomeExecutor() : Executor("SomeExecutor")
 {
-    public async ValueTask HandleAsync(CustomResponseType message, IWorkflowContext context)
+    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
+    {
+        return routeBuilder
+            .AddHandler<CustomResponseType>(this.HandleCustomResponseAsync)
+            .AddHandler<OtherDataType>(this.HandleOtherDataAsync);
+    }
+
+    public async ValueTask HandleCustomResponseAsync(CustomResponseType message, IWorkflowContext context)
     {
         // Process the response...
         ...
     }
 
-    public async ValueTask HandleAsync(OtherDataType message, IWorkflowContext context)
+    public async ValueTask HandleOtherDataAsync(OtherDataType message, IWorkflowContext context)
     {
         // Process the message...
         ...
@@ -151,9 +158,9 @@ await foreach (WorkflowEvent evt in handle.WatchStreamAsync().ConfigureAwait(fal
             await handle.SendResponseAsync(response).ConfigureAwait(false);
             break;
 
-        case WorkflowCompletedEvent workflowCompleteEvt:
+        case WorkflowOutputEvent workflowOutputEvt:
             // The workflow has completed successfully
-            Console.WriteLine($"Workflow completed with result: {workflowCompleteEvt.Data}");
+            Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
             return;
     }
 }
@@ -192,13 +199,14 @@ while True:
 
 ## Checkpoints and Requests
 
-To learn more about checkpoints, please refer to this [page](./checkpoints.md).
+To learn more about checkpoints, see [Checkpoints](./checkpoints.md).
 
 When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You cannot provide responses directly during the resume operation - instead, you must listen for the re-emitted events and respond using the standard response mechanism.
 
 ## Next Steps
 
-- [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
-- [Learn how to use workflows as agents](./as-agents.md).
 - [Learn how to manage state](./shared-states.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
+- [Learn how to monitor workflows](./observability.md).
+- [Learn about state isolation in workflows](./state-isolation.md).
+- [Learn how to visualize workflows](./visualization.md).

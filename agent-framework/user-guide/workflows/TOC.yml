@@ -16,5 +16,7 @@
   href: checkpoints.md
 - name: Observability
   href: observability.md
+- name: State Isolation
+  href: state-isolation.md
 - name: Visualization
   href: visualization.md

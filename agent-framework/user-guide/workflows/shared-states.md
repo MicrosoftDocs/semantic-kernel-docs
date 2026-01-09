@@ -22,10 +22,10 @@ Shared States allow multiple executors within a workflow to access and modify co
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class FileReadExecutor() : ReflectingExecutor<FileReadExecutor>("FileReadExecutor"), IMessageHandler<string, string>
+internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExecutor")
 {
     /// <summary>
     /// Reads a file and stores its content in a shared state.
@@ -78,10 +78,10 @@ class FileReadExecutor(Executor):
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class WordCountingExecutor() : ReflectingExecutor<WordCountingExecutor>("WordCountingExecutor"), IMessageHandler<string, int>
+internal sealed class WordCountingExecutor() : Executor<string, int>("WordCountingExecutor")
 {
     /// <summary>
     /// Counts the number of words in the file content stored in a shared state.
@@ -127,7 +127,7 @@ class WordCountingExecutor(Executor):
 
 ## Next Steps
 
-- [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
-- [Learn how to use workflows as agents](./as-agents.md).
-- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
+- [Learn how to monitor workflows](./observability.md).
+- [Learn about state isolation in workflows](./state-isolation.md).
+- [Learn how to visualize workflows](./visualization.md).

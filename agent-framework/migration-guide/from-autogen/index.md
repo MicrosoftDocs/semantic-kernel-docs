@@ -1,9 +1,9 @@
 ---
 title: AutoGen to Microsoft Agent Framework Migration Guide
 description: A comprehensive guide for migrating from AutoGen to the Microsoft Agent Framework Python SDK.
-author: ekzhu
+author: moonbox3
 ms.topic: reference
-ms.author: ekzhu
+ms.author: evmattso
 ms.date: 09/29/2025
 ms.service: agent-framework
 ---
@@ -1195,85 +1195,134 @@ result = await team.run("Complex research and analysis task")
 **Agent Framework Implementation:**
 
 ```python
+from typing import cast
 from agent_framework import (
-    MagenticBuilder, MagenticCallbackMode, WorkflowOutputEvent,
-    MagenticCallbackEvent, MagenticOrchestratorMessageEvent, MagenticAgentDeltaEvent
+    MAGENTIC_EVENT_TYPE_AGENT_DELTA,
+    MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
+    AgentRunUpdateEvent,
+    ChatAgent,
+    ChatMessage,
+    MagenticBuilder,
+    WorkflowOutputEvent,
+)
+from agent_framework.openai import OpenAIChatClient
+
+# Create a manager agent for orchestration
+manager_agent = ChatAgent(
+    name="MagenticManager",
+    description="Orchestrator that coordinates the workflow",
+    instructions="You coordinate a team to complete complex tasks efficiently.",
+    chat_client=OpenAIChatClient(),
 )
 
-# Assume we have researcher, coder, and coordinator_client from previous examples
-async def on_event(event: MagenticCallbackEvent) -> None:
-    if isinstance(event, MagenticOrchestratorMessageEvent):
-        print(f"[ORCHESTRATOR]: {event.message.text}")
-    elif isinstance(event, MagenticAgentDeltaEvent):
-        print(f"[{event.agent_id}]: {event.text}", end="")
-
-workflow = (MagenticBuilder()
-           .participants(researcher=researcher, coder=coder)
-           .on_event(on_event, mode=MagenticCallbackMode.STREAMING)
-           .with_standard_manager(
-               chat_client=coordinator_client,
-               max_round_count=20,
-               max_stall_count=3,
-               max_reset_count=2
-           )
-           .build())
+workflow = (
+    MagenticBuilder()
+    .participants(researcher=researcher, coder=coder)
+    .with_standard_manager(
+        agent=manager_agent,
+        max_round_count=20,
+        max_stall_count=3,
+        max_reset_count=2,
+    )
+    .build()
+)
 
 # Example usage (would be in async context)
 async def magentic_example():
+    output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
-        if isinstance(event, WorkflowOutputEvent):
-            final_result = event.data
+        if isinstance(event, AgentRunUpdateEvent):
+            props = event.data.additional_properties if event.data else None
+            event_type = props.get("magentic_event_type") if props else None
+
+            if event_type == MAGENTIC_EVENT_TYPE_ORCHESTRATOR:
+                text = event.data.text if event.data else ""
+                print(f"[ORCHESTRATOR]: {text}")
+            elif event_type == MAGENTIC_EVENT_TYPE_AGENT_DELTA:
+                agent_id = props.get("agent_id", event.executor_id) if props else event.executor_id
+                if event.data and event.data.text:
+                    print(f"[{agent_id}]: {event.data.text}", end="")
+
+        elif isinstance(event, WorkflowOutputEvent):
+            output_messages = cast(list[ChatMessage], event.data)
+            if output_messages:
+                output = output_messages[-1].text
 ```
 
 **Agent Framework Customization Options:**
 
 The Magentic workflow provides extensive customization options:
 
-- **Manager configuration**: Custom orchestrator models and prompts
+- **Manager configuration**: Use a ChatAgent with custom instructions and model settings
 - **Round limits**: `max_round_count`, `max_stall_count`, `max_reset_count`
-- **Event callbacks**: Real-time streaming with granular event filtering
+- **Event streaming**: Use `AgentRunUpdateEvent` with `magentic_event_type` metadata
 - **Agent specialization**: Custom instructions and tools per agent
-- **Callback modes**: `STREAMING` for real-time updates or `BATCH` for final results
-- **Human-in-the-loop planning**: Custom planner functions for interactive workflows
+- **Human-in-the-loop**: Plan review, tool approval, and stall intervention
 
 ```python
 # Advanced customization example with human-in-the-loop
+from typing import cast
+from agent_framework import (
+    MAGENTIC_EVENT_TYPE_AGENT_DELTA,
+    MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
+    AgentRunUpdateEvent,
+    ChatAgent,
+    MagenticBuilder,
+    MagenticHumanInterventionDecision,
+    MagenticHumanInterventionKind,
+    MagenticHumanInterventionReply,
+    MagenticHumanInterventionRequest,
+    RequestInfoEvent,
+    WorkflowOutputEvent,
+)
 from agent_framework.openai import OpenAIChatClient
-from agent_framework import MagenticBuilder, MagenticCallbackMode, MagenticPlannerContext
 
-# Assume we have researcher_agent, coder_agent, analyst_agent, detailed_event_handler
-# and get_human_input function defined elsewhere
+# Create manager agent with custom configuration
+manager_agent = ChatAgent(
+    name="MagenticManager",
+    description="Orchestrator for complex tasks",
+    instructions="Custom orchestration instructions...",
+    chat_client=OpenAIChatClient(model_id="gpt-4o"),
+)
 
-async def custom_planner(context: MagenticPlannerContext) -> str:
-    """Custom planner with human input for critical decisions."""
-    if context.round_count > 5:
-        # Request human input for complex decisions
-        return await get_human_input(f"Next action for: {context.current_state}")
-    return "Continue with automated planning"
+workflow = (
+    MagenticBuilder()
+    .participants(
+        researcher=researcher_agent,
+        coder=coder_agent,
+        analyst=analyst_agent,
+    )
+    .with_standard_manager(
+        agent=manager_agent,
+        max_round_count=15,      # Limit total rounds
+        max_stall_count=2,       # Trigger stall handling
+        max_reset_count=1,       # Allow one reset on failure
+    )
+    .with_plan_review()           # Enable human plan review
+    .with_human_input_on_stall()  # Enable human intervention on stalls
+    .build()
+)
 
-workflow = (MagenticBuilder()
-           .participants(
-               researcher=researcher_agent,
-               coder=coder_agent,
-               analyst=analyst_agent
-           )
-           .with_standard_manager(
-               chat_client=OpenAIChatClient(model_id="gpt-5"),
-               max_round_count=15,      # Limit total rounds
-               max_stall_count=2,       # Prevent infinite loops
-               max_reset_count=1,       # Allow one reset on failure
-               orchestrator_prompt="Custom orchestration instructions..."
-           )
-           .with_planner(custom_planner)  # Human-in-the-loop planning
-           .on_event(detailed_event_handler, mode=MagenticCallbackMode.STREAMING)
-           .build())
+# Handle human intervention requests during execution
+async for event in workflow.run_stream("Complex task"):
+    if isinstance(event, RequestInfoEvent) and event.request_type is MagenticHumanInterventionRequest:
+        req = cast(MagenticHumanInterventionRequest, event.data)
+        if req.kind == MagenticHumanInterventionKind.PLAN_REVIEW:
+            # Review and approve the plan
+            reply = MagenticHumanInterventionReply(
+                decision=MagenticHumanInterventionDecision.APPROVE
+            )
+            async for ev in workflow.send_responses_streaming({event.request_id: reply}):
+                pass  # Handle continuation
 ```
 
 For detailed Magentic examples, see:
 
 - [Basic Magentic Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic.py) - Standard orchestrated multi-agent workflow
 - [Magentic with Checkpointing](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_checkpoint.py) - Persistent orchestrated workflows
-- [Magentic Human Plan Update](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_human_plan_update.py) - Human-in-the-loop planning
+- [Magentic Human Plan Update](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_human_plan_update.py) - Human-in-the-loop plan review
+- [Magentic Agent Clarification](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_agent_clarification.py) - Tool approval for agent clarification
+- [Magentic Human Replan](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_human_replan.py) - Human intervention on stalls
 
 #### Future Patterns
 

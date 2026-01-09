@@ -1,6 +1,6 @@
 ---
 title: Create a Workflow with Branching Logic
-description: Learn how to create a workflow with branching logic using Agent Framework.
+description: Learn how to create a workflow with branching logic.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -28,6 +28,10 @@ You'll create an email processing workflow that demonstrates conditional routing
 - A legitimate email handler that drafts professional responses.
 - A spam handler that marks suspicious emails.
 - Shared state management to persist email data between workflow steps.
+
+### Concepts Covered
+
+- [Conditional Edges](../../user-guide/workflows/core-concepts/edges.md#conditional-edges)
 
 ### Prerequisites
 
@@ -375,10 +379,14 @@ You'll create an email processing workflow that demonstrates conditional routing
 - A legitimate email handler that drafts professional responses
 - A spam handler that marks suspicious emails
 
+### Concepts Covered
+
+- [Conditional Edges](../../user-guide/workflows/core-concepts/edges.md#conditional-edges)
+
 ### Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework-core`
+- Agent Framework installed: `pip install agent-framework-core --pre`
 - Azure OpenAI service configured with proper environment variables
 - Azure CLI authentication: `az login`
 
@@ -629,6 +637,10 @@ You'll extend the email processing workflow to handle three decision paths:
 - **Uncertain** → Handle Uncertain Executor (default case)
 
 The key improvement is using the `SwitchBuilder` pattern instead of multiple individual conditional edges, making the workflow easier to understand and maintain as decision complexity grows.
+
+### Concepts Covered
+
+- [Switch-Case Edges](../../user-guide/workflows/core-concepts/edges.md#switch-case-edges)
 
 ### Data Models for Switch-Case
 
@@ -995,6 +1007,10 @@ You'll extend the email processing workflow to handle three decision paths:
 
 The key improvement is using a single switch-case edge group instead of multiple individual conditional edges, making the workflow easier to understand and maintain as decision complexity grows.
 
+### Concepts Covered
+
+- [Switch-Case Edges](../../user-guide/workflows/core-concepts/edges.md#switch-case-edges)
+
 ### Enhanced Data Models
 
 Update your data models to support the three-way classification:
@@ -1270,6 +1286,10 @@ Building on the switch-case example, you'll create an enhanced email processing 
 
 This pattern enables parallel processing pipelines that adapt to content characteristics.
 
+### Concepts Covered
+
+- [Fan-out Edges](../../user-guide/workflows/core-concepts/edges.md#fan-out-edges)
+
 ### Data Models for Multi-Selection
 
 Extend the data models to support email length analysis and summarization:
@@ -1330,16 +1350,16 @@ public static class EmailProcessingConstants
 }
 ```
 
-### Partitioner Function: The Heart of Multi-Selection
+### Target Assigner Function: The Heart of Multi-Selection
 
-The partitioner function determines which executors should receive each message:
+The target assigner function determines which executors should receive each message:
 
 ```csharp
 /// <summary>
-/// Creates a partitioner for routing messages based on the analysis result.
+/// Creates a target assigner for routing messages based on the analysis result.
 /// </summary>
 /// <returns>A function that takes an analysis result and returns the target partitions.</returns>
-private static Func<AnalysisResult?, int, IEnumerable<int>> GetPartitioner()
+private static Func<AnalysisResult?, int, IEnumerable<int>> GetTargetAssigner()
 {
     return (analysisResult, targetCount) =>
     {
@@ -1372,7 +1392,7 @@ private static Func<AnalysisResult?, int, IEnumerable<int>> GetPartitioner()
 }
 ```
 
-### Key Features of the Partitioner Function
+### Key Features of the Target Assigner Function
 
 1. **Dynamic Target Selection**: Returns a list of executor indices to activate
 2. **Content-Aware Routing**: Makes decisions based on message properties like email length
@@ -1630,7 +1650,7 @@ public static class Program
                 emailSummaryExecutor,      // Index 2: Summarizer (conditionally for long NotSpam)
                 handleUncertainExecutor,   // Index 3: Uncertain handler
             ],
-            partitioner: GetPartitioner()
+            targetSelector: GetTargetAssigner()
         )
         // Email assistant branch
         .AddEdge(emailAssistantExecutor, sendEmailExecutor)
@@ -1689,7 +1709,7 @@ builder.AddSwitch(spamDetectionExecutor, switchBuilder =>
 builder.AddFanOutEdge(
     emailAnalysisExecutor,
     targets: [handleSpamExecutor, emailAssistantExecutor, emailSummaryExecutor, handleUncertainExecutor],
-    partitioner: GetPartitioner() // Returns list of target indices
+    targetSelector: GetTargetAssigner() // Returns list of target indices
 )
 ```
 
@@ -1746,6 +1766,10 @@ Building on the switch-case example, you'll create an enhanced email processing 
 - **Database persistence** → Triggered for both short emails and summarized long emails
 
 This pattern enables parallel processing pipelines that adapt to content characteristics.
+
+### Concepts Covered
+
+- [Fan-Out Edges](../../user-guide/workflows/core-concepts/edges.md#fan-out-edges)
 
 ### Enhanced Data Models for Multi-Selection
 

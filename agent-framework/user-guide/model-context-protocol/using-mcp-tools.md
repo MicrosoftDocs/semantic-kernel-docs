@@ -11,11 +11,11 @@ ms.service: agent-framework
 
 # Using MCP tools with Agents
 
-The Microsoft Agent Framework supports integration with Model Context Protocol (MCP) servers, allowing your agents to access external tools and services. This guide shows how to connect to an MCP server and use its tools within your agent.
+Microsoft Agent Framework supports integration with Model Context Protocol (MCP) servers, allowing your agents to access external tools and services. This guide shows how to connect to an MCP server and use its tools within your agent.
 
 ::: zone pivot="programming-language-csharp"
 
-The .Net version of Agent Framework can be used together with the [official MCP C# SDK](https://github.com/modelcontextprotocol/csharp-sdk) to allow your agent to call MCP tools.
+The .NET version of Agent Framework can be used together with the [official MCP C# SDK](https://github.com/modelcontextprotocol/csharp-sdk) to allow your agent to call MCP tools.
 
 The following sample shows how to:
 
@@ -55,7 +55,7 @@ var mcpTools = await mcpClient.ListToolsAsync().ConfigureAwait(false);
 
 The `ListToolsAsync()` method returns a collection of tools that the MCP server exposes. These tools are automatically converted to AITool objects that can be used by your agent.
 
-### Creating an Agent with MCP Tools
+### Create an Agent with MCP Tools
 
 Create your agent and provide the MCP tools during initialization:
 
@@ -65,7 +65,7 @@ AIAgent agent = new AzureOpenAIClient(
     new AzureCliCredential())
      .GetChatClient(deploymentName)
      .CreateAIAgent(
-         instructions: "You answer questions related to GitHub repositories only.", 
+         instructions: "You answer questions related to GitHub repositories only.",
          tools: [.. mcpTools.Cast<AITool>()]);
 
 ```
@@ -97,7 +97,7 @@ The agent will:
 Make sure to set up the required environment variables:
 
 ```csharp
-var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? 
+var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
     throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 ```
@@ -123,8 +123,7 @@ Popular MCP servers include:
 Each server provides different tools and capabilities that extend your agent's functionality.
 This integration allows your agents to seamlessly access external data and services while maintaining the security and standardization benefits of the Model Context Protocol.
 
-
-The full source code and instructions to run this sample is available [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/ModelContextProtocol/Agent_MCP_Server).
+The full source code and instructions to run this sample is available at <https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/ModelContextProtocol/Agent_MCP_Server>.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -148,8 +147,8 @@ async def local_mcp_example():
     """Example using a local MCP server via stdio."""
     async with (
         MCPStdioTool(
-            name="calculator", 
-            command="uvx", 
+            name="calculator",
+            command="uvx",
             args=["mcp-server-calculator"]
         ) as mcp_server,
         ChatAgent(
@@ -159,7 +158,7 @@ async def local_mcp_example():
         ) as agent,
     ):
         result = await agent.run(
-            "What is 15 * 23 + 45?", 
+            "What is 15 * 23 + 45?",
             tools=mcp_server
         )
         print(result)
@@ -240,7 +239,7 @@ if __name__ == "__main__":
 Common MCP servers you can use with Python Agent Framework:
 
 - **Calculator**: `uvx mcp-server-calculator` - Mathematical computations
-- **Filesystem**: `uvx mcp-server-filesystem` - File system operations  
+- **Filesystem**: `uvx mcp-server-filesystem` - File system operations
 - **GitHub**: `npx @modelcontextprotocol/server-github` - GitHub repository access
 - **SQLite**: `uvx mcp-server-sqlite` - Database operations
 

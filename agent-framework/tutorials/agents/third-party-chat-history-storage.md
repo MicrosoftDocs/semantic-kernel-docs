@@ -177,20 +177,20 @@ using OpenAI;
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
-     .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(new ChatClientAgentOptions
-     {
-         Name = "Joker",
-         Instructions = "You are good at telling jokes.",
-         ChatMessageStoreFactory = ctx =>
-         {
-             // Create a new chat message store for this agent that stores the messages in a vector store.
-             return new VectorChatMessageStore(
+    .GetChatClient("gpt-4o-mini")
+    .CreateAIAgent(new ChatClientAgentOptions
+    {
+        Name = "Joker",
+        ChatOptions = new() { Instructions = "You are good at telling jokes." },
+        ChatMessageStoreFactory = ctx =>
+        {
+            // Create a new chat message store for this agent that stores the messages in a vector store.
+            return new VectorChatMessageStore(
                 new InMemoryVectorStore(),
                 ctx.SerializedState,
                 ctx.JsonSerializerOptions);
-         }
-     });
+        }
+    });
 ```
 
 ::: zone-end

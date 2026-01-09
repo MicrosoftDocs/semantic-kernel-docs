@@ -1,6 +1,6 @@
 ---
 title: Handle Requests and Responses in Workflows
-description: Learn how to handle requests and responses in workflows using Agent Framework.
+description: Learn how to handle requests and responses in workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -12,6 +12,10 @@ ms.service: agent-framework
 # Handle Requests and Responses in Workflows
 
 This tutorial demonstrates how to handle requests and responses in workflows using Agent Framework Workflows. You'll learn how to create interactive workflows that can pause execution to request input from external sources (like humans or other systems) and then resume once a response is provided.
+
+## Concepts Covered
+
+- [Requests and Responses](../../user-guide/workflows/requests-and-responses.md)
 
 ::: zone pivot="programming-language-csharp"
 
@@ -68,12 +72,12 @@ Create executors that process user input and provide feedback:
 /// <summary>
 /// Executor that judges the guess and provides feedback.
 /// </summary>
-internal sealed class JudgeExecutor : Executor<int>, IMessageHandler<int>
+internal sealed class JudgeExecutor : Executor<int>("Judge")
 {
     private readonly int _targetNumber;
     private int _tries;
 
-    public JudgeExecutor(int targetNumber) : base("Judge")
+    public JudgeExecutor(int targetNumber) : this()
     {
         _targetNumber = targetNumber;
     }
@@ -279,9 +283,8 @@ Executors can send requests directly using `ctx.request_info()` and handle respo
 First, install the required packages:
 
 ```bash
-pip install agent-framework-core
+pip install agent-framework-core --pre
 pip install azure-identity
-pip install pydantic
 ```
 
 ## Define Request and Response Models

@@ -39,7 +39,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 using Microsoft.Agents.AI;
 
@@ -213,25 +213,41 @@ def select_next_speaker(state: GroupChatStateSnapshot) -> str | None:
 # Build the group chat workflow
 workflow = (
     GroupChatBuilder()
-    .select_speakers(select_next_speaker, display_name="Orchestrator")
+    .set_select_speakers_func(select_next_speaker, display_name="Orchestrator")
     .participants([researcher, writer])
     .build()
 )
 ```
 
-## Configure Group Chat with Prompt-Based Manager
+## Configure Group Chat with Agent-Based Manager
 
-Alternatively, use an AI-powered manager for dynamic speaker selection:
+Alternatively, use an agent-based manager for intelligent speaker selection. The manager is a full `ChatAgent` with access to tools, context, and observability:
 
 ```python
-# Build group chat with prompt-based manager
+# Create coordinator agent for speaker selection
+coordinator = ChatAgent(
+    name="Coordinator",
+    description="Coordinates multi-agent collaboration by selecting speakers",
+    instructions="""
+You coordinate a team conversation to solve the user's task.
+
+Review the conversation history and select the next participant to speak.
+
+Guidelines:
+- Start with Researcher to gather information
+- Then have Writer synthesize the final answer
+- Only finish after both have contributed meaningfully
+- Allow for multiple rounds of information gathering if needed
+""",
+    chat_client=chat_client,
+)
+
+# Build group chat with agent-based manager
 workflow = (
     GroupChatBuilder()
-    .set_prompt_based_manager(
-        chat_client=chat_client,
-        display_name="Coordinator"
-    )
-    .participants(researcher=researcher, writer=writer)
+    .set_manager(coordinator, display_name="Orchestrator")
+    .with_termination_condition(lambda messages: sum(1 for msg in messages if msg.role == Role.ASSISTANT) >= 4)
+    .participants([researcher, writer])
     .build()
 )
 ```
@@ -241,24 +257,39 @@ workflow = (
 Execute the workflow and process events:
 
 ```python
-from agent_framework import AgentRunUpdateEvent, WorkflowOutputEvent
+from typing import cast
+from agent_framework import AgentRunUpdateEvent, Role, WorkflowOutputEvent
 
 task = "What are the key benefits of async/await in Python?"
 
 print(f"Task: {task}\n")
 print("=" * 80)
 
+final_conversation: list[ChatMessage] = []
+last_executor_id: str | None = None
+
 # Run the workflow
 async for event in workflow.run_stream(task):
     if isinstance(event, AgentRunUpdateEvent):
         # Print streaming agent updates
-        print(f"[{event.executor_id}]: {event.data}", end="", flush=True)
+        eid = event.executor_id
+        if eid != last_executor_id:
+            if last_executor_id is not None:
+                print()
+            print(f"[{eid}]:", end=" ", flush=True)
+            last_executor_id = eid
+        print(event.data, end="", flush=True)
     elif isinstance(event, WorkflowOutputEvent):
-        # Workflow completed
-        final_message = event.data
-        author = getattr(final_message, "author_name", "System")
-        text = getattr(final_message, "text", str(final_message))
-        print(f"\n\n[{author}]\n{text}")
+        # Workflow completed - data is a list of ChatMessage
+        final_conversation = cast(list[ChatMessage], event.data)
+
+if final_conversation:
+    print("\n\n" + "=" * 80)
+    print("Final Conversation:")
+    for msg in final_conversation:
+        author = getattr(msg, "author_name", "Unknown")
+        text = getattr(msg, "text", str(msg))
+        print(f"\n[{author}]\n{text}")
         print("-" * 80)
 
 print("\nWorkflow completed.")
@@ -314,13 +345,14 @@ Workflow completed.
 
 ::: zone pivot="programming-language-python"
 
-- **Flexible Manager Strategies**: Choose between simple selectors, prompt-based managers, or custom logic
+- **Flexible Manager Strategies**: Choose between simple selectors, agent-based managers, or custom logic
 - **GroupChatBuilder**: Creates workflows with configurable speaker selection
-- **select_speakers()**: Define custom Python functions for speaker selection
-- **set_prompt_based_manager()**: Use AI-powered coordination for dynamic speaker selection
+- **set_select_speakers_func()**: Define custom Python functions for speaker selection
+- **set_manager()**: Use an agent-based manager for intelligent speaker coordination
 - **GroupChatStateSnapshot**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
-- **Event Streaming**: Process agent updates and outputs in real-time
+- **Event Streaming**: Process `AgentRunUpdateEvent` and `WorkflowOutputEvent` in real-time
+- **list[ChatMessage] Output**: All orchestrations return a list of chat messages
 
 ::: zone-end
 
@@ -403,7 +435,7 @@ def smart_selector(state: GroupChatStateSnapshot) -> str | None:
 
 workflow = (
     GroupChatBuilder()
-    .select_speakers(smart_selector, display_name="SmartOrchestrator")
+    .set_select_speakers_func(smart_selector, display_name="SmartOrchestrator")
     .participants([researcher, writer])
     .build()
 )

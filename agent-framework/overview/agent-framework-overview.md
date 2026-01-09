@@ -1,9 +1,9 @@
 ---
 title: Introduction to Microsoft Agent Framework
 description: Learn about Microsoft Agent Framework
-author: ekzhu
+author: markwallace-microsoft
 ms.topic: reference
-ms.author: ekzhu
+ms.author: markwallace
 ms.date: 10/01/2025
 ms.service: agent-framework
 ---
@@ -54,13 +54,13 @@ and the same is expected for Agent Framework. Microsoft Agent Framework welcomes
 
 ## Installation
 
-Python:
+:::no-loc text="Python:":::
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
-.NET:
+:::no-loc text=".NET:":::
 
 ```dotnetcli
 dotnet add package Microsoft.Agents.AI

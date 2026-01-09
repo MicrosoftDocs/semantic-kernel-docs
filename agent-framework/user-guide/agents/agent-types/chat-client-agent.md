@@ -1,6 +1,6 @@
 ---
 title: Agent based on any IChatClient
-description: Learn how to use the Microsoft Agent Framework with any IChatClient implementation.
+description: Learn how to use Microsoft Agent Framework with any IChatClient implementation.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -13,25 +13,25 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-The Microsoft Agent Framework supports creating agents for any inference service that provides a [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
+Microsoft Agent Framework supports creating agents for any inference service that provides a [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
 
-In this document, we will use Ollama as an example.
+This article uses Ollama as an example.
 
 ## Getting Started
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI --prerelease
 ```
 
-You will also need to add the package for the specific `IChatClient` implementation you want to use. In this example, we will use [OllamaSharp](https://www.nuget.org/packages/OllamaSharp/).
+You will also need to add the package for the specific <xref:Microsoft.Extensions.AI.IChatClient> implementation you want to use. This example uses [OllamaSharp](https://www.nuget.org/packages/OllamaSharp/).
 
-```powershell
+```dotnetcli
 dotnet add package OllamaSharp
 ```
 
-## Creating a ChatClientAgent
+## Create a ChatClientAgent
 
 To create an agent based on the `IChatClient` interface, you can use the `ChatClientAgent` class.
 The `ChatClientAgent` class takes `IChatClient` as a constructor parameter.
@@ -65,26 +65,26 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 
 The agent is a standard `AIAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-The Microsoft Agent Framework supports creating agents for any inference service that provides a chat client implementation compatible with the `ChatClientProtocol`. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
+Microsoft Agent Framework supports creating agents for any inference service that provides a chat client implementation compatible with the `ChatClientProtocol`. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
 
 ## Getting Started
 
 Add the required Python packages to your project.
 
 ```bash
-pip install agent-framework
+pip install agent-framework --pre
 ```
 
-You may also need to add packages for specific chat client implementations you want to use:
+You might also need to add packages for specific chat client implementations you want to use:
 
 ```bash
 # For Azure AI
-pip install agent-framework-azure-ai
+pip install agent-framework-azure-ai --pre
 
 # For custom implementations
 # Install any required dependencies for your custom client
@@ -149,7 +149,7 @@ async with AzureCliCredential() as credential:
 
 The agent supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 
