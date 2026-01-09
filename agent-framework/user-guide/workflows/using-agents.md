@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Microsoft Agent Framework Workflows - Working with Agents
 
-This page provides an overview of how to use **Agents** within the Microsoft Agent Framework Workflows.
+This page provides an overview of how to use **Agents** within Microsoft Agent Framework Workflows.
 
 ## Overview
 
@@ -24,7 +24,7 @@ To add intelligence to your workflows, you can leverage AI agents as part of you
 You can add agents to your workflow via edges:
 
 ```csharp
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 using Microsoft.Agents.AI;
 
@@ -42,9 +42,9 @@ Workflow<ChatMessage> workflow = builder.Build<ChatMessage>();
 
 Inside the workflow created above, the agents are actually wrapped inside an executor that handles the communication of the agent with other parts of the workflow. The executor can handle three message types:
 
-- `ChatMessage`: A single chat message
-- `List<ChatMessage>`: A list of chat messages
-- `TurnToken`: A turn token that signals the start of a new turn
+- `ChatMessage`: A single chat message.
+- `List<ChatMessage>`: A list of chat messages.
+- `TurnToken`: A turn token that signals the start of a new turn.
 
 The executor doesn't trigger the agent to respond until it receives a `TurnToken`. Any messages received before the `TurnToken` are buffered and sent to the agent when the `TurnToken` is received.
 
@@ -139,7 +139,7 @@ async for event in workflow.run_streaming("Write a short blog post about AI agen
 
 ## Using a Custom Agent Executor
 
-Sometimes you may want to customize how AI agents are integrated into a workflow. You can achieve this by creating a custom executor. This allows you to control:
+Sometimes you might want to customize how AI agents are integrated into a workflow. You can achieve this by creating a custom executor. This allows you to control:
 
 - The invocation of the agent: streaming or non-streaming
 - The message types the agent will handle, including custom message types
@@ -151,7 +151,7 @@ Sometimes you may want to customize how AI agents are integrated into a workflow
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-internal sealed class CustomAgentExecutor : ReflectingExecutor<CustomAgentExecutor>, IMessageHandler<CustomInput, CustomOutput>
+internal sealed class CustomAgentExecutor : Executor<CustomInput, CustomOutput>("CustomAgentExecutor")
 {
     private readonly AIAgent _agent;
 
@@ -228,3 +228,6 @@ class Writer(Executor):
 - [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
 - [Learn how to manage state](./shared-states.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
+- [Learn how to monitor workflows](./observability.md).
+- [Learn about state isolation in workflows](./state-isolation.md).
+- [Learn how to visualize workflows](./visualization.md).

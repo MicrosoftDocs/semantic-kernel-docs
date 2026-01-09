@@ -1,6 +1,6 @@
 ---
 title: Create a Simple Concurrent Workflow
-description: Learn how to create a simple concurrent workflow using Agent Framework.
+description: Learn how to create a simple concurrent workflow.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -23,6 +23,14 @@ You'll create a workflow that:
 - Sends the same question to two expert AI agents simultaneously (Physicist and Chemist)
 - Collects and combines responses from both agents into a single output
 - Demonstrates concurrent execution with AI agents using fan-out/fan-in patterns
+
+### Concepts Covered
+
+- [Executors](../../user-guide/workflows/core-concepts/executors.md)
+- [Fan-out Edges](../../user-guide/workflows/core-concepts/edges.md#fan-out-edges)
+- [Fan-in Edges](../../user-guide/workflows/core-concepts/edges.md#fan-in-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
+- [Events](../../user-guide/workflows/core-concepts/events.md)
 
 ## Prerequisites
 
@@ -101,8 +109,7 @@ The `ConcurrentStartExecutor` implementation:
 /// <summary>
 /// Executor that starts the concurrent processing by sending messages to the agents.
 /// </summary>
-internal sealed class ConcurrentStartExecutor() :
-    Executor<string>("ConcurrentStartExecutor")
+internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentStartExecutor")
 {
     /// <summary>
     /// Starts the concurrent processing by sending messages to the agents.
@@ -117,7 +124,7 @@ internal sealed class ConcurrentStartExecutor() :
         // Broadcast the message to all connected agents. Receiving agents will queue
         // the message but will not start processing until they receive a turn token.
         await context.SendMessageAsync(new ChatMessage(ChatRole.User, message), cancellationToken);
-        
+
         // Broadcast the turn token to kick off the agents.
         await context.SendMessageAsync(new TurnToken(emitEvents: true), cancellationToken);
     }
@@ -139,7 +146,7 @@ The `ConcurrentAggregationExecutor` implementation:
 /// Executor that aggregates the results from the concurrent agents.
 /// </summary>
 internal sealed class ConcurrentAggregationExecutor() :
-    Executor<ChatMessage>("ConcurrentAggregationExecutor")
+    Executor<List<ChatMessage>>("ConcurrentAggregationExecutor")
 {
     private readonly List<ChatMessage> _messages = [];
 
@@ -151,9 +158,9 @@ internal sealed class ConcurrentAggregationExecutor() :
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
     /// The default is <see cref="CancellationToken.None"/>.</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public override async ValueTask HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    public override async ValueTask HandleAsync(List<ChatMessage> message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
-        this._messages.Add(message);
+        this._messages.AddRange(message);
 
         if (this._messages.Count == 2)
         {
@@ -231,10 +238,18 @@ You'll create a workflow that:
 - Aggregates the different result types (float and int) into a final output
 - Demonstrates how the framework handles different result types from concurrent executors
 
+### Concepts Covered
+
+- [Executors](../../user-guide/workflows/core-concepts/executors.md)
+- [Fan-out Edges](../../user-guide/workflows/core-concepts/edges.md#fan-out-edges)
+- [Fan-in Edges](../../user-guide/workflows/core-concepts/edges.md#fan-in-edges)
+- [Workflow Builder](../../user-guide/workflows/core-concepts/workflows.md)
+- [Events](../../user-guide/workflows/core-concepts/events.md)
+
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework Core installed: `pip install agent-framework-core`
+- Agent Framework Core installed: `pip install agent-framework-core --pre`
 
 ## Step 1: Import Required Dependencies
 

@@ -1,6 +1,6 @@
 ---
 title: Azure AI Foundry Agents
-description: Learn how to use the Microsoft Agent Framework with Azure AI Foundry Agents service.
+description: Learn how to use Microsoft Agent Framework with Azure AI Foundry Agents service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Azure AI Foundry Agents
 
-The Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service, you can create persistent service-based agent instances with service-managed conversation threads.
+Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service. You can create persistent service-based agent instances with service-managed conversation threads.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -19,12 +19,12 @@ The Microsoft Agent Framework supports creating agents that use the [Azure AI Fo
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.AzureAI.Persistent --prerelease
 ```
 
-## Creating Azure AI Foundry Agents
+## Create Azure AI Foundry Agents
 
 As a first step you need to create a client to connect to the Azure AI Foundry Agents service.
 
@@ -60,7 +60,7 @@ AIAgent agent1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Valu
 Console.WriteLine(await agent1.RunAsync("Tell me a joke about a pirate."));
 ```
 
-### Using the Agent Framework helpers
+### Using Agent Framework helpers
 
 You can also create and return an `AIAgent` in one step:
 
@@ -83,7 +83,7 @@ AIAgent agent3 = await persistentAgentsClient.GetAIAgentAsync("<agent-id>");
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -106,7 +106,7 @@ Alternatively, you can provide these values directly in your code.
 Add the Agent Framework Azure AI package to your project:
 
 ```bash
-pip install agent-framework-azure-ai
+pip install agent-framework-azure-ai --pre
 ```
 
 ## Getting Started
@@ -122,7 +122,7 @@ async with AzureCliCredential() as credential:
     # Use credential with Azure AI agent client
 ```
 
-## Creating Azure AI Foundry Agents
+## Create Azure AI Foundry Agents
 
 ### Basic Agent Creation
 
@@ -203,7 +203,7 @@ async def main():
 asyncio.run(main())
 ```
 
-### Creating and Managing Persistent Agents
+### Create and Manage Persistent Agents
 
 For more control over agent lifecycle, you can create persistent agents using the Azure AI Projects client:
 
@@ -337,7 +337,7 @@ asyncio.run(main())
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 

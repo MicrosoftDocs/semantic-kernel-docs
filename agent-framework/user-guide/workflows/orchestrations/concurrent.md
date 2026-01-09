@@ -35,7 +35,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using Microsoft.Agents.Workflows;
+using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 using Microsoft.Agents.AI;
 
@@ -91,9 +91,9 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
     {
         Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
-    else if (evt is WorkflowCompletedEvent completed)
+    else if (evt is WorkflowOutputEvent outputEvt)
     {
-        result = (List<ChatMessage>)completed.Data!;
+        result = (List<ChatMessage>)outputEvt.Data!;
         break;
     }
 }
@@ -132,7 +132,7 @@ Assistant: English detected. Hello, world!
 
 ::: zone pivot="programming-language-python"
 
-Agents are specialized entities that can process tasks. Here, we define three agents: a research expert, a marketing expert, and a legal expert.
+Agents are specialized entities that can process tasks. The following code defines three agents: a research expert, a marketing expert, and a legal expert.
 
 ```python
 from agent_framework.azure import AzureChatClient
@@ -180,17 +180,17 @@ workflow = ConcurrentBuilder().participants([researcher, marketer, legal]).build
 ## Run the Concurrent Workflow and Collect the Results
 
 ```python
-from agent_framework import ChatMessage, WorkflowCompletedEvent
+from agent_framework import ChatMessage, WorkflowOutputEvent
 
 # 3) Run with a single prompt, stream progress, and pretty-print the final combined messages
-completion: WorkflowCompletedEvent | None = None
+output_evt: WorkflowOutputEvent  | None = None
 async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowCompletedEvent):
-        completion = event
+    if isinstance(event, WorkflowOutputEvent):
+        output_evt = event
 
-if completion:
+if output_evt:
     print("===== Final Aggregated Conversation (messages) =====")
-    messages: list[ChatMessage] | Any = completion.data
+    messages: list[ChatMessage] | Any = output_evt.data
     for i, msg in enumerate(messages, start=1):
         name = msg.author_name if msg.author_name else "user"
         print(f"{'-' * 60}\n\n{i:02d} [{name}]:\n{msg.text}")
@@ -245,7 +245,7 @@ Sample Output:
     **1. Regulatory Compliance**
     - Verify that the electric bike meets all applicable federal, state, and local regulations
         regarding e-bike classification, speed limits, power output, and safety features.
-    - Ensure necessary certifications (e.g., UL certification for batteries, CE markings if sold internationally) are obtained.
+    - Ensure necessary certifications (for example, UL certification for batteries, CE markings if sold internationally) are obtained.
 
     **2. Product Safety**
     - Include consumer safety warnings regarding use, battery handling, charging protocols, and age restrictions.
@@ -362,14 +362,14 @@ workflow = (
     .build()
 )
 
-completion: WorkflowCompletedEvent | None = None
+output_evt: WorkflowOutputEvent | None = None
 async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowCompletedEvent):
-        completion = event
+    if isinstance(event, WorkflowOutputEvent):
+        output_evt = event
 
-if completion:
+if output_evt:
     print("===== Final Consolidated Output =====")
-    print(completion.data)
+    print(output_evt.data)
 ```
 
 ### Sample Output with Custom Aggregator

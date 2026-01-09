@@ -19,16 +19,15 @@ Executors are the fundamental building blocks that process messages in a workflo
 
 ::: zone pivot="programming-language-csharp"
 
-Executors implement the `IMessageHandler<TInput>` or `IMessageHandler<TInput, TOutput>` interfaces and inherit from the `ReflectingExecutor<T>` base class. Each executor has a unique identifier and can handle specific message types.
+Executors inherit from the `Executor<TInput, TOutput>` base class. Each executor has a unique identifier and can handle specific message types.
 
 ### Basic Executor Structure
 
 ```csharp
-using Microsoft.Agents.Workflows;
-using Microsoft.Agents.Workflows.Reflection;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"),
-    IMessageHandler<string, string>
+internal sealed class UppercaseExecutor() : Executor<string, string>("UppercaseExecutor")
 {
     public async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
     {
@@ -41,8 +40,7 @@ internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor
 It is possible to send messages manually without returning a value:
 
 ```csharp
-internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor>("UppercaseExecutor"),
-    IMessageHandler<string>
+internal sealed class UppercaseExecutor() : Executor<string>("UppercaseExecutor")
 {
     public async ValueTask HandleAsync(string message, IWorkflowContext context)
     {
@@ -52,16 +50,22 @@ internal sealed class UppercaseExecutor() : ReflectingExecutor<UppercaseExecutor
 }
 ```
 
-It is also possible to handle multiple input types by implementing multiple interfaces:
+It is also possible to handle multiple input types by overriding the `ConfigureRoutes` method:
 
 ```csharp
-internal sealed class SampleExecutor() : ReflectingExecutor<SampleExecutor>("SampleExecutor"),
-    IMessageHandler<string, string>, IMessageHandler<int, int>
+internal sealed class SampleExecutor() : Executor("SampleExecutor")
 {
+    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
+    {
+        return routeBuilder
+            .AddHandler<string>(this.HandleStringAsync)
+            .AddHandler<int>(this.HandleIntAsync);
+    }
+
     /// <summary>
     /// Converts input string to uppercase
     /// </summary>
-    public async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
+    public async ValueTask<string> HandleStringAsync(string message, IWorkflowContext context)
     {
         string result = message.ToUpperInvariant();
         return result;
@@ -70,12 +74,19 @@ internal sealed class SampleExecutor() : ReflectingExecutor<SampleExecutor>("Sam
     /// <summary>
     /// Doubles the input integer
     /// </summary>
-    public async ValueTask<int> HandleAsync(int message, IWorkflowContext context)
+    public async ValueTask<int> HandleIntAsync(int message, IWorkflowContext context)
     {
         int result = message * 2;
         return result;
     }
 }
+```
+
+It is also possible to create an executor from a function by using the `BindExecutor` extension method:
+
+```csharp
+Func<string, string> uppercaseFunc = s => s.ToUpperInvariant();
+var uppercase = uppercaseFunc.BindExecutor("UppercaseExecutor");
 ```
 
 ::: zone-end

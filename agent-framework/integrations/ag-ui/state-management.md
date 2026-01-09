@@ -488,7 +488,7 @@ agent = ChatAgent(
     chat_client=AzureOpenAIChatClient(
         credential=AzureCliCredential(),
         endpoint=endpoint,
-        deployment_name=deployment_name,    
+        deployment_name=deployment_name,
     ),
     tools=[update_recipe],
 )
@@ -614,7 +614,7 @@ async def main():
 
     # Create AG-UI chat client
     chat_client = AGUIChatClient(server_url=server_url)
-    
+
     # Wrap with ChatAgent for convenient API
     agent = ChatAgent(
         name="ClientAgent",
@@ -624,7 +624,7 @@ async def main():
 
     # Get a thread for conversation continuity
     thread = agent.get_new_thread()
-    
+
     # Track state locally
     state: dict[str, Any] = {}
 
@@ -647,7 +647,7 @@ async def main():
                 # Handle text content
                 if update.text:
                     print(update.text, end="", flush=True)
-                
+
                 # Handle state updates
                 for content in update.contents:
                     # STATE_SNAPSHOT events come as DataContent with application/json
@@ -656,7 +656,7 @@ async def main():
                         state_data = json.loads(content.data.decode() if isinstance(content.data, bytes) else content.data)
                         state = state_data
                         print("\n[State Snapshot Received]")
-                    
+
                     # STATE_DELTA events are handled similarly
                     # Apply JSON Patch deltas to maintain state
                     if hasattr(content, 'delta') and content.delta:
@@ -672,7 +672,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    # Install dependencies: pip install agent-framework-ag-ui jsonpatch
+    # Install dependencies: pip install agent-framework-ag-ui jsonpatch --pre
     asyncio.run(main())
 ```
 
@@ -913,7 +913,7 @@ Always write the complete state, not just deltas:
 def update_recipe(recipe: Recipe) -> str:
     """
     You MUST write the complete recipe with ALL fields.
-    When modifying a recipe, include ALL existing ingredients and 
+    When modifying a recipe, include ALL existing ingredients and
     instructions plus your changes. NEVER delete existing data.
     """
     return "Recipe updated."

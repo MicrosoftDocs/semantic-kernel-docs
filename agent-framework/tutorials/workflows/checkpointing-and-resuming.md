@@ -1,6 +1,6 @@
 ---
 title: Checkpointing and Resuming Workflows
-description: Learn how to implement checkpointing and resuming in workflows using Agent Framework.
+description: Learn how to implement checkpointing and resuming in workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -12,6 +12,10 @@ ms.service: agent-framework
 # Checkpointing and Resuming Workflows
 
 Checkpointing allows workflows to save their state at specific points and resume execution later, even after process restarts. This is crucial for long-running workflows, error recovery, and human-in-the-loop scenarios.
+
+### Concepts Covered
+
+- [Checkpoints](../../user-guide/workflows/checkpoints.md)
 
 ::: zone pivot="programming-language-csharp"
 
@@ -67,14 +71,14 @@ await using Checkpointed<StreamingRun> checkpointedRun = await InProcessExecutio
 Executors can persist local state that survives checkpoints using the `Executor<T>` base class:
 
 ```csharp
-internal sealed class GuessNumberExecutor : Executor<NumberSignal>
+internal sealed class GuessNumberExecutor : Executor<NumberSignal>("Guess")
 {
     private const string StateKey = "GuessNumberExecutor.State";
 
     public int LowerBound { get; private set; }
     public int UpperBound { get; private set; }
 
-    public GuessNumberExecutor() : base("GuessNumber")
+    public GuessNumberExecutor() : this()
     {
     }
 
@@ -446,37 +450,45 @@ Executors can persist local state that survives checkpoints:
 ```python
 from agent_framework import Executor, WorkflowContext, handler
 
-class UpperCaseExecutor(Executor):
+class WorkerExecutor(Executor):
+    """Processes numbers to compute their factor pairs and manages executor state for checkpointing."""
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id=id)
+        self._composite_number_pairs: dict[int, list[tuple[int, int]]] = {}
+
     @handler
-    async def to_upper_case(self, text: str, ctx: WorkflowContext[str]) -> None:
-        result = text.upper()
+    async def compute(
+        self,
+        task: ComputeTask,
+        ctx: WorkflowContext[ComputeTask, dict[int, list[tuple[int, int]]]],
+    ) -> None:
+        """Process the next number in the task, computing its factor pairs."""
+        next_number = task.remaining_numbers.pop(0)
 
-        # Persist executor-local state for checkpoints
-        prev = await ctx.get_executor_state() or {}
-        count = int(prev.get("count", 0)) + 1
-        await ctx.set_executor_state({
-            "count": count,
-            "last_input": text,
-            "last_output": result,
-        })
+        print(f"WorkerExecutor: Computing factor pairs for {next_number}")
+        pairs: list[tuple[int, int]] = []
+        for i in range(1, next_number):
+            if next_number % i == 0:
+                pairs.append((i, next_number // i))
+        self._composite_number_pairs[next_number] = pairs
 
-        # Send result to next executor
-        await ctx.send_message(result)
-```
+        if not task.remaining_numbers:
+            # All numbers processed - output the results
+            await ctx.yield_output(self._composite_number_pairs)
+        else:
+            # More numbers to process - continue with remaining task
+            await ctx.send_message(task)
 
-### Shared State
+    @override
+    async def on_checkpoint_save(self) -> dict[str, Any]:
+        """Save the executor's internal state for checkpointing."""
+        return {"composite_number_pairs": self._composite_number_pairs}
 
-Use shared state for data that multiple executors need to access:
-
-```python
-class ProcessorExecutor(Executor):
-    @handler
-    async def process(self, text: str, ctx: WorkflowContext[str]) -> None:
-        # Write to shared state for cross-executor visibility
-        await ctx.set_shared_state("original_input", text)
-        await ctx.set_shared_state("processed_output", text.upper())
-
-        await ctx.send_message(text.upper())
+    @override
+    async def on_checkpoint_restore(self, state: dict[str, Any]) -> None:
+        """Restore the executor's internal state from a checkpoint."""
+        self._composite_number_pairs = state.get("composite_number_pairs", {})
 ```
 
 ## Working with Checkpoints
@@ -494,24 +506,6 @@ workflow_checkpoints = await checkpoint_storage.list_checkpoints(workflow_id="my
 
 # Sort by creation time
 sorted_checkpoints = sorted(all_checkpoints, key=lambda cp: cp.timestamp)
-```
-
-### Checkpoint Information
-
-Access checkpoint metadata and state:
-
-```python
-from agent_framework import get_checkpoint_summary
-
-for checkpoint in checkpoints:
-    # Get human-readable summary
-    summary = get_checkpoint_summary(checkpoint)
-
-    print(f"Checkpoint: {summary.checkpoint_id}")
-    print(f"Iteration: {summary.iteration_count}")
-    print(f"Status: {summary.status}")
-    print(f"Messages: {len(checkpoint.messages)}")
-    print(f"Shared State: {checkpoint.shared_state}")
 ```
 
 ## Resuming from Checkpoints
@@ -686,4 +680,4 @@ For the complete working implementation, see the [Checkpoint with Resume sample]
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Learn about Workflow Visualization](visualization.md)
+> [Learn about using factories in workflow builders](./workflow-builder-with-factories.md)

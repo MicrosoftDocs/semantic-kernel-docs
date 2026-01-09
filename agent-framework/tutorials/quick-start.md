@@ -144,9 +144,19 @@ Before you begin, ensure you have the following:
 - [Python 3.10 or later](https://www.python.org/downloads/)
 - An [Azure AI](/azure/ai-foundry/) project with a deployed model (for example, `gpt-4o-mini`)
 - [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
+- Install the Agent Framework Package:
+
+```bash
+pip install -U agent-framework --pre
+```
 
 > [!NOTE]
-> This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI project. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
+> Installing `agent-framework` will install `agent-framework-core` and all other official packages. If you want to install only the Azure AI package, you can run: `pip install agent-framework-azure-ai --pre`
+> All of the official packages, including `agent-framework-azure-ai` have a dependency on `agent-framework-core`, so in most cases, you wouldn't have to specify that.
+> The full list of official packages can be found in the [Agent Framework GitHub repository](https://github.com/microsoft/agent-framework/blob/main/python/pyproject.toml#L80).
+
+> [!NOTE]
+> This sample uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure AI project. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively).
 
 ## Running a Basic Agent Sample
 
@@ -156,20 +166,17 @@ Make sure to set the following environment variables:
 - `AZURE_AI_PROJECT_ENDPOINT`: Your Azure AI project endpoint
 - `AZURE_AI_MODEL_DEPLOYMENT_NAME`: The name of your model deployment
 
-
 ### Sample Code
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework.azure import AzureAIClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
-        ChatAgent(
-            chat_client=AzureAIAgentClient(async_credential=credential),
+        AzureAIClient(async_credential=credential).create_agent(
             instructions="You are good at telling jokes."
         ) as agent,
     ):
@@ -182,7 +189,7 @@ if __name__ == "__main__":
 
 ## More Examples
 
-For more detailed examples and advanced scenarios, see the [Azure AI Agent Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/README.md).
+For more detailed examples and advanced scenarios, see the [Azure AI Examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/README.md).
 
 
 ::: zone-end

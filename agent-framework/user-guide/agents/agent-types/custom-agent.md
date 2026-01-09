@@ -1,6 +1,6 @@
 ---
 title: Custom Agents
-description: Learn how to build custom agents with the Microsoft Agent Framework.
+description: Learn how to build custom agents with Microsoft Agent Framework.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -13,20 +13,20 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-The Microsoft Agent Framework supports building custom agents by inheriting from the `AIAgent` class and implementing the required methods.
+Microsoft Agent Framework supports building custom agents by inheriting from the `AIAgent` class and implementing the required methods.
 
-This document shows how to build a simple custom agent that parrots back user input in upper case.
+This article shows how to build a simple custom agent that parrots back user input in upper case.
 In most cases building your own agent will involve more complex logic and integration with an AI service.
 
 ## Getting Started
 
 Add the required NuGet packages to your project.
 
-```powershell
+```dotnetcli
 dotnet add package Microsoft.Agents.AI.Abstractions --prerelease
 ```
 
-## Creating a Custom Agent
+## Create a Custom Agent
 
 ### The Agent Thread
 
@@ -36,9 +36,9 @@ of a single conversation, including message history, and any other state the age
 To make it easy to get started, you can inherit from various base classes that implement common thread storage mechanisms.
 
 1. `InMemoryAgentThread` - stores the chat history in memory and can be serialized to JSON.
-1. `ServiceIdAgentThread` - doesn't store any chat history, but allows you to associate an id with the thread, under which the chat history can be stored externally.
+1. `ServiceIdAgentThread` - doesn't store any chat history, but allows you to associate an ID with the thread, under which the chat history can be stored externally.
 
-For this example, we will use the `InMemoryAgentThread` as the base class for our custom thread.
+For this example, you'll use the `InMemoryAgentThread` as the base class for the custom thread.
 
 ```csharp
 internal sealed class CustomAgentThread : InMemoryAgentThread
@@ -51,7 +51,7 @@ internal sealed class CustomAgentThread : InMemoryAgentThread
 
 ### The Agent class
 
-Next, we want to create the agent class itself by inheriting from the `AIAgent` class.
+Next, create the agent class itself by inheriting from the `AIAgent` class.
 
 ```csharp
 internal sealed class UpperCaseParrotAgent : AIAgent
@@ -76,10 +76,10 @@ Two methods are required to be implemented:
 
 ### Core agent logic
 
-The core logic of the agent, is to take any input messages, convert their text to upper case, and return them as response messages.
+The core logic of the agent is to take any input messages, convert their text to upper case, and return them as response messages.
 
-We want to add the following method to contain this logic.
-We are cloning the input messages, since various aspects of the input messages have to be modified to be valid response messages.  E.g. the role has to be changed to `Assistant`.
+Add the following method to contain this logic.
+The input messages are cloned, since various aspects of the input messages have to be modified to be valid response messages. For example, the role has to be changed to `Assistant`.
 
 ```csharp
     private static IEnumerable<ChatMessage> CloneAndToUpperCase(IEnumerable<ChatMessage> messages, string agentName) => messages.Select(x =>
@@ -100,12 +100,12 @@ We are cloning the input messages, since various aspects of the input messages h
 
 ### Agent run methods
 
-Finally we need to implement the two core methods that are used to run the agent.
-One for non-streaming and one for streaming.
+Finally, you need to implement the two core methods that are used to run the agent:
+one for non-streaming and one for streaming.
 
-For both methods, we need to ensure that a thread is provided, and if not we create a new thread.
+For both methods, you need to ensure that a thread is provided, and if not, create a new thread.
 The thread can then be updated with the new messages by calling `NotifyThreadOfNewMessagesAsync`.
-If we don't do this, the user will not be able to have a multi-turn conversation with the agent and each run will be a fresh interaction.
+If you don't do this, the user won't be able to have a multi-turn conversation with the agent and each run will be a fresh interaction.
 
 ```csharp
     public override async Task<AgentRunResponse> RunAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, CancellationToken cancellationToken = default)
@@ -145,12 +145,12 @@ If we don't do this, the user will not be able to have a multi-turn conversation
 
 If the `AIAgent` methods are all implemented correctly, the agent would be a standard `AIAgent` and support standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-The Microsoft Agent Framework supports building custom agents by inheriting from the `BaseAgent` class and implementing the required methods.
+Microsoft Agent Framework supports building custom agents by inheriting from the `BaseAgent` class and implementing the required methods.
 
 This document shows how to build a simple custom agent that echoes back user input with a prefix.
 In most cases building your own agent will involve more complex logic and integration with an AI service.
@@ -160,10 +160,10 @@ In most cases building your own agent will involve more complex logic and integr
 Add the required Python packages to your project.
 
 ```bash
-pip install agent-framework-core
+pip install agent-framework-core --pre
 ```
 
-## Creating a Custom Agent
+## Create a Custom Agent
 
 ### The Agent Protocol
 
@@ -176,7 +176,7 @@ from typing import Any
 
 class MyCustomAgent(AgentProtocol):
     """A custom agent that implements the AgentProtocol directly."""
-    
+
     @property
     def id(self) -> str:
         """Returns the ID of the agent."""
@@ -344,7 +344,7 @@ class EchoAgent(BaseAgent):
 
 If agent methods are all implemented correctly, the agent would support all standard agent operations.
 
-See the [Agent getting started tutorials](../../../tutorials/overview.md) for more information on how to run and interact with agents.
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../../tutorials/overview.md).
 
 ::: zone-end
 

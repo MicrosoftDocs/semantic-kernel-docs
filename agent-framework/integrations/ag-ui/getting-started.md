@@ -387,13 +387,13 @@ The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using Fas
 Install the necessary packages for the server:
 
 ```bash
-pip install agent-framework-ag-ui
+pip install agent-framework-ag-ui --pre
 ```
 
 Or using uv:
 
 ```bash
-uv pip install agent-framework-ag-ui
+uv pip install agent-framework-ag-ui --prerelease=allow
 ```
 
 This will automatically install `agent-framework-core`, `fastapi`, and `uvicorn` as dependencies.
@@ -425,7 +425,7 @@ if not deployment_name:
 chat_client = AzureOpenAIChatClient(
     credential=AzureCliCredential(),
     endpoint=endpoint,
-    deployment_name=deployment_name,    
+    deployment_name=deployment_name,
 )
 
 # Create the AI agent
@@ -488,7 +488,7 @@ The AG-UI package is already installed, which includes the `AGUIChatClient`:
 
 ```bash
 # Already installed with agent-framework-ag-ui
-pip install agent-framework-ag-ui
+pip install agent-framework-ag-ui --pre
 ```
 
 ### Client Code
@@ -513,7 +513,7 @@ async def main():
 
     # Create AG-UI chat client
     chat_client = AGUIChatClient(server_url=server_url)
-    
+
     # Create agent with the chat client
     agent = ChatAgent(
         name="ClientAgent",

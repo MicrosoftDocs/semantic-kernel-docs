@@ -1,6 +1,7 @@
 ---
 title: Microsoft Agent Framework Workflows - Observability
 description: In-depth look at Observability in Microsoft Agent Framework Workflows.
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -12,34 +13,34 @@ ms.service: agent-framework
 
 Observability provides insights into the internal state and behavior of workflows during execution. This includes logging, metrics, and tracing capabilities that help monitor and debug workflows.
 
-Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/semconv/gen-ai/), Agent Framework Workflows emits additional spans, logs, and metrics to provide deeper insights into workflow execution. These observability features help developers understand the flow of messages, the performance of executors, and any errors that may occur.
+> [!TIP]
+> Observability is a framework-wide feature and is not limited to workflows. For more information, see [Observability](../observability.md).
+
+Aside from the standard [GenAI telemetry](https://opentelemetry.io/docs/specs/semconv/gen-ai/), Agent Framework Workflows emits additional spans, logs, and metrics to provide deeper insights into workflow execution. These observability features help developers understand the flow of messages, the performance of executors, and any errors that might occur.
 
 ## Enable Observability
 
-Observability is enabled framework-wide by setting the `ENABLE_OTEL=true` environment variable or calling `setup_observability()` at the beginning of your application.
+::: zone pivot="programming-language-csharp"
 
-```env
-# This is not required if you run `setup_observability()` in your code
-ENABLE_OTEL=true
-# Sensitive data (e.g., message content) will be included in logs and traces if this is set to true
-ENABLE_SENSITIVE_DATA=true
-```
+Please refer to [Enabling Observability](../observability.md#enable-observability-c) for instructions on enabling observability in your applications.
 
-```python
-from agent_framework.observability import setup_observability
+::: zone-end
 
-setup_observability(enable_sensitive_data=True)
-```
+::: zone pivot="programming-language-python"
+
+Please refer to [Enabling Observability](../observability.md#enable-observability-python) for instructions on enabling observability in your applications.
+
+::: zone-end
 
 ## Workflow Spans
 
-| Span Name                        | Description                                      |
-|----------------------------------|--------------------------------------------------|
-| `workflow.build`                 | For each workflow build                          |
-| `workflow.run`                   | For each workflow execution                      |
-| `message.send`                   | For each message sent to an executor             |
-| `executor.process`               | For each executor processing a message           |
-| `edge_group.process`             | For each edge group processing a message         |
+| Span Name            | Description                              |
+|----------------------|------------------------------------------|
+| `workflow.build`     | For each workflow build                  |
+| `workflow.run`       | For each workflow execution              |
+| `message.send`       | For each message sent to an executor     |
+| `executor.process`   | For each executor processing a message   |
+| `edge_group.process` | For each edge group processing a message |
 
 ### Links between Spans
 
@@ -51,7 +52,5 @@ For example:
 
 ## Next Steps
 
-- [Learn how to use agents in workflows](./using-agents.md) to build intelligent workflows.
-- [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
-- [Learn how to manage state](./shared-states.md) in workflows.
-- [Learn how to create checkpoints and resume from them](./checkpoints.md).
+- [Learn about state isolation in workflows](./state-isolation.md).
+- [Learn how to visualize workflows](./visualization.md).
