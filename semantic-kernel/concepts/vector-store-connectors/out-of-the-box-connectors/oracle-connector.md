@@ -204,12 +204,6 @@ var collection = new OracleCollection<string, Hotel>("<connection string>", "skh
 
 ## Getting started
 
-Install python-oracledb:
-
-```cli
-pip install python-oracledb
-```
-
 Install the Oracle Database Vector Store connector:
 
 ```cli
