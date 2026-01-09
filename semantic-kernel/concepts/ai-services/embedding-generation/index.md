@@ -84,6 +84,10 @@ Clone the repository containing the ONNX model you would like to use.
 git clone https://huggingface.co/TaylorAI/bge-micro-v2
 ```
 
+# [VoyageAI](#tab/csharp-VoyageAI)
+
+No local setup.
+
 ---
 
 ## Installing the necessary packages
@@ -130,6 +134,12 @@ dotnet add package Microsoft.SemanticKernel.Connectors.Ollama --prerelease
 
 ```bash
 dotnet add package Microsoft.SemanticKernel.Connectors.Onnx --prerelease
+```
+
+# [VoyageAI](#tab/csharp-VoyageAI)
+
+```bash
+dotnet add package Microsoft.SemanticKernel.Connectors.VoyageAI --prerelease
 ```
 
 ---
@@ -278,6 +288,26 @@ kernelBuilder.AddBertOnnxTextEmbeddingGeneration(
     onnxModelPath: "PATH_ON_DISK",       // Path to the model on disk e.g. C:\Repos\huggingface\microsoft\TaylorAI\bge-micro-v2\onnx\model.onnx
     vocabPath: "VOCABULARY_PATH_ON_DISK",// Path to the vocabulary file on disk, e.g. C:\Repos\huggingface\TailorAI\bge-micro-v2\vocab.txt
     serviceId: "SERVICE_ID"              // Optional; for targeting specific services within Semantic Kernel
+);
+Kernel kernel = kernelBuilder.Build();
+```
+
+# [VoyageAI](#tab/csharp-VoyageAI)
+
+> [!IMPORTANT]
+> The VoyageAI embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+#pragma warning disable SKEXP0070
+IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
+kernelBuilder.AddVoyageAITextEmbeddingGeneration(
+    modelId: "voyage-3-large",           // Name of the VoyageAI model, e.g. "voyage-3-large", "voyage-code-3", "voyage-finance-2"
+    apiKey: "YOUR_API_KEY",
+    endpoint: "https://api.voyageai.com/v1", // Optional; VoyageAI API endpoint
+    serviceId: "YOUR_SERVICE_ID",        // Optional; for targeting specific services within Semantic Kernel
+    httpClient: new HttpClient()         // Optional; if not provided, the HttpClient from the kernel will be used
 );
 Kernel kernel = kernelBuilder.Build();
 ```
@@ -451,6 +481,29 @@ builder.Services.AddTransient((serviceProvider)=> {
 });
 ```
 
+# [VoyageAI](#tab/csharp-VoyageAI)
+
+> [!IMPORTANT]
+> The VoyageAI embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+#pragma warning disable SKEXP0070
+builder.Services.AddVoyageAITextEmbeddingGeneration(
+    modelId: "voyage-3-large",                  // Name of the VoyageAI model
+    apiKey: "YOUR_API_KEY",
+    endpoint: "https://api.voyageai.com/v1",    // Optional; VoyageAI API endpoint
+    serviceId: "SERVICE_ID"                     // Optional; for targeting specific services within Semantic Kernel
+);
+
+builder.Services.AddTransient((serviceProvider)=> {
+    return new Kernel(serviceProvider);
+});
+```
+
 ---
 
 ### Creating standalone instances
@@ -577,6 +630,23 @@ BertOnnxTextEmbeddingGenerationService textEmbeddingGenerationService = await Be
 );
 ```
 
+# [VoyageAI](#tab/csharp-VoyageAI)
+
+> [!IMPORTANT]
+> The VoyageAI embedding generation connector is currently experimental. To use it, you will need to add `#pragma warning disable SKEXP0070`.
+
+```csharp
+using Microsoft.SemanticKernel.Connectors.VoyageAI;
+
+#pragma warning disable SKEXP0070
+VoyageAITextEmbeddingGenerationService textEmbeddingGenerationService = new(
+    modelId: "voyage-3-large",                  // Name of the VoyageAI model
+    apiKey: "YOUR_API_KEY",
+    endpoint: "https://api.voyageai.com/v1",    // Optional; VoyageAI API endpoint
+    httpClient: new HttpClient()                // Optional; for customizing HTTP client
+);
+```
+
 ---
 
 ## Using text embedding generation services
@@ -609,16 +679,366 @@ ReadOnlyMemory<float> embedding =
 
 ::: zone pivot="programming-language-python"
 
-## Coming soon
+## Installing the necessary packages
 
-More information coming soon.
+Before adding embedding generation to your kernel, you will need to install the necessary packages. Below are the packages you will need to install for each AI service provider.
+
+# [Azure OpenAI](#tab/python-AzureOpenAI)
+
+```bash
+pip install semantic-kernel
+```
+
+# [OpenAI](#tab/python-OpenAI)
+
+```bash
+pip install semantic-kernel
+```
+
+# [VoyageAI](#tab/python-VoyageAI)
+
+```bash
+pip install semantic-kernel voyageai
+```
+
+---
+
+## Creating text embedding generation services
+
+Now that you've installed the necessary packages, you can create a text embedding generation service.
+
+# [Azure OpenAI](#tab/python-AzureOpenAI)
+
+```python
+from semantic_kernel.connectors.ai.open_ai import AzureTextEmbedding
+
+text_embedding_service = AzureTextEmbedding(
+    deployment_name="YOUR_DEPLOYMENT_NAME",
+    endpoint="YOUR_AZURE_ENDPOINT",
+    api_key="YOUR_API_KEY",
+)
+```
+
+# [OpenAI](#tab/python-OpenAI)
+
+```python
+from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
+
+text_embedding_service = OpenAITextEmbedding(
+    ai_model_id="text-embedding-ada-002",
+    api_key="YOUR_API_KEY",
+)
+```
+
+# [VoyageAI](#tab/python-VoyageAI)
+
+```python
+from semantic_kernel.connectors.ai.voyage_ai import VoyageAITextEmbedding
+import os
+
+text_embedding_service = VoyageAITextEmbedding(
+    ai_model_id="voyage-3-large",  # Options: voyage-3-large, voyage-code-3, voyage-finance-2, voyage-law-2
+    api_key=os.getenv("VOYAGE_API_KEY"),
+)
+```
+
+---
+
+## Using text embedding generation services
+
+All text embedding generation services implement the embedding generation interface which provides methods to generate embeddings.
+
+### Generating embeddings
+
+```python
+import asyncio
+
+async def generate_embeddings():
+    texts = ["First text", "Second text", "Third text"]
+
+    embeddings = await text_embedding_service.generate_embeddings(texts)
+
+    for i, embedding in enumerate(embeddings):
+        print(f"Embedding {i} dimension: {len(embedding)}")
+
+asyncio.run(generate_embeddings())
+```
+
+## VoyageAI Specialized Services
+
+VoyageAI provides additional specialized embedding services for advanced use cases.
+
+### Contextualized Embeddings
+
+For RAG applications where you need document-aware chunk embeddings:
+
+```python
+from semantic_kernel.connectors.ai.voyage_ai import VoyageAIContextualizedEmbedding
+import os
+
+# Create service
+embedding_service = VoyageAIContextualizedEmbedding(
+    ai_model_id="voyage-context-3",
+    api_key=os.getenv("VOYAGE_API_KEY"),
+)
+
+# Each inner list represents chunks from a document
+inputs = [
+    ["Chapter 1: Introduction", "This chapter covers...", "Key concepts include..."],
+    ["Chapter 2: Methods", "We employed the following..."]
+]
+
+embeddings = await embedding_service.generate_contextualized_embeddings(inputs)
+print(f"Generated {len(embeddings)} contextualized embeddings")
+```
+
+### Multimodal Embeddings
+
+For text and image embeddings:
+
+```python
+from semantic_kernel.connectors.ai.voyage_ai import VoyageAIMultimodalEmbedding
+from PIL import Image
+import os
+
+# Create service
+embedding_service = VoyageAIMultimodalEmbedding(
+    ai_model_id="voyage-multimodal-3",  # Options: voyage-multimodal-3, voyage-multimodal-3.5
+    api_key=os.getenv("VOYAGE_API_KEY"),
+)
+
+# Text only
+texts = ["Text description 1", "Text description 2"]
+embeddings = await embedding_service.generate_embeddings(texts)
+print(f"Generated {len(embeddings)} multimodal embeddings")
+
+# Mixed text and images
+image = Image.open("photo.jpg")
+inputs = [
+    ["Chapter title", image, "Text after image"]
+]
+embeddings = await embedding_service.generate_multimodal_embeddings(inputs)
+```
+
+### Document Reranking
+
+VoyageAI also provides document reranking for improved search results:
+
+```python
+from semantic_kernel.connectors.ai.voyage_ai import VoyageAIReranker
+import os
+
+# Create reranker service
+reranker_service = VoyageAIReranker(
+    ai_model_id="rerank-2.5",
+    api_key=os.getenv("VOYAGE_API_KEY"),
+)
+
+# Rerank documents
+query = "What is Semantic Kernel?"
+documents = ["Doc 1 text", "Doc 2 text", "Doc 3 text"]
+
+results = await reranker_service.rerank(query, documents)
+
+# Results are sorted by relevance
+for result in results:
+    print(f"Index: {result.index}, Score: {result.relevance_score}")
+```
+
+### Execution Settings
+
+You can customize the embedding generation with execution settings:
+
+```python
+from semantic_kernel.connectors.ai.voyage_ai import VoyageAIEmbeddingPromptExecutionSettings
+
+settings = VoyageAIEmbeddingPromptExecutionSettings(
+    input_type="query",  # or "document"
+    truncation=True,
+    output_dimension=1024,
+    output_dtype="float"  # or "int8", "uint8", "binary", "ubinary"
+)
+
+embeddings = await text_embedding_service.generate_embeddings(texts, settings=settings)
+```
 
 ::: zone-end
 
 ::: zone pivot="programming-language-java"
 
-## Coming soon
+## Installing the necessary packages
 
-More information coming soon.
+Before adding embedding generation to your kernel, you will need to install the necessary packages. Below are the packages you will need to install for each AI service provider.
+
+# [Azure OpenAI](#tab/java-AzureOpenAI)
+
+Add the dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-aiservices-openai</artifactId>
+    <version>${semantickernel.version}</version>
+</dependency>
+```
+
+# [OpenAI](#tab/java-OpenAI)
+
+Add the dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-aiservices-openai</artifactId>
+    <version>${semantickernel.version}</version>
+</dependency>
+```
+
+# [VoyageAI](#tab/java-VoyageAI)
+
+Add the dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.microsoft.semantic-kernel</groupId>
+    <artifactId>semantickernel-aiservices-voyageai</artifactId>
+    <version>${semantickernel.version}</version>
+</dependency>
+```
+
+---
+
+## Creating text embedding generation services
+
+Now that you've installed the necessary packages, you can create a text embedding generation service.
+
+# [Azure OpenAI](#tab/java-AzureOpenAI)
+
+```java
+import com.microsoft.semantickernel.aiservices.openai.textembeddings.OpenAITextEmbeddingGenerationService;
+
+OpenAITextEmbeddingGenerationService textEmbeddingService = OpenAITextEmbeddingGenerationService.builder()
+    .withApiKey("YOUR_AZURE_OPENAI_API_KEY")
+    .withDeploymentName("YOUR_DEPLOYMENT_NAME")
+    .withEndpoint("YOUR_AZURE_ENDPOINT")
+    .withModelId("text-embedding-ada-002")
+    .build();
+```
+
+# [OpenAI](#tab/java-OpenAI)
+
+```java
+import com.microsoft.semantickernel.aiservices.openai.textembeddings.OpenAITextEmbeddingGenerationService;
+
+OpenAITextEmbeddingGenerationService textEmbeddingService = OpenAITextEmbeddingGenerationService.builder()
+    .withApiKey("YOUR_OPENAI_API_KEY")
+    .withModelId("text-embedding-ada-002")
+    .build();
+```
+
+# [VoyageAI](#tab/java-VoyageAI)
+
+```java
+import com.microsoft.semantickernel.aiservices.voyageai.core.VoyageAIClient;
+import com.microsoft.semantickernel.aiservices.voyageai.textembedding.VoyageAITextEmbeddingGenerationService;
+
+// Create VoyageAI client
+VoyageAIClient client = new VoyageAIClient(System.getenv("VOYAGE_API_KEY"));
+
+// Create embedding service
+VoyageAITextEmbeddingGenerationService textEmbeddingService =
+    VoyageAITextEmbeddingGenerationService.builder()
+        .withClient(client)
+        .withModelId("voyage-3-large")  // Options: voyage-3-large, voyage-code-3, voyage-finance-2, voyage-law-2
+        .build();
+```
+
+---
+
+## Using text embedding generation services
+
+All text embedding generation services implement the `TextEmbeddingGenerationService` interface which provides methods to generate embeddings.
+
+### Generating a single embedding
+
+```java
+import com.microsoft.semantickernel.services.textembedding.Embedding;
+import reactor.core.publisher.Mono;
+
+Mono<Embedding> embeddingMono = textEmbeddingService.generateEmbeddingAsync("Your text here");
+Embedding embedding = embeddingMono.block();
+
+System.out.println("Embedding dimension: " + embedding.getVector().size());
+```
+
+### Generating multiple embeddings
+
+```java
+import com.microsoft.semantickernel.services.textembedding.Embedding;
+import java.util.Arrays;
+import java.util.List;
+
+List<String> texts = Arrays.asList(
+    "First text",
+    "Second text",
+    "Third text"
+);
+
+List<Embedding> embeddings = textEmbeddingService.generateEmbeddingsAsync(texts).block();
+
+for (int i = 0; i < embeddings.size(); i++) {
+    System.out.println("Embedding " + i + " dimension: " + embeddings.get(i).getVector().size());
+}
+```
+
+## VoyageAI Specialized Services
+
+VoyageAI provides additional specialized embedding services for advanced use cases.
+
+### Contextualized Embeddings
+
+For RAG applications where you need document-aware chunk embeddings:
+
+```java
+import com.microsoft.semantickernel.aiservices.voyageai.contextualizedembedding.VoyageAIContextualizedEmbeddingGenerationService;
+
+VoyageAIClient client = new VoyageAIClient(System.getenv("VOYAGE_API_KEY"));
+
+VoyageAIContextualizedEmbeddingGenerationService service =
+    VoyageAIContextualizedEmbeddingGenerationService.builder()
+        .withClient(client)
+        .withModelId("voyage-context-3")
+        .build();
+
+// Each inner list represents chunks from a document
+List<List<String>> inputs = Arrays.asList(
+    Arrays.asList("Chapter 1: Introduction", "This chapter covers...", "Key concepts include..."),
+    Arrays.asList("Chapter 2: Methods", "We employed the following...")
+);
+
+List<Embedding> embeddings = service.generateContextualizedEmbeddingsAsync(inputs).block();
+System.out.println("Generated " + embeddings.size() + " contextualized embeddings");
+```
+
+### Multimodal Embeddings
+
+For text and image embeddings:
+
+```java
+import com.microsoft.semantickernel.aiservices.voyageai.multimodalembedding.VoyageAIMultimodalEmbeddingGenerationService;
+
+VoyageAIClient client = new VoyageAIClient(System.getenv("VOYAGE_API_KEY"));
+
+VoyageAIMultimodalEmbeddingGenerationService service =
+    VoyageAIMultimodalEmbeddingGenerationService.builder()
+        .withClient(client)
+        .withModelId("voyage-multimodal-3")  // Options: voyage-multimodal-3, voyage-multimodal-3.5
+        .build();
+
+// Generate embeddings for text (also supports images)
+List<String> texts = Arrays.asList("Text description 1", "Text description 2");
+List<Embedding> embeddings = service.generateEmbeddingsAsync(texts).block();
+System.out.println("Generated " + embeddings.size() + " multimodal embeddings");
+```
 
 ::: zone-end
