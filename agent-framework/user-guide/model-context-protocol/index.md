@@ -29,7 +29,7 @@ The MCP tool allows you to pass custom headers, such as authentication keys or s
 
 You can integrate multiple remote MCP servers by adding them as tools to your agent. Agent Framework makes it easy to convert an MCP tool to an AI tool that can be called by your agent.
 
-The MCP tool supports custom headers, so you can connect to MCP servers by using the authentication schemas that they require or by passing other headers that the MCP servers require. **TODO You can specify headers only by including them in tool_resources at each run. In this way, you can put API keys, OAuth access tokens, or other credentials directly in your request. TODO**
+The MCP tool supports custom headers, so you can connect to MCP servers by using the authentication schemas that they require or by passing other headers that the MCP servers require. **You can specify headers only by including them in tool_resources at each run. In this way, you can put API keys, OAuth access tokens, or other credentials directly in your request.**
 
 The most commonly used header is the authorization header. Headers that you pass in are available only for the current run and aren't persisted.
 
