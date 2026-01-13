@@ -3,7 +3,7 @@ title: Out-of-the-box Vector Store connectors (Preview)
 description: Out-of-the-box Vector Store connectors
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
@@ -71,7 +71,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [In-Memory](./inmemory-connector.md)                               |    ✅    |                    N/A                       | Microsoft Semantic Kernel Project |
 | [MongoDB](./mongodb-connector.md)                                  |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Neon Serverless Postgres](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/neon1722366567200.neon_serverless_postgres_azure_prod) |Use [Postgres Connector](./postgres-connector.md)| ✅              | Microsoft Semantic Kernel Project |
-| [Oracle](./oracle-connector.md)                                    | Planned   |                                             |              Oracle               |
+| [Oracle](./oracle-connector.md)                                    |    ✅    |        ✅              |   Oracle               |
 | [Pinecone](./pinecone-connector.md)                                |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Postgres](./postgres-connector.md)                                |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Qdrant](./qdrant-connector.md)                                    |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
