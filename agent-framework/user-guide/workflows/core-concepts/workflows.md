@@ -126,11 +126,17 @@ The framework performs comprehensive validation when building workflows:
 
 ### Execution Model
 
-The framework uses a modified [Pregel](https://kowshik.github.io/JPregel/pregel_paper.pdf) execution model with clear data flow semantics and superstep-based processing.
+The framework uses a modified [Pregel](https://kowshik.github.io/JPregel/pregel_paper.pdf) execution model, a Bulk Synchronous Parallel (BSP) approach with clear data flow semantics and superstep-based processing.
 
 ### Pregel-Style Supersteps
 
-Workflow execution is organized into discrete supersteps, where each superstep processes all available messages in parallel:
+Workflow execution is organized into discrete supersteps. A superstep is an atomic unit of execution where:
+
+1. All pending messages from the previous superstep are collected
+2. Messages are routed to their target executors based on edge definitions
+3. All target executors run concurrently within the superstep
+4. The superstep waits for all executors to complete before advancing to the next superstep
+5. Any new messages emitted by executors are queued for the next superstep
 
 ```text
 Superstep N:
@@ -140,15 +146,35 @@ Superstep N:
 │  Messages       │    │  & Conditions   │    │  Executors      │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                                        │
+                                                       │ (barrier: wait for all)
 ┌─────────────────┐    ┌─────────────────┐             │
 │  Start Next     │◀───│  Emit Events &  │◀────────────┘
 │  Superstep      │    │  New Messages   │
 └─────────────────┘    └─────────────────┘
 ```
 
+### Superstep Synchronization Barrier
+
+The most important characteristic of the Pregel model is the synchronization barrier between supersteps. Within a single superstep, all triggered executors run in parallel, but the workflow will not advance to the next superstep until every executor in the current superstep completes.
+
+This has important implications for fan-out patterns: if you fan out to multiple paths and one path contains a chain of executors while another is a single long-running executor, the chained path cannot advance to its next step until the long-running executor completes. All executors triggered in the same superstep must finish before any downstream executors can begin.
+
+### Why Superstep Synchronization?
+
+The BSP model provides important guarantees:
+
+- **Deterministic execution**: Given the same input, the workflow always executes in the same order
+- **Reliable checkpointing**: State can be saved at superstep boundaries for fault tolerance
+- **Simpler reasoning**: No race conditions between supersteps; each superstep sees a consistent view of messages
+
+### Working with the Superstep Model
+
+If you need truly independent parallel paths that don't block each other, consider consolidating sequential steps into a single executor. Instead of chaining multiple executors (e.g., `step1 -> step2 -> step3`), combine that logic into one executor that performs all steps internally. This way, both parallel paths execute within a single superstep and complete in the time of the slowest path.
+
 ### Key Execution Characteristics
 
 - **Superstep Isolation**: All executors in a superstep run concurrently without interfering with each other
+- **Synchronization Barrier**: The workflow waits for all executors in a superstep to complete before advancing
 - **Message Delivery**: Messages are delivered in parallel to all matching edges
 - **Event Streaming**: Events are emitted in real-time as executors complete processing
 - **Type Safety**: Runtime type validation ensures messages are routed to compatible handlers
