@@ -14,7 +14,9 @@ ms.service: agent-framework
 
 Concurrent orchestration enables multiple agents to work on the same task in parallel. Each agent processes the input independently, and their results are collected and aggregated. This approach is well-suited for scenarios where diverse perspectives or solutions are valuable, such as brainstorming, ensemble reasoning, or voting systems.
 
-![Concurrent Orchestration](../resources/images/orchestration-concurrent.png)
+<p align="center">
+    <img src="../resources/images/orchestration-concurrent.png" alt="Concurrent Orchestration"/>
+</p>
 
 ## What You'll Learn
 

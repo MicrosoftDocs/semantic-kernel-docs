@@ -11,15 +11,21 @@ ms.service: agent-framework
 
 # Microsoft Agent Framework Workflows Orchestrations - Group Chat
 
-Group chat orchestration models a collaborative conversation among multiple agents, coordinated by a manager that determines speaker selection and conversation flow. This pattern is ideal for scenarios requiring iterative refinement, collaborative problem-solving, or multi-perspective analysis.
+Group chat orchestration models a collaborative conversation among multiple agents, coordinated by an orchestrator that determines speaker selection and conversation flow. This pattern is ideal for scenarios requiring iterative refinement, collaborative problem-solving, or multi-perspective analysis.
+
+Internally, the group chat orchestration assembles agents in a star topology, with an orchestrator in the middle. The orchestrator can implement various strategies for selecting which agent speaks next, such as round-robin, prompt-based selection, or custom logic based on conversation context, making it a flexible and powerful pattern for multi-agent collaboration.
+
+<p align="center">
+    <img src="../resources/images/orchestration-groupchat.png" alt="Group Chat Orchestration"/>
+</p>
 
 ## Differences Between Group Chat and Other Patterns
 
 Group chat orchestration has distinct characteristics compared to other multi-agent patterns:
 
-- **Centralized Coordination**: Unlike handoff patterns where agents directly transfer control, group chat uses a manager to coordinate who speaks next
+- **Centralized Coordination**: Unlike handoff patterns where agents directly transfer control, group chat uses an orchestrator to coordinate who speaks next
 - **Iterative Refinement**: Agents can review and build upon each other's responses in multiple rounds
-- **Flexible Speaker Selection**: The manager can use various strategies (round-robin, prompt-based, custom logic) to select speakers
+- **Flexible Speaker Selection**: The orchestrator can use various strategies (round-robin, prompt-based, custom logic) to select speakers
 - **Shared Context**: All agents see the full conversation history, enabling collaborative refinement
 
 ## What You'll Learn
@@ -27,7 +33,7 @@ Group chat orchestration has distinct characteristics compared to other multi-ag
 - How to create specialized agents for group collaboration
 - How to configure speaker selection strategies
 - How to build workflows with iterative agent refinement
-- How to customize conversation flow with custom managers
+- How to customize conversation flow with custom orchestrators
 
 ::: zone pivot="programming-language-csharp"
 
@@ -71,7 +77,7 @@ ChatClientAgent reviewer = new(client,
     "A marketing review agent");
 ```
 
-## Configure Group Chat with Round-Robin Manager
+## Configure Group Chat with Round-Robin Orchestrator
 
 Build the group chat workflow using `AgentWorkflowBuilder`:
 
@@ -79,9 +85,9 @@ Build the group chat workflow using `AgentWorkflowBuilder`:
 // Build group chat with round-robin speaker selection
 // The manager factory receives the list of agents and returns a configured manager
 var workflow = AgentWorkflowBuilder
-    .CreateGroupChatBuilderWith(agents => 
-        new RoundRobinGroupChatManager(agents) 
-        { 
+    .CreateGroupChatBuilderWith(agents =>
+        new RoundRobinGroupChatManager(agents)
+        {
             MaximumIterationCount = 5  // Maximum number of turns
         })
     .AddParticipants(writer, reviewer)
@@ -94,8 +100,8 @@ Execute the workflow and observe the iterative conversation:
 
 ```csharp
 // Start the group chat
-var messages = new List<ChatMessage> { 
-    new(ChatRole.User, "Create a slogan for an eco-friendly electric vehicle.") 
+var messages = new List<ChatMessage> {
+    new(ChatRole.User, "Create a slogan for an eco-friendly electric vehicle.")
 };
 
 StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
@@ -131,15 +137,15 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
 ```plaintext
 [CopyWriter]: "Green Dreams, Zero Emissions" - Drive the future with style and sustainability.
 
-[Reviewer]: The slogan is good, but "Green Dreams" might be a bit abstract. Consider something 
+[Reviewer]: The slogan is good, but "Green Dreams" might be a bit abstract. Consider something
 more direct like "Pure Power, Zero Impact" to emphasize both performance and environmental benefit.
 
 [CopyWriter]: "Pure Power, Zero Impact" - Experience electric excellence without compromise.
 
-[Reviewer]: Excellent! This slogan is clear, impactful, and directly communicates the key benefits. 
+[Reviewer]: Excellent! This slogan is clear, impactful, and directly communicates the key benefits.
 The tagline reinforces the message perfectly. Approved for use.
 
-[CopyWriter]: Thank you! The final slogan is: "Pure Power, Zero Impact" - Experience electric 
+[CopyWriter]: Thank you! The final slogan is: "Pure Power, Zero Impact" - Experience electric
 excellence without compromise.
 ```
 
@@ -186,66 +192,52 @@ writer = ChatAgent(
 Build a group chat with custom speaker selection logic:
 
 ```python
-from agent_framework import GroupChatBuilder, GroupChatStateSnapshot
+from agent_framework import GroupChatBuilder, GroupChatState
 
-def select_next_speaker(state: GroupChatStateSnapshot) -> str | None:
-    """Alternate between researcher and writer for collaborative refinement.
-    
-    Args:
-        state: Contains task, participants, conversation, history, and round_index
-        
-    Returns:
-        Name of next speaker, or None to finish
-    """
-    round_idx = state["round_index"]
-    history = state["history"]
-    
-    # Finish after 4 turns (researcher → writer → researcher → writer)
-    if round_idx >= 4:
-        return None
-    
-    # Alternate speakers
-    last_speaker = history[-1].speaker if history else None
-    if last_speaker == "Researcher":
-        return "Writer"
-    return "Researcher"
+def round_robin_selector(state: GroupChatState) -> str:
+    """A round-robin selector function that picks the next speaker based on the current round index."""
+
+    participant_names = list(state.participants.keys())
+    return participant_names[state.current_round % len(participant_names)]
+
 
 # Build the group chat workflow
 workflow = (
     GroupChatBuilder()
-    .set_select_speakers_func(select_next_speaker, display_name="Orchestrator")
+    .with_select_speaker_func(round_robin_selector)
     .participants([researcher, writer])
+    # Terminate after 4 turns (researcher → writer → researcher → writer)
+    .with_termination_condition(lambda conversation: len(conversation) >= 4)
     .build()
 )
 ```
 
-## Configure Group Chat with Agent-Based Manager
+## Configure Group Chat with Agent-Based Orchestrator
 
-Alternatively, use an agent-based manager for intelligent speaker selection. The manager is a full `ChatAgent` with access to tools, context, and observability:
+Alternatively, use an agent-based orchestrator for intelligent speaker selection. The orchestrator is a full `ChatAgent` with access to tools, context, and observability:
 
 ```python
-# Create coordinator agent for speaker selection
-coordinator = ChatAgent(
-    name="Coordinator",
+# Create orchestrator agent for speaker selection
+orchestrator_agent = ChatAgent(
+    name="Orchestrator",
     description="Coordinates multi-agent collaboration by selecting speakers",
     instructions="""
 You coordinate a team conversation to solve the user's task.
-
-Review the conversation history and select the next participant to speak.
 
 Guidelines:
 - Start with Researcher to gather information
 - Then have Writer synthesize the final answer
 - Only finish after both have contributed meaningfully
-- Allow for multiple rounds of information gathering if needed
 """,
     chat_client=chat_client,
 )
 
-# Build group chat with agent-based manager
+# Build group chat with agent-based orchestrator
 workflow = (
     GroupChatBuilder()
-    .set_manager(coordinator, display_name="Orchestrator")
+    .with_agent_orchestrator(orchestrator_agent)
+    # Set a hard termination condition: stop after 4 assistant messages
+    # The agent orchestrator will intelligently decide when to end before this limit but just in case
     .with_termination_condition(lambda messages: sum(1 for msg in messages if msg.role == Role.ASSISTANT) >= 4)
     .participants([researcher, writer])
     .build()
@@ -302,24 +294,24 @@ Task: What are the key benefits of async/await in Python?
 
 ================================================================================
 
-[Researcher]: Async/await in Python provides non-blocking I/O operations, enabling 
-concurrent execution without threading overhead. Key benefits include improved 
-performance for I/O-bound tasks, better resource utilization, and simplified 
+[Researcher]: Async/await in Python provides non-blocking I/O operations, enabling
+concurrent execution without threading overhead. Key benefits include improved
+performance for I/O-bound tasks, better resource utilization, and simplified
 concurrent code structure using native coroutines.
 
 [Writer]: The key benefits of async/await in Python are:
 
-1. **Non-blocking Operations**: Allows I/O operations to run concurrently without 
-   blocking the main thread, significantly improving performance for network 
+1. **Non-blocking Operations**: Allows I/O operations to run concurrently without
+   blocking the main thread, significantly improving performance for network
    requests, file I/O, and database queries.
 
-2. **Resource Efficiency**: Avoids the overhead of thread creation and context 
+2. **Resource Efficiency**: Avoids the overhead of thread creation and context
    switching, making it more memory-efficient than traditional threading.
 
-3. **Simplified Concurrency**: Provides a clean, synchronous-looking syntax for 
+3. **Simplified Concurrency**: Provides a clean, synchronous-looking syntax for
    asynchronous code, making concurrent programs easier to write and maintain.
 
-4. **Scalability**: Enables handling thousands of concurrent connections with 
+4. **Scalability**: Enables handling thousands of concurrent connections with
    minimal resource consumption, ideal for high-performance web servers and APIs.
 
 --------------------------------------------------------------------------------
@@ -345,11 +337,11 @@ Workflow completed.
 
 ::: zone pivot="programming-language-python"
 
-- **Flexible Manager Strategies**: Choose between simple selectors, agent-based managers, or custom logic
+- **Flexible Orchestrator Strategies**: Choose between simple selectors, agent-based orchestrators, or custom logic
 - **GroupChatBuilder**: Creates workflows with configurable speaker selection
-- **set_select_speakers_func()**: Define custom Python functions for speaker selection
-- **set_manager()**: Use an agent-based manager for intelligent speaker coordination
-- **GroupChatStateSnapshot**: Provides conversation state for selection decisions
+- **with_select_speaker_func()**: Define custom Python functions for speaker selection
+- **with_agent_orchestrator()**: Use an agent-based orchestrator for intelligent speaker coordination
+- **GroupChatState**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
 - **Event Streaming**: Process `AgentRunUpdateEvent` and `WorkflowOutputEvent` in real-time
 - **list[ChatMessage] Output**: All orchestrations return a list of chat messages
@@ -366,32 +358,32 @@ You can implement custom manager logic by creating a custom group chat manager:
 public class ApprovalBasedManager : RoundRobinGroupChatManager
 {
     private readonly string _approverName;
-    
-    public ApprovalBasedManager(IReadOnlyList<AIAgent> agents, string approverName) 
+
+    public ApprovalBasedManager(IReadOnlyList<AIAgent> agents, string approverName)
         : base(agents)
     {
         _approverName = approverName;
     }
-    
+
     // Override to add custom termination logic
     protected override ValueTask<bool> ShouldTerminateAsync(
-        IReadOnlyList<ChatMessage> history, 
+        IReadOnlyList<ChatMessage> history,
         CancellationToken cancellationToken = default)
     {
         var last = history.LastOrDefault();
         bool shouldTerminate = last?.AuthorName == _approverName &&
             last.Text?.Contains("approve", StringComparison.OrdinalIgnoreCase) == true;
-            
+
         return ValueTask.FromResult(shouldTerminate);
     }
 }
 
 // Use custom manager in workflow
 var workflow = AgentWorkflowBuilder
-    .CreateGroupChatBuilderWith(agents => 
-        new ApprovalBasedManager(agents, "Reviewer") 
-        { 
-            MaximumIterationCount = 10 
+    .CreateGroupChatBuilderWith(agents =>
+        new ApprovalBasedManager(agents, "Reviewer")
+        {
+            MaximumIterationCount = 10
         })
     .AddParticipants(writer, reviewer)
     .Build();
@@ -404,44 +396,50 @@ var workflow = AgentWorkflowBuilder
 You can implement sophisticated selection logic based on conversation state:
 
 ```python
-def smart_selector(state: GroupChatStateSnapshot) -> str | None:
+def smart_selector(state: GroupChatState) -> str:
     """Select speakers based on conversation content and context."""
-    round_idx = state["round_index"]
-    conversation = state["conversation"]
-    history = state["history"]
-    
-    # Maximum 10 rounds
-    if round_idx >= 10:
-        return None
-    
-    # First round: always start with researcher
-    if round_idx == 0:
-        return "Researcher"
-    
-    # Check last message content
+    conversation = state.conversation
+
     last_message = conversation[-1] if conversation else None
-    last_text = getattr(last_message, "text", "").lower()
-    
-    # If researcher asked a question, let writer respond
-    if "?" in last_text and history[-1].speaker == "Researcher":
-        return "Writer"
-    
-    # If writer provided info, let researcher validate or extend
-    if history[-1].speaker == "Writer":
+
+    # If no messages yet, start with Researcher
+    if not last_message:
         return "Researcher"
-    
-    # Default alternation
-    return "Writer" if history[-1].speaker == "Researcher" else "Researcher"
+
+    # Check last message content
+    last_text = last_message.text.lower()
+
+    # If researcher finished gathering info, switch to writer
+    if "I have finished" in last_text and last_message.author_name == "Researcher":
+        return "Writer"
+
+    # Else continue with researcher until it indicates completion
+    return "Researcher"
 
 workflow = (
     GroupChatBuilder()
-    .set_select_speakers_func(smart_selector, display_name="SmartOrchestrator")
+    .with_select_speaker_func(smart_selector, orchestrator_name="SmartOrchestrator")
     .participants([researcher, writer])
     .build()
 )
 ```
 
 ::: zone-end
+
+## Context Synchronization
+
+As mentioned at the beginning of this guide, all agents in a group chat see the full conversation history.
+
+Agents in Agent Framework relies on agent threads ([`AgentThread`](../../agents/multi-turn-conversation.md)) to manage context. In a group chat orchestration, agents **do not** share the same thread instance, but the orchestrator ensures that each agent's thread is synchronized with the complete conversation history before each turn. To achieve this, after each agent's turn, the orchestrator broadcasts the response to all other agents, making sure all participants have the latest context for their next turn.
+
+<p align="center">
+    <img src="../resources/images/orchestration-groupchat-synchronization.gif" alt="Group Chat Context Synchronization">
+</p>
+
+> [!TIP]
+> Agents do not share the same thread instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentThread` abstraction. Sharing the same thread instance could lead to inconsistencies in how each agent processes and maintains context.
+
+After broadcasting the response, the orchestrator then decide the next speaker and sends a request to the selected agent, which now has the full conversation history to generate its response.
 
 ## When to Use Group Chat
 
@@ -454,6 +452,7 @@ Group chat orchestration is ideal for:
 - **Quality Assurance**: Automated review and approval processes
 
 **Consider alternatives when:**
+
 - You need strict sequential processing (use Sequential orchestration)
 - Agents should work completely independently (use Concurrent orchestration)
 - Direct agent-to-agent handoffs are needed (use Handoff orchestration)
@@ -462,4 +461,4 @@ Group chat orchestration is ideal for:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Handoff Orchestration](./handoff.md)
+> [Magentic Orchestration](./magentic.md)

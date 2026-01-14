@@ -13,7 +13,14 @@ zone_pivot_groups: programming-languages
 
 Handoff orchestration allows agents to transfer control to one another based on the context or user request. Each agent can "handoff" the conversation to another agent with the appropriate expertise, ensuring that the right agent handles each part of the task. This is particularly useful in customer support, expert systems, or any scenario requiring dynamic delegation.
 
-![Handoff Orchestration](../resources/images/orchestration-handoff.png)
+Internally, the handoff orchestration is implemented using a mesh topology where agents are connected directly without an orchestrator. Each agent can decide when to hand off the conversation based on predefined rules or the content of the messages.
+
+<p align="center">
+    <img src="../resources/images/orchestration-handoff.png" alt="Handoff Orchestration"/>
+</p>
+
+> [!NOTE]
+> Handoff orchestration only supports `ChatAgent` and the agents must support local tools execution.
 
 ## Differences Between Handoff and Agent-as-Tools
 
@@ -149,6 +156,25 @@ math_tutor: I'd be happy to help with calculus integration! Integration is the r
 
 ::: zone pivot="programming-language-python"
 
+## Define a few tools for demonstration
+
+```python
+@ai_function
+def process_refund(order_number: Annotated[str, "Order number to process refund for"]) -> str:
+    """Simulated function to process a refund for a given order number."""
+    return f"Refund processed successfully for order {order_number}."
+
+@ai_function
+def check_order_status(order_number: Annotated[str, "Order number to check status for"]) -> str:
+    """Simulated function to check the status of a given order number."""
+    return f"Order {order_number} is currently being processed and will ship in 2 business days."
+
+@ai_function
+def process_return(order_number: Annotated[str, "Order number to process return for"]) -> str:
+    """Simulated function to process a return for a given order number."""
+    return f"Return initiated successfully for order {order_number}. You will receive return instructions via email."
+```
+
 ## Set Up the Chat Client
 
 ```python
@@ -167,36 +193,38 @@ Create domain-specific agents with a coordinator for routing:
 # Create triage/coordinator agent
 triage_agent = chat_client.create_agent(
     instructions=(
-        "You are frontline support triage. Read the latest user message and decide whether "
-        "to hand off to refund_agent, order_agent, or support_agent. Provide a brief natural-language "
-        "response for the user. When delegation is required, call the matching handoff tool "
-        "(`handoff_to_refund_agent`, `handoff_to_order_agent`, or `handoff_to_support_agent`)."
+        "You are frontline support triage. Route customer issues to the appropriate specialist agents "
+        "based on the problem described."
     ),
+    description="Triage agent that handles general inquiries.",
     name="triage_agent",
 )
 
-# Create specialist agents
+# Refund specialist: Handles refund requests
 refund_agent = chat_client.create_agent(
-    instructions=(
-        "You handle refund workflows. Ask for any order identifiers you require and outline the refund steps."
-    ),
+    instructions="You process refund requests.",
+    description="Agent that handles refund requests.",
     name="refund_agent",
+    # In a real application, an agent can have multiple tools; here we keep it simple
+    tools=[process_refund],
 )
 
+# Order/shipping specialist: Resolves delivery issues
 order_agent = chat_client.create_agent(
-    instructions=(
-        "You resolve shipping and fulfillment issues. Clarify the delivery problem and describe the actions "
-        "you will take to remedy it."
-    ),
+    instructions="You handle order and shipping inquiries.",
+    description="Agent that handles order tracking and shipping issues.",
     name="order_agent",
+    # In a real application, an agent can have multiple tools; here we keep it simple
+    tools=[check_order_status],
 )
 
-support_agent = chat_client.create_agent(
-    instructions=(
-        "You are a general support agent. Offer empathetic troubleshooting and gather missing details if the "
-        "issue does not match other specialists."
-    ),
-    name="support_agent",
+# Return specialist: Handles return requests
+return_agent = chat_client.create_agent(
+    instructions="You manage product return requests.",
+    description="Agent that handles return processing.",
+    name="return_agent",
+    # In a real application, an agent can have multiple tools; here we keep it simple
+    tools=[process_return],
 )
 ```
 
@@ -211,42 +239,57 @@ from agent_framework import HandoffBuilder
 workflow = (
     HandoffBuilder(
         name="customer_support_handoff",
-        participants=[triage_agent, refund_agent, order_agent, support_agent],
+        participants=[triage_agent, refund_agent, order_agent, return_agent],
     )
-    .set_coordinator("triage_agent")
+    .with_start_agent(triage_agent) # Triage receives initial user input
     .with_termination_condition(
-        # Terminate after a certain number of user messages
-        lambda conv: sum(1 for msg in conv if msg.role.value == "user") >= 10
+        # Custom termination: Check if one of the agents has provided a closing message.
+        # This looks for the last message containing "welcome", which indicates the
+        # conversation has concluded naturally.
+        lambda conversation: len(conversation) > 0 and "welcome" in conversation[-1].text.lower()
     )
     .build()
 )
 ```
 
-For more advanced routing, you can configure specialist-to-specialist handoffs:
+By default, all agents can handoff to each other. For more advanced routing, you can configure handoffs:
 
 ```python
-# Enable return-to-previous and add specialist-to-specialist handoffs
 workflow = (
     HandoffBuilder(
-        name="advanced_handoff",
-        participants=[coordinator, technical, account, billing],
+        name="customer_support_handoff",
+        participants=[triage_agent, refund_agent, order_agent, return_agent],
     )
-    .set_coordinator(coordinator)
-    .add_handoff(coordinator, [technical, account, billing])  # Coordinator routes to all specialists
-    .add_handoff(technical, [billing, account])  # Technical can route to billing or account
-    .add_handoff(account, [technical, billing])  # Account can route to technical or billing
-    .add_handoff(billing, [technical, account])  # Billing can route to technical or account
-    .enable_return_to_previous(True)  # User inputs route directly to current specialist
+    .with_start_agent(triage_agent) # Triage receives initial user input
+    .with_termination_condition(
+        # Custom termination: Check if one of the agents has provided a closing message.
+        # This looks for the last message containing "welcome", which indicates the
+        # conversation has concluded naturally.
+        lambda conversation: len(conversation) > 0 and "welcome" in conversation[-1].text.lower()
+    )
+    # Triage cannot route directly to refund agent
+    .add_handoff(triage_agent, [order_agent, return_agent])
+    # Only the return agent can handoff to refund agent - users wanting refunds after returns
+    .add_handoff(return_agent, [refund_agent])
+    # All specialists can handoff back to triage for further routing
+    .add_handoff(order_agent, [triage_agent])
+    .add_handoff(return_agent, [triage_agent])
+    .add_handoff(refund_agent, [triage_agent])
     .build()
 )
 ```
 
-## Run Interactive Handoff Workflow
+> [!NOTE]
+> Even with custom handoff rules, all agents are still connected in a mesh topology. This is because agents need to share context with each other to maintain conversation history (see [Context Synchronization](#context-synchronization) for more details). The handoff rules only govern which agents can take over the conversation next.
 
-Handle multi-turn conversations with user input requests:
+## Run Handoff Agent Interaction
+
+Unlike other orchestrations, handoff is interactive because an agent may not decide to handoff after every turn. If an agent doesn't handoff, human input is required to continue the conversation. See [Autonomous Mode](#autonomous-mode) for bypassing this requirement. In other orchestrations, after an agent responds, the control either goes to the orchestrator or the next agent.
+
+When an agent in a handoff workflow decides not to handoff (a handoff is triggered by a special tool call), the workflow emits a `RequestInfoEvent` with a `HandoffAgentUserRequest` payload containing the agent's most recent messages. The user must respond to this request to continue the workflow.
 
 ```python
-from agent_framework import RequestInfoEvent, HandoffUserInputRequest, WorkflowOutputEvent
+from agent_framework import RequestInfoEvent, HandoffAgentUserRequest, WorkflowOutputEvent
 
 # Start workflow with initial user message
 events = [event async for event in workflow.run_stream("I need help with my order")]
@@ -254,31 +297,97 @@ events = [event async for event in workflow.run_stream("I need help with my orde
 # Process events and collect pending input requests
 pending_requests = []
 for event in events:
-    if isinstance(event, RequestInfoEvent):
+    if isinstance(event, RequestInfoEvent) and isinstance(event.data, HandoffAgentUserRequest):
         pending_requests.append(event)
         request_data = event.data
-        print(f"Agent {request_data.awaiting_agent_id} is awaiting your input")
-        for msg in request_data.conversation[-3:]:
+        print(f"Agent {event.source_executor_id} is awaiting your input")
+        # The request contains the most recent messages generated by the
+        # agent requesting input
+        for msg in request_data.agent_response.messages[-3:]:
             print(f"{msg.author_name}: {msg.text}")
 
 # Interactive loop: respond to requests
 while pending_requests:
     user_input = input("You: ")
-    
+
     # Send responses to all pending requests
-    responses = {req.request_id: user_input for req in pending_requests}
+    responses = {req.request_id: HandoffAgentUserRequest.create_response(user_input) for req in pending_requests}
+    # You can also send a `HandoffAgentUserRequest.terminate()` to end the workflow early
     events = [event async for event in workflow.send_responses_streaming(responses)]
-    
+
     # Process new events
     pending_requests = []
     for event in events:
-        if isinstance(event, RequestInfoEvent):
-            pending_requests.append(event)
-        elif isinstance(event, WorkflowOutputEvent):
-            print("Workflow completed!")
-            conversation = event.data
-            for msg in conversation:
-                print(f"{msg.author_name}: {msg.text}")
+        # Check for new input requests
+```
+
+## Autonomous Mode
+
+The Handoff orchestration is designed for interactive scenarios where human input is required when an agent decides not to handoff. However, as an **experimental feature**, you can enable "autonomous mode" to allow the workflow to continue without human intervention. In this mode, when an agent decides not to handoff, the workflow automatically sends a default response (e.g.`User did not respond. Continue assisting autonomously.`) to the agent, allowing it to continue the conversation.
+
+> [!TIP]
+> Why is Handoff orchestration inherently interactive? Unlike other orchestrations where there is only one path to follow after an agent responds (e.g. back to orchestrator or next agent), in a Handoff orchestration, the agent has the option to either handoff to another agent or continue assisting the user itself. And because handoffs are achieved through tool calls, if an agent does not call a handoff tool but generates a response instead, the workflow won't know what to do next but to delegate back to the user for further input. It is also not possible to force an agent to always handoff by requiring it to call the handoff tool because the agent won't be able to generate meaningful responses otherwise.
+
+**Autonomous Mode** is enabled by calling `with_autonomous_mode()` on the `HandoffBuilder`. This configures the workflow to automatically respond to input requests with a default message, allowing the agent to continue without waiting for human input.
+
+```python
+workflow = (
+    HandoffBuilder(
+        name="autonomous_customer_support",
+        participants=[triage_agent, refund_agent, order_agent, return_agent],
+    )
+    .with_start_agent(triage_agent)
+    .with_autonomous_mode()
+    .build()
+)
+```
+
+You can also enable autonomous mode on only a subset of agents by passing a list of agent instances to `with_autonomous_mode()`.
+
+```python
+workflow = (
+    HandoffBuilder(
+        name="partially_autonomous_support",
+        participants=[triage_agent, refund_agent, order_agent, return_agent],
+    )
+    .with_start_agent(triage_agent)
+    .with_autonomous_mode(agents=[triage_agent])  # Only triage_agent runs autonomously
+    .build()
+)
+```
+
+You can customize the default response message.
+
+```python
+workflow = (
+    HandoffBuilder(
+        name="custom_autonomous_support",
+        participants=[triage_agent, refund_agent, order_agent, return_agent],
+    )
+    .with_start_agent(triage_agent)
+    .with_autonomous_mode(
+        agents=[triage_agent],
+        prompts={triage_agent.name: "Continue with your best judgment as the user is unavailable."},
+    )
+    .build()
+)
+```
+
+You can customize the number of turns an agent can run autonomously before requiring human input. This can prevent the workflow from running indefinitely without user involvement.
+
+```python
+workflow = (
+    HandoffBuilder(
+        name="limited_autonomous_support",
+        participants=[triage_agent, refund_agent, order_agent, return_agent],
+    )
+    .with_start_agent(triage_agent)
+    .with_autonomous_mode(
+        agents=[triage_agent],
+        turn_limits={triage_agent.name: 3},  # Max 3 autonomous turns
+    )
+    .build()
+)
 ```
 
 ## Advanced: Tool Approval in Handoff Workflows
@@ -292,13 +401,9 @@ from typing import Annotated
 from agent_framework import ai_function
 
 @ai_function(approval_mode="always_require")
-def submit_refund(
-    refund_description: Annotated[str, "Description of the refund reason"],
-    amount: Annotated[str, "Refund amount"],
-    order_id: Annotated[str, "Order ID for the refund"],
-) -> str:
-    """Submit a refund request for manual review before processing."""
-    return f"Refund recorded for order {order_id} (amount: {amount}): {refund_description}"
+def process_refund(order_number: Annotated[str, "Order number to process refund for"]) -> str:
+    """Simulated function to process a refund for a given order number."""
+    return f"Refund processed successfully for order {order_number}."
 ```
 
 ### Create Agents with Approval-Required Tools
@@ -310,28 +415,27 @@ from azure.identity import AzureCliCredential
 
 client = AzureOpenAIChatClient(credential=AzureCliCredential())
 
-triage_agent = client.create_agent(
+triage_agent = chat_client.create_agent(
+    instructions=(
+        "You are frontline support triage. Route customer issues to the appropriate specialist agents "
+        "based on the problem described."
+    ),
+    description="Triage agent that handles general inquiries.",
     name="triage_agent",
-    instructions=(
-        "You are a customer service triage agent. Listen to customer issues and determine "
-        "if they need refund help or order tracking. Use handoff_to_refund_agent or "
-        "handoff_to_order_agent to transfer them."
-    ),
 )
 
-refund_agent = client.create_agent(
+refund_agent = chat_client.create_agent(
+    instructions="You process refund requests.",
+    description="Agent that handles refund requests.",
     name="refund_agent",
-    instructions=(
-        "You are a refund specialist. Help customers with refund requests. "
-        "When the user confirms they want a refund and supplies order details, "
-        "call submit_refund to record the request."
-    ),
-    tools=[submit_refund],
+    tools=[process_refund],
 )
 
-order_agent = client.create_agent(
+order_agent = chat_client.create_agent(
+    instructions="You handle order and shipping inquiries.",
+    description="Agent that handles order tracking and shipping issues.",
     name="order_agent",
-    instructions="You are an order tracking specialist. Help customers track their orders.",
+    tools=[check_order_status],
 )
 ```
 
@@ -341,7 +445,7 @@ order_agent = client.create_agent(
 from agent_framework import (
     FunctionApprovalRequestContent,
     HandoffBuilder,
-    HandoffUserInputRequest,
+    HandoffAgentUserRequest,
     RequestInfoEvent,
     WorkflowOutputEvent,
 )
@@ -351,7 +455,7 @@ workflow = (
         name="support_with_approvals",
         participants=[triage_agent, refund_agent, order_agent],
     )
-    .set_coordinator("triage_agent")
+    .with_start_agent(triage_agent)
     .build()
 )
 
@@ -365,28 +469,28 @@ async for event in workflow.run_stream("My order 12345 arrived damaged. I need a
 # Process pending requests - could be user input OR tool approval
 while pending_requests:
     responses: dict[str, object] = {}
-    
+
     for request in pending_requests:
-        if isinstance(request.data, HandoffUserInputRequest):
+        if isinstance(request.data, HandoffAgentUserRequest):
             # Agent needs user input
-            print(f"Agent {request.data.awaiting_agent_id} asks:")
-            for msg in request.data.conversation[-2:]:
+            print(f"Agent {request.source_executor_id} asks:")
+            for msg in request.data.agent_response.messages[-2:]:
                 print(f"  {msg.author_name}: {msg.text}")
-            
+
             user_input = input("You: ")
-            responses[request.request_id] = user_input
-            
+            responses[request.request_id] = HandoffAgentUserRequest.create_response(user_input)
+
         elif isinstance(request.data, FunctionApprovalRequestContent):
             # Agent wants to call a tool that requires approval
             func_call = request.data.function_call
             args = func_call.parse_arguments() or {}
-            
+
             print(f"\nTool approval requested: {func_call.name}")
             print(f"Arguments: {args}")
-            
+
             approval = input("Approve? (y/n): ").strip().lower() == "y"
             responses[request.request_id] = request.data.create_response(approved=approval)
-    
+
     # Send all responses and collect new requests
     pending_requests = []
     async for event in workflow.send_responses_streaming(responses):
@@ -410,7 +514,7 @@ workflow = (
         name="durable_support",
         participants=[triage_agent, refund_agent, order_agent],
     )
-    .set_coordinator("triage_agent")
+    .with_start_agent(triage_agent)
     .with_checkpointing(storage)
     .build()
 )
@@ -438,13 +542,12 @@ responses = {}
 for req in restored_requests:
     if isinstance(req.data, FunctionApprovalRequestContent):
         responses[req.request_id] = req.data.create_response(approved=True)
-    elif isinstance(req.data, HandoffUserInputRequest):
-        responses[req.request_id] = "Yes, please process the refund."
+    elif isinstance(req.data, HandoffAgentUserRequest):
+        responses[req.request_id] = HandoffAgentUserRequest.create_response("Yes, please process the refund.")
 
 async for event in workflow.send_responses_streaming(responses):
     if isinstance(event, WorkflowOutputEvent):
         print("Refund workflow completed!")
-```
 ```
 
 ## Sample Interaction
@@ -473,9 +576,25 @@ refund_agent: I'll process your refund for order 1234. Here's what will happen n
 4. Refund processing within 5-10 business days
 
 Could you provide photos of the damage to expedite the process?
-```
+````
 
 ::: zone-end
+
+## Context Synchronization
+
+Agents in Agent Framework relies on agent threads ([`AgentThread`](../../agents/multi-turn-conversation.md)) to manage context. In a Handoff orchestration, agents **do not** share the same thread instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
+
+<p align="center">
+    <img src="../resources/images/orchestration-handoff-synchronization.gif" alt="Handoff Context Synchronization">
+</p>
+
+> [!NOTE]
+> Tool related contents, including handoff tool calls, are not broadcasted to other agents. Only user and agent messages are synchronized across all participants.
+
+> [!TIP]
+> Agents do not share the same thread instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentThread` abstraction. Sharing the same thread instance could lead to inconsistencies in how each agent processes and maintains context.
+
+After broadcasting the response, the participant then checks whether it needs to handoff the conversation to another agent. If so, it sends a request to the selected agent to take over the conversation. Otherwise, it requests user input or continues autonomously based on the workflow configuration.
 
 ## Key Concepts
 
@@ -494,9 +613,8 @@ Could you provide photos of the damage to expedite the process?
 
 - **Dynamic Routing**: Agents can decide which agent should handle the next interaction based on context
 - **HandoffBuilder**: Creates workflows with automatic handoff tool registration
-- **set_coordinator()**: Defines which agent receives user input first
+- **with_start_agent()**: Defines which agent receives user input first
 - **add_handoff()**: Configures specific handoff relationships between agents
-- **enable_return_to_previous()**: Routes user inputs directly to the current specialist, skipping coordinator re-evaluation
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
 - **Tool Approval**: Use `@ai_function(approval_mode="always_require")` for sensitive operations that need human approval
@@ -509,4 +627,4 @@ Could you provide photos of the damage to expedite the process?
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Magentic Orchestration](./magentic.md)
+> [Human-in-the-Loop in Orchestrations](./human-in-the-loop.md) - Learn how to implement human-in-the-loop interactions in orchestrations for enhanced control and oversight.
