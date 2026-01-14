@@ -44,7 +44,7 @@ new ChatClientAgent(
     tools: [AIFunctionFactory.Create(GetWeather)]);
 
 // When using one of the helper factory methods.
-openAIResponseClient.CreateAIAgent(
+openAIResponseClient.AsAIAgent(
     instructions: "You are a helpful assistant",
     tools: [AIFunctionFactory.Create(GetWeather)]);
 ```

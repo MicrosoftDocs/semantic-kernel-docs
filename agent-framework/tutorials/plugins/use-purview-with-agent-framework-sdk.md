@@ -62,7 +62,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
     new AzureCliCredential())
     .GetChatClient(deploymentName)
-    .CreateAIAgent("You are a secure assistant.")
+    .AsAIAgent("You are a secure assistant.")
     .AsBuilder()
     .WithPurview(browserCredential, new PurviewSettings("My Secure Agent"))
     .Build();

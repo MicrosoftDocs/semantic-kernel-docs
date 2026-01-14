@@ -92,7 +92,7 @@ ChatClient chatClient = new AzureOpenAIClient(
         new DefaultAzureCredential())
     .GetChatClient(deploymentName);
 
-AIAgent agent = chatClient.AsIChatClient().CreateAIAgent(
+AIAgent agent = chatClient.AsIChatClient().AsAIAgent(
     name: "AGUIAssistant",
     instructions: "You are a helpful assistant.");
 
@@ -107,7 +107,7 @@ await app.RunAsync();
 - **`AddAGUI`**: Registers AG-UI services with the dependency injection container
 - **`MapAGUI`**: Extension method that registers the AG-UI endpoint with automatic request/response handling and SSE streaming
 - **`ChatClient` and `AsIChatClient()`**: `AzureOpenAIClient.GetChatClient()` returns OpenAI's `ChatClient` type. The `AsIChatClient()` extension method (from `Microsoft.Extensions.AI.OpenAI`) converts it to the `IChatClient` interface required by Agent Framework
-- **`CreateAIAgent`**: Creates an Agent Framework agent from an `IChatClient`
+- **`AsAIAgent`**: Creates an Agent Framework agent from an `IChatClient`
 - **ASP.NET Core Integration**: Uses ASP.NET Core's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages
 - **Configuration**: `AzureOpenAIClient` with `DefaultAzureCredential` provides secure authentication
@@ -149,7 +149,7 @@ dotnet add package Microsoft.Agents.AI --prerelease
 ```
 
 > [!NOTE]
-> The `Microsoft.Agents.AI` package provides the `CreateAIAgent()` extension method.
+> The `Microsoft.Agents.AI` package provides the `AsAIAgent()` extension method.
 
 ### Client Code
 
@@ -174,7 +174,7 @@ using HttpClient httpClient = new()
 
 AGUIChatClient chatClient = new(httpClient, serverUrl);
 
-AIAgent agent = chatClient.CreateAIAgent(
+AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent");
 
@@ -256,7 +256,7 @@ catch (Exception ex)
 
 - **Server-Sent Events (SSE)**: The protocol uses SSE for streaming responses
 - **AGUIChatClient**: Client class that connects to AG-UI servers and implements `IChatClient`
-- **CreateAIAgent**: Extension method on `AGUIChatClient` to create an agent from the client
+- **AsAIAgent**: Extension method on `AGUIChatClient` to create an agent from the client
 - **RunStreamingAsync**: Streams responses as `AgentRunResponseUpdate` objects
 - **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ConversationId` and `ResponseId`
 - **Thread Management**: The `AgentThread` maintains conversation context across requests

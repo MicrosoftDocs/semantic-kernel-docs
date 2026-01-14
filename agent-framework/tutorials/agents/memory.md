@@ -158,7 +158,7 @@ ChatClient chatClient = new AzureOpenAIClient(
     new AzureCliCredential())
     .GetChatClient("gpt-4o-mini");
 
-AIAgent agent = chatClient.CreateAIAgent(new ChatClientAgentOptions()
+AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions()
 {
     ChatOptions = new() { Instructions = "You are a friendly assistant. Always address the user by their name." },
     AIContextProviderFactory = ctx => new UserInfoMemory(

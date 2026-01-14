@@ -30,7 +30,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
     .GetChatClient("gpt-4o")
-    .CreateAIAgent(
+    .AsAIAgent(
         name: "VisionAgent",
         instructions: "You are a helpful agent that can analyze images");
 ```

@@ -78,7 +78,7 @@ var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT
 // Create an AI agent following the standard Microsoft Agent Framework pattern
 AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
-    .CreateAIAgent(
+    .AsAIAgent(
         instructions: "You are good at telling jokes.",
         name: "Joker");
 

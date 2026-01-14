@@ -65,16 +65,16 @@ AzureOpenAIClient client = new(new Uri(endpoint), new DefaultAzureCredential());
 ChatClient chatClient = client.GetChatClient(deploymentName);
 
 // Create the main agent from the first tutorial
-AIAgent mainAgent = chatClient.CreateAIAgent(
+AIAgent mainAgent = chatClient.AsAIAgent(
     instructions: "You are a helpful assistant that can answer questions and provide information.",
     name: "MyDurableAgent");
 
 // Create translation agents
-AIAgent frenchAgent = chatClient.CreateAIAgent(
+AIAgent frenchAgent = chatClient.AsAIAgent(
     instructions: "You are a translator. Translate the following text to French. Return only the translation, no explanations.",
     name: "FrenchTranslator");
 
-AIAgent spanishAgent = chatClient.CreateAIAgent(
+AIAgent spanishAgent = chatClient.AsAIAgent(
     instructions: "You are a translator. Translate the following text to Spanish. Return only the translation, no explanations.",
     name: "SpanishTranslator");
 

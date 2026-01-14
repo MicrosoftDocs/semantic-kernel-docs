@@ -40,7 +40,7 @@ static string GetWeather([Description("The location to get the weather for.")] s
     => $"The weather in {location} is cloudy with a high of 15°C.";
 ```
 
-When creating the agent, you can now provide the function tool to the agent, by passing a list of tools to the `CreateAIAgent` method.
+When creating the agent, you can now provide the function tool to the agent, by passing a list of tools to the `AsAIAgent` method.
 
 ```csharp
 using System;
@@ -54,7 +54,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
+     .AsAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
 ```
 
 Now you can just run the agent as normal, and the agent will be able to call the `GetWeather` function tool when needed.
