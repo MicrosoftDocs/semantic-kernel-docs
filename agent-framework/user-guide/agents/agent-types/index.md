@@ -122,7 +122,7 @@ Once you have created the OpenAIClient, you can get a sub client for the specifi
 ```csharp
 AIAgent agent = client
     .GetChatClient(model)
-    .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+    .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 ### Using the Azure OpenAI SDK
@@ -136,7 +136,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(serviceUrl),
     new AzureCliCredential())
      .GetChatClient(deploymentName)
-     .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+     .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 ### Using the Azure AI Persistent Agents SDK

@@ -50,10 +50,10 @@ var responseClient = client.GetOpenAIResponseClient("gpt-4o-mini");
 #pragma warning restore OPENAI001
 ```
 
-Finally, create the agent using the `CreateAIAgent` extension method on the `ResponseClient`.
+Finally, create the agent using the `AsAIAgent` extension method on the `ResponseClient`.
 
 ```csharp
-AIAgent agent = responseClient.CreateAIAgent(
+AIAgent agent = responseClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 

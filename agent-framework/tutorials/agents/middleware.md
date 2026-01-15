@@ -40,7 +40,7 @@ AIAgent baseAgent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
-        .CreateAIAgent(
+        .AsAIAgent(
             instructions: "You are an AI assistant that helps people find information.",
             tools: [AIFunctionFactory.Create(GetDateTime, name: nameof(GetDateTime))]);
 ```
@@ -196,7 +196,7 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
 ```csharp
 var agent = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
     .GetChatClient("gpt-4o-mini")
-    .CreateAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
+    .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
         .AsBuilder()
             .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
         .Build());

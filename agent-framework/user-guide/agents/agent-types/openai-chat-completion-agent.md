@@ -42,10 +42,10 @@ Pick the ChatCompletion service to create a ChatCompletion based agent.
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
 ```
 
-Finally, create the agent using the `CreateAIAgent` extension method on the `ChatCompletionClient`.
+Finally, create the agent using the `AsAIAgent` extension method on the `ChatCompletionClient`.
 
 ```csharp
-AIAgent agent = chatCompletionClient.CreateAIAgent(
+AIAgent agent = chatCompletionClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 

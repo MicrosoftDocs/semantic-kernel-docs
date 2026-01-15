@@ -33,7 +33,7 @@ When using OpenAI Chat Completion as the underlying service for agents, the foll
 ```csharp
 AIAgent agent = new OpenAIClient("<your_api_key>")
      .GetChatClient(modelName)
-     .CreateAIAgent(JokerInstructions, JokerName);
+     .AsAIAgent(JokerInstructions, JokerName);
 AgentThread thread = agent.GetNewThread();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread));
 ```
@@ -64,7 +64,7 @@ which can be set to either `InMemoryChatMessageStore.ChatReducerTriggerEvent.Aft
 ```csharp
 AIAgent agent = new OpenAIClient("<your_api_key>")
     .GetChatClient(modelName)
-    .CreateAIAgent(new ChatClientAgentOptions
+    .AsAIAgent(new ChatClientAgentOptions
     {
         Name = JokerName,
         ChatOptions = new() { Instructions = JokerInstructions },
@@ -88,7 +88,7 @@ For example, when using OpenAI Responses with store=true as the underlying servi
 ```csharp
 AIAgent agent = new OpenAIClient("<your_api_key>")
      .GetOpenAIResponseClient(modelName)
-     .CreateAIAgent(JokerInstructions, JokerName);
+     .AsAIAgent(JokerInstructions, JokerName);
 AgentThread thread = agent.GetNewThread();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread));
 ```
@@ -115,7 +115,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
     new AzureCliCredential())
     .GetChatClient(deploymentName)
-    .CreateAIAgent(new ChatClientAgentOptions
+    .AsAIAgent(new ChatClientAgentOptions
     {
         Name = JokerName,
         ChatOptions = new() { Instructions = JokerInstructions },

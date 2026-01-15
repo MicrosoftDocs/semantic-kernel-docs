@@ -53,7 +53,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
-        .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+        .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 Turn the agent into a function tool and then an MCP tool. The agent name and description will be used as the mcp tool name and description.

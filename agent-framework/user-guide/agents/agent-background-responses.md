@@ -59,7 +59,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
     .GetOpenAIResponseClient("<deployment-name>")
-    .CreateAIAgent();
+    .AsAIAgent();
 
 AgentRunOptions options = new()
 {
@@ -101,7 +101,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
     .GetOpenAIResponseClient("<deployment-name>")
-    .CreateAIAgent();
+    .AsAIAgent();
 
 AgentRunOptions options = new()
 {

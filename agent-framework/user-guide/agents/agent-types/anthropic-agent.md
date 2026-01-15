@@ -74,7 +74,7 @@ var deploymentName = Environment.GetEnvironmentVariable("ANTHROPIC_DEPLOYMENT_NA
 
 AnthropicClient client = new() { APIKey = apiKey };
 
-AIAgent agent = client.CreateAIAgent(
+AIAgent agent = client.AsAIAgent(
     model: deploymentName,
     name: "HelpfulAssistant",
     instructions: "You are a helpful assistant.");
@@ -95,7 +95,7 @@ var deploymentName = Environment.GetEnvironmentVariable("ANTHROPIC_DEPLOYMENT_NA
 AnthropicClient client = new AnthropicFoundryClient(
     new AnthropicFoundryApiKeyCredentials(apiKey, resource));
 
-AIAgent agent = client.CreateAIAgent(
+AIAgent agent = client.AsAIAgent(
     model: deploymentName,
     name: "FoundryAgent",
     instructions: "You are a helpful assistant using Anthropic on Azure Foundry.");
@@ -114,7 +114,7 @@ var deploymentName = Environment.GetEnvironmentVariable("ANTHROPIC_DEPLOYMENT_NA
 AnthropicClient client = new AnthropicFoundryClient(
     new AnthropicAzureTokenCredential(new AzureCliCredential(), resource));
 
-AIAgent agent = client.CreateAIAgent(
+AIAgent agent = client.AsAIAgent(
     model: deploymentName,
     name: "FoundryAgent",
     instructions: "You are a helpful assistant using Anthropic on Azure Foundry.");

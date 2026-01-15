@@ -73,7 +73,7 @@ AzureAIAgent agent = new(definition, azureAgentClient);
 Agent creation in Agent Framework is made simpler with extensions provided by all main providers.
 
 ```csharp
-AIAgent openAIAgent = chatClient.CreateAIAgent(instructions: ParrotInstructions);
+AIAgent openAIAgent = chatClient.AsAIAgent(instructions: ParrotInstructions);
 AIAgent azureFoundryAgent = await persistentAgentsClient.CreateAIAgentAsync(instructions: ParrotInstructions);
 AIAgent openAIAssistantAgent = await assistantClient.CreateAIAgentAsync(instructions: ParrotInstructions);
 ```
@@ -160,7 +160,7 @@ ChatCompletionAgent agent = new() { Kernel = kernel, ... };
 In Agent Framework, in a single call you can register tools directly in the agent creation process.
 
 ```csharp
-AIAgent agent = chatClient.CreateAIAgent(tools: [AIFunctionFactory.Create(GetWeather)]);
+AIAgent agent = chatClient.AsAIAgent(tools: [AIFunctionFactory.Create(GetWeather)]);
 ```
 
 ## 6. Agent Non-Streaming Invocation
@@ -281,7 +281,7 @@ serviceContainer.AddKeyedSingleton<SemanticKernel.Agents.Agent>(
 Agent Framework provides the `AIAgent` type as the base abstraction class.
 
 ```csharp
-services.AddKeyedSingleton<AIAgent>(() => client.CreateAIAgent(...));
+services.AddKeyedSingleton<AIAgent>(() => client.AsAIAgent(...));
 ```
 
 ## 11. Agent Type Consolidation

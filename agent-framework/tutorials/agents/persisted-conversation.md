@@ -36,7 +36,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(instructions: "You are a helpful assistant.", name: "Assistant");
+     .AsAIAgent(instructions: "You are a helpful assistant.", name: "Assistant");
 
 AgentThread thread = agent.GetNewThread();
 ```

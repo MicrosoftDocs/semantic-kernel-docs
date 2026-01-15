@@ -61,7 +61,7 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
 ```csharp
 var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
     .GetChatClient(deploymentName)
-    .CreateAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
+    .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
         .AsBuilder()
             .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
         .Build());

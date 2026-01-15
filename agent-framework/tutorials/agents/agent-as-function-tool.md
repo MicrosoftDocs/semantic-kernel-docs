@@ -48,7 +48,7 @@ AIAgent weatherAgent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(
+     .AsAIAgent(
         instructions: "You answer questions about the weather.",
         name: "WeatherAgent",
         description: "An agent that answers questions about the weather.",
@@ -62,7 +62,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(instructions: "You are a helpful assistant who responds in French.", tools: [weatherAgent.AsAIFunction()]);
+     .AsAIAgent(instructions: "You are a helpful assistant who responds in French.", tools: [weatherAgent.AsAIFunction()]);
 ```
 
 Invoke the main agent as normal. It can now call the weather agent as a tool, and should respond in French.

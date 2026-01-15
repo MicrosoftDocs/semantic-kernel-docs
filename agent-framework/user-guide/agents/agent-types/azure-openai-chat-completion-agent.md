@@ -48,10 +48,10 @@ Pick the ChatCompletion service to create a ChatCompletion based agent.
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
 ```
 
-Finally, create the agent using the `CreateAIAgent` extension method on the `ChatCompletionClient`.
+Finally, create the agent using the `AsAIAgent` extension method on the `ChatCompletionClient`.
 
 ```csharp
-AIAgent agent = chatCompletionClient.CreateAIAgent(
+AIAgent agent = chatCompletionClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 // Invoke the agent and output the text result.
@@ -85,7 +85,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
     new AzureCliCredential())
      .GetChatClient(deploymentName)
-     .CreateAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
+     .AsAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
 
 // Non-streaming agent interaction with function tools.
 Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?"));
@@ -96,7 +96,7 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 Get responses as they are generated using streaming:
 
 ```csharp
-AIAgent agent = chatCompletionClient.CreateAIAgent(
+AIAgent agent = chatCompletionClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 

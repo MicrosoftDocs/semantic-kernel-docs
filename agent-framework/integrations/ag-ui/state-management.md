@@ -255,7 +255,7 @@ AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
     var chatClient = azureClient.GetChatClient(deploymentName);
 
     // Create base agent
-    AIAgent baseAgent = chatClient.AsIChatClient().CreateAIAgent(
+    AIAgent baseAgent = chatClient.AsIChatClient().AsAIAgent(
         name: "RecipeAgent",
         instructions: """
             You are a helpful recipe assistant. When users ask you to create or suggest a recipe,
