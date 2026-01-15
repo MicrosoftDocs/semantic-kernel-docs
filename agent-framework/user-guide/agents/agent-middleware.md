@@ -238,7 +238,7 @@ Chat middleware intercepts chat requests sent to AI models. It uses the `ChatCon
 
 - `chat_client`: The chat client being invoked
 - `messages`: List of messages being sent to the AI service
-- `chat_options`: The options for the chat request
+- `options`: The options for the chat request
 - `is_streaming`: Boolean indicating if this is a streaming invocation
 - `metadata`: Dictionary for storing additional data between middleware
 - `result`: The chat response from the AI (can be modified)

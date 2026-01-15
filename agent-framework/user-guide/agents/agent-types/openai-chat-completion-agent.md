@@ -67,7 +67,7 @@ For more information on how to run and interact with agents, see the [Agent gett
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework-core --pre
 ```
 
 ## Configuration

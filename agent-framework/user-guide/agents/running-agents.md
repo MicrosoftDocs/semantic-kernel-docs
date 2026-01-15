@@ -75,36 +75,59 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?",
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Python agents support passing keyword arguments to customize each run. The specific options available depend on the agent type, but `ChatAgent` supports many chat client parameters that can be passed to both `run` and `run_stream` methods.
+Python agents support customizing each run via the `options` parameter. Options are passed as a TypedDict and can be set at both construction time (via `default_options`) and per-run (via `options`). Each provider has its own TypedDict class that provides full IDE autocomplete and type checking for provider-specific settings.
 
-Common options for `ChatAgent` include:
+Common options include:
 
 - `max_tokens`: Maximum number of tokens to generate
 - `temperature`: Controls randomness in response generation
-- `model`: Override the model for this specific run
-- `tools`: Add additional tools for this run only
-- `response_format`: Specify the response format (for example, structured output)
+- `model_id`: Override the model for this specific run
+- `top_p`: Nucleus sampling parameter
+- `response_format`: Specify the response format (e.g., structured output)
+
+> [!NOTE]
+> The `tools` and `instructions` parameters remain as direct keyword arguments and are not passed via the `options` dictionary.
 
 ```python
-# Run with custom options
+from agent_framework.openai import OpenAIChatClient, OpenAIChatOptions
+
+# Set default options at construction time
+agent = OpenAIChatClient().create_agent(
+    instructions="You are a helpful assistant",
+    default_options={
+        "temperature": 0.7,
+        "max_tokens": 500
+    }
+)
+
+# Run with custom options (overrides defaults)
+# OpenAIChatOptions provides IDE autocomplete for all OpenAI-specific settings
+options: OpenAIChatOptions = {
+    "temperature": 0.3,
+    "max_tokens": 150,
+    "model_id": "gpt-4o",
+    "presence_penalty": 0.5,
+    "frequency_penalty": 0.3
+}
+
 result = await agent.run(
     "What is the weather like in Amsterdam?",
-    temperature=0.3,
-    max_tokens=150,
-    model="gpt-4o"
+    options=options
 )
 
 # Streaming with custom options
 async for update in agent.run_stream(
     "Tell me a detailed weather forecast",
-    temperature=0.7,
-    tools=[additional_weather_tool]
+    options={"temperature": 0.7, "top_p": 0.9},
+    tools=[additional_weather_tool]  # tools is still a keyword argument
 ):
     if update.text:
         print(update.text, end="", flush=True)
 ```
 
-When both agent-level defaults and run-level options are provided, the run-level options take precedence.
+Each provider has its own TypedDict class (e.g., `OpenAIChatOptions`, `AnthropicChatOptions`, `OllamaChatOptions`) that exposes the full set of options supported by that provider.
+
+When both `default_options` and per-run `options` are provided, the per-run options take precedence and are merged with the defaults.
 
 ::: zone-end
 

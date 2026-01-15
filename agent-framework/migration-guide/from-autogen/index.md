@@ -221,33 +221,39 @@ def get_time() -> str:
 client = OpenAIChatClient(model_id="gpt-5")
 
 async def example():
-    # Direct creation
+    # Direct creation with default options
     agent = ChatAgent(
         name="assistant",
         chat_client=client,
         instructions="You are a helpful assistant.",
-        tools=[get_weather]  # Multi-turn by default
+        tools=[get_weather],  # Multi-turn by default
+        default_options={
+            "temperature": 0.7,
+            "max_tokens": 1000,
+        }
     )
 
     # Factory method (more convenient)
     agent = client.create_agent(
         name="assistant",
         instructions="You are a helpful assistant.",
-        tools=[get_weather]
+        tools=[get_weather],
+        default_options={"temperature": 0.7}
     )
 
-    # Execution with runtime tool configuration
+    # Execution with runtime tool and options configuration
     result = await agent.run(
         "What's the weather?",
-        tools=[get_time],  # Can add tools at runtime
-        tool_choice="auto"
+        tools=[get_time],  # Can add tools at runtime (keyword arg)
+        options={"tool_choice": "auto"}  # Other options go in options dict
     )
 ```
 
 **Key Differences:**
 
 - **Default behavior**: `ChatAgent` automatically iterates through tool calls, while `AssistantAgent` requires explicit `max_tool_iterations` setting
-- **Runtime configuration**: `ChatAgent.run()` accepts `tools` and `tool_choice` parameters for per-invocation customization
+- **Runtime configuration**: `ChatAgent.run()` accepts `tools` as a keyword argument and other options via the `options` dict parameter for per-invocation customization
+- **Options system**: Agent Framework uses TypedDict-based options (e.g., `OpenAIChatOptions`) for type safety and IDE autocomplete. Options are passed via `default_options` at construction and `options` at runtime
 - **Factory methods**: Agent Framework provides convenient factory methods directly from chat clients
 - **State management**: `ChatAgent` is stateless and doesn't maintain conversation history between invocations, unlike `AssistantAgent` which maintains conversation history as part of its state
 
@@ -340,18 +346,21 @@ async for event in agent.run_stream(task="Hello"):
 ```python
 # Assume we have client, agent, and tools from previous examples
 async def streaming_example():
-    # Chat client streaming
-    async for chunk in client.get_streaming_response("Hello", tools=tools):
+    # Chat client streaming - tools go in options dict
+    async for chunk in client.get_streaming_response(
+        "Hello",
+        options={"tools": tools}
+    ):
         if chunk.text:
             print(chunk.text, end="")
 
-    # Agent streaming
-    async for chunk in agent.run_stream("Hello"):
+    # Agent streaming - tools can be keyword arg on agents
+    async for chunk in agent.run_stream("Hello", tools=tools):
         if chunk.text:
             print(chunk.text, end="", flush=True)
 ```
 
-Tip: In Agent Framework, both clients and agents yield the same update shape; you can read `chunk.text` in either case.
+Tip: In Agent Framework, both clients and agents yield the same update shape; you can read `chunk.text` in either case. Note that for chat clients, `tools` goes in the `options` dict, while for agents, `tools` remains a direct keyword argument.
 
 ### Message Types and Creation
 
@@ -1345,7 +1354,7 @@ Agent Framework provides built-in request-response capabilities where any execut
 
 ```python
 from agent_framework import (
-    RequestInfoEvent, WorkflowBuilder, WorkflowContext, 
+    RequestInfoEvent, WorkflowBuilder, WorkflowContext,
     Executor, handler, response_handler
 )
 from dataclasses import dataclass
@@ -1361,7 +1370,7 @@ class ApprovalRequest:
 
 # Workflow executor that requests human approval
 class ReviewerExecutor(Executor):
-    
+
     @handler
     async def review_content(
         self,
@@ -1374,7 +1383,7 @@ class ReviewerExecutor(Executor):
             agent_name="writer_agent"
         )
         await ctx.request_info(request_data=approval_request, response_type=str)
-    
+
     @response_handler
     async def handle_approval_response(
         self,

@@ -769,18 +769,37 @@ arguments = KernelArguments(settings)
 response = await agent.get_response(user_input, thread=thread, arguments=arguments)
 ```
 
-**Solution**: Simplified options in Agent Framework
+**Solution**: Simplified TypedDict-based options in Agent Framework
 
-Agent Framework allows the passing of all parameters directly to the relevant methods, so that you don't have to import anything extra, or create any options objects, unless you want to. Internally, it uses a `ChatOptions` object for `ChatClients` and `ChatAgents`, which you can also create and pass in if you want to. This is also created in a `ChatAgent` to hold the options and can be overridden per call.
+Agent Framework uses a TypedDict-based options system for `ChatClients` and `ChatAgents`. Options are passed via a single `options` parameter as a typed dictionary, with provider-specific TypedDict classes (like `OpenAIChatOptions`) for full IDE autocomplete and type checking.
 
 ```python
-agent = ...
+from agent_framework.openai import OpenAIChatClient
 
-response = await agent.run(user_input, thread, max_tokens=1000, frequency_penalty=0.5)
+client = OpenAIChatClient()
+
+# Set default options at agent creation
+agent = client.create_agent(
+    instructions="You are a helpful assistant.",
+    default_options={
+        "max_tokens": 1000,
+        "temperature": 0.7,
+    }
+)
+
+# Override options per call
+response = await agent.run(
+    user_input,
+    thread,
+    options={
+        "max_tokens": 500,
+        "frequency_penalty": 0.5,
+    }
+)
 ```
 
 > [!NOTE]
-> The above is specific to a `ChatAgent`, because other agents might have different options, they should all accepts `messages` as a parameter, since that is defined in the `AgentProtocol`.
+> The `tools` and `instructions` parameters remain as direct keyword arguments on agent creation and `run()` methods, and are not passed via the `options` dictionary. See the [Typed Options Upgrade Guide](../../support/upgrade/typed-options-guide-python.md) for detailed migration patterns.
 
 ::: zone-end
 
