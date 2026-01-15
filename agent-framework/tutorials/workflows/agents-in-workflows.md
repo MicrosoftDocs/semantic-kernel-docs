@@ -138,7 +138,7 @@ Run the workflow with streaming to observe real-time updates from all agents:
         await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
         await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
         {
-            if (evt is AgentRunUpdateEvent executorComplete)
+            if (evt is AgentResponseUpdateEvent executorComplete)
             {
                 Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
             }
@@ -163,14 +163,14 @@ Properly clean up the Azure Foundry agents after use:
 2. **Agent Creation**: Creates persistent agents on Azure Foundry with specific instructions for translation
 3. **Sequential Processing**: French agent translates input first, then Spanish agent, then English agent
 4. **Turn Token Pattern**: Agents cache messages and only process when they receive a `TurnToken`
-5. **Streaming Updates**: `AgentRunUpdateEvent` provides real-time token updates as agents generate responses
+5. **Streaming Updates**: `AgentResponseUpdateEvent` provides real-time token updates as agents generate responses
 6. **Resource Management**: Proper cleanup of Azure Foundry agents using the Administration API
 
 ## Key Concepts
 
 - **Azure Foundry Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
 - **PersistentAgentsClient**: Client for creating and managing agents on Azure Foundry
-- **AgentRunUpdateEvent**: Real-time streaming updates during agent execution
+- **AgentResponseUpdateEvent**: Real-time streaming updates during agent execution
 - **TurnToken**: Signal that triggers agent processing after message caching
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next
 
@@ -216,7 +216,7 @@ from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
 from typing import Any
 
-from agent_framework import AgentRunUpdateEvent, WorkflowBuilder, WorkflowOutputEvent
+from agent_framework import AgentResponseUpdateEvent, WorkflowBuilder, WorkflowOutputEvent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 ```
@@ -290,7 +290,7 @@ Run the workflow with streaming to observe real-time updates from both agents:
 
         events = workflow.run_stream("Create a slogan for a new electric SUV that is affordable and fun to drive.")
         async for event in events:
-            if isinstance(event, AgentRunUpdateEvent):
+            if isinstance(event, AgentResponseUpdateEvent):
                 # Handle streaming updates from agents
                 eid = event.executor_id
                 if eid != last_executor_id:
@@ -320,13 +320,13 @@ if __name__ == "__main__":
 1. **Azure AI Client Setup**: Uses `AzureAIAgentClient` with Azure CLI credentials for authentication
 2. **Agent Factory Pattern**: Creates a factory function that manages async context lifecycle for multiple agents
 3. **Sequential Processing**: Writer agent generates content first, then passes it to the Reviewer agent
-4. **Streaming Updates**: `AgentRunUpdateEvent` provides real-time token updates as agents generate responses
+4. **Streaming Updates**: `AgentResponseUpdateEvent` provides real-time token updates as agents generate responses
 5. **Context Management**: Proper cleanup of Azure AI resources using `AsyncExitStack`
 
 ## Key Concepts
 
 - **Azure AI Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
-- **AgentRunUpdateEvent**: Real-time streaming updates during agent execution
+- **AgentResponseUpdateEvent**: Real-time streaming updates during agent execution
 - **AsyncExitStack**: Proper async context management for multiple resources
 - **Agent Factory Pattern**: Reusable agent creation with shared client configuration
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next

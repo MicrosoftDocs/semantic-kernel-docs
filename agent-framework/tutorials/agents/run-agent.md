@@ -67,7 +67,7 @@ AIAgent agent = new AzureOpenAIClient(
 ## Running the agent
 
 To run the agent, call the `RunAsync` method on the agent instance, providing the user input.
-The agent will return an `AgentRunResponse` object, and calling `.ToString()` or `.Text` on this response object, provides the text result from the agent.
+The agent will return an `AgentResponse` object, and calling `.ToString()` or `.Text` on this response object, provides the text result from the agent.
 
 ```csharp
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
@@ -84,7 +84,7 @@ Because he wanted to improve his "arrr-ticulation"! 🏴‍☠️
 ## Running the agent with streaming
 
 To run the agent with streaming, call the `RunStreamingAsync` method on the agent instance, providing the user input.
-The agent will return a stream `AgentRunResponseUpdate` objects, and calling `.ToString()` or `.Text` on each update object provides the part of the text result contained in that update.
+The agent will return a stream `AgentResponseUpdate` objects, and calling `.ToString()` or `.Text` on each update object provides the part of the text result contained in that update.
 
 ```csharp
 await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pirate."))

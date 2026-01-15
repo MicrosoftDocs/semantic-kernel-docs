@@ -67,7 +67,7 @@ You can check the response content for any `FunctionApprovalRequestContent` inst
 
 ```csharp
 AgentThread thread = agent.GetNewThread();
-AgentRunResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread);
+AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread);
 
 var functionApprovalRequests = response.Messages
     .SelectMany(x => x.Contents)

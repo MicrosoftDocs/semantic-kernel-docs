@@ -67,7 +67,7 @@ AIAgent agent = new AzureOpenAIClient(
     .WithPurview(browserCredential, new PurviewSettings("My Secure Agent"))
     .Build();
 
-AgentRunResponse response = await agent.RunAsync("Summarize zero trust in one sentence.").ConfigureAwait(false);
+AgentResponse response = await agent.RunAsync("Summarize zero trust in one sentence.").ConfigureAwait(false);
 Console.WriteLine(response);
 
 ```

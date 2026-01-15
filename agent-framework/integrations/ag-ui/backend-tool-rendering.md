@@ -186,7 +186,7 @@ To see tool calls and results in real-time, extend the client's streaming loop t
 
 ```csharp
 // Inside the streaming loop from getting-started.md
-await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(messages, thread))
+await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, thread))
 {
     ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 

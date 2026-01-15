@@ -109,10 +109,10 @@ await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is AgentRunUpdateEvent update)
+    if (evt is AgentResponseUpdateEvent update)
     {
         // Process streaming agent responses
-        AgentRunResponse response = update.AsResponse();
+        AgentResponse response = update.AsResponse();
         foreach (ChatMessage message in response.Messages)
         {
             Console.WriteLine($"[{update.ExecutorId}]: {message.Text}");
@@ -250,7 +250,7 @@ Execute the workflow and process events:
 
 ```python
 from typing import cast
-from agent_framework import AgentRunUpdateEvent, Role, WorkflowOutputEvent
+from agent_framework import AgentResponseUpdateEvent, Role, WorkflowOutputEvent
 
 task = "What are the key benefits of async/await in Python?"
 
@@ -262,7 +262,7 @@ last_executor_id: str | None = None
 
 # Run the workflow
 async for event in workflow.run_stream(task):
-    if isinstance(event, AgentRunUpdateEvent):
+    if isinstance(event, AgentResponseUpdateEvent):
         # Print streaming agent updates
         eid = event.executor_id
         if eid != last_executor_id:
@@ -343,7 +343,7 @@ Workflow completed.
 - **with_agent_orchestrator()**: Use an agent-based orchestrator for intelligent speaker coordination
 - **GroupChatState**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
-- **Event Streaming**: Process `AgentRunUpdateEvent` and `WorkflowOutputEvent` in real-time
+- **Event Streaming**: Process `AgentResponseUpdateEvent` and `WorkflowOutputEvent` in real-time
 - **list[ChatMessage] Output**: All orchestrations return a list of chat messages
 
 ::: zone-end

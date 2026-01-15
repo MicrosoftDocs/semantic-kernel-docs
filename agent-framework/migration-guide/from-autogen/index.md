@@ -221,33 +221,39 @@ def get_time() -> str:
 client = OpenAIChatClient(model_id="gpt-5")
 
 async def example():
-    # Direct creation
+    # Direct creation with default options
     agent = ChatAgent(
         name="assistant",
         chat_client=client,
         instructions="You are a helpful assistant.",
-        tools=[get_weather]  # Multi-turn by default
+        tools=[get_weather],  # Multi-turn by default
+        default_options={
+            "temperature": 0.7,
+            "max_tokens": 1000,
+        }
     )
 
     # Factory method (more convenient)
     agent = client.create_agent(
         name="assistant",
         instructions="You are a helpful assistant.",
-        tools=[get_weather]
+        tools=[get_weather],
+        default_options={"temperature": 0.7}
     )
 
-    # Execution with runtime tool configuration
+    # Execution with runtime tool and options configuration
     result = await agent.run(
         "What's the weather?",
-        tools=[get_time],  # Can add tools at runtime
-        tool_choice="auto"
+        tools=[get_time],  # Can add tools at runtime (keyword arg)
+        options={"tool_choice": "auto"}  # Other options go in options dict
     )
 ```
 
 **Key Differences:**
 
 - **Default behavior**: `ChatAgent` automatically iterates through tool calls, while `AssistantAgent` requires explicit `max_tool_iterations` setting
-- **Runtime configuration**: `ChatAgent.run()` accepts `tools` and `tool_choice` parameters for per-invocation customization
+- **Runtime configuration**: `ChatAgent.run()` accepts `tools` as a keyword argument and other options via the `options` dict parameter for per-invocation customization
+- **Options system**: Agent Framework uses TypedDict-based options (e.g., `OpenAIChatOptions`) for type safety and IDE autocomplete. Options are passed via `default_options` at construction and `options` at runtime
 - **Factory methods**: Agent Framework provides convenient factory methods directly from chat clients
 - **State management**: `ChatAgent` is stateless and doesn't maintain conversation history between invocations, unlike `AssistantAgent` which maintains conversation history as part of its state
 
@@ -340,18 +346,21 @@ async for event in agent.run_stream(task="Hello"):
 ```python
 # Assume we have client, agent, and tools from previous examples
 async def streaming_example():
-    # Chat client streaming
-    async for chunk in client.get_streaming_response("Hello", tools=tools):
+    # Chat client streaming - tools go in options dict
+    async for chunk in client.get_streaming_response(
+        "Hello",
+        options={"tools": tools}
+    ):
         if chunk.text:
             print(chunk.text, end="")
 
-    # Agent streaming
-    async for chunk in agent.run_stream("Hello"):
+    # Agent streaming - tools can be keyword arg on agents
+    async for chunk in agent.run_stream("Hello", tools=tools):
         if chunk.text:
             print(chunk.text, end="", flush=True)
 ```
 
-Tip: In Agent Framework, both clients and agents yield the same update shape; you can read `chunk.text` in either case.
+Tip: In Agent Framework, both clients and agents yield the same update shape; you can read `chunk.text` in either case. Note that for chat clients, `tools` goes in the `options` dict, while for agents, `tools` remains a direct keyword argument.
 
 ### Message Types and Creation
 
@@ -688,8 +697,8 @@ Notes:
 from collections.abc import AsyncIterable
 from typing import Any
 from agent_framework import (
-    AgentRunResponse,
-    AgentRunResponseUpdate,
+    AgentResponse,
+    AgentResponseUpdate,
     AgentThread,
     BaseAgent,
     ChatMessage,
@@ -704,7 +713,7 @@ class StaticAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AgentRunResponse:
+    ) -> AgentResponse:
         # Build a static reply
         reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
 
@@ -713,7 +722,7 @@ class StaticAgent(BaseAgent):
             normalized = self._normalize_messages(messages)
             await self._notify_thread_of_new_messages(thread, normalized, reply)
 
-        return AgentRunResponse(messages=[reply])
+        return AgentResponse(messages=[reply])
 
     async def run_stream(
         self,
@@ -721,9 +730,9 @@ class StaticAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AsyncIterable[AgentRunResponseUpdate]:
+    ) -> AsyncIterable[AgentResponseUpdate]:
         # Stream the same static response in a single chunk for simplicity
-        yield AgentRunResponseUpdate(contents=[TextContent(text="Hello from AF custom agent")], role=Role.ASSISTANT)
+        yield AgentResponseUpdate(contents=[TextContent(text="Hello from AF custom agent")], role=Role.ASSISTANT)
 
         # Notify thread of input and the complete response once streaming ends
         if thread is not None:
@@ -1199,7 +1208,7 @@ from typing import cast
 from agent_framework import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
     MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
-    AgentRunUpdateEvent,
+    AgentResponseUpdateEvent,
     ChatAgent,
     ChatMessage,
     MagenticBuilder,
@@ -1231,7 +1240,7 @@ workflow = (
 async def magentic_example():
     output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
-        if isinstance(event, AgentRunUpdateEvent):
+        if isinstance(event, AgentResponseUpdateEvent):
             props = event.data.additional_properties if event.data else None
             event_type = props.get("magentic_event_type") if props else None
 
@@ -1255,7 +1264,7 @@ The Magentic workflow provides extensive customization options:
 
 - **Manager configuration**: Use a ChatAgent with custom instructions and model settings
 - **Round limits**: `max_round_count`, `max_stall_count`, `max_reset_count`
-- **Event streaming**: Use `AgentRunUpdateEvent` with `magentic_event_type` metadata
+- **Event streaming**: Use `AgentResponseUpdateEvent` with `magentic_event_type` metadata
 - **Agent specialization**: Custom instructions and tools per agent
 - **Human-in-the-loop**: Plan review, tool approval, and stall intervention
 
@@ -1265,7 +1274,7 @@ from typing import cast
 from agent_framework import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
     MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
-    AgentRunUpdateEvent,
+    AgentResponseUpdateEvent,
     ChatAgent,
     MagenticBuilder,
     MagenticHumanInterventionDecision,
@@ -1345,7 +1354,7 @@ Agent Framework provides built-in request-response capabilities where any execut
 
 ```python
 from agent_framework import (
-    RequestInfoEvent, WorkflowBuilder, WorkflowContext, 
+    RequestInfoEvent, WorkflowBuilder, WorkflowContext,
     Executor, handler, response_handler
 )
 from dataclasses import dataclass
@@ -1361,7 +1370,7 @@ class ApprovalRequest:
 
 # Workflow executor that requests human approval
 class ReviewerExecutor(Executor):
-    
+
     @handler
     async def review_content(
         self,
@@ -1374,7 +1383,7 @@ class ReviewerExecutor(Executor):
             agent_name="writer_agent"
         )
         await ctx.request_info(request_data=approval_request, response_type=str)
-    
+
     @response_handler
     async def handle_approval_response(
         self,

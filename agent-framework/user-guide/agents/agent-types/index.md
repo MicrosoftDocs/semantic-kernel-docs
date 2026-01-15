@@ -294,7 +294,7 @@ It is also possible to create fully custom agents that are not just wrappers aro
 Agent Framework provides the `AgentProtocol` protocol and `BaseAgent` base class, which when implemented/subclassed allows for complete control over the agent's behavior and capabilities.
 
 ```python
-from agent_framework import BaseAgent, AgentRunResponse, AgentRunResponseUpdate, AgentThread, ChatMessage
+from agent_framework import BaseAgent, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
 from collections.abc import AsyncIterable
 
 class CustomAgent(BaseAgent):
@@ -304,7 +304,7 @@ class CustomAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AgentRunResponse:
+    ) -> AgentResponse:
         # Custom agent implementation
         pass
 
@@ -314,7 +314,7 @@ class CustomAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AsyncIterable[AgentRunResponseUpdate]:
+    ) -> AsyncIterable[AgentResponseUpdate]:
         # Custom streaming implementation
         pass
 ```

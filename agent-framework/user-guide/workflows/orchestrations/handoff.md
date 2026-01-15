@@ -120,7 +120,7 @@ while (true)
     List<ChatMessage> newMessages = new();
     await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
     {
-        if (evt is AgentRunUpdateEvent e)
+        if (evt is AgentResponseUpdateEvent e)
         {
             Console.WriteLine($"{e.ExecutorId}: {e.Data}");
         }

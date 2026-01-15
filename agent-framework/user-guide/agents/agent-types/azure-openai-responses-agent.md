@@ -93,7 +93,7 @@ export AZURE_OPENAI_API_KEY="<your-api-key>"  # If not using Azure CLI authentic
 Add the Agent Framework package to your project:
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework-core --pre
 ```
 
 ## Getting Started

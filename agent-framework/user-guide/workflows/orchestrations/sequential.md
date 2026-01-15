@@ -92,7 +92,7 @@ await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 List<ChatMessage> result = new();
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is AgentRunUpdateEvent e)
+    if (evt is AgentResponseUpdateEvent e)
     {
         Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
@@ -125,7 +125,7 @@ English_Translation: Assistant: Spanish detected. Hello, world!
 - **AgentWorkflowBuilder.BuildSequential()**: Creates a pipeline workflow from a collection of agents
 - **ChatClientAgent**: Represents an agent backed by a chat client with specific instructions
 - **StreamingRun**: Provides real-time execution with event streaming capabilities
-- **Event Handling**: Monitor agent progress through `AgentRunUpdateEvent` and completion through `WorkflowOutputEvent`
+- **Event Handling**: Monitor agent progress through `AgentResponseUpdateEvent` and completion through `WorkflowOutputEvent`
 
 ::: zone-end
 
