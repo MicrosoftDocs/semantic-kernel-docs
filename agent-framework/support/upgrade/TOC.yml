@@ -1,2 +1,4 @@
 - name: Upgrade Guide - Workflow APIs and Request-Response System in Python
   href: requests-and-responses-upgrade-guide-python.md
+- name: Upgrade Guide - Python Options based on TypedDicts
+  href: typed-options-guide-python.md

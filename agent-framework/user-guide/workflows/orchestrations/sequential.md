@@ -13,7 +13,12 @@ ms.service: agent-framework
 
 In sequential orchestration, agents are organized in a pipeline. Each agent processes the task in turn, passing its output to the next agent in the sequence. This is ideal for workflows where each step builds upon the previous one, such as document review, data processing pipelines, or multi-stage reasoning.
 
-![Sequential Orchestration](../resources/images/orchestration-sequential.png)
+<p align="center">
+    <img src="../resources/images/orchestration-sequential.png" alt="Sequential Orchestration">
+</p>
+
+> [!IMPORTANT]
+> The full conversation history from previous agents is passed to the next agent in the sequence. Each agent can see all prior messages, allowing for context-aware processing.
 
 ## What You'll Learn
 
@@ -87,7 +92,7 @@ await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 List<ChatMessage> result = new();
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is AgentRunUpdateEvent e)
+    if (evt is AgentResponseUpdateEvent e)
     {
         Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
@@ -120,7 +125,7 @@ English_Translation: Assistant: Spanish detected. Hello, world!
 - **AgentWorkflowBuilder.BuildSequential()**: Creates a pipeline workflow from a collection of agents
 - **ChatClientAgent**: Represents an agent backed by a chat client with specific instructions
 - **StreamingRun**: Provides real-time execution with event streaming capabilities
-- **Event Handling**: Monitor agent progress through `AgentRunUpdateEvent` and completion through `WorkflowOutputEvent`
+- **Event Handling**: Monitor agent progress through `AgentResponseUpdateEvent` and completion through `WorkflowOutputEvent`
 
 ::: zone-end
 

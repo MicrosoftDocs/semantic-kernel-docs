@@ -331,14 +331,15 @@ Anthropic supports extended thinking capabilities through the `thinking` feature
 
 ```python
 from agent_framework import TextReasoningContent, UsageContent
+from agent_framework.anthropic import AnthropicClient
 
 async def thinking_example():
     agent = AnthropicClient().create_agent(
         name="DocsAgent",
         instructions="You are a helpful agent.",
         tools=[HostedWebSearchTool()],
-        max_tokens=20000,
-        additional_chat_options={
+        default_options={
+            "max_tokens": 20000,
             "thinking": {"type": "enabled", "budget_tokens": 10000}
         },
     )
@@ -357,6 +358,65 @@ async def thinking_example():
         if chunk.text:
             print(chunk.text, end="", flush=True)
     print()
+```
+
+### Anthropic Skills
+
+Anthropic provides managed skills that extend agent capabilities, such as creating PowerPoint presentations. Skills require the Code Interpreter tool to function:
+
+```python
+from agent_framework import HostedCodeInterpreterTool, HostedFileContent
+from agent_framework.anthropic import AnthropicClient
+
+async def skills_example():
+    # Create client with skills beta flag
+    client = AnthropicClient(additional_beta_flags=["skills-2025-10-02"])
+
+    # Create an agent with the pptx skill enabled
+    # Skills require the Code Interpreter tool
+    agent = client.create_agent(
+        name="PresentationAgent",
+        instructions="You are a helpful agent for creating PowerPoint presentations.",
+        tools=HostedCodeInterpreterTool(),
+        default_options={
+            "max_tokens": 20000,
+            "thinking": {"type": "enabled", "budget_tokens": 10000},
+            "container": {
+                "skills": [{"type": "anthropic", "skill_id": "pptx", "version": "latest"}]
+            },
+        },
+    )
+
+    query = "Create a presentation about renewable energy with 5 slides"
+    print(f"User: {query}")
+    print("Agent: ", end="", flush=True)
+
+    files: list[HostedFileContent] = []
+    async for chunk in agent.run_stream(query):
+        for content in chunk.contents:
+            match content.type:
+                case "text":
+                    print(content.text, end="", flush=True)
+                case "text_reasoning":
+                    print(f"\033[32m{content.text}\033[0m", end="", flush=True)
+                case "hosted_file":
+                    # Catch generated files
+                    files.append(content)
+
+    print("\n")
+
+    # Download generated files
+    if files:
+        print("Generated files:")
+        for idx, file in enumerate(files):
+            file_content = await client.anthropic_client.beta.files.download(
+                file_id=file.file_id,
+                betas=["files-api-2025-04-14"]
+            )
+            filename = f"presentation-{idx}.pptx"
+            with open(filename, "wb") as f:
+                await file_content.write_to_file(f.name)
+            print(f"File {idx}: {filename} saved to disk.")
 ```
 
 ## Using the Agent

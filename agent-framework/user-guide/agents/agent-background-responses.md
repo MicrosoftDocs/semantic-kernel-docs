@@ -69,7 +69,7 @@ AgentRunOptions options = new()
 AgentThread thread = agent.GetNewThread();
 
 // Get initial response - may return with or without a continuation token
-AgentRunResponse response = await agent.RunAsync("Write a very long novel about otters in space.", thread, options);
+AgentResponse response = await agent.RunAsync("Write a very long novel about otters in space.", thread, options);
 
 // Continue to poll until the final response is received
 while (response.ContinuationToken is not null)
@@ -110,7 +110,7 @@ AgentRunOptions options = new()
 
 AgentThread thread = agent.GetNewThread();
 
-AgentRunResponseUpdate? latestReceivedUpdate = null;
+AgentResponseUpdate? latestReceivedUpdate = null;
 
 await foreach (var update in agent.RunStreamingAsync("Write a very long novel about otters in space.", thread, options))
 {
@@ -132,7 +132,7 @@ await foreach (var update in agent.RunStreamingAsync(thread, options))
 
 ### Key Points:
 
-- Each `AgentRunResponseUpdate` contains a continuation token that can be used for resumption
+- Each `AgentResponseUpdate` contains a continuation token that can be used for resumption
 - Store the continuation token from the last received update before interruption
 - Use the stored continuation token to resume the stream from the interruption point
 

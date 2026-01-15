@@ -69,7 +69,7 @@ For more information on how to run and interact with agents, see the [Agent gett
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework-core --pre
 ```
 
 ## Configuration
@@ -170,7 +170,7 @@ async def reasoning_example():
         instructions="You are a personal math tutor. When asked a math question, "
                     "write and run code to answer the question.",
         tools=HostedCodeInterpreterTool(),
-        reasoning={"effort": "high", "summary": "detailed"},
+        default_options={"reasoning": {"effort": "high", "summary": "detailed"}},
     )
 
     print("Agent: ", end="", flush=True)
@@ -191,7 +191,7 @@ Get responses in structured formats:
 
 ```python
 from pydantic import BaseModel
-from agent_framework import AgentRunResponse
+from agent_framework import AgentResponse
 
 class CityInfo(BaseModel):
     """A structured output for city information."""
@@ -205,7 +205,7 @@ async def structured_output_example():
     )
 
     # Non-streaming structured output
-    result = await agent.run("Tell me about Paris, France", response_format=CityInfo)
+    result = await agent.run("Tell me about Paris, France", options={"response_format": CityInfo})
 
     if result.value:
         city_data = result.value
@@ -214,7 +214,7 @@ async def structured_output_example():
 
     # Streaming structured output
     structured_result = await AgentRunResponse.from_agent_response_generator(
-        agent.run_stream("Tell me about Tokyo, Japan", response_format=CityInfo),
+        agent.run_stream("Tell me about Tokyo, Japan", options={"response_format": CityInfo}),
         output_format_type=CityInfo,
     )
 
@@ -281,7 +281,7 @@ async def code_interpreter_with_files_example():
 
     # Create the OpenAI client for file operations
     openai_client = AsyncOpenAI()
-    
+
     # Create sample CSV data
     csv_data = """name,department,salary,years_experience
 Alice Johnson,Engineering,95000,5
@@ -291,7 +291,7 @@ David Brown,Marketing,68000,2
 Emma Davis,Sales,82000,4
 Frank Wilson,Engineering,88000,6
 """
-    
+
     # Create temporary CSV file
     with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as temp_file:
         temp_file.write(csv_data)
@@ -309,7 +309,7 @@ Frank Wilson,Engineering,88000,6
 
     # Create agent using OpenAI Responses client
     agent = ChatAgent(
-        chat_client=OpenAIResponsesClient(),
+        chat_client=OpenAIResponsesClient(async_client=openai_client),
         instructions="You are a helpful assistant that can analyze data files using Python code.",
         tools=HostedCodeInterpreterTool(inputs=[{"file_id": uploaded_file.id}]),
     )
@@ -365,25 +365,25 @@ from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
 
 async def file_search_example():
     client = OpenAIResponsesClient()
-    
+
     # Create a file with sample content
     file = await client.client.files.create(
-        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), 
+        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."),
         purpose="user_data"
     )
-    
+
     # Create a vector store for document storage
     vector_store = await client.client.vector_stores.create(
         name="knowledge_base",
         expires_after={"anchor": "last_active_at", "days": 1},
     )
-    
+
     # Add file to vector store and wait for processing
     result = await client.client.vector_stores.files.create_and_poll(
-        vector_store_id=vector_store.id, 
+        vector_store_id=vector_store.id,
         file_id=file.id
     )
-    
+
     # Check if processing was successful
     if result.last_error is not None:
         raise Exception(f"Vector store file processing failed with status: {result.last_error.message}")
@@ -401,7 +401,7 @@ async def file_search_example():
     # Test the file search
     message = "What is the weather today? Do a file search to find the answer."
     print(f"User: {message}")
-    
+
     response = await agent.run(message)
     print(f"Agent: {response}")
 
@@ -462,31 +462,35 @@ async def image_analysis_example():
 Generate images using the Responses API:
 
 ```python
-from agent_framework import DataContent, UriContent
+from agent_framework import DataContent, HostedImageGenerationTool, ImageGenerationToolResultContent, UriContent
 
 async def image_generation_example():
     agent = OpenAIResponsesClient().create_agent(
         instructions="You are a helpful AI that can generate images.",
-        tools=[{
-            "type": "image_generation",
-            "size": "1024x1024",
-            "quality": "low",
-        }],
+        tools=[
+            HostedImageGenerationTool(
+                options={
+                    "size": "1024x1024",
+                    "output_format": "webp",
+                }
+            )
+        ],
     )
 
     result = await agent.run("Generate an image of a sunset over the ocean.")
 
     # Check for generated images in the response
-    for content in result.contents:
-        if isinstance(content, (DataContent, UriContent)):
-            print(f"Image generated: {content.uri}")
+    for message in result.messages:
+        for content in message.contents:
+            if isinstance(content, ImageGenerationToolResultContent) and content.outputs:
+                for output in content.outputs:
+                    if isinstance(output, (DataContent, UriContent)) and output.uri:
+                        print(f"Image generated: {output.uri}")
 ```
 
-### Model Context Protocol (MCP) Tools
+### MCP Tools
 
-#### Local MCP Tools
-
-Connect to local MCP servers for extended capabilities:
+Connect to MCP servers from within the agent for extended capabilities:
 
 ```python
 from agent_framework import MCPStreamableHTTPTool
@@ -507,7 +511,7 @@ async def local_mcp_example():
 
 #### Hosted MCP Tools
 
-Use hosted MCP tools for extended capabilities:
+Use hosted MCP tools to leverage server-side capabilities:
 
 ```python
 from agent_framework import HostedMCPTool

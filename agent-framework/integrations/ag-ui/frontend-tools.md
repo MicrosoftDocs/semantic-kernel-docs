@@ -85,7 +85,7 @@ AIAgent inspectableAgent = baseAgent
     .Use(runFunc: null, runStreamingFunc: InspectToolsMiddleware)
     .Build();
 
-static async IAsyncEnumerable<AgentRunResponseUpdate> InspectToolsMiddleware(
+static async IAsyncEnumerable<AgentResponseUpdate> InspectToolsMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
@@ -109,7 +109,7 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> InspectToolsMiddleware(
         }
     }
 
-    await foreach (AgentRunResponseUpdate update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
+    await foreach (AgentResponseUpdate update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
     {
         yield return update;
     }

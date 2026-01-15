@@ -62,7 +62,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-async Task<AgentRunResponse> CustomAgentRunMiddleware(
+async Task<AgentResponse> CustomAgentRunMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
