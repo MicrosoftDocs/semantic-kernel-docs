@@ -9,7 +9,7 @@ ms.date: 09/25/2025
 ms.service: agent-framework
 ---
 
-# Agent based on any IChatClient
+# Agent based on any Chat Client
 
 ::: zone pivot="programming-language-csharp"
 
