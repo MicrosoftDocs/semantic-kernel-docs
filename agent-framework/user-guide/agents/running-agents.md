@@ -121,8 +121,8 @@ Since not all content returned is the result, it's important to look for specifi
 To extract the text result from a response, all `TextContent` items from all `ChatMessages` items need to be aggregated.
 To simplify this, a `Text` property is available on all response types that aggregates all `TextContent`.
 
-For the non-streaming case, everything is returned in one `AgentRunResponse` object.
-`AgentRunResponse` allows access to the produced messages via the `Messages` property.
+For the non-streaming case, everything is returned in one `AgentResponse` object.
+`AgentResponse` allows access to the produced messages via the `Messages` property.
 
 ```csharp
 var response = await agent.RunAsync("What is the weather like in Amsterdam?");
@@ -130,7 +130,7 @@ Console.WriteLine(response.Text);
 Console.WriteLine(response.Messages.Count);
 ```
 
-For the streaming case, `AgentRunResponseUpdate` objects are streamed as they are produced.
+For the streaming case, `AgentResponseUpdate` objects are streamed as they are produced.
 Each update might contain a part of the result from the agent, and also various other content items.
 Similar to the non-streaming case, it is possible to use the `Text` property to get the portion
 of the result contained in the update, and drill into the detail via the `Contents` property.
@@ -146,8 +146,8 @@ await foreach (var update in agent.RunStreamingAsync("What is the weather like i
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-For the non-streaming case, everything is returned in one `AgentRunResponse` object.
-`AgentRunResponse` allows access to the produced messages via the `messages` property.
+For the non-streaming case, everything is returned in one `AgentResponse` object.
+`AgentResponse` allows access to the produced messages via the `messages` property.
 
 To extract the text result from a response, all `TextContent` items from all `ChatMessage` items need to be aggregated.
 To simplify this, a `Text` property is available on all response types that aggregates all `TextContent`.
@@ -162,7 +162,7 @@ for message in response.messages:
     print(f"Role: {message.role}, Text: {message.text}")
 ```
 
-For the streaming case, `AgentRunResponseUpdate` objects are streamed as they are produced.
+For the streaming case, `AgentResponseUpdate` objects are streamed as they are produced.
 Each update might contain a part of the result from the agent, and also various other content items.
 Similar to the non-streaming case, it is possible to use the `text` property to get the portion
 of the result contained in the update, and drill into the detail via the `contents` property.

@@ -688,8 +688,8 @@ Notes:
 from collections.abc import AsyncIterable
 from typing import Any
 from agent_framework import (
-    AgentRunResponse,
-    AgentRunResponseUpdate,
+    AgentResponse,
+    AgentResponseUpdate,
     AgentThread,
     BaseAgent,
     ChatMessage,
@@ -704,7 +704,7 @@ class StaticAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AgentRunResponse:
+    ) -> AgentResponse:
         # Build a static reply
         reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
 
@@ -713,7 +713,7 @@ class StaticAgent(BaseAgent):
             normalized = self._normalize_messages(messages)
             await self._notify_thread_of_new_messages(thread, normalized, reply)
 
-        return AgentRunResponse(messages=[reply])
+        return AgentResponse(messages=[reply])
 
     async def run_stream(
         self,
@@ -721,9 +721,9 @@ class StaticAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AsyncIterable[AgentRunResponseUpdate]:
+    ) -> AsyncIterable[AgentResponseUpdate]:
         # Stream the same static response in a single chunk for simplicity
-        yield AgentRunResponseUpdate(contents=[TextContent(text="Hello from AF custom agent")], role=Role.ASSISTANT)
+        yield AgentResponseUpdate(contents=[TextContent(text="Hello from AF custom agent")], role=Role.ASSISTANT)
 
         # Notify thread of input and the complete response once streaming ends
         if thread is not None:
@@ -1199,7 +1199,7 @@ from typing import cast
 from agent_framework import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
     MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
-    AgentRunUpdateEvent,
+    AgentResponseUpdateEvent,
     ChatAgent,
     ChatMessage,
     MagenticBuilder,
@@ -1231,7 +1231,7 @@ workflow = (
 async def magentic_example():
     output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
-        if isinstance(event, AgentRunUpdateEvent):
+        if isinstance(event, AgentResponseUpdateEvent):
             props = event.data.additional_properties if event.data else None
             event_type = props.get("magentic_event_type") if props else None
 
@@ -1255,7 +1255,7 @@ The Magentic workflow provides extensive customization options:
 
 - **Manager configuration**: Use a ChatAgent with custom instructions and model settings
 - **Round limits**: `max_round_count`, `max_stall_count`, `max_reset_count`
-- **Event streaming**: Use `AgentRunUpdateEvent` with `magentic_event_type` metadata
+- **Event streaming**: Use `AgentResponseUpdateEvent` with `magentic_event_type` metadata
 - **Agent specialization**: Custom instructions and tools per agent
 - **Human-in-the-loop**: Plan review, tool approval, and stall intervention
 
@@ -1265,7 +1265,7 @@ from typing import cast
 from agent_framework import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
     MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
-    AgentRunUpdateEvent,
+    AgentResponseUpdateEvent,
     ChatAgent,
     MagenticBuilder,
     MagenticHumanInterventionDecision,

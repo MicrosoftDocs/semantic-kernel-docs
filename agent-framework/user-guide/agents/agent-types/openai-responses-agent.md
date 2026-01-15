@@ -191,7 +191,7 @@ Get responses in structured formats:
 
 ```python
 from pydantic import BaseModel
-from agent_framework import AgentRunResponse
+from agent_framework import AgentResponse
 
 class CityInfo(BaseModel):
     """A structured output for city information."""
@@ -213,7 +213,7 @@ async def structured_output_example():
         print(f"Description: {city_data.description}")
 
     # Streaming structured output
-    structured_result = await AgentRunResponse.from_agent_response_generator(
+    structured_result = await AgentResponse.from_agent_response_generator(
         agent.run_stream("Tell me about Tokyo, Japan", response_format=CityInfo),
         output_format_type=CityInfo,
     )

@@ -89,7 +89,7 @@ await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 List<ChatMessage> result = new();
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is AgentRunUpdateEvent e)
+    if (evt is AgentResponseUpdateEvent e)
     {
         Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
@@ -127,7 +127,7 @@ Assistant: English detected. Hello, world!
 - **Parallel Execution**: All agents process the input simultaneously and independently
 - **AgentWorkflowBuilder.BuildConcurrent()**: Creates a concurrent workflow from a collection of agents
 - **Automatic Aggregation**: Results from all agents are automatically collected into the final result
-- **Event Streaming**: Real-time monitoring of agent progress through `AgentRunUpdateEvent`
+- **Event Streaming**: Real-time monitoring of agent progress through `AgentResponseUpdateEvent`
 - **Diverse Perspectives**: Each agent brings its unique expertise to the same problem
 
 ::: zone-end

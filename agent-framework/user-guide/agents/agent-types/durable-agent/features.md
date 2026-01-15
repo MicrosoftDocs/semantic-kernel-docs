@@ -44,7 +44,7 @@ public static async Task<string> SpamDetectionOrchestration(
     DurableAIAgent spamDetectionAgent = context.GetAgent("SpamDetectionAgent");
     AgentThread spamThread = spamDetectionAgent.GetNewThread();
 
-    AgentRunResponse<DetectionResult> spamDetectionResponse = await spamDetectionAgent.RunAsync<DetectionResult>(
+    AgentResponse<DetectionResult> spamDetectionResponse = await spamDetectionAgent.RunAsync<DetectionResult>(
         message: $"Analyze this email for spam: {email.EmailContent}",
         thread: spamThread);
     DetectionResult result = spamDetectionResponse.Result;
@@ -58,7 +58,7 @@ public static async Task<string> SpamDetectionOrchestration(
     DurableAIAgent emailAssistantAgent = context.GetAgent("EmailAssistantAgent");
     AgentThread emailThread = emailAssistantAgent.GetNewThread();
 
-    AgentRunResponse<EmailResponse> emailAssistantResponse = await emailAssistantAgent.RunAsync<EmailResponse>(
+    AgentResponse<EmailResponse> emailAssistantResponse = await emailAssistantAgent.RunAsync<EmailResponse>(
         message: $"Draft a professional response to: {email.EmailContent}",
         thread: emailThread);
 
@@ -148,11 +148,11 @@ public static async Task<string> ResearchOrchestration(
     DurableAIAgent competitorAgent = context.GetAgent("CompetitorResearchAgent");
 
     // Start all agent runs concurrently
-    Task<AgentRunResponse<TextResponse>> technicalTask = 
+    Task<AgentResponse<TextResponse>> technicalTask = 
         technicalAgent.RunAsync<TextResponse>($"Research technical aspects of {topic}");
-    Task<AgentRunResponse<TextResponse>> marketTask = 
+    Task<AgentResponse<TextResponse>> marketTask = 
         marketAgent.RunAsync<TextResponse>($"Research market trends for {topic}");
-    Task<AgentRunResponse<TextResponse>> competitorTask = 
+    Task<AgentResponse<TextResponse>> competitorTask = 
         competitorAgent.RunAsync<TextResponse>($"Research competitors in {topic}");
 
     // Wait for all tasks to complete
@@ -165,7 +165,7 @@ public static async Task<string> ResearchOrchestration(
         competitorTask.Result.Result.Text);
     
     DurableAIAgent summaryAgent = context.GetAgent("SummaryAgent");
-    AgentRunResponse<TextResponse> summaryResponse = 
+    AgentResponse<TextResponse> summaryResponse = 
         await summaryAgent.RunAsync<TextResponse>($"Summarize this research:\n{allResearch}");
     
     return summaryResponse.Result.Text;
@@ -230,7 +230,7 @@ public static async Task<string> ContentApprovalWorkflow(
 
     // Generate content using an agent
     DurableAIAgent contentAgent = context.GetAgent("ContentGenerationAgent");
-    AgentRunResponse<GeneratedContent> contentResponse = 
+    AgentResponse<GeneratedContent> contentResponse = 
         await contentAgent.RunAsync<GeneratedContent>($"Write an article about {topic}");
     GeneratedContent draftContent = contentResponse.Result;
 

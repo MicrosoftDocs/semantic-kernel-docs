@@ -23,24 +23,24 @@ There are built-in events that provide observability into the workflow execution
 
 ```csharp
 // Workflow lifecycle events
-WorkflowStartedEvent    // Workflow execution begins
-WorkflowOutputEvent     // Workflow outputs data
-WorkflowErrorEvent      // Workflow encounters an error
-WorkflowWarningEvent    // Workflow encountered a warning
+WorkflowStartedEvent     // Workflow execution begins
+WorkflowOutputEvent      // Workflow outputs data
+WorkflowErrorEvent       // Workflow encounters an error
+WorkflowWarningEvent     // Workflow encountered a warning
 
 // Executor events
-ExecutorInvokedEvent    // Executor starts processing
-ExecutorCompletedEvent  // Executor finishes processing
-ExecutorFailedEvent     // Executor encounters an error
-AgentRunResponseEvent   // An agent run produces output
-AgentRunUpdateEvent     // An agent run produces a streaming update
+ExecutorInvokedEvent     // Executor starts processing
+ExecutorCompletedEvent   // Executor finishes processing
+ExecutorFailedEvent      // Executor encounters an error
+AgentResponseEvent       // An agent run produces output
+AgentResponseUpdateEvent // An agent run produces a streaming update
 
 // Superstep events
-SuperStepStartedEvent   // Superstep begins
-SuperStepCompletedEvent // Superstep completes
+SuperStepStartedEvent    // Superstep begins
+SuperStepCompletedEvent  // Superstep completes
 
 // Request events
-RequestInfoEvent        // A request is issued
+RequestInfoEvent         // A request is issued
 ```
 
 ::: zone-end
@@ -49,24 +49,24 @@ RequestInfoEvent        // A request is issued
 
 ```python
 # Workflow lifecycle events
-WorkflowStartedEvent    # Workflow execution begins
-WorkflowOutputEvent     # Workflow produces an output
-WorkflowErrorEvent      # Workflow encounters an error
-WorkflowWarningEvent    # Workflow encountered a warning
+WorkflowStartedEvent     # Workflow execution begins
+WorkflowOutputEvent      # Workflow produces an output
+WorkflowErrorEvent       # Workflow encounters an error
+WorkflowWarningEvent     # Workflow encountered a warning
 
 # Executor events
-ExecutorInvokedEvent    # Executor starts processing
-ExecutorCompletedEvent  # Executor finishes processing
-ExecutorFailedEvent     # Executor encounters an error
-AgentRunEvent           # An agent run produces output
-AgentRunUpdateEvent     # An agent run produces a streaming update
+ExecutorInvokedEvent     # Executor starts processing
+ExecutorCompletedEvent   # Executor finishes processing
+ExecutorFailedEvent      # Executor encounters an error
+AgentRunEvent            # An agent run produces output
+AgentResponseUpdateEvent # An agent run produces a streaming update
 
 # Superstep events
-SuperStepStartedEvent   # Superstep begins
-SuperStepCompletedEvent # Superstep completes
+SuperStepStartedEvent    # Superstep begins
+SuperStepCompletedEvent  # Superstep completes
 
 # Request events
-RequestInfoEvent        # A request is issued
+RequestInfoEvent         # A request is issued
 ```
 
 ::: zone-end

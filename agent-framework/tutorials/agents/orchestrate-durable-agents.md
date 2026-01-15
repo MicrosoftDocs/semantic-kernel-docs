@@ -184,15 +184,15 @@ public static class AgentOrchestration
         
         // Step 1: Get the main agent's response
         DurableAIAgent mainAgent = context.GetAgent("MyDurableAgent");
-        AgentRunResponse<TextResponse> mainResponse = await mainAgent.RunAsync<TextResponse>(input);
+        AgentResponse<TextResponse> mainResponse = await mainAgent.RunAsync<TextResponse>(input);
         string agentResponse = mainResponse.Result.Text;
 
         // Step 2: Fan out - get the translation agents and run them concurrently
         DurableAIAgent frenchAgent = context.GetAgent("FrenchTranslator");
         DurableAIAgent spanishAgent = context.GetAgent("SpanishTranslator");
 
-        Task<AgentRunResponse<TextResponse>> frenchTask = frenchAgent.RunAsync<TextResponse>(agentResponse);
-        Task<AgentRunResponse<TextResponse>> spanishTask = spanishAgent.RunAsync<TextResponse>(agentResponse);
+        Task<AgentResponse<TextResponse>> frenchTask = frenchAgent.RunAsync<TextResponse>(agentResponse);
+        Task<AgentResponse<TextResponse>> spanishTask = spanishAgent.RunAsync<TextResponse>(agentResponse);
 
         // Step 3: Wait for both translation tasks to complete (fan-in)
         await Task.WhenAll(frenchTask, spanishTask);

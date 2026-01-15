@@ -180,13 +180,13 @@ await foreach (AgentResponseItem<ChatMessageContent> result in agent.InvokeAsync
 
 ### Agent Framework
 
-The Non-Streaming returns a single `AgentRunResponse` with the agent response that can contain multiple messages.
-The text result of the run is available in `AgentRunResponse.Text` or `AgentRunResponse.ToString()`.
-All messages created as part of the response are returned in the `AgentRunResponse.Messages` list.
+The Non-Streaming returns a single `AgentResponse` with the agent response that can contain multiple messages.
+The text result of the run is available in `AgentResponse.Text` or `AgentResponse.ToString()`.
+All messages created as part of the response are returned in the `AgentResponse.Messages` list.
 This might include tool call messages, function results, reasoning updates, and final results.
 
 ```csharp
-AgentRunResponse agentResponse = await agent.RunAsync(userInput, thread);
+AgentResponse agentResponse = await agent.RunAsync(userInput, thread);
 ```
 
 ## 7. Agent Streaming Invocation
@@ -204,12 +204,12 @@ await foreach (StreamingChatMessageContent update in agent.InvokeStreamingAsync(
 
 ### Agent Framework
 
-Agent Framework has a similar streaming API pattern, with the key difference being that it returns `AgentRunResponseUpdate` objects that include more agent-related information per update.
+Agent Framework has a similar streaming API pattern, with the key difference being that it returns `AgentResponseUpdate` objects that include more agent-related information per update.
 
-All updates produced by any service underlying the AIAgent are returned. The textual result of the agent is available by concatenating the `AgentRunResponse.Text` values.
+All updates produced by any service underlying the AIAgent are returned. The textual result of the agent is available by concatenating the `AgentResponse.Text` values.
 
 ```csharp
-await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(userInput, thread))
+await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(userInput, thread))
 {
     Console.Write(update); // Update is ToString() friendly
 }
@@ -677,7 +677,7 @@ This compatibility layer allows you to gradually migrate your code from Semantic
 
 ## 6. Agent Non-Streaming Invocation
 
-Key differences can be seen in the method names from `invoke` to `run`, return types (for example, `AgentRunResponse`) and parameters.
+Key differences can be seen in the method names from `invoke` to `run`, return types (for example, `AgentResponse`) and parameters.
 
 ### Semantic Kernel
 
@@ -701,7 +701,7 @@ print(f"# {response.role}: {response}")
 
 ### Agent Framework
 
-The Non-Streaming run returns a single `AgentRunResponse` with the agent response that can contain multiple messages.
+The Non-Streaming run returns a single `AgentResponse` with the agent response that can contain multiple messages.
 The text result of the run is available in `response.text` or `str(response)`.
 All messages created as part of the response are returned in the `response.messages` list.
 This might include tool call messages, function results, reasoning updates and final results.
@@ -716,7 +716,7 @@ print("Agent response:", response.text)
 
 ## 7. Agent Streaming Invocation
 
-Key differences in the method names from `invoke` to `run_stream`, return types (`AgentRunResponseUpdate`) and parameters.
+Key differences in the method names from `invoke` to `run_stream`, return types (`AgentResponseUpdate`) and parameters.
 
 ### Semantic Kernel
 
@@ -731,28 +731,28 @@ async for update in agent.invoke_stream(
 
 ### Agent Framework
 
-Similar streaming API pattern with the key difference being that it returns `AgentRunResponseUpdate` objects including more agent related information per update.
+Similar streaming API pattern with the key difference being that it returns `AgentResponseUpdate` objects including more agent related information per update.
 
 All contents produced by any service underlying the Agent are returned. The final result of the agent is available by combining the `update` values into a single response.
 
 ```python
-from agent_framework import AgentRunResponse
+from agent_framework import AgentResponse
 agent = ...
 updates = []
 async for update in agent.run_stream(user_input, thread):
     updates.append(update)
     print(update.text)
 
-full_response = AgentRunResponse.from_agent_run_response_updates(updates)
+full_response = AgentResponse.from_agent_response_updates(updates)
 print("Full agent response:", full_response.text)
 ```
 
 You can even do that directly:
 
 ```python
-from agent_framework import AgentRunResponse
+from agent_framework import AgentResponse
 agent = ...
-full_response = AgentRunResponse.from_agent_response_generator(agent.run_stream(user_input, thread))
+full_response = AgentResponse.from_agent_response_generator(agent.run_stream(user_input, thread))
 print("Full agent response:", full_response.text)
 ```
 

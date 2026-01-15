@@ -209,7 +209,7 @@ try
         bool isFirstUpdate = true;
         string? threadId = null;
 
-        await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(messages, thread))
+        await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, thread))
         {
             ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 
@@ -257,7 +257,7 @@ catch (Exception ex)
 - **Server-Sent Events (SSE)**: The protocol uses SSE for streaming responses
 - **AGUIChatClient**: Client class that connects to AG-UI servers and implements `IChatClient`
 - **CreateAIAgent**: Extension method on `AGUIChatClient` to create an agent from the client
-- **RunStreamingAsync**: Streams responses as `AgentRunResponseUpdate` objects
+- **RunStreamingAsync**: Streams responses as `AgentResponseUpdate` objects
 - **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ConversationId` and `ResponseId`
 - **Thread Management**: The `AgentThread` maintains conversation context across requests
 - **Content Types**: Responses include `TextContent` for messages and `ErrorContent` for errors
@@ -327,7 +327,7 @@ The client displays different content types with distinct colors:
 
 1. `AGUIChatClient` sends HTTP POST request to server endpoint
 2. Server responds with SSE stream
-3. Client parses incoming events into `AgentRunResponseUpdate` objects
+3. Client parses incoming events into `AgentResponseUpdate` objects
 4. Each update is displayed based on its content type
 5. `ConversationId` is captured for conversation continuity
 6. Stream completes when run finishes

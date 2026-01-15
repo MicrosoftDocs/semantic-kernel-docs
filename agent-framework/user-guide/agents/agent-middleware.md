@@ -72,7 +72,7 @@ var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
 Here is an example of agent run middleware, that can inspect and/or modify the input and output from the agent run.
 
 ```csharp
-async Task<AgentRunResponse> CustomAgentRunMiddleware(
+async Task<AgentResponse> CustomAgentRunMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
@@ -91,7 +91,7 @@ async Task<AgentRunResponse> CustomAgentRunMiddleware(
 Here is an example of agent run streaming middleware, that can inspect and/or modify the input and output from the agent streaming run.
 
 ```csharp
-async IAsyncEnumerable<AgentRunResponseUpdate> CustomAgentRunStreamingMiddleware(
+    async IAsyncEnumerable<AgentResponseUpdate> CustomAgentRunStreamingMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
@@ -99,14 +99,14 @@ async IAsyncEnumerable<AgentRunResponseUpdate> CustomAgentRunStreamingMiddleware
     [EnumeratorCancellation] CancellationToken cancellationToken)
 {
     Console.WriteLine(messages.Count());
-    List<AgentRunResponseUpdate> updates = [];
+    List<AgentResponseUpdate> updates = [];
     await foreach (var update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
     {
         updates.Add(update);
         yield return update;
     }
 
-    Console.WriteLine(updates.ToAgentRunResponse().Messages.Count);
+    Console.WriteLine(updates.ToAgentResponse().Messages.Count);
 }
 ```
 
@@ -451,8 +451,8 @@ Middleware can override results in both non-streaming and streaming scenarios, a
 
 The result type in `context.result` depends on whether the agent invocation is streaming or non-streaming:
 
-- **Non-streaming**: `context.result` contains an `AgentRunResponse` with the complete response
-- **Streaming**: `context.result` contains an async generator that yields `AgentRunResponseUpdate` chunks
+- **Non-streaming**: `context.result` contains an `AgentResponse` with the complete response
+- **Streaming**: `context.result` contains an async generator that yields `AgentResponseUpdate` chunks
 
 You can use `context.is_streaming` to differentiate between these scenarios and handle result overrides appropriately.
 
@@ -477,15 +477,15 @@ async def weather_override_middleware(
 
         if context.is_streaming:
             # Streaming override
-            async def override_stream() -> AsyncIterable[AgentRunResponseUpdate]:
+            async def override_stream() -> AsyncIterable[AgentResponseUpdate]:
                 for chunk in custom_message_parts:
-                    yield AgentRunResponseUpdate(contents=[TextContent(text=chunk)])
+                    yield AgentResponseUpdate(contents=[TextContent(text=chunk)])
 
             context.result = override_stream()
         else:
             # Non-streaming override
             custom_message = "".join(custom_message_parts)
-            context.result = AgentRunResponse(
+            context.result = AgentResponse(
                 messages=[ChatMessage(role=Role.ASSISTANT, text=custom_message)]
             )
 ```
