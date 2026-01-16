@@ -129,7 +129,7 @@ agent = ChatAgent(
 )
 
 # When using factory helper methods
-agent = OpenAIChatClient().create_agent(
+agent = OpenAIChatClient().as_agent(
     instructions="You are a helpful assistant",
     tools=[get_weather]
 )

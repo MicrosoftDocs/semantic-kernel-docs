@@ -524,7 +524,7 @@ async def main() -> None:
     # Agent 1. Classifies spam and returns a DetectionResult object.
     # response_format enforces that the LLM returns parsable JSON for the Pydantic model.
     spam_detection_agent = AgentExecutor(
-        chat_client.create_agent(
+        chat_client.as_agent(
             instructions=(
                 "You are a spam detection assistant that identifies spam emails. "
                 "Always return JSON with fields is_spam (bool), reason (string), and email_content (string). "
@@ -537,7 +537,7 @@ async def main() -> None:
 
     # Agent 2. Drafts a professional reply. Also uses structured JSON output for reliability.
     email_assistant_agent = AgentExecutor(
-        chat_client.create_agent(
+        chat_client.as_agent(
             instructions=(
                 "You are an email assistant that helps users draft professional responses to emails. "
                 "Your input might be a JSON object that includes 'email_content'; base your reply on that content. "
@@ -1158,7 +1158,7 @@ async def main():
 
     # Enhanced spam detection agent with three-way classification
     spam_detection_agent = AgentExecutor(
-        chat_client.create_agent(
+        chat_client.as_agent(
             instructions=(
                 "You are a spam detection assistant that identifies spam emails. "
                 "Be less confident in your assessments. "
@@ -1172,7 +1172,7 @@ async def main():
 
     # Email assistant remains the same
     email_assistant_agent = AgentExecutor(
-        chat_client.create_agent(
+        chat_client.as_agent(
             instructions=(
                 "You are an email assistant that helps users draft responses to emails with professionalism."
             ),
@@ -1980,7 +1980,7 @@ async def main() -> None:
 
     # Enhanced analysis agent
     email_analysis_agent = AgentExecutor(
-        chat_client.create_agent(
+        chat_client.as_agent(
             instructions=(
                 "You are a spam detection assistant that identifies spam emails. "
                 "Always return JSON with fields 'spam_decision' (one of NotSpam, Spam, Uncertain) "
@@ -1993,7 +1993,7 @@ async def main() -> None:
 
     # Email assistant (same as before)
     email_assistant_agent = AgentExecutor(
-        chat_client.create_agent(
+        chat_client.as_agent(
             instructions=(
                 "You are an email assistant that helps users draft responses to emails with professionalism."
             ),
@@ -2004,7 +2004,7 @@ async def main() -> None:
 
     # New: Email summary agent for long emails
     email_summary_agent = AgentExecutor(
-        chat_client.create_agent(
+        chat_client.as_agent(
             instructions="You are an assistant that helps users summarize emails.",
             response_format=EmailSummaryModel,
         ),

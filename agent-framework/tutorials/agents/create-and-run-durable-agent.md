@@ -222,7 +222,7 @@ agent = AzureOpenAIChatClient(
     endpoint=endpoint,
     deployment_name=deployment_name,
     credential=DefaultAzureCredential()
-).create_agent(
+).as_agent(
     instructions="You are a helpful assistant that can answer questions and provide information.",
     name="MyDurableAgent"
 )

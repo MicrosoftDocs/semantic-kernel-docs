@@ -166,7 +166,7 @@ from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="You are good at telling jokes.",
         name="Joker"
     )
@@ -191,7 +191,7 @@ async def main():
         endpoint="https://<myresource>.openai.azure.com",
         deployment_name="gpt-4o-mini",
         credential=AzureCliCredential()
-    ).create_agent(
+    ).as_agent(
         instructions="You are good at telling jokes.",
         name="Joker"
     )
@@ -222,7 +222,7 @@ def get_weather(
     return f"The weather in {location} is sunny with a high of 25°C."
 
 async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather
     )
@@ -243,7 +243,7 @@ from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful programming assistant."
     )
     
@@ -271,7 +271,7 @@ from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful assistant."
     )
 

@@ -120,7 +120,7 @@ from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
         instructions="You are good at telling jokes.",
         name="Joker"
     )
@@ -146,7 +146,7 @@ async def main():
         deployment_name="gpt-4o-mini",
         api_version="preview",
         credential=AzureCliCredential()
-    ).create_agent(
+    ).as_agent(
         instructions="You are good at telling jokes.",
         name="Joker"
     )
@@ -172,7 +172,7 @@ async def main():
     agent = AzureOpenAIResponsesClient(
         deployment_name="o1-preview",  # Use reasoning model
         credential=AzureCliCredential()
-    ).create_agent(
+    ).as_agent(
         instructions="You are a helpful assistant that excels at complex reasoning.",
         name="ReasoningAgent"
     )
@@ -201,7 +201,7 @@ class WeatherForecast(BaseModel):
     humidity: Annotated[int, Field(description="Humidity percentage")]
 
 async def main():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a weather assistant that provides structured forecasts.",
         response_format=WeatherForecast
     )
@@ -234,7 +234,7 @@ def get_weather(
     return f"The weather in {location} is sunny with a high of 25°C."
 
 async def main():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather
     )
@@ -426,7 +426,7 @@ async def main():
     responses_client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
     
     # Create agent
-    agent = responses_client.create_agent(
+    agent = responses_client.as_agent(
         name="DocsAgent",
         instructions="You are a helpful assistant that can help with Microsoft documentation questions.",
     )
@@ -505,7 +505,7 @@ async def main():
     print("=== Azure Responses Agent with Image Analysis ===")
 
     # Create an Azure Responses agent with vision capabilities
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
         name="VisionAgent",
         instructions="You are a helpful agent that can analyze images.",
     )
@@ -540,7 +540,7 @@ from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful programming assistant."
     )
     
@@ -568,7 +568,7 @@ from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful assistant."
     )
 

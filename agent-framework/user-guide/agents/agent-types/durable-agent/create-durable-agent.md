@@ -111,7 +111,7 @@ agent = AzureOpenAIChatClient(
     endpoint=endpoint,
     deployment_name=deployment_name,
     credential=DefaultAzureCredential()
-).create_agent(
+).as_agent(
     instructions="You are good at telling jokes.",
     name="Joker"
 )

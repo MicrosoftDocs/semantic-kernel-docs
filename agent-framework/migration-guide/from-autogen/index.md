@@ -234,7 +234,7 @@ async def example():
     )
 
     # Factory method (more convenient)
-    agent = client.create_agent(
+    agent = client.as_agent(
         name="assistant",
         instructions="You are a helpful assistant.",
         tools=[get_weather],

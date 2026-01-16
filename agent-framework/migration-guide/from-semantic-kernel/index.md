@@ -381,7 +381,7 @@ Or, with the convenience methods provided by chat clients:
 ```python
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(instructions="You are a helpful assistant")
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(instructions="You are a helpful assistant")
 ```
 
 The direct method exposes all possible parameters you can set for your agent. While the convenience method has a subset, you can still pass in the same set of parameters, because it calls the direct method internally.
@@ -467,7 +467,7 @@ def get_weather(location: str) -> str:
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny."
 
-agent = chat_client.create_agent(tools=get_weather)
+agent = chat_client.as_agent(tools=get_weather)
 ```
 
 > [!NOTE]
@@ -516,7 +516,7 @@ class Plugin:
         return f"The weather in {location} is sunny with a high of 25°C and a low of 15°C."
 
 plugin = Plugin("Initial state")
-agent = chat_client.create_agent(tools=[plugin.get_weather, plugin.get_weather_details])
+agent = chat_client.as_agent(tools=[plugin.get_weather, plugin.get_weather_details])
 
 ... # use the agent
 
@@ -575,7 +575,7 @@ kernel_function = KernelFunctionFromPrompt(
 agent_tool = kernel_function.as_agent_framework_tool(kernel=kernel)
 
 # Use the tool with an Agent Framework agent
-agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(tools=agent_tool)
+agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(tools=agent_tool)
 response = await agent.run("What kind of day is it?")
 print(response.text)
 ```
@@ -595,7 +595,7 @@ def get_weather(self, location: str) -> str:
 agent_tool = get_weather.as_agent_framework_tool()
 
 # Use the tool with an Agent Framework agent
-agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(tools=agent_tool)
+agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(tools=agent_tool)
 response = await agent.run("What's the weather in Seattle?")
 print(response.text)
 ```
@@ -663,7 +663,7 @@ async with collection:
     search_tool = search_function.as_agent_framework_tool()
 
     # Use the tool with an Agent Framework agent
-    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
+    agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(
         instructions="You are a travel agent that helps people find hotels.",
         tools=search_tool
     )
@@ -779,7 +779,7 @@ from agent_framework.openai import OpenAIChatClient
 client = OpenAIChatClient()
 
 # Set default options at agent creation
-agent = client.create_agent(
+agent = client.as_agent(
     instructions="You are a helpful assistant.",
     default_options={
         "max_tokens": 1000,

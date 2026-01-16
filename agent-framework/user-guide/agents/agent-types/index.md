@@ -192,7 +192,7 @@ from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import DefaultAzureCredential
 
 async with DefaultAzureCredential() as credential:
-    agent = AzureAIAgentClient(async_credential=credential).create_agent(
+    agent = AzureAIAgentClient(async_credential=credential).as_agent(
         instructions="You are a helpful assistant"
     )
 ```
@@ -227,7 +227,7 @@ def get_weather(location: Annotated[str, Field(description="The location to get 
 
 async with (
     DefaultAzureCredential() as credential,
-    AzureAIAgentClient(async_credential=credential).create_agent(
+    AzureAIAgentClient(async_credential=credential).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather
     ) as agent

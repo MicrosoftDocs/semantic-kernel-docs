@@ -92,7 +92,7 @@ Common options include:
 from agent_framework.openai import OpenAIChatClient, OpenAIChatOptions
 
 # Set default options at construction time
-agent = OpenAIChatClient().create_agent(
+agent = OpenAIChatClient().as_agent(
     instructions="You are a helpful assistant",
     default_options={
         "temperature": 0.7,
