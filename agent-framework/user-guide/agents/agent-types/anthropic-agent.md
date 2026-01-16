@@ -196,7 +196,7 @@ The simplest way to create an Anthropic agent:
 ```python
 async def basic_example():
     # Create an agent using Anthropic
-    agent = AnthropicClient().create_agent(
+    agent = AnthropicClient().as_agent(
         name="HelpfulAssistant",
         instructions="You are a helpful assistant.",
     )
@@ -214,7 +214,7 @@ async def explicit_config_example():
     agent = AnthropicClient(
         model_id="claude-sonnet-4-5-20250929",
         api_key="your-api-key-here",
-    ).create_agent(
+    ).as_agent(
         name="HelpfulAssistant",
         instructions="You are a helpful assistant.",
     )
@@ -240,7 +240,7 @@ from anthropic import AsyncAnthropicFoundry
 async def foundry_example():
     agent = AnthropicClient(
         anthropic_client=AsyncAnthropicFoundry()
-    ).create_agent(
+    ).as_agent(
         name="FoundryAgent",
         instructions="You are a helpful assistant using Anthropic on Foundry.",
     )
@@ -269,7 +269,7 @@ def get_weather(
     return f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
 
 async def tools_example():
-    agent = AnthropicClient().create_agent(
+    agent = AnthropicClient().as_agent(
         name="WeatherAgent",
         instructions="You are a helpful weather assistant.",
         tools=get_weather,  # Add tools to the agent
@@ -285,7 +285,7 @@ Get responses as they are generated for better user experience:
 
 ```python
 async def streaming_example():
-    agent = AnthropicClient().create_agent(
+    agent = AnthropicClient().as_agent(
         name="WeatherAgent",
         instructions="You are a helpful weather agent.",
         tools=get_weather,
@@ -308,7 +308,7 @@ Anthropic agents support hosted tools such as web search, MCP (Model Context Pro
 from agent_framework import HostedMCPTool, HostedWebSearchTool
 
 async def hosted_tools_example():
-    agent = AnthropicClient().create_agent(
+    agent = AnthropicClient().as_agent(
         name="DocsAgent",
         instructions="You are a helpful agent for both Microsoft docs questions and general questions.",
         tools=[
@@ -334,7 +334,7 @@ from agent_framework import TextReasoningContent, UsageContent
 from agent_framework.anthropic import AnthropicClient
 
 async def thinking_example():
-    agent = AnthropicClient().create_agent(
+    agent = AnthropicClient().as_agent(
         name="DocsAgent",
         instructions="You are a helpful agent.",
         tools=[HostedWebSearchTool()],
@@ -374,7 +374,7 @@ async def skills_example():
 
     # Create an agent with the pptx skill enabled
     # Skills require the Code Interpreter tool
-    agent = client.create_agent(
+    agent = client.as_agent(
         name="PresentationAgent",
         instructions="You are a helpful agent for creating PowerPoint presentations.",
         tools=HostedCodeInterpreterTool(),

@@ -80,13 +80,13 @@ from azure.identity import AzureCliCredential
 
 # Create the agents first
 chat_client = AzureChatClient(credential=AzureCliCredential())
-writer_agent: ChatAgent = chat_client.create_agent(
+writer_agent: ChatAgent = chat_client.as_agent(
     instructions=(
         "You are an excellent content writer. You create new content and edit contents based on the feedback."
     ),
     name="writer_agent",
 )
-reviewer_agent = chat_client.create_agent(
+reviewer_agent = chat_client.as_agent(
     instructions=(
         "You are an excellent content reviewer."
         "Provide actionable feedback to the writer about the provided content."
@@ -201,7 +201,7 @@ class Writer(Executor):
 
     def __init__(self, chat_client: AzureChatClient, id: str = "writer"):
         # Create a domain specific agent using your configured AzureChatClient.
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             instructions=(
                 "You are an excellent content writer. You create new content and edit contents based on the feedback."
             ),

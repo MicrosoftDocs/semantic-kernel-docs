@@ -140,14 +140,14 @@ from azure.identity import AzureCliCredential
 # 1) Create agents using AzureChatClient
 chat_client = AzureChatClient(credential=AzureCliCredential())
 
-writer = chat_client.create_agent(
+writer = chat_client.as_agent(
     instructions=(
         "You are a concise copywriter. Provide a single, punchy marketing sentence based on the prompt."
     ),
     name="writer",
 )
 
-reviewer = chat_client.create_agent(
+reviewer = chat_client.as_agent(
     instructions=(
         "You are a thoughtful reviewer. Give brief feedback on the previous assistant message."
     ),
@@ -236,7 +236,7 @@ class Summarizer(Executor):
 
 ```python
 # Create a content agent
-content = chat_client.create_agent(
+content = chat_client.as_agent(
     instructions="Produce a concise paragraph answering the user's request.",
     name="content",
 )

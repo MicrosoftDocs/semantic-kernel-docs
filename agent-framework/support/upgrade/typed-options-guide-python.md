@@ -54,7 +54,7 @@ response = await client.get_response(
 )
 ```
 
-> **Note:** For **Agents**, the `instructions` and `tools` parameters remain available as direct keyword arguments on `ChatAgent.__init__()` and `client.create_agent()`. For `agent.run()`, only `tools` is available as a keyword argument:
+> **Note:** For **Agents**, the `instructions` and `tools` parameters remain available as direct keyword arguments on `ChatAgent.__init__()` and `client.as_agent()`. For `agent.run()`, only `tools` is available as a keyword argument:
 >
 > ```python
 > # Agent creation accepts both tools and instructions as keyword arguments

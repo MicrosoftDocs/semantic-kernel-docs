@@ -152,7 +152,7 @@ async with collection:
     search_tool = search_function.as_agent_framework_tool()
 
     # Create an agent with the search tool
-    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
+    agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(
         instructions="You are a helpful support specialist. Use the search tool to find relevant information before answering questions. Always cite your sources.",
         tools=search_tool
     )
@@ -224,7 +224,7 @@ policy_search = policy_collection.create_search_function(
 ).as_agent_framework_tool()
 
 # Create an agent with multiple search tools
-agent = chat_client.create_agent(
+agent = chat_client.as_agent(
     instructions="You are a support agent. Use the appropriate search tool to find information before answering. Cite your sources.",
     tools=[product_search, policy_search]
 )
@@ -270,7 +270,7 @@ detail_lookup = support_collection.create_search_function(
 ).as_agent_framework_tool()
 
 # Create an agent with both search functions
-agent = chat_client.create_agent(
+agent = chat_client.as_agent(
     instructions="You are a support agent. Use search_all_articles for general queries and get_article_details when you need full details about a specific article.",
     tools=[general_search, detail_lookup]
 )

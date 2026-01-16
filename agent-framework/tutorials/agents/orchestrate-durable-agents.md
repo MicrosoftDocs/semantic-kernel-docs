@@ -125,18 +125,18 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create the main agent from the first tutorial
-main_agent = chat_client.create_agent(
+main_agent = chat_client.as_agent(
     instructions="You are a helpful assistant that can answer questions and provide information.",
     name="MyDurableAgent"
 )
 
 # Create translation agents
-french_agent = chat_client.create_agent(
+french_agent = chat_client.as_agent(
     instructions="You are a translator. Translate the following text to French. Return only the translation, no explanations.",
     name="FrenchTranslator"
 )
 
-spanish_agent = chat_client.create_agent(
+spanish_agent = chat_client.as_agent(
     instructions="You are a translator. Translate the following text to Spanish. Return only the translation, no explanations.",
     name="SpanishTranslator"
 )

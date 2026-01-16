@@ -153,7 +153,7 @@ from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 # Create the agent using Azure OpenAI Chat Client
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     name="HelpfulAssistant",
     instructions="You are a helpful assistant that extracts person information from text."
 )

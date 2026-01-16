@@ -237,7 +237,7 @@ async def create_azure_ai_agent() -> tuple[Callable[..., Awaitable[Any]], Callab
     client = await stack.enter_async_context(AzureAIAgentClient(async_credential=cred))
 
     async def agent(**kwargs: Any) -> Any:
-        return await stack.enter_async_context(client.create_agent(**kwargs))
+        return await stack.enter_async_context(client.as_agent(**kwargs))
 
     async def close() -> None:
         await stack.aclose()

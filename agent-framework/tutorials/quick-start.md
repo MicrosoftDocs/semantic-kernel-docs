@@ -176,7 +176,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIClient(async_credential=credential).create_agent(
+        AzureAIClient(async_credential=credential).as_agent(
             instructions="You are good at telling jokes."
         ) as agent,
     ):
