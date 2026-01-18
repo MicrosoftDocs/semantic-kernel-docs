@@ -489,7 +489,7 @@ agent = ChatAgent(
 For detailed examples, see:
 
 - [Azure AI with Code Interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_code_interpreter.py) - Code execution tool
-- [Azure AI with Multiple Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_multiple_tools.py) - Multiple hosted tools
+- [Azure AI with Multiple Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai_agent/azure_ai_with_multiple_tools.py) - Multiple hosted tools
 - [OpenAI with Web Search](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_with_web_search.py) - Web search integration
 
 Requirements and caveats:
@@ -1183,7 +1183,7 @@ async def concurrent_example():
 For concurrent execution examples, see:
 
 - [Concurrent Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_agents.py) - Parallel agent execution
-- [Concurrent Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_custom_executors.py) - Custom parallel patterns
+- [Concurrent Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_custom_agent_executors.py) - Custom parallel patterns
 - [Concurrent with Custom Aggregator](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_custom_aggregator.py) - Result aggregation patterns
 
 #### MagenticOneGroupChat Pattern
@@ -1703,7 +1703,7 @@ async def observability_example():
 For detailed observability examples, see:
 
 - [Zero-code Setup](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/advanced_zero_code.py) - Environment variable configuration
-- [Manual Setup](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/setup_observability_with_parameters.py) - Programmatic configuration
+- [Manual Setup](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/configure_otel_providers_with_parameters.py) - Programmatic configuration
 - [Agent Observability](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/agent_observability.py) - Single agent telemetry
 - [Workflow Observability](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/workflow_observability.py) - Multi-agent workflow tracing
 
