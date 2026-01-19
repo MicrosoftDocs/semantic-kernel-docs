@@ -65,7 +65,8 @@ ChatOptions chatOptions = new()
     ResponseFormat = ChatResponseFormat.ForJsonSchema(
         schema: schema,
         schemaName: "PersonInfo",
-        schemaDescription: "Information about a person including their name, age, and occupation")
+        schemaDescription: "Information about a person including their name, age, and occupation"),
+    Instructions = "You are a helpful assistant.",
 };
 ```
 
@@ -76,16 +77,16 @@ using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
-using OpenAI;
+using Microsoft.Extensions.AI;
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
+        .AsIChatClient()
         .CreateAIAgent(new ChatClientAgentOptions()
         {
             Name = "HelpfulAssistant",
-            Instructions = "You are a helpful assistant.",
             ChatOptions = chatOptions
         });
 ```
