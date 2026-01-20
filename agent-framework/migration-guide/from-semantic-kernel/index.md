@@ -103,7 +103,7 @@ The agent is responsible for creating the thread.
 
 ```csharp
 // New.
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 ```
 
 ## 4. Hosted Agent Thread Cleanup

@@ -34,7 +34,7 @@ When using OpenAI Chat Completion as the underlying service for agents, the foll
 AIAgent agent = new OpenAIClient("<your_api_key>")
      .GetChatClient(modelName)
      .AsAIAgent(JokerInstructions, JokerName);
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread));
 ```
 
@@ -61,6 +61,8 @@ To configure the `InMemoryChatMessageStore` with a reducer, you can provide a fa
 for each new `AgentThread` and pass it a reducer of your choice. The `InMemoryChatMessageStore` can also be passed an optional trigger event
 which can be set to either `InMemoryChatMessageStore.ChatReducerTriggerEvent.AfterMessageAdded` or `InMemoryChatMessageStore.ChatReducerTriggerEvent.BeforeMessagesRetrieval`.
 
+The factory is an async function that receives a context object and a cancellation token.
+
 ```csharp
 AIAgent agent = new OpenAIClient("<your_api_key>")
     .GetChatClient(modelName)
@@ -68,11 +70,12 @@ AIAgent agent = new OpenAIClient("<your_api_key>")
     {
         Name = JokerName,
         ChatOptions = new() { Instructions = JokerInstructions },
-        ChatMessageStoreFactory = ctx => new InMemoryChatMessageStore(
-            new MessageCountingChatReducer(2),
-            ctx.SerializedState,
-            ctx.JsonSerializerOptions,
-            InMemoryChatMessageStore.ChatReducerTriggerEvent.AfterMessageAdded)
+        ChatMessageStoreFactory = (ctx, ct) => new ValueTask<ChatMessageStore>(
+            new InMemoryChatMessageStore(
+                new MessageCountingChatReducer(2),
+                ctx.SerializedState,
+                ctx.JsonSerializerOptions,
+                InMemoryChatMessageStore.ChatReducerTriggerEvent.AfterMessageAdded))
     });
 ```
 
@@ -89,7 +92,7 @@ For example, when using OpenAI Responses with store=true as the underlying servi
 AIAgent agent = new OpenAIClient("<your_api_key>")
      .GetOpenAIResponseClient(modelName)
      .AsAIAgent(JokerInstructions, JokerName);
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread));
 ```
 
@@ -101,14 +104,16 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread)
 
 When using a service that does not support in-service storage of chat history, Agent Framework allows developers to replace the default in-memory storage of chat history with third-party chat history storage. The developer is required to provide a subclass of the base abstract `ChatMessageStore` class.
 
-The `ChatMessageStore` class defines the interface for storing and retrieving chat messages. Developers must implement the `AddMessagesAsync` and `GetMessagesAsync` methods to add messages to the remote store as they are generated, and retrieve messages from the remote store before invoking the underlying service.
+The `ChatMessageStore` class defines the interface for storing and retrieving chat messages. Developers must implement the `InvokedAsync` and `InvokingAsync` methods to add messages to the remote store as they are generated, and retrieve messages from the remote store before invoking the underlying service.
 
-The agent will use all messages returned by `GetMessagesAsync` when processing a user query. It is up to the implementer of `ChatMessageStore` to ensure that the size of the chat history does not exceed the context window of the underlying service.
+The agent will use all messages returned by `InvokingAsync` when processing a user query. It is up to the implementer of `ChatMessageStore` to ensure that the size of the chat history does not exceed the context window of the underlying service.
 
 When implementing a custom `ChatMessageStore` which stores chat history in a remote store, the chat history for that thread should be stored under a key that is unique to that thread. The `ChatMessageStore` implementation should generate this key and keep it in its state. `ChatMessageStore` has a `Serialize` method that can be overridden to serialize its state when the thread is serialized. The `ChatMessageStore` should also provide a constructor that takes a <xref:System.Text.Json.JsonElement> as input to support deserialization of its state.
 
 To supply a custom `ChatMessageStore` to a `ChatClientAgent`, you can use the `ChatMessageStoreFactory` option when creating the agent.
 Here is an example showing how to pass the custom implementation of `ChatMessageStore` to a `ChatClientAgent` that is based on Azure OpenAI Chat Completion.
+
+The factory is an async function that receives a context object and a cancellation token.
 
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
@@ -119,13 +124,14 @@ AIAgent agent = new AzureOpenAIClient(
     {
         Name = JokerName,
         ChatOptions = new() { Instructions = JokerInstructions },
-        ChatMessageStoreFactory = ctx =>
-        {
+        ChatMessageStoreFactory = (ctx, ct) => new ValueTask<ChatMessageStore>(
             // Create a new chat message store for this agent that stores the messages in a custom store.
             // Each thread must get its own copy of the CustomMessageStore, since the store
             // also contains the ID that the thread is stored under.
-            return new CustomMessageStore(vectorStore, ctx.SerializedState, ctx.JsonSerializerOptions);
-        }
+            new CustomMessageStore(
+                vectorStore,
+                ctx.SerializedState,
+                ctx.JsonSerializerOptions))
     });
 ```
 
@@ -147,14 +153,14 @@ It is important to be able to persist an `AgentThread` object between agent invo
 
 Even if the chat history is stored in a remote store, the `AgentThread` object still contains an ID referencing the remote chat history. Losing the `AgentThread` state will therefore result in also losing the ID of the remote chat history.
 
-The `AgentThread` as well as any objects attached to it, all therefore provide the `SerializeAsync` method to serialize their state. The `AIAgent` also provides a `DeserializeThread` method that re-creates a thread from the serialized state. The `DeserializeThread` method re-creates the thread with the `ChatMessageStore` and `AIContextProvider` configured on the agent.
+The `AgentThread` as well as any objects attached to it, all therefore provide the `Serialize` method to serialize their state. The `AIAgent` also provides a `DeserializeThreadAsync` method that re-creates a thread from the serialized state. The `DeserializeThreadAsync` method re-creates the thread with the `ChatMessageStore` and `AIContextProvider` configured on the agent.
 
 ```csharp
 // Serialize the thread state to a JsonElement, so it can be stored for later use.
 JsonElement serializedThreadState = thread.Serialize();
 
 // Re-create the thread from the JsonElement.
-AgentThread resumedThread = AIAgent.DeserializeThread(serializedThreadState);
+AgentThread resumedThread = await agent.DeserializeThreadAsync(serializedThreadState);
 ```
 
 > [!NOTE]

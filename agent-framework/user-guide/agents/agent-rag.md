@@ -21,6 +21,8 @@ The `TextSearchProvider` class is an out-of-the-box implementation of a RAG cont
 
 It can easily be attached to a `ChatClientAgent` using the `AIContextProviderFactory` option to provide RAG capabilities to the agent.
 
+The factory is an async function that receives a context object and a cancellation token.
+
 ```csharp
 // Create the AI agent with the TextSearchProvider as the AI context provider.
 AIAgent agent = azureOpenAIClient
@@ -28,7 +30,8 @@ AIAgent agent = azureOpenAIClient
     .AsAIAgent(new ChatClientAgentOptions
     {
         ChatOptions = new() { Instructions = "You are a helpful support specialist for Contoso Outdoors. Answer questions using the provided context and cite the source document when available." },
-        AIContextProviderFactory = ctx => new TextSearchProvider(SearchAdapter, ctx.SerializedState, ctx.JsonSerializerOptions, textSearchOptions)
+        AIContextProviderFactory = (ctx, ct) => new ValueTask<AIContextProvider>(
+            new TextSearchProvider(SearchAdapter, ctx.SerializedState, ctx.JsonSerializerOptions, textSearchOptions))
     });
 ```
 

@@ -125,7 +125,7 @@ var runOptions = new ChatClientAgentRunOptions()
 The agent is invoked with a question and executes using the configured MCP tools:
 
 ```csharp
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 var response = await agent.RunAsync(
     "Please summarize the Azure AI Agent documentation related to MCP Tool calling?", 
     thread, 
