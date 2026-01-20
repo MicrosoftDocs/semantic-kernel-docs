@@ -146,6 +146,8 @@ To use the custom `AIContextProvider`, you need to provide an `AIContextProvider
 
 When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `AIContextProviderFactory` in addition to all other agent options.
 
+The factory is an async function that receives a context object and a cancellation token.
+
 ```csharp
 using System;
 using Azure.AI.OpenAI;
@@ -161,19 +163,20 @@ ChatClient chatClient = new AzureOpenAIClient(
 AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions()
 {
     ChatOptions = new() { Instructions = "You are a friendly assistant. Always address the user by their name." },
-    AIContextProviderFactory = ctx => new UserInfoMemory(
-        chatClient.AsIChatClient(),
-        ctx.SerializedState,
-        ctx.JsonSerializerOptions)
+    AIContextProviderFactory = (ctx, ct) => new ValueTask<AIContextProvider>(
+        new UserInfoMemory(
+            chatClient.AsIChatClient(),
+            ctx.SerializedState,
+            ctx.JsonSerializerOptions))
 });
 ```
 
-When creating a new thread, the `AIContextProvider` will be created by `GetNewThread`
+When creating a new thread, the `AIContextProvider` will be created by `GetNewThreadAsync`
 and attached to the thread. Once memories are extracted it is therefore possible to access the memory component via the thread's `GetService` method and inspect the memories.
 
 ```csharp
 // Create a new thread for the conversation.
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 
 Console.WriteLine(await agent.RunAsync("Hello, what is the square root of 9?", thread));
 Console.WriteLine(await agent.RunAsync("My name is Ruaidhrí", thread));

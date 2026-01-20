@@ -66,7 +66,7 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 
 // Get initial response - may return with or without a continuation token
 AgentResponse response = await agent.RunAsync("Write a very long novel about otters in space.", thread, options);
@@ -108,7 +108,7 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 
 AgentResponseUpdate? latestReceivedUpdate = null;
 

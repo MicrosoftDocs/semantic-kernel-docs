@@ -68,10 +68,11 @@ Agents can therefore attach any additional state or behaviors needed to the thre
 Two methods are required to be implemented:
 
 ```csharp
-    public override AgentThread GetNewThread() => new CustomAgentThread();
+    public override Task<AgentThread> GetNewThreadAsync(CancellationToken cancellationToken = default) 
+        => Task.FromResult<AgentThread>(new CustomAgentThread());
 
-    public override AgentThread DeserializeThread(JsonElement serializedThread, JsonSerializerOptions? jsonSerializerOptions = null)
-        => new CustomAgentThread(serializedThread, jsonSerializerOptions);
+    public override Task<AgentThread> DeserializeThreadAsync(JsonElement serializedThread, JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default)
+        => Task.FromResult<AgentThread>(new CustomAgentThread(serializedThread, jsonSerializerOptions));
 ```
 
 ### Core agent logic
@@ -110,7 +111,7 @@ If you don't do this, the user won't be able to have a multi-turn conversation w
 ```csharp
     public override async Task<AgentResponse> RunAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, CancellationToken cancellationToken = default)
     {
-        thread ??= this.GetNewThread();
+        thread ??= await this.GetNewThreadAsync(cancellationToken);
         List<ChatMessage> responseMessages = CloneAndToUpperCase(messages, this.DisplayName).ToList();
         await NotifyThreadOfNewMessagesAsync(thread, messages.Concat(responseMessages), cancellationToken);
         return new AgentResponse
@@ -123,7 +124,7 @@ If you don't do this, the user won't be able to have a multi-turn conversation w
 
     public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        thread ??= this.GetNewThread();
+        thread ??= await this.GetNewThreadAsync(cancellationToken);
         List<ChatMessage> responseMessages = CloneAndToUpperCase(messages, this.DisplayName).ToList();
         await NotifyThreadOfNewMessagesAsync(thread, messages.Concat(responseMessages), cancellationToken);
         foreach (var message in responseMessages)
