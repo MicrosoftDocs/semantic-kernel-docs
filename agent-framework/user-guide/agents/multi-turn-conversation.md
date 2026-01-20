@@ -39,7 +39,7 @@ Some underlying service stored conversations/threads/responses might be persiste
 
 ```csharp
 // Create a new thread.
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 // Run the agent with the thread.
 var response = await agent.RunAsync("Hello, how are you?", thread);
 
