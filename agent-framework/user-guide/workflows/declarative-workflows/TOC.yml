@@ -1,0 +1,8 @@
+- name: Overview
+  href: ../declarative-workflows.md
+- name: Expressions and Variables
+  href: expressions.md
+- name: Actions Reference
+  href: actions-reference.md
+- name: Advanced Patterns
+  href: advanced-patterns.md
