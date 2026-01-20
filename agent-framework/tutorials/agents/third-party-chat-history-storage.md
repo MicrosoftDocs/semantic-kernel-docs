@@ -47,12 +47,12 @@ To create a custom `ChatMessageStore`, you need to implement the abstract `ChatM
 
 The most important methods to implement are:
 
-- `AddMessagesAsync` - called to add new messages to the store.
-- `GetMessagesAsync` - called to retrieve the messages from the store.
+- `InvokingAsync` - called at the start of agent invocation to retrieve messages from the store that should be provided as context.
+- `InvokedAsync` - called at the end of agent invocation to add new messages to the store.
 
-`GetMessagesAsync` should return the messages in ascending chronological order. All messages returned by it will be used by the `ChatClientAgent` when making calls to the underlying <xref:Microsoft.Extensions.AI.IChatClient>.  It's therefore important that this method considers the limits of the underlying model, and only returns as many messages as can be handled by the model.
+`InvokingAsync` should return the messages in ascending chronological order (oldest first). All messages returned by it will be used by the `ChatClientAgent` when making calls to the underlying <xref:Microsoft.Extensions.AI.IChatClient>. It's therefore important that this method considers the limits of the underlying model, and only returns as many messages as can be handled by the model.
 
-Any chat history reduction logic, such as summarization or trimming, should be done before returning messages from `GetMessagesAsync`.
+Any chat history reduction logic, such as summarization or trimming, should be done before returning messages from `InvokingAsync`.
 
 ### Serialization
 
@@ -60,19 +60,19 @@ Any chat history reduction logic, such as summarization or trimming, should be d
 
 While the actual messages making up the chat history are stored externally, the `ChatMessageStore` instance might need to store keys or other state to identify the chat history in the external store.
 
-To allow persisting threads, you need to implement the `SerializeStateAsync` method of the `ChatMessageStore` class. You also need to provide a constructor that takes a <xref:System.Text.Json.JsonElement> parameter, which can be used to deserialize the state when resuming a thread.
+To allow persisting threads, you need to implement the `Serialize` method of the `ChatMessageStore` class. This method should return a `JsonElement` containing the state needed to restore the store later. When deserializing, the agent framework will pass this serialized state to the ChatMessageStoreFactory, allowing you to use it to recreate the store.
 
 ### Sample ChatMessageStore implementation
 
 The following sample implementation stores chat messages in a vector store.
 
-`AddMessagesAsync` upserts messages into the vector store, using a unique key for each message.
+`InvokedAsync` upserts messages into the vector store, using a unique key for each message. It stores both the request messages and response messages from the invocation context.
 
-`GetMessagesAsync` retrieves the messages for the current thread from the vector store, orders them by timestamp, and returns them in ascending order.
+`InvokingAsync` retrieves the messages for the current thread from the vector store, orders them by timestamp, and returns them in ascending chronological order (oldest first).
 
-When the first message is received, the store generates a unique key for the thread, which is then used to identify the chat history in the vector store for subsequent calls.
+When the first invocation occurs, the store generates a unique key for the thread, which is then used to identify the chat history in the vector store for subsequent calls.
 
-The unique key is stored in the `ThreadDbKey` property, which is serialized and deserialized using the `SerializeStateAsync` method and the constructor that takes a `JsonElement`.
+The unique key is stored in the `ThreadDbKey` property, which is serialized using the `Serialize` method and deserialized via the constructor that takes a `JsonElement`.
 This key will therefore be persisted as part of the `AgentThread` state, allowing the thread to be resumed later and continue using the same chat history.
 
 ```csharp
@@ -105,31 +105,22 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
 
     public string? ThreadDbKey { get; private set; }
 
-    public override async Task AddMessagesAsync(
-        IEnumerable<ChatMessage> messages,
-        CancellationToken cancellationToken)
+    public override async ValueTask<IEnumerable<ChatMessage>> InvokingAsync(
+        InvokingContext context,
+        CancellationToken cancellationToken = default)
     {
-        this.ThreadDbKey ??= Guid.NewGuid().ToString("N");
-        var collection = this._vectorStore.GetCollection<string, ChatHistoryItem>("ChatHistory");
-        await collection.EnsureCollectionExistsAsync(cancellationToken);
-        await collection.UpsertAsync(messages.Select(x => new ChatHistoryItem()
+        if (this.ThreadDbKey is null)
         {
-            Key = this.ThreadDbKey + x.MessageId,
-            Timestamp = DateTimeOffset.UtcNow,
-            ThreadId = this.ThreadDbKey,
-            SerializedMessage = JsonSerializer.Serialize(x),
-            MessageText = x.Text
-        }), cancellationToken);
-    }
+            // No thread key yet, so no messages to retrieve
+            return [];
+        }
 
-    public override async Task<IEnumerable<ChatMessage>> GetMessagesAsync(
-        CancellationToken cancellationToken)
-    {
         var collection = this._vectorStore.GetCollection<string, ChatHistoryItem>("ChatHistory");
         await collection.EnsureCollectionExistsAsync(cancellationToken);
         var records = collection
             .GetAsync(
-                x => x.ThreadId == this.ThreadDbKey, 10,
+                x => x.ThreadId == this.ThreadDbKey, 
+                10,
                 new() { OrderBy = x => x.Descending(y => y.Timestamp) },
                 cancellationToken);
 
@@ -139,8 +130,39 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
             messages.Add(JsonSerializer.Deserialize<ChatMessage>(record.SerializedMessage!)!);
         }
         
+        // Reverse to return in ascending chronological order (oldest first)
         messages.Reverse();
         return messages;
+    }
+
+    public override async ValueTask InvokedAsync(
+        InvokedContext context,
+        CancellationToken cancellationToken = default)
+    {
+        // Don't store messages if the request failed.
+        if (context.InvokeException is not null)
+        {
+            return;
+        }
+
+        this.ThreadDbKey ??= Guid.NewGuid().ToString("N");
+        
+        var collection = this._vectorStore.GetCollection<string, ChatHistoryItem>("ChatHistory");
+        await collection.EnsureCollectionExistsAsync(cancellationToken);
+        
+        // Store request messages, response messages, and optionally AIContextProvider messages
+        var allNewMessages = context.RequestMessages
+            .Concat(context.AIContextProviderMessages ?? [])
+            .Concat(context.ResponseMessages ?? []);
+        
+        await collection.UpsertAsync(allNewMessages.Select(x => new ChatHistoryItem()
+        {
+            Key = this.ThreadDbKey + x.MessageId,
+            Timestamp = DateTimeOffset.UtcNow,
+            ThreadId = this.ThreadDbKey,
+            SerializedMessage = JsonSerializer.Serialize(x),
+            MessageText = x.Text
+        }), cancellationToken);
     }
 
     public override JsonElement Serialize(JsonSerializerOptions? jsonSerializerOptions = null) =>
@@ -169,10 +191,16 @@ To use the custom `ChatMessageStore`, you need to provide a `ChatMessageStoreFac
 
 When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `ChatMessageStoreFactory` in addition to all other agent options.
 
+The factory is an async function that receives a context object and a cancellation token, and returns a `ValueTask<ChatMessageStore>`.
+
 ```csharp
 using Azure.AI.OpenAI;
 using Azure.Identity;
-using OpenAI;
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel.Connectors.InMemory;
+
+// Create a vector store to store the chat messages in.
+VectorStore vectorStore = new InMemoryVectorStore();
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
@@ -181,16 +209,28 @@ AIAgent agent = new AzureOpenAIClient(
      .CreateAIAgent(new ChatClientAgentOptions
      {
          Name = "Joker",
-         Instructions = "You are good at telling jokes.",
-         ChatMessageStoreFactory = ctx =>
-         {
+         ChatOptions = new() { Instructions = "You are good at telling jokes." },
+         ChatMessageStoreFactory = (ctx, ct) => new ValueTask<ChatMessageStore>(
              // Create a new chat message store for this agent that stores the messages in a vector store.
-             return new VectorChatMessageStore(
-                new InMemoryVectorStore(),
+             // Each thread must get its own copy of the VectorChatMessageStore, since the store
+             // also contains the id that the thread is stored under.
+             new VectorChatMessageStore(
+                vectorStore,
                 ctx.SerializedState,
-                ctx.JsonSerializerOptions);
-         }
+                ctx.JsonSerializerOptions))
      });
+
+// Start a new thread for the agent conversation.
+AgentThread thread = await agent.GetNewThreadAsync();
+
+// Run the agent with the thread
+var response = await agent.RunAsync("Tell me a joke about a pirate.", thread);
+
+// The thread state can be serialized for storage
+JsonElement serializedThread = thread.Serialize();
+
+// Later, deserialize the thread to resume the conversation
+AgentThread resumedThread = await agent.DeserializeThreadAsync(serializedThread);
 ```
 
 ::: zone-end
