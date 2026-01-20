@@ -65,16 +65,16 @@ AzureOpenAIClient client = new(new Uri(endpoint), new DefaultAzureCredential());
 ChatClient chatClient = client.GetChatClient(deploymentName);
 
 // Create the main agent from the first tutorial
-AIAgent mainAgent = chatClient.CreateAIAgent(
+AIAgent mainAgent = chatClient.AsAIAgent(
     instructions: "You are a helpful assistant that can answer questions and provide information.",
     name: "MyDurableAgent");
 
 // Create translation agents
-AIAgent frenchAgent = chatClient.CreateAIAgent(
+AIAgent frenchAgent = chatClient.AsAIAgent(
     instructions: "You are a translator. Translate the following text to French. Return only the translation, no explanations.",
     name: "FrenchTranslator");
 
-AIAgent spanishAgent = chatClient.CreateAIAgent(
+AIAgent spanishAgent = chatClient.AsAIAgent(
     instructions: "You are a translator. Translate the following text to Spanish. Return only the translation, no explanations.",
     name: "SpanishTranslator");
 
@@ -125,18 +125,18 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create the main agent from the first tutorial
-main_agent = chat_client.create_agent(
+main_agent = chat_client.as_agent(
     instructions="You are a helpful assistant that can answer questions and provide information.",
     name="MyDurableAgent"
 )
 
 # Create translation agents
-french_agent = chat_client.create_agent(
+french_agent = chat_client.as_agent(
     instructions="You are a translator. Translate the following text to French. Return only the translation, no explanations.",
     name="FrenchTranslator"
 )
 
-spanish_agent = chat_client.create_agent(
+spanish_agent = chat_client.as_agent(
     instructions="You are a translator. Translate the following text to Spanish. Return only the translation, no explanations.",
     name="SpanishTranslator"
 )
@@ -184,15 +184,15 @@ public static class AgentOrchestration
         
         // Step 1: Get the main agent's response
         DurableAIAgent mainAgent = context.GetAgent("MyDurableAgent");
-        AgentRunResponse<TextResponse> mainResponse = await mainAgent.RunAsync<TextResponse>(input);
+        AgentResponse<TextResponse> mainResponse = await mainAgent.RunAsync<TextResponse>(input);
         string agentResponse = mainResponse.Result.Text;
 
         // Step 2: Fan out - get the translation agents and run them concurrently
         DurableAIAgent frenchAgent = context.GetAgent("FrenchTranslator");
         DurableAIAgent spanishAgent = context.GetAgent("SpanishTranslator");
 
-        Task<AgentRunResponse<TextResponse>> frenchTask = frenchAgent.RunAsync<TextResponse>(agentResponse);
-        Task<AgentRunResponse<TextResponse>> spanishTask = spanishAgent.RunAsync<TextResponse>(agentResponse);
+        Task<AgentResponse<TextResponse>> frenchTask = frenchAgent.RunAsync<TextResponse>(agentResponse);
+        Task<AgentResponse<TextResponse>> spanishTask = spanishAgent.RunAsync<TextResponse>(agentResponse);
 
         // Step 3: Wait for both translation tasks to complete (fan-in)
         await Task.WhenAll(frenchTask, spanishTask);

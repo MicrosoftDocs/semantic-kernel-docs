@@ -203,7 +203,9 @@ In this tutorial, you'll create a workflow with two executors:
 
 The workflow demonstrates core concepts like:
 
-- Using the `@executor` decorator to create workflow nodes
+- Two ways to define a unit of work (an executor node):
+  1. A custom class that subclasses `Executor` with an async method marked by `@handler`
+  2. A standalone async function decorated with `@executor`
 - Connecting executors with `WorkflowBuilder`
 - Passing data between steps with `ctx.send_message()`
 - Yielding final output with `ctx.yield_output()`
@@ -260,13 +262,16 @@ class UpperCase(Executor):
 
 **Key Points:**
 
-- The `@executor` decorator registers this function as a workflow node
-- `WorkflowContext[str]` indicates this executor sends a string downstream by specifying the first type parameter
-- `ctx.send_message()` passes data to the next step
+- Subclassing `Executor` lets you define a named node with lifecycle hooks if needed
+- The `@handler` decorator marks the async method that does the work
+- The handler signature follows a contract:
+  - First parameter is the typed input to this node (here: `text: str`)
+  - Second parameter is a `WorkflowContext[T_Out]`, where `T_Out` is the type of data this node will emit via `ctx.send_message()` (here: `str`)
+- Within a handler you typically compute a result and forward it to downstream nodes using `ctx.send_message(result)`
 
 ### Step 3: Create the Second Executor
 
-Create an executor that reverses the text and yields the final output from a method decorated with `@executor`:
+For simple steps you can skip subclassing and define an async function with the same signature pattern (typed input + `WorkflowContext`) and decorate it with `@executor`. This creates a fully functional node that can be wired into a flow:
 
 ```python
 @executor(id="reverse_text_executor")
@@ -280,9 +285,12 @@ async def reverse_text(text: str, ctx: WorkflowContext[Never, str]) -> None:
 
 **Key Points:**
 
-- `WorkflowContext[Never, str]` indicates this is a terminal executor that does not send any messages by specifying `Never` as the first type parameter but produce workflow outputs by specifying `str` as the second parameter
-- `ctx.yield_output()` provides the final workflow result
-- The workflow completes when it becomes idle
+- The `@executor` decorator transforms a standalone async function into a workflow node
+- The `WorkflowContext` is parameterized with two types:
+  - `T_Out = Never`: this node does not send messages to downstream nodes
+  - `T_W_Out = str`: this node yields workflow output of type `str`
+- Terminal nodes yield outputs using `ctx.yield_output()` to provide workflow results
+- The workflow completes when it becomes idle (no more work to do)
 
 ### Step 4: Build the Workflow
 
@@ -336,12 +344,22 @@ Workflow completed with result: DLROW OLLEH
 
 ## Key Concepts Explained
 
+### Two Ways to Define Executors
+
+1. **Custom class (subclassing `Executor`)**: Best when you need lifecycle hooks or complex state. Define an async method with the `@handler` decorator.
+2. **Function-based (`@executor` decorator)**: Best for simple steps. Define a standalone async function with the same signature pattern.
+
+Both approaches use the same handler signature:
+- First parameter: the typed input to this node
+- Second parameter: a `WorkflowContext[T_Out, T_W_Out]`
+
 ### Workflow Context Types
 
 The `WorkflowContext` generic type defines what data flows between executors:
 
-- `WorkflowContext[str]` - Sends a string to the next executor
-- `WorkflowContext[Never, str]` - Terminal executor that yields workflow output of type string
+- `WorkflowContext[T_Out]` - Used for nodes that send messages of type `T_Out` to downstream nodes via `ctx.send_message()`
+- `WorkflowContext[T_Out, T_W_Out]` - Used for nodes that also yield workflow output of type `T_W_Out` via `ctx.yield_output()`
+- `WorkflowContext` without type parameters is equivalent to `WorkflowContext[Never, Never]`, meaning this node neither sends messages to downstream nodes nor yields workflow output
 
 ### Event Types
 

@@ -52,14 +52,14 @@ AIFunction weatherFunction = AIFunctionFactory.Create(GetWeather);
 AIFunction approvalRequiredWeatherFunction = new ApprovalRequiredAIFunction(weatherFunction);
 ```
 
-When creating the agent, you can now provide the approval requiring function tool to the agent, by passing a list of tools to the `CreateAIAgent` method.
+When creating the agent, you can now provide the approval requiring function tool to the agent, by passing a list of tools to the `AsAIAgent` method.
 
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(instructions: "You are a helpful assistant", tools: [approvalRequiredWeatherFunction]);
+     .AsAIAgent(instructions: "You are a helpful assistant", tools: [approvalRequiredWeatherFunction]);
 ```
 
 Since you now have a function that requires approval, the agent might respond with a request for approval, instead of executing the function directly and returning the result.
@@ -67,7 +67,7 @@ You can check the response content for any `FunctionApprovalRequestContent` inst
 
 ```csharp
 AgentThread thread = agent.GetNewThread();
-AgentRunResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread);
+AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread);
 
 var functionApprovalRequests = response.Messages
     .SelectMany(x => x.Contents)

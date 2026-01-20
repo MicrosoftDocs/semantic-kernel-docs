@@ -57,7 +57,7 @@ static string GetUserLocation()
 AITool[] frontendTools = [AIFunctionFactory.Create(GetUserLocation)];
 
 // Pass tools when creating the agent
-AIAgent agent = chatClient.CreateAIAgent(
+AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
     tools: frontendTools);
@@ -67,7 +67,7 @@ The rest of your client code remains the same as shown in the Getting Started tu
 
 ### How Tools Are Sent to the Server
 
-When you register tools with `CreateAIAgent()`, the `AGUIChatClient` automatically:
+When you register tools with `AsAIAgent()`, the `AGUIChatClient` automatically:
 
 1. Captures the tool definitions (names, descriptions, parameter schemas)
 3. Sends the tools with each request to the server agent which maps them to `ChatAgentRunOptions.ChatOptions.Tools`
@@ -85,7 +85,7 @@ AIAgent inspectableAgent = baseAgent
     .Use(runFunc: null, runStreamingFunc: InspectToolsMiddleware)
     .Build();
 
-static async IAsyncEnumerable<AgentRunResponseUpdate> InspectToolsMiddleware(
+static async IAsyncEnumerable<AgentResponseUpdate> InspectToolsMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
@@ -109,7 +109,7 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> InspectToolsMiddleware(
         }
     }
 
-    await foreach (AgentRunResponseUpdate update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
+    await foreach (AgentResponseUpdate update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
     {
         yield return update;
     }
@@ -123,7 +123,7 @@ This middleware pattern allows you to:
 
 The following are new concepts for frontend tools:
 
-- **Client-side registration**: Tools are registered on the client using `AIFunctionFactory.Create()` and passed to `CreateAIAgent()`
+- **Client-side registration**: Tools are registered on the client using `AIFunctionFactory.Create()` and passed to `AsAIAgent()`
 - **Automatic capture**: Tools are automatically captured and sent via `ChatAgentRunOptions.ChatOptions.Tools`
 
 ## How Frontend Tools Work

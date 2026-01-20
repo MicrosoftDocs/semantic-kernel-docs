@@ -113,7 +113,7 @@ To register an agent factory to the `WorkflowBuilder`, you can use the `register
 ```python
 def create_agent() -> ChatAgent:
     """Factory function to create a Writer agent."""
-    return AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    return AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions=("You are a helpful assistant.",),
         name="assistant",
     )

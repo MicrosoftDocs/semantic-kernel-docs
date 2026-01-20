@@ -6,7 +6,9 @@
   href: sequential.md
 - name: Group Chat
   href: group-chat.md
-- name: Handoff
-  href: handoff.md
 - name: Magentic
   href: magentic.md
+- name: Handoff
+  href: handoff.md
+- name: Human-in-the-Loop
+  href: human-in-the-loop.md

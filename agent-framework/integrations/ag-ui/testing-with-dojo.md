@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Testing with AG-UI Dojo
 
-The [AG-UI Dojo application](https://github.com/ag-oss/ag-ui/tree/main/apps/dojo) provides an interactive environment to test and explore Microsoft Agent Framework agents that implement the AG-UI protocol. Dojo offers a visual interface to connect to your agents and interact with all 7 AG-UI features.
+The [AG-UI Dojo application](https://dojo.ag-ui.com/) provides an interactive environment to test and explore Microsoft Agent Framework agents that implement the AG-UI protocol. Dojo offers a visual interface to connect to your agents and interact with all 7 AG-UI features.
 
 :::zone pivot="programming-language-python"
 
@@ -226,7 +226,7 @@ If you see authentication errors:
 
 ## Next Steps
 
-- Explore the [example agents](https://github.com/ag-oss/ag-ui/tree/main/integrations/microsoft-agent-framework/python/examples/agents) to see implementation patterns
+- Explore the [example agents](https://github.com/ag-ui-protocol/ag-ui/tree/main/integrations/microsoft-agent-framework/python/examples/agents) to see implementation patterns
 - Learn about [Backend Tool Rendering](backend-tool-rendering.md) to customize tool UIs
 <!-- - Implement [Human-in-the-Loop](human-in-the-loop.md) workflows for approval flows -->
 <!-- - Add [State Management](state-management.md) for complex interactive experiences -->
@@ -234,10 +234,10 @@ If you see authentication errors:
 ## Additional Resources
 
 - [AG-UI Documentation](https://docs.ag-ui.com/introduction)
-- [AG-UI GitHub Repository](https://github.com/ag-oss/ag-ui)
-- [Dojo Application](https://github.com/ag-oss/ag-ui/tree/main/apps/dojo)
+- [AG-UI GitHub Repository](https://github.com/ag-ui-protocol/ag-ui)
+- [Dojo Application](https://dojo.ag-ui.com/)
 
-- [Microsoft Agent Framework Integration Examples](https://github.com/ag-oss/ag-ui/tree/main/integrations/microsoft-agent-framework)
+- [Microsoft Agent Framework Integration Examples](https://github.com/ag-ui-protocol/ag-ui/tree/main/integrations/microsoft-agent-framework)
 
 :::zone-end
 

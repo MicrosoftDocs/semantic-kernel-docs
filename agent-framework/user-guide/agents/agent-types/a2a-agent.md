@@ -55,10 +55,10 @@ In this case, you construct an `A2AClient` directly with the URL of the agent.
 A2AClient a2aClient = new(new Uri("https://your-a2a-agent-host/echo"));
 ```
 
-And then you can create an instance of the `AIAgent` using the `GetAIAgent` method.
+And then you can create an instance of the `AIAgent` using the `AsAIAgent` method.
 
 ```csharp
-AIAgent agent = a2aClient.GetAIAgent();
+AIAgent agent = a2aClient.AsAIAgent();
 ```
 
 ## Using the Agent

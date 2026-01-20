@@ -147,7 +147,7 @@ ChatClient chatClient = new AzureOpenAIClient(
         new DefaultAzureCredential())
     .GetChatClient(deploymentName);
 
-ChatClientAgent agent = chatClient.AsIChatClient().CreateAIAgent(
+ChatClientAgent agent = chatClient.AsIChatClient().AsAIAgent(
     name: "AGUIAssistant",
     instructions: "You are a helpful assistant with access to restaurant information.",
     tools: tools);
@@ -186,7 +186,7 @@ To see tool calls and results in real-time, extend the client's streaming loop t
 
 ```csharp
 // Inside the streaming loop from getting-started.md
-await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(messages, thread))
+await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, thread))
 {
     ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 

@@ -62,12 +62,12 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
     new AzureCliCredential())
     .GetChatClient(deploymentName)
-    .CreateAIAgent("You are a secure assistant.")
+    .AsAIAgent("You are a secure assistant.")
     .AsBuilder()
     .WithPurview(browserCredential, new PurviewSettings("My Secure Agent"))
     .Build();
 
-AgentRunResponse response = await agent.RunAsync("Summarize zero trust in one sentence.").ConfigureAwait(false);
+AgentResponse response = await agent.RunAsync("Summarize zero trust in one sentence.").ConfigureAwait(false);
 Console.WriteLine(response);
 
 ```

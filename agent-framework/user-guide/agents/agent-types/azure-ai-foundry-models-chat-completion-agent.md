@@ -57,10 +57,10 @@ A client for chat completions can then be created using the model deployment nam
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
 ```
 
-Finally, the agent can be created using the `CreateAIAgent` extension method on the `ChatCompletionClient`.
+Finally, the agent can be created using the `AsAIAgent` extension method on the `ChatCompletionClient`.
 
 ```csharp
-AIAgent agent = chatCompletionClient.CreateAIAgent(
+AIAgent agent = chatCompletionClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 

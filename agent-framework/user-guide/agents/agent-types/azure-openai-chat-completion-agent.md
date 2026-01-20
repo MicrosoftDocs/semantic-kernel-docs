@@ -48,10 +48,10 @@ Pick the ChatCompletion service to create a ChatCompletion based agent.
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
 ```
 
-Finally, create the agent using the `CreateAIAgent` extension method on the `ChatCompletionClient`.
+Finally, create the agent using the `AsAIAgent` extension method on the `ChatCompletionClient`.
 
 ```csharp
-AIAgent agent = chatCompletionClient.CreateAIAgent(
+AIAgent agent = chatCompletionClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 // Invoke the agent and output the text result.
@@ -85,7 +85,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
     new AzureCliCredential())
      .GetChatClient(deploymentName)
-     .CreateAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
+     .AsAIAgent(instructions: "You are a helpful assistant", tools: [AIFunctionFactory.Create(GetWeather)]);
 
 // Non-streaming agent interaction with function tools.
 Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?"));
@@ -96,7 +96,7 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 Get responses as they are generated using streaming:
 
 ```csharp
-AIAgent agent = chatCompletionClient.CreateAIAgent(
+AIAgent agent = chatCompletionClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 
@@ -139,7 +139,7 @@ export AZURE_OPENAI_API_KEY="<your-api-key>"  # If not using Azure CLI authentic
 Add the Agent Framework package to your project:
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework-core --pre
 ```
 
 ## Getting Started
@@ -166,7 +166,7 @@ from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="You are good at telling jokes.",
         name="Joker"
     )
@@ -191,7 +191,7 @@ async def main():
         endpoint="https://<myresource>.openai.azure.com",
         deployment_name="gpt-4o-mini",
         credential=AzureCliCredential()
-    ).create_agent(
+    ).as_agent(
         instructions="You are good at telling jokes.",
         name="Joker"
     )
@@ -222,13 +222,41 @@ def get_weather(
     return f"The weather in {location} is sunny with a high of 25°C."
 
 async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather
     )
 
     result = await agent.run("What's the weather like in Seattle?")
     print(result.text)
+
+asyncio.run(main())
+```
+
+### Using Threads for Context Management
+
+Maintain conversation context across multiple interactions:
+
+```python
+import asyncio
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import AzureCliCredential
+
+async def main():
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+        instructions="You are a helpful programming assistant."
+    )
+    
+    # Create a new thread for conversation context
+    thread = agent.get_new_thread()
+    
+    # First interaction
+    result1 = await agent.run("I'm working on a Python web application.", thread=thread, store=True)
+    print(f"Assistant: {result1.text}")
+    
+    # Second interaction - context is preserved
+    result2 = await agent.run("What framework should I use?", thread=thread, store=True)
+    print(f"Assistant: {result2.text}")
 
 asyncio.run(main())
 ```
@@ -243,7 +271,7 @@ from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful assistant."
     )
 

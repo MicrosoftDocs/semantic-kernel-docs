@@ -206,7 +206,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(new ChatClientAgentOptions
+     .AsAIAgent(new ChatClientAgentOptions
      {
          Name = "Joker",
          ChatOptions = new() { Instructions = "You are good at telling jokes." },

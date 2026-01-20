@@ -85,13 +85,13 @@ Coming soon...
 Non-thread-safe example:
 
 ```python
-writer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+writer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     instructions=(
         "You are an excellent content writer. You create new content and edit contents based on the feedback."
     ),
     name="writer_agent",
 )
-reviewer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+reviewer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     instructions=(
         "You are an excellent content reviewer."
         "Provide actionable feedback to the writer about the provided content."
@@ -115,7 +115,7 @@ Thread-safe example:
 ```python
 def create_writer_agent() -> ChatAgent:
     """Factory function to create a Writer agent."""
-    return AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    return AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions=(
             "You are an excellent content writer. You create new content and edit contents based on the feedback."
         ),
@@ -124,7 +124,7 @@ def create_writer_agent() -> ChatAgent:
 
 def create_reviewer_agent() -> ChatAgent:
     """Factory function to create a Reviewer agent."""
-    return AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+    return AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
         instructions=(
             "You are an excellent content reviewer."
             "Provide actionable feedback to the writer about the provided content."

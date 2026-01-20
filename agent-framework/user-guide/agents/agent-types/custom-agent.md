@@ -108,12 +108,12 @@ The thread can then be updated with the new messages by calling `NotifyThreadOfN
 If you don't do this, the user won't be able to have a multi-turn conversation with the agent and each run will be a fresh interaction.
 
 ```csharp
-    public override async Task<AgentRunResponse> RunAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, CancellationToken cancellationToken = default)
+    public override async Task<AgentResponse> RunAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, CancellationToken cancellationToken = default)
     {
         thread ??= this.GetNewThread();
         List<ChatMessage> responseMessages = CloneAndToUpperCase(messages, this.DisplayName).ToList();
         await NotifyThreadOfNewMessagesAsync(thread, messages.Concat(responseMessages), cancellationToken);
-        return new AgentRunResponse
+        return new AgentResponse
         {
             AgentId = this.Id,
             ResponseId = Guid.NewGuid().ToString(),
@@ -121,14 +121,14 @@ If you don't do this, the user won't be able to have a multi-turn conversation w
         };
     }
 
-    public override async IAsyncEnumerable<AgentRunResponseUpdate> RunStreamingAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         thread ??= this.GetNewThread();
         List<ChatMessage> responseMessages = CloneAndToUpperCase(messages, this.DisplayName).ToList();
         await NotifyThreadOfNewMessagesAsync(thread, messages.Concat(responseMessages), cancellationToken);
         foreach (var message in responseMessages)
         {
-            yield return new AgentRunResponseUpdate
+            yield return new AgentResponseUpdate
             {
                 AgentId = this.Id,
                 AuthorName = this.DisplayName,
@@ -170,7 +170,7 @@ pip install agent-framework-core --pre
 The framework provides the `AgentProtocol` protocol that defines the interface all agents must implement. Custom agents can either implement this protocol directly or extend the `BaseAgent` class for convenience.
 
 ```python
-from agent_framework import AgentProtocol, AgentRunResponse, AgentRunResponseUpdate, AgentThread, ChatMessage
+from agent_framework import AgentProtocol, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
 from collections.abc import AsyncIterable
 from typing import Any
 
@@ -188,7 +188,7 @@ class MyCustomAgent(AgentProtocol):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AgentRunResponse:
+    ) -> AgentResponse:
         """Execute the agent and return a complete response."""
         ...
 
@@ -198,7 +198,7 @@ class MyCustomAgent(AgentProtocol):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AsyncIterable[AgentRunResponseUpdate]:
+    ) -> AsyncIterable[AgentResponseUpdate]:
         """Execute the agent and yield streaming response updates."""
         ...
 ```
@@ -210,8 +210,8 @@ The recommended approach is to extend the `BaseAgent` class, which provides comm
 ```python
 from agent_framework import (
     BaseAgent,
-    AgentRunResponse,
-    AgentRunResponseUpdate,
+    AgentResponse,
+    AgentResponseUpdate,
     AgentThread,
     ChatMessage,
     Role,
@@ -255,7 +255,7 @@ class EchoAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AgentRunResponse:
+    ) -> AgentResponse:
         """Execute the agent and return a complete response.
 
         Args:
@@ -264,7 +264,7 @@ class EchoAgent(BaseAgent):
             **kwargs: Additional keyword arguments.
 
         Returns:
-            An AgentRunResponse containing the agent's reply.
+            An AgentResponse containing the agent's reply.
         """
         # Normalize input messages to a list
         normalized_messages = self._normalize_messages(messages)
@@ -288,7 +288,7 @@ class EchoAgent(BaseAgent):
         if thread is not None:
             await self._notify_thread_of_new_messages(thread, normalized_messages, response_message)
 
-        return AgentRunResponse(messages=[response_message])
+        return AgentResponse(messages=[response_message])
 
     async def run_stream(
         self,
@@ -296,7 +296,7 @@ class EchoAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AsyncIterable[AgentRunResponseUpdate]:
+    ) -> AsyncIterable[AgentResponseUpdate]:
         """Execute the agent and yield streaming response updates.
 
         Args:
@@ -305,7 +305,7 @@ class EchoAgent(BaseAgent):
             **kwargs: Additional keyword arguments.
 
         Yields:
-            AgentRunResponseUpdate objects containing chunks of the response.
+            AgentResponseUpdate objects containing chunks of the response.
         """
         # Normalize input messages to a list
         normalized_messages = self._normalize_messages(messages)
@@ -326,7 +326,7 @@ class EchoAgent(BaseAgent):
             # Add space before word except for the first one
             chunk_text = f" {word}" if i > 0 else word
 
-            yield AgentRunResponseUpdate(
+            yield AgentResponseUpdate(
                 contents=[TextContent(text=chunk_text)],
                 role=Role.ASSISTANT,
             )

@@ -141,7 +141,7 @@ The simplest way to create an agent is by using the `OpenAIAssistantsClient` whi
 ```python
 async def basic_example():
     # Create an agent with automatic assistant creation and cleanup
-    async with OpenAIAssistantsClient().create_agent(
+    async with OpenAIAssistantsClient().as_agent(
         instructions="You are a helpful assistant.",
         name="MyAssistant"
     ) as agent:
@@ -158,7 +158,7 @@ async def explicit_config_example():
     async with OpenAIAssistantsClient(
         ai_model_id="gpt-4o-mini",
         api_key="your-api-key-here",
-    ).create_agent(
+    ).as_agent(
         instructions="You are a helpful assistant.",
     ) as agent:
         result = await agent.run("What's the weather like?")
@@ -303,7 +303,7 @@ Maintain conversation context across multiple interactions:
 
 ```python
 async def thread_example():
-    async with OpenAIAssistantsClient().create_agent(
+    async with OpenAIAssistantsClient().as_agent(
         name="Assistant",
         instructions="You are a helpful assistant.",
     ) as agent:
@@ -346,7 +346,7 @@ async def existing_assistant_example():
         async with OpenAIAssistantsClient(
             async_client=client,
             assistant_id=assistant.id
-        ).create_agent() as agent:
+        ).as_agent() as agent:
             result = await agent.run("What's the weather like in Seattle?")
             print(result.text)
     finally:
@@ -360,7 +360,7 @@ Get responses as they are generated for better user experience:
 
 ```python
 async def streaming_example():
-    async with OpenAIAssistantsClient().create_agent(
+    async with OpenAIAssistantsClient().as_agent(
         instructions="You are a helpful assistant.",
     ) as agent:
         print("Assistant: ", end="", flush=True)
