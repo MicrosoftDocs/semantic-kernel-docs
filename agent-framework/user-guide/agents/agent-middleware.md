@@ -61,7 +61,7 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
 ```csharp
 var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
     .GetChatClient(deploymentName)
-    .CreateAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
+    .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
         .AsBuilder()
             .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
         .Build());
@@ -388,7 +388,7 @@ from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 # Agent-level middleware: Applied to ALL runs of the agent
-async with AzureAIAgentClient(async_credential=credential).create_agent(
+async with AzureAIAgentClient(async_credential=credential).as_agent(
     name="WeatherAgent",
     instructions="You are a helpful weather assistant.",
     tools=get_weather,

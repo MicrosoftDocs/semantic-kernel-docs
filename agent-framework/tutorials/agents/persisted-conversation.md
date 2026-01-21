@@ -36,9 +36,9 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(instructions: "You are a helpful assistant.", name: "Assistant");
+     .AsAIAgent(instructions: "You are a helpful assistant.", name: "Assistant");
 
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 ```
 
 Run the agent, passing in the thread, so that the `AgentThread` includes this exchange.
@@ -75,7 +75,7 @@ string loadedJson = await File.ReadAllTextAsync(filePath);
 JsonElement reloaded = JsonSerializer.Deserialize<JsonElement>(loadedJson, JsonSerializerOptions.Web);
 
 // Deserialize the thread into an AgentThread tied to the same agent type
-AgentThread resumedThread = agent.DeserializeThread(reloaded, JsonSerializerOptions.Web);
+AgentThread resumedThread = await agent.DeserializeThreadAsync(reloaded, JsonSerializerOptions.Web);
 ```
 
 Use the resumed thread to continue the conversation.

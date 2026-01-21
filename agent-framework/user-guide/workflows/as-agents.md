@@ -81,7 +81,7 @@ Each conversation with a workflow agent requires a thread to manage state:
 
 ```csharp
 // Create a new thread for the conversation
-AgentThread thread = workflowAgent.GetNewThread();
+AgentThread thread = await workflowAgent.GetNewThreadAsync();
 ```
 
 ### Non-Streaming Execution
@@ -155,7 +155,7 @@ JsonElement serializedThread = thread.Serialize();
 // Store serializedThread to your persistence layer...
 
 // Later, resume the thread
-AgentThread resumedThread = workflowAgent.DeserializeThread(serializedThread);
+AgentThread resumedThread = await workflowAgent.DeserializeThreadAsync(serializedThread);
 
 // Continue the conversation
 await foreach (var update in workflowAgent.RunStreamingAsync(newMessages, resumedThread))

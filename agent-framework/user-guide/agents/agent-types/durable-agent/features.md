@@ -42,7 +42,7 @@ public static async Task<string> SpamDetectionOrchestration(
 
     // Check if the email is spam
     DurableAIAgent spamDetectionAgent = context.GetAgent("SpamDetectionAgent");
-    AgentThread spamThread = spamDetectionAgent.GetNewThread();
+    AgentThread spamThread = await spamDetectionAgent.GetNewThreadAsync();
 
     AgentResponse<DetectionResult> spamDetectionResponse = await spamDetectionAgent.RunAsync<DetectionResult>(
         message: $"Analyze this email for spam: {email.EmailContent}",
@@ -56,7 +56,7 @@ public static async Task<string> SpamDetectionOrchestration(
 
     // Generate response for legitimate email
     DurableAIAgent emailAssistantAgent = context.GetAgent("EmailAssistantAgent");
-    AgentThread emailThread = emailAssistantAgent.GetNewThread();
+    AgentThread emailThread = await emailAssistantAgent.GetNewThreadAsync();
 
     AgentResponse<EmailResponse> emailAssistantResponse = await emailAssistantAgent.RunAsync<EmailResponse>(
         message: $"Draft a professional response to: {email.EmailContent}",

@@ -73,7 +73,7 @@ AzureAIAgent agent = new(definition, azureAgentClient);
 Agent creation in Agent Framework is made simpler with extensions provided by all main providers.
 
 ```csharp
-AIAgent openAIAgent = chatClient.CreateAIAgent(instructions: ParrotInstructions);
+AIAgent openAIAgent = chatClient.AsAIAgent(instructions: ParrotInstructions);
 AIAgent azureFoundryAgent = await persistentAgentsClient.CreateAIAgentAsync(instructions: ParrotInstructions);
 AIAgent openAIAssistantAgent = await assistantClient.CreateAIAgentAsync(instructions: ParrotInstructions);
 ```
@@ -103,7 +103,7 @@ The agent is responsible for creating the thread.
 
 ```csharp
 // New.
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 ```
 
 ## 4. Hosted Agent Thread Cleanup
@@ -160,7 +160,7 @@ ChatCompletionAgent agent = new() { Kernel = kernel, ... };
 In Agent Framework, in a single call you can register tools directly in the agent creation process.
 
 ```csharp
-AIAgent agent = chatClient.CreateAIAgent(tools: [AIFunctionFactory.Create(GetWeather)]);
+AIAgent agent = chatClient.AsAIAgent(tools: [AIFunctionFactory.Create(GetWeather)]);
 ```
 
 ## 6. Agent Non-Streaming Invocation
@@ -281,7 +281,7 @@ serviceContainer.AddKeyedSingleton<SemanticKernel.Agents.Agent>(
 Agent Framework provides the `AIAgent` type as the base abstraction class.
 
 ```csharp
-services.AddKeyedSingleton<AIAgent>(() => client.CreateAIAgent(...));
+services.AddKeyedSingleton<AIAgent>(() => client.AsAIAgent(...));
 ```
 
 ## 11. Agent Type Consolidation
@@ -381,7 +381,7 @@ Or, with the convenience methods provided by chat clients:
 ```python
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(instructions="You are a helpful assistant")
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(instructions="You are a helpful assistant")
 ```
 
 The direct method exposes all possible parameters you can set for your agent. While the convenience method has a subset, you can still pass in the same set of parameters, because it calls the direct method internally.
@@ -467,7 +467,7 @@ def get_weather(location: str) -> str:
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny."
 
-agent = chat_client.create_agent(tools=get_weather)
+agent = chat_client.as_agent(tools=get_weather)
 ```
 
 > [!NOTE]
@@ -516,7 +516,7 @@ class Plugin:
         return f"The weather in {location} is sunny with a high of 25°C and a low of 15°C."
 
 plugin = Plugin("Initial state")
-agent = chat_client.create_agent(tools=[plugin.get_weather, plugin.get_weather_details])
+agent = chat_client.as_agent(tools=[plugin.get_weather, plugin.get_weather_details])
 
 ... # use the agent
 
@@ -575,7 +575,7 @@ kernel_function = KernelFunctionFromPrompt(
 agent_tool = kernel_function.as_agent_framework_tool(kernel=kernel)
 
 # Use the tool with an Agent Framework agent
-agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(tools=agent_tool)
+agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(tools=agent_tool)
 response = await agent.run("What kind of day is it?")
 print(response.text)
 ```
@@ -595,7 +595,7 @@ def get_weather(self, location: str) -> str:
 agent_tool = get_weather.as_agent_framework_tool()
 
 # Use the tool with an Agent Framework agent
-agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(tools=agent_tool)
+agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(tools=agent_tool)
 response = await agent.run("What's the weather in Seattle?")
 print(response.text)
 ```
@@ -663,7 +663,7 @@ async with collection:
     search_tool = search_function.as_agent_framework_tool()
 
     # Use the tool with an Agent Framework agent
-    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
+    agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(
         instructions="You are a travel agent that helps people find hotels.",
         tools=search_tool
     )
@@ -779,7 +779,7 @@ from agent_framework.openai import OpenAIChatClient
 client = OpenAIChatClient()
 
 # Set default options at agent creation
-agent = client.create_agent(
+agent = client.as_agent(
     instructions="You are a helpful assistant.",
     default_options={
         "max_tokens": 1000,

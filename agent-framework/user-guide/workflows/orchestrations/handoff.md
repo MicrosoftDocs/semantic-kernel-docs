@@ -191,7 +191,7 @@ Create domain-specific agents with a coordinator for routing:
 
 ```python
 # Create triage/coordinator agent
-triage_agent = chat_client.create_agent(
+triage_agent = chat_client.as_agent(
     instructions=(
         "You are frontline support triage. Route customer issues to the appropriate specialist agents "
         "based on the problem described."
@@ -201,7 +201,7 @@ triage_agent = chat_client.create_agent(
 )
 
 # Refund specialist: Handles refund requests
-refund_agent = chat_client.create_agent(
+refund_agent = chat_client.as_agent(
     instructions="You process refund requests.",
     description="Agent that handles refund requests.",
     name="refund_agent",
@@ -210,7 +210,7 @@ refund_agent = chat_client.create_agent(
 )
 
 # Order/shipping specialist: Resolves delivery issues
-order_agent = chat_client.create_agent(
+order_agent = chat_client.as_agent(
     instructions="You handle order and shipping inquiries.",
     description="Agent that handles order tracking and shipping issues.",
     name="order_agent",
@@ -219,7 +219,7 @@ order_agent = chat_client.create_agent(
 )
 
 # Return specialist: Handles return requests
-return_agent = chat_client.create_agent(
+return_agent = chat_client.as_agent(
     instructions="You manage product return requests.",
     description="Agent that handles return processing.",
     name="return_agent",
@@ -415,7 +415,7 @@ from azure.identity import AzureCliCredential
 
 client = AzureOpenAIChatClient(credential=AzureCliCredential())
 
-triage_agent = chat_client.create_agent(
+triage_agent = chat_client.as_agent(
     instructions=(
         "You are frontline support triage. Route customer issues to the appropriate specialist agents "
         "based on the problem described."
@@ -424,14 +424,14 @@ triage_agent = chat_client.create_agent(
     name="triage_agent",
 )
 
-refund_agent = chat_client.create_agent(
+refund_agent = chat_client.as_agent(
     instructions="You process refund requests.",
     description="Agent that handles refund requests.",
     name="refund_agent",
     tools=[process_refund],
 )
 
-order_agent = chat_client.create_agent(
+order_agent = chat_client.as_agent(
     instructions="You handle order and shipping inquiries.",
     description="Agent that handles order tracking and shipping issues.",
     name="order_agent",

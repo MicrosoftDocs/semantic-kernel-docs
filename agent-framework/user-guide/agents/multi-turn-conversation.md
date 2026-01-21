@@ -30,7 +30,7 @@ The `AgentThread` state may also include memories or references to memories stor
 
 `AgentThread` instances can be created in two ways:
 
-1. By calling `GetNewThread` on the agent.
+1. By calling `GetNewThreadAsync` on the agent.
 1. By running the agent and not providing an `AgentThread`. In this case the agent will create a throwaway `AgentThread` which will only be used for the duration of the run.
 
 Some underlying service stored conversations/threads/responses might be persistently created in an underlying service, where the service requires this, for example, Foundry Agents or OpenAI Responses. Any cleanup or deletion of these is the responsibility of the user.
@@ -39,7 +39,7 @@ Some underlying service stored conversations/threads/responses might be persiste
 
 ```csharp
 // Create a new thread.
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 // Run the agent with the thread.
 var response = await agent.RunAsync("Hello, how are you?", thread);
 
@@ -62,12 +62,12 @@ themselves.
 
 ```csharp
 // Create a new thread.
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 // Run the agent with the thread.
 var response = await agent.RunAsync("Hello, how are you?", thread);
 
 // Serialize the thread for storage.
-JsonElement serializedThread = await thread.SerializeAsync();
+JsonElement serializedThread = thread.Serialize();
 // Deserialize the thread state after loading from storage.
 AgentThread resumedThread = await agent.DeserializeThreadAsync(serializedThread);
 

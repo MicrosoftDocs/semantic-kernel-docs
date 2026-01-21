@@ -44,10 +44,10 @@ var responseClient = client.GetOpenAIResponseClient("gpt-4o-mini");
 #pragma warning restore OPENAI001
 ```
 
-Finally, create the agent using the `CreateAIAgent` extension method on the `ResponseClient`.
+Finally, create the agent using the `AsAIAgent` extension method on the `ResponseClient`.
 
 ```csharp
-AIAgent agent = responseClient.CreateAIAgent(
+AIAgent agent = responseClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 
@@ -110,7 +110,7 @@ The simplest way to create a responses agent:
 ```python
 async def basic_example():
     # Create an agent using OpenAI Responses
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="WeatherBot",
         instructions="You are a helpful weather assistant.",
     )
@@ -128,7 +128,7 @@ async def explicit_config_example():
     agent = OpenAIResponsesClient(
         ai_model_id="gpt-4o",
         api_key="your-api-key-here",
-    ).create_agent(
+    ).as_agent(
         instructions="You are a helpful assistant.",
     )
 
@@ -144,7 +144,7 @@ Get responses as they are generated for better user experience:
 
 ```python
 async def streaming_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a creative storyteller.",
     )
 
@@ -165,7 +165,7 @@ Use advanced reasoning capabilities with models like GPT-5:
 from agent_framework import HostedCodeInterpreterTool, TextContent, TextReasoningContent
 
 async def reasoning_example():
-    agent = OpenAIResponsesClient(ai_model_id="gpt-5").create_agent(
+    agent = OpenAIResponsesClient(ai_model_id="gpt-5").as_agent(
         name="MathTutor",
         instructions="You are a personal math tutor. When asked a math question, "
                     "write and run code to answer the question.",
@@ -199,7 +199,7 @@ class CityInfo(BaseModel):
     description: str
 
 async def structured_output_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="CityExpert",
         instructions="You describe cities in a structured format.",
     )
@@ -240,7 +240,7 @@ def get_weather(
     return f"The weather in {location} is sunny with 25°C."
 
 async def tools_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather,
     )
@@ -257,7 +257,7 @@ Enable your agent to execute Python code:
 from agent_framework import HostedCodeInterpreterTool
 
 async def code_interpreter_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a helpful assistant that can write and execute Python code.",
         tools=HostedCodeInterpreterTool(),
     )
@@ -335,7 +335,7 @@ Maintain conversation context across multiple interactions:
 
 ```python
 async def thread_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="Agent",
         instructions="You are a helpful assistant.",
     )
@@ -418,7 +418,7 @@ Enable real-time web search capabilities:
 from agent_framework import HostedWebSearchTool
 
 async def web_search_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="SearchBot",
         instructions="You are a helpful assistant that can search the web for current information.",
         tools=HostedWebSearchTool(),
@@ -436,7 +436,7 @@ Analyze and understand images with multi-modal capabilities:
 from agent_framework import ChatMessage, TextContent, UriContent
 
 async def image_analysis_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="VisionAgent",
         instructions="You are a helpful agent that can analyze images.",
     )
@@ -465,7 +465,7 @@ Generate images using the Responses API:
 from agent_framework import DataContent, HostedImageGenerationTool, ImageGenerationToolResultContent, UriContent
 
 async def image_generation_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a helpful AI that can generate images.",
         tools=[
             HostedImageGenerationTool(
@@ -496,7 +496,7 @@ Connect to MCP servers from within the agent for extended capabilities:
 from agent_framework import MCPStreamableHTTPTool
 
 async def local_mcp_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="DocsAgent",
         instructions="You are a helpful assistant that can help with Microsoft documentation.",
         tools=MCPStreamableHTTPTool(
@@ -517,7 +517,7 @@ Use hosted MCP tools to leverage server-side capabilities:
 from agent_framework import HostedMCPTool
 
 async def hosted_mcp_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="DocsBot",
         instructions="You are a helpful assistant with access to various tools.",
         tools=HostedMCPTool(

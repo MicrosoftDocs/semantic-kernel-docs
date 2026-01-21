@@ -136,7 +136,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).create_agent(
+        AzureAIAgentClient(async_credential=credential).as_agent(
             name="HelperAgent",
             instructions="You are a helpful assistant."
         ) as agent,
@@ -164,7 +164,7 @@ async def main():
             model_deployment_name="gpt-4o-mini",
             async_credential=credential,
             agent_name="HelperAgent"
-        ).create_agent(
+        ).as_agent(
             instructions="You are a helpful assistant."
         ) as agent,
     ):
@@ -270,7 +270,7 @@ def get_weather(
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).create_agent(
+        AzureAIAgentClient(async_credential=credential).as_agent(
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather
@@ -295,7 +295,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).create_agent(
+        AzureAIAgentClient(async_credential=credential).as_agent(
             name="CodingAgent",
             instructions="You are a helpful assistant that can write and execute Python code.",
             tools=HostedCodeInterpreterTool()
@@ -319,7 +319,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).create_agent(
+        AzureAIAgentClient(async_credential=credential).as_agent(
             name="StreamingAgent",
             instructions="You are a helpful assistant."
         ) as agent,

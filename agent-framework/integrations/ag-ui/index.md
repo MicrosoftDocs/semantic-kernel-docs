@@ -251,7 +251,7 @@ To get started with AG-UI integration:
 
 - [Agent Framework Documentation](../../overview/agent-framework-overview.md)
 - [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
-- [AG-UI Dojo App](https://github.com/ag-oss/ag-ui/tree/main/apps/dojo) - Example application demonstrating Agent Framework integration
+- [AG-UI Dojo App](https://dojo.ag-ui.com/) - Example application demonstrating Agent Framework integration
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
 
 ::: zone-end

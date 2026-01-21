@@ -64,7 +64,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
     new AzureCliCredential())
      .GetChatClient(deploymentName)
-     .CreateAIAgent(
+     .AsAIAgent(
          instructions: "You answer questions related to GitHub repositories only.",
          tools: [.. mcpTools.Cast<AITool>()]);
 

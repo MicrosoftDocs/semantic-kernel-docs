@@ -53,7 +53,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
-        .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+        .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 Turn the agent into a function tool and then an MCP tool. The agent name and description will be used as the mcp tool name and description.
@@ -114,7 +114,7 @@ def get_item_price(
     return "$9.99"
 
 # Create an agent with tools
-agent = OpenAIResponsesClient().create_agent(
+agent = OpenAIResponsesClient().as_agent(
     name="RestaurantAgent",
     description="Answer questions about the menu.",
     tools=[get_specials, get_item_price],

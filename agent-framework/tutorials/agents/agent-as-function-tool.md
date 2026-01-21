@@ -48,7 +48,7 @@ AIAgent weatherAgent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(
+     .AsAIAgent(
         instructions: "You answer questions about the weather.",
         name: "WeatherAgent",
         description: "An agent that answers questions about the weather.",
@@ -62,7 +62,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
      .GetChatClient("gpt-4o-mini")
-     .CreateAIAgent(instructions: "You are a helpful assistant who responds in French.", tools: [weatherAgent.AsAIFunction()]);
+     .AsAIAgent(instructions: "You are a helpful assistant who responds in French.", tools: [weatherAgent.AsAIFunction()]);
 ```
 
 Invoke the main agent as normal. It can now call the weather agent as a tool, and should respond in French.
@@ -103,7 +103,7 @@ Create a `ChatAgent` that uses the function tool.
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
-weather_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+weather_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     name="WeatherAgent",
     description="An agent that answers questions about the weather.",
     instructions="You answer questions about the weather.",
@@ -114,7 +114,7 @@ weather_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_ag
 Now, create a main agent and provide the `weather_agent` as a function tool by calling `.as_tool()` to convert `weather_agent` to a function tool.
 
 ```python
-main_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+main_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     instructions="You are a helpful assistant who responds in French.",
     tools=weather_agent.as_tool()
 )
@@ -138,7 +138,7 @@ weather_tool = weather_agent.as_tool(
     arg_description="The weather query or location"
 )
 
-main_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+main_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     instructions="You are a helpful assistant who responds in French.",
     tools=weather_tool
 )

@@ -142,7 +142,7 @@ from agent_framework.azure import AzureChatClient
 # 1) Create three domain agents using AzureChatClient
 chat_client = AzureChatClient(credential=AzureCliCredential())
 
-researcher = chat_client.create_agent(
+researcher = chat_client.as_agent(
     instructions=(
         "You're an expert market and product researcher. Given a prompt, provide concise, factual insights,"
         " opportunities, and risks."
@@ -150,7 +150,7 @@ researcher = chat_client.create_agent(
     name="researcher",
 )
 
-marketer = chat_client.create_agent(
+marketer = chat_client.as_agent(
     instructions=(
         "You're a creative marketing strategist. Craft compelling value propositions and target messaging"
         " aligned to the prompt."
@@ -158,7 +158,7 @@ marketer = chat_client.create_agent(
     name="marketer",
 )
 
-legal = chat_client.create_agent(
+legal = chat_client.as_agent(
     instructions=(
         "You're a cautious legal/compliance reviewer. Highlight constraints, disclaimers, and policy concerns"
         " based on the prompt."
@@ -273,7 +273,7 @@ class ResearcherExec(Executor):
     agent: ChatAgent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "researcher"):
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             instructions=(
                 "You're an expert market and product researcher. Given a prompt, provide concise, factual insights,"
                 " opportunities, and risks."
@@ -292,7 +292,7 @@ class MarketerExec(Executor):
     agent: ChatAgent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "marketer"):
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             instructions=(
                 "You're a creative marketing strategist. Craft compelling value propositions and target messaging"
                 " aligned to the prompt."

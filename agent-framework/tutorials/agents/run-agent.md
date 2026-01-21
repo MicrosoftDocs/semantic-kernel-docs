@@ -61,7 +61,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
-        .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+        .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 ## Running the agent
@@ -199,7 +199,7 @@ import asyncio
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     instructions="You are good at telling jokes.",
     name="Joker"
 )
