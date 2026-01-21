@@ -14,7 +14,9 @@ ms.service: agent-framework
 
 Concurrent orchestration enables multiple agents to work on the same task in parallel. Each agent processes the input independently, and their results are collected and aggregated. This approach is well-suited for scenarios where diverse perspectives or solutions are valuable, such as brainstorming, ensemble reasoning, or voting systems.
 
-![Concurrent Orchestration](../resources/images/orchestration-concurrent.png)
+<p align="center">
+    <img src="../resources/images/orchestration-concurrent.png" alt="Concurrent Orchestration"/>
+</p>
 
 ## What You'll Learn
 
@@ -87,7 +89,7 @@ await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 List<ChatMessage> result = new();
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is AgentRunUpdateEvent e)
+    if (evt is AgentResponseUpdateEvent e)
     {
         Console.WriteLine($"{e.ExecutorId}: {e.Data}");
     }
@@ -125,7 +127,7 @@ Assistant: English detected. Hello, world!
 - **Parallel Execution**: All agents process the input simultaneously and independently
 - **AgentWorkflowBuilder.BuildConcurrent()**: Creates a concurrent workflow from a collection of agents
 - **Automatic Aggregation**: Results from all agents are automatically collected into the final result
-- **Event Streaming**: Real-time monitoring of agent progress through `AgentRunUpdateEvent`
+- **Event Streaming**: Real-time monitoring of agent progress through `AgentResponseUpdateEvent`
 - **Diverse Perspectives**: Each agent brings its unique expertise to the same problem
 
 ::: zone-end
@@ -140,7 +142,7 @@ from agent_framework.azure import AzureChatClient
 # 1) Create three domain agents using AzureChatClient
 chat_client = AzureChatClient(credential=AzureCliCredential())
 
-researcher = chat_client.create_agent(
+researcher = chat_client.as_agent(
     instructions=(
         "You're an expert market and product researcher. Given a prompt, provide concise, factual insights,"
         " opportunities, and risks."
@@ -148,7 +150,7 @@ researcher = chat_client.create_agent(
     name="researcher",
 )
 
-marketer = chat_client.create_agent(
+marketer = chat_client.as_agent(
     instructions=(
         "You're a creative marketing strategist. Craft compelling value propositions and target messaging"
         " aligned to the prompt."
@@ -156,7 +158,7 @@ marketer = chat_client.create_agent(
     name="marketer",
 )
 
-legal = chat_client.create_agent(
+legal = chat_client.as_agent(
     instructions=(
         "You're a cautious legal/compliance reviewer. Highlight constraints, disclaimers, and policy concerns"
         " based on the prompt."
@@ -271,7 +273,7 @@ class ResearcherExec(Executor):
     agent: ChatAgent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "researcher"):
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             instructions=(
                 "You're an expert market and product researcher. Given a prompt, provide concise, factual insights,"
                 " opportunities, and risks."
@@ -290,7 +292,7 @@ class MarketerExec(Executor):
     agent: ChatAgent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "marketer"):
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             instructions=(
                 "You're a creative marketing strategist. Craft compelling value propositions and target messaging"
                 " aligned to the prompt."

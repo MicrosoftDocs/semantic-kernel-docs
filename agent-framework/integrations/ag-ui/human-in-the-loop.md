@@ -126,7 +126,7 @@ var agent = baseAgent
             cancellationToken))
     .Build();
 
-static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMiddleware(
+static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
@@ -250,8 +250,8 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMidd
     }
 
     // Local function: Convert FunctionApprovalRequestContent to client tool calls
-    static async IAsyncEnumerable<AgentRunResponseUpdate> ConvertFunctionApprovalsToToolCalls(
-        AgentRunResponseUpdate update,
+    static async IAsyncEnumerable<AgentResponseUpdate> ConvertFunctionApprovalsToToolCalls(
+        AgentResponseUpdate update,
         JsonSerializerOptions jsonSerializerOptions)
     {
         // Check if this update contains a FunctionApprovalRequestContent
@@ -292,7 +292,7 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsMidd
         var approvalJson = JsonSerializer.Serialize(approvalData, jsonSerializerOptions.GetTypeInfo(typeof(ApprovalRequest)));
 
         // Yield a tool call update that represents the approval request
-        yield return new AgentRunResponseUpdate(ChatRole.Assistant, [
+        yield return new AgentResponseUpdate(ChatRole.Assistant, [
             new FunctionCallContent(
                 callId: approvalId,
                 name: "request_approval",
@@ -337,7 +337,7 @@ var wrappedAgent = agent
             cancellationToken))
     .Build();
 
-static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsClientMiddleware(
+static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsClientMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
@@ -414,8 +414,8 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsClie
     }
 
     // Local function: Convert request_approval tool calls to FunctionApprovalRequestContent
-    static async IAsyncEnumerable<AgentRunResponseUpdate> ConvertToolCallsToApprovalRequests(
-        AgentRunResponseUpdate update,
+    static async IAsyncEnumerable<AgentResponseUpdate> ConvertToolCallsToApprovalRequests(
+        AgentResponseUpdate update,
         JsonSerializerOptions jsonSerializerOptions)
     {
         FunctionCallContent? approvalToolCall = null;
@@ -452,7 +452,7 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsClie
             arguments: functionArguments);
 
         // Yield the original tool call first (for message history)
-        yield return new AgentRunResponseUpdate(ChatRole.Assistant, [approvalToolCall]);
+        yield return new AgentResponseUpdate(ChatRole.Assistant, [approvalToolCall]);
 
         // Create approval request with CallId stored in AdditionalProperties
         var approvalRequestContent = new FunctionApprovalRequestContent(
@@ -463,7 +463,7 @@ static async IAsyncEnumerable<AgentRunResponseUpdate> HandleApprovalRequestsClie
         approvalRequestContent.AdditionalProperties ??= new Dictionary<string, object?>();
         approvalRequestContent.AdditionalProperties["request_approval_call_id"] = approvalToolCall.CallId;
 
-        yield return new AgentRunResponseUpdate(ChatRole.Assistant, [approvalRequestContent]);
+        yield return new AgentResponseUpdate(ChatRole.Assistant, [approvalRequestContent]);
     }
 }
 #pragma warning restore MEAI001
@@ -490,7 +490,7 @@ do
     approvalResponses.Clear();
     approvalToolCalls.Clear();
     
-    await foreach (AgentRunResponseUpdate update in wrappedAgent.RunStreamingAsync(
+    await foreach (AgentResponseUpdate update in wrappedAgent.RunStreamingAsync(
         messages, thread, cancellationToken: cancellationToken))
     {
         foreach (AIContent content in update.Contents)

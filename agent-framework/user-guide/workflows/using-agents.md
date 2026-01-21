@@ -56,9 +56,9 @@ StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessag
 await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    // The agents will run in streaming mode and an AgentRunUpdateEvent
+    // The agents will run in streaming mode and an AgentResponseUpdateEvent
     // will be emitted as new chunks are generated.
-    if (evt is AgentRunUpdateEvent agentRunUpdate)
+    if (evt is AgentResponseUpdateEvent agentRunUpdate)
     {
         Console.WriteLine($"{agentRunUpdate.ExecutorId}: {agentRunUpdate.Data}");
     }
@@ -80,13 +80,13 @@ from azure.identity import AzureCliCredential
 
 # Create the agents first
 chat_client = AzureChatClient(credential=AzureCliCredential())
-writer_agent: ChatAgent = chat_client.create_agent(
+writer_agent: ChatAgent = chat_client.as_agent(
     instructions=(
         "You are an excellent content writer. You create new content and edit contents based on the feedback."
     ),
     name="writer_agent",
 )
-reviewer_agent = chat_client.create_agent(
+reviewer_agent = chat_client.as_agent(
     instructions=(
         "You are an excellent content reviewer."
         "Provide actionable feedback to the writer about the provided content."
@@ -118,7 +118,7 @@ Whenever the executor receives a message of one of these types, it will trigger 
 
 Two possible event type related to the agents' responses can be emitted when running the workflow:
 
-- `AgentRunUpdateEvent` containing chunks of the agent's response as they are generated in streaming mode.
+- `AgentResponseUpdateEvent` containing chunks of the agent's response as they are generated in streaming mode.
 - `AgentRunEvent` containing the full response from the agent in non-streaming mode.
 
 > By default, agents are wrapped in executors that run in streaming mode. You can customize this behavior by creating a custom executor. See the next section for more details.
@@ -126,7 +126,7 @@ Two possible event type related to the agents' responses can be emitted when run
 ```python
 last_executor_id = None
 async for event in workflow.run_streaming("Write a short blog post about AI agents."):
-    if isinstance(event, AgentRunUpdateEvent):
+    if isinstance(event, AgentResponseUpdateEvent):
         if event.executor_id != last_executor_id:
             if last_executor_id is not None:
                 print()
@@ -201,7 +201,7 @@ class Writer(Executor):
 
     def __init__(self, chat_client: AzureChatClient, id: str = "writer"):
         # Create a domain specific agent using your configured AzureChatClient.
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             instructions=(
                 "You are an excellent content writer. You create new content and edit contents based on the feedback."
             ),

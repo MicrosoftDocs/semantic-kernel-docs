@@ -122,7 +122,7 @@ Once you have created the OpenAIClient, you can get a sub client for the specifi
 ```csharp
 AIAgent agent = client
     .GetChatClient(model)
-    .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+    .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 ### Using the Azure OpenAI SDK
@@ -136,7 +136,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri(serviceUrl),
     new AzureCliCredential())
      .GetChatClient(deploymentName)
-     .CreateAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+     .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
 ### Using the Azure AI Persistent Agents SDK
@@ -192,7 +192,7 @@ from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import DefaultAzureCredential
 
 async with DefaultAzureCredential() as credential:
-    agent = AzureAIAgentClient(async_credential=credential).create_agent(
+    agent = AzureAIAgentClient(async_credential=credential).as_agent(
         instructions="You are a helpful assistant"
     )
 ```
@@ -227,7 +227,7 @@ def get_weather(location: Annotated[str, Field(description="The location to get 
 
 async with (
     DefaultAzureCredential() as credential,
-    AzureAIAgentClient(async_credential=credential).create_agent(
+    AzureAIAgentClient(async_credential=credential).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather
     ) as agent
@@ -237,9 +237,9 @@ async with (
 
 For complete examples with function tools, see:
 
-- [Azure AI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_function_tools.py)
-- [Azure OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_openai_with_function_tools.py)
-- [OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_with_function_tools.py)
+- [Azure AI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai_agent/azure_ai_with_function_tools.py)
+- [Azure OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_chat_client_with_function_tools.py)
+- [OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_with_function_tools.py)
 
 ### Streaming Responses
 
@@ -259,8 +259,8 @@ async for chunk in agent.run_stream("What's the weather like in Portland?"):
 For streaming examples, see:
 
 - [Azure AI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_basic.py)
-- [Azure OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_openai_basic.py)
-- [OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_basic.py)
+- [Azure OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_chat_client_basic.py)
+- [OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_basic.py)
 
 ### Code Interpreter Tools
 
@@ -285,8 +285,8 @@ async with (
 For code interpreter examples, see:
 
 - [Azure AI with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_code_interpreter.py)
-- [Azure OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_assistants_client/azure_assistants_with_code_interpreter.py)
-- [OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai_assistants_client/openai_assistants_with_code_interpreter.py)
+- [Azure OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_assistants_with_code_interpreter.py)
+- [OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_assistants_with_code_interpreter.py)
 
 ## Custom agents
 
@@ -294,7 +294,7 @@ It is also possible to create fully custom agents that are not just wrappers aro
 Agent Framework provides the `AgentProtocol` protocol and `BaseAgent` base class, which when implemented/subclassed allows for complete control over the agent's behavior and capabilities.
 
 ```python
-from agent_framework import BaseAgent, AgentRunResponse, AgentRunResponseUpdate, AgentThread, ChatMessage
+from agent_framework import BaseAgent, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
 from collections.abc import AsyncIterable
 
 class CustomAgent(BaseAgent):
@@ -304,7 +304,7 @@ class CustomAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AgentRunResponse:
+    ) -> AgentResponse:
         # Custom agent implementation
         pass
 
@@ -314,7 +314,7 @@ class CustomAgent(BaseAgent):
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
-    ) -> AsyncIterable[AgentRunResponseUpdate]:
+    ) -> AsyncIterable[AgentResponseUpdate]:
         # Custom streaming implementation
         pass
 ```

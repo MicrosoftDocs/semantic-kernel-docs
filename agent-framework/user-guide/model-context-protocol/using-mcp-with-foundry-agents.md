@@ -125,7 +125,7 @@ var runOptions = new ChatClientAgentRunOptions()
 The agent is invoked with a question and executes using the configured MCP tools:
 
 ```csharp
-AgentThread thread = agent.GetNewThread();
+AgentThread thread = await agent.GetNewThreadAsync();
 var response = await agent.RunAsync(
     "Please summarize the Azure AI Agent documentation related to MCP Tool calling?", 
     thread, 
@@ -182,7 +182,7 @@ async def basic_foundry_mcp_example():
         await chat_client.setup_azure_ai_observability()
         
         # Create agent with hosted MCP tool
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             name="MicrosoftLearnAgent", 
             instructions="You answer questions by searching Microsoft Learn content only.",
             tools=HostedMCPTool(
@@ -215,7 +215,7 @@ async def multi_tool_mcp_example():
         await chat_client.setup_azure_ai_observability()
         
         # Create agent with multiple MCP tools
-        agent = chat_client.create_agent(
+        agent = chat_client.as_agent(
             name="MultiToolAgent",
             instructions="You can search documentation and access GitHub repositories.",
             tools=[

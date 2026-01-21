@@ -42,10 +42,10 @@ Pick the ChatCompletion service to create a ChatCompletion based agent.
 var chatCompletionClient = client.GetChatClient("gpt-4o-mini");
 ```
 
-Finally, create the agent using the `CreateAIAgent` extension method on the `ChatCompletionClient`.
+Finally, create the agent using the `AsAIAgent` extension method on the `ChatCompletionClient`.
 
 ```csharp
-AIAgent agent = chatCompletionClient.CreateAIAgent(
+AIAgent agent = chatCompletionClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 
@@ -67,7 +67,7 @@ For more information on how to run and interact with agents, see the [Agent gett
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework-core --pre
 ```
 
 ## Configuration
@@ -108,7 +108,7 @@ The simplest way to create a chat completion agent:
 ```python
 async def basic_example():
     # Create an agent using OpenAI ChatCompletion
-    agent = OpenAIChatClient().create_agent(
+    agent = OpenAIChatClient().as_agent(
         name="HelpfulAssistant",
         instructions="You are a helpful assistant.",
     )
@@ -126,7 +126,7 @@ async def explicit_config_example():
     agent = OpenAIChatClient(
         ai_model_id="gpt-4o-mini",
         api_key="your-api-key-here",
-    ).create_agent(
+    ).as_agent(
         instructions="You are a helpful assistant.",
     )
 
@@ -170,7 +170,7 @@ Enable real-time web search capabilities:
 from agent_framework import HostedWebSearchTool
 
 async def web_search_example():
-    agent = OpenAIChatClient(model_id="gpt-4o-search-preview").create_agent(
+    agent = OpenAIChatClient(model_id="gpt-4o-search-preview").as_agent(
         name="SearchBot",
         instructions="You are a helpful assistant that can search the web for current information.",
         tools=HostedWebSearchTool(),
@@ -188,7 +188,7 @@ Connect to local MCP servers for extended capabilities:
 from agent_framework import MCPStreamableHTTPTool
 
 async def local_mcp_example():
-    agent = OpenAIChatClient().create_agent(
+    agent = OpenAIChatClient().as_agent(
         name="DocsAgent",
         instructions="You are a helpful assistant that can help with Microsoft documentation.",
         tools=MCPStreamableHTTPTool(
@@ -207,7 +207,7 @@ Maintain conversation context across multiple interactions:
 
 ```python
 async def thread_example():
-    agent = OpenAIChatClient().create_agent(
+    agent = OpenAIChatClient().as_agent(
         name="Agent",
         instructions="You are a helpful assistant.",
     )
@@ -234,7 +234,7 @@ Get responses as they are generated for better user experience:
 
 ```python
 async def streaming_example():
-    agent = OpenAIChatClient().create_agent(
+    agent = OpenAIChatClient().as_agent(
         name="StoryTeller",
         instructions="You are a creative storyteller.",
     )

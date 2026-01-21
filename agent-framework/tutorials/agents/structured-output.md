@@ -82,7 +82,7 @@ AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
-        .CreateAIAgent(new ChatClientAgentOptions()
+        .AsAIAgent(new ChatClientAgentOptions()
         {
             Name = "HelpfulAssistant",
             Instructions = "You are a helpful assistant.",
@@ -108,7 +108,7 @@ You must assemble all the updates into a single response before deserializing it
 
 ```csharp
 var updates = agent.RunStreamingAsync("Please provide information about John Smith, who is a 35-year-old software engineer.");
-personInfo = (await updates.ToAgentRunResponseAsync()).Deserialize<PersonInfo>(JsonSerializerOptions.Web);
+personInfo = (await updates.ToAgentResponseAsync()).Deserialize<PersonInfo>(JsonSerializerOptions.Web);
 ```
 
 ::: zone-end
@@ -153,7 +153,7 @@ from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 # Create the agent using Azure OpenAI Chat Client
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).create_agent(
+agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
     name="HelpfulAssistant",
     instructions="You are a helpful assistant that extracts person information from text."
 )
@@ -181,11 +181,11 @@ else:
 When streaming, the agent response is streamed as a series of updates. To get the structured output, you must collect all the updates and then access the final response value:
 
 ```python
-from agent_framework import AgentRunResponse
+from agent_framework import AgentResponse
 
-# Get structured response from streaming agent using AgentRunResponse.from_agent_response_generator
-# This method collects all streaming updates and combines them into a single AgentRunResponse
-final_response = await AgentRunResponse.from_agent_response_generator(
+# Get structured response from streaming agent using AgentResponse.from_agent_response_generator
+# This method collects all streaming updates and combines them into a single AgentResponse
+final_response = await AgentResponse.from_agent_response_generator(
     agent.run_stream(query, response_format=PersonInfo),
     output_format_type=PersonInfo,
 )

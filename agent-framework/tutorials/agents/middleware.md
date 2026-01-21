@@ -40,7 +40,7 @@ AIAgent baseAgent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
         .GetChatClient("gpt-4o-mini")
-        .CreateAIAgent(
+        .AsAIAgent(
             instructions: "You are an AI assistant that helps people find information.",
             tools: [AIFunctionFactory.Create(GetDateTime, name: nameof(GetDateTime))]);
 ```
@@ -62,7 +62,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-async Task<AgentRunResponse> CustomAgentRunMiddleware(
+async Task<AgentResponse> CustomAgentRunMiddleware(
     IEnumerable<ChatMessage> messages,
     AgentThread? thread,
     AgentRunOptions? options,
@@ -196,7 +196,7 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
 ```csharp
 var agent = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
     .GetChatClient("gpt-4o-mini")
-    .CreateAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
+    .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
         .AsBuilder()
             .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
         .Build());
@@ -217,7 +217,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     credential = AzureCliCredential()
 
-    async with AzureAIAgentClient(credential=credential).create_agent(
+    async with AzureAIAgentClient(credential=credential).as_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
     ) as agent:
@@ -256,7 +256,7 @@ Add the middleware when creating your agent:
 async def main():
     credential = AzureCliCredential()
 
-    async with AzureAIAgentClient(credential=credential).create_agent(
+    async with AzureAIAgentClient(credential=credential).as_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
         middleware=logging_agent_middleware,  # Add your middleware here
@@ -289,7 +289,7 @@ async def logging_function_middleware(
     print(f"Function result: {context.result}")
 
 # Add both the function and middleware to your agent
-async with AzureAIAgentClient(credential=credential).create_agent(
+async with AzureAIAgentClient(credential=credential).as_agent(
     name="TimeAgent",
     instructions="You can tell the current time.",
     tools=[get_time],

@@ -81,7 +81,7 @@ Each conversation with a workflow agent requires a thread to manage state:
 
 ```csharp
 // Create a new thread for the conversation
-AgentThread thread = workflowAgent.GetNewThread();
+AgentThread thread = await workflowAgent.GetNewThreadAsync();
 ```
 
 ### Non-Streaming Execution
@@ -94,7 +94,7 @@ var messages = new List<ChatMessage>
     new(ChatRole.User, "Write an article about renewable energy trends in 2025")
 };
 
-AgentRunResponse response = await workflowAgent.RunAsync(messages, thread);
+AgentResponse response = await workflowAgent.RunAsync(messages, thread);
 
 foreach (ChatMessage message in response.Messages)
 {
@@ -112,7 +112,7 @@ var messages = new List<ChatMessage>
     new(ChatRole.User, "Write an article about renewable energy trends in 2025")
 };
 
-await foreach (AgentRunResponseUpdate update in workflowAgent.RunStreamingAsync(messages, thread))
+await foreach (AgentResponseUpdate update in workflowAgent.RunStreamingAsync(messages, thread))
 {
     // Process streaming updates from each agent in the workflow
     if (!string.IsNullOrEmpty(update.Text))
@@ -127,7 +127,7 @@ await foreach (AgentRunResponseUpdate update in workflowAgent.RunStreamingAsync(
 When a workflow contains executors that request external input (using `RequestInfoExecutor`), these requests are surfaced as function calls in the agent response:
 
 ```csharp
-await foreach (AgentRunResponseUpdate update in workflowAgent.RunStreamingAsync(messages, thread))
+await foreach (AgentResponseUpdate update in workflowAgent.RunStreamingAsync(messages, thread))
 {
     // Check for function call requests
     foreach (AIContent content in update.Contents)
@@ -155,7 +155,7 @@ JsonElement serializedThread = thread.Serialize();
 // Store serializedThread to your persistence layer...
 
 // Later, resume the thread
-AgentThread resumedThread = workflowAgent.DeserializeThread(serializedThread);
+AgentThread resumedThread = await workflowAgent.DeserializeThreadAsync(serializedThread);
 
 // Continue the conversation
 await foreach (var update in workflowAgent.RunStreamingAsync(newMessages, resumedThread))
@@ -400,14 +400,14 @@ if __name__ == "__main__":
 
 When a workflow runs as an agent, workflow events are converted to agent responses. The type of response depends on which method you use:
 
-- `run()`: Returns an `AgentRunResponse` containing the complete result after the workflow finishes
-- `run_stream()`: Yields `AgentRunResponseUpdate` objects as the workflow executes, providing real-time updates
+- `run()`: Returns an `AgentResponse` containing the complete result after the workflow finishes
+- `run_stream()`: Yields `AgentResponseUpdate` objects as the workflow executes, providing real-time updates
 
 During execution, internal workflow events are mapped to agent responses as follows:
 
 | Workflow Event | Agent Response |
 |----------------|----------------|
-| `AgentRunUpdateEvent` | Passed through as `AgentRunResponseUpdate` (streaming) or aggregated into `AgentRunResponse` (non-streaming) |
+| `AgentResponseUpdateEvent` | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
 | `RequestInfoEvent` | Converted to `FunctionCallContent` and `FunctionApprovalRequestContent` |
 | Other events | Included in `raw_representation` for observability |
 

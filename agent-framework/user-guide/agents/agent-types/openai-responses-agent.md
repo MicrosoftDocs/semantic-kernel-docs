@@ -44,10 +44,10 @@ var responseClient = client.GetOpenAIResponseClient("gpt-4o-mini");
 #pragma warning restore OPENAI001
 ```
 
-Finally, create the agent using the `CreateAIAgent` extension method on the `ResponseClient`.
+Finally, create the agent using the `AsAIAgent` extension method on the `ResponseClient`.
 
 ```csharp
-AIAgent agent = responseClient.CreateAIAgent(
+AIAgent agent = responseClient.AsAIAgent(
     instructions: "You are good at telling jokes.",
     name: "Joker");
 
@@ -69,7 +69,7 @@ For more information on how to run and interact with agents, see the [Agent gett
 Install the Microsoft Agent Framework package.
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework-core --pre
 ```
 
 ## Configuration
@@ -110,7 +110,7 @@ The simplest way to create a responses agent:
 ```python
 async def basic_example():
     # Create an agent using OpenAI Responses
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="WeatherBot",
         instructions="You are a helpful weather assistant.",
     )
@@ -128,7 +128,7 @@ async def explicit_config_example():
     agent = OpenAIResponsesClient(
         ai_model_id="gpt-4o",
         api_key="your-api-key-here",
-    ).create_agent(
+    ).as_agent(
         instructions="You are a helpful assistant.",
     )
 
@@ -144,7 +144,7 @@ Get responses as they are generated for better user experience:
 
 ```python
 async def streaming_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a creative storyteller.",
     )
 
@@ -165,12 +165,12 @@ Use advanced reasoning capabilities with models like GPT-5:
 from agent_framework import HostedCodeInterpreterTool, TextContent, TextReasoningContent
 
 async def reasoning_example():
-    agent = OpenAIResponsesClient(ai_model_id="gpt-5").create_agent(
+    agent = OpenAIResponsesClient(ai_model_id="gpt-5").as_agent(
         name="MathTutor",
         instructions="You are a personal math tutor. When asked a math question, "
                     "write and run code to answer the question.",
         tools=HostedCodeInterpreterTool(),
-        reasoning={"effort": "high", "summary": "detailed"},
+        default_options={"reasoning": {"effort": "high", "summary": "detailed"}},
     )
 
     print("Agent: ", end="", flush=True)
@@ -191,7 +191,7 @@ Get responses in structured formats:
 
 ```python
 from pydantic import BaseModel
-from agent_framework import AgentRunResponse
+from agent_framework import AgentResponse
 
 class CityInfo(BaseModel):
     """A structured output for city information."""
@@ -199,13 +199,13 @@ class CityInfo(BaseModel):
     description: str
 
 async def structured_output_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="CityExpert",
         instructions="You describe cities in a structured format.",
     )
 
     # Non-streaming structured output
-    result = await agent.run("Tell me about Paris, France", response_format=CityInfo)
+    result = await agent.run("Tell me about Paris, France", options={"response_format": CityInfo})
 
     if result.value:
         city_data = result.value
@@ -214,7 +214,7 @@ async def structured_output_example():
 
     # Streaming structured output
     structured_result = await AgentRunResponse.from_agent_response_generator(
-        agent.run_stream("Tell me about Tokyo, Japan", response_format=CityInfo),
+        agent.run_stream("Tell me about Tokyo, Japan", options={"response_format": CityInfo}),
         output_format_type=CityInfo,
     )
 
@@ -240,7 +240,7 @@ def get_weather(
     return f"The weather in {location} is sunny with 25°C."
 
 async def tools_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather,
     )
@@ -257,7 +257,7 @@ Enable your agent to execute Python code:
 from agent_framework import HostedCodeInterpreterTool
 
 async def code_interpreter_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a helpful assistant that can write and execute Python code.",
         tools=HostedCodeInterpreterTool(),
     )
@@ -281,7 +281,7 @@ async def code_interpreter_with_files_example():
 
     # Create the OpenAI client for file operations
     openai_client = AsyncOpenAI()
-    
+
     # Create sample CSV data
     csv_data = """name,department,salary,years_experience
 Alice Johnson,Engineering,95000,5
@@ -291,7 +291,7 @@ David Brown,Marketing,68000,2
 Emma Davis,Sales,82000,4
 Frank Wilson,Engineering,88000,6
 """
-    
+
     # Create temporary CSV file
     with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as temp_file:
         temp_file.write(csv_data)
@@ -309,7 +309,7 @@ Frank Wilson,Engineering,88000,6
 
     # Create agent using OpenAI Responses client
     agent = ChatAgent(
-        chat_client=OpenAIResponsesClient(),
+        chat_client=OpenAIResponsesClient(async_client=openai_client),
         instructions="You are a helpful assistant that can analyze data files using Python code.",
         tools=HostedCodeInterpreterTool(inputs=[{"file_id": uploaded_file.id}]),
     )
@@ -335,7 +335,7 @@ Maintain conversation context across multiple interactions:
 
 ```python
 async def thread_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="Agent",
         instructions="You are a helpful assistant.",
     )
@@ -365,25 +365,25 @@ from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
 
 async def file_search_example():
     client = OpenAIResponsesClient()
-    
+
     # Create a file with sample content
     file = await client.client.files.create(
-        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), 
+        file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."),
         purpose="user_data"
     )
-    
+
     # Create a vector store for document storage
     vector_store = await client.client.vector_stores.create(
         name="knowledge_base",
         expires_after={"anchor": "last_active_at", "days": 1},
     )
-    
+
     # Add file to vector store and wait for processing
     result = await client.client.vector_stores.files.create_and_poll(
-        vector_store_id=vector_store.id, 
+        vector_store_id=vector_store.id,
         file_id=file.id
     )
-    
+
     # Check if processing was successful
     if result.last_error is not None:
         raise Exception(f"Vector store file processing failed with status: {result.last_error.message}")
@@ -401,7 +401,7 @@ async def file_search_example():
     # Test the file search
     message = "What is the weather today? Do a file search to find the answer."
     print(f"User: {message}")
-    
+
     response = await agent.run(message)
     print(f"Agent: {response}")
 
@@ -418,7 +418,7 @@ Enable real-time web search capabilities:
 from agent_framework import HostedWebSearchTool
 
 async def web_search_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="SearchBot",
         instructions="You are a helpful assistant that can search the web for current information.",
         tools=HostedWebSearchTool(),
@@ -436,7 +436,7 @@ Analyze and understand images with multi-modal capabilities:
 from agent_framework import ChatMessage, TextContent, UriContent
 
 async def image_analysis_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="VisionAgent",
         instructions="You are a helpful agent that can analyze images.",
     )
@@ -462,37 +462,41 @@ async def image_analysis_example():
 Generate images using the Responses API:
 
 ```python
-from agent_framework import DataContent, UriContent
+from agent_framework import DataContent, HostedImageGenerationTool, ImageGenerationToolResultContent, UriContent
 
 async def image_generation_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         instructions="You are a helpful AI that can generate images.",
-        tools=[{
-            "type": "image_generation",
-            "size": "1024x1024",
-            "quality": "low",
-        }],
+        tools=[
+            HostedImageGenerationTool(
+                options={
+                    "size": "1024x1024",
+                    "output_format": "webp",
+                }
+            )
+        ],
     )
 
     result = await agent.run("Generate an image of a sunset over the ocean.")
 
     # Check for generated images in the response
-    for content in result.contents:
-        if isinstance(content, (DataContent, UriContent)):
-            print(f"Image generated: {content.uri}")
+    for message in result.messages:
+        for content in message.contents:
+            if isinstance(content, ImageGenerationToolResultContent) and content.outputs:
+                for output in content.outputs:
+                    if isinstance(output, (DataContent, UriContent)) and output.uri:
+                        print(f"Image generated: {output.uri}")
 ```
 
-### Model Context Protocol (MCP) Tools
+### MCP Tools
 
-#### Local MCP Tools
-
-Connect to local MCP servers for extended capabilities:
+Connect to MCP servers from within the agent for extended capabilities:
 
 ```python
 from agent_framework import MCPStreamableHTTPTool
 
 async def local_mcp_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="DocsAgent",
         instructions="You are a helpful assistant that can help with Microsoft documentation.",
         tools=MCPStreamableHTTPTool(
@@ -507,13 +511,13 @@ async def local_mcp_example():
 
 #### Hosted MCP Tools
 
-Use hosted MCP tools for extended capabilities:
+Use hosted MCP tools to leverage server-side capabilities:
 
 ```python
 from agent_framework import HostedMCPTool
 
 async def hosted_mcp_example():
-    agent = OpenAIResponsesClient().create_agent(
+    agent = OpenAIResponsesClient().as_agent(
         name="DocsBot",
         instructions="You are a helpful assistant with access to various tools.",
         tools=HostedMCPTool(

@@ -114,7 +114,7 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 | `AIAgent` | Agent Endpoint | Each agent becomes an HTTP endpoint |
 | `agent.Run()` | HTTP POST Request | Client sends messages via HTTP |
 | `agent.RunStreamingAsync()` | Server-Sent Events | Streaming responses via SSE |
-| `AgentRunResponseUpdate` | AG-UI Events | Converted to protocol events automatically |
+| `AgentResponseUpdate` | AG-UI Events | Converted to protocol events automatically |
 | `AIFunctionFactory.Create()` | Backend Tools | Executed on server, results streamed |
 | `ApprovalRequiredAIFunction` | Human-in-the-Loop | Middleware converts to approval protocol |
 | `AgentThread` | Thread Management | `ConversationId` maintains context |
@@ -251,7 +251,7 @@ To get started with AG-UI integration:
 
 - [Agent Framework Documentation](../../overview/agent-framework-overview.md)
 - [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
-- [AG-UI Dojo App](https://github.com/ag-oss/ag-ui/tree/main/apps/dojo) - Example application demonstrating Agent Framework integration
+- [AG-UI Dojo App](https://dojo.ag-ui.com/) - Example application demonstrating Agent Framework integration
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
 
 ::: zone-end

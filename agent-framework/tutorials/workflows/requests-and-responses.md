@@ -411,7 +411,7 @@ Create the main workflow that connects all components:
 async def main() -> None:
     # Create the chat agent with structured output enforcement
     chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
-    agent = chat_client.create_agent(
+    agent = chat_client.as_agent(
         instructions=(
             "You guess a number between 1 and 10. "
             "If the user says 'higher' or 'lower', adjust your next guess. "
