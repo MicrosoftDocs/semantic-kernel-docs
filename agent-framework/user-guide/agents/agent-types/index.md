@@ -44,11 +44,11 @@ var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful ass
 
 To make creating these agents even easier, Agent Framework provides helpers for many popular services. For more information, see the documentation for each service.
 
-| Underlying inference service | Description | Service chat history storage support | Custom chat history storage support |
-|------------------------------|-------------|--------------------------------------|-------------------------------------|
+| Underlying inference service | Description | Service chat history storage supported | InMemory/Custom chat history storage supported |
+|------------------------------|-------------|----------------------------------------|------------------------------------------------|
 |[Azure AI Foundry Agent](./azure-ai-foundry-agent.md)|An agent that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
 |[Azure AI Foundry Models ChatCompletion](./azure-ai-foundry-models-chat-completion-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via ChatCompletion.|No|Yes|
-|[Azure AI Foundry Models Responses](./azure-ai-foundry-models-responses-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|No|Yes|
+|[Azure AI Foundry Models Responses](./azure-ai-foundry-models-responses-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|Yes|Yes|
 |[Azure OpenAI ChatCompletion](./azure-openai-chat-completion-agent.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
 |[OpenAI ChatCompletion](./openai-chat-completion-agent.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
