@@ -1,6 +1,6 @@
 ---
 title: Storing Chat History in 3rd Party Storage
-description: How to store agent chat history in external storage using a custom ChatMessageStore.
+description: How to store agent chat history in external storage
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -13,7 +13,7 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial shows how to store agent chat history in external storage by implementing a custom `ChatMessageStore` and using it with a `ChatClientAgent`.
+This tutorial shows how to store agent chat history in external storage by implementing a custom `ChatHistoryProvider` and using it with a `ChatClientAgent`.
 
 By default, when using `ChatClientAgent`, chat history is stored either in memory in the `AgentThread` object or the underlying inference service, if the service supports it.
 
@@ -39,9 +39,9 @@ In addition, you'll use the in-memory vector store to store chat messages.
 dotnet add package Microsoft.SemanticKernel.Connectors.InMemory --prerelease
 ```
 
-## Create a custom ChatMessage Store
+## Create a custom ChatHistoryProvider
 
-To create a custom `ChatMessageStore`, you need to implement the abstract `ChatMessageStore` class and provide implementations for the required methods.
+To create a custom `ChatHistoryProvider`, you need to implement the abstract `ChatHistoryProvider` class and provide implementations for the required methods.
 
 ### Message storage and retrieval methods
 
@@ -56,13 +56,13 @@ Any chat history reduction logic, such as summarization or trimming, should be d
 
 ### Serialization
 
-`ChatMessageStore` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
+`ChatHistoryProvider` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
 
-While the actual messages making up the chat history are stored externally, the `ChatMessageStore` instance might need to store keys or other state to identify the chat history in the external store.
+While the actual messages making up the chat history are stored externally, the `ChatHistoryProvider` instance might need to store keys or other state to identify the chat history in the external store.
 
-To allow persisting threads, you need to implement the `Serialize` method of the `ChatMessageStore` class. This method should return a `JsonElement` containing the state needed to restore the store later. When deserializing, the agent framework will pass this serialized state to the ChatMessageStoreFactory, allowing you to use it to recreate the store.
+To allow persisting threads, you need to implement the `Serialize` method of the `ChatHistoryProvider` class. This method should return a `JsonElement` containing the state needed to restore the provider later. When deserializing, the agent framework will pass this serialized state to the ChatHistoryProviderFactory, allowing you to use it to recreate the provider.
 
-### Sample ChatMessageStore implementation
+### Sample ChatHistoryProvider implementation
 
 The following sample implementation stores chat messages in a vector store.
 
@@ -87,11 +87,11 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.InMemory;
 
-internal sealed class VectorChatMessageStore : ChatMessageStore
+internal sealed class VectorChatHistoryProvider : ChatHistoryProvider
 {
     private readonly VectorStore _vectorStore;
 
-    public VectorChatMessageStore(
+    public VectorChatHistoryProvider(
         VectorStore vectorStore,
         JsonElement serializedStoreState,
         JsonSerializerOptions? jsonSerializerOptions = null)
@@ -185,13 +185,13 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
 }
 ```
 
-## Using the custom ChatMessageStore with a ChatClientAgent
+## Using the custom ChatHistoryProvider with a ChatClientAgent
 
-To use the custom `ChatMessageStore`, you need to provide a `ChatMessageStoreFactory` when creating the agent. This factory allows the agent to create a new instance of the desired `ChatMessageStore` for each thread.
+To use the custom `ChatHistoryProvider`, you need to provide a `ChatHistoryProviderFactory` when creating the agent. This factory allows the agent to create a new instance of the desired `ChatHistoryProvider` for each thread.
 
-When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `ChatMessageStoreFactory` in addition to all other agent options.
+When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `ChatHistoryProviderFactory` in addition to all other agent options.
 
-The factory is an async function that receives a context object and a cancellation token, and returns a `ValueTask<ChatMessageStore>`.
+The factory is an async function that receives a context object and a cancellation token, and returns a `ValueTask<ChatHistoryProvider>`.
 
 ```csharp
 using Azure.AI.OpenAI;
@@ -210,11 +210,11 @@ AIAgent agent = new AzureOpenAIClient(
      {
          Name = "Joker",
          ChatOptions = new() { Instructions = "You are good at telling jokes." },
-         ChatMessageStoreFactory = (ctx, ct) => new ValueTask<ChatMessageStore>(
-             // Create a new chat message store for this agent that stores the messages in a vector store.
-             // Each thread must get its own copy of the VectorChatMessageStore, since the store
+         ChatHistoryProviderFactory = (ctx, ct) => new ValueTask<ChatHistoryProvider>(
+             // Create a new chat history provider for this agent that stores the messages in a vector store.
+             // Each thread must get its own copy of the VectorChatHistoryProvider, since the provider
              // also contains the id that the thread is stored under.
-             new VectorChatMessageStore(
+             new VectorChatHistoryProvider(
                 vectorStore,
                 ctx.SerializedState,
                 ctx.JsonSerializerOptions))
