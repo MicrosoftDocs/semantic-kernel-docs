@@ -116,10 +116,10 @@ var jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.
 
 var agent = baseAgent
     .AsBuilder()
-    .Use(runFunc: null, runStreamingFunc: (messages, thread, options, innerAgent, cancellationToken) =>
+    .Use(runFunc: null, runStreamingFunc: (messages, session, options, innerAgent, cancellationToken) =>
         HandleApprovalRequestsMiddleware(
             messages,
-            thread,
+            session,
             options,
             innerAgent,
             jsonOptions.SerializerOptions,
@@ -128,7 +128,7 @@ var agent = baseAgent
 
 static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     JsonSerializerOptions jsonSerializerOptions,
@@ -139,7 +139,7 @@ static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsMiddlew
 
     // Invoke inner agent
     await foreach (var update in innerAgent.RunStreamingAsync(
-        modifiedMessages, thread, options, cancellationToken))
+        modifiedMessages, session, options, cancellationToken))
     {
         // Process updates: Convert approval requests to client tool calls
         await foreach (var processedUpdate in ConvertFunctionApprovalsToToolCalls(update, jsonSerializerOptions))
@@ -327,10 +327,10 @@ var jsonSerializerOptions = JsonSerializerOptions.Default;
 // Wrap the agent with approval middleware
 var wrappedAgent = agent
     .AsBuilder()
-    .Use(runFunc: null, runStreamingFunc: (messages, thread, options, innerAgent, cancellationToken) =>
+    .Use(runFunc: null, runStreamingFunc: (messages, session, options, innerAgent, cancellationToken) =>
         HandleApprovalRequestsClientMiddleware(
             messages,
-            thread,
+            session,
             options,
             innerAgent,
             jsonSerializerOptions,
@@ -339,7 +339,7 @@ var wrappedAgent = agent
 
 static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsClientMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     JsonSerializerOptions jsonSerializerOptions,
@@ -349,7 +349,7 @@ static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsClientM
     var processedMessages = ConvertApprovalResponsesToToolResults(messages, jsonSerializerOptions);
 
     // Invoke inner agent
-    await foreach (var update in innerAgent.RunStreamingAsync(processedMessages, thread, options, cancellationToken))
+    await foreach (var update in innerAgent.RunStreamingAsync(processedMessages, session, options, cancellationToken))
     {
         // Process updates: Convert tool calls to approval requests
         await foreach (var processedUpdate in ConvertToolCallsToApprovalRequests(update, jsonSerializerOptions))
@@ -491,7 +491,7 @@ do
     approvalToolCalls.Clear();
     
     await foreach (AgentResponseUpdate update in wrappedAgent.RunStreamingAsync(
-        messages, thread, cancellationToken: cancellationToken))
+        messages, session, cancellationToken: cancellationToken))
     {
         foreach (AIContent content in update.Contents)
         {

@@ -74,13 +74,13 @@ Here is an example of agent run middleware, that can inspect and/or modify the i
 ```csharp
 async Task<AgentResponse> CustomAgentRunMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     CancellationToken cancellationToken)
 {
     Console.WriteLine(messages.Count());
-    var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
+    var response = await innerAgent.RunAsync(messages, session, options, cancellationToken).ConfigureAwait(false);
     Console.WriteLine(response.Messages.Count);
     return response;
 }
@@ -93,14 +93,14 @@ Here is an example of agent run streaming middleware, that can inspect and/or mo
 ```csharp
     async IAsyncEnumerable<AgentResponseUpdate> CustomAgentRunStreamingMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     [EnumeratorCancellation] CancellationToken cancellationToken)
 {
     Console.WriteLine(messages.Count());
     List<AgentResponseUpdate> updates = [];
-    await foreach (var update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
+    await foreach (var update in innerAgent.RunStreamingAsync(messages, session, options, cancellationToken))
     {
         updates.Add(update);
         yield return update;
@@ -137,8 +137,8 @@ This will prevent the function calling loop from issuing a request to the infere
 If there were more than one function available for invocation during this iteration, it might also prevent any remaining functions from being executed.
 
 > [!WARNING]
-> Terminating the function call loop might result in your thread being left in an inconsistent state, for example, containing function call content with no function result content.
-> This might result in the thread being unusable for further runs.
+> Terminating the function call loop might result in your chat history being left in an inconsistent state, for example, containing function call content with no function result content.
+> This might result in the chat history being unusable for further runs.
 
 ## IChatClient middleware
 

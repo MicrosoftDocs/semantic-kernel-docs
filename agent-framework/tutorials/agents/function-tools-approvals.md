@@ -66,8 +66,8 @@ Since you now have a function that requires approval, the agent might respond wi
 You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
 
 ```csharp
-AgentThread thread = await agent.GetNewThreadAsync();
-AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread);
+AgentSession session = await agent.GetNewSessionAsync();
+AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", session);
 
 var functionApprovalRequests = response.Messages
     .SelectMany(x => x.Contents)
@@ -87,11 +87,11 @@ Console.WriteLine($"We require approval to execute '{requestContent.FunctionCall
 Once the user has provided their input, you can create a `FunctionApprovalResponseContent` instance using the `CreateResponse` method on the `FunctionApprovalRequestContent`.
 Pass `true` to approve the function call, or `false` to reject it.
 
-The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same thread object to get the result back from the agent.
+The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same session object to get the result back from the agent.
 
 ```csharp
 var approvalMessage = new ChatMessage(ChatRole.User, [requestContent.CreateResponse(true)]);
-Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+Console.WriteLine(await agent.RunAsync(approvalMessage, session));
 ```
 
 Whenever you are using function tools with human in the loop approvals, remember to check for `FunctionApprovalRequestContent` instances in the response, after each agent run, until all function calls have been approved or rejected.

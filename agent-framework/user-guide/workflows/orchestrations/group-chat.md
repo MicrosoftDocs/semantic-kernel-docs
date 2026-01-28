@@ -430,14 +430,14 @@ workflow = (
 
 As mentioned at the beginning of this guide, all agents in a group chat see the full conversation history.
 
-Agents in Agent Framework relies on agent threads ([`AgentThread`](../../agents/multi-turn-conversation.md)) to manage context. In a group chat orchestration, agents **do not** share the same thread instance, but the orchestrator ensures that each agent's thread is synchronized with the complete conversation history before each turn. To achieve this, after each agent's turn, the orchestrator broadcasts the response to all other agents, making sure all participants have the latest context for their next turn.
+Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/multi-turn-conversation.md)) to manage context. In a group chat orchestration, agents **do not** share the same session instance, but the orchestrator ensures that each agent's session is synchronized with the complete conversation history before each turn. To achieve this, after each agent's turn, the orchestrator broadcasts the response to all other agents, making sure all participants have the latest context for their next turn.
 
 <p align="center">
     <img src="../resources/images/orchestration-groupchat-synchronization.gif" alt="Group Chat Context Synchronization">
 </p>
 
 > [!TIP]
-> Agents do not share the same thread instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentThread` abstraction. Sharing the same thread instance could lead to inconsistencies in how each agent processes and maintains context.
+> Agents do not share the same session instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
 
 After broadcasting the response, the orchestrator then decide the next speaker and sends a request to the selected agent, which now has the full conversation history to generate its response.
 
