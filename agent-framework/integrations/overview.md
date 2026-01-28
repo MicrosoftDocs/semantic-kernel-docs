@@ -19,10 +19,11 @@ Microsoft Agent Framework has integrations with many different services, tools a
 | ------------------------------------------------------------------ | --------------- |
 | [AG UI](./ag-ui/index.md)                                          | Preview         |
 | [Agent Framework Dev UI](../user-guide/devui/index.md)             | Preview         |
+| [Purview](./use-purview-with-agent-framework-sdk.md) | Preview         |
 
 ## Chat History Providers
 
-Microsoft Agent Framework supports many differenta agent types with different chat history storage capabilities.
+Microsoft Agent Framework supports many different agent types with different chat history storage capabilities.
 In some cases agents store chat history in the AI service, while in others Agent Framework manages the storage.
 
 To allow chat history storage to be customized when managed by Agent Framework, custom Chat History Providers
@@ -65,6 +66,7 @@ Here is a list of existing providers that can be used.
 | ------------------------------------------------------------------ | --------------- |
 | [Mem0 Memory Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/mem0/agent_framework_mem0/_provider.py) | Preview         |
 | [Redis Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_provider.py)     | Preview         |
+| [Purview Context Provider](use-purview-with-agent-framework-sdk.md) | Preview         |
 
 ::: zone-end
 

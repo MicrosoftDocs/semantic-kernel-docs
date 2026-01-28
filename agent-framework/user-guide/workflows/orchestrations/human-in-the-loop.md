@@ -87,7 +87,7 @@ builder = (
 
 ## Function Approval with HITL
 
-When your agents use functions that require human approval (e.g., functions decorated with `@ai_function(approval_mode="always_require")`), the HITL mechanism seamlessly integrates function approval requests into the workflow.
+When your agents use functions that require human approval (e.g., functions decorated with `@tool(approval_mode="always_require")`), the HITL mechanism seamlessly integrates function approval requests into the workflow.
 
 > [!TIP]
 > See the [Function Approval](../../../tutorials/agents/function-tools-approvals.md) documentation for more details on function approval.

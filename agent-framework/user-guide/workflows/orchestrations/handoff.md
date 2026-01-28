@@ -159,17 +159,17 @@ math_tutor: I'd be happy to help with calculus integration! Integration is the r
 ## Define a few tools for demonstration
 
 ```python
-@ai_function
+@tool
 def process_refund(order_number: Annotated[str, "Order number to process refund for"]) -> str:
     """Simulated function to process a refund for a given order number."""
     return f"Refund processed successfully for order {order_number}."
 
-@ai_function
+@tool
 def check_order_status(order_number: Annotated[str, "Order number to check status for"]) -> str:
     """Simulated function to check the status of a given order number."""
     return f"Order {order_number} is currently being processed and will ship in 2 business days."
 
-@ai_function
+@tool
 def process_return(order_number: Annotated[str, "Order number to process return for"]) -> str:
     """Simulated function to process a return for a given order number."""
     return f"Return initiated successfully for order {order_number}. You will receive return instructions via email."
@@ -398,9 +398,9 @@ Handoff workflows can include agents with tools that require human approval befo
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def process_refund(order_number: Annotated[str, "Order number to process refund for"]) -> str:
     """Simulated function to process a refund for a given order number."""
     return f"Refund processed successfully for order {order_number}."
@@ -617,7 +617,7 @@ After broadcasting the response, the participant then checks whether it needs to
 - **add_handoff()**: Configures specific handoff relationships between agents
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
-- **Tool Approval**: Use `@ai_function(approval_mode="always_require")` for sensitive operations that need human approval
+- **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human approval
 - **FunctionApprovalRequestContent**: Emitted when an agent calls a tool requiring approval; use `create_response(approved=...)` to respond
 - **Checkpointing**: Use `with_checkpointing()` for durable workflows that can pause and resume across process restarts
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs

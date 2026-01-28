@@ -23,7 +23,7 @@ Microsoft Agent Framework supports creating agents that use the [GitHub Copilot 
 Add the required NuGet packages to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.Agents.AI.GithubCopilot --prerelease
+dotnet add package Microsoft.Agents.AI.GitHub.Copilot --prerelease
 ```
 
 ## Create a GitHub Copilot Agent
@@ -94,7 +94,7 @@ Maintain conversation context across multiple interactions using sessions:
 await using CopilotClient copilotClient = new();
 await copilotClient.StartAsync();
 
-await using GithubCopilotAgent agent = new(
+await using GitHubCopilotAgent agent = new(
     copilotClient,
     instructions: "You are a helpful assistant. Keep your answers short.");
 
@@ -208,7 +208,7 @@ Import the required classes from Agent Framework:
 
 ```python
 import asyncio
-from agent_framework.github import GithubCopilotAgent, GithubCopilotOptions
+from agent_framework.github import GitHubCopilotAgent, GitHubCopilotOptions
 ```
 
 ## Create a GitHub Copilot Agent
@@ -219,7 +219,7 @@ The simplest way to create a GitHub Copilot agent:
 
 ```python
 async def basic_example():
-    agent = GithubCopilotAgent(
+    agent = GitHubCopilotAgent(
         default_options={"instructions": "You are a helpful assistant."},
     )
 
@@ -234,7 +234,7 @@ You can provide explicit configuration through `default_options`:
 
 ```python
 async def explicit_config_example():
-    agent = GithubCopilotAgent(
+    agent = GitHubCopilotAgent(
         default_options={
             "instructions": "You are a helpful assistant.",
             "model": "gpt-5",
@@ -264,7 +264,7 @@ def get_weather(
     return f"The weather in {location} is sunny with a high of 25C."
 
 async def tools_example():
-    agent = GithubCopilotAgent(
+    agent = GitHubCopilotAgent(
         default_options={"instructions": "You are a helpful weather agent."},
         tools=[get_weather],
     )
@@ -280,7 +280,7 @@ Get responses as they are generated for better user experience:
 
 ```python
 async def streaming_example():
-    agent = GithubCopilotAgent(
+    agent = GitHubCopilotAgent(
         default_options={"instructions": "You are a helpful assistant."},
     )
 
@@ -298,7 +298,7 @@ Maintain conversation context across multiple interactions:
 
 ```python
 async def thread_example():
-    agent = GithubCopilotAgent(
+    agent = GitHubCopilotAgent(
         default_options={"instructions": "You are a helpful assistant."},
     )
 
@@ -333,7 +333,7 @@ def prompt_permission(
     return PermissionRequestResult(kind="denied-interactively-by-user")
 
 async def permissions_example():
-    agent = GithubCopilotAgent(
+    agent = GitHubCopilotAgent(
         default_options={
             "instructions": "You are a helpful assistant that can execute shell commands.",
             "on_permission_request": prompt_permission,
@@ -369,7 +369,7 @@ async def mcp_example():
         },
     }
 
-    agent = GithubCopilotAgent(
+    agent = GitHubCopilotAgent(
         default_options={
             "instructions": "You are a helpful assistant with access to the filesystem and Microsoft Learn.",
             "on_permission_request": prompt_permission,
