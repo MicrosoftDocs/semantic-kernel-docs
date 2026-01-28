@@ -115,17 +115,17 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
 
     public override Task<AgentResponse> RunAsync(
         IEnumerable<ChatMessage> messages,
-        AgentThread? thread = null,
+        AgentSession? session = null,
         AgentRunOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        return this.RunStreamingAsync(messages, thread, options, cancellationToken)
+        return this.RunStreamingAsync(messages, session, options, cancellationToken)
             .ToAgentResponseAsync(cancellationToken);
     }
 
     public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(
         IEnumerable<ChatMessage> messages,
-        AgentThread? thread = null,
+        AgentSession? session = null,
         AgentRunOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -136,7 +136,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
             state.ValueKind != JsonValueKind.Object)
         {
             // No state management requested, pass through to inner agent
-            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, thread, options, cancellationToken).ConfigureAwait(false))
+            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
             {
                 yield return update;
             }
@@ -154,7 +154,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         if (!hasProperties)
         {
             // Empty state - treat as no state
-            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, thread, options, cancellationToken).ConfigureAwait(false))
+            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
             {
                 yield return update;
             }
@@ -188,7 +188,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
 
         // Collect all updates from first run
         var allUpdates = new List<AgentResponseUpdate>();
-        await foreach (var update in this.InnerAgent.RunStreamingAsync(firstRunMessages, thread, firstRunOptions, cancellationToken).ConfigureAwait(false))
+        await foreach (var update in this.InnerAgent.RunStreamingAsync(firstRunMessages, session, firstRunOptions, cancellationToken).ConfigureAwait(false))
         {
             allUpdates.Add(update);
 
@@ -225,7 +225,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
                 ChatRole.System,
                 [new TextContent("Please provide a concise summary of the state changes in at most two sentences.")]));
 
-        await foreach (var update in this.InnerAgent.RunStreamingAsync(secondRunMessages, thread, options, cancellationToken).ConfigureAwait(false))
+        await foreach (var update in this.InnerAgent.RunStreamingAsync(secondRunMessages, session, options, cancellationToken).ConfigureAwait(false))
         {
             yield return update;
         }
@@ -408,10 +408,10 @@ This configuration maps the `recipe` state field to the `recipe` argument of the
 Create a tool function that accepts your Pydantic model:
 
 ```python
-from agent_framework import ai_function
+from agent_framework import tool
 
 
-@ai_function
+@tool
 def update_recipe(recipe: Recipe) -> str:
     """Update the recipe with new or modified content.
 
@@ -838,13 +838,13 @@ class TaskStep(BaseModel):
     estimated_duration: str = "5 min"
 
 
-@ai_function
+@tool
 def generate_task_steps(steps: list[TaskStep]) -> str:
     """Generate task steps for a given task."""
     return f"Generated {len(steps)} steps."
 
 
-@ai_function
+@tool
 def update_preferences(preferences: dict[str, Any]) -> str:
     """Update user preferences."""
     return "Preferences updated."
@@ -869,7 +869,7 @@ agent_with_multiple_state = AgentFrameworkAgent(
 When a tool returns complex nested data, use `"*"` to map all tool arguments to state:
 
 ```python
-@ai_function
+@tool
 def create_document(title: str, content: str, metadata: dict[str, Any]) -> str:
     """Create a document with title, content, and metadata."""
     return "Document created."
@@ -909,7 +909,7 @@ Benefits:
 Always write the complete state, not just deltas:
 
 ```python
-@ai_function
+@tool
 def update_recipe(recipe: Recipe) -> str:
     """
     You MUST write the complete recipe with ALL fields.

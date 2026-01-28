@@ -23,7 +23,7 @@ For prerequisites and installing NuGet packages, see the [Create and run a simpl
 
 ## Create an AIContextProvider
 
-`AIContextProvider` is an abstract class that you can inherit from, and which can be associated with the `AgentThread` for a `ChatClientAgent`.
+`AIContextProvider` is an abstract class that you can inherit from, and which can be associated with the `AgentSession` for a `ChatClientAgent`.
 It allows you to:
 
 1. Run custom logic before and after the agent invokes the underlying inference service.
@@ -39,11 +39,11 @@ The `AIContextProvider` class has two methods that you can override to run custo
 
 ### Serialization
 
-`AIContextProvider` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
+`AIContextProvider` instances are created and attached to an `AgentSession` when the session is created, and when a session is resumed from a serialized state.
 
 The `AIContextProvider` instance might have its own state that needs to be persisted between invocations of the agent. For example, a memory component that remembers information about the user might have memories as part of its state.
 
-To allow persisting threads, you need to implement the `SerializeAsync` method of the `AIContextProvider` class. You also need to provide a constructor that takes a `JsonElement` parameter, which can be used to deserialize the state when resuming a thread.
+To allow persisting sessions, you need to implement the `SerializeAsync` method of the `AIContextProvider` class. You also need to provide a constructor that takes a `JsonElement` parameter, which can be used to deserialize the state when resuming a session.
 
 ### Sample AIContextProvider implementation
 
@@ -62,10 +62,10 @@ internal sealed class UserInfo
 Then you can implement the `AIContextProvider` to manage the memories.
 The `UserInfoMemory` class below contains the following behavior:
 
-1. It uses an `IChatClient` to look for the user's name and age in user messages when new messages are added to the thread at the end of each run.
+1. It uses an `IChatClient` to look for the user's name and age in user messages when new messages are added to the session at the end of each run.
 1. It provides any current memories to the agent before each invocation.
 1. If no memories are available, it instructs the agent to ask the user for the missing information, and not to answer any questions until the information is provided.
-1. It also implements serialization to allow persisting the memories as part of the thread state.
+1. It also implements serialization to allow persisting the memories as part of the session state.
 
 ```csharp
 using System.Linq;
@@ -142,7 +142,7 @@ internal sealed class UserInfoMemory : AIContextProvider
 
 ## Using the AIContextProvider with an agent
 
-To use the custom `AIContextProvider`, you need to provide an `AIContextProviderFactory` when creating the agent. This factory allows the agent to create a new instance of the desired `AIContextProvider` for each thread.
+To use the custom `AIContextProvider`, you need to provide an `AIContextProviderFactory` when creating the agent. This factory allows the agent to create a new instance of the desired `AIContextProvider` for each session.
 
 When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `AIContextProviderFactory` in addition to all other agent options.
 
@@ -171,19 +171,19 @@ AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions()
 });
 ```
 
-When creating a new thread, the `AIContextProvider` will be created by `GetNewThreadAsync`
-and attached to the thread. Once memories are extracted it is therefore possible to access the memory component via the thread's `GetService` method and inspect the memories.
+When creating a new session, the `AIContextProvider` will be created by `GetNewSessionAsync`
+and attached to the session. Once memories are extracted it is therefore possible to access the memory component via the session's `GetService` method and inspect the memories.
 
 ```csharp
-// Create a new thread for the conversation.
-AgentThread thread = await agent.GetNewThreadAsync();
+// Create a new session for the conversation.
+AgentSession session = await agent.GetNewSessionAsync();
 
-Console.WriteLine(await agent.RunAsync("Hello, what is the square root of 9?", thread));
-Console.WriteLine(await agent.RunAsync("My name is Ruaidhrí", thread));
-Console.WriteLine(await agent.RunAsync("I am 20 years old", thread));
+Console.WriteLine(await agent.RunAsync("Hello, what is the square root of 9?", session));
+Console.WriteLine(await agent.RunAsync("My name is Ruaidhrí", session));
+Console.WriteLine(await agent.RunAsync("I am 20 years old", session));
 
-// Access the memory component via the thread's GetService method.
-var userInfo = thread.GetService<UserInfoMemory>()?.UserInfo;
+// Access the memory component via the session's GetService method.
+var userInfo = session.GetService<UserInfoMemory>()?.UserInfo;
 Console.WriteLine($"MEMORY - User Name: {userInfo?.UserName}");
 Console.WriteLine($"MEMORY - User Age: {userInfo?.UserAge}");
 ```
