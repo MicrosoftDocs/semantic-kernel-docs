@@ -408,10 +408,10 @@ This configuration maps the `recipe` state field to the `recipe` argument of the
 Create a tool function that accepts your Pydantic model:
 
 ```python
-from agent_framework import ai_function
+from agent_framework import tool
 
 
-@ai_function
+@tool
 def update_recipe(recipe: Recipe) -> str:
     """Update the recipe with new or modified content.
 
@@ -838,13 +838,13 @@ class TaskStep(BaseModel):
     estimated_duration: str = "5 min"
 
 
-@ai_function
+@tool
 def generate_task_steps(steps: list[TaskStep]) -> str:
     """Generate task steps for a given task."""
     return f"Generated {len(steps)} steps."
 
 
-@ai_function
+@tool
 def update_preferences(preferences: dict[str, Any]) -> str:
     """Update user preferences."""
     return "Preferences updated."
@@ -869,7 +869,7 @@ agent_with_multiple_state = AgentFrameworkAgent(
 When a tool returns complex nested data, use `"*"` to map all tool arguments to state:
 
 ```python
-@ai_function
+@tool
 def create_document(title: str, content: str, metadata: dict[str, Any]) -> str:
     """Create a document with title, content, and metadata."""
     return "Document created."
@@ -909,7 +909,7 @@ Benefits:
 Always write the complete state, not just deltas:
 
 ```python
-@ai_function
+@tool
 def update_recipe(recipe: Recipe) -> str:
     """
     You MUST write the complete recipe with ALL fields.

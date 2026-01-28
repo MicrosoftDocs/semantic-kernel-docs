@@ -224,7 +224,7 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 | `agent.run()` | HTTP POST Request | Client sends messages via HTTP |
 | `agent.run_streaming()` | Server-Sent Events | Streaming responses via SSE |
 | Agent response updates | AG-UI Events | `TEXT_MESSAGE_CONTENT`, `TOOL_CALL_START`, etc. |
-| Function tools (`@ai_function`) | Backend Tools | Executed on server, results streamed to client |
+| Function tools (`@tool`) | Backend Tools | Executed on server, results streamed to client |
 | Tool approval mode | Human-in-the-Loop | Approval requests/responses via protocol |
 | Conversation history | Thread Management | `threadId` maintains context across requests |
 

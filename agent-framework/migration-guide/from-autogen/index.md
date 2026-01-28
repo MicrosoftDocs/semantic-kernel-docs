@@ -95,7 +95,7 @@ result = await agent.run("Help me with this task")
 
 1. Orchestration style: AutoGen pairs an event-driven core with a high‑level `Team`. Agent Framework centers on a typed, graph‑based `Workflow` that routes data along edges and activates executors when inputs are ready.
 
-2. Tools: AutoGen wraps functions with `FunctionTool`. Agent Framework uses `@ai_function`, infers schemas automatically, and adds hosted tools such as a code interpreter and web search.
+2. Tools: AutoGen wraps functions with `FunctionTool`. Agent Framework uses `@tool`, infers schemas automatically, and adds hosted tools such as a code interpreter and web search.
 
 3. Agent behavior: `AssistantAgent` is single‑turn unless you increase `max_tool_iterations`. `ChatAgent` is multi‑turn by default and keeps invoking tools until it can return a final answer.
 
@@ -203,16 +203,16 @@ result = await agent.run(task="What's the weather?")
 #### Agent Framework ChatAgent
 
 ```python
-from agent_framework import ChatAgent, ai_function
+from agent_framework import ChatAgent, tool
 from agent_framework.openai import OpenAIChatClient
 
 # Create simple tools for the example
-@ai_function
+@tool
 def get_weather(location: str) -> str:
     """Get weather for a location."""
     return f"Weather in {location}: sunny"
 
-@ai_function
+@tool
 def get_time() -> str:
     """Get current time."""
     return "Current time: 2:30 PM"
@@ -438,14 +438,14 @@ tool = FunctionTool(
 agent = AssistantAgent(name="assistant", model_client=client, tools=[tool])
 ```
 
-#### Agent Framework @ai_function
+#### Agent Framework @tool
 
 ```python
-from agent_framework import ai_function
+from agent_framework import tool
 from typing import Annotated
 from pydantic import Field
 
-@ai_function
+@tool
 def get_weather(
     location: Annotated[str, Field(description="The location to get weather for")]
 ) -> str:

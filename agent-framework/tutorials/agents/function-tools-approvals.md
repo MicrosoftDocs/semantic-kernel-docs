@@ -112,15 +112,15 @@ For prerequisites and installing Python packages, see the [Create and run a simp
 ## Create the agent with function tools requiring approval
 
 When using functions, it's possible to indicate for each function, whether it requires human approval before being executed.
-This is done by setting the `approval_mode` parameter to `"always_require"` when using the `@ai_function` decorator.
+This is done by setting the `approval_mode` parameter to `"always_require"` when using the `@tool` decorator.
 
 Here is an example of a simple function tool that fakes getting the weather for a given location.
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function
+@tool
 def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get the current weather for a given location."""
     return f"The weather in {location} is cloudy with a high of 15°C."
@@ -129,7 +129,7 @@ def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco
 To create a function that requires approval, you can use the `approval_mode` parameter:
 
 ```python
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def get_weather_detail(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get detailed weather information for a given location."""
     return f"The weather in {location} is cloudy with a high of 15°C, humidity 88%."
