@@ -1226,8 +1226,8 @@ manager_agent = ChatAgent(
 
 workflow = (
     MagenticBuilder()
-    .participants(researcher=researcher, coder=coder)
-    .with_standard_manager(
+    .participants([researcher, coder])
+    .with_manager(
         agent=manager_agent,
         max_round_count=20,
         max_stall_count=3,
@@ -1240,19 +1240,7 @@ workflow = (
 async def magentic_example():
     output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
-        if isinstance(event, AgentResponseUpdateEvent):
-            props = event.data.additional_properties if event.data else None
-            event_type = props.get("magentic_event_type") if props else None
-
-            if event_type == MAGENTIC_EVENT_TYPE_ORCHESTRATOR:
-                text = event.data.text if event.data else ""
-                print(f"[ORCHESTRATOR]: {text}")
-            elif event_type == MAGENTIC_EVENT_TYPE_AGENT_DELTA:
-                agent_id = props.get("agent_id", event.executor_id) if props else event.executor_id
-                if event.data and event.data.text:
-                    print(f"[{agent_id}]: {event.data.text}", end="")
-
-        elif isinstance(event, WorkflowOutputEvent):
+        if isinstance(event, WorkflowOutputEvent):
             output_messages = cast(list[ChatMessage], event.data)
             if output_messages:
                 output = output_messages[-1].text
@@ -1296,12 +1284,8 @@ manager_agent = ChatAgent(
 
 workflow = (
     MagenticBuilder()
-    .participants(
-        researcher=researcher_agent,
-        coder=coder_agent,
-        analyst=analyst_agent,
-    )
-    .with_standard_manager(
+    .participants([researcher_agent, coder_agent, analyst_agent])
+    .with_manager(
         agent=manager_agent,
         max_round_count=15,      # Limit total rounds
         max_stall_count=2,       # Trigger stall handling

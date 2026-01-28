@@ -204,7 +204,7 @@ def round_robin_selector(state: GroupChatState) -> str:
 # Build the group chat workflow
 workflow = (
     GroupChatBuilder()
-    .with_select_speaker_func(round_robin_selector)
+    .with_orchestrator(selection_func=round_robin_selector)
     .participants([researcher, writer])
     # Terminate after 4 turns (researcher → writer → researcher → writer)
     .with_termination_condition(lambda conversation: len(conversation) >= 4)
@@ -235,7 +235,7 @@ Guidelines:
 # Build group chat with agent-based orchestrator
 workflow = (
     GroupChatBuilder()
-    .with_agent_orchestrator(orchestrator_agent)
+    .with_orchestrator(agent=orchestrator_agent)
     # Set a hard termination condition: stop after 4 assistant messages
     # The agent orchestrator will intelligently decide when to end before this limit but just in case
     .with_termination_condition(lambda messages: sum(1 for msg in messages if msg.role == Role.ASSISTANT) >= 4)
@@ -337,10 +337,8 @@ Workflow completed.
 
 ::: zone pivot="programming-language-python"
 
-- **Flexible Orchestrator Strategies**: Choose between simple selectors, agent-based orchestrators, or custom logic
+- **Flexible Orchestrator Strategies**: Choose between simple selectors, agent-based orchestrators, or custom logic by using `with_orchestrator()`.
 - **GroupChatBuilder**: Creates workflows with configurable speaker selection
-- **with_select_speaker_func()**: Define custom Python functions for speaker selection
-- **with_agent_orchestrator()**: Use an agent-based orchestrator for intelligent speaker coordination
 - **GroupChatState**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
 - **Event Streaming**: Process `AgentResponseUpdateEvent` and `WorkflowOutputEvent` in real-time
@@ -418,11 +416,14 @@ def smart_selector(state: GroupChatState) -> str:
 
 workflow = (
     GroupChatBuilder()
-    .with_select_speaker_func(smart_selector, orchestrator_name="SmartOrchestrator")
+    .with_orchestrator(selection_func=smart_selector, orchestrator_name="SmartOrchestrator")
     .participants([researcher, writer])
     .build()
 )
 ```
+
+> [!IMPORTANT]
+> When using a custom implementation of `BaseGroupChatOrchestrator` for advanced scenarios, all properties must be set, including `participant_registry`, `max_rounds`, and `termination_condition`. `max_rounds` and `termination_condition` set in the builder will be ignored.
 
 ::: zone-end
 

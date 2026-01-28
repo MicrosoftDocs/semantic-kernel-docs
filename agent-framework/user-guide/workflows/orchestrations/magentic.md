@@ -77,7 +77,7 @@ manager_agent = ChatAgent(
 
 ## Build the Magentic Workflow
 
-Use `MagenticBuilder` to configure the workflow with a standard manager:
+Use `MagenticBuilder` to configure the workflow with a standard manager(`StandardMagenticManager`):
 
 ```python
 from agent_framework import MagenticBuilder
@@ -85,7 +85,7 @@ from agent_framework import MagenticBuilder
 workflow = (
     MagenticBuilder()
     .participants([researcher_agent, coder_agent])
-    .with_standard_manager(
+    .with_manager(
         agent=manager_agent,
         max_round_count=10,
         max_stall_count=3,
@@ -96,7 +96,7 @@ workflow = (
 ```
 
 > [!TIP]
-> A standard manager is implemented based on the Magentic-One design, with fixed prompts taken from the original paper. You can customize the manager's behavior by passing in your own prompts to `with_standard_manager()`. To further customize the manager, you can also implement your own manager by sub classing the `MagenticManagerBase` class.
+> A standard manager is implemented based on the Magentic-One design, with fixed prompts taken from the original paper. You can customize the manager's behavior by passing in your own prompts to `with_manager()`. To further customize the manager, you can also implement your own manager by sub classing the `MagenticManagerBase` class.
 
 ## Run the Workflow with Event Streaming
 
@@ -184,7 +184,7 @@ from agent_framework import (
 workflow = (
     MagenticBuilder()
     .participants([researcher_agent, analyst_agent])
-    .with_standard_manager(
+    .with_manager(
         agent=manager_agent,
         max_round_count=10,
         max_stall_count=1,
