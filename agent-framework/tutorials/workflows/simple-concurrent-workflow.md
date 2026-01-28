@@ -103,23 +103,24 @@ Create an executor that initiates the concurrent processing by sending input to 
         var startExecutor = new ConcurrentStartExecutor();
 ```
 
+> [!NOTE]
+> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](../../user-guide/workflows/core-concepts/executors.md).
+
 The `ConcurrentStartExecutor` implementation:
 
 ```csharp
 /// <summary>
 /// Executor that starts the concurrent processing by sending messages to the agents.
 /// </summary>
-internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentStartExecutor")
+internal sealed partial class ConcurrentStartExecutor() : Executor("ConcurrentStartExecutor")
 {
     /// <summary>
     /// Starts the concurrent processing by sending messages to the agents.
     /// </summary>
     /// <param name="message">The user message to process</param>
     /// <param name="context">Workflow context for accessing workflow services and adding events</param>
-    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
-    /// The default is <see cref="CancellationToken.None"/>.</param>
-    /// <returns>A task representing the asynchronous operation</returns>
-    public override async ValueTask HandleAsync(string message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(string message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Broadcast the message to all connected agents. Receiving agents will queue
         // the message but will not start processing until they receive a turn token.
@@ -145,8 +146,8 @@ The `ConcurrentAggregationExecutor` implementation:
 /// <summary>
 /// Executor that aggregates the results from the concurrent agents.
 /// </summary>
-internal sealed class ConcurrentAggregationExecutor() :
-    Executor<List<ChatMessage>>("ConcurrentAggregationExecutor")
+internal sealed partial class ConcurrentAggregationExecutor() :
+    Executor("ConcurrentAggregationExecutor")
 {
     private readonly List<ChatMessage> _messages = [];
 
@@ -155,10 +156,8 @@ internal sealed class ConcurrentAggregationExecutor() :
     /// </summary>
     /// <param name="message">The message from the agent</param>
     /// <param name="context">Workflow context for accessing workflow services and adding events</param>
-    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
-    /// The default is <see cref="CancellationToken.None"/>.</param>
-    /// <returns>A task representing the asynchronous operation</returns>
-    public override async ValueTask HandleAsync(List<ChatMessage> message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(List<ChatMessage> message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         this._messages.AddRange(message);
 
@@ -215,7 +214,7 @@ Run the workflow and capture the streaming output:
 - **Fan-Out Edges**: Use `AddFanOutEdge()` to distribute the same input to multiple executors or agents.
 - **Fan-In Edges**: Use `AddFanInEdge()` to collect results from multiple source executors.
 - **AI Agent Integration**: AI agents can be used directly as executors in workflows.
-- **Executor Base Class**: Custom executors inherit from `Executor<TInput>` and override the `HandleAsync` method.
+- **Executor Base Class**: Custom executors derive from `Executor` as a `partial` class and use `[MessageHandler]` on handler methods.
 - **Turn Tokens**: Use `TurnToken` to signal agents to begin processing queued messages.
 - **Streaming Execution**: Use `StreamAsync()` to get real-time updates as the workflow progresses.
 
