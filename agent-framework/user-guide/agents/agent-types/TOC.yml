@@ -26,6 +26,8 @@
       href: durable-agent/create-durable-agent.md
     - name: Durable Agent Features
       href: durable-agent/features.md
+- name: GitHub Copilot Agents
+  href: github-copilot-agent.md
 - name: A2A Agents
   href: a2a-agent.md
 - name: Custom Agents

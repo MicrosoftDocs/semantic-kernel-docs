@@ -64,13 +64,13 @@ using System.Threading.Tasks;
 
 async Task<AgentResponse> CustomAgentRunMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     CancellationToken cancellationToken)
 {
     Console.WriteLine($"Input: {messages.Count()}");
-    var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
+    var response = await innerAgent.RunAsync(messages, session, options, cancellationToken).ConfigureAwait(false);
     Console.WriteLine($"Output: {response.Messages.Count}");
     return response;
 }
