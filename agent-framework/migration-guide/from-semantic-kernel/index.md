@@ -487,9 +487,9 @@ Finally, you can use the decorator to further customize the name and description
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function(name="weather_tool", description="Retrieves weather information for any location")
+@tool(name="weather_tool", description="Retrieves weather information for any location")
 def get_weather(location: Annotated[str, "The location to get the weather for."])
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny."
@@ -524,7 +524,7 @@ print("Plugin state:", plugin.state)
 ```
 
 > [!NOTE]
-> The functions within the class can also be decorated with `@ai_function` to customize the name and description of the tools.
+> The functions within the class can also be decorated with `@tool` to customize the name and description of the tools.
 
 This mechanism is also useful for tools that need additional input that cannot be supplied by the LLM, such as connections, secrets, etc.
 
