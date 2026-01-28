@@ -13,9 +13,9 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial shows how to persist an agent conversation (AgentThread) to storage and reload it later.
+This tutorial shows how to persist an agent conversation (AgentSession) to storage and reload it later.
 
-When hosting an agent in a service or even in a client application, you often want to maintain conversation state across multiple requests or sessions. By persisting the `AgentThread`, you can save the conversation context and reload it later.
+When hosting an agent in a service or even in a client application, you often want to maintain conversation state across multiple requests or sessions. By persisting the `AgentSession`, you can save the conversation context and reload it later.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ For prerequisites and installing NuGet packages, see the [Create and run a simpl
 
 ## Persisting and resuming the conversation
 
-Create an agent and obtain a new thread that will hold the conversation state.
+Create an agent and obtain a new session that will hold the conversation state.
 
 ```csharp
 using System;
@@ -38,35 +38,35 @@ AIAgent agent = new AzureOpenAIClient(
      .GetChatClient("gpt-4o-mini")
      .AsAIAgent(instructions: "You are a helpful assistant.", name: "Assistant");
 
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.GetNewSessionAsync();
 ```
 
-Run the agent, passing in the thread, so that the `AgentThread` includes this exchange.
+Run the agent, passing in the session, so that the `AgentSession` includes this exchange.
 
 ```csharp
-// Run the agent and append the exchange to the thread
-Console.WriteLine(await agent.RunAsync("Tell me a short pirate joke.", thread));
+// Run the agent and append the exchange to the session
+Console.WriteLine(await agent.RunAsync("Tell me a short pirate joke.", session));
 ```
 
-Call the `Serialize` method on the thread to serialize it to a JsonElement.
+Call the `Serialize` method on the session to serialize it to a JsonElement.
 It can then be converted to a string for storage and saved to a database, blob storage, or file.
 
 ```csharp
 using System.IO;
 using System.Text.Json;
 
-// Serialize the thread state
-string serializedJson = thread.Serialize(JsonSerializerOptions.Web).GetRawText();
+// Serialize the session state
+string serializedJson = session.Serialize(JsonSerializerOptions.Web).GetRawText();
 
 // Example: save to a local file (replace with DB or blob storage in production)
-string filePath = Path.Combine(Path.GetTempPath(), "agent_thread.json");
+string filePath = Path.Combine(Path.GetTempPath(), "agent_session.json");
 await File.WriteAllTextAsync(filePath, serializedJson);
 ```
 
-Load the persisted JSON from storage and recreate the AgentThread instance from it.
-The thread must be deserialized using an agent instance. This should be the
-same agent type that was used to create the original thread.
-This is because agents might have their own thread types and might construct threads with
+Load the persisted JSON from storage and recreate the AgentSession instance from it.
+The session must be deserialized using an agent instance. This should be the
+same agent type that was used to create the original session.
+This is because agents might have their own session types and might construct sessions with
 additional functionality that is specific to that agent type.
 
 ```csharp
@@ -74,15 +74,15 @@ additional functionality that is specific to that agent type.
 string loadedJson = await File.ReadAllTextAsync(filePath);
 JsonElement reloaded = JsonSerializer.Deserialize<JsonElement>(loadedJson, JsonSerializerOptions.Web);
 
-// Deserialize the thread into an AgentThread tied to the same agent type
-AgentThread resumedThread = await agent.DeserializeThreadAsync(reloaded, JsonSerializerOptions.Web);
+// Deserialize the session into an AgentSession tied to the same agent type
+AgentSession resumedSession = await agent.DeserializeSessionAsync(reloaded, JsonSerializerOptions.Web);
 ```
 
-Use the resumed thread to continue the conversation.
+Use the resumed session to continue the conversation.
 
 ```csharp
-// Continue the conversation with resumed thread
-Console.WriteLine(await agent.RunAsync("Now tell that joke in the voice of a pirate.", resumedThread));
+// Continue the conversation with resumed session
+Console.WriteLine(await agent.RunAsync("Now tell that joke in the voice of a pirate.", resumedSession));
 ```
 
 ::: zone-end

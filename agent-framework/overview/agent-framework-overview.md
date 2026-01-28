@@ -22,7 +22,7 @@ Agent Framework offers two primary categories of capabilities:
 - [Workflows](#workflows): Graph-based workflows that connect multiple agents and functions to perform complex, multi-step tasks. Workflows support type-based routing, nesting, checkpointing, and request/response patterns for human-in-the-loop scenarios.
 
 The framework also provides foundational building
-blocks, including model clients (chat completions and responses), an agent thread for state management, context providers for agent memory,
+blocks, including model clients (chat completions and responses), an agent session for state management, context providers for agent memory,
 middleware for intercepting agent actions, and MCP clients for tool integration.
 Together, these components give you the flexibility and power to build
 interactive, robust, and safe AI applications.
@@ -31,7 +31,7 @@ interactive, robust, and safe AI applications.
 
 [Semantic Kernel](https://github.com/microsoft/semantic-kernel)
 and [AutoGen](https://github.com/microsoft/autogen) pioneered the concepts of AI agents and multi-agent orchestration.
-The Agent Framework is the direct successor, created by the same teams. It combines AutoGen's simple abstractions for single- and multi-agent patterns with Semantic Kernel's enterprise-grade features such as thread-based state management, type safety, filters,
+The Agent Framework is the direct successor, created by the same teams. It combines AutoGen's simple abstractions for single- and multi-agent patterns with Semantic Kernel's enterprise-grade features such as session-based state management, type safety, filters,
 telemetry, and extensive model and embedding support. Beyond merging the two,
 Agent Framework introduces workflows that give developers explicit control over
 multi-agent execution paths, plus a robust state management system
@@ -78,7 +78,7 @@ The following diagram illustrates the core components and their interactions in 
 ![AI Agent Diagram](../media/agent.svg)
 
 An AI agent can also be augmented with additional components such as
-a [thread](../user-guide/agents/multi-turn-conversation.md),
+a [session](../user-guide/agents/multi-turn-conversation.md),
 a [context provider](../user-guide/agents/agent-memory.md),
 and [middleware](../user-guide/agents/agent-middleware.md)
 to enhance its capabilities.

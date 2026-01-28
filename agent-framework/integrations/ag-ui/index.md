@@ -20,7 +20,7 @@ AG-UI is a standardized protocol for building AI agent interfaces that provides:
 - **Remote Agent Hosting**: Deploy AI agents as web services accessible by multiple clients
 - **Real-time Streaming**: Stream agent responses using Server-Sent Events (SSE) for immediate feedback
 - **Standardized Communication**: Consistent message format for reliable agent interactions
-- **Thread Management**: Maintain conversation context across multiple requests
+- **Session Management**: Maintain conversation context across multiple requests
 - **Advanced Features**: Human-in-the-loop approvals, state synchronization, and custom UI rendering
 
 ## When to Use AG-UI
@@ -65,7 +65,7 @@ While you can run agents directly in your application using Agent Framework's `R
 | Client Access | Single application | Multiple clients (web, mobile) |
 | Streaming | In-process async iteration | Server-Sent Events (SSE) |
 | State Management | Application-managed | Protocol-level state snapshots |
-| Thread Context | Application-managed | Protocol-managed thread IDs |
+| Session Context | Application-managed | Protocol-managed session IDs |
 | Approval Workflows | Custom implementation | Built-in middleware pattern |
 
 ## Architecture Overview
@@ -117,7 +117,7 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 | `AgentResponseUpdate` | AG-UI Events | Converted to protocol events automatically |
 | `AIFunctionFactory.Create()` | Backend Tools | Executed on server, results streamed |
 | `ApprovalRequiredAIFunction` | Human-in-the-Loop | Middleware converts to approval protocol |
-| `AgentThread` | Thread Management | `ConversationId` maintains context |
+| `AgentSession` | Session Management | `ConversationId` maintains context |
 | `ChatResponseFormat.ForJsonSchema<T>()` | State Snapshots | Structured output becomes state events |
 
 ## Installation

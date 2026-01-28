@@ -582,7 +582,7 @@ Could you provide photos of the damage to expedite the process?
 
 ## Context Synchronization
 
-Agents in Agent Framework relies on agent threads ([`AgentThread`](../../agents/multi-turn-conversation.md)) to manage context. In a Handoff orchestration, agents **do not** share the same thread instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
+Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/multi-turn-conversation.md)) to manage context. In a Handoff orchestration, agents **do not** share the same session instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
 
 <p align="center">
     <img src="../resources/images/orchestration-handoff-synchronization.gif" alt="Handoff Context Synchronization">
@@ -592,7 +592,7 @@ Agents in Agent Framework relies on agent threads ([`AgentThread`](../../agents/
 > Tool related contents, including handoff tool calls, are not broadcasted to other agents. Only user and agent messages are synchronized across all participants.
 
 > [!TIP]
-> Agents do not share the same thread instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentThread` abstraction. Sharing the same thread instance could lead to inconsistencies in how each agent processes and maintains context.
+> Agents do not share the same session instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
 
 After broadcasting the response, the participant then checks whether it needs to handoff the conversation to another agent. If so, it sends a request to the selected agent to take over the conversation. Otherwise, it requests user input or continues autonomously based on the workflow configuration.
 
