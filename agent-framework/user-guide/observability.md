@@ -249,6 +249,27 @@ configure_azure_monitor(
 enable_instrumentation(enable_sensitive_data=False)
 ```
 
+##### MLflow
+
+[MLflow](https://mlflow.org/) is a popular open-source platform that provides observability and reproducibility for LLM applications. Agent Framework can export traces to MLflow through its OTLP endpoint to keep a durable record of workflow runs, inputs/outputs, and derived metrics.
+
+```
+# Create custom exporters with MLflow configuration
+exporters = [
+    OTLPSpanExporter(
+        endpoint="<mlflow-tracking-server-uri>/v1/traces",
+        headers={"x-mlflow-experiment-id": "<mlflow-experiment-id>"}
+    )
+]
+configure_otel_providers(exporters=exporters)
+```
+
+![MLflow Traces](https://mlflow.org/docs/latest/images/llms/tracing/microsoft-agent-framework-tracing.png)
+
+See [MLflow Microsoft Agent Framework integration](https://mlflow.org/docs/latest/genai/tracing/integrations/listing/microsoft-agent-framework/) for more details on how to set up MLflow to collect traces from Agent Framework.
+
+##### Langfuse
+
 For [Langfuse](https://langfuse.com/integrations/frameworks/microsoft-agent-framework):
 
 ```python
