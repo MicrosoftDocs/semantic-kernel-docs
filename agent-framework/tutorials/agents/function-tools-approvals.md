@@ -66,7 +66,7 @@ Since you now have a function that requires approval, the agent might respond wi
 You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
 
 ```csharp
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", session);
 
 var functionApprovalRequests = response.Messages

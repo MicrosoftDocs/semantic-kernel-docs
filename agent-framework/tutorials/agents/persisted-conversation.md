@@ -38,7 +38,7 @@ AIAgent agent = new AzureOpenAIClient(
      .GetChatClient("gpt-4o-mini")
      .AsAIAgent(instructions: "You are a helpful assistant.", name: "Assistant");
 
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 ```
 
 Run the agent, passing in the session, so that the `AgentSession` includes this exchange.

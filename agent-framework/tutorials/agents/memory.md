@@ -171,12 +171,12 @@ AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions()
 });
 ```
 
-When creating a new session, the `AIContextProvider` will be created by `GetNewSessionAsync`
+When creating a new session, the `AIContextProvider` will be created by `CreateSessionAsync`
 and attached to the session. Once memories are extracted it is therefore possible to access the memory component via the session's `GetService` method and inspect the memories.
 
 ```csharp
 // Create a new session for the conversation.
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 
 Console.WriteLine(await agent.RunAsync("Hello, what is the square root of 9?", session));
 Console.WriteLine(await agent.RunAsync("My name is Ruaidhrí", session));

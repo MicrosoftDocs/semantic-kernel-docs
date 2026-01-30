@@ -221,7 +221,7 @@ AIAgent agent = new AzureOpenAIClient(
      });
 
 // Start a new session for the agent conversation.
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 
 // Run the agent with the session
 var response = await agent.RunAsync("Tell me a joke about a pirate.", session);
