@@ -15,7 +15,7 @@ The Agent Framework provides a comprehensive set of hosting libraries that enabl
 ## Overview
 As you may already know from the [AI Agents Overview](../../overview/agent-framework-overview.md#ai-agents), `AIAgent` is the fundamental concept of the Agent Framework. It defines an "LLM wrapper" that processes user inputs, makes decisions, calls tools, and performs additional work to execute actions and generate responses.
 
-However, exposing AI agents from your ASP.NET Core application is not trivial. The Agent Framework hosting libraries solve this by registering AI agents in a dependency injection container, allowing you to resolve and use them in your application services. Additionally, the hosting libraries enable you to manage agent dependencies, such as tools and thread storage, from the same dependency injection container.
+However, exposing AI agents from your ASP.NET Core application is not trivial. The Agent Framework hosting libraries solve this by registering AI agents in a dependency injection container, allowing you to resolve and use them in your application services. Additionally, the hosting libraries enable you to manage agent dependencies, such as tools and session storage, from the same dependency injection container.
 
 Agents can be hosted alongside your application infrastructure, independent of the protocols they use. Similarly, workflows can be hosted and leverage your application's common infrastructure.
 
@@ -60,10 +60,10 @@ var pirateAgent = builder.AddAIAgent("pirate", instructions: "You are a pirate. 
     .WithAITool(new MyTool()); // MyTool is a custom type derived from `AITool`
 ```
 
-You can also configure the thread store (storage for conversation data):
+You can also configure the session store (storage for conversation data):
 ```csharp
 var pirateAgent = builder.AddAIAgent("pirate", instructions: "You are a pirate. Speak like a pirate")
-    .WithInMemoryThreadStore();
+    .WithInMemorySessionStore();
 ```
 
 #### AddWorkflow
