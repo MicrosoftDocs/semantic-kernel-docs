@@ -279,4 +279,4 @@ for message in response.messages:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Multi-Turn Conversations and Threading](./multi-turn-conversation.md)
+> [Multi-Turn Conversations](./multi-turn-conversation.md)

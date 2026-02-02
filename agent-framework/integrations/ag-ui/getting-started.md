@@ -178,7 +178,7 @@ AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent");
 
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.GetNewSessionAsync();
 List<ChatMessage> messages =
 [
     new(ChatRole.System, "You are a helpful assistant.")
@@ -209,7 +209,7 @@ try
         bool isFirstUpdate = true;
         string? threadId = null;
 
-        await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, thread))
+        await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
         {
             ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 
@@ -259,7 +259,7 @@ catch (Exception ex)
 - **AsAIAgent**: Extension method on `AGUIChatClient` to create an agent from the client
 - **RunStreamingAsync**: Streams responses as `AgentResponseUpdate` objects
 - **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ConversationId` and `ResponseId`
-- **Thread Management**: The `AgentThread` maintains conversation context across requests
+- **Session Management**: The `AgentSession` maintains conversation context across requests
 - **Content Types**: Responses include `TextContent` for messages and `ErrorContent` for errors
 
 ### Configure and Run the Client
