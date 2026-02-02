@@ -135,9 +135,6 @@ Users can define and emit custom events during workflow execution for enhanced o
 
 ::: zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](./executors.md).
-
 ```csharp
 using Microsoft.Agents.AI.Workflows;
 

@@ -40,11 +40,8 @@ var workflow = new WorkflowBuilder(inputPort)
 
 Now, because in the workflow `executorA` is connected to the `inputPort` in both directions, `executorA` needs to be able to send requests and receive responses via the `inputPort`. Here's what you need to do in `SomeExecutor` to send a request and receive a response.
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](./core-concepts/executors.md).
-
 ```csharp
-internal sealed partial class SomeExecutor() : Executor("SomeExecutor")
+internal sealed partial class SomeExecutor(): Executor("SomeExecutor")
 {
     [MessageHandler]
     private async ValueTask HandleAsync(CustomResponseType message, IWorkflowContext context)

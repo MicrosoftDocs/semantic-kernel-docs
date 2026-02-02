@@ -81,9 +81,6 @@ var uppercase = uppercaseFunc.BindExecutor("UppercaseExecutor");
 
 ### Step 3: Define the Reverse Text Executor
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](../../user-guide/workflows/core-concepts/executors.md).
-
 Define an executor that reverses the text:
 
 ```csharp

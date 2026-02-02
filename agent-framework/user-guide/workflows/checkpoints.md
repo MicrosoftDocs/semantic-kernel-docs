@@ -185,9 +185,6 @@ async for event in workflow.run_stream
 
 ::: zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](./core-concepts/executors.md).
-
 To ensure that the state of an executor is captured in a checkpoint, the executor must override the `OnCheckpointingAsync` method and save its state to the workflow context.
 
 ```csharp

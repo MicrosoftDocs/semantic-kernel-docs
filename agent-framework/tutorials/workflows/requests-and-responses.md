@@ -66,9 +66,6 @@ internal enum NumberSignal
 
 ### Workflow Executor
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](../../user-guide/workflows/core-concepts/executors.md).
-
 Create executors that process user input and provide feedback:
 
 ```csharp

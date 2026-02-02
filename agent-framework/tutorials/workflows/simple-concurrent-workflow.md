@@ -103,9 +103,6 @@ Create an executor that initiates the concurrent processing by sending input to 
         var startExecutor = new ConcurrentStartExecutor();
 ```
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](../../user-guide/workflows/core-concepts/executors.md).
-
 The `ConcurrentStartExecutor` implementation:
 
 ```csharp

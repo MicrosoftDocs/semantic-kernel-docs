@@ -164,9 +164,6 @@ private static ChatClientAgent GetEmailAssistantAgent(IChatClient chatClient) =>
 
 ### Implement Executors
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](../../user-guide/workflows/core-concepts/executors.md).
-
 Create the workflow executors that handle different stages of email processing:
 
 ```csharp

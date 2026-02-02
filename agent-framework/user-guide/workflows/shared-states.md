@@ -21,13 +21,10 @@ Shared States allow multiple executors within a workflow to access and modify co
 
 ::: zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](./core-concepts/executors.md).
-
 ```csharp
 using Microsoft.Agents.AI.Workflows;
 
-internal sealed partial class FileReadExecutor() : Executor("FileReadExecutor")
+internal sealed partial class FileReadExecutor(): Executor("FileReadExecutor")
 {
     /// <summary>
     /// Reads a file and stores its content in a shared state.

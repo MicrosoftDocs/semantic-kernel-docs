@@ -68,9 +68,6 @@ await using Checkpointed<StreamingRun> checkpointedRun = await InProcessExecutio
 
 ### Executor State
 
-> [!NOTE]
-> Executors use the `[MessageHandler]` attribute with a `partial` class. For details on this pattern, see [Executors](../../user-guide/workflows/core-concepts/executors.md).
-
 Executors can persist local state that survives checkpoints:
 
 ```csharp
