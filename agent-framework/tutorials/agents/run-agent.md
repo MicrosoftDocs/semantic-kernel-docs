@@ -238,13 +238,13 @@ asyncio.run(main())
 Instead of a simple string, you can also provide one or more `ChatMessage` objects to the `run` and `run_stream` methods.
 
 ```python
-from agent_framework import ChatMessage, TextContent, UriContent, Role
+from agent_framework import ChatMessage, Content, Role
 
 message = ChatMessage(
     role=Role.USER,
     contents=[
-        TextContent(text="Tell me a joke about this image?"),
-        UriContent(uri="https://samplesite.org/clown.jpg", media_type="image/jpeg")
+        Content.from_text(text="Tell me a joke about this image?"),
+        Content.from_uri(uri="https://samplesite.org/clown.jpg", media_type="image/jpeg")
     ]
 )
 
