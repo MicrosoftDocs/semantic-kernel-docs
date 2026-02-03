@@ -81,7 +81,7 @@ Each conversation with a workflow agent requires a session to manage state:
 
 ```csharp
 // Create a new session for the conversation
-AgentSession session = await workflowAgent.GetNewSessionAsync();
+AgentSession session = await workflowAgent.CreateSessionAsync();
 ```
 
 ### Non-Streaming Execution

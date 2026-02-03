@@ -98,7 +98,7 @@ await using GitHubCopilotAgent agent = new(
     copilotClient,
     instructions: "You are a helpful assistant. Keep your answers short.");
 
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 
 // First turn
 await agent.RunAsync("My name is Alice.", session);

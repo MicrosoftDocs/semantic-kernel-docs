@@ -34,7 +34,7 @@ When using OpenAI Chat Completion as the underlying service for agents, the foll
 AIAgent agent = new OpenAIClient("<your_api_key>")
      .GetChatClient(modelName)
      .AsAIAgent(JokerInstructions, JokerName);
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", session));
 ```
 
@@ -92,7 +92,7 @@ For example, when using OpenAI Responses with store=true as the underlying servi
 AIAgent agent = new OpenAIClient("<your_api_key>")
      .GetOpenAIResponseClient(modelName)
      .AsAIAgent(JokerInstructions, JokerName);
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", session));
 ```
 

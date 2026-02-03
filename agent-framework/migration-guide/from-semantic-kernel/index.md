@@ -103,7 +103,7 @@ The agent is responsible for creating the session.
 
 ```csharp
 // New.
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 ```
 
 ## 4. Hosted Agent Thread/Session Cleanup

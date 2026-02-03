@@ -27,10 +27,10 @@ For prerequisites and creating the agent, see the [Create and run a simple agent
 Agents are stateless and do not maintain any state internally between calls.
 To have a multi-turn conversation with an agent, you need to create an object to hold the conversation state and pass this object to the agent when running it.
 
-To create the conversation state object, call the `GetNewSessionAsync` method on the agent instance.
+To create the conversation state object, call the `CreateSessionAsync` method on the agent instance.
 
 ```csharp
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 ```
 
 You can then pass this session object to the `RunAsync` and `RunStreamingAsync` methods on the agent instance, along with the user input.
@@ -52,8 +52,8 @@ These sessions can then be used to maintain separate conversation states for eac
 The conversations will be fully independent of each other, since the agent does not maintain any state internally.
 
 ```csharp
-AgentSession session1 = await agent.GetNewSessionAsync();
-AgentSession session2 = await agent.GetNewSessionAsync();
+AgentSession session1 = await agent.CreateSessionAsync();
+AgentSession session2 = await agent.CreateSessionAsync();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", session1));
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a robot.", session2));
 Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell it in the voice of a pirate's parrot.", session1));
