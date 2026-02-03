@@ -1,6 +1,6 @@
 ---
 title: Durable Agents
-description: Learn how to use the durable task extension for Microsoft Agent Framework to build stateful AI agents with serverless hosting.
+description: Learn how to use the durable task extension for Microsoft Agent Framework to build stateful AI agents with automatic state management.
 zone_pivot_groups: programming-languages
 author: anthonychu
 ms.topic: tutorial
@@ -11,9 +11,9 @@ ms.service: agent-framework
 
 # Durable Agents
 
-The durable task extension for Microsoft Agent Framework enables you to build stateful AI agents and multi-agent deterministic orchestrations in a serverless environment on Azure.
+The durable task extension for Microsoft Agent Framework enables you to build stateful AI agents and multi-agent deterministic orchestrations. Durable agents support flexible hosting options: use Azure Functions or Azure Container Apps for serverless scenarios with automatic HTTP endpoints, or integrate with any hosting environment such as Kubernetes or your own application servers.
 
-[Azure Functions](/azure/azure-functions/functions-overview) is a serverless compute service that lets you run code on-demand without managing infrastructure. The durable task extension for Microsoft Agent Framework builds on this foundation to provide durable state management, meaning your agent's conversation history and execution state are reliably persisted and survive failures, restarts, and long-running operations.
+The durable task extension provides durable state management, meaning your agent's conversation history and execution state are reliably persisted and survive failures, restarts, and long-running operations.
 
 The extension manages agent thread state and orchestration coordination, allowing you to focus on your agent logic instead of infrastructure concerns for reliability.
 
@@ -21,7 +21,7 @@ The extension manages agent thread state and orchestration coordination, allowin
 
 The durable task extension provides the following key features:
 
-- **Serverless hosting**: Deploy and host agents in Azure Functions with automatically generated HTTP endpoints for agent interactions
+- **Flexible hosting**: Deploy and host agents on Azure Functions or Azure Container Apps for serverless scenarios, or integrate with any hosting environment such as Kubernetes or your own application servers
 - **Stateful agent threads**: Maintain persistent threads with conversation history that survive across multiple interactions
 - **Deterministic orchestrations**: Coordinate multiple agents reliably with fault-tolerant workflows that can run for days or weeks, supporting sequential, parallel, and human-in-the-loop patterns
 - **Observability and debugging**: Visualize agent conversations, orchestration flows, and execution history through the built-in Durable Task Scheduler dashboard
@@ -30,7 +30,11 @@ The durable task extension provides the following key features:
 
 ::: zone pivot="programming-language-csharp"
 
-In a .NET Azure Functions project, add the required NuGet packages.
+Choose the package based on your hosting environment:
+
+### Azure Functions Extension
+
+For serverless hosting with Azure Functions, add the following NuGet packages:
 
 ```bash
 dotnet add package Azure.AI.OpenAI --prerelease
@@ -39,32 +43,60 @@ dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 dotnet add package Microsoft.Agents.AI.Hosting.AzureFunctions --prerelease
 ```
 
-> [!NOTE]
-> In addition to these packages, ensure your project uses version 2.2.0 or later of the [Microsoft.Azure.Functions.Worker](https://www.nuget.org/packages/Microsoft.Azure.Functions.Worker/) package.
+### Durable Task package
+
+For hosting outside of Azure Functions (such as ASP.NET Core, console applications, or other hosting environments), add the core Durable Task package:
+
+```bash
+dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.DurableTask --prerelease
+```
+
+The `Microsoft.Agents.AI.DurableTask` package provides the core durable agent functionality that works with any Durable Task backend.
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-In a Python Azure Functions project, install the required Python packages.
+Choose the package based on your hosting environment:
+
+### Azure Functions Extension
+
+For serverless hosting with Azure Functions, install the Azure Functions-specific package:
 
 ```bash
 pip install azure-identity
 pip install agent-framework-azurefunctions --pre
 ```
 
+### Durable Task package
+
+For hosting outside of Azure Functions (such as Azure Container Apps, Azure Kubernetes Services, App Services, or other hosting environments), install the core Durable Task package:
+
+```bash
+pip install azure-identity
+pip install agent-framework-durabletask --pre
+```
+
+The `agent-framework-durabletask` package provides the core durable agent functionality that works with any Durable Task backend.
+
 ::: zone-end
 
-## Serverless Hosting
+## Hosting Options
 
-With the durable task extension, you can deploy and host Microsoft Agent Framework agents in Azure Functions with built-in HTTP endpoints and orchestration-based invocation. Azure Functions provides event-driven, pay-per-invocation pricing with automatic scaling and minimal infrastructure management.
+The durable task extension supports multiple hosting environments. Choose the option that best fits your deployment requirements.
 
-When you configure a durable agent, the durable task extension automatically creates HTTP endpoints for your agent and manages all the underlying infrastructure for storing conversation state, handling concurrent requests, and coordinating multi-agent workflows.
+### Azure Functions Extension
+
+With the Azure Functions Extension package, you can deploy and host Microsoft Agent Framework agents in Azure Functions with built-in HTTP endpoints and orchestration-based invocation. Azure Functions provides event-driven, pay-per-invocation pricing with automatic scaling and minimal infrastructure management.
+
+When you configure a durable agent with the Azure Functions Extension, it automatically creates HTTP endpoints for your agent and manages all the underlying infrastructure for storing conversation state, handling concurrent requests, and coordinating multi-agent workflows.
 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using System;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
@@ -87,9 +119,7 @@ AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredent
 using IHost app = FunctionsApplication
     .CreateBuilder(args)
     .ConfigureFunctionsWebApplication()
-    .ConfigureDurableAgents(options =>
-        options.AddAIAgent(agent)
-    )
+    .ConfigureDurableAgents(options => options.AddAIAgent(agent))
     .Build();
 app.Run();
 ```
@@ -99,21 +129,13 @@ app.Run();
 ::: zone pivot="programming-language-python"
 
 ```python
-import os
-from agent_framework.azure import AzureOpenAIChatClient, AgentFunctionApp
+from agent_framework.azure import AgentFunctionApp, AzureOpenAIChatClient
 from azure.identity import DefaultAzureCredential
 
-endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini")
-
 # Create an AI agent following the standard Microsoft Agent Framework pattern
-agent = AzureOpenAIChatClient(
-    endpoint=endpoint,
-    deployment_name=deployment_name,
-    credential=DefaultAzureCredential()
-).as_agent(
+agent = AzureOpenAIChatClient(credential=DefaultAzureCredential()).as_agent(
+    name="Joker",
     instructions="You are good at telling jokes.",
-    name="Joker"
 )
 
 # Configure the function app to host the agent with durable thread management
@@ -123,16 +145,111 @@ app = AgentFunctionApp(agents=[agent])
 
 ::: zone-end
 
+### Durable Task Package
+
+For scenarios where you want to host durable agents outside of Azure Functions, use the Durable Task package. This gives you the same durable state management capabilities while allowing you to integrate with any hosting environment such as Azure Container Apps, Kubernetes, or custom applications.
+
+::: zone pivot="programming-language-csharp"
+
+```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.DurableTask;
+using Microsoft.DurableTask.Client.AzureManaged;
+using Microsoft.DurableTask.Worker.AzureManaged;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
+var dtsConnectionString = Environment.GetEnvironmentVariable("DURABLE_TASK_SCHEDULER_CONNECTION_STRING");
+
+// Create an AI agent following the standard Microsoft Agent Framework pattern
+AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
+    .AsAIAgent(
+        instructions: "You are good at telling jokes.",
+        name: "Joker");
+
+// Configure the host to run the durable agent worker
+IHost host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices(services =>
+    {
+        services.ConfigureDurableAgents(
+            options => options.AddAIAgent(agent),
+            workerBuilder: builder => builder.UseDurableTaskScheduler(dtsConnectionString),
+            clientBuilder: builder => builder.UseDurableTaskScheduler(dtsConnectionString));
+    })
+    .Build();
+
+await host.RunAsync();
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+```python
+import os
+from agent_framework.azure import AzureOpenAIChatClient, DurableAIAgentWorker
+from azure.identity import DefaultAzureCredential
+from durabletask.azuremanaged.worker import DurableTaskSchedulerWorker
+
+# Create an AI agent following the standard Microsoft Agent Framework pattern
+agent = AzureOpenAIChatClient(credential=DefaultAzureCredential()).as_agent(
+    name="Joker",
+    instructions="You are good at telling jokes.",
+)
+
+# Configure the Durable Task Scheduler worker
+dts_endpoint = os.environ["DURABLE_TASK_SCHEDULER_ENDPOINT"]
+dts_taskhub = os.environ.get("DURABLE_TASK_SCHEDULER_TASKHUB", "default")
+
+worker = DurableTaskSchedulerWorker(
+    host_address=dts_endpoint,
+    secure_channel=True,
+    taskhub=dts_taskhub,
+    credential=DefaultAzureCredential(),
+)
+
+# Wrap with the agent worker and register the agent
+agent_worker = DurableAIAgentWorker(worker)
+agent_worker.add_agent(agent)
+
+# Start the worker
+await agent_worker.start()
+```
+
+::: zone-end
+
+With the core Durable Task package, you need to implement your own HTTP endpoints or other interfaces for agent interaction, but you gain full control over your hosting environment.
+
+### When to Use Each Hosting Option
+
+**Choose Azure Functions or Azure Container Apps hosting when you need:**
+
+- Serverless, pay-per-invocation pricing
+- Automatic HTTP endpoints without custom code
+- Automatic scaling to zero when not in use
+- Minimal infrastructure management
+
+**Choose the core Durable Task package when you need:**
+
+- Custom hosting environments (Kubernetes, VMs, other containers)
+- Integration with existing web frameworks (ASP.NET Core, Flask, FastAPI)
+- Full control over HTTP routing and middleware
+
 ### When to Use Durable Agents
 
 Choose durable agents when you need:
 
-- **Full code control**: Deploy and manage your own compute environment while maintaining serverless benefits
+- **Full code control**: Deploy and manage your own compute environment with your choice of hosting platform
 - **Complex orchestrations**: Coordinate multiple agents with deterministic, reliable workflows that can run for days or weeks
-- **Event-driven orchestration**: Integrate with Azure Functions triggers (HTTP, timers, queues, etc.) and bindings for event-driven agent workflows
+- **Event-driven orchestration**: Integrate with triggers (HTTP, timers, queues, etc.) for event-driven agent workflows
 - **Automatic conversation state**: Agent conversation history is automatically managed and persisted without requiring explicit state handling in your code
 
-This serverless hosting approach differs from managed service-based agent hosting (such as Azure AI Foundry Agent Service), which provides fully managed infrastructure without requiring you to deploy or manage Azure Functions apps. Durable agents are ideal when you need the flexibility of code-first deployment combined with the reliability of durable state management.
+Durable agents are ideal when you need the flexibility of code-first deployment combined with the reliability of durable state management. Whether you choose serverless hosting with Azure Functions or self-hosted deployments with the core Durable Task package, you get the same powerful state management capabilities.
 
 When hosted in the [Azure Functions Flex Consumption](/azure/azure-functions/flex-consumption-plan) hosting plan, agents can scale to thousands of instances or to zero instances when not in use, allowing you to pay only for the compute you need.
 
@@ -140,9 +257,9 @@ When hosted in the [Azure Functions Flex Consumption](/azure/azure-functions/fle
 
 Agents maintain persistent threads that survive across multiple interactions. Each thread is identified by a unique thread ID and stores the complete conversation history in durable storage managed by the [Durable Task Scheduler](/azure/azure-functions/durable/durable-task-scheduler/durable-task-scheduler).
 
-This pattern enables conversational continuity where agent state is preserved through process crashes and restarts, allowing full conversation history to be maintained across user threads. The durable storage ensures that even if your Azure Functions instance restarts or scales to a different instance, the conversation seamlessly continues from where it left off.
+This pattern enables conversational continuity where agent state is preserved through process crashes and restarts, allowing full conversation history to be maintained across user threads. The durable storage ensures that even if your hosting instance restarts or scales to a different instance, the conversation seamlessly continues from where it left off.
 
-The following example demonstrates multiple HTTP requests to the same thread, showing how conversation context persists:
+The following example demonstrates multiple HTTP requests to the same thread when using Azure Functions hosting, showing how conversation context persists:
 
 ```bash
 # First interaction - start a new thread
