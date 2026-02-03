@@ -235,9 +235,7 @@ Various `BaseContent` subclasses exist that are used to represent different type
 
 |Type|Description|
 |---|---|
-|`TextContent`|Textual content that can be both input and output from the agent. Typically contains the text result from an agent.|
-|`DataContent`|Binary content represented as a data URI (for example, base64-encoded images). Can be used to pass binary data to and from the agent.|
-|`UriContent`|A URI that points to hosted content such as an image, audio file, or document.|
+|`Content`|Unified content type with factory methods (`Content.from_text()`, `Content.from_data()`, `Content.from_uri()`). Use the `type` property to check content type ("text", "data", "uri").|
 |`FunctionCallContent`|A request by an AI service to invoke a function tool.|
 |`FunctionResultContent`|The result of a function tool invocation.|
 |`ErrorContent`|Error information when processing fails.|
@@ -246,7 +244,7 @@ Various `BaseContent` subclasses exist that are used to represent different type
 Here's how to work with different content types:
 
 ```python
-from agent_framework import ChatMessage, TextContent, DataContent, UriContent
+from agent_framework import ChatMessage, Content
 
 # Create a text message
 text_message = ChatMessage(role="user", text="Hello!")
@@ -256,8 +254,8 @@ image_data = b"..."  # your image bytes
 mixed_message = ChatMessage(
     role="user",
     contents=[
-        TextContent("Analyze this image:"),
-        DataContent(data=image_data, media_type="image/png"),
+        Content.from_text("Analyze this image:"),
+        Content.from_data(data=image_data, media_type="image/png"),
     ]
 )
 
@@ -265,11 +263,11 @@ mixed_message = ChatMessage(
 response = await agent.run("Describe the image")
 for message in response.messages:
     for content in message.contents:
-        if isinstance(content, TextContent):
+        if content.type == "text":
             print(f"Text: {content.text}")
-        elif isinstance(content, DataContent):
+        elif content.type == "data":
             print(f"Data URI: {content.uri}")
-        elif isinstance(content, UriContent):
+        elif content.type == "uri":
             print(f"External URI: {content.uri}")
 ```
 

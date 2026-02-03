@@ -479,7 +479,7 @@ async def weather_override_middleware(
             # Streaming override
             async def override_stream() -> AsyncIterable[AgentResponseUpdate]:
                 for chunk in custom_message_parts:
-                    yield AgentResponseUpdate(contents=[TextContent(text=chunk)])
+                    yield AgentResponseUpdate(contents=[Content.from_text(text=chunk)])
 
             context.result = override_stream()
         else:

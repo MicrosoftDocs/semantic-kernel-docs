@@ -388,13 +388,13 @@ user_message = text_msg.to_model_message()
 #### Agent Framework Message Types
 
 ```python
-from agent_framework import ChatMessage, TextContent, DataContent, UriContent, Role
+from agent_framework import ChatMessage, Content, Role
 import base64
 
 # Text message
 text_msg = ChatMessage(role=Role.USER, text="Hello")
 
-# Supply real image bytes, or use a data: URI/URL via UriContent
+# Supply real image bytes, or use a data: URI/URL via Content.from_uri()
 image_bytes = b"<your_image_bytes>"
 image_b64 = base64.b64encode(image_bytes).decode()
 image_uri = f"data:image/jpeg;base64,{image_b64}"
@@ -403,8 +403,8 @@ image_uri = f"data:image/jpeg;base64,{image_b64}"
 multi_modal_msg = ChatMessage(
     role=Role.USER,
     contents=[
-        TextContent(text="Describe this image"),
-        DataContent(uri=image_uri, media_type="image/jpeg")
+        Content.from_text(text="Describe this image"),
+        Content.from_uri(uri=image_uri, media_type="image/jpeg")
     ]
 )
 ```
@@ -702,8 +702,8 @@ from agent_framework import (
     AgentThread,
     BaseAgent,
     ChatMessage,
+    Content,
     Role,
-    TextContent,
 )
 
 class StaticAgent(BaseAgent):
@@ -715,7 +715,7 @@ class StaticAgent(BaseAgent):
         **kwargs: Any,
     ) -> AgentResponse:
         # Build a static reply
-        reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
+        reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
 
         # Persist conversation to the provided AgentThread (if any)
         if thread is not None:
@@ -732,11 +732,11 @@ class StaticAgent(BaseAgent):
         **kwargs: Any,
     ) -> AsyncIterable[AgentResponseUpdate]:
         # Stream the same static response in a single chunk for simplicity
-        yield AgentResponseUpdate(contents=[TextContent(text="Hello from AF custom agent")], role=Role.ASSISTANT)
+        yield AgentResponseUpdate(contents=[Content.from_text(text="Hello from AF custom agent")], role=Role.ASSISTANT)
 
         # Notify thread of input and the complete response once streaming ends
         if thread is not None:
-            reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
+            reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
             normalized = self._normalize_messages(messages)
             await self._notify_thread_of_new_messages(thread, normalized, reply)
 ```
