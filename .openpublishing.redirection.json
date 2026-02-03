@@ -834,6 +834,16 @@
             "source_path": "agent-framework/user-guide/agents/agent-observability.md",
             "redirect_url": "/agent-framework/user-guide/observability",
             "redirect_document_id": true
+        },
+        {
+            "source_path": "agent-framework/tutorials/plugins/use-purview-with-agent-framework-sdk.md",
+            "redirect_url": "/agent-framework/integrations/use-purview-with-agent-framework-sdk",
+            "redirect_document_id": true
+        },
+        {
+            "source_path": "agent-framework/integrations/index.md",
+            "redirect_url": "/agent-framework/integrations/overview",
+            "redirect_document_id": true
         }
     ]
 }

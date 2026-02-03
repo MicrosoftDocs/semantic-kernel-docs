@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Azure AI Foundry Agents
 
-Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service. You can create persistent service-based agent instances with service-managed conversation threads.
+Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service. You can create persistent service-based agent instances with service-managed chat history.
 
 ::: zone pivot="programming-language-csharp"
 
