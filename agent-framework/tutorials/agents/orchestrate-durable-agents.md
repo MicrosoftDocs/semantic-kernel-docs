@@ -13,6 +13,9 @@ ms.service: agent-framework
 
 This tutorial shows you how to orchestrate multiple durable AI agents using the fan-out/fan-in patterns. You'll extend the durable agent from the [Create and run a durable agent](create-and-run-durable-agent.md) tutorial to create a multi-agent system that processes a user's question, then translates the response into multiple languages concurrently.
 
+> [!NOTE]
+> This tutorial uses Azure Functions hosting. The orchestration patterns shown here also work with the core Durable Task packages (`Microsoft.Agents.AI.DurableTask` for .NET or `agent-framework-durabletask` for Python) in other hosting environments.
+
 This orchestration pattern demonstrates how to:
 - Reuse the durable agent from the first tutorial.
 - Create additional durable agents for language translation.

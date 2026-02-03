@@ -1,6 +1,6 @@
 ---
 title: Create and run a durable agent
-description: Learn how to create and run a durable AI agent with Azure Functions and the durable task extension for Microsoft Agent Framework
+description: Learn how to create and run a durable AI agent with Azure Functions hosting using the durable task extension for Microsoft Agent Framework
 zone_pivot_groups: programming-languages
 author: anthonychu
 ms.topic: tutorial
@@ -11,7 +11,10 @@ ms.service: agent-framework
 
 # Create and run a durable agent
 
-This tutorial shows you how to create and run a [durable AI agent](../../user-guide/agents/agent-types/durable-agent/create-durable-agent.md) using the durable task extension for Microsoft Agent Framework. You'll build an Azure Functions app that hosts a stateful agent with built-in HTTP endpoints, and learn how to monitor it using the Durable Task Scheduler dashboard.
+This tutorial shows you how to create and run a [durable AI agent](../../user-guide/agents/agent-types/durable-agent/create-durable-agent.md) using Azure Functions as the hosting platform. You'll build an Azure Functions app that hosts a stateful agent with built-in HTTP endpoints, and learn how to monitor it using the Durable Task Scheduler dashboard.
+
+> [!NOTE]
+> This tutorial focuses on Azure Functions hosting. Durable agents can also be hosted on other platforms using the `Microsoft.Agents.AI.DurableTask` (.NET) or `agent-framework-durabletask` (Python) packages. See the [Durable Agents overview](../../user-guide/agents/agent-types/durable-agent/create-durable-agent.md) for more hosting options.
 
 Durable agents provide serverless hosting with automatic state management, allowing your agents to maintain conversation history across multiple interactions without managing infrastructure.
 
