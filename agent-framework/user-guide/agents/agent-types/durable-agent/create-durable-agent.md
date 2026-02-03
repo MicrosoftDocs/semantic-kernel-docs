@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Durable Agents
 
-The durable task extension for Microsoft Agent Framework enables you to build stateful AI agents and multi-agent deterministic orchestrations. Durable agents support flexible hosting options—use Azure Functions or Azure Container Apps for serverless scenarios with automatic HTTP endpoints, or integrate with any hosting environment such as Kubernetes or your own application servers.
+The durable task extension for Microsoft Agent Framework enables you to build stateful AI agents and multi-agent deterministic orchestrations. Durable agents support flexible hosting options: use Azure Functions or Azure Container Apps for serverless scenarios with automatic HTTP endpoints, or integrate with any hosting environment such as Kubernetes or your own application servers.
 
 The durable task extension provides durable state management, meaning your agent's conversation history and execution state are reliably persisted and survive failures, restarts, and long-running operations.
 
@@ -163,8 +163,7 @@ using Microsoft.Extensions.Hosting;
 
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
-var dtsConnectionString = Environment.GetEnvironmentVariable("DURABLE_TASK_SCHEDULER_CONNECTION_STRING")
-    ?? "Endpoint=http://localhost:8080;TaskHub=default;Authentication=None";
+var dtsConnectionString = Environment.GetEnvironmentVariable("DURABLE_TASK_SCHEDULER_CONNECTION_STRING");
 
 // Create an AI agent following the standard Microsoft Agent Framework pattern
 AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
@@ -184,7 +183,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-await host.StartAsync();
+await host.RunAsync();
 ```
 
 ::: zone-end
@@ -192,6 +191,7 @@ await host.StartAsync();
 ::: zone pivot="programming-language-python"
 
 ```python
+import os
 from agent_framework.azure import AzureOpenAIChatClient, DurableAIAgentWorker
 from azure.identity import DefaultAzureCredential
 from durabletask.azuremanaged.worker import DurableTaskSchedulerWorker
@@ -203,10 +203,14 @@ agent = AzureOpenAIChatClient(credential=DefaultAzureCredential()).as_agent(
 )
 
 # Configure the Durable Task Scheduler worker
+dts_endpoint = os.environ["DURABLE_TASK_SCHEDULER_ENDPOINT"]
+dts_taskhub = os.environ.get("DURABLE_TASK_SCHEDULER_TASKHUB", "default")
+
 worker = DurableTaskSchedulerWorker(
-    host_address="http://localhost:8080",
-    secure_channel=False,
-    taskhub="default",
+    host_address=dts_endpoint,
+    secure_channel=True,
+    taskhub=dts_taskhub,
+    credential=DefaultAzureCredential(),
 )
 
 # Wrap with the agent worker and register the agent
@@ -235,7 +239,6 @@ With the core Durable Task package, you need to implement your own HTTP endpoint
 - Custom hosting environments (Kubernetes, VMs, other containers)
 - Integration with existing web frameworks (ASP.NET Core, Flask, FastAPI)
 - Full control over HTTP routing and middleware
-- Flexible compute placement (your code runs anywhere, with Azure DTS for state management)
 
 ### When to Use Durable Agents
 

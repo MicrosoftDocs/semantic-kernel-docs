@@ -1,6 +1,6 @@
 ---
 title: Create and run a durable agent
-description: Learn how to create and run a durable AI agent with Azure Functions hosting using the durable task extension for Microsoft Agent Framework
+description: Learn how to create and run a durable AI agent hosted in Azure Functions using the durable task extension for Microsoft Agent Framework
 zone_pivot_groups: programming-languages
 author: anthonychu
 ms.topic: tutorial

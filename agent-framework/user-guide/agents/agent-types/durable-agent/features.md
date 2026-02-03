@@ -120,6 +120,9 @@ public class SpamDetectionOrchestration : TaskOrchestrator<Email, string>
 
 When using agents in orchestrations, you must use the `get_agent()` method to get a durable agent instance, which is a special wrapper around one of your registered agents. The durable agent wrapper ensures that agent calls are properly tracked and checkpointed by the durable orchestration framework.
 
+- **Azure Functions Extension**: Call `app.get_agent(context, "AgentName")` from your `AgentFunctionApp` instance, passing the orchestration context.
+- **Durable Task package**: Wrap the orchestration context with `DurableAIAgentOrchestrationContext(ctx)`, then call `get_agent("AgentName")` on the wrapped context.
+
 #### Azure Functions Extension
 
 ```python
@@ -175,7 +178,7 @@ def spam_detection_orchestration(context: df.DurableOrchestrationContext):
 
 ```python
 from typing import cast
-from agent_framework.azure import DurableAIAgentWorker
+from agent_framework.azure import DurableAIAgentOrchestrationContext
 from durabletask import task
 from pydantic import BaseModel
 
@@ -190,8 +193,11 @@ class EmailResponse(BaseModel):
 def spam_detection_orchestration(ctx: task.OrchestrationContext):
     email = ctx.get_input()
 
+    # Wrap the orchestration context to access agents
+    agent_context = DurableAIAgentOrchestrationContext(ctx)
+
     # Check if the email is spam
-    spam_agent = ctx.get_agent("SpamDetectionAgent")
+    spam_agent = agent_context.get_agent("SpamDetectionAgent")
     spam_thread = spam_agent.get_new_thread()
 
     spam_result_raw = yield spam_agent.run(
@@ -206,7 +212,7 @@ def spam_detection_orchestration(ctx: task.OrchestrationContext):
         return result
 
     # Generate response for legitimate email
-    email_agent = ctx.get_agent("EmailAssistantAgent")
+    email_agent = agent_context.get_agent("EmailAssistantAgent")
     email_thread = email_agent.get_new_thread()
 
     email_response_raw = yield email_agent.run(
@@ -355,17 +361,20 @@ def research_orchestration(context: df.DurableOrchestrationContext):
 #### Durable Task package
 
 ```python
-from agent_framework.azure import DurableAIAgentWorker
+from agent_framework.azure import DurableAIAgentOrchestrationContext
 from durabletask import task
 
 @task.orchestrator
 def research_orchestration(ctx: task.OrchestrationContext):
     topic = ctx.get_input()
 
+    # Wrap the orchestration context to access agents
+    agent_context = DurableAIAgentOrchestrationContext(ctx)
+
     # Execute multiple research agents in parallel
-    technical_agent = ctx.get_agent("TechnicalResearchAgent")
-    market_agent = ctx.get_agent("MarketResearchAgent")
-    competitor_agent = ctx.get_agent("CompetitorResearchAgent")
+    technical_agent = agent_context.get_agent("TechnicalResearchAgent")
+    market_agent = agent_context.get_agent("MarketResearchAgent")
+    competitor_agent = agent_context.get_agent("CompetitorResearchAgent")
 
     technical_task = technical_agent.run(messages=f"Research technical aspects of {topic}")
     market_task = market_agent.run(messages=f"Research market trends for {topic}")
@@ -377,18 +386,7 @@ def research_orchestration(ctx: task.OrchestrationContext):
     # Aggregate results
     all_research = "\n\n".join([r.get('response', '') for r in results])
     
-    summary_agent = ctx.get_agent("SummaryAgent")
-    summary = yield summary_agent.run(messages=f"Summarize this research:\n{all_research}")
-    
-    return summary.get('response', '')
-```
-
-::: zone-end
-
-    # Aggregate results
-    all_research = "\n\n".join([r.get('response', '') for r in results])
-    
-    summary_agent = app.get_agent(context, "SummaryAgent")
+    summary_agent = agent_context.get_agent("SummaryAgent")
     summary = yield summary_agent.run(messages=f"Summarize this research:\n{all_research}")
     
     return summary.get('response', '')
@@ -544,14 +542,18 @@ def content_approval_workflow(context: df.DurableOrchestrationContext):
 
 ```python
 from datetime import timedelta
+from agent_framework.azure import DurableAIAgentOrchestrationContext
 from durabletask import task
 
 @task.orchestrator
 def content_approval_workflow(ctx: task.OrchestrationContext):
     topic = ctx.get_input()
 
+    # Wrap the orchestration context to access agents
+    agent_context = DurableAIAgentOrchestrationContext(ctx)
+
     # Generate content using an agent
-    content_agent = ctx.get_agent("ContentGenerationAgent")
+    content_agent = agent_context.get_agent("ContentGenerationAgent")
     draft_content = yield content_agent.run(
         messages=f"Write an article about {topic}"
     )
