@@ -30,7 +30,7 @@ The `AgentSession` state may also include memories or references to memories sto
 
 `AgentSession` instances can be created in two ways:
 
-1. By calling `GetNewSessionAsync` on the agent.
+1. By calling `CreateSessionAsync` on the agent.
 1. By running the agent and not providing an `AgentSession`. In this case the agent will create a throwaway `AgentSession` which will only be used for the duration of the run.
 
 Some underlying service stored conversations/threads/responses might be persistently created in an underlying service, where the service requires this, for example, Foundry Agents or OpenAI Responses. Any cleanup or deletion of these is the responsibility of the user.
@@ -39,7 +39,7 @@ Some underlying service stored conversations/threads/responses might be persiste
 
 ```csharp
 // Create a new session.
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 // Run the agent with the session.
 var response = await agent.RunAsync("Hello, how are you?", session);
 
@@ -62,7 +62,7 @@ themselves.
 
 ```csharp
 // Create a new session.
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 // Run the agent with the session.
 var response = await agent.RunAsync("Hello, how are you?", session);
 

@@ -66,7 +66,7 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 
 // Get initial response - may return with or without a continuation token
 AgentResponse response = await agent.RunAsync("Write a very long novel about otters in space.", session, options);
@@ -108,7 +108,7 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
-AgentSession session = await agent.GetNewSessionAsync();
+AgentSession session = await agent.CreateSessionAsync();
 
 AgentResponseUpdate? latestReceivedUpdate = null;
 
