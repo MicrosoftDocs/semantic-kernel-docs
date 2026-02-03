@@ -144,7 +144,7 @@ Sometimes you might want to customize how AI agents are integrated into a workfl
 - The invocation of the agent: streaming or non-streaming
 - The message types the agent will handle, including custom message types
 - The life cycle of the agent, including initialization and cleanup
-- The usage of agent threads and other resources
+- The usage of agent sessions and other resources
 - Additional events emitted during the agent's execution, including custom events
 - Integration with other workflow features, such as shared states and requests/responses
 

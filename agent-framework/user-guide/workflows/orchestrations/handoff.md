@@ -159,17 +159,17 @@ math_tutor: I'd be happy to help with calculus integration! Integration is the r
 ## Define a few tools for demonstration
 
 ```python
-@ai_function
+@tool
 def process_refund(order_number: Annotated[str, "Order number to process refund for"]) -> str:
     """Simulated function to process a refund for a given order number."""
     return f"Refund processed successfully for order {order_number}."
 
-@ai_function
+@tool
 def check_order_status(order_number: Annotated[str, "Order number to check status for"]) -> str:
     """Simulated function to check the status of a given order number."""
     return f"Order {order_number} is currently being processed and will ship in 2 business days."
 
-@ai_function
+@tool
 def process_return(order_number: Annotated[str, "Order number to process return for"]) -> str:
     """Simulated function to process a return for a given order number."""
     return f"Return initiated successfully for order {order_number}. You will receive return instructions via email."
@@ -398,9 +398,9 @@ Handoff workflows can include agents with tools that require human approval befo
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def process_refund(order_number: Annotated[str, "Order number to process refund for"]) -> str:
     """Simulated function to process a refund for a given order number."""
     return f"Refund processed successfully for order {order_number}."
@@ -582,7 +582,7 @@ Could you provide photos of the damage to expedite the process?
 
 ## Context Synchronization
 
-Agents in Agent Framework relies on agent threads ([`AgentThread`](../../agents/multi-turn-conversation.md)) to manage context. In a Handoff orchestration, agents **do not** share the same thread instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
+Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/multi-turn-conversation.md)) to manage context. In a Handoff orchestration, agents **do not** share the same session instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
 
 <p align="center">
     <img src="../resources/images/orchestration-handoff-synchronization.gif" alt="Handoff Context Synchronization">
@@ -592,7 +592,7 @@ Agents in Agent Framework relies on agent threads ([`AgentThread`](../../agents/
 > Tool related contents, including handoff tool calls, are not broadcasted to other agents. Only user and agent messages are synchronized across all participants.
 
 > [!TIP]
-> Agents do not share the same thread instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentThread` abstraction. Sharing the same thread instance could lead to inconsistencies in how each agent processes and maintains context.
+> Agents do not share the same session instance because different [agent types](../../agents/agent-types/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
 
 After broadcasting the response, the participant then checks whether it needs to handoff the conversation to another agent. If so, it sends a request to the selected agent to take over the conversation. Otherwise, it requests user input or continues autonomously based on the workflow configuration.
 
@@ -617,7 +617,7 @@ After broadcasting the response, the participant then checks whether it needs to
 - **add_handoff()**: Configures specific handoff relationships between agents
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
-- **Tool Approval**: Use `@ai_function(approval_mode="always_require")` for sensitive operations that need human approval
+- **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human approval
 - **FunctionApprovalRequestContent**: Emitted when an agent calls a tool requiring approval; use `create_response(approved=...)` to respond
 - **Checkpointing**: Use `with_checkpointing()` for durable workflows that can pause and resume across process restarts
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
