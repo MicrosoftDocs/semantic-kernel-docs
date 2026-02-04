@@ -23,9 +23,8 @@ Shared States allow multiple executors within a workflow to access and modify co
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExecutor")
+internal sealed partial class FileReadExecutor(): Executor("FileReadExecutor")
 {
     /// <summary>
     /// Reads a file and stores its content in a shared state.
@@ -33,7 +32,8 @@ internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExe
     /// <param name="message">The path to the embedded resource file.</param>
     /// <param name="context">The workflow context for accessing shared states.</param>
     /// <returns>The ID of the shared state where the file content is stored.</returns>
-    public async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
     {
         // Read file content from embedded resource
         string fileContent = File.ReadAllText(message);
@@ -79,9 +79,8 @@ class FileReadExecutor(Executor):
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class WordCountingExecutor() : Executor<string, int>("WordCountingExecutor")
+internal sealed partial class WordCountingExecutor() : Executor("WordCountingExecutor")
 {
     /// <summary>
     /// Counts the number of words in the file content stored in a shared state.
@@ -89,7 +88,8 @@ internal sealed class WordCountingExecutor() : Executor<string, int>("WordCounti
     /// <param name="message">The ID of the shared state containing the file content.</param>
     /// <param name="context">The workflow context for accessing shared states.</param>
     /// <returns>The number of words in the file content.</returns>
-    public async ValueTask<int> HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask<int> HandleAsync(string message, IWorkflowContext context)
     {
         // Retrieve the file content from the shared state
         var fileContent = await context.ReadStateAsync<string>(message, scopeName: "FileContent")

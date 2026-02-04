@@ -87,9 +87,10 @@ Define an executor that reverses the text:
 /// <summary>
 /// Second executor: reverses the input text and completes the workflow.
 /// </summary>
-internal sealed class ReverseTextExecutor() : Executor<string, string>("ReverseTextExecutor")
+internal sealed partial class ReverseTextExecutor() : Executor("ReverseTextExecutor")
 {
-    public override ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Reverse the input text
         return ValueTask.FromResult(new string(input.Reverse().ToArray()));
@@ -101,8 +102,8 @@ ReverseTextExecutor reverse = new();
 
 **Key Points:**
 
-- Create a class that inherits from `Executor<TInput, TOutput>`
-- Implement `HandleAsync()` to process the input and return the output
+- Create a `partial` class that derives from `Executor`
+- Add the `[MessageHandler]` attribute to the handler method
 
 ### Step 4: Build and Connect the Workflow
 
@@ -159,11 +160,12 @@ Executors from functions:
 
 - Use `BindExecutor()` to create an executor from a function
 
-Executors implement `Executor<TInput, TOutput>`:
+Executors derive from `Executor` and use `[MessageHandler]`:
 
-- **TInput**: The type of data this executor accepts
-- **TOutput**: The type of data this executor produces
-- **HandleAsync**: The method that processes the input and returns the output
+- The class must be `partial` to enable source generation
+- **`[MessageHandler]`**: Attribute that marks a method as a message handler
+- The handler method's parameter type determines what messages the executor accepts
+- The handler method's return type determines what messages the executor produces
 
 ### .NET Workflow Builder Pattern
 
