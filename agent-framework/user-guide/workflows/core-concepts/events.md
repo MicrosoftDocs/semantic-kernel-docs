@@ -137,13 +137,13 @@ Users can define and emit custom events during workflow execution for enhanced o
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
 internal sealed class CustomEvent(string message) : WorkflowEvent(message) { }
 
-internal sealed class CustomExecutor() : ReflectingExecutor<CustomExecutor>("CustomExecutor"), IMessageHandler<string>
+internal sealed partial class CustomExecutor() : Executor("CustomExecutor")
 {
-    public async ValueTask HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask HandleAsync(string message, IWorkflowContext context)
     {
         await context.AddEventAsync(new CustomEvent($"Processing message: {message}"));
         // Executor logic...

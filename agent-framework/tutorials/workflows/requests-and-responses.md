@@ -72,17 +72,18 @@ Create executors that process user input and provide feedback:
 /// <summary>
 /// Executor that judges the guess and provides feedback.
 /// </summary>
-internal sealed class JudgeExecutor : Executor<int>("Judge")
+internal sealed partial class JudgeExecutor : Executor
 {
     private readonly int _targetNumber;
     private int _tries;
 
-    public JudgeExecutor(int targetNumber) : this()
+    public JudgeExecutor(int targetNumber) : base("Judge")
     {
         _targetNumber = targetNumber;
     }
 
-    public override async ValueTask HandleAsync(int message, IWorkflowContext context, CancellationToken cancellationToken)
+    [MessageHandler]
+    private async ValueTask HandleAsync(int message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         _tries++;
         if (message == _targetNumber)

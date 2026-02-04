@@ -41,9 +41,10 @@ var workflow = new WorkflowBuilder(inputPort)
 Now, because in the workflow `executorA` is connected to the `inputPort` in both directions, `executorA` needs to be able to send requests and receive responses via the `inputPort`. Here's what you need to do in `SomeExecutor` to send a request and receive a response.
 
 ```csharp
-internal sealed class SomeExecutor() : Executor<CustomResponseType>("SomeExecutor")
+internal sealed partial class SomeExecutor(): Executor("SomeExecutor")
 {
-    public async ValueTask HandleAsync(CustomResponseType message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask HandleAsync(CustomResponseType message, IWorkflowContext context)
     {
         // Process the response...
         ...
@@ -56,22 +57,17 @@ internal sealed class SomeExecutor() : Executor<CustomResponseType>("SomeExecuto
 Alternatively, `SomeExecutor` can separate the request sending and response handling into two handlers.
 
 ```csharp
-internal sealed class SomeExecutor() : Executor("SomeExecutor")
+internal sealed partial class SomeExecutor() : Executor("SomeExecutor")
 {
-    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
-    {
-        return routeBuilder
-            .AddHandler<CustomResponseType>(this.HandleCustomResponseAsync)
-            .AddHandler<OtherDataType>(this.HandleOtherDataAsync);
-    }
-
-    public async ValueTask HandleCustomResponseAsync(CustomResponseType message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask HandleCustomResponseAsync(CustomResponseType message, IWorkflowContext context)
     {
         // Process the response...
         ...
     }
 
-    public async ValueTask HandleOtherDataAsync(OtherDataType message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask HandleOtherDataAsync(OtherDataType message, IWorkflowContext context)
     {
         // Process the message...
         ...
@@ -79,7 +75,6 @@ internal sealed class SomeExecutor() : Executor("SomeExecutor")
         await context.SendMessageAsync(new CustomRequestType(...)).ConfigureAwait(false);
     }
 }
-
 ```
 
 ::: zone-end
