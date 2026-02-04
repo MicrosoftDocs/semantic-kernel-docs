@@ -325,7 +325,7 @@ memory_provider = Mem0Provider(
 agent = ChatAgent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant with memory.",
-    context_providers=memory_provider
+    context_provider=memory_provider
 )
 ```
 

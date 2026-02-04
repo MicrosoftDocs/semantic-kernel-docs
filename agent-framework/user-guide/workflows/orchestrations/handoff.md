@@ -473,7 +473,7 @@ while pending_requests:
     for request in pending_requests:
         if isinstance(request.data, HandoffAgentUserRequest):
             # Agent needs user input
-            print(f"Agent {request.source_executor_id} asks:")
+            print(f"Agent {request.executor_id} asks:")
             for msg in request.data.agent_response.messages[-2:]:
                 print(f"  {msg.author_name}: {msg.text}")
 

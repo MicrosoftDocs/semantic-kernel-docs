@@ -1,0 +1,173 @@
+name: Agent Framework Docs Sync
+
+on:
+  # disabled schedule until we are confident it works well
+  # schedule:
+  #   # Run at 2pm UTC on weekdays (Mon-Fri)
+  #   - cron: '0 14 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  actions: read
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get last successful run time
+        id: last-run
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Get workflow runs for this workflow
+            const { data: runs } = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'agent-framework-docs-sync.yml',
+              status: 'success',
+              per_page: 2
+            });
+
+            // Find the previous successful run (not the current one)
+            const previousRun = runs.workflow_runs.find(run => run.id !== context.runId);
+
+            let sinceDate;
+            if (previousRun) {
+              sinceDate = previousRun.created_at;
+              console.log(`Found previous successful run at: ${sinceDate}`);
+            } else {
+              // First run or no previous success - default to 24 hours ago
+              const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+              sinceDate = yesterday.toISOString();
+              console.log(`No previous run found, using: ${sinceDate}`);
+            }
+
+            core.setOutput('since_date', sinceDate);
+
+      - name: Fetch merged PRs from agent-framework
+        id: fetch-prs
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const sinceDate = '${{ steps.last-run.outputs.since_date }}';
+            const sinceISO = sinceDate.split('T')[0];
+
+            // Search for PRs merged since the last run
+            const { data: searchResults } = await github.rest.search.issuesAndPullRequests({
+              q: `repo:microsoft/agent-framework is:pr is:merged merged:>=${sinceISO}`,
+              sort: 'updated',
+              order: 'desc',
+              per_page: 100
+            });
+
+            console.log(`Found ${searchResults.total_count} merged PRs since ${sinceISO}`);
+
+            if (searchResults.total_count === 0) {
+              core.setOutput('has_prs', 'false');
+              return;
+            }
+
+            // Filter to PRs merged after the exact timestamp
+            const sinceTime = new Date(sinceDate).getTime();
+            const prs = [];
+
+            for (const item of searchResults.items) {
+              const { data: pr } = await github.rest.pulls.get({
+                owner: 'microsoft',
+                repo: 'agent-framework',
+                pull_number: item.number
+              });
+
+              // Only include PRs merged after our last run
+              if (new Date(pr.merged_at).getTime() > sinceTime) {
+                prs.push({
+                  number: pr.number,
+                  title: pr.title,
+                  body: pr.body || '',
+                  url: pr.html_url,
+                  merged_at: pr.merged_at,
+                  labels: pr.labels.map(l => l.name)
+                });
+              }
+            }
+
+            if (prs.length === 0) {
+              console.log('No PRs merged after the exact timestamp');
+              core.setOutput('has_prs', 'false');
+              return;
+            }
+
+            console.log(`${prs.length} PRs to process`);
+            core.setOutput('has_prs', 'true');
+            core.setOutput('pr_list', JSON.stringify(prs));
+            core.setOutput('pr_summary', prs.map(p => `- [#${p.number}](${p.url}): ${p.title}`).join('\n'));
+
+      - name: Create issue for Copilot coding agent
+        if: steps.fetch-prs.outputs.has_prs == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prSummary = `${{ steps.fetch-prs.outputs.pr_summary }}`;
+            const prList = JSON.parse('${{ steps.fetch-prs.outputs.pr_list }}');
+            const sinceDate = '${{ steps.last-run.outputs.since_date }}';
+
+            // Build detailed PR information
+            let prDetails = '';
+            for (const pr of prList) {
+              prDetails += `### [#${pr.number}](${pr.url}): ${pr.title}\n`;
+              prDetails += `**Merged:** ${pr.merged_at}\n`;
+              prDetails += `**Labels:** ${pr.labels.length > 0 ? pr.labels.join(', ') : 'None'}\n`;
+              if (pr.body) {
+                prDetails += `\n<details><summary>PR Description</summary>\n\n${pr.body}\n\n</details>\n`;
+              }
+              prDetails += '\n---\n\n';
+            }
+
+            const issueBody = `## Problem Statement
+
+            The following PRs were merged in [microsoft/agent-framework](https://github.com/microsoft/agent-framework) since the last workflow run and may require documentation updates in this repository.
+
+            ## PRs to Process
+
+            ${prSummary}
+
+            ## PR Details
+
+            ${prDetails}
+
+            ## Acceptance Criteria
+
+            Follow the instructions in \`.github/agents/agent-framework-pr-merge.agent.md\` to:
+
+            1. **Analyze each PR** to determine if documentation updates are needed
+            2. **Update relevant documentation** in \`agent-framework/\` for any API or behavior changes
+            3. **Add Python breaking changes** to \`agent-framework/support/upgrade/python-2026-significant-changes.md\`:
+               - Use the "Unreleased (Coming Soon)" section if the change is not yet in a published release
+               - Include before/after code examples
+               - Add entry to the summary table
+            4. **Handle version updates** by converting "Unreleased" sections to the proper version header
+
+            ## Files to Reference
+
+            - Agent instructions: \`.github/agents/agent-framework-pr-merge.agent.md\`
+            - Breaking changes doc: \`agent-framework/support/upgrade/python-2026-significant-changes.md\`
+            - Documentation root: \`agent-framework/\`
+
+            ---
+            *This issue was automatically created by the Agent Framework Docs Sync workflow.*`;
+
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Docs Sync] Update documentation for recent agent-framework PRs`,
+              body: issueBody,
+              labels: ['documentation', 'automated', 'copilot'],
+              assignees: ['copilot']
+            });
+
+            console.log(`Created issue #${issue.number}: ${issue.html_url}`);

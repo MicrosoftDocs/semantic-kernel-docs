@@ -2,7 +2,7 @@
 title: Upgrade Guide - Chat Client and Chat Agent options through TypedDicts
 description: Guide on upgrading chat client and chat agent options to use TypedDicts in the Agent Framework.
 author: eavanvalkenburg
-ms.topic: tutorial
+ms.topic: upgrade-and-migration-article
 ms.author: edvan
 ms.date: 01/15/2026
 ms.service: agent-framework
@@ -75,7 +75,7 @@ response = await client.get_response(
 ### Key Changes
 
 1. **Consolidated Options Parameter**: Most keyword arguments (`model_id`, `temperature`, etc.) are now passed via a single `options` dict
-2. **Exception for Agent Creation**: `instructions` and `tools` remain available as direct keyword arguments on `ChatAgent.__init__()` and `create_agent()`
+2. **Exception for Agent Creation**: `instructions` and `tools` remain available as direct keyword arguments on `ChatAgent.__init__()` and `as_agent()`
 3. **Exception for Agent Run**: `tools` remains available as a direct keyword argument on `agent.run()`
 4. **TypedDict-based Options**: Options are defined as `TypedDict` classes for type safety
 5. **Generic Type Support**: Chat clients and agents support generics for provider-specific options, to allow runtime overloads
@@ -580,7 +580,7 @@ extended_options = {**my_options, "max_tokens": 500}
 1. Find all `ChatAgent` constructors and `run()` calls that use keyword arguments
 2. Move keyword arguments on constructors to `default_options={...}`
 3. Move keyword arguments on `run()` to `options={...}`
-4. **Exception**: `tools` and `instructions` can remain as keyword arguments on `ChatAgent.__init__()` and `create_agent()`
+4. **Exception**: `tools` and `instructions` can remain as keyword arguments on `ChatAgent.__init__()` and `as_agent()`
 5. **Exception**: `tools` can remain as a keyword argument on `run()`
 
 ### Custom Chat Client Updates

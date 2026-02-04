@@ -336,7 +336,7 @@ class UserInfoMemory(ContextProvider):
 
 To use the custom `ContextProvider`, you need to provide the instantiated `ContextProvider` when creating the agent.
 
-When creating a `ChatAgent` you can provide the `context_providers` parameter to attach the memory component to the agent.
+When creating a `ChatAgent` you can provide the `context_provider` parameter to attach the memory component to the agent.
 
 ```python
 import asyncio
@@ -355,7 +355,7 @@ async def main():
         async with ChatAgent(
             chat_client=chat_client,
             instructions="You are a friendly assistant. Always address the user by their name.",
-            context_providers=memory_provider,
+            context_provider=memory_provider,
         ) as agent:
             # Create a new thread for the conversation
             thread = agent.get_new_thread()

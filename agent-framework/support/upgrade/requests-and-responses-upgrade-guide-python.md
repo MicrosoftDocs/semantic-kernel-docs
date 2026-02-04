@@ -2,7 +2,7 @@
 title: Upgrade Guide - Workflow APIs and Request-Response System in Python
 description: Guide on upgrading to consolidated workflow APIs and the new request-response system in Microsoft Agent Framework.
 author: TaoChenOSU
-ms.topic: tutorial
+ms.topic: upgrade-and-migration-article
 ms.author: taochen
 ms.date: 11/06/2025
 ms.service: agent-framework
@@ -161,7 +161,7 @@ async def run_interactive_session(
     checkpoint_id: str | None = None,
 ) -> str:
     """Run workflow until completion, handling human input interactively."""
-    
+
     requests: dict[str, HumanApprovalRequest] = {}
     responses: dict[str, str] | None = None
     completed_output: str | None = None

@@ -340,7 +340,7 @@ Event: ExecutorInvokedEvent(executor_id=upper_case_executor)
 Event: ExecutorCompletedEvent(executor_id=upper_case_executor)
 Event: ExecutorInvokedEvent(executor_id=reverse_text_executor)
 Event: ExecutorCompletedEvent(executor_id=reverse_text_executor)
-Event: WorkflowOutputEvent(data='DLROW OLLEH', source_executor_id=reverse_text_executor)
+Event: WorkflowOutputEvent(data='DLROW OLLEH', executor_id=reverse_text_executor)
 Workflow completed with result: DLROW OLLEH
 ```
 
