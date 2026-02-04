@@ -72,16 +72,16 @@ agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
 )
 ```
 
-Next, create a `ChatMessage` that contains both a text prompt and an image URL. Use `TextContent` for the text and `UriContent` for the image.
+Next, create a `ChatMessage` that contains both a text prompt and an image URL. Use `Content.from_text()` for the text and `Content.from_uri()` for the image.
 
 ```python
-from agent_framework import ChatMessage, TextContent, UriContent, Role
+from agent_framework import ChatMessage, Content, Role
 
 message = ChatMessage(
     role=Role.USER,
     contents=[
-        TextContent(text="What do you see in this image?"),
-        UriContent(
+        Content.from_text(text="What do you see in this image?"),
+        Content.from_uri(
             uri="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
             media_type="image/jpeg"
         )
@@ -89,10 +89,10 @@ message = ChatMessage(
 )
 ```
 
-You can also load an image from your local file system using `DataContent`:
+You can also load an image from your local file system using `Content.from_data()`:
 
 ```python
-from agent_framework import ChatMessage, TextContent, DataContent, Role
+from agent_framework import ChatMessage, Content, Role
 
 # Load image from local file
 with open("path/to/your/image.jpg", "rb") as f:
@@ -101,8 +101,8 @@ with open("path/to/your/image.jpg", "rb") as f:
 message = ChatMessage(
     role=Role.USER,
     contents=[
-        TextContent(text="What do you see in this image?"),
-        DataContent(
+        Content.from_text(text="What do you see in this image?"),
+        Content.from_data(
             data=image_bytes,
             media_type="image/jpeg"
         )

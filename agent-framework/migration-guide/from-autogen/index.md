@@ -95,7 +95,7 @@ result = await agent.run("Help me with this task")
 
 1. Orchestration style: AutoGen pairs an event-driven core with a high‑level `Team`. Agent Framework centers on a typed, graph‑based `Workflow` that routes data along edges and activates executors when inputs are ready.
 
-2. Tools: AutoGen wraps functions with `FunctionTool`. Agent Framework uses `@ai_function`, infers schemas automatically, and adds hosted tools such as a code interpreter and web search.
+2. Tools: AutoGen wraps functions with `FunctionTool`. Agent Framework uses `@tool`, infers schemas automatically, and adds hosted tools such as a code interpreter and web search.
 
 3. Agent behavior: `AssistantAgent` is single‑turn unless you increase `max_tool_iterations`. `ChatAgent` is multi‑turn by default and keeps invoking tools until it can return a final answer.
 
@@ -203,16 +203,16 @@ result = await agent.run(task="What's the weather?")
 #### Agent Framework ChatAgent
 
 ```python
-from agent_framework import ChatAgent, ai_function
+from agent_framework import ChatAgent, tool
 from agent_framework.openai import OpenAIChatClient
 
 # Create simple tools for the example
-@ai_function
+@tool
 def get_weather(location: str) -> str:
     """Get weather for a location."""
     return f"Weather in {location}: sunny"
 
-@ai_function
+@tool
 def get_time() -> str:
     """Get current time."""
     return "Current time: 2:30 PM"
@@ -388,13 +388,13 @@ user_message = text_msg.to_model_message()
 #### Agent Framework Message Types
 
 ```python
-from agent_framework import ChatMessage, TextContent, DataContent, UriContent, Role
+from agent_framework import ChatMessage, Content, Role
 import base64
 
 # Text message
 text_msg = ChatMessage(role=Role.USER, text="Hello")
 
-# Supply real image bytes, or use a data: URI/URL via UriContent
+# Supply real image bytes, or use a data: URI/URL via Content.from_uri()
 image_bytes = b"<your_image_bytes>"
 image_b64 = base64.b64encode(image_bytes).decode()
 image_uri = f"data:image/jpeg;base64,{image_b64}"
@@ -403,8 +403,8 @@ image_uri = f"data:image/jpeg;base64,{image_b64}"
 multi_modal_msg = ChatMessage(
     role=Role.USER,
     contents=[
-        TextContent(text="Describe this image"),
-        DataContent(uri=image_uri, media_type="image/jpeg")
+        Content.from_text(text="Describe this image"),
+        Content.from_uri(uri=image_uri, media_type="image/jpeg")
     ]
 )
 ```
@@ -438,14 +438,14 @@ tool = FunctionTool(
 agent = AssistantAgent(name="assistant", model_client=client, tools=[tool])
 ```
 
-#### Agent Framework @ai_function
+#### Agent Framework @tool
 
 ```python
-from agent_framework import ai_function
+from agent_framework import tool
 from typing import Annotated
 from pydantic import Field
 
-@ai_function
+@tool
 def get_weather(
     location: Annotated[str, Field(description="The location to get weather for")]
 ) -> str:
@@ -702,8 +702,8 @@ from agent_framework import (
     AgentThread,
     BaseAgent,
     ChatMessage,
+    Content,
     Role,
-    TextContent,
 )
 
 class StaticAgent(BaseAgent):
@@ -715,7 +715,7 @@ class StaticAgent(BaseAgent):
         **kwargs: Any,
     ) -> AgentResponse:
         # Build a static reply
-        reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
+        reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
 
         # Persist conversation to the provided AgentThread (if any)
         if thread is not None:
@@ -732,11 +732,11 @@ class StaticAgent(BaseAgent):
         **kwargs: Any,
     ) -> AsyncIterable[AgentResponseUpdate]:
         # Stream the same static response in a single chunk for simplicity
-        yield AgentResponseUpdate(contents=[TextContent(text="Hello from AF custom agent")], role=Role.ASSISTANT)
+        yield AgentResponseUpdate(contents=[Content.from_text(text="Hello from AF custom agent")], role=Role.ASSISTANT)
 
         # Notify thread of input and the complete response once streaming ends
         if thread is not None:
-            reply = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text="Hello from AF custom agent")])
+            reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
             normalized = self._normalize_messages(messages)
             await self._notify_thread_of_new_messages(thread, normalized, reply)
 ```
@@ -1226,8 +1226,8 @@ manager_agent = ChatAgent(
 
 workflow = (
     MagenticBuilder()
-    .participants(researcher=researcher, coder=coder)
-    .with_standard_manager(
+    .participants([researcher, coder])
+    .with_manager(
         agent=manager_agent,
         max_round_count=20,
         max_stall_count=3,
@@ -1240,19 +1240,7 @@ workflow = (
 async def magentic_example():
     output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
-        if isinstance(event, AgentResponseUpdateEvent):
-            props = event.data.additional_properties if event.data else None
-            event_type = props.get("magentic_event_type") if props else None
-
-            if event_type == MAGENTIC_EVENT_TYPE_ORCHESTRATOR:
-                text = event.data.text if event.data else ""
-                print(f"[ORCHESTRATOR]: {text}")
-            elif event_type == MAGENTIC_EVENT_TYPE_AGENT_DELTA:
-                agent_id = props.get("agent_id", event.executor_id) if props else event.executor_id
-                if event.data and event.data.text:
-                    print(f"[{agent_id}]: {event.data.text}", end="")
-
-        elif isinstance(event, WorkflowOutputEvent):
+        if isinstance(event, WorkflowOutputEvent):
             output_messages = cast(list[ChatMessage], event.data)
             if output_messages:
                 output = output_messages[-1].text
@@ -1296,12 +1284,8 @@ manager_agent = ChatAgent(
 
 workflow = (
     MagenticBuilder()
-    .participants(
-        researcher=researcher_agent,
-        coder=coder_agent,
-        analyst=analyst_agent,
-    )
-    .with_standard_manager(
+    .participants([researcher_agent, coder_agent, analyst_agent])
+    .with_manager(
         agent=manager_agent,
         max_round_count=15,      # Limit total rounds
         max_stall_count=2,       # Trigger stall handling

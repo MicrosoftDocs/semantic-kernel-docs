@@ -68,21 +68,22 @@ await using Checkpointed<StreamingRun> checkpointedRun = await InProcessExecutio
 
 ### Executor State
 
-Executors can persist local state that survives checkpoints using the `Executor<T>` base class:
+Executors can persist local state that survives checkpoints:
 
 ```csharp
-internal sealed class GuessNumberExecutor : Executor<NumberSignal>("Guess")
+internal sealed partial class GuessNumberExecutor : Executor
 {
     private const string StateKey = "GuessNumberExecutor.State";
 
     public int LowerBound { get; private set; }
     public int UpperBound { get; private set; }
 
-    public GuessNumberExecutor() : this()
+    public GuessNumberExecutor() : base("Guess")
     {
     }
 
-    public override async ValueTask HandleAsync(NumberSignal message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(NumberSignal message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         int guess = (LowerBound + UpperBound) / 2;
         await context.SendMessageAsync(guess, cancellationToken);

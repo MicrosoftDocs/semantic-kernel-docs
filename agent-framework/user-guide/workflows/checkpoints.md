@@ -189,15 +189,15 @@ To ensure that the state of an executor is captured in a checkpoint, the executo
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class CustomExecutor() : Executor<string>("CustomExecutor")
+internal sealed partial class CustomExecutor() : Executor("CustomExecutor")
 {
     private const string StateKey = "CustomExecutorState";
 
     private List<string> messages = new();
 
-    public async ValueTask HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask HandleAsync(string message, IWorkflowContext context)
     {
         this.messages.Add(message);
         // Executor logic...

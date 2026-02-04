@@ -23,9 +23,7 @@ items:
   - name: Observability
     href: user-guide/observability.md
 - name: Integrations
-  items:
-  - name: AG-UI
-    href: integrations/ag-ui/TOC.yml
+  href: integrations/TOC.yml
 - name: Support
   href: support/TOC.yml
 - name: Migration Guide

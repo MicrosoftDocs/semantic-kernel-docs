@@ -2,7 +2,7 @@
   href: agent-types/TOC.yml
 - name: Running Agents
   href: running-agents.md
-- name: Multi-Turn Conversations and Threading
+- name: Multi-Turn Conversations
   href: multi-turn-conversation.md
 - name: Agent Chat History and Memory
   href: agent-memory.md

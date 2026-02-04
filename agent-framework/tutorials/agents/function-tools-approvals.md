@@ -66,8 +66,8 @@ Since you now have a function that requires approval, the agent might respond wi
 You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
 
 ```csharp
-AgentThread thread = await agent.GetNewThreadAsync();
-AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread);
+AgentSession session = await agent.CreateSessionAsync();
+AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", session);
 
 var functionApprovalRequests = response.Messages
     .SelectMany(x => x.Contents)
@@ -87,11 +87,11 @@ Console.WriteLine($"We require approval to execute '{requestContent.FunctionCall
 Once the user has provided their input, you can create a `FunctionApprovalResponseContent` instance using the `CreateResponse` method on the `FunctionApprovalRequestContent`.
 Pass `true` to approve the function call, or `false` to reject it.
 
-The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same thread object to get the result back from the agent.
+The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same session object to get the result back from the agent.
 
 ```csharp
 var approvalMessage = new ChatMessage(ChatRole.User, [requestContent.CreateResponse(true)]);
-Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+Console.WriteLine(await agent.RunAsync(approvalMessage, session));
 ```
 
 Whenever you are using function tools with human in the loop approvals, remember to check for `FunctionApprovalRequestContent` instances in the response, after each agent run, until all function calls have been approved or rejected.
@@ -112,15 +112,15 @@ For prerequisites and installing Python packages, see the [Create and run a simp
 ## Create the agent with function tools requiring approval
 
 When using functions, it's possible to indicate for each function, whether it requires human approval before being executed.
-This is done by setting the `approval_mode` parameter to `"always_require"` when using the `@ai_function` decorator.
+This is done by setting the `approval_mode` parameter to `"always_require"` when using the `@tool` decorator.
 
 Here is an example of a simple function tool that fakes getting the weather for a given location.
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function
+@tool
 def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get the current weather for a given location."""
     return f"The weather in {location} is cloudy with a high of 15°C."
@@ -129,7 +129,7 @@ def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco
 To create a function that requires approval, you can use the `approval_mode` parameter:
 
 ```python
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def get_weather_detail(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get detailed weather information for a given location."""
     return f"The weather in {location} is cloudy with a high of 15°C, humidity 88%."

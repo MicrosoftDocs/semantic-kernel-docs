@@ -144,14 +144,14 @@ Sometimes you might want to customize how AI agents are integrated into a workfl
 - The invocation of the agent: streaming or non-streaming
 - The message types the agent will handle, including custom message types
 - The life cycle of the agent, including initialization and cleanup
-- The usage of agent threads and other resources
+- The usage of agent sessions and other resources
 - Additional events emitted during the agent's execution, including custom events
 - Integration with other workflow features, such as shared states and requests/responses
 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-internal sealed class CustomAgentExecutor : Executor<CustomInput, CustomOutput>("CustomAgentExecutor")
+internal sealed partial class CustomAgentExecutor : Executor
 {
     private readonly AIAgent _agent;
 
@@ -164,7 +164,8 @@ internal sealed class CustomAgentExecutor : Executor<CustomInput, CustomOutput>(
         this._agent = agent;
     }
 
-    public async ValueTask<CustomOutput> HandleAsync(CustomInput message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask<CustomOutput> HandleAsync(CustomInput message, IWorkflowContext context)
     {
         // Retrieve any shared states if needed
         var sharedState = await context.ReadStateAsync<SharedStateType>("sharedStateId", scopeName: "SharedStateScope");

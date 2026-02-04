@@ -177,7 +177,8 @@ async def main():
     async with (
         AzureCliCredential() as credential,
         AzureAIClient(async_credential=credential).as_agent(
-            instructions="You are good at telling jokes."
+            name="JokeAgent",
+            instructions="You are good at telling jokes.",
         ) as agent,
     ):
         result = await agent.run("Tell me a joke about a pirate.")

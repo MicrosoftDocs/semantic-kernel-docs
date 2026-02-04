@@ -162,7 +162,7 @@ async def streaming_example():
 Use advanced reasoning capabilities with models like GPT-5:
 
 ```python
-from agent_framework import HostedCodeInterpreterTool, TextContent, TextReasoningContent
+from agent_framework import Content, HostedCodeInterpreterTool, TextReasoningContent
 
 async def reasoning_example():
     agent = OpenAIResponsesClient(ai_model_id="gpt-5").as_agent(
@@ -180,7 +180,7 @@ async def reasoning_example():
                 if isinstance(content, TextReasoningContent):
                     # Reasoning content in gray text
                     print(f"\033[97m{content.text}\033[0m", end="", flush=True)
-                elif isinstance(content, TextContent):
+                elif content.type == "text":
                     print(content.text, end="", flush=True)
     print()
 ```
@@ -433,7 +433,7 @@ async def web_search_example():
 Analyze and understand images with multi-modal capabilities:
 
 ```python
-from agent_framework import ChatMessage, TextContent, UriContent
+from agent_framework import ChatMessage, Content
 
 async def image_analysis_example():
     agent = OpenAIResponsesClient().as_agent(
@@ -445,8 +445,8 @@ async def image_analysis_example():
     message = ChatMessage(
         role="user",
         contents=[
-            TextContent(text="What do you see in this image?"),
-            UriContent(
+            Content.from_text(text="What do you see in this image?"),
+            Content.from_uri(
                 uri="your-image-uri",
                 media_type="image/jpeg",
             ),
@@ -462,7 +462,7 @@ async def image_analysis_example():
 Generate images using the Responses API:
 
 ```python
-from agent_framework import DataContent, HostedImageGenerationTool, ImageGenerationToolResultContent, UriContent
+from agent_framework import Content, HostedImageGenerationTool, ImageGenerationToolResultContent
 
 async def image_generation_example():
     agent = OpenAIResponsesClient().as_agent(
@@ -484,7 +484,7 @@ async def image_generation_example():
         for content in message.contents:
             if isinstance(content, ImageGenerationToolResultContent) and content.outputs:
                 for output in content.outputs:
-                    if isinstance(output, (DataContent, UriContent)) and output.uri:
+                    if output.type in ("data", "uri") and output.uri:
                         print(f"Image generated: {output.uri}")
 ```
 

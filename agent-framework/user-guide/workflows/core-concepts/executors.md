@@ -19,20 +19,23 @@ Executors are the fundamental building blocks that process messages in a workflo
 
 ::: zone pivot="programming-language-csharp"
 
-Executors inherit from the `Executor<TInput, TOutput>` base class. Each executor has a unique identifier and can handle specific message types.
+> [!IMPORTANT]
+> Starting with this release, the recommended way to define executor message handlers in C# is to use the `[MessageHandler]` attribute on methods within a `partial` class that derives from `Executor`. This replaces the previous patterns of inheriting from `Executor<TInput>`, `Executor<TInput, TOutput>`, or `ReflectingExecutor<T>` with `IMessageHandler<T>` interfaces. The new approach uses compile-time source generation for handler registration, providing better performance, compile-time validation, and Native AOT compatibility. The previous patterns are deprecated and will be removed in a future version.
+
+Executors derive from the `Executor` base class and use the `[MessageHandler]` attribute to declare handler methods. The class must be marked `partial` to enable source generation. Each executor has a unique identifier and can handle specific message types.
 
 ### Basic Executor Structure
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class UppercaseExecutor() : Executor<string, string>("UppercaseExecutor")
+internal sealed partial class UppercaseExecutor() : Executor("UppercaseExecutor")
 {
-    public async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private ValueTask<string> HandleAsync(string message, IWorkflowContext context)
     {
         string result = message.ToUpperInvariant();
-        return result; // Return value is automatically sent to connected executors
+        return ValueTask.FromResult(result); // Return value is automatically sent to connected executors
     }
 }
 ```
@@ -40,9 +43,10 @@ internal sealed class UppercaseExecutor() : Executor<string, string>("UppercaseE
 It is possible to send messages manually without returning a value:
 
 ```csharp
-internal sealed class UppercaseExecutor() : Executor<string>("UppercaseExecutor")
+internal sealed partial class UppercaseExecutor() : Executor("UppercaseExecutor")
 {
-    public async ValueTask HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask HandleAsync(string message, IWorkflowContext context)
     {
         string result = message.ToUpperInvariant();
         await context.SendMessageAsync(result); // Manually send messages to connected executors
@@ -50,34 +54,27 @@ internal sealed class UppercaseExecutor() : Executor<string>("UppercaseExecutor"
 }
 ```
 
-It is also possible to handle multiple input types by overriding the `ConfigureRoutes` method:
+It is also possible to handle multiple input types by defining multiple `[MessageHandler]` methods:
 
 ```csharp
-internal sealed class SampleExecutor() : Executor("SampleExecutor")
+internal sealed partial class SampleExecutor() : Executor("SampleExecutor")
 {
-    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
-    {
-        return routeBuilder
-            .AddHandler<string>(this.HandleStringAsync)
-            .AddHandler<int>(this.HandleIntAsync);
-    }
-
     /// <summary>
     /// Converts input string to uppercase
     /// </summary>
-    public async ValueTask<string> HandleStringAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private ValueTask<string> HandleStringAsync(string message, IWorkflowContext context)
     {
-        string result = message.ToUpperInvariant();
-        return result;
+        return ValueTask.FromResult(message.ToUpperInvariant());
     }
 
     /// <summary>
     /// Doubles the input integer
     /// </summary>
-    public async ValueTask<int> HandleIntAsync(int message, IWorkflowContext context)
+    [MessageHandler]
+    private ValueTask<int> HandleIntAsync(int message, IWorkflowContext context)
     {
-        int result = message * 2;
-        return result;
+        return ValueTask.FromResult(message * 2);
     }
 }
 ```
