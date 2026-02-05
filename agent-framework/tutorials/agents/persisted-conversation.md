@@ -48,7 +48,7 @@ Run the agent, passing in the session, so that the `AgentSession` includes this 
 Console.WriteLine(await agent.RunAsync("Tell me a short pirate joke.", session));
 ```
 
-Call the `Serialize` method on the session to serialize it to a JsonElement.
+Call the `SerializeSession` method on the agent to serialize the session to a JsonElement.
 It can then be converted to a string for storage and saved to a database, blob storage, or file.
 
 ```csharp
@@ -56,7 +56,7 @@ using System.IO;
 using System.Text.Json;
 
 // Serialize the session state
-string serializedJson = session.Serialize(JsonSerializerOptions.Web).GetRawText();
+string serializedJson = agent.SerializeSession(session, JsonSerializerOptions.Web).GetRawText();
 
 // Example: save to a local file (replace with DB or blob storage in production)
 string filePath = Path.Combine(Path.GetTempPath(), "agent_session.json");

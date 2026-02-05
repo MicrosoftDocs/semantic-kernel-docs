@@ -67,7 +67,7 @@ AgentSession session = await agent.CreateSessionAsync();
 var response = await agent.RunAsync("Hello, how are you?", session);
 
 // Serialize the session for storage.
-JsonElement serializedSession = session.Serialize();
+JsonElement serializedSession = agent.SerializeSession(session);
 // Deserialize the session state after loading from storage.
 AgentSession resumedSession = await agent.DeserializeSessionAsync(serializedSession);
 

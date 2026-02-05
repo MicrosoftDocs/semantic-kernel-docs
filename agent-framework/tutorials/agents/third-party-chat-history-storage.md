@@ -227,7 +227,7 @@ AgentSession session = await agent.CreateSessionAsync();
 var response = await agent.RunAsync("Tell me a joke about a pirate.", session);
 
 // The session state can be serialized for storage
-JsonElement serializedSession = session.Serialize();
+JsonElement serializedSession = agent.SerializeSession(session);
 
 // Later, deserialize the session to resume the conversation
 AgentSession resumedSession = await agent.DeserializeSessionAsync(serializedSession);

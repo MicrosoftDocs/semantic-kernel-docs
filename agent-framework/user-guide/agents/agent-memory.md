@@ -153,11 +153,11 @@ It is important to be able to persist an `AgentSession` object between agent inv
 
 Even if the chat history is stored in a remote store, the `AgentSession` object still contains an ID referencing the remote chat history. Losing the `AgentSession` state will therefore result in also losing the ID of the remote chat history.
 
-The `AgentSession` as well as any objects attached to it, all therefore provide the `Serialize` method to serialize their state. The `AIAgent` also provides a `DeserializeSessionAsync` method that re-creates a session from the serialized state. The `DeserializeSessionAsync` method re-creates the session with the `ChatHistoryProvider` and `AIContextProvider` configured on the agent.
+The `AIAgent` provides the `SerializeSession` method to serialize session state, as well as a `DeserializeSessionAsync` method that re-creates a session from the serialized state. The `DeserializeSessionAsync` method re-creates the session with the `ChatHistoryProvider` and `AIContextProvider` configured on the agent.
 
 ```csharp
 // Serialize the session state to a JsonElement, so it can be stored for later use.
-JsonElement serializedSessionState = session.Serialize();
+JsonElement serializedSessionState = agent.SerializeSession(session);
 
 // Re-create the session from the JsonElement.
 AgentSession resumedSession = await agent.DeserializeSessionAsync(serializedSessionState);

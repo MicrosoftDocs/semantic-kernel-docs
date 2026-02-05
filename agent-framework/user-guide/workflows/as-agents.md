@@ -150,7 +150,7 @@ Workflow agent sessions can be serialized for persistence and resumed later:
 
 ```csharp
 // Serialize the session state
-JsonElement serializedSession = session.Serialize();
+JsonElement serializedSession = workflowAgent.SerializeSession(session);
 
 // Store serializedSession to your persistence layer...
 
