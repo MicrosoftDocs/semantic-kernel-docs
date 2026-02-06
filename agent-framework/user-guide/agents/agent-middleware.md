@@ -171,7 +171,7 @@ Function-based middleware is the simplest way to implement middleware using asyn
 
 ### Agent Middleware
 
-Agent middleware intercepts and modifies agent run execution. It uses the `AgentRunContext` which contains:
+Agent middleware intercepts and modifies agent run execution. It uses the `AgentContext` which contains:
 
 - `agent`: The agent being invoked
 - `messages`: List of chat messages in the conversation
@@ -187,8 +187,8 @@ Here's a simple logging example with logic before and after `next` callable:
 
 ```python
 async def logging_agent_middleware(
-    context: AgentRunContext,
-    next: Callable[[AgentRunContext], Awaitable[None]],
+    context: AgentContext,
+    next: Callable[[AgentContext], Awaitable[None]],
 ) -> None:
     """Agent middleware that logs execution timing."""
     # Pre-processing: Log before agent execution
@@ -307,15 +307,15 @@ Class-based middleware is useful for stateful operations or complex logic that b
 Class-based agent middleware uses a `process` method that has the same signature and behavior as function-based middleware. The `process` method receives the same `context` and `next` parameters and is invoked in exactly the same way.
 
 ```python
-from agent_framework import AgentMiddleware, AgentRunContext
+from agent_framework import AgentMiddleware, AgentContext
 
 class LoggingAgentMiddleware(AgentMiddleware):
     """Agent middleware that logs execution."""
 
     async def process(
         self,
-        context: AgentRunContext,
-        next: Callable[[AgentRunContext], Awaitable[None]],
+        context: AgentContext,
+        next: Callable[[AgentContext], Awaitable[None]],
     ) -> None:
         # Pre-processing: Log before agent execution
         print("[Agent Class] Starting execution")
@@ -424,8 +424,8 @@ Middleware can terminate execution early using `context.terminate`. This is usef
 
 ```python
 async def blocking_middleware(
-    context: AgentRunContext,
-    next: Callable[[AgentRunContext], Awaitable[None]],
+    context: AgentContext,
+    next: Callable[[AgentContext], Awaitable[None]],
 ) -> None:
     """Middleware that blocks execution based on conditions."""
     # Check for blocked content
@@ -458,8 +458,8 @@ You can use `context.is_streaming` to differentiate between these scenarios and 
 
 ```python
 async def weather_override_middleware(
-    context: AgentRunContext,
-    next: Callable[[AgentRunContext], Awaitable[None]]
+    context: AgentContext,
+    next: Callable[[AgentContext], Awaitable[None]]
 ) -> None:
     """Middleware that overrides weather results for both streaming and non-streaming."""
 

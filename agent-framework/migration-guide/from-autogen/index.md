@@ -618,13 +618,13 @@ as agents are stateless by default.
 Agent Framework introduces middleware capabilities that AutoGen lacks. Middleware enables powerful cross-cutting concerns like logging, security, and performance monitoring.
 
 ```python
-from agent_framework import ChatAgent, AgentRunContext, FunctionInvocationContext
+from agent_framework import ChatAgent, AgentContext, FunctionInvocationContext
 from typing import Callable, Awaitable
 
 # Assume we have client from previous examples
 async def logging_middleware(
-    context: AgentRunContext,
-    next: Callable[[AgentRunContext], Awaitable[None]]
+    context: AgentContext,
+    next: Callable[[AgentContext], Awaitable[None]]
 ) -> None:
     print(f"Agent {context.agent.name} starting")
     await next(context)

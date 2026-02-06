@@ -233,11 +233,11 @@ if __name__ == "__main__":
 Create a simple logging middleware to see when your agent runs:
 
 ```python
-from agent_framework import AgentRunContext
+from agent_framework import AgentContext
 
 async def logging_agent_middleware(
-    context: AgentRunContext,
-    next: Callable[[AgentRunContext], Awaitable[None]],
+    context: AgentContext,
+    next: Callable[[AgentContext], Awaitable[None]],
 ) -> None:
     """Simple middleware that logs agent execution."""
     print("Agent starting...")
