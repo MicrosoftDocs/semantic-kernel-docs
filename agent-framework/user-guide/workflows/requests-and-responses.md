@@ -200,7 +200,7 @@ When a checkpoint is created, pending requests are also saved as part of the che
 
 ## Next Steps
 
-- [Learn how to manage state](./shared-states.md) in workflows.
+- [Learn how to manage state](./state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
 - [Learn how to monitor workflows](./observability.md).
 - [Learn about state isolation in workflows](./state-isolation.md).

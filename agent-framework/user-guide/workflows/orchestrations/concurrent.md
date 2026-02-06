@@ -172,7 +172,7 @@ legal = chat_client.as_agent(
 The `ConcurrentBuilder` class allows you to construct a workflow to run multiple agents in parallel. You pass the list of agents as participants.
 
 ```python
-from agent_framework import ConcurrentBuilder
+from agent_framework.orchestrations import ConcurrentBuilder
 
 # 2) Build a concurrent workflow
 # Participants are either Agents (type of AgentProtocol) or Executors

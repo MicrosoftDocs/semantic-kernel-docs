@@ -1,6 +1,7 @@
 ---
 title: Microsoft Agent Framework Workflows Orchestrations
 description: In-depth look at Orchestrations in Microsoft Agent Framework Workflows.
+zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
@@ -11,6 +12,30 @@ ms.service: agent-framework
 # Microsoft Agent Framework Workflows Orchestrations
 
 Orchestrations are pre-built workflow patterns often with specially-built executors that allow developers to quickly create complex workflows by simply plugging in their own AI agents.
+
+::: zone pivot="programming-language-python"
+
+## Installation
+
+To use orchestrations in Python, install the orchestrations package:
+
+```bash
+pip install agent-framework-orchestrations --pre
+```
+
+Then import orchestration builders from `agent_framework.orchestrations`:
+
+```python
+from agent_framework.orchestrations import (
+    SequentialBuilder,
+    ConcurrentBuilder,
+    GroupChatBuilder,
+    MagenticBuilder,
+    HandoffBuilder,
+)
+```
+
+::: zone-end
 
 ## Why Multi-Agent?
 

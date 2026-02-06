@@ -192,7 +192,7 @@ writer = ChatAgent(
 Build a group chat with custom speaker selection logic:
 
 ```python
-from agent_framework import GroupChatBuilder, GroupChatState
+from agent_framework.orchestrations import GroupChatBuilder, GroupChatState
 
 def round_robin_selector(state: GroupChatState) -> str:
     """A round-robin selector function that picks the next speaker based on the current round index."""
@@ -250,7 +250,7 @@ Execute the workflow and process events:
 
 ```python
 from typing import cast
-from agent_framework import AgentResponseUpdateEvent, Role, WorkflowOutputEvent
+from agent_framework import AgentResponseUpdate, Role, WorkflowOutputEvent
 
 task = "What are the key benefits of async/await in Python?"
 
@@ -262,7 +262,7 @@ last_executor_id: str | None = None
 
 # Run the workflow
 async for event in workflow.run_stream(task):
-    if isinstance(event, AgentResponseUpdateEvent):
+    if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
         # Print streaming agent updates
         eid = event.executor_id
         if eid != last_executor_id:
@@ -341,7 +341,7 @@ Workflow completed.
 - **GroupChatBuilder**: Creates workflows with configurable speaker selection
 - **GroupChatState**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
-- **Event Streaming**: Process `AgentResponseUpdateEvent` and `WorkflowOutputEvent` in real-time
+- **Event Streaming**: Process `WorkflowOutputEvent` with `AgentResponseUpdate` data in real-time
 - **list[ChatMessage] Output**: All orchestrations return a list of chat messages
 
 ::: zone-end

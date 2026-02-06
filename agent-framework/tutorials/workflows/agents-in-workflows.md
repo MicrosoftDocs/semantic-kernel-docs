@@ -170,7 +170,7 @@ Properly clean up the Azure Foundry agents after use:
 
 - **Azure Foundry Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
 - **PersistentAgentsClient**: Client for creating and managing agents on Azure Foundry
-- **AgentResponseUpdateEvent**: Real-time streaming updates during agent execution
+- **WorkflowOutputEvent**: Contains agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
 - **TurnToken**: Signal that triggers agent processing after message caching
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next
 
@@ -216,7 +216,7 @@ from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
 from typing import Any
 
-from agent_framework import AgentResponseUpdateEvent, WorkflowBuilder, WorkflowOutputEvent
+from agent_framework import AgentResponseUpdate, WorkflowBuilder, WorkflowOutputEvent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 ```
@@ -290,7 +290,7 @@ Run the workflow with streaming to observe real-time updates from both agents:
 
         events = workflow.run_stream("Create a slogan for a new electric SUV that is affordable and fun to drive.")
         async for event in events:
-            if isinstance(event, AgentResponseUpdateEvent):
+            if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
                 # Handle streaming updates from agents
                 eid = event.executor_id
                 if eid != last_executor_id:
@@ -320,13 +320,13 @@ if __name__ == "__main__":
 1. **Azure AI Client Setup**: Uses `AzureAIAgentClient` with Azure CLI credentials for authentication
 2. **Agent Factory Pattern**: Creates a factory function that manages async context lifecycle for multiple agents
 3. **Sequential Processing**: Writer agent generates content first, then passes it to the Reviewer agent
-4. **Streaming Updates**: `AgentResponseUpdateEvent` provides real-time token updates as agents generate responses
+4. **Streaming Updates**: `WorkflowOutputEvent` with `AgentResponseUpdate` data provides real-time token updates as agents generate responses
 5. **Context Management**: Proper cleanup of Azure AI resources using `AsyncExitStack`
 
 ## Key Concepts
 
 - **Azure AI Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
-- **AgentResponseUpdateEvent**: Real-time streaming updates during agent execution
+- **WorkflowOutputEvent**: Contains agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
 - **AsyncExitStack**: Proper async context management for multiple resources
 - **Agent Factory Pattern**: Reusable agent creation with shared client configuration
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next

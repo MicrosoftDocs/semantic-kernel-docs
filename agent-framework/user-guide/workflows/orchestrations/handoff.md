@@ -233,7 +233,7 @@ return_agent = chat_client.as_agent(
 Build the handoff workflow using `HandoffBuilder`:
 
 ```python
-from agent_framework import HandoffBuilder
+from agent_framework.orchestrations import HandoffBuilder
 
 # Build the handoff workflow
 workflow = (
@@ -289,7 +289,8 @@ Unlike other orchestrations, handoff is interactive because an agent may not dec
 When an agent in a handoff workflow decides not to handoff (a handoff is triggered by a special tool call), the workflow emits a `RequestInfoEvent` with a `HandoffAgentUserRequest` payload containing the agent's most recent messages. The user must respond to this request to continue the workflow.
 
 ```python
-from agent_framework import RequestInfoEvent, HandoffAgentUserRequest, WorkflowOutputEvent
+from agent_framework import RequestInfoEvent, WorkflowOutputEvent
+from agent_framework.orchestrations import HandoffAgentUserRequest
 
 # Start workflow with initial user message
 events = [event async for event in workflow.run_stream("I need help with my order")]
@@ -444,11 +445,10 @@ order_agent = chat_client.as_agent(
 ```python
 from agent_framework import (
     FunctionApprovalRequestContent,
-    HandoffBuilder,
-    HandoffAgentUserRequest,
     RequestInfoEvent,
     WorkflowOutputEvent,
 )
+from agent_framework.orchestrations import HandoffBuilder, HandoffAgentUserRequest
 
 workflow = (
     HandoffBuilder(

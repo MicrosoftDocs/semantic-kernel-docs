@@ -160,7 +160,7 @@ reviewer = chat_client.as_agent(
 The `SequentialBuilder` class creates a pipeline where agents process tasks in order. Each agent sees the full conversation history and adds their response:
 
 ```python
-from agent_framework import SequentialBuilder
+from agent_framework.orchestrations import SequentialBuilder
 
 # 2) Build sequential workflow: writer -> reviewer
 workflow = SequentialBuilder().participants([writer, reviewer]).build()

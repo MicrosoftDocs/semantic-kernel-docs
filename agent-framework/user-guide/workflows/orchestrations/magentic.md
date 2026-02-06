@@ -28,7 +28,7 @@ The Magentic manager maintains a shared context, tracks progress, and adapts the
 ## What You'll Learn
 
 - How to set up a Magentic manager to coordinate multiple specialized agents
-- How to handle streaming events with `AgentRunUpdateEvent`
+- How to handle streaming events with `WorkflowOutputEvent`
 - How to implement human-in-the-loop plan review
 - How to track agent collaboration and progress through complex tasks
 
@@ -80,7 +80,7 @@ manager_agent = ChatAgent(
 Use `MagenticBuilder` to configure the workflow with a standard manager(`StandardMagenticManager`):
 
 ```python
-from agent_framework import MagenticBuilder
+from agent_framework.orchestrations import MagenticBuilder
 
 workflow = (
     MagenticBuilder()
@@ -108,7 +108,7 @@ import asyncio
 from typing import cast
 
 from agent_framework import (
-    AgentRunUpdateEvent,
+    AgentResponseUpdate,
     ChatMessage,
     MagenticOrchestratorEvent,
     MagenticProgressLedger,
@@ -128,7 +128,7 @@ task = (
 last_message_id: str | None = None
 output_event: WorkflowOutputEvent | None = None
 async for event in workflow.run_stream(task):
-    if isinstance(event, AgentRunUpdateEvent):
+    if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
         message_id = event.data.message_id
         if message_id != last_message_id:
             if last_message_id is not None:
@@ -172,14 +172,14 @@ Enaable plan review simply by adding `.with_plan_review()` when building the Mag
 
 ```python
 from agent_framework import (
-    AgentRunUpdateEvent,
+    AgentResponseUpdate,
     ChatAgent,
     ChatMessage,
-    MagenticBuilder,
     MagenticPlanReviewRequest,
     RequestInfoEvent,
     WorkflowOutputEvent,
 )
+from agent_framework.orchestrations import MagenticBuilder
 
 workflow = (
     MagenticBuilder()
@@ -213,7 +213,7 @@ while not output_event:
 
     last_message_id: str | None = None
     async for event in stream:
-        if isinstance(event, AgentRunUpdateEvent):
+        if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
             message_id = event.data.message_id
             if message_id != last_message_id:
                 if last_message_id is not None:

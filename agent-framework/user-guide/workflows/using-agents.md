@@ -116,17 +116,19 @@ Whenever the executor receives a message of one of these types, it will trigger 
 - `agent_run_response`: The full response from the agent
 - `full_conversation`: The full conversation history up to this point
 
-Two possible event type related to the agents' responses can be emitted when running the workflow:
+Agent executors emit `WorkflowOutputEvent` events containing agent responses:
 
-- `AgentResponseUpdateEvent` containing chunks of the agent's response as they are generated in streaming mode.
-- `AgentRunEvent` containing the full response from the agent in non-streaming mode.
+- In streaming mode, `WorkflowOutputEvent.data` contains `AgentResponseUpdate` chunks as they are generated.
+- In non-streaming mode, `WorkflowOutputEvent.data` contains the full `AgentResponse`.
 
 > By default, agents are wrapped in executors that run in streaming mode. You can customize this behavior by creating a custom executor. See the next section for more details.
 
 ```python
+from agent_framework import AgentResponseUpdate, WorkflowOutputEvent
+
 last_executor_id = None
-async for event in workflow.run_streaming("Write a short blog post about AI agents."):
-    if isinstance(event, AgentResponseUpdateEvent):
+async for event in workflow.run_stream("Write a short blog post about AI agents."):
+    if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
         if event.executor_id != last_executor_id:
             if last_executor_id is not None:
                 print()
@@ -146,7 +148,7 @@ Sometimes you might want to customize how AI agents are integrated into a workfl
 - The life cycle of the agent, including initialization and cleanup
 - The usage of agent sessions and other resources
 - Additional events emitted during the agent's execution, including custom events
-- Integration with other workflow features, such as shared states and requests/responses
+- Integration with other workflow features, such as state and requests/responses
 
 ::: zone pivot="programming-language-csharp"
 
@@ -227,7 +229,7 @@ class Writer(Executor):
 
 - [Learn how to use workflows as agents](./as-agents.md).
 - [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
-- [Learn how to manage state](./shared-states.md) in workflows.
+- [Learn how to manage state](./state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
 - [Learn how to monitor workflows](./observability.md).
 - [Learn about state isolation in workflows](./state-isolation.md).

@@ -1090,8 +1090,8 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
 
     # Persist the raw email content in shared state
     new_email = Email(email_id=str(uuid4()), email_content=email_text)
-    await ctx.set_shared_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
-    await ctx.set_shared_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
+    ctx.set_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
+    ctx.set_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
 
     # Forward email to spam detection agent
     await ctx.send_message(
@@ -1104,7 +1104,7 @@ async def to_detection_result(response: AgentExecutorResponse, ctx: WorkflowCont
 
     # Parse the agent's structured JSON output
     parsed = DetectionResultAgent.model_validate_json(response.agent_run_response.text)
-    email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
+    email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
 
     # Create typed message for switch-case routing
     await ctx.send_message(DetectionResult(
@@ -1122,7 +1122,7 @@ async def submit_to_email_assistant(detection: DetectionResult, ctx: WorkflowCon
         raise RuntimeError("This executor should only handle NotSpam messages.")
 
     # Retrieve original email content from shared state
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
     await ctx.send_message(
         AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
     )
@@ -1149,7 +1149,7 @@ async def handle_uncertain(detection: DetectionResult, ctx: WorkflowContext[Neve
 
     if detection.spam_decision == "Uncertain":
         # Include original content for human review
-        email: Email | None = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
+        email: Email | None = ctx.get_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
         await ctx.yield_output(
             f"Email marked as uncertain: {detection.reason}. Email content: {getattr(email, 'email_content', '')}"
         )
@@ -1883,8 +1883,8 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
     """Store email and initiate analysis."""
 
     new_email = Email(email_id=str(uuid4()), email_content=email_text)
-    await ctx.set_shared_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
-    await ctx.set_shared_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
+    ctx.set_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
+    ctx.set_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
 
     await ctx.send_message(
         AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=new_email.email_content)], should_respond=True)
@@ -1895,8 +1895,8 @@ async def to_analysis_result(response: AgentExecutorResponse, ctx: WorkflowConte
     """Transform agent response into enriched analysis result."""
 
     parsed = AnalysisResultAgent.model_validate_json(response.agent_run_response.text)
-    email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{email_id}")
+    email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{email_id}")
 
     # Create enriched analysis result with email length for routing decisions
     await ctx.send_message(
@@ -1916,7 +1916,7 @@ async def submit_to_email_assistant(analysis: AnalysisResult, ctx: WorkflowConte
     if analysis.spam_decision != "NotSpam":
         raise RuntimeError("This executor should only handle NotSpam messages.")
 
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
         AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
     )
@@ -1933,7 +1933,7 @@ async def summarize_email(analysis: AnalysisResult, ctx: WorkflowContext[AgentEx
     """Generate summary for long emails (parallel branch)."""
 
     # Only called for long NotSpam emails by selection function
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
         AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
     )
@@ -1943,8 +1943,8 @@ async def merge_summary(response: AgentExecutorResponse, ctx: WorkflowContext[An
     """Merge summary back into analysis result for database persistence."""
 
     summary = EmailSummaryModel.model_validate_json(response.agent_run_response.text)
-    email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{email_id}")
+    email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{email_id}")
 
     # Create analysis result with summary for database storage
     await ctx.send_message(
@@ -1971,7 +1971,7 @@ async def handle_uncertain(analysis: AnalysisResult, ctx: WorkflowContext[Never,
     """Handle uncertain emails (single target like switch-case)."""
 
     if analysis.spam_decision == "Uncertain":
-        email: Email | None = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
+        email: Email | None = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
         await ctx.yield_output(
             f"Email marked as uncertain: {analysis.reason}. Email content: {getattr(email, 'email_content', '')}"
         )

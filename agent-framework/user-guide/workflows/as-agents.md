@@ -407,7 +407,7 @@ During execution, internal workflow events are mapped to agent responses as foll
 
 | Workflow Event | Agent Response |
 |----------------|----------------|
-| `AgentResponseUpdateEvent` | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
+| `WorkflowOutputEvent` with `AgentResponseUpdate` | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
 | `RequestInfoEvent` | Converted to `FunctionCallContent` and `FunctionApprovalRequestContent` |
 | Other events | Included in `raw_representation` for observability |
 
@@ -448,7 +448,7 @@ Expose complex workflows through APIs that expect the standard Agent interface, 
 ## Next Steps
 
 - [Learn how to handle requests and responses](./requests-and-responses.md) in workflows
-- [Learn how to manage state](./shared-states.md) in workflows
+- [Learn how to manage state](./state.md) in workflows
 - [Learn how to create checkpoints and resume from them](./checkpoints.md)
 - [Learn how to monitor workflows](./observability.md)
 - [Learn about state isolation in workflows](./state-isolation.md)

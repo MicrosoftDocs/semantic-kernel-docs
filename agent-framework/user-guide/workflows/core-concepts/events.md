@@ -58,8 +58,6 @@ WorkflowWarningEvent     # Workflow encountered a warning
 ExecutorInvokedEvent     # Executor starts processing
 ExecutorCompletedEvent   # Executor finishes processing
 ExecutorFailedEvent      # Executor encounters an error
-AgentRunEvent            # An agent run produces output
-AgentResponseUpdateEvent # An agent run produces a streaming update
 
 # Superstep events
 SuperStepStartedEvent    # Superstep begins
@@ -182,7 +180,7 @@ class CustomExecutor(Executor):
 - [Learn how to use agents in workflows](./../using-agents.md) to build intelligent workflows.
 - [Learn how to use workflows as agents](./../as-agents.md).
 - [Learn how to handle requests and responses](./../requests-and-responses.md) in workflows.
-- [Learn how to manage state](./../shared-states.md) in workflows.
+- [Learn how to manage state](./../state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./../checkpoints.md).
 - [Learn how to monitor workflows](./../observability.md).
 - [Learn about state isolation in workflows](./../state-isolation.md).

@@ -658,7 +658,7 @@ For detailed middleware examples, see:
 - [Function-based Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/function_based_middleware.py) - Simple function middleware
 - [Class-based Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/class_based_middleware.py) - Object-oriented middleware
 - [Exception Handling Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/exception_handling_with_middleware.py) - Error handling patterns
-- [Shared State Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/shared_state_middleware.py) - State management across agents
+- [State Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/shared_state_middleware.py) - State management across agents
 
 ### Custom Agents
 
@@ -1142,7 +1142,8 @@ result = await team.run("Discuss this topic")
 **Agent Framework Implementation:**
 
 ```python
-from agent_framework import SequentialBuilder, WorkflowOutputEvent
+from agent_framework import WorkflowOutputEvent
+from agent_framework.orchestrations import SequentialBuilder
 
 # Assume we have agent1, agent2, agent3 from previous examples
 # Sequential workflow through participants
@@ -1164,7 +1165,8 @@ For detailed orchestration examples, see:
 For concurrent execution patterns, Agent Framework also provides:
 
 ```python
-from agent_framework import ConcurrentBuilder, WorkflowOutputEvent
+from agent_framework import WorkflowOutputEvent
+from agent_framework.orchestrations import ConcurrentBuilder
 
 # Assume we have agent1, agent2, agent3 from previous examples
 # Concurrent workflow for parallel processing
@@ -1206,13 +1208,15 @@ result = await team.run("Complex research and analysis task")
 ```python
 from typing import cast
 from agent_framework import (
-    MAGENTIC_EVENT_TYPE_AGENT_DELTA,
-    MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
-    AgentResponseUpdateEvent,
+    AgentResponseUpdate,
     ChatAgent,
     ChatMessage,
-    MagenticBuilder,
     WorkflowOutputEvent,
+)
+from agent_framework.orchestrations import (
+    MAGENTIC_EVENT_TYPE_AGENT_DELTA,
+    MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
+    MagenticBuilder,
 )
 from agent_framework.openai import OpenAIChatClient
 
@@ -1252,7 +1256,7 @@ The Magentic workflow provides extensive customization options:
 
 - **Manager configuration**: Use a ChatAgent with custom instructions and model settings
 - **Round limits**: `max_round_count`, `max_stall_count`, `max_reset_count`
-- **Event streaming**: Use `AgentResponseUpdateEvent` with `magentic_event_type` metadata
+- **Event streaming**: Use `WorkflowOutputEvent` with `AgentResponseUpdate` data for streaming
 - **Agent specialization**: Custom instructions and tools per agent
 - **Human-in-the-loop**: Plan review, tool approval, and stall intervention
 
@@ -1260,17 +1264,19 @@ The Magentic workflow provides extensive customization options:
 # Advanced customization example with human-in-the-loop
 from typing import cast
 from agent_framework import (
+    AgentResponseUpdate,
+    ChatAgent,
+    RequestInfoEvent,
+    WorkflowOutputEvent,
+)
+from agent_framework.orchestrations import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
     MAGENTIC_EVENT_TYPE_ORCHESTRATOR,
-    AgentResponseUpdateEvent,
-    ChatAgent,
     MagenticBuilder,
     MagenticHumanInterventionDecision,
     MagenticHumanInterventionKind,
     MagenticHumanInterventionReply,
     MagenticHumanInterventionRequest,
-    RequestInfoEvent,
-    WorkflowOutputEvent,
 )
 from agent_framework.openai import OpenAIChatClient
 
@@ -1448,7 +1454,7 @@ AutoGen's `Team` abstraction does not provide built-in checkpointing capabilitie
 Agent Framework provides comprehensive checkpointing through `FileCheckpointStorage` and the `with_checkpointing()` method on `WorkflowBuilder`. Checkpoints capture:
 
 - **Executor state**: Local state for each executor using `ctx.set_executor_state()`
-- **Shared state**: Cross-executor state using `ctx.set_shared_state()`
+- **State**: Cross-executor state using `ctx.set_state()`
 - **Message queues**: Pending messages between executors
 - **Workflow position**: Current execution progress and next steps
 
@@ -1476,8 +1482,8 @@ class ProcessingExecutor(Executor):
         })
 
         # Persist shared state for other executors
-        await ctx.set_shared_state("original_input", data)
-        await ctx.set_shared_state("processed_output", result)
+        ctx.set_state("original_input", data)
+        ctx.set_state("processed_output", result)
 
         await ctx.send_message(result)
 

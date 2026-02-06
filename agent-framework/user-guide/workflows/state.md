@@ -1,6 +1,6 @@
 ---
-title: Microsoft Agent Framework Workflows - Shared States
-description: In-depth look at Shared States in Microsoft Agent Framework Workflows.
+title: Microsoft Agent Framework Workflows - State
+description: In-depth look at State in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -9,15 +9,15 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows - Shared States
+# Microsoft Agent Framework Workflows - State
 
-This document provides an overview of **Shared States** in the Microsoft Agent Framework Workflow system.
+This document provides an overview of **State** in the Microsoft Agent Framework Workflow system.
 
 ## Overview
 
-Shared States allow multiple executors within a workflow to access and modify common data. This feature is essential for scenarios where different parts of the workflow need to share information where direct message passing is not feasible or efficient.
+State allows multiple executors within a workflow to access and modify common data. This feature is essential for scenarios where different parts of the workflow need to share information where direct message passing is not feasible or efficient.
 
-## Writing to Shared States
+## Writing to State
 
 ::: zone pivot="programming-language-csharp"
 
@@ -64,16 +64,16 @@ class FileReadExecutor(Executor):
         # Read file content from embedded resource
         with open(file_path, 'r') as file:
             file_content = file.read()
-        # Store file content in a shared state for access by other executors
+        # Store file content in state for access by other executors
         file_id = str(uuid.uuid4())
-        await ctx.set_shared_state(file_id, file_content)
+        ctx.set_state(file_id, file_content)
 
         await ctx.send_message(file_id)
 ```
 
 ::: zone-end
 
-## Accessing Shared States
+## Accessing State
 
 ::: zone pivot="programming-language-csharp"
 
@@ -115,8 +115,8 @@ class WordCountingExecutor(Executor):
 
     @handler
     async def handle(self, file_id: str, ctx: WorkflowContext[int]):
-        # Retrieve the file content from the shared state
-        file_content = await ctx.get_shared_state(file_id)
+        # Retrieve the file content from state
+        file_content = ctx.get_state(file_id)
         if file_content is None:
             raise ValueError("File content state not found")
 
