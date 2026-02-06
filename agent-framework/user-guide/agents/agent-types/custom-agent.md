@@ -192,15 +192,15 @@ pip install agent-framework-core --pre
 
 ### The Agent Protocol
 
-The framework provides the `AgentProtocol` protocol that defines the interface all agents must implement. Custom agents can either implement this protocol directly or extend the `BaseAgent` class for convenience.
+The framework provides the `AgentLike` protocol that defines the interface all agents must implement. Custom agents can either implement this protocol directly or extend the `BaseAgent` class for convenience.
 
 ```python
-from agent_framework import AgentProtocol, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
+from agent_framework import AgentLike, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
 from collections.abc import AsyncIterable
 from typing import Any
 
-class MyCustomAgent(AgentProtocol):
-    """A custom agent that implements the AgentProtocol directly."""
+class MyCustomAgent(AgentLike):
+    """A custom agent that implements the AgentLike directly."""
 
     @property
     def id(self) -> str:

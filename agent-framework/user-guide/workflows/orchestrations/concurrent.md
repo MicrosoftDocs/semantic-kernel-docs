@@ -175,7 +175,7 @@ The `ConcurrentBuilder` class allows you to construct a workflow to run multiple
 from agent_framework.orchestrations import ConcurrentBuilder
 
 # 2) Build a concurrent workflow
-# Participants are either Agents (type of AgentProtocol) or Executors
+# Participants are either Agents (type of AgentLike) or Executors
 workflow = ConcurrentBuilder().participants([researcher, marketer, legal]).build()
 ```
 

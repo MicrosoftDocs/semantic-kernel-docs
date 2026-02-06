@@ -108,7 +108,7 @@ Expected output:
 Accumulated text length: 11
 ```
 
-To register an agent factory to the `WorkflowBuilder`, you can use the `register_agent` method. This method takes two parameters: the factory function that creates instances of the agent (of types that implement `AgentProtocol`) and the name of the factory to be used in the workflow configuration.
+To register an agent factory to the `WorkflowBuilder`, you can use the `register_agent` method. This method takes two parameters: the factory function that creates instances of the agent (of types that implement `AgentLike`) and the name of the factory to be used in the workflow configuration.
 
 ```python
 def create_agent() -> ChatAgent:
