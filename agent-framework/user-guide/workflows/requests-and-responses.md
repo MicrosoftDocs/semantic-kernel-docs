@@ -133,6 +133,48 @@ class SomeExecutor(Executor):
 
 The `@response_handler` decorator automatically registers the method to handle responses for the specified request and response types.
 
+### Explicit Type Parameters for Response Handlers
+
+As an alternative to type annotations, you can specify types explicitly via decorator parameters on `@response_handler`. This follows the same pattern as the `@handler` decorator.
+
+> [!IMPORTANT]
+> When using explicit type parameters, you must specify **all** types via the decorator - you cannot mix explicit parameters with type annotations. If you provide any explicit type parameter (`request`, `response`, `output`, or `workflow_output`), the framework will not introspect the function signature for types. The `request` and `response` parameters are required when using explicit mode; `output` and `workflow_output` are optional.
+
+```python
+from agent_framework import (
+    Executor,
+    WorkflowContext,
+    handler,
+    response_handler,
+)
+
+class SomeExecutor(Executor):
+
+    @handler(input=OtherDataType)
+    async def handle_data(self, data, context):
+        # Send a request using the API
+        await context.request_info(
+            request_data=CustomRequestType(...),
+            response_type=CustomResponseType
+        )
+
+    # Explicit types - no type annotations needed on parameters
+    @response_handler(request=CustomRequestType, response=CustomResponseType)
+    async def handle_response(self, original_request, response, context):
+        # Process the response...
+        ...
+
+    # With output types specified
+    @response_handler(request=CustomRequestType, response=CustomResponseType, output=int)
+    async def handle_response_with_output(self, original_request, response, context):
+        await context.send_message(42)  # int - matches output type
+
+    # Union types and string forward references are supported
+    @response_handler(request="MyRequest | OtherRequest", response="MyResponse")
+    async def handle_custom(self, original_request, response, context):
+        ...
+```
+
 ::: zone-end
 
 ## Handling Requests and Responses

@@ -155,6 +155,66 @@ class SampleExecutor(Executor):
         await ctx.send_message(number * 2)
 ```
 
+### Explicit Type Parameters
+
+As an alternative to type annotations, you can specify types explicitly via decorator parameters. This is useful for developers who prefer not to use function type annotations.
+
+> [!IMPORTANT]
+> When using explicit type parameters, you must specify **all** types via the decorator - you cannot mix explicit parameters with type annotations. If you provide any explicit type parameter (`input`, `output`, or `workflow_output`), the framework will not introspect the function signature for types. The `input` parameter is required when using explicit mode; `output` and `workflow_output` are optional (defaulting to no outputs).
+
+#### Using explicit types with `@handler`
+
+```python
+from agent_framework import (
+    Executor,
+    WorkflowContext,
+    handler,
+)
+
+class ExplicitTypesExecutor(Executor):
+
+    # Explicit types - no type annotations needed on parameters
+    @handler(input=str, output=str)
+    async def to_upper_case(self, text, ctx) -> None:
+        await ctx.send_message(text.upper())
+
+    # Union types are supported
+    @handler(input=str | int, output=str)
+    async def handle_mixed(self, message, ctx) -> None:
+        await ctx.send_message(str(message).upper())
+
+    # Specify all three type parameters
+    @handler(input=str, output=int, workflow_output=bool)
+    async def process_with_workflow_output(self, message, ctx) -> None:
+        await ctx.send_message(len(message))  # int - matches output
+        await ctx.yield_output(True)  # bool - matches workflow_output
+
+    # String forward references are also supported
+    @handler(input="MyCustomType", output="ResponseType")
+    async def handle_custom(self, message, ctx) -> None:
+        ...
+```
+
+#### Using explicit types with `@executor`
+
+```python
+from agent_framework import (
+    WorkflowContext,
+    executor,
+)
+
+# Explicit types with function executor
+@executor(id="upper_case_executor", input=str, output=str)
+async def upper_case(text, ctx) -> None:
+    await ctx.send_message(text.upper())
+
+# Union types and workflow outputs
+@executor(id="processor", input=str | int, output=str, workflow_output=bool)
+async def process(message, ctx) -> None:
+    await ctx.send_message(str(message))
+    await ctx.yield_output(True)
+```
+
 ### The `WorkflowContext` Object
 
 The `WorkflowContext` object provides methods for the handler to interact with the workflow during execution. The `WorkflowContext` is parameterized with the type of messages the handler will emit and the type of outputs it can yield.

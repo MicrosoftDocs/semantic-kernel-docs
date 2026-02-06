@@ -188,7 +188,7 @@ builder.add_fan_out_edges(
     selection_func=lambda message, target_ids: (
         [0] if message.priority == Priority.HIGH else
         [1, 2] if message.priority == Priority.NORMAL else
-        list(range(target_count))
+        list(range(target_ids))
     )
 )
 workflow = builder.build()
