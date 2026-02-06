@@ -345,7 +345,7 @@ Semantic Kernel provides specific agent classes for various services, for exampl
 
 In Agent Framework, the majority of agents are built using the `ChatAgent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
 
-All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `AgentProtocol` (`from agent_framework import AgentProtocol`) interface.
+All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `SupportsAgentRun` (`from agent_framework import SupportsAgentRun`) interface.
 
 ## 3. Agent Creation Simplification
 

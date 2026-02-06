@@ -291,7 +291,7 @@ For code interpreter examples, see:
 ## Custom agents
 
 It is also possible to create fully custom agents that are not just wrappers around a chat client.
-Agent Framework provides the `AgentProtocol` protocol and `BaseAgent` base class, which when implemented/subclassed allows for complete control over the agent's behavior and capabilities.
+Agent Framework provides the `SupportsAgentRun` protocol and `BaseAgent` base class, which when implemented/subclassed allows for complete control over the agent's behavior and capabilities.
 
 ```python
 from agent_framework import BaseAgent, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
