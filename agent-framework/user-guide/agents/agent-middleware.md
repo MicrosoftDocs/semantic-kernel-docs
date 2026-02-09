@@ -181,21 +181,21 @@ Agent middleware intercepts and modifies agent run execution. It uses the `Agent
 - `terminate`: Flag to stop further processing
 - `kwargs`: Additional keyword arguments passed to the agent run method
 
-The `next` callable continues the middleware chain or executes the agent if it's the last middleware.
+The `call_next` callable continues the middleware chain or executes the agent if it's the last middleware.
 
-Here's a simple logging example with logic before and after `next` callable:
+Here's a simple logging example with logic before and after `call_next` callable:
 
 ```python
 async def logging_agent_middleware(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]],
+    call_next: Callable[[AgentContext], Awaitable[None]],
 ) -> None:
     """Agent middleware that logs execution timing."""
     # Pre-processing: Log before agent execution
     print("[Agent] Starting execution")
 
     # Continue to next middleware or agent execution
-    await next(context)
+    await call_next(context)
 
     # Post-processing: Log after agent execution
     print("[Agent] Execution completed")
@@ -212,21 +212,21 @@ Function middleware intercepts function calls within agents. It uses the `Functi
 - `terminate`: Flag to stop further processing
 - `kwargs`: Additional keyword arguments passed to the chat method that invoked this function
 
-The `next` callable continues to the next middleware or executes the actual function.
+The `call_next` callable continues to the next middleware or executes the actual function.
 
-Here's a simple logging example with logic before and after `next` callable:
+Here's a simple logging example with logic before and after `call_next` callable:
 
 ```python
 async def logging_function_middleware(
     context: FunctionInvocationContext,
-    next: Callable[[FunctionInvocationContext], Awaitable[None]],
+    call_next: Callable[[FunctionInvocationContext], Awaitable[None]],
 ) -> None:
     """Function middleware that logs function execution."""
     # Pre-processing: Log before function execution
     print(f"[Function] Calling {context.function.name}")
 
     # Continue to next middleware or function execution
-    await next(context)
+    await call_next(context)
 
     # Post-processing: Log after function execution
     print(f"[Function] {context.function.name} completed")
@@ -245,21 +245,21 @@ Chat middleware intercepts chat requests sent to AI models. It uses the `ChatCon
 - `terminate`: Flag to stop further processing
 - `kwargs`: Additional keyword arguments passed to the chat client
 
-The `next` callable continues to the next middleware or sends the request to the AI service.
+The `call_next` callable continues to the next middleware or sends the request to the AI service.
 
-Here's a simple logging example with logic before and after `next` callable:
+Here's a simple logging example with logic before and after `call_next` callable:
 
 ```python
 async def logging_chat_middleware(
     context: ChatContext,
-    next: Callable[[ChatContext], Awaitable[None]],
+    call_next: Callable[[ChatContext], Awaitable[None]],
 ) -> None:
     """Chat middleware that logs AI interactions."""
     # Pre-processing: Log before AI call
     print(f"[Chat] Sending {len(context.messages)} messages to AI")
 
     # Continue to next middleware or AI service
-    await next(context)
+    await call_next(context)
 
     # Post-processing: Log after AI response
     print("[Chat] AI response received")
@@ -277,24 +277,24 @@ Decorators provide explicit middleware type declaration without requiring type a
 from agent_framework import agent_middleware, function_middleware, chat_middleware
 
 @agent_middleware  # Explicitly marks as agent middleware
-async def simple_agent_middleware(context, next):
+async def simple_agent_middleware(context, call_next):
     """Agent middleware with decorator - types are inferred."""
     print("Before agent execution")
-    await next(context)
+    await call_next(context)
     print("After agent execution")
 
 @function_middleware  # Explicitly marks as function middleware
-async def simple_function_middleware(context, next):
+async def simple_function_middleware(context, call_next):
     """Function middleware with decorator - types are inferred."""
     print(f"Calling function: {context.function.name}")
-    await next(context)
+    await call_next(context)
     print("Function call completed")
 
 @chat_middleware  # Explicitly marks as chat middleware
-async def simple_chat_middleware(context, next):
+async def simple_chat_middleware(context, call_next):
     """Chat middleware with decorator - types are inferred."""
     print(f"Processing {len(context.messages)} chat messages")
-    await next(context)
+    await call_next(context)
     print("Chat processing completed")
 ```
 
@@ -304,7 +304,7 @@ Class-based middleware is useful for stateful operations or complex logic that b
 
 ### Agent Middleware Class
 
-Class-based agent middleware uses a `process` method that has the same signature and behavior as function-based middleware. The `process` method receives the same `context` and `next` parameters and is invoked in exactly the same way.
+Class-based agent middleware uses a `process` method that has the same signature and behavior as function-based middleware. The `process` method receives the same `context` and `call_next` parameters and is invoked in exactly the same way.
 
 ```python
 from agent_framework import AgentMiddleware, AgentContext
@@ -315,13 +315,13 @@ class LoggingAgentMiddleware(AgentMiddleware):
     async def process(
         self,
         context: AgentContext,
-        next: Callable[[AgentContext], Awaitable[None]],
+        call_next: Callable[[AgentContext], Awaitable[None]],
     ) -> None:
         # Pre-processing: Log before agent execution
         print("[Agent Class] Starting execution")
 
         # Continue to next middleware or agent execution
-        await next(context)
+        await call_next(context)
 
         # Post-processing: Log after agent execution
         print("[Agent Class] Execution completed")
@@ -329,7 +329,7 @@ class LoggingAgentMiddleware(AgentMiddleware):
 
 ### Function Middleware Class
 
-Class-based function middleware also uses a `process` method with the same signature and behavior as function-based middleware. The method receives the same `context` and `next` parameters.
+Class-based function middleware also uses a `process` method with the same signature and behavior as function-based middleware. The method receives the same `context` and `call_next` parameters.
 
 ```python
 from agent_framework import FunctionMiddleware, FunctionInvocationContext
@@ -340,13 +340,13 @@ class LoggingFunctionMiddleware(FunctionMiddleware):
     async def process(
         self,
         context: FunctionInvocationContext,
-        next: Callable[[FunctionInvocationContext], Awaitable[None]],
+        call_next: Callable[[FunctionInvocationContext], Awaitable[None]],
     ) -> None:
         # Pre-processing: Log before function execution
         print(f"[Function Class] Calling {context.function.name}")
 
         # Continue to next middleware or function execution
-        await next(context)
+        await call_next(context)
 
         # Post-processing: Log after function execution
         print(f"[Function Class] {context.function.name} completed")
@@ -365,13 +365,13 @@ class LoggingChatMiddleware(ChatMiddleware):
     async def process(
         self,
         context: ChatContext,
-        next: Callable[[ChatContext], Awaitable[None]],
+        call_next: Callable[[ChatContext], Awaitable[None]],
     ) -> None:
         # Pre-processing: Log before AI call
         print(f"[Chat Class] Sending {len(context.messages)} messages to AI")
 
         # Continue to next middleware or AI service
-        await next(context)
+        await call_next(context)
 
         # Post-processing: Log after AI response
         print("[Chat Class] AI response received")
@@ -425,7 +425,7 @@ Middleware can terminate execution early using `context.terminate`. This is usef
 ```python
 async def blocking_middleware(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]],
+    call_next: Callable[[AgentContext], Awaitable[None]],
 ) -> None:
     """Middleware that blocks execution based on conditions."""
     # Check for blocked content
@@ -437,7 +437,7 @@ async def blocking_middleware(
             return
 
     # If no issues, continue normally
-    await next(context)
+    await call_next(context)
 ```
 
 **What termination means:**
@@ -459,12 +459,12 @@ You can use `context.is_streaming` to differentiate between these scenarios and 
 ```python
 async def weather_override_middleware(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]]
+    call_next: Callable[[AgentContext], Awaitable[None]]
 ) -> None:
     """Middleware that overrides weather results for both streaming and non-streaming."""
 
     # Execute the original agent logic
-    await next(context)
+    await call_next(context)
 
     # Override results if present
     if context.result is not None:

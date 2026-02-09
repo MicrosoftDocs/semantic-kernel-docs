@@ -624,20 +624,20 @@ from typing import Callable, Awaitable
 # Assume we have client from previous examples
 async def logging_middleware(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]]
+    call_next: Callable[[AgentContext], Awaitable[None]]
 ) -> None:
     print(f"Agent {context.agent.name} starting")
-    await next(context)
+    await call_next(context)
     print(f"Agent {context.agent.name} completed")
 
 async def security_middleware(
     context: FunctionInvocationContext,
-    next: Callable[[FunctionInvocationContext], Awaitable[None]]
+    call_next: Callable[[FunctionInvocationContext], Awaitable[None]]
 ) -> None:
     if "password" in str(context.arguments):
         print("Blocking function call with sensitive data")
-        return  # Don't call next()
-    await next(context)
+        return  # Don't call call_next()
+    await call_next(context)
 
 agent = ChatAgent(
     name="secure_agent",
