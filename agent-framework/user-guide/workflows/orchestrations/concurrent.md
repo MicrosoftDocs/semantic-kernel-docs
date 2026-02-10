@@ -176,18 +176,18 @@ from agent_framework.orchestrations import ConcurrentBuilder
 
 # 2) Build a concurrent workflow
 # Participants are either Agents (type of SupportsAgentRun) or Executors
-workflow = ConcurrentBuilder().participants([researcher, marketer, legal]).build()
+workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 ```
 
 ## Run the Concurrent Workflow and Collect the Results
 
 ```python
-from agent_framework import ChatMessage, WorkflowOutputEvent
+from agent_framework import ChatMessage, WorkflowEvent
 
 # 3) Run with a single prompt, stream progress, and pretty-print the final combined messages
-output_evt: WorkflowOutputEvent  | None = None
+output_evt: WorkflowEvent | None = None
 async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         output_evt = event
 
 if output_evt:
@@ -317,7 +317,7 @@ researcher = ResearcherExec(chat_client)
 marketer = MarketerExec(chat_client)
 legal = LegalExec(chat_client)
 
-workflow = ConcurrentBuilder().participants([researcher, marketer, legal]).build()
+workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 ```
 
 ## Advanced: Custom Aggregator
@@ -358,15 +358,14 @@ async def summarize_results(results: list[Any]) -> str:
 
 ```python
 workflow = (
-    ConcurrentBuilder()
-    .participants([researcher, marketer, legal])
+    ConcurrentBuilder(participants=[researcher, marketer, legal])
     .with_aggregator(summarize_results)
     .build()
 )
 
-output_evt: WorkflowOutputEvent | None = None
+output_evt: WorkflowEvent | None = None
 async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         output_evt = event
 
 if output_evt:

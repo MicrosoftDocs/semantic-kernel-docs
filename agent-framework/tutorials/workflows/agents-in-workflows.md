@@ -170,7 +170,7 @@ Properly clean up the Azure Foundry agents after use:
 
 - **Azure Foundry Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
 - **PersistentAgentsClient**: Client for creating and managing agents on Azure Foundry
-- **WorkflowOutputEvent**: Contains agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
+- **WorkflowEvent**: Output events (`type="output"`) contain agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
 - **TurnToken**: Signal that triggers agent processing after message caching
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next
 
@@ -216,7 +216,7 @@ from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
 from typing import Any
 
-from agent_framework import AgentResponseUpdate, WorkflowBuilder, WorkflowOutputEvent
+from agent_framework import AgentResponseUpdate, WorkflowBuilder
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 ```
@@ -274,11 +274,11 @@ async def main() -> None:
 
 ## Step 4: Build the Workflow
 
-Connect the agents in a sequential workflow using the fluent builder:
+Connect the agents in a sequential workflow using the builder:
 
 ```python
         # Build the workflow with agents as executors
-        workflow = WorkflowBuilder().set_start_executor(writer).add_edge(writer, reviewer).build()
+        workflow = WorkflowBuilder(start_executor=writer).add_edge(writer, reviewer).build()
 ```
 
 ## Step 5: Execute with Streaming
@@ -290,7 +290,7 @@ Run the workflow with streaming to observe real-time updates from both agents:
 
         events = workflow.run_stream("Create a slogan for a new electric SUV that is affordable and fun to drive.")
         async for event in events:
-            if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
+            if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
                 # Handle streaming updates from agents
                 eid = event.executor_id
                 if eid != last_executor_id:
@@ -299,7 +299,7 @@ Run the workflow with streaming to observe real-time updates from both agents:
                     print(f"{eid}:", end=" ", flush=True)
                     last_executor_id = eid
                 print(event.data, end="", flush=True)
-            elif isinstance(event, WorkflowOutputEvent):
+            elif event.type == "output":
                 print("\n===== Final output =====")
                 print(event.data)
     finally:
@@ -320,13 +320,13 @@ if __name__ == "__main__":
 1. **Azure AI Client Setup**: Uses `AzureAIAgentClient` with Azure CLI credentials for authentication
 2. **Agent Factory Pattern**: Creates a factory function that manages async context lifecycle for multiple agents
 3. **Sequential Processing**: Writer agent generates content first, then passes it to the Reviewer agent
-4. **Streaming Updates**: `WorkflowOutputEvent` with `AgentResponseUpdate` data provides real-time token updates as agents generate responses
+4. **Streaming Updates**: Output events (`type="output"`) with `AgentResponseUpdate` data provide real-time token updates as agents generate responses
 5. **Context Management**: Proper cleanup of Azure AI resources using `AsyncExitStack`
 
 ## Key Concepts
 
 - **Azure AI Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
-- **WorkflowOutputEvent**: Contains agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
+- **WorkflowEvent**: Output events (`type="output"`) contain agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
 - **AsyncExitStack**: Proper async context management for multiple resources
 - **Agent Factory Pattern**: Reusable agent creation with shared client configuration
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next

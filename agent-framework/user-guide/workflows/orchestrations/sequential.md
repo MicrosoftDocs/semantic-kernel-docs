@@ -163,7 +163,7 @@ The `SequentialBuilder` class creates a pipeline where agents process tasks in o
 from agent_framework.orchestrations import SequentialBuilder
 
 # 2) Build sequential workflow: writer -> reviewer
-workflow = SequentialBuilder().participants([writer, reviewer]).build()
+workflow = SequentialBuilder(participants=[writer, reviewer]).build()
 ```
 
 ## Run the Sequential Workflow
@@ -171,12 +171,12 @@ workflow = SequentialBuilder().participants([writer, reviewer]).build()
 Execute the workflow and collect the final conversation showing each agent's contribution:
 
 ```python
-from agent_framework import ChatMessage, WorkflowOutputEvent
+from agent_framework import ChatMessage, WorkflowEvent
 
 # 3) Run and print final conversation
-output_evt: WorkflowOutputEvent | None = None
+output_evt: WorkflowEvent | None = None
 async for event in workflow.run_stream("Write a tagline for a budget-friendly eBike."):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         output_evt = event
 
 if output_evt:
@@ -243,7 +243,7 @@ content = chat_client.as_agent(
 
 # Build sequential workflow: content -> summarizer
 summarizer = Summarizer(id="summarizer")
-workflow = SequentialBuilder().participants([content, summarizer]).build()
+workflow = SequentialBuilder(participants=[content, summarizer]).build()
 ```
 
 ### Sample Output with Custom Executor

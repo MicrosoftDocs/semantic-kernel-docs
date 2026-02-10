@@ -18,6 +18,326 @@ This document will be removed once we reach the 1.0.0 stable release, so please 
 
 ---
 
+## python-1.0.0b260210 (February 10, 2026)
+
+**Release Notes:** [python-1.0.0b260210](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260210)
+
+### 🔴 Workflow factory methods removed from `WorkflowBuilder`
+
+**PR:** [#3781](https://github.com/microsoft/agent-framework/pull/3781)
+
+`register_executor()` and `register_agent()` have been removed from `WorkflowBuilder`. All builder methods (`add_edge`, `add_fan_out_edges`, `add_fan_in_edges`, `add_chain`, `add_switch_case_edge_group`, `add_multi_selection_edge_group`) and `start_executor` no longer accept string names — they require executor or agent instances directly.
+
+For state isolation, wrap executor/agent instantiation and workflow building inside a helper method so each call produces fresh instances.
+
+#### `WorkflowBuilder` with executors
+
+**Before:**
+```python
+workflow = (
+    WorkflowBuilder(start_executor="UpperCase")
+    .register_executor(lambda: UpperCaseExecutor(id="upper"), name="UpperCase")
+    .register_executor(lambda: ReverseExecutor(id="reverse"), name="Reverse")
+    .add_edge("UpperCase", "Reverse")
+    .build()
+)
+```
+
+**After:**
+```python
+upper = UpperCaseExecutor(id="upper")
+reverse = ReverseExecutor(id="reverse")
+
+workflow = WorkflowBuilder(start_executor=upper).add_edge(upper, reverse).build()
+```
+
+#### `WorkflowBuilder` with agents
+
+**Before:**
+```python
+builder = WorkflowBuilder(start_executor="writer_agent")
+builder.register_agent(factory_func=create_writer_agent, name="writer_agent")
+builder.register_agent(factory_func=create_reviewer_agent, name="reviewer_agent")
+builder.add_edge("writer_agent", "reviewer_agent")
+
+workflow = builder.build()
+```
+
+**After:**
+```python
+writer_agent = create_writer_agent()
+reviewer_agent = create_reviewer_agent()
+
+workflow = WorkflowBuilder(start_executor=writer_agent).add_edge(writer_agent, reviewer_agent).build()
+```
+
+#### State isolation with helper methods
+
+For workflows that need isolated state per invocation, wrap construction in a helper method:
+
+```python
+def create_workflow() -> Workflow:
+    """Each call produces fresh executor instances with independent state."""
+    upper = UpperCaseExecutor(id="upper")
+    reverse = ReverseExecutor(id="reverse")
+
+    return WorkflowBuilder(start_executor=upper).add_edge(upper, reverse).build()
+
+workflow_a = create_workflow()
+workflow_b = create_workflow()
+```
+
+---
+
+### 🔴 Fluent builder methods moved to constructor parameters
+
+**PR:** [#3693](https://github.com/microsoft/agent-framework/pull/3693)
+
+Single-config fluent methods across 6 builders (`WorkflowBuilder`, `SequentialBuilder`, `ConcurrentBuilder`, `GroupChatBuilder`, `MagenticBuilder`, `HandoffBuilder`) have been migrated to constructor parameters. Fluent methods that were the sole configuration path for a setting are removed in favor of constructor arguments.
+
+#### `WorkflowBuilder`
+
+`set_start_executor()`, `with_checkpointing()`, and `with_output_from()` are removed. Use constructor parameters instead.
+
+**Before:**
+```python
+upper = UpperCaseExecutor(id="upper")
+reverse = ReverseExecutor(id="reverse")
+
+workflow = (
+    WorkflowBuilder(start_executor=upper)
+    .add_edge(upper, reverse)
+    .set_start_executor(upper)
+    .with_checkpointing(storage)
+    .build()
+)
+```
+
+**After:**
+```python
+upper = UpperCaseExecutor(id="upper")
+reverse = ReverseExecutor(id="reverse")
+
+workflow = (
+    WorkflowBuilder(start_executor=upper, checkpoint_storage=storage)
+    .add_edge(upper, reverse)
+    .build()
+)
+```
+
+#### `SequentialBuilder` / `ConcurrentBuilder`
+
+`participants()`, `register_participants()`, `with_checkpointing()`, and `with_intermediate_outputs()` are removed. Use constructor parameters instead.
+
+**Before:**
+```python
+workflow = SequentialBuilder().participants([agent_a, agent_b]).with_checkpointing(storage).build()
+```
+
+**After:**
+```python
+workflow = SequentialBuilder(participants=[agent_a, agent_b], checkpoint_storage=storage).build()
+```
+
+#### `GroupChatBuilder`
+
+`participants()`, `register_participants()`, `with_orchestrator()`, `with_termination_condition()`, `with_max_rounds()`, `with_checkpointing()`, and `with_intermediate_outputs()` are removed. Use constructor parameters instead.
+
+**Before:**
+```python
+workflow = (
+    GroupChatBuilder()
+    .with_orchestrator(selection_func=selector)
+    .participants([agent1, agent2])
+    .with_termination_condition(lambda conv: len(conv) >= 4)
+    .with_max_rounds(10)
+    .build()
+)
+```
+
+**After:**
+```python
+workflow = GroupChatBuilder(
+    participants=[agent1, agent2],
+    selection_func=selector,
+    termination_condition=lambda conv: len(conv) >= 4,
+    max_rounds=10,
+).build()
+```
+
+#### `MagenticBuilder`
+
+`participants()`, `register_participants()`, `with_manager()`, `with_plan_review()`, `with_checkpointing()`, and `with_intermediate_outputs()` are removed. Use constructor parameters instead.
+
+**Before:**
+```python
+workflow = (
+    MagenticBuilder()
+    .participants([researcher, coder])
+    .with_manager(agent=manager_agent)
+    .with_plan_review()
+    .build()
+)
+```
+
+**After:**
+```python
+workflow = MagenticBuilder(
+    participants=[researcher, coder],
+    manager_agent=manager_agent,
+    enable_plan_review=True,
+).build()
+```
+
+#### `HandoffBuilder`
+
+`with_checkpointing()` and `with_termination_condition()` are removed. Use constructor parameters instead.
+
+**Before:**
+```python
+workflow = (
+    HandoffBuilder(participants=[triage, specialist])
+    .with_start_agent(triage)
+    .with_termination_condition(lambda conv: len(conv) > 5)
+    .with_checkpointing(storage)
+    .build()
+)
+```
+
+**After:**
+```python
+workflow = (
+    HandoffBuilder(
+        participants=[triage, specialist],
+        termination_condition=lambda conv: len(conv) > 5,
+        checkpoint_storage=storage,
+    )
+    .with_start_agent(triage)
+    .build()
+)
+```
+
+#### Validation changes
+
+- `WorkflowBuilder` now requires `start_executor` as a constructor argument (previously set via fluent method)
+- `SequentialBuilder`, `ConcurrentBuilder`, `GroupChatBuilder`, and `MagenticBuilder` now require either `participants` or `participant_factories` at construction time — passing neither raises `ValueError`
+
+> [!NOTE]
+> `HandoffBuilder` already accepted `participants`/`participant_factories` as constructor parameters and was not changed in this regard.
+
+---
+
+### 🔴 Workflow events unified into single `WorkflowEvent` with `type` discriminator
+
+**PR:** [#3690](https://github.com/microsoft/agent-framework/pull/3690)
+
+All individual workflow event subclasses have been replaced by a single generic `WorkflowEvent[DataT]` class. Instead of using `isinstance()` checks to identify event types, you now check the `event.type` string literal (e.g., `"output"`, `"request_info"`, `"status"`). This follows the same pattern as the `Content` class consolidation from `python-1.0.0b260123`.
+
+#### Removed event classes
+
+The following exported event subclasses no longer exist:
+
+| Old Class | New `event.type` Value |
+|-----------|----------------------|
+| `WorkflowOutputEvent` | `"output"` |
+| `RequestInfoEvent` | `"request_info"` |
+| `WorkflowStatusEvent` | `"status"` |
+| `WorkflowStartedEvent` | `"started"` |
+| `WorkflowFailedEvent` | `"failed"` |
+| `ExecutorInvokedEvent` | `"executor_invoked"` |
+| `ExecutorCompletedEvent` | `"executor_completed"` |
+| `ExecutorFailedEvent` | `"executor_failed"` |
+| `SuperStepStartedEvent` | `"superstep_started"` |
+| `SuperStepCompletedEvent` | `"superstep_completed"` |
+
+#### Update imports
+
+**Before:**
+```python
+from agent_framework import (
+    WorkflowOutputEvent,
+    RequestInfoEvent,
+    WorkflowStatusEvent,
+    ExecutorCompletedEvent,
+)
+```
+
+**After:**
+```python
+from agent_framework import WorkflowEvent
+# Individual event classes no longer exist; use event.type to discriminate
+```
+
+#### Update event type checks
+
+**Before:**
+```python
+async for event in workflow.run_stream(input_message):
+    if isinstance(event, WorkflowOutputEvent):
+        print(f"Output from {event.executor_id}: {event.data}")
+    elif isinstance(event, RequestInfoEvent):
+        requests[event.request_id] = event.data
+    elif isinstance(event, WorkflowStatusEvent):
+        print(f"Status: {event.state}")
+```
+
+**After:**
+```python
+async for event in workflow.run_stream(input_message):
+    if event.type == "output":
+        print(f"Output from {event.executor_id}: {event.data}")
+    elif event.type == "request_info":
+        requests[event.request_id] = event.data
+    elif event.type == "status":
+        print(f"Status: {event.state}")
+```
+
+#### Streaming with `AgentResponseUpdate`
+
+**Before:**
+```python
+from agent_framework import AgentResponseUpdate, WorkflowOutputEvent
+
+async for event in workflow.run_stream("Write a blog post about AI agents."):
+    if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
+        print(event.data, end="", flush=True)
+    elif isinstance(event, WorkflowOutputEvent):
+        print(f"Final output: {event.data}")
+```
+
+**After:**
+```python
+from agent_framework import AgentResponseUpdate
+
+async for event in workflow.run_stream("Write a blog post about AI agents."):
+    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+        print(event.data, end="", flush=True)
+    elif event.type == "output":
+        print(f"Final output: {event.data}")
+```
+
+#### Type annotations
+
+**Before:**
+```python
+pending_requests: list[RequestInfoEvent] = []
+output: WorkflowOutputEvent | None = None
+```
+
+**After:**
+```python
+from typing import Any
+from agent_framework import WorkflowEvent
+
+pending_requests: list[WorkflowEvent[Any]] = []
+output: WorkflowEvent | None = None
+```
+
+> [!NOTE]
+> `WorkflowEvent` is generic (`WorkflowEvent[DataT]`), but for collections of mixed events, use `WorkflowEvent[Any]` or unparameterized `WorkflowEvent`.
+
+---
+
 ## python-1.0.0b260130 (January 30, 2026)
 
 **Release Notes:** [python-1.0.0b260130](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260130)
@@ -539,6 +859,9 @@ No significant changes in this release.
 
 | Release | Release Notes | Type | Change | PR |
 |---------|---------------|------|--------|-----|
+| 1.0.0b260210 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260210) | 🔴 Breaking | `register_executor()`/`register_agent()` removed from `WorkflowBuilder`; use instances directly, helper methods for state isolation | [#3781](https://github.com/microsoft/agent-framework/pull/3781) |
+| 1.0.0b260210 | | 🔴 Breaking | Fluent builder methods moved to constructor parameters across 6 builders | [#3693](https://github.com/microsoft/agent-framework/pull/3693) |
+| 1.0.0b260210 | | 🔴 Breaking | Workflow events unified into single `WorkflowEvent` with `type` discriminator; `isinstance()` → `event.type == "..."` | [#3690](https://github.com/microsoft/agent-framework/pull/3690) |
 | 1.0.0b260130 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260130) | 🟡 Enhancement | `ChatOptions`/`ChatResponse`/`AgentResponse` generic over response format | [#3305](https://github.com/microsoft/agent-framework/pull/3305) |
 | 1.0.0b260128 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260128) | 🔴 Breaking | `AIFunction` → `FunctionTool`, `@ai_function` → `@tool` | [#3413](https://github.com/microsoft/agent-framework/pull/3413) |
 | 1.0.0b260128 | | 🔴 Breaking | Factory pattern for GroupChat/Magentic; `with_standard_manager` → `with_manager`, `participant_factories` → `register_participant` | [#3224](https://github.com/microsoft/agent-framework/pull/3224) |

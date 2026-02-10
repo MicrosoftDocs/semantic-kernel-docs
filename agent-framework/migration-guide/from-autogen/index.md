@@ -806,9 +806,8 @@ async def agent2_executor(input_msg: str, ctx: WorkflowContext[Never, str]) -> N
     await ctx.yield_output(response.text)  # Final output
 
 # Build typed data flow graph
-workflow = (WorkflowBuilder()
+workflow = (WorkflowBuilder(start_executor=agent1_executor)
            .add_edge(agent1_executor, agent2_executor)
-           .set_start_executor(agent1_executor)
            .build())
 
 # Example usage (would be in async context)
@@ -924,10 +923,9 @@ async def editor_exec(msg: str, ctx: WorkflowContext[Never, str]) -> None:
         await ctx.yield_output("Needs revision")
 
 workflow_seq = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=writer_exec)
     .add_edge(writer_exec, reviewer_exec)
     .add_edge(reviewer_exec, editor_exec)
-    .set_start_executor(writer_exec)
     .build()
 )
 ```
@@ -990,18 +988,16 @@ async def join_all(msg: str, ctx: WorkflowContext[str, str]) -> None:
         await ctx.yield_output(" | ".join(state["items"]))  # ALL join
 
 wf_any = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=start)
     .add_edge(start, branch_b).add_edge(start, branch_c)
     .add_edge(branch_b, join_any).add_edge(branch_c, join_any)
-    .set_start_executor(start)
     .build()
 )
 
 wf_all = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=start)
     .add_edge(start, branch_b).add_edge(start, branch_c)
     .add_edge(branch_b, join_all).add_edge(branch_c, join_all)
-    .set_start_executor(start)
     .build()
 )
 ```
@@ -1029,10 +1025,9 @@ async def caption(image_ref: str, ctx: WorkflowContext[Never, str]) -> None:
     await ctx.yield_output(f"Caption: {image_ref}")
 
 workflow = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=ingest)
     .add_edge(ingest, write)
     .add_edge(ingest, caption)
-    .set_start_executor(ingest)
     .build()
 )
 
@@ -1095,9 +1090,8 @@ from agent_framework import WorkflowExecutor, WorkflowBuilder
 # specialist1_executor, specialist2_executor, coordinator_executor, reviewer_executor
 
 # Create sub-workflow
-sub_workflow = (WorkflowBuilder()
+sub_workflow = (WorkflowBuilder(start_executor=specialist1_executor)
                .add_edge(specialist1_executor, specialist2_executor)
-               .set_start_executor(specialist1_executor)
                .build())
 
 # Wrap as executor
@@ -1107,10 +1101,9 @@ sub_workflow_executor = WorkflowExecutor(
 )
 
 # Use in parent workflow
-parent_workflow = (WorkflowBuilder()
+parent_workflow = (WorkflowBuilder(start_executor=coordinator_executor)
                   .add_edge(coordinator_executor, sub_workflow_executor)
                   .add_edge(sub_workflow_executor, reviewer_executor)
-                  .set_start_executor(coordinator_executor)
                   .build())
 ```
 
@@ -1142,18 +1135,17 @@ result = await team.run("Discuss this topic")
 **Agent Framework Implementation:**
 
 ```python
-from agent_framework import WorkflowOutputEvent
 from agent_framework.orchestrations import SequentialBuilder
 
 # Assume we have agent1, agent2, agent3 from previous examples
 # Sequential workflow through participants
-workflow = SequentialBuilder().participants([agent1, agent2, agent3]).build()
+workflow = SequentialBuilder(participants=[agent1, agent2, agent3]).build()
 
 # Example usage (would be in async context)
 async def sequential_example():
     # Each agent appends to shared conversation
     async for event in workflow.run_stream("Discuss this topic"):
-        if isinstance(event, WorkflowOutputEvent):
+        if event.type == "output":
             conversation_history = event.data  # list[ChatMessage]
 ```
 
@@ -1165,20 +1157,18 @@ For detailed orchestration examples, see:
 For concurrent execution patterns, Agent Framework also provides:
 
 ```python
-from agent_framework import WorkflowOutputEvent
 from agent_framework.orchestrations import ConcurrentBuilder
 
 # Assume we have agent1, agent2, agent3 from previous examples
 # Concurrent workflow for parallel processing
-workflow = (ConcurrentBuilder()
-           .participants([agent1, agent2, agent3])
+workflow = (ConcurrentBuilder(participants=[agent1, agent2, agent3])
            .build())
 
 # Example usage (would be in async context)
 async def concurrent_example():
     # All agents process the input concurrently
     async for event in workflow.run_stream("Process this in parallel"):
-        if isinstance(event, WorkflowOutputEvent):
+        if event.type == "output":
             results = event.data  # Combined results from all agents
 ```
 
@@ -1211,7 +1201,6 @@ from agent_framework import (
     AgentResponseUpdate,
     ChatAgent,
     ChatMessage,
-    WorkflowOutputEvent,
 )
 from agent_framework.orchestrations import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
@@ -1228,23 +1217,19 @@ manager_agent = ChatAgent(
     chat_client=OpenAIChatClient(),
 )
 
-workflow = (
-    MagenticBuilder()
-    .participants([researcher, coder])
-    .with_manager(
-        agent=manager_agent,
-        max_round_count=20,
-        max_stall_count=3,
-        max_reset_count=2,
-    )
-    .build()
-)
+workflow = MagenticBuilder(
+    participants=[researcher, coder],
+    manager_agent=manager_agent,
+    max_round_count=20,
+    max_stall_count=3,
+    max_reset_count=2,
+).build()
 
 # Example usage (would be in async context)
 async def magentic_example():
     output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
-        if isinstance(event, WorkflowOutputEvent):
+        if event.type == "output":
             output_messages = cast(list[ChatMessage], event.data)
             if output_messages:
                 output = output_messages[-1].text
@@ -1256,7 +1241,7 @@ The Magentic workflow provides extensive customization options:
 
 - **Manager configuration**: Use a ChatAgent with custom instructions and model settings
 - **Round limits**: `max_round_count`, `max_stall_count`, `max_reset_count`
-- **Event streaming**: Use `WorkflowOutputEvent` with `AgentResponseUpdate` data for streaming
+- **Event streaming**: Use output events (`event.type == "output"`) with `AgentResponseUpdate` data for streaming
 - **Agent specialization**: Custom instructions and tools per agent
 - **Human-in-the-loop**: Plan review, tool approval, and stall intervention
 
@@ -1289,22 +1274,21 @@ manager_agent = ChatAgent(
 )
 
 workflow = (
-    MagenticBuilder()
-    .participants([researcher_agent, coder_agent, analyst_agent])
-    .with_manager(
-        agent=manager_agent,
+    MagenticBuilder(
+        participants=[researcher_agent, coder_agent, analyst_agent],
+        enable_plan_review=True,
+        manager_agent=manager_agent,
         max_round_count=15,      # Limit total rounds
         max_stall_count=2,       # Trigger stall handling
         max_reset_count=1,       # Allow one reset on failure
     )
-    .with_plan_review()           # Enable human plan review
     .with_human_input_on_stall()  # Enable human intervention on stalls
     .build()
 )
 
 # Handle human intervention requests during execution
 async for event in workflow.run_stream("Complex task"):
-    if isinstance(event, RequestInfoEvent) and event.request_type is MagenticHumanInterventionRequest:
+    if event.type == "request_info" and event.request_type is MagenticHumanInterventionRequest:
         req = cast(MagenticHumanInterventionRequest, event.data)
         if req.kind == MagenticHumanInterventionKind.PLAN_REVIEW:
             # Review and approve the plan
@@ -1392,9 +1376,8 @@ class ReviewerExecutor(Executor):
 # Build workflow with human-in-the-loop
 reviewer = ReviewerExecutor(id="reviewer")
 
-workflow = (WorkflowBuilder()
+workflow = (WorkflowBuilder(start_executor=agent_executor)
            .add_edge(agent_executor, reviewer)
-           .set_start_executor(agent_executor)
            .build())
 ```
 
@@ -1403,8 +1386,6 @@ workflow = (WorkflowBuilder()
 Agent Framework provides streaming APIs to handle the pause-resume cycle:
 
 ```python
-from agent_framework import RequestInfoEvent, WorkflowOutputEvent
-
 # Assume we have workflow defined from previous examples
 async def run_with_human_input():
     pending_responses = None
@@ -1423,7 +1404,7 @@ async def run_with_human_input():
 
         # Collect human requests and outputs
         for event in events:
-            if isinstance(event, RequestInfoEvent):
+            if event.type == "request_info":
                 # Display request to human and collect response
                 request_data = event.data  # ApprovalRequest instance
                 print(f"Review needed: {request_data.content}")
@@ -1431,7 +1412,7 @@ async def run_with_human_input():
                 human_response = input("Enter 'approved' or revision notes: ")
                 pending_responses = {event.request_id: human_response}
 
-            elif isinstance(event, WorkflowOutputEvent):
+            elif event.type == "output":
                 print(f"Final result: {event.data}")
                 completed = True
 ```
@@ -1451,7 +1432,7 @@ AutoGen's `Team` abstraction does not provide built-in checkpointing capabilitie
 
 #### Agent Framework Checkpointing
 
-Agent Framework provides comprehensive checkpointing through `FileCheckpointStorage` and the `with_checkpointing()` method on `WorkflowBuilder`. Checkpoints capture:
+Agent Framework provides comprehensive checkpointing through `FileCheckpointStorage` and the `checkpoint_storage` constructor parameter on `WorkflowBuilder`. Checkpoints capture:
 
 - **Executor state**: Local state for each executor using `ctx.set_executor_state()`
 - **State**: Cross-executor state using `ctx.set_state()`
@@ -1499,10 +1480,8 @@ processing_executor = ProcessingExecutor(id="processing")
 finalize_executor = FinalizeExecutor(id="finalize")
 
 # Build workflow with checkpointing enabled
-workflow = (WorkflowBuilder()
+workflow = (WorkflowBuilder(start_executor=processing_executor, checkpoint_storage=checkpoint_storage)
            .add_edge(processing_executor, finalize_executor)
-           .set_start_executor(processing_executor)
-           .with_checkpointing(checkpoint_storage=checkpoint_storage)  # Enable checkpointing
            .build())
 
 # Example usage (would be in async context)
@@ -1545,10 +1524,8 @@ def create_workflow(checkpoint_storage: FileCheckpointStorage):
     upper_executor = UpperCaseExecutor(id="upper")
     reverse_executor = ReverseExecutor(id="reverse")
 
-    return (WorkflowBuilder()
+    return (WorkflowBuilder(start_executor=upper_executor, checkpoint_storage=checkpoint_storage)
            .add_edge(upper_executor, reverse_executor)
-           .set_start_executor(upper_executor)
-           .with_checkpointing(checkpoint_storage=checkpoint_storage)
            .build())
 
 # Assume we have checkpoint_storage from previous examples
@@ -1591,7 +1568,7 @@ async def resume_with_pending_requests_example():
         checkpoint_id=checkpoint_id,
         checkpoint_storage=checkpoint_storage
     ):
-        if isinstance(event, RequestInfoEvent):
+        if event.type == "request_info":
             request_info_events.append(event)
 
     # Handle re-emitted pending request

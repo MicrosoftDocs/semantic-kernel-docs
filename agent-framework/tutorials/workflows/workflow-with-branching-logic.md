@@ -564,8 +564,7 @@ Create a workflow with conditional edges that route based on spam detection resu
     # then call the email assistant, then finalize.
     # If spam, go directly to the spam handler and finalize.
     workflow = (
-        WorkflowBuilder()
-        .set_start_executor(spam_detection_agent)
+        WorkflowBuilder(start_executor=spam_detection_agent)
         # Not spam path: transform response -> request for assistant -> assistant -> send email
         .add_edge(spam_detection_agent, to_email_assistant_request, condition=get_condition(False))
         .add_edge(to_email_assistant_request, email_assistant_agent)
@@ -1198,8 +1197,7 @@ Replace multiple conditional edges with a single switch-case group:
 ```python
     # Build workflow using switch-case for cleaner three-way routing
     workflow = (
-        WorkflowBuilder()
-        .set_start_executor(store_email)
+        WorkflowBuilder(start_executor=store_email)
         .add_edge(store_email, spam_detection_agent)
         .add_edge(spam_detection_agent, to_detection_result)
         .add_switch_case_edge_group(
@@ -1825,10 +1823,14 @@ class Email:
     email_id: str
     email_content: str
 
-# Custom event for database operations
-class DatabaseEvent(WorkflowEvent):
-    """Custom event for tracking database operations."""
-    pass
+# Custom event data for database operations
+class DatabaseEvent:
+    """Custom event data for tracking database operations."""
+    def __init__(self, message: str):
+        self.message = message
+
+    def __repr__(self) -> str:
+        return f"DatabaseEvent({self.message})"
 ```
 
 ### Selection Function: The Heart of Multi-Selection
@@ -1983,7 +1985,7 @@ async def database_access(analysis: AnalysisResult, ctx: WorkflowContext[Never, 
     """Simulate database persistence with custom events."""
 
     await asyncio.sleep(0.05)  # Simulate DB operation
-    await ctx.add_event(DatabaseEvent(f"Email {analysis.email_id} saved to database."))
+    await ctx.add_event(WorkflowEvent("data", data=DatabaseEvent(f"Email {analysis.email_id} saved to database.")))
 ```
 
 ### Enhanced AI Agents
@@ -2034,8 +2036,7 @@ Construct the workflow with sophisticated routing and parallel processing:
 
 ```python
     workflow = (
-        WorkflowBuilder()
-        .set_start_executor(store_email)
+        WorkflowBuilder(start_executor=store_email)
         .add_edge(store_email, email_analysis_agent)
         .add_edge(email_analysis_agent, to_analysis_result)
 
@@ -2084,9 +2085,9 @@ Run the workflow and observe parallel execution through custom events:
 
     # Stream events to see parallel execution
     async for event in workflow.run_stream(email):
-        if isinstance(event, DatabaseEvent):
+        if isinstance(event.data, DatabaseEvent):
             print(f"Database: {event}")
-        elif isinstance(event, WorkflowOutputEvent):
+        elif event.type == "output":
             print(f"Output: {event.data}")
 ```
 

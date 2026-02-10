@@ -80,12 +80,11 @@ from agent_framework import (
 checkpoint_storage = InMemoryCheckpointStorage()
 
 # Build a workflow with checkpointing enabled
-builder = WorkflowBuilder()
-builder.set_start_executor(start_executor)
+builder = WorkflowBuilder(start_executor=start_executor, checkpoint_storage=checkpoint_storage)
 builder.add_edge(start_executor, executor_b)
 builder.add_edge(executor_b, executor_c)
 builder.add_edge(executor_b, end_executor)
-workflow = builder.with_checkpointing(checkpoint_storage).build()
+workflow = builder.build()
 
 # Run the workflow
 async for event in workflow.run_streaming(input):
@@ -162,8 +161,7 @@ Or you can rehydrate a new workflow instance from a checkpoint.
 ```python
 from agent_framework import WorkflowBuilder
 
-builder = WorkflowBuilder()
-builder.set_start_executor(start_executor)
+builder = WorkflowBuilder(start_executor=start_executor)
 builder.add_edge(start_executor, executor_b)
 builder.add_edge(executor_b, executor_c)
 builder.add_edge(executor_b, end_executor)

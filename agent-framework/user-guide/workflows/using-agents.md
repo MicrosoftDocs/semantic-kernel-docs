@@ -96,8 +96,7 @@ reviewer_agent = chat_client.as_agent(
 )
 
 # Build a workflow with the agents
-builder = WorkflowBuilder()
-builder.set_start_executor(writer_agent)
+builder = WorkflowBuilder(start_executor=writer_agent)
 builder.add_edge(writer_agent, reviewer_agent)
 workflow = builder.build()
 ```
@@ -116,19 +115,19 @@ Whenever the executor receives a message of one of these types, it will trigger 
 - `agent_run_response`: The full response from the agent
 - `full_conversation`: The full conversation history up to this point
 
-Agent executors emit `WorkflowOutputEvent` events containing agent responses:
+Agent executors emit output events (type `"output"`) containing agent responses:
 
-- In streaming mode, `WorkflowOutputEvent.data` contains `AgentResponseUpdate` chunks as they are generated.
-- In non-streaming mode, `WorkflowOutputEvent.data` contains the full `AgentResponse`.
+- In streaming mode, the event's `.data` contains `AgentResponseUpdate` chunks as they are generated.
+- In non-streaming mode, the event's `.data` contains the full `AgentResponse`.
 
 > By default, agents are wrapped in executors that run in streaming mode. You can customize this behavior by creating a custom executor. See the next section for more details.
 
 ```python
-from agent_framework import AgentResponseUpdate, WorkflowOutputEvent
+from agent_framework import AgentResponseUpdate
 
 last_executor_id = None
 async for event in workflow.run_stream("Write a short blog post about AI agents."):
-    if isinstance(event, WorkflowOutputEvent) and isinstance(event.data, AgentResponseUpdate):
+    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
         if event.executor_id != last_executor_id:
             if last_executor_id is not None:
                 print()

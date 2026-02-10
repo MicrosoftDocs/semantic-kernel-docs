@@ -214,8 +214,7 @@ writer = ChatAgent(
 
 # Build your workflow
 workflow = (
-    WorkflowBuilder()
-    .set_start_executor(researcher)
+    WorkflowBuilder(start_executor=researcher)
     .add_edge(researcher, writer)
     .build()
 )
@@ -361,8 +360,7 @@ async def main():
     
     # Build a sequential workflow
     workflow = (
-        SequentialBuilder()
-        .add_agents([researcher, writer, reviewer])
+        SequentialBuilder(participants=[researcher, writer, reviewer])
         .build()
     )
     
@@ -407,8 +405,8 @@ During execution, internal workflow events are mapped to agent responses as foll
 
 | Workflow Event | Agent Response |
 |----------------|----------------|
-| `WorkflowOutputEvent` with `AgentResponseUpdate` | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
-| `RequestInfoEvent` | Converted to `FunctionCallContent` and `FunctionApprovalRequestContent` |
+| `event.type == "output"` with `AgentResponseUpdate` data | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
+| `event.type == "request_info"` | Converted to `FunctionCallContent` and `FunctionApprovalRequestContent` |
 | Other events | Included in `raw_representation` for observability |
 
 This conversion allows you to use the standard agent interface while still having access to detailed workflow information when needed.

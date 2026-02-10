@@ -110,7 +110,7 @@ from agent_framework.workflows import WorkflowBuilder
 
 # Define your workflow
 workflow = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor="my_executor")
     # Add executors and edges
     .build()
 )

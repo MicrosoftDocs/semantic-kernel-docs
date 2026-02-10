@@ -34,7 +34,7 @@ entities/
         agent.py         # Agent implementation (optional, can be in __init__.py)
         .env             # Optional: API keys, config vars
     my_workflow/
-        __init__.py      # Must export: workflow = WorkflowBuilder()...
+        __init__.py      # Must export: workflow = WorkflowBuilder(start_executor=...)...
         workflow.py      # Workflow implementation (optional)
         .env             # Optional: environment variables
     .env                 # Optional: shared environment variables
@@ -72,7 +72,7 @@ The key requirement is that the `__init__.py` file must export a variable named 
 from agent_framework.workflows import WorkflowBuilder
 
 workflow = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor="my_executor")
     .add_executor(...)
     .add_edge(...)
     .build()

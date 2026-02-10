@@ -58,8 +58,7 @@ from agent_framework import WorkflowBuilder, WorkflowViz
 
 # Create a workflow with a fan-out and fan-in pattern
 workflow = (
-    WorkflowBuilder()
-    .set_start_executor(dispatcher)
+    WorkflowBuilder(start_executor=dispatcher)
     .add_fan_out_edges(dispatcher, [researcher, marketer, legal])
     .add_fan_in_edges([researcher, marketer, legal], aggregator)
     .build()

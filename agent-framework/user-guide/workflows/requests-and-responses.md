@@ -88,8 +88,7 @@ from agent_framework import response_handler, WorkflowBuilder
 
 executor_a = SomeExecutor()
 executor_b = SomeOtherExecutor()
-workflow_builder = WorkflowBuilder()
-workflow_builder.set_start_executor(executor_a)
+workflow_builder = WorkflowBuilder(start_executor=executor_a)
 workflow_builder.add_edge(executor_a, executor_b)
 workflow = workflow_builder.build()
 ```
@@ -207,27 +206,27 @@ await foreach (WorkflowEvent evt in handle.WatchStreamAsync().ConfigureAwait(fal
 
 ::: zone pivot="programming-language-python"
 
-Executors can send requests directly without needing a separate component. When an executor calls `ctx.request_info()`, the workflow emits a `RequestInfoEvent`. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor's `@response_handler` method.
+Executors can send requests directly without needing a separate component. When an executor calls `ctx.request_info()`, the workflow emits a `WorkflowEvent` with `type="request_info"`. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor's `@response_handler` method.
 
 ```python
-from agent_framework import RequestInfoEvent
+from agent_framework import WorkflowEvent
 
 while True:
-    request_info_events : list[RequestInfoEvent] = []
+    request_info_events : list[WorkflowEvent] = []
     pending_responses : dict[str, CustomResponseType] = {}
 
     stream = workflow.run_stream(input) if not pending_responses else workflow.send_responses_streaming(pending_responses)
 
     async for event in stream:
-        if isinstance(event, RequestInfoEvent):
-            # Handle `RequestInfoEvent` from the workflow
+        if event.type == "request_info":
+            # Handle request_info event from the workflow
             request_info_events.append(event)
 
     if not request_info_events:
         break
 
     for request_info_event in request_info_events:
-        # Handle `RequestInfoEvent` from the workflow
+        # Handle request_info event from the workflow
         response = CustomResponseType(...)
         pending_responses[request_info_event.request_id] = response
 ```
@@ -238,7 +237,7 @@ while True:
 
 To learn more about checkpoints, see [Checkpoints](./checkpoints.md).
 
-When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You cannot provide responses directly during the resume operation - instead, you must listen for the re-emitted events and respond using the standard response mechanism.
+When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `WorkflowEvent` objects with `type="request_info"`, allowing you to capture and respond to them. You cannot provide responses directly during the resume operation - instead, you must listen for the re-emitted events and respond using the standard response mechanism.
 
 ## Next Steps
 

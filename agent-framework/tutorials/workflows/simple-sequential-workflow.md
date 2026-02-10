@@ -237,7 +237,7 @@ First, import the necessary modules from Agent Framework:
 ```python
 import asyncio
 from typing_extensions import Never
-from agent_framework import WorkflowBuilder, WorkflowContext, WorkflowOutputEvent, executor
+from agent_framework import WorkflowBuilder, WorkflowContext, executor
 ```
 
 ### Step 2: Create the First Executor
@@ -302,17 +302,16 @@ Connect the executors using `WorkflowBuilder`:
 upper_case = UpperCase(id="upper_case_executor")
 
 workflow = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=upper_case)
     .add_edge(upper_case, reverse_text)
-    .set_start_executor(upper_case)
     .build()
 )
 ```
 
 **Key Points:**
 
+- `start_executor` in the constructor defines the entry point
 - `add_edge()` creates directed connections between executors
-- `set_start_executor()` defines the entry point
 - `build()` finalizes the workflow
 
 ### Step 5: Run the Workflow with Streaming
@@ -324,7 +323,7 @@ async def main():
     # Run the workflow and stream events
     async for event in workflow.run_stream("hello world"):
         print(f"Event: {event}")
-        if isinstance(event, WorkflowOutputEvent):
+        if event.type == "output":
             print(f"Workflow completed with result: {event.data}")
 
 if __name__ == "__main__":
@@ -336,11 +335,11 @@ if __name__ == "__main__":
 When you run the workflow, you'll see events like:
 
 ```text
-Event: ExecutorInvokedEvent(executor_id=upper_case_executor)
-Event: ExecutorCompletedEvent(executor_id=upper_case_executor)
-Event: ExecutorInvokedEvent(executor_id=reverse_text_executor)
-Event: ExecutorCompletedEvent(executor_id=reverse_text_executor)
-Event: WorkflowOutputEvent(data='DLROW OLLEH', executor_id=reverse_text_executor)
+Event: WorkflowEvent(type='executor_invoked', executor_id='upper_case_executor')
+Event: WorkflowEvent(type='executor_completed', executor_id='upper_case_executor')
+Event: WorkflowEvent(type='executor_invoked', executor_id='reverse_text_executor')
+Event: WorkflowEvent(type='executor_completed', executor_id='reverse_text_executor')
+Event: WorkflowEvent(type='output', executor_id='reverse_text_executor', data='DLROW OLLEH')
 Workflow completed with result: DLROW OLLEH
 ```
 

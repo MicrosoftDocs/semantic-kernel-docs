@@ -46,9 +46,8 @@ builder.AddEdge(sourceExecutor, targetExecutor);
 ```python
 from agent_framework import WorkflowBuilder
 
-builder = WorkflowBuilder()
+builder = WorkflowBuilder(start_executor=source_executor)
 builder.add_edge(source_executor, target_executor)
-builder.set_start_executor(source_executor)
 workflow = builder.build()
 ```
 
@@ -82,10 +81,9 @@ builder.AddEdge(
 ```python
 from agent_framework import WorkflowBuilder
 
-builder = WorkflowBuilder()
+builder = WorkflowBuilder(start_executor=spam_detector)
 builder.add_edge(spam_detector, email_processor, condition=lambda result: isinstance(result, SpamResult) and not result.is_spam)
 builder.add_edge(spam_detector, spam_handler, condition=lambda result: isinstance(result, SpamResult) and result.is_spam)
-builder.set_start_executor(spam_detector)
 workflow = builder.build()
 ```
 
@@ -123,8 +121,7 @@ from agent_framework import (
     WorkflowBuilder,
 )
 
-builder = WorkflowBuilder()
-builder.set_start_executor(router_executor)
+builder = WorkflowBuilder(start_executor=router_executor)
 builder.add_switch_case_edge_group(
     router_executor,
     [
@@ -174,14 +171,12 @@ builder.AddFanOutEdge(
 ```python
 from agent_framework import WorkflowBuilder
 
-builder = WorkflowBuilder()
-builder.set_start_executor(splitter_executor)
+builder = WorkflowBuilder(start_executor=splitter_executor)
 builder.add_fan_out_edges(splitter_executor, [worker1, worker2, worker3])
 workflow = builder.build()
 
 # Send to specific targets based on partitioner function
-builder = WorkflowBuilder()
-builder.set_start_executor(splitter_executor)
+builder = WorkflowBuilder(start_executor=splitter_executor)
 builder.add_fan_out_edges(
     splitter_executor,
     [worker1, worker2, worker3],
