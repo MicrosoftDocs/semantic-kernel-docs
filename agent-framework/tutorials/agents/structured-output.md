@@ -16,7 +16,7 @@ ms.service: agent-framework
 This tutorial step shows you how to produce structured output with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> Not all agent types support structured output natively. The `ChatClientAgent` supports structured output when used with compatible chat clients. For agents without native structured output support, you can use the `StructuredOutputAgent` decorator.
+> Not all agent types support structured output natively. The `ChatClientAgent` supports structured output when used with compatible chat clients.
 
 ## Prerequisites
 
@@ -160,29 +160,6 @@ AgentResponse response = await updates.ToAgentResponseAsync();
 PersonInfo personInfo = JsonSerializer.Deserialize<PersonInfo>(response.Text)!;
 
 Console.WriteLine($"Name: {personInfo.Name}, Age: {personInfo.Age}, Occupation: {personInfo.Occupation}");
-```
-
-## Structured output with agents with no structured output capabilities
-
-Some agents don't natively support structured output, either because it's not part of the protocol (for example, an A2A agent) or because the agents use language models without structured output capabilities.
-To address this, you can use the `StructuredOutputAgent` decorator, which wraps any `AIAgent` and converts the agent's text response into structured JSON using a configured chat client. The decorator can be applied using the `UseStructuredOutput` method on the agent builder.
-
-```csharp
-using Microsoft.Extensions.AI;
-
-IChatClient chatClient = chatClient.AsIChatClient();
-
-// The base agent does not have structured output capabilities.
-AIAgent baseAgent = chatClient.AsAIAgent(name: "HelpfulAssistant", instructions: "You are a helpful assistant.");
-
-AIAgent agent = baseAgent
-    .AsBuilder()
-    .UseStructuredOutput(chatClient)
-    .Build();
-
-AgentResponse<PersonInfo> response = await agent.RunAsync<PersonInfo>("Please provide information about John Smith, who is a 35-year-old software engineer.");
-
-Console.WriteLine($"Name: {response.Result.Name}, Age: {response.Result.Age}, Occupation: {response.Result.Occupation}");
 ```
 
 ::: zone-end
