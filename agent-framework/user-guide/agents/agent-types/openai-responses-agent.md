@@ -97,7 +97,7 @@ Import the required classes from Agent Framework:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIResponsesClient
 ```
 
@@ -308,7 +308,7 @@ Frank Wilson,Engineering,88000,6
     print(f"File uploaded with ID: {uploaded_file.id}")
 
     # Create agent using OpenAI Responses client
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=OpenAIResponsesClient(async_client=openai_client),
         instructions="You are a helpful assistant that can analyze data files using Python code.",
         tools=HostedCodeInterpreterTool(inputs=[{"file_id": uploaded_file.id}]),
@@ -392,7 +392,7 @@ async def file_search_example():
     vector_store_content = HostedVectorStoreContent(vector_store_id=vector_store.id)
 
     # Create agent with file search capability
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=client,
         instructions="You are a helpful assistant that can search through files to find information.",
         tools=[HostedFileSearchTool(inputs=vector_store_content)],
@@ -433,7 +433,7 @@ async def web_search_example():
 Analyze and understand images with multi-modal capabilities:
 
 ```python
-from agent_framework import ChatMessage, Content
+from agent_framework import Message, Content
 
 async def image_analysis_example():
     agent = OpenAIResponsesClient().as_agent(
@@ -442,7 +442,7 @@ async def image_analysis_example():
     )
 
     # Create message with both text and image content
-    message = ChatMessage(
+    message = Message(
         role="user",
         contents=[
             Content.from_text(text="What do you see in this image?"),

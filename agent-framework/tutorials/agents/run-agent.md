@@ -233,14 +233,14 @@ async def main():
 asyncio.run(main())
 ```
 
-## Running the agent with a ChatMessage
+## Running the agent with a Message
 
-Instead of a simple string, you can also provide one or more `ChatMessage` objects to the `run` and `run_stream` methods.
+Instead of a simple string, you can also provide one or more `Message` objects to the `run` and `run_stream` methods.
 
 ```python
-from agent_framework import ChatMessage, Content, Role
+from agent_framework import Message, Content, Role
 
-message = ChatMessage(
+message = Message(
     role=Role.USER,
     contents=[
         Content.from_text(text="Tell me a joke about this image?"),

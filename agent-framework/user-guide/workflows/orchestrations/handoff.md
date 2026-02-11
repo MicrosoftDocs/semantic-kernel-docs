@@ -20,7 +20,7 @@ Internally, the handoff orchestration is implemented using a mesh topology where
 </p>
 
 > [!NOTE]
-> Handoff orchestration only supports `ChatAgent` and the agents must support local tools execution.
+> Handoff orchestration only supports `Agent` and the agents must support local tools execution.
 
 ## Differences Between Handoff and Agent-as-Tools
 
@@ -233,21 +233,16 @@ return_agent = chat_client.as_agent(
 Build the handoff workflow using `HandoffBuilder`:
 
 ```python
-from agent_framework import HandoffBuilder
+from agent_framework.orchestrations import HandoffBuilder
 
 # Build the handoff workflow
 workflow = (
     HandoffBuilder(
         name="customer_support_handoff",
         participants=[triage_agent, refund_agent, order_agent, return_agent],
+        termination_condition=lambda conversation: len(conversation) > 0 and "welcome" in conversation[-1].text.lower(),
     )
     .with_start_agent(triage_agent) # Triage receives initial user input
-    .with_termination_condition(
-        # Custom termination: Check if one of the agents has provided a closing message.
-        # This looks for the last message containing "welcome", which indicates the
-        # conversation has concluded naturally.
-        lambda conversation: len(conversation) > 0 and "welcome" in conversation[-1].text.lower()
-    )
     .build()
 )
 ```
@@ -259,14 +254,9 @@ workflow = (
     HandoffBuilder(
         name="customer_support_handoff",
         participants=[triage_agent, refund_agent, order_agent, return_agent],
+        termination_condition=lambda conversation: len(conversation) > 0 and "welcome" in conversation[-1].text.lower(),
     )
     .with_start_agent(triage_agent) # Triage receives initial user input
-    .with_termination_condition(
-        # Custom termination: Check if one of the agents has provided a closing message.
-        # This looks for the last message containing "welcome", which indicates the
-        # conversation has concluded naturally.
-        lambda conversation: len(conversation) > 0 and "welcome" in conversation[-1].text.lower()
-    )
     # Triage cannot route directly to refund agent
     .add_handoff(triage_agent, [order_agent, return_agent])
     # Only the return agent can handoff to refund agent - users wanting refunds after returns
@@ -286,10 +276,11 @@ workflow = (
 
 Unlike other orchestrations, handoff is interactive because an agent may not decide to handoff after every turn. If an agent doesn't handoff, human input is required to continue the conversation. See [Autonomous Mode](#autonomous-mode) for bypassing this requirement. In other orchestrations, after an agent responds, the control either goes to the orchestrator or the next agent.
 
-When an agent in a handoff workflow decides not to handoff (a handoff is triggered by a special tool call), the workflow emits a `RequestInfoEvent` with a `HandoffAgentUserRequest` payload containing the agent's most recent messages. The user must respond to this request to continue the workflow.
+When an agent in a handoff workflow decides not to handoff (a handoff is triggered by a special tool call), the workflow emits a `WorkflowEvent` with `type="request_info"` and a `HandoffAgentUserRequest` payload containing the agent's most recent messages. The user must respond to this request to continue the workflow.
 
 ```python
-from agent_framework import RequestInfoEvent, HandoffAgentUserRequest, WorkflowOutputEvent
+from agent_framework import WorkflowEvent
+from agent_framework.orchestrations import HandoffAgentUserRequest
 
 # Start workflow with initial user message
 events = [event async for event in workflow.run_stream("I need help with my order")]
@@ -297,7 +288,7 @@ events = [event async for event in workflow.run_stream("I need help with my orde
 # Process events and collect pending input requests
 pending_requests = []
 for event in events:
-    if isinstance(event, RequestInfoEvent) and isinstance(event.data, HandoffAgentUserRequest):
+    if event.type == "request_info" and isinstance(event.data, HandoffAgentUserRequest):
         pending_requests.append(event)
         request_data = event.data
         print(f"Agent {event.source_executor_id} is awaiting your input")
@@ -409,7 +400,7 @@ def process_refund(order_number: Annotated[str, "Order number to process refund 
 ### Create Agents with Approval-Required Tools
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
@@ -444,11 +435,9 @@ order_agent = chat_client.as_agent(
 ```python
 from agent_framework import (
     FunctionApprovalRequestContent,
-    HandoffBuilder,
-    HandoffAgentUserRequest,
-    RequestInfoEvent,
-    WorkflowOutputEvent,
+    WorkflowEvent,
 )
+from agent_framework.orchestrations import HandoffBuilder, HandoffAgentUserRequest
 
 workflow = (
     HandoffBuilder(
@@ -459,11 +448,11 @@ workflow = (
     .build()
 )
 
-pending_requests: list[RequestInfoEvent] = []
+pending_requests: list[WorkflowEvent] = []
 
 # Start workflow
 async for event in workflow.run_stream("My order 12345 arrived damaged. I need a refund."):
-    if isinstance(event, RequestInfoEvent):
+    if event.type == "request_info":
         pending_requests.append(event)
 
 # Process pending requests - could be user input OR tool approval
@@ -473,7 +462,7 @@ while pending_requests:
     for request in pending_requests:
         if isinstance(request.data, HandoffAgentUserRequest):
             # Agent needs user input
-            print(f"Agent {request.source_executor_id} asks:")
+            print(f"Agent {request.executor_id} asks:")
             for msg in request.data.agent_response.messages[-2:]:
                 print(f"  {msg.author_name}: {msg.text}")
 
@@ -494,9 +483,9 @@ while pending_requests:
     # Send all responses and collect new requests
     pending_requests = []
     async for event in workflow.send_responses_streaming(responses):
-        if isinstance(event, RequestInfoEvent):
+        if event.type == "request_info":
             pending_requests.append(event)
-        elif isinstance(event, WorkflowOutputEvent):
+        elif event.type == "output":
             print("\nWorkflow completed!")
 ```
 
@@ -513,16 +502,16 @@ workflow = (
     HandoffBuilder(
         name="durable_support",
         participants=[triage_agent, refund_agent, order_agent],
+        checkpoint_storage=storage,
     )
     .with_start_agent(triage_agent)
-    .with_checkpointing(storage)
     .build()
 )
 
 # Initial run - workflow pauses when approval is needed
 pending_requests = []
 async for event in workflow.run_stream("I need a refund for order 12345"):
-    if isinstance(event, RequestInfoEvent):
+    if event.type == "request_info":
         pending_requests.append(event)
 
 # Process can exit here - checkpoint is saved automatically
@@ -534,7 +523,7 @@ latest = sorted(checkpoints, key=lambda c: c.timestamp, reverse=True)[0]
 # Step 1: Restore checkpoint to reload pending requests
 restored_requests = []
 async for event in workflow.run_stream(checkpoint_id=latest.checkpoint_id):
-    if isinstance(event, RequestInfoEvent):
+    if event.type == "request_info":
         restored_requests.append(event)
 
 # Step 2: Send responses
@@ -546,7 +535,7 @@ for req in restored_requests:
         responses[req.request_id] = HandoffAgentUserRequest.create_response("Yes, please process the refund.")
 
 async for event in workflow.send_responses_streaming(responses):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         print("Refund workflow completed!")
 ```
 

@@ -77,8 +77,7 @@ You can choose to enable HITL for only a subset of agents in the orchestration b
 
 ```python
 builder = (
-    SequentialBuilder()
-    .participants([agent1, agent2, agent3])
+    SequentialBuilder(participants=[agent1, agent2, agent3])
     .with_request_info(agents=[agent2])
 )
 ```

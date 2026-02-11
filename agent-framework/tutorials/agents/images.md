@@ -57,7 +57,7 @@ This will print the agent's analysis of the image to the console.
 
 ## Passing images to the agent
 
-You can send images to an agent by creating a `ChatMessage` that includes both text and image content. The agent can then analyze the image and respond accordingly.
+You can send images to an agent by creating a `Message` that includes both text and image content. The agent can then analyze the image and respond accordingly.
 
 First, create an agent that is able to analyze images.
 
@@ -72,12 +72,12 @@ agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
 )
 ```
 
-Next, create a `ChatMessage` that contains both a text prompt and an image URL. Use `Content.from_text()` for the text and `Content.from_uri()` for the image.
+Next, create a `Message` that contains both a text prompt and an image URL. Use `Content.from_text()` for the text and `Content.from_uri()` for the image.
 
 ```python
-from agent_framework import ChatMessage, Content, Role
+from agent_framework import Message, Content, Role
 
-message = ChatMessage(
+message = Message(
     role=Role.USER,
     contents=[
         Content.from_text(text="What do you see in this image?"),
@@ -92,13 +92,13 @@ message = ChatMessage(
 You can also load an image from your local file system using `Content.from_data()`:
 
 ```python
-from agent_framework import ChatMessage, Content, Role
+from agent_framework import Message, Content, Role
 
 # Load image from local file
 with open("path/to/your/image.jpg", "rb") as f:
     image_bytes = f.read()
 
-message = ChatMessage(
+message = Message(
     role=Role.USER,
     contents=[
         Content.from_text(text="What do you see in this image?"),

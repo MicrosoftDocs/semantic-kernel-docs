@@ -48,25 +48,20 @@ RequestInfoEvent         // A request is issued
 ::: zone pivot="programming-language-python"
 
 ```python
-# Workflow lifecycle events
-WorkflowStartedEvent     # Workflow execution begins
-WorkflowOutputEvent      # Workflow produces an output
-WorkflowErrorEvent       # Workflow encounters an error
-WorkflowWarningEvent     # Workflow encountered a warning
+# All events use the unified WorkflowEvent class with a type discriminator:
+WorkflowEvent.type == "started"             # Workflow execution begins
+WorkflowEvent.type == "output"              # Workflow produces an output
+WorkflowEvent.type == "error"               # Workflow encounters an error
+WorkflowEvent.type == "warning"             # Workflow encountered a warning
 
-# Executor events
-ExecutorInvokedEvent     # Executor starts processing
-ExecutorCompletedEvent   # Executor finishes processing
-ExecutorFailedEvent      # Executor encounters an error
-AgentRunEvent            # An agent run produces output
-AgentResponseUpdateEvent # An agent run produces a streaming update
+WorkflowEvent.type == "executor_invoked"    # Executor starts processing
+WorkflowEvent.type == "executor_completed"  # Executor finishes processing
+WorkflowEvent.type == "executor_failed"     # Executor encounters an error
 
-# Superstep events
-SuperStepStartedEvent    # Superstep begins
-SuperStepCompletedEvent  # Superstep completes
+WorkflowEvent.type == "superstep_started"   # Superstep begins
+WorkflowEvent.type == "superstep_completed" # Superstep completes
 
-# Request events
-RequestInfoEvent         # A request is issued
+WorkflowEvent.type == "request_info"        # A request is issued
 ```
 
 ::: zone-end
@@ -106,25 +101,19 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework import (
-    ExecutorCompleteEvent,
-    ExecutorInvokeEvent,
-    WorkflowOutputEvent,
-    WorkflowErrorEvent,
-)
+from agent_framework import WorkflowEvent
 
 async for event in workflow.run_stream(input_message):
-    match event:
-        case ExecutorInvokeEvent() as invoke:
-            print(f"Starting {invoke.executor_id}")
-        case ExecutorCompleteEvent() as complete:
-            print(f"Completed {complete.executor_id}: {complete.data}")
-        case WorkflowOutputEvent() as output:
-            print(f"Workflow produced output: {output.data}")
-            return
-        case WorkflowErrorEvent() as error:
-            print(f"Workflow error: {error.exception}")
-            return
+    if event.type == "executor_invoked":
+        print(f"Starting {event.executor_id}")
+    elif event.type == "executor_completed":
+        print(f"Completed {event.executor_id}: {event.data}")
+    elif event.type == "output":
+        print(f"Workflow produced output: {event.data}")
+        return
+    elif event.type == "error":
+        print(f"Workflow error: {event.data}")
+        return
 ```
 
 ::: zone-end
@@ -163,15 +152,11 @@ from agent_framework import (
     WorkflowEvent,
 )
 
-class CustomEvent(WorkflowEvent):
-    def __init__(self, message: str):
-        super().__init__(message)
-
 class CustomExecutor(Executor):
 
     @handler
     async def handle(self, message: str, ctx: WorkflowContext[str]) -> None:
-        await ctx.add_event(CustomEvent(f"Processing message: {message}"))
+        await ctx.add_event(WorkflowEvent("data", data=f"Processing message: {message}"))
         # Executor logic...
 ```
 
@@ -182,7 +167,7 @@ class CustomExecutor(Executor):
 - [Learn how to use agents in workflows](./../using-agents.md) to build intelligent workflows.
 - [Learn how to use workflows as agents](./../as-agents.md).
 - [Learn how to handle requests and responses](./../requests-and-responses.md) in workflows.
-- [Learn how to manage state](./../shared-states.md) in workflows.
+- [Learn how to manage state](./../state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./../checkpoints.md).
 - [Learn how to monitor workflows](./../observability.md).
 - [Learn about state isolation in workflows](./../state-isolation.md).
