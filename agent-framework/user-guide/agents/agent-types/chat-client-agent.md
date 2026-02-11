@@ -70,7 +70,7 @@ For more information on how to run and interact with agents, see the [Agent gett
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Microsoft Agent Framework supports creating agents for any inference service that provides a chat client implementation compatible with the `ChatClientProtocol`. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
+Microsoft Agent Framework supports creating agents for any inference service that provides a chat client implementation compatible with the `SupportsChatGetResponse`. This means that there is a very broad range of services that can be used to create agents, including open source models that can be run locally.
 
 ## Getting Started
 
@@ -97,11 +97,11 @@ The framework provides several built-in chat client implementations:
 ### OpenAI Chat Client
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 # Create agent using OpenAI
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(model_id="gpt-4o"),
     instructions="You are a helpful assistant.",
     name="OpenAI Assistant"
@@ -111,11 +111,11 @@ agent = ChatAgent(
 ### Azure OpenAI Chat Client
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 
 # Create agent using Azure OpenAI
-agent = ChatAgent(
+agent = Agent(
     chat_client=AzureOpenAIChatClient(
         model_id="gpt-4o",
         endpoint="https://your-resource.openai.azure.com/",
@@ -129,13 +129,13 @@ agent = ChatAgent(
 ### Azure AI Agent Client
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 # Create agent using Azure AI
 async with AzureCliCredential() as credential:
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant.",
         name="Azure AI Assistant"

@@ -168,16 +168,16 @@ These agents support a wide range of functionality out of the box:
 1. Structured output
 1. Streaming responses
 
-To create one of these agents, simply construct a `ChatAgent` using the chat client implementation of your choice.
+To create one of these agents, simply construct a `Agent` using the chat client implementation of your choice.
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import DefaultAzureCredential
 
 async with (
     DefaultAzureCredential() as credential,
-    ChatAgent(
+    Agent(
         chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant"
     ) as agent
@@ -267,13 +267,13 @@ For streaming examples, see:
 Azure AI agents support hosted code interpreter tools for executing Python code:
 
 ```python
-from agent_framework import ChatAgent, HostedCodeInterpreterTool
+from agent_framework import Agent, HostedCodeInterpreterTool
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import DefaultAzureCredential
 
 async with (
     DefaultAzureCredential() as credential,
-    ChatAgent(
+    Agent(
         chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant that can execute Python code.",
         tools=HostedCodeInterpreterTool()
@@ -294,13 +294,13 @@ It is also possible to create fully custom agents that are not just wrappers aro
 Agent Framework provides the `SupportsAgentRun` protocol and `BaseAgent` base class, which when implemented/subclassed allows for complete control over the agent's behavior and capabilities.
 
 ```python
-from agent_framework import BaseAgent, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
+from agent_framework import BaseAgent, AgentResponse, AgentResponseUpdate, AgentThread, Message
 from collections.abc import AsyncIterable
 
 class CustomAgent(BaseAgent):
     async def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -310,7 +310,7 @@ class CustomAgent(BaseAgent):
 
     def run_stream(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,

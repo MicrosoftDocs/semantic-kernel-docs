@@ -82,7 +82,7 @@ For prerequisites and installing packages, see the [Create and run a simple agen
 
 ## Create and use an agent as a function tool
 
-You can use a `ChatAgent` as a function tool by calling `.as_tool()` on the agent and providing it as a tool to another agent. This allows you to compose agents and build more advanced workflows.
+You can use a `Agent` as a function tool by calling `.as_tool()` on the agent and providing it as a tool to another agent. This allows you to compose agents and build more advanced workflows.
 
 First, create a function tool that will be used by your agent that's exposed as a function.
 
@@ -97,7 +97,7 @@ def get_weather(
     return f"The weather in {location} is cloudy with a high of 15°C."
 ```
 
-Create a `ChatAgent` that uses the function tool.
+Create a `Agent` that uses the function tool.
 
 ```python
 from agent_framework.azure import AzureOpenAIChatClient

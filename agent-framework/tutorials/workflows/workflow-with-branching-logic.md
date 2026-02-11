@@ -411,7 +411,7 @@ from agent_framework import (
     AgentExecutor,
     AgentExecutorRequest,
     AgentExecutorResponse,
-    ChatMessage,
+    Message,
     Role,
     WorkflowBuilder,
     WorkflowContext,
@@ -509,7 +509,7 @@ async def to_email_assistant_request(
 
     # Create a new request for the email assistant with the original email content
     request = AgentExecutorRequest(
-        messages=[ChatMessage(Role.USER, text=detection.email_content)],
+        messages=[Message(Role.USER, text=detection.email_content)],
         should_respond=True
     )
     await ctx.send_message(request)
@@ -589,7 +589,7 @@ Run the workflow with sample email content:
 
     # Execute the workflow. Since the start is an AgentExecutor, pass an AgentExecutorRequest.
     # The workflow completes when it becomes idle (no more work to do).
-    request = AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email)], should_respond=True)
+    request = AgentExecutorRequest(messages=[Message(Role.USER, text=email)], should_respond=True)
     events = await workflow.run(request)
     outputs = events.get_outputs()
     if outputs:
@@ -1094,7 +1094,7 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
 
     # Forward email to spam detection agent
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=new_email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=new_email.email_content)], should_respond=True)
     )
 
 @executor(id="to_detection_result")
@@ -1123,7 +1123,7 @@ async def submit_to_email_assistant(detection: DetectionResult, ctx: WorkflowCon
     # Retrieve original email content from shared state
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
     )
 
 @executor(id="finalize_and_send")
@@ -1889,7 +1889,7 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
     ctx.set_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
 
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=new_email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=new_email.email_content)], should_respond=True)
     )
 
 @executor(id="to_analysis_result")
@@ -1920,7 +1920,7 @@ async def submit_to_email_assistant(analysis: AnalysisResult, ctx: WorkflowConte
 
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
     )
 
 @executor(id="finalize_and_send")
@@ -1937,7 +1937,7 @@ async def summarize_email(analysis: AnalysisResult, ctx: WorkflowContext[AgentEx
     # Only called for long NotSpam emails by selection function
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
     )
 
 @executor(id="merge_summary")

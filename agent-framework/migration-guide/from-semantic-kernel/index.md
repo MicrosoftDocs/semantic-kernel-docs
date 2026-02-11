@@ -332,7 +332,7 @@ from agent_framework.azure import AzureAIAgentClient
 Many of the most commonly used types are imported directly from `agent_framework`:
 
 ```python
-from agent_framework import ChatMessage, ChatAgent
+from agent_framework import Message, Agent
 ```
 
 ## 2. Agent Type Consolidation
@@ -343,7 +343,7 @@ Semantic Kernel provides specific agent classes for various services, for exampl
 
 ### Agent Framework
 
-In Agent Framework, the majority of agents are built using the `ChatAgent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
+In Agent Framework, the majority of agents are built using the `Agent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
 
 All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `SupportsAgentRun` (`from agent_framework import SupportsAgentRun`) interface.
 
@@ -371,9 +371,9 @@ Agent creation in Agent Framework can be done in two ways, directly:
 
 ```python
 from agent_framework.azure import AzureAIAgentClient
-from agent_framework import ChatMessage, ChatAgent
+from agent_framework import Message, Agent
 
-agent = ChatAgent(chat_client=AzureAIAgentClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
+agent = Agent(chat_client=AzureAIAgentClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
 ```
 
 Or, with the convenience methods provided by chat clients:
@@ -771,7 +771,7 @@ response = await agent.get_response(user_input, thread=thread, arguments=argumen
 
 **Solution**: Simplified TypedDict-based options in Agent Framework
 
-Agent Framework uses a TypedDict-based options system for `ChatClients` and `ChatAgents`. Options are passed via a single `options` parameter as a typed dictionary, with provider-specific TypedDict classes (like `OpenAIChatOptions`) for full IDE autocomplete and type checking.
+Agent Framework uses a TypedDict-based options system for `ChatClients` and `Agents`. Options are passed via a single `options` parameter as a typed dictionary, with provider-specific TypedDict classes (like `OpenAIChatOptions`) for full IDE autocomplete and type checking.
 
 ```python
 from agent_framework.openai import OpenAIChatClient

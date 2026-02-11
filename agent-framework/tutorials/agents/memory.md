@@ -194,7 +194,7 @@ Console.WriteLine($"MEMORY - User Age: {userInfo?.UserAge}");
 This tutorial shows how to add memory to an agent by implementing a `ContextProvider` and attaching it to the agent.
 
 > [!IMPORTANT]
-> Not all agent types support `ContextProvider`. This step uses a `ChatAgent`, which does support `ContextProvider`.
+> Not all agent types support `ContextProvider`. This step uses a `Agent`, which does support `ContextProvider`.
 
 ## Prerequisites
 
@@ -202,7 +202,7 @@ For prerequisites and installing packages, see the [Create and run a simple agen
 
 ## Create a ContextProvider
 
-`ContextProvider` is an abstract class that you can inherit from, and which can be associated with an `AgentThread` for a `ChatAgent`.
+`ContextProvider` is an abstract class that you can inherit from, and which can be associated with an `AgentThread` for a `Agent`.
 It allows you to:
 
 1. Run custom logic before and after the agent invokes the underlying inference service.
@@ -251,11 +251,11 @@ The `UserInfoMemory` class below contains the following behavior:
 from collections.abc import MutableSequence, Sequence
 from typing import Any
 
-from agent_framework import ContextProvider, Context, ChatAgent, ChatClientProtocol, ChatMessage, ChatOptions
+from agent_framework import ContextProvider, Context, Agent, SupportsChatGetResponse, Message, ChatOptions
 
 
 class UserInfoMemory(ContextProvider):
-    def __init__(self, chat_client: ChatClientProtocol, user_info: UserInfo | None = None, **kwargs: Any):
+    def __init__(self, chat_client: SupportsChatGetResponse, user_info: UserInfo | None = None, **kwargs: Any):
         """Create the memory.
 
         If you pass in kwargs, they will be attempted to be used to create a UserInfo object.
@@ -270,14 +270,14 @@ class UserInfoMemory(ContextProvider):
 
     async def invoked(
         self,
-        request_messages: ChatMessage | Sequence[ChatMessage],
-        response_messages: ChatMessage | Sequence[ChatMessage] | None = None,
+        request_messages: Message | Sequence[Message],
+        response_messages: Message | Sequence[Message] | None = None,
         invoke_exception: Exception | None = None,
         **kwargs: Any,
     ) -> None:
         """Extract user information from messages after each agent call."""
         # Ensure request_messages is a list
-        messages_list = [request_messages] if isinstance(request_messages, ChatMessage) else list(request_messages)
+        messages_list = [request_messages] if isinstance(request_messages, Message) else list(request_messages)
         
         # Check if we need to extract user info from user messages
         user_messages = [msg for msg in messages_list if msg.role.value == "user"]
@@ -306,7 +306,7 @@ class UserInfoMemory(ContextProvider):
             except Exception:
                 pass  # Failed to extract, continue without updating
 
-    async def invoking(self, messages: ChatMessage | MutableSequence[ChatMessage], **kwargs: Any) -> Context:
+    async def invoking(self, messages: Message | MutableSequence[Message], **kwargs: Any) -> Context:
         """Provide user information context before each agent call."""
         instructions: list[str] = []
 
@@ -336,11 +336,11 @@ class UserInfoMemory(ContextProvider):
 
 To use the custom `ContextProvider`, you need to provide the instantiated `ContextProvider` when creating the agent.
 
-When creating a `ChatAgent` you can provide the `context_provider` parameter to attach the memory component to the agent.
+When creating a `Agent` you can provide the `context_provider` parameter to attach the memory component to the agent.
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
@@ -352,7 +352,7 @@ async def main():
         memory_provider = UserInfoMemory(chat_client)
 
         # Create the agent with memory
-        async with ChatAgent(
+        async with Agent(
             chat_client=chat_client,
             instructions="You are a friendly assistant. Always address the user by their name.",
             context_provider=memory_provider,

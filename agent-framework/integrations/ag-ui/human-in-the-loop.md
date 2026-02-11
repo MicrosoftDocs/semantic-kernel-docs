@@ -711,7 +711,7 @@ Here's a complete server implementation with approval-required tools:
 import os
 from typing import Annotated
 
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import AgentFrameworkAgent, add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -765,7 +765,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="BankingAssistant",
     instructions="You are a banking assistant. Help users with their banking needs. Always confirm details before performing transfers.",
     chat_client=chat_client,
@@ -850,7 +850,7 @@ Here's a client using `AGUIChatClient` that handles approval requests:
 import asyncio
 import os
 
-from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework import Agent, ToolCallContent, ToolResultContent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -881,7 +881,7 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
     
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",

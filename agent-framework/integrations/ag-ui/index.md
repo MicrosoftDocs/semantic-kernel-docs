@@ -194,7 +194,7 @@ The AG-UI integration uses a clean, modular architecture:
          │
          ▼
 ┌─────────────────────────┐
-│  ChatAgent              │
+│  Agent              │
 │  (Agent Framework)      │
 └────────┬────────────────┘
          │
@@ -220,7 +220,7 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 
 | Agent Framework Concept | AG-UI Equivalent | Description |
 |------------------------|------------------|-------------|
-| `ChatAgent` | Agent Endpoint | Each agent becomes an HTTP endpoint |
+| `Agent` | Agent Endpoint | Each agent becomes an HTTP endpoint |
 | `agent.run()` | HTTP POST Request | Client sends messages via HTTP |
 | `agent.run_streaming()` | Server-Sent Events | Streaming responses via SSE |
 | Agent response updates | AG-UI Events | `TEXT_MESSAGE_CONTENT`, `TOOL_CALL_START`, etc. |

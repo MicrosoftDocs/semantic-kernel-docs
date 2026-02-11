@@ -54,11 +54,11 @@ response = await client.get_response(
 )
 ```
 
-> **Note:** For **Agents**, the `instructions` and `tools` parameters remain available as direct keyword arguments on `ChatAgent.__init__()` and `client.as_agent()`. For `agent.run()`, only `tools` is available as a keyword argument:
+> **Note:** For **Agents**, the `instructions` and `tools` parameters remain available as direct keyword arguments on `Agent.__init__()` and `client.as_agent()`. For `agent.run()`, only `tools` is available as a keyword argument:
 >
 > ```python
 > # Agent creation accepts both tools and instructions as keyword arguments
-> agent = ChatAgent(
+> agent = Agent(
 >     chat_client=client,
 >     tools=[my_function],
 >     instructions="You are a helpful assistant.",
@@ -75,7 +75,7 @@ response = await client.get_response(
 ### Key Changes
 
 1. **Consolidated Options Parameter**: Most keyword arguments (`model_id`, `temperature`, etc.) are now passed via a single `options` dict
-2. **Exception for Agent Creation**: `instructions` and `tools` remain available as direct keyword arguments on `ChatAgent.__init__()` and `as_agent()`
+2. **Exception for Agent Creation**: `instructions` and `tools` remain available as direct keyword arguments on `Agent.__init__()` and `as_agent()`
 3. **Exception for Agent Run**: `tools` remains available as a direct keyword argument on `agent.run()`
 4. **TypedDict-based Options**: Options are defined as `TypedDict` classes for type safety
 5. **Generic Type Support**: Chat clients and agents support generics for provider-specific options, to allow runtime overloads
@@ -218,20 +218,20 @@ The key benefit is that most provider-specific parameters are now part of the ty
 - **No need for additional_properties** for known provider parameters
 - **Easy extension** for custom or new parameters
 
-### 3. Update ChatAgent Configuration
+### 3. Update Agent Configuration
 
-ChatAgent initialization and run methods follow the same pattern:
+Agent initialization and run methods follow the same pattern:
 
 **Before (keyword arguments on constructor and run):**
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 client = OpenAIChatClient()
 
 # Default options as keyword arguments on constructor
-agent = ChatAgent(
+agent = Agent(
     chat_client=client,
     name="assistant",
     model_id="gpt-4",
@@ -248,11 +248,11 @@ response = await agent.run(
 **After:**
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient, OpenAIChatOptions
 
 client = OpenAIChatClient()
-agent = ChatAgent(
+agent = Agent(
     chat_client=client,
     name="assistant",
     default_options={ # <- type checkers will verify this dict
@@ -346,10 +346,10 @@ response = await client.get_response(
 The generic setup has also been extended to Chat Agents:
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient[OpenAIReasoningChatOptions](),
     default_options={
         "model_id": "o3",
@@ -362,10 +362,10 @@ agent = ChatAgent(
 and you can specify the generic on both the client and the agent, so this is also valid:
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
-agent = ChatAgent[OpenAIReasoningChatOptions](
+agent = Agent[OpenAIReasoningChatOptions](
     chat_client=OpenAIChatClient(),
     default_options={
         "model_id": "o3",
@@ -383,13 +383,13 @@ If you have implemented a custom chat client by extending `BaseChatClient`, upda
 **Before:**
 
 ```python
-from agent_framework import BaseChatClient, ChatMessage, ChatOptions, ChatResponse
+from agent_framework import BaseChatClient, Message, ChatOptions, ChatResponse
 
 class MyCustomClient(BaseChatClient):
     async def _inner_get_response(
         self,
         *,
-        messages: MutableSequence[ChatMessage],
+        messages: MutableSequence[Message],
         chat_options: ChatOptions,
         **kwargs: Any,
     ) -> ChatResponse:
@@ -403,7 +403,7 @@ class MyCustomClient(BaseChatClient):
 
 ```python
 from typing import Generic
-from agent_framework import BaseChatClient, ChatMessage, ChatOptions, ChatResponse
+from agent_framework import BaseChatClient, Message, ChatOptions, ChatResponse
 
 # Define your provider's options TypedDict
 class MyCustomChatOptions(ChatOptions, total=False):
@@ -418,7 +418,7 @@ class MyCustomClient(BaseChatClient[TOptions], Generic[TOptions]):
     async def _inner_get_response(
         self,
         *,
-        messages: MutableSequence[ChatMessage],
+        messages: MutableSequence[Message],
         options: dict[str, Any],  # Note: parameter renamed and just a dict
         **kwargs: Any,
     ) -> ChatResponse:
@@ -492,7 +492,7 @@ For agent creation, `tools` and `instructions` can remain as keyword arguments. 
 
 ```python
 # Before
-agent = ChatAgent(
+agent = Agent(
     chat_client=client,
     name="assistant",
     tools=[my_function],
@@ -501,7 +501,7 @@ agent = ChatAgent(
 )
 
 # After - tools and instructions stay as keyword args on creation
-agent = ChatAgent(
+agent = Agent(
     chat_client=client,
     name="assistant",
     tools=[my_function],  # Still a keyword argument!
@@ -565,7 +565,7 @@ extended_options = {**my_options, "max_tokens": 500}
 | Agent default options | Keyword arguments on constructor | `default_options={...}` |
 | Agent run options | Keyword arguments on `run()` | `options={...}` parameter |
 | Client typing | `OpenAIChatClient()` | `OpenAIChatClient[CustomOptions]()` (optional) |
-| Agent typing | `ChatAgent(...)` | `ChatAgent[CustomOptions](...)` (optional) |
+| Agent typing | `Agent(...)` | `Agent[CustomOptions](...)` (optional) |
 
 ## Testing Your Migration
 
@@ -575,12 +575,12 @@ extended_options = {**my_options, "max_tokens": 500}
 2. Move all keyword arguments into an `options={...}` dictionary
 3. Move any `additional_properties` values directly into the `options` dict
 
-### ChatAgent Updates
+### Agent Updates
 
-1. Find all `ChatAgent` constructors and `run()` calls that use keyword arguments
+1. Find all `Agent` constructors and `run()` calls that use keyword arguments
 2. Move keyword arguments on constructors to `default_options={...}`
 3. Move keyword arguments on `run()` to `options={...}`
-4. **Exception**: `tools` and `instructions` can remain as keyword arguments on `ChatAgent.__init__()` and `as_agent()`
+4. **Exception**: `tools` and `instructions` can remain as keyword arguments on `Agent.__init__()` and `as_agent()`
 5. **Exception**: `tools` can remain as a keyword argument on `run()`
 
 ### Custom Chat Client Updates

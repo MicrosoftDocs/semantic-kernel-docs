@@ -92,10 +92,10 @@ Follow the [Directory Discovery](./directory-discovery.md) guide to create your 
 
 ```python
 # my_agent/__init__.py
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
-agent = ChatAgent(
+agent = Agent(
     name="my_agent",
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant."

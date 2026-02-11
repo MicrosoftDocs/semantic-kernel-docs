@@ -385,7 +385,7 @@ configure_azure_monitor(
 enable_instrumentation()
 
 # Create your agent with the same OpenTelemetry agent ID as registered in Foundry
-agent = ChatAgent(
+agent = Agent(
     chat_client=...,
     name="My Agent",
     instructions="You are a helpful assistant.",

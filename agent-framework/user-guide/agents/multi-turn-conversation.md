@@ -77,7 +77,7 @@ var response = await agent.RunAsync("Hello, how are you?", resumedSession);
 
 The Microsoft Agent Framework provides built-in support for managing multi-turn conversations with AI agents. This includes maintaining context across multiple interactions. Different agent types and underlying services that are used to build agents might support different chat history types, and Agent Framework abstracts these differences away, providing a consistent interface for developers.
 
-For example, when using a `ChatAgent` based on a Foundry agent, the conversation history is persisted in the service. While when using a `ChatAgent` based on chat completion with gpt-4, the conversation history is in-memory and managed by the agent.
+For example, when using a `Agent` based on a Foundry agent, the conversation history is persisted in the service. While when using a `Agent` based on chat completion with gpt-4, the conversation history is in-memory and managed by the agent.
 
 The differences between the underlying chat history models are abstracted away via the `AgentSession` type.
 
@@ -152,7 +152,7 @@ response = await agent.run("Hello, how are you?", thread=resumed_thread)
 For in-memory threads, you can provide a custom message store implementation to control how messages are stored and retrieved:
 
 ```python
-from agent_framework import AgentThread, ChatMessageStore, ChatAgent
+from agent_framework import AgentThread, ChatMessageStore, Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
@@ -165,7 +165,7 @@ def custom_message_store_factory():
     return CustomStore()  # or your custom implementation
 
 async with AzureCliCredential() as credential:
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant",
         chat_message_store_factory=custom_message_store_factory
@@ -179,7 +179,7 @@ async with AzureCliCredential() as credential:
 
 `Agents` are stateless and the same agent instance can be used with multiple `AgentThread` instances.
 
-Not all agents support all `AgentThread` types though. For example if you are using a `ChatAgent` with the OpenAI Responses service and `store=True`, `AgentThread` instances used by this agent, will not work with a `ChatAgent` using the Azure AI Agent service.
+Not all agents support all `AgentThread` types though. For example if you are using a `Agent` with the OpenAI Responses service and `store=True`, `AgentThread` instances used by this agent, will not work with a `Agent` using the Azure AI Agent service.
 This is because these services both support saving the conversation history in the service, and while the two `AgentThread` instances will have references to each service stored conversation, the id from the OpenAI Responses service cannot be used with the Foundry Agent service, and vice versa.
 
 It is therefore considered unsafe to use an `AgentThread` instance that was created by one agent with a different agent instance, unless you are aware of the underlying threading model and its implications.
@@ -189,14 +189,14 @@ It is therefore considered unsafe to use an `AgentThread` instance that was crea
 Here's a complete example showing how to maintain context across multiple interactions:
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def multi_turn_example():
     async with (
         AzureCliCredential() as credential,
-        ChatAgent(
+        Agent(
             chat_client=AzureAIAgentClient(async_credential=credential),
             instructions="You are a helpful assistant"
         ) as agent

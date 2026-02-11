@@ -117,7 +117,7 @@ personInfo = (await updates.ToAgentResponseAsync()).Deserialize<PersonInfo>(Json
 This tutorial step shows you how to produce structured output with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> Not all agent types support structured output. The `ChatAgent` supports structured output when used with compatible chat clients.
+> Not all agent types support structured output. The `Agent` supports structured output when used with compatible chat clients.
 
 ## Prerequisites
 
@@ -125,8 +125,8 @@ For prerequisites and installing packages, see the [Create and run a simple agen
 
 ## Create the agent with structured output
 
-The `ChatAgent` is built on top of any chat client implementation that supports structured output.
-The `ChatAgent` uses the `response_format` parameter to specify the desired output schema.
+The `Agent` is built on top of any chat client implementation that supports structured output.
+The `Agent` uses the `response_format` parameter to specify the desired output schema.
 
 When creating or running the agent, you can provide a Pydantic model that defines the structure of the expected output.
 

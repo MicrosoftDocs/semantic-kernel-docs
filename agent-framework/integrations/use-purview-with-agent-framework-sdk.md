@@ -78,7 +78,7 @@ Console.WriteLine(response);
 ```python
 import asyncio
 import os
-from agent_framework import ChatAgent, ChatMessage, Role
+from agent_framework import Agent, Message, Role
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework.microsoft import PurviewPolicyMiddleware, PurviewSettings
 from azure.identity import AzureCliCredential, InteractiveBrowserCredential
@@ -95,12 +95,12 @@ async def main():
         ),
         settings=PurviewSettings(app_name="My Secure Agent")
     )
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=chat_client,
         instructions="You are a secure assistant.",
         middleware=[purview_middleware]
     )
-    response = await agent.run(ChatMessage(role=Role.USER, text="Summarize zero trust in one sentence."))
+    response = await agent.run(Message(role=Role.USER, text="Summarize zero trust in one sentence."))
     print(response)
 
   if __name__ == "__main__":

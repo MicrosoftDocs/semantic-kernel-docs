@@ -87,7 +87,7 @@ agent = AssistantAgent(name="assistant", model_client=client, tools=[my_tool])
 result = await agent.run(task="Help me with this task")
 
 # Agent Framework
-agent = ChatAgent(name="assistant", chat_client=client, tools=[my_tool])
+agent = Agent(name="assistant", chat_client=client, tools=[my_tool])
 result = await agent.run("Help me with this task")
 ```
 
@@ -97,7 +97,7 @@ result = await agent.run("Help me with this task")
 
 2. Tools: AutoGen wraps functions with `FunctionTool`. Agent Framework uses `@tool`, infers schemas automatically, and adds hosted tools such as a code interpreter and web search.
 
-3. Agent behavior: `AssistantAgent` is single‑turn unless you increase `max_tool_iterations`. `ChatAgent` is multi‑turn by default and keeps invoking tools until it can return a final answer.
+3. Agent behavior: `AssistantAgent` is single‑turn unless you increase `max_tool_iterations`. `Agent` is multi‑turn by default and keeps invoking tools until it can return a final answer.
 
 4. Runtime: AutoGen offers embedded and experimental distributed runtimes. Agent Framework focuses on single‑process composition today; distributed execution is planned.
 
@@ -200,10 +200,10 @@ agent = AssistantAgent(
 result = await agent.run(task="What's the weather?")
 ```
 
-#### Agent Framework ChatAgent
+#### Agent Framework Agent
 
 ```python
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from agent_framework.openai import OpenAIChatClient
 
 # Create simple tools for the example
@@ -222,7 +222,7 @@ client = OpenAIChatClient(model_id="gpt-5")
 
 async def example():
     # Direct creation with default options
-    agent = ChatAgent(
+    agent = Agent(
         name="assistant",
         chat_client=client,
         instructions="You are a helpful assistant.",
@@ -251,15 +251,15 @@ async def example():
 
 **Key Differences:**
 
-- **Default behavior**: `ChatAgent` automatically iterates through tool calls, while `AssistantAgent` requires explicit `max_tool_iterations` setting
-- **Runtime configuration**: `ChatAgent.run()` accepts `tools` as a keyword argument and other options via the `options` dict parameter for per-invocation customization
+- **Default behavior**: `Agent` automatically iterates through tool calls, while `AssistantAgent` requires explicit `max_tool_iterations` setting
+- **Runtime configuration**: `Agent.run()` accepts `tools` as a keyword argument and other options via the `options` dict parameter for per-invocation customization
 - **Options system**: Agent Framework uses TypedDict-based options (e.g., `OpenAIChatOptions`) for type safety and IDE autocomplete. Options are passed via `default_options` at construction and `options` at runtime
 - **Factory methods**: Agent Framework provides convenient factory methods directly from chat clients
-- **State management**: `ChatAgent` is stateless and doesn't maintain conversation history between invocations, unlike `AssistantAgent` which maintains conversation history as part of its state
+- **State management**: `Agent` is stateless and doesn't maintain conversation history between invocations, unlike `AssistantAgent` which maintains conversation history as part of its state
 
 #### Managing Conversation State with AgentThread
 
-To continue conversations with `ChatAgent`, use `AgentThread` to manage conversation history:
+To continue conversations with `Agent`, use `AgentThread` to manage conversation history:
 
 ```python
 # Assume we have an agent from previous examples
@@ -388,11 +388,11 @@ user_message = text_msg.to_model_message()
 #### Agent Framework Message Types
 
 ```python
-from agent_framework import ChatMessage, Content, Role
+from agent_framework import Message, Content, Role
 import base64
 
 # Text message
-text_msg = ChatMessage(role=Role.USER, text="Hello")
+text_msg = Message(role=Role.USER, text="Hello")
 
 # Supply real image bytes, or use a data: URI/URL via Content.from_uri()
 image_bytes = b"<your_image_bytes>"
@@ -400,7 +400,7 @@ image_b64 = base64.b64encode(image_bytes).decode()
 image_uri = f"data:image/jpeg;base64,{image_b64}"
 
 # Multi-modal message with mixed content
-multi_modal_msg = ChatMessage(
+multi_modal_msg = Message(
     role=Role.USER,
     contents=[
         Content.from_text(text="Describe this image"),
@@ -412,7 +412,7 @@ multi_modal_msg = ChatMessage(
 **Key Differences**:
 
 - AutoGen uses separate message classes (`TextMessage`, `MultiModalMessage`) with a `source` field
-- Agent Framework uses a unified `ChatMessage` with typed content objects and a `role` field
+- Agent Framework uses a unified `Message` with typed content objects and a `role` field
 - Agent Framework messages use `Role` enum (USER, ASSISTANT, SYSTEM, TOOL) instead of string sources
 
 ### Tool Creation and Integration
@@ -453,7 +453,7 @@ def get_weather(
     return f"Weather in {location}: sunny"
 
 # Direct use with agent (automatic conversion)
-agent = ChatAgent(name="assistant", chat_client=client, tools=[get_weather])
+agent = Agent(name="assistant", chat_client=client, tools=[get_weather])
 ```
 
 For detailed examples, see:
@@ -467,7 +467,7 @@ For detailed examples, see:
 Agent Framework provides hosted tools that are not available in AutoGen:
 
 ```python
-from agent_framework import ChatAgent, HostedCodeInterpreterTool, HostedWebSearchTool
+from agent_framework import Agent, HostedCodeInterpreterTool, HostedWebSearchTool
 from agent_framework.azure import AzureOpenAIChatClient
 
 # Azure OpenAI client with a model that supports hosted tools
@@ -479,7 +479,7 @@ code_tool = HostedCodeInterpreterTool()
 # Web search tool
 search_tool = HostedWebSearchTool()
 
-agent = ChatAgent(
+agent = Agent(
     name="researcher",
     chat_client=client,
     tools=[code_tool, search_tool]
@@ -514,7 +514,7 @@ AutoGen has basic MCP support through extensions (specific implementation detail
 #### Agent Framework MCP Support
 
 ```python
-from agent_framework import ChatAgent, MCPStdioTool, MCPStreamableHTTPTool, MCPWebsocketTool
+from agent_framework import Agent, MCPStdioTool, MCPStreamableHTTPTool, MCPWebsocketTool
 from agent_framework.openai import OpenAIChatClient
 
 # Create client for the example
@@ -539,7 +539,7 @@ ws_mcp = MCPWebsocketTool(
     url="ws://localhost:8000/ws"
 )
 
-agent = ChatAgent(name="assistant", chat_client=client, tools=[mcp_tool])
+agent = Agent(name="assistant", chat_client=client, tools=[mcp_tool])
 ```
 
 For MCP examples, see:
@@ -583,11 +583,11 @@ coordinator = AssistantAgent(
 #### Agent Framework as_tool()
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 
 # Assume we have client from previous examples
 # Create specialized agent
-writer = ChatAgent(
+writer = Agent(
     name="writer",
     chat_client=client,
     instructions="You are a creative writer."
@@ -602,7 +602,7 @@ writer_tool = writer.as_tool(
 )
 
 # Use in coordinator
-coordinator = ChatAgent(
+coordinator = Agent(
     name="coordinator",
     chat_client=client,
     tools=[writer_tool]
@@ -618,7 +618,7 @@ as agents are stateless by default.
 Agent Framework introduces middleware capabilities that AutoGen lacks. Middleware enables powerful cross-cutting concerns like logging, security, and performance monitoring.
 
 ```python
-from agent_framework import ChatAgent, AgentContext, FunctionInvocationContext
+from agent_framework import Agent, AgentContext, FunctionInvocationContext
 from typing import Callable, Awaitable
 
 # Assume we have client from previous examples
@@ -639,7 +639,7 @@ async def security_middleware(
         return  # Don't call call_next()
     await call_next(context)
 
-agent = ChatAgent(
+agent = Agent(
     name="secure_agent",
     chat_client=client,
     middleware=[logging_middleware, security_middleware]
@@ -701,7 +701,7 @@ from agent_framework import (
     AgentResponseUpdate,
     AgentThread,
     BaseAgent,
-    ChatMessage,
+    Message,
     Content,
     Role,
 )
@@ -709,13 +709,13 @@ from agent_framework import (
 class StaticAgent(BaseAgent):
     async def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
     ) -> AgentResponse:
         # Build a static reply
-        reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
+        reply = Message(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
 
         # Persist conversation to the provided AgentThread (if any)
         if thread is not None:
@@ -726,7 +726,7 @@ class StaticAgent(BaseAgent):
 
     async def run_stream(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -736,7 +736,7 @@ class StaticAgent(BaseAgent):
 
         # Notify thread of input and the complete response once streaming ends
         if thread is not None:
-            reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
+            reply = Message(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
             normalized = self._normalize_messages(messages)
             await self._notify_thread_of_new_messages(thread, normalized, reply)
 ```
@@ -1040,7 +1040,7 @@ What to notice:
 
 - GraphFlow broadcasts messages and uses conditional transitions. Join behavior is configured via target‑side `activation` and per‑edge `activation_group`/`activation_condition` (for example, group both edges into `join_d` with `activation_condition="any"`).
 - Workflow routes data explicitly; use `target_id` to select downstream executors. Join behavior lives in the receiving executor (for example, yield on first input vs wait for all), or via orchestration builders/aggregators.
-- Executors in Workflow are free‑form: wrap a `ChatAgent`, a function, or a sub‑workflow and mix them within the same graph.
+- Executors in Workflow are free‑form: wrap a `Agent`, a function, or a sub‑workflow and mix them within the same graph.
 
 #### Key Differences
 
@@ -1146,7 +1146,7 @@ async def sequential_example():
     # Each agent appends to shared conversation
     async for event in workflow.run_stream("Discuss this topic"):
         if event.type == "output":
-            conversation_history = event.data  # list[ChatMessage]
+            conversation_history = event.data  # list[Message]
 ```
 
 For detailed orchestration examples, see:
@@ -1199,8 +1199,8 @@ result = await team.run("Complex research and analysis task")
 from typing import cast
 from agent_framework import (
     AgentResponseUpdate,
-    ChatAgent,
-    ChatMessage,
+    Agent,
+    Message,
 )
 from agent_framework.orchestrations import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
@@ -1210,7 +1210,7 @@ from agent_framework.orchestrations import (
 from agent_framework.openai import OpenAIChatClient
 
 # Create a manager agent for orchestration
-manager_agent = ChatAgent(
+manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator that coordinates the workflow",
     instructions="You coordinate a team to complete complex tasks efficiently.",
@@ -1230,7 +1230,7 @@ async def magentic_example():
     output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
         if event.type == "output":
-            output_messages = cast(list[ChatMessage], event.data)
+            output_messages = cast(list[Message], event.data)
             if output_messages:
                 output = output_messages[-1].text
 ```
@@ -1239,7 +1239,7 @@ async def magentic_example():
 
 The Magentic workflow provides extensive customization options:
 
-- **Manager configuration**: Use a ChatAgent with custom instructions and model settings
+- **Manager configuration**: Use a Agent with custom instructions and model settings
 - **Round limits**: `max_round_count`, `max_stall_count`, `max_reset_count`
 - **Event streaming**: Use output events (`event.type == "output"`) with `AgentResponseUpdate` data for streaming
 - **Agent specialization**: Custom instructions and tools per agent
@@ -1250,7 +1250,7 @@ The Magentic workflow provides extensive customization options:
 from typing import cast
 from agent_framework import (
     AgentResponseUpdate,
-    ChatAgent,
+    Agent,
     RequestInfoEvent,
     WorkflowOutputEvent,
 )
@@ -1266,7 +1266,7 @@ from agent_framework.orchestrations import (
 from agent_framework.openai import OpenAIChatClient
 
 # Create manager agent with custom configuration
-manager_agent = ChatAgent(
+manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator for complex tasks",
     instructions="Custom orchestration instructions...",
@@ -1638,7 +1638,7 @@ Agent Framework provides comprehensive observability through multiple approaches
 - **Console output**: Built-in console logging and visualization
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.observability import setup_observability
 from agent_framework.openai import OpenAIChatClient
 
@@ -1656,7 +1656,7 @@ client = OpenAIChatClient(model_id="gpt-5")
 
 async def observability_example():
     # Observability is automatically applied to all agents and workflows
-    agent = ChatAgent(name="assistant", chat_client=client)
+    agent = Agent(name="assistant", chat_client=client)
     result = await agent.run("Hello")  # Automatically traced
 ```
 

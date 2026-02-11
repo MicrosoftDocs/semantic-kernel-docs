@@ -186,27 +186,27 @@ AIAgent workflowAgent = workflow.AsAgent(
 
 ## Requirements
 
-To use a workflow as an agent, the workflow's start executor must be able to handle `list[ChatMessage]` as input. This is automatically satisfied when using `ChatAgent` or `AgentExecutor`.
+To use a workflow as an agent, the workflow's start executor must be able to handle `list[Message]` as input. This is automatically satisfied when using `Agent` or `AgentExecutor`.
 
 ## Creating a Workflow Agent
 
 Call `as_agent()` on any compatible workflow to convert it into an agent:
 
 ```python
-from agent_framework import WorkflowBuilder, ChatAgent
+from agent_framework import WorkflowBuilder, Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 
 # Create your chat client and agents
 chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
 
-researcher = ChatAgent(
+researcher = Agent(
     name="Researcher",
     instructions="Research and gather information on the given topic.",
     chat_client=chat_client,
 )
 
-writer = ChatAgent(
+writer = Agent(
     name="Writer", 
     instructions="Write clear, engaging content based on research.",
     chat_client=chat_client,
@@ -245,9 +245,9 @@ thread = workflow_agent.get_new_thread()
 For simple use cases where you want the complete response:
 
 ```python
-from agent_framework import ChatMessage, Role
+from agent_framework import Message, Role
 
-messages = [ChatMessage(role=Role.USER, content="Write an article about AI trends")]
+messages = [Message(role=Role.USER, content="Write an article about AI trends")]
 
 response = await workflow_agent.run(messages, thread=thread)
 
@@ -260,7 +260,7 @@ for message in response.messages:
 For real-time updates as the workflow executes:
 
 ```python
-messages = [ChatMessage(role=Role.USER, content="Write an article about AI trends")]
+messages = [Message(role=Role.USER, content="Write an article about AI trends")]
 
 async for update in workflow_agent.run_stream(messages, thread=thread):
     # Process streaming updates from each agent in the workflow
@@ -308,7 +308,7 @@ response_content = FunctionApprovalResponseContent(
     approved=True,
 )
 
-response_message = ChatMessage(
+response_message = Message(
     role=Role.USER,
     contents=[response_content],
 )
@@ -326,8 +326,8 @@ Here's a complete example demonstrating a workflow agent with streaming output:
 ```python
 import asyncio
 from agent_framework import (
-    ChatAgent,
-    ChatMessage,
+    Agent,
+    Message,
     Role,
 )
 from agent_framework.azure import AzureOpenAIChatClient
@@ -340,19 +340,19 @@ async def main():
     chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
     
     # Create specialized agents
-    researcher = ChatAgent(
+    researcher = Agent(
         name="Researcher",
         instructions="Research the given topic and provide key facts.",
         chat_client=chat_client,
     )
     
-    writer = ChatAgent(
+    writer = Agent(
         name="Writer",
         instructions="Write engaging content based on the research provided.",
         chat_client=chat_client,
     )
     
-    reviewer = ChatAgent(
+    reviewer = Agent(
         name="Reviewer",
         instructions="Review the content and provide a final polished version.",
         chat_client=chat_client,
@@ -369,7 +369,7 @@ async def main():
     
     # Create a thread and run the workflow
     thread = workflow_agent.get_new_thread()
-    messages = [ChatMessage(role=Role.USER, content="Write about quantum computing")]
+    messages = [Message(role=Role.USER, content="Write about quantum computing")]
     
     print("Starting workflow...")
     print("=" * 60)

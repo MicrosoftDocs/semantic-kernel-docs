@@ -182,7 +182,7 @@ workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 ## Run the Concurrent Workflow and Collect the Results
 
 ```python
-from agent_framework import ChatMessage, WorkflowEvent
+from agent_framework import Message, WorkflowEvent
 
 # 3) Run with a single prompt, stream progress, and pretty-print the final combined messages
 output_evt: WorkflowEvent | None = None
@@ -192,7 +192,7 @@ async for event in workflow.run_stream("We are launching a new budget-friendly e
 
 if output_evt:
     print("===== Final Aggregated Conversation (messages) =====")
-    messages: list[ChatMessage] | Any = output_evt.data
+    messages: list[Message] | Any = output_evt.data
     for i, msg in enumerate(messages, start=1):
         name = msg.author_name if msg.author_name else "user"
         print(f"{'-' * 60}\n\n{i:02d} [{name}]:\n{msg.text}")
@@ -263,14 +263,14 @@ Concurrent orchestration supports custom executors that wrap agents with additio
 from agent_framework import (
     AgentExecutorRequest,
     AgentExecutorResponse,
-    ChatAgent,
+    Agent,
     Executor,
     WorkflowContext,
     handler,
 )
 
 class ResearcherExec(Executor):
-    agent: ChatAgent
+    agent: Agent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "researcher"):
         agent = chat_client.as_agent(
@@ -289,7 +289,7 @@ class ResearcherExec(Executor):
         await ctx.send_message(AgentExecutorResponse(self.id, response, full_conversation=full_conversation))
 
 class MarketerExec(Executor):
-    agent: ChatAgent
+    agent: Agent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "marketer"):
         agent = chat_client.as_agent(
@@ -340,14 +340,14 @@ async def summarize_results(results: list[Any]) -> str:
             expert_sections.append(f"{getattr(r, 'executor_id', 'expert')}: (error: {type(e).__name__}: {e})")
 
     # Ask the model to synthesize a concise summary of the experts' outputs
-    system_msg = ChatMessage(
+    system_msg = Message(
         Role.SYSTEM,
         text=(
             "You are a helpful assistant that consolidates multiple domain expert outputs "
             "into one cohesive, concise summary with clear takeaways. Keep it under 200 words."
         ),
     )
-    user_msg = ChatMessage(Role.USER, text="\n\n".join(expert_sections))
+    user_msg = Message(Role.USER, text="\n\n".join(expert_sections))
 
     response = await chat_client.get_response([system_msg, user_msg])
     # Return the model's final assistant text as the completion result

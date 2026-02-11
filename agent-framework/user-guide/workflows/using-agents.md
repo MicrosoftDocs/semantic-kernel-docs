@@ -80,7 +80,7 @@ from azure.identity import AzureCliCredential
 
 # Create the agents first
 chat_client = AzureChatClient(credential=AzureCliCredential())
-writer_agent: ChatAgent = chat_client.as_agent(
+writer_agent: Agent = chat_client.as_agent(
     instructions=(
         "You are an excellent content writer. You create new content and edit contents based on the feedback."
     ),
@@ -106,8 +106,8 @@ workflow = builder.build()
 Inside the workflow created above, the agents are actually wrapped inside an executor that handles the communication of the agent with other parts of the workflow. The executor can handle three message types:
 
 - `str`: A single chat message in string format
-- `ChatMessage`: A single chat message
-- `List<ChatMessage>`: A list of chat messages
+- `Message`: A single chat message
+- `List<Message>`: A list of chat messages
 
 Whenever the executor receives a message of one of these types, it will trigger the agent to respond, and the response type will be an `AgentExecutorResponse` object. This class contains useful information about the agent's response, including:
 
@@ -190,8 +190,8 @@ internal sealed partial class CustomAgentExecutor : Executor
 
 ```python
 from agent_framework import (
-    ChatAgent,
-    ChatMessage,
+    Agent,
+    Message,
     Executor,
     WorkflowContext,
     handler
@@ -199,7 +199,7 @@ from agent_framework import (
 
 class Writer(Executor):
 
-    agent: ChatAgent
+    agent: Agent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "writer"):
         # Create a domain specific agent using your configured AzureChatClient.
@@ -212,10 +212,10 @@ class Writer(Executor):
         super().__init__(agent=agent, id=id)
 
     @handler
-    async def handle(self, message: ChatMessage, ctx: WorkflowContext[list[ChatMessage]]) -> None:
+    async def handle(self, message: Message, ctx: WorkflowContext[list[Message]]) -> None:
         """Handles a single chat message and forwards the accumulated messages to the next executor in the workflow."""
         # Invoke the agent with the incoming message and get the response
-        messages: list[ChatMessage] = [message]
+        messages: list[Message] = [message]
         response = await self.agent.run(messages)
         # Accumulate messages and send them to the next executor in the workflow.
         messages.extend(response.messages)

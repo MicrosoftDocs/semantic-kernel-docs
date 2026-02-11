@@ -195,7 +195,7 @@ pip install agent-framework-core --pre
 The framework provides the `SupportsAgentRun` protocol that defines the interface all agents must implement. Custom agents can either implement this protocol directly or extend the `BaseAgent` class for convenience.
 
 ```python
-from agent_framework import SupportsAgentRun, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
+from agent_framework import SupportsAgentRun, AgentResponse, AgentResponseUpdate, AgentThread, Message
 from collections.abc import AsyncIterable
 from typing import Any
 
@@ -209,7 +209,7 @@ class MyCustomAgent(SupportsAgentRun):
 
     async def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -219,7 +219,7 @@ class MyCustomAgent(SupportsAgentRun):
 
     def run_stream(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -238,7 +238,7 @@ from agent_framework import (
     AgentResponse,
     AgentResponseUpdate,
     AgentThread,
-    ChatMessage,
+    Message,
     Content,
     Role,
 )
@@ -276,7 +276,7 @@ class EchoAgent(BaseAgent):
 
     async def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -295,7 +295,7 @@ class EchoAgent(BaseAgent):
         normalized_messages = self._normalize_messages(messages)
 
         if not normalized_messages:
-            response_message = ChatMessage(
+            response_message = Message(
                 role=Role.ASSISTANT,
                 contents=[Content.from_text(text="Hello! I'm a custom echo agent. Send me a message and I'll echo it back.")],
             )
@@ -307,7 +307,7 @@ class EchoAgent(BaseAgent):
             else:
                 echo_text = f"{self.echo_prefix}[Non-text message received]"
 
-            response_message = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text=echo_text)])
+            response_message = Message(role=Role.ASSISTANT, contents=[Content.from_text(text=echo_text)])
 
         # Notify the thread of new messages if provided
         if thread is not None:
@@ -317,7 +317,7 @@ class EchoAgent(BaseAgent):
 
     async def run_stream(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -361,7 +361,7 @@ class EchoAgent(BaseAgent):
 
         # Notify the thread of the complete response if provided
         if thread is not None:
-            complete_response = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text=response_text)])
+            complete_response = Message(role=Role.ASSISTANT, contents=[Content.from_text(text=response_text)])
             await self._notify_thread_of_new_messages(thread, normalized_messages, complete_response)
 ```
 

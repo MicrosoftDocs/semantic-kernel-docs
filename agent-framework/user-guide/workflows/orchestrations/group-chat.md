@@ -168,10 +168,10 @@ chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
 Create specialized agents with distinct roles:
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 
 # Create a researcher agent
-researcher = ChatAgent(
+researcher = Agent(
     name="Researcher",
     description="Collects relevant background information.",
     instructions="Gather concise facts that help answer the question. Be brief and factual.",
@@ -179,7 +179,7 @@ researcher = ChatAgent(
 )
 
 # Create a writer agent
-writer = ChatAgent(
+writer = Agent(
     name="Writer",
     description="Synthesizes polished answers using gathered information.",
     instructions="Compose clear, structured answers using any notes provided. Be comprehensive.",
@@ -211,11 +211,11 @@ workflow = GroupChatBuilder(
 
 ## Configure Group Chat with Agent-Based Orchestrator
 
-Alternatively, use an agent-based orchestrator for intelligent speaker selection. The orchestrator is a full `ChatAgent` with access to tools, context, and observability:
+Alternatively, use an agent-based orchestrator for intelligent speaker selection. The orchestrator is a full `Agent` with access to tools, context, and observability:
 
 ```python
 # Create orchestrator agent for speaker selection
-orchestrator_agent = ChatAgent(
+orchestrator_agent = Agent(
     name="Orchestrator",
     description="Coordinates multi-agent collaboration by selecting speakers",
     instructions="""
@@ -252,7 +252,7 @@ task = "What are the key benefits of async/await in Python?"
 print(f"Task: {task}\n")
 print("=" * 80)
 
-final_conversation: list[ChatMessage] = []
+final_conversation: list[Message] = []
 last_executor_id: str | None = None
 
 # Run the workflow
@@ -267,8 +267,8 @@ async for event in workflow.run_stream(task):
             last_executor_id = eid
         print(event.data, end="", flush=True)
     elif event.type == "output":
-        # Workflow completed - data is a list of ChatMessage
-        final_conversation = cast(list[ChatMessage], event.data)
+        # Workflow completed - data is a list of Message
+        final_conversation = cast(list[Message], event.data)
 
 if final_conversation:
     print("\n\n" + "=" * 80)
@@ -337,7 +337,7 @@ Workflow completed.
 - **GroupChatState**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
 - **Event Streaming**: Process `WorkflowOutputEvent` with `AgentResponseUpdate` data in real-time
-- **list[ChatMessage] Output**: All orchestrations return a list of chat messages
+- **list[Message] Output**: All orchestrations return a list of chat messages
 
 ::: zone-end
 

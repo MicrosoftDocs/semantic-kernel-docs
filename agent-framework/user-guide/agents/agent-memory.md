@@ -182,11 +182,11 @@ The Agent Framework supports several types of memory to accommodate different us
 The simplest form of memory where conversation history is stored in memory during the application runtime. This is the default behavior and requires no additional configuration.
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 # Default behavior - uses in-memory storage
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant."
 )
@@ -210,7 +210,7 @@ from agent_framework import ChatMessageStore
 def create_message_store():
     return ChatMessageStore()
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant.",
     chat_message_store_factory=create_message_store
@@ -230,7 +230,7 @@ def create_redis_store():
         max_messages=100  # Keep last 100 messages
     )
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant.",
     chat_message_store_factory=create_redis_store
@@ -241,21 +241,21 @@ agent = ChatAgent(
 You can implement your own storage backend by implementing the `ChatMessageStoreProtocol`:
 
 ```python
-from agent_framework import ChatMessage, ChatMessageStoreProtocol
+from agent_framework import Message, ChatMessageStoreProtocol
 from typing import Any
 from collections.abc import Sequence
 
 class DatabaseMessageStore(ChatMessageStoreProtocol):
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
-        self._messages: list[ChatMessage] = []
+        self._messages: list[Message] = []
 
-    async def add_messages(self, messages: Sequence[ChatMessage]) -> None:
+    async def add_messages(self, messages: Sequence[Message]) -> None:
         """Add messages to database."""
         # Implement database insertion logic
         self._messages.extend(messages)
 
-    async def list_messages(self) -> list[ChatMessage]:
+    async def list_messages(self) -> list[Message]:
         """Retrieve messages from database."""
         # Implement database query logic
         return self._messages
@@ -278,7 +278,7 @@ Context providers enable sophisticated memory patterns by injecting relevant con
 
 #### Basic Context Provider
 ```python
-from agent_framework import ContextProvider, Context, ChatMessage
+from agent_framework import ContextProvider, Context, Message
 from collections.abc import MutableSequence
 from typing import Any
 
@@ -286,7 +286,7 @@ class UserPreferencesMemory(ContextProvider):
     def __init__(self):
         self.preferences = {}
 
-    async def invoking(self, messages: ChatMessage | MutableSequence[ChatMessage], **kwargs: Any) -> Context:
+    async def invoking(self, messages: Message | MutableSequence[Message], **kwargs: Any) -> Context:
         """Provide user preferences before each invocation."""
         if self.preferences:
             preferences_text = ", ".join([f"{k}: {v}" for k, v in self.preferences.items()])
@@ -296,8 +296,8 @@ class UserPreferencesMemory(ContextProvider):
 
     async def invoked(
         self,
-        request_messages: ChatMessage | Sequence[ChatMessage],
-        response_messages: ChatMessage | Sequence[ChatMessage] | None = None,
+        request_messages: Message | Sequence[Message],
+        response_messages: Message | Sequence[Message] | None = None,
         invoke_exception: Exception | None = None,
         **kwargs: Any,
     ) -> None:
@@ -322,7 +322,7 @@ memory_provider = Mem0Provider(
     application_id="my_app"
 )
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant with memory.",
     context_provider=memory_provider
@@ -336,7 +336,7 @@ The framework supports serializing entire thread states for persistence across a
 import json
 
 # Create agent and thread
-agent = ChatAgent(chat_client=OpenAIChatClient())
+agent = Agent(chat_client=OpenAIChatClient())
 thread = agent.get_new_thread()
 
 # Have conversation

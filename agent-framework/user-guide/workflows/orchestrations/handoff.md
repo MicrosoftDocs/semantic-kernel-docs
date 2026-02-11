@@ -20,7 +20,7 @@ Internally, the handoff orchestration is implemented using a mesh topology where
 </p>
 
 > [!NOTE]
-> Handoff orchestration only supports `ChatAgent` and the agents must support local tools execution.
+> Handoff orchestration only supports `Agent` and the agents must support local tools execution.
 
 ## Differences Between Handoff and Agent-as-Tools
 
@@ -400,7 +400,7 @@ def process_refund(order_number: Annotated[str, "Order number to process refund 
 ### Create Agents with Approval-Required Tools
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity import AzureCliCredential
 

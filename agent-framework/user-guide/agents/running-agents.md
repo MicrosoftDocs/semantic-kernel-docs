@@ -172,7 +172,7 @@ await foreach (var update in agent.RunStreamingAsync("What is the weather like i
 For the non-streaming case, everything is returned in one `AgentResponse` object.
 `AgentResponse` allows access to the produced messages via the `messages` property.
 
-To extract the text result from a response, all `TextContent` items from all `ChatMessage` items need to be aggregated.
+To extract the text result from a response, all `TextContent` items from all `Message` items need to be aggregated.
 To simplify this, a `Text` property is available on all response types that aggregates all `TextContent`.
 
 ```python
@@ -229,7 +229,7 @@ Here are some popular types from <xref:Microsoft.Extensions.AI>:
 ::: zone pivot="programming-language-python"
 
 The Python Agent Framework uses message and content types from the `agent_framework` package.
-Messages are represented by the `ChatMessage` class and all content classes inherit from the base `BaseContent` class.
+Messages are represented by the `Message` class and all content classes inherit from the base `BaseContent` class.
 
 Various `BaseContent` subclasses exist that are used to represent different types of content:
 
@@ -244,14 +244,14 @@ Various `BaseContent` subclasses exist that are used to represent different type
 Here's how to work with different content types:
 
 ```python
-from agent_framework import ChatMessage, Content
+from agent_framework import Message, Content
 
 # Create a text message
-text_message = ChatMessage(role="user", text="Hello!")
+text_message = Message(role="user", text="Hello!")
 
 # Create a message with multiple content types
 image_data = b"..."  # your image bytes
-mixed_message = ChatMessage(
+mixed_message = Message(
     role="user",
     contents=[
         Content.from_text("Analyze this image:"),

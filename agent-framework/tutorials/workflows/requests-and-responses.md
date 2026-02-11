@@ -301,7 +301,7 @@ from agent_framework import (
     AgentExecutor,
     AgentExecutorRequest,
     AgentExecutorResponse,
-    ChatMessage,
+    Message,
     Executor,
     Role,
     WorkflowBuilder,
@@ -351,7 +351,7 @@ class TurnManager(Executor):
     @handler
     async def start(self, _: str, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
         """Start the game by asking the agent for an initial guess."""
-        user = ChatMessage(Role.USER, text="Start by making your first guess.")
+        user = Message(Role.USER, text="Start by making your first guess.")
         await ctx.send_message(AgentExecutorRequest(messages=[user], should_respond=True))
 
     @handler
@@ -394,7 +394,7 @@ class TurnManager(Executor):
             return
 
         # Provide feedback to the agent for the next guess
-        user_msg = ChatMessage(
+        user_msg = Message(
             Role.USER,
             text=f'Feedback: {reply}. Return ONLY a JSON object matching the schema {{"guess": <int 1..10>}}.',
         )

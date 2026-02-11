@@ -89,6 +89,60 @@ workflow_b = create_workflow()
 
 ---
 
+### 🔴 `ChatAgent` renamed to `Agent`, `ChatMessage` renamed to `Message`
+
+**PR:** [#3747](https://github.com/microsoft/agent-framework/pull/3747)
+
+Core Python types have been simplified by removing the redundant `Chat` prefix. No backward-compatibility aliases are provided.
+
+| Before | After |
+|--------|-------|
+| `ChatAgent` | `Agent` |
+| `RawChatAgent` | `RawAgent` |
+| `ChatMessage` | `Message` |
+| `ChatClientProtocol` | `SupportsChatGetResponse` |
+
+#### Update imports
+
+**Before:**
+```python
+from agent_framework import ChatAgent, ChatMessage
+```
+
+**After:**
+```python
+from agent_framework import Agent, Message
+```
+
+#### Update type references
+
+**Before:**
+```python
+agent = ChatAgent(
+    chat_client=client,
+    name="assistant",
+    instructions="You are a helpful assistant.",
+)
+
+message = ChatMessage(role="user", contents=[Content.from_text("Hello")])
+```
+
+**After:**
+```python
+agent = Agent(
+    client=client,
+    name="assistant",
+    instructions="You are a helpful assistant.",
+)
+
+message = Message(role="user", contents=[Content.from_text("Hello")])
+```
+
+> [!NOTE]
+> `ChatClient`, `ChatResponse`, `ChatOptions`, and `ChatMessageStore` are **not** renamed by this change.
+
+---
+
 ### 🔴 Fluent builder methods moved to constructor parameters
 
 **PR:** [#3693](https://github.com/microsoft/agent-framework/pull/3693)
@@ -807,9 +861,9 @@ response = await client.get_response(
 
 **Before:**
 ```python
-from agent_framework.core import ChatAgent, AggregateContextProvider
+from agent_framework.core import Agent, AggregateContextProvider
 
-agent = ChatAgent(
+agent = Agent(
     name="my-agent",
     display_name="My Agent",
     context_providers=[provider1, provider2],
@@ -821,10 +875,10 @@ aggregate = AggregateContextProvider([provider1, provider2])
 
 **After:**
 ```python
-from agent_framework.core import ChatAgent
+from agent_framework.core import Agent
 
 # Only one context provider allowed; combine manually if needed
-agent = ChatAgent(
+agent = Agent(
     name="my-agent",  # display_name removed
     context_provider=provider1,  # singular, only 1
     middleware=[my_middleware],  # must be a list now
@@ -860,6 +914,7 @@ No significant changes in this release.
 | Release | Release Notes | Type | Change | PR |
 |---------|---------------|------|--------|-----|
 | 1.0.0b260210 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260210) | 🔴 Breaking | `register_executor()`/`register_agent()` removed from `WorkflowBuilder`; use instances directly, helper methods for state isolation | [#3781](https://github.com/microsoft/agent-framework/pull/3781) |
+| 1.0.0b260210 | | 🔴 Breaking | `ChatAgent` → `Agent`, `ChatMessage` → `Message`, `RawChatAgent` → `RawAgent`, `ChatClientProtocol` → `SupportsChatGetResponse` | [#3747](https://github.com/microsoft/agent-framework/pull/3747) |
 | 1.0.0b260210 | | 🔴 Breaking | Fluent builder methods moved to constructor parameters across 6 builders | [#3693](https://github.com/microsoft/agent-framework/pull/3693) |
 | 1.0.0b260210 | | 🔴 Breaking | Workflow events unified into single `WorkflowEvent` with `type` discriminator; `isinstance()` → `event.type == "..."` | [#3690](https://github.com/microsoft/agent-framework/pull/3690) |
 | 1.0.0b260130 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260130) | 🟡 Enhancement | `ChatOptions`/`ChatResponse`/`AgentResponse` generic over response format | [#3305](https://github.com/microsoft/agent-framework/pull/3305) |

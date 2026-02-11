@@ -102,10 +102,10 @@ Create an agent and obtain a new thread that will hold the conversation state.
 
 ```python
 from azure.identity import AzureCliCredential
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=AzureOpenAIChatClient(
         endpoint="https://<myresource>.openai.azure.com",
         credential=AzureCliCredential(),

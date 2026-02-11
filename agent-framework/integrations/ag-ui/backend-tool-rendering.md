@@ -392,7 +392,7 @@ Here's a complete server implementation with function tools:
 import os
 from typing import Annotated, Any
 
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -444,7 +444,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="TravelAssistant",
     instructions="You are a helpful travel assistant. Use the available tools to help users plan their trips.",
     chat_client=chat_client,
@@ -506,7 +506,7 @@ Here's an enhanced client using `AGUIChatClient` that displays tool execution:
 import asyncio
 import os
 
-from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework import Agent, ToolCallContent, ToolResultContent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -519,7 +519,7 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
     
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
@@ -684,7 +684,7 @@ class WeatherTools:
 weather_tools = WeatherTools(api_key="your-api-key")
 
 # Create agent with class-based tools
-agent = ChatAgent(
+agent = Agent(
     name="WeatherAgent",
     instructions="You are a weather assistant.",
     chat_client=AzureOpenAIChatClient(...),

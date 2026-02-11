@@ -486,7 +486,7 @@ async def weather_override_middleware(
             # Non-streaming override
             custom_message = "".join(custom_message_parts)
             context.result = AgentResponse(
-                messages=[ChatMessage(role=Role.ASSISTANT, text=custom_message)]
+                messages=[Message(role=Role.ASSISTANT, text=custom_message)]
             )
 ```
 
