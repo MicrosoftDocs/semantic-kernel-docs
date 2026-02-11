@@ -130,7 +130,9 @@ AgentRunOptions runOptions = new()
 
 AgentResponse response = await agent.RunAsync("Please provide information about John Smith, who is a 35-year-old software engineer.", options: runOptions);
 
-Console.WriteLine(response.Text);
+JsonElement result = JsonSerializer.Deserialize<JsonElement>(response.Text);
+
+Console.WriteLine($"Name: {result.GetProperty("name").GetString()}, Age: {result.GetProperty("age").GetInt32()}, Occupation: {result.GetProperty("occupation").GetString()}");
 ```
 
 ## Structured output with streaming
