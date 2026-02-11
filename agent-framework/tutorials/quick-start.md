@@ -160,7 +160,7 @@ pip install -U agent-framework --pre
 
 ## Running a Basic Agent Sample
 
-This sample demonstrates how to create and use a simple AI agent with Azure AI as the backend. It will create a basic agent using `ChatAgent` with `AzureAIAgentClient` and custom instructions.
+This sample demonstrates how to create and use a simple AI agent with Azure AI as the backend. It will create a basic agent using `Agent` with `AzureAIAgentClient` and custom instructions.
 
 Make sure to set the following environment variables:
 - `AZURE_AI_PROJECT_ENDPOINT`: Your Azure AI project endpoint
@@ -177,7 +177,8 @@ async def main():
     async with (
         AzureCliCredential() as credential,
         AzureAIClient(async_credential=credential).as_agent(
-            instructions="You are good at telling jokes."
+            name="JokeAgent",
+            instructions="You are good at telling jokes.",
         ) as agent,
     ):
         result = await agent.run("Tell me a joke about a pirate.")

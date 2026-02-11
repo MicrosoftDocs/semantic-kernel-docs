@@ -66,8 +66,8 @@ Since you now have a function that requires approval, the agent might respond wi
 You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
 
 ```csharp
-AgentThread thread = await agent.GetNewThreadAsync();
-AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", thread);
+AgentSession session = await agent.CreateSessionAsync();
+AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", session);
 
 var functionApprovalRequests = response.Messages
     .SelectMany(x => x.Contents)
@@ -87,11 +87,11 @@ Console.WriteLine($"We require approval to execute '{requestContent.FunctionCall
 Once the user has provided their input, you can create a `FunctionApprovalResponseContent` instance using the `CreateResponse` method on the `FunctionApprovalRequestContent`.
 Pass `true` to approve the function call, or `false` to reject it.
 
-The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same thread object to get the result back from the agent.
+The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same session object to get the result back from the agent.
 
 ```csharp
 var approvalMessage = new ChatMessage(ChatRole.User, [requestContent.CreateResponse(true)]);
-Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+Console.WriteLine(await agent.RunAsync(approvalMessage, session));
 ```
 
 Whenever you are using function tools with human in the loop approvals, remember to check for `FunctionApprovalRequestContent` instances in the response, after each agent run, until all function calls have been approved or rejected.
@@ -112,15 +112,15 @@ For prerequisites and installing Python packages, see the [Create and run a simp
 ## Create the agent with function tools requiring approval
 
 When using functions, it's possible to indicate for each function, whether it requires human approval before being executed.
-This is done by setting the `approval_mode` parameter to `"always_require"` when using the `@ai_function` decorator.
+This is done by setting the `approval_mode` parameter to `"always_require"` when using the `@tool` decorator.
 
 Here is an example of a simple function tool that fakes getting the weather for a given location.
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function
+@tool
 def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get the current weather for a given location."""
     return f"The weather in {location} is cloudy with a high of 15°C."
@@ -129,19 +129,19 @@ def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco
 To create a function that requires approval, you can use the `approval_mode` parameter:
 
 ```python
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def get_weather_detail(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get detailed weather information for a given location."""
     return f"The weather in {location} is cloudy with a high of 15°C, humidity 88%."
 ```
 
-When creating the agent, you can now provide the approval requiring function tool to the agent, by passing a list of tools to the `ChatAgent` constructor.
+When creating the agent, you can now provide the approval requiring function tool to the agent, by passing a list of tools to the `Agent` constructor.
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIResponsesClient
 
-async with ChatAgent(
+async with Agent(
     chat_client=OpenAIResponsesClient(),
     name="WeatherAgent",
     instructions="You are a helpful weather assistant.",
@@ -168,16 +168,16 @@ This can be shown to the user, so that they can decide whether to approve or rej
 Once the user has provided their input, you can create a response using the `create_response` method on the user input request.
 Pass `True` to approve the function call, or `False` to reject it.
 
-The response can then be passed to the agent in a new `ChatMessage`, to get the result back from the agent.
+The response can then be passed to the agent in a new `Message`, to get the result back from the agent.
 
 ```python
-from agent_framework import ChatMessage, Role
+from agent_framework import Message, Role
 
 # Get user approval (in a real application, this would be interactive)
 user_approval = True  # or False to reject
 
 # Create the approval response
-approval_message = ChatMessage(
+approval_message = Message(
     role=Role.USER, 
     contents=[user_input_needed.create_response(user_approval)]
 )
@@ -185,7 +185,7 @@ approval_message = ChatMessage(
 # Continue the conversation with the approval
 final_result = await agent.run([
     "What is the detailed weather like in Amsterdam?",
-    ChatMessage(role=Role.ASSISTANT, contents=[user_input_needed]),
+    Message(role=Role.ASSISTANT, contents=[user_input_needed]),
     approval_message
 ])
 print(final_result.text)
@@ -215,14 +215,14 @@ async def handle_approvals(query: str, agent) -> str:
             print(f"Arguments: {user_input_needed.function_call.arguments}")
             
             # Add the assistant message with the approval request
-            new_inputs.append(ChatMessage(role=Role.ASSISTANT, contents=[user_input_needed]))
+            new_inputs.append(Message(role=Role.ASSISTANT, contents=[user_input_needed]))
             
             # Get user approval (in practice, this would be interactive)
             user_approval = True  # Replace with actual user input
             
             # Add the user's approval response
             new_inputs.append(
-                ChatMessage(role=Role.USER, contents=[user_input_needed.create_response(user_approval)])
+                Message(role=Role.USER, contents=[user_input_needed.create_response(user_approval)])
             )
         
         # Continue with all the context

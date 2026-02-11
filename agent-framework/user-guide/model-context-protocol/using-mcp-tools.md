@@ -140,7 +140,7 @@ Use `MCPStdioTool` to connect to MCP servers that run as local processes using s
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, MCPStdioTool
+from agent_framework import Agent, MCPStdioTool
 from agent_framework.openai import OpenAIChatClient
 
 async def local_mcp_example():
@@ -151,7 +151,7 @@ async def local_mcp_example():
             command="uvx",
             args=["mcp-server-calculator"]
         ) as mcp_server,
-        ChatAgent(
+        Agent(
             chat_client=OpenAIChatClient(),
             name="MathAgent",
             instructions="You are a helpful math assistant that can solve calculations.",
@@ -173,7 +173,7 @@ Use `MCPStreamableHTTPTool` to connect to MCP servers over HTTP with Server-Sent
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, MCPStreamableHTTPTool
+from agent_framework import Agent, MCPStreamableHTTPTool
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
@@ -186,7 +186,7 @@ async def http_mcp_example():
             url="https://learn.microsoft.com/api/mcp",
             headers={"Authorization": "Bearer your-token"},
         ) as mcp_server,
-        ChatAgent(
+        Agent(
             chat_client=AzureAIAgentClient(async_credential=credential),
             name="DocsAgent",
             instructions="You help with Microsoft documentation questions.",
@@ -208,7 +208,7 @@ Use `MCPWebsocketTool` to connect to MCP servers over WebSocket connections:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, MCPWebsocketTool
+from agent_framework import Agent, MCPWebsocketTool
 from agent_framework.openai import OpenAIChatClient
 
 async def websocket_mcp_example():
@@ -218,7 +218,7 @@ async def websocket_mcp_example():
             name="realtime-data",
             url="wss://api.example.com/mcp",
         ) as mcp_server,
-        ChatAgent(
+        Agent(
             chat_client=OpenAIChatClient(),
             name="DataAgent",
             instructions="You provide real-time data insights.",

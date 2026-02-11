@@ -87,9 +87,10 @@ Define an executor that reverses the text:
 /// <summary>
 /// Second executor: reverses the input text and completes the workflow.
 /// </summary>
-internal sealed class ReverseTextExecutor() : Executor<string, string>("ReverseTextExecutor")
+internal sealed partial class ReverseTextExecutor() : Executor("ReverseTextExecutor")
 {
-    public override ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private ValueTask<string> HandleAsync(string input, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Reverse the input text
         return ValueTask.FromResult(new string(input.Reverse().ToArray()));
@@ -101,8 +102,8 @@ ReverseTextExecutor reverse = new();
 
 **Key Points:**
 
-- Create a class that inherits from `Executor<TInput, TOutput>`
-- Implement `HandleAsync()` to process the input and return the output
+- Create a `partial` class that derives from `Executor`
+- Add the `[MessageHandler]` attribute to the handler method
 
 ### Step 4: Build and Connect the Workflow
 
@@ -159,11 +160,12 @@ Executors from functions:
 
 - Use `BindExecutor()` to create an executor from a function
 
-Executors implement `Executor<TInput, TOutput>`:
+Executors derive from `Executor` and use `[MessageHandler]`:
 
-- **TInput**: The type of data this executor accepts
-- **TOutput**: The type of data this executor produces
-- **HandleAsync**: The method that processes the input and returns the output
+- The class must be `partial` to enable source generation
+- **`[MessageHandler]`**: Attribute that marks a method as a message handler
+- The handler method's parameter type determines what messages the executor accepts
+- The handler method's return type determines what messages the executor produces
 
 ### .NET Workflow Builder Pattern
 
@@ -235,7 +237,7 @@ First, import the necessary modules from Agent Framework:
 ```python
 import asyncio
 from typing_extensions import Never
-from agent_framework import WorkflowBuilder, WorkflowContext, WorkflowOutputEvent, executor
+from agent_framework import WorkflowBuilder, WorkflowContext, executor
 ```
 
 ### Step 2: Create the First Executor
@@ -300,17 +302,16 @@ Connect the executors using `WorkflowBuilder`:
 upper_case = UpperCase(id="upper_case_executor")
 
 workflow = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=upper_case)
     .add_edge(upper_case, reverse_text)
-    .set_start_executor(upper_case)
     .build()
 )
 ```
 
 **Key Points:**
 
+- `start_executor` in the constructor defines the entry point
 - `add_edge()` creates directed connections between executors
-- `set_start_executor()` defines the entry point
 - `build()` finalizes the workflow
 
 ### Step 5: Run the Workflow with Streaming
@@ -322,7 +323,7 @@ async def main():
     # Run the workflow and stream events
     async for event in workflow.run_stream("hello world"):
         print(f"Event: {event}")
-        if isinstance(event, WorkflowOutputEvent):
+        if event.type == "output":
             print(f"Workflow completed with result: {event.data}")
 
 if __name__ == "__main__":
@@ -334,11 +335,11 @@ if __name__ == "__main__":
 When you run the workflow, you'll see events like:
 
 ```text
-Event: ExecutorInvokedEvent(executor_id=upper_case_executor)
-Event: ExecutorCompletedEvent(executor_id=upper_case_executor)
-Event: ExecutorInvokedEvent(executor_id=reverse_text_executor)
-Event: ExecutorCompletedEvent(executor_id=reverse_text_executor)
-Event: WorkflowOutputEvent(data='DLROW OLLEH', source_executor_id=reverse_text_executor)
+Event: WorkflowEvent(type='executor_invoked', executor_id='upper_case_executor')
+Event: WorkflowEvent(type='executor_completed', executor_id='upper_case_executor')
+Event: WorkflowEvent(type='executor_invoked', executor_id='reverse_text_executor')
+Event: WorkflowEvent(type='executor_completed', executor_id='reverse_text_executor')
+Event: WorkflowEvent(type='output', executor_id='reverse_text_executor', data='DLROW OLLEH')
 Workflow completed with result: DLROW OLLEH
 ```
 

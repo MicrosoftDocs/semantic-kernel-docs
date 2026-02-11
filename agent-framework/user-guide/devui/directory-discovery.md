@@ -30,11 +30,11 @@ For your agents and workflows to be discovered by DevUI, they must be organized 
 ```
 entities/
     weather_agent/
-        __init__.py      # Must export: agent = ChatAgent(...)
+        __init__.py      # Must export: agent = Agent(...)
         agent.py         # Agent implementation (optional, can be in __init__.py)
         .env             # Optional: API keys, config vars
     my_workflow/
-        __init__.py      # Must export: workflow = WorkflowBuilder()...
+        __init__.py      # Must export: workflow = WorkflowBuilder(start_executor=...)...
         workflow.py      # Workflow implementation (optional)
         .env             # Optional: environment variables
     .env                 # Optional: shared environment variables
@@ -47,14 +47,14 @@ Create a directory for your agent with the required `__init__.py`:
 **`weather_agent/__init__.py`**:
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 def get_weather(location: str) -> str:
     """Get weather for a location."""
     return f"Weather in {location}: 72F and sunny"
 
-agent = ChatAgent(
+agent = Agent(
     name="weather_agent",
     chat_client=OpenAIChatClient(),
     tools=[get_weather],
@@ -72,7 +72,7 @@ The key requirement is that the `__init__.py` file must export a variable named 
 from agent_framework.workflows import WorkflowBuilder
 
 workflow = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor="my_executor")
     .add_executor(...)
     .add_edge(...)
     .build()

@@ -173,7 +173,7 @@ using System.Text.Json;
 /// <summary>
 /// Executor that detects spam using an AI agent.
 /// </summary>
-internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionResult>
+internal sealed partial class SpamDetectionExecutor : Executor
 {
     private readonly AIAgent _spamDetectionAgent;
 
@@ -182,7 +182,8 @@ internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionRes
         this._spamDetectionAgent = spamDetectionAgent;
     }
 
-    public override async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Generate a random email ID and store the email content to shared state
         var newEmail = new Email
@@ -204,7 +205,7 @@ internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionRes
 /// <summary>
 /// Executor that assists with email responses using an AI agent.
 /// </summary>
-internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailResponse>
+internal sealed partial class EmailAssistantExecutor : Executor
 {
     private readonly AIAgent _emailAssistantAgent;
 
@@ -213,7 +214,8 @@ internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailRe
         this._emailAssistantAgent = emailAssistantAgent;
     }
 
-    public override async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.IsSpam)
         {
@@ -235,22 +237,24 @@ internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailRe
 /// <summary>
 /// Executor that sends emails.
 /// </summary>
-internal sealed class SendEmailExecutor : Executor<EmailResponse>
+internal sealed partial class SendEmailExecutor : Executor
 {
     public SendEmailExecutor() : base("SendEmailExecutor") { }
 
-    public override async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
+    [MessageHandler]
+    private async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
         await context.YieldOutputAsync($"Email sent: {message.Response}");
 }
 
 /// <summary>
 /// Executor that handles spam messages.
 /// </summary>
-internal sealed class HandleSpamExecutor : Executor<DetectionResult>
+internal sealed partial class HandleSpamExecutor : Executor
 {
     public HandleSpamExecutor() : base("HandleSpamExecutor") { }
 
-    public override async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.IsSpam)
         {
@@ -407,7 +411,7 @@ from agent_framework import (
     AgentExecutor,
     AgentExecutorRequest,
     AgentExecutorResponse,
-    ChatMessage,
+    Message,
     Role,
     WorkflowBuilder,
     WorkflowContext,
@@ -505,7 +509,7 @@ async def to_email_assistant_request(
 
     # Create a new request for the email assistant with the original email content
     request = AgentExecutorRequest(
-        messages=[ChatMessage(Role.USER, text=detection.email_content)],
+        messages=[Message(Role.USER, text=detection.email_content)],
         should_respond=True
     )
     await ctx.send_message(request)
@@ -560,8 +564,7 @@ Create a workflow with conditional edges that route based on spam detection resu
     # then call the email assistant, then finalize.
     # If spam, go directly to the spam handler and finalize.
     workflow = (
-        WorkflowBuilder()
-        .set_start_executor(spam_detection_agent)
+        WorkflowBuilder(start_executor=spam_detection_agent)
         # Not spam path: transform response -> request for assistant -> assistant -> send email
         .add_edge(spam_detection_agent, to_email_assistant_request, condition=get_condition(False))
         .add_edge(to_email_assistant_request, email_assistant_agent)
@@ -586,7 +589,7 @@ Run the workflow with sample email content:
 
     # Execute the workflow. Since the start is an AgentExecutor, pass an AgentExecutorRequest.
     # The workflow completes when it becomes idle (no more work to do).
-    request = AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email)], should_respond=True)
+    request = AgentExecutorRequest(messages=[Message(Role.USER, text=email)], should_respond=True)
     events = await workflow.run(request)
     outputs = events.get_outputs()
     if outputs:
@@ -764,7 +767,7 @@ Implement executors that handle the three-way routing with shared state manageme
 /// <summary>
 /// Executor that detects spam using an AI agent with three-way classification.
 /// </summary>
-internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionResult>
+internal sealed partial class SpamDetectionExecutor : Executor
 {
     private readonly AIAgent _spamDetectionAgent;
 
@@ -773,7 +776,8 @@ internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionRes
         this._spamDetectionAgent = spamDetectionAgent;
     }
 
-    public override async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask<DetectionResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Generate a random email ID and store the email content in shared state
         var newEmail = new Email
@@ -795,7 +799,7 @@ internal sealed class SpamDetectionExecutor : Executor<ChatMessage, DetectionRes
 /// <summary>
 /// Executor that assists with email responses using an AI agent.
 /// </summary>
-internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailResponse>
+internal sealed partial class EmailAssistantExecutor : Executor
 {
     private readonly AIAgent _emailAssistantAgent;
 
@@ -804,7 +808,8 @@ internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailRe
         this._emailAssistantAgent = emailAssistantAgent;
     }
 
-    public override async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask<EmailResponse> HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
@@ -825,22 +830,24 @@ internal sealed class EmailAssistantExecutor : Executor<DetectionResult, EmailRe
 /// <summary>
 /// Executor that sends emails.
 /// </summary>
-internal sealed class SendEmailExecutor : Executor<EmailResponse>
+internal sealed partial class SendEmailExecutor : Executor
 {
     public SendEmailExecutor() : base("SendEmailExecutor") { }
 
-    public override async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
+    [MessageHandler]
+    private async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
         await context.YieldOutputAsync($"Email sent: {message.Response}").ConfigureAwait(false);
 }
 
 /// <summary>
 /// Executor that handles spam messages.
 /// </summary>
-internal sealed class HandleSpamExecutor : Executor<DetectionResult>
+internal sealed partial class HandleSpamExecutor : Executor
 {
     public HandleSpamExecutor() : base("HandleSpamExecutor") { }
 
-    public override async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
@@ -856,11 +863,12 @@ internal sealed class HandleSpamExecutor : Executor<DetectionResult>
 /// <summary>
 /// Executor that handles uncertain emails requiring manual review.
 /// </summary>
-internal sealed class HandleUncertainExecutor : Executor<DetectionResult>
+internal sealed partial class HandleUncertainExecutor : Executor
 {
     public HandleUncertainExecutor() : base("HandleUncertainExecutor") { }
 
-    public override async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(DetectionResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Uncertain)
         {
@@ -1081,12 +1089,12 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
 
     # Persist the raw email content in shared state
     new_email = Email(email_id=str(uuid4()), email_content=email_text)
-    await ctx.set_shared_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
-    await ctx.set_shared_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
+    ctx.set_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
+    ctx.set_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
 
     # Forward email to spam detection agent
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=new_email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=new_email.email_content)], should_respond=True)
     )
 
 @executor(id="to_detection_result")
@@ -1095,7 +1103,7 @@ async def to_detection_result(response: AgentExecutorResponse, ctx: WorkflowCont
 
     # Parse the agent's structured JSON output
     parsed = DetectionResultAgent.model_validate_json(response.agent_run_response.text)
-    email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
+    email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
 
     # Create typed message for switch-case routing
     await ctx.send_message(DetectionResult(
@@ -1113,9 +1121,9 @@ async def submit_to_email_assistant(detection: DetectionResult, ctx: WorkflowCon
         raise RuntimeError("This executor should only handle NotSpam messages.")
 
     # Retrieve original email content from shared state
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
     )
 
 @executor(id="finalize_and_send")
@@ -1140,7 +1148,7 @@ async def handle_uncertain(detection: DetectionResult, ctx: WorkflowContext[Neve
 
     if detection.spam_decision == "Uncertain":
         # Include original content for human review
-        email: Email | None = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
+        email: Email | None = ctx.get_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
         await ctx.yield_output(
             f"Email marked as uncertain: {detection.reason}. Email content: {getattr(email, 'email_content', '')}"
         )
@@ -1189,8 +1197,7 @@ Replace multiple conditional edges with a single switch-case group:
 ```python
     # Build workflow using switch-case for cleaner three-way routing
     workflow = (
-        WorkflowBuilder()
-        .set_start_executor(store_email)
+        WorkflowBuilder(start_executor=store_email)
         .add_edge(store_email, spam_detection_agent)
         .add_edge(spam_detection_agent, to_detection_result)
         .add_switch_case_edge_group(
@@ -1407,7 +1414,7 @@ Implement executors that handle the advanced analysis and routing:
 /// <summary>
 /// Executor that analyzes emails using an AI agent with enhanced analysis.
 /// </summary>
-internal sealed class EmailAnalysisExecutor : Executor<ChatMessage, AnalysisResult>
+internal sealed partial class EmailAnalysisExecutor : Executor
 {
     private readonly AIAgent _emailAnalysisAgent;
 
@@ -1416,7 +1423,8 @@ internal sealed class EmailAnalysisExecutor : Executor<ChatMessage, AnalysisResu
         this._emailAnalysisAgent = emailAnalysisAgent;
     }
 
-    public override async ValueTask<AnalysisResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask<AnalysisResult> HandleAsync(ChatMessage message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Generate a random email ID and store the email content
         var newEmail = new Email
@@ -1441,7 +1449,7 @@ internal sealed class EmailAnalysisExecutor : Executor<ChatMessage, AnalysisResu
 /// <summary>
 /// Executor that assists with email responses using an AI agent.
 /// </summary>
-internal sealed class EmailAssistantExecutor : Executor<AnalysisResult, EmailResponse>
+internal sealed partial class EmailAssistantExecutor : Executor
 {
     private readonly AIAgent _emailAssistantAgent;
 
@@ -1450,7 +1458,8 @@ internal sealed class EmailAssistantExecutor : Executor<AnalysisResult, EmailRes
         this._emailAssistantAgent = emailAssistantAgent;
     }
 
-    public override async ValueTask<EmailResponse> HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask<EmailResponse> HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
@@ -1471,7 +1480,7 @@ internal sealed class EmailAssistantExecutor : Executor<AnalysisResult, EmailRes
 /// <summary>
 /// Executor that summarizes emails using an AI agent for long emails.
 /// </summary>
-internal sealed class EmailSummaryExecutor : Executor<AnalysisResult, AnalysisResult>
+internal sealed partial class EmailSummaryExecutor : Executor
 {
     private readonly AIAgent _emailSummaryAgent;
 
@@ -1480,7 +1489,8 @@ internal sealed class EmailSummaryExecutor : Executor<AnalysisResult, AnalysisRe
         this._emailSummaryAgent = emailSummaryAgent;
     }
 
-    public override async ValueTask<AnalysisResult> HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask<AnalysisResult> HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Read the email content from shared state
         var email = await context.ReadStateAsync<Email>(message.EmailId, scopeName: EmailStateConstants.EmailStateScope);
@@ -1499,22 +1509,24 @@ internal sealed class EmailSummaryExecutor : Executor<AnalysisResult, AnalysisRe
 /// <summary>
 /// Executor that sends emails.
 /// </summary>
-internal sealed class SendEmailExecutor : Executor<EmailResponse>
+internal sealed partial class SendEmailExecutor : Executor
 {
     public SendEmailExecutor() : base("SendEmailExecutor") { }
 
-    public override async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
+    [MessageHandler]
+    private async ValueTask HandleAsync(EmailResponse message, IWorkflowContext context, CancellationToken cancellationToken = default) =>
         await context.YieldOutputAsync($"Email sent: {message.Response}");
 }
 
 /// <summary>
 /// Executor that handles spam messages.
 /// </summary>
-internal sealed class HandleSpamExecutor : Executor<AnalysisResult>
+internal sealed partial class HandleSpamExecutor : Executor
 {
     public HandleSpamExecutor() : base("HandleSpamExecutor") { }
 
-    public override async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Spam)
         {
@@ -1530,11 +1542,12 @@ internal sealed class HandleSpamExecutor : Executor<AnalysisResult>
 /// <summary>
 /// Executor that handles uncertain messages requiring manual review.
 /// </summary>
-internal sealed class HandleUncertainExecutor : Executor<AnalysisResult>
+internal sealed partial class HandleUncertainExecutor : Executor
 {
     public HandleUncertainExecutor() : base("HandleUncertainExecutor") { }
 
-    public override async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         if (message.spamDecision == SpamDecision.Uncertain)
         {
@@ -1551,11 +1564,12 @@ internal sealed class HandleUncertainExecutor : Executor<AnalysisResult>
 /// <summary>
 /// Executor that handles database access with custom events.
 /// </summary>
-internal sealed class DatabaseAccessExecutor : Executor<AnalysisResult>
+internal sealed partial class DatabaseAccessExecutor : Executor
 {
     public DatabaseAccessExecutor() : base("DatabaseAccessExecutor") { }
 
-    public override async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(AnalysisResult message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         // Simulate database operations
         await context.ReadStateAsync<Email>(message.EmailId, scopeName: EmailStateConstants.EmailStateScope);
@@ -1809,10 +1823,14 @@ class Email:
     email_id: str
     email_content: str
 
-# Custom event for database operations
-class DatabaseEvent(WorkflowEvent):
-    """Custom event for tracking database operations."""
-    pass
+# Custom event data for database operations
+class DatabaseEvent:
+    """Custom event data for tracking database operations."""
+    def __init__(self, message: str):
+        self.message = message
+
+    def __repr__(self) -> str:
+        return f"DatabaseEvent({self.message})"
 ```
 
 ### Selection Function: The Heart of Multi-Selection
@@ -1867,11 +1885,11 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
     """Store email and initiate analysis."""
 
     new_email = Email(email_id=str(uuid4()), email_content=email_text)
-    await ctx.set_shared_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
-    await ctx.set_shared_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
+    ctx.set_state(f"{EMAIL_STATE_PREFIX}{new_email.email_id}", new_email)
+    ctx.set_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
 
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=new_email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=new_email.email_content)], should_respond=True)
     )
 
 @executor(id="to_analysis_result")
@@ -1879,8 +1897,8 @@ async def to_analysis_result(response: AgentExecutorResponse, ctx: WorkflowConte
     """Transform agent response into enriched analysis result."""
 
     parsed = AnalysisResultAgent.model_validate_json(response.agent_run_response.text)
-    email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{email_id}")
+    email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{email_id}")
 
     # Create enriched analysis result with email length for routing decisions
     await ctx.send_message(
@@ -1900,9 +1918,9 @@ async def submit_to_email_assistant(analysis: AnalysisResult, ctx: WorkflowConte
     if analysis.spam_decision != "NotSpam":
         raise RuntimeError("This executor should only handle NotSpam messages.")
 
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
     )
 
 @executor(id="finalize_and_send")
@@ -1917,9 +1935,9 @@ async def summarize_email(analysis: AnalysisResult, ctx: WorkflowContext[AgentEx
     """Generate summary for long emails (parallel branch)."""
 
     # Only called for long NotSpam emails by selection function
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[ChatMessage(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
     )
 
 @executor(id="merge_summary")
@@ -1927,8 +1945,8 @@ async def merge_summary(response: AgentExecutorResponse, ctx: WorkflowContext[An
     """Merge summary back into analysis result for database persistence."""
 
     summary = EmailSummaryModel.model_validate_json(response.agent_run_response.text)
-    email_id: str = await ctx.get_shared_state(CURRENT_EMAIL_ID_KEY)
-    email: Email = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{email_id}")
+    email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
+    email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{email_id}")
 
     # Create analysis result with summary for database storage
     await ctx.send_message(
@@ -1955,7 +1973,7 @@ async def handle_uncertain(analysis: AnalysisResult, ctx: WorkflowContext[Never,
     """Handle uncertain emails (single target like switch-case)."""
 
     if analysis.spam_decision == "Uncertain":
-        email: Email | None = await ctx.get_shared_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
+        email: Email | None = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
         await ctx.yield_output(
             f"Email marked as uncertain: {analysis.reason}. Email content: {getattr(email, 'email_content', '')}"
         )
@@ -1967,7 +1985,7 @@ async def database_access(analysis: AnalysisResult, ctx: WorkflowContext[Never, 
     """Simulate database persistence with custom events."""
 
     await asyncio.sleep(0.05)  # Simulate DB operation
-    await ctx.add_event(DatabaseEvent(f"Email {analysis.email_id} saved to database."))
+    await ctx.add_event(WorkflowEvent("data", data=DatabaseEvent(f"Email {analysis.email_id} saved to database.")))
 ```
 
 ### Enhanced AI Agents
@@ -2018,8 +2036,7 @@ Construct the workflow with sophisticated routing and parallel processing:
 
 ```python
     workflow = (
-        WorkflowBuilder()
-        .set_start_executor(store_email)
+        WorkflowBuilder(start_executor=store_email)
         .add_edge(store_email, email_analysis_agent)
         .add_edge(email_analysis_agent, to_analysis_result)
 
@@ -2068,9 +2085,9 @@ Run the workflow and observe parallel execution through custom events:
 
     # Stream events to see parallel execution
     async for event in workflow.run_stream(email):
-        if isinstance(event, DatabaseEvent):
+        if isinstance(event.data, DatabaseEvent):
             print(f"Database: {event}")
-        elif isinstance(event, WorkflowOutputEvent):
+        elif event.type == "output":
             print(f"Output: {event.data}")
 ```
 

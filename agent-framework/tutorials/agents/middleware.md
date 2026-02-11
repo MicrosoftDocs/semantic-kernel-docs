@@ -64,13 +64,13 @@ using System.Threading.Tasks;
 
 async Task<AgentResponse> CustomAgentRunMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     CancellationToken cancellationToken)
 {
     Console.WriteLine($"Input: {messages.Count()}");
-    var response = await innerAgent.RunAsync(messages, thread, options, cancellationToken).ConfigureAwait(false);
+    var response = await innerAgent.RunAsync(messages, session, options, cancellationToken).ConfigureAwait(false);
     Console.WriteLine($"Output: {response.Messages.Count}");
     return response;
 }
@@ -233,17 +233,17 @@ if __name__ == "__main__":
 Create a simple logging middleware to see when your agent runs:
 
 ```python
-from agent_framework import AgentRunContext
+from agent_framework import AgentContext
 
 async def logging_agent_middleware(
-    context: AgentRunContext,
-    next: Callable[[AgentRunContext], Awaitable[None]],
+    context: AgentContext,
+    call_next: Callable[[AgentContext], Awaitable[None]],
 ) -> None:
     """Simple middleware that logs agent execution."""
     print("Agent starting...")
 
     # Continue to agent execution
-    await next(context)
+    await call_next(context)
 
     print("Agent finished!")
 ```
@@ -259,7 +259,7 @@ async def main():
     async with AzureAIAgentClient(credential=credential).as_agent(
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
-        middleware=logging_agent_middleware,  # Add your middleware here
+        middleware=[logging_agent_middleware],  # Add your middleware here
     ) as agent:
         result = await agent.run("Hello!")
         print(result.text)
@@ -279,12 +279,12 @@ def get_time():
 
 async def logging_function_middleware(
     context: FunctionInvocationContext,
-    next: Callable[[FunctionInvocationContext], Awaitable[None]],
+    call_next: Callable[[FunctionInvocationContext], Awaitable[None]],
 ) -> None:
     """Middleware that logs function calls."""
     print(f"Calling function: {context.function.name}")
 
-    await next(context)
+    await call_next(context)
 
     print(f"Function result: {context.result}")
 

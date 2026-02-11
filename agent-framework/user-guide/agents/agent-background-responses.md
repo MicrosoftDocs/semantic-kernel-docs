@@ -66,10 +66,10 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.CreateSessionAsync();
 
 // Get initial response - may return with or without a continuation token
-AgentResponse response = await agent.RunAsync("Write a very long novel about otters in space.", thread, options);
+AgentResponse response = await agent.RunAsync("Write a very long novel about otters in space.", session, options);
 
 // Continue to poll until the final response is received
 while (response.ContinuationToken is not null)
@@ -78,7 +78,7 @@ while (response.ContinuationToken is not null)
     await Task.Delay(TimeSpan.FromSeconds(2));
 
     options.ContinuationToken = response.ContinuationToken;
-    response = await agent.RunAsync(thread, options);
+    response = await agent.RunAsync(session, options);
 }
 
 Console.WriteLine(response.Text);
@@ -108,11 +108,11 @@ AgentRunOptions options = new()
     AllowBackgroundResponses = true
 };
 
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.CreateSessionAsync();
 
 AgentResponseUpdate? latestReceivedUpdate = null;
 
-await foreach (var update in agent.RunStreamingAsync("Write a very long novel about otters in space.", thread, options))
+await foreach (var update in agent.RunStreamingAsync("Write a very long novel about otters in space.", session, options))
 {
     Console.Write(update.Text);
     
@@ -124,7 +124,7 @@ await foreach (var update in agent.RunStreamingAsync("Write a very long novel ab
 
 // Resume from interruption point captured by the continuation token
 options.ContinuationToken = latestReceivedUpdate?.ContinuationToken;
-await foreach (var update in agent.RunStreamingAsync(thread, options))
+await foreach (var update in agent.RunStreamingAsync(session, options))
 {
     Console.Write(update.Text);
 }

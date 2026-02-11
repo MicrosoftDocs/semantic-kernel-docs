@@ -1,6 +1,6 @@
 ---
 title: Storing Chat History in 3rd Party Storage
-description: How to store agent chat history in external storage using a custom ChatMessageStore.
+description: How to store agent chat history in external storage
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -13,9 +13,9 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial shows how to store agent chat history in external storage by implementing a custom `ChatMessageStore` and using it with a `ChatClientAgent`.
+This tutorial shows how to store agent chat history in external storage by implementing a custom `ChatHistoryProvider` and using it with a `ChatClientAgent`.
 
-By default, when using `ChatClientAgent`, chat history is stored either in memory in the `AgentThread` object or the underlying inference service, if the service supports it.
+By default, when using `ChatClientAgent`, chat history is stored either in memory in the `AgentSession` object or the underlying inference service, if the service supports it.
 
 Where services do not require chat history to be stored in the service, it is possible to provide a custom store for persisting chat history instead of relying on the default in-memory behavior.
 
@@ -39,9 +39,9 @@ In addition, you'll use the in-memory vector store to store chat messages.
 dotnet add package Microsoft.SemanticKernel.Connectors.InMemory --prerelease
 ```
 
-## Create a custom ChatMessage Store
+## Create a custom ChatHistoryProvider
 
-To create a custom `ChatMessageStore`, you need to implement the abstract `ChatMessageStore` class and provide implementations for the required methods.
+To create a custom `ChatHistoryProvider`, you need to implement the abstract `ChatHistoryProvider` class and provide implementations for the required methods.
 
 ### Message storage and retrieval methods
 
@@ -56,24 +56,24 @@ Any chat history reduction logic, such as summarization or trimming, should be d
 
 ### Serialization
 
-`ChatMessageStore` instances are created and attached to an `AgentThread` when the thread is created, and when a thread is resumed from a serialized state.
+`ChatHistoryProvider` instances are created and attached to an `AgentSession` when the session is created, and when a session is resumed from a serialized state.
 
-While the actual messages making up the chat history are stored externally, the `ChatMessageStore` instance might need to store keys or other state to identify the chat history in the external store.
+While the actual messages making up the chat history are stored externally, the `ChatHistoryProvider` instance might need to store keys or other state to identify the chat history in the external store.
 
-To allow persisting threads, you need to implement the `Serialize` method of the `ChatMessageStore` class. This method should return a `JsonElement` containing the state needed to restore the store later. When deserializing, the agent framework will pass this serialized state to the ChatMessageStoreFactory, allowing you to use it to recreate the store.
+To allow persisting sessions, you need to implement the `Serialize` method of the `ChatHistoryProvider` class. This method should return a `JsonElement` containing the state needed to restore the provider later. When deserializing, the agent framework will pass this serialized state to the ChatHistoryProviderFactory, allowing you to use it to recreate the provider.
 
-### Sample ChatMessageStore implementation
+### Sample ChatHistoryProvider implementation
 
 The following sample implementation stores chat messages in a vector store.
 
 `InvokedAsync` upserts messages into the vector store, using a unique key for each message. It stores both the request messages and response messages from the invocation context.
 
-`InvokingAsync` retrieves the messages for the current thread from the vector store, orders them by timestamp, and returns them in ascending chronological order (oldest first).
+`InvokingAsync` retrieves the messages for the current session from the vector store, orders them by timestamp, and returns them in ascending chronological order (oldest first).
 
-When the first invocation occurs, the store generates a unique key for the thread, which is then used to identify the chat history in the vector store for subsequent calls.
+When the first invocation occurs, the store generates a unique key for the session, which is then used to identify the chat history in the vector store for subsequent calls.
 
-The unique key is stored in the `ThreadDbKey` property, which is serialized using the `Serialize` method and deserialized via the constructor that takes a `JsonElement`.
-This key will therefore be persisted as part of the `AgentThread` state, allowing the thread to be resumed later and continue using the same chat history.
+The unique key is stored in the `SessionDbKey` property, which is serialized using the `Serialize` method and deserialized via the constructor that takes a `JsonElement`.
+This key will therefore be persisted as part of the `AgentSession` state, allowing the session to be resumed later and continue using the same chat history.
 
 ```csharp
 using System;
@@ -87,11 +87,11 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.InMemory;
 
-internal sealed class VectorChatMessageStore : ChatMessageStore
+internal sealed class VectorChatHistoryProvider : ChatHistoryProvider
 {
     private readonly VectorStore _vectorStore;
 
-    public VectorChatMessageStore(
+    public VectorChatHistoryProvider(
         VectorStore vectorStore,
         JsonElement serializedStoreState,
         JsonSerializerOptions? jsonSerializerOptions = null)
@@ -99,19 +99,19 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
         this._vectorStore = vectorStore ?? throw new ArgumentNullException(nameof(vectorStore));
         if (serializedStoreState.ValueKind is JsonValueKind.String)
         {
-            this.ThreadDbKey = serializedStoreState.Deserialize<string>();
+            this.SessionDbKey = serializedStoreState.Deserialize<string>();
         }
     }
 
-    public string? ThreadDbKey { get; private set; }
+    public string? SessionDbKey { get; private set; }
 
     public override async ValueTask<IEnumerable<ChatMessage>> InvokingAsync(
         InvokingContext context,
         CancellationToken cancellationToken = default)
     {
-        if (this.ThreadDbKey is null)
+        if (this.SessionDbKey is null)
         {
-            // No thread key yet, so no messages to retrieve
+            // No session key yet, so no messages to retrieve
             return [];
         }
 
@@ -119,7 +119,7 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
         await collection.EnsureCollectionExistsAsync(cancellationToken);
         var records = collection
             .GetAsync(
-                x => x.ThreadId == this.ThreadDbKey, 
+                x => x.SessionId == this.SessionDbKey, 
                 10,
                 new() { OrderBy = x => x.Descending(y => y.Timestamp) },
                 cancellationToken);
@@ -145,7 +145,7 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
             return;
         }
 
-        this.ThreadDbKey ??= Guid.NewGuid().ToString("N");
+        this.SessionDbKey ??= Guid.NewGuid().ToString("N");
         
         var collection = this._vectorStore.GetCollection<string, ChatHistoryItem>("ChatHistory");
         await collection.EnsureCollectionExistsAsync(cancellationToken);
@@ -157,24 +157,24 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
         
         await collection.UpsertAsync(allNewMessages.Select(x => new ChatHistoryItem()
         {
-            Key = this.ThreadDbKey + x.MessageId,
+            Key = this.SessionDbKey + x.MessageId,
             Timestamp = DateTimeOffset.UtcNow,
-            ThreadId = this.ThreadDbKey,
+            SessionId = this.SessionDbKey,
             SerializedMessage = JsonSerializer.Serialize(x),
             MessageText = x.Text
         }), cancellationToken);
     }
 
     public override JsonElement Serialize(JsonSerializerOptions? jsonSerializerOptions = null) =>
-        // We have to serialize the thread id, so that on deserialization you can retrieve the messages using the same thread id.
-        JsonSerializer.SerializeToElement(this.ThreadDbKey);
+        // We have to serialize the session id, so that on deserialization you can retrieve the messages using the same session id.
+        JsonSerializer.SerializeToElement(this.SessionDbKey);
 
     private sealed class ChatHistoryItem
     {
         [VectorStoreKey]
         public string? Key { get; set; }
         [VectorStoreData]
-        public string? ThreadId { get; set; }
+        public string? SessionId { get; set; }
         [VectorStoreData]
         public DateTimeOffset? Timestamp { get; set; }
         [VectorStoreData]
@@ -185,13 +185,13 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
 }
 ```
 
-## Using the custom ChatMessageStore with a ChatClientAgent
+## Using the custom ChatHistoryProvider with a ChatClientAgent
 
-To use the custom `ChatMessageStore`, you need to provide a `ChatMessageStoreFactory` when creating the agent. This factory allows the agent to create a new instance of the desired `ChatMessageStore` for each thread.
+To use the custom `ChatHistoryProvider`, you need to provide a `ChatHistoryProviderFactory` when creating the agent. This factory allows the agent to create a new instance of the desired `ChatHistoryProvider` for each session.
 
-When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `ChatMessageStoreFactory` in addition to all other agent options.
+When creating a `ChatClientAgent` it is possible to provide a `ChatClientAgentOptions` object that allows providing the `ChatHistoryProviderFactory` in addition to all other agent options.
 
-The factory is an async function that receives a context object and a cancellation token, and returns a `ValueTask<ChatMessageStore>`.
+The factory is an async function that receives a context object and a cancellation token, and returns a `ValueTask<ChatHistoryProvider>`.
 
 ```csharp
 using Azure.AI.OpenAI;
@@ -210,35 +210,35 @@ AIAgent agent = new AzureOpenAIClient(
      {
          Name = "Joker",
          ChatOptions = new() { Instructions = "You are good at telling jokes." },
-         ChatMessageStoreFactory = (ctx, ct) => new ValueTask<ChatMessageStore>(
-             // Create a new chat message store for this agent that stores the messages in a vector store.
-             // Each thread must get its own copy of the VectorChatMessageStore, since the store
-             // also contains the id that the thread is stored under.
-             new VectorChatMessageStore(
+         ChatHistoryProviderFactory = (ctx, ct) => new ValueTask<ChatHistoryProvider>(
+             // Create a new chat history provider for this agent that stores the messages in a vector store.
+             // Each session must get its own copy of the VectorChatHistoryProvider, since the provider
+             // also contains the id that the session is stored under.
+             new VectorChatHistoryProvider(
                 vectorStore,
                 ctx.SerializedState,
                 ctx.JsonSerializerOptions))
      });
 
-// Start a new thread for the agent conversation.
-AgentThread thread = await agent.GetNewThreadAsync();
+// Start a new session for the agent conversation.
+AgentSession session = await agent.CreateSessionAsync();
 
-// Run the agent with the thread
-var response = await agent.RunAsync("Tell me a joke about a pirate.", thread);
+// Run the agent with the session
+var response = await agent.RunAsync("Tell me a joke about a pirate.", session);
 
-// The thread state can be serialized for storage
-JsonElement serializedThread = thread.Serialize();
+// The session state can be serialized for storage
+JsonElement serializedSession = agent.SerializeSession(session);
 
-// Later, deserialize the thread to resume the conversation
-AgentThread resumedThread = await agent.DeserializeThreadAsync(serializedThread);
+// Later, deserialize the session to resume the conversation
+AgentSession resumedSession = await agent.DeserializeSessionAsync(serializedSession);
 ```
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-This tutorial shows how to store agent chat history in external storage by implementing a custom `ChatMessageStore` and using it with a `ChatAgent`.
+This tutorial shows how to store agent chat history in external storage by implementing a custom `ChatMessageStore` and using it with a `Agent`.
 
-By default, when using `ChatAgent`, chat history is stored either in memory in the `AgentThread` object or the underlying inference service, if the service supports it.
+By default, when using `Agent`, chat history is stored either in memory in the `AgentThread` object or the underlying inference service, if the service supports it.
 
 Where services do not require or are not capable of the chat history to be stored in the service, it is possible to provide a custom store for persisting chat history instead of relying on the default in-memory behavior.
 
@@ -246,7 +246,7 @@ Where services do not require or are not capable of the chat history to be store
 
 For prerequisites, see the [Create and run a simple agent](./run-agent.md) step in this tutorial.
 
-## Create a custom ChatMessage Store
+## Create a custom Message Store
 
 To create a custom `ChatMessageStore`, you need to implement the `ChatMessageStore` protocol and provide implementations for the required methods.
 
@@ -257,7 +257,7 @@ The most important methods to implement are:
 - `add_messages` - called to add new messages to the store.
 - `list_messages` - called to retrieve the messages from the store.
 
-`list_messages` should return the messages in ascending chronological order. All messages returned by it will be used by the `ChatAgent` when making calls to the underlying chat client. It's therefore important that this method considers the limits of the underlying model, and only returns as many messages as can be handled by the model.
+`list_messages` should return the messages in ascending chronological order. All messages returned by it will be used by the `Agent` when making calls to the underlying chat client. It's therefore important that this method considers the limits of the underlying model, and only returns as many messages as can be handled by the model.
 
 Any chat history reduction logic, such as summarization or trimming, should be done before returning messages from `list_messages`.
 
@@ -289,7 +289,7 @@ from uuid import uuid4
 from pydantic import BaseModel
 import json
 import redis.asyncio as redis
-from agent_framework import ChatMessage
+from agent_framework import Message
 
 
 class RedisStoreState(BaseModel):
@@ -337,11 +337,11 @@ class RedisChatMessageStore:
         """Get the Redis key for this thread's messages."""
         return f"{self.key_prefix}:{self.thread_id}"
 
-    async def add_messages(self, messages: Sequence[ChatMessage]) -> None:
+    async def add_messages(self, messages: Sequence[Message]) -> None:
         """Add messages to the Redis store.
 
         Args:
-            messages: Sequence of ChatMessage objects to add to the store.
+            messages: Sequence of Message objects to add to the store.
         """
         if not messages:
             return
@@ -357,11 +357,11 @@ class RedisChatMessageStore:
                 # Keep only the most recent max_messages using LTRIM
                 await self._redis_client.ltrim(self.redis_key, -self.max_messages, -1)
 
-    async def list_messages(self) -> list[ChatMessage]:
+    async def list_messages(self) -> list[Message]:
         """Get all messages from the store in chronological order.
 
         Returns:
-            List of ChatMessage objects in chronological order (oldest first).
+            List of Message objects in chronological order (oldest first).
         """
         # Retrieve all messages from Redis list (oldest to newest)
         redis_messages = await self._redis_client.lrange(self.redis_key, 0, -1)
@@ -405,15 +405,15 @@ class RedisChatMessageStore:
                 self.redis_url = state.redis_url
                 self._redis_client = redis.from_url(self.redis_url, decode_responses=True)
 
-    def _serialize_message(self, message: ChatMessage) -> str:
-        """Serialize a ChatMessage to JSON string."""
+    def _serialize_message(self, message: Message) -> str:
+        """Serialize a Message to JSON string."""
         message_dict = message.model_dump()
         return json.dumps(message_dict, separators=(",", ":"))
 
-    def _deserialize_message(self, serialized_message: str) -> ChatMessage:
-        """Deserialize a JSON string to ChatMessage."""
+    def _deserialize_message(self, serialized_message: str) -> Message:
+        """Deserialize a JSON string to Message."""
         message_dict = json.loads(serialized_message)
-        return ChatMessage.model_validate(message_dict)
+        return Message.model_validate(message_dict)
 
     async def clear(self) -> None:
         """Remove all messages from the store."""
@@ -424,19 +424,19 @@ class RedisChatMessageStore:
         await self._redis_client.aclose()
 ```
 
-## Using the custom ChatMessageStore with a ChatAgent
+## Using the custom ChatMessageStore with a Agent
 
 To use the custom `ChatMessageStore`, you need to provide a `chat_message_store_factory` when creating the agent. This factory allows the agent to create a new instance of the desired `ChatMessageStore` for each thread.
 
-When creating a `ChatAgent`, you can provide the `chat_message_store_factory` parameter in addition to all other agent options.
+When creating a `Agent`, you can provide the `chat_message_store_factory` parameter in addition to all other agent options.
 
 ```python
 from azure.identity import AzureCliCredential
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import AzureOpenAIChatClient
 
 # Create the chat agent with custom message store factory
-agent = ChatAgent(
+agent = Agent(
     chat_client=AzureOpenAIChatClient(
         endpoint="https://<myresource>.openai.azure.com",
         credential=AzureCliCredential(),

@@ -44,11 +44,11 @@ var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful ass
 
 To make creating these agents even easier, Agent Framework provides helpers for many popular services. For more information, see the documentation for each service.
 
-| Underlying inference service | Description | Service chat history storage support | Custom chat history storage support |
-|------------------------------|-------------|--------------------------------------|-------------------------------------|
+| Underlying inference service | Description | Service chat history storage supported | InMemory/Custom chat history storage supported |
+|------------------------------|-------------|----------------------------------------|------------------------------------------------|
 |[Azure AI Foundry Agent](./azure-ai-foundry-agent.md)|An agent that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
 |[Azure AI Foundry Models ChatCompletion](./azure-ai-foundry-models-chat-completion-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via ChatCompletion.|No|Yes|
-|[Azure AI Foundry Models Responses](./azure-ai-foundry-models-responses-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|No|Yes|
+|[Azure AI Foundry Models Responses](./azure-ai-foundry-models-responses-agent.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|Yes|Yes|
 |[Azure OpenAI ChatCompletion](./azure-openai-chat-completion-agent.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./azure-openai-responses-agent.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
 |[OpenAI ChatCompletion](./openai-chat-completion-agent.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
@@ -168,16 +168,16 @@ These agents support a wide range of functionality out of the box:
 1. Structured output
 1. Streaming responses
 
-To create one of these agents, simply construct a `ChatAgent` using the chat client implementation of your choice.
+To create one of these agents, simply construct a `Agent` using the chat client implementation of your choice.
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import DefaultAzureCredential
 
 async with (
     DefaultAzureCredential() as credential,
-    ChatAgent(
+    Agent(
         chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant"
     ) as agent
@@ -267,13 +267,13 @@ For streaming examples, see:
 Azure AI agents support hosted code interpreter tools for executing Python code:
 
 ```python
-from agent_framework import ChatAgent, HostedCodeInterpreterTool
+from agent_framework import Agent, HostedCodeInterpreterTool
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import DefaultAzureCredential
 
 async with (
     DefaultAzureCredential() as credential,
-    ChatAgent(
+    Agent(
         chat_client=AzureAIAgentClient(async_credential=credential),
         instructions="You are a helpful assistant that can execute Python code.",
         tools=HostedCodeInterpreterTool()
@@ -291,16 +291,16 @@ For code interpreter examples, see:
 ## Custom agents
 
 It is also possible to create fully custom agents that are not just wrappers around a chat client.
-Agent Framework provides the `AgentProtocol` protocol and `BaseAgent` base class, which when implemented/subclassed allows for complete control over the agent's behavior and capabilities.
+Agent Framework provides the `SupportsAgentRun` protocol and `BaseAgent` base class, which when implemented/subclassed allows for complete control over the agent's behavior and capabilities.
 
 ```python
-from agent_framework import BaseAgent, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
+from agent_framework import BaseAgent, AgentResponse, AgentResponseUpdate, AgentThread, Message
 from collections.abc import AsyncIterable
 
 class CustomAgent(BaseAgent):
     async def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -310,7 +310,7 @@ class CustomAgent(BaseAgent):
 
     def run_stream(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,

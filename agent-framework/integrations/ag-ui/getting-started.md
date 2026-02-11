@@ -178,7 +178,7 @@ AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent");
 
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.CreateSessionAsync();
 List<ChatMessage> messages =
 [
     new(ChatRole.System, "You are a helpful assistant.")
@@ -209,7 +209,7 @@ try
         bool isFirstUpdate = true;
         string? threadId = null;
 
-        await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, thread))
+        await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
         {
             ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 
@@ -259,7 +259,7 @@ catch (Exception ex)
 - **AsAIAgent**: Extension method on `AGUIChatClient` to create an agent from the client
 - **RunStreamingAsync**: Streams responses as `AgentResponseUpdate` objects
 - **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ConversationId` and `ResponseId`
-- **Thread Management**: The `AgentThread` maintains conversation context across requests
+- **Session Management**: The `AgentSession` maintains conversation context across requests
 - **Content Types**: Responses include `TextContent` for messages and `ErrorContent` for errors
 
 ### Configure and Run the Client
@@ -407,7 +407,7 @@ Create a file named `server.py`:
 
 import os
 
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -429,7 +429,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create the AI agent
-agent = ChatAgent(
+agent = Agent(
     name="AGUIAssistant",
     instructions="You are a helpful assistant.",
     chat_client=chat_client,
@@ -450,7 +450,7 @@ if __name__ == "__main__":
 ### Key Concepts
 
 - **`add_agent_framework_fastapi_endpoint`**: Registers the AG-UI endpoint with automatic request/response handling and SSE streaming
-- **`ChatAgent`**: The Agent Framework agent that will handle incoming requests
+- **`Agent`**: The Agent Framework agent that will handle incoming requests
 - **FastAPI Integration**: Uses FastAPI's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages
 - **Configuration**: `AzureOpenAIChatClient` reads from environment variables or accepts parameters directly
@@ -501,7 +501,7 @@ Create a file named `client.py`:
 import asyncio
 import os
 
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -515,7 +515,7 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
 
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
@@ -711,8 +711,8 @@ add_agent_framework_fastapi_endpoint(app, agent, "/agent")
 ```python
 app = FastAPI()
 
-weather_agent = ChatAgent(name="weather", ...)
-finance_agent = ChatAgent(name="finance", ...)
+weather_agent = Agent(name="weather", ...)
+finance_agent = Agent(name="finance", ...)
 
 add_agent_framework_fastapi_endpoint(app, weather_agent, "/weather")
 add_agent_framework_fastapi_endpoint(app, finance_agent, "/finance")

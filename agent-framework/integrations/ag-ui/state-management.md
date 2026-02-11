@@ -115,17 +115,17 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
 
     public override Task<AgentResponse> RunAsync(
         IEnumerable<ChatMessage> messages,
-        AgentThread? thread = null,
+        AgentSession? session = null,
         AgentRunOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        return this.RunStreamingAsync(messages, thread, options, cancellationToken)
+        return this.RunStreamingAsync(messages, session, options, cancellationToken)
             .ToAgentResponseAsync(cancellationToken);
     }
 
     public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(
         IEnumerable<ChatMessage> messages,
-        AgentThread? thread = null,
+        AgentSession? session = null,
         AgentRunOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -136,7 +136,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
             state.ValueKind != JsonValueKind.Object)
         {
             // No state management requested, pass through to inner agent
-            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, thread, options, cancellationToken).ConfigureAwait(false))
+            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
             {
                 yield return update;
             }
@@ -154,7 +154,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         if (!hasProperties)
         {
             // Empty state - treat as no state
-            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, thread, options, cancellationToken).ConfigureAwait(false))
+            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
             {
                 yield return update;
             }
@@ -188,7 +188,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
 
         // Collect all updates from first run
         var allUpdates = new List<AgentResponseUpdate>();
-        await foreach (var update in this.InnerAgent.RunStreamingAsync(firstRunMessages, thread, firstRunOptions, cancellationToken).ConfigureAwait(false))
+        await foreach (var update in this.InnerAgent.RunStreamingAsync(firstRunMessages, session, firstRunOptions, cancellationToken).ConfigureAwait(false))
         {
             allUpdates.Add(update);
 
@@ -225,7 +225,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
                 ChatRole.System,
                 [new TextContent("Please provide a concise summary of the state changes in at most two sentences.")]));
 
-        await foreach (var update in this.InnerAgent.RunStreamingAsync(secondRunMessages, thread, options, cancellationToken).ConfigureAwait(false))
+        await foreach (var update in this.InnerAgent.RunStreamingAsync(secondRunMessages, session, options, cancellationToken).ConfigureAwait(false))
         {
             yield return update;
         }
@@ -408,10 +408,10 @@ This configuration maps the `recipe` state field to the `recipe` argument of the
 Create a tool function that accepts your Pydantic model:
 
 ```python
-from agent_framework import ai_function
+from agent_framework import tool
 
 
-@ai_function
+@tool
 def update_recipe(recipe: Recipe) -> str:
     """Update the recipe with new or modified content.
 
@@ -438,7 +438,7 @@ Here's a complete server implementation with state management:
 ```python
 """AG-UI server with state management."""
 
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import (
     AgentFrameworkAgent,
@@ -449,7 +449,7 @@ from azure.identity import AzureCliCredential
 from fastapi import FastAPI
 
 # Create the chat agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="recipe_agent",
     instructions="""You are a helpful recipe assistant that creates and modifies recipes.
 
@@ -603,7 +603,7 @@ import os
 from typing import Any
 
 import jsonpatch
-from agent_framework import ChatAgent, ChatMessage, Role
+from agent_framework import Agent, Message, Role
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -615,8 +615,8 @@ async def main():
     # Create AG-UI chat client
     chat_client = AGUIChatClient(server_url=server_url)
 
-    # Wrap with ChatAgent for convenient API
-    agent = ChatAgent(
+    # Wrap with Agent for convenient API
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
@@ -682,12 +682,12 @@ The `AGUIChatClient` provides:
 
 - **Simplified Connection**: Automatic handling of HTTP/SSE communication
 - **Thread Management**: Built-in thread ID tracking for conversation continuity
-- **Agent Integration**: Works seamlessly with `ChatAgent` for familiar API
+- **Agent Integration**: Works seamlessly with `Agent` for familiar API
 - **State Handling**: Automatic parsing of state events from the server
 - **Parity with .NET**: Consistent experience across languages
 
 > [!TIP]
-> Use `AGUIChatClient` with `ChatAgent` to get the full benefit of the agent framework's features like conversation history, tool execution, and middleware support.
+> Use `AGUIChatClient` with `Agent` to get the full benefit of the agent framework's features like conversation history, tool execution, and middleware support.
 
 ## Using Confirmation Strategies
 
@@ -838,13 +838,13 @@ class TaskStep(BaseModel):
     estimated_duration: str = "5 min"
 
 
-@ai_function
+@tool
 def generate_task_steps(steps: list[TaskStep]) -> str:
     """Generate task steps for a given task."""
     return f"Generated {len(steps)} steps."
 
 
-@ai_function
+@tool
 def update_preferences(preferences: dict[str, Any]) -> str:
     """Update user preferences."""
     return "Preferences updated."
@@ -869,7 +869,7 @@ agent_with_multiple_state = AgentFrameworkAgent(
 When a tool returns complex nested data, use `"*"` to map all tool arguments to state:
 
 ```python
-@ai_function
+@tool
 def create_document(title: str, content: str, metadata: dict[str, Any]) -> str:
     """Create a document with title, content, and metadata."""
     return "Document created."
@@ -909,7 +909,7 @@ Benefits:
 Always write the complete state, not just deltas:
 
 ```python
-@ai_function
+@tool
 def update_recipe(recipe: Recipe) -> str:
     """
     You MUST write the complete recipe with ALL fields.
@@ -941,7 +941,7 @@ predict_state_config = {
 Include clear instructions about state management:
 
 ```python
-agent = ChatAgent(
+agent = Agent(
     instructions="""
     CRITICAL RULES:
     1. You will receive the current recipe state in the system context
