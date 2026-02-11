@@ -162,6 +162,15 @@ PersonInfo personInfo = JsonSerializer.Deserialize<PersonInfo>(response.Text)!;
 Console.WriteLine($"Name: {personInfo.Name}, Age: {personInfo.Age}, Occupation: {personInfo.Occupation}");
 ```
 
+## Structured output with agents with no structured output capabilities
+
+Some agents don't natively support structured output, either because it's not part of the protocol or because the agents use language models without structured output capabilities. One possible approach is to create a custom decorator agent that wraps any `AIAgent` and uses an additional LLM call via a chat client to convert the agent's text response into structured JSON.
+
+> [!NOTE]
+> Since this approach relies on an additional LLM call to transform the response, its reliability may not be sufficient for all scenarios.
+
+For a reference implementation of this pattern that you can adapt to your own requirements, see the [StructuredOutputAgent sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Agents/Agent_Step05_StructuredOutput).
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
