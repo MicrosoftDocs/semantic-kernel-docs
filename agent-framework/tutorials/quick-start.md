@@ -29,7 +29,7 @@ Before you begin, ensure you have the following:
 > Microsoft Agent Framework is supported with all actively supported versions of .NET. For the purposes of this sample, we recommend the .NET 8 SDK or a later version.
 
 > [!NOTE]
-> This demo uses Azure default credential for authentication. Make sure you're authenticated with Azure (e.g., via `az login`) and have access to the Azure OpenAI resource. For other authentication options, see [credential chains](/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#defaultazurecredential-overview). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you have an api key and do not wish to use role based authentication.
+> This demo uses Azure default credential for authentication. Make sure you're authenticated with Azure (e.g., via `az login`) and have access to the Azure OpenAI resource. To see the available authentication options, refer to the [credential chains documentation](/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#defaultazurecredential-overview). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you have an api key and do not wish to use role based authentication.
 
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
