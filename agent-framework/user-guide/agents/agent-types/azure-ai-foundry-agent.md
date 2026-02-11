@@ -36,8 +36,11 @@ using Microsoft.Agents.AI;
 
 var persistentAgentsClient = new PersistentAgentsClient(
     "https://<myresource>.services.ai.azure.com/api/projects/<myproject>",
-    new AzureCliCredential());
+    new DefaultAzureCredential());
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 To use the Azure AI Foundry Agents service, you need create an agent resource in the service.
 This can be done using either the Azure.AI.Agents.Persistent SDK or using Microsoft Agent Framework helpers.

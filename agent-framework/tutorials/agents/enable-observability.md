@@ -73,13 +73,16 @@ using OpenAI;
 // Create the agent and enable OpenTelemetry instrumentation
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
         .GetChatClient("gpt-4o-mini")
         .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker")
         .AsBuilder()
         .UseOpenTelemetry(sourceName: "agent-telemetry-source")
         .Build();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Run the agent and print the text response. The console exporter will show trace data on the console.
 

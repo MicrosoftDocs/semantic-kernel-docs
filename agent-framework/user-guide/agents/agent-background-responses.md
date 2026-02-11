@@ -57,7 +57,7 @@ For non-streaming scenarios, when you initially run an agent, it may or may not 
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
     .GetOpenAIResponseClient("<deployment-name>")
     .AsAIAgent();
 
@@ -84,6 +84,9 @@ while (response.ContinuationToken is not null)
 Console.WriteLine(response.Text);
 ```
 
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
 ### Key Points:
 
 - The initial call may complete immediately (no continuation token) or start a background operation (with continuation token)
@@ -99,7 +102,7 @@ In streaming scenarios, background responses work much like regular streaming re
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
     .GetOpenAIResponseClient("<deployment-name>")
     .AsAIAgent();
 

@@ -204,7 +204,7 @@ VectorStore vectorStore = new InMemoryVectorStore();
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
      .GetChatClient("gpt-4o-mini")
      .AsAIAgent(new ChatClientAgentOptions
      {
@@ -232,6 +232,9 @@ JsonElement serializedSession = agent.SerializeSession(session);
 // Later, deserialize the session to resume the conversation
 AgentSession resumedSession = await agent.DeserializeSessionAsync(serializedSession);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

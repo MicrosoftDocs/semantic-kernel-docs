@@ -62,13 +62,16 @@ Create your agent and provide the MCP tools during initialization:
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
      .GetChatClient(deploymentName)
      .AsAIAgent(
          instructions: "You answer questions related to GitHub repositories only.",
          tools: [.. mcpTools.Cast<AITool>()]);
 
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Key points:
 

@@ -28,12 +28,15 @@ First, create an `AIAgent` that is able to analyze images.
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
     .GetChatClient("gpt-4o")
     .AsAIAgent(
         name: "VisionAgent",
         instructions: "You are a helpful agent that can analyze images");
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Next, create a `ChatMessage` that contains both a text prompt and an image URL. Use `TextContent` for the text and `UriContent` for the image.
 

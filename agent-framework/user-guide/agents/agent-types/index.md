@@ -114,8 +114,11 @@ OpenAIClient client = new OpenAIClient(new ApiKeyCredential(apiKey), clientOptio
 When using an Azure Service, it's also possible to use Azure credentials instead of an API key.
 
 ```csharp
-OpenAIClient client = new OpenAIClient(new BearerTokenPolicy(new AzureCliCredential(), "https://ai.azure.com/.default"), clientOptions)
+OpenAIClient client = new OpenAIClient(new BearerTokenPolicy(new DefaultAzureCredential(), "https://ai.azure.com/.default"), clientOptions)
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Once you have created the OpenAIClient, you can get a sub client for the specific service you want to use and then create an `AIAgent` from that.
 
@@ -134,7 +137,7 @@ See the table above for the correct URL to use.
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri(serviceUrl),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
      .GetChatClient(deploymentName)
      .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
 ```
@@ -144,7 +147,7 @@ AIAgent agent = new AzureOpenAIClient(
 This SDK is only supported with the Azure AI Foundry Agents service. See the table above for the correct URL to use.
 
 ```csharp
-var persistentAgentsClient = new PersistentAgentsClient(serviceUrl, new AzureCliCredential());
+var persistentAgentsClient = new PersistentAgentsClient(serviceUrl, new DefaultAzureCredential());
 AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
     model: deploymentName,
     name: "Joker",

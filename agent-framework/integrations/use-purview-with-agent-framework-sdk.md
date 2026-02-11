@@ -60,7 +60,7 @@ TokenCredential browserCredential = new InteractiveBrowserCredential(
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
     .GetChatClient(deploymentName)
     .AsAIAgent("You are a secure assistant.")
     .AsBuilder()
@@ -71,6 +71,9 @@ AgentResponse response = await agent.RunAsync("Summarize zero trust in one sente
 Console.WriteLine(response);
 
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

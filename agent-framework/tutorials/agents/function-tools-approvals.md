@@ -57,10 +57,13 @@ When creating the agent, you can now provide the approval requiring function too
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
      .GetChatClient("gpt-4o-mini")
      .AsAIAgent(instructions: "You are a helpful assistant", tools: [approvalRequiredWeatherFunction]);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Since you now have a function that requires approval, the agent might respond with a request for approval, instead of executing the function directly and returning the result.
 You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
