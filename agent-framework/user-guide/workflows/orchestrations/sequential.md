@@ -160,10 +160,10 @@ reviewer = chat_client.as_agent(
 The `SequentialBuilder` class creates a pipeline where agents process tasks in order. Each agent sees the full conversation history and adds their response:
 
 ```python
-from agent_framework import SequentialBuilder
+from agent_framework.orchestrations import SequentialBuilder
 
 # 2) Build sequential workflow: writer -> reviewer
-workflow = SequentialBuilder().participants([writer, reviewer]).build()
+workflow = SequentialBuilder(participants=[writer, reviewer]).build()
 ```
 
 ## Run the Sequential Workflow
@@ -171,17 +171,17 @@ workflow = SequentialBuilder().participants([writer, reviewer]).build()
 Execute the workflow and collect the final conversation showing each agent's contribution:
 
 ```python
-from agent_framework import ChatMessage, WorkflowOutputEvent
+from agent_framework import Message, WorkflowEvent
 
 # 3) Run and print final conversation
-output_evt: WorkflowOutputEvent | None = None
+output_evt: WorkflowEvent | None = None
 async for event in workflow.run_stream("Write a tagline for a budget-friendly eBike."):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         output_evt = event
 
 if output_evt:
     print("===== Final Conversation =====")
-    messages: list[ChatMessage] | Any = output_evt.data
+    messages: list[Message] | Any = output_evt.data
     for i, msg in enumerate(messages, start=1):
         name = msg.author_name or ("assistant" if msg.role == Role.ASSISTANT else "user")
         print(f"{'-' * 60}\n{i:02d} [{name}]\n{msg.text}")
@@ -212,7 +212,7 @@ Sequential orchestration supports mixing agents with custom executors for specia
 
 ```python
 from agent_framework import Executor, WorkflowContext, handler
-from agent_framework import ChatMessage, Role
+from agent_framework import Message, Role
 
 class Summarizer(Executor):
     """Simple summarizer: consumes full conversation and appends an assistant summary."""
@@ -220,12 +220,12 @@ class Summarizer(Executor):
     @handler
     async def summarize(
         self,
-        conversation: list[ChatMessage],
-        ctx: WorkflowContext[list[ChatMessage]]
+        conversation: list[Message],
+        ctx: WorkflowContext[list[Message]]
     ) -> None:
         users = sum(1 for m in conversation if m.role == Role.USER)
         assistants = sum(1 for m in conversation if m.role == Role.ASSISTANT)
-        summary = ChatMessage(
+        summary = Message(
             role=Role.ASSISTANT,
             text=f"Summary -> users:{users} assistants:{assistants}"
         )
@@ -243,7 +243,7 @@ content = chat_client.as_agent(
 
 # Build sequential workflow: content -> summarizer
 summarizer = Summarizer(id="summarizer")
-workflow = SequentialBuilder().participants([content, summarizer]).build()
+workflow = SequentialBuilder(participants=[content, summarizer]).build()
 ```
 
 ### Sample Output with Custom Executor

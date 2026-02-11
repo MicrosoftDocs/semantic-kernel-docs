@@ -42,11 +42,11 @@ public static async Task<string> SpamDetectionOrchestration(
 
     // Check if the email is spam
     DurableAIAgent spamDetectionAgent = context.GetAgent("SpamDetectionAgent");
-    AgentThread spamThread = await spamDetectionAgent.GetNewThreadAsync();
+    AgentSession spamSession = await spamDetectionAgent.CreateSessionAsync();
 
     AgentResponse<DetectionResult> spamDetectionResponse = await spamDetectionAgent.RunAsync<DetectionResult>(
         message: $"Analyze this email for spam: {email.EmailContent}",
-        thread: spamThread);
+        session: spamSession);
     DetectionResult result = spamDetectionResponse.Result;
 
     if (result.IsSpam)
@@ -56,11 +56,11 @@ public static async Task<string> SpamDetectionOrchestration(
 
     // Generate response for legitimate email
     DurableAIAgent emailAssistantAgent = context.GetAgent("EmailAssistantAgent");
-    AgentThread emailThread = await emailAssistantAgent.GetNewThreadAsync();
+    AgentSession emailSession = await emailAssistantAgent.CreateSessionAsync();
 
     AgentResponse<EmailResponse> emailAssistantResponse = await emailAssistantAgent.RunAsync<EmailResponse>(
         message: $"Draft a professional response to: {email.EmailContent}",
-        thread: emailThread);
+        session: emailSession);
 
     return await context.CallActivityAsync<string>(nameof(SendEmail), emailAssistantResponse.Result.Response);
 }
@@ -345,9 +345,9 @@ Human-in-the-loop workflows with durable agents are extremely cost-effective whe
 
 The [Durable Task Scheduler](/azure/azure-functions/durable/durable-task-scheduler/durable-task-scheduler) (DTS) is the recommended durable backend for your durable agents, offering the best performance, fully managed infrastructure, and built-in observability through a UI dashboard. While Azure Functions can use other storage backends (like Azure Storage), DTS is optimized specifically for durable workloads and provides superior performance and monitoring capabilities.
 
-### Agent Thread Insights
+### Agent Session Insights
 
-- **Conversation history**: View complete conversation threads for each agent thread, including all messages, tool calls, and conversation context at any point in time
+- **Conversation history**: View complete chat history for each agent session, including all messages, tool calls, and conversation context at any point in time
 - **Task timing**: Monitor how long specific tasks and agent interactions take to complete
 
 :::image type="content" source="../../../../media/durable-agent-chat-history.png" alt-text="Screenshot of the Durable Task Scheduler dashboard showing agent chat history with conversation threads and messages.":::

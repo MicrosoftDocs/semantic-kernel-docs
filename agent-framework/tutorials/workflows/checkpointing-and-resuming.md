@@ -68,21 +68,22 @@ await using Checkpointed<StreamingRun> checkpointedRun = await InProcessExecutio
 
 ### Executor State
 
-Executors can persist local state that survives checkpoints using the `Executor<T>` base class:
+Executors can persist local state that survives checkpoints:
 
 ```csharp
-internal sealed class GuessNumberExecutor : Executor<NumberSignal>("Guess")
+internal sealed partial class GuessNumberExecutor : Executor
 {
     private const string StateKey = "GuessNumberExecutor.State";
 
     public int LowerBound { get; private set; }
     public int UpperBound { get; private set; }
 
-    public GuessNumberExecutor() : this()
+    public GuessNumberExecutor() : base("Guess")
     {
     }
 
-    public override async ValueTask HandleAsync(NumberSignal message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    [MessageHandler]
+    private async ValueTask HandleAsync(NumberSignal message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         int guess = (LowerBound + UpperBound) / 2;
         await context.SendMessageAsync(guess, cancellationToken);
@@ -433,10 +434,8 @@ Enable checkpointing when building your workflow:
 from agent_framework import WorkflowBuilder
 
 workflow = (
-    WorkflowBuilder(max_iterations=5)
+    WorkflowBuilder(max_iterations=5, start_executor=executor1, checkpoint_storage=checkpoint_storage)
     .add_edge(executor1, executor2)
-    .set_start_executor(executor1)
-    .with_checkpointing(checkpoint_storage=checkpoint_storage)  # Enable checkpointing
     .build()
 )
 ```
@@ -522,7 +521,7 @@ async for event in workflow.run_stream(
 ):
     print(f"Resumed Event: {event}")
 
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         print(f"Final Result: {event.data}")
         break
 ```
@@ -554,7 +553,7 @@ async for event in workflow.run_stream(
     checkpoint_id="checkpoint-id",
     checkpoint_storage=checkpoint_storage
 ):
-    if isinstance(event, RequestInfoEvent):
+    if event.type == "request_info":
         # Capture re-emitted pending requests
         print(f"Pending request re-emitted: {event.request_id}")
         request_info_events.append(event)
@@ -568,7 +567,7 @@ for event in request_info_events:
 
 # Send response back to workflow
 async for event in workflow.send_responses_streaming(responses):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         print(f"Workflow completed: {event.data}")
 ```
 
@@ -621,8 +620,7 @@ from pathlib import Path
 from agent_framework import (
     FileCheckpointStorage,
     WorkflowBuilder,
-    WorkflowOutputEvent,
-    get_checkpoint_summary
+    get_checkpoint_summary,
 )
 
 async def main():
@@ -633,10 +631,8 @@ async def main():
 
     # Build workflow with checkpointing
     workflow = (
-        WorkflowBuilder()
+        WorkflowBuilder(start_executor=executor1, checkpoint_storage=storage)
         .add_edge(executor1, executor2)
-        .set_start_executor(executor1)
-        .with_checkpointing(storage)
         .build()
     )
 
@@ -680,4 +676,4 @@ For the complete working implementation, see the [Checkpoint with Resume sample]
 ## Next Steps
 
 > [!div class="nextstepaction"]
-> [Learn about using factories in workflow builders](./workflow-builder-with-factories.md)
+> [Learn about state isolation in workflows](../../user-guide/workflows/state-isolation.md)

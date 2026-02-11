@@ -97,7 +97,7 @@ Import the required classes from Agent Framework:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIResponsesClient
 ```
 
@@ -162,7 +162,7 @@ async def streaming_example():
 Use advanced reasoning capabilities with models like GPT-5:
 
 ```python
-from agent_framework import HostedCodeInterpreterTool, TextContent, TextReasoningContent
+from agent_framework import Content, HostedCodeInterpreterTool, TextReasoningContent
 
 async def reasoning_example():
     agent = OpenAIResponsesClient(ai_model_id="gpt-5").as_agent(
@@ -180,7 +180,7 @@ async def reasoning_example():
                 if isinstance(content, TextReasoningContent):
                     # Reasoning content in gray text
                     print(f"\033[97m{content.text}\033[0m", end="", flush=True)
-                elif isinstance(content, TextContent):
+                elif content.type == "text":
                     print(content.text, end="", flush=True)
     print()
 ```
@@ -308,7 +308,7 @@ Frank Wilson,Engineering,88000,6
     print(f"File uploaded with ID: {uploaded_file.id}")
 
     # Create agent using OpenAI Responses client
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=OpenAIResponsesClient(async_client=openai_client),
         instructions="You are a helpful assistant that can analyze data files using Python code.",
         tools=HostedCodeInterpreterTool(inputs=[{"file_id": uploaded_file.id}]),
@@ -392,7 +392,7 @@ async def file_search_example():
     vector_store_content = HostedVectorStoreContent(vector_store_id=vector_store.id)
 
     # Create agent with file search capability
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=client,
         instructions="You are a helpful assistant that can search through files to find information.",
         tools=[HostedFileSearchTool(inputs=vector_store_content)],
@@ -433,7 +433,7 @@ async def web_search_example():
 Analyze and understand images with multi-modal capabilities:
 
 ```python
-from agent_framework import ChatMessage, TextContent, UriContent
+from agent_framework import Message, Content
 
 async def image_analysis_example():
     agent = OpenAIResponsesClient().as_agent(
@@ -442,11 +442,11 @@ async def image_analysis_example():
     )
 
     # Create message with both text and image content
-    message = ChatMessage(
+    message = Message(
         role="user",
         contents=[
-            TextContent(text="What do you see in this image?"),
-            UriContent(
+            Content.from_text(text="What do you see in this image?"),
+            Content.from_uri(
                 uri="your-image-uri",
                 media_type="image/jpeg",
             ),
@@ -462,7 +462,7 @@ async def image_analysis_example():
 Generate images using the Responses API:
 
 ```python
-from agent_framework import DataContent, HostedImageGenerationTool, ImageGenerationToolResultContent, UriContent
+from agent_framework import Content, HostedImageGenerationTool, ImageGenerationToolResultContent
 
 async def image_generation_example():
     agent = OpenAIResponsesClient().as_agent(
@@ -484,7 +484,7 @@ async def image_generation_example():
         for content in message.contents:
             if isinstance(content, ImageGenerationToolResultContent) and content.outputs:
                 for output in content.outputs:
-                    if isinstance(output, (DataContent, UriContent)) and output.uri:
+                    if output.type in ("data", "uri") and output.uri:
                         print(f"Image generated: {output.uri}")
 ```
 

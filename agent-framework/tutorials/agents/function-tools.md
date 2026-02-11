@@ -94,21 +94,21 @@ def get_weather(
     return f"The weather in {location} is cloudy with a high of 15°C."
 ```
 
-You can also use the `ai_function` decorator to explicitly specify the function's name and description:
+You can also use the `@tool` decorator to explicitly specify the function's name and description:
 
 ```python
 from typing import Annotated
 from pydantic import Field
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function(name="weather_tool", description="Retrieves weather information for any location")
+@tool(name="weather_tool", description="Retrieves weather information for any location")
 def get_weather(
     location: Annotated[str, Field(description="The location to get the weather for.")],
 ) -> str:
     return f"The weather in {location} is cloudy with a high of 15°C."
 ```
 
-If you don't specify the `name` and `description` parameters in the `ai_function` decorator, the framework will automatically use the function's name and docstring as fallbacks.
+If you don't specify the `name` and `description` parameters in the `@tool` decorator, the framework will automatically use the function's name and docstring as fallbacks.
 
 When creating the agent, you can now provide the function tool to the agent, by passing it to the `tools` parameter.
 
@@ -169,7 +169,7 @@ agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
 )
 ```
 
-You can also decorate the functions with the same `ai_function` decorator as before.
+You can also decorate the functions with the same `@tool` decorator as before.
 
 ::: zone-end
 

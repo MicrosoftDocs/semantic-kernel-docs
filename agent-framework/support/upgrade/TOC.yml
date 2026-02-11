@@ -2,3 +2,5 @@
   href: requests-and-responses-upgrade-guide-python.md
 - name: Upgrade Guide - Python Options based on TypedDicts
   href: typed-options-guide-python.md
+- name: Upgrade Guide - 2026 Python Significant Changes
+  href: python-2026-significant-changes.md

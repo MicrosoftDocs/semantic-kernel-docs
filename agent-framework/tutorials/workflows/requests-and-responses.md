@@ -72,17 +72,18 @@ Create executors that process user input and provide feedback:
 /// <summary>
 /// Executor that judges the guess and provides feedback.
 /// </summary>
-internal sealed class JudgeExecutor : Executor<int>("Judge")
+internal sealed partial class JudgeExecutor : Executor
 {
     private readonly int _targetNumber;
     private int _tries;
 
-    public JudgeExecutor(int targetNumber) : this()
+    public JudgeExecutor(int targetNumber) : base("Judge")
     {
         _targetNumber = targetNumber;
     }
 
-    public override async ValueTask HandleAsync(int message, IWorkflowContext context, CancellationToken cancellationToken)
+    [MessageHandler]
+    private async ValueTask HandleAsync(int message, IWorkflowContext context, CancellationToken cancellationToken = default)
     {
         _tries++;
         if (message == _targetNumber)
@@ -273,7 +274,7 @@ Executors have built-in requests-and-responses capabilities that enable human-in
 Executors can send requests directly using `ctx.request_info()` and handle responses using the `@response_handler` decorator:
 
 1. Executor calls `ctx.request_info(request_data=request_data, response_type=response_type)`
-2. Workflow emits a `RequestInfoEvent` with the request data
+2. Workflow emits a `WorkflowEvent` with `type="request_info"` containing the request data
 3. External system (human, API, etc.) processes the request
 4. Response is sent back via `send_responses_streaming()`
 5. Workflow resumes and delivers the response to the executor's `@response_handler` method
@@ -300,15 +301,12 @@ from agent_framework import (
     AgentExecutor,
     AgentExecutorRequest,
     AgentExecutorResponse,
-    ChatMessage,
+    Message,
     Executor,
-    RequestInfoEvent,
     Role,
     WorkflowBuilder,
     WorkflowContext,
-    WorkflowOutputEvent,
     WorkflowRunState,
-    WorkflowStatusEvent,
     handler,
     response_handler,
 )
@@ -353,7 +351,7 @@ class TurnManager(Executor):
     @handler
     async def start(self, _: str, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
         """Start the game by asking the agent for an initial guess."""
-        user = ChatMessage(Role.USER, text="Start by making your first guess.")
+        user = Message(Role.USER, text="Start by making your first guess.")
         await ctx.send_message(AgentExecutorRequest(messages=[user], should_respond=True))
 
     @handler
@@ -396,7 +394,7 @@ class TurnManager(Executor):
             return
 
         # Provide feedback to the agent for the next guess
-        user_msg = ChatMessage(
+        user_msg = Message(
             Role.USER,
             text=f'Feedback: {reply}. Return ONLY a JSON object matching the schema {{"guess": <int 1..10>}}.',
         )
@@ -427,8 +425,7 @@ async def main() -> None:
 
     # Build the workflow graph
     workflow = (
-        WorkflowBuilder()
-        .set_start_executor(turn_manager)
+        WorkflowBuilder(start_executor=turn_manager)
         .add_edge(turn_manager, agent_exec)  # Ask agent to make/adjust a guess
         .add_edge(agent_exec, turn_manager)  # Agent's response goes back to coordinator
         .build()
@@ -463,21 +460,21 @@ async def run_interactive_workflow(workflow):
         # Process events to collect requests and detect completion
         requests: list[tuple[str, str]] = []  # (request_id, prompt)
         for event in events:
-            if isinstance(event, RequestInfoEvent) and isinstance(event.data, HumanFeedbackRequest):
-                # RequestInfoEvent for our HumanFeedbackRequest
+            if event.type == "request_info" and isinstance(event.data, HumanFeedbackRequest):
+                # request_info event for our HumanFeedbackRequest
                 requests.append((event.request_id, event.data.prompt))
-            elif isinstance(event, WorkflowOutputEvent):
+            elif event.type == "output":
                 # Capture workflow output when yielded
                 workflow_output = str(event.data)
                 completed = True
 
         # Check workflow status
         pending_status = any(
-            isinstance(e, WorkflowStatusEvent) and e.state == WorkflowRunState.IN_PROGRESS_PENDING_REQUESTS
+            e.type == "status" and e.state == WorkflowRunState.IN_PROGRESS_PENDING_REQUESTS
             for e in events
         )
         idle_with_requests = any(
-            isinstance(e, WorkflowStatusEvent) and e.state == WorkflowRunState.IDLE_WITH_PENDING_REQUESTS
+            e.type == "status" and e.state == WorkflowRunState.IDLE_WITH_PENDING_REQUESTS
             for e in events
         )
 
@@ -515,7 +512,7 @@ For the complete working implementation, see the [Human-in-the-Loop Guessing Gam
 
 3. **Human Request**: The `TurnManager` processes the agent's guess and calls `ctx.request_info()` with a `HumanFeedbackRequest`.
 
-4. **Workflow Pause**: The workflow emits a `RequestInfoEvent` and continues until no further actions can be taken, then waits for human input.
+4. **Workflow Pause**: The workflow emits a request_info event (`event.type == "request_info"`) and continues until no further actions can be taken, then waits for human input.
 
 5. **Human Response**: The external application collects human input and sends responses back using `send_responses_streaming()`.
 

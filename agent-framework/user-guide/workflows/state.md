@@ -1,6 +1,6 @@
 ---
-title: Microsoft Agent Framework Workflows - Shared States
-description: In-depth look at Shared States in Microsoft Agent Framework Workflows.
+title: Microsoft Agent Framework Workflows - State
+description: In-depth look at State in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
@@ -9,23 +9,22 @@ ms.date: 09/12/2025
 ms.service: agent-framework
 ---
 
-# Microsoft Agent Framework Workflows - Shared States
+# Microsoft Agent Framework Workflows - State
 
-This document provides an overview of **Shared States** in the Microsoft Agent Framework Workflow system.
+This document provides an overview of **State** in the Microsoft Agent Framework Workflow system.
 
 ## Overview
 
-Shared States allow multiple executors within a workflow to access and modify common data. This feature is essential for scenarios where different parts of the workflow need to share information where direct message passing is not feasible or efficient.
+State allows multiple executors within a workflow to access and modify common data. This feature is essential for scenarios where different parts of the workflow need to share information where direct message passing is not feasible or efficient.
 
-## Writing to Shared States
+## Writing to State
 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExecutor")
+internal sealed partial class FileReadExecutor(): Executor("FileReadExecutor")
 {
     /// <summary>
     /// Reads a file and stores its content in a shared state.
@@ -33,7 +32,8 @@ internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExe
     /// <param name="message">The path to the embedded resource file.</param>
     /// <param name="context">The workflow context for accessing shared states.</param>
     /// <returns>The ID of the shared state where the file content is stored.</returns>
-    public async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
     {
         // Read file content from embedded resource
         string fileContent = File.ReadAllText(message);
@@ -64,24 +64,23 @@ class FileReadExecutor(Executor):
         # Read file content from embedded resource
         with open(file_path, 'r') as file:
             file_content = file.read()
-        # Store file content in a shared state for access by other executors
+        # Store file content in state for access by other executors
         file_id = str(uuid.uuid4())
-        await ctx.set_shared_state(file_id, file_content)
+        ctx.set_state(file_id, file_content)
 
         await ctx.send_message(file_id)
 ```
 
 ::: zone-end
 
-## Accessing Shared States
+## Accessing State
 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
-internal sealed class WordCountingExecutor() : Executor<string, int>("WordCountingExecutor")
+internal sealed partial class WordCountingExecutor() : Executor("WordCountingExecutor")
 {
     /// <summary>
     /// Counts the number of words in the file content stored in a shared state.
@@ -89,7 +88,8 @@ internal sealed class WordCountingExecutor() : Executor<string, int>("WordCounti
     /// <param name="message">The ID of the shared state containing the file content.</param>
     /// <param name="context">The workflow context for accessing shared states.</param>
     /// <returns>The number of words in the file content.</returns>
-    public async ValueTask<int> HandleAsync(string message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask<int> HandleAsync(string message, IWorkflowContext context)
     {
         // Retrieve the file content from the shared state
         var fileContent = await context.ReadStateAsync<string>(message, scopeName: "FileContent")
@@ -115,8 +115,8 @@ class WordCountingExecutor(Executor):
 
     @handler
     async def handle(self, file_id: str, ctx: WorkflowContext[int]):
-        # Retrieve the file content from the shared state
-        file_content = await ctx.get_shared_state(file_id)
+        # Retrieve the file content from state
+        file_content = ctx.get_state(file_id)
         if file_content is None:
             raise ValueError("File content state not found")
 

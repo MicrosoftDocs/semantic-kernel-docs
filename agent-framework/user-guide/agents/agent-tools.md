@@ -96,9 +96,9 @@ var agent = await azureAgentClient.CreateAIAgentAsync(
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Tooling support with ChatAgent
+## Tooling support with Agent
 
-The `ChatAgent` is an agent class that can be used to build agentic capabilities on top of any inference service. It comes with support for:
+The `Agent` is an agent class that can be used to build agentic capabilities on top of any inference service. It comes with support for:
 
 1. Using your own function tools with the agent
 2. Using built-in tools that the underlying service might support
@@ -106,12 +106,12 @@ The `ChatAgent` is an agent class that can be used to build agentic capabilities
 
 ### Provide function tools during agent construction
 
-There are various ways to construct a `ChatAgent`, either directly or via factory helper methods on various service clients. All approaches support passing tools at construction time.
+There are various ways to construct a `Agent`, either directly or via factory helper methods on various service clients. All approaches support passing tools at construction time.
 
 ```python
 from typing import Annotated
 from pydantic import Field
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 # Sample function tool
@@ -121,8 +121,8 @@ def get_weather(
     """Get the weather for a given location."""
     return f"The weather in {location} is cloudy with a high of 15°C."
 
-# When creating a ChatAgent directly
-agent = ChatAgent(
+# When creating a Agent directly
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant",
     tools=[get_weather]  # Tools provided at construction
@@ -148,7 +148,7 @@ Python agents support providing tools on a per-run basis using the `tools` param
 
 ```python
 # Agent created without tools
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant"
     # No tools defined here
@@ -193,7 +193,7 @@ The Python Agent Framework supports various built-in and hosted tools that exten
 ```python
 from agent_framework import HostedWebSearchTool
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant with web search capabilities",
     tools=[
@@ -216,7 +216,7 @@ result = await agent.run("What are the latest news about AI?")
 ```python
 from agent_framework import HostedMCPTool
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=AzureAIAgentClient(async_credential=credential),
     instructions="You are a documentation assistant",
     tools=[
@@ -235,7 +235,7 @@ result = await agent.run("How do I create an Azure storage account?")
 ```python
 from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=AzureAIAgentClient(async_credential=credential),
     instructions="You are a document search assistant",
     tools=[
@@ -256,7 +256,7 @@ result = await agent.run("Find information about quarterly reports")
 ```python
 from agent_framework import HostedCodeInterpreterTool
 
-agent = ChatAgent(
+agent = Agent(
     chat_client=AzureAIAgentClient(async_credential=credential),
     instructions="You are a data analysis assistant",
     tools=[HostedCodeInterpreterTool()]
@@ -271,7 +271,7 @@ You can combine tools defined at the agent level with tools provided at runtime:
 
 ```python
 # Agent with base tools
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     instructions="You are a helpful assistant",
     tools=[get_time]  # Base tool available for all runs

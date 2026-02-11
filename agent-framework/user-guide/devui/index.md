@@ -64,7 +64,7 @@ pip install agent-framework-devui --pre
 Launch DevUI with agents registered in-memory:
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 from agent_framework.devui import serve
 
@@ -73,7 +73,7 @@ def get_weather(location: str) -> str:
     return f"Weather in {location}: 72F and sunny"
 
 # Create your agent
-agent = ChatAgent(
+agent = Agent(
     name="WeatherAgent",
     chat_client=OpenAIChatClient(),
     tools=[get_weather]
