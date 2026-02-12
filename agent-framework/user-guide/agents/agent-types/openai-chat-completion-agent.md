@@ -95,7 +95,7 @@ Import the required classes from Agent Framework:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 ```
 
@@ -152,7 +152,7 @@ def get_weather(
     return f"The weather in {location} is sunny with 25°C."
 
 async def tools_example():
-    agent = ChatAgent(
+    agent = Agent(
         chat_client=OpenAIChatClient(),
         instructions="You are a helpful weather assistant.",
         tools=get_weather,  # Add tools to the agent

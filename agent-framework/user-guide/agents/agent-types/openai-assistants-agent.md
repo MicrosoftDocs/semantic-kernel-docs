@@ -128,7 +128,7 @@ Import the required classes from Agent Framework:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIAssistantsClient
 ```
 
@@ -185,7 +185,7 @@ async def existing_assistant_example():
 
     try:
         # Use the existing assistant with Agent Framework
-        async with ChatAgent(
+        async with Agent(
             chat_client=OpenAIAssistantsClient(
                 async_client=client,
                 assistant_id=assistant.id
@@ -216,7 +216,7 @@ def get_weather(
     return f"The weather in {location} is sunny with 25°C."
 
 async def tools_example():
-    async with ChatAgent(
+    async with Agent(
         chat_client=OpenAIAssistantsClient(),
         instructions="You are a helpful weather assistant.",
         tools=get_weather,  # Provide tools to the agent
@@ -233,7 +233,7 @@ Enable your assistant to execute Python code:
 from agent_framework import HostedCodeInterpreterTool
 
 async def code_interpreter_example():
-    async with ChatAgent(
+    async with Agent(
         chat_client=OpenAIAssistantsClient(),
         instructions="You are a helpful assistant that can write and execute Python code.",
         tools=HostedCodeInterpreterTool(),
@@ -277,7 +277,7 @@ async def file_search_example():
     print("=== OpenAI Assistants Client Agent with File Search Example ===\n")
 
     client = OpenAIAssistantsClient()
-    async with ChatAgent(
+    async with Agent(
         chat_client=client,
         instructions="You are a helpful assistant that searches files in a knowledge base.",
         tools=HostedFileSearchTool(),

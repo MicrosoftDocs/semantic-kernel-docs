@@ -172,7 +172,7 @@ await foreach (var update in agent.RunStreamingAsync("What is the weather like i
 For the non-streaming case, everything is returned in one `AgentResponse` object.
 `AgentResponse` allows access to the produced messages via the `messages` property.
 
-To extract the text result from a response, all `TextContent` items from all `ChatMessage` items need to be aggregated.
+To extract the text result from a response, all `TextContent` items from all `Message` items need to be aggregated.
 To simplify this, a `Text` property is available on all response types that aggregates all `TextContent`.
 
 ```python
@@ -229,15 +229,13 @@ Here are some popular types from <xref:Microsoft.Extensions.AI>:
 ::: zone pivot="programming-language-python"
 
 The Python Agent Framework uses message and content types from the `agent_framework` package.
-Messages are represented by the `ChatMessage` class and all content classes inherit from the base `BaseContent` class.
+Messages are represented by the `Message` class and all content classes inherit from the base `BaseContent` class.
 
 Various `BaseContent` subclasses exist that are used to represent different types of content:
 
 |Type|Description|
 |---|---|
-|`TextContent`|Textual content that can be both input and output from the agent. Typically contains the text result from an agent.|
-|`DataContent`|Binary content represented as a data URI (for example, base64-encoded images). Can be used to pass binary data to and from the agent.|
-|`UriContent`|A URI that points to hosted content such as an image, audio file, or document.|
+|`Content`|Unified content type with factory methods (`Content.from_text()`, `Content.from_data()`, `Content.from_uri()`). Use the `type` property to check content type ("text", "data", "uri").|
 |`FunctionCallContent`|A request by an AI service to invoke a function tool.|
 |`FunctionResultContent`|The result of a function tool invocation.|
 |`ErrorContent`|Error information when processing fails.|
@@ -246,18 +244,18 @@ Various `BaseContent` subclasses exist that are used to represent different type
 Here's how to work with different content types:
 
 ```python
-from agent_framework import ChatMessage, TextContent, DataContent, UriContent
+from agent_framework import Message, Content
 
 # Create a text message
-text_message = ChatMessage(role="user", text="Hello!")
+text_message = Message(role="user", text="Hello!")
 
 # Create a message with multiple content types
 image_data = b"..."  # your image bytes
-mixed_message = ChatMessage(
+mixed_message = Message(
     role="user",
     contents=[
-        TextContent("Analyze this image:"),
-        DataContent(data=image_data, media_type="image/png"),
+        Content.from_text("Analyze this image:"),
+        Content.from_data(data=image_data, media_type="image/png"),
     ]
 )
 
@@ -265,11 +263,11 @@ mixed_message = ChatMessage(
 response = await agent.run("Describe the image")
 for message in response.messages:
     for content in message.contents:
-        if isinstance(content, TextContent):
+        if content.type == "text":
             print(f"Text: {content.text}")
-        elif isinstance(content, DataContent):
+        elif content.type == "data":
             print(f"Data URI: {content.uri}")
-        elif isinstance(content, UriContent):
+        elif content.type == "uri":
             print(f"External URI: {content.uri}")
 ```
 
@@ -279,4 +277,4 @@ for message in response.messages:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Multi-Turn Conversations and Threading](./multi-turn-conversation.md)
+> [Multi-Turn Conversations](./multi-turn-conversation.md)

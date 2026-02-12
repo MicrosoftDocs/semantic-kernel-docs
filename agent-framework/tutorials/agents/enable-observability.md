@@ -179,11 +179,11 @@ configure_otel_providers()
 Create an agent using Agent Framework. Observability is automatically enabled once `configure_otel_providers()` has been called.
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 # Create the agent - telemetry is automatically enabled
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     name="Joker",
     instructions="You are good at telling jokes."
@@ -240,7 +240,7 @@ For custom agents not created through Foundry, you can register them in the Foun
 
 ```python
 from azure.monitor.opentelemetry import configure_azure_monitor
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.observability import create_resource, enable_instrumentation
 from agent_framework.openai import OpenAIChatClient
 
@@ -254,7 +254,7 @@ configure_azure_monitor(
 enable_instrumentation()
 
 # Create your agent with the same OpenTelemetry agent ID as registered in Foundry
-agent = ChatAgent(
+agent = Agent(
     chat_client=OpenAIChatClient(),
     name="My Agent",
     instructions="You are a helpful assistant.",

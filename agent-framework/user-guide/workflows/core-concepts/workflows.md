@@ -42,7 +42,7 @@ var workflow = builder.Build<string>(); // Specify input message type
 
 ::: zone pivot="programming-language-python"
 
-Workflows are constructed using the `WorkflowBuilder` class, which provides a fluent API for defining the workflow structure:
+Workflows are constructed using the `WorkflowBuilder` class:
 
 ```python
 from agent_framework import WorkflowBuilder
@@ -52,8 +52,7 @@ validator = Validator()
 formatter = Formatter()
 
 # Build workflow
-builder = WorkflowBuilder()
-builder.set_start_executor(processor)  # Set starting executor
+builder = WorkflowBuilder(start_executor=processor)
 builder.add_edge(processor, validator)
 builder.add_edge(validator, formatter)
 workflow = builder.build()
@@ -101,11 +100,9 @@ foreach (WorkflowEvent evt in result.NewEvents)
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework import WorkflowOutputEvent
-
 # Streaming execution - get events as they happen
 async for event in workflow.run_stream(input_message):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         print(f"Workflow completed: {event.data}")
 
 # Non-streaming execution - wait for completion

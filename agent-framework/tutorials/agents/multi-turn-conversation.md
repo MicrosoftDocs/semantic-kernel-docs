@@ -27,37 +27,37 @@ For prerequisites and creating the agent, see the [Create and run a simple agent
 Agents are stateless and do not maintain any state internally between calls.
 To have a multi-turn conversation with an agent, you need to create an object to hold the conversation state and pass this object to the agent when running it.
 
-To create the conversation state object, call the `GetNewThreadAsync` method on the agent instance.
+To create the conversation state object, call the `CreateSessionAsync` method on the agent instance.
 
 ```csharp
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.CreateSessionAsync();
 ```
 
-You can then pass this thread object to the `RunAsync` and `RunStreamingAsync` methods on the agent instance, along with the user input.
+You can then pass this session object to the `RunAsync` and `RunStreamingAsync` methods on the agent instance, along with the user input.
 
 ```csharp
-Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread));
-Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell it in the voice of a pirate's parrot.", thread));
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", session));
+Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell it in the voice of a pirate's parrot.", session));
 ```
 
 This will maintain the conversation state between the calls, and the agent will be able to refer to previous input and response messages in the conversation when responding to new input.
 
 > [!IMPORTANT]
-> The type of service that is used by the `AIAgent` will determine how conversation history is stored. For example, when using a ChatCompletion service, like in this example, the conversation history is stored in the AgentThread object and sent to the service on each call. When using the Azure AI Agent service on the other hand, the conversation history is stored in the Azure AI Agent service and only a reference to the conversation is sent to the service on each call.
+> The type of service that is used by the `AIAgent` will determine how chat history is stored. For example, when using a ChatCompletion service, like in this example, the chat history is stored in the AgentSession object and sent to the service on each call. When using the Azure AI Agent service on the other hand, the chat history is stored in the Azure AI Agent service and only a reference to the chat history is sent to the service on each call.
 
 ## Single agent with multiple conversations
 
-It is possible to have multiple, independent conversations with the same agent instance, by creating multiple `AgentThread` objects.
-These threads can then be used to maintain separate conversation states for each conversation.
+It is possible to have multiple, independent conversations with the same agent instance, by creating multiple `AgentSession` objects.
+These sessions can then be used to maintain separate conversation states for each conversation.
 The conversations will be fully independent of each other, since the agent does not maintain any state internally.
 
 ```csharp
-AgentThread thread1 = await agent.GetNewThreadAsync();
-AgentThread thread2 = await agent.GetNewThreadAsync();
-Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", thread1));
-Console.WriteLine(await agent.RunAsync("Tell me a joke about a robot.", thread2));
-Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell it in the voice of a pirate's parrot.", thread1));
-Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell it in the voice of a robot.", thread2));
+AgentSession session1 = await agent.CreateSessionAsync();
+AgentSession session2 = await agent.CreateSessionAsync();
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", session1));
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a robot.", session2));
+Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell it in the voice of a pirate's parrot.", session1));
+Console.WriteLine(await agent.RunAsync("Now add some emojis to the joke and tell it in the voice of a robot.", session2));
 ```
 
 ::: zone-end

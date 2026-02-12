@@ -80,7 +80,7 @@ from azure.identity import AzureCliCredential
 
 # Create the agents first
 chat_client = AzureChatClient(credential=AzureCliCredential())
-writer_agent: ChatAgent = chat_client.as_agent(
+writer_agent: Agent = chat_client.as_agent(
     instructions=(
         "You are an excellent content writer. You create new content and edit contents based on the feedback."
     ),
@@ -96,8 +96,7 @@ reviewer_agent = chat_client.as_agent(
 )
 
 # Build a workflow with the agents
-builder = WorkflowBuilder()
-builder.set_start_executor(writer_agent)
+builder = WorkflowBuilder(start_executor=writer_agent)
 builder.add_edge(writer_agent, reviewer_agent)
 workflow = builder.build()
 ```
@@ -107,8 +106,8 @@ workflow = builder.build()
 Inside the workflow created above, the agents are actually wrapped inside an executor that handles the communication of the agent with other parts of the workflow. The executor can handle three message types:
 
 - `str`: A single chat message in string format
-- `ChatMessage`: A single chat message
-- `List<ChatMessage>`: A list of chat messages
+- `Message`: A single chat message
+- `List<Message>`: A list of chat messages
 
 Whenever the executor receives a message of one of these types, it will trigger the agent to respond, and the response type will be an `AgentExecutorResponse` object. This class contains useful information about the agent's response, including:
 
@@ -116,17 +115,19 @@ Whenever the executor receives a message of one of these types, it will trigger 
 - `agent_run_response`: The full response from the agent
 - `full_conversation`: The full conversation history up to this point
 
-Two possible event type related to the agents' responses can be emitted when running the workflow:
+Agent executors emit output events (type `"output"`) containing agent responses:
 
-- `AgentResponseUpdateEvent` containing chunks of the agent's response as they are generated in streaming mode.
-- `AgentRunEvent` containing the full response from the agent in non-streaming mode.
+- In streaming mode, the event's `.data` contains `AgentResponseUpdate` chunks as they are generated.
+- In non-streaming mode, the event's `.data` contains the full `AgentResponse`.
 
 > By default, agents are wrapped in executors that run in streaming mode. You can customize this behavior by creating a custom executor. See the next section for more details.
 
 ```python
+from agent_framework import AgentResponseUpdate
+
 last_executor_id = None
-async for event in workflow.run_streaming("Write a short blog post about AI agents."):
-    if isinstance(event, AgentResponseUpdateEvent):
+async for event in workflow.run_stream("Write a short blog post about AI agents."):
+    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
         if event.executor_id != last_executor_id:
             if last_executor_id is not None:
                 print()
@@ -144,14 +145,14 @@ Sometimes you might want to customize how AI agents are integrated into a workfl
 - The invocation of the agent: streaming or non-streaming
 - The message types the agent will handle, including custom message types
 - The life cycle of the agent, including initialization and cleanup
-- The usage of agent threads and other resources
+- The usage of agent sessions and other resources
 - Additional events emitted during the agent's execution, including custom events
-- Integration with other workflow features, such as shared states and requests/responses
+- Integration with other workflow features, such as state and requests/responses
 
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-internal sealed class CustomAgentExecutor : Executor<CustomInput, CustomOutput>("CustomAgentExecutor")
+internal sealed partial class CustomAgentExecutor : Executor
 {
     private readonly AIAgent _agent;
 
@@ -164,7 +165,8 @@ internal sealed class CustomAgentExecutor : Executor<CustomInput, CustomOutput>(
         this._agent = agent;
     }
 
-    public async ValueTask<CustomOutput> HandleAsync(CustomInput message, IWorkflowContext context)
+    [MessageHandler]
+    private async ValueTask<CustomOutput> HandleAsync(CustomInput message, IWorkflowContext context)
     {
         // Retrieve any shared states if needed
         var sharedState = await context.ReadStateAsync<SharedStateType>("sharedStateId", scopeName: "SharedStateScope");
@@ -188,8 +190,8 @@ internal sealed class CustomAgentExecutor : Executor<CustomInput, CustomOutput>(
 
 ```python
 from agent_framework import (
-    ChatAgent,
-    ChatMessage,
+    Agent,
+    Message,
     Executor,
     WorkflowContext,
     handler
@@ -197,7 +199,7 @@ from agent_framework import (
 
 class Writer(Executor):
 
-    agent: ChatAgent
+    agent: Agent
 
     def __init__(self, chat_client: AzureChatClient, id: str = "writer"):
         # Create a domain specific agent using your configured AzureChatClient.
@@ -210,10 +212,10 @@ class Writer(Executor):
         super().__init__(agent=agent, id=id)
 
     @handler
-    async def handle(self, message: ChatMessage, ctx: WorkflowContext[list[ChatMessage]]) -> None:
+    async def handle(self, message: Message, ctx: WorkflowContext[list[Message]]) -> None:
         """Handles a single chat message and forwards the accumulated messages to the next executor in the workflow."""
         # Invoke the agent with the incoming message and get the response
-        messages: list[ChatMessage] = [message]
+        messages: list[Message] = [message]
         response = await self.agent.run(messages)
         # Accumulate messages and send them to the next executor in the workflow.
         messages.extend(response.messages)
@@ -226,7 +228,7 @@ class Writer(Executor):
 
 - [Learn how to use workflows as agents](./as-agents.md).
 - [Learn how to handle requests and responses](./requests-and-responses.md) in workflows.
-- [Learn how to manage state](./shared-states.md) in workflows.
+- [Learn how to manage state](./state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
 - [Learn how to monitor workflows](./observability.md).
 - [Learn about state isolation in workflows](./state-isolation.md).

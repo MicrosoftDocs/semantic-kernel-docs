@@ -251,12 +251,12 @@ Azure OpenAI Responses agents support code execution through the hosted code int
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, HostedCodeInterpreterTool
+from agent_framework import Agent, HostedCodeInterpreterTool
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
 async def main():
-    async with ChatAgent(
+    async with Agent(
         chat_client=AzureOpenAIResponsesClient(credential=AzureCliCredential()),
         instructions="You are a helpful assistant that can write and execute Python code.",
         tools=HostedCodeInterpreterTool()
@@ -275,7 +275,7 @@ For data analysis tasks, you can upload files and analyze them with code:
 import asyncio
 import os
 import tempfile
-from agent_framework import ChatAgent, HostedCodeInterpreterTool
+from agent_framework import Agent, HostedCodeInterpreterTool
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 from openai import AsyncAzureOpenAI
@@ -335,7 +335,7 @@ async def main():
     temp_file_path, file_id = await create_sample_file_and_upload(openai_client)
 
     # Create agent using Azure OpenAI Responses client
-    async with ChatAgent(
+    async with Agent(
         chat_client=AzureOpenAIResponsesClient(credential=credential),
         instructions="You are a helpful assistant that can analyze data files using Python code.",
         tools=HostedCodeInterpreterTool(inputs=[{"file_id": file_id}]),
@@ -357,7 +357,7 @@ Enable your agent to search through uploaded documents and files:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, HostedFileSearchTool, HostedVectorStoreContent
+from agent_framework import Agent, HostedFileSearchTool, HostedVectorStoreContent
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
@@ -393,7 +393,7 @@ async def main():
 
     file_id, vector_store = await create_vector_store(client)
 
-    async with ChatAgent(
+    async with Agent(
         chat_client=client,
         instructions="You are a helpful assistant that can search through files to find information.",
         tools=[HostedFileSearchTool(inputs=vector_store)],
@@ -416,7 +416,7 @@ Connect to local MCP servers for extended capabilities:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, MCPStreamableHTTPTool
+from agent_framework import Agent, MCPStreamableHTTPTool
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
@@ -455,7 +455,7 @@ Use hosted MCP tools with approval workflows:
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, HostedMCPTool
+from agent_framework import Agent, HostedMCPTool
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
@@ -463,7 +463,7 @@ async def main():
     """Example showing hosted MCP tools without approvals."""
     credential = AzureCliCredential()
     
-    async with ChatAgent(
+    async with Agent(
         chat_client=AzureOpenAIResponsesClient(credential=credential),
         name="DocsAgent",
         instructions="You are a helpful assistant that can help with microsoft documentation questions.",
@@ -497,7 +497,7 @@ Azure OpenAI Responses agents support multimodal interactions including image an
 
 ```python
 import asyncio
-from agent_framework import ChatMessage, TextContent, UriContent
+from agent_framework import Message, Content
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
@@ -511,11 +511,11 @@ async def main():
     )
 
     # Create a message with both text and image content
-    user_message = ChatMessage(
+    user_message = Message(
         role="user",
         contents=[
-            TextContent(text="What do you see in this image?"),
-            UriContent(
+            Content.from_text(text="What do you see in this image?"),
+            Content.from_uri(
                 uri="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
                 media_type="image/jpeg",
             ),

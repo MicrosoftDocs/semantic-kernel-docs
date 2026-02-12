@@ -187,9 +187,9 @@ DevUI maps Agent Framework events to OpenAI Responses API events. The table belo
 
 | OpenAI Event | Agent Framework Event |
 |--------------|----------------------|
-| `response.output_item.added` (ExecutorActionItem) | `ExecutorInvokedEvent` |
-| `response.output_item.done` (ExecutorActionItem) | `ExecutorCompletedEvent` |
-| `response.output_item.added` (ResponseOutputMessage) | `WorkflowOutputEvent` |
+| `response.output_item.added` (ExecutorActionItem) | `WorkflowEvent` with `type="executor_invoked"` |
+| `response.output_item.done` (ExecutorActionItem) | `WorkflowEvent` with `type="executor_completed"` |
+| `response.output_item.added` (ResponseOutputMessage) | `WorkflowEvent` with `type="output"` |
 
 ### DevUI Custom Extensions
 

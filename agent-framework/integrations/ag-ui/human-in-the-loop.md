@@ -116,10 +116,10 @@ var jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.
 
 var agent = baseAgent
     .AsBuilder()
-    .Use(runFunc: null, runStreamingFunc: (messages, thread, options, innerAgent, cancellationToken) =>
+    .Use(runFunc: null, runStreamingFunc: (messages, session, options, innerAgent, cancellationToken) =>
         HandleApprovalRequestsMiddleware(
             messages,
-            thread,
+            session,
             options,
             innerAgent,
             jsonOptions.SerializerOptions,
@@ -128,7 +128,7 @@ var agent = baseAgent
 
 static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     JsonSerializerOptions jsonSerializerOptions,
@@ -139,7 +139,7 @@ static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsMiddlew
 
     // Invoke inner agent
     await foreach (var update in innerAgent.RunStreamingAsync(
-        modifiedMessages, thread, options, cancellationToken))
+        modifiedMessages, session, options, cancellationToken))
     {
         // Process updates: Convert approval requests to client tool calls
         await foreach (var processedUpdate in ConvertFunctionApprovalsToToolCalls(update, jsonSerializerOptions))
@@ -327,10 +327,10 @@ var jsonSerializerOptions = JsonSerializerOptions.Default;
 // Wrap the agent with approval middleware
 var wrappedAgent = agent
     .AsBuilder()
-    .Use(runFunc: null, runStreamingFunc: (messages, thread, options, innerAgent, cancellationToken) =>
+    .Use(runFunc: null, runStreamingFunc: (messages, session, options, innerAgent, cancellationToken) =>
         HandleApprovalRequestsClientMiddleware(
             messages,
-            thread,
+            session,
             options,
             innerAgent,
             jsonSerializerOptions,
@@ -339,7 +339,7 @@ var wrappedAgent = agent
 
 static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsClientMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     JsonSerializerOptions jsonSerializerOptions,
@@ -349,7 +349,7 @@ static async IAsyncEnumerable<AgentResponseUpdate> HandleApprovalRequestsClientM
     var processedMessages = ConvertApprovalResponsesToToolResults(messages, jsonSerializerOptions);
 
     // Invoke inner agent
-    await foreach (var update in innerAgent.RunStreamingAsync(processedMessages, thread, options, cancellationToken))
+    await foreach (var update in innerAgent.RunStreamingAsync(processedMessages, session, options, cancellationToken))
     {
         // Process updates: Convert tool calls to approval requests
         await foreach (var processedUpdate in ConvertToolCallsToApprovalRequests(update, jsonSerializerOptions))
@@ -491,7 +491,7 @@ do
     approvalToolCalls.Clear();
     
     await foreach (AgentResponseUpdate update in wrappedAgent.RunStreamingAsync(
-        messages, thread, cancellationToken: cancellationToken))
+        messages, session, cancellationToken: cancellationToken))
     {
         foreach (AIContent content in update.Contents)
         {
@@ -667,15 +667,15 @@ Human-in-the-Loop (HITL) is a pattern where the agent requests user approval bef
 
 ## Marking Tools for Approval
 
-To require approval for a tool, use the `approval_mode` parameter in the `@ai_function` decorator:
+To require approval for a tool, use the `approval_mode` parameter in the `@tool` decorator:
 
 ```python
-from agent_framework import ai_function
+from agent_framework import tool
 from typing import Annotated
 from pydantic import Field
 
 
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def send_email(
     to: Annotated[str, Field(description="Email recipient address")],
     subject: Annotated[str, Field(description="Email subject line")],
@@ -686,7 +686,7 @@ def send_email(
     return f"Email sent to {to} with subject '{subject}'"
 
 
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def delete_file(
     filepath: Annotated[str, Field(description="Path to the file to delete")],
 ) -> str:
@@ -711,7 +711,7 @@ Here's a complete server implementation with approval-required tools:
 import os
 from typing import Annotated
 
-from agent_framework import ChatAgent, ai_function
+from agent_framework import Agent, tool
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import AgentFrameworkAgent, add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -720,7 +720,7 @@ from pydantic import Field
 
 
 # Tools that require approval
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def transfer_money(
     from_account: Annotated[str, Field(description="Source account number")],
     to_account: Annotated[str, Field(description="Destination account number")],
@@ -731,7 +731,7 @@ def transfer_money(
     return f"Transferred {amount} {currency} from {from_account} to {to_account}"
 
 
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def cancel_subscription(
     subscription_id: Annotated[str, Field(description="Subscription identifier")],
 ) -> str:
@@ -740,7 +740,7 @@ def cancel_subscription(
 
 
 # Regular tools (no approval required)
-@ai_function
+@tool
 def check_balance(
     account: Annotated[str, Field(description="Account number")],
 ) -> str:
@@ -765,7 +765,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="BankingAssistant",
     instructions="You are a banking assistant. Help users with their banking needs. Always confirm details before performing transfers.",
     chat_client=chat_client,
@@ -850,7 +850,7 @@ Here's a client using `AGUIChatClient` that handles approval requests:
 import asyncio
 import os
 
-from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework import Agent, ToolCallContent, ToolResultContent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -881,7 +881,7 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
     
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
@@ -1041,7 +1041,7 @@ wrapped_agent = AgentFrameworkAgent(
 Provide detailed descriptions so users understand what they're approving:
 
 ```python
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def delete_database(
     database_name: Annotated[str, Field(description="Name of the database to permanently delete")],
 ) -> str:
@@ -1061,7 +1061,7 @@ Request approval for individual sensitive actions rather than batching:
 
 ```python
 # Good: Individual approval per transfer
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def transfer_money(...): pass
 
 # Avoid: Batching multiple sensitive operations
@@ -1073,7 +1073,7 @@ def transfer_money(...): pass
 Use descriptive parameter names and provide context:
 
 ```python
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def purchase_item(
     item_name: Annotated[str, Field(description="Name of the item to purchase")],
     quantity: Annotated[int, Field(description="Number of items to purchase")],
@@ -1101,17 +1101,17 @@ You can mix tools that require approval with those that don't:
 
 ```python
 # No approval needed for read-only operations
-@ai_function
+@tool
 def get_account_balance(...): pass
 
-@ai_function
+@tool
 def list_transactions(...): pass
 
 # Approval required for write operations
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def transfer_funds(...): pass
 
-@ai_function(approval_mode="always_require")
+@tool(approval_mode="always_require")
 def close_account(...): pass
 ```
 

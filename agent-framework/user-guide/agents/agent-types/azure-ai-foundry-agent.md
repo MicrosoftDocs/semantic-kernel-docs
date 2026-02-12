@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Azure AI Foundry Agents
 
-Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service. You can create persistent service-based agent instances with service-managed conversation threads.
+Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service. You can create persistent service-based agent instances with service-managed chat history.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -182,14 +182,14 @@ If you have an existing agent in Azure AI Foundry, you can use it by providing i
 
 ```python
 import asyncio
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
-        ChatAgent(
+        Agent(
             chat_client=AzureAIAgentClient(
                 async_credential=credential,
                 agent_id="<existing-agent-id>"
@@ -210,7 +210,7 @@ For more control over agent lifecycle, you can create persistent agents using th
 ```python
 import asyncio
 import os
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.projects.aio import AIProjectClient
 from azure.identity.aio import AzureCliCredential
@@ -232,7 +232,7 @@ async def main():
 
         try:
             # Use the agent
-            async with ChatAgent(
+            async with Agent(
                 chat_client=AzureAIAgentClient(
                     project_client=project_client,
                     agent_id=created_agent.id

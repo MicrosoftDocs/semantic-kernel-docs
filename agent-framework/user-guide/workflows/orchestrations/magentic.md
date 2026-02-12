@@ -11,6 +11,14 @@ ms.service: agent-framework
 
 # Microsoft Agent Framework Workflows Orchestrations - Magentic
 
+::: zone pivot="programming-language-csharp"
+
+Magentic Orchestration is not yet supported in C#.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
 Magentic orchestration is designed based on the [Magentic-One](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/magentic-one.html) system invented by AutoGen. It is a flexible, general-purpose multi-agent pattern designed for complex, open-ended tasks that require dynamic collaboration. In this pattern, a dedicated Magentic manager coordinates a team of specialized agents, selecting which agent should act next based on the evolving context, task progress, and agent capabilities.
 
 The Magentic manager maintains a shared context, tracks progress, and adapts the workflow in real time. This enables the system to break down complex problems, delegate subtasks, and iteratively refine solutions through agent collaboration. The orchestration is especially well-suited for scenarios where the solution path is not known in advance and might require multiple rounds of reasoning, research, and computation.
@@ -20,7 +28,7 @@ The Magentic manager maintains a shared context, tracks progress, and adapts the
 </p>
 
 > [!TIP]
-> The Magentic orchestration has the same archetecture as the [Group Chat orchestration](./group-chat.md) pattern, with a very powerful manager that uses planning to coordinate agent collaboration. If your scenario requires simpler coordination without complex planning, consider using the Group Chat pattern instead.
+> The Magentic orchestration has the same architecture as the [Group Chat orchestration](./group-chat.md) pattern, with a very powerful manager that uses planning to coordinate agent collaboration. If your scenario requires simpler coordination without complex planning, consider using the Group Chat pattern instead.
 
 > [!NOTE]
 > In the [Magentic-One](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/magentic-one.html) paper, 4 highly specialized agents are designed to solve a very specific set of tasks. In the Magentic orchestration in Agent Framework, you can define your own specialized agents to suit your specific application needs. However, it is untested how well the Magentic orchestration will perform outside of the original Magentic-One design.
@@ -28,27 +36,19 @@ The Magentic manager maintains a shared context, tracks progress, and adapts the
 ## What You'll Learn
 
 - How to set up a Magentic manager to coordinate multiple specialized agents
-- How to handle streaming events with `AgentRunUpdateEvent`
+- How to handle streaming events with `WorkflowOutputEvent`
 - How to implement human-in-the-loop plan review
 - How to track agent collaboration and progress through complex tasks
 
 ## Define Your Specialized Agents
 
-::: zone pivot="programming-language-csharp"
-
-Coming soon...
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-
 In Magentic orchestration, you define specialized agents that the manager can dynamically select based on task requirements:
 
 ```python
-from agent_framework import ChatAgent, HostedCodeInterpreterTool
+from agent_framework import Agent, HostedCodeInterpreterTool
 from agent_framework.openai import OpenAIChatClient, OpenAIResponsesClient
 
-researcher_agent = ChatAgent(
+researcher_agent = Agent(
     name="ResearcherAgent",
     description="Specialist in research and information gathering",
     instructions=(
@@ -58,7 +58,7 @@ researcher_agent = ChatAgent(
     chat_client=OpenAIChatClient(model_id="gpt-4o-search-preview"),
 )
 
-coder_agent = ChatAgent(
+coder_agent = Agent(
     name="CoderAgent",
     description="A helpful assistant that writes and executes code to process and analyze data.",
     instructions="You solve questions using code. Please provide detailed analysis and computation process.",
@@ -67,7 +67,7 @@ coder_agent = ChatAgent(
 )
 
 # Create a manager agent for orchestration
-manager_agent = ChatAgent(
+manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator that coordinates the research and coding workflow",
     instructions="You coordinate a team to complete complex tasks efficiently.",
@@ -77,26 +77,22 @@ manager_agent = ChatAgent(
 
 ## Build the Magentic Workflow
 
-Use `MagenticBuilder` to configure the workflow with a standard manager:
+Use `MagenticBuilder` to configure the workflow with a standard manager(`StandardMagenticManager`):
 
 ```python
-from agent_framework import MagenticBuilder
+from agent_framework.orchestrations import MagenticBuilder
 
-workflow = (
-    MagenticBuilder()
-    .participants([researcher_agent, coder_agent])
-    .with_standard_manager(
-        agent=manager_agent,
-        max_round_count=10,
-        max_stall_count=3,
-        max_reset_count=2,
-    )
-    .build()
-)
+workflow = MagenticBuilder(
+    participants=[researcher_agent, coder_agent],
+    manager_agent=manager_agent,
+    max_round_count=10,
+    max_stall_count=3,
+    max_reset_count=2,
+).build()
 ```
 
 > [!TIP]
-> A standard manager is implemented based on the Magentic-One design, with fixed prompts taken from the original paper. You can customize the manager's behavior by passing in your own prompts to `with_standard_manager()`. To further customize the manager, you can also implement your own manager by sub classing the `MagenticManagerBase` class.
+> A standard manager is implemented based on the Magentic-One design, with fixed prompts taken from the original paper. You can customize the manager's behavior by passing in your own prompts via the `MagenticBuilder` constructor parameters. To further customize the manager, you can also implement your own manager by sub classing the `MagenticManagerBase` class.
 
 ## Run the Workflow with Event Streaming
 
@@ -108,12 +104,11 @@ import asyncio
 from typing import cast
 
 from agent_framework import (
-    AgentRunUpdateEvent,
-    ChatMessage,
-    MagenticOrchestratorEvent,
-    MagenticProgressLedger,
-    WorkflowOutputEvent,
+    AgentResponseUpdate,
+    Message,
+    WorkflowEvent,
 )
+from agent_framework.orchestrations import MagenticProgressLedger
 
 task = (
     "I am preparing a report on the energy efficiency of different machine learning model architectures. "
@@ -126,9 +121,9 @@ task = (
 
 # Keep track of the last executor to format output nicely in streaming mode
 last_message_id: str | None = None
-output_event: WorkflowOutputEvent | None = None
+output_event: WorkflowEvent | None = None
 async for event in workflow.run_stream(task):
-    if isinstance(event, AgentRunUpdateEvent):
+    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
         message_id = event.data.message_id
         if message_id != last_message_id:
             if last_message_id is not None:
@@ -137,24 +132,24 @@ async for event in workflow.run_stream(task):
             last_message_id = message_id
         print(event.data, end="", flush=True)
 
-    elif isinstance(event, MagenticOrchestratorEvent):
-        print(f"\n[Magentic Orchestrator Event] Type: {event.event_type.name}")
-        if isinstance(event.data, MagenticProgressLedger):
-            print(f"Please review progress ledger:\n{json.dumps(event.data.to_dict(), indent=2)}")
+    elif event.type == "magentic_orchestrator":
+        print(f"\n[Magentic Orchestrator Event] Type: {event.data.event_type.name}")
+        if isinstance(event.data.content, MagenticProgressLedger):
+            print(f"Please review progress ledger:\n{json.dumps(event.data.content.to_dict(), indent=2)}")
         else:
-            print(f"Unknown data type in MagenticOrchestratorEvent: {type(event.data)}")
+            print(f"Unknown data type in MagenticOrchestratorEvent: {type(event.data.content)}")
 
         # Block to allow user to read the plan/progress before continuing
         # Note: this is for demonstration only and is not the recommended way to handle human interaction.
         # Please refer to `with_plan_review` for proper human interaction during planning phases.
         await asyncio.get_event_loop().run_in_executor(None, input, "Press Enter to continue...")
 
-    elif isinstance(event, WorkflowOutputEvent):
+    elif event.type == "output":
         output_event = event
 
 # The output of the Magentic workflow is a list of ChatMessages with only one final message
 # generated by the orchestrator.
-output_messages = cast(list[ChatMessage], output_event.data)
+output_messages = cast(list[Message], output_event.data)
 output = output_messages[-1].text
 print(output)
 ```
@@ -168,42 +163,37 @@ There are two options for plan review:
 1. **Revise**: The user can provide feedback to revise the plan, which will trigger the manage to replan based on the feedback.
 2. **Approve**: The user can approve the plan as-is, allowing the workflow to proceed.
 
-Enaable plan review simply by adding `.with_plan_review()` when building the Magentic workflow:
+Enable plan review by passing `enable_plan_review=True` when building the Magentic workflow:
 
 ```python
 from agent_framework import (
-    AgentRunUpdateEvent,
-    ChatAgent,
-    ChatMessage,
-    MagenticBuilder,
+    AgentResponseUpdate,
+    Agent,
+    Message,
     MagenticPlanReviewRequest,
-    RequestInfoEvent,
-    WorkflowOutputEvent,
+    WorkflowEvent,
 )
+from agent_framework.orchestrations import MagenticBuilder
 
-workflow = (
-    MagenticBuilder()
-    .participants([researcher_agent, analyst_agent])
-    .with_standard_manager(
-        agent=manager_agent,
-        max_round_count=10,
-        max_stall_count=1,
-        max_reset_count=2,
-    )
-    .with_plan_review()  # Request human input for plan review
-    .build()
-)
+workflow = MagenticBuilder(
+    participants=[researcher_agent, analyst_agent],
+    enable_plan_review=True,
+    manager_agent=manager_agent,
+    max_round_count=10,
+    max_stall_count=1,
+    max_reset_count=2,
+).build()
 ```
 
-Plan review requests are emitted as `RequestInfoEvent` with `MagenticPlanReviewRequest` data. You can handle these requests in the event stream:
+Plan review requests are emitted as `WorkflowEvent` with `type="request_info"` and `MagenticPlanReviewRequest` data. You can handle these requests in the event stream:
 
 > [!TIP]
 > Learn more about requests and responses in the [Requests and Responses](../requests-and-responses.md) guide.
 
 ```python
-pending_request: RequestInfoEvent | None = None
+pending_request: WorkflowEvent | None = None
 pending_responses: dict[str, MagenticPlanReviewResponse] | None = None
-output_event: WorkflowOutputEvent | None = None
+output_event: WorkflowEvent | None = None
 
 while not output_event:
     if pending_responses is not None:
@@ -213,7 +203,7 @@ while not output_event:
 
     last_message_id: str | None = None
     async for event in stream:
-        if isinstance(event, AgentRunUpdateEvent):
+        if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
             message_id = event.data.message_id
             if message_id != last_message_id:
                 if last_message_id is not None:
@@ -222,10 +212,10 @@ while not output_event:
                 last_message_id = message_id
             print(event.data, end="", flush=True)
 
-        elif isinstance(event, RequestInfoEvent) and event.request_type is MagenticPlanReviewRequest:
+        elif event.type == "request_info" and event.request_type is MagenticPlanReviewRequest:
             pending_request = event
 
-        elif isinstance(event, WorkflowOutputEvent):
+        elif event.type == "output":
             output_event = event
 
     pending_responses = None

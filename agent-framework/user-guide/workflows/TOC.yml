@@ -10,8 +10,8 @@
   href: as-agents.md
 - name: Requests and Responses
   href: requests-and-responses.md
-- name: Shared States
-  href: shared-states.md
+- name: State
+  href: state.md
 - name: Checkpoints
   href: checkpoints.md
 - name: Observability

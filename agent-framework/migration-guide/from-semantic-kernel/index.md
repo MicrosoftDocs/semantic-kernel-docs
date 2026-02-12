@@ -84,7 +84,7 @@ Additionally, for hosted agent providers you can also use the `GetAIAgent` metho
 AIAgent azureFoundryAgent = await persistentAgentsClient.GetAIAgentAsync(agentId);
 ```
 
-## 3. Agent Thread Creation
+## 3. Agent Thread/Session Creation
 
 ### Semantic Kernel
 
@@ -99,14 +99,14 @@ AgentThread thread = new OpenAIResponseAgentThread(this.Client);
 
 ### Agent Framework
 
-The agent is responsible for creating the thread.
+The agent is responsible for creating the session.
 
 ```csharp
 // New.
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.CreateSessionAsync();
 ```
 
-## 4. Hosted Agent Thread Cleanup
+## 4. Hosted Agent Thread/Session Cleanup
 
 This case applies exclusively to a few AI providers that still provide hosted threads.
 
@@ -123,16 +123,16 @@ await thread.DeleteAsync();
 ### Agent Framework
 
 > [!NOTE]
-> OpenAI Responses introduced a new conversation model that simplifies how conversations are handled. This change simplifies hosted thread management compared to the now deprecated OpenAI Assistants model. For more information, see the [OpenAI Assistants migration guide](https://platform.openai.com/docs/assistants/migration).
+> OpenAI Responses introduced a new conversation model that simplifies how conversations are handled. This change simplifies hosted chat history management compared to the now deprecated OpenAI Assistants model. For more information, see the [OpenAI Assistants migration guide](https://platform.openai.com/docs/assistants/migration).
 
-Agent Framework doesn't have a thread deletion API in the `AgentThread` type as not all providers support hosted threads or thread deletion. This design will become more common as more providers shift to responses-based architectures.
+Agent Framework doesn't have a chat history or session deletion API in the `AgentSession` type as not all providers support hosted chat history or chat history deletion.
 
-If you require thread deletion and the provider allows it, the caller **should** keep track of the created threads and delete them later when necessary via the provider's SDK.
+If you require chat history deletion and the provider allows it, the caller **should** keep track of the created sessions and delete their associated chat hsitory later when necessary via the provider's SDK.
 
 OpenAI Assistants Provider:
 
 ```csharp
-await assistantClient.DeleteThreadAsync(thread.ConversationId);
+await assistantClient.DeleteThreadAsync(session.ConversationId);
 ```
 
 ## 5. Tool Registration
@@ -186,7 +186,7 @@ All messages created as part of the response are returned in the `AgentResponse.
 This might include tool call messages, function results, reasoning updates, and final results.
 
 ```csharp
-AgentResponse agentResponse = await agent.RunAsync(userInput, thread);
+AgentResponse agentResponse = await agent.RunAsync(userInput, session);
 ```
 
 ## 7. Agent Streaming Invocation
@@ -209,7 +209,7 @@ Agent Framework has a similar streaming API pattern, with the key difference bei
 All updates produced by any service underlying the AIAgent are returned. The textual result of the agent is available by concatenating the `AgentResponse.Text` values.
 
 ```csharp
-await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(userInput, thread))
+await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(userInput, session))
 {
     Console.Write(update); // Update is ToString() friendly
 }
@@ -332,7 +332,7 @@ from agent_framework.azure import AzureAIAgentClient
 Many of the most commonly used types are imported directly from `agent_framework`:
 
 ```python
-from agent_framework import ChatMessage, ChatAgent
+from agent_framework import Message, Agent
 ```
 
 ## 2. Agent Type Consolidation
@@ -343,9 +343,9 @@ Semantic Kernel provides specific agent classes for various services, for exampl
 
 ### Agent Framework
 
-In Agent Framework, the majority of agents are built using the `ChatAgent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
+In Agent Framework, the majority of agents are built using the `Agent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
 
-All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `AgentProtocol` (`from agent_framework import AgentProtocol`) interface.
+All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `SupportsAgentRun` (`from agent_framework import SupportsAgentRun`) interface.
 
 ## 3. Agent Creation Simplification
 
@@ -371,9 +371,9 @@ Agent creation in Agent Framework can be done in two ways, directly:
 
 ```python
 from agent_framework.azure import AzureAIAgentClient
-from agent_framework import ChatMessage, ChatAgent
+from agent_framework import Message, Agent
 
-agent = ChatAgent(chat_client=AzureAIAgentClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
+agent = Agent(chat_client=AzureAIAgentClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
 ```
 
 Or, with the convenience methods provided by chat clients:
@@ -487,9 +487,9 @@ Finally, you can use the decorator to further customize the name and description
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function(name="weather_tool", description="Retrieves weather information for any location")
+@tool(name="weather_tool", description="Retrieves weather information for any location")
 def get_weather(location: Annotated[str, "The location to get the weather for."])
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny."
@@ -524,7 +524,7 @@ print("Plugin state:", plugin.state)
 ```
 
 > [!NOTE]
-> The functions within the class can also be decorated with `@ai_function` to customize the name and description of the tools.
+> The functions within the class can also be decorated with `@tool` to customize the name and description of the tools.
 
 This mechanism is also useful for tools that need additional input that cannot be supplied by the LLM, such as connections, secrets, etc.
 
@@ -771,7 +771,7 @@ response = await agent.get_response(user_input, thread=thread, arguments=argumen
 
 **Solution**: Simplified TypedDict-based options in Agent Framework
 
-Agent Framework uses a TypedDict-based options system for `ChatClients` and `ChatAgents`. Options are passed via a single `options` parameter as a typed dictionary, with provider-specific TypedDict classes (like `OpenAIChatOptions`) for full IDE autocomplete and type checking.
+Agent Framework uses a TypedDict-based options system for `ChatClients` and `Agents`. Options are passed via a single `options` parameter as a typed dictionary, with provider-specific TypedDict classes (like `OpenAIChatOptions`) for full IDE autocomplete and type checking.
 
 ```python
 from agent_framework.openai import OpenAIChatClient

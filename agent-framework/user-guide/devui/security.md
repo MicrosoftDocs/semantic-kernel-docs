@@ -150,13 +150,13 @@ Register cleanup hooks to properly close credentials and resources on shutdown:
 
 ```python
 from azure.identity.aio import DefaultAzureCredential
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_devui import register_cleanup, serve
 
 credential = DefaultAzureCredential()
 client = AzureOpenAIChatClient()
-agent = ChatAgent(name="MyAgent", chat_client=client)
+agent = Agent(name="MyAgent", chat_client=client)
 
 # Register cleanup hook - credential will be closed on shutdown
 register_cleanup(agent, credential.close)
@@ -170,7 +170,7 @@ When using MCP (Model Context Protocol) tools with DevUI:
 ```python
 # Correct - DevUI handles cleanup automatically
 mcp_tool = MCPStreamableHTTPTool(url="http://localhost:8011/mcp", chat_client=chat_client)
-agent = ChatAgent(tools=mcp_tool)
+agent = Agent(tools=mcp_tool)
 serve(entities=[agent])
 ```
 

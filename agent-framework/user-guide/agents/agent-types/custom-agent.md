@@ -28,24 +28,24 @@ dotnet add package Microsoft.Agents.AI.Abstractions --prerelease
 
 ## Create a Custom Agent
 
-### The Agent Thread
+### The Agent Session
 
-To create a custom agent you also need a thread, which is used to keep track of the state
+To create a custom agent you also need a session, which is used to keep track of the state
 of a single conversation, including message history, and any other state the agent needs to maintain.
 
-To make it easy to get started, you can inherit from various base classes that implement common thread storage mechanisms.
+To make it easy to get started, you can inherit from various base classes that implement common session storage mechanisms.
 
-1. `InMemoryAgentThread` - stores the chat history in memory and can be serialized to JSON.
-1. `ServiceIdAgentThread` - doesn't store any chat history, but allows you to associate an ID with the thread, under which the chat history can be stored externally.
+1. `InMemoryAgentSession` - stores the chat history in memory and can be serialized to JSON.
+1. `ServiceIdAgentSession` - doesn't store any chat history, but allows you to associate an ID with the session, under which the chat history can be stored externally.
 
-For this example, you'll use the `InMemoryAgentThread` as the base class for the custom thread.
+For this example, you'll use the `InMemoryAgentSession` as the base class for the custom session.
 
 ```csharp
-internal sealed class CustomAgentThread : InMemoryAgentThread
+internal sealed class CustomAgentSession : InMemoryAgentSession
 {
-    internal CustomAgentThread() : base() { }
-    internal CustomAgentThread(JsonElement serializedThreadState, JsonSerializerOptions? jsonSerializerOptions = null)
-        : base(serializedThreadState, jsonSerializerOptions) { }
+    internal CustomAgentSession() : base() { }
+    internal CustomAgentSession(JsonElement serializedSessionState, JsonSerializerOptions? jsonSerializerOptions = null)
+        : base(serializedSessionState, jsonSerializerOptions) { }
 }
 ```
 
@@ -59,20 +59,20 @@ internal sealed class UpperCaseParrotAgent : AIAgent
 }
 ```
 
-### Constructing threads
+### Constructing sessions
 
-Threads are always created via two factory methods on the agent class.
-This allows for the agent to control how threads are created and deserialized.
-Agents can therefore attach any additional state or behaviors needed to the thread when constructed.
+Sessions are always created via two factory methods on the agent class.
+This allows for the agent to control how sessions are created and deserialized.
+Agents can therefore attach any additional state or behaviors needed to the session when constructed.
 
 Two methods are required to be implemented:
 
 ```csharp
-    public override Task<AgentThread> GetNewThreadAsync(CancellationToken cancellationToken = default) 
-        => Task.FromResult<AgentThread>(new CustomAgentThread());
+    public override Task<AgentSession> CreateSessionAsync(CancellationToken cancellationToken = default) 
+        => Task.FromResult<AgentSession>(new CustomAgentSession());
 
-    public override Task<AgentThread> DeserializeThreadAsync(JsonElement serializedThread, JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default)
-        => Task.FromResult<AgentThread>(new CustomAgentThread(serializedThread, jsonSerializerOptions));
+    public override Task<AgentSession> DeserializeSessionAsync(JsonElement serializedSession, JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default)
+        => Task.FromResult<AgentSession>(new CustomAgentSession(serializedSession, jsonSerializerOptions));
 ```
 
 ### Core agent logic
@@ -104,16 +104,28 @@ The input messages are cloned, since various aspects of the input messages have 
 Finally, you need to implement the two core methods that are used to run the agent:
 one for non-streaming and one for streaming.
 
-For both methods, you need to ensure that a thread is provided, and if not, create a new thread.
-The thread can then be updated with the new messages by calling `NotifyThreadOfNewMessagesAsync`.
+For both methods, you need to ensure that a session is provided, and if not, create a new session.
+Messages can be retrieved and passed to the `ChatHistoryProvider` on the session.
 If you don't do this, the user won't be able to have a multi-turn conversation with the agent and each run will be a fresh interaction.
 
 ```csharp
-    public override async Task<AgentResponse> RunAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, CancellationToken cancellationToken = default)
+    public override async Task<AgentResponse> RunAsync(IEnumerable<ChatMessage> messages, AgentSession? session = null, AgentRunOptions? options = null, CancellationToken cancellationToken = default)
     {
-        thread ??= await this.GetNewThreadAsync(cancellationToken);
+        session ??= await this.CreateSessionAsync(cancellationToken);
+
+        // Get existing messages from the store
+        var invokingContext = new ChatHistoryProvider.InvokingContext(messages);
+        var storeMessages = await typedSession.ChatHistoryProvider.InvokingAsync(invokingContext, cancellationToken);
+
         List<ChatMessage> responseMessages = CloneAndToUpperCase(messages, this.DisplayName).ToList();
-        await NotifyThreadOfNewMessagesAsync(thread, messages.Concat(responseMessages), cancellationToken);
+
+        // Notify the session of the input and output messages.
+        var invokedContext = new ChatHistoryProvider.InvokedContext(messages, storeMessages)
+        {
+            ResponseMessages = responseMessages
+        };
+        await typedSession.ChatHistoryProvider.InvokedAsync(invokedContext, cancellationToken);
+
         return new AgentResponse
         {
             AgentId = this.Id,
@@ -122,11 +134,23 @@ If you don't do this, the user won't be able to have a multi-turn conversation w
         };
     }
 
-    public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(IEnumerable<ChatMessage> messages, AgentThread? thread = null, AgentRunOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(IEnumerable<ChatMessage> messages, AgentSession? session = null, AgentRunOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        thread ??= await this.GetNewThreadAsync(cancellationToken);
+        session ??= await this.CreateSessionAsync(cancellationToken);
+
+        // Get existing messages from the store
+        var invokingContext = new ChatHistoryProvider.InvokingContext(messages);
+        var storeMessages = await typedSession.ChatHistoryProvider.InvokingAsync(invokingContext, cancellationToken);
+
         List<ChatMessage> responseMessages = CloneAndToUpperCase(messages, this.DisplayName).ToList();
-        await NotifyThreadOfNewMessagesAsync(thread, messages.Concat(responseMessages), cancellationToken);
+
+        // Notify the session of the input and output messages.
+        var invokedContext = new ChatHistoryProvider.InvokedContext(messages, storeMessages)
+        {
+            ResponseMessages = responseMessages
+        };
+        await typedSession.ChatHistoryProvider.InvokedAsync(invokedContext, cancellationToken);
+
         foreach (var message in responseMessages)
         {
             yield return new AgentResponseUpdate
@@ -168,15 +192,15 @@ pip install agent-framework-core --pre
 
 ### The Agent Protocol
 
-The framework provides the `AgentProtocol` protocol that defines the interface all agents must implement. Custom agents can either implement this protocol directly or extend the `BaseAgent` class for convenience.
+The framework provides the `SupportsAgentRun` protocol that defines the interface all agents must implement. Custom agents can either implement this protocol directly or extend the `BaseAgent` class for convenience.
 
 ```python
-from agent_framework import AgentProtocol, AgentResponse, AgentResponseUpdate, AgentThread, ChatMessage
+from agent_framework import SupportsAgentRun, AgentResponse, AgentResponseUpdate, AgentThread, Message
 from collections.abc import AsyncIterable
 from typing import Any
 
-class MyCustomAgent(AgentProtocol):
-    """A custom agent that implements the AgentProtocol directly."""
+class MyCustomAgent(SupportsAgentRun):
+    """A custom agent that implements the SupportsAgentRun directly."""
 
     @property
     def id(self) -> str:
@@ -185,7 +209,7 @@ class MyCustomAgent(AgentProtocol):
 
     async def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -195,7 +219,7 @@ class MyCustomAgent(AgentProtocol):
 
     def run_stream(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -214,9 +238,9 @@ from agent_framework import (
     AgentResponse,
     AgentResponseUpdate,
     AgentThread,
-    ChatMessage,
+    Message,
+    Content,
     Role,
-    TextContent,
 )
 from collections.abc import AsyncIterable
 from typing import Any
@@ -252,7 +276,7 @@ class EchoAgent(BaseAgent):
 
     async def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -271,9 +295,9 @@ class EchoAgent(BaseAgent):
         normalized_messages = self._normalize_messages(messages)
 
         if not normalized_messages:
-            response_message = ChatMessage(
+            response_message = Message(
                 role=Role.ASSISTANT,
-                contents=[TextContent(text="Hello! I'm a custom echo agent. Send me a message and I'll echo it back.")],
+                contents=[Content.from_text(text="Hello! I'm a custom echo agent. Send me a message and I'll echo it back.")],
             )
         else:
             # For simplicity, echo the last user message
@@ -283,7 +307,7 @@ class EchoAgent(BaseAgent):
             else:
                 echo_text = f"{self.echo_prefix}[Non-text message received]"
 
-            response_message = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text=echo_text)])
+            response_message = Message(role=Role.ASSISTANT, contents=[Content.from_text(text=echo_text)])
 
         # Notify the thread of new messages if provided
         if thread is not None:
@@ -293,7 +317,7 @@ class EchoAgent(BaseAgent):
 
     async def run_stream(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | list[str] | list[Message] | None = None,
         *,
         thread: AgentThread | None = None,
         **kwargs: Any,
@@ -328,7 +352,7 @@ class EchoAgent(BaseAgent):
             chunk_text = f" {word}" if i > 0 else word
 
             yield AgentResponseUpdate(
-                contents=[TextContent(text=chunk_text)],
+                contents=[Content.from_text(text=chunk_text)],
                 role=Role.ASSISTANT,
             )
 
@@ -337,7 +361,7 @@ class EchoAgent(BaseAgent):
 
         # Notify the thread of the complete response if provided
         if thread is not None:
-            complete_response = ChatMessage(role=Role.ASSISTANT, contents=[TextContent(text=response_text)])
+            complete_response = Message(role=Role.ASSISTANT, contents=[Content.from_text(text=response_text)])
             await self._notify_thread_of_new_messages(thread, normalized_messages, complete_response)
 ```
 
