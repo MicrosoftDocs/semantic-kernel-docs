@@ -19,7 +19,7 @@ and [AutoGen](https://github.com/microsoft/autogen) projects, combining their st
 Agent Framework offers two primary categories of capabilities:
 
 - [AI agents](#ai-agents): Individual agents that use LLMs to process user inputs, call tools and MCP servers to perform actions, and generate responses. Agents support model providers including Azure OpenAI, OpenAI, and Azure AI.
-- [Workflows](#workflows): Graph-based workflows that connect multiple agents and functions to perform complex, multi-step tasks. Workflows support type-based routing, nesting, checkpointing, and request/response patterns for human-in-the-loop scenarios.
+- [Workflows](#workflows): Graph-based workflows are the underlying APIs that drive multi-agent orchestrations, connecting multiple agents and functions to perform complex, multi-step tasks. Workflows support type-based routing, nesting, checkpointing, and request/response patterns for human-in-the-loop scenarios.
 
 The framework also provides foundational building
 blocks, including model clients (chat completions and responses), an agent session for state management, context providers for agent memory,
@@ -27,7 +27,7 @@ middleware for intercepting agent actions, and MCP clients for tool integration.
 Together, these components give you the flexibility and power to build
 interactive, robust, and safe AI applications.
 
-## Why another agent framework?
+## Why Microsoft Agent Framework?
 
 [Semantic Kernel](https://github.com/microsoft/semantic-kernel)
 and [AutoGen](https://github.com/microsoft/autogen) pioneered the concepts of AI agents and multi-agent orchestration.
