@@ -237,13 +237,13 @@ from agent_framework import AgentContext
 
 async def logging_agent_middleware(
     context: AgentContext,
-    call_next: Callable[[], Awaitable[None]],
+    call_next: Callable[[AgentContext], Awaitable[None]],
 ) -> None:
     """Simple middleware that logs agent execution."""
     print("Agent starting...")
 
     # Continue to agent execution
-    await call_next()
+    await call_next(context)
 
     print("Agent finished!")
 ```
@@ -279,12 +279,12 @@ def get_time():
 
 async def logging_function_middleware(
     context: FunctionInvocationContext,
-    call_next: Callable[[], Awaitable[None]],
+    call_next: Callable[[FunctionInvocationContext], Awaitable[None]],
 ) -> None:
     """Middleware that logs function calls."""
     print(f"Calling function: {context.function.name}")
 
-    await call_next()
+    await call_next(context)
 
     print(f"Function result: {context.result}")
 
