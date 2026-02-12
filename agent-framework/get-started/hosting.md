@@ -22,6 +22,8 @@ Once you've built your agent, you need to host it so users and other agents can 
 | [Azure Functions (Durable)](../integrations/azure-functions.md) | Run agents as durable Azure Functions | Serverless, long-running tasks |
 | [AG-UI Protocol](../integrations/ag-ui/index.md) | Build web-based AI agent applications | Web frontends |
 
+:::zone pivot="programming-language-csharp"
+
 ## Hosting in ASP.NET Core
 
 The Agent Framework provides hosting libraries that enable you to integrate AI agents into ASP.NET Core applications. These libraries simplify registering, configuring, and exposing agents through various protocols.
@@ -103,8 +105,6 @@ var workflowAsAgent = builder
 ### Implementation Details
 
 The hosting libraries act as protocol adapters that bridge external communication protocols and the Agent Framework's internal `AIAgent` implementation. When you use a hosting integration library, the library retrieves the registered `AIAgent` from dependency injection, wraps it with protocol-specific middleware to translate incoming requests and outgoing responses, and invokes the `AIAgent` to process requests. This architecture keeps your agent implementation protocol-agnostic.
-
-:::zone pivot="programming-language-csharp"
 
 For example, using the ASP.NET Core hosting library with the A2A protocol adapter:
 

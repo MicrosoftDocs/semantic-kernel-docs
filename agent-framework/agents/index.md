@@ -17,6 +17,10 @@ The Microsoft Agent Framework provides support for several types of agents to ac
 
 All agents are derived from a common base class, `Agent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
 
+## Default Agent Runtime Execution Model
+
+All agents in the Microsoft Agent Framework execute using a structured runtime model. This model coordinates user interaction, model inference, and tool execution in a deterministic loop.
+
 ![AI Agent Diagram](../media/agent.svg)
 
 > [!IMPORTANT]
