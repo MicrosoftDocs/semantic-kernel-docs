@@ -388,8 +388,8 @@ class ApprovalRequiredExecutor(Executor):
 
 After completing the migration:
 
-1. Review the updated [Requests and Responses Tutorial](../../tutorials/workflows/requests-and-responses.md)
-2. Explore advanced patterns in the [User Guide](../../user-guide/workflows/requests-and-responses.md)
+1. Review the updated [Requests and Responses Tutorial](../../workflows/state.md)
+2. Explore advanced patterns in the [User Guide](../../workflows/state.md)
 3. Check out updated samples in the [repository](https://github.com/microsoft/agent-framework/tree/main/python/samples)
 
-For additional help, refer to the [Agent Framework documentation](../../overview/agent-framework-overview.md) or reach out to the team and community.
+For additional help, refer to the [Agent Framework documentation](../../overview/index.md) or reach out to the team and community.

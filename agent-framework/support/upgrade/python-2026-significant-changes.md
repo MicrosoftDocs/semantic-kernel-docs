@@ -932,3 +932,8 @@ No significant changes in this release.
 | 1.0.0b260114 | | 🔴 Breaking | `display_name` removed; `context_providers` → `context_provider` (singular); `middleware` must be list | [#3139](https://github.com/microsoft/agent-framework/pull/3139) |
 | 1.0.0b260107 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260107) | — | No significant changes | — |
 | 1.0.0b260106 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260106) | — | No significant changes | — |
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Support overview](../index.md)

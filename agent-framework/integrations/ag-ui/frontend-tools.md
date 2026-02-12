@@ -189,7 +189,7 @@ Now that you understand frontend tools, you can:
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
 - [Backend Tool Rendering](backend-tool-rendering.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 
 ::: zone-end
 
@@ -570,6 +570,6 @@ async def capture_photo() -> str:
 
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 
 ::: zone-end

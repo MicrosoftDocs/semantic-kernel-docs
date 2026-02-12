@@ -282,7 +282,7 @@ Now that you can add function tools, you can:
 
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 
 ::: zone-end
 
@@ -538,7 +538,7 @@ async def main():
                 break
 
             print("\nAssistant: ", end="", flush=True)
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, thread=thread, stream=True):
                 # Display text content
                 if update.text:
                     print(f"\033[96m{update.text}\033[0m", end="", flush=True)
@@ -701,12 +701,12 @@ Now that you understand backend tool rendering, you can:
 
 <!-- - **[Add Human-in-the-Loop](human-in-the-loop.md)**: Require user approval before executing sensitive tools -->
 <!-- - **[Manage State](state-management.md)**: Share state between client and server for richer interactions -->
-- **[Create Advanced Tools](../../tutorials/agents/function-tools.md)**: Learn more about creating function tools with Agent Framework
+- **[Create Advanced Tools](../../agents/tools/function-tools.md)**: Learn more about creating function tools with Agent Framework
 
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
 - [Getting Started with AG-UI](getting-started.md)
-- [Function Tools Tutorial](../../tutorials/agents/function-tools.md)
+- [Function Tools Tutorial](../../agents/tools/function-tools.md)
 
 ::: zone-end

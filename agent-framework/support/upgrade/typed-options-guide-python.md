@@ -610,8 +610,8 @@ To see the typed dicts in action for the case of using OpenAI Reasoning Models w
 
 After completing the migration:
 
-1. Explore provider-specific options in the [API documentation](../../api-docs/TOC.yml)
+1. Explore provider-specific options in the [API documentation](/python/api/agent-framework-core/agent_framework)
 2. Review updated [samples](https://github.com/microsoft/agent-framework/tree/main/python/samples)
-3. Learn about creating [custom chat clients](../../user-guide/agents/agent-types/custom-agent.md)
+3. Learn about creating [custom chat clients](../../agents/providers/custom.md)
 
-For additional help, refer to the [Agent Framework documentation](../../overview/agent-framework-overview.md) or reach out to the community.
+For additional help, refer to the [Agent Framework documentation](../../overview/index.md) or reach out to the community.

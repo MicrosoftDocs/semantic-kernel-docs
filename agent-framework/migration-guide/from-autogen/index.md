@@ -355,7 +355,7 @@ async def streaming_example():
             print(chunk.text, end="")
 
     # Agent streaming - tools can be keyword arg on agents
-    async for chunk in agent.run_stream("Hello", tools=tools):
+    async for chunk in agent.run("Hello", tools=tools, stream=True):
         if chunk.text:
             print(chunk.text, end="", flush=True)
 ```
@@ -627,7 +627,7 @@ async def logging_middleware(
     call_next: Callable[[AgentContext], Awaitable[None]]
 ) -> None:
     print(f"Agent {context.agent.name} starting")
-    await call_next(context)
+    await call_next()
     print(f"Agent {context.agent.name} completed")
 
 async def security_middleware(
@@ -637,7 +637,7 @@ async def security_middleware(
     if "password" in str(context.arguments):
         print("Blocking function call with sensitive data")
         return  # Don't call call_next()
-    await call_next(context)
+    await call_next()
 
 agent = Agent(
     name="secure_agent",
@@ -724,7 +724,7 @@ class StaticAgent(BaseAgent):
 
         return AgentResponse(messages=[reply])
 
-    async def run_stream(
+    async def _run_stream(
         self,
         messages: str | Message | list[str] | list[Message] | None = None,
         *,
@@ -743,7 +743,7 @@ class StaticAgent(BaseAgent):
 
 Notes:
 
-- `AgentThread` maintains conversation state externally; use `agent.get_new_thread()` and pass it to `run`/`run_stream`.
+- `AgentThread` maintains conversation state externally; use `agent.get_new_thread()` and pass it to `run()`/`run(..., stream=True)`.
 - Call `self._notify_thread_of_new_messages(thread, input_messages, response_messages)` so the thread has both sides of the exchange.
 - See the full sample: [Custom Agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/custom/custom_agent.py)
 
@@ -1697,4 +1697,4 @@ The Agent Framework provides samples across several other important areas:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Quickstart Guide](../../tutorials/quick-start.md)
+> [Quickstart Guide](../../get-started/your-first-agent.md)
