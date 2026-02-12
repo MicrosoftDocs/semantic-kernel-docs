@@ -22,15 +22,17 @@ Before you begin, ensure you have the following:
 
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
 - [Azure OpenAI resource](/azure/ai-foundry/openai/how-to/create-resource) with a deployed model (for example, `gpt-4o-mini`)
-- [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated](/cli/azure/authenticate-azure-cli) (`az login`)
+- [Azure authentication](/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#defaultazurecredential-overview) (e.g., via [Azure CLI `az login`](/cli/azure/authenticate-azure-cli), Visual Studio, or VS Code)
 - [User has the `Cognitive Services OpenAI User` or `Cognitive Services OpenAI Contributor` roles for the Azure OpenAI resource.](/azure/ai-foundry/openai/how-to/role-based-access-control)
 
 > [!NOTE]
 > Microsoft Agent Framework is supported with all actively supported versions of .NET. For the purposes of this sample, we recommend the .NET 8 SDK or a later version.
 
 > [!NOTE]
-> This demo uses Azure CLI credentials for authentication. Make sure you're logged in with `az login` and have access to the Azure OpenAI resource. For more information, see the [Azure CLI documentation](/cli/azure/authenticate-azure-cli-interactively). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you
-have an api key and do not wish to use role based authentication, in which case `az login` is not required.
+> This demo uses Azure default credential for authentication. Make sure you're authenticated with Azure (e.g., via `az login`) and have access to the Azure OpenAI resource. To see the available authentication options, refer to the [credential chains documentation](/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#defaultazurecredential-overview). It is also possible to replace the `AzureCliCredential` with an `ApiKeyCredential` if you have an api key and do not wish to use role based authentication.
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ## Create a project
 
@@ -68,7 +70,7 @@ using OpenAI;
 
 AIAgent agent = new AzureOpenAIClient(
   new Uri("https://your-resource.openai.azure.com/"),
-  new AzureCliCredential())
+  new DefaultAzureCredential())
     .GetChatClient("gpt-4o-mini")
     .AsAIAgent(instructions: "You are good at telling jokes.");
 

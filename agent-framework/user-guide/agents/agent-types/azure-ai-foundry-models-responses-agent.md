@@ -40,11 +40,14 @@ using OpenAI;
 var clientOptions = new OpenAIClientOptions() { Endpoint = new Uri("https://<myresource>.services.ai.azure.com/openai/v1/") };
 
 #pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates.
-OpenAIClient client = new OpenAIClient(new BearerTokenPolicy(new AzureCliCredential(), "https://ai.azure.com/.default"), clientOptions);
+OpenAIClient client = new OpenAIClient(new BearerTokenPolicy(new DefaultAzureCredential(), "https://ai.azure.com/.default"), clientOptions);
 #pragma warning restore OPENAI001
 // You can optionally authenticate with an API key
 // OpenAIClient client = new OpenAIClient(new ApiKeyCredential("<your_api_key>"), clientOptions);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 A client for responses can then be created using the model deployment name.
 

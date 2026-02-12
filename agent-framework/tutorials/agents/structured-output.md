@@ -80,7 +80,7 @@ using OpenAI;
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
         .GetChatClient("gpt-4o-mini")
         .AsAIAgent(new ChatClientAgentOptions()
         {
@@ -89,6 +89,9 @@ AIAgent agent = new AzureOpenAIClient(
             ChatOptions = chatOptions
         });
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Now you can just run the agent with some textual information that the agent can use to fill in the structured output.
 

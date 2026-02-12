@@ -38,8 +38,11 @@ using OpenAI;
 
 AzureOpenAIClient client = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com/"),
-    new AzureCliCredential());
+    new DefaultAzureCredential());
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Azure OpenAI supports multiple services that all provide model calling capabilities.
 Pick the Responses service to create a Responses based agent.

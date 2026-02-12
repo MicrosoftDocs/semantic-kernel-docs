@@ -118,7 +118,7 @@ The factory is an async function that receives a context object and a cancellati
 ```csharp
 AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
     .GetChatClient(deploymentName)
     .AsAIAgent(new ChatClientAgentOptions
     {
@@ -134,6 +134,9 @@ AIAgent agent = new AzureOpenAIClient(
                 ctx.JsonSerializerOptions))
     });
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 > [!TIP]
 > For a detailed example on how to create a custom message store, see the [Storing Chat History in 3rd Party Storage](../../tutorials/agents/third-party-chat-history-storage.md) tutorial.

@@ -59,7 +59,7 @@ an empty `Kernel` if not provided.
 Azure AI Foundry requires an agent resource to be created in the cloud before creating a local agent class that uses it.
 
 ```csharp
-PersistentAgentsClient azureAgentClient = AzureAIAgent.CreateAgentsClient(azureEndpoint, new AzureCliCredential());
+PersistentAgentsClient azureAgentClient = AzureAIAgent.CreateAgentsClient(azureEndpoint, new DefaultAzureCredential());
 
 PersistentAgent definition = await azureAgentClient.Administration.CreateAgentAsync(
     deploymentName,
@@ -67,6 +67,9 @@ PersistentAgent definition = await azureAgentClient.Administration.CreateAgentAs
 
 AzureAIAgent agent = new(definition, azureAgentClient);
  ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Agent Framework
 

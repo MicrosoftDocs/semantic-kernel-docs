@@ -157,7 +157,7 @@ using OpenAI;
 
 ChatClient chatClient = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
     .GetChatClient("gpt-4o-mini");
 
 AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions()
@@ -170,6 +170,9 @@ AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions()
             ctx.JsonSerializerOptions))
 });
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 When creating a new session, the `AIContextProvider` will be created by `CreateSessionAsync`
 and attached to the session. Once memories are extracted it is therefore possible to access the memory component via the session's `GetService` method and inspect the memories.

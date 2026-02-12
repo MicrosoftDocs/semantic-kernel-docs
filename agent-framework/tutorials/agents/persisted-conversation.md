@@ -34,12 +34,15 @@ using OpenAI;
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
+    new DefaultAzureCredential())
      .GetChatClient("gpt-4o-mini")
      .AsAIAgent(instructions: "You are a helpful assistant.", name: "Assistant");
 
 AgentSession session = await agent.CreateSessionAsync();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Run the agent, passing in the session, so that the `AgentSession` includes this exchange.
 

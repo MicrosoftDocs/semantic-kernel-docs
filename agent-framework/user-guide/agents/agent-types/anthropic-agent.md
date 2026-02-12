@@ -112,7 +112,7 @@ var resource = Environment.GetEnvironmentVariable("ANTHROPIC_RESOURCE");
 var deploymentName = Environment.GetEnvironmentVariable("ANTHROPIC_DEPLOYMENT_NAME") ?? "claude-haiku-4-5";
 
 AnthropicClient client = new AnthropicFoundryClient(
-    new AnthropicAzureTokenCredential(new AzureCliCredential(), resource));
+    new AnthropicAzureTokenCredential(new DefaultAzureCredential(), resource));
 
 AIAgent agent = client.AsAIAgent(
     model: deploymentName,
@@ -139,6 +139,9 @@ public sealed class AnthropicAzureTokenCredential(TokenCredential tokenCredentia
     }
 }
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ## Using the Agent
 

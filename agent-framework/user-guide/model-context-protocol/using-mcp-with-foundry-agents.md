@@ -71,7 +71,7 @@ mcpTool.AllowedTools.Add("microsoft_docs_search");
 The agent is created server-side using the Azure AI Foundry Persistent Agents SDK:
 
 ```csharp
-var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
+var persistentAgentsClient = new PersistentAgentsClient(endpoint, new DefaultAzureCredential());
 
 var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
     model: model,
@@ -79,6 +79,9 @@ var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync
     instructions: AgentInstructions,
     tools: [mcpTool]);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 This creates a persistent agent that:
 - Lives on the Azure AI Foundry service

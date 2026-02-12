@@ -43,7 +43,7 @@ var middlewareEnabledAgent = originalAgent
 `IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
 
 ```csharp
-var chatClient = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
+var chatClient = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
     .AsIChatClient();
 
@@ -55,11 +55,14 @@ var middlewareEnabledChatClient = chatClient
 var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You are a helpful assistant.");
 ```
 
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
 `IChatClient` middleware can also be registered using a factory method when constructing
  an agent via one of the helper methods on SDK clients.
 
 ```csharp
-var agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
+var agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
     .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
         .AsBuilder()

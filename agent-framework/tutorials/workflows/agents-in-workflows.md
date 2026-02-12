@@ -71,8 +71,11 @@ public static class Program
         // Set up the Azure Foundry client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT") ?? throw new Exception("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
         var model = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_MODEL_ID") ?? "gpt-4o-mini";
-        var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
+        var persistentAgentsClient = new PersistentAgentsClient(endpoint, new DefaultAzureCredential());
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ## Step 3: Create Agent Factory Method
 

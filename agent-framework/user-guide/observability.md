@@ -27,13 +27,16 @@ To enable observability for your chat client, you need to build the chat client 
 
 ```csharp
 // Using the Azure OpenAI client as an example
-var instrumentedChatClient = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
+var instrumentedChatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
     .AsIChatClient() // Converts a native OpenAI SDK ChatClient into a Microsoft.Extensions.AI.IChatClient
     .AsBuilder()
     .UseOpenTelemetry(sourceName: "MyApplication", configure: (cfg) => cfg.EnableSensitiveData = true)    // Enable OpenTelemetry instrumentation with sensitive data
     .Build();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 To enable observability for your agent, you need to build the agent as follows:
 
