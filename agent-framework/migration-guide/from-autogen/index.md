@@ -22,7 +22,7 @@ A comprehensive guide for migrating from AutoGen to the Microsoft Agent Framewor
   - [Responses API Support (Agent Framework Exclusive)](#responses-api-support-agent-framework-exclusive)
 - [Single-Agent Feature Mapping](#single-agent-feature-mapping)
   - [Basic Agent Creation and Execution](#basic-agent-creation-and-execution)
-  - [Managing Conversation State with AgentThread](#managing-conversation-state-with-agentthread)
+  - [Managing Conversation State with AgentSession](#managing-conversation-state-with-agentsession)
   - [OpenAI Assistant Agent Equivalence](#openai-assistant-agent-equivalence)
   - [Streaming Support](#streaming-support)
   - [Message Types and Creation](#message-types-and-creation)
@@ -87,7 +87,7 @@ agent = AssistantAgent(name="assistant", model_client=client, tools=[my_tool])
 result = await agent.run(task="Help me with this task")
 
 # Agent Framework
-agent = ChatAgent(name="assistant", chat_client=client, tools=[my_tool])
+agent = Agent(name="assistant", chat_client=client, tools=[my_tool])
 result = await agent.run("Help me with this task")
 ```
 
@@ -97,7 +97,7 @@ result = await agent.run("Help me with this task")
 
 2. Tools: AutoGen wraps functions with `FunctionTool`. Agent Framework uses `@tool`, infers schemas automatically, and adds hosted tools such as a code interpreter and web search.
 
-3. Agent behavior: `AssistantAgent` is single‑turn unless you increase `max_tool_iterations`. `ChatAgent` is multi‑turn by default and keeps invoking tools until it can return a final answer.
+3. Agent behavior: `AssistantAgent` is single‑turn unless you increase `max_tool_iterations`. `Agent` is multi‑turn by default and keeps invoking tools until it can return a final answer.
 
 4. Runtime: AutoGen offers embedded and experimental distributed runtimes. Agent Framework focuses on single‑process composition today; distributed execution is planned.
 
@@ -151,9 +151,9 @@ client = AzureOpenAIChatClient(model_id="gpt-5")
 
 For detailed examples, see:
 
-- [OpenAI Chat Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_basic.py) - Basic OpenAI client setup
-- [Azure OpenAI Chat Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_chat_client_basic.py) - Azure OpenAI with authentication
-- [Azure AI Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_basic.py) - Azure AI agent integration
+- [OpenAI Chat Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_basic.py) - Basic OpenAI client setup
+- [Azure OpenAI Chat Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_chat_client_basic.py) - Azure OpenAI with authentication
+- [Azure AI Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_basic.py) - Azure AI agent integration
 
 ### Responses API Support (Agent Framework Exclusive)
 
@@ -172,8 +172,8 @@ openai_responses_client = OpenAIResponsesClient(model_id="gpt-5")
 
 For Responses API examples, see:
 
-- [Azure Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_responses_client_basic.py) - Azure OpenAI with responses
-- [OpenAI Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_responses_client_basic.py) - OpenAI responses integration
+- [Azure Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_responses_client_basic.py) - Azure OpenAI with responses
+- [OpenAI Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_responses_client_basic.py) - OpenAI responses integration
 
 ## Single-Agent Feature Mapping
 
@@ -200,10 +200,10 @@ agent = AssistantAgent(
 result = await agent.run(task="What's the weather?")
 ```
 
-#### Agent Framework ChatAgent
+#### Agent Framework Agent
 
 ```python
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from agent_framework.openai import OpenAIChatClient
 
 # Create simple tools for the example
@@ -222,7 +222,7 @@ client = OpenAIChatClient(model_id="gpt-5")
 
 async def example():
     # Direct creation with default options
-    agent = ChatAgent(
+    agent = Agent(
         name="assistant",
         chat_client=client,
         instructions="You are a helpful assistant.",
@@ -251,54 +251,54 @@ async def example():
 
 **Key Differences:**
 
-- **Default behavior**: `ChatAgent` automatically iterates through tool calls, while `AssistantAgent` requires explicit `max_tool_iterations` setting
-- **Runtime configuration**: `ChatAgent.run()` accepts `tools` as a keyword argument and other options via the `options` dict parameter for per-invocation customization
+- **Default behavior**: `Agent` automatically iterates through tool calls, while `AssistantAgent` requires explicit `max_tool_iterations` setting
+- **Runtime configuration**: `Agent.run()` accepts `tools` as a keyword argument and other options via the `options` dict parameter for per-invocation customization
 - **Options system**: Agent Framework uses TypedDict-based options (e.g., `OpenAIChatOptions`) for type safety and IDE autocomplete. Options are passed via `default_options` at construction and `options` at runtime
 - **Factory methods**: Agent Framework provides convenient factory methods directly from chat clients
-- **State management**: `ChatAgent` is stateless and doesn't maintain conversation history between invocations, unlike `AssistantAgent` which maintains conversation history as part of its state
+- **State management**: `Agent` is stateless and doesn't maintain conversation history between invocations, unlike `AssistantAgent` which maintains conversation history as part of its state
 
-#### Managing Conversation State with AgentThread
+#### Managing Conversation State with AgentSession
 
-To continue conversations with `ChatAgent`, use `AgentThread` to manage conversation history:
+To continue conversations with `Agent`, use `AgentSession` to manage conversation history:
 
 ```python
 # Assume we have an agent from previous examples
 async def conversation_example():
-    # Create a new thread that will be reused
-    thread = agent.get_new_thread()
+    # Create a new session that will be reused
+    session = agent.create_session()
 
-    # First interaction - thread is empty
-    result1 = await agent.run("What's 2+2?", thread=thread)
+    # First interaction - session is empty
+    result1 = await agent.run("What's 2+2?", session=session)
     print(result1.text)  # "4"
 
-    # Continue conversation - thread contains previous messages
-    result2 = await agent.run("What about that number times 10?", thread=thread)
+    # Continue conversation - session contains previous messages
+    result2 = await agent.run("What about that number times 10?", session=session)
     print(result2.text)  # "40" (understands "that number" refers to 4)
 
-    # AgentThread can use external storage, similar to ChatCompletionContext in AutoGen
+    # AgentSession can use external storage, similar to ChatCompletionContext in AutoGen
 ```
 
 Stateless by default: quick demo
 
 ```python
-# Without a thread (two independent invocations)
+# Without a session (two independent invocations)
 r1 = await agent.run("What's 2+2?")
 print(r1.text)  # for example, "4"
 
 r2 = await agent.run("What about that number times 10?")
 print(r2.text)  # Likely ambiguous without prior context; cannot be "40"
 
-# With a thread (shared context across calls)
-thread = agent.get_new_thread()
-print((await agent.run("What's 2+2?", thread=thread)).text)  # "4"
-print((await agent.run("What about that number times 10?", thread=thread)).text)  # "40"
+# With a session (shared context across calls)
+session = agent.create_session()
+print((await agent.run("What's 2+2?", session=session)).text)  # "4"
+print((await agent.run("What about that number times 10?", session=session)).text)  # "40"
 ```
 
-For thread management examples, see:
+For conversation session examples, see:
 
-- [Azure AI with Thread](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_thread.py) - Conversation state management
-- [OpenAI Chat Client with Thread](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_with_thread.py) - Thread usage patterns
-- [Redis-backed Threads](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/threads/redis_chat_message_store_thread.py) - Persisting conversation state externally
+- [Azure AI with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_session.py) - Conversation state management
+- [OpenAI Chat Client with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_session.py) - Session usage patterns
+- [Redis-backed Sessions](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/conversations/redis_chat_message_store_session.py) - Persisting conversation state externally
 
 #### OpenAI Assistant Agent Equivalence
 
@@ -316,10 +316,10 @@ from agent_framework.openai import OpenAIAssistantsClient
 
 For OpenAI Assistant examples, see:
 
-- [OpenAI Assistants Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_assistants_basic.py) - Basic assistant setup
-- [OpenAI Assistants with Function Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_assistants_with_function_tools.py) - Custom tools integration
-- [Azure OpenAI Assistants Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_assistants_basic.py) - Azure assistant setup
-- [OpenAI Assistants with Thread](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_assistants_with_thread.py) - Thread management
+- [OpenAI Assistants Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_assistants_basic.py) - Basic assistant setup
+- [OpenAI Assistants with Function Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_assistants_with_function_tools.py) - Custom tools integration
+- [Azure OpenAI Assistants Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_assistants_basic.py) - Azure assistant setup
+- [OpenAI Assistants with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_assistants_with_session.py) - Session management
 
 ### Streaming Support
 
@@ -355,7 +355,7 @@ async def streaming_example():
             print(chunk.text, end="")
 
     # Agent streaming - tools can be keyword arg on agents
-    async for chunk in agent.run_stream("Hello", tools=tools):
+    async for chunk in agent.run("Hello", tools=tools, stream=True):
         if chunk.text:
             print(chunk.text, end="", flush=True)
 ```
@@ -388,11 +388,11 @@ user_message = text_msg.to_model_message()
 #### Agent Framework Message Types
 
 ```python
-from agent_framework import ChatMessage, Content, Role
+from agent_framework import Message, Content, Role
 import base64
 
 # Text message
-text_msg = ChatMessage(role=Role.USER, text="Hello")
+text_msg = Message(role=Role.USER, text="Hello")
 
 # Supply real image bytes, or use a data: URI/URL via Content.from_uri()
 image_bytes = b"<your_image_bytes>"
@@ -400,7 +400,7 @@ image_b64 = base64.b64encode(image_bytes).decode()
 image_uri = f"data:image/jpeg;base64,{image_b64}"
 
 # Multi-modal message with mixed content
-multi_modal_msg = ChatMessage(
+multi_modal_msg = Message(
     role=Role.USER,
     contents=[
         Content.from_text(text="Describe this image"),
@@ -412,7 +412,7 @@ multi_modal_msg = ChatMessage(
 **Key Differences**:
 
 - AutoGen uses separate message classes (`TextMessage`, `MultiModalMessage`) with a `source` field
-- Agent Framework uses a unified `ChatMessage` with typed content objects and a `role` field
+- Agent Framework uses a unified `Message` with typed content objects and a `role` field
 - Agent Framework messages use `Role` enum (USER, ASSISTANT, SYSTEM, TOOL) instead of string sources
 
 ### Tool Creation and Integration
@@ -453,33 +453,31 @@ def get_weather(
     return f"Weather in {location}: sunny"
 
 # Direct use with agent (automatic conversion)
-agent = ChatAgent(name="assistant", chat_client=client, tools=[get_weather])
+agent = Agent(name="assistant", chat_client=client, tools=[get_weather])
 ```
 
 For detailed examples, see:
 
-- [OpenAI Chat Agent Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_basic.py) - Simple OpenAI chat agent
-- [OpenAI with Function Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_with_function_tools.py) - Agent with custom tools
-- [Azure OpenAI Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_chat_client_basic.py) - Azure OpenAI agent setup
+- [OpenAI Chat Agent Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_basic.py) - Simple OpenAI chat agent
+- [OpenAI with Function Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_function_tools.py) - Agent with custom tools
+- [Azure OpenAI Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_chat_client_basic.py) - Azure OpenAI agent setup
 
 #### Hosted Tools (Agent Framework Exclusive)
 
 Agent Framework provides hosted tools that are not available in AutoGen:
 
 ```python
-from agent_framework import ChatAgent, HostedCodeInterpreterTool, HostedWebSearchTool
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework import Agent
+from agent_framework.azure import AzureOpenAIResponsesClient
 
-# Azure OpenAI client with a model that supports hosted tools
-client = AzureOpenAIChatClient(model_id="gpt-5")
+# Azure OpenAI Responses client with a model that supports hosted tools
+client = AzureOpenAIResponsesClient(model_id="gpt-5")
 
-# Code execution tool
-code_tool = HostedCodeInterpreterTool()
+# Hosted tools are created from the client
+code_tool = client.get_code_interpreter_tool()
+search_tool = client.get_web_search_tool()
 
-# Web search tool
-search_tool = HostedWebSearchTool()
-
-agent = ChatAgent(
+agent = Agent(
     name="researcher",
     chat_client=client,
     tools=[code_tool, search_tool]
@@ -488,9 +486,9 @@ agent = ChatAgent(
 
 For detailed examples, see:
 
-- [Azure AI with Code Interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_code_interpreter.py) - Code execution tool
-- [Azure AI with Multiple Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai_agent/azure_ai_with_multiple_tools.py) - Multiple hosted tools
-- [OpenAI with Web Search](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_with_web_search.py) - Web search integration
+- [Azure AI with Code Interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_code_interpreter.py) - Code execution tool
+- [Azure AI with Multiple Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai_agent/azure_ai_with_multiple_tools.py) - Multiple hosted tools
+- [OpenAI with Web Search](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_web_search.py) - Web search integration
 
 Requirements and caveats:
 
@@ -514,7 +512,7 @@ AutoGen has basic MCP support through extensions (specific implementation detail
 #### Agent Framework MCP Support
 
 ```python
-from agent_framework import ChatAgent, MCPStdioTool, MCPStreamableHTTPTool, MCPWebsocketTool
+from agent_framework import Agent, MCPStdioTool, MCPStreamableHTTPTool, MCPWebsocketTool
 from agent_framework.openai import OpenAIChatClient
 
 # Create client for the example
@@ -539,15 +537,15 @@ ws_mcp = MCPWebsocketTool(
     url="ws://localhost:8000/ws"
 )
 
-agent = ChatAgent(name="assistant", chat_client=client, tools=[mcp_tool])
+agent = Agent(name="assistant", chat_client=client, tools=[mcp_tool])
 ```
 
 For MCP examples, see:
 
-- [OpenAI with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_with_local_mcp.py) - Using MCPStreamableHTTPTool with OpenAI
-- [OpenAI with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_responses_client_with_hosted_mcp.py) - Using hosted MCP services
-- [Azure AI with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_local_mcp.py) - Using MCP with Azure AI
-- [Azure AI with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_hosted_mcp.py) - Using hosted MCP with Azure AI
+- [OpenAI with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_local_mcp.py) - Using MCPStreamableHTTPTool with OpenAI
+- [OpenAI with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_responses_client_with_hosted_mcp.py) - Using hosted MCP services
+- [Azure AI with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_local_mcp.py) - Using MCP with Azure AI
+- [Azure AI with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_hosted_mcp.py) - Using hosted MCP with Azure AI
 
 ### Agent-as-a-Tool Pattern
 
@@ -583,11 +581,11 @@ coordinator = AssistantAgent(
 #### Agent Framework as_tool()
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 
 # Assume we have client from previous examples
 # Create specialized agent
-writer = ChatAgent(
+writer = Agent(
     name="writer",
     chat_client=client,
     instructions="You are a creative writer."
@@ -602,7 +600,7 @@ writer_tool = writer.as_tool(
 )
 
 # Use in coordinator
-coordinator = ChatAgent(
+coordinator = Agent(
     name="coordinator",
     chat_client=client,
     tools=[writer_tool]
@@ -618,7 +616,7 @@ as agents are stateless by default.
 Agent Framework introduces middleware capabilities that AutoGen lacks. Middleware enables powerful cross-cutting concerns like logging, security, and performance monitoring.
 
 ```python
-from agent_framework import ChatAgent, AgentContext, FunctionInvocationContext
+from agent_framework import Agent, AgentContext, FunctionInvocationContext
 from typing import Callable, Awaitable
 
 # Assume we have client from previous examples
@@ -627,7 +625,7 @@ async def logging_middleware(
     call_next: Callable[[AgentContext], Awaitable[None]]
 ) -> None:
     print(f"Agent {context.agent.name} starting")
-    await call_next(context)
+    await call_next()
     print(f"Agent {context.agent.name} completed")
 
 async def security_middleware(
@@ -637,9 +635,9 @@ async def security_middleware(
     if "password" in str(context.arguments):
         print("Blocking function call with sensitive data")
         return  # Don't call call_next()
-    await call_next(context)
+    await call_next()
 
-agent = ChatAgent(
+agent = Agent(
     name="secure_agent",
     chat_client=client,
     middleware=[logging_middleware, security_middleware]
@@ -655,10 +653,10 @@ agent = ChatAgent(
 
 For detailed middleware examples, see:
 
-- [Function-based Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/function_based_middleware.py) - Simple function middleware
-- [Class-based Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/class_based_middleware.py) - Object-oriented middleware
-- [Exception Handling Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/exception_handling_with_middleware.py) - Error handling patterns
-- [State Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/middleware/shared_state_middleware.py) - State management across agents
+- [Function-based Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/middleware/function_based_middleware.py) - Simple function middleware
+- [Class-based Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/middleware/class_based_middleware.py) - Object-oriented middleware
+- [Exception Handling Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/middleware/exception_handling_with_middleware.py) - Error handling patterns
+- [State Middleware](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/middleware/shared_state_middleware.py) - State management across agents
 
 ### Custom Agents
 
@@ -691,61 +689,84 @@ Notes:
 - Implement `on_messages(...)` and return a `Response` with a chat message.
 - Optionally implement `on_reset(...)` to clear internal state between runs.
 
-#### Agent Framework: Extend BaseAgent (thread-aware)
+#### Agent Framework: Extend BaseAgent (run-centric)
 
 ```python
-from collections.abc import AsyncIterable
-from typing import Any
+from collections.abc import AsyncIterable, Awaitable, Sequence
+from typing import Any, Literal, overload
 from agent_framework import (
     AgentResponse,
     AgentResponseUpdate,
-    AgentThread,
+    AgentSession,
     BaseAgent,
-    ChatMessage,
+    Message,
     Content,
-    Role,
+    ResponseStream,
+    normalize_messages,
 )
 
 class StaticAgent(BaseAgent):
-    async def run(
+    @overload
+    def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | Sequence[str | Message] | None = None,
         *,
-        thread: AgentThread | None = None,
+        stream: Literal[False] = False,
+        session: AgentSession | None = None,
         **kwargs: Any,
-    ) -> AgentResponse:
-        # Build a static reply
-        reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
+    ) -> Awaitable[AgentResponse]: ...
 
-        # Persist conversation to the provided AgentThread (if any)
-        if thread is not None:
-            normalized = self._normalize_messages(messages)
-            await self._notify_thread_of_new_messages(thread, normalized, reply)
-
-        return AgentResponse(messages=[reply])
-
-    async def run_stream(
+    @overload
+    def run(
         self,
-        messages: str | ChatMessage | list[str] | list[ChatMessage] | None = None,
+        messages: str | Message | Sequence[str | Message] | None = None,
         *,
-        thread: AgentThread | None = None,
+        stream: Literal[True],
+        session: AgentSession | None = None,
         **kwargs: Any,
-    ) -> AsyncIterable[AgentResponseUpdate]:
-        # Stream the same static response in a single chunk for simplicity
-        yield AgentResponseUpdate(contents=[Content.from_text(text="Hello from AF custom agent")], role=Role.ASSISTANT)
+    ) -> ResponseStream[AgentResponseUpdate, AgentResponse]: ...
 
-        # Notify thread of input and the complete response once streaming ends
-        if thread is not None:
-            reply = ChatMessage(role=Role.ASSISTANT, contents=[Content.from_text(text="Hello from AF custom agent")])
-            normalized = self._normalize_messages(messages)
-            await self._notify_thread_of_new_messages(thread, normalized, reply)
+    def run(
+        self,
+        messages: str | Message | Sequence[str | Message] | None = None,
+        *,
+        stream: bool = False,
+        session: AgentSession | None = None,
+        **kwargs: Any,
+    ) -> Awaitable[AgentResponse] | ResponseStream[AgentResponseUpdate, AgentResponse]:
+        normalized_messages = normalize_messages(messages)
+        response_text = "Hello from AF custom agent"
+
+        async def _run_non_streaming() -> AgentResponse:
+            reply = Message(role="assistant", contents=[Content.from_text(response_text)])
+
+            if session is not None:
+                stored = session.state.setdefault("memory", {}).setdefault("messages", [])
+                stored.extend(normalized_messages)
+                stored.append(reply)
+
+            return AgentResponse(messages=[reply])
+
+        async def _run_streaming() -> AsyncIterable[AgentResponseUpdate]:
+            yield AgentResponseUpdate(contents=[Content.from_text(response_text)], role="assistant")
+
+            if session is not None:
+                reply = Message(role="assistant", contents=[Content.from_text(response_text)])
+                stored = session.state.setdefault("memory", {}).setdefault("messages", [])
+                stored.extend(normalized_messages)
+                stored.append(reply)
+
+        if stream:
+            return ResponseStream(_run_streaming(), finalizer=AgentResponse.from_updates)
+        return _run_non_streaming()
 ```
 
 Notes:
 
-- `AgentThread` maintains conversation state externally; use `agent.get_new_thread()` and pass it to `run`/`run_stream`.
-- Call `self._notify_thread_of_new_messages(thread, input_messages, response_messages)` so the thread has both sides of the exchange.
-- See the full sample: [Custom Agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/custom/custom_agent.py)
+- To satisfy `SupportsAgentRun`, implement `run(...)` with the stream and non-stream return contract.
+- `BaseAgent` provides `create_session()` / `get_session()`; keep custom state in `session.state`.
+- Persist custom conversation state in `session.state` (or via history/context providers) so it survives across turns.
+- See the full sample: [Custom Agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/custom/custom_agent.py)
 
 ---
 
@@ -806,9 +827,8 @@ async def agent2_executor(input_msg: str, ctx: WorkflowContext[Never, str]) -> N
     await ctx.yield_output(response.text)  # Final output
 
 # Build typed data flow graph
-workflow = (WorkflowBuilder()
+workflow = (WorkflowBuilder(start_executor=agent1_executor)
            .add_edge(agent1_executor, agent2_executor)
-           .set_start_executor(agent1_executor)
            .build())
 
 # Example usage (would be in async context)
@@ -817,9 +837,9 @@ workflow = (WorkflowBuilder()
 
 For detailed workflow examples, see:
 
-- [Workflow Basics](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/_start-here/step1_executors_and_edges.py) - Introduction to executors and edges
-- [Agents in Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/_start-here/step2_agents_in_a_workflow.py) - Integrating agents in workflows
-- [Workflow Streaming](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/_start-here/step3_streaming.py) - Real-time workflow execution
+- [Workflow Basics](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/_start-here/step1_executors_and_edges.py) - Introduction to executors and edges
+- [Agents in Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/_start-here/step2_agents_in_a_workflow.py) - Integrating agents in workflows
+- [Workflow Streaming](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/_start-here/step3_streaming.py) - Real-time workflow execution
 
 **Benefits:**
 
@@ -924,10 +944,9 @@ async def editor_exec(msg: str, ctx: WorkflowContext[Never, str]) -> None:
         await ctx.yield_output("Needs revision")
 
 workflow_seq = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=writer_exec)
     .add_edge(writer_exec, reviewer_exec)
     .add_edge(reviewer_exec, editor_exec)
-    .set_start_executor(writer_exec)
     .build()
 )
 ```
@@ -990,18 +1009,16 @@ async def join_all(msg: str, ctx: WorkflowContext[str, str]) -> None:
         await ctx.yield_output(" | ".join(state["items"]))  # ALL join
 
 wf_any = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=start)
     .add_edge(start, branch_b).add_edge(start, branch_c)
     .add_edge(branch_b, join_any).add_edge(branch_c, join_any)
-    .set_start_executor(start)
     .build()
 )
 
 wf_all = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=start)
     .add_edge(start, branch_b).add_edge(start, branch_c)
     .add_edge(branch_b, join_all).add_edge(branch_c, join_all)
-    .set_start_executor(start)
     .build()
 )
 ```
@@ -1029,10 +1046,9 @@ async def caption(image_ref: str, ctx: WorkflowContext[Never, str]) -> None:
     await ctx.yield_output(f"Caption: {image_ref}")
 
 workflow = (
-    WorkflowBuilder()
+    WorkflowBuilder(start_executor=ingest)
     .add_edge(ingest, write)
     .add_edge(ingest, caption)
-    .set_start_executor(ingest)
     .build()
 )
 
@@ -1045,7 +1061,7 @@ What to notice:
 
 - GraphFlow broadcasts messages and uses conditional transitions. Join behavior is configured via target‑side `activation` and per‑edge `activation_group`/`activation_condition` (for example, group both edges into `join_d` with `activation_condition="any"`).
 - Workflow routes data explicitly; use `target_id` to select downstream executors. Join behavior lives in the receiving executor (for example, yield on first input vs wait for all), or via orchestration builders/aggregators.
-- Executors in Workflow are free‑form: wrap a `ChatAgent`, a function, or a sub‑workflow and mix them within the same graph.
+- Executors in Workflow are free‑form: wrap a `Agent`, a function, or a sub‑workflow and mix them within the same graph.
 
 #### Key Differences
 
@@ -1095,9 +1111,8 @@ from agent_framework import WorkflowExecutor, WorkflowBuilder
 # specialist1_executor, specialist2_executor, coordinator_executor, reviewer_executor
 
 # Create sub-workflow
-sub_workflow = (WorkflowBuilder()
+sub_workflow = (WorkflowBuilder(start_executor=specialist1_executor)
                .add_edge(specialist1_executor, specialist2_executor)
-               .set_start_executor(specialist1_executor)
                .build())
 
 # Wrap as executor
@@ -1107,10 +1122,9 @@ sub_workflow_executor = WorkflowExecutor(
 )
 
 # Use in parent workflow
-parent_workflow = (WorkflowBuilder()
+parent_workflow = (WorkflowBuilder(start_executor=coordinator_executor)
                   .add_edge(coordinator_executor, sub_workflow_executor)
                   .add_edge(sub_workflow_executor, reviewer_executor)
-                  .set_start_executor(coordinator_executor)
                   .build())
 ```
 
@@ -1142,51 +1156,48 @@ result = await team.run("Discuss this topic")
 **Agent Framework Implementation:**
 
 ```python
-from agent_framework import WorkflowOutputEvent
 from agent_framework.orchestrations import SequentialBuilder
 
 # Assume we have agent1, agent2, agent3 from previous examples
 # Sequential workflow through participants
-workflow = SequentialBuilder().participants([agent1, agent2, agent3]).build()
+workflow = SequentialBuilder(participants=[agent1, agent2, agent3]).build()
 
 # Example usage (would be in async context)
 async def sequential_example():
     # Each agent appends to shared conversation
     async for event in workflow.run_stream("Discuss this topic"):
-        if isinstance(event, WorkflowOutputEvent):
-            conversation_history = event.data  # list[ChatMessage]
+        if event.type == "output":
+            conversation_history = event.data  # list[Message]
 ```
 
 For detailed orchestration examples, see:
 
-- [Sequential Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/sequential_agents.py) - Round-robin style agent execution
-- [Sequential Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/sequential_custom_executors.py) - Custom executor patterns
+- [Sequential Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/sequential_agents.py) - Round-robin style agent execution
+- [Sequential Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/sequential_custom_executors.py) - Custom executor patterns
 
 For concurrent execution patterns, Agent Framework also provides:
 
 ```python
-from agent_framework import WorkflowOutputEvent
 from agent_framework.orchestrations import ConcurrentBuilder
 
 # Assume we have agent1, agent2, agent3 from previous examples
 # Concurrent workflow for parallel processing
-workflow = (ConcurrentBuilder()
-           .participants([agent1, agent2, agent3])
+workflow = (ConcurrentBuilder(participants=[agent1, agent2, agent3])
            .build())
 
 # Example usage (would be in async context)
 async def concurrent_example():
     # All agents process the input concurrently
     async for event in workflow.run_stream("Process this in parallel"):
-        if isinstance(event, WorkflowOutputEvent):
+        if event.type == "output":
             results = event.data  # Combined results from all agents
 ```
 
 For concurrent execution examples, see:
 
-- [Concurrent Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_agents.py) - Parallel agent execution
-- [Concurrent Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_custom_agent_executors.py) - Custom parallel patterns
-- [Concurrent with Custom Aggregator](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/concurrent_custom_aggregator.py) - Result aggregation patterns
+- [Concurrent Agents](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/concurrent_agents.py) - Parallel agent execution
+- [Concurrent Custom Executors](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/concurrent_custom_agent_executors.py) - Custom parallel patterns
+- [Concurrent with Custom Aggregator](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/concurrent_custom_aggregator.py) - Result aggregation patterns
 
 #### MagenticOneGroupChat Pattern
 
@@ -1209,9 +1220,8 @@ result = await team.run("Complex research and analysis task")
 from typing import cast
 from agent_framework import (
     AgentResponseUpdate,
-    ChatAgent,
-    ChatMessage,
-    WorkflowOutputEvent,
+    Agent,
+    Message,
 )
 from agent_framework.orchestrations import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
@@ -1221,31 +1231,27 @@ from agent_framework.orchestrations import (
 from agent_framework.openai import OpenAIChatClient
 
 # Create a manager agent for orchestration
-manager_agent = ChatAgent(
+manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator that coordinates the workflow",
     instructions="You coordinate a team to complete complex tasks efficiently.",
     chat_client=OpenAIChatClient(),
 )
 
-workflow = (
-    MagenticBuilder()
-    .participants([researcher, coder])
-    .with_manager(
-        agent=manager_agent,
-        max_round_count=20,
-        max_stall_count=3,
-        max_reset_count=2,
-    )
-    .build()
-)
+workflow = MagenticBuilder(
+    participants=[researcher, coder],
+    manager_agent=manager_agent,
+    max_round_count=20,
+    max_stall_count=3,
+    max_reset_count=2,
+).build()
 
 # Example usage (would be in async context)
 async def magentic_example():
     output: str | None = None
     async for event in workflow.run_stream("Complex research task"):
-        if isinstance(event, WorkflowOutputEvent):
-            output_messages = cast(list[ChatMessage], event.data)
+        if event.type == "output":
+            output_messages = cast(list[Message], event.data)
             if output_messages:
                 output = output_messages[-1].text
 ```
@@ -1254,9 +1260,9 @@ async def magentic_example():
 
 The Magentic workflow provides extensive customization options:
 
-- **Manager configuration**: Use a ChatAgent with custom instructions and model settings
+- **Manager configuration**: Use a Agent with custom instructions and model settings
 - **Round limits**: `max_round_count`, `max_stall_count`, `max_reset_count`
-- **Event streaming**: Use `WorkflowOutputEvent` with `AgentResponseUpdate` data for streaming
+- **Event streaming**: Use output events (`event.type == "output"`) with `AgentResponseUpdate` data for streaming
 - **Agent specialization**: Custom instructions and tools per agent
 - **Human-in-the-loop**: Plan review, tool approval, and stall intervention
 
@@ -1265,7 +1271,7 @@ The Magentic workflow provides extensive customization options:
 from typing import cast
 from agent_framework import (
     AgentResponseUpdate,
-    ChatAgent,
+    Agent,
     RequestInfoEvent,
     WorkflowOutputEvent,
 )
@@ -1281,7 +1287,7 @@ from agent_framework.orchestrations import (
 from agent_framework.openai import OpenAIChatClient
 
 # Create manager agent with custom configuration
-manager_agent = ChatAgent(
+manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator for complex tasks",
     instructions="Custom orchestration instructions...",
@@ -1289,22 +1295,21 @@ manager_agent = ChatAgent(
 )
 
 workflow = (
-    MagenticBuilder()
-    .participants([researcher_agent, coder_agent, analyst_agent])
-    .with_manager(
-        agent=manager_agent,
+    MagenticBuilder(
+        participants=[researcher_agent, coder_agent, analyst_agent],
+        enable_plan_review=True,
+        manager_agent=manager_agent,
         max_round_count=15,      # Limit total rounds
         max_stall_count=2,       # Trigger stall handling
         max_reset_count=1,       # Allow one reset on failure
     )
-    .with_plan_review()           # Enable human plan review
     .with_human_input_on_stall()  # Enable human intervention on stalls
     .build()
 )
 
 # Handle human intervention requests during execution
 async for event in workflow.run_stream("Complex task"):
-    if isinstance(event, RequestInfoEvent) and event.request_type is MagenticHumanInterventionRequest:
+    if event.type == "request_info" and event.request_type is MagenticHumanInterventionRequest:
         req = cast(MagenticHumanInterventionRequest, event.data)
         if req.kind == MagenticHumanInterventionKind.PLAN_REVIEW:
             # Review and approve the plan
@@ -1317,11 +1322,9 @@ async for event in workflow.run_stream("Complex task"):
 
 For detailed Magentic examples, see:
 
-- [Basic Magentic Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic.py) - Standard orchestrated multi-agent workflow
-- [Magentic with Checkpointing](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_checkpoint.py) - Persistent orchestrated workflows
-- [Magentic Human Plan Update](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_human_plan_update.py) - Human-in-the-loop plan review
-- [Magentic Agent Clarification](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_agent_clarification.py) - Tool approval for agent clarification
-- [Magentic Human Replan](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_human_replan.py) - Human intervention on stalls
+- [Basic Magentic Workflow](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/magentic.py) - Standard orchestrated multi-agent workflow
+- [Magentic with Checkpointing](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/magentic_checkpoint.py) - Persistent orchestrated workflows
+- [Magentic Human Plan Review](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/magentic_human_plan_review.py) - Human-in-the-loop plan review
 
 #### Future Patterns
 
@@ -1392,9 +1395,8 @@ class ReviewerExecutor(Executor):
 # Build workflow with human-in-the-loop
 reviewer = ReviewerExecutor(id="reviewer")
 
-workflow = (WorkflowBuilder()
+workflow = (WorkflowBuilder(start_executor=agent_executor)
            .add_edge(agent_executor, reviewer)
-           .set_start_executor(agent_executor)
            .build())
 ```
 
@@ -1403,8 +1405,6 @@ workflow = (WorkflowBuilder()
 Agent Framework provides streaming APIs to handle the pause-resume cycle:
 
 ```python
-from agent_framework import RequestInfoEvent, WorkflowOutputEvent
-
 # Assume we have workflow defined from previous examples
 async def run_with_human_input():
     pending_responses = None
@@ -1423,7 +1423,7 @@ async def run_with_human_input():
 
         # Collect human requests and outputs
         for event in events:
-            if isinstance(event, RequestInfoEvent):
+            if event.type == "request_info":
                 # Display request to human and collect response
                 request_data = event.data  # ApprovalRequest instance
                 print(f"Review needed: {request_data.content}")
@@ -1431,15 +1431,15 @@ async def run_with_human_input():
                 human_response = input("Enter 'approved' or revision notes: ")
                 pending_responses = {event.request_id: human_response}
 
-            elif isinstance(event, WorkflowOutputEvent):
+            elif event.type == "output":
                 print(f"Final result: {event.data}")
                 completed = True
 ```
 
 For human-in-the-loop workflow examples, see:
 
-- [Guessing Game with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/human-in-the-loop/guessing_game_with_human_input.py) - Interactive workflow with user feedback
-- [Workflow as Agent with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/agents/workflow_as_agent_human_in_the_loop.py) - Nested workflows with human interaction
+- [Guessing Game with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/human-in-the-loop/guessing_game_with_human_input.py) - Interactive workflow with user feedback
+- [Workflow as Agent with Human Input](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/agents/workflow_as_agent_human_in_the_loop.py) - Nested workflows with human interaction
 
 ### Checkpointing and Resuming Workflows
 
@@ -1451,7 +1451,7 @@ AutoGen's `Team` abstraction does not provide built-in checkpointing capabilitie
 
 #### Agent Framework Checkpointing
 
-Agent Framework provides comprehensive checkpointing through `FileCheckpointStorage` and the `with_checkpointing()` method on `WorkflowBuilder`. Checkpoints capture:
+Agent Framework provides comprehensive checkpointing through `FileCheckpointStorage` and the `checkpoint_storage` constructor parameter on `WorkflowBuilder`. Checkpoints capture:
 
 - **Executor state**: Local state for each executor using `ctx.set_executor_state()`
 - **State**: Cross-executor state using `ctx.set_state()`
@@ -1499,10 +1499,8 @@ processing_executor = ProcessingExecutor(id="processing")
 finalize_executor = FinalizeExecutor(id="finalize")
 
 # Build workflow with checkpointing enabled
-workflow = (WorkflowBuilder()
+workflow = (WorkflowBuilder(start_executor=processing_executor, checkpoint_storage=checkpoint_storage)
            .add_edge(processing_executor, finalize_executor)
-           .set_start_executor(processing_executor)
-           .with_checkpointing(checkpoint_storage=checkpoint_storage)  # Enable checkpointing
            .build())
 
 # Example usage (would be in async context)
@@ -1545,10 +1543,8 @@ def create_workflow(checkpoint_storage: FileCheckpointStorage):
     upper_executor = UpperCaseExecutor(id="upper")
     reverse_executor = ReverseExecutor(id="reverse")
 
-    return (WorkflowBuilder()
+    return (WorkflowBuilder(start_executor=upper_executor, checkpoint_storage=checkpoint_storage)
            .add_edge(upper_executor, reverse_executor)
-           .set_start_executor(upper_executor)
-           .with_checkpointing(checkpoint_storage=checkpoint_storage)
            .build())
 
 # Assume we have checkpoint_storage from previous examples
@@ -1591,7 +1587,7 @@ async def resume_with_pending_requests_example():
         checkpoint_id=checkpoint_id,
         checkpoint_storage=checkpoint_storage
     ):
-        if isinstance(event, RequestInfoEvent):
+        if event.type == "request_info":
             request_info_events.append(event)
 
     # Handle re-emitted pending request
@@ -1619,10 +1615,10 @@ async def resume_with_pending_requests_example():
 
 For comprehensive checkpointing examples, see:
 
-- [Checkpoint with Resume](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/checkpoint/checkpoint_with_resume.py) - Basic checkpointing and interactive resume
-- [Checkpoint with Human-in-the-Loop](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/checkpoint/checkpoint_with_human_in_the_loop.py) - Persistent workflows with human approval gates
-- [Sub-workflow Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/checkpoint/sub_workflow_checkpoint.py) - Checkpointing nested workflows
-- [Magentic Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/orchestration/magentic_checkpoint.py) - Checkpointing orchestrated multi-agent workflows
+- [Checkpoint with Resume](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/checkpoint/checkpoint_with_resume.py) - Basic checkpointing and interactive resume
+- [Checkpoint with Human-in-the-Loop](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/checkpoint/checkpoint_with_human_in_the_loop.py) - Persistent workflows with human approval gates
+- [Sub-workflow Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/checkpoint/sub_workflow_checkpoint.py) - Checkpointing nested workflows
+- [Magentic Checkpoint](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/magentic_checkpoint.py) - Checkpointing orchestrated multi-agent workflows
 
 ---
 
@@ -1661,7 +1657,7 @@ Agent Framework provides comprehensive observability through multiple approaches
 - **Console output**: Built-in console logging and visualization
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.observability import setup_observability
 from agent_framework.openai import OpenAIChatClient
 
@@ -1679,7 +1675,7 @@ client = OpenAIChatClient(model_id="gpt-5")
 
 async def observability_example():
     # Observability is automatically applied to all agents and workflows
-    agent = ChatAgent(name="assistant", chat_client=client)
+    agent = Agent(name="assistant", chat_client=client)
     result = await agent.run("Hello")  # Automatically traced
 ```
 
@@ -1692,10 +1688,10 @@ async def observability_example():
 
 For detailed observability examples, see:
 
-- [Zero-code Setup](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/advanced_zero_code.py) - Environment variable configuration
-- [Manual Setup](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/configure_otel_providers_with_parameters.py) - Programmatic configuration
-- [Agent Observability](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/agent_observability.py) - Single agent telemetry
-- [Workflow Observability](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/observability/workflow_observability.py) - Multi-agent workflow tracing
+- [Zero-code Setup](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/observability/advanced_zero_code.py) - Environment variable configuration
+- [Manual Setup](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/observability/configure_otel_providers_with_parameters.py) - Programmatic configuration
+- [Agent Observability](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/observability/agent_observability.py) - Single agent telemetry
+- [Workflow Observability](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/observability/workflow_observability.py) - Multi-agent workflow tracing
 
 ---
 
@@ -1713,11 +1709,11 @@ For additional examples and detailed implementation guidance, refer to the [Agen
 
 The Agent Framework provides samples across several other important areas:
 
-- **Threads**: [Thread samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/threads) - Managing conversation state and context
-- **Multimodal Input**: [Multimodal samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/multimodal_input) - Working with images and other media types
-- **Context Providers**: [Context Provider samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/context_providers) - External context integration patterns
+- **Conversations**: [Conversation samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/conversations) - Managing conversation state and context
+- **Multimodal Input**: [Multimodal samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/multimodal_input) - Working with images and other media types
+- **Context Providers**: [Context Provider samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/context_providers) - External context integration patterns
 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Quickstart Guide](../../tutorials/quick-start.md)
+> [Quickstart Guide](../../get-started/your-first-agent.md)

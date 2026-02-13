@@ -438,7 +438,7 @@ Here's a complete server implementation with state management:
 ```python
 """AG-UI server with state management."""
 
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import (
     AgentFrameworkAgent,
@@ -449,7 +449,7 @@ from azure.identity import AzureCliCredential
 from fastapi import FastAPI
 
 # Create the chat agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="recipe_agent",
     instructions="""You are a helpful recipe assistant that creates and modifies recipes.
 
@@ -603,7 +603,7 @@ import os
 from typing import Any
 
 import jsonpatch
-from agent_framework import ChatAgent, ChatMessage, Role
+from agent_framework import Agent, Message, Role
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -615,15 +615,15 @@ async def main():
     # Create AG-UI chat client
     chat_client = AGUIChatClient(server_url=server_url)
 
-    # Wrap with ChatAgent for convenient API
-    agent = ChatAgent(
+    # Wrap with Agent for convenient API
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     # Track state locally
     state: dict[str, Any] = {}
@@ -643,7 +643,7 @@ async def main():
 
             print()
             # Stream the agent response with state
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Handle text content
                 if update.text:
                     print(update.text, end="", flush=True)
@@ -682,12 +682,12 @@ The `AGUIChatClient` provides:
 
 - **Simplified Connection**: Automatic handling of HTTP/SSE communication
 - **Thread Management**: Built-in thread ID tracking for conversation continuity
-- **Agent Integration**: Works seamlessly with `ChatAgent` for familiar API
+- **Agent Integration**: Works seamlessly with `Agent` for familiar API
 - **State Handling**: Automatic parsing of state events from the server
 - **Parity with .NET**: Consistent experience across languages
 
 > [!TIP]
-> Use `AGUIChatClient` with `ChatAgent` to get the full benefit of the agent framework's features like conversation history, tool execution, and middleware support.
+> Use `AGUIChatClient` with `Agent` to get the full benefit of the agent framework's features like conversation history, tool execution, and middleware support.
 
 ## Using Confirmation Strategies
 
@@ -941,7 +941,7 @@ predict_state_config = {
 Include clear instructions about state management:
 
 ```python
-agent = ChatAgent(
+agent = Agent(
     instructions="""
     CRITICAL RULES:
     1. You will receive the current recipe state in the system context
@@ -970,7 +970,7 @@ recipe_agent = AgentFrameworkAgent(
 
 You've now learned all the core AG-UI features! Next you can:
 
-- Explore the [Agent Framework documentation](../../overview/agent-framework-overview.md)
+- Explore the [Agent Framework documentation](../../overview/index.md)
 - Build a complete application combining all AG-UI features
 - Deploy your AG-UI service to production
 

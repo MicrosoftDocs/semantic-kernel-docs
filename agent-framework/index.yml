@@ -18,25 +18,72 @@ metadata:
 productDirectory:
     items:
     - title: Overview
-      imageSrc: /agent-framework/media/overview.svg
+      imageSrc: https://learn.microsoft.com/static/media/content-type/overview.svg
       links:
-        - url: /agent-framework/overview/agent-framework-overview
+        - url: /agent-framework/overview/
           text: Introduction to Agent Framework
-    - title: Get Started
-      imageSrc: /agent-framework/media/quick-start.svg
-      links:
-        - url: /agent-framework/tutorials/quick-start
-          text: Agent Framework Quick-Start Guide
-        - url: /agent-framework/tutorials/overview
-          text: Learn how to use Agent Framework
+        - url: https://github.com/microsoft/agent-framework
+          text: GitHub Repository
         - url: https://github.com/microsoft/agent-framework/tree/main/python/samples
           text: Check out Python samples for Agent Framework
         - url: https://github.com/microsoft/agent-framework/tree/main/dotnet/samples
           text: Check out C# samples for Agent Framework
-    - title: Migration Guide
-      imageSrc: /agent-framework/media/migration-guide.svg
+    - title: Get Started
+      imageSrc: https://learn.microsoft.com/static/media/content-type/getstarted.svg
       links:
+        - url: /agent-framework/get-started/your-first-agent
+          text: "Step 1: Your First Agent"
+        - url: /agent-framework/get-started/add-tools
+          text: "Step 2: Add Tools"
+        - url: /agent-framework/get-started/multi-turn
+          text: "Step 3: Multi-Turn Conversations"
+        - url: /agent-framework/get-started/memory
+          text: "Step 4: Memory & Persistence"
+        - url: /agent-framework/get-started/workflows
+          text: "Step 5: Workflows"
+        - url: /agent-framework/get-started/hosting
+          text: "Step 6: Host Your Agent"
+    - title: Agents
+      imageSrc: https://learn.microsoft.com/static/media/content-type/concept.svg
+      links:
+        - url: /agent-framework/agents/index
+          text: Agents overview
+        - url: /agent-framework/agents/tools/index
+          text: Tools
+        - url: /agent-framework/agents/providers/index
+          text: Providers
+    - title: Workflows
+      imageSrc: https://learn.microsoft.com/static/media/content-type/architecture.svg
+      links:
+        - url: /agent-framework/workflows/index
+          text: Workflows overview
+        - url: /agent-framework/workflows/executors
+          text: Executors
+        - url: /agent-framework/workflows/edges
+          text: Edges
+        - url: /agent-framework/workflows/workflows
+          text: Workflow Builder & Execution
+    - title: Integrations
+      imageSrc: https://learn.microsoft.com/static/media/content-type/minihub.svg
+      links:
+        - url: /agent-framework/integrations/index
+          text: Integrations overview
+        - url: /agent-framework/integrations/azure-functions
+          text: Azure Functions
+        - url: /agent-framework/integrations/azure-functions
+          text: Durable Task
+        - url: /agent-framework/integrations/a2a
+          text: A2A Protocol
+        - url: /agent-framework/devui/index
+          text: DevUI
+    - title: Support
+      imageSrc: https://learn.microsoft.com/static/media/content-type/howtoguide.svg
+      links:
+        - url: /agent-framework/support/index
+          text: Get support
+        - url: /agent-framework/support/faq
+          text: FAQ
         - url: /agent-framework/migration-guide/from-autogen/index
-          text: Migrate from Autogen to Agent Framework
+          text: Migrate from Autogen
         - url: /agent-framework/migration-guide/from-semantic-kernel/index
-          text: Migrate from Semantic Kernel to Agent Framework
+          text: Migrate from Semantic Kernel

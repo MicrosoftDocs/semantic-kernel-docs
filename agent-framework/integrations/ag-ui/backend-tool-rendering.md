@@ -282,7 +282,7 @@ Now that you can add function tools, you can:
 
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 
 ::: zone-end
 
@@ -392,7 +392,7 @@ Here's a complete server implementation with function tools:
 import os
 from typing import Annotated, Any
 
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -444,7 +444,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="TravelAssistant",
     instructions="You are a helpful travel assistant. Use the available tools to help users plan their trips.",
     chat_client=chat_client,
@@ -506,7 +506,7 @@ Here's an enhanced client using `AGUIChatClient` that displays tool execution:
 import asyncio
 import os
 
-from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework import Agent, ToolCallContent, ToolResultContent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -519,14 +519,14 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
     
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     try:
         while True:
@@ -538,7 +538,7 @@ async def main():
                 break
 
             print("\nAssistant: ", end="", flush=True)
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Display text content
                 if update.text:
                     print(f"\033[96m{update.text}\033[0m", end="", flush=True)
@@ -684,7 +684,7 @@ class WeatherTools:
 weather_tools = WeatherTools(api_key="your-api-key")
 
 # Create agent with class-based tools
-agent = ChatAgent(
+agent = Agent(
     name="WeatherAgent",
     instructions="You are a weather assistant.",
     chat_client=AzureOpenAIChatClient(...),
@@ -701,12 +701,12 @@ Now that you understand backend tool rendering, you can:
 
 <!-- - **[Add Human-in-the-Loop](human-in-the-loop.md)**: Require user approval before executing sensitive tools -->
 <!-- - **[Manage State](state-management.md)**: Share state between client and server for richer interactions -->
-- **[Create Advanced Tools](../../tutorials/agents/function-tools.md)**: Learn more about creating function tools with Agent Framework
+- **[Create Advanced Tools](../../agents/tools/function-tools.md)**: Learn more about creating function tools with Agent Framework
 
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
 - [Getting Started with AG-UI](getting-started.md)
-- [Function Tools Tutorial](../../tutorials/agents/function-tools.md)
+- [Function Tools Tutorial](../../agents/tools/function-tools.md)
 
 ::: zone-end

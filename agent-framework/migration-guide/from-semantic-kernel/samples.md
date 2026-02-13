@@ -21,3 +21,8 @@ See the [Semantic Kernel repository](https://github.com/microsoft/semantic-kerne
 See the [Agent Framework repository](https://github.com/microsoft/agent-framework/tree/main/python/samples/semantic-kernel-migration) for detailed per agent type code samples showing the the Agent Framework equivalent code for Semantic Kernel features.
 
 ::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Support](../../support/index.md)

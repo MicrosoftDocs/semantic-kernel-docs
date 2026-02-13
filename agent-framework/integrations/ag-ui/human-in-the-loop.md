@@ -632,7 +632,7 @@ The server middleware must remove approval protocol messages after processing:
 ## Next Steps
 
 <!-- - **[Learn State Management](state-management.md)**: Manage shared state with approval workflows -->
-- **[Explore Function Tools](../../tutorials/agents/function-tools-approvals.md)**: Learn more about approval patterns in Agent Framework
+- **[Explore Function Tools](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
 
 ::: zone-end
 
@@ -711,7 +711,7 @@ Here's a complete server implementation with approval-required tools:
 import os
 from typing import Annotated
 
-from agent_framework import ChatAgent, tool
+from agent_framework import Agent, tool
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import AgentFrameworkAgent, add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -765,7 +765,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="BankingAssistant",
     instructions="You are a banking assistant. Help users with their banking needs. Always confirm details before performing transfers.",
     chat_client=chat_client,
@@ -850,7 +850,7 @@ Here's a client using `AGUIChatClient` that handles approval requests:
 import asyncio
 import os
 
-from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework import Agent, ToolCallContent, ToolResultContent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -881,14 +881,14 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
     
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     try:
         while True:
@@ -902,7 +902,7 @@ async def main():
             print("\nAssistant: ", end="", flush=True)
             pending_approval_update = None
 
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Check if this is an approval request
                 # (Approval requests are detected by specific metadata or content markers)
                 if update.additional_properties and update.additional_properties.get("requires_approval"):
@@ -1120,12 +1120,12 @@ def close_account(...): pass
 Now that you understand human-in-the-loop, you can:
 
 - **[Learn State Management](state-management.md)**: Manage shared state with approval workflows
-- **[Explore Advanced Patterns](../../tutorials/agents/function-tools-approvals.md)**: Learn more about approval patterns in Agent Framework
+- **[Explore Advanced Patterns](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
 
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
 - [Backend Tool Rendering](backend-tool-rendering.md)
-- [Function Tools with Approvals](../../tutorials/agents/function-tools-approvals.md)
+- [Function Tools with Approvals](../../agents/tools/tool-approval.md)
 
 ::: zone-end

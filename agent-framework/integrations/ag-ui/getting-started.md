@@ -353,7 +353,7 @@ Now that you understand the basics of AG-UI, you can:
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 - [AG-UI Protocol Specification](https://docs.ag-ui.com/)
 
 ::: zone-end
@@ -407,7 +407,7 @@ Create a file named `server.py`:
 
 import os
 
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -429,7 +429,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create the AI agent
-agent = ChatAgent(
+agent = Agent(
     name="AGUIAssistant",
     instructions="You are a helpful assistant.",
     chat_client=chat_client,
@@ -450,7 +450,7 @@ if __name__ == "__main__":
 ### Key Concepts
 
 - **`add_agent_framework_fastapi_endpoint`**: Registers the AG-UI endpoint with automatic request/response handling and SSE streaming
-- **`ChatAgent`**: The Agent Framework agent that will handle incoming requests
+- **`Agent`**: The Agent Framework agent that will handle incoming requests
 - **FastAPI Integration**: Uses FastAPI's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages
 - **Configuration**: `AzureOpenAIChatClient` reads from environment variables or accepts parameters directly
@@ -501,7 +501,7 @@ Create a file named `client.py`:
 import asyncio
 import os
 
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -515,14 +515,14 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
 
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     try:
         while True:
@@ -537,7 +537,7 @@ async def main():
 
             # Stream the agent response
             print("\nAssistant: ", end="", flush=True)
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Print text content as it streams
                 if update.text:
                     print(f"\033[96m{update.text}\033[0m", end="", flush=True)
@@ -711,8 +711,8 @@ add_agent_framework_fastapi_endpoint(app, agent, "/agent")
 ```python
 app = FastAPI()
 
-weather_agent = ChatAgent(name="weather", ...)
-finance_agent = ChatAgent(name="finance", ...)
+weather_agent = Agent(name="weather", ...)
+finance_agent = Agent(name="finance", ...)
 
 add_agent_framework_fastapi_endpoint(app, weather_agent, "/weather")
 add_agent_framework_fastapi_endpoint(app, finance_agent, "/finance")
@@ -786,7 +786,7 @@ Now that you understand the basics of AG-UI, you can:
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 - [AG-UI Protocol Specification](https://docs.ag-ui.com/)
 
 ::: zone-end

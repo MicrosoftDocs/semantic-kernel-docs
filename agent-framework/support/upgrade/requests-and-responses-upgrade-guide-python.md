@@ -120,7 +120,7 @@ async for event in workflow.run_stream_from_checkpoint(
 requests: dict[str, Any] = {}
 
 async for event in workflow.run_stream(checkpoint_id="checkpoint-id"):
-    if isinstance(event, RequestInfoEvent):
+    if event.type == "request_info":
         # Pending requests are automatically re-emitted
         print(f"Pending request re-emitted: {event.request_id}")
         requests[event.request_id] = event.data
@@ -133,7 +133,7 @@ for request_id, request_data in requests.items():
 
 # Send responses back to workflow
 async for event in workflow.send_responses_streaming(responses):
-    if isinstance(event, WorkflowOutputEvent):
+    if event.type == "output":
         print(f"Workflow output: {event.data}")
 ```
 
@@ -145,10 +145,7 @@ Here's a complete example showing checkpoint resume with pending human approval:
 from agent_framework import (
     Executor,
     FileCheckpointStorage,
-    RequestInfoEvent,
     WorkflowBuilder,
-    WorkflowOutputEvent,
-    WorkflowStatusEvent,
     handler,
     response_handler,
 )
@@ -184,11 +181,11 @@ async def run_interactive_session(
 
         # Process events
         async for event in event_stream:
-            if isinstance(event, WorkflowStatusEvent):
+            if event.type == "status":
                 print(event)
-            if isinstance(event, WorkflowOutputEvent):
+            if event.type == "output":
                 completed_output = event.data
-            if isinstance(event, RequestInfoEvent):
+            if event.type == "request_info":
                 if isinstance(event.data, HumanApprovalRequest):
                     requests[event.request_id] = event.data
 
@@ -270,8 +267,7 @@ approval_executor = ApprovalRequiredExecutor(id="approval")
 request_info_executor = RequestInfoExecutor(id="request_info")
 
 workflow = (
-    WorkflowBuilder()
-    .set_start_executor(approval_executor)
+    WorkflowBuilder(start_executor=approval_executor)
     .add_edge(approval_executor, request_info_executor)
     .add_edge(request_info_executor, approval_executor)
     .build()
@@ -285,8 +281,7 @@ workflow = (
 approval_executor = ApprovalRequiredExecutor(id="approval")
 
 workflow = (
-    WorkflowBuilder()
-    .set_start_executor(approval_executor)
+    WorkflowBuilder(start_executor=approval_executor)
     .build()
 )
 ```
@@ -378,7 +373,7 @@ class ApprovalRequiredExecutor(Executor):
 1. **Update API Calls**: Replace `run_stream_from_checkpoint()` with `run_stream(checkpoint_id=...)`
 2. **Update API Calls**: Replace `run_from_checkpoint()` with `run(checkpoint_id=...)`
 3. **Remove `responses` parameter**: Delete any `responses` arguments from checkpoint resume calls
-4. **Add event capture**: Implement logic to capture re-emitted `RequestInfoEvent` objects
+4. **Add event capture**: Implement logic to capture re-emitted request_info events (`event.type == "request_info"`)
 5. **Test checkpoint resume**: Verify pending requests are re-emitted and handled correctly
 
 ### Part 2 Checklist: Request-Response System
@@ -393,8 +388,8 @@ class ApprovalRequiredExecutor(Executor):
 
 After completing the migration:
 
-1. Review the updated [Requests and Responses Tutorial](../../tutorials/workflows/requests-and-responses.md)
-2. Explore advanced patterns in the [User Guide](../../user-guide/workflows/requests-and-responses.md)
+1. Review the updated [Requests and Responses Tutorial](../../workflows/state.md)
+2. Explore advanced patterns in the [User Guide](../../workflows/state.md)
 3. Check out updated samples in the [repository](https://github.com/microsoft/agent-framework/tree/main/python/samples)
 
-For additional help, refer to the [Agent Framework documentation](../../overview/agent-framework-overview.md) or reach out to the team and community.
+For additional help, refer to the [Agent Framework documentation](../../overview/index.md) or reach out to the team and community.
