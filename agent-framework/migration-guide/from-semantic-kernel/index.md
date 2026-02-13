@@ -59,7 +59,7 @@ an empty `Kernel` if not provided.
 Azure AI Foundry requires an agent resource to be created in the cloud before creating a local agent class that uses it.
 
 ```csharp
-PersistentAgentsClient azureAgentClient = AzureAIAgent.CreateAgentsClient(azureEndpoint, new AzureCliCredential());
+PersistentAgentsClient azureAgentClient = AzureAIAgent.CreateAgentsClient(azureEndpoint, new DefaultAzureCredential());
 
 PersistentAgent definition = await azureAgentClient.Administration.CreateAgentAsync(
     deploymentName,
@@ -67,6 +67,9 @@ PersistentAgent definition = await azureAgentClient.Administration.CreateAgentAs
 
 AzureAIAgent agent = new(definition, azureAgentClient);
  ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Agent Framework
 
@@ -471,7 +474,7 @@ agent = chat_client.as_agent(tools=get_weather)
 ```
 
 > [!NOTE]
-> The `tools` parameter is present on both the agent creation, the `run` and `run_stream` methods, as well as the `get_response` and `get_streaming_response` methods, it allows you to supply tools both as a list or a single function.
+> The `tools` parameter is present on both the agent creation and the `run` method (with or without `stream=True`), as well as the `get_response` and `get_streaming_response` methods, it allows you to supply tools both as a list or a single function.
 
 The name of the function will then become the name of the tool, and the docstring will become the description of the tool, you can also add a description to the parameters:
 
@@ -716,7 +719,7 @@ print("Agent response:", response.text)
 
 ## 7. Agent Streaming Invocation
 
-Key differences in the method names from `invoke` to `run_stream`, return types (`AgentResponseUpdate`) and parameters.
+Key differences in the method names from `invoke` to `run(..., stream=True)`, return types (`AgentResponseUpdate`) and parameters.
 
 ### Semantic Kernel
 
@@ -739,7 +742,7 @@ All contents produced by any service underlying the Agent are returned. The fina
 from agent_framework import AgentResponse
 agent = ...
 updates = []
-async for update in agent.run_stream(user_input, thread):
+async for update in agent.run(user_input, thread, stream=True):
     updates.append(update)
     print(update.text)
 
@@ -752,7 +755,7 @@ You can even do that directly:
 ```python
 from agent_framework import AgentResponse
 agent = ...
-full_response = AgentResponse.from_agent_response_generator(agent.run_stream(user_input, thread))
+full_response = AgentResponse.from_agent_response_generator(agent.run(user_input, thread, stream=True))
 print("Full agent response:", full_response.text)
 ```
 
@@ -806,4 +809,4 @@ response = await agent.run(
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Quickstart Guide](../../tutorials/quick-start.md)
+> [Quickstart Guide](../../get-started/your-first-agent.md)

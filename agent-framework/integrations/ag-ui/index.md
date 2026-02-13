@@ -136,12 +136,12 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-<!-- 3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows -->
-<!-- 4. **[State Management](state-management.md)**: Synchronize state between client and server -->
+<!-- 3. **[Human-in-the-Loop](#)**: Implement approval workflows -->
+<!-- 4. **[State Management](#)**: Synchronize state between client and server -->
 
 ## Additional Resources
 
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 - [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
 - [Microsoft.Extensions.AI Documentation](/dotnet/api/microsoft.extensions.ai)
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
@@ -152,7 +152,7 @@ To get started with AG-UI integration:
 
 ## AG-UI vs. Direct Agent Usage
 
-While you can run agents directly in your application using Agent Framework's `run` and `run_streaming` methods, AG-UI provides additional capabilities:
+While you can run agents directly in your application using Agent Framework's `run` and `run(..., stream=True)` methods, AG-UI provides additional capabilities:
 
 | Feature | Direct Agent Usage | AG-UI Integration |
 |---------|-------------------|-------------------|
@@ -222,7 +222,7 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 |------------------------|------------------|-------------|
 | `Agent` | Agent Endpoint | Each agent becomes an HTTP endpoint |
 | `agent.run()` | HTTP POST Request | Client sends messages via HTTP |
-| `agent.run_streaming()` | Server-Sent Events | Streaming responses via SSE |
+| `agent.run(..., stream=True)` | Server-Sent Events | Streaming responses via SSE |
 | Agent response updates | AG-UI Events | `TEXT_MESSAGE_CONTENT`, `TOOL_CALL_START`, etc. |
 | Function tools (`@tool`) | Backend Tools | Executed on server, results streamed to client |
 | Tool approval mode | Human-in-the-Loop | Approval requests/responses via protocol |
@@ -244,12 +244,12 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-<!-- 3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows -->
-<!-- 4. **[State Management](state-management.md)**: Synchronize state between client and server -->
+<!-- 3. **[Human-in-the-Loop](#)**: Implement approval workflows -->
+<!-- 4. **[State Management](#)**: Synchronize state between client and server -->
 
 ## Additional Resources
 
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 - [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
 - [AG-UI Dojo App](https://dojo.ag-ui.com/) - Example application demonstrating Agent Framework integration
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)

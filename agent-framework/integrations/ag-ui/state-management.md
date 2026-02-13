@@ -623,7 +623,7 @@ async def main():
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     # Track state locally
     state: dict[str, Any] = {}
@@ -643,7 +643,7 @@ async def main():
 
             print()
             # Stream the agent response with state
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Handle text content
                 if update.text:
                     print(update.text, end="", flush=True)
@@ -970,7 +970,7 @@ recipe_agent = AgentFrameworkAgent(
 
 You've now learned all the core AG-UI features! Next you can:
 
-- Explore the [Agent Framework documentation](../../overview/agent-framework-overview.md)
+- Explore the [Agent Framework documentation](../../overview/index.md)
 - Build a complete application combining all AG-UI features
 - Deploy your AG-UI service to production
 

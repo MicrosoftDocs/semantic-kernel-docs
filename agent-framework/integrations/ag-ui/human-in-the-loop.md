@@ -632,7 +632,7 @@ The server middleware must remove approval protocol messages after processing:
 ## Next Steps
 
 <!-- - **[Learn State Management](state-management.md)**: Manage shared state with approval workflows -->
-- **[Explore Function Tools](../../tutorials/agents/function-tools-approvals.md)**: Learn more about approval patterns in Agent Framework
+- **[Explore Function Tools](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
 
 ::: zone-end
 
@@ -888,7 +888,7 @@ async def main():
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     try:
         while True:
@@ -902,7 +902,7 @@ async def main():
             print("\nAssistant: ", end="", flush=True)
             pending_approval_update = None
 
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Check if this is an approval request
                 # (Approval requests are detected by specific metadata or content markers)
                 if update.additional_properties and update.additional_properties.get("requires_approval"):
@@ -1120,12 +1120,12 @@ def close_account(...): pass
 Now that you understand human-in-the-loop, you can:
 
 - **[Learn State Management](state-management.md)**: Manage shared state with approval workflows
-- **[Explore Advanced Patterns](../../tutorials/agents/function-tools-approvals.md)**: Learn more about approval patterns in Agent Framework
+- **[Explore Advanced Patterns](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
 
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
 - [Backend Tool Rendering](backend-tool-rendering.md)
-- [Function Tools with Approvals](../../tutorials/agents/function-tools-approvals.md)
+- [Function Tools with Approvals](../../agents/tools/tool-approval.md)
 
 ::: zone-end

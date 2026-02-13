@@ -4,7 +4,7 @@ description: Guide to significant changes in Python releases for Microsoft Agent
 author: eavanvalkenburg
 ms.topic: upgrade-and-migration-article
 ms.author: edvan
-ms.date: 02/04/2026
+ms.date: 02/13/2026
 ms.service: agent-framework
 ---
 # Python 2026 Significant Changes Guide
@@ -15,6 +15,122 @@ This document lists all significant changes in Python releases since the start o
 - 🟡 **Enhancement** — New capability or improvement; existing code continues to work
 
 This document will be removed once we reach the 1.0.0 stable release, so please refer to it when upgrading between versions in 2026 to ensure you don't miss any important changes. For detailed upgrade instructions on specific topics (e.g., options migration), refer to the linked upgrade guides or the linked PR's.
+
+---
+
+## python-1.0.0b260212 (February 12, 2026)
+
+**Release Notes:** [python-1.0.0b260212](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260212)
+
+### 🔴 `Hosted*Tool` classes replaced by client `get_*_tool()` methods
+
+**PR:** [#3634](https://github.com/microsoft/agent-framework/pull/3634)
+
+The hosted tool classes were removed in favor of client-scoped factory methods. This makes tool availability explicit by provider.
+
+| Removed class | Replacement |
+|---|---|
+| `HostedCodeInterpreterTool` | `client.get_code_interpreter_tool()` |
+| `HostedWebSearchTool` | `client.get_web_search_tool()` |
+| `HostedFileSearchTool` | `client.get_file_search_tool(...)` |
+| `HostedMCPTool` | `client.get_mcp_tool(...)` |
+| `HostedImageGenerationTool` | `client.get_image_generation_tool(...)` |
+
+**Before:**
+```python
+from agent_framework import HostedCodeInterpreterTool, HostedWebSearchTool
+
+tools = [HostedCodeInterpreterTool(), HostedWebSearchTool()]
+```
+
+**After:**
+```python
+from agent_framework.openai import OpenAIResponsesClient
+
+client = OpenAIResponsesClient()
+tools = [client.get_code_interpreter_tool(), client.get_web_search_tool()]
+```
+
+---
+
+### 🔴 Session/context provider pipeline finalized (`AgentSession`, `context_providers`)
+
+**PR:** [#3850](https://github.com/microsoft/agent-framework/pull/3850)
+
+The Python session and context-provider migration was completed. `AgentThread` and the old context-provider types were removed.
+
+- `AgentThread` → `AgentSession`
+- `agent.get_new_thread()` → `agent.create_session()`
+- `agent.get_new_thread(service_thread_id=...)` → `agent.get_session(service_session_id=...)`
+- `context_provider=` / `chat_message_store_factory=` patterns are replaced by `context_providers=[...]`
+
+**Before:**
+```python
+thread = agent.get_new_thread()
+response = await agent.run("Hello", thread=thread)
+```
+
+**After:**
+```python
+session = agent.create_session()
+response = await agent.run("Hello", session=session)
+```
+
+---
+
+### 🔴 Checkpoint model and storage behavior refactored
+
+**PR:** [#3744](https://github.com/microsoft/agent-framework/pull/3744)
+
+Checkpoint internals were redesigned, which affects persisted checkpoint compatibility and custom storage implementations:
+
+- `WorkflowCheckpoint` now stores live objects (serialization happens in checkpoint storage)
+- `FileCheckpointStorage` now uses pickle serialization
+- `workflow_id` was removed and `previous_checkpoint_id` was added
+- Deprecated checkpoint hooks were removed
+
+If you persist checkpoints between versions, regenerate or migrate existing checkpoint artifacts before resuming workflows.
+
+---
+
+### 🟡 `AzureOpenAIResponsesClient` supports Azure AI Foundry project endpoints
+
+**PR:** [#3814](https://github.com/microsoft/agent-framework/pull/3814)
+
+You can now create `AzureOpenAIResponsesClient` with a Foundry project endpoint or `AIProjectClient`, not only direct Azure OpenAI endpoints.
+
+```python
+from azure.identity import DefaultAzureCredential
+from agent_framework.azure import AzureOpenAIResponsesClient
+
+client = AzureOpenAIResponsesClient(
+    project_endpoint="https://<your-project>.services.ai.azure.com",
+    deployment_name="gpt-4o-mini",
+    credential=DefaultAzureCredential(),
+)
+```
+
+---
+
+### 🔴 Middleware `call_next` no longer accepts `context`
+
+**PR:** [#3829](https://github.com/microsoft/agent-framework/pull/3829)
+
+Middleware continuation now takes no arguments. If your middleware still calls `call_next(context)`, update it to `call_next()`.
+
+**Before:**
+```python
+async def telemetry_middleware(context, call_next):
+    # ...
+    return await call_next(context)
+```
+
+**After:**
+```python
+async def telemetry_middleware(context, call_next):
+    # ...
+    return await call_next()
+```
 
 ---
 
@@ -140,6 +256,148 @@ message = Message(role="user", contents=[Content.from_text("Hello")])
 
 > [!NOTE]
 > `ChatClient`, `ChatResponse`, `ChatOptions`, and `ChatMessageStore` are **not** renamed by this change.
+
+---
+
+### 🔴 Types API review updates across response/message models
+
+**PR:** [#3647](https://github.com/microsoft/agent-framework/pull/3647)
+
+This release includes a broad, breaking cleanup of message/response typing and helper APIs.
+
+- `Role` and `FinishReason` are now `NewType` wrappers over `str` with `RoleLiteral`/`FinishReasonLiteral` for known values. Treat them as strings (no `.value` usage).
+- `Message` construction is standardized on `Message(role, contents=[...])`; strings in `contents` are auto-converted to text content.
+- `ChatResponse` and `AgentResponse` constructors now center on `messages=` (single `Message` or sequence); legacy `text=` constructor usage was removed from responses.
+- `ChatResponseUpdate` and `AgentResponseUpdate` no longer accept `text=`; use `contents=[Content.from_text(...)]`.
+- Update-combining helper names were simplified.
+- `try_parse_value` was removed from `ChatResponse` and `AgentResponse`.
+
+#### Helper method renames
+
+| Before | After |
+|---|---|
+| `ChatResponse.from_chat_response_updates(...)` | `ChatResponse.from_updates(...)` |
+| `ChatResponse.from_chat_response_generator(...)` | `ChatResponse.from_update_generator(...)` |
+| `AgentResponse.from_agent_run_response_updates(...)` | `AgentResponse.from_updates(...)` |
+
+#### Update response-update construction
+
+**Before:**
+```python
+update = AgentResponseUpdate(text="Processing...", role="assistant")
+```
+
+**After:**
+```python
+from agent_framework import AgentResponseUpdate, Content
+
+update = AgentResponseUpdate(
+    contents=[Content.from_text("Processing...")],
+    role="assistant",
+)
+```
+
+#### Replace `try_parse_value` with `try/except` on `.value`
+
+**Before:**
+```python
+if parsed := response.try_parse_value(MySchema):
+    print(parsed.name)
+```
+
+**After:**
+```python
+from pydantic import ValidationError
+
+try:
+    parsed = response.value
+    if parsed:
+        print(parsed.name)
+except ValidationError as err:
+    print(f"Validation failed: {err}")
+```
+
+---
+
+### 🔴 Unified `run`/`get_response` model and `ResponseStream` usage
+
+**PR:** [#3379](https://github.com/microsoft/agent-framework/pull/3379)
+
+Python APIs were consolidated around `agent.run(...)` and `client.get_response(...)`, with streaming represented by `ResponseStream`.
+
+**Before:**
+```python
+async for update in agent.run_stream("Hello"):
+    print(update)
+```
+
+**After:**
+```python
+stream = agent.run("Hello", stream=True)
+async for update in stream:
+    print(update)
+```
+
+---
+
+### 🔴 Core context/protocol type renames
+
+**PRs:** [#3714](https://github.com/microsoft/agent-framework/pull/3714), [#3717](https://github.com/microsoft/agent-framework/pull/3717)
+
+| Before | After |
+|---|---|
+| `AgentRunContext` | `AgentContext` |
+| `AgentProtocol` | `SupportsAgentRun` |
+
+Update imports and type annotations accordingly.
+
+---
+
+### 🔴 Middleware continuation parameter renamed to `call_next`
+
+**PR:** [#3735](https://github.com/microsoft/agent-framework/pull/3735)
+
+Middleware signatures should now use `call_next` instead of `next`.
+
+**Before:**
+```python
+async def my_middleware(context, next):
+    return await next(context)
+```
+
+**After:**
+```python
+async def my_middleware(context, call_next):
+    return await call_next(context)
+```
+
+---
+
+### 🔴 TypeVar names standardized (`TName` → `NameT`)
+
+**PR:** [#3770](https://github.com/microsoft/agent-framework/pull/3770)
+
+The codebase now follows a consistent TypeVar naming style where suffix `T` is used.
+
+**Before:**
+```python
+TMessage = TypeVar("TMessage")
+```
+
+**After:**
+```python
+MessageT = TypeVar("MessageT")
+```
+
+If you maintain custom wrappers around framework generics, align your local TypeVar names with the new convention to reduce annotation churn.
+
+---
+
+### 🔴 Workflow-as-agent output and streaming changes
+
+**PR:** [#3649](https://github.com/microsoft/agent-framework/pull/3649)
+
+`workflow.as_agent()` behavior was updated to align output and streaming with standard agent response patterns. Review workflow-as-agent consumers that depend on legacy output/update handling and update them to the current `AgentResponse`/`AgentResponseUpdate` flow.
 
 ---
 
@@ -392,6 +650,103 @@ output: WorkflowEvent | None = None
 
 ---
 
+### 🔴 `workflow.send_responses*` removed; use `workflow.run(responses=...)`
+
+**PR:** [#3720](https://github.com/microsoft/agent-framework/pull/3720)
+
+`send_responses()` and `send_responses_streaming()` were removed from `Workflow`. Continue paused workflows by passing responses directly to `run()`.
+
+**Before:**
+```python
+async for event in workflow.send_responses_streaming(
+    checkpoint_id=checkpoint_id,
+    responses=[approved_response],
+):
+    ...
+```
+
+**After:**
+```python
+async for event in workflow.run(
+    checkpoint_id=checkpoint_id,
+    responses=[approved_response],
+):
+    ...
+```
+
+---
+
+### 🔴 `SharedState` renamed to `State`; workflow state APIs are synchronous
+
+**PR:** [#3667](https://github.com/microsoft/agent-framework/pull/3667)
+
+State APIs no longer require `await`, and naming was standardized:
+
+| Before | After |
+|---|---|
+| `ctx.shared_state` | `ctx.state` |
+| `await ctx.get_shared_state("k")` | `ctx.get_state("k")` |
+| `await ctx.set_shared_state("k", v)` | `ctx.set_state("k", v)` |
+| `checkpoint.shared_state` | `checkpoint.state` |
+
+---
+
+### 🔴 Orchestration builders moved to `agent_framework.orchestrations`
+
+**PR:** [#3685](https://github.com/microsoft/agent-framework/pull/3685)
+
+Orchestration builders are now in a dedicated package namespace.
+
+**Before:**
+```python
+from agent_framework import SequentialBuilder, GroupChatBuilder
+```
+
+**After:**
+```python
+from agent_framework.orchestrations import SequentialBuilder, GroupChatBuilder
+```
+
+---
+
+### 🟡 Long-running background responses and continuation tokens
+
+**PR:** [#3808](https://github.com/microsoft/agent-framework/pull/3808)
+
+Background responses are now supported for Python agent runs through `options={"background": True}` and `continuation_token`.
+
+```python
+response = await agent.run("Long task", options={"background": True})
+while response.continuation_token is not None:
+    response = await agent.run(options={"continuation_token": response.continuation_token})
+```
+
+---
+
+### 🟡 Session/context provider preview types added side-by-side
+
+**PR:** [#3763](https://github.com/microsoft/agent-framework/pull/3763)
+
+New session/context pipeline types were introduced alongside legacy APIs for incremental migration, including `SessionContext` and `BaseContextProvider`.
+
+---
+
+### 🟡 Code interpreter streaming now includes incremental code deltas
+
+**PR:** [#3775](https://github.com/microsoft/agent-framework/pull/3775)
+
+Streaming code-interpreter runs now surface code delta updates in the streamed content so UIs can render generated code progressively.
+
+---
+
+### 🟡 `@tool` supports explicit schema handling
+
+**PR:** [#3734](https://github.com/microsoft/agent-framework/pull/3734)
+
+Tool definitions can now use explicit schema handling when inferred schema output needs customization.
+
+---
+
 ## python-1.0.0b260130 (January 30, 2026)
 
 **Release Notes:** [python-1.0.0b260130](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260130)
@@ -433,6 +788,14 @@ result = response.value  # Type: MyOutput | None (inferred!)
 > [!TIP]
 > This is a non-breaking enhancement. Existing code without type parameters continues to work.
 > You do not need to specify the types in the code snippet above for the options and response; they are shown here for clarity.
+
+---
+
+### 🟡 `BaseAgent` support added for Claude Agent SDK
+
+**PR:** [#3509](https://github.com/microsoft/agent-framework/pull/3509)
+
+The Python SDK now includes a `BaseAgent` implementation for the Claude Agent SDK, enabling first-class adapter-based usage in Agent Framework.
 
 ---
 
@@ -529,7 +892,11 @@ agent = GitHubCopilotAgent(...)
 
 **Release Notes:** [python-1.0.0b260127](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260127)
 
-No significant changes in this release.
+### 🟡 `BaseAgent` support added for GitHub Copilot SDK
+
+**PR:** [#3404](https://github.com/microsoft/agent-framework/pull/3404)
+
+The Python SDK now includes a `BaseAgent` implementation for GitHub Copilot SDK integrations.
 
 ---
 
@@ -716,6 +1083,22 @@ result = await endpoint.run(
 
 ---
 
+### 🟡 Anthropic client now supports `response_format` structured outputs
+
+**PR:** [#3301](https://github.com/microsoft/agent-framework/pull/3301)
+
+You can now use structured output parsing with Anthropic clients via `response_format`, similar to OpenAI and Azure clients.
+
+---
+
+### 🟡 Azure AI configuration expanded (`reasoning`, `rai_config`)
+
+**PRs:** [#3403](https://github.com/microsoft/agent-framework/pull/3403), [#3265](https://github.com/microsoft/agent-framework/pull/3265)
+
+Azure AI support was expanded with reasoning configuration support and `rai_config` during agent creation.
+
+---
+
 ## python-1.0.0b260116 (January 16, 2026)
 
 **Release Notes:** [python-1.0.0b260116](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260116)
@@ -763,6 +1146,14 @@ async for event in workflow.run_stream(...):
     if isinstance(event, WorkflowOutputEvent):
         executor = event.executor_id
 ```
+
+---
+
+### 🟡 AG-UI supports service-managed session continuity
+
+**PR:** [#3136](https://github.com/microsoft/agent-framework/pull/3136)
+
+AG-UI now preserves service-managed conversation identity (for example, Foundry-managed sessions/threads) to maintain multi-turn continuity.
 
 ---
 
@@ -893,6 +1284,48 @@ class MyAggregateProvider:
 
 ---
 
+### 🔴 `AgentRunResponse*` renamed to `AgentResponse*`
+
+**PR:** [#3207](https://github.com/microsoft/agent-framework/pull/3207)
+
+`AgentRunResponse` and `AgentRunResponseUpdate` were renamed to `AgentResponse` and `AgentResponseUpdate`.
+
+**Before:**
+```python
+from agent_framework import AgentRunResponse, AgentRunResponseUpdate
+```
+
+**After:**
+```python
+from agent_framework import AgentResponse, AgentResponseUpdate
+```
+
+---
+
+### 🟡 Declarative workflow runtime added for YAML-defined workflows
+
+**PR:** [#2815](https://github.com/microsoft/agent-framework/pull/2815)
+
+A graph-based runtime was added for executing declarative YAML workflows, enabling multi-agent orchestration without custom runtime code.
+
+---
+
+### 🟡 MCP loading/reliability improvements
+
+**PR:** [#3154](https://github.com/microsoft/agent-framework/pull/3154)
+
+MCP integrations gained improved connection-loss behavior, pagination support when loading, and representation control options.
+
+---
+
+### 🟡 Foundry `A2ATool` now supports connections without a target URL
+
+**PR:** [#3127](https://github.com/microsoft/agent-framework/pull/3127)
+
+`A2ATool` can now resolve Foundry-backed A2A connections via project connection metadata even when a direct target URL is not configured.
+
+---
+
 ## python-1.0.0b260107 (January 7, 2026)
 
 **Release Notes:** [python-1.0.0b260107](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260107)
@@ -913,22 +1346,54 @@ No significant changes in this release.
 
 | Release | Release Notes | Type | Change | PR |
 |---------|---------------|------|--------|-----|
+| 1.0.0b260212 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260212) | 🔴 Breaking | `Hosted*Tool` classes removed; create hosted tools via client `get_*_tool()` methods | [#3634](https://github.com/microsoft/agent-framework/pull/3634) |
+| 1.0.0b260212 | | 🔴 Breaking | Session/context provider pipeline finalized: `AgentThread` removed, use `AgentSession` + `context_providers` | [#3850](https://github.com/microsoft/agent-framework/pull/3850) |
+| 1.0.0b260212 | | 🔴 Breaking | Checkpoint model/storage refactor (`workflow_id` removed, `previous_checkpoint_id` added, storage behavior changed) | [#3744](https://github.com/microsoft/agent-framework/pull/3744) |
+| 1.0.0b260212 | | 🟡 Enhancement | `AzureOpenAIResponsesClient` can be created from Azure AI Foundry project endpoint or `AIProjectClient` | [#3814](https://github.com/microsoft/agent-framework/pull/3814) |
+| 1.0.0b260212 | | 🔴 Breaking | Middleware continuation no longer accepts `context`; update `call_next(context)` to `call_next()` | [#3829](https://github.com/microsoft/agent-framework/pull/3829) |
+| 1.0.0b260210 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260210) | 🔴 Breaking | `send_responses()`/`send_responses_streaming()` removed; use `workflow.run(responses=...)` | [#3720](https://github.com/microsoft/agent-framework/pull/3720) |
+| 1.0.0b260210 | | 🔴 Breaking | `SharedState` → `State`; workflow state APIs are synchronous and checkpoint state field renamed | [#3667](https://github.com/microsoft/agent-framework/pull/3667) |
+| 1.0.0b260210 | | 🔴 Breaking | Orchestration builders moved to `agent_framework.orchestrations` package | [#3685](https://github.com/microsoft/agent-framework/pull/3685) |
+| 1.0.0b260210 | | 🟡 Enhancement | Background responses and `continuation_token` support added to Python agent responses | [#3808](https://github.com/microsoft/agent-framework/pull/3808) |
+| 1.0.0b260210 | | 🟡 Enhancement | Session/context preview types added side-by-side (`SessionContext`, `BaseContextProvider`) | [#3763](https://github.com/microsoft/agent-framework/pull/3763) |
+| 1.0.0b260210 | | 🟡 Enhancement | Streaming code-interpreter updates now include incremental code deltas | [#3775](https://github.com/microsoft/agent-framework/pull/3775) |
+| 1.0.0b260210 | | 🟡 Enhancement | `@tool` decorator adds explicit schema handling support | [#3734](https://github.com/microsoft/agent-framework/pull/3734) |
 | 1.0.0b260210 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260210) | 🔴 Breaking | `register_executor()`/`register_agent()` removed from `WorkflowBuilder`; use instances directly, helper methods for state isolation | [#3781](https://github.com/microsoft/agent-framework/pull/3781) |
 | 1.0.0b260210 | | 🔴 Breaking | `ChatAgent` → `Agent`, `ChatMessage` → `Message`, `RawChatAgent` → `RawAgent`, `ChatClientProtocol` → `SupportsChatGetResponse` | [#3747](https://github.com/microsoft/agent-framework/pull/3747) |
+| 1.0.0b260210 | | 🔴 Breaking | Types API review: `Role`/`FinishReason` type changes, response/update constructor tightening, helper renames to `from_updates`, and removal of `try_parse_value` | [#3647](https://github.com/microsoft/agent-framework/pull/3647) |
+| 1.0.0b260210 | | 🔴 Breaking | APIs unified around `run`/`get_response` and `ResponseStream` | [#3379](https://github.com/microsoft/agent-framework/pull/3379) |
+| 1.0.0b260210 | | 🔴 Breaking | `AgentRunContext` renamed to `AgentContext` | [#3714](https://github.com/microsoft/agent-framework/pull/3714) |
+| 1.0.0b260210 | | 🔴 Breaking | `AgentProtocol` renamed to `SupportsAgentRun` | [#3717](https://github.com/microsoft/agent-framework/pull/3717) |
+| 1.0.0b260210 | | 🔴 Breaking | Middleware `next` parameter renamed to `call_next` | [#3735](https://github.com/microsoft/agent-framework/pull/3735) |
+| 1.0.0b260210 | | 🔴 Breaking | TypeVar naming standardized (`TName` → `NameT`) | [#3770](https://github.com/microsoft/agent-framework/pull/3770) |
+| 1.0.0b260210 | | 🔴 Breaking | Workflow-as-agent output/stream behavior aligned with current agent response flow | [#3649](https://github.com/microsoft/agent-framework/pull/3649) |
 | 1.0.0b260210 | | 🔴 Breaking | Fluent builder methods moved to constructor parameters across 6 builders | [#3693](https://github.com/microsoft/agent-framework/pull/3693) |
 | 1.0.0b260210 | | 🔴 Breaking | Workflow events unified into single `WorkflowEvent` with `type` discriminator; `isinstance()` → `event.type == "..."` | [#3690](https://github.com/microsoft/agent-framework/pull/3690) |
 | 1.0.0b260130 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260130) | 🟡 Enhancement | `ChatOptions`/`ChatResponse`/`AgentResponse` generic over response format | [#3305](https://github.com/microsoft/agent-framework/pull/3305) |
+| 1.0.0b260130 | | 🟡 Enhancement | `BaseAgent` support added for Claude Agent SDK integrations | [#3509](https://github.com/microsoft/agent-framework/pull/3509) |
 | 1.0.0b260128 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260128) | 🔴 Breaking | `AIFunction` → `FunctionTool`, `@ai_function` → `@tool` | [#3413](https://github.com/microsoft/agent-framework/pull/3413) |
 | 1.0.0b260128 | | 🔴 Breaking | Factory pattern for GroupChat/Magentic; `with_standard_manager` → `with_manager`, `participant_factories` → `register_participant` | [#3224](https://github.com/microsoft/agent-framework/pull/3224) |
 | 1.0.0b260128 | | 🔴 Breaking | `Github` → `GitHub` | [#3486](https://github.com/microsoft/agent-framework/pull/3486) |
-| 1.0.0b260127 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260127) | — | No significant changes | — |
+| 1.0.0b260127 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260127) | 🟡 Enhancement | `BaseAgent` support added for GitHub Copilot SDK integrations | [#3404](https://github.com/microsoft/agent-framework/pull/3404) |
 | 1.0.0b260123 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260123) | 🔴 Breaking | Content types consolidated to single `Content` class with classmethods | [#3252](https://github.com/microsoft/agent-framework/pull/3252) |
 | 1.0.0b260123 | | 🔴 Breaking | `response_format` validation errors now raise `ValidationError` | [#3274](https://github.com/microsoft/agent-framework/pull/3274) |
 | 1.0.0b260123 | | 🔴 Breaking | AG-UI run logic simplified | [#3322](https://github.com/microsoft/agent-framework/pull/3322) |
+| 1.0.0b260123 | | 🟡 Enhancement | Anthropic client adds `response_format` support for structured outputs | [#3301](https://github.com/microsoft/agent-framework/pull/3301) |
+| 1.0.0b260123 | | 🟡 Enhancement | Azure AI configuration expanded with `reasoning` and `rai_config` support | [#3403](https://github.com/microsoft/agent-framework/pull/3403), [#3265](https://github.com/microsoft/agent-framework/pull/3265) |
 | 1.0.0b260116 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260116) | 🔴 Breaking | `create_agent` → `as_agent` | [#3249](https://github.com/microsoft/agent-framework/pull/3249) |
 | 1.0.0b260116 | | 🔴 Breaking | `source_executor_id` → `executor_id` | [#3166](https://github.com/microsoft/agent-framework/pull/3166) |
+| 1.0.0b260116 | | 🟡 Enhancement | AG-UI supports service-managed session/thread continuity | [#3136](https://github.com/microsoft/agent-framework/pull/3136) |
 | 1.0.0b260114 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260114) | 🔴 Breaking | Orchestrations refactored (GroupChat, Handoff, Sequential, Concurrent) | [#3023](https://github.com/microsoft/agent-framework/pull/3023) |
 | 1.0.0b260114 | | 🔴 Breaking | Options as TypedDict and Generic | [#3140](https://github.com/microsoft/agent-framework/pull/3140) |
 | 1.0.0b260114 | | 🔴 Breaking | `display_name` removed; `context_providers` → `context_provider` (singular); `middleware` must be list | [#3139](https://github.com/microsoft/agent-framework/pull/3139) |
+| 1.0.0b260114 | | 🔴 Breaking | `AgentRunResponse`/`AgentRunResponseUpdate` renamed to `AgentResponse`/`AgentResponseUpdate` | [#3207](https://github.com/microsoft/agent-framework/pull/3207) |
+| 1.0.0b260114 | | 🟡 Enhancement | Declarative workflow runtime added for YAML-defined workflows | [#2815](https://github.com/microsoft/agent-framework/pull/2815) |
+| 1.0.0b260114 | | 🟡 Enhancement | MCP loading/reliability improvements (connection-loss handling, pagination, representation controls) | [#3154](https://github.com/microsoft/agent-framework/pull/3154) |
+| 1.0.0b260114 | | 🟡 Enhancement | Foundry `A2ATool` supports connections without explicit target URL | [#3127](https://github.com/microsoft/agent-framework/pull/3127) |
 | 1.0.0b260107 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260107) | — | No significant changes | — |
 | 1.0.0b260106 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260106) | — | No significant changes | — |
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Support overview](../index.md)

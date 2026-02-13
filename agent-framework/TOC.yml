@@ -1,33 +1,232 @@
 items:
 - name: Agent Framework
-  href: overview/agent-framework-overview.md
-- name: Quick Start Guide
-  href: tutorials/quick-start.md
+  href: overview/index.md
+- name: Get Started
   expanded: true
-- name: Tutorials
-  href: tutorials/TOC.yml
-- name: User Guide
   items:
   - name: Overview
-    href: user-guide/overview.md
-  - name: Agents
-    href: user-guide/agents/TOC.yml
-  - name: Model Context Protocol
-    href: user-guide/model-context-protocol/TOC.yml
-  - name: Workflows
-    href: user-guide/workflows/TOC.yml
-  - name: Hosting
-    href: user-guide/hosting/TOC.yml
-  - name: DevUI
-    href: user-guide/devui/TOC.yml
+    href: get-started/index.md
+  - name: "Step 1: Your First Agent"
+    href: get-started/your-first-agent.md
+  - name: "Step 2: Add Tools"
+    href: get-started/add-tools.md
+  - name: "Step 3: Multi-Turn Conversations"
+    href: get-started/multi-turn.md
+  - name: "Step 4: Memory & Persistence"
+    href: get-started/memory.md
+  - name: "Step 5: Workflows"
+    href: get-started/workflows.md
+  - name: "Step 6: Host Your Agent"
+    href: get-started/hosting.md
+- name: Agents
+  items:
+  - name: Overview
+    href: agents/index.md
+  - name: Running Agents
+    href: agents/running-agents.md
+  - name: Multimodal
+    href: agents/multimodal.md
+  - name: Structured Output
+    href: agents/structured-output.md
+  - name: Background Responses
+    href: agents/background-responses.md
+  - name: RAG
+    href: agents/rag.md
+  - name: Declarative Agents
+    href: agents/declarative.md
   - name: Observability
-    href: user-guide/observability.md
+    href: agents/observability.md
+  - name: Tools
+    items:
+    - name: Overview
+      href: agents/tools/index.md
+    - name: Function Tools
+      href: agents/tools/function-tools.md
+    - name: Tool Approval
+      href: agents/tools/tool-approval.md
+    - name: Code Interpreter
+      href: agents/tools/code-interpreter.md
+    - name: File Search
+      href: agents/tools/file-search.md
+    - name: Web Search
+      href: agents/tools/web-search.md
+    - name: Hosted MCP Tools
+      href: agents/tools/hosted-mcp-tools.md
+    - name: Local MCP Tools
+      href: agents/tools/local-mcp-tools.md
+  - name: Conversations & Memory
+    items:
+    - name: Overview
+      href: agents/conversations/index.md
+    - name: Session
+      href: agents/conversations/session.md
+    - name: Context Providers
+      href: agents/conversations/context-providers.md
+    - name: Storage
+      href: agents/conversations/storage.md
+  - name: Middleware
+    items:
+    - name: Overview
+      href: agents/middleware/index.md
+    - name: Defining Middleware
+      href: agents/middleware/defining-middleware.md
+    - name: Chat-Level Middleware
+      href: agents/middleware/chat-middleware.md
+    - name: Agent vs Run Scope
+      href: agents/middleware/agent-vs-run-scope.md
+    - name: Termination & Guardrails
+      href: agents/middleware/termination.md
+    - name: Result Overrides
+      href: agents/middleware/result-overrides.md
+    - name: Exception Handling
+      href: agents/middleware/exception-handling.md
+    - name: Shared State
+      href: agents/middleware/shared-state.md
+    - name: Runtime Context
+      href: agents/middleware/runtime-context.md
+  - name: Providers
+    items:
+    - name: Overview
+      href: agents/providers/index.md
+    - name: Azure OpenAI
+      href: agents/providers/azure-openai.md
+    - name: OpenAI
+      href: agents/providers/openai.md
+    - name: Azure AI Foundry
+      href: agents/providers/azure-ai-foundry.md
+    - name: Anthropic
+      href: agents/providers/anthropic.md
+    - name: Ollama
+      href: agents/providers/ollama.md
+    - name: GitHub Copilot
+      href: agents/providers/github-copilot.md
+    - name: Copilot Studio
+      href: agents/providers/copilot-studio.md
+    - name: Custom Provider
+      href: agents/providers/custom.md
+- name: Workflows
+  items:
+  - name: Overview
+    href: workflows/index.md
+  - name: Executors
+    href: workflows/executors.md
+  - name: Edges
+    href: workflows/edges.md
+  - name: Events
+    href: workflows/events.md
+  - name: Workflow Builder & Execution
+    href: workflows/workflows.md
+  - name: Agents in Workflows
+    href: workflows/agents-in-workflows.md
+  - name: Human-in-the-Loop
+    href: workflows/human-in-the-loop.md
+  - name: State Management
+    href: workflows/state.md
+  - name: Checkpoints & Resuming
+    href: workflows/checkpoints.md
+  - name: Declarative Workflows
+    href: workflows/declarative.md
+  - name: Observability
+    href: workflows/observability.md
+  - name: Workflows as Agents
+    href: workflows/as-agents.md
+  - name: Visualization
+    href: workflows/visualization.md
+  - name: Orchestrations
+    items:
+    - name: Overview
+      href: workflows/orchestrations/index.md
+    - name: Sequential
+      href: workflows/orchestrations/sequential.md
+    - name: Concurrent
+      href: workflows/orchestrations/concurrent.md
+    - name: Handoff
+      href: workflows/orchestrations/handoff.md
+    - name: Group Chat
+      href: workflows/orchestrations/group-chat.md
+    - name: Magentic
+      href: workflows/orchestrations/magentic.md
 - name: Integrations
-  href: integrations/TOC.yml
-- name: Support
-  href: support/TOC.yml
+  items:
+  - name: Overview
+    href: integrations/index.md
+  - name: Azure Functions (Durable)
+    href: integrations/azure-functions.md
+  - name: OpenAI-Compatible Endpoints
+    href: integrations/openai-endpoints.md
+  - name: Purview
+    href: integrations/purview.md
+  - name: M365
+    href: integrations/m365.md
+  - name: A2A Protocol
+    href: integrations/a2a.md
+  - name: AG-UI Protocol
+    items:
+    - name: Overview
+      href: integrations/ag-ui/index.md
+    - name: Getting Started
+      href: integrations/ag-ui/getting-started.md
+    - name: Backend Tool Rendering
+      href: integrations/ag-ui/backend-tool-rendering.md
+    - name: Frontend Tool Rendering
+      href: integrations/ag-ui/frontend-tools.md
+    - name: Security Considerations
+      href: integrations/ag-ui/security-considerations.md
+    - name: Human-in-the-Loop
+      href: integrations/ag-ui/human-in-the-loop.md
+    - name: State Management
+      href: integrations/ag-ui/state-management.md
+    - name: Testing with Dojo
+      href: integrations/ag-ui/testing-with-dojo.md
+- name: DevUI
+  items:
+  - name: Overview
+    href: devui/index.md
+  - name: Directory Discovery
+    href: devui/directory-discovery.md
+  - name: API Reference
+    href: devui/api-reference.md
+  - name: Tracing & Observability
+    href: devui/tracing.md
+  - name: Security & Deployment
+    href: devui/security.md
+  - name: Samples
+    href: devui/samples.md
 - name: Migration Guide
-  href: migration-guide/TOC.yml
-- name: API Reference Guide
-  href: api-docs/TOC.yml
-  expanded: true
+  items:
+  - name: Overview
+    href: migration-guide/index.md
+  - name: From AutoGen
+    items:
+    - name: Overview
+      href: migration-guide/from-autogen/index.md
+  - name: From Semantic Kernel
+    items:
+    - name: Overview
+      href: migration-guide/from-semantic-kernel/index.md
+    - name: Migration Samples
+      href: migration-guide/from-semantic-kernel/samples.md
+- name: API Reference
+  items:
+  - name: .NET API Reference
+    href: /dotnet/api/microsoft.agents.ai
+  - name: Python API Reference
+    href: /python/api/agent-framework-core/agent_framework
+- name: Support
+  items:
+  - name: Overview
+    href: support/index.md
+  - name: FAQ
+    href: support/faq.md
+  - name: Troubleshooting
+    href: support/troubleshooting.md
+  - name: Upgrade Guides
+    items:
+    - name: Overview
+      href: support/upgrade/index.md
+    - name: Workflow APIs and Request-Response System in Python
+      href: support/upgrade/requests-and-responses-upgrade-guide-python.md
+    - name: Python Options based on TypedDicts
+      href: support/upgrade/typed-options-guide-python.md
+    - name: 2026 Python Significant Changes
+      href: support/upgrade/python-2026-significant-changes.md

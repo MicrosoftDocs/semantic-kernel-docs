@@ -1,6 +1,0 @@
-- name: Overview
-  href: overview.md
-- name: AG-UI
-  href: ag-ui/TOC.yml
-- name: Purview
-  href: use-purview-with-agent-framework-sdk.md

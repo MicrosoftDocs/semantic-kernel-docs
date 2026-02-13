@@ -606,12 +606,12 @@ The new TypedDict-based system provides excellent IDE support:
 
 ## Next Steps
 
-To see the typed dicts in action for the case of using OpenAI Reasoning Models with the Chat Completion API, explore [this sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/chat_client/typed_options.py)
+To see the typed dicts in action for the case of using OpenAI Reasoning Models with the Chat Completion API, explore [this sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/typed_options.py)
 
 After completing the migration:
 
-1. Explore provider-specific options in the [API documentation](../../api-docs/TOC.yml)
+1. Explore provider-specific options in the [API documentation](/python/api/agent-framework-core/agent_framework)
 2. Review updated [samples](https://github.com/microsoft/agent-framework/tree/main/python/samples)
-3. Learn about creating [custom chat clients](../../user-guide/agents/agent-types/custom-agent.md)
+3. Learn about creating [custom chat clients](../../agents/providers/custom.md)
 
-For additional help, refer to the [Agent Framework documentation](../../overview/agent-framework-overview.md) or reach out to the community.
+For additional help, refer to the [Agent Framework documentation](../../overview/index.md) or reach out to the community.
