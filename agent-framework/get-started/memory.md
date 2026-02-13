@@ -51,65 +51,11 @@ Console.WriteLine(await agent.RunAsync("What is my name?", session));
 
 Define a context provider that injects additional context into every agent call:
 
-```python
-from typing import Any
-from agent_framework import AgentSession, BaseContextProvider, SessionContext
-
-
-class UserNameProvider(BaseContextProvider):
-    """A simple context provider that remembers the user's name."""
-
-    def __init__(self) -> None:
-        super().__init__(source_id="user-name-provider")
-        self.user_name: str | None = None
-
-    async def before_run(
-        self,
-        *,
-        agent: Any,
-        session: AgentSession,
-        context: SessionContext,
-        state: dict[str, Any],
-    ) -> None:
-        """Called before each agent invocation — add extra instructions."""
-        if self.user_name:
-            context.instructions.append(f"The user's name is {self.user_name}. Always address them by name.")
-        else:
-            context.instructions.append("You don't know the user's name yet. Ask for it politely.")
-
-    async def after_run(
-        self,
-        *,
-        agent: Any,
-        session: AgentSession,
-        context: SessionContext,
-        state: dict[str, Any],
-    ) -> None:
-        """Called after each agent invocation — extract information."""
-        for msg in context.input_messages:
-            text = msg.text if hasattr(msg, "text") else ""
-            if isinstance(text, str) and "my name is" in text.lower():
-                self.user_name = text.lower().split("my name is")[-1].strip().split()[0].capitalize()
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/04_memory.py" id="context_provider" highlight="7,19-22,33-37":::
 
 Create an agent with the context provider:
 
-```python
-credential = AzureCliCredential()
-client = AzureOpenAIResponsesClient(
-    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
-    credential=credential,
-)
-
-memory = UserNameProvider()
-
-agent = client.as_agent(
-    name="MemoryAgent",
-    instructions="You are a friendly assistant.",
-    context_providers=[memory],
-)
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/04_memory.py" id="create_agent" highlight="13-14":::
 
 > [!NOTE]
 > In Python, persistence/memory is handled by history providers. A `BaseHistoryProvider` is also a `BaseContextProvider`, and `InMemoryHistoryProvider` is the built-in local implementation.
@@ -137,22 +83,7 @@ agent = client.as_agent(
 
 Run it — the agent now has access to the context:
 
-```python
-session = await agent.create_session()
-
-result = await agent.run("Hello! What's the square root of 9?", session=session)
-print(f"Agent: {result}\n")
-
-# Now provide the name — the provider extracts and stores it
-result = await agent.run("My name is Alice", session=session)
-print(f"Agent: {result}\n")
-
-# Subsequent calls are personalized
-result = await agent.run("What is 2 + 2?", session=session)
-print(f"Agent: {result}\n")
-
-print(f"[Memory] Stored user name: {memory.user_name}")
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/04_memory.py" id="run_with_memory" highlight="1,4,8,12,15":::
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/04_memory.py) for the complete runnable file.

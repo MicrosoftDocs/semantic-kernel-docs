@@ -101,10 +101,10 @@ agent-framework/
    Code blocks are wrapped in `:::zone pivot="programming-language-csharp"`
    and `:::zone pivot="programming-language-python"` sections.
 
-3. **Inline code for now**: Code is currently inlined with `<!-- source: ... -->`
-   comments above each block indicating the sample file it came from. When the
-   code repo structure is finalized, these will be converted to `:::code`
-   directives. See `.github/skills/code-snippets.md` for how to do this.
+3. **Code snippets as source of truth**: Prefer `:::code` directives that point
+   to sample files in the code repo, so docs stay synced with runnable samples.
+   Inline code blocks are temporary and should be replaced when snippet tags are
+   available in the source sample.
 
 4. **Navigation**: Each page has a "Next steps" section with:
    - A `> [!div class="nextstepaction"]` button pointing to the sequential next page
@@ -113,33 +113,24 @@ agent-framework/
 ## :::code directive syntax
 
 ```markdown
-```python
-    client = OpenAIResponsesClient(
-        api_key=os.environ["OPENAI_API_KEY"],
-        model_id=os.environ.get("OPENAI_RESPONSES_MODEL_ID", "gpt-4o"),
-    )
-
-    agent = client.as_agent(
-        name="HelloAgent",
-        instructions="You are a friendly assistant. Keep your answers brief.",
-    )
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/01_hello_agent.py" id="create_agent" highlight="8-11":::
 ```
 
 | Parameter | Description |
 |-----------|-------------|
 | `language` | `"python"` or `"csharp"` |
-| `source` | Path from docset root, always starts with `~/agent-framework/` |
+| `source` | Snippet source path using docset-relative syntax (for example, `~/...` or `~/../<dependent-repo>/...`) |
 | `id` | Matches a snippet tag in the source file (`# <name>` / `# </name>` for Python, `// <name>` / `// </name>` for C#) |
 | `range` | Line range (e.g. `"2-24,26"`). **Cannot coexist with `id`** |
 | `highlight` | Lines to highlight, **relative to the displayed snippet** |
 
 ### Source path conventions
 
-- Python samples: `~/agent-framework/python/samples/<section>/<file>.py`
-- .NET samples: `~/agent-framework/dotnet/samples/<section>/<file>.cs`
+- Python samples: `~/../agent-framework-code/python/samples/<section>/<file>.py`
+- .NET samples: `~/../agent-framework-code/dotnet/samples/<section>/<file>.cs`
 
-The `~/` prefix maps to the docset root configured in `docfx.json`.
+The dependent repository alias (`agent-framework-code`) is configured in
+`.openpublishing.publish.config.json` under `dependent_repositories`.
 
 ## Zone pivot syntax
 
@@ -205,7 +196,7 @@ Every docs page maps to sample files in both repos:
 | `get-started/multi-turn.md` | `01-get-started/03_multi_turn.py` | `01-get-started/03_MultiTurn.cs` |
 | `get-started/memory.md` | `01-get-started/04_memory.py` | `01-get-started/04_Memory.cs` |
 | `get-started/workflows.md` | `01-get-started/05_first_workflow.py` | `01-get-started/05_FirstWorkflow.cs` |
-| `get-started/hosting.md` | `01-get-started/06_host_your_agent.py` | `01-get-started/06_HostYourAgent.cs` |
+| `get-started/hosting.md` | `04-hosting/azure_functions/01_single_agent/function_app.py` | `01-get-started/06_HostYourAgent.cs` |
 | `agents/tools/function-tools.md` | `02-agents/tools/function_tools.py` | `02-agents/tools/FunctionTools.cs` |
 | `agents/tools/web-search.md` | `02-agents/tools/web_search.py` | `02-agents/tools/WebSearch.cs` |
 | `agents/tools/file-search.md` | `02-agents/tools/file_search.py` | `02-agents/tools/FileSearch.cs` |

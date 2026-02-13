@@ -61,41 +61,11 @@ Console.WriteLine($"Output: {string.Join(", ", result.GetOutputs())}");
 
 Define workflow steps (executors) and connect them with edges:
 
-```python
-from agent_framework import (
-    Executor, WorkflowBuilder, WorkflowContext, executor, handler,
-)
-from typing_extensions import Never
-
-# Step 1: A class-based executor that converts text to uppercase
-class UpperCase(Executor):
-    def __init__(self, id: str):
-        super().__init__(id=id)
-
-    @handler
-    async def to_upper_case(self, text: str, ctx: WorkflowContext[str]) -> None:
-        await ctx.send_message(text.upper())
-
-# Step 2: A function-based executor that reverses the string
-@executor(id="reverse_text")
-async def reverse_text(text: str, ctx: WorkflowContext[Never, str]) -> None:
-    await ctx.yield_output(text[::-1])
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="create_workflow" highlight="24-26":::
 
 Build and run the workflow:
 
-```python
-upper = UpperCase(id="upper_case")
-workflow = (
-    WorkflowBuilder(start_executor=upper)
-    .add_edge(upper, reverse_text)
-    .build()
-)
-
-events = await workflow.run("hello world")
-print(f"Output: {events.get_outputs()}")
-# Output: ['DLROW OLLEH']
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="run_workflow" highlight="3-5":::
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/05_first_workflow.py) for the complete runnable file.

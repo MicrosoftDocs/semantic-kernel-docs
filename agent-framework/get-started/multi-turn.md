@@ -50,32 +50,9 @@ Console.WriteLine(await agent.RunAsync("What do you remember about me?", session
 
 Use `AgentSession` to maintain context across multiple calls:
 
-```python
-    credential = AzureCliCredential()
-    client = AzureOpenAIResponsesClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
-        credential=credential,
-    )
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/03_multi_turn.py" id="create_agent" highlight="8-11":::
 
-    agent = client.as_agent(
-        name="ConversationAgent",
-        instructions="You are a friendly assistant. Keep your answers brief.",
-    )
-```
-
-```python
-    # Create a session to maintain conversation history
-    session = await agent.create_session()
-
-    # First turn
-    result = await agent.run("My name is Alice and I love hiking.", session=session)
-    print(f"Agent: {result}\n")
-
-    # Second turn — the agent should remember the user's name and hobby
-    result = await agent.run("What do you remember about me?", session=session)
-    print(f"Agent: {result}")
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/03_multi_turn.py" id="multi_turn" highlight="2,6,10":::
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/03_multi_turn.py) for the complete runnable file.

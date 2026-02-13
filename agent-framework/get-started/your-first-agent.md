@@ -66,36 +66,13 @@ pip install agent-framework --pre
 
 Create and run an agent:
 
-```python
-    credential = AzureCliCredential()
-    client = AzureOpenAIResponsesClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
-        credential=credential,
-    )
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/01_hello_agent.py" id="create_agent" highlight="8-11":::
 
-    agent = client.as_agent(
-        name="HelloAgent",
-        instructions="You are a friendly assistant. Keep your answers brief.",
-    )
-```
-
-```python
-    # Non-streaming: get the complete response at once
-    result = await agent.run("What is the largest city in France?")
-    print(f"Agent: {result}")
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/01_hello_agent.py" id="run_agent" highlight="2":::
 
 Or stream the response:
 
-```python
-    # Streaming: receive tokens as they are generated
-    print("Agent (streaming): ", end="", flush=True)
-    async for chunk in agent.run("Tell me a one-sentence fun fact.", stream=True):
-        if chunk.text:
-            print(chunk.text, end="", flush=True)
-    print()
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/01_hello_agent.py" id="run_agent_streaming" highlight="3-5":::
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/01_hello_agent.py) for the complete runnable file.

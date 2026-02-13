@@ -134,26 +134,13 @@ Install the Azure Functions hosting package:
 pip install agent-framework-azurefunctions --pre
 ```
 
-Create an agent and host it with `AgentFunctionApp`:
+Create an agent:
 
-```python
-from agent_framework.azure import AgentFunctionApp, AzureOpenAIChatClient
-from azure.identity import AzureCliCredential
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="13-24" highlight="9-11":::
 
+Register the agent with `AgentFunctionApp`:
 
-def _create_agent():
-    """Create a hosted agent backed by Azure OpenAI."""
-    return AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
-        name="HostedAgent",
-        instructions="You are a helpful assistant hosted in Azure Functions.",
-    )
-
-
-# AgentFunctionApp registers your agent with Azure Functions and exposes
-# HTTP endpoints (e.g. POST /api/agents/HostedAgent/run) via the Durable
-# Task extension.
-app = AgentFunctionApp(agents=[_create_agent()])
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="27-28" highlight="2":::
 
 Run locally with [Azure Functions Core Tools](/azure/azure-functions/functions-run-local):
 
@@ -164,13 +151,13 @@ func start
 Then invoke:
 
 ```bash
-curl -X POST http://localhost:7071/api/agents/HostedAgent/run \
+curl -X POST http://localhost:7071/api/agents/Joker/run \
   -H "Content-Type: text/plain" \
-  -d "Hello! What can you do?"
+  -d "Tell me a short joke about cloud computing."
 ```
 
 > [!TIP]
-> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/06_host_your_agent.py) for the complete runnable file, and the [Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/azure_functions) for multi-agent orchestrations.
+> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py) for the complete runnable file, and the [Azure Functions hosting samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/azure_functions) for more patterns.
 
 :::zone-end
 
@@ -184,6 +171,8 @@ curl -X POST http://localhost:7071/api/agents/HostedAgent/run \
 - [A2A Protocol](../integrations/a2a.md) — expose and consume agents via A2A
 - [Azure Functions](../integrations/azure-functions.md) — serverless agent hosting
 - [AG-UI Protocol](../integrations/ag-ui/index.md) — web-based agent UIs
+- [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Azure AI Foundry
+- [Foundry Hosted Agents sample (Python)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) — run an end-to-end Agent Framework hosted-agent sample
 
 ## See also
 

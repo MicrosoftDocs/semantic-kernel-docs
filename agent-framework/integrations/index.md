@@ -13,6 +13,11 @@ zone_pivot_groups: programming-languages
 
 Microsoft Agent Framework has integrations with many different services, tools and protocols.
 
+## Azure AI Foundry Hosted Agents
+
+- [Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents)
+- [Hosted Agents sample (Python, Agent Framework)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework)
+
 ## UI Framework integrations
 
 | UI Framework                                                       | Release Status  |
@@ -40,9 +45,9 @@ may be supplied. Here is a list of existing providers that can be used.
 
 ::: zone pivot="programming-language-python"
 
-| Chat Message Store                                                 | Release Status  |
+| Chat History Provider                                              | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
-| [Redis Chat Message Store](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_chat_message_store.py) | Preview         |
+| [Redis History Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_history_provider.py) | Preview         |
 
 ::: zone-end
 

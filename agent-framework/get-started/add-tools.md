@@ -58,27 +58,11 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 
 Define a tool with the `@tool` decorator:
 
-```python
-# NOTE: approval_mode="never_require" is for sample brevity.
-# Use "always_require" in production for user confirmation before tool execution.
-@tool(approval_mode="never_require")
-def get_weather(
-    location: Annotated[str, Field(description="The location to get the weather for.")],
-) -> str:
-    """Get the weather for a given location."""
-    conditions = ["sunny", "cloudy", "rainy", "stormy"]
-    return f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/02_add_tools.py" id="define_tool" highlight="3-6":::
 
 Create an agent with the tool:
 
-```python
-    agent = client.as_agent(
-        name="WeatherAgent",
-        instructions="You are a helpful weather agent. Use the get_weather tool to answer questions.",
-        tools=get_weather,
-    )
-```
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/02_add_tools.py" id="create_agent_with_tools" highlight="4":::
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/02_add_tools.py) for the complete runnable file.

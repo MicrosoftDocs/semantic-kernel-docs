@@ -14,7 +14,7 @@ eliminating inline code duplication.
 ## :::code Directive Syntax
 
 ```markdown
-:::code language="python" source="https://github.com/microsoft/agent-framework/python/samples/01-get-started/01_hello_agent.py" id="create_agent" highlight="1-4":::
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/01_hello_agent.py" id="create_agent" highlight="1-4":::
 ```
 
 ### Parameters
@@ -22,17 +22,75 @@ eliminating inline code duplication.
 | Parameter | Required | Description |
 |-----------|----------|-------------|
 | `language` | Yes | `"python"` or `"csharp"` |
-| `source` | Yes | Path from docset root. Always starts with `~/agent-framework/` |
+| `source` | Yes | Snippet file path using docset-relative syntax (for example `~/...` or `~/../<dependent-repo>/...`) |
 | `id` | No | Matches a snippet tag in source (`# <name>` / `# </name>` for Python, `// <name>` / `// </name>` for C#) |
 | `range` | No | Line range (e.g. `"2-24,26"`). **Cannot coexist with `id`** |
 | `highlight` | No | Lines to highlight, **relative to the displayed snippet** (not the file) |
 
 ### Source Path Conventions
 
-- Python: `https://github.com/microsoft/agent-framework/python/samples/<section>/<file>.py`
-- .NET: `https://github.com/microsoft/agent-framework/dotnet/samples/<section>/<file>.cs`
+- In-repo snippets: `~/agent-framework/<path-to-file>`
+- Out-of-repo snippets (dependent repositories): `~/../<path_to_root>/<path-to-file>`
+- Agent Framework code samples in this repo: `~/../agent-framework-code/python/samples/<section>/<file>.py`
 
-The `~/` prefix maps to the docset root configured in `docfx.json`.
+## Out-of-repo snippet references
+
+If the code file you want to reference is in a different repository, set up that code repository as a dependent repository in `.openpublishing.publish.config.json`. The `path_to_root` you assign acts like a folder name for snippet source paths.
+
+### Dependent repositories metadata
+
+The `dependent_repositories` list is required in `.openpublishing.publish.config.json` for cross-repository references (CRR):
+
+```json
+{
+  "dependent_repositories": [
+    {
+      "path_to_root": "<relative path to repository root>",
+      "url": "<referenced repository url>",
+      "branch": "<branch name of referenced repository>",
+      "branch_mapping": {
+        "<source repository branch>": "<referenced repository branch>",
+        "<source repository branch>": "<referenced repository branch>"
+      }
+    },
+    {
+      "path_to_root": "token",
+      "url": "https://github.com/Microsoft/token",
+      "branch": "main",
+      "branch_mapping": {
+        "main": "main",
+        "develop": "test"
+      }
+    }
+  ]
+}
+```
+
+| Metadata | Meaning | Required |
+|----------|---------|----------|
+| `dependent_repositories` | The CRR relationship list name | Yes |
+| `path_to_root` | Relative folder path to the repository root (folder can be virtual) | Yes |
+| `url` | URL of the reference repository this repo depends on | Yes |
+| `branch` | Default branch of the reference repository for builds | Yes |
+| `branch_mapping` | Optional source-branch to reference-branch map | No |
+
+### Snippet reference syntax
+
+Use the same `:::code` syntax for CRR snippets as in-repo snippets. Only the `source` path changes.
+
+- Start paths with `~` for docset-root-relative references.
+- Use `..` segments to move up directories when needed (for example `../../`).
+- Prefer readable paths; deeply nested `..` chains are harder to maintain.
+
+Example CRR source path:
+
+`~/../xamarin-forms-samples/WebServices/TodoREST/TodoAPI/TodoAPI/Startup.cs`
+
+> [!NOTE]
+> The dependent repository alias is rooted at repo root, but `~` is rooted at the docset's `build_source_folder`. In this repo, Agent Framework docs use `"build_source_folder": "agent-framework"`, so dependent repositories are referenced like `~/../agent-framework-code/...`.
+
+> [!IMPORTANT]
+> Updating an external code snippet does not automatically trigger a content build. Trigger a build by changing doc content or starting a build manually.
 
 ## Snippet Tags in Source Files
 
@@ -64,11 +122,11 @@ Every page showing code for both languages uses zone pivots:
 
 ```markdown
 :::zone pivot="programming-language-csharp"
-:::code language="csharp" source="https://github.com/microsoft/agent-framework/dotnet/samples/..." id="...":::
+:::code language="csharp" source="~/../agent-framework-code/dotnet/samples/..." id="...":::
 :::zone-end
 
 :::zone pivot="programming-language-python"
-:::code language="python" source="https://github.com/microsoft/agent-framework/python/samples/..." id="...":::
+:::code language="python" source="~/../agent-framework-code/python/samples/..." id="...":::
 :::zone-end
 ```
 
