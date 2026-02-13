@@ -1,11 +1,11 @@
 ---
 title: Producing Structured Output with agents
-description: Learn how to use produce structured output with an agent
+description: Learn how to use structured output with an agent
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/15/2025
+ms.date: 02/10/2026
 ms.service: agent-framework
 ---
 
@@ -16,19 +16,64 @@ ms.service: agent-framework
 This tutorial step shows you how to produce structured output with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> Not all agent types support structured output. This step uses a `ChatClientAgent`, which does support structured output.
+> Not all agent types support structured output natively. The `ChatClientAgent` supports structured output when used with compatible chat clients.
 
 ## Prerequisites
 
 For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./running-agents.md) step in this tutorial.
 
-## Create the agent with structured output
+## Define a type for the structured output
 
-The `ChatClientAgent` is built on top of any <xref:Microsoft.Extensions.AI.IChatClient> implementation.
-The `ChatClientAgent` uses the support for structured output that's provided by the underlying chat client.
+First, define a type that represents the structure of the output you want from the agent.
 
-When creating the agent, you have the option to provide the default <xref:Microsoft.Extensions.AI.ChatOptions> instance to use for the underlying chat client.
-This `ChatOptions` instance allows you to pick a preferred <xref:Microsoft.Extensions.AI.ChatResponseFormat>.
+```csharp
+public class PersonInfo
+{
+    public string? Name { get; set; }
+    public int? Age { get; set; }
+    public string? Occupation { get; set; }
+}
+```
+
+## Create the agent
+
+Create a `ChatClientAgent` using the Azure OpenAI Chat Client.
+
+```csharp
+using System;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+
+AIAgent agent = new AzureOpenAIClient(
+    new Uri("https://<myresource>.openai.azure.com"),
+    new AzureCliCredential())
+        .GetChatClient("gpt-4o-mini")
+        .AsAIAgent(name: "HelpfulAssistant", instructions: "You are a helpful assistant.");
+```
+
+## Structured output with RunAsync\<T\>
+
+The `RunAsync<T>` method is available on the `AIAgent` base class. It accepts a generic type parameter that specifies the structured output type.
+This approach is applicable when the structured output type is known at compile time and a typed result instance is needed. It supports primitives, arrays, and complex types.
+
+```csharp
+AgentResponse<PersonInfo> response = await agent.RunAsync<PersonInfo>("Please provide information about John Smith, who is a 35-year-old software engineer.");
+
+Console.WriteLine($"Name: {response.Result.Name}, Age: {response.Result.Age}, Occupation: {response.Result.Occupation}");
+```
+
+## Structured output with ResponseFormat
+
+Structured output can be configured by setting the `ResponseFormat` property on `AgentRunOptions` at invocation time, or at agent initialization time for agents that support it, such as `ChatClientAgent` and Foundry Agent.
+
+This approach is applicable when:
+
+- The structured output type is not known at compile time.
+- The schema is represented as raw JSON.
+- Structured output can only be configured at agent creation time.
+- Only the raw JSON text is needed without deserialization.
+- Inter-agent collaboration is used.
 
 Various options for `ResponseFormat` are available:
 
@@ -36,47 +81,68 @@ Various options for `ResponseFormat` are available:
 - A built-in <xref:Microsoft.Extensions.AI.ChatResponseFormat.Json?displayProperty=nameWithType> property: The response will be a JSON object without any particular schema.
 - A custom <xref:Microsoft.Extensions.AI.ChatResponseFormatJson> instance: The response will be a JSON object that conforms to a specific schema.
 
-This example creates an agent that produces structured output in the form of a JSON object that conforms to a specific schema.
-
-The easiest way to produce the schema is to define a type that represents the structure of the output you want from the agent, and then use the `AIJsonUtilities.CreateJsonSchema` method to create a schema from the type.
+> [!NOTE]
+> Primitives and arrays are not supported by the `ResponseFormat` approach. If you need to work with primitives or arrays, use the `RunAsync<T>` approach or create a wrapper type.
+>
+> ```csharp
+> // Instead of using List<string> directly, create a wrapper type:
+> public class MovieListWrapper
+> {
+>     public List<string> Movies { get; set; }
+> }
+> ```
 
 ```csharp
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.AI;
 
-public class PersonInfo
+AgentRunOptions runOptions = new()
 {
-    public string? Name { get; set; }
-    public int? Age { get; set; }
-    public string? Occupation { get; set; }
-}
-
-JsonElement schema = AIJsonUtilities.CreateJsonSchema(typeof(PersonInfo));
-```
-
-You can then create a <xref:Microsoft.Extensions.AI.ChatOptions> instance that uses this schema for the response format.
-
-```csharp
-using Microsoft.Extensions.AI;
-
-ChatOptions chatOptions = new()
-{
-    ResponseFormat = ChatResponseFormat.ForJsonSchema(
-        schema: schema,
-        schemaName: "PersonInfo",
-        schemaDescription: "Information about a person including their name, age, and occupation")
+    ResponseFormat = ChatResponseFormat.ForJsonSchema<PersonInfo>()
 };
+
+AgentResponse response = await agent.RunAsync("Please provide information about John Smith, who is a 35-year-old software engineer.", options: runOptions);
+
+PersonInfo personInfo = JsonSerializer.Deserialize<PersonInfo>(response.Text, JsonSerializerOptions.Web)!;
+
+Console.WriteLine($"Name: {personInfo.Name}, Age: {personInfo.Age}, Occupation: {personInfo.Occupation}");
 ```
 
-This `ChatOptions` instance can be used when creating the agent.
+The `ResponseFormat` can also be specified using a raw JSON schema string, which is useful when there is no corresponding .NET type available, such as for declarative agents or schemas loaded from external configuration:
 
 ```csharp
-using System;
-using Azure.AI.OpenAI;
-using Azure.Identity;
-using Microsoft.Agents.AI;
-using OpenAI;
+string jsonSchema = """
+{
+    "type": "object",
+    "properties": {
+        "name": { "type": "string" },
+        "age": { "type": "integer" },
+        "occupation": { "type": "string" }
+    },
+    "required": ["name", "age", "occupation"]
+}
+""";
+
+AgentRunOptions runOptions = new()
+{
+    ResponseFormat = ChatResponseFormat.ForJsonSchema(JsonElement.Parse(jsonSchema), "PersonInfo", "Information about a person")
+};
+
+AgentResponse response = await agent.RunAsync("Please provide information about John Smith, who is a 35-year-old software engineer.", options: runOptions);
+
+JsonElement result = JsonSerializer.Deserialize<JsonElement>(response.Text);
+
+Console.WriteLine($"Name: {result.GetProperty("name").GetString()}, Age: {result.GetProperty("age").GetInt32()}, Occupation: {result.GetProperty("occupation").GetString()}");
+```
+
+## Structured output with streaming
+
+When streaming, the agent response is streamed as a series of updates, and you can only deserialize the response once all the updates have been received.
+You must assemble all the updates into a single response before deserializing it.
+
+```csharp
+using System.Text.Json;
+using Microsoft.Extensions.AI;
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
@@ -86,33 +152,29 @@ AIAgent agent = new AzureOpenAIClient(
         {
             Name = "HelpfulAssistant",
             Instructions = "You are a helpful assistant.",
-            ChatOptions = chatOptions
+            ChatOptions = new() { ResponseFormat = ChatResponseFormat.ForJsonSchema<PersonInfo>() }
         });
-```
 
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-Now you can just run the agent with some textual information that the agent can use to fill in the structured output.
+IAsyncEnumerable<AgentResponseUpdate> updates = agent.RunStreamingAsync("Please provide information about John Smith, who is a 35-year-old software engineer.");
 
-```csharp
-var response = await agent.RunAsync("Please provide information about John Smith, who is a 35-year-old software engineer.");
-```
+AgentResponse response = await updates.ToAgentResponseAsync();
 
-The agent response can then be deserialized into the `PersonInfo` class using the `Deserialize<T>` method on the response object.
+PersonInfo personInfo = JsonSerializer.Deserialize<PersonInfo>(response.Text)!;
 
-```csharp
-var personInfo = response.Deserialize<PersonInfo>(JsonSerializerOptions.Web);
 Console.WriteLine($"Name: {personInfo.Name}, Age: {personInfo.Age}, Occupation: {personInfo.Occupation}");
 ```
 
-When streaming, the agent response is streamed as a series of updates, and you can only deserialize the response once all the updates have been received.
-You must assemble all the updates into a single response before deserializing it.
+## Structured output with agents with no structured output capabilities
 
-```csharp
-var updates = agent.RunStreamingAsync("Please provide information about John Smith, who is a 35-year-old software engineer.");
-personInfo = (await updates.ToAgentResponseAsync()).Deserialize<PersonInfo>(JsonSerializerOptions.Web);
-```
+Some agents don't natively support structured output, either because it's not part of the protocol or because the agents use language models without structured output capabilities. One possible approach is to create a custom decorator agent that wraps any `AIAgent` and uses an additional LLM call via a chat client to convert the agent's text response into structured JSON.
+
+> [!NOTE]
+> Since this approach relies on an additional LLM call to transform the response, its reliability may not be sufficient for all scenarios.
+
+For a reference implementation of this pattern that you can adapt to your own requirements, see the [StructuredOutputAgent sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Agents/Agent_Step05_StructuredOutput).
 
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
