@@ -104,6 +104,12 @@ var collection = new InMemoryCollection<string, Hotel>("skhotels");
 
 ## Overview
 
+> [!WARNING]
+> The In-Memory Vector Store has support for custom filters that can be expressed as Python lambda functions, these functions are
+> executed in the same process as the main application, and therefore can execute arbitrary code.
+> We filter for certain allowed operations, but you should not let filters be set by untrusted sources, including by LLM inputs.
+> See the [Filtering](#filtering) section for more details.
+
 The In-Memory Vector Store connector is a Vector Store implementation provided by Semantic Kernel that uses no external database and stores data in memory.
 This Vector Store is useful for prototyping scenarios or where high-speed in-memory operations are required.
 
@@ -147,6 +153,53 @@ It is possible to construct a direct reference to a named collection.
 from semantic_kernel.connectors.in_memory import InMemoryCollection
 
 vector_collection = InMemoryCollection(record_type=DataModel, collection_name="collection_name")
+```
+
+### Filtering
+
+> [!WARNING]
+> The In-Memory Vector Store has support for custom filters that can be expressed as Python lambda functions, these functions are
+> executed in the same process as the main application, and therefore can execute arbitrary code.
+> We filter for certain allowed operations, but you should not let filters be set by untrusted sources, including by LLM inputs.
+
+The In-Memory connector uses an allowlist approach for filter security. Only the following operations are permitted in filter expressions:
+
+#### Allowed operations
+
+| Category | Allowed Operations |
+|----------|-------------------|
+| **Comparisons** | `==`, `!=`, `<`, `<=`, `>`, `>=`, `in`, `not in`, `is`, `is not` |
+| **Boolean operations** | `and`, `or`, `not` |
+| **Data access** | Attribute access (e.g., `x.field`), subscript access (e.g., `x['field']`), slicing |
+| **Literals** | Constants, lists, tuples, sets, dictionaries |
+| **Basic arithmetic** | `+`, `-`, `*`, `/`, `%`, `//` |
+
+#### Allowed functions
+
+The following built-in functions and methods can be used in filter expressions:
+
+- **Type conversion**: `str`, `int`, `float`, `bool`
+- **Aggregation**: `len`, `abs`, `min`, `max`, `sum`, `any`, `all`
+- **String methods**: `lower`, `upper`, `strip`, `startswith`, `endswith`, `contains`
+- **Dictionary methods**: `get`, `keys`, `values`, `items`
+
+#### Examples
+
+```python
+# Simple equality filter
+results = await collection.search(vector, filter="lambda x: x.category == 'electronics'")
+
+# Numeric comparison
+results = await collection.search(vector, filter="lambda x: x.price < 100")
+
+# Boolean combination
+results = await collection.search(vector, filter="lambda x: x.in_stock and x.rating >= 4.0")
+
+# String method
+results = await collection.search(vector, filter="lambda x: x.name.startswith('A')")
+
+# Membership test
+results = await collection.search(vector, filter="lambda x: x.status in ['active', 'pending']")
 ```
 
 ::: zone-end
