@@ -103,7 +103,7 @@ async def main():
         instructions="You are a secure assistant.",
         middleware=[purview_middleware]
     )
-    response = await agent.run(Message(role=Role.USER, text="Summarize zero trust in one sentence."))
+    response = await agent.run(Message(role='user', contents=["Summarize zero trust in one sentence."]))
     print(response)
 
   if __name__ == "__main__":
@@ -134,6 +134,6 @@ Now that you added the above code to your agent, perform the following steps to 
 
 - [PyPI Package: Microsoft Agent Framework - Purview Integration (Python)](https://pypi.org/project/agent-framework-purview/).
 - [GitHub: Microsoft Agent Framework – Purview Integration (Python) source code](https://github.com/microsoft/agent-framework/tree/main/python/packages/purview).
-- [Code Sample: Purview Policy Enforcement Sample (Python)](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/purview_agent).
+- [Code Sample: Purview Policy Enforcement Sample (Python)](https://github.com/microsoft/agent-framework/tree/main/python/samples/05-end-to-end/purview_agent).
 
 ::: zone-end

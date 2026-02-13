@@ -1314,6 +1314,26 @@
       "source_path": "agent-framework/user-guide/devui/samples.md",
       "redirect_url": "/agent-framework/devui/samples",
       "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/multi-turn.md",
+      "redirect_url": "/agent-framework/agents/conversations/session",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/threads.md",
+      "redirect_url": "/agent-framework/agents/conversations/session",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/chat-history.md",
+      "redirect_url": "/agent-framework/agents/conversations/storage",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/persistent-storage.md",
+      "redirect_url": "/agent-framework/agents/conversations/storage",
+      "redirect_document_id": false
     }
   ]
 }

@@ -1,6 +1,6 @@
 ---
 title: "Step 3: Multi-Turn Conversations"
-description: "Maintain context across multiple exchanges with AgentThread."
+description: "Maintain context across multiple exchanges with AgentSession."
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Step 3: Multi-Turn Conversations
 
-Use a thread to maintain conversation context so the agent remembers what was said earlier.
+Use a session to maintain conversation context so the agent remembers what was said earlier.
 
 :::zone pivot="programming-language-csharp"
 
@@ -48,7 +48,7 @@ Console.WriteLine(await agent.RunAsync("What do you remember about me?", session
 
 :::zone pivot="programming-language-python"
 
-Use `AgentThread` to maintain context across multiple calls:
+Use `AgentSession` to maintain context across multiple calls:
 
 ```python
     credential = AzureCliCredential()
@@ -65,15 +65,15 @@ Use `AgentThread` to maintain context across multiple calls:
 ```
 
 ```python
-    # Create a thread to maintain conversation history
-    thread = agent.get_new_thread()
+    # Create a session to maintain conversation history
+    session = await agent.create_session()
 
     # First turn
-    result = await agent.run("My name is Alice and I love hiking.", thread=thread)
+    result = await agent.run("My name is Alice and I love hiking.", session=session)
     print(f"Agent: {result}\n")
 
     # Second turn — the agent should remember the user's name and hobby
-    result = await agent.run("What do you remember about me?", thread=thread)
+    result = await agent.run("What do you remember about me?", session=session)
     print(f"Agent: {result}")
 ```
 
@@ -89,5 +89,5 @@ Use `AgentThread` to maintain context across multiple calls:
 
 **Go deeper:**
 
-- [Multi-turn conversations](../agents/conversations/multi-turn.md) — advanced conversation patterns
+- [Multi-turn conversations](../agents/conversations/session.md) — advanced conversation patterns
 - [Middleware](../agents/middleware/index.md) — intercept and modify agent interactions

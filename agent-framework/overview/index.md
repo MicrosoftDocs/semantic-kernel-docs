@@ -81,7 +81,7 @@ pip install agent-framework --pre
 
 :::zone-end
 
-That's it — an agent that calls an LLM and returns a response. From here you can [add tools](../agents/tools/index.md), [multi-turn conversations](../agents/conversations/multi-turn.md), [middleware](../agents/middleware/index.md), and [workflows](#when-to-use-agents-vs-workflows) to build production applications.
+That's it — an agent that calls an LLM and returns a response. From here you can [add tools](../agents/tools/index.md), [multi-turn conversations](../agents/conversations/session.md), [middleware](../agents/middleware/index.md), and [workflows](#when-to-use-agents-vs-workflows) to build production applications.
 
 > [!div class="nextstepaction"]
 > [Get Started — full tutorial](../get-started/your-first-agent.md)

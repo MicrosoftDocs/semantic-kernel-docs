@@ -222,6 +222,25 @@ async def main():
 asyncio.run(main())
 ```
 
+### Responses Client with Azure AI Foundry project endpoint
+
+`AzureOpenAIResponsesClient` can also be created from an Azure AI Foundry project endpoint:
+
+```python
+from agent_framework.azure import AzureOpenAIResponsesClient
+from azure.identity import AzureCliCredential
+
+client = AzureOpenAIResponsesClient(
+    project_endpoint="https://<your-project>.services.ai.azure.com/api/projects/<project-id>",
+    deployment_name="gpt-4o-mini",
+    credential=AzureCliCredential(),
+)
+agent = client.as_agent(
+    name="FoundryResponsesAgent",
+    instructions="You are a helpful assistant.",
+)
+```
+
 **Supported tools:** Function tools, tool approval, code interpreter, file search, web search, hosted MCP, local MCP tools.
 
 ### Hosted Tools with Responses Client
@@ -302,11 +321,11 @@ async def thread_example():
     agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
         instructions="You are a helpful assistant.",
     )
-    thread = agent.get_new_thread()
+    session = await agent.create_session()
 
-    result1 = await agent.run("My name is Alice", thread=thread)
+    result1 = await agent.run("My name is Alice", session=session)
     print(result1)
-    result2 = await agent.run("What's my name?", thread=thread)
+    result2 = await agent.run("What's my name?", session=session)
     print(result2)  # Remembers "Alice"
 ```
 

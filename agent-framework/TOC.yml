@@ -30,7 +30,7 @@ items:
     href: agents/structured-output.md
   - name: Background Responses
     href: agents/background-responses.md
-  - name: RAG & Context Providers
+  - name: RAG
     href: agents/rag.md
   - name: Declarative Agents
     href: agents/declarative.md
@@ -58,14 +58,12 @@ items:
     items:
     - name: Overview
       href: agents/conversations/index.md
-    - name: Multi-Turn Conversations
-      href: agents/conversations/multi-turn.md
-    - name: Threads
-      href: agents/conversations/threads.md
-    - name: Chat History
-      href: agents/conversations/chat-history.md
-    - name: Persistent Storage
-      href: agents/conversations/persistent-storage.md
+    - name: Session
+      href: agents/conversations/session.md
+    - name: Context Providers
+      href: agents/conversations/context-providers.md
+    - name: Storage
+      href: agents/conversations/storage.md
   - name: Middleware
     items:
     - name: Overview

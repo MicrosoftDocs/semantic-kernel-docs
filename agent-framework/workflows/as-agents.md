@@ -231,13 +231,13 @@ workflow_agent = workflow.as_agent(name="Content Pipeline Agent")
 
 ## Using Workflow Agents
 
-### Creating a Thread
+### Creating a Session
 
-Each conversation with a workflow agent requires a thread to manage state:
+Each conversation with a workflow agent requires a session to manage state:
 
 ```python
-# Create a new thread for the conversation
-thread = workflow_agent.get_new_thread()
+# Create a new session for the conversation
+session = await workflow_agent.create_session()
 ```
 
 ### Non-Streaming Execution
@@ -245,11 +245,11 @@ thread = workflow_agent.get_new_thread()
 For simple use cases where you want the complete response:
 
 ```python
-from agent_framework import Message, Role
+from agent_framework import Message
 
-messages = [Message(role=Role.USER, content="Write an article about AI trends")]
+messages = [Message(role="user", contents=["Write an article about AI trends"])]
 
-response = await workflow_agent.run(messages, thread=thread)
+response = await workflow_agent.run(messages, session=session)
 
 for message in response.messages:
     print(f"{message.author_name}: {message.text}")
@@ -260,9 +260,9 @@ for message in response.messages:
 For real-time updates as the workflow executes:
 
 ```python
-messages = [Message(role=Role.USER, content="Write an article about AI trends")]
+messages = [Message(role="user", contents=["Write an article about AI trends"])]
 
-async for update in workflow_agent.run(messages, thread=thread, stream=True):
+async for update in workflow_agent.run(messages, session=session, stream=True):
     # Process streaming updates from each agent in the workflow
     if update.text:
         print(update.text, end="", flush=True)
@@ -279,7 +279,7 @@ from agent_framework import (
     FunctionApprovalResponseContent,
 )
 
-async for update in workflow_agent.run(messages, thread=thread, stream=True):
+async for update in workflow_agent.run(messages, session=session, stream=True):
     for content in update.contents:
         if isinstance(content, FunctionApprovalRequestContent):
             # The workflow is requesting external input
@@ -309,12 +309,12 @@ response_content = FunctionApprovalResponseContent(
 )
 
 response_message = Message(
-    role=Role.USER,
+    role="user",
     contents=[response_content],
 )
 
 # Continue the workflow with the response
-async for update in workflow_agent.run([response_message], thread=thread, stream=True):
+async for update in workflow_agent.run([response_message], session=session, stream=True):
     if update.text:
         print(update.text, end="", flush=True)
 ```
@@ -328,7 +328,6 @@ import asyncio
 from agent_framework import (
     Agent,
     Message,
-    Role,
 )
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework._workflows import SequentialBuilder
@@ -367,15 +366,15 @@ async def main():
     # Convert to a workflow agent
     workflow_agent = workflow.as_agent(name="Content Creation Pipeline")
     
-    # Create a thread and run the workflow
-    thread = workflow_agent.get_new_thread()
-    messages = [Message(role=Role.USER, content="Write about quantum computing")]
+    # Create a session and run the workflow
+    session = await workflow_agent.create_session()
+    messages = [Message(role="user", contents=["Write about quantum computing"])]
     
     print("Starting workflow...")
     print("=" * 60)
     
     current_author = None
-    async for update in workflow_agent.run(messages, thread=thread, stream=True):
+    async for update in workflow_agent.run(messages, session=session, stream=True):
         # Show when different agents are responding
         if update.author_name and update.author_name != current_author:
             if current_author:

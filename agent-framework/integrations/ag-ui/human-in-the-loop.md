@@ -888,7 +888,7 @@ async def main():
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     try:
         while True:
@@ -902,7 +902,7 @@ async def main():
             print("\nAssistant: ", end="", flush=True)
             pending_approval_update = None
 
-            async for update in agent.run(message, thread=thread, stream=True):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Check if this is an approval request
                 # (Approval requests are detected by specific metadata or content markers)
                 if update.additional_properties and update.additional_properties.get("requires_approval"):

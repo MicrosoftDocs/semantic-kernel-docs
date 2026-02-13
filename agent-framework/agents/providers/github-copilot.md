@@ -306,14 +306,14 @@ async def thread_example():
     )
 
     async with agent:
-        thread = agent.get_new_thread()
+        thread = agent.create_session()
 
         # First interaction
-        result1 = await agent.run("My name is Alice.", thread=thread)
+        result1 = await agent.run("My name is Alice.", session=thread)
         print(f"Agent: {result1}")
 
         # Second interaction - agent remembers the context
-        result2 = await agent.run("What's my name?", thread=thread)
+        result2 = await agent.run("What's my name?", session=thread)
         print(f"Agent: {result2}")  # Should remember "Alice"
 ```
 

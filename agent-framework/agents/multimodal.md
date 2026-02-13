@@ -74,10 +74,10 @@ agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
 Next, create a `Message` that contains both a text prompt and an image URL. Use `Content.from_text()` for the text and `Content.from_uri()` for the image.
 
 ```python
-from agent_framework import Message, Content, Role
+from agent_framework import Message, Content
 
 message = Message(
-    role=Role.USER,
+    role="user",
     contents=[
         Content.from_text(text="What do you see in this image?"),
         Content.from_uri(
@@ -91,14 +91,14 @@ message = Message(
 You can also load an image from your local file system using `Content.from_data()`:
 
 ```python
-from agent_framework import Message, Content, Role
+from agent_framework import Message, Content
 
 # Load image from local file
 with open("path/to/your/image.jpg", "rb") as f:
     image_bytes = f.read()
 
 message = Message(
-    role=Role.USER,
+    role="user",
     contents=[
         Content.from_text(text="What do you see in this image?"),
         Content.from_data(

@@ -92,7 +92,6 @@ from agent_framework import (
     ChatResponseUpdate,
     Message,
     ResponseStream,
-    Role,
     tool,
 )
 from agent_framework.openai import OpenAIResponsesClient
@@ -116,7 +115,7 @@ it creates a custom async generator that yields the override message in chunks.
 """
 
 
-# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/getting_started/tools/function_tool_with_approval.py and samples/getting_started/tools/function_tool_with_approval_and_threads.py.
+# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
 def get_weather(
     location: Annotated[str, Field(description="The location to get the weather for.")],
@@ -158,7 +157,7 @@ async def weather_override_middleware(context: ChatContext, call_next: Callable[
             # For non-streaming: just replace with a new message
             current_text = context.result.text if isinstance(context.result, ChatResponse) else ""
             custom_message = f"Weather Advisory: [0] {''.join(chunks)} Original message was: {current_text}"
-            context.result = ChatResponse(messages=[Message(role=Role.ASSISTANT, text=custom_message)])
+            context.result = ChatResponse(messages=[Message(role="assistant", contents=[custom_message])])
 
 
 async def validate_weather_middleware(context: ChatContext, call_next: Callable[[], Awaitable[None]]) -> None:
@@ -173,12 +172,12 @@ async def validate_weather_middleware(context: ChatContext, call_next: Callable[
     if context.stream and isinstance(context.result, ResponseStream):
 
         def _append_validation_note(response: ChatResponse) -> ChatResponse:
-            response.messages.append(Message(role=Role.ASSISTANT, text=validation_note))
+            response.messages.append(Message(role="assistant", contents=[validation_note]))
             return response
 
         context.result.with_finalizer(_append_validation_note)
     elif isinstance(context.result, ChatResponse):
-        context.result.messages.append(Message(role=Role.ASSISTANT, text=validation_note))
+        context.result.messages.append(Message(role="assistant", contents=[validation_note]))
 
 
 async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[], Awaitable[None]]) -> None:
@@ -218,7 +217,7 @@ async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[]
             cleaned_messages.append(
                 Message(
                     role=message.role,
-                    text=text.strip(),
+                    contents=[text.strip()],
                     author_name=message.author_name,
                     message_id=message.message_id,
                     additional_properties=message.additional_properties,
@@ -231,7 +230,7 @@ async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[]
         if not found_validation:
             raise RuntimeError("Expected validation note not found in agent response.")
 
-        cleaned_messages.append(Message(role=Role.ASSISTANT, text=" Agent: OK"))
+        cleaned_messages.append(Message(role="assistant", contents=[" Agent: OK"]))
         response.messages = cleaned_messages
         return response
 
@@ -315,7 +314,6 @@ from agent_framework import (
     ChatResponseUpdate,
     Message,
     ResponseStream,
-    Role,
     tool,
 )
 from agent_framework.openai import OpenAIResponsesClient
@@ -339,7 +337,7 @@ it creates a custom async generator that yields the override message in chunks.
 """
 
 
-# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/getting_started/tools/function_tool_with_approval.py and samples/getting_started/tools/function_tool_with_approval_and_threads.py.
+# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
 def get_weather(
     location: Annotated[str, Field(description="The location to get the weather for.")],
@@ -381,7 +379,7 @@ async def weather_override_middleware(context: ChatContext, call_next: Callable[
             # For non-streaming: just replace with a new message
             current_text = context.result.text if isinstance(context.result, ChatResponse) else ""
             custom_message = f"Weather Advisory: [0] {''.join(chunks)} Original message was: {current_text}"
-            context.result = ChatResponse(messages=[Message(role=Role.ASSISTANT, text=custom_message)])
+            context.result = ChatResponse(messages=[Message(role="assistant", contents=[custom_message])])
 
 
 async def validate_weather_middleware(context: ChatContext, call_next: Callable[[], Awaitable[None]]) -> None:
@@ -396,12 +394,12 @@ async def validate_weather_middleware(context: ChatContext, call_next: Callable[
     if context.stream and isinstance(context.result, ResponseStream):
 
         def _append_validation_note(response: ChatResponse) -> ChatResponse:
-            response.messages.append(Message(role=Role.ASSISTANT, text=validation_note))
+            response.messages.append(Message(role="assistant", contents=[validation_note]))
             return response
 
         context.result.with_finalizer(_append_validation_note)
     elif isinstance(context.result, ChatResponse):
-        context.result.messages.append(Message(role=Role.ASSISTANT, text=validation_note))
+        context.result.messages.append(Message(role="assistant", contents=[validation_note]))
 
 
 async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[], Awaitable[None]]) -> None:
@@ -441,7 +439,7 @@ async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[]
             cleaned_messages.append(
                 Message(
                     role=message.role,
-                    text=text.strip(),
+                    contents=[text.strip()],
                     author_name=message.author_name,
                     message_id=message.message_id,
                     additional_properties=message.additional_properties,
@@ -454,7 +452,7 @@ async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[]
         if not found_validation:
             raise RuntimeError("Expected validation note not found in agent response.")
 
-        cleaned_messages.append(Message(role=Role.ASSISTANT, text=" Agent: OK"))
+        cleaned_messages.append(Message(role="assistant", contents=[" Agent: OK"]))
         response.messages = cleaned_messages
         return response
 

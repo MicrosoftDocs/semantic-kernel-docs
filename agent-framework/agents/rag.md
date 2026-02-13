@@ -1,5 +1,5 @@
 ---
-title: Agent Retrieval Augmented Generation (RAG)
+title: RAG
 description: Learn how to use Retrieval Augmented Generation (RAG) with Agent Framework
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -9,9 +9,11 @@ ms.date: 11/11/2025
 ms.service: agent-framework
 ---
 
-# Agent Retrieval Augmented Generation (RAG)
+# RAG
 
 Microsoft Agent Framework supports adding Retrieval Augmented Generation (RAG) capabilities to agents easily by adding AI Context Providers to the agent.
+
+For conversation/session patterns alongside retrieval, see [Conversations & Memory overview](./conversations/index.md).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -291,7 +293,7 @@ import asyncio
 from collections.abc import MutableSequence, Sequence
 from typing import Any
 
-from agent_framework import Agent, Context, ContextProvider, Message, SupportsChatGetResponse
+from agent_framework import Agent, BaseContextProvider, Context, Message, SupportsChatGetResponse
 from agent_framework.azure import AzureAIClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import BaseModel
@@ -302,7 +304,7 @@ class UserInfo(BaseModel):
     age: int | None = None
 
 
-class UserInfoMemory(ContextProvider):
+class UserInfoMemory(BaseContextProvider):
     def __init__(self, client: SupportsChatGetResponse, user_info: UserInfo | None = None, **kwargs: Any):
         """Create the memory.
 
@@ -388,17 +390,17 @@ async def main():
         async with Agent(
             client=client,
             instructions="You are a friendly assistant. Always address the user by their name.",
-            context_provider=memory_provider,
+            context_providers=[memory_provider],
         ) as agent:
             # Create a new thread for the conversation
-            thread = agent.get_new_thread()
+            thread = agent.create_session()
 
-            print(await agent.run("Hello, what is the square root of 9?", thread=thread))
-            print(await agent.run("My name is Ruaidhrí", thread=thread))
-            print(await agent.run("I am 20 years old", thread=thread))
+            print(await agent.run("Hello, what is the square root of 9?", session=thread))
+            print(await agent.run("My name is Ruaidhrí", session=thread))
+            print(await agent.run("I am 20 years old", session=thread))
 
-            # Access the memory component via the thread's get_service method and inspect the memories
-            user_info_memory = thread.context_provider.providers[0]  # type: ignore
+            # Access the memory component and inspect the memories
+            user_info_memory = memory_provider
             if user_info_memory:
                 print()
                 print(f"MEMORY - User Name: {user_info_memory.user_info.name}")  # type: ignore
@@ -416,7 +418,7 @@ import asyncio
 from collections.abc import MutableSequence, Sequence
 from typing import Any
 
-from agent_framework import Agent, Context, ContextProvider, Message, SupportsChatGetResponse
+from agent_framework import Agent, BaseContextProvider, Context, Message, SupportsChatGetResponse
 from agent_framework.azure import AzureAIClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import BaseModel
@@ -427,7 +429,7 @@ class UserInfo(BaseModel):
     age: int | None = None
 
 
-class UserInfoMemory(ContextProvider):
+class UserInfoMemory(BaseContextProvider):
     def __init__(self, client: SupportsChatGetResponse, user_info: UserInfo | None = None, **kwargs: Any):
         """Create the memory.
 
@@ -513,17 +515,17 @@ async def main():
         async with Agent(
             client=client,
             instructions="You are a friendly assistant. Always address the user by their name.",
-            context_provider=memory_provider,
+            context_providers=[memory_provider],
         ) as agent:
             # Create a new thread for the conversation
-            thread = agent.get_new_thread()
+            thread = agent.create_session()
 
-            print(await agent.run("Hello, what is the square root of 9?", thread=thread))
-            print(await agent.run("My name is Ruaidhrí", thread=thread))
-            print(await agent.run("I am 20 years old", thread=thread))
+            print(await agent.run("Hello, what is the square root of 9?", session=thread))
+            print(await agent.run("My name is Ruaidhrí", session=thread))
+            print(await agent.run("I am 20 years old", session=thread))
 
-            # Access the memory component via the thread's get_service method and inspect the memories
-            user_info_memory = thread.context_provider.providers[0]  # type: ignore
+            # Access the memory component and inspect the memories
+            user_info_memory = memory_provider
             if user_info_memory:
                 print()
                 print(f"MEMORY - User Name: {user_info_memory.user_info.name}")  # type: ignore

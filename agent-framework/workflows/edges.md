@@ -472,7 +472,6 @@ from agent_framework import (
     AgentExecutorRequest,
     AgentExecutorResponse,
     Message,
-    Role,
     WorkflowBuilder,
     WorkflowContext,
     executor,
@@ -569,7 +568,7 @@ async def to_email_assistant_request(
 
     # Create a new request for the email assistant with the original email content
     request = AgentExecutorRequest(
-        messages=[Message(Role.USER, text=detection.email_content)],
+        messages=[Message(role="user", contents=[detection.email_content])],
         should_respond=True
     )
     await ctx.send_message(request)
@@ -649,7 +648,7 @@ Run the workflow with sample email content:
 
     # Execute the workflow. Since the start is an AgentExecutor, pass an AgentExecutorRequest.
     # The workflow completes when it becomes idle (no more work to do).
-    request = AgentExecutorRequest(messages=[Message(Role.USER, text=email)], should_respond=True)
+    request = AgentExecutorRequest(messages=[Message(role="user", contents=[email])], should_respond=True)
     events = await workflow.run(request)
     outputs = events.get_outputs()
     if outputs:
@@ -679,7 +678,7 @@ if __name__ == "__main__":
 
 ### Complete Implementation
 
-For the complete working implementation, see the [edge_condition.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/control-flow/edge_condition.py) sample in the Agent Framework repository.
+For the complete working implementation, see the [edge_condition.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/edge_condition.py) sample in the Agent Framework repository.
 
 ::: zone-end
 
@@ -1154,7 +1153,7 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
 
     # Forward email to spam detection agent
     await ctx.send_message(
-        AgentExecutorRequest(messages=[Message(Role.USER, text=new_email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(role="user", contents=[new_email.email_content])], should_respond=True)
     )
 
 @executor(id="to_detection_result")
@@ -1183,7 +1182,7 @@ async def submit_to_email_assistant(detection: DetectionResult, ctx: WorkflowCon
     # Retrieve original email content from shared state
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{detection.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(role="user", contents=[email.email_content])], should_respond=True)
     )
 
 @executor(id="finalize_and_send")
@@ -1330,7 +1329,7 @@ The switch-case pattern scales much better as the number of routing decisions gr
 
 ### Switch-Case Sample Code
 
-For the complete working implementation, see the [switch_case_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/control-flow/switch_case_edge_group.py) sample in the Agent Framework repository.
+For the complete working implementation, see the [switch_case_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/switch_case_edge_group.py) sample in the Agent Framework repository.
 
 ::: zone-end
 
@@ -1949,7 +1948,7 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
     ctx.set_state(CURRENT_EMAIL_ID_KEY, new_email.email_id)
 
     await ctx.send_message(
-        AgentExecutorRequest(messages=[Message(Role.USER, text=new_email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(role="user", contents=[new_email.email_content])], should_respond=True)
     )
 
 @executor(id="to_analysis_result")
@@ -1980,7 +1979,7 @@ async def submit_to_email_assistant(analysis: AnalysisResult, ctx: WorkflowConte
 
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(role="user", contents=[email.email_content])], should_respond=True)
     )
 
 @executor(id="finalize_and_send")
@@ -1997,7 +1996,7 @@ async def summarize_email(analysis: AnalysisResult, ctx: WorkflowContext[AgentEx
     # Only called for long NotSpam emails by selection function
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{analysis.email_id}")
     await ctx.send_message(
-        AgentExecutorRequest(messages=[Message(Role.USER, text=email.email_content)], should_respond=True)
+        AgentExecutorRequest(messages=[Message(role="user", contents=[email.email_content])], should_respond=True)
     )
 
 @executor(id="merge_summary")
@@ -2195,7 +2194,7 @@ Run the workflow and observe parallel execution through custom events:
 
 ### Multi-Selection Sample Code
 
-For the complete working implementation, see the [multi_selection_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/control-flow/multi_selection_edge_group.py) sample in the Agent Framework repository.
+For the complete working implementation, see the [multi_selection_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/multi_selection_edge_group.py) sample in the Agent Framework repository.
 
 ::: zone-end
 

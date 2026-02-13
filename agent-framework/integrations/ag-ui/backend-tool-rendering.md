@@ -526,7 +526,7 @@ async def main():
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     try:
         while True:
@@ -538,7 +538,7 @@ async def main():
                 break
 
             print("\nAssistant: ", end="", flush=True)
-            async for update in agent.run(message, thread=thread, stream=True):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Display text content
                 if update.text:
                     print(f"\033[96m{update.text}\033[0m", end="", flush=True)

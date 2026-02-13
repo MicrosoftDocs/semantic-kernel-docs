@@ -171,24 +171,24 @@ This can be shown to the user, so that they can decide whether to approve or rej
 Once the user has provided their input, you can create a response using the `create_response` method on the user input request.
 Pass `True` to approve the function call, or `False` to reject it.
 
-The response can then be passed to the agent in a new `ChatMessage`, to get the result back from the agent.
+The response can then be passed to the agent in a new `Message`, to get the result back from the agent.
 
 ```python
-from agent_framework import Message, Role
+from agent_framework import Message
 
 # Get user approval (in a real application, this would be interactive)
 user_approval = True  # or False to reject
 
 # Create the approval response
 approval_message = Message(
-    role=Role.USER, 
+    role="user", 
     contents=[user_input_needed.create_response(user_approval)]
 )
 
 # Continue the conversation with the approval
 final_result = await agent.run([
     "What is the detailed weather like in Amsterdam?",
-    Message(role=Role.ASSISTANT, contents=[user_input_needed]),
+    Message(role="assistant", contents=[user_input_needed]),
     approval_message
 ])
 print(final_result.text)
@@ -218,14 +218,14 @@ async def handle_approvals(query: str, agent) -> str:
             print(f"Arguments: {user_input_needed.function_call.arguments}")
             
             # Add the assistant message with the approval request
-            new_inputs.append(Message(role=Role.ASSISTANT, contents=[user_input_needed]))
+            new_inputs.append(Message(role="assistant", contents=[user_input_needed]))
             
             # Get user approval (in practice, this would be interactive)
             user_approval = True  # Replace with actual user input
             
             # Add the user's approval response
             new_inputs.append(
-                Message(role=Role.USER, contents=[user_input_needed.create_response(user_approval)])
+                Message(role="user", contents=[user_input_needed.create_response(user_approval)])
             )
         
         # Continue with all the context
@@ -263,7 +263,7 @@ It shows how to handle function call approvals without using threads.
 conditions = ["sunny", "cloudy", "raining", "snowing", "clear"]
 
 
-# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/getting_started/tools/function_tool_with_approval.py and samples/getting_started/tools/function_tool_with_approval_and_threads.py.
+# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
 def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get the current weather for a given location."""
@@ -422,7 +422,7 @@ It shows how to handle function call approvals without using threads.
 conditions = ["sunny", "cloudy", "raining", "snowing", "clear"]
 
 
-# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/getting_started/tools/function_tool_with_approval.py and samples/getting_started/tools/function_tool_with_approval_and_threads.py.
+# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
 def get_weather(location: Annotated[str, "The city and state, e.g. San Francisco, CA"]) -> str:
     """Get the current weather for a given location."""

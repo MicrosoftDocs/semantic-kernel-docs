@@ -45,8 +45,10 @@ The Magentic manager maintains a shared context, tracks progress, and adapts the
 In Magentic orchestration, you define specialized agents that the manager can dynamically select based on task requirements:
 
 ```python
-from agent_framework import Agent, HostedCodeInterpreterTool
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient, OpenAIResponsesClient
+
+responses_client = OpenAIResponsesClient()
 
 researcher_agent = Agent(
     name="ResearcherAgent",
@@ -62,8 +64,8 @@ coder_agent = Agent(
     name="CoderAgent",
     description="A helpful assistant that writes and executes code to process and analyze data.",
     instructions="You solve questions using code. Please provide detailed analysis and computation process.",
-    chat_client=OpenAIResponsesClient(),
-    tools=HostedCodeInterpreterTool(),
+    chat_client=responses_client,
+    tools=responses_client.get_code_interpreter_tool(),
 )
 
 # Create a manager agent for orchestration
@@ -197,7 +199,7 @@ output_event: WorkflowEvent | None = None
 
 while not output_event:
     if pending_responses is not None:
-        stream = workflow.send_responses_streaming(pending_responses)
+        stream = workflow.run(responses=pending_responses)
     else:
         stream = workflow.run_stream(task)
 
@@ -265,7 +267,7 @@ The Magentic orchestration follows this execution pattern:
 
 ## Complete Example
 
-See complete samples in the [Agent Framework Samples repository](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/workflows/orchestration).
+See complete samples in the [Agent Framework Samples repository](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows/orchestrations).
 
 ::: zone-end
 

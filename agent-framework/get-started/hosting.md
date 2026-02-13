@@ -170,7 +170,7 @@ curl -X POST http://localhost:7071/api/agents/HostedAgent/run \
 ```
 
 > [!TIP]
-> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/06_host_your_agent.py) for the complete runnable file, and the [Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/azure_functions) for multi-agent orchestrations.
+> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/06_host_your_agent.py) for the complete runnable file, and the [Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/azure_functions) for multi-agent orchestrations.
 
 :::zone-end
 

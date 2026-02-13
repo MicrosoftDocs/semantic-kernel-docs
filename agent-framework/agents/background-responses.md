@@ -154,9 +154,10 @@ await foreach (var update in agent.RunStreamingAsync(session, options))
 To enable background responses, pass the `background` option when calling `agent.run()`:
 
 ```python
+session = agent.create_session()
 response = await agent.run(
     messages="Your prompt here",
-    thread=thread,
+    session=session,
     options={"background": True},
 )
 ```
@@ -179,12 +180,12 @@ agent = Agent(
     client=OpenAIResponsesClient(model_id="o3"),
 )
 
-thread = agent.get_new_thread()
+session = await agent.create_session()
 
 # Start a background run — returns immediately
 response = await agent.run(
     messages="Briefly explain the theory of relativity in two sentences.",
-    thread=thread,
+    session=session,
     options={"background": True},
 )
 
@@ -192,7 +193,7 @@ response = await agent.run(
 while response.continuation_token is not None:
     await asyncio.sleep(2)
     response = await agent.run(
-        thread=thread,
+        session=session,
         options={"continuation_token": response.continuation_token},
     )
 
@@ -211,14 +212,14 @@ print(response.text)
 In streaming scenarios, background responses work like regular streaming — the agent streams updates back in real time. The key difference is that each update includes a `continuation_token`, enabling stream resumption if the connection is interrupted:
 
 ```python
-thread = agent.get_new_thread()
+session = await agent.create_session()
 
 # Start a streaming background run
 last_token = None
 stream = agent.run(
     messages="Briefly list three benefits of exercise.",
     stream=True,
-    thread=thread,
+    session=session,
     options={"background": True},
 )
 
@@ -238,7 +239,7 @@ If the stream is interrupted, use the last `continuation_token` to resume from w
 if last_token is not None:
     stream = agent.run(
         stream=True,
-        thread=thread,
+        session=session,
         options={"continuation_token": last_token},
     )
     async for update in stream:
@@ -272,4 +273,4 @@ When working with background responses, consider the following best practices:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [RAG & Context Providers](rag.md)
+> [RAG](rag.md)

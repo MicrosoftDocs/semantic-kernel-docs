@@ -91,7 +91,7 @@ print(viz.save_pdf("workflow.pdf"))
 > [!TIP]
 > For basic text output (Mermaid and DOT), no additional dependencies are needed. For image export, you need to install the `graphviz` Python package by running: `pip install graphviz>=0.20.0` and [install GraphViz](https://graphviz.org/download/).
 
-For a complete working implementation with visualization, see the [Concurrent with Visualization sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/workflows/visualization/concurrent_with_visualization.py).
+For a complete working implementation with visualization, see the [Concurrent with Visualization sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/visualization/concurrent_with_visualization.py).
 
 ::: zone-end
 

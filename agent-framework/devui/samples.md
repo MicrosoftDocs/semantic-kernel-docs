@@ -25,16 +25,16 @@ DevUI samples for C# are coming soon. Please check back later or refer to the Py
 
 ## Getting Started Samples
 
-The Agent Framework repository includes sample agents and workflows in the `python/samples/getting_started/devui/` directory:
+The Agent Framework repository includes sample agents and workflows in the `python/samples/02-agents/devui/` directory:
 
 | Sample | Description |
 |--------|-------------|
-| [weather_agent_azure](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/devui/weather_agent_azure) | A weather agent using Azure OpenAI |
-| [foundry_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/devui/foundry_agent) | Agent using Azure AI Foundry |
-| [azure_responses_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/devui/azure_responses_agent) | Agent using Azure Responses API |
-| [fanout_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/devui/fanout_workflow) | Workflow demonstrating fan-out pattern |
-| [spam_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/devui/spam_workflow) | Workflow for spam detection |
-| [workflow_agents](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/devui/workflow_agents) | Multiple agents in a workflow |
+| [weather_agent_azure](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/weather_agent_azure) | A weather agent using Azure OpenAI |
+| [foundry_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/foundry_agent) | Agent using Azure AI Foundry |
+| [azure_responses_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/azure_responses_agent) | Agent using Azure Responses API |
+| [fanout_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/fanout_workflow) | Workflow demonstrating fan-out pattern |
+| [spam_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/spam_workflow) | Workflow for spam detection |
+| [workflow_agents](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_agents) | Multiple agents in a workflow |
 
 ## Running the Samples
 
@@ -42,7 +42,7 @@ The Agent Framework repository includes sample agents and workflows in the `pyth
 
 ```bash
 git clone https://github.com/microsoft/agent-framework.git
-cd agent-framework/python/samples/getting_started/devui
+cd agent-framework/python/samples/02-agents/devui
 ```
 
 ### Set Up Environment
@@ -120,7 +120,7 @@ workflow = (
 
 - [DevUI Package README](https://github.com/microsoft/agent-framework/tree/main/python/packages/devui) - Full package documentation
 - [Agent Framework Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples) - All Python samples
-- [Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/workflows) - Workflow-specific samples
+- [Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows) - Workflow-specific samples
 
 ::: zone-end
 

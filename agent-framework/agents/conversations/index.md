@@ -1,41 +1,38 @@
 ---
-title: Conversations & memory in Agent Framework
-description: Learn about multi-turn conversations, chat history, persistent storage, and threads in Agent Framework.
+title: Conversations & Memory overview in Agent Framework
+description: Learn the core AgentSession usage pattern and how to navigate sessions, context providers, and storage.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 02/12/2026
+ms.date: 02/13/2026
 ms.service: agent-framework
 ---
 
-# Conversations & memory
+# Conversations & Memory overview
 
-Agents are most useful when they can remember what was said earlier in a conversation. Agent Framework provides `AgentThread` (Python) and `AgentSession` (.NET) to maintain conversation state across multiple exchanges, along with options for persistent storage and chat history management.
+Use `AgentSession` to keep conversation context between invocations.
 
-## How it works
+## Core usage pattern
 
-When you create a thread and pass it to each `run` call, the agent automatically:
+Most applications follow the same flow:
 
-1. **Stores messages** — both user inputs and agent responses are tracked
-2. **Provides context** — previous messages are sent to the model on each turn
-3. **Maintains identity** — each thread has a unique ID for tracking
+1. Create a session (`create_session()`)
+2. Pass that session to each `run(...)`
+3. Rehydrate by service conversation ID (`get_session(...)`) or from serialized state
 
 :::zone pivot="programming-language-csharp"
 
 ```csharp
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent(instructions: "You are a friendly assistant. Keep your answers brief.", name: "ConversationAgent");
-
-// Create a session to maintain conversation history
+// Create and reuse a session
 AgentSession session = await agent.CreateSessionAsync();
 
-// First turn
-Console.WriteLine(await agent.RunAsync("My name is Alice and I love hiking.", session));
+var first = await agent.RunAsync("My name is Alice.", session);
+var second = await agent.RunAsync("What is my name?", session);
 
-// Second turn — the agent remembers the user's name and hobby
-Console.WriteLine(await agent.RunAsync("What do you remember about me?", session));
+// Persist and restore later
+var serialized = agent.SerializeSession(session);
+AgentSession resumed = await agent.DeserializeSessionAsync(serialized);
 ```
 
 :::zone-end
@@ -43,37 +40,31 @@ Console.WriteLine(await agent.RunAsync("What do you remember about me?", session
 :::zone pivot="programming-language-python"
 
 ```python
-agent = client.as_agent(
-    name="ConversationAgent",
-    instructions="You are a friendly assistant. Keep your answers brief.",
-)
+# Create and reuse a session
+session = agent.create_session()
 
-# Create a thread to maintain conversation history
-thread = agent.get_new_thread()
+first = await agent.run("My name is Alice.", session=session)
+second = await agent.run("What is my name?", session=session)
 
-# First turn
-result = await agent.run("My name is Alice and I love hiking.", thread=thread)
-print(f"Agent: {result}\n")
+# Rehydrate by service conversation ID when needed
+service_session = agent.get_session(service_session_id="<service-conversation-id>")
 
-# Second turn — the agent remembers the user's name and hobby
-result = await agent.run("What do you remember about me?", thread=thread)
-print(f"Agent: {result}")
+# Persist and restore later
+serialized = session.to_dict()
+resumed = AgentSession.from_dict(serialized)
 ```
 
 :::zone-end
 
-Without a thread, each call to `run` is independent — the agent has no memory of previous exchanges.
+## Guide map
 
-## Topics
-
-| Topic | Description |
-|-------|-------------|
-| [Multi-Turn Conversations](multi-turn.md) | Maintain context across multiple exchanges |
-| [Chat History](chat-history.md) | Access and manage the conversation history |
-| [Persistent Storage](persistent-storage.md) | Store conversations across sessions |
-| [Threads](threads.md) | Organize conversations into logical threads |
+| Page | Focus |
+|---|---|
+| [Session](./session.md) | `AgentSession` structure (`session_id`, `service_session_id`, `state`) and serialization |
+| [Context Providers](./context-providers.md) | Built-in and custom context/history provider patterns |
+| [Storage](./storage.md) | Built-in storage modes and external persistence strategies |
 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Multi-Turn Conversations](multi-turn.md)
+> [Session](./session.md)

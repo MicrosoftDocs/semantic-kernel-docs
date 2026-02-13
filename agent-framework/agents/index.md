@@ -15,7 +15,12 @@ ms.author: taochen
 
 The Microsoft Agent Framework provides support for several types of agents to accommodate different use cases and requirements.
 
-All agents are derived from a common base class, `Agent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
+::: zone pivot="programming-language-csharp"
+All agents are derived from a common base class, `AIAgent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
+::: zone-end
+::: zone pivot="programming-language-python"
+All agents are derived from a common base class, [`Agent`](/python/api/agent-framework-core/agent_framework.agent?view=agent-framework-python-latest), which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
+::: zone-end
 
 ## Default Agent Runtime Execution Model
 
@@ -168,6 +173,7 @@ AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
 
 Agent Framework makes it easy to create simple agents based on many different inference services.
 Any inference service that provides a chat client implementation can be used to build these agents.
+This can be done using the [`SupportsChatGetResponse`](/python/api/agent-framework-core/agent_framework.supportschatgetresponse?view=agent-framework-python-latest), which defines a standard for the methods that a client needs to support to be used with the standard [`Agent`](/python/api/agent-framework-core/agent_framework.agent?view=agent-framework-python-latest) class.
 
 These agents support a wide range of functionality out of the box:
 
@@ -177,78 +183,56 @@ These agents support a wide range of functionality out of the box:
 1. Structured output
 1. Streaming responses
 
-To create one of these agents, simply construct a `Agent` using the chat client implementation of your choice.
+To create one of these agents, simply construct an [`Agent`](/python/api/agent-framework-core/agent_framework.agent?view=agent-framework-python-latest) using the chat client implementation of your choice.
+
 
 ```python
+import os
 from agent_framework import Agent
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity.aio import DefaultAzureCredential
 
-async with (
-    DefaultAzureCredential() as credential,
-    Agent(
-        chat_client=AzureAIAgentClient(async_credential=credential),
-        instructions="You are a helpful assistant"
-    ) as agent
-):
-    response = await agent.run("Hello!")
+Agent(
+    client=AzureOpenAIResponsesClient(credential=DefaultAzureCredential(), project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"), deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME")),
+    instructions="You are a helpful assistant"
+) as agent
+response = await agent.run("Hello!")
 ```
 
 Alternatively, you can use the convenience method on the chat client:
 
 ```python
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity.aio import DefaultAzureCredential
 
-async with DefaultAzureCredential() as credential:
-    agent = AzureAIAgentClient(async_credential=credential).as_agent(
-        instructions="You are a helpful assistant"
-    )
+agent = AzureOpenAIResponsesClient(async_credential=DefaultAzureCredential(), project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"), deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME")).as_agent(
+    instructions="You are a helpful assistant"
+)
 ```
+
+> [!NOTE]
+> This example shows using the AzureOpenAIResponsesClient, but the same pattern applies to any chat client that implements [`SupportsChatGetResponse`](/python/api/agent-framework-core/agent_framework.supportschatgetresponse?view=agent-framework-python-latest), see [providers overview](./providers/index.md) for more details on other clients.
 
 For detailed examples, see the agent-specific documentation sections below.
 
-### Supported Agent Types
+### Supported Chat Providers
 
-|Underlying Inference Service|Description|Service Chat History storage supported|Custom Chat History storage supported|
-|---|---|---|---|
-|[Azure AI Agent](./providers/azure-ai-foundry.md)|An agent that uses the Azure AI Agents Service as its backend.|Yes|No|
-|[Azure OpenAI Chat Completion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|Yes|
-|[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
-|[OpenAI Chat Completion](./providers/openai.md)|An agent that uses the OpenAI Chat Completion service.|No|Yes|
-|[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
-|[OpenAI Assistants](./providers/openai.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
-|[Any other ChatClient](./providers/custom.md)|You can also use any other chat client implementation to create an agent.|Varies|Varies|
+|Underlying Inference Service|Description|Service Chat History storage supported|
+|---|---|---|
+|[Azure AI Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Azure AI Agents Service as its backend.|Yes|
+|[Azure OpenAI Chat Completion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|
+|[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|
+|[Azure OpenAI Assistants](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Assistants service.|Yes|
+|[OpenAI Chat Completion](./providers/openai.md)|An agent that uses the OpenAI Chat Completion service.|No|
+|[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|
+|[OpenAI Assistants](./providers/openai.md)|An agent that uses the OpenAI Assistants service.|Yes|
+|[Anthropic Claude](./providers/anthropic.md)|An agent that uses Anthropic Claude models.|No|
+|[Amazon Bedrock](https://github.com/microsoft/agent-framework/tree/main/python/packages/bedrock)|An agent that uses Amazon Bedrock models through the Agent Framework Bedrock chat client.|No|
+|[GitHub Copilot](./providers/github-copilot.md)|An agent that uses the GitHub Copilot SDK backend.|No|
+|[Ollama (OpenAI-compatible)](./providers/ollama.md)|An agent that uses locally hosted Ollama models via OpenAI-compatible APIs.|No|
+|[Any other ChatClient](./providers/custom.md)|You can also use any other implementation of [`SupportsChatGetResponse`](/python/api/agent-framework-core/agent_framework.supportschatgetresponse?view=agent-framework-python-latest) to create an agent.|Varies|
 
-### Function Tools
-
-You can provide function tools to agents for enhanced capabilities:
-
-```python
-from typing import Annotated
-from pydantic import Field
-from azure.identity.aio import DefaultAzureCredential
-from agent_framework.azure import AzureAIAgentClient
-
-def get_weather(location: Annotated[str, Field(description="The location to get the weather for.")]) -> str:
-    """Get the weather for a given location."""
-    return f"The weather in {location} is sunny with a high of 25°C."
-
-async with (
-    DefaultAzureCredential() as credential,
-    AzureAIAgentClient(async_credential=credential).as_agent(
-        instructions="You are a helpful weather assistant.",
-        tools=get_weather
-    ) as agent
-):
-    response = await agent.run("What's the weather in Seattle?")
-```
-
-For complete examples with function tools, see:
-
-- [Azure AI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai_agent/azure_ai_with_function_tools.py)
-- [Azure OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_chat_client_with_function_tools.py)
-- [OpenAI with function tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_with_function_tools.py)
+Custom chat history storage is supported whenever session-based conversation state is supported.
 
 ### Streaming Responses
 
@@ -267,114 +251,51 @@ async for chunk in agent.run("What's the weather like in Portland?", stream=True
 
 For streaming examples, see:
 
-- [Azure AI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_basic.py)
-- [Azure OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_chat_client_basic.py)
-- [OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_chat_client_basic.py)
+- [Azure AI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_basic.py)
+- [Azure OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_chat_client_basic.py)
+- [OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_basic.py)
 
-### Code Interpreter Tools
+For more invocation patterns, see [Running Agents](./running-agents.md).
 
-Azure AI agents support hosted code interpreter tools for executing Python code:
+### Function Tools
+
+You can provide function tools to agents for enhanced capabilities:
 
 ```python
-from agent_framework import Agent, HostedCodeInterpreterTool
-from agent_framework.azure import AzureAIAgentClient
+import os
+from typing import Annotated
 from azure.identity.aio import DefaultAzureCredential
+from agent_framework.azure import AzureOpenAIResponsesClient
 
-async with (
-    DefaultAzureCredential() as credential,
-    Agent(
-        chat_client=AzureAIAgentClient(async_credential=credential),
-        instructions="You are a helpful assistant that can execute Python code.",
-        tools=HostedCodeInterpreterTool()
-    ) as agent
-):
-    response = await agent.run("Calculate the factorial of 100 using Python")
+def get_weather(location: Annotated[str, "The location to get the weather for."]) -> str:
+    """Get the weather for a given location."""
+    return f"The weather in {location} is sunny with a high of 25°C."
+
+async with DefaultAzureCredential() as credential:
+    agent = AzureOpenAIResponsesClient(
+        async_credential=credential,
+        project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
+        deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"),
+    ).as_agent(
+        instructions="You are a helpful weather assistant.",
+        tools=get_weather,
+    )
+    response = await agent.run("What's the weather in Seattle?")
 ```
 
-For code interpreter examples, see:
-
-- [Azure AI with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_ai/azure_ai_with_code_interpreter.py)
-- [Azure OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/azure_openai/azure_assistants_with_code_interpreter.py)
-- [OpenAI Assistants with code interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/agents/openai/openai_assistants_with_code_interpreter.py)
+For tools and tool patterns, see [Tools overview](./tools/index.md).
 
 ## Custom agents
 
-It is also possible to create fully custom agents that are not just wrappers around a chat client.
-Agent Framework provides the `BaseAgent` base class, which when subclassed allows for complete control over the agent's behavior and capabilities. The key is implementing a single `run()` method that supports both streaming and non-streaming via the `stream` parameter.
+For fully custom implementations (for example deterministic agents or API-backed agents), see [Custom Agents](./providers/custom.md). That page covers implementing [`SupportsAgentRun`](/python/api/agent-framework-core/agent_framework.supportsagentrun?view=agent-framework-python-latest) or extending [`BaseAgent`](/python/api/agent-framework-core/agent_framework.baseagent?view=agent-framework-python-latest), including streaming updates with [`AgentResponseUpdate`](/python/api/agent-framework-core/agent_framework.agentresponseupdate?view=agent-framework-python-latest).
 
-```python
-import asyncio
-from collections.abc import AsyncIterable
-from typing import Any
+## Other agent types
 
-from agent_framework import (
-    AgentResponse,
-    AgentResponseUpdate,
-    AgentThread,
-    BaseAgent,
-    Content,
-    Message,
-    Role,
-    normalize_messages,
-)
+Agent Framework also includes protocol-backed agents, such as:
 
-
-class CustomAgent(BaseAgent):
-    """A custom agent that extends BaseAgent."""
-
-    def run(
-        self,
-        messages: str | Message | list[str] | list[Message] | None = None,
-        *,
-        stream: bool = False,
-        thread: AgentThread | None = None,
-        **kwargs: Any,
-    ) -> "AsyncIterable[AgentResponseUpdate] | asyncio.Future[AgentResponse]":
-        """Execute the agent.
-
-        Args:
-            messages: The message(s) to process.
-            stream: If True, return an async iterable of updates.
-            thread: The conversation thread (optional).
-
-        Returns:
-            When stream=False: An awaitable AgentResponse.
-            When stream=True: An async iterable of AgentResponseUpdate objects.
-        """
-        if stream:
-            return self._run_stream(messages=messages, thread=thread, **kwargs)
-        return self._run(messages=messages, thread=thread, **kwargs)
-
-    async def _run(
-        self,
-        messages: str | Message | list[str] | list[Message] | None = None,
-        *,
-        thread: AgentThread | None = None,
-        **kwargs: Any,
-    ) -> AgentResponse:
-        normalized = normalize_messages(messages)
-        # Your custom logic here
-        response = Message(
-            role=Role.ASSISTANT,
-            contents=[Content.from_text(text="Hello from custom agent!")],
-        )
-        if thread is not None:
-            await self._notify_thread_of_new_messages(thread, normalized, response)
-        return AgentResponse(messages=[response])
-
-    async def _run_stream(
-        self,
-        messages: str | Message | list[str] | list[Message] | None = None,
-        *,
-        thread: AgentThread | None = None,
-        **kwargs: Any,
-    ) -> AsyncIterable[AgentResponseUpdate]:
-        # Your custom streaming logic here
-        yield AgentResponseUpdate(
-            contents=[Content.from_text(text="Hello from custom agent!")],
-            role=Role.ASSISTANT,
-        )
-```
+| Agent Type | Description |
+|---|---|
+| [A2A](../integrations/a2a.md) | A proxy agent that connects to and invokes remote A2A-compliant agents. |
 
 ::: zone-end
 

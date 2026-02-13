@@ -1656,4 +1656,4 @@ actions:
 
 ## Next Steps
 
-- [Python Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/workflows/declarative) - Explore complete working examples
+- [Python Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows/declarative) - Explore complete working examples

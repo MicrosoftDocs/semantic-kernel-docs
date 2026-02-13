@@ -606,7 +606,7 @@ The new TypedDict-based system provides excellent IDE support:
 
 ## Next Steps
 
-To see the typed dicts in action for the case of using OpenAI Reasoning Models with the Chat Completion API, explore [this sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/getting_started/chat_client/typed_options.py)
+To see the typed dicts in action for the case of using OpenAI Reasoning Models with the Chat Completion API, explore [this sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/typed_options.py)
 
 After completing the migration:
 

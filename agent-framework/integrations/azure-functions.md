@@ -246,11 +246,11 @@ def spam_detection_orchestration(context: df.DurableOrchestrationContext):
 
     # Check if the email is spam
     spam_agent = app.get_agent(context, "SpamDetectionAgent")
-    spam_thread = spam_agent.get_new_thread()
+    spam_thread = spam_agent.create_session()
 
     spam_result_raw = yield spam_agent.run(
         messages=f"Analyze this email for spam: {email['content']}",
-        thread=spam_thread,
+        session=spam_thread,
         response_format=SpamDetectionResult
     )
     spam_result = cast(SpamDetectionResult, spam_result_raw.get("structured_response"))
@@ -261,11 +261,11 @@ def spam_detection_orchestration(context: df.DurableOrchestrationContext):
 
     # Generate response for legitimate email
     email_agent = app.get_agent(context, "EmailAssistantAgent")
-    email_thread = email_agent.get_new_thread()
+    email_thread = email_agent.create_session()
 
     email_response_raw = yield email_agent.run(
         messages=f"Draft a professional response to: {email['content']}",
-        thread=email_thread,
+        session=email_thread,
         response_format=EmailResponse
     )
     email_response = cast(EmailResponse, email_response_raw.get("structured_response"))

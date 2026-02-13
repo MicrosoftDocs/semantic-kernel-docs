@@ -52,28 +52,41 @@ Console.WriteLine(await agent.RunAsync("What is my name?", session));
 Define a context provider that injects additional context into every agent call:
 
 ```python
-class UserNameProvider(ContextProvider):
+from typing import Any
+from agent_framework import AgentSession, BaseContextProvider, SessionContext
+
+
+class UserNameProvider(BaseContextProvider):
     """A simple context provider that remembers the user's name."""
 
     def __init__(self) -> None:
+        super().__init__(source_id="user-name-provider")
         self.user_name: str | None = None
 
-    async def invoking(self, messages: Message | MutableSequence[Message], **kwargs: Any) -> Context:
+    async def before_run(
+        self,
+        *,
+        agent: Any,
+        session: AgentSession,
+        context: SessionContext,
+        state: dict[str, Any],
+    ) -> None:
         """Called before each agent invocation — add extra instructions."""
         if self.user_name:
-            return Context(instructions=f"The user's name is {self.user_name}. Always address them by name.")
-        return Context(instructions="You don't know the user's name yet. Ask for it politely.")
+            context.instructions.append(f"The user's name is {self.user_name}. Always address them by name.")
+        else:
+            context.instructions.append("You don't know the user's name yet. Ask for it politely.")
 
-    async def invoked(
+    async def after_run(
         self,
-        request_messages: Message | "list[Message] | Message | None" = None,
-        response_messages: "Message | list[Message] | None" = None,
-        invoke_exception: Exception | None = None,
-        **kwargs: Any,
+        *,
+        agent: Any,
+        session: AgentSession,
+        context: SessionContext,
+        state: dict[str, Any],
     ) -> None:
         """Called after each agent invocation — extract information."""
-        msgs = [request_messages] if isinstance(request_messages, Message) else list(request_messages or [])
-        for msg in msgs:
+        for msg in context.input_messages:
             text = msg.text if hasattr(msg, "text") else ""
             if isinstance(text, str) and "my name is" in text.lower():
                 self.user_name = text.lower().split("my name is")[-1].strip().split()[0].capitalize()
@@ -94,24 +107,48 @@ memory = UserNameProvider()
 agent = client.as_agent(
     name="MemoryAgent",
     instructions="You are a friendly assistant.",
-    context_provider=memory,
+    context_providers=[memory],
 )
 ```
+
+> [!NOTE]
+> In Python, persistence/memory is handled by history providers. A `BaseHistoryProvider` is also a `BaseContextProvider`, and `InMemoryHistoryProvider` is the built-in local implementation.
+> `RawAgent` may auto-add `InMemoryHistoryProvider("memory")` in specific cases (for example, when using a session with no configured context providers and no service-side storage indicators), but this is not guaranteed in all scenarios.
+> If you always want local persistence, add an `InMemoryHistoryProvider` explicitly. Also make sure only one history provider has `load_messages=True`, so you don't replay multiple stores into the same invocation.
+>
+> You can also add an audit store by appending another history provider at the end of `context_providers` with `store_context_messages=True`:
+>
+> ```python
+> from agent_framework import InMemoryHistoryProvider
+>
+> memory_store = InMemoryHistoryProvider("memory", load_messages=True)
+> audit_store = InMemoryHistoryProvider(
+>     "audit",
+>     load_messages=False,
+>     store_context_messages=True,  # include context added by other providers
+> )
+>
+> agent = client.as_agent(
+>     name="MemoryAgent",
+>     instructions="You are a friendly assistant.",
+>     context_providers=[memory, memory_store, audit_store],  # audit store last
+> )
+> ```
 
 Run it — the agent now has access to the context:
 
 ```python
-thread = agent.get_new_thread()
+session = await agent.create_session()
 
-result = await agent.run("Hello! What's the square root of 9?", thread=thread)
+result = await agent.run("Hello! What's the square root of 9?", session=session)
 print(f"Agent: {result}\n")
 
 # Now provide the name — the provider extracts and stores it
-result = await agent.run("My name is Alice", thread=thread)
+result = await agent.run("My name is Alice", session=session)
 print(f"Agent: {result}\n")
 
 # Subsequent calls are personalized
-result = await agent.run("What is 2 + 2?", thread=thread)
+result = await agent.run("What is 2 + 2?", session=session)
 print(f"Agent: {result}\n")
 
 print(f"[Memory] Stored user name: {memory.user_name}")
@@ -129,5 +166,5 @@ print(f"[Memory] Stored user name: {memory.user_name}")
 
 **Go deeper:**
 
-- [Persistent storage](../agents/conversations/persistent-storage.md) — store conversations in databases
-- [Chat history](../agents/conversations/chat-history.md) — manage chat history and memory
+- [Persistent storage](../agents/conversations/storage.md) — store conversations in databases
+- [Chat history](../agents/conversations/context-providers.md) — manage chat history and memory

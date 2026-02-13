@@ -237,7 +237,7 @@ workflow = GroupChatBuilder(
     participants=[researcher, writer],
     # Set a hard termination condition: stop after 4 assistant messages
     # The agent orchestrator will intelligently decide when to end before this limit but just in case
-    termination_condition=lambda messages: sum(1 for msg in messages if msg.role == Role.ASSISTANT) >= 4,
+    termination_condition=lambda messages: sum(1 for msg in messages if msg.role == "assistant") >= 4,
     orchestrator_agent=orchestrator_agent,
 ).build()
 ```
@@ -427,7 +427,7 @@ workflow = GroupChatBuilder(
 
 As mentioned at the beginning of this guide, all agents in a group chat see the full conversation history.
 
-Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/conversations/multi-turn.md)) to manage context. In a group chat orchestration, agents **do not** share the same session instance, but the orchestrator ensures that each agent's session is synchronized with the complete conversation history before each turn. To achieve this, after each agent's turn, the orchestrator broadcasts the response to all other agents, making sure all participants have the latest context for their next turn.
+Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/conversations/session.md)) to manage context. In a group chat orchestration, agents **do not** share the same session instance, but the orchestrator ensures that each agent's session is synchronized with the complete conversation history before each turn. To achieve this, after each agent's turn, the orchestrator broadcasts the response to all other agents, making sure all participants have the latest context for their next turn.
 
 <p align="center">
     <img src="../resources/images/orchestration-groupchat.png" alt="Group Chat Context Synchronization">

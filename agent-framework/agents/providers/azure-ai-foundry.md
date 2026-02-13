@@ -294,17 +294,17 @@ Azure AI Foundry agents support code execution through the hosted code interpret
 
 ```python
 import asyncio
-from agent_framework import HostedCodeInterpreterTool
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).as_agent(
+        AzureAIAgentClient(async_credential=credential) as client,
+        client.as_agent(
             name="CodingAgent",
             instructions="You are a helpful assistant that can write and execute Python code.",
-            tools=HostedCodeInterpreterTool()
+            tools=client.get_code_interpreter_tool(),
         ) as agent,
     ):
         result = await agent.run("Calculate the factorial of 20 using Python code.")

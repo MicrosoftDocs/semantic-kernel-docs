@@ -198,9 +198,16 @@ pip install agent-framework-core --pre
 The framework provides the `SupportsAgentRun` protocol that defines the interface all agents must implement. Custom agents can either implement this protocol directly or extend the `BaseAgent` class for convenience.
 
 ```python
-from agent_framework import SupportsAgentRun, AgentResponse, AgentResponseUpdate, AgentThread, Message
-from collections.abc import AsyncIterable
-from typing import Any
+from typing import Any, Literal, overload
+from collections.abc import Awaitable, Sequence
+from agent_framework import (
+    AgentResponse,
+    AgentResponseUpdate,
+    AgentSession,
+    Message,
+    ResponseStream,
+    SupportsAgentRun,
+)
 
 class MyCustomAgent(SupportsAgentRun):
     """A custom agent that implements the SupportsAgentRun directly."""
@@ -210,36 +217,60 @@ class MyCustomAgent(SupportsAgentRun):
         """Returns the ID of the agent."""
         ...
 
-    async def run(
+    @overload
+    def run(
         self,
-        messages: str | Message | list[str] | list[Message] | None = None,
+        messages: str | Message | Sequence[str | Message] | None = None,
+        *,
+        stream: Literal[False] = False,
+        session: AgentSession | None = None,
+        **kwargs: Any,
+    ) -> Awaitable[AgentResponse]: ...
+
+    @overload
+    def run(
+        self,
+        messages: str | Message | Sequence[str | Message] | None = None,
+        *,
+        stream: Literal[True],
+        session: AgentSession | None = None,
+        **kwargs: Any,
+    ) -> ResponseStream[AgentResponseUpdate, AgentResponse]: ...
+
+    def run(
+        self,
+        messages: str | Message | Sequence[str | Message] | None = None,
         *,
         stream: bool = False,
-        thread: AgentThread | None = None,
+        session: AgentSession | None = None,
         **kwargs: Any,
-    ) -> AgentResponse | AsyncIterable[AgentResponseUpdate]:
-        """Execute the agent. When stream=False, returns AgentResponse. When stream=True, returns AsyncIterable[AgentResponseUpdate]."""
+    ) -> Awaitable[AgentResponse] | ResponseStream[AgentResponseUpdate, AgentResponse]:
+        """Execute the agent and return either an awaitable response or a ResponseStream."""
         ...
 ```
+
+> [!TIP]
+> Add `@overload` signatures to `run()` so IDEs and static type checkers infer the return type based on `stream` (`Awaitable[AgentResponse]` for `stream=False` and `ResponseStream[AgentResponseUpdate, AgentResponse]` for `stream=True`).
 
 ### Using BaseAgent
 
 The recommended approach is to extend the `BaseAgent` class, which provides common functionality and simplifies implementation:
 
 ```python
+import asyncio
+from collections.abc import AsyncIterable, Awaitable, Sequence
+from typing import Any, Literal, overload
+
 from agent_framework import (
-    BaseAgent,
     AgentResponse,
     AgentResponseUpdate,
-    AgentThread,
-    Message,
+    AgentSession,
+    BaseAgent,
     Content,
-    Role,
+    Message,
+    ResponseStream,
     normalize_messages,
 )
-from collections.abc import AsyncIterable
-from typing import Any
-import asyncio
 
 
 class EchoAgent(BaseAgent):
@@ -262,58 +293,83 @@ class EchoAgent(BaseAgent):
             **kwargs,
         )
 
+    @overload
     def run(
         self,
-        messages: str | Message | list[str] | list[Message] | None = None,
+        messages: str | Message | Sequence[str | Message] | None = None,
+        *,
+        stream: Literal[False] = False,
+        session: AgentSession | None = None,
+        **kwargs: Any,
+    ) -> Awaitable[AgentResponse]: ...
+
+    @overload
+    def run(
+        self,
+        messages: str | Message | Sequence[str | Message] | None = None,
+        *,
+        stream: Literal[True],
+        session: AgentSession | None = None,
+        **kwargs: Any,
+    ) -> ResponseStream[AgentResponseUpdate, AgentResponse]: ...
+
+    def run(
+        self,
+        messages: str | Message | Sequence[str | Message] | None = None,
         *,
         stream: bool = False,
-        thread: AgentThread | None = None,
+        session: AgentSession | None = None,
         **kwargs: Any,
-    ) -> "AsyncIterable[AgentResponseUpdate] | asyncio.Future[AgentResponse]":
+    ) -> Awaitable[AgentResponse] | ResponseStream[AgentResponseUpdate, AgentResponse]:
         """Execute the agent.
 
         Args:
             messages: The message(s) to process.
-            stream: If True, return an async iterable of updates.
-            thread: The conversation thread (optional).
+            stream: If True, return a ResponseStream of updates.
+            session: The conversation session (optional).
 
         Returns:
             When stream=False: An awaitable AgentResponse.
-            When stream=True: An async iterable of AgentResponseUpdate objects.
+            When stream=True: A ResponseStream with AgentResponseUpdate items and final response support.
         """
         if stream:
-            return self._run_stream(messages=messages, thread=thread, **kwargs)
-        return self._run(messages=messages, thread=thread, **kwargs)
+            return ResponseStream(
+                self._run_stream(messages=messages, session=session, **kwargs),
+                finalizer=AgentResponse.from_updates,
+            )
+        return self._run(messages=messages, session=session, **kwargs)
 
     async def _run(
         self,
-        messages: str | Message | list[str] | list[Message] | None = None,
+        messages: str | Message | Sequence[str | Message] | None = None,
         *,
-        thread: AgentThread | None = None,
+        session: AgentSession | None = None,
         **kwargs: Any,
     ) -> AgentResponse:
         normalized_messages = normalize_messages(messages)
 
         if not normalized_messages:
             response_message = Message(
-                role=Role.ASSISTANT,
-                contents=[Content.from_text(text="Hello! I'm a custom echo agent. Send me a message and I'll echo it back.")],
+                role="assistant",
+                contents=[Content.from_text("Hello! I'm a custom echo agent. Send me a message and I'll echo it back.")],
             )
         else:
             last_message = normalized_messages[-1]
             echo_text = f"{self.echo_prefix}{last_message.text}" if last_message.text else f"{self.echo_prefix}[Non-text message received]"
-            response_message = Message(role=Role.ASSISTANT, contents=[Content.from_text(text=echo_text)])
+            response_message = Message(role="assistant", contents=[Content.from_text(echo_text)])
 
-        if thread is not None:
-            await self._notify_thread_of_new_messages(thread, normalized_messages, response_message)
+        if session is not None:
+            stored = session.state.setdefault("memory", {}).setdefault("messages", [])
+            stored.extend(normalized_messages)
+            stored.append(response_message)
 
         return AgentResponse(messages=[response_message])
 
     async def _run_stream(
         self,
-        messages: str | Message | list[str] | list[Message] | None = None,
+        messages: str | Message | Sequence[str | Message] | None = None,
         *,
-        thread: AgentThread | None = None,
+        session: AgentSession | None = None,
         **kwargs: Any,
     ) -> AsyncIterable[AgentResponseUpdate]:
         normalized_messages = normalize_messages(messages)
@@ -328,19 +384,28 @@ class EchoAgent(BaseAgent):
         for i, word in enumerate(words):
             chunk_text = f" {word}" if i > 0 else word
             yield AgentResponseUpdate(
-                contents=[Content.from_text(text=chunk_text)],
-                role=Role.ASSISTANT,
+                contents=[Content.from_text(chunk_text)],
+                role="assistant",
             )
             await asyncio.sleep(0.1)
 
-        if thread is not None:
-            complete_response = Message(role=Role.ASSISTANT, contents=[Content.from_text(text=response_text)])
-            await self._notify_thread_of_new_messages(thread, normalized_messages, complete_response)
+        if session is not None:
+            complete_response = Message(role="assistant", contents=[Content.from_text(response_text)])
+            stored = session.state.setdefault("memory", {}).setdefault("messages", [])
+            stored.extend(normalized_messages)
+            stored.append(complete_response)
 ```
 
 ## Using the Agent
 
-If agent methods are all implemented correctly, the agent would support all standard agent operations.
+If agent methods are all implemented correctly, the agent supports standard operations, including streaming via `ResponseStream`:
+
+```python
+stream = echo_agent.run("Stream this response", stream=True, session=echo_agent.create_session())
+async for update in stream:
+    print(update.text or "", end="", flush=True)
+final_response = await stream.get_final_response()
+```
 
 For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../get-started/your-first-agent.md).
 

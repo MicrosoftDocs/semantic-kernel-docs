@@ -311,18 +311,19 @@ async def streaming_example():
 Anthropic agents support hosted tools such as web search, MCP (Model Context Protocol), and code execution:
 
 ```python
-from agent_framework import HostedMCPTool, HostedWebSearchTool
+from agent_framework.anthropic import AnthropicClient
 
 async def hosted_tools_example():
-    agent = AnthropicClient().as_agent(
+    client = AnthropicClient()
+    agent = client.as_agent(
         name="DocsAgent",
         instructions="You are a helpful agent for both Microsoft docs questions and general questions.",
         tools=[
-            HostedMCPTool(
+            client.get_mcp_tool(
                 name="Microsoft Learn MCP",
                 url="https://learn.microsoft.com/api/mcp",
             ),
-            HostedWebSearchTool(),
+            client.get_web_search_tool(),
         ],
         max_tokens=20000,
     )
@@ -340,10 +341,11 @@ from agent_framework import TextReasoningContent, UsageContent
 from agent_framework.anthropic import AnthropicClient
 
 async def thinking_example():
-    agent = AnthropicClient().as_agent(
+    client = AnthropicClient()
+    agent = client.as_agent(
         name="DocsAgent",
         instructions="You are a helpful agent.",
-        tools=[HostedWebSearchTool()],
+        tools=[client.get_web_search_tool()],
         default_options={
             "max_tokens": 20000,
             "thinking": {"type": "enabled", "budget_tokens": 10000}
@@ -371,7 +373,7 @@ async def thinking_example():
 Anthropic provides managed skills that extend agent capabilities, such as creating PowerPoint presentations. Skills require the Code Interpreter tool to function:
 
 ```python
-from agent_framework import HostedCodeInterpreterTool, HostedFileContent
+from agent_framework import HostedFileContent
 from agent_framework.anthropic import AnthropicClient
 
 async def skills_example():
@@ -383,7 +385,7 @@ async def skills_example():
     agent = client.as_agent(
         name="PresentationAgent",
         instructions="You are a helpful agent for creating PowerPoint presentations.",
-        tools=HostedCodeInterpreterTool(),
+        tools=client.get_code_interpreter_tool(),
         default_options={
             "max_tokens": 20000,
             "thinking": {"type": "enabled", "budget_tokens": 10000},
@@ -444,7 +446,7 @@ This sample demonstrates using Anthropic with an agent and a single custom tool.
 """
 
 
-# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/getting_started/tools/function_tool_with_approval.py and samples/getting_started/tools/function_tool_with_approval_and_threads.py.
+# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
 def get_weather(
     location: Annotated[str, "The location to get the weather for."],
@@ -504,7 +506,7 @@ if __name__ == "__main__":
 
 ## Using the Agent
 
-The agent is a standard `BaseAgent` and supports all standard agent operations.
+The agent is a standard `Agent` and supports all standard agent operations.
 
 See the [Agent getting started tutorials](../../get-started/your-first-agent.md) for more information on how to run and interact with agents.
 

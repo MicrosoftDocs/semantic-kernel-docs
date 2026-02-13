@@ -281,11 +281,11 @@ async def thread_example():
     agent = OpenAIResponsesClient().as_agent(
         instructions="You are a helpful assistant.",
     )
-    thread = agent.get_new_thread()
+    session = await agent.create_session()
 
-    result1 = await agent.run("My name is Alice", thread=thread)
+    result1 = await agent.run("My name is Alice", session=session)
     print(result1)
-    result2 = await agent.run("What's my name?", thread=thread)
+    result2 = await agent.run("What's my name?", session=session)
     print(result2)  # Remembers "Alice"
 ```
 

@@ -50,7 +50,7 @@ While an agent and a workflow can involve multiple steps to achieve a goal, they
 Begin your journey with Microsoft Agent Framework Workflows by exploring the getting started samples:
 
 - [C# Getting Started Sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows)
-- [Python Getting Started Sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/getting_started/workflows)
+- [Python Getting Started Sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows)
 
 ## Next Steps
 

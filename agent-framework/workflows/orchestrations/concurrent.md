@@ -344,13 +344,13 @@ async def summarize_results(results: list[Any]) -> str:
 
     # Ask the model to synthesize a concise summary of the experts' outputs
     system_msg = Message(
-        Role.SYSTEM,
-        text=(
+        role="system",
+        contents=[(
             "You are a helpful assistant that consolidates multiple domain expert outputs "
             "into one cohesive, concise summary with clear takeaways. Keep it under 200 words."
-        ),
+        )],
     )
-    user_msg = Message(Role.USER, text="\n\n".join(expert_sections))
+    user_msg = Message(role="user", contents=["\n\n".join(expert_sections]))
 
     response = await chat_client.get_response([system_msg, user_msg])
     # Return the model's final assistant text as the completion result

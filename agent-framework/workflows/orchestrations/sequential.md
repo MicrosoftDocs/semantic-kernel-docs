@@ -186,7 +186,7 @@ if output_evt:
     print("===== Final Conversation =====")
     messages: list[Message] | Any = output_evt.data
     for i, msg in enumerate(messages, start=1):
-        name = msg.author_name or ("assistant" if msg.role == Role.ASSISTANT else "user")
+        name = msg.author_name or ("assistant" if msg.role == "assistant" else "user")
         print(f"{'-' * 60}\n{i:02d} [{name}]\n{msg.text}")
 ```
 
@@ -215,7 +215,7 @@ Sequential orchestration supports mixing agents with custom executors for specia
 
 ```python
 from agent_framework import Executor, WorkflowContext, handler
-from agent_framework import Message, Role
+from agent_framework import Message
 
 class Summarizer(Executor):
     """Simple summarizer: consumes full conversation and appends an assistant summary."""
@@ -226,11 +226,11 @@ class Summarizer(Executor):
         conversation: list[Message],
         ctx: WorkflowContext[list[Message]]
     ) -> None:
-        users = sum(1 for m in conversation if m.role == Role.USER)
-        assistants = sum(1 for m in conversation if m.role == Role.ASSISTANT)
+        users = sum(1 for m in conversation if m.role == "user")
+        assistants = sum(1 for m in conversation if m.role == "assistant")
         summary = Message(
-            role=Role.ASSISTANT,
-            text=f"Summary -> users:{users} assistants:{assistants}"
+            role="assistant",
+            contents=[f"Summary -> users:{users} assistants:{assistants}"]
         )
         await ctx.send_message(list(conversation) + [summary])
 ```
