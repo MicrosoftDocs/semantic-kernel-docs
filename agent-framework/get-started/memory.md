@@ -15,7 +15,11 @@ Add context to your agent so it can remember user preferences, past interactions
 
 :::zone pivot="programming-language-csharp"
 
-Set up memory with a custom `ChatHistoryProvider`:
+By default, agents will store chat history in an `InMemoryChatHistoryProvider` or in the underlying AI service,
+depending on what the underlying service requires.
+
+The following agent uses OpenAI Chat Completion, which neither supports nor requires in-service chat history storage
+so therefore automatically creates and uses an `InMemoryChatHistoryProvider`.
 
 ```csharp
 using System;
@@ -32,7 +36,28 @@ AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential(
     .AsAIAgent(instructions: "You are a friendly assistant. Keep your answers brief.", name: "MemoryAgent");
 ```
 
-Use a session to persist context across runs:
+To use a custom `ChatHistoryProvider` you can pass one to the agent options:
+
+```csharp
+using System;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+
+var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
+    ?? throw new InvalidOperationException("Set AZURE_OPENAI_ENDPOINT");
+var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
+
+AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
+    .GetChatClient(deploymentName)
+    .AsAIAgent(new ChatClientAgentOptions()
+    {
+        ChatOptions = new() { Instructions = "You are a helpful assistant." },
+        ChatHistoryProvider = new CustomChatHistoryProvider()
+    });
+```
+
+Use a session to share context across runs:
 
 ```csharp
 AgentSession session = await agent.CreateSessionAsync();

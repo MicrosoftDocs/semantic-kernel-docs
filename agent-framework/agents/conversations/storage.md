@@ -36,8 +36,10 @@ AIAgent agent = new OpenAIClient("<your_api_key>")
 AgentSession session = await agent.CreateSessionAsync();
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate.", session));
 
-// Works when in-memory storage is active.
-IList<ChatMessage>? messages = session.GetService<IList<ChatMessage>>();
+// When in-memory chat history storage is used, it's possible to access the chat history
+// that is stored in the session via the provider attached to the agent.
+var provider = agent.GetService<InMemoryChatHistoryProvider>();
+List<ChatMessage>? messages = provider?.GetMessages(session);
 ```
 
 :::zone-end
@@ -73,12 +75,10 @@ AIAgent agent = new OpenAIClient("<your_api_key>")
     {
         Name = "Assistant",
         ChatOptions = new() { Instructions = "You are a helpful assistant." },
-        ChatHistoryProviderFactory = (ctx, ct) => new ValueTask<ChatHistoryProvider>(
-            new InMemoryChatHistoryProvider(
-                new MessageCountingChatReducer(20),
-                ctx.SerializedState,
-                ctx.JsonSerializerOptions,
-                InMemoryChatHistoryProvider.ChatReducerTriggerEvent.AfterMessageAdded))
+        ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+        {
+            ChatReducer = new MessageCountingChatReducer(20)
+        })
     });
 ```
 
@@ -122,10 +122,9 @@ Key guidance:
 
 - Store messages under a session-scoped key.
 - Keep returned history within model context limits.
-- Persist provider-specific identifiers in `session.state`.
-- In Python, only one history provider should use `load_messages=True`.
-
+- Persist provider-specific identifiers in the session state.
 :::zone pivot="programming-language-python"
+- In Python, only one history provider should use `load_messages=True`.
 
 ```python
 from agent_framework.openai import OpenAIChatClient

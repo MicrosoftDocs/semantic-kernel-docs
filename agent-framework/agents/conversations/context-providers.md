@@ -15,17 +15,35 @@ Context providers run around each invocation to add context before execution and
 
 ## Built-in pattern
 
-The regular pattern is to configure providers through `context_providers=[...]` when creating an agent.
-
 :::zone pivot="programming-language-csharp"
 
-`ChatHistoryProvider` and `AIContextProvider` are the built-in extension points for short-term history and long-term/context enrichment.
+Configure providers through constructor options when creating an agent. `ChatHistoryProvider` and `AIContextProvider` are the built-in extension points for chat history and memory/context enrichment respectively.
+
+`InMemoryChatHistoryProvider` is the built-in provider used for local in-memory chat history.
+
+```csharp
+AIAgent agent = new OpenAIClient("<your_api_key>")
+    .GetChatClient(modelName)
+    .AsAIAgent(new ChatClientAgentOptions()
+    {
+        ChatOptions = new() { Instructions = "You are a helpful assistant." },
+        ChatHistoryProvider = new InMemoryChatHistoryProvider(),
+        AIContextProviders = [
+            new MyCustomMemoryProvider()
+        ],
+    });
+
+AgentSession session = await agent.CreateSessionAsync();
+Console.WriteLine(await agent.RunAsync("Remember my name is Alice.", session));
+```
 
 :::zone-end
 
 :::zone pivot="programming-language-python"
 
-For Python, `InMemoryHistoryProvider` is the built-in history provider used for local conversational memory.
+The regular pattern is to configure providers through `context_providers=[...]` when creating an agent.
+
+`InMemoryHistoryProvider` is the built-in history provider used for local conversational memory.
 
 ```python
 from agent_framework import InMemoryHistoryProvider
@@ -134,8 +152,6 @@ class DatabaseHistoryProvider(BaseHistoryProvider):
         await self._db.save_messages(key, [m.to_dict() for m in messages])
 ```
 
-:::zone-end
-
 > [!IMPORTANT]
 > In Python, you can configure multiple history providers, but **only one** should use `load_messages=True`.
 > Use additional providers for diagnostics/evals with `load_messages=False` and `store_context_messages=True` so they capture context from other providers alongside input/output.
@@ -147,6 +163,8 @@ class DatabaseHistoryProvider(BaseHistoryProvider):
 > audit = InMemoryHistoryProvider("audit", load_messages=False, store_context_messages=True)
 > agent = OpenAIChatClient().as_agent(context_providers=[primary, audit])
 > ```
+
+:::zone-end
 
 ## Next steps
 
