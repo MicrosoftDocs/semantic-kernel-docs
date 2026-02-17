@@ -295,6 +295,48 @@ This pattern works with any Semantic Kernel VectorStore connector, including:
 
 Each connector provides the same `create_search_function` method that can be bridged to Agent Framework tools, allowing you to choose the vector database that best fits your needs. See [the full list here](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors).
 
+### Using Neo4j for Graph-Enhanced RAG
+
+For knowledge graph scenarios where relationships between entities matter, the Neo4j Context Provider offers graph-enhanced RAG. It supports vector, fulltext, and hybrid search modes, with optional graph traversal to enrich results with related entities via custom Cypher queries.
+
+```python
+from agent_framework_neo4j import Neo4jContextProvider, Neo4jSettings, AzureAIEmbedder
+
+settings = Neo4jSettings()
+
+neo4j_provider = Neo4jContextProvider(
+    uri=settings.uri,
+    username=settings.username,
+    password=settings.get_password(),
+    index_name="documentChunks",
+    index_type="vector",
+    embedder=AzureAIEmbedder(...),
+    top_k=5,
+    retrieval_query="""
+        MATCH (node)-[:FROM_DOCUMENT]->(doc:Document)
+        OPTIONAL MATCH (doc)<-[:FILED]-(company:Company)
+        RETURN node.text AS text, score, doc.title AS title, company.name AS company
+        ORDER BY score DESC
+    """,
+)
+
+async with neo4j_provider:
+    agent = ChatAgent(
+        chat_client=chat_client,
+        instructions="You are a financial analyst assistant.",
+        context_providers=neo4j_provider
+    )
+    response = await agent.run("What risks does Acme Corp face?")
+```
+
+Key features:
+- **Index-driven**: Works with any Neo4j vector or fulltext index
+- **Graph traversal**: Custom Cypher queries enrich search results with related entities
+- **Search modes**: Vector (semantic similarity), fulltext (keyword/BM25), or hybrid (both combined)
+
+> [!TIP]
+> Install with `pip install agent-framework-neo4j`. See the [Neo4j Context Provider repository](https://github.com/neo4j-labs/neo4j-maf-provider) for complete documentation.
+
 ::: zone-end
 
 ## Next steps

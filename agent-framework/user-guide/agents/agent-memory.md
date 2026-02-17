@@ -329,6 +329,49 @@ agent = ChatAgent(
 )
 ```
 
+#### Neo4j Memory Provider
+
+The Neo4j Memory Provider gives agents persistent memory backed by a knowledge graph. Unlike RAG providers that retrieve from static knowledge bases, the memory provider stores and recalls agent interactions, automatically extracting entities and building a knowledge graph over time.
+
+The provider manages three types of memory:
+- **Short-term memory**: Conversation history and recent context
+- **Long-term memory**: Entities, preferences, and facts extracted from interactions
+- **Reasoning memory**: Past reasoning traces and tool usage patterns
+
+```python
+from neo4j_agent_memory import MemoryClient, MemorySettings
+from neo4j_agent_memory.integrations.microsoft_agent import (
+    Neo4jMicrosoftMemory,
+    create_memory_tools,
+)
+
+client = MemoryClient(settings)
+
+async with client:
+    memory = Neo4jMicrosoftMemory.from_memory_client(
+        memory_client=client,
+        session_id="user-123",
+    )
+    tools = create_memory_tools(memory)
+
+    agent = ChatAgent(
+        chat_client=chat_client,
+        instructions="You are a helpful assistant with persistent memory.",
+        tools=tools,
+        context_providers=[memory.context_provider],
+    )
+    response = await agent.run("Remember that I prefer window seats on flights.")
+```
+
+Key features:
+- **Bidirectional**: Automatically retrieves relevant context before invocation and saves new memories after responses
+- **Entity extraction**: Builds a knowledge graph from conversations using a multi-stage extraction pipeline
+- **Preference learning**: Infers and stores user preferences across sessions
+- **Memory tools**: Agents can explicitly search memory, remember preferences, and find entity connections
+
+> [!TIP]
+> Install with `pip install neo4j-agent-memory[microsoft-agent]`. See the [Neo4j Agent Memory repository](https://github.com/neo4j-labs/agent-memory) for complete documentation.
+
 ### Thread Serialization and Persistence
 The framework supports serializing entire thread states for persistence across application restarts:
 
