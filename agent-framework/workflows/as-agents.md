@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 
@@ -239,6 +239,10 @@ Each conversation with a workflow agent requires a session to manage state:
 # Create a new session for the conversation
 session = await workflow_agent.create_session()
 ```
+
+> [!NOTE]
+> If `workflow.as_agent()` is created without `context_providers`, the framework adds an `InMemoryHistoryProvider("memory")` by default so multi-turn history works out of the box.
+> If you pass `context_providers` explicitly, that list is used as-is.
 
 ### Non-Streaming Execution
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/15/2025
+ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 
@@ -115,6 +115,20 @@ def get_weather(
 ```
 
 If you don't specify the `name` and `description` parameters in the `@tool` decorator, the framework will automatically use the function's name and docstring as fallbacks.
+
+### Use explicit schemas with `@tool`
+
+When you need full control over the schema exposed to the model, pass the `schema` parameter to `@tool`.
+You can provide either a Pydantic model or a raw JSON schema dictionary.
+
+:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/tools/function_tool_with_explicit_schema.py" range="25-41,44-59":::
+
+### Create declaration-only tools
+
+If a tool is implemented outside the framework (for example, client-side in a UI), you can declare it without an implementation using `FunctionTool(..., func=None)`.
+The model can still reason about and call the tool, and your application can provide the result later.
+
+:::code language="python" source="~/../agent-framework-code/python/samples/03-workflows/human-in-the-loop/agents_with_declaration_only_tools.py" range="33-46":::
 
 When creating the agent, you can now provide the function tool to the agent, by passing it to the `tools` parameter.
 

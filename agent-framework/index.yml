@@ -18,7 +18,7 @@ metadata:
 productDirectory:
     items:
     - title: Overview
-      imageSrc: https://learn.microsoft.com/static/media/content-type/overview.svg
+      imageSrc: /agent-framework/media/overview.svg
       links:
         - url: /agent-framework/overview/
           text: Introduction to Agent Framework
@@ -29,7 +29,7 @@ productDirectory:
         - url: https://github.com/microsoft/agent-framework/tree/main/dotnet/samples
           text: Check out C# samples for Agent Framework
     - title: Get Started
-      imageSrc: https://learn.microsoft.com/static/media/content-type/getstarted.svg
+      imageSrc: /agent-framework/media/getstarted.svg
       links:
         - url: /agent-framework/get-started/your-first-agent
           text: "Step 1: Your First Agent"
@@ -44,16 +44,18 @@ productDirectory:
         - url: /agent-framework/get-started/hosting
           text: "Step 6: Host Your Agent"
     - title: Agents
-      imageSrc: https://learn.microsoft.com/static/media/content-type/concept.svg
+      imageSrc: /agent-framework/media/concept.svg
       links:
         - url: /agent-framework/agents/index
           text: Agents overview
         - url: /agent-framework/agents/tools/index
           text: Tools
+        - url: /agent-framework/agents/conversations/index
+          text: Conversations
         - url: /agent-framework/agents/providers/index
           text: Providers
     - title: Workflows
-      imageSrc: https://learn.microsoft.com/static/media/content-type/architecture.svg
+      imageSrc: /agent-framework/media/architecture.svg
       links:
         - url: /agent-framework/workflows/index
           text: Workflows overview
@@ -64,7 +66,7 @@ productDirectory:
         - url: /agent-framework/workflows/workflows
           text: Workflow Builder & Execution
     - title: Integrations
-      imageSrc: https://learn.microsoft.com/static/media/content-type/minihub.svg
+      imageSrc: /agent-framework/media/minihub.svg
       links:
         - url: /agent-framework/integrations/index
           text: Integrations overview
@@ -77,7 +79,7 @@ productDirectory:
         - url: /agent-framework/devui/index
           text: DevUI
     - title: Support
-      imageSrc: https://learn.microsoft.com/static/media/content-type/howtoguide.svg
+      imageSrc: /agent-framework/media/howtoguide.svg
       links:
         - url: /agent-framework/support/index
           text: Get support

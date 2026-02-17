@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
-ms.date: 09/29/2025
+ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 
@@ -178,6 +178,13 @@ Agent Framework can be customized using three different types of middleware:
 3. **Chat middleware**: Intercepts the underlying chat requests sent to AI models, providing access to the raw messages, options, and responses.
 
 All types support both function-based and class-based implementations. When multiple middleware of the same type are registered, they form a chain where each calls the `next` callable to continue processing.
+
+> [!NOTE]
+> Middleware order with mixed registration scopes:
+> - Agent-level middleware wraps run-level middleware.
+> - For agent middleware `[A1, A2]` and run middleware `[R1, R2]`, execution order is:
+>   `A1 -> A2 -> R1 -> R2 -> Agent -> R2 -> R1 -> A2 -> A1`.
+> - Function/chat middleware follows the same wrapping principle at tool/chat-call time.
 
 ## Agent Middleware
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 
@@ -123,6 +123,13 @@ async def main() -> None:
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+### Streaming code-interpreter deltas
+
+When using Assistants clients with streaming, code-interpreter input can arrive in incremental deltas before the final tool result.
+You can inspect streaming updates and aggregate code fragments as they arrive:
+
+:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/providers/azure_openai/azure_assistants_with_code_interpreter.py" range="23-39,61-67":::
 
 :::zone-end
 

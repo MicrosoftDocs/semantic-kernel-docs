@@ -4,7 +4,7 @@ description: Guide to significant changes in Python releases for Microsoft Agent
 author: eavanvalkenburg
 ms.topic: upgrade-and-migration-article
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 # Python 2026 Significant Changes Guide
@@ -15,6 +15,65 @@ This document lists all significant changes in Python releases since the start o
 - 🟡 **Enhancement** — New capability or improvement; existing code continues to work
 
 This document will be removed once we reach the 1.0.0 stable release, so please refer to it when upgrading between versions in 2026 to ensure you don't miss any important changes. For detailed upgrade instructions on specific topics (e.g., options migration), refer to the linked upgrade guides or the linked PR's.
+
+---
+
+## Post-python-1.0.0b260212 merged changes (unreleased)
+
+The following significant PRs were merged after the latest published Python prerelease and should be tracked for upcoming package updates.
+
+### 🔴 Chat/agent message typing alignment (`run` vs `get_response`)
+
+**PR:** [#3920](https://github.com/microsoft/agent-framework/pull/3920)
+
+Chat-client `get_response` implementations now consistently receive `Sequence[Message]`.
+`agent.run(...)` remains flexible (`str`, `Content`, `Message`, or sequences of those), and normalizes inputs before calling chat clients.
+
+**Before:**
+```python
+async def get_response(self, messages: str | Message | list[Message], **kwargs): ...
+```
+
+**After:**
+```python
+from collections.abc import Sequence
+from agent_framework import Message
+
+async def get_response(self, messages: Sequence[Message], **kwargs): ...
+```
+
+---
+
+### 🔴 `FunctionTool[Any]` generic setup removed for schema passthrough
+
+**PR:** [#3907](https://github.com/microsoft/agent-framework/pull/3907)
+
+Schema-based tool paths no longer rely on the previous `FunctionTool[Any]` generic behavior.
+Use `FunctionTool` directly and supply either a pydantic BaseModel or explicit schemas where needed (for example, with `@tool(schema=...)`).
+
+**Before:**
+```python
+placeholder: FunctionTool[Any] = FunctionTool(...)
+```
+
+**After:**
+```python
+placeholder: FunctionTool = FunctionTool(...)
+```
+
+---
+
+### 🟡 `workflow.as_agent()` now defaults local history when providers are unset
+
+**PR:** [#3918](https://github.com/microsoft/agent-framework/pull/3918)
+
+When `workflow.as_agent()` is created without `context_providers`, it now adds `InMemoryHistoryProvider("memory")` by default.
+If context providers are explicitly supplied, that list is preserved unchanged.
+
+```python
+workflow_agent = workflow.as_agent(name="MyWorkflowAgent")
+# Default local history provider is injected when none are provided.
+```
 
 ---
 
@@ -1346,6 +1405,9 @@ No significant changes in this release.
 
 | Release | Release Notes | Type | Change | PR |
 |---------|---------------|------|--------|-----|
+| post-1.0.0b260212 (unreleased) | N/A | 🔴 Breaking | Chat/agent message typing aligned: custom `get_response()` implementations must accept `Sequence[Message]` | [#3920](https://github.com/microsoft/agent-framework/pull/3920) |
+| post-1.0.0b260212 (unreleased) | N/A | 🔴 Breaking | `FunctionTool[Any]` compatibility shim removed for schema passthrough; use `FunctionTool` with explicit schemas as needed | [#3907](https://github.com/microsoft/agent-framework/pull/3907) |
+| post-1.0.0b260212 (unreleased) | N/A | 🟡 Enhancement | `workflow.as_agent()` now injects `InMemoryHistoryProvider("memory")` by default when context providers are unset | [#3918](https://github.com/microsoft/agent-framework/pull/3918) |
 | 1.0.0b260212 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260212) | 🔴 Breaking | `Hosted*Tool` classes removed; create hosted tools via client `get_*_tool()` methods | [#3634](https://github.com/microsoft/agent-framework/pull/3634) |
 | 1.0.0b260212 | | 🔴 Breaking | Session/context provider pipeline finalized: `AgentThread` removed, use `AgentSession` + `context_providers` | [#3850](https://github.com/microsoft/agent-framework/pull/3850) |
 | 1.0.0b260212 | | 🔴 Breaking | Checkpoint model/storage refactor (`workflow_id` removed, `previous_checkpoint_id` added, storage behavior changed) | [#3744](https://github.com/microsoft/agent-framework/pull/3744) |

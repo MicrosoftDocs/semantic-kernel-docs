@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/15/2025
+ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 
@@ -255,6 +255,18 @@ asyncio.run(main())
 ```
 
 ## Agent Features
+
+### Reasoning and content filtering options
+
+When creating agents through Azure AI project providers, you can set `default_options` to enable model reasoning and Responsible AI content filtering.
+
+Use `reasoning` for reasoning-capable models:
+
+:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/providers/azure_ai/azure_ai_with_reasoning.py" range="5-7,31-35,60-64":::
+
+Use `rai_config` to apply a configured RAI policy:
+
+:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/providers/azure_ai/azure_ai_with_content_filtering.py" range="6-7,32-46":::
 
 ### Function Tools
 
