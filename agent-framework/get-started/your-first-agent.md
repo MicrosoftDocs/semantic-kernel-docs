@@ -74,6 +74,16 @@ Or stream the response:
 
 :::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/01_hello_agent.py" id="run_agent_streaming" highlight="3-5":::
 
+> [!NOTE]
+> Agent Framework does **not** automatically load `.env` files. To use a `.env` file for configuration, call `load_dotenv()` at the start of your script:
+>
+> ```python
+> from dotenv import load_dotenv
+> load_dotenv()
+> ```
+>
+> Alternatively, set environment variables directly in your shell or IDE. See the [settings migration note](../support/upgrade/python-2026-significant-changes.md#-pydantic-settings-replaced-with-typeddict--load_settings) for details.
+
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/01_hello_agent.py) for the complete runnable file.
 

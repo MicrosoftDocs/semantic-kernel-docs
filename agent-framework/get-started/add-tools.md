@@ -58,7 +58,7 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 
 Define a tool with the `@tool` decorator:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/02_add_tools.py" id="define_tool" highlight="3-6":::
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/02_add_tools.py" id="define_tool" highlight="3":::
 
 Create an agent with the tool:
 

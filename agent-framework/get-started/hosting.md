@@ -136,11 +136,11 @@ pip install agent-framework-azurefunctions --pre
 
 Create an agent:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="13-24" highlight="9-11":::
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="13-27" highlight="12-15":::
 
 Register the agent with `AgentFunctionApp`:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="27-28" highlight="2":::
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="30-31" highlight="2":::
 
 Run locally with [Azure Functions Core Tools](/azure/azure-functions/functions-run-local):
 

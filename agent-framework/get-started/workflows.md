@@ -61,11 +61,11 @@ Console.WriteLine($"Output: {string.Join(", ", result.GetOutputs())}");
 
 Define workflow steps (executors) and connect them with edges:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="create_workflow" highlight="24-26":::
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="create_workflow" highlight="26":::
 
 Build and run the workflow:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="run_workflow" highlight="3-5":::
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="run_workflow" highlight="3":::
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/05_first_workflow.py) for the complete runnable file.

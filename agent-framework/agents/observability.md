@@ -434,7 +434,7 @@ ENABLE_INSTRUMENTATION=true
 OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 ```
 
-Or include them in your `.env` file and run your sample.
+Or include them in your `.env` file and ensure you call `load_dotenv()` at the start of your application (Agent Framework does not automatically load `.env` files).
 
 Once your sample finishes running, navigate to <http://localhost:18888> in a web browser to see the telemetry data. Follow the [Aspire Dashboard exploration guide](/dotnet/aspire/fundamentals/dashboard/explore) to authenticate to the dashboard and start exploring your traces, logs, and metrics.
 
