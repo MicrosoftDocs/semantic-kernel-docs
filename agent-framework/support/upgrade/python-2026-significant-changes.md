@@ -4,7 +4,7 @@ description: Guide to significant changes in Python releases for Microsoft Agent
 author: eavanvalkenburg
 ms.topic: upgrade-and-migration-article
 ms.author: edvan
-ms.date: 02/17/2026
+ms.date: 02/19/2026
 ms.service: agent-framework
 ---
 # Python 2026 Significant Changes Guide
@@ -22,25 +22,68 @@ This document will be removed once we reach the 1.0.0 stable release, so please 
 
 The following significant PRs were merged after the latest published Python prerelease and should be tracked for upcoming package updates.
 
-### 🔴 Chat/agent message typing alignment (`run` vs `get_response`)
+### 🟡 Durable workflow support for Azure Functions
 
-**PR:** [#3920](https://github.com/microsoft/agent-framework/pull/3920)
+**PR:** [#3630](https://github.com/microsoft/agent-framework/pull/3630)
 
-Chat-client `get_response` implementations now consistently receive `Sequence[Message]`.
-`agent.run(...)` remains flexible (`str`, `Content`, `Message`, or sequences of those), and normalizes inputs before calling chat clients.
+The `agent-framework-azurefunctions` package now supports running `Workflow` graphs on Azure Durable Functions. Pass a `workflow` parameter to `AgentFunctionApp` to automatically register agent entities, activity functions, and HTTP endpoints.
+
+```python
+from agent_framework.azurefunctions import AgentFunctionApp
+
+app = AgentFunctionApp(workflow=my_workflow)
+# Automatically registers:
+#   POST /api/workflow/run          — start a workflow
+#   GET  /api/workflow/status/{id}  — check status
+#   POST /api/workflow/respond/{id}/{requestId} — HITL response
+```
+
+Supports fan-out/fan-in, shared state, and human-in-the-loop patterns with configurable timeout and automatic rejection on expiry.
+
+---
+
+### 🟡 OpenTelemetry trace context propagated to MCP requests
+
+**PR:** [#3780](https://github.com/microsoft/agent-framework/pull/3780)
+
+When OpenTelemetry is installed, trace context (e.g., W3C `traceparent`) is automatically injected into MCP requests via `params._meta`. This enables end-to-end distributed tracing across agent → MCP server calls. No code changes needed — this is additive behavior that activates when a valid span context exists.
+
+---
+
+### 🔴 Pydantic Settings replaced with `TypedDict` + `load_settings()`
+
+**PRs:** [#3843](https://github.com/microsoft/agent-framework/pull/3843), [#4032](https://github.com/microsoft/agent-framework/pull/4032)
+
+The `pydantic-settings`-based `AFBaseSettings` class has been replaced with a lightweight, function-based settings system using `TypedDict` and `load_settings()`. The `pydantic-settings` dependency was removed entirely.
+
+All settings classes (e.g., `OpenAISettings`, `AzureOpenAISettings`, `AnthropicSettings`) are now `TypedDict` definitions, and settings values are accessed via dictionary syntax instead of attribute access.
 
 **Before:**
 ```python
-async def get_response(self, messages: str | Message | list[Message], **kwargs): ...
+from agent_framework.openai import OpenAISettings
+
+settings = OpenAISettings()  # pydantic-settings auto-loads from env
+api_key = settings.api_key
+model_id = settings.model_id
 ```
 
 **After:**
 ```python
-from collections.abc import Sequence
-from agent_framework import Message
+from agent_framework.openai import OpenAISettings, load_settings
 
-async def get_response(self, messages: Sequence[Message], **kwargs): ...
+settings = load_settings(OpenAISettings, env_prefix="OPENAI_")
+api_key = settings["api_key"]
+model_id = settings["model_id"]
 ```
+
+> [!IMPORTANT]
+> Agent Framework does **not** automatically load values from `.env` files. You must explicitly opt in to `.env` loading by either:
+>
+> - Calling `load_dotenv()` from the `python-dotenv` package at the start of your application
+> - Passing `env_file_path=".env"` to `load_settings()`
+> - Setting environment variables directly in your shell or IDE
+>
+> The `load_settings` resolution order is: explicit overrides → `.env` file values (when `env_file_path` is provided) → environment variables → defaults. If you specify `env_file_path`, the file must exist or a `FileNotFoundError` is raised.
 
 ---
 
@@ -73,6 +116,78 @@ If context providers are explicitly supplied, that list is preserved unchanged.
 ```python
 workflow_agent = workflow.as_agent(name="MyWorkflowAgent")
 # Default local history provider is injected when none are provided.
+```
+
+---
+
+### 🟡 AzureAIClient warns on unsupported runtime overrides
+
+**PR:** [#3919](https://github.com/microsoft/agent-framework/pull/3919)
+
+`AzureAIClient` now logs a warning when runtime `tools` or `structured_output` differ from the agent's creation-time configuration. The Azure AI Agent Service does not support runtime tool or response format changes — use `AzureOpenAIResponsesClient` instead if you need dynamic overrides.
+
+---
+
+### 🔴 Chat/agent message typing alignment (`run` vs `get_response`)
+
+**PR:** [#3920](https://github.com/microsoft/agent-framework/pull/3920)
+
+Chat-client `get_response` implementations now consistently receive `Sequence[Message]`.
+`agent.run(...)` remains flexible (`str`, `Content`, `Message`, or sequences of those), and normalizes inputs before calling chat clients.
+
+**Before:**
+```python
+async def get_response(self, messages: str | Message | list[Message], **kwargs): ...
+```
+
+**After:**
+```python
+from collections.abc import Sequence
+from agent_framework import Message
+
+async def get_response(self, messages: Sequence[Message], **kwargs): ...
+```
+
+---
+
+### 🟡 Bedrock added to `core[all]` and tool-choice defaults fixed
+
+**PR:** [#3953](https://github.com/microsoft/agent-framework/pull/3953)
+
+Amazon Bedrock is now included in the `agent-framework-core[all]` extras and is available via the `agent_framework.amazon` lazy import surface. Tool-choice behavior was also fixed: unset tool-choice values now remain unset so providers use their service defaults, while explicitly set values are preserved.
+
+```python
+from agent_framework.amazon import BedrockClient
+```
+
+---
+
+### 🔴 Provider state scoped by `source_id`
+
+**PR:** [#3995](https://github.com/microsoft/agent-framework/pull/3995)
+
+Provider hooks now receive a provider-scoped state dictionary (`state.setdefault(provider.source_id, {})`) instead of the full session state. This means provider implementations that previously accessed nested state via `state[self.source_id]["key"]` must now access `state["key"]` directly.
+
+Additionally, `InMemoryHistoryProvider` default `source_id` changed from `"memory"` to `"in_memory"`.
+
+**Before:**
+```python
+# In a custom provider hook:
+async def on_before_agent(self, state: dict, **kwargs):
+    my_data = state[self.source_id]["my_key"]
+
+# InMemoryHistoryProvider default source_id
+provider = InMemoryHistoryProvider("memory")
+```
+
+**After:**
+```python
+# Provider hooks receive scoped state — no nested access needed:
+async def on_before_agent(self, state: dict, **kwargs):
+    my_data = state["my_key"]
+
+# InMemoryHistoryProvider default source_id changed
+provider = InMemoryHistoryProvider("in_memory")
 ```
 
 ---
