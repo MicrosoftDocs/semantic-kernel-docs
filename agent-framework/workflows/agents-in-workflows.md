@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/29/2025
+ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 
@@ -189,12 +189,12 @@ For the complete working implementation of this Azure Foundry agents workflow, s
 
 You'll create a workflow that:
 
-- Uses Azure AI Agent Service to create intelligent agents
+- Uses `AzureOpenAIResponsesClient` to create intelligent agents
 - Implements a Writer agent that creates content based on prompts
 - Implements a Reviewer agent that provides feedback on the content
 - Connects agents in a sequential workflow pipeline
 - Streams real-time updates as agents process requests
-- Demonstrates proper async context management for Azure AI clients
+- Demonstrates an optional shared-session pattern for agents created from the same client
 
 ### Concepts Covered
 
@@ -205,74 +205,58 @@ You'll create a workflow that:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework-azure-ai --pre`
-- Azure AI Agent Service configured with proper environment variables
+- Agent Framework installed: `pip install agent-framework --pre`
+- Azure OpenAI Responses configured with proper environment variables
 - Azure CLI authentication: `az login`
 
 ## Step 1: Import Required Dependencies
 
-Start by importing the necessary components for Azure AI agents and workflows:
+Start by importing the necessary components for workflows and Azure OpenAI Responses agents:
 
 ```python
 import asyncio
-from collections.abc import Awaitable, Callable
-from contextlib import AsyncExitStack
-from typing import Any
+import os
 
 from agent_framework import AgentResponseUpdate, WorkflowBuilder
-from agent_framework.azure import AzureAIAgentClient
-from azure.identity.aio import AzureCliCredential
+from agent_framework.azure import AzureOpenAIResponsesClient
+from azure.identity import AzureCliCredential
 ```
 
-## Step 2: Create Azure AI Agent Factory
+## Step 2: Create Azure OpenAI Responses Client
 
-Create a helper function to manage Azure AI agent creation with proper async context handling:
+Create one shared client that you can use to construct multiple agents:
 
 ```python
-async def create_azure_ai_agent() -> tuple[Callable[..., Awaitable[Any]], Callable[[], Awaitable[None]]]:
-    """Helper method to create an Azure AI agent factory and a close function.
-
-    This makes sure the async context managers are properly handled.
-    """
-    stack = AsyncExitStack()
-    cred = await stack.enter_async_context(AzureCliCredential())
-
-    client = await stack.enter_async_context(AzureAIAgentClient(async_credential=cred))
-
-    async def agent(**kwargs: Any) -> Any:
-        return await stack.enter_async_context(client.as_agent(**kwargs))
-
-    async def close() -> None:
-        await stack.aclose()
-
-    return agent, close
+async def main() -> None:
+    client = AzureOpenAIResponsesClient(
+        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        credential=AzureCliCredential(),
+    )
 ```
 
-## Step 3: Create Specialized Azure AI Agents
+## Step 3: Create Specialized Agents
 
 Create two specialized agents for content creation and review:
 
 ```python
-async def main() -> None:
-    agent, close = await create_azure_ai_agent()
-    try:
-        # Create a Writer agent that generates content
-        writer = await agent(
-            name="Writer",
-            instructions=(
-                "You are an excellent content writer. You create new content and edit contents based on the feedback."
-            ),
-        )
+    # Create a Writer agent that generates content
+    writer = client.as_agent(
+        name="Writer",
+        instructions=(
+            "You are an excellent content writer. You create new content and edit contents based on the feedback."
+        ),
+    )
 
-        # Create a Reviewer agent that provides feedback
-        reviewer = await agent(
-            name="Reviewer",
-            instructions=(
-                "You are an excellent content reviewer. "
-                "Provide actionable feedback to the writer about the provided content. "
-                "Provide the feedback in the most concise manner possible."
-            ),
-        )
+    # Create a Reviewer agent that provides feedback
+    reviewer = client.as_agent(
+        name="Reviewer",
+        instructions=(
+            "You are an excellent content reviewer. "
+            "Provide actionable feedback to the writer about the provided content. "
+            "Provide the feedback in the most concise manner possible."
+        ),
+    )
 ```
 
 ## Step 4: Build the Workflow
@@ -284,29 +268,34 @@ Connect the agents in a sequential workflow using the builder:
         workflow = WorkflowBuilder(start_executor=writer).add_edge(writer, reviewer).build()
 ```
 
+### Optional: Share one session across `AzureOpenAIResponsesClient` agents
+
+By default, each agent executor uses its own session state.
+For agents created from the same `AzureOpenAIResponsesClient`, you can wire a shared session explicitly:
+
+:::code language="python" source="~/../agent-framework-code/python/samples/03-workflows/agents/azure_ai_agents_with_shared_session.py" range="43-53,62-83":::
+
 ## Step 5: Execute with Streaming
 
 Run the workflow with streaming to observe real-time updates from both agents:
 
 ```python
-        last_executor_id: str | None = None
+    last_executor_id: str | None = None
 
-        events = workflow.run_stream("Create a slogan for a new electric SUV that is affordable and fun to drive.")
-        async for event in events:
-            if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
-                # Handle streaming updates from agents
-                eid = event.executor_id
-                if eid != last_executor_id:
-                    if last_executor_id is not None:
-                        print()
-                    print(f"{eid}:", end=" ", flush=True)
-                    last_executor_id = eid
-                print(event.data, end="", flush=True)
-            elif event.type == "output":
-                print("\n===== Final output =====")
-                print(event.data)
-    finally:
-        await close()
+    events = workflow.run("Create a slogan for a new electric SUV that is affordable and fun to drive.", stream=True)
+    async for event in events:
+        if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+            # Handle streaming updates from agents
+            eid = event.executor_id
+            if eid != last_executor_id:
+                if last_executor_id is not None:
+                    print()
+                print(f"{eid}:", end=" ", flush=True)
+                last_executor_id = eid
+            print(event.data, end="", flush=True)
+        elif event.type == "output":
+            print("\n===== Final output =====")
+            print(event.data)
 ```
 
 ## Step 6: Complete Main Function
@@ -320,23 +309,22 @@ if __name__ == "__main__":
 
 ## How It Works
 
-1. **Azure AI Client Setup**: Uses `AzureAIAgentClient` with Azure CLI credentials for authentication
-2. **Agent Factory Pattern**: Creates a factory function that manages async context lifecycle for multiple agents
-3. **Sequential Processing**: Writer agent generates content first, then passes it to the Reviewer agent
-4. **Streaming Updates**: Output events (`type="output"`) with `AgentResponseUpdate` data provide real-time token updates as agents generate responses
-5. **Context Management**: Proper cleanup of Azure AI resources using `AsyncExitStack`
+1. **Client Setup**: Uses one `AzureOpenAIResponsesClient` with Azure CLI credentials for authentication.
+2. **Agent Creation**: Creates Writer and Reviewer agents from the same client configuration.
+3. **Sequential Processing**: Writer agent generates content first, then passes it to the Reviewer agent.
+4. **Streaming Updates**: Output events (`type="output"`) with `AgentResponseUpdate` data provide real-time token updates as agents generate responses.
+5. **Shared Sessions (Optional)**: A shared session can be wired when both agents are created from the same `AzureOpenAIResponsesClient`.
 
 ## Key Concepts
 
-- **Azure AI Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
-- **WorkflowEvent**: Output events (`type="output"`) contain agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
-- **AsyncExitStack**: Proper async context management for multiple resources
-- **Agent Factory Pattern**: Reusable agent creation with shared client configuration
-- **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next
+- **AzureOpenAIResponsesClient**: Shared client used to create workflow agents with consistent configuration.
+- **WorkflowEvent**: Output events (`type="output"`) contain agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming).
+- **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next.
+- **Shared Session Pattern**: Optional configuration for shared memory/thread across selected agents in a workflow.
 
 ## Complete Implementation
 
-For the complete working implementation of this Azure AI agents workflow, see the [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/agents/azure_ai_agents_streaming.py) sample in the Agent Framework repository.
+For complete working implementations, see [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/agents/azure_ai_agents_streaming.py) and [azure_ai_agents_with_shared_session.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/agents/azure_ai_agents_with_shared_session.py) in the Agent Framework repository.
 
 ::: zone-end
 

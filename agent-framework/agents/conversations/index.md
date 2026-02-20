@@ -17,9 +17,22 @@ Use `AgentSession` to keep conversation context between invocations.
 
 Most applications follow the same flow:
 
+:::zone pivot="programming-language-csharp"
+
+1. Create a session (`CreateSessionAsync()`)
+2. Pass that session to each `RunAsync(...)`
+3. Rehydrate from serialized state (`DeserializeSessionAsync(...)`)
+4. Continue with a service conversation ID (varies by agent, e.g. `myChatClientAgent.CreateSessionAsync("existing-id")`)
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
 1. Create a session (`create_session()`)
 2. Pass that session to each `run(...)`
 3. Rehydrate by service conversation ID (`get_session(...)`) or from serialized state
+
+:::zone-end
 
 :::zone pivot="programming-language-csharp"
 
@@ -60,7 +73,7 @@ resumed = AgentSession.from_dict(serialized)
 
 | Page | Focus |
 |---|---|
-| [Session](./session.md) | `AgentSession` structure (`session_id`, `service_session_id`, `state`) and serialization |
+| [Session](./session.md) | `AgentSession` structure and serialization |
 | [Context Providers](./context-providers.md) | Built-in and custom context/history provider patterns |
 | [Storage](./storage.md) | Built-in storage modes and external persistence strategies |
 

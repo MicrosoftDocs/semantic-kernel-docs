@@ -60,8 +60,10 @@ To make creating these agents even easier, Agent Framework provides helpers for 
 |[Azure AI Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
 |[Azure AI Foundry Models ChatCompletion](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via ChatCompletion.|No|Yes|
 |[Azure AI Foundry Models Responses](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|Yes|Yes|
+|[Azure AI Foundry Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Azure AI Foundry Anthropic Service as its backend.|No|Yes|
 |[Azure OpenAI ChatCompletion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
+|[Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Anthropic Service as its backend.|No|Yes|
 |[OpenAI ChatCompletion](./providers/openai.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
 |[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
 |[OpenAI Assistants](./providers/openai.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
@@ -88,7 +90,7 @@ See the documentation for each agent type, for more information:
 
 ## Azure and OpenAI SDK Options Reference
 
-When using Azure AI Foundry, Azure OpenAI, or OpenAI services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each. Make sure to replace `<resource>` and `<project>` with your actual resource and project names.
+When using Azure AI Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each. Make sure to replace `<resource>` and `<project>` with your actual resource and project names.
 
 | AI Service | SDK | Nuget | Url |
 |------------------|-----|-------|-----|
@@ -99,6 +101,8 @@ When using Azure AI Foundry, Azure OpenAI, or OpenAI services, you have various 
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
 | OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
+| [Azure AI Foundry Anthropic](/azure/ai-foundry/foundry-models/how-to/use-foundry-models-claude?view=foundry-classic) | Anthropic Foundry SDK | [Anthropic.Foundry](https://www.nuget.org/packages/Anthropic.Foundry) | Resource name required |
+| Anthropic | Anthropic SDK | [Anthropic](https://www.nuget.org/packages/Anthropic) | No url or resource name required |
 
 1. [Upgrading from Azure OpenAI to Azure AI Foundry](/azure/ai-foundry/how-to/upgrade-azure-openai)
 1. We recommend using the OpenAI SDK.
@@ -161,8 +165,32 @@ This SDK is only supported with the Azure AI Foundry Agents service. See the tab
 var persistentAgentsClient = new PersistentAgentsClient(serviceUrl, new DefaultAzureCredential());
 AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
     model: deploymentName,
-    name: "Joker",
-    instructions: "You are good at telling jokes.");
+    instructions: "You are good at telling jokes.",
+    name: "Joker");
+```
+
+### Using the Azure AI Foundry Anthropic SDK
+
+The resource is the subdomain name / first name coming before '.services.ai.azure.com' in the endpoint Uri.
+
+For example: `https://(resource name).services.ai.azure.com/anthropic/v1/chat/completions`
+
+```csharp
+var client = new AnthropicFoundryClient(new AnthropicFoundryApiKeyCredentials(apiKey, resource));
+AIAgent agent = client.AsAIAgent(
+    model: deploymentName,
+    instructions: "Joker",
+    name: "You are good at telling jokes.");
+```
+
+### Using the Anthropic SDK
+
+```csharp
+var client = new AnthropicClient() { ApiKey = apiKey };
+AIAgent agent = client.AsAIAgent(
+    model: deploymentName,
+    instructions: "Joker",
+    name: "You are good at telling jokes.");
 ```
 
 ::: zone-end

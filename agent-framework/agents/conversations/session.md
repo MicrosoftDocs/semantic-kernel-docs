@@ -15,11 +15,25 @@ ms.service: agent-framework
 
 ## What `AgentSession` contains
 
+:::zone pivot="programming-language-csharp"
+
+| Field | Purpose |
+|---|---|
+| `StateBag` | Arbitrary state container for this session |
+
+The C# `AgentSession` is an abstract base class. Concrete implementations (created via `CreateSessionAsync()`) may add additional state e.g. an id for remote chat history storage, when service-managed history is used.
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
 | Field | Purpose |
 |---|---|
 | `session_id` | Local unique identifier for this session |
 | `service_session_id` | Remote service conversation identifier (when service-managed history is used) |
 | `state` | Mutable dictionary shared with context/history providers |
+
+:::zone-end
 
 ## Built-in usage pattern
 
@@ -47,9 +61,27 @@ second = await agent.run("What is my name?", session=session)
 
 ## Creating a session from an existing service conversation ID
 
-Use this when the backing service already has conversation state.
+:::zone pivot="programming-language-csharp"
+
+Create a new session from an existing conversation id varies by agent type. Here are some examples.
+
+When using `ChatClientAgent`
+
+```csharp
+AgentSession session = await chatClientAgent.CreateSessionAsync(conversationId);
+```
+
+When using an `A2AAgent`
+
+```csharp
+AgentSession session = await a2aAgent.CreateSessionAsync(contextId, taskId);
+```
+
+:::zone-end
 
 :::zone pivot="programming-language-python"
+
+Use this when the backing service already has conversation state.
 
 ```python
 session = agent.get_session(service_session_id="<service-conversation-id>")
