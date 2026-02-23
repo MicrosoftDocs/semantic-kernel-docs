@@ -1,0 +1,1659 @@
+---
+title: Declarative Workflows - Overview
+description: Learn how to define workflows using YAML configuration files instead of programmatic code in Microsoft Agent Framework.
+zone_pivot_groups: programming-languages
+author: moonbox3
+ms.topic: tutorial
+ms.author: evmattso
+ms.date: 1/12/2026
+ms.service: agent-framework
+---
+
+# Declarative Workflows - Overview
+
+Declarative workflows allow you to define workflow logic using YAML configuration files instead of writing programmatic code. This approach makes workflows easier to read, modify, and share across teams.
+
+## Overview
+
+With declarative workflows, you describe *what* your workflow should do rather than *how* to implement it. The framework handles the underlying execution, converting your YAML definitions into executable workflow graphs.
+
+**Key benefits:**
+
+- **Readable format**: YAML syntax is easy to understand, even for non-developers
+- **Portable**: Workflow definitions can be shared, versioned, and modified without code changes
+- **Rapid iteration**: Modify workflow behavior by editing configuration files
+- **Consistent structure**: Predefined action types ensure workflows follow best practices
+
+## When to Use Declarative vs. Programmatic Workflows
+
+| Scenario | Recommended Approach |
+|----------|---------------------|
+| Standard orchestration patterns | Declarative |
+| Workflows that change frequently | Declarative |
+| Non-developers need to modify workflows | Declarative |
+| Complex custom logic | Programmatic |
+| Maximum flexibility and control | Programmatic |
+| Integration with existing Python code | Programmatic |
+
+::: zone pivot="programming-language-csharp"
+
+> [!NOTE]
+> Documentation for declarative workflows in .NET is coming soon. Please check back for updates.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- Python 3.10 - 3.13 (Python 3.14 is not yet supported due to PowerFx compatibility)
+- The Agent Framework declarative package installed:
+
+```bash
+pip install agent-framework-declarative --pre
+```
+
+This package pulls in the underlying `agent-framework-core` automatically.
+
+- Basic familiarity with YAML syntax
+- Understanding of [workflow concepts](./index.md)
+
+## Basic YAML Structure
+
+A declarative workflow consists of a few key elements:
+
+```yaml
+name: my-workflow
+description: A brief description of what this workflow does
+
+inputs:
+  parameterName:
+    type: string
+    description: Description of the parameter
+
+actions:
+  - kind: ActionType
+    id: unique_action_id
+    displayName: Human readable name
+    # Action-specific properties
+```
+
+### Structure Elements
+
+| Element | Required | Description |
+|---------|----------|-------------|
+| `name` | Yes | Unique identifier for the workflow |
+| `description` | No | Human-readable description |
+| `inputs` | No | Input parameters the workflow accepts |
+| `actions` | Yes | List of actions to execute |
+
+## Your First Declarative Workflow
+
+Let's create a simple workflow that greets a user by name.
+
+### Step 1: Create the YAML File
+
+Create a file named `greeting-workflow.yaml`:
+
+```yaml
+name: greeting-workflow
+description: A simple workflow that greets the user
+
+inputs:
+  name:
+    type: string
+    description: The name of the person to greet
+
+actions:
+  # Set a greeting prefix
+  - kind: SetVariable
+    id: set_greeting
+    displayName: Set greeting prefix
+    variable: Local.greeting
+    value: Hello
+
+  # Build the full message using an expression
+  - kind: SetVariable
+    id: build_message
+    displayName: Build greeting message
+    variable: Local.message
+    value: =Concat(Local.greeting, ", ", Workflow.Inputs.name, "!")
+
+  # Send the greeting to the user
+  - kind: SendActivity
+    id: send_greeting
+    displayName: Send greeting to user
+    activity:
+      text: =Local.message
+
+  # Store the result in outputs
+  - kind: SetVariable
+    id: set_output
+    displayName: Store result in outputs
+    variable: Workflow.Outputs.greeting
+    value: =Local.message
+```
+
+### Step 2: Load and Run the Workflow
+
+Create a Python file to execute the workflow:
+
+```python
+import asyncio
+from pathlib import Path
+
+from agent_framework.declarative import WorkflowFactory
+
+
+async def main() -> None:
+    """Run the greeting workflow."""
+    # Create a workflow factory
+    factory = WorkflowFactory()
+
+    # Load the workflow from YAML
+    workflow_path = Path(__file__).parent / "greeting-workflow.yaml"
+    workflow = factory.create_workflow_from_yaml_path(workflow_path)
+
+    print(f"Loaded workflow: {workflow.name}")
+    print("-" * 40)
+
+    # Run with a name input
+    result = await workflow.run({"name": "Alice"})
+    for output in result.get_outputs():
+        print(f"Output: {output}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Expected Output
+
+```
+Loaded workflow: greeting-workflow
+----------------------------------------
+Output: Hello, Alice!
+```
+
+## Core Concepts
+
+### Variable Namespaces
+
+Declarative workflows use namespaced variables to organize state:
+
+| Namespace | Description | Example |
+|-----------|-------------|---------|
+| `Local.*` | Variables local to the workflow | `Local.message` |
+| `Workflow.Inputs.*` | Input parameters | `Workflow.Inputs.name` |
+| `Workflow.Outputs.*` | Output values | `Workflow.Outputs.result` |
+| `System.*` | System-provided values | `System.ConversationId` |
+
+### Expression Language
+
+Values prefixed with `=` are evaluated as expressions:
+
+```yaml
+# Literal value (no evaluation)
+value: Hello
+
+# Expression (evaluated at runtime)
+value: =Concat("Hello, ", Workflow.Inputs.name)
+```
+
+Common functions include:
+- `Concat(str1, str2, ...)` - Concatenate strings
+- `If(condition, trueValue, falseValue)` - Conditional expression
+- `IsBlank(value)` - Check if value is empty
+
+### Action Types
+
+Declarative workflows support various action types:
+
+| Category | Actions |
+|----------|---------|
+| Variable Management | `SetVariable`, `SetMultipleVariables`, `AppendValue`, `ResetVariable` |
+| Control Flow | `If`, `ConditionGroup`, `Foreach`, `RepeatUntil`, `BreakLoop`, `ContinueLoop`, `GotoAction` |
+| Output | `SendActivity`, `EmitEvent` |
+| Agent Invocation | `InvokeAzureAgent` |
+| Human-in-the-Loop | `Question`, `Confirmation`, `RequestExternalInput`, `WaitForInput` |
+| Workflow Control | `EndWorkflow`, `EndConversation`, `CreateConversation` |
+
+## Actions Reference
+
+Actions are the building blocks of declarative workflows. Each action performs a specific operation, and actions are executed sequentially in the order they appear in the YAML file.
+
+### Action Structure
+
+All actions share common properties:
+
+```yaml
+- kind: ActionType      # Required: The type of action
+  id: unique_id         # Optional: Unique identifier for referencing
+  displayName: Name     # Optional: Human-readable name for logging
+  # Action-specific properties...
+```
+
+### Variable Management Actions
+
+#### SetVariable
+
+Sets a variable to a specified value.
+
+```yaml
+- kind: SetVariable
+  id: set_greeting
+  displayName: Set greeting message
+  variable: Local.greeting
+  value: Hello World
+```
+
+With an expression:
+
+```yaml
+- kind: SetVariable
+  variable: Local.fullName
+  value: =Concat(Workflow.Inputs.firstName, " ", Workflow.Inputs.lastName)
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variable` | Yes | Variable path (e.g., `Local.name`, `Workflow.Outputs.result`) |
+| `value` | Yes | Value to set (literal or expression) |
+
+#### SetMultipleVariables
+
+Sets multiple variables in a single action.
+
+```yaml
+- kind: SetMultipleVariables
+  id: initialize_vars
+  displayName: Initialize variables
+  variables:
+    Local.counter: 0
+    Local.status: pending
+    Local.message: =Concat("Processing order ", Workflow.Inputs.orderId)
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variables` | Yes | Map of variable paths to values |
+
+#### AppendValue
+
+Appends a value to a list or concatenates to a string.
+
+```yaml
+- kind: AppendValue
+  id: add_item
+  variable: Local.items
+  value: =Workflow.Inputs.newItem
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variable` | Yes | Variable path to append to |
+| `value` | Yes | Value to append |
+
+#### ResetVariable
+
+Clears a variable's value.
+
+```yaml
+- kind: ResetVariable
+  id: clear_counter
+  variable: Local.counter
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variable` | Yes | Variable path to reset |
+
+### Control Flow Actions
+
+#### If
+
+Executes actions conditionally based on a condition.
+
+```yaml
+- kind: If
+  id: check_age
+  displayName: Check user age
+  condition: =Workflow.Inputs.age >= 18
+  then:
+    - kind: SendActivity
+      activity:
+        text: "Welcome, adult user!"
+  else:
+    - kind: SendActivity
+      activity:
+        text: "Welcome, young user!"
+```
+
+Nested conditions:
+
+```yaml
+- kind: If
+  condition: =Workflow.Inputs.role = "admin"
+  then:
+    - kind: SendActivity
+      activity:
+        text: "Admin access granted"
+  else:
+    - kind: If
+      condition: =Workflow.Inputs.role = "user"
+      then:
+        - kind: SendActivity
+          activity:
+            text: "User access granted"
+      else:
+        - kind: SendActivity
+          activity:
+            text: "Access denied"
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `condition` | Yes | Expression that evaluates to true/false |
+| `then` | Yes | Actions to execute if condition is true |
+| `else` | No | Actions to execute if condition is false |
+
+#### ConditionGroup
+
+Evaluates multiple conditions like a switch/case statement.
+
+```yaml
+- kind: ConditionGroup
+  id: route_by_category
+  displayName: Route based on category
+  conditions:
+    - condition: =Workflow.Inputs.category = "electronics"
+      id: electronics_branch
+      actions:
+        - kind: SetVariable
+          variable: Local.department
+          value: Electronics Team
+    - condition: =Workflow.Inputs.category = "clothing"
+      id: clothing_branch
+      actions:
+        - kind: SetVariable
+          variable: Local.department
+          value: Clothing Team
+    - condition: =Workflow.Inputs.category = "food"
+      id: food_branch
+      actions:
+        - kind: SetVariable
+          variable: Local.department
+          value: Food Team
+  elseActions:
+    - kind: SetVariable
+      variable: Local.department
+      value: General Support
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `conditions` | Yes | List of condition/actions pairs (first match wins) |
+| `elseActions` | No | Actions if no condition matches |
+
+#### Foreach
+
+Iterates over a collection.
+
+```yaml
+- kind: Foreach
+  id: process_items
+  displayName: Process each item
+  source: =Workflow.Inputs.items
+  itemName: item
+  indexName: index
+  actions:
+    - kind: SendActivity
+      activity:
+        text: =Concat("Processing item ", index, ": ", item)
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `source` | Yes | Expression returning a collection |
+| `itemName` | No | Variable name for current item (default: `item`) |
+| `indexName` | No | Variable name for current index (default: `index`) |
+| `actions` | Yes | Actions to execute for each item |
+
+#### RepeatUntil
+
+Repeats actions until a condition becomes true.
+
+```yaml
+- kind: SetVariable
+  variable: Local.counter
+  value: 0
+
+- kind: RepeatUntil
+  id: count_loop
+  displayName: Count to 5
+  condition: =Local.counter >= 5
+  actions:
+    - kind: SetVariable
+      variable: Local.counter
+      value: =Local.counter + 1
+    - kind: SendActivity
+      activity:
+        text: =Concat("Counter: ", Local.counter)
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `condition` | Yes | Loop continues until this is true |
+| `actions` | Yes | Actions to repeat |
+
+#### BreakLoop
+
+Exits the current loop immediately.
+
+```yaml
+- kind: Foreach
+  source: =Workflow.Inputs.items
+  actions:
+    - kind: If
+      condition: =item = "stop"
+      then:
+        - kind: BreakLoop
+    - kind: SendActivity
+      activity:
+        text: =item
+```
+
+#### ContinueLoop
+
+Skips to the next iteration of the loop.
+
+```yaml
+- kind: Foreach
+  source: =Workflow.Inputs.numbers
+  actions:
+    - kind: If
+      condition: =item < 0
+      then:
+        - kind: ContinueLoop
+    - kind: SendActivity
+      activity:
+        text: =Concat("Positive number: ", item)
+```
+
+#### GotoAction
+
+Jumps to a specific action by ID.
+
+```yaml
+- kind: SetVariable
+  id: start_label
+  variable: Local.attempts
+  value: =Local.attempts + 1
+
+- kind: SendActivity
+  activity:
+    text: =Concat("Attempt ", Local.attempts)
+
+- kind: If
+  condition: =And(Local.attempts < 3, Not(Local.success))
+  then:
+    - kind: GotoAction
+      actionId: start_label
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `actionId` | Yes | ID of the action to jump to |
+
+### Output Actions
+
+#### SendActivity
+
+Sends a message to the user.
+
+```yaml
+- kind: SendActivity
+  id: send_welcome
+  displayName: Send welcome message
+  activity:
+    text: "Welcome to our service!"
+```
+
+With an expression:
+
+```yaml
+- kind: SendActivity
+  activity:
+    text: =Concat("Hello, ", Workflow.Inputs.name, "! How can I help you today?")
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `activity` | Yes | The activity to send |
+| `activity.text` | Yes | Message text (literal or expression) |
+
+#### EmitEvent
+
+Emits a custom event.
+
+```yaml
+- kind: EmitEvent
+  id: emit_status
+  displayName: Emit status event
+  eventType: order_status_changed
+  data:
+    orderId: =Workflow.Inputs.orderId
+    status: =Local.newStatus
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `eventType` | Yes | Type identifier for the event |
+| `data` | No | Event payload data |
+
+### Agent Invocation Actions
+
+#### InvokeAzureAgent
+
+Invokes an Azure AI agent.
+
+Basic invocation:
+
+```yaml
+- kind: InvokeAzureAgent
+  id: call_assistant
+  displayName: Call assistant agent
+  agent:
+    name: AssistantAgent
+  conversationId: =System.ConversationId
+```
+
+With input and output configuration:
+
+```yaml
+- kind: InvokeAzureAgent
+  id: call_analyst
+  displayName: Call analyst agent
+  agent:
+    name: AnalystAgent
+  conversationId: =System.ConversationId
+  input:
+    messages: =Local.userMessage
+    arguments:
+      topic: =Workflow.Inputs.topic
+  output:
+    responseObject: Local.AnalystResult
+    messages: Local.AnalystMessages
+    autoSend: true
+```
+
+With external loop (continues until condition is met):
+
+```yaml
+- kind: InvokeAzureAgent
+  id: support_agent
+  agent:
+    name: SupportAgent
+  input:
+    externalLoop:
+      when: =Not(Local.IsResolved)
+  output:
+    responseObject: Local.SupportResult
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `agent.name` | Yes | Name of the registered agent |
+| `conversationId` | No | Conversation context identifier |
+| `input.messages` | No | Messages to send to the agent |
+| `input.arguments` | No | Additional arguments for the agent |
+| `input.externalLoop.when` | No | Condition to continue agent loop |
+| `output.responseObject` | No | Path to store agent response |
+| `output.messages` | No | Path to store conversation messages |
+| `output.autoSend` | No | Automatically send response to user |
+
+### Human-in-the-Loop Actions
+
+#### Question
+
+Asks the user a question and stores the response.
+
+```yaml
+- kind: Question
+  id: ask_name
+  displayName: Ask for user name
+  question:
+    text: "What is your name?"
+  variable: Local.userName
+  default: "Guest"
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `question.text` | Yes | The question to ask |
+| `variable` | Yes | Path to store the response |
+| `default` | No | Default value if no response |
+
+#### Confirmation
+
+Asks the user for a yes/no confirmation.
+
+```yaml
+- kind: Confirmation
+  id: confirm_delete
+  displayName: Confirm deletion
+  question:
+    text: "Are you sure you want to delete this item?"
+  variable: Local.confirmed
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `question.text` | Yes | The confirmation question |
+| `variable` | Yes | Path to store boolean result |
+
+#### RequestExternalInput
+
+Requests input from an external system or process.
+
+```yaml
+- kind: RequestExternalInput
+  id: request_approval
+  displayName: Request manager approval
+  prompt:
+    text: "Please provide approval for this request."
+  variable: Local.approvalResult
+  default: "pending"
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `prompt.text` | Yes | Description of required input |
+| `variable` | Yes | Path to store the input |
+| `default` | No | Default value |
+
+#### WaitForInput
+
+Pauses the workflow and waits for external input.
+
+```yaml
+- kind: WaitForInput
+  id: wait_for_response
+  variable: Local.externalResponse
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variable` | Yes | Path to store the input when received |
+
+### Workflow Control Actions
+
+#### EndWorkflow
+
+Terminates the workflow execution.
+
+```yaml
+- kind: EndWorkflow
+  id: finish
+  displayName: End workflow
+```
+
+#### EndConversation
+
+Ends the current conversation.
+
+```yaml
+- kind: EndConversation
+  id: end_chat
+  displayName: End conversation
+```
+
+#### CreateConversation
+
+Creates a new conversation context.
+
+```yaml
+- kind: CreateConversation
+  id: create_new_conv
+  displayName: Create new conversation
+  conversationId: Local.NewConversationId
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `conversationId` | Yes | Path to store the new conversation ID |
+
+### Actions Quick Reference
+
+| Action | Category | Description |
+|--------|----------|-------------|
+| `SetVariable` | Variable | Set a single variable |
+| `SetMultipleVariables` | Variable | Set multiple variables |
+| `AppendValue` | Variable | Append to list/string |
+| `ResetVariable` | Variable | Clear a variable |
+| `If` | Control Flow | Conditional branching |
+| `ConditionGroup` | Control Flow | Multi-branch switch |
+| `Foreach` | Control Flow | Iterate over collection |
+| `RepeatUntil` | Control Flow | Loop until condition |
+| `BreakLoop` | Control Flow | Exit current loop |
+| `ContinueLoop` | Control Flow | Skip to next iteration |
+| `GotoAction` | Control Flow | Jump to action by ID |
+| `SendActivity` | Output | Send message to user |
+| `EmitEvent` | Output | Emit custom event |
+| `InvokeAzureAgent` | Agent | Call Azure AI agent |
+| `Question` | Human-in-the-Loop | Ask user a question |
+| `Confirmation` | Human-in-the-Loop | Yes/no confirmation |
+| `RequestExternalInput` | Human-in-the-Loop | Request external input |
+| `WaitForInput` | Human-in-the-Loop | Wait for input |
+| `EndWorkflow` | Workflow Control | Terminate workflow |
+| `EndConversation` | Workflow Control | End conversation |
+| `CreateConversation` | Workflow Control | Create new conversation |
+
+## Expression Syntax
+
+Declarative workflows use a PowerFx-like expression language to manage state and compute dynamic values. Values prefixed with `=` are evaluated as expressions at runtime.
+
+### Variable Namespace Details
+
+| Namespace | Description | Access |
+|-----------|-------------|--------|
+| `Local.*` | Workflow-local variables | Read/Write |
+| `Workflow.Inputs.*` | Input parameters passed to the workflow | Read-only |
+| `Workflow.Outputs.*` | Values returned from the workflow | Read/Write |
+| `System.*` | System-provided values | Read-only |
+| `Agent.*` | Results from agent invocations | Read-only |
+
+#### System Variables
+
+| Variable | Description |
+|----------|-------------|
+| `System.ConversationId` | Current conversation identifier |
+| `System.LastMessage` | The most recent message |
+| `System.Timestamp` | Current timestamp |
+
+#### Agent Variables
+
+After invoking an agent, access response data through the output variable:
+
+```yaml
+actions:
+  - kind: InvokeAzureAgent
+    id: call_assistant
+    agent:
+      name: MyAgent
+    output:
+      responseObject: Local.AgentResult
+
+  # Access agent response
+  - kind: SendActivity
+    activity:
+      text: =Local.AgentResult.text
+```
+
+### Literal vs. Expression Values
+
+```yaml
+# Literal string (stored as-is)
+value: Hello World
+
+# Expression (evaluated at runtime)
+value: =Concat("Hello ", Workflow.Inputs.name)
+
+# Literal number
+value: 42
+
+# Expression returning a number
+value: =Workflow.Inputs.quantity * 2
+```
+
+### String Operations
+
+#### Concat
+
+Concatenate multiple strings:
+
+```yaml
+value: =Concat("Hello, ", Workflow.Inputs.name, "!")
+# Result: "Hello, Alice!" (if Workflow.Inputs.name is "Alice")
+
+value: =Concat(Local.firstName, " ", Local.lastName)
+# Result: "John Doe" (if firstName is "John" and lastName is "Doe")
+```
+
+#### IsBlank
+
+Check if a value is empty or undefined:
+
+```yaml
+condition: =IsBlank(Workflow.Inputs.optionalParam)
+# Returns true if the parameter is not provided
+
+value: =If(IsBlank(Workflow.Inputs.name), "Guest", Workflow.Inputs.name)
+# Returns "Guest" if name is blank, otherwise returns the name
+```
+
+### Conditional Expressions
+
+#### If Function
+
+Return different values based on a condition:
+
+```yaml
+value: =If(Workflow.Inputs.age < 18, "minor", "adult")
+
+value: =If(Local.count > 0, "Items found", "No items")
+
+# Nested conditions
+value: =If(Workflow.Inputs.role = "admin", "Full access", If(Workflow.Inputs.role = "user", "Limited access", "No access"))
+```
+
+### Comparison Operators
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `=` | Equal to | `=Workflow.Inputs.status = "active"` |
+| `<>` | Not equal to | `=Workflow.Inputs.status <> "deleted"` |
+| `<` | Less than | `=Workflow.Inputs.age < 18` |
+| `>` | Greater than | `=Workflow.Inputs.count > 0` |
+| `<=` | Less than or equal | `=Workflow.Inputs.score <= 100` |
+| `>=` | Greater than or equal | `=Workflow.Inputs.quantity >= 1` |
+
+### Boolean Functions
+
+```yaml
+# Or - returns true if any condition is true
+condition: =Or(Workflow.Inputs.role = "admin", Workflow.Inputs.role = "moderator")
+
+# And - returns true if all conditions are true
+condition: =And(Workflow.Inputs.age >= 18, Workflow.Inputs.hasConsent)
+
+# Not - negates a condition
+condition: =Not(IsBlank(Workflow.Inputs.email))
+```
+
+### Mathematical Operations
+
+```yaml
+# Addition
+value: =Workflow.Inputs.price + Workflow.Inputs.tax
+
+# Subtraction
+value: =Workflow.Inputs.total - Workflow.Inputs.discount
+
+# Multiplication
+value: =Workflow.Inputs.quantity * Workflow.Inputs.unitPrice
+
+# Division
+value: =Workflow.Inputs.total / Workflow.Inputs.count
+```
+
+### Practical Expression Examples
+
+#### User Categorization
+
+```yaml
+name: categorize-user
+inputs:
+  age:
+    type: integer
+    description: User's age
+
+actions:
+  - kind: SetVariable
+    variable: Local.age
+    value: =Workflow.Inputs.age
+
+  - kind: SetVariable
+    variable: Local.category
+    value: =If(Local.age < 13, "child", If(Local.age < 20, "teenager", If(Local.age < 65, "adult", "senior")))
+
+  - kind: SendActivity
+    activity:
+      text: =Concat("You are categorized as: ", Local.category)
+
+  - kind: SetVariable
+    variable: Workflow.Outputs.category
+    value: =Local.category
+```
+
+#### Conditional Greeting
+
+```yaml
+name: smart-greeting
+inputs:
+  name:
+    type: string
+    description: User's name (optional)
+  timeOfDay:
+    type: string
+    description: morning, afternoon, or evening
+
+actions:
+  # Set the greeting based on time of day
+  - kind: SetVariable
+    variable: Local.timeGreeting
+    value: =If(Workflow.Inputs.timeOfDay = "morning", "Good morning", If(Workflow.Inputs.timeOfDay = "afternoon", "Good afternoon", "Good evening"))
+
+  # Handle optional name
+  - kind: SetVariable
+    variable: Local.userName
+    value: =If(IsBlank(Workflow.Inputs.name), "friend", Workflow.Inputs.name)
+
+  # Build the full greeting
+  - kind: SetVariable
+    variable: Local.fullGreeting
+    value: =Concat(Local.timeGreeting, ", ", Local.userName, "!")
+
+  - kind: SendActivity
+    activity:
+      text: =Local.fullGreeting
+```
+
+#### Input Validation
+
+```yaml
+name: validate-order
+inputs:
+  quantity:
+    type: integer
+    description: Number of items to order
+  email:
+    type: string
+    description: Customer email
+
+actions:
+  # Check if inputs are valid
+  - kind: SetVariable
+    variable: Local.isValidQuantity
+    value: =And(Workflow.Inputs.quantity > 0, Workflow.Inputs.quantity <= 100)
+
+  - kind: SetVariable
+    variable: Local.hasEmail
+    value: =Not(IsBlank(Workflow.Inputs.email))
+
+  - kind: SetVariable
+    variable: Local.isValid
+    value: =And(Local.isValidQuantity, Local.hasEmail)
+
+  - kind: If
+    condition: =Local.isValid
+    then:
+      - kind: SendActivity
+        activity:
+          text: "Order validated successfully!"
+    else:
+      - kind: SendActivity
+        activity:
+          text: =If(Not(Local.isValidQuantity), "Invalid quantity (must be 1-100)", "Email is required")
+```
+
+## Advanced Patterns
+
+As your workflows grow in complexity, you'll need patterns that handle multi-step processes, agent coordination, and interactive scenarios.
+
+### Multi-Agent Orchestration
+
+#### Sequential Agent Pipeline
+
+Pass work through multiple agents in sequence, where each agent builds on the previous agent's output.
+
+**Use case**: Content creation pipelines where different specialists handle research, writing, and editing.
+
+```yaml
+name: content-pipeline
+description: Sequential agent pipeline for content creation
+
+kind: Workflow
+trigger:
+  kind: OnConversationStart
+  id: content_workflow
+  actions:
+    # First agent: Research and analyze
+    - kind: InvokeAzureAgent
+      id: invoke_researcher
+      displayName: Research phase
+      conversationId: =System.ConversationId
+      agent:
+        name: ResearcherAgent
+
+    # Second agent: Write draft based on research
+    - kind: InvokeAzureAgent
+      id: invoke_writer
+      displayName: Writing phase
+      conversationId: =System.ConversationId
+      agent:
+        name: WriterAgent
+
+    # Third agent: Edit and polish
+    - kind: InvokeAzureAgent
+      id: invoke_editor
+      displayName: Editing phase
+      conversationId: =System.ConversationId
+      agent:
+        name: EditorAgent
+```
+
+**Python setup**:
+
+```python
+from agent_framework.declarative import WorkflowFactory
+
+# Create factory and register agents
+factory = WorkflowFactory()
+factory.register_agent("ResearcherAgent", researcher_agent)
+factory.register_agent("WriterAgent", writer_agent)
+factory.register_agent("EditorAgent", editor_agent)
+
+# Load and run
+workflow = factory.create_workflow_from_yaml_path("content-pipeline.yaml")
+result = await workflow.run({"topic": "AI in healthcare"})
+```
+
+#### Conditional Agent Routing
+
+Route requests to different agents based on the input or intermediate results.
+
+**Use case**: Support systems that route to specialized agents based on issue type.
+
+```yaml
+name: support-router
+description: Route to specialized support agents
+
+inputs:
+  category:
+    type: string
+    description: Support category (billing, technical, general)
+
+actions:
+  - kind: ConditionGroup
+    id: route_request
+    displayName: Route to appropriate agent
+    conditions:
+      - condition: =Workflow.Inputs.category = "billing"
+        id: billing_route
+        actions:
+          - kind: InvokeAzureAgent
+            id: billing_agent
+            agent:
+              name: BillingAgent
+            conversationId: =System.ConversationId
+      - condition: =Workflow.Inputs.category = "technical"
+        id: technical_route
+        actions:
+          - kind: InvokeAzureAgent
+            id: technical_agent
+            agent:
+              name: TechnicalAgent
+            conversationId: =System.ConversationId
+    elseActions:
+      - kind: InvokeAzureAgent
+        id: general_agent
+        agent:
+          name: GeneralAgent
+        conversationId: =System.ConversationId
+```
+
+#### Agent with External Loop
+
+Continue agent interaction until a condition is met, such as the issue being resolved.
+
+**Use case**: Support conversations that continue until the user's problem is solved.
+
+```yaml
+name: support-conversation
+description: Continue support until resolved
+
+actions:
+  - kind: SetVariable
+    variable: Local.IsResolved
+    value: false
+
+  - kind: InvokeAzureAgent
+    id: support_agent
+    displayName: Support agent with external loop
+    agent:
+      name: SupportAgent
+    conversationId: =System.ConversationId
+    input:
+      externalLoop:
+        when: =Not(Local.IsResolved)
+    output:
+      responseObject: Local.SupportResult
+
+  - kind: SendActivity
+    activity:
+      text: "Thank you for contacting support. Your issue has been resolved."
+```
+
+### Loop Control Patterns
+
+#### Iterative Agent Conversation
+
+Create back-and-forth conversations between agents with controlled iteration.
+
+**Use case**: Student-teacher scenarios, debate simulations, or iterative refinement.
+
+```yaml
+name: student-teacher
+description: Iterative learning conversation between student and teacher
+
+kind: Workflow
+trigger:
+  kind: OnConversationStart
+  id: learning_session
+  actions:
+    # Initialize turn counter
+    - kind: SetVariable
+      id: init_counter
+      path: Local.TurnCount
+      value: 0
+
+    - kind: SendActivity
+      id: start_message
+      activity:
+        text: =Concat("Starting session for: ", Workflow.Inputs.problem)
+
+    # Student attempts solution (loop entry point)
+    - kind: SendActivity
+      id: student_label
+      activity:
+        text: "\n[Student]:"
+
+    - kind: InvokeAzureAgent
+      id: student_attempt
+      conversationId: =System.ConversationId
+      agent:
+        name: StudentAgent
+
+    # Teacher reviews
+    - kind: SendActivity
+      id: teacher_label
+      activity:
+        text: "\n[Teacher]:"
+
+    - kind: InvokeAzureAgent
+      id: teacher_review
+      conversationId: =System.ConversationId
+      agent:
+        name: TeacherAgent
+      output:
+        messages: Local.TeacherResponse
+
+    # Increment counter
+    - kind: SetVariable
+      id: increment
+      path: Local.TurnCount
+      value: =Local.TurnCount + 1
+
+    # Check completion conditions
+    - kind: ConditionGroup
+      id: check_completion
+      conditions:
+        # Success: Teacher congratulated student
+        - condition: =Not(IsBlank(Find("congratulations", Local.TeacherResponse)))
+          id: success_check
+          actions:
+            - kind: SendActivity
+              activity:
+                text: "Session complete - student succeeded!"
+            - kind: SetVariable
+              variable: Workflow.Outputs.result
+              value: success
+        # Continue: Under turn limit
+        - condition: =Local.TurnCount < 4
+          id: continue_check
+          actions:
+            - kind: GotoAction
+              actionId: student_label
+      elseActions:
+        # Timeout: Reached turn limit
+        - kind: SendActivity
+          activity:
+            text: "Session ended - turn limit reached."
+        - kind: SetVariable
+          variable: Workflow.Outputs.result
+          value: timeout
+```
+
+#### Counter-Based Loops
+
+Implement traditional counting loops using variables and GotoAction.
+
+```yaml
+name: counter-loop
+description: Process items with a counter
+
+actions:
+  - kind: SetVariable
+    variable: Local.counter
+    value: 0
+
+  - kind: SetVariable
+    variable: Local.maxIterations
+    value: 5
+
+  # Loop start
+  - kind: SetVariable
+    id: loop_start
+    variable: Local.counter
+    value: =Local.counter + 1
+
+  - kind: SendActivity
+    activity:
+      text: =Concat("Processing iteration ", Local.counter)
+
+  # Your processing logic here
+  - kind: SetVariable
+    variable: Local.result
+    value: =Concat("Result from iteration ", Local.counter)
+
+  # Check if should continue
+  - kind: If
+    condition: =Local.counter < Local.maxIterations
+    then:
+      - kind: GotoAction
+        actionId: loop_start
+    else:
+      - kind: SendActivity
+        activity:
+          text: "Loop complete!"
+```
+
+#### Early Exit with BreakLoop
+
+Use BreakLoop to exit iterations early when a condition is met.
+
+```yaml
+name: search-workflow
+description: Search through items and stop when found
+
+actions:
+  - kind: SetVariable
+    variable: Local.found
+    value: false
+
+  - kind: Foreach
+    source: =Workflow.Inputs.items
+    itemName: currentItem
+    actions:
+      # Check if this is the item we're looking for
+      - kind: If
+        condition: =currentItem.id = Workflow.Inputs.targetId
+        then:
+          - kind: SetVariable
+            variable: Local.found
+            value: true
+          - kind: SetVariable
+            variable: Local.result
+            value: =currentItem
+          - kind: BreakLoop
+
+      - kind: SendActivity
+        activity:
+          text: =Concat("Checked item: ", currentItem.name)
+
+  - kind: If
+    condition: =Local.found
+    then:
+      - kind: SendActivity
+        activity:
+          text: =Concat("Found: ", Local.result.name)
+    else:
+      - kind: SendActivity
+        activity:
+          text: "Item not found"
+```
+
+### Human-in-the-Loop Patterns
+
+#### Interactive Survey
+
+Collect multiple pieces of information from the user.
+
+```yaml
+name: customer-survey
+description: Interactive customer feedback survey
+
+actions:
+  - kind: SendActivity
+    activity:
+      text: "Welcome to our customer feedback survey!"
+
+  # Collect name
+  - kind: Question
+    id: ask_name
+    question:
+      text: "What is your name?"
+    variable: Local.userName
+    default: "Anonymous"
+
+  - kind: SendActivity
+    activity:
+      text: =Concat("Nice to meet you, ", Local.userName, "!")
+
+  # Collect rating
+  - kind: Question
+    id: ask_rating
+    question:
+      text: "How would you rate our service? (1-5)"
+    variable: Local.rating
+    default: "3"
+
+  # Respond based on rating
+  - kind: If
+    condition: =Local.rating >= 4
+    then:
+      - kind: SendActivity
+        activity:
+          text: "Thank you for the positive feedback!"
+    else:
+      - kind: Question
+        id: ask_improvement
+        question:
+          text: "What could we improve?"
+        variable: Local.feedback
+
+  # Collect additional feedback
+  - kind: RequestExternalInput
+    id: additional_comments
+    prompt:
+      text: "Any additional comments? (optional)"
+    variable: Local.comments
+    default: ""
+
+  # Summary
+  - kind: SendActivity
+    activity:
+      text: =Concat("Thank you, ", Local.userName, "! Your feedback has been recorded.")
+
+  - kind: SetVariable
+    variable: Workflow.Outputs.survey
+    value:
+      name: =Local.userName
+      rating: =Local.rating
+      feedback: =Local.feedback
+      comments: =Local.comments
+```
+
+#### Approval Workflow
+
+Request approval before proceeding with an action.
+
+```yaml
+name: approval-workflow
+description: Request approval before processing
+
+inputs:
+  requestType:
+    type: string
+    description: Type of request
+  amount:
+    type: number
+    description: Request amount
+
+actions:
+  - kind: SendActivity
+    activity:
+      text: =Concat("Processing ", inputs.requestType, " request for $", inputs.amount)
+
+  # Check if approval is needed
+  - kind: If
+    condition: =Workflow.Inputs.amount > 1000
+    then:
+      - kind: SendActivity
+        activity:
+          text: "This request requires manager approval."
+
+      - kind: Confirmation
+        id: get_approval
+        question:
+          text: =Concat("Do you approve this ", inputs.requestType, " request for $", inputs.amount, "?")
+        variable: Local.approved
+
+      - kind: If
+        condition: =Local.approved
+        then:
+          - kind: SendActivity
+            activity:
+              text: "Request approved. Processing..."
+          - kind: SetVariable
+            variable: Workflow.Outputs.status
+            value: approved
+        else:
+          - kind: SendActivity
+            activity:
+              text: "Request denied."
+          - kind: SetVariable
+            variable: Workflow.Outputs.status
+            value: denied
+    else:
+      - kind: SendActivity
+        activity:
+          text: "Request auto-approved (under threshold)."
+      - kind: SetVariable
+        variable: Workflow.Outputs.status
+        value: auto_approved
+```
+
+### Complex Orchestration
+
+#### Support Ticket Workflow
+
+A comprehensive example combining multiple patterns: agent routing, conditional logic, and conversation management.
+
+```yaml
+name: support-ticket-workflow
+description: Complete support ticket handling with escalation
+
+kind: Workflow
+trigger:
+  kind: OnConversationStart
+  id: support_workflow
+  actions:
+    # Initial self-service agent
+    - kind: InvokeAzureAgent
+      id: self_service
+      displayName: Self-service agent
+      agent:
+        name: SelfServiceAgent
+      conversationId: =System.ConversationId
+      input:
+        externalLoop:
+          when: =Not(Local.ServiceResult.IsResolved)
+      output:
+        responseObject: Local.ServiceResult
+
+    # Check if resolved by self-service
+    - kind: If
+      condition: =Local.ServiceResult.IsResolved
+      then:
+        - kind: SendActivity
+          activity:
+            text: "Issue resolved through self-service."
+        - kind: SetVariable
+          variable: Workflow.Outputs.resolution
+          value: self_service
+        - kind: EndWorkflow
+          id: end_resolved
+
+    # Create support ticket
+    - kind: SendActivity
+      activity:
+        text: "Creating support ticket..."
+
+    - kind: SetVariable
+      variable: Local.TicketId
+      value: =Concat("TKT-", System.ConversationId)
+
+    # Route to appropriate team
+    - kind: ConditionGroup
+      id: route_ticket
+      conditions:
+        - condition: =Local.ServiceResult.Category = "technical"
+          id: technical_route
+          actions:
+            - kind: InvokeAzureAgent
+              id: technical_support
+              agent:
+                name: TechnicalSupportAgent
+              conversationId: =System.ConversationId
+              output:
+                responseObject: Local.TechResult
+        - condition: =Local.ServiceResult.Category = "billing"
+          id: billing_route
+          actions:
+            - kind: InvokeAzureAgent
+              id: billing_support
+              agent:
+                name: BillingSupportAgent
+              conversationId: =System.ConversationId
+              output:
+                responseObject: Local.BillingResult
+      elseActions:
+        # Escalate to human
+        - kind: SendActivity
+          activity:
+            text: "Escalating to human support..."
+        - kind: SetVariable
+          variable: Workflow.Outputs.resolution
+          value: escalated
+
+    - kind: SendActivity
+      activity:
+        text: =Concat("Ticket ", Local.TicketId, " has been processed.")
+```
+
+### Best Practices
+
+#### Naming Conventions
+
+Use clear, descriptive names for actions and variables:
+
+```yaml
+# Good
+- kind: SetVariable
+  id: calculate_total_price
+  variable: Local.orderTotal
+
+# Avoid
+- kind: SetVariable
+  id: sv1
+  variable: Local.x
+```
+
+#### Organizing Large Workflows
+
+Break complex workflows into logical sections with comments:
+
+```yaml
+actions:
+  # === INITIALIZATION ===
+  - kind: SetVariable
+    id: init_status
+    variable: Local.status
+    value: started
+
+  # === DATA COLLECTION ===
+  - kind: Question
+    id: collect_name
+    # ...
+
+  # === PROCESSING ===
+  - kind: InvokeAzureAgent
+    id: process_request
+    # ...
+
+  # === OUTPUT ===
+  - kind: SendActivity
+    id: send_result
+    # ...
+```
+
+#### Error Handling
+
+Use conditional checks to handle potential issues:
+
+```yaml
+actions:
+  - kind: SetVariable
+    variable: Local.hasError
+    value: false
+
+  - kind: InvokeAzureAgent
+    id: call_agent
+    agent:
+      name: ProcessingAgent
+    output:
+      responseObject: Local.AgentResult
+
+  - kind: If
+    condition: =IsBlank(Local.AgentResult)
+    then:
+      - kind: SetVariable
+        variable: Local.hasError
+        value: true
+      - kind: SendActivity
+        activity:
+          text: "An error occurred during processing."
+    else:
+      - kind: SendActivity
+        activity:
+          text: =Local.AgentResult.message
+```
+
+#### Testing Strategies
+
+1. **Start simple**: Test basic flows before adding complexity
+2. **Use default values**: Provide sensible defaults for inputs
+3. **Add logging**: Use SendActivity for debugging during development
+4. **Test edge cases**: Verify behavior with missing or invalid inputs
+
+```yaml
+# Debug logging example
+- kind: SendActivity
+  id: debug_log
+  activity:
+    text: =Concat("[DEBUG] Current state: counter=", Local.counter, ", status=", Local.status)
+```
+
+::: zone-end
+
+## Next Steps
+
+- [Python Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows/declarative) - Explore complete working examples
