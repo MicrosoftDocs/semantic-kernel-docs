@@ -127,7 +127,7 @@ Now that you added the above code to your agent, perform the following steps to 
 
 - Nuget: [Microsoft.Agents.AI.Purview](https://www.nuget.org/packages/Microsoft.Agents.AI.Purview/)
 - Github: [Microsoft.Agents.AI.Purview](https://github.com/microsoft/agent-framework/tree/main/dotnet/src/Microsoft.Agents.AI.Purview)
-- Sample: [AgentWithPurview](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/Purview/AgentWithPurview)
+- Sample: [AgentWithPurview](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/05-end-to-end/AgentWithPurview)
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

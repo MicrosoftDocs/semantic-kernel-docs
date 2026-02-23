@@ -179,7 +179,7 @@ Properly clean up the Azure Foundry agents after use:
 
 ## Complete Implementation
 
-For the complete working implementation of this Azure Foundry agents workflow, see the [FoundryAgent Program.cs](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Workflows/Agents/FoundryAgent/Program.cs) sample in the Agent Framework repository.
+For the complete working implementation of this Azure Foundry agents workflow, see the [FoundryAgent Program.cs](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/03-workflows/Agents/FoundryAgent/Program.cs) sample in the Agent Framework repository.
 
 ::: zone-end
 

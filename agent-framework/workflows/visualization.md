@@ -43,7 +43,7 @@ dotnet run | tail -n +20 | dot -Tpng -o workflow.png
 > [!TIP]
 > To export visualization images you need to [install GraphViz](https://graphviz.org/download/).
 
-For a complete working implementation with visualization, see the [Visualization sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/Visualization).
+For a complete working implementation with visualization, see the [Visualization sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/Visualization).
 
 ::: zone-end
 

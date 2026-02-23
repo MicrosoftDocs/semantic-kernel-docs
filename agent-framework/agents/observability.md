@@ -162,7 +162,7 @@ using var tracerProvider = Sdk.CreateTracerProviderBuilder()
 
 ## Getting started
 
-See a full example of an agent with OpenTelemetry enabled in the [Agent Framework repository](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/AgentOpenTelemetry).
+See a full example of an agent with OpenTelemetry enabled in the [Agent Framework repository](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/AgentOpenTelemetry).
 
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.

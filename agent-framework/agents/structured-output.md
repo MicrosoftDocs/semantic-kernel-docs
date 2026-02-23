@@ -174,7 +174,7 @@ Some agents don't natively support structured output, either because it's not pa
 > [!NOTE]
 > Since this approach relies on an additional LLM call to transform the response, its reliability may not be sufficient for all scenarios.
 
-For a reference implementation of this pattern that you can adapt to your own requirements, see the [StructuredOutputAgent sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Agents/Agent_Step05_StructuredOutput).
+For a reference implementation of this pattern that you can adapt to your own requirements, see the [StructuredOutputAgent sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/02-agents/Agents/Agent_Step02_StructuredOutput).
 
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.

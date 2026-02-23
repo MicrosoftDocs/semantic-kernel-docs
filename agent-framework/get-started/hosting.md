@@ -122,7 +122,7 @@ app.Run();
 ```
 
 > [!TIP]
-> See the [Durable Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/Durable/Agents/AzureFunctions) for serverless hosting examples.
+> See the [Durable Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/04-hosting/DurableAgents/AzureFunctions) for serverless hosting examples.
 
 :::zone-end
 

@@ -53,7 +53,7 @@ Console.WriteLine($"Output: {string.Join(", ", result.GetOutputs())}");
 ```
 
 > [!TIP]
-> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/_Foundational/01_ExecutorsAndEdges) for a full runnable sample application.
+> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/01-get-started/05_first_workflow) for a full runnable sample application.
 
 :::zone-end
 
