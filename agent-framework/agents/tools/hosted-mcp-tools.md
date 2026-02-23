@@ -1,0 +1,341 @@
+---
+title: MCP and Foundry Agents
+description: Using MCP with Foundry Agents
+zone_pivot_groups: programming-languages
+author: markwallace
+ms.topic: reference
+ms.author: markwallace
+ms.date: 09/24/2025
+ms.service: agent-framework
+---
+
+# Using MCP tools with Foundry Agents
+
+You can extend the capabilities of your Azure AI Foundry agent by connecting it to tools hosted on remote [Model Context Protocol (MCP)](/azure/ai-foundry/agents/how-to/tools/model-context-protocol) servers (bring your own MCP server endpoint).
+
+## How to use the Model Context Protocol tool
+
+This section explains how to create an AI agent using Azure Foundry (Azure AI) with a hosted Model Context Protocol (MCP) server integration. The agent can utilize MCP tools that are managed and executed by the Azure Foundry service, allowing for secure and controlled access to external resources.
+
+### Key Features
+
+- **Hosted MCP Server**: The MCP server is hosted and managed by Azure AI Foundry, eliminating the need to manage server infrastructure
+- **Persistent Agents**: Agents are created and stored server-side, allowing for stateful conversations
+- **Tool Approval Workflow**: Configurable approval mechanisms for MCP tool invocations
+
+### How It Works
+
+::: zone pivot="programming-language-csharp"
+
+#### 1. Environment Setup
+
+The sample requires two environment variables:
+- `AZURE_FOUNDRY_PROJECT_ENDPOINT`: Your Azure AI Foundry project endpoint URL
+- `AZURE_FOUNDRY_PROJECT_MODEL_ID`: The model deployment name (defaults to "gpt-4.1-mini")
+
+```csharp
+var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT") 
+    ?? throw new InvalidOperationException("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
+var model = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_MODEL_ID") ?? "gpt-4.1-mini";
+```
+
+#### 2. Agent Configuration
+
+The agent is configured with specific instructions and metadata:
+
+```csharp
+const string AgentName = "MicrosoftLearnAgent";
+const string AgentInstructions = "You answer questions by searching the Microsoft Learn content only.";
+```
+
+This creates an agent specialized for answering questions using Microsoft Learn documentation.
+
+#### 3. MCP Tool Definition
+
+The sample creates an MCP tool definition that points to a hosted MCP server:
+
+```csharp
+var mcpTool = new MCPToolDefinition(
+    serverLabel: "microsoft_learn",
+    serverUrl: "https://learn.microsoft.com/api/mcp");
+mcpTool.AllowedTools.Add("microsoft_docs_search");
+```
+
+**Key Components:**
+- **serverLabel**: A unique identifier for the MCP server instance
+- **serverUrl**: The URL of the hosted MCP server
+- **AllowedTools**: Specifies which tools from the MCP server the agent can use
+
+#### 4. Persistent Agent Creation
+
+The agent is created server-side using the Azure AI Foundry Persistent Agents SDK:
+
+```csharp
+var persistentAgentsClient = new PersistentAgentsClient(endpoint, new DefaultAzureCredential());
+
+var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
+    model: model,
+    name: AgentName,
+    instructions: AgentInstructions,
+    tools: [mcpTool]);
+```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+This creates a persistent agent that:
+- Lives on the Azure AI Foundry service
+- Has access to the specified MCP tools
+- Can maintain conversation state across multiple interactions
+
+#### 5. Agent Retrieval and Execution
+
+The created agent is retrieved as an `AIAgent` instance:
+
+```csharp
+AIAgent agent = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+```
+
+#### 6. Tool Resource Configuration
+
+The sample configures tool resources with approval settings:
+
+```csharp
+var runOptions = new ChatClientAgentRunOptions()
+{
+    ChatOptions = new()
+    {
+        RawRepresentationFactory = (_) => new ThreadAndRunOptions()
+        {
+            ToolResources = new MCPToolResource(serverLabel: "microsoft_learn")
+            {
+                RequireApproval = new MCPApproval("never"),
+            }.ToToolResources()
+        }
+    }
+};
+```
+
+**Key Configuration:**
+- **MCPToolResource**: Links the MCP server instance to the agent execution
+- **RequireApproval**: Controls when user approval is needed for tool invocations
+  - `"never"`: Tools execute automatically without approval
+  - `"always"`: All tool invocations require user approval
+  - Custom approval rules can also be configured
+
+#### 7. Agent Execution
+
+The agent is invoked with a question and executes using the configured MCP tools:
+
+```csharp
+AgentSession session = await agent.CreateSessionAsync();
+var response = await agent.RunAsync(
+    "Please summarize the Azure AI Agent documentation related to MCP Tool calling?", 
+    session, 
+    runOptions);
+Console.WriteLine(response);
+```
+
+#### 8. Cleanup
+
+The sample demonstrates proper resource cleanup:
+
+```csharp
+await persistentAgentsClient.Administration.DeleteAgentAsync(agent.Id);
+```
+
+> [!TIP]
+> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+
+
+::: zone-end
+::: zone pivot="programming-language-python"
+
+Azure AI Foundry provides seamless integration with Model Context Protocol (MCP) servers through the Python Agent Framework. The service manages the MCP server hosting and execution, eliminating infrastructure management while providing secure, controlled access to external tools.
+
+### Environment Setup
+
+Configure your Azure AI Foundry project credentials through environment variables:
+
+```python
+import os
+from azure.identity.aio import AzureCliCredential
+from agent_framework.azure import AzureAIAgentClient
+
+# Required environment variables
+os.environ["AZURE_AI_PROJECT_ENDPOINT"] = "https://<your-project>.services.ai.azure.com/api/projects/<project-id>"
+os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"] = "gpt-4o-mini"  # Optional, defaults to this
+```
+
+### Basic MCP Integration
+
+Create an Azure AI Foundry agent with hosted MCP tools:
+
+```python
+import asyncio
+from agent_framework.azure import AzureAIAgentClient
+from azure.identity.aio import AzureCliCredential
+
+async def basic_foundry_mcp_example():
+    """Basic example of Azure AI Foundry agent with hosted MCP tools."""
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentClient(credential=credential) as client,
+    ):
+        # Create a hosted MCP tool using the client method
+        learn_mcp = client.get_mcp_tool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+        )
+
+        # Create agent with hosted MCP tool
+        agent = client.as_agent(
+            name="MicrosoftLearnAgent", 
+            instructions="You answer questions by searching Microsoft Learn content only.",
+            tools=learn_mcp,
+        )
+        
+        # Simple query without approval workflow
+        result = await agent.run(
+            "Please summarize the Azure AI Agent documentation related to MCP tool calling?"
+        )
+        print(result)
+
+if __name__ == "__main__":
+    asyncio.run(basic_foundry_mcp_example())
+```
+
+### Multi-Tool MCP Configuration
+
+Use multiple hosted MCP tools with a single agent:
+
+```python
+async def multi_tool_mcp_example():
+    """Example using multiple hosted MCP tools."""
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIAgentClient(credential=credential) as client,
+    ):
+        # Create multiple MCP tools using the client method
+        learn_mcp = client.get_mcp_tool(
+            name="Microsoft Learn MCP",
+            url="https://learn.microsoft.com/api/mcp",
+            approval_mode="never_require",  # Auto-approve documentation searches
+        )
+        github_mcp = client.get_mcp_tool(
+            name="GitHub MCP", 
+            url="https://api.github.com/mcp",
+            approval_mode="always_require",  # Require approval for GitHub operations
+            headers={"Authorization": "Bearer github-token"},
+        )
+
+        # Create agent with multiple MCP tools
+        agent = client.as_agent(
+            name="MultiToolAgent",
+            instructions="You can search documentation and access GitHub repositories.",
+            tools=[learn_mcp, github_mcp],
+        )
+        
+        result = await agent.run(
+            "Find Azure documentation and also check the latest commits in microsoft/semantic-kernel"
+        )
+        print(result)
+
+if __name__ == "__main__":
+    asyncio.run(multi_tool_mcp_example())
+```
+
+The Python Agent Framework provides seamless integration with Azure AI Foundry's hosted MCP capabilities, enabling secure and scalable access to external tools while maintaining the flexibility and control needed for production applications.
+
+### Complete example
+
+```python
+# Copyright (c) Microsoft. All rights reserved.
+
+import asyncio
+import os
+
+from agent_framework import Agent
+from agent_framework.openai import OpenAIResponsesClient
+from dotenv import load_dotenv
+
+"""
+MCP GitHub Integration with Personal Access Token (PAT)
+
+This example demonstrates how to connect to GitHub's remote MCP server using a Personal Access
+Token (PAT) for authentication. The agent can use GitHub operations like searching repositories,
+reading files, creating issues, and more depending on how you scope your token.
+
+Prerequisites:
+1. A GitHub Personal Access Token with appropriate scopes
+   - Create one at: https://github.com/settings/tokens
+   - For read-only operations, you can use more restrictive scopes
+2. Environment variables:
+   - GITHUB_PAT: Your GitHub Personal Access Token (required)
+   - OPENAI_API_KEY: Your OpenAI API key (required)
+   - OPENAI_RESPONSES_MODEL_ID: Your OpenAI model ID (required)
+"""
+
+
+async def github_mcp_example() -> None:
+    """Example of using GitHub MCP server with PAT authentication."""
+    # 1. Load environment variables from .env file if present
+    load_dotenv()
+
+    # 2. Get configuration from environment
+    github_pat = os.getenv("GITHUB_PAT")
+    if not github_pat:
+        raise ValueError(
+            "GITHUB_PAT environment variable must be set. Create a token at https://github.com/settings/tokens"
+        )
+
+    # 3. Create authentication headers with GitHub PAT
+    auth_headers = {
+        "Authorization": f"Bearer {github_pat}",
+    }
+
+    # 4. Create agent with the GitHub MCP tool using instance method
+    # The MCP tool manages the connection to the MCP server and makes its tools available
+    # Set approval_mode="never_require" to allow the MCP tool to execute without approval
+    client = OpenAIResponsesClient()
+    github_mcp_tool = client.get_mcp_tool(
+        name="GitHub",
+        url="https://api.githubcopilot.com/mcp/",
+        headers=auth_headers,
+        approval_mode="never_require",
+    )
+
+    # 5. Create agent with the GitHub MCP tool
+    async with Agent(
+        client=client,
+        name="GitHubAgent",
+        instructions=(
+            "You are a helpful assistant that can help users interact with GitHub. "
+            "You can search for repositories, read file contents, check issues, and more. "
+            "Always be clear about what operations you're performing."
+        ),
+        tools=github_mcp_tool,
+    ) as agent:
+        # Example 1: Get authenticated user information
+        query1 = "What is my GitHub username and tell me about my account?"
+        print(f"\nUser: {query1}")
+        result1 = await agent.run(query1)
+        print(f"Agent: {result1.text}")
+
+        # Example 2: List my repositories
+        query2 = "List all the repositories I own on GitHub"
+        print(f"\nUser: {query2}")
+        result2 = await agent.run(query2)
+        print(f"Agent: {result2.text}")
+
+
+if __name__ == "__main__":
+    asyncio.run(github_mcp_example())
+```
+
+::: zone-end
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Using workflows as Agents](../../workflows/as-agents.md)
