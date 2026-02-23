@@ -4,7 +4,7 @@ description: Guide to significant changes in Python releases for Microsoft Agent
 author: eavanvalkenburg
 ms.topic: upgrade-and-migration-article
 ms.author: edvan
-ms.date: 02/19/2026
+ms.date: 02/21/2026
 ms.service: agent-framework
 ---
 # Python 2026 Significant Changes Guide
@@ -18,35 +18,184 @@ This document will be removed once we reach the 1.0.0 stable release, so please 
 
 ---
 
-## Post-python-1.0.0b260212 merged changes (unreleased)
+## python-1.0.0rc1 / python-1.0.0b260219 (February 19, 2026)
 
-The following significant PRs were merged after the latest published Python prerelease and should be tracked for upcoming package updates.
+**Release:** `agent-framework-core` and `agent-framework-azure-ai` promoted to `1.0.0rc1`. All other packages updated to `1.0.0b260219`.
 
-### 🟡 Durable workflow support for Azure Functions
+### 🔴 Unified Azure credential handling across all packages
 
-**PR:** [#3630](https://github.com/microsoft/agent-framework/pull/3630)
+**PR:** [#4088](https://github.com/microsoft/agent-framework/pull/4088)
 
-The `agent-framework-azurefunctions` package now supports running `Workflow` graphs on Azure Durable Functions. Pass a `workflow` parameter to `AgentFunctionApp` to automatically register agent entities, activity functions, and HTTP endpoints.
+The `ad_token`, `ad_token_provider`, and `get_entra_auth_token` parameters/helpers have been replaced with a unified `credential` parameter across all Azure-related Python packages. The new approach uses `azure.identity.get_bearer_token_provider` for automatic token caching and refresh.
 
+**Affected classes:** `AzureOpenAIChatClient`, `AzureOpenAIResponsesClient`, `AzureOpenAIAssistantsClient`, `AzureAIClient`, `AzureAIAgentClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentsProvider`, `AzureAISearchContextProvider`, `PurviewClient`, `PurviewPolicyMiddleware`, `PurviewChatPolicyMiddleware`.
+
+**Before:**
 ```python
-from agent_framework.azurefunctions import AgentFunctionApp
+from azure.identity import AzureCliCredential, get_bearer_token_provider
 
-app = AgentFunctionApp(workflow=my_workflow)
-# Automatically registers:
-#   POST /api/workflow/run          — start a workflow
-#   GET  /api/workflow/status/{id}  — check status
-#   POST /api/workflow/respond/{id}/{requestId} — HITL response
+token_provider = get_bearer_token_provider(
+    AzureCliCredential(), "https://cognitiveservices.azure.com/.default"
+)
+
+client = AzureOpenAIResponsesClient(
+    azure_ad_token_provider=token_provider,
+    ...
+)
 ```
 
-Supports fan-out/fan-in, shared state, and human-in-the-loop patterns with configurable timeout and automatic rejection on expiry.
+**After:**
+```python
+from azure.identity import AzureCliCredential
+
+client = AzureOpenAIResponsesClient(
+    credential=AzureCliCredential(),
+    ...
+)
+```
+
+The `credential` parameter accepts `TokenCredential`, `AsyncTokenCredential`, or a callable token provider. Token caching and refresh are handled automatically.
 
 ---
 
-### 🟡 OpenTelemetry trace context propagated to MCP requests
+### 🔴 Redesigned Python exception hierarchy
 
-**PR:** [#3780](https://github.com/microsoft/agent-framework/pull/3780)
+**PR:** [#4082](https://github.com/microsoft/agent-framework/pull/4082)
 
-When OpenTelemetry is installed, trace context (e.g., W3C `traceparent`) is automatically injected into MCP requests via `params._meta`. This enables end-to-end distributed tracing across agent → MCP server calls. No code changes needed — this is additive behavior that activates when a valid span context exists.
+The flat `ServiceException` family has been replaced with domain-scoped exception branches under a single `AgentFrameworkException` root. This gives callers precise `except` targets and clear error semantics.
+
+**New hierarchy:**
+
+```
+AgentFrameworkException
+├── AgentException
+│   ├── AgentInvalidAuthException
+│   ├── AgentInvalidRequestException
+│   ├── AgentInvalidResponseException
+│   └── AgentContentFilterException
+├── ChatClientException
+│   ├── ChatClientInvalidAuthException
+│   ├── ChatClientInvalidRequestException
+│   ├── ChatClientInvalidResponseException
+│   └── ChatClientContentFilterException
+├── IntegrationException
+│   ├── IntegrationInitializationError
+│   ├── IntegrationInvalidAuthException
+│   ├── IntegrationInvalidRequestException
+│   ├── IntegrationInvalidResponseException
+│   └── IntegrationContentFilterException
+├── ContentError
+├── WorkflowException
+│   ├── WorkflowRunnerException
+│   ├── WorkflowValidationError
+│   └── WorkflowActionError
+├── ToolExecutionException
+├── MiddlewareTermination
+└── SettingNotFoundError
+```
+
+**Removed exceptions:** `ServiceException`, `ServiceInitializationError`, `ServiceResponseException`, `ServiceContentFilterException`, `ServiceInvalidAuthError`, `ServiceInvalidExecutionSettingsError`, `ServiceInvalidRequestError`, `ServiceInvalidResponseError`, `AgentExecutionException`, `AgentInvocationError`, `AgentInitializationError`, `AgentSessionException`, `ChatClientInitializationError`, `CheckpointDecodingError`.
+
+**Before:**
+```python
+from agent_framework.exceptions import ServiceException, ServiceResponseException
+
+try:
+    result = await agent.run("Hello")
+except ServiceResponseException:
+    ...
+except ServiceException:
+    ...
+```
+
+**After:**
+```python
+from agent_framework.exceptions import AgentException, AgentInvalidResponseException, AgentFrameworkException
+
+try:
+    result = await agent.run("Hello")
+except AgentInvalidResponseException:
+    ...
+except AgentException:
+    ...
+except AgentFrameworkException:
+    # catch-all for any Agent Framework error
+    ...
+```
+
+> [!NOTE]
+> Init validation errors now use built-in `ValueError`/`TypeError` instead of custom exceptions. Agent Framework exceptions are reserved for domain-level failures.
+
+---
+
+### 🔴 Provider state scoped by `source_id`
+
+**PR:** [#3995](https://github.com/microsoft/agent-framework/pull/3995)
+
+Provider hooks now receive a provider-scoped state dictionary (`state.setdefault(provider.source_id, {})`) instead of the full session state. This means provider implementations that previously accessed nested state via `state[self.source_id]["key"]` must now access `state["key"]` directly.
+
+Additionally, `InMemoryHistoryProvider` default `source_id` changed from `"memory"` to `"in_memory"`.
+
+**Before:**
+```python
+# In a custom provider hook:
+async def on_before_agent(self, state: dict, **kwargs):
+    my_data = state[self.source_id]["my_key"]
+
+# InMemoryHistoryProvider default source_id
+provider = InMemoryHistoryProvider("memory")
+```
+
+**After:**
+```python
+# Provider hooks receive scoped state — no nested access needed:
+async def on_before_agent(self, state: dict, **kwargs):
+    my_data = state["my_key"]
+
+# InMemoryHistoryProvider default source_id changed
+provider = InMemoryHistoryProvider("in_memory")
+```
+
+---
+
+### 🔴 Chat/agent message typing alignment (`run` vs `get_response`)
+
+**PR:** [#3920](https://github.com/microsoft/agent-framework/pull/3920)
+
+Chat-client `get_response` implementations now consistently receive `Sequence[Message]`.
+`agent.run(...)` remains flexible (`str`, `Content`, `Message`, or sequences of those), and normalizes inputs before calling chat clients.
+
+**Before:**
+```python
+async def get_response(self, messages: str | Message | list[Message], **kwargs): ...
+```
+
+**After:**
+```python
+from collections.abc import Sequence
+from agent_framework import Message
+
+async def get_response(self, messages: Sequence[Message], **kwargs): ...
+```
+
+---
+
+### 🔴 `FunctionTool[Any]` generic setup removed for schema passthrough
+
+**PR:** [#3907](https://github.com/microsoft/agent-framework/pull/3907)
+
+Schema-based tool paths no longer rely on the previous `FunctionTool[Any]` generic behavior.
+Use `FunctionTool` directly and supply either a pydantic BaseModel or explicit schemas where needed (for example, with `@tool(schema=...)`).
+
+**Before:**
+```python
+placeholder: FunctionTool[Any] = FunctionTool(...)
+```
+
+**After:**
+```python
+placeholder: FunctionTool = FunctionTool(...)
+```
 
 ---
 
@@ -87,22 +236,31 @@ model_id = settings["model_id"]
 
 ---
 
-### 🔴 `FunctionTool[Any]` generic setup removed for schema passthrough
+### 🟡 Fix reasoning model workflow handoff and history serialization
 
-**PR:** [#3907](https://github.com/microsoft/agent-framework/pull/3907)
+**PR:** [#4083](https://github.com/microsoft/agent-framework/pull/4083)
 
-Schema-based tool paths no longer rely on the previous `FunctionTool[Any]` generic behavior.
-Use `FunctionTool` directly and supply either a pydantic BaseModel or explicit schemas where needed (for example, with `@tool(schema=...)`).
+Fixes multiple failures when using reasoning models (e.g., gpt-5-mini, gpt-5.2) in multi-agent workflows. Reasoning items from the Responses API are now correctly serialized and only included in history when a `function_call` is also present, preventing API errors. Encrypted/hidden reasoning content is now properly emitted, and the `summary` field format is corrected. The `service_session_id` is also cleared on handoff to prevent cross-agent state leakage.
 
-**Before:**
+---
+
+### 🟡 Bedrock added to `core[all]` and tool-choice defaults fixed
+
+**PR:** [#3953](https://github.com/microsoft/agent-framework/pull/3953)
+
+Amazon Bedrock is now included in the `agent-framework-core[all]` extras and is available via the `agent_framework.amazon` lazy import surface. Tool-choice behavior was also fixed: unset tool-choice values now remain unset so providers use their service defaults, while explicitly set values are preserved.
+
 ```python
-placeholder: FunctionTool[Any] = FunctionTool(...)
+from agent_framework.amazon import BedrockClient
 ```
 
-**After:**
-```python
-placeholder: FunctionTool = FunctionTool(...)
-```
+---
+
+### 🟡 AzureAIClient warns on unsupported runtime overrides
+
+**PR:** [#3919](https://github.com/microsoft/agent-framework/pull/3919)
+
+`AzureAIClient` now logs a warning when runtime `tools` or `structured_output` differ from the agent's creation-time configuration. The Azure AI Agent Service does not support runtime tool or response format changes — use `AzureOpenAIResponsesClient` instead if you need dynamic overrides.
 
 ---
 
@@ -120,75 +278,31 @@ workflow_agent = workflow.as_agent(name="MyWorkflowAgent")
 
 ---
 
-### 🟡 AzureAIClient warns on unsupported runtime overrides
+### 🟡 OpenTelemetry trace context propagated to MCP requests
 
-**PR:** [#3919](https://github.com/microsoft/agent-framework/pull/3919)
+**PR:** [#3780](https://github.com/microsoft/agent-framework/pull/3780)
 
-`AzureAIClient` now logs a warning when runtime `tools` or `structured_output` differ from the agent's creation-time configuration. The Azure AI Agent Service does not support runtime tool or response format changes — use `AzureOpenAIResponsesClient` instead if you need dynamic overrides.
-
----
-
-### 🔴 Chat/agent message typing alignment (`run` vs `get_response`)
-
-**PR:** [#3920](https://github.com/microsoft/agent-framework/pull/3920)
-
-Chat-client `get_response` implementations now consistently receive `Sequence[Message]`.
-`agent.run(...)` remains flexible (`str`, `Content`, `Message`, or sequences of those), and normalizes inputs before calling chat clients.
-
-**Before:**
-```python
-async def get_response(self, messages: str | Message | list[Message], **kwargs): ...
-```
-
-**After:**
-```python
-from collections.abc import Sequence
-from agent_framework import Message
-
-async def get_response(self, messages: Sequence[Message], **kwargs): ...
-```
+When OpenTelemetry is installed, trace context (e.g., W3C `traceparent`) is automatically injected into MCP requests via `params._meta`. This enables end-to-end distributed tracing across agent → MCP server calls. No code changes needed — this is additive behavior that activates when a valid span context exists.
 
 ---
 
-### 🟡 Bedrock added to `core[all]` and tool-choice defaults fixed
+### 🟡 Durable workflow support for Azure Functions
 
-**PR:** [#3953](https://github.com/microsoft/agent-framework/pull/3953)
+**PR:** [#3630](https://github.com/microsoft/agent-framework/pull/3630)
 
-Amazon Bedrock is now included in the `agent-framework-core[all]` extras and is available via the `agent_framework.amazon` lazy import surface. Tool-choice behavior was also fixed: unset tool-choice values now remain unset so providers use their service defaults, while explicitly set values are preserved.
+The `agent-framework-azurefunctions` package now supports running `Workflow` graphs on Azure Durable Functions. Pass a `workflow` parameter to `AgentFunctionApp` to automatically register agent entities, activity functions, and HTTP endpoints.
 
 ```python
-from agent_framework.amazon import BedrockClient
+from agent_framework.azurefunctions import AgentFunctionApp
+
+app = AgentFunctionApp(workflow=my_workflow)
+# Automatically registers:
+#   POST /api/workflow/run          — start a workflow
+#   GET  /api/workflow/status/{id}  — check status
+#   POST /api/workflow/respond/{id}/{requestId} — HITL response
 ```
 
----
-
-### 🔴 Provider state scoped by `source_id`
-
-**PR:** [#3995](https://github.com/microsoft/agent-framework/pull/3995)
-
-Provider hooks now receive a provider-scoped state dictionary (`state.setdefault(provider.source_id, {})`) instead of the full session state. This means provider implementations that previously accessed nested state via `state[self.source_id]["key"]` must now access `state["key"]` directly.
-
-Additionally, `InMemoryHistoryProvider` default `source_id` changed from `"memory"` to `"in_memory"`.
-
-**Before:**
-```python
-# In a custom provider hook:
-async def on_before_agent(self, state: dict, **kwargs):
-    my_data = state[self.source_id]["my_key"]
-
-# InMemoryHistoryProvider default source_id
-provider = InMemoryHistoryProvider("memory")
-```
-
-**After:**
-```python
-# Provider hooks receive scoped state — no nested access needed:
-async def on_before_agent(self, state: dict, **kwargs):
-    my_data = state["my_key"]
-
-# InMemoryHistoryProvider default source_id changed
-provider = InMemoryHistoryProvider("in_memory")
-```
+Supports fan-out/fan-in, shared state, and human-in-the-loop patterns with configurable timeout and automatic rejection on expiry.
 
 ---
 

@@ -119,7 +119,7 @@ pip install agent-framework-azure-ai --pre
 
 ### Authentication
 
-Azure AI Foundry Agents use Azure credentials for authentication. The simplest approach is to use `AzureCliCredential` after running `az login`:
+Azure AI Foundry Agents use Azure credentials for authentication. The simplest approach is to use `AzureCliCredential` after running `az login`. All Azure AI clients accept a unified `credential` parameter that supports `TokenCredential`, `AsyncTokenCredential`, or a callable token provider — token caching and refresh are handled automatically.
 
 ```python
 from azure.identity.aio import AzureCliCredential
@@ -142,7 +142,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).as_agent(
+        AzureAIAgentClient(credential=credential).as_agent(
             name="HelperAgent",
             instructions="You are a helpful assistant."
         ) as agent,
@@ -168,7 +168,7 @@ async def main():
         AzureAIAgentClient(
             project_endpoint="https://<your-project>.services.ai.azure.com/api/projects/<project-id>",
             model_deployment_name="gpt-4o-mini",
-            async_credential=credential,
+            credential=credential,
             agent_name="HelperAgent"
         ).as_agent(
             instructions="You are a helpful assistant."
@@ -197,7 +197,7 @@ async def main():
         AzureCliCredential() as credential,
         Agent(
             chat_client=AzureAIAgentClient(
-                async_credential=credential,
+                credential=credential,
                 agent_id="<existing-agent-id>"
             ),
             instructions="You are a helpful assistant."
@@ -288,7 +288,7 @@ def get_weather(
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).as_agent(
+        AzureAIAgentClient(credential=credential).as_agent(
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather
@@ -312,7 +312,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential) as client,
+        AzureAIAgentClient(credential=credential) as client,
         client.as_agent(
             name="CodingAgent",
             instructions="You are a helpful assistant that can write and execute Python code.",
@@ -337,7 +337,7 @@ from azure.identity.aio import AzureCliCredential
 async def main():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential).as_agent(
+        AzureAIAgentClient(credential=credential).as_agent(
             name="StreamingAgent",
             instructions="You are a helpful assistant."
         ) as agent,

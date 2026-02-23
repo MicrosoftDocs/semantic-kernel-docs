@@ -213,7 +213,7 @@ async def http_mcp_example():
             headers={"Authorization": "Bearer your-token"},
         ) as mcp_server,
         Agent(
-            chat_client=AzureAIAgentClient(async_credential=credential),
+            chat_client=AzureAIAgentClient(credential=credential),
             name="DocsAgent",
             instructions="You help with Microsoft documentation questions.",
         ) as agent,

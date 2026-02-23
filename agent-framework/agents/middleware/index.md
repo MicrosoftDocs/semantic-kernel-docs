@@ -375,7 +375,7 @@ from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 # Agent-level middleware: Applied to ALL runs of the agent
-async with AzureAIAgentClient(async_credential=credential).as_agent(
+async with AzureAIAgentClient(credential=credential).as_agent(
     name="WeatherAgent",
     instructions="You are a helpful weather assistant.",
     tools=get_weather,
