@@ -178,7 +178,7 @@ AZURE_OPENAI_API_VERSION="2024-10-21"  # Default API version
 AZURE_OPENAI_API_KEY="<your-api-key>"  # If not using Azure CLI authentication
 ```
 
-All clients use Azure credentials for authentication. The simplest approach is `AzureCliCredential` after running `az login`.
+All clients use Azure credentials for authentication. The simplest approach is `AzureCliCredential` after running `az login`. All Azure clients accept a unified `credential` parameter that supports `TokenCredential`, `AsyncTokenCredential`, or a callable token provider — token caching and refresh are handled automatically.
 
 ## Chat Completion Client
 

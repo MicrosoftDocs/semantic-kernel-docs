@@ -180,7 +180,7 @@ async def basic_foundry_mcp_example():
     """Basic example of Azure AI Foundry agent with hosted MCP tools."""
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential) as client,
+        AzureAIAgentClient(credential=credential) as client,
     ):
         # Create a hosted MCP tool using the client method
         learn_mcp = client.get_mcp_tool(
@@ -214,7 +214,7 @@ async def multi_tool_mcp_example():
     """Example using multiple hosted MCP tools."""
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential) as client,
+        AzureAIAgentClient(credential=credential) as client,
     ):
         # Create multiple MCP tools using the client method
         learn_mcp = client.get_mcp_tool(

@@ -233,7 +233,7 @@ Alternatively, you can use the convenience method on the chat client:
 from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity.aio import DefaultAzureCredential
 
-agent = AzureOpenAIResponsesClient(async_credential=DefaultAzureCredential(), project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"), deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME")).as_agent(
+agent = AzureOpenAIResponsesClient(credential=DefaultAzureCredential(), project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"), deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME")).as_agent(
     instructions="You are a helpful assistant"
 )
 ```
@@ -301,7 +301,7 @@ def get_weather(location: Annotated[str, "The location to get the weather for."]
 
 async with DefaultAzureCredential() as credential:
     agent = AzureOpenAIResponsesClient(
-        async_credential=credential,
+        credential=credential,
         project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
         deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"),
     ).as_agent(
