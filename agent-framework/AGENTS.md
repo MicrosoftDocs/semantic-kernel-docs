@@ -127,7 +127,7 @@ agent-framework/
 ### Source path conventions
 
 - Python samples: `~/../agent-framework-code/python/samples/<section>/<file>.py`
-- .NET samples: `~/../agent-framework-code/dotnet/samples/<section>/<file>.cs`
+- .NET samples: `~/../agent-framework-code/dotnet/samples/<section>/<project folder>/<file>.cs`
 
 The dependent repository alias (`agent-framework-code`) is configured in
 `.openpublishing.publish.config.json` under `dependent_repositories`.
