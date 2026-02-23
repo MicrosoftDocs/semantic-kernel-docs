@@ -68,7 +68,7 @@ Console.WriteLine(await agent.RunAsync("What is my name?", session));
 ```
 
 > [!TIP]
-> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/01-get-started/04_Memory.cs) for the complete runnable file.
+> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Agents/Agent_Step07_3rdPartyChatHistoryStorage) for a full runnable sample application.
 
 :::zone-end
 
