@@ -150,14 +150,14 @@ Forwarded properties contain arbitrary JSON that passes through the system. Trea
 
 AG-UI does not include built-in authorization mechanism. It is up to your application to prevent unauthorized use of the exposed AG-UI endpoint. 
 
-### Thread ID Management
+### Session ID Management
 
-Thread IDs identify conversation sessions. Implement proper validation to prevent unauthorized access.
+Session IDs identify conversation sessions. Implement proper validation to prevent unauthorized access.
 
 **Security considerations:**
-- Generate thread IDs server-side using cryptographically secure random values
-- Never allow clients to directly access arbitrary thread IDs
-- Verify thread ownership before processing requests
+- Generate Session IDs server-side using cryptographically secure random values
+- Never allow clients to directly access arbitrary Session IDs
+- Verify session ownership before processing requests
 
 ### Sensitive Data Filtering
 
