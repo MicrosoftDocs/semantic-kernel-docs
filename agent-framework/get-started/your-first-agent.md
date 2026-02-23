@@ -54,7 +54,7 @@ await foreach (var update in agent.RunStreamingAsync("Tell me a one-sentence fun
 ```
 
 > [!TIP]
-> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/01-get-started/01_HelloAgent.cs) for the complete runnable file.
+> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Agents/Agent_Step01_Running) for a full runnable sample application.
 
 :::zone-end
 
