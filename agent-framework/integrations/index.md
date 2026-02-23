@@ -77,7 +77,7 @@ Here is a list of existing providers that can be used.
 
 ## Retrieval Augmented Generation (RAG) AI Context Providers
 
-AI Context Providers are plugins for `ChatClientAgent` instances and can be used to add RAG capabilities to an agent. This is done by searching for relevant data based on the user input, and passing this data to the AI Service with the other inputs.
+AI Context Providers are plugins for `ChatClientAgent` instances and can be used to add RAG capabilities to an agent. This is done by searching for relevant data based on the user input, and passing this data to the AI service with the other inputs.
 
 Here is a list of existing providers that can be used.
 

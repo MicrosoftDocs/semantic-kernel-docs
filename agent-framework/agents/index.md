@@ -1,6 +1,6 @@
 ---
 title: Microsoft Agent Framework Agent Types
-titleSuffix: Azure AI Foundry
+titleSuffix: Microsoft Foundry
 description: Learn different Agent Framework agent types.
 ms.service: agent-framework
 ms.topic: tutorial
@@ -57,10 +57,10 @@ To make creating these agents even easier, Agent Framework provides helpers for 
 
 | Underlying inference service | Description | Service chat history storage supported | InMemory/Custom chat history storage supported |
 |------------------------------|-------------|----------------------------------------|------------------------------------------------|
-|[Azure AI Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Azure AI Foundry Agents Service as its backend.|Yes|No|
-|[Azure AI Foundry Models ChatCompletion](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via ChatCompletion.|No|Yes|
-|[Azure AI Foundry Models Responses](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Azure AI Foundry Service as its backend via Responses.|Yes|Yes|
-|[Azure AI Foundry Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Azure AI Foundry Anthropic Service as its backend.|No|Yes|
+|[Microsoft Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Foundry Agent Service as its backend.|Yes|No|
+|[Foundry Models ChatCompletion](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via ChatCompletion.|No|Yes|
+|[Foundry Models Responses](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via Responses.|Yes|Yes|
+|[Foundry Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Foundry Anthropic Service as its backend.|No|Yes|
 |[Azure OpenAI ChatCompletion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
 |[Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Anthropic Service as its backend.|No|Yes|
@@ -90,23 +90,23 @@ See the documentation for each agent type, for more information:
 
 ## Azure and OpenAI SDK Options Reference
 
-When using Azure AI Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each. Make sure to replace `<resource>` and `<project>` with your actual resource and project names.
+When using Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each. Make sure to replace `<resource>` and `<project>` with your actual resource and project names.
 
-| AI Service | SDK | Nuget | Url |
+| AI service | SDK | Nuget | Url |
 |------------------|-----|-------|-----|
-| [Azure AI Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
-| [Azure AI Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
-| [Azure AI Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
-| [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Persistent Agents SDK | [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
+| [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
+| [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
+| [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
+| [Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Persistent Agents SDK | [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
 | OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
 | [Azure AI Foundry Anthropic](/azure/ai-foundry/foundry-models/how-to/use-foundry-models-claude?view=foundry-classic) | Anthropic Foundry SDK | [Anthropic.Foundry](https://www.nuget.org/packages/Anthropic.Foundry) | Resource name required |
 | Anthropic | Anthropic SDK | [Anthropic](https://www.nuget.org/packages/Anthropic) | No url or resource name required |
 
-1. [Upgrading from Azure OpenAI to Azure AI Foundry](/azure/ai-foundry/how-to/upgrade-azure-openai)
+1. [Upgrading from Azure OpenAI to Foundry](/azure/ai-foundry/how-to/upgrade-azure-openai)
 1. We recommend using the OpenAI SDK.
-1. While we recommend using the OpenAI SDK to access Azure AI Foundry models, Azure AI Foundry Models support models from many different vendors, not just OpenAI. All these models are supported via the OpenAI SDK.
+1. While we recommend using the OpenAI SDK to access Foundry models, Foundry Models support models from many different vendors, not just OpenAI. All these models are supported via the OpenAI SDK.
 
 ### Using the OpenAI SDK
 
@@ -145,7 +145,7 @@ AIAgent agent = client
 
 ### Using the Azure OpenAI SDK
 
-This SDK can be used to connect to both Azure OpenAI and Azure AI Foundry Models services.
+This SDK can be used to connect to both Azure OpenAI and Foundry Models services.
 Either way, you will need to supply the correct service URL when creating the `AzureOpenAIClient`.
 See the table above for the correct URL to use.
 
@@ -159,7 +159,7 @@ AIAgent agent = new AzureOpenAIClient(
 
 ### Using the Azure AI Persistent Agents SDK
 
-This SDK is only supported with the Azure AI Foundry Agents service. See the table above for the correct URL to use.
+This SDK is only supported with the Agent Service. See the table above for the correct URL to use.
 
 ```csharp
 var persistentAgentsClient = new PersistentAgentsClient(serviceUrl, new DefaultAzureCredential());
@@ -247,7 +247,7 @@ For detailed examples, see the agent-specific documentation sections below.
 
 |Underlying Inference Service|Description|Service Chat History storage supported|
 |---|---|---|
-|[Azure AI Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Azure AI Agents Service as its backend.|Yes|
+|[Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Agent Service as its backend.|Yes|
 |[Azure OpenAI Chat Completion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|
 |[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|
 |[Azure OpenAI Assistants](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Assistants service.|Yes|

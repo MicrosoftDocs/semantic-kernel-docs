@@ -222,9 +222,9 @@ async def main():
 asyncio.run(main())
 ```
 
-### Responses Client with Azure AI Foundry project endpoint
+### Responses Client with Microsoft Foundry project endpoint
 
-`AzureOpenAIResponsesClient` can also be created from an Azure AI Foundry project endpoint:
+`AzureOpenAIResponsesClient` can also be created from a Foundry project endpoint:
 
 ```python
 from agent_framework.azure import AzureOpenAIResponsesClient

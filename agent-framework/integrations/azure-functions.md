@@ -33,7 +33,7 @@ Choose durable agents when you need:
 - **Event-driven orchestration**: Integrate with Azure Functions triggers (HTTP, timers, queues, etc.) and bindings for event-driven agent workflows
 - **Automatic conversation state**: Agent conversation history is automatically managed and persisted without requiring explicit state handling in your code
 
-This serverless hosting approach differs from managed service-based agent hosting (such as Azure AI Foundry Agent Service), which provides fully managed infrastructure without requiring you to deploy or manage Azure Functions apps. Durable agents are ideal when you need the flexibility of code-first deployment combined with the reliability of durable state management.
+This serverless hosting approach differs from managed service-based agent hosting (such as Foundry Agent Service), which provides fully managed infrastructure without requiring you to deploy or manage Azure Functions apps. Durable agents are ideal when you need the flexibility of code-first deployment combined with the reliability of durable state management.
 
 When hosted in the [Azure Functions Flex Consumption](/azure/azure-functions/flex-consumption-plan) hosting plan, agents can scale to thousands of instances or to zero instances when not in use, allowing you to pay only for the compute you need.
 

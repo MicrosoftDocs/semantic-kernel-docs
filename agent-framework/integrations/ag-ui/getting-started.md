@@ -33,7 +33,7 @@ Before you begin, ensure you have the following:
 - User has the `Cognitive Services OpenAI Contributor` role for the Azure OpenAI resource
 
 > [!NOTE]
-> These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Azure AI Foundry](/azure/ai-foundry/how-to/deploy-models-openai).
+> These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Microsoft Foundry](/azure/ai-foundry/how-to/deploy-models-openai).
 
 > [!NOTE]
 > These samples use `DefaultAzureCredential` for authentication. Make sure you're authenticated with Azure (e.g., via `az login`). For more information, see the [Azure Identity documentation](/dotnet/api/overview/azure/identity-readme).
@@ -370,7 +370,7 @@ Before you begin, ensure you have the following:
 - User has the `Cognitive Services OpenAI Contributor` role for the Azure OpenAI resource
 
 > [!NOTE]
-> These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Azure AI Foundry](/azure/ai-foundry/how-to/deploy-models-openai).
+> These samples use Azure OpenAI models. For more information, see [how to deploy Azure OpenAI models with Foundry](/azure/ai-foundry/how-to/deploy-models-openai).
 
 > [!NOTE]
 > These samples use `DefaultAzureCredential` for authentication. Make sure you're authenticated with Azure (e.g., via `az login`). For more information, see the [Azure Identity documentation](/python/api/azure-identity/azure.identity.defaultazurecredential).

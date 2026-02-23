@@ -19,7 +19,7 @@ Microsoft Agent Framework supports several types of agents to accommodate differ
 |----------|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Azure OpenAI](./azure-openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [OpenAI](./openai.md) | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| [Azure AI Foundry](./azure-ai-foundry.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Microsoft Foundry](./azure-ai-foundry.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Anthropic](./anthropic.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | [Ollama](./ollama.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | [GitHub Copilot](./github-copilot.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -39,7 +39,7 @@ The following providers are available for .NET:
 
 - **[Azure OpenAI](./azure-openai.md)** — Full-featured provider with chat completion, responses API, and tool support.
 - **[OpenAI](./openai.md)** — Direct OpenAI API access with chat completion and responses API.
-- **[Azure AI Foundry](./azure-ai-foundry.md)** — Persistent server-side agents with managed chat history.
+- **[Foundry](./azure-ai-foundry.md)** — Persistent server-side agents with managed chat history.
 - **[Anthropic](./anthropic.md)** — Claude models with function tools and streaming support.
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration with shell and file access.
@@ -56,7 +56,7 @@ Agent Framework supports many different inference services through chat clients.
 
 - **[Azure OpenAI](./azure-openai.md)** — Full-featured provider with Azure identity support.
 - **[OpenAI](./openai.md)** — Direct OpenAI API access.
-- **[Azure AI Foundry](./azure-ai-foundry.md)** — Persistent server-side agents with managed chat history.
+- **[Foundry](./azure-ai-foundry.md)** — Persistent server-side agents with managed chat history.
 - **[Anthropic](./anthropic.md)** — Claude models with extended thinking and hosted tools support.
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration.
