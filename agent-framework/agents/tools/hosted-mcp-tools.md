@@ -11,7 +11,7 @@ ms.service: agent-framework
 
 # Using MCP tools with Foundry Agents
 
-You can extend the capabilities of your Azure AI Foundry agent by connecting it to tools hosted on remote [Model Context Protocol (MCP)](/azure/ai-foundry/agents/how-to/tools/model-context-protocol) servers (bring your own MCP server endpoint).
+You can extend the capabilities of your Microsoft Foundry agent by connecting it to tools hosted on remote [Model Context Protocol (MCP)](/azure/ai-foundry/agents/how-to/tools/model-context-protocol) servers (bring your own MCP server endpoint).
 
 ## How to use the Model Context Protocol tool
 
@@ -19,7 +19,7 @@ This section explains how to create an AI agent using Azure Foundry (Azure AI) w
 
 ### Key Features
 
-- **Hosted MCP Server**: The MCP server is hosted and managed by Azure AI Foundry, eliminating the need to manage server infrastructure
+- **Hosted MCP Server**: The MCP server is hosted and managed by Foundry, eliminating the need to manage server infrastructure
 - **Persistent Agents**: Agents are created and stored server-side, allowing for stateful conversations
 - **Tool Approval Workflow**: Configurable approval mechanisms for MCP tool invocations
 
@@ -30,7 +30,7 @@ This section explains how to create an AI agent using Azure Foundry (Azure AI) w
 #### 1. Environment Setup
 
 The sample requires two environment variables:
-- `AZURE_FOUNDRY_PROJECT_ENDPOINT`: Your Azure AI Foundry project endpoint URL
+- `AZURE_FOUNDRY_PROJECT_ENDPOINT`: Your Foundry project endpoint URL
 - `AZURE_FOUNDRY_PROJECT_MODEL_ID`: The model deployment name (defaults to "gpt-4.1-mini")
 
 ```csharp
@@ -68,7 +68,7 @@ mcpTool.AllowedTools.Add("microsoft_docs_search");
 
 #### 4. Persistent Agent Creation
 
-The agent is created server-side using the Azure AI Foundry Persistent Agents SDK:
+The agent is created server-side using the Foundry Persistent Agents SDK:
 
 ```csharp
 var persistentAgentsClient = new PersistentAgentsClient(endpoint, new DefaultAzureCredential());
@@ -84,7 +84,7 @@ var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 This creates a persistent agent that:
-- Lives on the Azure AI Foundry service
+- Lives on the Foundry service
 - Has access to the specified MCP tools
 - Can maintain conversation state across multiple interactions
 
@@ -151,11 +151,11 @@ await persistentAgentsClient.Administration.DeleteAgentAsync(agent.Id);
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-Azure AI Foundry provides seamless integration with Model Context Protocol (MCP) servers through the Python Agent Framework. The service manages the MCP server hosting and execution, eliminating infrastructure management while providing secure, controlled access to external tools.
+Foundry provides seamless integration with Model Context Protocol (MCP) servers through the Python Agent Framework. The service manages the MCP server hosting and execution, eliminating infrastructure management while providing secure, controlled access to external tools.
 
 ### Environment Setup
 
-Configure your Azure AI Foundry project credentials through environment variables:
+Configure your Foundry project credentials through environment variables:
 
 ```python
 import os
@@ -169,7 +169,7 @@ os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"] = "gpt-4o-mini"  # Optional, defaul
 
 ### Basic MCP Integration
 
-Create an Azure AI Foundry agent with hosted MCP tools:
+Create a Foundry agent with hosted MCP tools:
 
 ```python
 import asyncio
@@ -177,7 +177,7 @@ from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 async def basic_foundry_mcp_example():
-    """Basic example of Azure AI Foundry agent with hosted MCP tools."""
+    """Basic example of Foundry agent with hosted MCP tools."""
     async with (
         AzureCliCredential() as credential,
         AzureAIAgentClient(credential=credential) as client,
@@ -245,7 +245,7 @@ if __name__ == "__main__":
     asyncio.run(multi_tool_mcp_example())
 ```
 
-The Python Agent Framework provides seamless integration with Azure AI Foundry's hosted MCP capabilities, enabling secure and scalable access to external tools while maintaining the flexibility and control needed for production applications.
+The Python Agent Framework provides seamless integration with Foundry's hosted MCP capabilities, enabling secure and scalable access to external tools while maintaining the flexibility and control needed for production applications.
 
 ### Complete example
 

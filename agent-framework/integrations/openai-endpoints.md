@@ -597,7 +597,7 @@ The `base_url` approach works with any server exposing the OpenAI Chat Completio
 | [Ollama](https://ollama.com/) | `http://localhost:11434/v1/` | Local inference, no API key needed |
 | [LM Studio](https://lmstudio.ai/) | `http://localhost:1234/v1/` | Local inference with GUI |
 | [vLLM](https://docs.vllm.ai/) | `http://localhost:8000/v1/` | High-throughput serving |
-| [Azure AI Foundry](https://ai.azure.com/) | Your deployment endpoint | Uses Azure credentials |
+| [Microsoft Foundry](https://ai.azure.com/) | Your deployment endpoint | Uses Azure credentials |
 | Hosted Agent Framework agents | Your agent endpoint | .NET agents exposed via `MapOpenAIChatCompletions` |
 
 > [!NOTE]

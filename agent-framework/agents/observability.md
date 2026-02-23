@@ -320,7 +320,7 @@ The following environment variables control Agent Framework observability:
 - `ENABLE_INSTRUMENTATION` - Default is `false`, set to `true` to enable OpenTelemetry instrumentation.
 - `ENABLE_SENSITIVE_DATA` - Default is `false`, set to `true` to enable logging of sensitive data (prompts, responses, function call arguments, and results). Be careful with this setting as it might expose sensitive data.
 - `ENABLE_CONSOLE_EXPORTERS` - Default is `false`, set to `true` to enable console output for telemetry.
-- `VS_CODE_EXTENSION_PORT` - Port for AI Toolkit or Azure AI Foundry VS Code extension integration.
+- `VS_CODE_EXTENSION_PORT` - Port for AI Toolkit or Microsoft Foundry VS Code extension integration.
 
 > [!NOTE]
 > Sensitive information includes prompts, responses, and more, and should only be enabled in development or test environments. It is not recommended to enable this in production as it may expose sensitive data.
@@ -357,7 +357,7 @@ pip install azure-monitor-opentelemetry
 ```
 
 #### Configure observability directly from the `AzureAIClient`:
-For Azure AI Foundry projects, you can configure observability directly from the `AzureAIClient`:
+For Foundry projects, you can configure observability directly from the `AzureAIClient`:
 
 ```python
 from agent_framework.azure import AzureAIClient
@@ -379,7 +379,7 @@ async def main():
 
 
 #### Configure azure monitor and optionally enable instrumentation:
-For non-Azure AI projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](/azure/ai-foundry/control-plane/register-custom-agent).
+For non-Foundry projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](/azure/ai-foundry/control-plane/register-custom-agent).
 
 Then run your agent with the same _OpenTelemetry agent ID_ as registered in Foundry, and configure azure monitor as follows:
 

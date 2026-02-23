@@ -56,7 +56,7 @@ an empty `Kernel` if not provided.
  ChatCompletionAgent agent = new() { Instructions = ParrotInstructions, Kernel = kernel };
 ```
 
-Azure AI Foundry requires an agent resource to be created in the cloud before creating a local agent class that uses it.
+Microsoft Foundry requires an agent resource to be created in the cloud before creating a local agent class that uses it.
 
 ```csharp
 PersistentAgentsClient azureAgentClient = AzureAIAgent.CreateAgentsClient(azureEndpoint, new DefaultAzureCredential());
@@ -295,7 +295,7 @@ Semantic Kernel provides specific agent classes for various services, for exampl
 
 - `ChatCompletionAgent` for use with chat-completion-based inference services.
 - `OpenAIAssistantAgent` for use with the OpenAI Assistants service.
-- `AzureAIAgent` for use with the Azure AI Foundry Agents service.
+- `AzureAIAgent` for use with the Foundry Agent Service.
 
 ### Agent Framework
 
@@ -324,9 +324,9 @@ from semantic_kernel.agents import ChatCompletionAgent
 ### Agent Framework
 
 Agent Framework package is installed as `agent-framework` and imported as `agent_framework`.
-Agent Framework is built up differently, it has a core package `agent-framework-core` that contains the core functionality, and then there are multiple packages that rely on that core package, such as `agent-framework-azure-ai`, `agent-framework-mem0`, `agent-framework-copilotstudio`, etc. When you run `pip install agent-framework --pre` it will install the core package and *all* packages, so that you can get started with all the features quickly. When you are ready to reduce the number of packages because you know what you need, you can install only the packages you need, so for instance if you only plan to use Azure AI Foundry and Mem0 you can install only those two packages: `pip install agent-framework-azure-ai agent-framework-mem0 --pre`, `agent-framework-core` is a dependency to those two, so will automatically be installed.
+Agent Framework is built up differently, it has a core package `agent-framework-core` that contains the core functionality, and then there are multiple packages that rely on that core package, such as `agent-framework-azure-ai`, `agent-framework-mem0`, `agent-framework-copilotstudio`, etc. When you run `pip install agent-framework --pre` it will install the core package and *all* packages, so that you can get started with all the features quickly. When you are ready to reduce the number of packages because you know what you need, you can install only the packages you need, so for instance if you only plan to use Foundry and Mem0 you can install only those two packages: `pip install agent-framework-azure-ai agent-framework-mem0 --pre`, `agent-framework-core` is a dependency to those two, so will automatically be installed.
 
-Even though the packages are split up, the imports are all from `agent_framework`, or it's modules. So for instance to import the client for Azure AI Foundry you would do:
+Even though the packages are split up, the imports are all from `agent_framework`, or it's modules. So for instance to import the client for Foundry you would do:
 
 ```python
 from agent_framework.azure import AzureAIAgentClient
@@ -346,7 +346,7 @@ Semantic Kernel provides specific agent classes for various services, for exampl
 
 ### Agent Framework
 
-In Agent Framework, the majority of agents are built using the `Agent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
+In Agent Framework, the majority of agents are built using the `Agent` which can be used with all the `ChatClient` based services, such as Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
 
 All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `SupportsAgentRun` (`from agent_framework import SupportsAgentRun`) interface.
 
@@ -412,7 +412,7 @@ thread = agent.get_new_thread()
 
 A thread is then created in one of three ways:
 
-1. If the agent has a `thread_id` (or `conversation_id` or something similar) set, it will create a thread in the underlying service with that ID. Once a thread has a `service_thread_id`, you can no longer use it to store messages in memory. This only applies to agents that have a service-side thread concept. such as Azure AI Foundry Agents and OpenAI Assistants.
+1. If the agent has a `thread_id` (or `conversation_id` or something similar) set, it will create a thread in the underlying service with that ID. Once a thread has a `service_thread_id`, you can no longer use it to store messages in memory. This only applies to agents that have a service-side thread concept. such as Foundry Agents and OpenAI Assistants.
 2. If the agent has a `chat_message_store_factory` set, it will use that factory to create a message store and use that to create an in-memory thread. It can then no longer be used with a agent with the `store` parameter set to `True`.
 3. If neither of the previous settings is set, it's considered `uninitialized` and depending on how it is used, it will either become a in-memory thread or a service thread.
 

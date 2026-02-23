@@ -381,7 +381,7 @@ If you persist checkpoints between versions, regenerate or migrate existing chec
 
 ---
 
-### 🟡 `AzureOpenAIResponsesClient` supports Azure AI Foundry project endpoints
+### 🟡 `AzureOpenAIResponsesClient` supports Microsoft Foundry project endpoints
 
 **PR:** [#3814](https://github.com/microsoft/agent-framework/pull/3814)
 
@@ -1640,7 +1640,7 @@ No significant changes in this release.
 | 1.0.0b260212 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260212) | 🔴 Breaking | `Hosted*Tool` classes removed; create hosted tools via client `get_*_tool()` methods | [#3634](https://github.com/microsoft/agent-framework/pull/3634) |
 | 1.0.0b260212 | | 🔴 Breaking | Session/context provider pipeline finalized: `AgentThread` removed, use `AgentSession` + `context_providers` | [#3850](https://github.com/microsoft/agent-framework/pull/3850) |
 | 1.0.0b260212 | | 🔴 Breaking | Checkpoint model/storage refactor (`workflow_id` removed, `previous_checkpoint_id` added, storage behavior changed) | [#3744](https://github.com/microsoft/agent-framework/pull/3744) |
-| 1.0.0b260212 | | 🟡 Enhancement | `AzureOpenAIResponsesClient` can be created from Azure AI Foundry project endpoint or `AIProjectClient` | [#3814](https://github.com/microsoft/agent-framework/pull/3814) |
+| 1.0.0b260212 | | 🟡 Enhancement | `AzureOpenAIResponsesClient` can be created from Foundry project endpoint or `AIProjectClient` | [#3814](https://github.com/microsoft/agent-framework/pull/3814) |
 | 1.0.0b260212 | | 🔴 Breaking | Middleware continuation no longer accepts `context`; update `call_next(context)` to `call_next()` | [#3829](https://github.com/microsoft/agent-framework/pull/3829) |
 | 1.0.0b260210 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0b260210) | 🔴 Breaking | `send_responses()`/`send_responses_streaming()` removed; use `workflow.run(responses=...)` | [#3720](https://github.com/microsoft/agent-framework/pull/3720) |
 | 1.0.0b260210 | | 🔴 Breaking | `SharedState` → `State`; workflow state APIs are synchronous and checkpoint state field renamed | [#3667](https://github.com/microsoft/agent-framework/pull/3667) |

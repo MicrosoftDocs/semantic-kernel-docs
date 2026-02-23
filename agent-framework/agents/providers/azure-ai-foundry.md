@@ -1,6 +1,6 @@
 ---
-title: Azure AI Foundry Agents
-description: Learn how to use Microsoft Agent Framework with Azure AI Foundry Agents service.
+title: Microsoft Foundry Agents
+description: Learn how to use Microsoft Agent Framework with Foundry Agent Service.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -9,9 +9,9 @@ ms.date: 02/17/2026
 ms.service: agent-framework
 ---
 
-# Azure AI Foundry Agents
+# Microsoft Foundry Agents
 
-Microsoft Agent Framework supports creating agents that use the [Azure AI Foundry Agents](/azure/ai-foundry/agents/overview) service. You can create persistent service-based agent instances with service-managed chat history.
+Microsoft Agent Framework supports creating agents that use the [Foundry Agent Service](/azure/ai-foundry/agents/overview). You can create persistent service-based agent instances with service-managed chat history.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -24,9 +24,9 @@ dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.AzureAI.Persistent --prerelease
 ```
 
-## Create Azure AI Foundry Agents
+## Create Foundry Agents
 
-As a first step you need to create a client to connect to the Azure AI Foundry Agents service.
+As a first step you need to create a client to connect to the Agent Service.
 
 ```csharp
 using System;
@@ -42,7 +42,7 @@ var persistentAgentsClient = new PersistentAgentsClient(
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-To use the Azure AI Foundry Agents service, you need create an agent resource in the service.
+To use the Agent Service, you need create an agent resource in the service.
 This can be done using either the Azure.AI.Agents.Persistent SDK or using Microsoft Agent Framework helpers.
 
 ### Using the Persistent SDK
@@ -74,9 +74,9 @@ AIAgent agent2 = await persistentAgentsClient.CreateAIAgentAsync(
     instructions: "You are good at telling jokes.");
 ```
 
-## Reusing Azure AI Foundry Agents
+## Reusing Foundry Agents
 
-You can reuse existing Azure AI Foundry Agents by retrieving them using their IDs.
+You can reuse existing Foundry Agents by retrieving them using their IDs.
 
 ```csharp
 AIAgent agent3 = await persistentAgentsClient.GetAIAgentAsync("<agent-id>");
@@ -98,7 +98,7 @@ For more information on how to run and interact with agents, see the [Agent gett
 
 ### Environment Variables
 
-Before using Azure AI Foundry Agents, you need to set up these environment variables:
+Before using Foundry Agents, you need to set up these environment variables:
 
 ```bash
 export AZURE_AI_PROJECT_ENDPOINT="https://<your-project>.services.ai.azure.com/api/projects/<project-id>"
@@ -119,7 +119,7 @@ pip install agent-framework-azure-ai --pre
 
 ### Authentication
 
-Azure AI Foundry Agents use Azure credentials for authentication. The simplest approach is to use `AzureCliCredential` after running `az login`. All Azure AI clients accept a unified `credential` parameter that supports `TokenCredential`, `AsyncTokenCredential`, or a callable token provider — token caching and refresh are handled automatically.
+Foundry Agents use Azure credentials for authentication. The simplest approach is to use `AzureCliCredential` after running `az login`. All Azure AI clients accept a unified `credential` parameter that supports `TokenCredential`, `AsyncTokenCredential`, or a callable token provider — token caching and refresh are handled automatically.
 
 ```python
 from azure.identity.aio import AzureCliCredential
@@ -128,7 +128,7 @@ async with AzureCliCredential() as credential:
     # Use credential with Azure AI agent client
 ```
 
-## Create Azure AI Foundry Agents
+## Create Foundry Agents
 
 ### Basic Agent Creation
 
@@ -180,11 +180,11 @@ async def main():
 asyncio.run(main())
 ```
 
-## Using Existing Azure AI Foundry Agents
+## Using Existing Foundry Agents
 
 ### Using an Existing Agent by ID
 
-If you have an existing agent in Azure AI Foundry, you can use it by providing its ID:
+If you have an existing agent in Foundry, you can use it by providing its ID:
 
 ```python
 import asyncio
@@ -270,7 +270,7 @@ Use `rai_config` to apply a configured RAI policy:
 
 ### Function Tools
 
-You can provide custom function tools to Azure AI Foundry agents:
+You can provide custom function tools to Foundry agents:
 
 ```python
 import asyncio
@@ -302,7 +302,7 @@ asyncio.run(main())
 
 ### Code Interpreter
 
-Azure AI Foundry agents support code execution through the hosted code interpreter:
+Foundry agents support code execution through the hosted code interpreter:
 
 ```python
 import asyncio
@@ -362,4 +362,4 @@ For more information on how to run and interact with agents, see the [Agent gett
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Azure AI Foundry Models based Agents](./azure-ai-foundry.md)
+> [Foundry Models based Agents](./azure-ai-foundry.md)

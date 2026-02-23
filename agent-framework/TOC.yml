@@ -92,7 +92,7 @@ items:
       href: agents/providers/azure-openai.md
     - name: OpenAI
       href: agents/providers/openai.md
-    - name: Azure AI Foundry
+    - name: Microsoft Foundry
       href: agents/providers/azure-ai-foundry.md
     - name: Anthropic
       href: agents/providers/anthropic.md
