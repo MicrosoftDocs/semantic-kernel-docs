@@ -924,6 +924,8 @@ Invokes a tool on an MCP (Model Context Protocol) server.
   toolName: microsoft_docs_search
   conversationId: =System.ConversationId
   requireApproval: false
+  headers:
+    X-Custom-Header: custom-value
   arguments:
     query: =Local.SearchQuery
   output:
@@ -931,20 +933,20 @@ Invokes a tool on an MCP (Model Context Protocol) server.
     result: Local.SearchResults
 ```
 
-With custom headers for authenticated MCP servers:
+
+With connection name for hosted scenarios:
 
 ```yaml
 - kind: InvokeMcpTool
-  id: invoke_azure_mcp
-  displayName: Get model details
+  id: invoke_hosted_mcp
   serverUrl: https://mcp.ai.azure.com
-  serverLabel: azure_mcp_server
-  toolName: model_details_get
-  conversationId: =System.ConversationId
-  arguments:
-    modelName: =Local.modelName
+  toolName: my_tool
+  # Connection name is used in hosted scenarios to connect to a ProjectConnectionId in Foundry.
+  # Note: This feature is not fully supported yet.
+  connection:
+    name: my-foundry-connection
   output:
-    result: Local.ModelDetails
+    result: Local.ToolResult
 ```
 
 **Properties:**
@@ -958,7 +960,7 @@ With custom headers for authenticated MCP servers:
 | `requireApproval` | No | Whether to require user approval |
 | `arguments` | No | Arguments to pass to the tool |
 | `headers` | No | Custom HTTP headers for the request |
-| `connection.name` | No | Named connection configuration |
+| `connection.name` | No | Named connection for hosted scenarios (connects to ProjectConnectionId in Foundry; not fully supported yet) |
 | `output.result` | No | Path to store tool result |
 | `output.messages` | No | Path to store result messages |
 | `output.autoSend` | No | Automatically send result to user |
