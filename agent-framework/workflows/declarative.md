@@ -35,34 +35,69 @@ With declarative workflows, you describe *what* your workflow should do rather t
 | Maximum flexibility and control | Programmatic |
 | Integration with existing Python code | Programmatic |
 
+## Basic YAML Structure
+
+The YAML structure differs slightly between C# and Python implementations. See the language-specific sections below for details.
+
+## Action Types
+
+Declarative workflows support various action types. The following table shows availability by language:
+
+| Category | Actions | C# | Python |
+|----------|---------|-----|--------|
+| Variable Management | `SetVariable`, `SetMultipleVariables`, `ResetVariable` | ✅ | ✅ |
+| Variable Management | `AppendValue` | ❌ | ✅ |
+| Variable Management | `SetTextVariable`, `ClearAllVariables`, `ParseValue`, `EditTableV2` | ✅ | ❌ |
+| Control Flow | `If`, `ConditionGroup`, `Foreach`, `BreakLoop`, `ContinueLoop`, `GotoAction` | ✅ | ✅ |
+| Control Flow | `RepeatUntil` | ❌ | ✅ |
+| Output | `SendActivity` | ✅ | ✅ |
+| Output | `EmitEvent` | ❌ | ✅ |
+| Agent Invocation | `InvokeAzureAgent` | ✅ | ✅ |
+| Tool Invocation | `InvokeFunctionTool`, `InvokeMcpTool` | ✅ | ❌ |
+| Human-in-the-Loop | `Question`, `RequestExternalInput` | ✅ | ✅ |
+| Human-in-the-Loop | `Confirmation`, `WaitForInput` | ❌ | ✅ |
+| Workflow Control | `EndWorkflow`, `EndConversation`, `CreateConversation` | ✅ | ✅ |
+| Conversation | `AddConversationMessage`, `CopyConversationMessages`, `RetrieveConversationMessage`, `RetrieveConversationMessages` | ✅ | ❌ |
+
 ::: zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> Documentation for declarative workflows in .NET is coming soon. Please check back for updates.
+### C# YAML Structure
+
+C# declarative workflows use a trigger-based structure:
+
+```yaml
+#
+# Workflow description as a comment
+#
+kind: Workflow
+trigger:
+
+  kind: OnConversationStart
+  id: my_workflow
+  actions:
+  
+    - kind: ActionType
+      id: unique_action_id
+      displayName: Human readable name
+      # Action-specific properties
+```
+
+### Structure Elements
+
+| Element | Required | Description |
+|---------|----------|-------------|
+| `kind` | Yes | Must be `Workflow` |
+| `trigger.kind` | Yes | Trigger type (typically `OnConversationStart`) |
+| `trigger.id` | Yes | Unique identifier for the workflow |
+| `trigger.actions` | Yes | List of actions to execute |
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-## Prerequisites
+### Python YAML Structure
 
-Before you begin, ensure you have:
-
-- Python 3.10 - 3.13 (Python 3.14 is not yet supported due to PowerFx compatibility)
-- The Agent Framework declarative package installed:
-
-```bash
-pip install agent-framework-declarative --pre
-```
-
-This package pulls in the underlying `agent-framework-core` automatically.
-
-- Basic familiarity with YAML syntax
-- Understanding of [workflow concepts](./index.md)
-
-## Basic YAML Structure
-
-A declarative workflow consists of a few key elements:
+Python declarative workflows use a name-based structure with optional inputs:
 
 ```yaml
 name: my-workflow
@@ -88,6 +123,1309 @@ actions:
 | `description` | No | Human-readable description |
 | `inputs` | No | Input parameters the workflow accepts |
 | `actions` | Yes | List of actions to execute |
+
+::: zone-end
+
+::: zone pivot="programming-language-csharp"
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- .NET 8.0 or later
+- An [Azure AI Foundry](https://ai.azure.com/) project with at least one deployed agent
+- The following NuGet packages installed:
+
+```bash
+dotnet add package Microsoft.Agents.AI.Workflows.Declarative --prerelease
+dotnet add package Microsoft.Agents.AI.Workflows.Declarative.AzureAI --prerelease
+```
+
+- Basic familiarity with YAML syntax
+- Understanding of [workflow concepts](./index.md)
+
+## Your First Declarative Workflow
+
+Let's create a simple workflow that greets a user based on their input.
+
+### Step 1: Create the YAML File
+
+Create a file named `greeting-workflow.yaml`:
+
+```yaml
+#
+# This workflow demonstrates a simple greeting based on user input.
+# The user's message is captured via System.LastMessage.
+#
+# Example input: 
+# Alice
+#
+kind: Workflow
+trigger:
+
+  kind: OnConversationStart
+  id: greeting_workflow
+  actions:
+
+    # Capture the user's input from the last message
+    - kind: SetVariable
+      id: capture_name
+      displayName: Capture user name
+      variable: Local.userName
+      value: =System.LastMessage.Text
+
+    # Set a greeting prefix
+    - kind: SetVariable
+      id: set_greeting
+      displayName: Set greeting prefix
+      variable: Local.greeting
+      value: Hello
+
+    # Build the full message using an expression
+    - kind: SetVariable
+      id: build_message
+      displayName: Build greeting message
+      variable: Local.message
+      value: =Concat(Local.greeting, ", ", Local.userName, "!")
+
+    # Send the greeting to the user
+    - kind: SendActivity
+      id: send_greeting
+      displayName: Send greeting to user
+      activity: =Local.message
+```
+
+### Step 2: Configure the Agent Provider
+
+Create a C# console application to execute the workflow. First, configure the agent provider that connects to Azure AI Foundry:
+
+```csharp
+using Azure.Identity;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Declarative;
+using Microsoft.Extensions.Configuration;
+
+// Load configuration (endpoint should be set in user secrets or environment variables)
+IConfiguration configuration = new ConfigurationBuilder()
+    .AddUserSecrets<Program>()
+    .AddEnvironmentVariables()
+    .Build();
+
+string foundryEndpoint = configuration["FOUNDRY_PROJECT_ENDPOINT"] 
+    ?? throw new InvalidOperationException("FOUNDRY_PROJECT_ENDPOINT not configured");
+
+// Create the agent provider that connects to Azure AI Foundry
+// WARNING: DefaultAzureCredential is convenient for development but requires 
+// careful consideration in production environments.
+AzureAgentProvider agentProvider = new(
+    new Uri(foundryEndpoint), 
+    new DefaultAzureCredential());
+```
+
+### Step 3: Build and Run the Workflow
+
+```csharp
+// Define workflow options with the agent provider
+DeclarativeWorkflowOptions options = new(agentProvider)
+{
+    Configuration = configuration,
+    // LoggerFactory = loggerFactory, // Optional: Enable logging
+    // ConversationId = conversationId, // Optional: Continue existing conversation
+};
+
+// Build the workflow from the YAML file
+string workflowPath = Path.Combine(AppContext.BaseDirectory, "greeting-workflow.yaml");
+Workflow workflow = DeclarativeWorkflowBuilder.Build<string>(workflowPath, options);
+
+Console.WriteLine($"Loaded workflow from: {workflowPath}");
+Console.WriteLine(new string('-', 40));
+
+// Create a checkpoint manager (in-memory for this example)
+CheckpointManager checkpointManager = CheckpointManager.CreateInMemory();
+
+// Execute the workflow with input
+string input = "Alice";
+StreamingRun run = await InProcessExecution.RunStreamingAsync(
+    workflow, 
+    input, 
+    checkpointManager);
+
+// Process workflow events
+await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync())
+{
+    switch (workflowEvent)
+    {
+        case MessageActivityEvent activityEvent:
+            Console.WriteLine($"Activity: {activityEvent.Message}");
+            break;
+        case AgentResponseEvent responseEvent:
+            Console.WriteLine($"Response: {responseEvent.Response.Text}");
+            break;
+        case WorkflowErrorEvent errorEvent:
+            Console.WriteLine($"Error: {errorEvent.Data}");
+            break;
+    }
+}
+
+Console.WriteLine("Workflow completed!");
+```
+
+### Expected Output
+
+```
+Loaded workflow from: C:\path\to\greeting-workflow.yaml
+----------------------------------------
+Activity: Hello, Alice!
+Workflow completed!
+```
+
+## Core Concepts
+
+### Variable Namespaces
+
+Declarative workflows in C# use namespaced variables to organize state:
+
+| Namespace | Description | Example |
+|-----------|-------------|---------|
+| `Local.*` | Variables local to the workflow | `Local.message` |
+| `System.*` | System-provided values | `System.ConversationId`, `System.LastMessage` |
+
+> [!NOTE]
+> C# declarative workflows do not use `Workflow.Inputs` or `Workflow.Outputs` namespaces. Input is received via `System.LastMessage` and output is sent via `SendActivity` actions.
+
+#### System Variables
+
+| Variable | Description |
+|----------|-------------|
+| `System.ConversationId` | Current conversation identifier |
+| `System.LastMessage` | The most recent user message |
+| `System.LastMessage.Text` | Text content of the last message |
+
+### Expression Language
+
+Values prefixed with `=` are evaluated as expressions using the PowerFx expression language:
+
+```yaml
+# Literal value (no evaluation)
+value: Hello
+
+# Expression (evaluated at runtime)
+value: =Concat("Hello, ", Local.userName)
+
+# Access last message text
+value: =System.LastMessage.Text
+```
+
+Common functions include:
+- `Concat(str1, str2, ...)` - Concatenate strings
+- `If(condition, trueValue, falseValue)` - Conditional expression
+- `IsBlank(value)` - Check if value is empty
+- `Upper(text)` / `Lower(text)` - Case conversion
+- `Find(searchText, withinText)` - Find text within string
+- `MessageText(message)` - Extract text from a message object
+- `UserMessage(text)` - Create a user message from text
+- `AgentMessage(text)` - Create an agent message from text
+
+### Configuration Options
+
+The `DeclarativeWorkflowOptions` class provides configuration for workflow execution:
+
+```csharp
+DeclarativeWorkflowOptions options = new(agentProvider)
+{
+    // Application configuration for variable substitution
+    Configuration = configuration,
+    
+    // Continue an existing conversation (optional)
+    ConversationId = "existing-conversation-id",
+    
+    // Enable logging (optional)
+    LoggerFactory = loggerFactory,
+    
+    // MCP tool handler for InvokeMcpTool actions (optional)
+    McpToolHandler = mcpToolHandler,
+    
+    // PowerFx expression limits (optional)
+    MaximumCallDepth = 50,
+    MaximumExpressionLength = 10000,
+    
+    // Telemetry configuration (optional)
+    ConfigureTelemetry = opts => { /* configure telemetry */ },
+    TelemetryActivitySource = activitySource,
+};
+```
+
+### Agent Provider Setup
+
+The `AzureAgentProvider` connects your workflow to Azure AI Foundry agents:
+
+```csharp
+using Azure.Identity;
+using Microsoft.Agents.AI.Workflows.Declarative;
+
+// Create the agent provider with Azure credentials
+AzureAgentProvider agentProvider = new(
+    new Uri("https://your-project.api.azureml.ms"), 
+    new DefaultAzureCredential())
+{
+    // Optional: Define functions that agents can automatically invoke
+    Functions = [
+        AIFunctionFactory.Create(myPlugin.GetData),
+        AIFunctionFactory.Create(myPlugin.ProcessItem),
+    ],
+    
+    // Optional: Allow concurrent function invocation
+    AllowConcurrentInvocation = true,
+    
+    // Optional: Allow multiple tool calls per response
+    AllowMultipleToolCalls = true,
+};
+```
+
+### Workflow Execution
+
+Use `InProcessExecution` to run workflows and handle events:
+
+```csharp
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Checkpointing;
+
+// Create checkpoint manager (choose in-memory or file-based)
+CheckpointManager checkpointManager = CheckpointManager.CreateInMemory();
+// Or persist to disk:
+// var checkpointFolder = Directory.CreateDirectory("./checkpoints");
+// var checkpointManager = CheckpointManager.CreateJson(
+//     new FileSystemJsonCheckpointStore(checkpointFolder));
+
+// Start workflow execution
+StreamingRun run = await InProcessExecution.RunStreamingAsync(
+    workflow, 
+    input, 
+    checkpointManager);
+
+// Process events as they occur
+await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync())
+{
+    switch (workflowEvent)
+    {
+        case MessageActivityEvent activity:
+            Console.WriteLine($"Message: {activity.Message}");
+            break;
+            
+        case AgentResponseUpdateEvent streamEvent:
+            Console.Write(streamEvent.Update.Text); // Streaming text
+            break;
+            
+        case AgentResponseEvent response:
+            Console.WriteLine($"Agent: {response.Response.Text}");
+            break;
+            
+        case RequestInfoEvent request:
+            // Handle external input requests (human-in-the-loop)
+            var userInput = await GetUserInputAsync(request);
+            await run.SendResponseAsync(request.Request.CreateResponse(userInput));
+            break;
+            
+        case SuperStepCompletedEvent checkpoint:
+            // Checkpoint created - can resume from here if needed
+            var checkpointInfo = checkpoint.CompletionInfo?.Checkpoint;
+            break;
+            
+        case WorkflowErrorEvent error:
+            Console.WriteLine($"Error: {error.Data}");
+            break;
+    }
+}
+```
+
+### Resuming from Checkpoints
+
+Workflows can be resumed from checkpoints for fault tolerance:
+
+```csharp
+// Save checkpoint info when workflow yields
+CheckpointInfo? lastCheckpoint = null;
+
+await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync())
+{
+    if (workflowEvent is SuperStepCompletedEvent checkpointEvent)
+    {
+        lastCheckpoint = checkpointEvent.CompletionInfo?.Checkpoint;
+    }
+}
+
+// Later: Resume from the saved checkpoint
+if (lastCheckpoint is not null)
+{
+    // Recreate the workflow (can be on a different machine)
+    Workflow workflow = DeclarativeWorkflowBuilder.Build<string>(workflowPath, options);
+    
+    StreamingRun resumedRun = await InProcessExecution.ResumeStreamingAsync(
+        workflow, 
+        lastCheckpoint, 
+        checkpointManager);
+    
+    // Continue processing events...
+}
+```
+
+## Actions Reference
+
+Actions are the building blocks of declarative workflows. Each action performs a specific operation, and actions are executed sequentially in the order they appear in the YAML file.
+
+### Action Structure
+
+All actions share common properties:
+
+```yaml
+- kind: ActionType      # Required: The type of action
+  id: unique_id         # Optional: Unique identifier for referencing
+  displayName: Name     # Optional: Human-readable name for logging
+  # Action-specific properties...
+```
+
+### Variable Management Actions
+
+#### SetVariable
+
+Sets a variable to a specified value.
+
+```yaml
+- kind: SetVariable
+  id: set_greeting
+  displayName: Set greeting message
+  variable: Local.greeting
+  value: Hello World
+```
+
+With an expression:
+
+```yaml
+- kind: SetVariable
+  variable: Local.fullName
+  value: =Concat(Local.firstName, " ", Local.lastName)
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variable` | Yes | Variable path (e.g., `Local.name`, `Workflow.Outputs.result`) |
+| `value` | Yes | Value to set (literal or expression) |
+
+#### SetMultipleVariables
+
+Sets multiple variables in a single action.
+
+```yaml
+- kind: SetMultipleVariables
+  id: initialize_vars
+  displayName: Initialize variables
+  variables:
+    Local.counter: 0
+    Local.status: pending
+    Local.message: =Concat("Processing order ", Local.orderId)
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variables` | Yes | Map of variable paths to values |
+
+#### SetTextVariable (C# only)
+
+Sets a text variable to a specified string value.
+
+```yaml
+- kind: SetTextVariable
+  id: set_text
+  displayName: Set text content
+  variable: Local.description
+  value: This is a text description
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variable` | Yes | Variable path for the text value |
+| `value` | Yes | Text value to set |
+
+#### ResetVariable
+
+Clears a variable's value.
+
+```yaml
+- kind: ResetVariable
+  id: clear_counter
+  variable: Local.counter
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `variable` | Yes | Variable path to reset |
+
+#### ClearAllVariables (C# only)
+
+Resets all variables in the current context.
+
+```yaml
+- kind: ClearAllVariables
+  id: clear_all
+  displayName: Clear all workflow variables
+```
+
+#### ParseValue (C# only)
+
+Extracts or converts data into a usable format.
+
+```yaml
+- kind: ParseValue
+  id: parse_json
+  displayName: Parse JSON response
+  source: =Local.rawResponse
+  variable: Local.parsedData
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `source` | Yes | Expression returning the value to parse |
+| `variable` | Yes | Variable path to store the parsed result |
+
+#### EditTableV2 (C# only)
+
+Modifies data in a structured table format.
+
+```yaml
+- kind: EditTableV2
+  id: update_table
+  displayName: Update configuration table
+  table: Local.configTable
+  operation: update
+  row:
+    key: =Local.settingName
+    value: =Local.settingValue
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `table` | Yes | Variable path to the table |
+| `operation` | Yes | Operation type (add, update, delete) |
+| `row` | Yes | Row data for the operation |
+
+### Control Flow Actions
+
+#### If
+
+Executes actions conditionally based on a condition.
+
+```yaml
+- kind: If
+  id: check_age
+  displayName: Check user age
+  condition: =Local.age >= 18
+  then:
+    - kind: SendActivity
+      activity:
+        text: "Welcome, adult user!"
+  else:
+    - kind: SendActivity
+      activity:
+        text: "Welcome, young user!"
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `condition` | Yes | Expression that evaluates to true/false |
+| `then` | Yes | Actions to execute if condition is true |
+| `else` | No | Actions to execute if condition is false |
+
+#### ConditionGroup
+
+Evaluates multiple conditions like a switch/case statement.
+
+```yaml
+- kind: ConditionGroup
+  id: route_by_category
+  displayName: Route based on category
+  conditions:
+    - condition: =Local.category = "electronics"
+      id: electronics_branch
+      actions:
+        - kind: SetVariable
+          variable: Local.department
+          value: Electronics Team
+    - condition: =Local.category = "clothing"
+      id: clothing_branch
+      actions:
+        - kind: SetVariable
+          variable: Local.department
+          value: Clothing Team
+  elseActions:
+    - kind: SetVariable
+      variable: Local.department
+      value: General Support
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `conditions` | Yes | List of condition/actions pairs (first match wins) |
+| `elseActions` | No | Actions if no condition matches |
+
+#### Foreach
+
+Iterates over a collection.
+
+```yaml
+- kind: Foreach
+  id: process_items
+  displayName: Process each item
+  source: =Local.items
+  itemName: item
+  indexName: index
+  actions:
+    - kind: SendActivity
+      activity:
+        text: =Concat("Processing item ", index, ": ", item)
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `source` | Yes | Expression returning a collection |
+| `itemName` | No | Variable name for current item (default: `item`) |
+| `indexName` | No | Variable name for current index (default: `index`) |
+| `actions` | Yes | Actions to execute for each item |
+
+#### BreakLoop
+
+Exits the current loop immediately.
+
+```yaml
+- kind: Foreach
+  source: =Local.items
+  actions:
+    - kind: If
+      condition: =item = "stop"
+      then:
+        - kind: BreakLoop
+    - kind: SendActivity
+      activity:
+        text: =item
+```
+
+#### ContinueLoop
+
+Skips to the next iteration of the loop.
+
+```yaml
+- kind: Foreach
+  source: =Local.numbers
+  actions:
+    - kind: If
+      condition: =item < 0
+      then:
+        - kind: ContinueLoop
+    - kind: SendActivity
+      activity:
+        text: =Concat("Positive number: ", item)
+```
+
+#### GotoAction
+
+Jumps to a specific action by ID.
+
+```yaml
+- kind: SetVariable
+  id: start_label
+  variable: Local.attempts
+  value: =Local.attempts + 1
+
+- kind: SendActivity
+  activity:
+    text: =Concat("Attempt ", Local.attempts)
+
+- kind: If
+  condition: =And(Local.attempts < 3, Not(Local.success))
+  then:
+    - kind: GotoAction
+      actionId: start_label
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `actionId` | Yes | ID of the action to jump to |
+
+### Output Actions
+
+#### SendActivity
+
+Sends a message to the user.
+
+```yaml
+- kind: SendActivity
+  id: send_welcome
+  displayName: Send welcome message
+  activity:
+    text: "Welcome to our service!"
+```
+
+With an expression:
+
+```yaml
+- kind: SendActivity
+  activity:
+    text: =Concat("Hello, ", Local.userName, "! How can I help you today?")
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `activity` | Yes | The activity to send |
+| `activity.text` | Yes | Message text (literal or expression) |
+
+### Agent Invocation Actions
+
+#### InvokeAzureAgent
+
+Invokes an Azure AI Foundry agent.
+
+Basic invocation:
+
+```yaml
+- kind: InvokeAzureAgent
+  id: call_assistant
+  displayName: Call assistant agent
+  agent:
+    name: AssistantAgent
+  conversationId: =System.ConversationId
+```
+
+With input and output configuration:
+
+```yaml
+- kind: InvokeAzureAgent
+  id: call_analyst
+  displayName: Call analyst agent
+  agent:
+    name: AnalystAgent
+  conversationId: =System.ConversationId
+  input:
+    messages: =Local.userMessage
+    arguments:
+      topic: =Local.topic
+  output:
+    responseObject: Local.AnalystResult
+    messages: Local.AnalystMessages
+    autoSend: true
+```
+
+With external loop (continues until condition is met):
+
+```yaml
+- kind: InvokeAzureAgent
+  id: support_agent
+  agent:
+    name: SupportAgent
+  input:
+    externalLoop:
+      when: =Not(Local.IsResolved)
+  output:
+    responseObject: Local.SupportResult
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `agent.name` | Yes | Name of the registered agent |
+| `conversationId` | No | Conversation context identifier |
+| `input.messages` | No | Messages to send to the agent |
+| `input.arguments` | No | Additional arguments for the agent |
+| `input.externalLoop.when` | No | Condition to continue agent loop |
+| `output.responseObject` | No | Path to store agent response |
+| `output.messages` | No | Path to store conversation messages |
+| `output.autoSend` | No | Automatically send response to user |
+
+### Tool Invocation Actions (C# only)
+
+#### InvokeFunctionTool
+
+Invokes a function tool directly from the workflow without going through an AI agent.
+
+```yaml
+- kind: InvokeFunctionTool
+  id: invoke_get_data
+  displayName: Get data from function
+  functionName: GetUserData
+  conversationId: =System.ConversationId
+  requireApproval: true
+  arguments:
+    userId: =Local.userId
+  output:
+    autoSend: true
+    result: Local.UserData
+    messages: Local.FunctionMessages
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `functionName` | Yes | Name of the function to invoke |
+| `conversationId` | No | Conversation context identifier |
+| `requireApproval` | No | Whether to require user approval before execution |
+| `arguments` | No | Arguments to pass to the function |
+| `output.result` | No | Path to store function result |
+| `output.messages` | No | Path to store function messages |
+| `output.autoSend` | No | Automatically send result to user |
+
+**C# Setup for InvokeFunctionTool:**
+
+Functions must be registered with the `WorkflowRunner` or handled via external input:
+
+```csharp
+// Define functions that can be invoked
+AIFunction[] functions = [
+    AIFunctionFactory.Create(myPlugin.GetUserData),
+    AIFunctionFactory.Create(myPlugin.ProcessOrder),
+];
+
+// Create workflow runner with functions
+WorkflowRunner runner = new(functions) { UseJsonCheckpoints = true };
+await runner.ExecuteAsync(workflowFactory.CreateWorkflow, input);
+```
+
+#### InvokeMcpTool
+
+Invokes a tool on an MCP (Model Context Protocol) server.
+
+```yaml
+- kind: InvokeMcpTool
+  id: invoke_docs_search
+  displayName: Search documentation
+  serverUrl: https://learn.microsoft.com/api/mcp
+  serverLabel: microsoft_docs
+  toolName: microsoft_docs_search
+  conversationId: =System.ConversationId
+  requireApproval: false
+  arguments:
+    query: =Local.SearchQuery
+  output:
+    autoSend: true
+    result: Local.SearchResults
+```
+
+With custom headers for authenticated MCP servers:
+
+```yaml
+- kind: InvokeMcpTool
+  id: invoke_azure_mcp
+  displayName: Get model details
+  serverUrl: https://mcp.ai.azure.com
+  serverLabel: azure_mcp_server
+  toolName: model_details_get
+  conversationId: =System.ConversationId
+  arguments:
+    modelName: =Local.modelName
+  output:
+    result: Local.ModelDetails
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `serverUrl` | Yes | URL of the MCP server |
+| `serverLabel` | No | Human-readable label for the server |
+| `toolName` | Yes | Name of the tool to invoke |
+| `conversationId` | No | Conversation context identifier |
+| `requireApproval` | No | Whether to require user approval |
+| `arguments` | No | Arguments to pass to the tool |
+| `headers` | No | Custom HTTP headers for the request |
+| `connection.name` | No | Named connection configuration |
+| `output.result` | No | Path to store tool result |
+| `output.messages` | No | Path to store result messages |
+| `output.autoSend` | No | Automatically send result to user |
+
+**C# Setup for InvokeMcpTool:**
+
+Configure the `McpToolHandler` in your workflow factory:
+
+```csharp
+using Azure.Core;
+using Azure.Identity;
+using Microsoft.Agents.AI.Workflows.Declarative;
+
+// Create MCP tool handler with authentication callback
+DefaultAzureCredential credential = new();
+DefaultMcpToolHandler mcpToolHandler = new(
+    httpClientProvider: async (serverUrl, cancellationToken) =>
+    {
+        if (serverUrl.StartsWith("https://mcp.ai.azure.com", StringComparison.OrdinalIgnoreCase))
+        {
+            // Acquire token for Azure MCP server
+            AccessToken token = await credential.GetTokenAsync(
+                new TokenRequestContext(["https://mcp.ai.azure.com/.default"]),
+                cancellationToken);
+
+            HttpClient httpClient = new();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token.Token);
+            return httpClient;
+        }
+
+        // Return null for servers that don't require authentication
+        return null;
+    });
+
+// Configure workflow factory with MCP handler
+WorkflowFactory workflowFactory = new("workflow.yaml", foundryEndpoint)
+{
+    McpToolHandler = mcpToolHandler
+};
+```
+
+### Human-in-the-Loop Actions
+
+#### Question
+
+Asks the user a question and stores the response.
+
+```yaml
+- kind: Question
+  id: ask_name
+  displayName: Ask for user name
+  question:
+    text: "What is your name?"
+  variable: Local.userName
+  default: "Guest"
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `question.text` | Yes | The question to ask |
+| `variable` | Yes | Path to store the response |
+| `default` | No | Default value if no response |
+
+#### RequestExternalInput
+
+Requests input from an external system or process.
+
+```yaml
+- kind: RequestExternalInput
+  id: request_approval
+  displayName: Request manager approval
+  prompt:
+    text: "Please provide approval for this request."
+  variable: Local.approvalResult
+  default: "pending"
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `prompt.text` | Yes | Description of required input |
+| `variable` | Yes | Path to store the input |
+| `default` | No | Default value |
+
+### Workflow Control Actions
+
+#### EndWorkflow
+
+Terminates the workflow execution.
+
+```yaml
+- kind: EndWorkflow
+  id: finish
+  displayName: End workflow
+```
+
+#### EndConversation
+
+Ends the current conversation.
+
+```yaml
+- kind: EndConversation
+  id: end_chat
+  displayName: End conversation
+```
+
+#### CreateConversation
+
+Creates a new conversation context.
+
+```yaml
+- kind: CreateConversation
+  id: create_new_conv
+  displayName: Create new conversation
+  conversationId: Local.NewConversationId
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `conversationId` | Yes | Path to store the new conversation ID |
+
+### Conversation Actions (C# only)
+
+#### AddConversationMessage
+
+Adds a message to a conversation thread.
+
+```yaml
+- kind: AddConversationMessage
+  id: add_system_message
+  displayName: Add system context
+  conversationId: =System.ConversationId
+  message:
+    role: system
+    content: =Local.contextInfo
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `conversationId` | Yes | Target conversation identifier |
+| `message` | Yes | Message to add |
+| `message.role` | Yes | Message role (system, user, assistant) |
+| `message.content` | Yes | Message content |
+
+#### CopyConversationMessages
+
+Copies messages from one conversation to another.
+
+```yaml
+- kind: CopyConversationMessages
+  id: copy_context
+  displayName: Copy conversation context
+  sourceConversationId: =Local.SourceConversation
+  targetConversationId: =System.ConversationId
+  limit: 10
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `sourceConversationId` | Yes | Source conversation identifier |
+| `targetConversationId` | Yes | Target conversation identifier |
+| `limit` | No | Maximum number of messages to copy |
+
+#### RetrieveConversationMessage
+
+Retrieves a specific message from a conversation.
+
+```yaml
+- kind: RetrieveConversationMessage
+  id: get_message
+  displayName: Get specific message
+  conversationId: =System.ConversationId
+  messageId: =Local.targetMessageId
+  variable: Local.retrievedMessage
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `conversationId` | Yes | Conversation identifier |
+| `messageId` | Yes | Message identifier to retrieve |
+| `variable` | Yes | Path to store the retrieved message |
+
+#### RetrieveConversationMessages
+
+Retrieves multiple messages from a conversation.
+
+```yaml
+- kind: RetrieveConversationMessages
+  id: get_history
+  displayName: Get conversation history
+  conversationId: =System.ConversationId
+  limit: 20
+  newestFirst: true
+  variable: Local.conversationHistory
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `conversationId` | Yes | Conversation identifier |
+| `limit` | No | Maximum messages to retrieve (default: 20) |
+| `newestFirst` | No | Return in descending order |
+| `after` | No | Cursor for pagination |
+| `before` | No | Cursor for pagination |
+| `variable` | Yes | Path to store retrieved messages |
+
+### Actions Quick Reference
+
+| Action | Category | C# | Python | Description |
+|--------|----------|-----|--------|-------------|
+| `SetVariable` | Variable | ✅ | ✅ | Set a single variable |
+| `SetMultipleVariables` | Variable | ✅ | ✅ | Set multiple variables |
+| `SetTextVariable` | Variable | ✅ | ❌ | Set a text variable |
+| `AppendValue` | Variable | ❌ | ✅ | Append to list/string |
+| `ResetVariable` | Variable | ✅ | ✅ | Clear a variable |
+| `ClearAllVariables` | Variable | ✅ | ❌ | Clear all variables |
+| `ParseValue` | Variable | ✅ | ❌ | Parse/transform data |
+| `EditTableV2` | Variable | ✅ | ❌ | Modify table data |
+| `If` | Control Flow | ✅ | ✅ | Conditional branching |
+| `ConditionGroup` | Control Flow | ✅ | ✅ | Multi-branch switch |
+| `Foreach` | Control Flow | ✅ | ✅ | Iterate over collection |
+| `RepeatUntil` | Control Flow | ❌ | ✅ | Loop until condition |
+| `BreakLoop` | Control Flow | ✅ | ✅ | Exit current loop |
+| `ContinueLoop` | Control Flow | ✅ | ✅ | Skip to next iteration |
+| `GotoAction` | Control Flow | ✅ | ✅ | Jump to action by ID |
+| `SendActivity` | Output | ✅ | ✅ | Send message to user |
+| `EmitEvent` | Output | ❌ | ✅ | Emit custom event |
+| `InvokeAzureAgent` | Agent | ✅ | ✅ | Call Azure AI agent |
+| `InvokeFunctionTool` | Tool | ✅ | ❌ | Invoke function directly |
+| `InvokeMcpTool` | Tool | ✅ | ❌ | Invoke MCP server tool |
+| `Question` | Human-in-the-Loop | ✅ | ✅ | Ask user a question |
+| `Confirmation` | Human-in-the-Loop | ❌ | ✅ | Yes/no confirmation |
+| `RequestExternalInput` | Human-in-the-Loop | ✅ | ✅ | Request external input |
+| `WaitForInput` | Human-in-the-Loop | ❌ | ✅ | Wait for input |
+| `EndWorkflow` | Workflow Control | ✅ | ✅ | Terminate workflow |
+| `EndConversation` | Workflow Control | ✅ | ✅ | End conversation |
+| `CreateConversation` | Workflow Control | ✅ | ✅ | Create new conversation |
+| `AddConversationMessage` | Conversation | ✅ | ❌ | Add message to thread |
+| `CopyConversationMessages` | Conversation | ✅ | ❌ | Copy messages |
+| `RetrieveConversationMessage` | Conversation | ✅ | ❌ | Get single message |
+| `RetrieveConversationMessages` | Conversation | ✅ | ❌ | Get multiple messages |
+
+## Advanced Patterns
+
+### Multi-Agent Orchestration
+
+#### Sequential Agent Pipeline
+
+Pass work through multiple agents in sequence.
+
+```yaml
+#
+# Sequential agent pipeline for content creation
+#
+kind: Workflow
+trigger:
+
+  kind: OnConversationStart
+  id: content_workflow
+  actions:
+
+    # First agent: Research
+    - kind: InvokeAzureAgent
+      id: invoke_researcher
+      displayName: Research phase
+      conversationId: =System.ConversationId
+      agent:
+        name: ResearcherAgent
+
+    # Second agent: Write draft
+    - kind: InvokeAzureAgent
+      id: invoke_writer
+      displayName: Writing phase
+      conversationId: =System.ConversationId
+      agent:
+        name: WriterAgent
+
+    # Third agent: Edit
+    - kind: InvokeAzureAgent
+      id: invoke_editor
+      displayName: Editing phase
+      conversationId: =System.ConversationId
+      agent:
+        name: EditorAgent
+```
+
+**C# Setup:**
+
+```csharp
+using Azure.AI.Projects;
+using Azure.AI.Projects.OpenAI;
+using Azure.Identity;
+
+// Ensure agents exist in Azure AI Foundry
+AIProjectClient aiProjectClient = new(foundryEndpoint, new DefaultAzureCredential());
+
+await aiProjectClient.CreateAgentAsync(
+    agentName: "ResearcherAgent",
+    agentDefinition: new PromptAgentDefinition(modelName)
+    {
+        Instructions = "You are a research specialist..."
+    },
+    agentDescription: "Research agent for content pipeline");
+
+// Create and run workflow
+WorkflowFactory workflowFactory = new("content-pipeline.yaml", foundryEndpoint);
+WorkflowRunner runner = new();
+await runner.ExecuteAsync(workflowFactory.CreateWorkflow, "Create content about AI");
+```
+
+#### Conditional Agent Routing
+
+Route requests to different agents based on conditions.
+
+```yaml
+#
+# Route to specialized support agents based on category
+#
+kind: Workflow
+trigger:
+
+  kind: OnConversationStart
+  id: support_router
+  actions:
+
+    # Capture category from user input or set via another action
+    - kind: SetVariable
+      id: set_category
+      variable: Local.category
+      value: =System.LastMessage.Text
+
+    - kind: ConditionGroup
+      id: route_request
+      displayName: Route to appropriate agent
+      conditions:
+        - condition: =Local.category = "billing"
+          id: billing_route
+          actions:
+            - kind: InvokeAzureAgent
+              id: billing_agent
+              agent:
+                name: BillingAgent
+              conversationId: =System.ConversationId
+        - condition: =Local.category = "technical"
+          id: technical_route
+          actions:
+            - kind: InvokeAzureAgent
+              id: technical_agent
+              agent:
+                name: TechnicalAgent
+              conversationId: =System.ConversationId
+      elseActions:
+        - kind: InvokeAzureAgent
+          id: general_agent
+          agent:
+            name: GeneralAgent
+          conversationId: =System.ConversationId
+```
+
+### Tool Integration Patterns
+
+#### Pre-fetching Data with InvokeFunctionTool
+
+Fetch data before calling an agent:
+
+```yaml
+#
+# Pre-fetch menu data before agent interaction
+#
+kind: Workflow
+trigger:
+
+  kind: OnConversationStart
+  id: menu_workflow
+  actions:
+    # Pre-fetch today's specials
+    - kind: InvokeFunctionTool
+      id: get_specials
+      functionName: GetSpecials
+      requireApproval: true
+      output:
+        autoSend: true
+        result: Local.Specials
+
+    # Agent uses pre-fetched data
+    - kind: InvokeAzureAgent
+      id: menu_agent
+      conversationId: =System.ConversationId
+      agent:
+        name: MenuAgent
+      input:
+        messages: =UserMessage("Describe today's specials: " & Local.Specials)
+```
+
+#### MCP Tool Integration
+
+Call external server using MCP:
+
+```yaml
+#
+# Search documentation using MCP
+#
+kind: Workflow
+trigger:
+
+  kind: OnConversationStart
+  id: docs_search
+  actions:
+
+    - kind: SetVariable
+      variable: Local.SearchQuery
+      value: =System.LastMessage.Text
+
+    # Search Microsoft Learn
+    - kind: InvokeMcpTool
+      id: search_docs
+      serverUrl: https://learn.microsoft.com/api/mcp
+      toolName: microsoft_docs_search
+      conversationId: =System.ConversationId
+      arguments:
+        query: =Local.SearchQuery
+      output:
+        result: Local.SearchResults
+        autoSend: true
+
+    # Summarize results with agent
+    - kind: InvokeAzureAgent
+      id: summarize
+      agent:
+        name: SummaryAgent
+      conversationId: =System.ConversationId
+      input:
+        messages: =UserMessage("Summarize these search results")
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- Python 3.10 - 3.13 (Python 3.14 is not yet supported due to PowerFx compatibility)
+- The Agent Framework declarative package installed:
+
+```bash
+pip install agent-framework-declarative --pre
+```
+
+This package pulls in the underlying `agent-framework-core` automatically.
+
+- Basic familiarity with YAML syntax
+- Understanding of [workflow concepts](./index.md)
 
 ## Your First Declarative Workflow
 
@@ -1656,4 +2994,21 @@ actions:
 
 ## Next Steps
 
+::: zone pivot="programming-language-csharp"
+
+- [C# Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/Declarative) - Explore complete working examples including:
+  - **StudentTeacher** - Multi-agent conversation with iterative learning
+  - **InvokeMcpTool** - MCP server tool integration
+  - **InvokeFunctionTool** - Direct function invocation from workflows
+  - **FunctionTools** - Agent with function tools
+  - **ToolApproval** - Human approval for tool execution
+  - **CustomerSupport** - Complex support ticket workflow
+  - **DeepResearch** - Research workflow with multiple agents
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
 - [Python Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows/declarative) - Explore complete working examples
+
+::: zone-end
