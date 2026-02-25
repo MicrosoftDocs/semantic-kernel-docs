@@ -140,6 +140,11 @@ Before you begin, ensure you have:
 dotnet add package Microsoft.Agents.AI.Workflows.Declarative --prerelease
 dotnet add package Microsoft.Agents.AI.Workflows.Declarative.AzureAI --prerelease
 ```
+- If you intend to add MCP tool invocation action to your workflow, also install the following NuGet package:
+
+```bash
+dotnet add package Microsoft.Agents.AI.Workflows.Declarative.Mcp --prerelease
+```
 
 - Basic familiarity with YAML syntax
 - Understanding of [workflow concepts](./index.md)
@@ -1202,7 +1207,7 @@ Retrieves multiple messages from a conversation.
 | `SendActivity` | Output | ✅ | ✅ | Send message to user |
 | `EmitEvent` | Output | ❌ | ✅ | Emit custom event |
 | `InvokeAzureAgent` | Agent | ✅ | ✅ | Call Azure AI agent |
-| `InvokeFunctionTool` | Tool | ✅ | ❌ | Invoke function directly |
+| `InvokeFunctionTool` | Tool | ✅ | ✅| Invoke function directly |
 | `InvokeMcpTool` | Tool | ✅ | ❌ | Invoke MCP server tool |
 | `Question` | Human-in-the-Loop | ✅ | ✅ | Ask user a question |
 | `Confirmation` | Human-in-the-Loop | ❌ | ✅ | Yes/no confirmation |
