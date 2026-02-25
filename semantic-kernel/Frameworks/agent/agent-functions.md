@@ -137,7 +137,7 @@ kernel = Kernel()
 # Add the chat completion service to the Kernel
 kernel.add_service(AzureChatCompletion())
 
-# Get the AI Service settings
+# Get the AI service settings
 settings = kernel.get_prompt_execution_settings_from_service_id()
 
 # Configure the function choice behavior to auto invoke kernel functions
@@ -241,7 +241,7 @@ kernel = Kernel()
 # Add the chat completion service to the Kernel
 kernel.add_service(AzureChatCompletion())
 
-# Create the AI Service settings
+# Create the AI service settings
 settings = AzureChatPromptExecutionSettings()
 
 # Configure the function choice behavior to auto invoke kernel functions

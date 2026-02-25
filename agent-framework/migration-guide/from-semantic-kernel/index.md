@@ -56,10 +56,10 @@ an empty `Kernel` if not provided.
  ChatCompletionAgent agent = new() { Instructions = ParrotInstructions, Kernel = kernel };
 ```
 
-Azure AI Foundry requires an agent resource to be created in the cloud before creating a local agent class that uses it.
+Microsoft Foundry requires an agent resource to be created in the cloud before creating a local agent class that uses it.
 
 ```csharp
-PersistentAgentsClient azureAgentClient = AzureAIAgent.CreateAgentsClient(azureEndpoint, new AzureCliCredential());
+PersistentAgentsClient azureAgentClient = AzureAIAgent.CreateAgentsClient(azureEndpoint, new DefaultAzureCredential());
 
 PersistentAgent definition = await azureAgentClient.Administration.CreateAgentAsync(
     deploymentName,
@@ -67,6 +67,9 @@ PersistentAgent definition = await azureAgentClient.Administration.CreateAgentAs
 
 AzureAIAgent agent = new(definition, azureAgentClient);
  ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Agent Framework
 
@@ -84,7 +87,7 @@ Additionally, for hosted agent providers you can also use the `GetAIAgent` metho
 AIAgent azureFoundryAgent = await persistentAgentsClient.GetAIAgentAsync(agentId);
 ```
 
-## 3. Agent Thread Creation
+## 3. Agent Thread/Session Creation
 
 ### Semantic Kernel
 
@@ -99,14 +102,14 @@ AgentThread thread = new OpenAIResponseAgentThread(this.Client);
 
 ### Agent Framework
 
-The agent is responsible for creating the thread.
+The agent is responsible for creating the session.
 
 ```csharp
 // New.
-AgentThread thread = await agent.GetNewThreadAsync();
+AgentSession session = await agent.CreateSessionAsync();
 ```
 
-## 4. Hosted Agent Thread Cleanup
+## 4. Hosted Agent Thread/Session Cleanup
 
 This case applies exclusively to a few AI providers that still provide hosted threads.
 
@@ -123,16 +126,16 @@ await thread.DeleteAsync();
 ### Agent Framework
 
 > [!NOTE]
-> OpenAI Responses introduced a new conversation model that simplifies how conversations are handled. This change simplifies hosted thread management compared to the now deprecated OpenAI Assistants model. For more information, see the [OpenAI Assistants migration guide](https://platform.openai.com/docs/assistants/migration).
+> OpenAI Responses introduced a new conversation model that simplifies how conversations are handled. This change simplifies hosted chat history management compared to the now deprecated OpenAI Assistants model. For more information, see the [OpenAI Assistants migration guide](https://platform.openai.com/docs/assistants/migration).
 
-Agent Framework doesn't have a thread deletion API in the `AgentThread` type as not all providers support hosted threads or thread deletion. This design will become more common as more providers shift to responses-based architectures.
+Agent Framework doesn't have a chat history or session deletion API in the `AgentSession` type as not all providers support hosted chat history or chat history deletion.
 
-If you require thread deletion and the provider allows it, the caller **should** keep track of the created threads and delete them later when necessary via the provider's SDK.
+If you require chat history deletion and the provider allows it, the caller **should** keep track of the created sessions and delete their associated chat hsitory later when necessary via the provider's SDK.
 
 OpenAI Assistants Provider:
 
 ```csharp
-await assistantClient.DeleteThreadAsync(thread.ConversationId);
+await assistantClient.DeleteThreadAsync(session.ConversationId);
 ```
 
 ## 5. Tool Registration
@@ -186,7 +189,7 @@ All messages created as part of the response are returned in the `AgentResponse.
 This might include tool call messages, function results, reasoning updates, and final results.
 
 ```csharp
-AgentResponse agentResponse = await agent.RunAsync(userInput, thread);
+AgentResponse agentResponse = await agent.RunAsync(userInput, session);
 ```
 
 ## 7. Agent Streaming Invocation
@@ -209,7 +212,7 @@ Agent Framework has a similar streaming API pattern, with the key difference bei
 All updates produced by any service underlying the AIAgent are returned. The textual result of the agent is available by concatenating the `AgentResponse.Text` values.
 
 ```csharp
-await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(userInput, thread))
+await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(userInput, session))
 {
     Console.Write(update); // Update is ToString() friendly
 }
@@ -292,7 +295,7 @@ Semantic Kernel provides specific agent classes for various services, for exampl
 
 - `ChatCompletionAgent` for use with chat-completion-based inference services.
 - `OpenAIAssistantAgent` for use with the OpenAI Assistants service.
-- `AzureAIAgent` for use with the Azure AI Foundry Agents service.
+- `AzureAIAgent` for use with the Foundry Agent Service.
 
 ### Agent Framework
 
@@ -321,9 +324,9 @@ from semantic_kernel.agents import ChatCompletionAgent
 ### Agent Framework
 
 Agent Framework package is installed as `agent-framework` and imported as `agent_framework`.
-Agent Framework is built up differently, it has a core package `agent-framework-core` that contains the core functionality, and then there are multiple packages that rely on that core package, such as `agent-framework-azure-ai`, `agent-framework-mem0`, `agent-framework-copilotstudio`, etc. When you run `pip install agent-framework --pre` it will install the core package and *all* packages, so that you can get started with all the features quickly. When you are ready to reduce the number of packages because you know what you need, you can install only the packages you need, so for instance if you only plan to use Azure AI Foundry and Mem0 you can install only those two packages: `pip install agent-framework-azure-ai agent-framework-mem0 --pre`, `agent-framework-core` is a dependency to those two, so will automatically be installed.
+Agent Framework is built up differently, it has a core package `agent-framework-core` that contains the core functionality, and then there are multiple packages that rely on that core package, such as `agent-framework-azure-ai`, `agent-framework-mem0`, `agent-framework-copilotstudio`, etc. When you run `pip install agent-framework --pre` it will install the core package and *all* packages, so that you can get started with all the features quickly. When you are ready to reduce the number of packages because you know what you need, you can install only the packages you need, so for instance if you only plan to use Foundry and Mem0 you can install only those two packages: `pip install agent-framework-azure-ai agent-framework-mem0 --pre`, `agent-framework-core` is a dependency to those two, so will automatically be installed.
 
-Even though the packages are split up, the imports are all from `agent_framework`, or it's modules. So for instance to import the client for Azure AI Foundry you would do:
+Even though the packages are split up, the imports are all from `agent_framework`, or it's modules. So for instance to import the client for Foundry you would do:
 
 ```python
 from agent_framework.azure import AzureAIAgentClient
@@ -332,7 +335,7 @@ from agent_framework.azure import AzureAIAgentClient
 Many of the most commonly used types are imported directly from `agent_framework`:
 
 ```python
-from agent_framework import ChatMessage, ChatAgent
+from agent_framework import Message, Agent
 ```
 
 ## 2. Agent Type Consolidation
@@ -343,9 +346,9 @@ Semantic Kernel provides specific agent classes for various services, for exampl
 
 ### Agent Framework
 
-In Agent Framework, the majority of agents are built using the `ChatAgent` which can be used with all the `ChatClient` based services, such as Azure AI Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
+In Agent Framework, the majority of agents are built using the `Agent` which can be used with all the `ChatClient` based services, such as Foundry, OpenAI ChatCompletion, and OpenAI Responses. There are two additional agents: `CopilotStudioAgent` for use with Copilot Studio and `A2AAgent` for use with A2A.
 
-All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `AgentProtocol` (`from agent_framework import AgentProtocol`) interface.
+All the built-in agents are based on the BaseAgent (`from agent_framework import BaseAgent`). And all agents are consistent with the `SupportsAgentRun` (`from agent_framework import SupportsAgentRun`) interface.
 
 ## 3. Agent Creation Simplification
 
@@ -371,9 +374,9 @@ Agent creation in Agent Framework can be done in two ways, directly:
 
 ```python
 from agent_framework.azure import AzureAIAgentClient
-from agent_framework import ChatMessage, ChatAgent
+from agent_framework import Message, Agent
 
-agent = ChatAgent(chat_client=AzureAIAgentClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
+agent = Agent(chat_client=AzureAIAgentClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
 ```
 
 Or, with the convenience methods provided by chat clients:
@@ -409,7 +412,7 @@ thread = agent.get_new_thread()
 
 A thread is then created in one of three ways:
 
-1. If the agent has a `thread_id` (or `conversation_id` or something similar) set, it will create a thread in the underlying service with that ID. Once a thread has a `service_thread_id`, you can no longer use it to store messages in memory. This only applies to agents that have a service-side thread concept. such as Azure AI Foundry Agents and OpenAI Assistants.
+1. If the agent has a `thread_id` (or `conversation_id` or something similar) set, it will create a thread in the underlying service with that ID. Once a thread has a `service_thread_id`, you can no longer use it to store messages in memory. This only applies to agents that have a service-side thread concept. such as Foundry Agents and OpenAI Assistants.
 2. If the agent has a `chat_message_store_factory` set, it will use that factory to create a message store and use that to create an in-memory thread. It can then no longer be used with a agent with the `store` parameter set to `True`.
 3. If neither of the previous settings is set, it's considered `uninitialized` and depending on how it is used, it will either become a in-memory thread or a service thread.
 
@@ -471,7 +474,7 @@ agent = chat_client.as_agent(tools=get_weather)
 ```
 
 > [!NOTE]
-> The `tools` parameter is present on both the agent creation, the `run` and `run_stream` methods, as well as the `get_response` and `get_streaming_response` methods, it allows you to supply tools both as a list or a single function.
+> The `tools` parameter is present on both the agent creation and the `run` method (with or without `stream=True`), as well as the `get_response` and `get_streaming_response` methods, it allows you to supply tools both as a list or a single function.
 
 The name of the function will then become the name of the tool, and the docstring will become the description of the tool, you can also add a description to the parameters:
 
@@ -487,9 +490,9 @@ Finally, you can use the decorator to further customize the name and description
 
 ```python
 from typing import Annotated
-from agent_framework import ai_function
+from agent_framework import tool
 
-@ai_function(name="weather_tool", description="Retrieves weather information for any location")
+@tool(name="weather_tool", description="Retrieves weather information for any location")
 def get_weather(location: Annotated[str, "The location to get the weather for."])
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny."
@@ -524,7 +527,7 @@ print("Plugin state:", plugin.state)
 ```
 
 > [!NOTE]
-> The functions within the class can also be decorated with `@ai_function` to customize the name and description of the tools.
+> The functions within the class can also be decorated with `@tool` to customize the name and description of the tools.
 
 This mechanism is also useful for tools that need additional input that cannot be supplied by the LLM, such as connections, secrets, etc.
 
@@ -716,7 +719,7 @@ print("Agent response:", response.text)
 
 ## 7. Agent Streaming Invocation
 
-Key differences in the method names from `invoke` to `run_stream`, return types (`AgentResponseUpdate`) and parameters.
+Key differences in the method names from `invoke` to `run(..., stream=True)`, return types (`AgentResponseUpdate`) and parameters.
 
 ### Semantic Kernel
 
@@ -739,7 +742,7 @@ All contents produced by any service underlying the Agent are returned. The fina
 from agent_framework import AgentResponse
 agent = ...
 updates = []
-async for update in agent.run_stream(user_input, thread):
+async for update in agent.run(user_input, thread, stream=True):
     updates.append(update)
     print(update.text)
 
@@ -752,7 +755,7 @@ You can even do that directly:
 ```python
 from agent_framework import AgentResponse
 agent = ...
-full_response = AgentResponse.from_agent_response_generator(agent.run_stream(user_input, thread))
+full_response = AgentResponse.from_agent_response_generator(agent.run(user_input, thread, stream=True))
 print("Full agent response:", full_response.text)
 ```
 
@@ -771,7 +774,7 @@ response = await agent.get_response(user_input, thread=thread, arguments=argumen
 
 **Solution**: Simplified TypedDict-based options in Agent Framework
 
-Agent Framework uses a TypedDict-based options system for `ChatClients` and `ChatAgents`. Options are passed via a single `options` parameter as a typed dictionary, with provider-specific TypedDict classes (like `OpenAIChatOptions`) for full IDE autocomplete and type checking.
+Agent Framework uses a TypedDict-based options system for `ChatClients` and `Agents`. Options are passed via a single `options` parameter as a typed dictionary, with provider-specific TypedDict classes (like `OpenAIChatOptions`) for full IDE autocomplete and type checking.
 
 ```python
 from agent_framework.openai import OpenAIChatClient
@@ -806,4 +809,4 @@ response = await agent.run(
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Quickstart Guide](../../tutorials/quick-start.md)
+> [Quickstart Guide](../../get-started/your-first-agent.md)
