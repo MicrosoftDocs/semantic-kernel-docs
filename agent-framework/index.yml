@@ -50,6 +50,8 @@ productDirectory:
           text: Agents overview
         - url: /agent-framework/agents/tools/index
           text: Tools
+        - url: /agent-framework/agents/skills
+          text: Agent Skills
         - url: /agent-framework/agents/conversations/index
           text: Conversations
         - url: /agent-framework/agents/providers/index
