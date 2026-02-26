@@ -67,7 +67,7 @@ Function calling functionality in Semantic Kernel allows developers to access a 
 Both ways are supported at the moment by the current and new models. However, we strongly recommend using the connector-agnostic approach to access function calls, as it is more flexible and allows your code to work with any AI connector that supports the new function-calling model. 
 Moreover, considering that the current model will be deprecated soon, now is a good time to migrate your code to the new model to avoid breaking changes in the future.
 
-So, if you use [Manual Function Invocation](../concepts/ai-services/chat-completion/function-calling/function-invocation.md#manual-function-invocation) with the connector-specific function call classes like in this code snippet:
+So, if you use [Manual Function Invocation](../../concepts/ai-services/chat-completion/function-calling/function-invocation.md#manual-function-invocation) with the connector-specific function call classes like in this code snippet:
 ```csharp
 using System.Text.Json;
 using Microsoft.SemanticKernel;

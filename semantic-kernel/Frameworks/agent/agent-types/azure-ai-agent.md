@@ -41,10 +41,10 @@ ms.service: semantic-kernel
 
 An `AzureAIAgent` is a specialized agent within the Semantic Kernel framework, designed to provide advanced conversational capabilities with seamless tool integration. It automates tool calling, eliminating the need for manual parsing and invocation. The agent also securely manages conversation history using threads, reducing the overhead of maintaining state. Additionally, the `AzureAIAgent` supports a variety of built-in tools, including file retrieval, code execution, and data interaction via Bing, Azure AI Search, Azure Functions, and OpenAPI.
 
-To use an `AzureAIAgent`, an Azure AI Foundry Project must be utilized.  The following articles provide an overview of the Azure AI Foundry, how to create and configure a project, and the agent service:
+To use an `AzureAIAgent`, a Microsoft Foundry Project must be utilized.  The following articles provide an overview of the Foundry, how to create and configure a project, and the agent service:
 
-- [What is Azure AI Foundry?](/azure/ai-foundry/what-is-ai-foundry)
-- [The Azure AI Foundry SDK](/azure/ai-foundry/how-to/develop/sdk-overview)
+- [What is Foundry?](/azure/ai-foundry/what-is-ai-foundry)
+- [The Microsoft Foundry SDK](/azure/ai-foundry/how-to/develop/sdk-overview)
 - [What is Azure AI Agent Service](/azure/ai-services/agents/overview)
 - [Quickstart: Create a new agent](/azure/ai-services/agents/quickstart)
 
@@ -86,7 +86,7 @@ pip install semantic-kernel
 
 ## Configuring the AI Project Client
 
-Accessing an `AzureAIAgent` first requires the creation of a client that is configured for a specific Foundry Project, most commonly by providing your project endpoint ([The Azure AI Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
+Accessing an `AzureAIAgent` first requires the creation of a client that is configured for a specific Foundry Project, most commonly by providing your project endpoint ([The Microsoft Foundry SDK: Getting Started with Projects](/azure/ai-foundry/how-to/develop/sdk-overview#get-started-with-projects)).
 
 ::: zone pivot="programming-language-csharp"
 
