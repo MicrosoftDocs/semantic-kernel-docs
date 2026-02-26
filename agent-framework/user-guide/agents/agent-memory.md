@@ -380,7 +380,7 @@ Key features:
 - **Memory tools**: Agents can explicitly search memory, remember preferences, and find entity connections
 
 > [!TIP]
-> Install with `pip install neo4j-agent-memory[microsoft-agent]`. See the [Neo4j Agent Memory repository](https://github.com/neo4j-labs/agent-memory) for complete documentation.
+> Install with `pip install neo4j-agent-memory[microsoft-agent]`. See the [Neo4j Agent Memory repository](https://github.com/neo4j-labs/agent-memory) for complete documentation and the [PyPI package page](https://pypi.org/project/neo4j-agent-memory/) for version details.
 
 ### Thread Serialization and Persistence
 The framework supports serializing entire thread states for persistence across application restarts:

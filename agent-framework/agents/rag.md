@@ -602,7 +602,7 @@ Key features:
 - **Search modes**: Vector (semantic similarity), fulltext (keyword/BM25), or hybrid (both combined)
 
 > [!TIP]
-> Install with `pip install agent-framework-neo4j`. See the [Neo4j Context Provider repository](https://github.com/neo4j-labs/neo4j-maf-provider) for complete documentation.
+> Install with `pip install agent-framework-neo4j`. See the [Neo4j Context Provider repository](https://github.com/neo4j-labs/neo4j-maf-provider) for complete documentation and the [PyPI package page](https://pypi.org/project/agent-framework-neo4j/) for version details.
 
 ::: zone-end
 
