@@ -50,7 +50,7 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 ```
 
 > [!TIP]
-> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Agents/Agent_Step03_UsingFunctionTools) for a full runnable sample application.
+> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/01-get-started/02_add_tools) for a full runnable sample application.
 
 :::zone-end
 

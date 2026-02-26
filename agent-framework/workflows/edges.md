@@ -428,7 +428,7 @@ This conditional routing pattern forms the foundation for building sophisticated
 
 ### Complete Implementation
 
-For the complete working implementation, see this [sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/ConditionalEdges/01_EdgeCondition) in the Agent Framework repository.
+For the complete working implementation, see this [sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/ConditionalEdges/01_EdgeCondition) in the Agent Framework repository.
 
 ::: zone-end
 
@@ -1054,7 +1054,7 @@ Try changing the email content to something clearly spam or clearly legitimate t
 
 ### Complete Implementation
 
-For the complete working implementation, see this [sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/ConditionalEdges/02_SwitchCase) in the Agent Framework repository.
+For the complete working implementation, see this [sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/ConditionalEdges/02_SwitchCase) in the Agent Framework repository.
 
 ::: zone-end
 
@@ -1819,7 +1819,7 @@ Database: Email def456 saved to database.
 
 ### Multi-Selection Complete Implementation
 
-For the complete working implementation, see this [sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/ConditionalEdges/03_MultiSelection) in the Agent Framework repository.
+For the complete working implementation, see this [sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/ConditionalEdges/03_MultiSelection) in the Agent Framework repository.
 
 ::: zone-end
 

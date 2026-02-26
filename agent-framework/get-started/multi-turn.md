@@ -42,7 +42,7 @@ Console.WriteLine(await agent.RunAsync("What do you remember about me?", session
 ```
 
 > [!TIP]
-> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Agents/Agent_Step02_MultiturnConversation) for a full runnable sample application.
+> See [here](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/01-get-started/03_multi_turn) for a full runnable sample application.
 
 :::zone-end
 

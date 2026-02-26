@@ -146,7 +146,7 @@ Popular MCP servers include:
 Each server provides different tools and capabilities that extend your agent's functionality.
 This integration allows your agents to seamlessly access external data and services while maintaining the security and standardization benefits of the Model Context Protocol.
 
-The full source code and instructions to run this sample is available at <https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/ModelContextProtocol/Agent_MCP_Server>.
+The full source code and instructions to run this sample is available at <https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/ModelContextProtocol/Agent_MCP_Server>.
 
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.

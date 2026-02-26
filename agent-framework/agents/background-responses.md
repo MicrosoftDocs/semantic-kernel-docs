@@ -14,7 +14,7 @@ ms.service: agent-framework
 The Microsoft Agent Framework supports background responses for handling long-running operations that may take time to complete. This feature enables agents to start processing a request and return a continuation token that can be used to poll for results or resume interrupted streams.
 
 > [!TIP]
-> For a complete working example, see the [Background Responses sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/Agents/Agent_Step17_BackgroundResponses/Program.cs).
+> For a complete working example, see the [Background Responses sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/02-agents/Agents/Agent_Step14_BackgroundResponses/Program.cs).
 
 ## When to Use Background Responses
 
