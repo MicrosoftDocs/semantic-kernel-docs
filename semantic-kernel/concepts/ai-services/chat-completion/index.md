@@ -28,7 +28,7 @@ When picking out a chat completion model, you will need to consider the followin
 
 ## Setting up your local environment
 
-Some of the AI Services can be hosted locally and may require some setup. Below are instructions for those that support this.
+Some of the AI services can be hosted locally and may require some setup. Below are instructions for those that support this.
 
 # [Azure OpenAI](#tab/csharp-AzureOpenAI)
 

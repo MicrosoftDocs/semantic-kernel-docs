@@ -87,7 +87,7 @@ AIAgent inspectableAgent = baseAgent
 
 static async IAsyncEnumerable<AgentResponseUpdate> InspectToolsMiddleware(
     IEnumerable<ChatMessage> messages,
-    AgentThread? thread,
+    AgentSession? session,
     AgentRunOptions? options,
     AIAgent innerAgent,
     CancellationToken cancellationToken)
@@ -109,7 +109,7 @@ static async IAsyncEnumerable<AgentResponseUpdate> InspectToolsMiddleware(
         }
     }
 
-    await foreach (AgentResponseUpdate update in innerAgent.RunStreamingAsync(messages, thread, options, cancellationToken))
+    await foreach (AgentResponseUpdate update in innerAgent.RunStreamingAsync(messages, session, options, cancellationToken))
     {
         yield return update;
     }
@@ -189,7 +189,7 @@ Now that you understand frontend tools, you can:
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
 - [Backend Tool Rendering](backend-tool-rendering.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 
 ::: zone-end
 
@@ -570,6 +570,6 @@ async def capture_photo() -> str:
 
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 
 ::: zone-end
