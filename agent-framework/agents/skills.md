@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
-ms.date: 02/25/2026
+ms.date: 02/27/2026
 ms.service: agent-framework
 ---
 
@@ -235,17 +235,26 @@ skills_provider = FileAgentSkillsProvider(
 
 :::zone-end
 
-## Security considerations
+## Security best practices
 
-`FileAgentSkillsProvider` reads only static content from the filesystem and includes the following security measures:
+Agent Skills should be treated like any third-party code you bring into your project. Because skill instructions are injected into the agent's context — and skills can include scripts — applying the same level of review and governance you would to an open-source dependency is essential.
 
-- **XML-escaping** — Skill metadata (names and descriptions) is XML-escaped before being injected into the system prompt, preventing prompt injection through skill frontmatter.
-- **Path traversal protection** — Resource reads validate that the resolved file path remains within the skill directory, blocking `../` escape attempts.
-- **Symlink guards** — Each path segment is checked for symlinks that could resolve outside the skill directory.
-- **Validation at discovery** — All referenced resources are validated when skills are loaded. Skills with missing or invalid resources are excluded and logged.
+- **Review before use** — Read all skill content (`SKILL.md`, scripts, and resources) before deploying. Verify that a script's actual behavior matches its stated intent. Check for adversarial instructions that attempt to bypass safety guidelines, exfiltrate data, or modify agent configuration files.
+- **Source trust** — Only install skills from trusted authors or vetted internal contributors. Prefer skills with clear provenance, version control, and active maintenance. Watch for typosquatted skill names that mimic popular packages.
+- **Sandboxing** — Run skills that include executable scripts in isolated environments. Limit filesystem, network, and system-level access to only what the skill requires. Require explicit user confirmation before executing potentially sensitive operations.
+- **Audit and logging** — Record which skills are loaded, which resources are read, and which scripts are executed. This gives you an audit trail to trace agent behavior back to specific skill content if something goes wrong.
 
-> [!WARNING]
-> Only use skills from trusted sources. Skill instructions are injected into the agent's context and can influence agent behavior.
+## When to use skills vs. workflows
+
+Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend what agents can do, but they work in fundamentally different ways. Choose the approach that best matches your requirements:
+
+- **Control** — With a skill, the AI decides how to execute the instructions. This is ideal when you want the agent to be creative or adaptive. With a workflow, you explicitly define the execution path. Use workflows when you need deterministic, predictable behavior.
+- **Resilience** — A skill runs within a single agent turn. If something fails, the entire operation must be retried. Workflows support [checkpointing](../workflows/checkpoints.md), so they can resume from the last successful step after a failure. Choose workflows when the cost of re-executing the entire process is high.
+- **Side effects** — Skills are suitable when operations are idempotent or low-risk. Prefer workflows when steps produce side effects (sending emails, charging payments) that should not be repeated on retry.
+- **Complexity** — Skills are best for focused, single-domain tasks that one agent can handle. Workflows are better suited for multi-step business processes that coordinate multiple agents, human approvals, or external system integrations.
+
+> [!TIP]
+> As a rule of thumb: if you want the AI to figure out _how_ to accomplish a task, use a skill. If you need to guarantee _what_ steps execute and in what order, use a workflow.
 
 ## Next steps
 
