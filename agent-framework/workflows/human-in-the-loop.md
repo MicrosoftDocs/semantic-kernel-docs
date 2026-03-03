@@ -1,315 +1,225 @@
 ---
-title: "Human-in-the-Loop Workflows"
-description: "Learn how to add human approval, review, and input steps to Agent Framework workflows."
+title: Microsoft Agent Framework Workflows - Human-in-the-loop (HITL)
+description: In-depth look at Human-in-the-loop interactions in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
-author: eavanvalkenburg
-ms.topic: conceptual
-ms.author: edvan
-ms.date: 02/09/2026
+author: TaoChenOSU
+ms.topic: tutorial
+ms.author: taochen
+ms.date: 03/03/2026
 ms.service: agent-framework
 ---
 
-# Human-in-the-Loop Workflows
+# Microsoft Agent Framework Workflows - Human-in-the-loop (HITL)
 
-Add human review, approval, or input steps into your workflow execution.
+This page provides an overview of **Human-in-the-loop (HITL)** interactions in the Microsoft Agent Framework Workflow system. HILT is achieved through the **request and response** handling mechanism in workflows, which allows executors to send requests to external systems (such as human operators) and wait for their responses before proceeding with the workflow execution.
 
-Human-in-the-loop (HITL) patterns let you pause a workflow at key decision points, collect human input, and then resume execution. This is essential for scenarios where AI outputs need review before proceeding.
+## Overview
 
-:::zone pivot="programming-language-csharp"
+Executors in a workflow can send requests to outside of the workflow and wait for responses. This is useful for scenarios where an executor needs to interact with external systems, such as human-in-the-loop interactions, or any other asynchronous operations.
+
+::: zone pivot="programming-language-csharp"
+
+Let's build a workflow that asks a human operator to guess a number and uses an executor to judge whether the guess is correct.
+
+## Enable Request and Response Handling in a Workflow
+
+Requests and responses are handled via a special type called `RequestPort`.
+
+A `RequestPort` is a communication channel that allows executors to send requests and receive responses. When an executor sends a message to a `RequestPort`, the request port emits a `RequestInfoEvent` that contains the details of the request. External systems can listen for these events, process the requests, and send responses back to the workflow. The framework automatically routes the responses back to the appropriate executor based on the original request.
 
 ```csharp
-using System;
-using System.Threading.Tasks;
-using Azure.AI.OpenAI;
-using Azure.Identity;
-using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.Workflows;
-using Microsoft.Extensions.AI;
+// Create a request port that receives requests of type NumberSignal and responses of type int.
+var numberRequestPort = RequestPort.Create<NumberSignal, int>("GuessNumber");
+```
 
-// Create the agent
-var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
-    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
+Add the input port to a workflow.
 
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent(instructions: "You guess a number between 1 and 10.");
+```csharp
+JudgeExecutor judgeExecutor = new(42);
+var workflow = new WorkflowBuilder(numberRequestPort)
+    .AddEdge(numberRequestPort, judgeExecutor)
+    .AddEdge(judgeExecutor, numberRequestPort)
+    .WithOutputFrom(judgeExecutor)
+    .Build();
+```
 
-// Build a workflow with human-in-the-loop approval
-var workflow = AgentWorkflowBuilder.BuildSequential([agent]);
+The definition of `JudgeExecutor` needs a target number and be able to judge whether the guess is correct. If it is not correct, it will send another request to ask for a new guess through the `RequestPort`.
 
-// Run the workflow, pausing for human input at each step
-await foreach (var update in workflow.RunStreamingAsync("Guess a number between 1 and 10."))
+```csharp
+internal enum NumberSignal
 {
-    Console.Write(update);
+    Init,
+    Above,
+    Below,
+}
 
-    // Prompt the user for feedback before continuing
-    Console.Write("\nYour feedback (higher/lower/correct): ");
-    var feedback = Console.ReadLine();
+internal sealed class JudgeExecutor() : Executor<int>("Judge")
+{
+    private readonly int _targetNumber;
+    private int _tries;
 
-    if (feedback?.Equals("correct", StringComparison.OrdinalIgnoreCase) == true)
+    public JudgeExecutor(int targetNumber) : this()
     {
-        Console.WriteLine("Guessed correctly!");
-        break;
+        this._targetNumber = targetNumber;
+    }
+
+    public override async ValueTask HandleAsync(int message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    {
+        this._tries++;
+        if (message == this._targetNumber)
+        {
+            await context.YieldOutputAsync($"{this._targetNumber} found in {this._tries} tries!", cancellationToken);
+        }
+        else if (message < this._targetNumber)
+        {
+            await context.SendMessageAsync(NumberSignal.Below, cancellationToken: cancellationToken);
+        }
+        else
+        {
+            await context.SendMessageAsync(NumberSignal.Above, cancellationToken: cancellationToken);
+        }
+    }
+}
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Executors can send requests using `ctx.request_info()` and handle responses with `@response_handler`.
+
+```python
+from agent_framework import response_handler, WorkflowBuilder
+
+executor_a = SomeExecutor()
+executor_b = SomeOtherExecutor()
+workflow_builder = WorkflowBuilder(start_executor=executor_a)
+workflow_builder.add_edge(executor_a, executor_b)
+workflow = workflow_builder.build()
+```
+
+`executor_a` can send requests and receive responses directly using built-in capabilities.
+
+```python
+from agent_framework import (
+    Executor,
+    WorkflowContext,
+    handler,
+    response_handler,
+)
+
+class SomeExecutor(Executor):
+
+    @handler
+    async def handle_data(
+        self,
+        data: OtherDataType,
+        context: WorkflowContext,
+    ):
+        # Process the message...
+        ...
+        # Send a request using the API
+        await context.request_info(
+            request_data=CustomRequestType(...),
+            response_type=CustomResponseType
+        )
+
+    @response_handler
+    async def handle_response(
+        self,
+        original_request: CustomRequestType,
+        response: CustomResponseType,
+        context: WorkflowContext,
+    ):
+        # Process the response...
+        ...
+```
+
+The `@response_handler` decorator automatically registers the method to handle responses for the specified request and response types.
+
+::: zone-end
+
+## Handling Requests and Responses
+
+::: zone pivot="programming-language-csharp"
+
+An `RequestPort` emits a `RequestInfoEvent` when it receives a request. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor that sent the original request.
+
+```csharp
+await using StreamingRun handle = await InProcessExecution.RunStreamingAsync(workflow, NumberSignal.Init);
+await foreach (WorkflowEvent evt in handle.WatchStreamAsync())
+{
+    switch (evt)
+    {
+        case RequestInfoEvent requestInputEvt:
+            // Handle `RequestInfoEvent` from the workflow
+            int guess = ...; // Get the guess from the human operator or any external system
+            await handle.SendResponseAsync(requestInputEvt.request.CreateResponse(guess));
+            break;
+
+        case WorkflowOutputEvent outputEvt:
+            // The workflow has yielded output
+            Console.WriteLine($"Workflow completed with result: {outputEvt.Data}");
+            return;
     }
 }
 ```
 
 > [!TIP]
-> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/03-workflows/human-in-the-loop/HumanInTheLoop.cs) for the complete runnable file.
+> See the [full sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/HumanInTheLoop/HumanInTheLoopBasic) for the complete runnable project.
 
-:::zone-end
+::: zone-end
 
-:::zone pivot="programming-language-python"
+::: zone pivot="programming-language-python"
+
+Executors can send requests directly without needing a separate component. When an executor calls `ctx.request_info()`, the workflow emits a `RequestInfoEvent`. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor's `@response_handler` method.
 
 ```python
-# Copyright (c) Microsoft. All rights reserved.
-
-import asyncio
-from collections.abc import AsyncIterable
-from dataclasses import dataclass
-
-from agent_framework import (
-    AgentExecutorRequest,
-    AgentExecutorResponse,
-    AgentResponseUpdate,
-    Executor,
-    Message,
-    WorkflowBuilder,
-    WorkflowContext,
-    WorkflowEvent,
-    handler,
-    response_handler,
-)
-from agent_framework.azure import AzureOpenAIChatClient
-from azure.identity import AzureCliCredential
-from pydantic import BaseModel
-
-"""
-Sample: Human in the loop guessing game
-
-An agent guesses a number, then a human guides it with higher, lower, or
-correct. The loop continues until the human confirms correct, at which point
-the workflow completes when idle with no pending work.
-
-Purpose:
-Show how to integrate a human step in the middle of an LLM workflow by using
-`request_info` and `run(responses=..., stream=True)`.
-
-Demonstrate:
-- Alternating turns between an AgentExecutor and a human, driven by events.
-- Using Pydantic response_format to enforce structured JSON output from the agent instead of regex parsing.
-- Driving the loop in application code with run and responses parameter.
-
-Prerequisites:
-- Azure OpenAI configured for AzureOpenAIChatClient with required environment variables.
-- Authentication via azure-identity. Use AzureCliCredential and run az login before executing the sample.
-- Basic familiarity with WorkflowBuilder, executors, edges, events, and streaming runs.
-"""
-
-# How human-in-the-loop is achieved via `request_info` and `run(responses=..., stream=True)`:
-# - An executor (TurnManager) calls `ctx.request_info` with a payload (HumanFeedbackRequest).
-# - The workflow run pauses and emits a  with the payload and the request_id.
-# - The application captures the event, prompts the user, and collects replies.
-# - The application calls `run(stream=True, responses=...)` with a map of request_ids to replies.
-# - The workflow resumes, and the response is delivered to the executor method decorated with @response_handler.
-# - The executor can then continue the workflow, e.g., by sending a new message to the agent.
-
-
-@dataclass
-class HumanFeedbackRequest:
-    """Request sent to the human for feedback on the agent's guess."""
-
-    prompt: str
-
-
-class GuessOutput(BaseModel):
-    """Structured output from the agent. Enforced via response_format for reliable parsing."""
-
-    guess: int
-
-
-class TurnManager(Executor):
-    """Coordinates turns between the agent and the human.
-
-    Responsibilities:
-    - Kick off the first agent turn.
-    - After each agent reply, request human feedback with a HumanFeedbackRequest.
-    - After each human reply, either finish the game or prompt the agent again with feedback.
-    """
-
-    def __init__(self, id: str | None = None):
-        super().__init__(id=id or "turn_manager")
-
-    @handler
-    async def start(self, _: str, ctx: WorkflowContext[AgentExecutorRequest]) -> None:
-        """Start the game by asking the agent for an initial guess.
-
-        Contract:
-        - Input is a simple starter token (ignored here).
-        - Output is an AgentExecutorRequest that triggers the agent to produce a guess.
-        """
-        user = Message("user", text="Start by making your first guess.")
-        await ctx.send_message(AgentExecutorRequest(messages=[user], should_respond=True))
-
-    @handler
-    async def on_agent_response(
-        self,
-        result: AgentExecutorResponse,
-        ctx: WorkflowContext,
-    ) -> None:
-        """Handle the agent's guess and request human guidance.
-
-        Steps:
-        1) Parse the agent's JSON into GuessOutput for robustness.
-        2) Request info with a HumanFeedbackRequest as the payload.
-        """
-        # Parse structured model output
-        text = result.agent_response.text
-        last_guess = GuessOutput.model_validate_json(text).guess
-
-        # Craft a precise human prompt that defines higher and lower relative to the agent's guess.
-        prompt = (
-            f"The agent guessed: {last_guess}. "
-            "Type one of: higher (your number is higher than this guess), "
-            "lower (your number is lower than this guess), correct, or exit."
-        )
-        # Send a request with a prompt as the payload and expect a string reply.
-        await ctx.request_info(
-            request_data=HumanFeedbackRequest(prompt=prompt),
-            response_type=str,
-        )
-
-    @response_handler
-    async def on_human_feedback(
-        self,
-        original_request: HumanFeedbackRequest,
-        feedback: str,
-        ctx: WorkflowContext[AgentExecutorRequest, str],
-    ) -> None:
-        """Continue the game or finish based on human feedback."""
-        reply = feedback.strip().lower()
-
-        if reply == "correct":
-            await ctx.yield_output("Guessed correctly!")
-            return
-
-        # Provide feedback to the agent to try again.
-        # response_format=GuessOutput on the agent ensures JSON output, so we just need to guide the logic.
-        last_guess = original_request.prompt.split(": ")[1].split(".")[0]
-        feedback_text = (
-            f"Feedback: {reply}. Your last guess was {last_guess}. "
-            f"Use this feedback to adjust and make your next guess (1-10)."
-        )
-        user_msg = Message("user", text=feedback_text)
-        await ctx.send_message(AgentExecutorRequest(messages=[user_msg], should_respond=True))
+from agent_framework import RequestInfoEvent
 
 
 async def process_event_stream(stream: AsyncIterable[WorkflowEvent]) -> dict[str, str] | None:
-    """Process events from the workflow stream to capture human feedback requests."""
-    # Track the last author to format streaming output.
-    last_response_id: str | None = None
-
+    """Process events from the workflow stream to capture requests."""
     requests: list[tuple[str, HumanFeedbackRequest]] = []
     async for event in stream:
-        if event.type == "request_info" and isinstance(event.data, HumanFeedbackRequest):
+        if event.type == "request_info":
             requests.append((event.request_id, event.data))
-        elif event.type == "output":
-            if isinstance(event.data, AgentResponseUpdate):
-                update = event.data
-                response_id = update.response_id
-                if response_id != last_response_id:
-                    if last_response_id is not None:
-                        print()  # Newline between different responses
-                    print(f"{update.author_name}: {update.text}", end="", flush=True)
-                    last_response_id = response_id
-                else:
-                    print(update.text, end="", flush=True)
-            else:
-                print(f"\n{event.executor_id}: {event.data}")
 
     # Handle any pending human feedback requests.
     if requests:
         responses: dict[str, str] = {}
         for request_id, request in requests:
-            print(f"\nHITL: {request.prompt}")
-            # Instructional print already appears above. The input line below is the user entry point.
-            # If desired, you can add more guidance here, but keep it concise.
-            answer = input("Enter higher/lower/correct/exit: ").lower()  # noqa: ASYNC250
-            if answer == "exit":
-                print("Exiting...")
-                return None
-            responses[request_id] = answer
+            responses[request_id] = ...  # Get the response for the request from the human operator or any external system.
         return responses
 
     return None
 
+# Initiate the first run of the workflow.
+# Runs are not isolated; state is preserved across multiple calls to run.
+stream = workflow.run("start", stream=True)
 
-async def main() -> None:
-    """Run the human-in-the-loop guessing game workflow."""
-    # Create agent and executor
-    guessing_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
-        name="GuessingAgent",
-        instructions=(
-            "You guess a number between 1 and 10. "
-            "If the user says 'higher' or 'lower', adjust your next guess. "
-            'You MUST return ONLY a JSON object exactly matching this schema: {"guess": <integer 1..10>}. '
-            "No explanations or additional text."
-        ),
-        # response_format enforces that the model produces JSON compatible with GuessOutput.
-        default_options={"response_format": GuessOutput},
-    )
-    turn_manager = TurnManager(id="turn_manager")
-
-    # Build a simple loop: TurnManager <-> AgentExecutor.
-    workflow = (
-        WorkflowBuilder(start_executor=turn_manager)
-        .add_edge(turn_manager, guessing_agent)  # Ask agent to make/adjust a guess
-        .add_edge(guessing_agent, turn_manager)  # Agent's response comes back to coordinator
-    ).build()
-
-    # Initiate the first run of the workflow.
-    # Runs are not isolated; state is preserved across multiple calls to run.
-    stream = workflow.run("start", stream=True)
-
+pending_responses = await process_event_stream(stream)
+while pending_responses is not None:
+    # Run the workflow until there is no more human feedback to provide,
+    # in which case this workflow completes.
+    stream = workflow.run(stream=True, responses=pending_responses)
     pending_responses = await process_event_stream(stream)
-    while pending_responses is not None:
-        # Run the workflow until there is no more human feedback to provide,
-        # in which case this workflow completes.
-        stream = workflow.run(stream=True, responses=pending_responses)
-        pending_responses = await process_event_stream(stream)
-
-    """
-    Sample Output:
-
-    HITL> The agent guessed: 5. Type one of: higher (your number is higher than this guess), lower (your number is lower than this guess), correct, or exit.
-    Enter higher/lower/correct/exit: higher
-    HITL> The agent guessed: 8. Type one of: higher (your number is higher than this guess), lower (your number is lower than this guess), correct, or exit.
-    Enter higher/lower/correct/exit: higher
-    HITL> The agent guessed: 10. Type one of: higher (your number is higher than this guess), lower (your number is lower than this guess), correct, or exit.
-    Enter higher/lower/correct/exit: lower
-    HITL> The agent guessed: 9. Type one of: higher (your number is higher than this guess), lower (your number is lower than this guess), correct, or exit.
-    Enter higher/lower/correct/exit: correct
-    Workflow output: Guessed correctly: 9
-    """  # noqa: E501
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
 ```
 
 > [!TIP]
-> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/human-in-the-loop/human_in_the_loop.py) for the complete runnable file.
+> See this [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/human-in-the-loop/guessing_game_with_human_input.py) for a complete runnable file.
 
-:::zone-end
+::: zone-end
 
-## Next steps
+## Checkpoints and Requests
 
-> [!div class="nextstepaction"]
-> [State Management](./state.md)
+To learn more about checkpoints, see [Checkpoints](./checkpoints.md).
 
-**Go deeper:**
+When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You cannot provide responses directly during the resume operation - instead, you must listen for the re-emitted events and respond using the standard response mechanism.
 
-- [Checkpoints & Resuming](./checkpoints.md) — persist and resume workflows
-- [Agents in Workflows](./agents-in-workflows.md) — use agents as workflow steps
-- [Tool Approval](../agents/tools/tool-approval.md) — human approval for tool calls
+## Next Steps
+
+- [Learn how to manage state](./state.md) in workflows.
+- [Learn how to create checkpoints and resume from them](./checkpoints.md).
+- [Learn how to monitor workflows](./observability.md).
+- [Learn how to visualize workflows](./visualization.md).
