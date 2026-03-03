@@ -20,7 +20,7 @@ AG-UI is a standardized protocol for building AI agent interfaces that provides:
 - **Remote Agent Hosting**: Deploy AI agents as web services accessible by multiple clients
 - **Real-time Streaming**: Stream agent responses using Server-Sent Events (SSE) for immediate feedback
 - **Standardized Communication**: Consistent message format for reliable agent interactions
-- **Thread Management**: Maintain conversation context across multiple requests
+- **Session Management**: Maintain conversation context across multiple requests
 - **Advanced Features**: Human-in-the-loop approvals, state synchronization, and custom UI rendering
 
 ## When to Use AG-UI
@@ -65,7 +65,7 @@ While you can run agents directly in your application using Agent Framework's `R
 | Client Access | Single application | Multiple clients (web, mobile) |
 | Streaming | In-process async iteration | Server-Sent Events (SSE) |
 | State Management | Application-managed | Protocol-level state snapshots |
-| Thread Context | Application-managed | Protocol-managed thread IDs |
+| Session Context | Application-managed | Protocol-managed session IDs |
 | Approval Workflows | Custom implementation | Built-in middleware pattern |
 
 ## Architecture Overview
@@ -117,7 +117,7 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 | `AgentResponseUpdate` | AG-UI Events | Converted to protocol events automatically |
 | `AIFunctionFactory.Create()` | Backend Tools | Executed on server, results streamed |
 | `ApprovalRequiredAIFunction` | Human-in-the-Loop | Middleware converts to approval protocol |
-| `AgentThread` | Thread Management | `ConversationId` maintains context |
+| `AgentSession` | Session Management | `ConversationId` maintains context |
 | `ChatResponseFormat.ForJsonSchema<T>()` | State Snapshots | Structured output becomes state events |
 
 ## Installation
@@ -136,12 +136,12 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-<!-- 3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows -->
-<!-- 4. **[State Management](state-management.md)**: Synchronize state between client and server -->
+<!-- 3. **[Human-in-the-Loop](#)**: Implement approval workflows -->
+<!-- 4. **[State Management](#)**: Synchronize state between client and server -->
 
 ## Additional Resources
 
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 - [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
 - [Microsoft.Extensions.AI Documentation](/dotnet/api/microsoft.extensions.ai)
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
@@ -152,7 +152,7 @@ To get started with AG-UI integration:
 
 ## AG-UI vs. Direct Agent Usage
 
-While you can run agents directly in your application using Agent Framework's `run` and `run_streaming` methods, AG-UI provides additional capabilities:
+While you can run agents directly in your application using Agent Framework's `run` and `run(..., stream=True)` methods, AG-UI provides additional capabilities:
 
 | Feature | Direct Agent Usage | AG-UI Integration |
 |---------|-------------------|-------------------|
@@ -194,7 +194,7 @@ The AG-UI integration uses a clean, modular architecture:
          │
          ▼
 ┌─────────────────────────┐
-│  ChatAgent              │
+│  Agent              │
 │  (Agent Framework)      │
 └────────┬────────────────┘
          │
@@ -220,11 +220,11 @@ Understanding how Agent Framework concepts map to AG-UI helps you build effectiv
 
 | Agent Framework Concept | AG-UI Equivalent | Description |
 |------------------------|------------------|-------------|
-| `ChatAgent` | Agent Endpoint | Each agent becomes an HTTP endpoint |
+| `Agent` | Agent Endpoint | Each agent becomes an HTTP endpoint |
 | `agent.run()` | HTTP POST Request | Client sends messages via HTTP |
-| `agent.run_streaming()` | Server-Sent Events | Streaming responses via SSE |
+| `agent.run(..., stream=True)` | Server-Sent Events | Streaming responses via SSE |
 | Agent response updates | AG-UI Events | `TEXT_MESSAGE_CONTENT`, `TOOL_CALL_START`, etc. |
-| Function tools (`@ai_function`) | Backend Tools | Executed on server, results streamed to client |
+| Function tools (`@tool`) | Backend Tools | Executed on server, results streamed to client |
 | Tool approval mode | Human-in-the-Loop | Approval requests/responses via protocol |
 | Conversation history | Thread Management | `threadId` maintains context across requests |
 
@@ -244,12 +244,12 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-<!-- 3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows -->
-<!-- 4. **[State Management](state-management.md)**: Synchronize state between client and server -->
+<!-- 3. **[Human-in-the-Loop](#)**: Implement approval workflows -->
+<!-- 4. **[State Management](#)**: Synchronize state between client and server -->
 
 ## Additional Resources
 
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 - [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
 - [AG-UI Dojo App](https://dojo.ag-ui.com/) - Example application demonstrating Agent Framework integration
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
