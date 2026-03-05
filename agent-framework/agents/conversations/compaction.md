@@ -13,8 +13,19 @@ ms.service: agent-framework
 
 As conversations grow, the token count of the chat history can exceed model context windows or drive up costs. Compaction strategies reduce the size of conversation history while preserving important context, so agents can continue functioning over long-running interactions.
 
+:::zone pivot="programming-language-csharp"
+
 > [!IMPORTANT]
 > The compaction framework is currently experimental. To use it, you will need to add `#pragma warning disable MAAI001`.
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+> [!NOTE]
+> Compaction strategies are not yet available in the Python SDK. This page documents the C# implementation. Python support is planned for a future release.
+
+:::zone-end
 
 ## Why compaction matters
 
@@ -70,7 +81,7 @@ Combine triggers with `CompactionTriggers.All(...)` (logical AND) or `Compaction
 
 ```csharp
 // Compact only when there are tool calls AND tokens exceed 2000
-var trigger = CompactionTriggers.All(
+CompactionTrigger trigger = CompactionTriggers.All(
     CompactionTriggers.HasToolCalls(),
     CompactionTriggers.TokensExceed(2000));
 ```
@@ -109,7 +120,7 @@ The most straightforward approach: removes the oldest non-system message groups 
 
 ```csharp
 // Drop oldest groups when tokens exceed 32K, keeping at least 10 recent groups
-var truncation = new TruncationCompactionStrategy(
+TruncationCompactionStrategy truncation = new(
     trigger: CompactionTriggers.TokensExceed(0x8000),
     minimumPreserved: 10);
 ```
@@ -124,7 +135,7 @@ Removes the oldest user **turns** and their associated response groups. Unlike t
 
 ```csharp
 // Keep only the last 4 user turns
-var slidingWindow = new SlidingWindowCompactionStrategy(
+SlidingWindowCompactionStrategy slidingWindow = new(
     trigger: CompactionTriggers.TurnsExceed(4));
 ```
 
@@ -139,7 +150,7 @@ The gentlest strategy: collapses old tool call groups into single concise assist
 
 ```csharp
 // Collapse old tool results when tokens exceed 512
-var toolCompaction = new ToolResultCompactionStrategy(
+ToolResultCompactionStrategy toolCompaction = new(
     trigger: CompactionTriggers.TokensExceed(0x200));
 ```
 
@@ -155,7 +166,7 @@ Uses an LLM to summarize older portions of the conversation, replacing them with
 
 ```csharp
 // Summarize older messages when tokens exceed 1280, keeping the last 4 groups
-var summarization = new SummarizationCompactionStrategy(
+SummarizationCompactionStrategy summarization = new(
     chatClient: summarizerChatClient,
     trigger: CompactionTriggers.TokensExceed(0x500),
     minimumPreserved: 4);
@@ -164,7 +175,7 @@ var summarization = new SummarizationCompactionStrategy(
 You can provide a custom summarization prompt:
 
 ```csharp
-var summarization = new SummarizationCompactionStrategy(
+SummarizationCompactionStrategy summarization = new(
     chatClient: summarizerChatClient,
     trigger: CompactionTriggers.TokensExceed(0x500),
     summarizationPrompt: "Summarize the key decisions and user preferences only.");
@@ -178,7 +189,7 @@ Composes multiple strategies into a sequential pipeline. Each strategy operates 
 - Strategies execute in order, so put the gentlest strategies first.
 
 ```csharp
-var pipeline = new PipelineCompactionStrategy(
+PipelineCompactionStrategy pipeline = new(
     new ToolResultCompactionStrategy(CompactionTriggers.TokensExceed(0x200)),
     new SummarizationCompactionStrategy(summarizerChatClient, CompactionTriggers.TokensExceed(0x500)),
     new SlidingWindowCompactionStrategy(CompactionTriggers.TurnsExceed(4)),
