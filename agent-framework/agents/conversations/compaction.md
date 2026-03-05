@@ -13,6 +13,9 @@ ms.service: agent-framework
 
 As conversations grow, the token count of the chat history can exceed model context windows or drive up costs. Compaction strategies reduce the size of conversation history while preserving important context, so agents can continue functioning over long-running interactions.
 
+> [!IMPORTANT]
+> The compaction framework is currently experimental. To use it, you will need to add `#pragma warning disable MAAI001`.
+
 ## Why compaction matters
 
 Every call to an LLM includes the full conversation history. Without compaction:
