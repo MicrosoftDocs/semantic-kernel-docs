@@ -75,6 +75,7 @@ resumed = AgentSession.from_dict(serialized)
 |---|---|
 | [Session](./session.md) | `AgentSession` structure and serialization |
 | [Context Providers](./context-providers.md) | Built-in and custom context/history provider patterns |
+| [Context Compaction](./compaction.md) | Efficiently manage conversation growth |
 | [Storage](./storage.md) | Built-in storage modes and external persistence strategies |
 
 ## Next steps
