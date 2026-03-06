@@ -258,9 +258,9 @@ Console.WriteLine(await agent.RunAsync("What's the price of a laptop?", session)
 
 :::zone-end
 
-:::zone pivot="programming-language-csharp"
-
 ## Choosing a strategy
+
+:::zone pivot="programming-language-csharp"
 
 | Strategy | Aggressiveness | Preserves context | Requires LLM | Best for |
 |---|---|---|---|---|
