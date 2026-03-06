@@ -129,7 +129,7 @@ To test your own agents with Dojo:
 Create a new agent following the [Getting Started](getting-started.md) guide:
 
 ```python
-from agent_framework import ChatAgent
+from agent_framework import Agent
 from agent_framework_azure_ai import AzureOpenAIChatClient
 
 # Create your agent
@@ -139,7 +139,7 @@ chat_client = AzureOpenAIChatClient(
     deployment_name=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
 )
 
-agent = ChatAgent(
+agent = Agent(
     name="my_test_agent",
     chat_client=chat_client,
     system_message="You are a helpful assistant.",
