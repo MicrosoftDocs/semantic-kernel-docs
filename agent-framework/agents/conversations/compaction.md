@@ -258,6 +258,8 @@ Console.WriteLine(await agent.RunAsync("What's the price of a laptop?", session)
 
 :::zone-end
 
+:::zone pivot="programming-language-csharp"
+
 ## Choosing a strategy
 
 | Strategy | Aggressiveness | Preserves context | Requires LLM | Best for |
@@ -267,6 +269,15 @@ Console.WriteLine(await agent.RunAsync("What's the price of a laptop?", session)
 | `SlidingWindowCompactionStrategy` | High | Low — drops entire turns | No | Hard turn-count limits |
 | `TruncationCompactionStrategy` | High | Low — drops oldest groups | No | Emergency token-budget backstops |
 | `PipelineCompactionStrategy` | Configurable | Depends on child strategies | Depends | Layered compaction with multiple fallbacks |
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+> [!NOTE]
+> Compaction strategies are not yet available in the Python SDK. This page documents the C# implementation. Python support is planned for a future release.
+
+:::zone-end
 
 ## Next steps
 
