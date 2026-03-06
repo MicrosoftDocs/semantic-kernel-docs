@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
-ms.date: 02/27/2026
+ms.date: 03/05/2026
 ms.service: agent-framework
 ---
 
@@ -72,12 +72,12 @@ Agent Skills use a three-stage progressive disclosure pattern to minimize contex
 
 This pattern keeps the agent's context window lean while giving it access to deep domain knowledge on demand.
 
-## Using FileAgentSkillsProvider
+## Providing skills to an agent
 
-The `FileAgentSkillsProvider` discovers skills from filesystem directories and makes them available to agents as a context provider. It searches configured paths recursively (up to two levels deep) for `SKILL.md` files, validates their format and resources, and exposes two tools to the agent: `load_skill` and `read_skill_resource`.
+The Agent Framework includes a skills provider that discovers skills from filesystem directories and makes them available to agents as a context provider. It searches configured paths recursively (up to two levels deep) for `SKILL.md` files, validates their format and resources, and exposes two tools to the agent: `load_skill` and `read_skill_resource`.
 
 > [!NOTE]
-> Script execution is not yet supported by `FileAgentSkillsProvider` and will be added in a future release.
+> Script execution is not yet supported and will be added in a future release.
 
 :::zone pivot="programming-language-csharp"
 
@@ -126,16 +126,16 @@ Console.WriteLine(response.Text);
 
 ### Basic setup
 
-Create a `FileAgentSkillsProvider` pointing to a directory containing your skills, and add it to the agent's context providers:
+Create a `SkillsProvider` pointing to a directory containing your skills, and add it to the agent's context providers:
 
 ```python
 from pathlib import Path
-from agent_framework import FileAgentSkillsProvider
+from agent_framework import SkillsProvider
 from agent_framework.azure import AzureOpenAIChatClient
 from azure.identity.aio import AzureCliCredential
 
 # Discover skills from the 'skills' directory
-skills_provider = FileAgentSkillsProvider(
+skills_provider = SkillsProvider(
     skill_paths=Path(__file__).parent / "skills"
 )
 
@@ -180,7 +180,7 @@ var skillsProvider = new FileAgentSkillsProvider(
 :::zone pivot="programming-language-python"
 
 ```python
-skills_provider = FileAgentSkillsProvider(
+skills_provider = SkillsProvider(
     skill_paths=[
         Path(__file__).parent / "company-skills",
         Path(__file__).parent / "team-skills",
@@ -194,7 +194,7 @@ Each path can point to an individual skill folder (containing a `SKILL.md`) or a
 
 ## Custom system prompt
 
-By default, `FileAgentSkillsProvider` injects a system prompt that lists available skills and instructs the agent to use `load_skill` and `read_skill_resource`. You can customize this prompt:
+By default, the skills provider injects a system prompt that lists available skills and instructs the agent to use `load_skill` and `read_skill_resource`. You can customize this prompt:
 
 :::zone pivot="programming-language-csharp"
 
@@ -220,10 +220,10 @@ var skillsProvider = new FileAgentSkillsProvider(
 :::zone pivot="programming-language-python"
 
 ```python
-skills_provider = FileAgentSkillsProvider(
+skills_provider = SkillsProvider(
     skill_paths=Path(__file__).parent / "skills",
-    skills_instruction_prompt=(
-        "You have skills available. Here they are:\n{0}\n"
+    instruction_template=(
+        "You have skills available. Here they are:\n{skills}\n"
         "Use the `load_skill` function to get skill instructions.\n"
         "Use the `read_skill_resource` function to read skill files."
     ),
@@ -231,7 +231,99 @@ skills_provider = FileAgentSkillsProvider(
 ```
 
 > [!NOTE]
-> The custom template must contain a `{0}` placeholder where the skill list is inserted.
+> The custom template must contain a `{skills}` placeholder where the skill list is inserted.
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+## Code-defined skills
+
+In addition to file-based skills discovered from `SKILL.md` files, you can define skills entirely in Python code. Code-defined skills are useful when:
+
+- Skill content is generated dynamically (for example, reading from a database or environment).
+- You want to keep skill definitions alongside the application code that uses them.
+- You need resources that execute logic at read time rather than serving static files.
+
+### Basic code skill
+
+Create a `Skill` instance with a name, description, and instruction content. Optionally attach `SkillResource` instances with static content:
+
+```python
+from textwrap import dedent
+from agent_framework import Skill, SkillResource, SkillsProvider
+
+code_style_skill = Skill(
+    name="code-style",
+    description="Coding style guidelines and conventions for the team",
+    content=dedent("""\
+        Use this skill when answering questions about coding style,
+        conventions, or best practices for the team.
+    """),
+    resources=[
+        SkillResource(
+            name="style-guide",
+            content=dedent("""\
+                # Team Coding Style Guide
+                - Use 4-space indentation (no tabs)
+                - Maximum line length: 120 characters
+                - Use type annotations on all public functions
+            """),
+        ),
+    ],
+)
+
+skills_provider = SkillsProvider(skills=[code_style_skill])
+```
+
+### Dynamic resources
+
+Use the `@skill.resource` decorator to register a function as a resource. The function is called each time the agent reads the resource, so it can return up-to-date data. Both sync and async functions are supported:
+
+```python
+import os
+from agent_framework import Skill
+
+project_info_skill = Skill(
+    name="project-info",
+    description="Project status and configuration information",
+    content="Use this skill for questions about the current project.",
+)
+
+@project_info_skill.resource
+def environment() -> str:
+    """Get current environment configuration."""
+    env = os.environ.get("APP_ENV", "development")
+    region = os.environ.get("APP_REGION", "us-east-1")
+    return f"Environment: {env}, Region: {region}"
+
+@project_info_skill.resource(name="team-roster", description="Current team members")
+def get_team_roster() -> str:
+    """Return the team roster."""
+    return "Alice Chen (Tech Lead), Bob Smith (Backend Engineer)"
+```
+
+When the decorator is used without arguments (`@skill.resource`), the function name becomes the resource name and the docstring becomes the description. Use `@skill.resource(name="...", description="...")` to set them explicitly.
+
+### Combining file-based and code-defined skills
+
+Pass both `skill_paths` and `skills` to a single `SkillsProvider`. File-based skills are discovered first; if a code-defined skill has the same name as an existing file-based skill, the code-defined skill is skipped:
+
+```python
+from pathlib import Path
+from agent_framework import Skill, SkillsProvider
+
+my_skill = Skill(
+    name="my-code-skill",
+    description="A code-defined skill",
+    content="Instructions for the skill.",
+)
+
+skills_provider = SkillsProvider(
+    skill_paths=Path(__file__).parent / "skills",
+    skills=[my_skill],
+)
+```
 
 :::zone-end
 
