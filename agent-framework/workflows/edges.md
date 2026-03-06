@@ -5,9 +5,22 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 02/12/2026
+ms.date: 03/05/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                | C# | Python | Notes |
+  |------------------------|:--:|:------:|-------|
+  | Edge Types (overview)  | ✅ |   ✅   |       |
+  | Direct Edges           | ✅ |   ✅   |       |
+  | Fan-in Edges           | ✅ |   ✅   |       |
+  | Conditional Edges      | ✅ |   ✅   |       |
+  | Switch-Case Edges      | ✅ |   ✅   |       |
+  | Multi-Selection Edges  | ✅ |   ✅   |       |
+-->
 
 # Edges
 
@@ -55,7 +68,7 @@ Collect messages from multiple sources into a single target:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-builder.AddFanInEdge(aggregatorExecutor, sources: [worker1, worker2, worker3]);
+builder.AddFanInBarrierEdge(sources: [worker1, worker2, worker3], target: aggregatorExecutor);
 ```
 
 ::: zone-end
@@ -2177,7 +2190,7 @@ Run the workflow and observe parallel execution through custom events:
 )
 ```
 
-### C# Multi-Selection Benefits
+### Multi-Selection Benefits
 
 1. **Parallel Processing**: Multiple branches can execute simultaneously
 2. **Conditional Fan-out**: Number of targets varies based on content
@@ -2185,7 +2198,7 @@ Run the workflow and observe parallel execution through custom events:
 4. **Efficient Resource Usage**: Only necessary branches are activated
 5. **Complex Business Logic**: Supports sophisticated routing scenarios
 
-### C# Real-World Applications
+### Real-World Applications
 
 - **Email Systems**: Route to reply assistant + archive + analytics (conditionally)
 - **Content Processing**: Trigger transcription + translation + analysis (based on content type)

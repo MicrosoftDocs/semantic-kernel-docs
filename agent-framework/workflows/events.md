@@ -5,9 +5,22 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 02/12/2026
+ms.date: 03/05/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section              | C#  | Python | Notes                                          |
+  |----------------------|:---:|:------:|-------------------------------------------------|
+  | Built-in Event Types | ✅  |   ✅   | Python has extra status/failed; C# has separate |
+  |                      |     |        | AgentResponse classes vs Python "data" type     |
+  | Consuming Events     | ✅  |   ✅   |                                                 |
+  | Defining Custom      | ✅  |   ✅   |                                                 |
+  | Emitting Custom      | ✅  |   ✅   |                                                 |
+  | Consuming Custom     | ✅  |   ✅   |                                                 |
+-->
 
 # Events
 
@@ -45,18 +58,26 @@ RequestInfoEvent         // A request is issued
 
 ```python
 # All events use the unified WorkflowEvent class with a type discriminator:
+
+# Workflow lifecycle events
 WorkflowEvent.type == "started"             # Workflow execution begins
+WorkflowEvent.type == "status"              # Workflow state changed (use .state)
 WorkflowEvent.type == "output"              # Workflow produces an output
-WorkflowEvent.type == "error"               # Workflow encounters an error
+WorkflowEvent.type == "failed"              # Workflow terminated with error (use .details)
+WorkflowEvent.type == "error"               # Non-fatal error from user code
 WorkflowEvent.type == "warning"             # Workflow encountered a warning
 
+# Executor events
 WorkflowEvent.type == "executor_invoked"    # Executor starts processing
 WorkflowEvent.type == "executor_completed"  # Executor finishes processing
 WorkflowEvent.type == "executor_failed"     # Executor encounters an error
+WorkflowEvent.type == "data"                # Executor emitted data (e.g., AgentResponse)
 
+# Superstep events
 WorkflowEvent.type == "superstep_started"   # Superstep begins
 WorkflowEvent.type == "superstep_completed" # Superstep completes
 
+# Request events
 WorkflowEvent.type == "request_info"        # A request is issued
 ```
 
@@ -116,22 +137,70 @@ async for event in workflow.run_stream(input_message):
 
 ## Custom Events
 
-Define and emit custom events during workflow execution for enhanced observability.
+Custom events let executors emit domain-specific signals during workflow execution tailored to your application's needs. Some example use cases include:
+
+- **Track progress** — report intermediate steps so callers can show status updates.
+- **Emit diagnostics** — surface warnings, metrics, or debug information without changing the workflow output.
+- **Relay domain data** — push structured payloads (e.g., database writes, tool calls) to listeners in real time.
+
+### Defining Custom Events
 
 ::: zone pivot="programming-language-csharp"
+
+Define a custom event by subclassing `WorkflowEvent`. The base constructor accepts an optional `object? data` payload that is exposed through the `Data` property.
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
 
-internal sealed class CustomEvent(string message) : WorkflowEvent(message) { }
+// Simple event with a string payload
+internal sealed class ProgressEvent(string step) : WorkflowEvent(step) { }
+
+// Event with a structured payload
+internal sealed class MetricsEvent(MetricsData metrics) : WorkflowEvent(metrics) { }
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+In Python, create custom events using the `WorkflowEvent` class directly with a custom type discriminator string. The `type` and `data` parameters carry all the information.
+
+```python
+from agent_framework import WorkflowEvent
+
+# Create a custom event with a custom type string and payload
+event = WorkflowEvent(type="progress", data="Step 1 complete")
+
+# Custom event with a structured payload
+event = WorkflowEvent(type="metrics", data={"latency_ms": 42, "tokens": 128})
+```
+
+> [!NOTE]
+> The event types `"started"`, `"status"`, and `"failed"` are reserved for framework lifecycle notifications. If an executor attempts to emit one of these types, the event is ignored and a warning is logged.
+
+::: zone-end
+
+### Emitting Custom Events
+
+::: zone pivot="programming-language-csharp"
+
+Emit custom events from an executor's message handler by calling `AddEventAsync` on the `IWorkflowContext`:
+
+```csharp
+using Microsoft.Agents.AI.Workflows;
+
+internal sealed class ProgressEvent(string step) : WorkflowEvent(step) { }
 
 internal sealed partial class CustomExecutor() : Executor("CustomExecutor")
 {
     [MessageHandler]
     private async ValueTask HandleAsync(string message, IWorkflowContext context)
     {
-        await context.AddEventAsync(new CustomEvent($"Processing message: {message}"));
+        await context.AddEventAsync(new ProgressEvent("Validating input"));
+
         // Executor logic...
+
+        await context.AddEventAsync(new ProgressEvent("Processing complete"));
     }
 }
 ```
@@ -139,6 +208,8 @@ internal sealed partial class CustomExecutor() : Executor("CustomExecutor")
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+Emit custom events from a handler by calling `add_event` on the `WorkflowContext`:
 
 ```python
 from agent_framework import (
@@ -152,8 +223,50 @@ class CustomExecutor(Executor):
 
     @handler
     async def handle(self, message: str, ctx: WorkflowContext[str]) -> None:
-        await ctx.add_event(WorkflowEvent("data", data=f"Processing message: {message}"))
+        await ctx.add_event(WorkflowEvent(type="progress", data="Validating input"))
+
         # Executor logic...
+
+        await ctx.add_event(WorkflowEvent(type="progress", data="Processing complete"))
+```
+
+::: zone-end
+
+### Consuming Custom Events
+
+::: zone pivot="programming-language-csharp"
+
+Use pattern matching to filter for your custom event type in the event stream:
+
+```csharp
+await foreach (WorkflowEvent evt in run.WatchStreamAsync())
+{
+    switch (evt)
+    {
+        case ProgressEvent progress:
+            Console.WriteLine($"Progress: {progress.Data}");
+            break;
+
+        case WorkflowOutputEvent output:
+            Console.WriteLine($"Done: {output.Data}");
+            return;
+    }
+}
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Filter on the custom type discriminator string:
+
+```python
+async for event in workflow.run(input_message, stream=True):
+    if event.type == "progress":
+        print(f"Progress: {event.data}")
+    elif event.type == "output":
+        print(f"Done: {event.data}")
+        return
 ```
 
 ::: zone-end
