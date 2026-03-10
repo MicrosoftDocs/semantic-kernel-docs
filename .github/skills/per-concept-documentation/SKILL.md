@@ -35,4 +35,5 @@ To create or update documentation for a specific concept in the project, follow 
    ```
 
 9. **Resolve parity gaps.** For each missing section identified in the parity table, determine whether it should be added (the concept exists in the other language's SDK) or marked as language-specific. Add equivalent sections where appropriate, mirroring the structure and depth of the existing language zone.
-10. **Update the date.** After making changes, update the `ms.date` field in the YAML frontmatter to the current date.
+10. **Treat each language zone as an isolated document.** Do not compare or contrast one language's implementation with another within the zone content itself. For example, avoid phrases like "Unlike C#, Python does not use a RequestPort" or "the same guessing game workflow." Each zone pivot should read as a standalone document that makes sense without any knowledge of the other language's zone.
+11. **Update the date.** After making changes, update the `ms.date` field in the YAML frontmatter to the current date.
