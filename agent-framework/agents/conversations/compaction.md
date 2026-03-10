@@ -216,7 +216,7 @@ This pipeline:
 
 :::zone pivot="programming-language-csharp"
 
-Assign a compaction strategy via the `CompactionStrategy` property on `ChatClientAgentOptions`. The framework automatically applies compaction before each LLM call during the tool loop.
+Wrap the compaction strategy in a `CompactionProvider` and register it as an `AIContextProvider` using the fluent builder API. The provider applies compaction to the accumulated message list before each LLM call during the tool loop.
 
 ```csharp
 IChatClient agentChatClient = openAIClient.GetChatClient(deploymentName).AsIChatClient();
@@ -230,21 +230,29 @@ PipelineCompactionStrategy compactionPipeline =
         new TruncationCompactionStrategy(CompactionTriggers.TokensExceed(0x8000)));
 
 AIAgent agent =
-    agentChatClient.AsAIAgent(
-        new ChatClientAgentOptions
-        {
-            Name = "ShoppingAssistant",
-            ChatOptions = new()
+    agentChatClient
+        .AsBuilder()
+        .UseAIContextProviders(new CompactionProvider(compactionPipeline))
+        .BuildAIAgent(
+            new ChatClientAgentOptions
             {
-                Instructions = "You are a helpful shopping assistant.",
-                Tools = [AIFunctionFactory.Create(LookupPrice)],
-            },
-            CompactionStrategy = compactionPipeline,
-        });
+                Name = "ShoppingAssistant",
+                ChatOptions = new()
+                {
+                    Instructions = "You are a helpful shopping assistant.",
+                    Tools = [AIFunctionFactory.Create(LookupPrice)],
+                },
+            });
 
 AgentSession session = await agent.CreateSessionAsync();
 Console.WriteLine(await agent.RunAsync("What's the price of a laptop?", session));
 ```
+
+> [!TIP]
+> You can also register the provider directly in `ChatClientAgentOptions` instead of using the builder API:
+> ```csharp
+> AIContextProviders = [new CompactionProvider(compactionPipeline)]
+> ```
 
 > [!TIP]
 > Use a smaller, cheaper model (such as `gpt-4o-mini`) for the summarization chat client to reduce costs while maintaining summary quality.
