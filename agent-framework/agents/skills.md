@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
-ms.date: 03/05/2026
+ms.date: 03/11/2026
 ms.service: agent-framework
 ---
 
@@ -74,12 +74,12 @@ This pattern keeps the agent's context window lean while giving it access to dee
 
 ## Providing skills to an agent
 
-The Agent Framework includes a skills provider that discovers skills from filesystem directories and makes them available to agents as a context provider. It searches configured paths recursively (up to two levels deep) for `SKILL.md` files, validates their format and resources, and exposes two tools to the agent: `load_skill` and `read_skill_resource`.
-
-> [!NOTE]
-> Script execution is not yet supported and will be added in a future release.
+The Agent Framework includes a skills provider that discovers skills from filesystem directories and makes them available to agents as a context provider. It searches configured paths recursively (up to two levels deep) for `SKILL.md` files, validates their format and resources, and exposes tools to the agent: `load_skill`, `read_skill_resource`, and (when scripts are present) `run_skill_script`.
 
 :::zone pivot="programming-language-csharp"
+
+> [!NOTE]
+> Script execution is not yet supported in C# and will be added in a future release.
 
 ### Basic setup
 
@@ -231,7 +231,7 @@ skills_provider = SkillsProvider(
 ```
 
 > [!NOTE]
-> The custom template must contain a `{skills}` placeholder where the skill list is inserted.
+> The custom template must contain a `{skills}` placeholder where the skill list is inserted and a `{runner_instructions}` placeholder where script-related instructions are inserted.
 
 :::zone-end
 
@@ -291,19 +291,42 @@ project_info_skill = Skill(
 )
 
 @project_info_skill.resource
-def environment() -> str:
+def environment() -> Any:
     """Get current environment configuration."""
     env = os.environ.get("APP_ENV", "development")
     region = os.environ.get("APP_REGION", "us-east-1")
     return f"Environment: {env}, Region: {region}"
 
 @project_info_skill.resource(name="team-roster", description="Current team members")
-def get_team_roster() -> str:
+def get_team_roster() -> Any:
     """Return the team roster."""
     return "Alice Chen (Tech Lead), Bob Smith (Backend Engineer)"
 ```
 
 When the decorator is used without arguments (`@skill.resource`), the function name becomes the resource name and the docstring becomes the description. Use `@skill.resource(name="...", description="...")` to set them explicitly.
+
+### Code-defined scripts
+
+Use the `@skill.script` decorator to register a function as an executable script on a skill. Code-defined scripts run **in-process** and do not require a script executor. Both sync and async functions are supported:
+
+```python
+from agent_framework import Skill
+
+unit_converter_skill = Skill(
+    name="unit-converter",
+    description="Convert between common units using a conversion factor",
+    content="Use the convert script to perform unit conversions.",
+)
+
+@unit_converter_skill.script(name="convert", description="Convert a value: result = value × factor")
+def convert_units(value: float, factor: float) -> str:
+    """Convert a value using a multiplication factor."""
+    import json
+    result = round(value * factor, 4)
+    return json.dumps({"value": value, "factor": factor, "result": result})
+```
+
+When the decorator is used without arguments (`@skill.script`), the function name becomes the script name and the docstring becomes the description. The function's typed parameters are automatically converted into a JSON Schema that the agent uses to pass arguments.
 
 ### Combining file-based and code-defined skills
 
@@ -324,6 +347,83 @@ skills_provider = SkillsProvider(
     skills=[my_skill],
 )
 ```
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+## Script execution
+
+Skills can include executable scripts that the agent runs via the `run_skill_script` tool. How a script runs depends on how it was defined:
+
+- **Code-defined scripts** (registered via `@skill.script`) run **in-process** as direct function calls. No runner is needed.
+- **File-based scripts** (`.py` files discovered in skill directories) require a `SkillScriptRunner` — any callable matching `(skill, script, args) -> Any` — that determines how the script is run (for example, as a local subprocess).
+
+### File-based script execution
+
+To enable execution of file-based scripts, pass a `script_runner` to `SkillsProvider`. Any sync or async callable that satisfies the `SkillScriptRunner` protocol can be used:
+
+```python
+from pathlib import Path
+from agent_framework import Skill, SkillScript, SkillsProvider
+
+def my_runner(skill: Skill, script: SkillScript, args: dict | None = None) -> str:
+    """Run a file-based script as a subprocess."""
+    import subprocess, sys
+    cmd = [sys.executable, str(Path(skill.path) / script.path)]
+    if args:
+        for key, value in args.items():
+            if value is not None:
+                cmd.extend([f"--{key}", str(value)])
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+    return result.stdout.strip()
+
+skills_provider = SkillsProvider(
+    skill_paths=Path(__file__).parent / "skills",
+    script_runner=my_runner,
+)
+```
+
+The runner receives the resolved `Skill`, `SkillScript`, and an optional `args` dictionary. File-based scripts are automatically discovered from `.py` files in skill directories.
+
+> [!WARNING]
+> The runner above is provided for **demonstration purposes only**. For production use, consider adding:
+>
+> - Sandboxing (for example, containers, `seccomp`, or `firejail`)
+> - Resource limits (CPU, memory, wall-clock timeout)
+> - Input validation and allow-listing of executable scripts
+> - Structured logging and audit trails
+
+> [!NOTE]
+> If file-based skills with scripts are provided but no `script_runner` is set, `SkillsProvider` raises a `ValueError`.
+
+## Script approval
+
+Use `require_script_approval=True` on `SkillsProvider` to gate all script execution behind human approval. Instead of executing immediately, the agent pauses and returns approval requests:
+
+```python
+from agent_framework import Agent, Skill, SkillsProvider
+
+# Create provider with approval enabled
+skills_provider = SkillsProvider(
+    skills=[my_skill],
+    require_script_approval=True,
+)
+
+# Run the agent — script calls pause for approval
+result = await agent.run("Deploy version 2.5.0 to production", session=session)
+
+# Handle approval requests
+while result.user_input_requests:
+    for request in result.user_input_requests:
+        print(f"Script: {request.function_call.name}")
+        print(f"Args: {request.function_call.arguments}")
+
+        approval = request.to_function_approval_response(approved=True)
+        result = await agent.run(approval, session=session)
+```
+
+When a script is rejected (`approved=False`), the agent is informed that the user declined and can respond accordingly.
 
 :::zone-end
 
