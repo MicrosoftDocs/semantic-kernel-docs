@@ -216,7 +216,11 @@ This pipeline:
 
 :::zone pivot="programming-language-csharp"
 
-Wrap the compaction strategy in a `CompactionProvider` and register it as an `AIContextProvider` using the fluent builder API. The provider applies compaction to the accumulated message list before each LLM call during the tool loop.
+Wrap a compaction strategy in a `CompactionProvider` and register it as an `AIContextProvider`. Pass either a single strategy or a `PipelineCompactionStrategy` to the constructor.
+
+### Registering with the builder API
+
+Register the provider on the `ChatClientBuilder` using `UseAIContextProviders`. The provider runs inside the tool-calling loop, compacting messages before each LLM call.
 
 ```csharp
 IChatClient agentChatClient = openAIClient.GetChatClient(deploymentName).AsIChatClient();
@@ -249,13 +253,43 @@ Console.WriteLine(await agent.RunAsync("What's the price of a laptop?", session)
 ```
 
 > [!TIP]
-> You can also register the provider directly in `ChatClientAgentOptions` instead of using the builder API:
-> ```csharp
-> AIContextProviders = [new CompactionProvider(compactionPipeline)]
-> ```
-
-> [!TIP]
 > Use a smaller, cheaper model (such as `gpt-4o-mini`) for the summarization chat client to reduce costs while maintaining summary quality.
+
+If only one strategy is needed, pass it directly to `CompactionProvider` without wrapping it in a `PipelineCompactionStrategy`:
+
+```csharp
+agentChatClient
+    .AsBuilder()
+    .UseAIContextProviders(new CompactionProvider(
+        new SlidingWindowCompactionStrategy(CompactionTriggers.TurnsExceed(20))))
+    .BuildAIAgent(...);
+```
+
+### Registering through `ChatClientAgentOptions`
+
+The provider can also be specified directly on `ChatClientAgentOptions.AIContextProviders`:
+
+```csharp
+AIAgent agent = agentChatClient
+    .AsBuilder()
+    .BuildAIAgent(new ChatClientAgentOptions
+    {
+        AIContextProviders = [new CompactionProvider(compactionPipeline)]
+    });
+```
+
+> [!NOTE]
+> When registered through `ChatClientAgentOptions`, the `CompactionProvider` is **not** engaged during the tool-calling loop. Agent-level context providers run before chat history is stored, so any synthetic summary messages produced by `CompactionProvider` can become part of the persisted history when using `ChatHistoryProvider`. To compact only the in-flight request context while preserving the original stored history, register the provider on the `ChatClientBuilder` via `UseAIContextProviders(...)` instead.
+
+### Ad-hoc compaction
+
+`CompactionProvider.CompactAsync` applies a strategy to an arbitrary message list without an active agent session:
+
+```csharp
+IEnumerable<ChatMessage> compacted = await CompactionProvider.CompactAsync(
+    new TruncationCompactionStrategy(CompactionTriggers.TokensExceed(8000)),
+    existingMessages);
+```
 
 :::zone-end
 
