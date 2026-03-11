@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
-ms.date: 03/10/2026
+ms.date: 03/11/2026
 ms.service: agent-framework
 ---
 
@@ -291,14 +291,14 @@ project_info_skill = Skill(
 )
 
 @project_info_skill.resource
-def environment() -> str:
+def environment() -> Any:
     """Get current environment configuration."""
     env = os.environ.get("APP_ENV", "development")
     region = os.environ.get("APP_REGION", "us-east-1")
     return f"Environment: {env}, Region: {region}"
 
 @project_info_skill.resource(name="team-roster", description="Current team members")
-def get_team_roster() -> str:
+def get_team_roster() -> Any:
     """Return the team roster."""
     return "Alice Chen (Tech Lead), Bob Smith (Backend Engineer)"
 ```
@@ -402,7 +402,7 @@ The runner receives the resolved `Skill`, `SkillScript`, and an optional `args` 
 Use `require_script_approval=True` on `SkillsProvider` to gate all script execution behind human approval. Instead of executing immediately, the agent pauses and returns approval requests:
 
 ```python
-from agent_framework import Agent, Message, Skill, SkillsProvider
+from agent_framework import Agent, Skill, SkillsProvider
 
 # Create provider with approval enabled
 skills_provider = SkillsProvider(
@@ -420,7 +420,7 @@ while result.user_input_requests:
         print(f"Args: {request.function_call.arguments}")
 
         approval = request.to_function_approval_response(approved=True)
-        result = await agent.run(Message("user", [approval]), session=session)
+        result = await agent.run(approval, session=session)
 ```
 
 When a script is rejected (`approved=False`), the agent is informed that the user declined and can respond accordingly.
