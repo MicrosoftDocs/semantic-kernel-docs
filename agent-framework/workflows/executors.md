@@ -5,9 +5,21 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 02/12/2026
+ms.date: 03/05/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                    | C# | Python |                 |
+  |----------------------------|:--:|:-------:|-----------------|
+  | Basic Executor Structure   | ✅ |   ✅   |                 |
+  | Multiple Input Types       | ✅ |   ✅   |                 |
+  | Function-Based Executors   | ✅ |   ✅   |                 |
+  | Explicit Type Parameters   | ❌ |   ✅   | Python-specific |
+  | The WorkflowContext Object | ✅ |   ✅   |                 |
+-->
 
 # Executors
 
@@ -85,6 +97,37 @@ Create an executor from a function using the `BindExecutor` extension method:
 ```csharp
 Func<string, string> uppercaseFunc = s => s.ToUpperInvariant();
 var uppercase = uppercaseFunc.BindExecutor("UppercaseExecutor");
+```
+
+## The IWorkflowContext Object
+
+The `IWorkflowContext` provides methods for interacting with the workflow during execution:
+
+- **`SendMessageAsync`** — send messages to connected executors
+- **`YieldOutputAsync`** — produce workflow outputs returned/streamed to the caller
+
+```csharp
+internal sealed partial class OutputExecutor() : Executor("OutputExecutor")
+{
+    [MessageHandler]
+    private async ValueTask HandleAsync(string message, IWorkflowContext context)
+    {
+        await context.YieldOutputAsync("Hello, World!");
+    }
+}
+```
+
+If a handler neither sends messages nor yields outputs, it can simply perform side effects:
+
+```csharp
+internal sealed partial class LogExecutor() : Executor("LogExecutor")
+{
+    [MessageHandler]
+    private void Handle(string message, IWorkflowContext context)
+    {
+        Console.WriteLine("Doing some work...");
+    }
+}
 ```
 
 ::: zone-end

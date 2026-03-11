@@ -66,6 +66,8 @@ items:
       href: agents/conversations/context-providers.md
     - name: Storage
       href: agents/conversations/storage.md
+    - name: Compaction
+      href: agents/conversations/compaction.md
   - name: Middleware
     items:
     - name: Overview

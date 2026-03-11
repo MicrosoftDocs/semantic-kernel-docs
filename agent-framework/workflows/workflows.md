@@ -5,9 +5,20 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 02/12/2026
+ms.date: 03/05/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section              | C# | Python | Notes |
+  |----------------------|:--:|:------:|-------|
+  | Building Workflows   | ✅ |   ✅   |       |
+  | Workflow Execution   | ✅ |   ✅   |       |
+  | Workflow Validation  | ✅ |   ✅   | Shared prose, no zone pivot |
+  | Execution Model      | ✅ |   ✅   | Shared prose, no zone pivot |
+-->
 
 # Workflow Builder & Execution
 
@@ -30,7 +41,7 @@ var formatter = new Formatter();
 WorkflowBuilder builder = new(processor); // Set starting executor
 builder.AddEdge(processor, validator);
 builder.AddEdge(validator, formatter);
-var workflow = builder.Build<string>(); // Specify input message type
+var workflow = builder.Build();
 ```
 
 ::: zone-end
@@ -65,10 +76,10 @@ Workflows support both streaming and non-streaming execution modes:
 using Microsoft.Agents.AI.Workflows;
 
 // Streaming execution — get events as they happen
-StreamingRun run = await InProcessExecution.StreamAsync(workflow, inputMessage);
+StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, inputMessage);
 await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 {
-    if (evt is ExecutorCompleteEvent executorComplete)
+    if (evt is ExecutorCompletedEvent executorComplete)
     {
         Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
     }
@@ -96,7 +107,7 @@ foreach (WorkflowEvent evt in result.NewEvents)
 
 ```python
 # Streaming execution — get events as they happen
-async for event in workflow.run_stream(input_message):
+async for event in workflow.run(input_message, stream=True):
     if event.type == "output":
         print(f"Workflow completed: {event.data}")
 

@@ -3,11 +3,23 @@ title: Microsoft Agent Framework Workflows - State
 description: In-depth look at State in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: tutorial
+ms.topic: conceptual
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 03/09/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                                    | C# | Python | Notes |
+  |--------------------------------------------|:--:|:------:|-------|
+  | Writing to State                           | ✅ |   ✅   |       |
+  | Accessing State                            | ✅ |   ✅   |       |
+  | State Isolation – Mutable vs Immutable     | ✅ |   ✅   | Prose only, no code needed |
+  | State Isolation – Helper Methods           | ❌ |   ✅   | C# coming soon |
+  | Agent State Management                     | ❌ |   ✅   | C# coming soon |
+-->
 
 # Microsoft Agent Framework Workflows - State
 
@@ -24,22 +36,18 @@ State allows multiple executors within a workflow to access and modify common da
 ```csharp
 using Microsoft.Agents.AI.Workflows;
 
-internal sealed partial class FileReadExecutor(): Executor("FileReadExecutor")
+internal sealed class FileReadExecutor() : Executor<string, string>("FileReadExecutor")
 {
-    /// <summary>
-    /// Reads a file and stores its content in a shared state.
-    /// </summary>
-    /// <param name="message">The path to the embedded resource file.</param>
-    /// <param name="context">The workflow context for accessing shared states.</param>
-    /// <returns>The ID of the shared state where the file content is stored.</returns>
-    [MessageHandler]
-    private async ValueTask<string> HandleAsync(string message, IWorkflowContext context)
+    public override async ValueTask<string> HandleAsync(
+        string message,
+        IWorkflowContext context,
+        CancellationToken cancellationToken = default)
     {
         // Read file content from embedded resource
         string fileContent = File.ReadAllText(message);
         // Store file content in a shared state for access by other executors
-        string fileID = Guid.NewGuid().ToString();
-        await context.QueueStateUpdateAsync<string>(fileID, fileContent, scopeName: "FileContent");
+        string fileID = Guid.NewGuid().ToString("N");
+        await context.QueueStateUpdateAsync(fileID, fileContent, scopeName: "FileContent", cancellationToken);
 
         return fileID;
     }
@@ -51,6 +59,8 @@ internal sealed partial class FileReadExecutor(): Executor("FileReadExecutor")
 ::: zone pivot="programming-language-python"
 
 ```python
+import uuid
+
 from agent_framework import (
     Executor,
     WorkflowContext,
@@ -80,19 +90,15 @@ class FileReadExecutor(Executor):
 ```csharp
 using Microsoft.Agents.AI.Workflows;
 
-internal sealed partial class WordCountingExecutor() : Executor("WordCountingExecutor")
+internal sealed class WordCountingExecutor() : Executor<string, int>("WordCountingExecutor")
 {
-    /// <summary>
-    /// Counts the number of words in the file content stored in a shared state.
-    /// </summary>
-    /// <param name="message">The ID of the shared state containing the file content.</param>
-    /// <param name="context">The workflow context for accessing shared states.</param>
-    /// <returns>The number of words in the file content.</returns>
-    [MessageHandler]
-    private async ValueTask<int> HandleAsync(string message, IWorkflowContext context)
+    public override async ValueTask<int> HandleAsync(
+        string message,
+        IWorkflowContext context,
+        CancellationToken cancellationToken = default)
     {
         // Retrieve the file content from the shared state
-        var fileContent = await context.ReadStateAsync<string>(message, scopeName: "FileContent")
+        var fileContent = await context.ReadStateAsync<string>(message, scopeName: "FileContent", cancellationToken)
             ?? throw new InvalidOperationException("File content state not found");
 
         return fileContent.Split([' ', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries).Length;
@@ -202,16 +208,24 @@ Coming soon...
 Non-isolated example (shared agent state):
 
 ```python
-writer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+writer_agent = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+).as_agent(
     instructions=(
         "You are an excellent content writer. You create new content and edit contents based on the feedback."
     ),
     name="writer_agent",
 )
-reviewer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+reviewer_agent = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+).as_agent(
     instructions=(
-        "You are an excellent content reviewer."
-        "Provide actionable feedback to the writer about the provided content."
+        "You are an excellent content reviewer. "
+        "Provide actionable feedback to the writer about the provided content. "
         "Provide the feedback in the most concise manner possible."
     ),
     name="reviewer_agent",
@@ -230,16 +244,24 @@ def create_workflow() -> Workflow:
     Each call produces new agent instances with their own threads,
     ensuring no conversation history leaks between workflow runs.
     """
-    writer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+    writer_agent = AzureOpenAIResponsesClient(
+        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        credential=AzureCliCredential(),
+    ).as_agent(
         instructions=(
             "You are an excellent content writer. You create new content and edit contents based on the feedback."
         ),
         name="writer_agent",
     )
-    reviewer_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+    reviewer_agent = AzureOpenAIResponsesClient(
+        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        credential=AzureCliCredential(),
+    ).as_agent(
         instructions=(
-            "You are an excellent content reviewer."
-            "Provide actionable feedback to the writer about the provided content."
+            "You are an excellent content reviewer. "
+            "Provide actionable feedback to the writer about the provided content. "
             "Provide the feedback in the most concise manner possible."
         ),
         name="reviewer_agent",

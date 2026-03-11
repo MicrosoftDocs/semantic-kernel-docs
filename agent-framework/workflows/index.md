@@ -14,7 +14,7 @@ ms.service: agent-framework
 
 Microsoft Agent Framework Workflows empowers you to build intelligent automation systems that seamlessly blend AI agents with business processes. With its type-safe architecture and intuitive design, you can orchestrate complex workflows without getting bogged down in infrastructure complexity, allowing you to focus on your core business logic.
 
-## How is a Workflows different from an Agent?
+## How is a Workflow different from an Agent?
 
 While an agent and a workflow can involve multiple steps to achieve a goal, they serve different purposes and operate at different levels of abstraction:
 

@@ -5,13 +5,25 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/03/2026
+ms.date: 03/09/2026
 ms.service: agent-framework
 ---
 
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                              | C# | Python | Notes                                           |
+  |--------------------------------------|:--:|:------:|:------------------------------------------------|
+  | Overview                             | ✅ |   ✅   |                                                  |
+  | Enable Request and Response Handling | ✅ |   ✅   | C# uses RequestPort; Python uses ctx.request_info |
+  | Handling Requests and Responses      | ✅ |   ✅   |                                                  |
+  | Checkpoints and Requests             | ✅ |   ✅   |                                                  |
+  | Next Steps                           | ✅ |   ✅   |                                                  |
+-->
+
 # Microsoft Agent Framework Workflows - Human-in-the-loop (HITL)
 
-This page provides an overview of **Human-in-the-loop (HITL)** interactions in the Microsoft Agent Framework Workflow system. HILT is achieved through the **request and response** handling mechanism in workflows, which allows executors to send requests to external systems (such as human operators) and wait for their responses before proceeding with the workflow execution.
+This page provides an overview of **Human-in-the-loop (HITL)** interactions in the Microsoft Agent Framework Workflow system. HITL is achieved through the **request and response** handling mechanism in workflows, which allows executors to send requests to external systems (such as human operators) and wait for their responses before proceeding with the workflow execution.
 
 ## Overview
 
@@ -86,56 +98,60 @@ internal sealed class JudgeExecutor() : Executor<int>("Judge")
 
 ::: zone pivot="programming-language-python"
 
-Executors can send requests using `ctx.request_info()` and handle responses with `@response_handler`.
+In Python, executors send requests using `ctx.request_info()` and handle responses with the `@response_handler` decorator.
+
+Let's build a workflow that asks a human operator to guess a number and uses an executor to judge whether the guess is correct.
+
+## Enable Request and Response Handling in a Workflow
 
 ```python
-from agent_framework import response_handler, WorkflowBuilder
+from dataclasses import dataclass
 
-executor_a = SomeExecutor()
-executor_b = SomeOtherExecutor()
-workflow_builder = WorkflowBuilder(start_executor=executor_a)
-workflow_builder.add_edge(executor_a, executor_b)
-workflow = workflow_builder.build()
-```
-
-`executor_a` can send requests and receive responses directly using built-in capabilities.
-
-```python
 from agent_framework import (
     Executor,
+    WorkflowBuilder,
     WorkflowContext,
     handler,
     response_handler,
 )
 
-class SomeExecutor(Executor):
+
+@dataclass
+class NumberSignal:
+    hint: str  # "init", "above", or "below"
+
+
+class JudgeExecutor(Executor):
+    def __init__(self, target_number: int):
+        super().__init__(id="judge")
+        self._target_number = target_number
+        self._tries = 0
 
     @handler
-    async def handle_data(
-        self,
-        data: OtherDataType,
-        context: WorkflowContext,
-    ):
-        # Process the message...
-        ...
-        # Send a request using the API
-        await context.request_info(
-            request_data=CustomRequestType(...),
-            response_type=CustomResponseType
-        )
+    async def handle_guess(self, guess: int, ctx: WorkflowContext[int, str]) -> None:
+        self._tries += 1
+        if guess == self._target_number:
+            await ctx.yield_output(f"{self._target_number} found in {self._tries} tries!")
+        elif guess < self._target_number:
+            await ctx.request_info(request_data=NumberSignal(hint="below"), response_type=int)
+        else:
+            await ctx.request_info(request_data=NumberSignal(hint="above"), response_type=int)
 
     @response_handler
-    async def handle_response(
+    async def on_human_response(
         self,
-        original_request: CustomRequestType,
-        response: CustomResponseType,
-        context: WorkflowContext,
-    ):
-        # Process the response...
-        ...
+        original_request: NumberSignal,
+        response: int,
+        ctx: WorkflowContext[int, str],
+    ) -> None:
+        await self.handle_guess(response, ctx)
+
+
+judge = JudgeExecutor(target_number=42)
+workflow = WorkflowBuilder(start_executor=judge).build()
 ```
 
-The `@response_handler` decorator automatically registers the method to handle responses for the specified request and response types.
+The `@response_handler` decorator automatically registers the method to handle responses for the specified request and response types. The framework matches incoming responses to the correct handler based on the type annotations of the `original_request` and `response` parameters.
 
 ::: zone-end
 
@@ -154,7 +170,7 @@ await foreach (WorkflowEvent evt in handle.WatchStreamAsync())
         case RequestInfoEvent requestInputEvt:
             // Handle `RequestInfoEvent` from the workflow
             int guess = ...; // Get the guess from the human operator or any external system
-            await handle.SendResponseAsync(requestInputEvt.request.CreateResponse(guess));
+            await handle.SendResponseAsync(requestInputEvt.Request.CreateResponse(guess));
             break;
 
         case WorkflowOutputEvent outputEvt:
@@ -172,31 +188,34 @@ await foreach (WorkflowEvent evt in handle.WatchStreamAsync())
 
 ::: zone pivot="programming-language-python"
 
-Executors can send requests directly without needing a separate component. When an executor calls `ctx.request_info()`, the workflow emits a `RequestInfoEvent`. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor's `@response_handler` method.
+Executors can send requests directly without needing a separate component. When an executor calls `ctx.request_info()`, the workflow emits a `WorkflowEvent` with `type == "request_info"`. You can subscribe to these events to handle incoming requests from the workflow. When you receive a response from an external system, send it back to the workflow using the response mechanism. The framework automatically routes the response to the executor's `@response_handler` method.
 
 ```python
-from agent_framework import RequestInfoEvent
+from collections.abc import AsyncIterable
+
+from agent_framework import WorkflowEvent
 
 
-async def process_event_stream(stream: AsyncIterable[WorkflowEvent]) -> dict[str, str] | None:
+async def process_event_stream(stream: AsyncIterable[WorkflowEvent]) -> dict[str, int] | None:
     """Process events from the workflow stream to capture requests."""
-    requests: list[tuple[str, HumanFeedbackRequest]] = []
+    requests: list[tuple[str, NumberSignal]] = []
     async for event in stream:
         if event.type == "request_info":
             requests.append((event.request_id, event.data))
 
     # Handle any pending human feedback requests.
     if requests:
-        responses: dict[str, str] = {}
+        responses: dict[str, int] = {}
         for request_id, request in requests:
-            responses[request_id] = ...  # Get the response for the request from the human operator or any external system.
+            guess = ...  # Get the guess from the human operator or any external system.
+            responses[request_id] = guess
         return responses
 
     return None
 
-# Initiate the first run of the workflow.
+# Initiate the first run of the workflow with an initial guess.
 # Runs are not isolated; state is preserved across multiple calls to run.
-stream = workflow.run("start", stream=True)
+stream = workflow.run(25, stream=True)
 
 pending_responses = await process_event_stream(stream)
 while pending_responses is not None:

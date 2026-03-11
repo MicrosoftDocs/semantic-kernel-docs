@@ -5,9 +5,28 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 02/17/2026
+ms.date: 03/09/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                        | C# | Python | Notes                              |
+  |--------------------------------|:--:|:------:|----------------------------------  |
+  | What You'll Build              | ✅ |   ✅   |                                    |
+  | Concepts Covered               | ✅ |   ✅   |                                    |
+  | Prerequisites                  | ✅ |   ✅   |                                    |
+  | Client/Agent Setup             | ✅ |   ✅   | Different Azure services           |
+  | Create Specialized Agents      | ✅ |   ✅   |                                    |
+  | Build the Workflow             | ✅ |   ✅   |                                    |
+  | Shared Session Pattern         | ❌ |   ❌   | Planned for future tutorial        |
+  | Execute with Streaming         | ✅ |   ✅   |                                    |
+  | Resource Cleanup               | ✅ |   ❌   | C#-specific (Azure Foundry agents) |
+  | How It Works                   | ✅ |   ✅   |                                    |
+  | Key Concepts                   | ✅ |   ✅   |                                    |
+  | Complete Implementation        | ✅ |   ✅   |                                    |
+-->
 
 # Agents in Workflows
 
@@ -30,13 +49,13 @@ You'll create a workflow that:
 ### Concepts Covered
 
 - [Agents in Workflows](./agents-in-workflows.md)
-- [Direct Edges](./edges.md#conditional-edges)
+- [Direct Edges](./edges.md#direct-edges)
 - [Workflow Builder](./index.md)
 
 ## Prerequisites
 
 - [.NET 8.0 SDK or later](https://dotnet.microsoft.com/download)
-- Azure Foundry service endpoint and deployment configured
+- An Azure Foundry project endpoint and model configured
 - [Azure CLI installed](/cli/azure/install-azure-cli) and [authenticated (for Azure credential authentication)](/cli/azure/authenticate-azure-cli)
 - A new console application
 
@@ -56,8 +75,6 @@ dotnet add package Microsoft.Agents.AI.Workflows --prerelease
 Configure the Azure Foundry client with environment variables and authentication:
 
 ```csharp
-using System;
-using System.Threading.Tasks;
 using Azure.AI.Agents.Persistent;
 using Azure.Identity;
 using Microsoft.Agents.AI;
@@ -68,14 +85,12 @@ public static class Program
 {
     private static async Task Main()
     {
-        // Set up the Azure Foundry client
-        var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT") ?? throw new Exception("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
-        var model = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_MODEL_ID") ?? "gpt-4o-mini";
-        var persistentAgentsClient = new PersistentAgentsClient(endpoint, new DefaultAzureCredential());
+        // Set up the Azure OpenAI client
+        var endpoint = Environment.GetEnvironmentVariable("AZURE_AI_PROJECT_ENDPOINT")
+            ?? throw new InvalidOperationException("AZURE_AI_PROJECT_ENDPOINT is not set.");
+        var deploymentName = Environment.GetEnvironmentVariable("AZURE_AI_MODEL_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
+        var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
 ```
-
-> [!WARNING]
-> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ## Step 3: Create Agent Factory Method
 
@@ -110,9 +125,9 @@ Create three translation agents using the helper method:
 
 ```csharp
         // Create agents
-        AIAgent frenchAgent = await GetTranslationAgentAsync("French", persistentAgentsClient, model);
-        AIAgent spanishAgent = await GetTranslationAgentAsync("Spanish", persistentAgentsClient, model);
-        AIAgent englishAgent = await GetTranslationAgentAsync("English", persistentAgentsClient, model);
+        AIAgent frenchAgent = await GetTranslationAgentAsync("French", persistentAgentsClient, deploymentName);
+        AIAgent spanishAgent = await GetTranslationAgentAsync("Spanish", persistentAgentsClient, deploymentName);
+        AIAgent englishAgent = await GetTranslationAgentAsync("English", persistentAgentsClient, deploymentName);
 ```
 
 ## Step 5: Build the Workflow
@@ -133,13 +148,13 @@ Run the workflow with streaming to observe real-time updates from all agents:
 
 ```csharp
         // Execute the workflow
-        await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, "Hello World!"));
+        await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, new ChatMessage(ChatRole.User, "Hello World!"));
 
         // Must send the turn token to trigger the agents.
         // The agents are wrapped as executors. When they receive messages,
         // they will cache the messages and only start processing when they receive a TurnToken.
         await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
-        await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+        await foreach (WorkflowEvent evt in run.WatchStreamAsync())
         {
             if (evt is AgentResponseUpdateEvent executorComplete)
             {
@@ -194,12 +209,11 @@ You'll create a workflow that:
 - Implements a Reviewer agent that provides feedback on the content
 - Connects agents in a sequential workflow pipeline
 - Streams real-time updates as agents process requests
-- Demonstrates an optional shared-session pattern for agents created from the same client
 
 ### Concepts Covered
 
 - [Agents in Workflows](./agents-in-workflows.md)
-- [Direct Edges](./edges.md#conditional-edges)
+- [Direct Edges](./edges.md#direct-edges)
 - [Workflow Builder](./index.md)
 
 ## Prerequisites
@@ -241,7 +255,7 @@ Create two specialized agents for content creation and review:
 
 ```python
     # Create a Writer agent that generates content
-    writer = client.as_agent(
+    writer_agent = client.as_agent(
         name="Writer",
         instructions=(
             "You are an excellent content writer. You create new content and edit contents based on the feedback."
@@ -249,7 +263,7 @@ Create two specialized agents for content creation and review:
     )
 
     # Create a Reviewer agent that provides feedback
-    reviewer = client.as_agent(
+    reviewer_agent = client.as_agent(
         name="Reviewer",
         instructions=(
             "You are an excellent content reviewer. "
@@ -265,37 +279,28 @@ Connect the agents in a sequential workflow using the builder:
 
 ```python
         # Build the workflow with agents as executors
-        workflow = WorkflowBuilder(start_executor=writer).add_edge(writer, reviewer).build()
+        workflow = WorkflowBuilder(start_executor=writer_agent).add_edge(writer_agent, reviewer_agent).build()
 ```
-
-### Optional: Share one session across `AzureOpenAIResponsesClient` agents
-
-By default, each agent executor uses its own session state.
-For agents created from the same `AzureOpenAIResponsesClient`, you can wire a shared session explicitly:
-
-:::code language="python" source="~/../agent-framework-code/python/samples/03-workflows/agents/azure_ai_agents_with_shared_session.py" range="43-53,62-83":::
 
 ## Step 5: Execute with Streaming
 
 Run the workflow with streaming to observe real-time updates from both agents:
 
 ```python
-    last_executor_id: str | None = None
+    last_author: str | None = None
 
     events = workflow.run("Create a slogan for a new electric SUV that is affordable and fun to drive.", stream=True)
     async for event in events:
         if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
-            # Handle streaming updates from agents
-            eid = event.executor_id
-            if eid != last_executor_id:
-                if last_executor_id is not None:
+            update = event.data
+            author = update.author_name
+            if author != last_author:
+                if last_author is not None:
                     print()
-                print(f"{eid}:", end=" ", flush=True)
-                last_executor_id = eid
-            print(event.data, end="", flush=True)
-        elif event.type == "output":
-            print("\n===== Final output =====")
-            print(event.data)
+                print(f"{author}: {update.text}", end="", flush=True)
+                last_author = author
+            else:
+                print(update.text, end="", flush=True)
 ```
 
 ## Step 6: Complete Main Function
@@ -313,18 +318,16 @@ if __name__ == "__main__":
 2. **Agent Creation**: Creates Writer and Reviewer agents from the same client configuration.
 3. **Sequential Processing**: Writer agent generates content first, then passes it to the Reviewer agent.
 4. **Streaming Updates**: Output events (`type="output"`) with `AgentResponseUpdate` data provide real-time token updates as agents generate responses.
-5. **Shared Sessions (Optional)**: A shared session can be wired when both agents are created from the same `AzureOpenAIResponsesClient`.
 
 ## Key Concepts
 
 - **AzureOpenAIResponsesClient**: Shared client used to create workflow agents with consistent configuration.
 - **WorkflowEvent**: Output events (`type="output"`) contain agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming).
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next.
-- **Shared Session Pattern**: Optional configuration for shared memory/thread across selected agents in a workflow.
 
 ## Complete Implementation
 
-For complete working implementations, see [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/agents/azure_ai_agents_streaming.py) and [azure_ai_agents_with_shared_session.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/agents/azure_ai_agents_with_shared_session.py) in the Agent Framework repository.
+For the complete working implementation, see [azure_ai_agents_streaming.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/agents/azure_ai_agents_streaming.py) in the Agent Framework repository.
 
 ::: zone-end
 
