@@ -69,7 +69,7 @@ pip install semantic-kernel
 ```
 
 > [!IMPORTANT]
-> Depending upon which AI Service you use as part of the `ChatCompletionAgent`, you may need to install extra packages. Please check for the required extra on the following [page](../../../concepts/ai-services/chat-completion/index.md#creating-a-chat-completion-service)
+> Depending upon which AI service you use as part of the `ChatCompletionAgent`, you may need to install extra packages. Please check for the required extra on the following [page](../../../concepts/ai-services/chat-completion/index.md#creating-a-chat-completion-service)
 
 
 ::: zone-end
@@ -88,7 +88,7 @@ pip install semantic-kernel
 
 ## Creating a `ChatCompletionAgent`
 
-A `ChatCompletionAgent` is fundamentally based on an [AI services](../../../concepts/ai-services/index.md).  As such, creating a `ChatCompletionAgent` starts with creating a [`Kernel`](../../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../../concepts/kernel.md) instance.
+A `ChatCompletionAgent` is fundamentally based on an [AI service](../../../concepts/ai-services/index.md).  As such, creating a `ChatCompletionAgent` starts with creating a [`Kernel`](../../../concepts/kernel.md) instance that contains one or more chat-completion services and then instantiating the agent with a reference to that [`Kernel`](../../../concepts/kernel.md) instance.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -174,7 +174,7 @@ var agent = ChatCompletionAgent.builder()
 No different from using Semantic Kernel [AI services](../../../concepts/ai-services/index.md) directly, a `ChatCompletionAgent` supports the specification of a service-selector.  A service-selector identifies which [AI service](../../../concepts/ai-services/index.md) to target when the [`Kernel`](../../../concepts/kernel.md) contains more than one.
 
 > [!NOTE]
-> If multiple [AI services](../../../concepts/ai-services/index.md) are present and no service-selector is provided, the same default logic is applied for the agent that you'd find when using an [AI services](../../../concepts/ai-services/index.md) outside of the `Agent Framework`
+> If multiple [AI services](../../../concepts/ai-services/index.md) are present and no service-selector is provided, the same default logic is applied for the agent that you'd find when using [AI services](../../../concepts/ai-services/index.md) outside of the `Agent Framework`
 
 ::: zone pivot="programming-language-csharp"
 
@@ -215,7 +215,7 @@ from semantic_kernel.connectors.ai.open_ai import (
 # Define the Kernel
 kernel = Kernel()
 
-# Add the AzureChatCompletion AI Service to the Kernel
+# Add the AzureChatCompletion AI service to the Kernel
 kernel.add_service(AzureChatCompletion(service_id="service1"))
 kernel.add_service(AzureChatCompletion(service_id="service2"))
 
