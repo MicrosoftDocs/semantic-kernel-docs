@@ -246,7 +246,7 @@ Excludes the oldest non-system groups until the included count drops to `compact
 
 - Respects atomic group boundaries (tool call groups are excluded as a unit).
 - `preserve_system` defaults to `True`.
-- Best for hard message- or token-budget backstops.
+- Best for hard message or token-budget backstops.
 
 ```python
 from agent_framework._compaction import CharacterEstimatorTokenizer, TruncationStrategy
