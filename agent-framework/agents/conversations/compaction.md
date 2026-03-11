@@ -22,8 +22,8 @@ As conversations grow, the token count of the chat history can exceed model cont
 
 :::zone pivot="programming-language-python"
 
-> [!NOTE]
-> Compaction strategies are not yet available in the Python SDK. This page documents the C# implementation. Python support is planned for a future release.
+> [!IMPORTANT]
+> The compaction framework is currently experimental in Python. Import strategies from `agent_framework._compaction`.
 
 :::zone-end
 
@@ -99,8 +99,39 @@ When no target is specified, it defaults to the inverse of the trigger — compa
 
 :::zone pivot="programming-language-python"
 
-> [!NOTE]
-> Compaction strategies are not yet available in the Python SDK. This page documents the C# implementation. Python support is planned for a future release.
+Compaction operates on a flat list of `Message` objects. Messages are annotated with lightweight group metadata, and strategies mutate those annotations in place to mark groups as excluded before the message list is projected to the model.
+
+### Message groups
+
+Messages are grouped into atomic units. Each group is assigned a `GroupKind`:
+
+| Kind | Description |
+|---|---|
+| `system` | System messages. Always preserved during compaction. |
+| `user` | A single user message. |
+| `assistant_text` | A plain assistant text response (no function calls). |
+| `tool_call` | An assistant message with function calls plus the corresponding tool result messages, treated as an atomic unit. |
+
+### Compaction strategies
+
+A `CompactionStrategy` is a protocol — any `async` callable that accepts a `list[Message]` and mutates it in place, returning `True` when it changed anything:
+
+```python
+class CompactionStrategy(Protocol):
+    async def __call__(self, messages: list[Message]) -> bool: ...
+```
+
+### Tokenizer
+
+Token-aware strategies accept a `TokenizerProtocol` implementation. The built-in `CharacterEstimatorTokenizer` uses a 4-character-per-token heuristic:
+
+```python
+from agent_framework._compaction import CharacterEstimatorTokenizer
+
+tokenizer = CharacterEstimatorTokenizer()
+```
+
+Pass a custom tokenizer when you need accurate token counts for a specific model's encoding.
 
 :::zone-end
 
@@ -207,8 +238,136 @@ This pipeline:
 
 :::zone pivot="programming-language-python"
 
-> [!NOTE]
-> Compaction strategies are not yet available in the Python SDK. This page documents the C# implementation. Python support is planned for a future release.
+All strategies are imported from `agent_framework._compaction`.
+
+### TruncationStrategy
+
+Excludes the oldest non-system groups until the included count drops to `compact_to`. When a `tokenizer` is provided, the metric is token count; otherwise it is included message count.
+
+- Respects atomic group boundaries (tool call groups are excluded as a unit).
+- `preserve_system` defaults to `True`.
+- Best for hard message- or token-budget backstops.
+
+```python
+from agent_framework._compaction import CharacterEstimatorTokenizer, TruncationStrategy
+
+# Exclude oldest groups when tokens exceed 32 000, trimming to 16 000
+truncation = TruncationStrategy(
+    max_n=32_000,
+    compact_to=16_000,
+    tokenizer=CharacterEstimatorTokenizer(),
+)
+```
+
+### SlidingWindowStrategy
+
+Keeps only the most recent `keep_last_groups` non-system groups, excluding everything older.
+
+- System groups are preserved by default (`preserve_system=True`).
+- Best for bounding conversation length to a fixed group count.
+
+```python
+from agent_framework._compaction import SlidingWindowStrategy
+
+# Keep only the last 20 non-system groups
+sliding_window = SlidingWindowStrategy(keep_last_groups=20)
+```
+
+### SelectiveToolCallCompactionStrategy
+
+Fully excludes older tool-call groups, keeping only the last `keep_last_tool_call_groups`.
+
+- Does not touch user or plain assistant messages.
+- Best when tool chatter dominates token usage and the full tool history is not needed.
+
+```python
+from agent_framework._compaction import SelectiveToolCallCompactionStrategy
+
+# Keep only the most recent tool-call group
+selective_tool = SelectiveToolCallCompactionStrategy(keep_last_tool_call_groups=1)
+```
+
+### ToolResultCompactionStrategy
+
+Collapses older tool-call groups into compact summary messages such as `[Tool results: get_weather: sunny, 18°C]`, preserving a readable trace without the full message overhead.
+
+- The most recent `keep_last_tool_call_groups` tool-call groups are left untouched.
+- Best as a first-pass strategy to reclaim space from verbose tool results while retaining readable history.
+
+```python
+from agent_framework._compaction import ToolResultCompactionStrategy
+
+# Collapse all but the newest tool-call group
+tool_result = ToolResultCompactionStrategy(keep_last_tool_call_groups=1)
+```
+
+### SummarizationStrategy
+
+Uses an LLM client to summarize older included messages, replacing them with a single summary message.
+
+- Triggers when included non-system message count exceeds `target_count + threshold`.
+- Retains the newest `target_count` messages; summarizes everything older.
+- A default prompt preserves key facts, decisions, and tool outcomes.
+- Requires a `SupportsChatGetResponse` client — a smaller, faster model is recommended.
+- Best for long conversations where context matters.
+
+```python
+from agent_framework._compaction import SummarizationStrategy
+
+# Summarize when non-system message count exceeds 6, retaining the 4 newest
+summarization = SummarizationStrategy(
+    client=summarizer_client,
+    target_count=4,
+    threshold=2,
+)
+```
+
+Provide a custom summarization prompt:
+
+```python
+summarization = SummarizationStrategy(
+    client=summarizer_client,
+    target_count=4,
+    prompt="Summarize the key decisions and user preferences only.",
+)
+```
+
+### TokenBudgetComposedStrategy
+
+Composes multiple strategies into a sequential pipeline driven by a token budget. Each child strategy runs in order, stopping early once the budget is satisfied. A built-in fallback excludes the oldest groups if the strategies alone cannot reach the target.
+
+- Strategies execute in order; place the gentlest strategies first.
+- `early_stop=True` (the default) stops as soon as the token budget is satisfied.
+
+```python
+from agent_framework._compaction import (
+    CharacterEstimatorTokenizer,
+    SelectiveToolCallCompactionStrategy,
+    SlidingWindowStrategy,
+    SummarizationStrategy,
+    TokenBudgetComposedStrategy,
+    ToolResultCompactionStrategy,
+)
+
+tokenizer = CharacterEstimatorTokenizer()
+
+pipeline = TokenBudgetComposedStrategy(
+    token_budget=16_000,
+    tokenizer=tokenizer,
+    strategies=[
+        ToolResultCompactionStrategy(keep_last_tool_call_groups=1),
+        SummarizationStrategy(client=summarizer_client, target_count=4, threshold=2),
+        SlidingWindowStrategy(keep_last_groups=20),
+    ],
+)
+```
+
+This pipeline:
+
+1. Collapses old tool results (gentle).
+2. Summarizes older conversation spans (moderate).
+3. Keeps only the last 20 groups (aggressive).
+4. Falls back to oldest-first exclusion if still over budget (emergency backstop).
 
 :::zone-end
 
@@ -295,8 +454,96 @@ IEnumerable<ChatMessage> compacted = await CompactionProvider.CompactAsync(
 
 :::zone pivot="programming-language-python"
 
-> [!NOTE]
-> Compaction strategies are not yet available in the Python SDK. This page documents the C# implementation. Python support is planned for a future release.
+`CompactionProvider` is a context provider that applies compaction strategies before and after each agent run. Add it alongside a history provider in the agent's `context_providers` list.
+
+- **`before_strategy`** — runs before the model call, compacting messages already loaded into the context.
+- **`after_strategy`** — runs after the model call, compacting the messages stored by the history provider so the next turn starts smaller.
+- **`history_source_id`** — the `source_id` of the history provider whose stored messages `after_strategy` should compact (defaults to `"in_memory"`).
+
+### Registering with an agent
+
+```python
+from agent_framework import Agent, CompactionProvider, InMemoryHistoryProvider
+from agent_framework._compaction import (
+    CharacterEstimatorTokenizer,
+    SlidingWindowStrategy,
+    SummarizationStrategy,
+    TokenBudgetComposedStrategy,
+    ToolResultCompactionStrategy,
+)
+
+tokenizer = CharacterEstimatorTokenizer()
+
+pipeline = TokenBudgetComposedStrategy(
+    token_budget=16_000,
+    tokenizer=tokenizer,
+    strategies=[
+        ToolResultCompactionStrategy(keep_last_tool_call_groups=1),
+        SummarizationStrategy(client=summarizer_client, target_count=4, threshold=2),
+        SlidingWindowStrategy(keep_last_groups=20),
+    ],
+)
+
+history = InMemoryHistoryProvider()
+compaction = CompactionProvider(
+    before_strategy=pipeline,
+    history_source_id=history.source_id,
+)
+
+agent = Agent(
+    client=client,
+    name="ShoppingAssistant",
+    instructions="You are a helpful shopping assistant.",
+    context_providers=[history, compaction],
+)
+
+session = agent.create_session()
+print(await agent.run("What's the price of a laptop?", session=session))
+```
+
+> [!TIP]
+> Use a smaller, cheaper model (such as `gpt-4o-mini`) for the summarization client to reduce costs while maintaining summary quality.
+
+If only one strategy is needed, pass it directly as `before_strategy`:
+
+```python
+compaction = CompactionProvider(
+    before_strategy=SlidingWindowStrategy(keep_last_groups=20),
+    history_source_id=history.source_id,
+)
+```
+
+### Compacting persisted history after each run
+
+Use `after_strategy` to compact the messages stored by the history provider so that future turns begin with a reduced context:
+
+```python
+compaction = CompactionProvider(
+    before_strategy=SlidingWindowStrategy(keep_last_groups=20),
+    after_strategy=ToolResultCompactionStrategy(keep_last_tool_call_groups=1),
+    history_source_id=history.source_id,
+)
+```
+
+### Ad-hoc compaction
+
+`apply_compaction` applies a strategy to an arbitrary message list outside an active agent session:
+
+```python
+from agent_framework._compaction import apply_compaction, TruncationStrategy, CharacterEstimatorTokenizer
+
+tokenizer = CharacterEstimatorTokenizer()
+
+compacted = await apply_compaction(
+    messages,
+    strategy=TruncationStrategy(
+        max_n=8_000,
+        compact_to=4_000,
+        tokenizer=tokenizer,
+    ),
+    tokenizer=tokenizer,
+)
+```
 
 :::zone-end
 
@@ -316,8 +563,14 @@ IEnumerable<ChatMessage> compacted = await CompactionProvider.CompactAsync(
 
 :::zone pivot="programming-language-python"
 
-> [!NOTE]
-> Compaction strategies are not yet available in the Python SDK. This page documents the C# implementation. Python support is planned for a future release.
+| Strategy | Aggressiveness | Preserves context | Requires LLM | Best for |
+|---|---|---|---|---|
+| `ToolResultCompactionStrategy` | Low | High — collapses tool results into summary messages | No | Reclaiming space from verbose tool output |
+| `SelectiveToolCallCompactionStrategy` | Low–Medium | Medium — fully excludes old tool-call groups | No | Removing tool history when results are no longer needed |
+| `SummarizationStrategy` | Medium | Medium — replaces history with a summary | Yes | Long conversations where context matters |
+| `SlidingWindowStrategy` | High | Low — drops oldest groups | No | Hard group-count limits |
+| `TruncationStrategy` | High | Low — drops oldest groups | No | Emergency message- or token-budget backstops |
+| `TokenBudgetComposedStrategy` | Configurable | Depends on child strategies | Depends | Layered compaction with a token-budget goal and multiple fallbacks |
 
 :::zone-end
 
