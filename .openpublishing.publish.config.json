@@ -68,6 +68,12 @@
       "url": "https://github.com/microsoft/semantic-kernel-java",
       "branch": "docs-java-1.2.0",
       "branch_mapping": {}
+    },
+    {
+      "path_to_root": "agent-framework-code",
+      "url": "https://github.com/microsoft/agent-framework",
+      "branch": "main",
+      "branch_mapping": {}
     }
   ],
   "branch_target_mapping": {
