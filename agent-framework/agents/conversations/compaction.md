@@ -141,13 +141,30 @@ Pass a custom tokenizer when you need accurate token counts for a specific model
 
 All strategies inherit from the abstract `CompactionStrategy` base class. Each strategy preserves system messages and respects a `MinimumPreserved` floor that protects the most-recent non-system groups from removal.
 
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+Compaction strategies are imported from `agent_framework._compaction`.
+
+:::zone-end
+
+:::zone pivot="programming-language-csharp"
 ### TruncationCompactionStrategy
+:::zone-end
+
+:::zone pivot="programming-language-python"
+### TruncationStrategy
+:::zone-end
 
 The most straightforward approach: removes the oldest non-system message groups until the target condition is met.
 
-- Respects atomic group boundaries (tool call + result messages are removed together).
-- `MinimumPreserved` defaults to `32`.
+- Respects atomic group boundaries (tool call and result messages are removed together).
 - Best for hard token-budget backstops.
+
+:::zone pivot="programming-language-csharp"
+
+- `MinimumPreserved` defaults to `32`.
 
 ```csharp
 // Drop oldest groups when tokens exceed 32K, keeping at least 10 recent groups
@@ -156,13 +173,44 @@ TruncationCompactionStrategy truncation = new(
     minimumPreserved: 10);
 ```
 
-### SlidingWindowCompactionStrategy
+:::zone-end
 
-Removes the oldest user **turns** and their associated response groups. Unlike truncation, this strategy operates on logical turn boundaries rather than individual groups.
+:::zone pivot="programming-language-python"
+
+- When a `tokenizer` is provided, the metric is token count; otherwise it is included message count.
+- `preserve_system` defaults to `True`.
+
+```python
+from agent_framework._compaction import CharacterEstimatorTokenizer, TruncationStrategy
+
+# Exclude oldest groups when tokens exceed 32 000, trimming to 16 000
+truncation = TruncationStrategy(
+    max_n=32_000,
+    compact_to=16_000,
+    tokenizer=CharacterEstimatorTokenizer(),
+)
+```
+
+:::zone-end
+
+:::zone pivot="programming-language-csharp"
+### SlidingWindowCompactionStrategy
+:::zone-end
+
+:::zone pivot="programming-language-python"
+### SlidingWindowStrategy
+:::zone-end
+
+Removes older conversation content to keep only the most recent window of exchanges, respecting logical conversation units rather than arbitrary message counts. System messages are preserved throughout.
+
+- Best for bounding conversation length predictably.
+
+:::zone pivot="programming-language-csharp"
+
+Removes the oldest user **turns** and their associated response groups, operating on logical turn boundaries rather than individual groups.
 
 - A turn starts with a user message and includes all subsequent assistant and tool-call groups until the next user message.
 - `MinimumPreserved` defaults to `1` (preserves at least the most recent non-system group).
-- Best for bounding conversation length predictably.
 
 ```csharp
 // Keep only the last 4 user turns
@@ -170,14 +218,34 @@ SlidingWindowCompactionStrategy slidingWindow = new(
     trigger: CompactionTriggers.TurnsExceed(4));
 ```
 
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+Keeps only the most recent `keep_last_groups` non-system groups, excluding everything older.
+
+- `preserve_system` defaults to `True`.
+
+```python
+from agent_framework._compaction import SlidingWindowStrategy
+
+# Keep only the last 20 non-system groups
+sliding_window = SlidingWindowStrategy(keep_last_groups=20)
+```
+
+:::zone-end
+
 ### ToolResultCompactionStrategy
 
-The gentlest strategy: collapses old tool call groups into single concise assistant messages while leaving user messages and plain assistant responses untouched.
+Collapses older tool-call groups into compact summary messages, preserving a readable trace without the full message overhead.
+
+- Does not touch user messages or plain assistant responses.
+- Best as a first-pass strategy to reclaim space from verbose tool results.
+
+:::zone pivot="programming-language-csharp"
 
 - Replaces multi-message tool call groups (assistant call + tool results) with a short summary like `[Tool calls: get_weather, search_docs]`.
-- Does not remove any user messages or plain assistant responses.
 - `MinimumPreserved` defaults to `2`, ensuring the current turn's tool interactions remain visible.
-- Best as a first-pass compaction to reclaim space from verbose tool results.
 
 ```csharp
 // Collapse old tool results when tokens exceed 512
@@ -185,15 +253,41 @@ ToolResultCompactionStrategy toolCompaction = new(
     trigger: CompactionTriggers.TokensExceed(0x200));
 ```
 
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+- Collapses into compact summary messages such as `[Tool results: get_weather: sunny, 18°C]`.
+- The most recent `keep_last_tool_call_groups` tool-call groups are left untouched.
+
+```python
+from agent_framework._compaction import ToolResultCompactionStrategy
+
+# Collapse all but the newest tool-call group
+tool_result = ToolResultCompactionStrategy(keep_last_tool_call_groups=1)
+```
+
+:::zone-end
+
+:::zone pivot="programming-language-csharp"
 ### SummarizationCompactionStrategy
+:::zone-end
+
+:::zone pivot="programming-language-python"
+### SummarizationStrategy
+:::zone-end
 
 Uses an LLM to summarize older portions of the conversation, replacing them with a single summary message.
 
+- A default prompt preserves key facts, decisions, user preferences, and tool call outcomes.
+- Requires a separate LLM client for summarization — a smaller, faster model is recommended.
+- Best for preserving conversational context while significantly reducing token count.
+- You can provide a custom summarization prompt.
+
+:::zone pivot="programming-language-csharp"
+
 - Protects system messages and the most recent `MinimumPreserved` non-system groups (default: `4`).
 - Sends the older messages to a separate `IChatClient` with a summarization prompt, then inserts the summary as a `MessageGroupKind.Summary` group.
-- The default prompt preserves key facts, decisions, user preferences, and tool call outcomes.
-- Requires a separate `IChatClient` instance for summarization — a smaller, faster model is recommended.
-- Best for preserving conversational context while significantly reducing token count.
 
 ```csharp
 // Summarize older messages when tokens exceed 1280, keeping the last 4 groups
@@ -211,6 +305,39 @@ SummarizationCompactionStrategy summarization = new(
     trigger: CompactionTriggers.TokensExceed(0x500),
     summarizationPrompt: "Summarize the key decisions and user preferences only.");
 ```
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+- Triggers when included non-system message count exceeds `target_count + threshold`.
+- Retains the newest `target_count` messages; summarizes everything older.
+- Requires a `SupportsChatGetResponse` client.
+
+```python
+from agent_framework._compaction import SummarizationStrategy
+
+# Summarize when non-system message count exceeds 6, retaining the 4 newest
+summarization = SummarizationStrategy(
+    client=summarizer_client,
+    target_count=4,
+    threshold=2,
+)
+```
+
+Provide a custom summarization prompt:
+
+```python
+summarization = SummarizationStrategy(
+    client=summarizer_client,
+    target_count=4,
+    prompt="Summarize the key decisions and user preferences only.",
+)
+```
+
+:::zone-end
+
+:::zone pivot="programming-language-csharp"
 
 ### PipelineCompactionStrategy
 
@@ -238,41 +365,6 @@ This pipeline:
 
 :::zone pivot="programming-language-python"
 
-All strategies are imported from `agent_framework._compaction`.
-
-### TruncationStrategy
-
-Excludes the oldest non-system groups until the included count drops to `compact_to`. When a `tokenizer` is provided, the metric is token count; otherwise it is included message count.
-
-- Respects atomic group boundaries (tool call groups are excluded as a unit).
-- `preserve_system` defaults to `True`.
-- Best for hard message or token-budget backstops.
-
-```python
-from agent_framework._compaction import CharacterEstimatorTokenizer, TruncationStrategy
-
-# Exclude oldest groups when tokens exceed 32 000, trimming to 16 000
-truncation = TruncationStrategy(
-    max_n=32_000,
-    compact_to=16_000,
-    tokenizer=CharacterEstimatorTokenizer(),
-)
-```
-
-### SlidingWindowStrategy
-
-Keeps only the most recent `keep_last_groups` non-system groups, excluding everything older.
-
-- System groups are preserved by default (`preserve_system=True`).
-- Best for bounding conversation length to a fixed group count.
-
-```python
-from agent_framework._compaction import SlidingWindowStrategy
-
-# Keep only the last 20 non-system groups
-sliding_window = SlidingWindowStrategy(keep_last_groups=20)
-```
-
 ### SelectiveToolCallCompactionStrategy
 
 Fully excludes older tool-call groups, keeping only the last `keep_last_tool_call_groups`.
@@ -285,51 +377,6 @@ from agent_framework._compaction import SelectiveToolCallCompactionStrategy
 
 # Keep only the most recent tool-call group
 selective_tool = SelectiveToolCallCompactionStrategy(keep_last_tool_call_groups=1)
-```
-
-### ToolResultCompactionStrategy
-
-Collapses older tool-call groups into compact summary messages such as `[Tool results: get_weather: sunny, 18°C]`, preserving a readable trace without the full message overhead.
-
-- The most recent `keep_last_tool_call_groups` tool-call groups are left untouched.
-- Best as a first-pass strategy to reclaim space from verbose tool results while retaining readable history.
-
-```python
-from agent_framework._compaction import ToolResultCompactionStrategy
-
-# Collapse all but the newest tool-call group
-tool_result = ToolResultCompactionStrategy(keep_last_tool_call_groups=1)
-```
-
-### SummarizationStrategy
-
-Uses an LLM client to summarize older included messages, replacing them with a single summary message.
-
-- Triggers when included non-system message count exceeds `target_count + threshold`.
-- Retains the newest `target_count` messages; summarizes everything older.
-- A default prompt preserves key facts, decisions, and tool outcomes.
-- Requires a `SupportsChatGetResponse` client — a smaller, faster model is recommended.
-- Best for long conversations where context matters.
-
-```python
-from agent_framework._compaction import SummarizationStrategy
-
-# Summarize when non-system message count exceeds 6, retaining the 4 newest
-summarization = SummarizationStrategy(
-    client=summarizer_client,
-    target_count=4,
-    threshold=2,
-)
-```
-
-Provide a custom summarization prompt:
-
-```python
-summarization = SummarizationStrategy(
-    client=summarizer_client,
-    target_count=4,
-    prompt="Summarize the key decisions and user preferences only.",
-)
 ```
 
 ### TokenBudgetComposedStrategy
