@@ -5,9 +5,26 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 02/17/2026
+ms.date: 03/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                            | C# | Python | Notes                                     |
+  |------------------------------------|:--:|:------:|-------------------------------------------|
+  | Requirements                       | ✅ |   ✅   |                                           |
+  | Creating a Workflow Agent           | ✅ |   ✅   |                                           |
+  | AsAIAgent / as_agent Parameters     | ✅ |   ✅   |                                           |
+  | Creating a Session                  | ✅ |   ✅   |                                           |
+  | Non-Streaming Execution             | ✅ |   ✅   |                                           |
+  | Streaming Execution                 | ✅ |   ✅   |                                           |
+  | Handling External Input Requests    | ✅ |   ✅   |                                           |
+  | Providing Responses to Requests     | ❌ |   ✅   | Python-specific, uses Content helpers     |
+  | Complete Example                    | ❌ |   ✅   | Python-specific                           |
+  | Event Conversion                    | ❌ |   ✅   | Python-specific                           |
+-->
 
 # Microsoft Agent Framework Workflows - Using Workflows as Agents
 
@@ -22,15 +39,15 @@ Sometimes you've built a sophisticated workflow with multiple agents, custom exe
 - **Unified Interface**: Interact with complex workflows using the same API as simple agents
 - **API Compatibility**: Integrate workflows with existing systems that support the Agent interface
 - **Composability**: Use workflow agents as building blocks in larger agent systems or other workflows
-- **Session Management**: Leverage agent sessions for conversation state, checkpointing, and resumption
+- **Session Management**: Leverage agent sessions for conversation state and resumption
 - **Streaming Support**: Get real-time updates as the workflow executes
 
 ### How It Works
 
 When you convert a workflow to an agent:
 
-1. The workflow is validated to ensure its start executor can accept chat messages
-2. A session is created to manage conversation state and checkpoints
+1. The workflow is validated to ensure its start executor can accept the required input types
+2. A session is created to manage conversation state
 3. Input messages are routed to the workflow's start executor
 4. Workflow events are converted to agent response updates
 5. External input requests (from `RequestInfoExecutor`) are surfaced as function calls
@@ -39,39 +56,46 @@ When you convert a workflow to an agent:
 
 ## Requirements
 
-To use a workflow as an agent, the workflow's start executor must be able to handle `IEnumerable<ChatMessage>` as input. This is automatically satisfied when using `ChatClientAgent` or other agent-based executors.
+To use a workflow as an agent, the workflow's start executor must be able to handle `IEnumerable<ChatMessage>` as input. This is automatically satisfied when using agent-based executors created with `AsAIAgent`.
 
 ## Create a Workflow Agent
 
-Use the `AsAgent()` extension method to convert any compatible workflow into an agent:
+Use the `AsAIAgent()` extension method to convert any compatible workflow into an agent:
 
 ```csharp
-using Microsoft.Agents.AI.Workflows;
 using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 
-// First, build your workflow
-var workflow = AgentWorkflowBuilder
-    .CreateSequentialPipeline(researchAgent, writerAgent, reviewerAgent)
+// Create agents
+AIAgent researchAgent = chatClient.AsAIAgent("You are a researcher. Research and gather information on the given topic.");
+AIAgent writerAgent = chatClient.AsAIAgent("You are a writer. Write clear, engaging content based on research.");
+AIAgent reviewerAgent = chatClient.AsAIAgent("You are a reviewer. Review the content and provide a final polished version.");
+
+// Build a sequential workflow
+var workflow = new WorkflowBuilder(researchAgent)
+    .AddEdge(researchAgent, writerAgent)
+    .AddEdge(writerAgent, reviewerAgent)
     .Build();
 
 // Convert the workflow to an agent
-AIAgent workflowAgent = workflow.AsAgent(
+AIAgent workflowAgent = workflow.AsAIAgent(
     id: "content-pipeline",
     name: "Content Pipeline Agent",
     description: "A multi-agent workflow that researches, writes, and reviews content"
 );
 ```
 
-### AsAgent Parameters
+### AsAIAgent Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `id` | `string?` | Optional unique identifier for the agent. Auto-generated if not provided. |
 | `name` | `string?` | Optional display name for the agent. |
 | `description` | `string?` | Optional description of the agent's purpose. |
-| `checkpointManager` | `CheckpointManager?` | Optional checkpoint manager for persistence across sessions. |
 | `executionEnvironment` | `IWorkflowExecutionEnvironment?` | Optional execution environment. Defaults to `InProcessExecution.OffThread` or `InProcessExecution.Concurrent` based on workflow configuration. |
+| `includeExceptionDetails` | `bool` | If `true`, includes exception messages in error content. Defaults to `false`. |
+| `includeWorkflowOutputsInResponse` | `bool` | If `true`, transforms outgoing workflow outputs into content in agent responses. Defaults to `false`. |
 
 ## Using Workflow Agents
 
@@ -150,7 +174,7 @@ Workflow agent sessions can be serialized for persistence and resumed later:
 
 ```csharp
 // Serialize the session state
-JsonElement serializedSession = workflowAgent.SerializeSession(session);
+JsonElement serializedSession = await workflowAgent.SerializeSessionAsync(session);
 
 // Store serializedSession to your persistence layer...
 
@@ -164,60 +188,42 @@ await foreach (var update in workflowAgent.RunStreamingAsync(newMessages, resume
 }
 ```
 
-## Checkpointing with Workflow Agents
-
-Enable checkpointing to persist workflow state across process restarts:
-
-```csharp
-// Create a checkpoint manager with your storage backend
-var checkpointManager = new CheckpointManager(new FileCheckpointStorage("./checkpoints"));
-
-// Create workflow agent with checkpointing enabled
-AIAgent workflowAgent = workflow.AsAgent(
-    id: "persistent-workflow",
-    name: "Persistent Workflow Agent",
-    checkpointManager: checkpointManager
-);
-```
-
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
 ## Requirements
 
-To use a workflow as an agent, the workflow's start executor must be able to handle `list[Message]` as input. This is automatically satisfied when using `Agent` or `AgentExecutor`.
+To use a workflow as an agent, the workflow's start executor must be able to handle message input. This is automatically satisfied when using `Agent` or agent-based executors.
 
 ## Creating a Workflow Agent
 
 Call `as_agent()` on any compatible workflow to convert it into an agent:
 
 ```python
-from agent_framework import WorkflowBuilder, Agent
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.orchestrations import SequentialBuilder
 from azure.identity import AzureCliCredential
 
 # Create your chat client and agents
-chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+client = AzureOpenAIResponsesClient(
+    project_endpoint="<your-endpoint>",
+    deployment_name="<your-deployment>",
+    credential=AzureCliCredential(),
+)
 
-researcher = Agent(
+researcher = client.as_agent(
     name="Researcher",
     instructions="Research and gather information on the given topic.",
-    chat_client=chat_client,
 )
 
-writer = Agent(
-    name="Writer", 
+writer = client.as_agent(
+    name="Writer",
     instructions="Write clear, engaging content based on research.",
-    chat_client=chat_client,
 )
 
-# Build your workflow
-workflow = (
-    WorkflowBuilder(start_executor=researcher)
-    .add_edge(researcher, writer)
-    .build()
-)
+# Build a sequential workflow
+workflow = SequentialBuilder(participants=[researcher, writer]).build()
 
 # Convert the workflow to an agent
 workflow_agent = workflow.as_agent(name="Content Pipeline Agent")
@@ -233,7 +239,7 @@ workflow_agent = workflow.as_agent(name="Content Pipeline Agent")
 
 ### Creating a Session
 
-Each conversation with a workflow agent requires a session to manage state:
+You can optionally create a session to manage conversation state across multiple turns:
 
 ```python
 # Create a new session for the conversation
@@ -241,7 +247,8 @@ session = await workflow_agent.create_session()
 ```
 
 > [!NOTE]
-> If `workflow.as_agent()` is created without `context_providers`, the framework adds an `InMemoryHistoryProvider("memory")` by default so multi-turn history works out of the box.
+> Sessions are optional. If you don't pass a `session` to `run()`, the agent handles state internally.
+> If `workflow.as_agent()` is created without `context_providers`, the framework adds an `InMemoryHistoryProvider()` by default so multi-turn history works out of the box.
 > If you pass `context_providers` explicitly, that list is used as-is.
 
 ### Non-Streaming Execution
@@ -249,11 +256,8 @@ session = await workflow_agent.create_session()
 For simple use cases where you want the complete response:
 
 ```python
-from agent_framework import Message
-
-messages = [Message(role="user", contents=["Write an article about AI trends"])]
-
-response = await workflow_agent.run(messages, session=session)
+# You can pass a plain string as input
+response = await workflow_agent.run("Write an article about AI trends")
 
 for message in response.messages:
     print(f"{message.author_name}: {message.text}")
@@ -264,63 +268,53 @@ for message in response.messages:
 For real-time updates as the workflow executes:
 
 ```python
-messages = [Message(role="user", contents=["Write an article about AI trends"])]
-
-async for update in workflow_agent.run(messages, session=session, stream=True):
-    # Process streaming updates from each agent in the workflow
+async for update in workflow_agent.run(
+    "Write an article about AI trends",
+    stream=True,
+):
     if update.text:
         print(update.text, end="", flush=True)
 ```
 
 ## Handling External Input Requests
 
-When a workflow contains executors that request external input (using `RequestInfoExecutor`), these requests are surfaced as function calls. The workflow agent tracks pending requests and expects responses before continuing:
+When a workflow contains executors that request external input (using `request_info`), these requests are surfaced as function calls in the agent response. The function call uses the name `WorkflowAgent.REQUEST_INFO_FUNCTION_NAME`:
 
 ```python
-from agent_framework import (
-    FunctionCallContent,
-    FunctionApprovalRequestContent,
-    FunctionApprovalResponseContent,
-)
+from agent_framework import Content, Message, WorkflowAgent
 
-async for update in workflow_agent.run(messages, session=session, stream=True):
-    for content in update.contents:
-        if isinstance(content, FunctionApprovalRequestContent):
-            # The workflow is requesting external input
-            request_id = content.id
-            function_call = content.function_call
-            
-            print(f"Workflow requests input: {function_call.name}")
-            print(f"Request data: {function_call.arguments}")
-            
-            # Store the request_id to provide a response later
+response = await workflow_agent.run("Process my request")
 
-# Check for pending requests
-if workflow_agent.pending_requests:
-    print(f"Pending requests: {list(workflow_agent.pending_requests.keys())}")
+# Look for function calls in the response
+human_review_function_call = None
+for message in response.messages:
+    for content in message.contents:
+        if content.name == WorkflowAgent.REQUEST_INFO_FUNCTION_NAME:
+            human_review_function_call = content
 ```
 
 ### Providing Responses to Pending Requests
 
-To continue workflow execution after an external input request:
+To continue workflow execution after an external input request, create a function result and send it back:
 
 ```python
-# Create a response for the pending request
-response_content = FunctionApprovalResponseContent(
-    id=request_id,
-    function_call=function_call,
-    approved=True,
-)
+if human_review_function_call:
+    # Parse the request arguments
+    request = WorkflowAgent.RequestInfoFunctionArgs.from_json(
+        human_review_function_call.arguments
+    )
 
-response_message = Message(
-    role="user",
-    contents=[response_content],
-)
+    # Create a response (your custom response type)
+    result_data = MyResponseType(approved=True, feedback="Looks good")
 
-# Continue the workflow with the response
-async for update in workflow_agent.run([response_message], session=session, stream=True):
-    if update.text:
-        print(update.text, end="", flush=True)
+    # Create the function call result
+    function_result = Content.from_function_result(
+        call_id=human_review_function_call.call_id,
+        result=result_data,
+    )
+
+    # Send the response back to continue the workflow
+    response = await workflow_agent.run(Message("tool", [function_result]))
 ```
 
 ## Complete Example
@@ -329,66 +323,62 @@ Here's a complete example demonstrating a workflow agent with streaming output:
 
 ```python
 import asyncio
-from agent_framework import (
-    Agent,
-    Message,
-)
-from agent_framework.azure import AzureOpenAIChatClient
-from agent_framework._workflows import SequentialBuilder
+import os
+
+from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.orchestrations import SequentialBuilder
 from azure.identity import AzureCliCredential
 
 
 async def main():
     # Set up the chat client
-    chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
-    
+    client = AzureOpenAIResponsesClient(
+        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        credential=AzureCliCredential(),
+    )
+
     # Create specialized agents
-    researcher = Agent(
+    researcher = client.as_agent(
         name="Researcher",
         instructions="Research the given topic and provide key facts.",
-        chat_client=chat_client,
     )
-    
-    writer = Agent(
+
+    writer = client.as_agent(
         name="Writer",
         instructions="Write engaging content based on the research provided.",
-        chat_client=chat_client,
     )
-    
-    reviewer = Agent(
+
+    reviewer = client.as_agent(
         name="Reviewer",
         instructions="Review the content and provide a final polished version.",
-        chat_client=chat_client,
     )
-    
+
     # Build a sequential workflow
-    workflow = (
-        SequentialBuilder(participants=[researcher, writer, reviewer])
-        .build()
-    )
-    
+    workflow = SequentialBuilder(participants=[researcher, writer, reviewer]).build()
+
     # Convert to a workflow agent
     workflow_agent = workflow.as_agent(name="Content Creation Pipeline")
-    
-    # Create a session and run the workflow
-    session = await workflow_agent.create_session()
-    messages = [Message(role="user", contents=["Write about quantum computing"])]
-    
+
+    # Run the workflow
     print("Starting workflow...")
     print("=" * 60)
-    
+
     current_author = None
-    async for update in workflow_agent.run(messages, session=session, stream=True):
+    async for update in workflow_agent.run(
+        "Write about quantum computing",
+        stream=True,
+    ):
         # Show when different agents are responding
         if update.author_name and update.author_name != current_author:
             if current_author:
                 print("\n" + "-" * 40)
             print(f"\n[{update.author_name}]:")
             current_author = update.author_name
-        
+
         if update.text:
             print(update.text, end="", flush=True)
-    
+
     print("\n" + "=" * 60)
     print("Workflow completed!")
 
@@ -399,7 +389,7 @@ if __name__ == "__main__":
 
 ## Understanding Event Conversion
 
-When a workflow runs as an agent, workflow events are converted to agent responses. The type of response depends on which method you use:
+When a workflow runs as an agent, workflow events are converted to agent responses. The type of response depends on how you call `run()`:
 
 - `run()`: Returns an `AgentResponse` containing the complete result after the workflow finishes
 - `run(..., stream=True)`: Returns an async iterable of `AgentResponseUpdate` objects as the workflow executes, providing real-time updates
@@ -408,9 +398,9 @@ During execution, internal workflow events are mapped to agent responses as foll
 
 | Workflow Event | Agent Response |
 |----------------|----------------|
-| `event.type == "output"` with `AgentResponseUpdate` data | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
-| `event.type == "request_info"` | Converted to `FunctionCallContent` and `FunctionApprovalRequestContent` |
-| Other events | Included in `raw_representation` for observability |
+| `event.type == "output"` | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
+| `event.type == "request_info"` | Converted to function call content using `WorkflowAgent.REQUEST_INFO_FUNCTION_NAME` |
+| Other events | Ignored (workflow-internal only) |
 
 This conversion allows you to use the standard agent interface while still having access to detailed workflow information when needed.
 
