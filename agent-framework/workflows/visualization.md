@@ -5,9 +5,22 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 03/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                    | C# | Python | Notes                                           |
+  |----------------------------|:--:|:------:|--------------------------------------------------|
+  | Basic usage                | ✅ |   ✅   |                                                  |
+  | Mermaid output             | ✅ |   ✅   |                                                  |
+  | DOT output                 | ✅ |   ✅   |                                                  |
+  | File export (SVG/PNG/PDF)  | ❌ |   ✅   | Python `WorkflowViz` has export/save_ methods    |
+  | GraphViz CLI export        | ✅ |   ❌   | C# shows shell piping to `dot` CLI               |
+  | Sample link                | ✅ |   ✅   |                                                  |
+-->
 
 # Microsoft Agent Framework Workflows - Visualization
 
@@ -21,10 +34,9 @@ Workflow visualization can be achieved via extension methods on the `Workflow` c
 using Microsoft.Agents.AI.Workflows;
 
 // Create a workflow with a fan-out and fan-in pattern
-var workflow = new WorkflowBuilder()
-    .SetStartExecutor(dispatcher)
-    .AddFanOutEdges(dispatcher, [researcher, marketer, legal])
-    .AddFanInEdges([researcher, marketer, legal], aggregator)
+var workflow = new WorkflowBuilder(dispatcher)
+    .AddFanOutEdge(dispatcher, [researcher, marketer, legal])
+    .AddFanInBarrierEdge([researcher, marketer, legal], aggregator)
     .Build();
 
 // Mermaid diagram
@@ -116,7 +128,7 @@ flowchart TD
 
 or in Graphviz DOT format:
 
-!Workflow Diagram
+The Mermaid diagram above also represents the Graphviz DOT format output, rendered as a directed graph.
 
 ## Visualization Features
 

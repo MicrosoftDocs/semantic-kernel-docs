@@ -5,9 +5,23 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 03/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                        | C# | Python | Notes |
+  |--------------------------------|:--:|:------:|-------|
+  | Overview                       | ✅ |   ✅   |       |
+  | When Are Checkpoints Created?  | ✅ |   ✅   |       |
+  | Capturing Checkpoints          | ✅ |   ✅   |       |
+  | Resuming from Checkpoints      | ✅ |   ✅   |       |
+  | Rehydrating from Checkpoints   | ✅ |   ✅   |       |
+  | Save Executor States           | ✅ |   ✅   |       |
+  | Next Steps                     | ✅ |   ✅   |       |
+-->
 
 # Microsoft Agent Framework Workflows - Checkpoints
 
@@ -35,39 +49,36 @@ Remember that workflows are executed in **supersteps**, as documented in the [co
 
 ::: zone pivot="programming-language-csharp"
 
-To enable check pointing, a `CheckpointManager` needs to be provided when creating a workflow run. A checkpoint then can be accessed via a `SuperStepCompletedEvent`.
+To enable checkpointing, a `CheckpointManager` needs to be provided when running the workflow. A checkpoint can then be accessed via a `SuperStepCompletedEvent`, or through the `Checkpoints` property on the run.
 
 ```csharp
 using Microsoft.Agents.AI.Workflows;
 
 // Create a checkpoint manager to manage checkpoints
-var checkpointManager = new CheckpointManager();
-// List to store checkpoint info for later use
-var checkpoints = new List<CheckpointInfo>();
+CheckpointManager checkpointManager = CheckpointManager.CreateInMemory();
 
 // Run the workflow with checkpointing enabled
-Checkpointed<StreamingRun> checkpointedRun = await InProcessExecution
-    .StreamAsync(workflow, input, checkpointManager)
+StreamingRun run = await InProcessExecution
+    .RunStreamingAsync(workflow, input, checkpointManager)
     .ConfigureAwait(false);
-await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().ConfigureAwait(false))
+await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
     if (evt is SuperStepCompletedEvent superStepCompletedEvt)
     {
-        // Access the checkpoint and store it
-        CheckpointInfo? checkpoint = superStepCompletedEvt.CompletionInfo!.Checkpoint;
-        if (checkpoint != null)
-        {
-            checkpoints.Add(checkpoint);
-        }
+        // Access the checkpoint
+        CheckpointInfo? checkpoint = superStepCompletedEvt.CompletionInfo?.Checkpoint;
     }
 }
+
+// Checkpoints can also be accessed from the run directly
+IReadOnlyList<CheckpointInfo> checkpoints = run.Checkpoints;
 ```
 
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
 
-To enable check pointing, a `CheckpointStorage` needs to be provided when creating a workflow. A checkpoint then can be accessed via the storage.
+To enable checkpointing, a `CheckpointStorage` needs to be provided when creating a workflow. A checkpoint can then be accessed via the storage.
 
 ```python
 from agent_framework import (
@@ -87,11 +98,11 @@ builder.add_edge(executor_b, end_executor)
 workflow = builder.build()
 
 # Run the workflow
-async for event in workflow.run_streaming(input):
+async for event in workflow.run(input, stream=True):
     ...
 
 # Access checkpoints from the storage
-checkpoints = await checkpoint_storage.list_checkpoints()
+checkpoints = await checkpoint_storage.list_checkpoints(workflow_name=workflow.name)
 ```
 
 ::: zone-end
@@ -104,10 +115,10 @@ You can resume a workflow from a specific checkpoint directly on the same run.
 
 ```csharp
 // Assume we want to resume from the 6th checkpoint
-CheckpointInfo savedCheckpoint = checkpoints[5];
-// Note that we are restoring the state directly to the same run instance.
-await checkpointedRun.RestoreCheckpointAsync(savedCheckpoint, CancellationToken.None).ConfigureAwait(false);
-await foreach (WorkflowEvent evt in checkpointedRun.Run.WatchStreamAsync().ConfigureAwait(false))
+CheckpointInfo savedCheckpoint = run.Checkpoints[5];
+// Restore the state directly on the same run instance.
+await run.RestoreCheckpointAsync(savedCheckpoint).ConfigureAwait(false);
+await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
     if (evt is WorkflowOutputEvent workflowOutputEvt)
     {
@@ -125,7 +136,7 @@ You can resume a workflow from a specific checkpoint directly on the same workfl
 ```python
 # Assume we want to resume from the 6th checkpoint
 saved_checkpoint = checkpoints[5]
-async for event in workflow.run_stream(checkpoint_id=saved_checkpoint.checkpoint_id):
+async for event in workflow.run(checkpoint_id=saved_checkpoint.checkpoint_id, stream=True):
     ...
 ```
 
@@ -139,11 +150,11 @@ Or you can rehydrate a workflow from a checkpoint into a new run instance.
 
 ```csharp
 // Assume we want to resume from the 6th checkpoint
-CheckpointInfo savedCheckpoint = checkpoints[5];
-Checkpointed<StreamingRun> newCheckpointedRun = await InProcessExecution
-    .ResumeStreamAsync(newWorkflow, savedCheckpoint, checkpointManager)
+CheckpointInfo savedCheckpoint = run.Checkpoints[5];
+StreamingRun newRun = await InProcessExecution
+    .ResumeStreamingAsync(newWorkflow, savedCheckpoint, checkpointManager)
     .ConfigureAwait(false);
-await foreach (WorkflowEvent evt in newCheckpointedRun.Run.WatchStreamAsync().ConfigureAwait(false))
+await foreach (WorkflowEvent evt in newRun.WatchStreamAsync().ConfigureAwait(false))
 {
     if (evt is WorkflowOutputEvent workflowOutputEvt)
     {
@@ -170,9 +181,10 @@ workflow = builder.build()
 
 # Assume we want to resume from the 6th checkpoint
 saved_checkpoint = checkpoints[5]
-async for event in workflow.run_stream
+async for event in workflow.run(
     checkpoint_id=saved_checkpoint.checkpoint_id,
     checkpoint_storage=checkpoint_storage,
+    stream=True,
 ):
     ...
 ```
@@ -221,7 +233,7 @@ protected override async ValueTask OnCheckpointRestoredAsync(IWorkflowContext co
 
 ::: zone pivot="programming-language-python"
 
-To ensure that the state of an executor is captured in a checkpoint, the executor must override the `on_checkpoint_save` method and save its state to the workflow context.
+To ensure that the state of an executor is captured in a checkpoint, the executor must override the `on_checkpoint_save` method and return its state as a dictionary.
 
 ```python
 class CustomExecutor(Executor):
@@ -238,7 +250,7 @@ class CustomExecutor(Executor):
         return {"messages": self._messages}
 ```
 
-Also, to ensure the state is correctly restored when resuming from a checkpoint, the executor must override the `on_checkpoint_restore` method and load its state from the workflow context.
+Also, to ensure the state is correctly restored when resuming from a checkpoint, the executor must override the `on_checkpoint_restore` method and restore its state from the provided state dictionary.
 
 ```python
 async def on_checkpoint_restore(self, state: dict[str, Any]) -> None:

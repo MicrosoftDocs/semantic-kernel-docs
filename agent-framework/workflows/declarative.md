@@ -5,9 +5,57 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 1/12/2026
+ms.date: 03/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                        | C# | Python | Notes                    |
+  |--------------------------------|:--:|:------:|--------------------------|
+  | Basic YAML Structure           | ✅ |   ✅   |                          |
+  | Prerequisites                  | ✅ |   ✅   |                          |
+  | Your First Declarative Workflow| ✅ |   ✅   |                          |
+  | Core Concepts                  | ✅ |   ✅   |                          |
+  | Variable Namespaces            | ✅ |   ✅   | C# lacks Workflow.Inputs/Outputs |
+  | Expression Language            | ✅ |   ✅   | C# has additional PowerFx funcs  |
+  | Configuration Options          | ✅ |   ❌   | C#-specific              |
+  | Agent Provider Setup           | ✅ |   ❌   | C#-specific              |
+  | Workflow Execution             | ✅ |   ❌   | C#-specific              |
+  | Resuming from Checkpoints      | ✅ |   ❌   | C#-specific              |
+  | SetVariable                    | ✅ |   ✅   |                          |
+  | SetMultipleVariables           | ✅ |   ✅   |                          |
+  | SetTextVariable                | ✅ |   ❌   | C#-specific              |
+  | AppendValue                    | ❌ |   ✅   | Python-specific          |
+  | ResetVariable                  | ✅ |   ✅   |                          |
+  | ClearAllVariables              | ✅ |   ❌   | C#-specific              |
+  | ParseValue                     | ✅ |   ❌   | C#-specific              |
+  | EditTableV2                    | ✅ |   ❌   | C#-specific              |
+  | If                             | ✅ |   ✅   |                          |
+  | ConditionGroup                 | ✅ |   ✅   |                          |
+  | Foreach                        | ✅ |   ✅   |                          |
+  | RepeatUntil                    | ❌ |   ✅   | Python-specific          |
+  | BreakLoop                      | ✅ |   ✅   |                          |
+  | ContinueLoop                   | ✅ |   ✅   |                          |
+  | GotoAction                     | ✅ |   ✅   |                          |
+  | SendActivity                   | ✅ |   ✅   |                          |
+  | EmitEvent                      | ❌ |   ✅   | Python-specific          |
+  | InvokeAzureAgent               | ✅ |   ✅   |                          |
+  | InvokeFunctionTool             | ✅ |   ✅   |                          |
+  | InvokeMcpTool                  | ✅ |   ❌   | C#-specific              |
+  | Question                       | ✅ |   ✅   |                          |
+  | Confirmation                   | ❌ |   ✅   | Python-specific          |
+  | RequestExternalInput           | ✅ |   ✅   |                          |
+  | WaitForInput                   | ❌ |   ✅   | Python-specific          |
+  | EndWorkflow                    | ✅ |   ✅   |                          |
+  | EndConversation                | ✅ |   ✅   |                          |
+  | CreateConversation             | ✅ |   ✅   |                          |
+  | Conversation Actions           | ✅ |   ❌   | C#-specific              |
+  | Expression Syntax              | ❌ |   ✅   | Python zone only (detailed) |
+  | Advanced Patterns              | ✅ |   ✅   |                          |
+  | Next Steps                     | ✅ |   ✅   |                          |
+-->
 
 # Declarative Workflows - Overview
 
@@ -53,7 +101,8 @@ Declarative workflows support various action types. The following table shows av
 | Output | `SendActivity` | ✅ | ✅ |
 | Output | `EmitEvent` | ❌ | ✅ |
 | Agent Invocation | `InvokeAzureAgent` | ✅ | ✅ |
-| Tool Invocation | `InvokeFunctionTool`, `InvokeMcpTool` | ✅ | ❌ |
+| Tool Invocation | `InvokeFunctionTool` | ✅ | ✅ |
+| Tool Invocation | `InvokeMcpTool` | ✅ | ❌ |
 | Human-in-the-Loop | `Question`, `RequestExternalInput` | ✅ | ✅ |
 | Human-in-the-Loop | `Confirmation`, `WaitForInput` | ❌ | ✅ |
 | Workflow Control | `EndWorkflow`, `EndConversation`, `CreateConversation` | ✅ | ✅ |
@@ -1562,6 +1611,7 @@ Declarative workflows support various action types:
 | Control Flow | `If`, `ConditionGroup`, `Foreach`, `RepeatUntil`, `BreakLoop`, `ContinueLoop`, `GotoAction` |
 | Output | `SendActivity`, `EmitEvent` |
 | Agent Invocation | `InvokeAzureAgent` |
+| Tool Invocation | `InvokeFunctionTool` |
 | Human-in-the-Loop | `Question`, `Confirmation`, `RequestExternalInput`, `WaitForInput` |
 | Workflow Control | `EndWorkflow`, `EndConversation`, `CreateConversation` |
 
@@ -1608,6 +1658,16 @@ With an expression:
 |----------|----------|-------------|
 | `variable` | Yes | Variable path (e.g., `Local.name`, `Workflow.Outputs.result`) |
 | `value` | Yes | Value to set (literal or expression) |
+
+> [!NOTE]
+> Python also supports the `SetValue` action kind, which uses `path` instead of `variable` for the target property. Both `SetVariable` (with `variable`) and `SetValue` (with `path`) achieve the same result. For example:
+>
+> ```yaml
+> - kind: SetValue
+>   id: set_greeting
+>   path: Local.greeting
+>   value: Hello World
+> ```
 
 #### SetMultipleVariables
 
@@ -1983,6 +2043,65 @@ With external loop (continues until condition is met):
 | `output.messages` | No | Path to store conversation messages |
 | `output.autoSend` | No | Automatically send response to user |
 
+### Tool Invocation Actions
+
+#### InvokeFunctionTool
+
+Invokes a registered Python function directly from the workflow without going through an AI agent.
+
+```yaml
+- kind: InvokeFunctionTool
+  id: invoke_weather
+  displayName: Get weather data
+  functionName: get_weather
+  arguments:
+    location: =Local.location
+    unit: =Local.unit
+  output:
+    result: Local.weatherInfo
+    messages: Local.weatherToolCallItems
+    autoSend: true
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `functionName` | Yes | Name of the registered function to invoke |
+| `arguments` | No | Arguments to pass to the function |
+| `output.result` | No | Path to store the function result |
+| `output.messages` | No | Path to store function messages |
+| `output.autoSend` | No | Automatically send result to user |
+
+**Python setup for InvokeFunctionTool:**
+
+Functions must be registered with the `WorkflowFactory` using `register_tool`:
+
+```python
+from agent_framework.declarative import WorkflowFactory
+
+# Define your functions
+def get_weather(location: str, unit: str = "F") -> dict:
+    """Get weather information for a location."""
+    # Your implementation here
+    return {"location": location, "temp": 72, "unit": unit}
+
+def format_message(template: str, data: dict) -> str:
+    """Format a message template with data."""
+    return template.format(**data)
+
+# Register functions with the factory
+factory = (
+    WorkflowFactory()
+    .register_tool("get_weather", get_weather)
+    .register_tool("format_message", format_message)
+)
+
+# Load and run the workflow
+workflow = factory.create_workflow_from_yaml_path("workflow.yaml")
+result = await workflow.run({"location": "Seattle", "unit": "F"})
+```
+
 ### Human-in-the-Loop Actions
 
 #### Question
@@ -2122,6 +2241,7 @@ Creates a new conversation context.
 | `SendActivity` | Output | Send message to user |
 | `EmitEvent` | Output | Emit custom event |
 | `InvokeAzureAgent` | Agent | Call Azure AI agent |
+| `InvokeFunctionTool` | Tool | Invoke registered function |
 | `Question` | Human-in-the-Loop | Ask user a question |
 | `Confirmation` | Human-in-the-Loop | Yes/no confirmation |
 | `RequestExternalInput` | Human-in-the-Loop | Request external input |
@@ -2526,7 +2646,7 @@ trigger:
     # Initialize turn counter
     - kind: SetVariable
       id: init_counter
-      path: Local.TurnCount
+      variable: Local.TurnCount
       value: 0
 
     - kind: SendActivity
@@ -2563,7 +2683,7 @@ trigger:
     # Increment counter
     - kind: SetVariable
       id: increment
-      path: Local.TurnCount
+      variable: Local.TurnCount
       value: =Local.TurnCount + 1
 
     # Check completion conditions
@@ -2775,7 +2895,7 @@ inputs:
 actions:
   - kind: SendActivity
     activity:
-      text: =Concat("Processing ", inputs.requestType, " request for $", inputs.amount)
+      text: =Concat("Processing ", Workflow.Inputs.requestType, " request for $", Workflow.Inputs.amount)
 
   # Check if approval is needed
   - kind: If
@@ -2788,7 +2908,7 @@ actions:
       - kind: Confirmation
         id: get_approval
         question:
-          text: =Concat("Do you approve this ", inputs.requestType, " request for $", inputs.amount, "?")
+          text: =Concat("Do you approve this ", Workflow.Inputs.requestType, " request for $", Workflow.Inputs.amount, "?")
         variable: Local.approved
 
       - kind: If
@@ -3003,7 +3123,7 @@ actions:
 
 ::: zone pivot="programming-language-csharp"
 
-- [C# Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/Workflows/Declarative) - Explore complete working examples including:
+- [C# Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/Declarative) - Explore complete working examples including:
   - **StudentTeacher** - Multi-agent conversation with iterative learning
   - **InvokeMcpTool** - MCP server tool integration
   - **InvokeFunctionTool** - Direct function invocation from workflows
