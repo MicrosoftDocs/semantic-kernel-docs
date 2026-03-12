@@ -24,6 +24,8 @@ items:
     href: agents/index.md
   - name: Running Agents
     href: agents/running-agents.md
+  - name: Agent Pipeline
+    href: agents/agent-pipeline.md
   - name: Multimodal
     href: agents/multimodal.md
   - name: Structured Output

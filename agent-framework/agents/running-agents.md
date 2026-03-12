@@ -320,4 +320,4 @@ for message in response.messages:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Multimodal](./multimodal.md)
+> [Agent Pipeline](./agent-pipeline.md)
