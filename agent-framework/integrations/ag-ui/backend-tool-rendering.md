@@ -186,7 +186,7 @@ To see tool calls and results in real-time, extend the client's streaming loop t
 
 ```csharp
 // Inside the streaming loop from getting-started.md
-await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, thread))
+await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
 {
     ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 
@@ -282,7 +282,7 @@ Now that you can add function tools, you can:
 
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
-- [Agent Framework Documentation](../../overview/agent-framework-overview.md)
+- [Agent Framework Documentation](../../overview/index.md)
 
 ::: zone-end
 
@@ -323,15 +323,15 @@ This approach provides:
 
 ### Basic Function Tool
 
-You can turn any Python function into a tool using the `@ai_function` decorator:
+You can turn any Python function into a tool using the `@tool` decorator:
 
 ```python
 from typing import Annotated
 from pydantic import Field
-from agent_framework import ai_function
+from agent_framework import tool
 
 
-@ai_function
+@tool
 def get_weather(
     location: Annotated[str, Field(description="The city")],
 ) -> str:
@@ -342,7 +342,7 @@ def get_weather(
 
 ### Key Concepts
 
-- **`@ai_function` decorator**: Marks a function as available to the agent
+- **`@tool` decorator**: Marks a function as available to the agent
 - **Type annotations**: Provide type information for parameters
 - **`Annotated` and `Field`**: Add descriptions to help the agent understand parameters
 - **Docstring**: Describes what the function does (helps the agent decide when to use it)
@@ -354,10 +354,10 @@ You can provide multiple tools to give the agent more capabilities:
 
 ```python
 from typing import Any
-from agent_framework import ai_function
+from agent_framework import tool
 
 
-@ai_function
+@tool
 def get_weather(
     location: Annotated[str, Field(description="The city.")],
 ) -> str:
@@ -365,7 +365,7 @@ def get_weather(
     return f"The weather in {location} is sunny with a temperature of 22°C."
 
 
-@ai_function
+@tool
 def get_forecast(
     location: Annotated[str, Field(description="The city.")],
     days: Annotated[int, Field(description="Number of days to forecast")] = 3,
@@ -392,7 +392,7 @@ Here's a complete server implementation with function tools:
 import os
 from typing import Annotated, Any
 
-from agent_framework import ChatAgent, ai_function
+from agent_framework import Agent, tool
 from agent_framework.azure import AzureOpenAIChatClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
@@ -401,7 +401,7 @@ from pydantic import Field
 
 
 # Define function tools
-@ai_function
+@tool
 def get_weather(
     location: Annotated[str, Field(description="The city")],
 ) -> str:
@@ -410,7 +410,7 @@ def get_weather(
     return f"The weather in {location} is sunny with a temperature of 22°C."
 
 
-@ai_function
+@tool
 def search_restaurants(
     location: Annotated[str, Field(description="The city to search in")],
     cuisine: Annotated[str, Field(description="Type of cuisine")] = "any",
@@ -444,7 +444,7 @@ chat_client = AzureOpenAIChatClient(
 )
 
 # Create agent with tools
-agent = ChatAgent(
+agent = Agent(
     name="TravelAssistant",
     instructions="You are a helpful travel assistant. Use the available tools to help users plan their trips.",
     chat_client=chat_client,
@@ -506,7 +506,7 @@ Here's an enhanced client using `AGUIChatClient` that displays tool execution:
 import asyncio
 import os
 
-from agent_framework import ChatAgent, ToolCallContent, ToolResultContent
+from agent_framework import Agent, ToolCallContent, ToolResultContent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -519,14 +519,14 @@ async def main():
     chat_client = AGUIChatClient(server_url=server_url)
     
     # Create agent with the chat client
-    agent = ChatAgent(
+    agent = Agent(
         name="ClientAgent",
         chat_client=chat_client,
         instructions="You are a helpful assistant.",
     )
 
     # Get a thread for conversation continuity
-    thread = agent.get_new_thread()
+    thread = agent.create_session()
 
     try:
         while True:
@@ -538,7 +538,7 @@ async def main():
                 break
 
             print("\nAssistant: ", end="", flush=True)
-            async for update in agent.run_stream(message, thread=thread):
+            async for update in agent.run(message, session=thread, stream=True):
                 # Display text content
                 if update.text:
                     print(f"\033[96m{update.text}\033[0m", end="", flush=True)
@@ -588,7 +588,7 @@ outdoor dining!
 Handle errors gracefully in your tools:
 
 ```python
-@ai_function
+@tool
 def get_weather(
     location: Annotated[str, Field(description="The city.")],
 ) -> str:
@@ -606,7 +606,7 @@ def get_weather(
 Return structured data when appropriate:
 
 ```python
-@ai_function
+@tool
 def analyze_sentiment(
     text: Annotated[str, Field(description="The text to analyze")],
 ) -> dict[str, Any]:
@@ -629,7 +629,7 @@ def analyze_sentiment(
 Provide clear descriptions to help the agent understand when to use tools:
 
 ```python
-@ai_function
+@tool
 def book_flight(
     origin: Annotated[str, Field(description="Departure city and airport code, e.g., 'New York, JFK'")],
     destination: Annotated[str, Field(description="Arrival city and airport code, e.g., 'London, LHR'")],
@@ -651,7 +651,7 @@ def book_flight(
 For related tools, organize them in a class:
 
 ```python
-from agent_framework import ai_function
+from agent_framework import tool
 
 
 class WeatherTools:
@@ -660,7 +660,7 @@ class WeatherTools:
     def __init__(self, api_key: str):
         self.api_key = api_key
     
-    @ai_function
+    @tool
     def get_current_weather(
         self,
         location: Annotated[str, Field(description="The city.")],
@@ -669,7 +669,7 @@ class WeatherTools:
         # Use self.api_key to call API
         return f"Current weather in {location}: Sunny, 22°C"
     
-    @ai_function
+    @tool
     def get_forecast(
         self,
         location: Annotated[str, Field(description="The city.")],
@@ -684,7 +684,7 @@ class WeatherTools:
 weather_tools = WeatherTools(api_key="your-api-key")
 
 # Create agent with class-based tools
-agent = ChatAgent(
+agent = Agent(
     name="WeatherAgent",
     instructions="You are a weather assistant.",
     chat_client=AzureOpenAIChatClient(...),
@@ -701,12 +701,12 @@ Now that you understand backend tool rendering, you can:
 
 <!-- - **[Add Human-in-the-Loop](human-in-the-loop.md)**: Require user approval before executing sensitive tools -->
 <!-- - **[Manage State](state-management.md)**: Share state between client and server for richer interactions -->
-- **[Create Advanced Tools](../../tutorials/agents/function-tools.md)**: Learn more about creating function tools with Agent Framework
+- **[Create Advanced Tools](../../agents/tools/function-tools.md)**: Learn more about creating function tools with Agent Framework
 
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
 - [Getting Started with AG-UI](getting-started.md)
-- [Function Tools Tutorial](../../tutorials/agents/function-tools.md)
+- [Function Tools Tutorial](../../agents/tools/function-tools.md)
 
 ::: zone-end

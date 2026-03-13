@@ -338,7 +338,7 @@ info_gathering_step.on_function_result().send_event_to(
 
 docs_generation_step.on_event("documentation_generated").send_event_to(target=docs_publish_step)
 
-# Configure the kernel with an AI Service and connection details, if necessary
+# Configure the kernel with an AI service and connection details, if necessary
 kernel = Kernel()
 kernel.add_service(AzureChatCompletion())
 
@@ -436,7 +436,7 @@ Ready to embark on an extraordinary coffee journey? Discover the perfect blend o
 ::: zone pivot="programming-language-python"
 
 ```python
-# Configure the kernel with an AI Service and connection details, if necessary
+# Configure the kernel with an AI service and connection details, if necessary
 kernel = Kernel()
 kernel.add_service(AzureChatCompletion())
 
