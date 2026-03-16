@@ -5,9 +5,24 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 03/13/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                              | C# | Python | Notes                  |
+  |--------------------------------------|:--:|:------:|------------------------|
+  | Introduction                         | ✅ |   ✅   | C# shows not supported |
+  | Define Your Specialized Agents       | ❌ |   ✅   |                        |
+  | Build the Magentic Workflow          | ❌ |   ✅   |                        |
+  | Run the Workflow with Event Streaming| ❌ |   ✅   |                        |
+  | Human-in-the-Loop Plan Review        | ❌ |   ✅   |                        |
+  | Key Concepts                         | ❌ |   ✅   |                        |
+  | Workflow Execution Flow              | ❌ |   ✅   |                        |
+  | Complete Example                     | ❌ |   ✅   |                        |
+-->
 
 # Microsoft Agent Framework Workflows Orchestrations - Magentic
 
@@ -36,7 +51,7 @@ The Magentic manager maintains a shared context, tracks progress, and adapts the
 ## What You'll Learn
 
 - How to set up a Magentic manager to coordinate multiple specialized agents
-- How to handle streaming events with `WorkflowOutputEvent`
+- How to handle streaming events with `WorkflowEvent`
 - How to implement human-in-the-loop plan review
 - How to track agent collaboration and progress through complex tasks
 
@@ -45,10 +60,17 @@ The Magentic manager maintains a shared context, tracks progress, and adapts the
 In Magentic orchestration, you define specialized agents that the manager can dynamically select based on task requirements:
 
 ```python
-from agent_framework import Agent
-from agent_framework.openai import OpenAIChatClient, OpenAIResponsesClient
+import os
 
-responses_client = OpenAIResponsesClient()
+from agent_framework import Agent
+from agent_framework.azure import AzureOpenAIResponsesClient
+from azure.identity import AzureCliCredential
+
+client = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+)
 
 researcher_agent = Agent(
     name="ResearcherAgent",
@@ -56,16 +78,15 @@ researcher_agent = Agent(
     instructions=(
         "You are a Researcher. You find information without additional computation or quantitative analysis."
     ),
-    # This agent requires the gpt-4o-search-preview model to perform web searches
-    chat_client=OpenAIChatClient(model_id="gpt-4o-search-preview"),
+    client=client,
 )
 
 coder_agent = Agent(
     name="CoderAgent",
     description="A helpful assistant that writes and executes code to process and analyze data.",
     instructions="You solve questions using code. Please provide detailed analysis and computation process.",
-    chat_client=responses_client,
-    tools=responses_client.get_code_interpreter_tool(),
+    client=client,
+    tools=client.get_code_interpreter_tool(),
 )
 
 # Create a manager agent for orchestration
@@ -73,7 +94,7 @@ manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator that coordinates the research and coding workflow",
     instructions="You coordinate a team to complete complex tasks efficiently.",
-    chat_client=OpenAIChatClient(),
+    client=client,
 )
 ```
 
@@ -86,6 +107,7 @@ from agent_framework.orchestrations import MagenticBuilder
 
 workflow = MagenticBuilder(
     participants=[researcher_agent, coder_agent],
+    intermediate_outputs=True,
     manager_agent=manager_agent,
     max_round_count=10,
     max_stall_count=3,
@@ -94,7 +116,7 @@ workflow = MagenticBuilder(
 ```
 
 > [!TIP]
-> A standard manager is implemented based on the Magentic-One design, with fixed prompts taken from the original paper. You can customize the manager's behavior by passing in your own prompts via the `MagenticBuilder` constructor parameters. To further customize the manager, you can also implement your own manager by sub classing the `MagenticManagerBase` class.
+> A standard manager is implemented based on the Magentic-One design, with fixed prompts taken from the original paper. You can customize the manager's behavior by passing in your own prompts via the `MagenticBuilder` constructor parameters. To further customize the manager, you can also implement your own manager by subclassing the `MagenticManagerBase` class.
 
 ## Run the Workflow with Event Streaming
 
@@ -124,7 +146,7 @@ task = (
 # Keep track of the last executor to format output nicely in streaming mode
 last_message_id: str | None = None
 output_event: WorkflowEvent | None = None
-async for event in workflow.run_stream(task):
+async for event in workflow.run(task, stream=True):
     if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
         message_id = event.data.message_id
         if message_id != last_message_id:
@@ -136,7 +158,9 @@ async for event in workflow.run_stream(task):
 
     elif event.type == "magentic_orchestrator":
         print(f"\n[Magentic Orchestrator Event] Type: {event.data.event_type.name}")
-        if isinstance(event.data.content, MagenticProgressLedger):
+        if isinstance(event.data.content, Message):
+            print(f"Please review the plan:\n{event.data.content.text}")
+        elif isinstance(event.data.content, MagenticProgressLedger):
             print(f"Please review progress ledger:\n{json.dumps(event.data.content.to_dict(), indent=2)}")
         else:
             print(f"Unknown data type in MagenticOrchestratorEvent: {type(event.data.content)}")
@@ -162,23 +186,31 @@ Enable human-in-the-loop (HITL) to allow users to review and approve the manager
 
 There are two options for plan review:
 
-1. **Revise**: The user can provide feedback to revise the plan, which will trigger the manage to replan based on the feedback.
+1. **Revise**: The user can provide feedback to revise the plan, which will trigger the manager to replan based on the feedback.
 2. **Approve**: The user can approve the plan as-is, allowing the workflow to proceed.
 
 Enable plan review by passing `enable_plan_review=True` when building the Magentic workflow:
 
 ```python
+import json
+import asyncio
+from typing import cast
+
 from agent_framework import (
     AgentResponseUpdate,
     Agent,
     Message,
-    MagenticPlanReviewRequest,
     WorkflowEvent,
 )
-from agent_framework.orchestrations import MagenticBuilder
+from agent_framework.orchestrations import (
+    MagenticBuilder,
+    MagenticPlanReviewRequest,
+    MagenticPlanReviewResponse,
+)
 
 workflow = MagenticBuilder(
     participants=[researcher_agent, analyst_agent],
+    intermediate_outputs=True,
     enable_plan_review=True,
     manager_agent=manager_agent,
     max_round_count=10,
@@ -199,9 +231,9 @@ output_event: WorkflowEvent | None = None
 
 while not output_event:
     if pending_responses is not None:
-        stream = workflow.run(responses=pending_responses)
+        stream = workflow.run(stream=True, responses=pending_responses)
     else:
-        stream = workflow.run_stream(task)
+        stream = workflow.run(task, stream=True)
 
     last_message_id: str | None = None
     async for event in stream:

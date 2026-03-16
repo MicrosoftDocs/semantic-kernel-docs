@@ -5,9 +5,26 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 11/12/2025
+ms.date: 03/12/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                                        | C# | Python | Notes           |
+  |------------------------------------------------|:--:|:------:|-----------------|
+  | Set Up the Client                              | ✅ |   ✅   |                 |
+  | Define Your Agents                             | ✅ |   ✅   |                 |
+  | Configure Group Chat (Round-Robin / Selector)  | ✅ |   ✅   |                 |
+  | Configure Group Chat (Agent-Based Orchestrator)| ❌ |   ✅   |                 |
+  | Run the Workflow                               | ✅ |   ✅   |                 |
+  | Sample Interaction                             | ✅ |   ✅   |                 |
+  | Key Concepts                                   | ✅ |   ✅   |                 |
+  | Advanced: Custom Speaker Selection             | ✅ |   ✅   |                 |
+  | Context Synchronization                        | ✅ |   ✅   | Shared section  |
+  | When to Use Group Chat                         | ✅ |   ✅   | Shared section  |
+-->
 
 # Microsoft Agent Framework Workflows Orchestrations - Group Chat
 
@@ -107,7 +124,7 @@ var messages = new List<ChatMessage> {
     new(ChatRole.User, "Create a slogan for an eco-friendly electric vehicle.")
 };
 
-StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
+await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, messages);
 await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
@@ -159,11 +176,17 @@ excellence without compromise.
 ## Set Up the Chat Client
 
 ```python
-from agent_framework.azure import AzureOpenAIChatClient
+import os
+
+from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
-# Initialize the Azure OpenAI chat client
-chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+# Initialize the Azure OpenAI client
+client = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+)
 ```
 
 ## Define Your Agents
@@ -175,18 +198,18 @@ from agent_framework import Agent
 
 # Create a researcher agent
 researcher = Agent(
+    client=client,
     name="Researcher",
     description="Collects relevant background information.",
     instructions="Gather concise facts that help answer the question. Be brief and factual.",
-    chat_client=chat_client,
 )
 
 # Create a writer agent
 writer = Agent(
+    client=client,
     name="Writer",
     description="Synthesizes polished answers using gathered information.",
     instructions="Compose clear, structured answers using any notes provided. Be comprehensive.",
-    chat_client=chat_client,
 )
 ```
 
@@ -229,7 +252,7 @@ Guidelines:
 - Then have Writer synthesize the final answer
 - Only finish after both have contributed meaningfully
 """,
-    chat_client=chat_client,
+    client=client,
 )
 
 # Build group chat with agent-based orchestrator
@@ -247,8 +270,7 @@ workflow = GroupChatBuilder(
 Execute the workflow and process events:
 
 ```python
-from typing import cast
-from agent_framework import AgentResponseUpdate, Role
+from agent_framework import AgentResponseUpdate, Message
 
 task = "What are the key benefits of async/await in Python?"
 
@@ -256,30 +278,28 @@ print(f"Task: {task}\n")
 print("=" * 80)
 
 final_conversation: list[Message] = []
-last_executor_id: str | None = None
+last_author: str | None = None
 
-# Run the workflow
-async for event in workflow.run_stream(task):
+# Run the workflow with streaming enabled
+async for event in workflow.run(task, stream=True):
     if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
         # Print streaming agent updates
-        eid = event.executor_id
-        if eid != last_executor_id:
-            if last_executor_id is not None:
+        author = event.data.author_name
+        if author != last_author:
+            if last_author is not None:
                 print()
-            print(f"[{eid}]:", end=" ", flush=True)
-            last_executor_id = eid
-        print(event.data, end="", flush=True)
-    elif event.type == "output":
+            print(f"[{author}]:", end=" ", flush=True)
+            last_author = author
+        print(event.data.text, end="", flush=True)
+    elif event.type == "output" and isinstance(event.data, list):
         # Workflow completed - data is a list of Message
-        final_conversation = cast(list[Message], event.data)
+        final_conversation = event.data
 
 if final_conversation:
     print("\n\n" + "=" * 80)
     print("Final Conversation:")
     for msg in final_conversation:
-        author = getattr(msg, "author_name", "Unknown")
-        text = getattr(msg, "text", str(msg))
-        print(f"\n[{author}]\n{text}")
+        print(f"\n[{msg.author_name}]\n{msg.text}")
         print("-" * 80)
 
 print("\nWorkflow completed.")
@@ -339,7 +359,7 @@ Workflow completed.
 - **GroupChatBuilder**: Creates workflows with configurable speaker selection
 - **GroupChatState**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
-- **Event Streaming**: Process `WorkflowOutputEvent` with `AgentResponseUpdate` data in real-time
+- **Event Streaming**: Process `AgentResponseUpdate` events in real-time via `workflow.run(task, stream=True)`
 - **list[Message] Output**: All orchestrations return a list of chat messages
 
 ::: zone-end
@@ -406,7 +426,7 @@ def smart_selector(state: GroupChatState) -> str:
     last_text = last_message.text.lower()
 
     # If researcher finished gathering info, switch to writer
-    if "I have finished" in last_text and last_message.author_name == "Researcher":
+    if "i have finished" in last_text and last_message.author_name == "Researcher":
         return "Writer"
 
     # Else continue with researcher until it indicates completion
