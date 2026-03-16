@@ -31,7 +31,7 @@ Agent Framework supports many different types of tools that extend agent capabil
 
 The OpenAI and Azure OpenAI providers each offer multiple client types with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents.
 
-| Tool Type | [Chat Completion](../providers/azure-openai.md) | [Responses](../providers/azure-openai.md) | [Assistants](../providers/azure-openai.md) | [Foundry](../providers/azure-ai-foundry.md) | [Anthropic](../providers/anthropic.md) | [Ollama](../providers/ollama.md) | [GitHub Copilot](../providers/github-copilot.md) | [Copilot Studio](../providers/copilot-studio.md) |
+| Tool Type | [Chat Completion](../providers/azure-openai.md) | [Responses](../providers/azure-openai.md) | [Assistants](../providers/azure-openai.md) | [Foundry](../providers/microsoft-foundry.md) | [Anthropic](../providers/anthropic.md) | [Ollama](../providers/ollama.md) | [GitHub Copilot](../providers/github-copilot.md) | [Copilot Studio](../providers/copilot-studio.md) |
 |-----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Tool Approval](./tool-approval.md) | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
@@ -52,7 +52,7 @@ The OpenAI and Azure OpenAI providers each offer multiple client types with diff
 
 The OpenAI and Azure OpenAI providers each offer multiple client types with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents.
 
-| Tool Type | [Chat Completion](../providers/azure-openai.md) | [Responses](../providers/azure-openai.md) | [Assistants](../providers/azure-openai.md) | [Foundry](../providers/azure-ai-foundry.md) | [Anthropic](../providers/anthropic.md) | [Claude Agent](../providers/anthropic.md) | [Ollama](../providers/ollama.md) | [GitHub Copilot](../providers/github-copilot.md) |
+| Tool Type | [Chat Completion](../providers/azure-openai.md) | [Responses](../providers/azure-openai.md) | [Assistants](../providers/azure-openai.md) | [Foundry](../providers/microsoft-foundry.md) | [Anthropic](../providers/anthropic.md) | [Claude Agent](../providers/anthropic.md) | [Ollama](../providers/ollama.md) | [GitHub Copilot](../providers/github-copilot.md) |
 |-----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Tool Approval](./tool-approval.md) | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
