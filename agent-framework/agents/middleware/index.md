@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
-ms.date: 02/17/2026
+ms.date: 03/16/2026
 ms.service: agent-framework
 ---
 
@@ -177,7 +177,7 @@ Agent Framework can be customized using three different types of middleware:
 2. **Function middleware**: Intercepts function (tool) calls made during agent execution, enabling input validation, result transformation, and execution control.
 3. **Chat middleware**: Intercepts the underlying chat requests sent to AI models, providing access to the raw messages, options, and responses.
 
-All types support both function-based and class-based implementations. When multiple middleware of the same type are registered, they form a chain where each calls the `next` callable to continue processing.
+All types support both function-based and class-based implementations. When multiple middleware of the same type are registered, they form a chain where each calls the `call_next` callback to continue processing. `call_next` does not take the context as an argument; middleware mutates the shared context object directly and then awaits `call_next()`.
 
 > [!NOTE]
 > Middleware order with mixed registration scopes:
@@ -192,29 +192,31 @@ Agent middleware intercepts and modifies agent run execution. It uses the `Agent
 
 - `agent`: The agent being invoked
 - `messages`: List of chat messages in the conversation
-- `is_streaming`: Boolean indicating if the response is streaming
+- `session`: The current agent session, if any
+- `options`: Agent run options for this invocation
+- `stream`: Boolean indicating if the response is streaming
 - `metadata`: Dictionary for storing additional data between middleware
 - `result`: The agent's response (can be modified)
-- `terminate`: Flag to stop further processing
-- `kwargs`: Additional keyword arguments passed to the agent run method
+- `kwargs`: Legacy runtime keyword arguments passed to the agent run method
+- `client_kwargs`: Client-specific runtime values for downstream chat clients
+- `function_invocation_kwargs`: Runtime values that will be forwarded to tools
 
-The `next` callable continues the middleware chain or executes the agent if it's the last middleware.
+The `call_next` callback continues the middleware chain or executes the agent if it's the last middleware.
 
 ### Function-based
 
 ```python
-async def logging_agent_middleware(
+async def inject_tool_runtime_defaults(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]],
+    call_next: Callable[[], Awaitable[None]],
 ) -> None:
-    """Agent middleware that logs execution timing."""
-    # Pre-processing: Log before agent execution
+    """Agent middleware that sets tool-only runtime defaults."""
     print("[Agent] Starting execution")
+    context.function_invocation_kwargs.setdefault("tenant", "contoso")
+    context.function_invocation_kwargs.setdefault("request_source", "agent-middleware")
 
-    # Continue to next middleware or agent execution
-    await next(context)
+    await call_next()
 
-    # Post-processing: Log after agent execution
     print("[Agent] Execution completed")
 ```
 
@@ -231,10 +233,10 @@ class LoggingAgentMiddleware(AgentMiddleware):
     async def process(
         self,
         context: AgentContext,
-        next: Callable[[AgentContext], Awaitable[None]],
+        call_next: Callable[[], Awaitable[None]],
     ) -> None:
         print("[Agent Class] Starting execution")
-        await next(context)
+        await call_next()
         print("[Agent Class] Execution completed")
 ```
 
@@ -244,29 +246,25 @@ Function middleware intercepts function calls within agents. It uses the `Functi
 
 - `function`: The function being invoked
 - `arguments`: The validated arguments for the function
+- `session`: The current agent session, if any
 - `metadata`: Dictionary for storing additional data between middleware
 - `result`: The function's return value (can be modified)
-- `terminate`: Flag to stop further processing
-- `kwargs`: Additional keyword arguments passed to the chat method that invoked this function
+- `kwargs`: Runtime keyword arguments that will be forwarded to the tool invocation
 
-The `next` callable continues to the next middleware or executes the actual function.
+The `call_next` callback continues to the next middleware or executes the actual function.
 
 ### Function-based
 
 ```python
-async def logging_function_middleware(
+async def inject_function_kwargs(
     context: FunctionInvocationContext,
-    next: Callable[[FunctionInvocationContext], Awaitable[None]],
+    call_next: Callable[[], Awaitable[None]],
 ) -> None:
-    """Function middleware that logs function execution."""
-    # Pre-processing: Log before function execution
-    print(f"[Function] Calling {context.function.name}")
+    """Function middleware that enriches tool runtime values."""
+    context.kwargs.setdefault("tenant", "contoso")
+    context.kwargs.setdefault("request_source", "function-middleware")
 
-    # Continue to next middleware or function execution
-    await next(context)
-
-    # Post-processing: Log after function execution
-    print(f"[Function] {context.function.name} completed")
+    await call_next()
 ```
 
 ### Class-based
@@ -280,10 +278,10 @@ class LoggingFunctionMiddleware(FunctionMiddleware):
     async def process(
         self,
         context: FunctionInvocationContext,
-        next: Callable[[FunctionInvocationContext], Awaitable[None]],
+        call_next: Callable[[], Awaitable[None]],
     ) -> None:
         print(f"[Function Class] Calling {context.function.name}")
-        await next(context)
+        await call_next()
         print(f"[Function Class] {context.function.name} completed")
 ```
 
@@ -294,27 +292,27 @@ Chat middleware intercepts chat requests sent to AI models. It uses the `ChatCon
 - `chat_client`: The chat client being invoked
 - `messages`: List of messages being sent to the AI service
 - `options`: The options for the chat request
-- `is_streaming`: Boolean indicating if this is a streaming invocation
+- `stream`: Boolean indicating if this is a streaming invocation
 - `metadata`: Dictionary for storing additional data between middleware
 - `result`: The chat response from the AI (can be modified)
-- `terminate`: Flag to stop further processing
 - `kwargs`: Additional keyword arguments passed to the chat client
+- `function_invocation_kwargs`: Tool-only runtime values that will be forwarded by the chat layer
 
-The `next` callable continues to the next middleware or sends the request to the AI service.
+The `call_next` callback continues to the next middleware or sends the request to the AI service.
 
 ### Function-based
 
 ```python
 async def logging_chat_middleware(
     context: ChatContext,
-    next: Callable[[ChatContext], Awaitable[None]],
+    call_next: Callable[[], Awaitable[None]],
 ) -> None:
     """Chat middleware that logs AI interactions."""
     # Pre-processing: Log before AI call
     print(f"[Chat] Sending {len(context.messages)} messages to AI")
 
     # Continue to next middleware or AI service
-    await next(context)
+    await call_next()
 
     # Post-processing: Log after AI response
     print("[Chat] AI response received")
@@ -331,10 +329,10 @@ class LoggingChatMiddleware(ChatMiddleware):
     async def process(
         self,
         context: ChatContext,
-        next: Callable[[ChatContext], Awaitable[None]],
+        call_next: Callable[[], Awaitable[None]],
     ) -> None:
         print(f"[Chat Class] Sending {len(context.messages)} messages to AI")
-        await next(context)
+        await call_next()
         print("[Chat Class] AI response received")
 ```
 
@@ -346,21 +344,21 @@ Decorators provide explicit middleware type declaration without requiring type a
 from agent_framework import agent_middleware, function_middleware, chat_middleware
 
 @agent_middleware
-async def simple_agent_middleware(context, next):
+async def simple_agent_middleware(context, call_next):
     print("Before agent execution")
-    await next(context)
+    await call_next()
     print("After agent execution")
 
 @function_middleware
-async def simple_function_middleware(context, next):
+async def simple_function_middleware(context, call_next):
     print(f"Calling function: {context.function.name}")
-    await next(context)
+    await call_next()
     print("Function call completed")
 
 @chat_middleware
-async def simple_chat_middleware(context, next):
+async def simple_chat_middleware(context, call_next):
     print(f"Processing {len(context.messages)} chat messages")
-    await next(context)
+    await call_next()
     print("Chat processing completed")
 ```
 
@@ -407,12 +405,14 @@ async with AzureAIAgentClient(credential=credential).as_agent(
 
 ## Middleware Termination
 
-Middleware can terminate execution early using `context.terminate`. This is useful for security checks, rate limiting, or validation failures.
+Middleware can terminate execution early by setting `context.result` and raising `MiddlewareTermination`. This is useful for security checks, rate limiting, or validation failures.
 
 ```python
+from agent_framework import AgentContext, AgentResponse, Message, MiddlewareTermination
+
 async def blocking_middleware(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]],
+    call_next: Callable[[], Awaitable[None]],
 ) -> None:
     """Middleware that blocks execution based on conditions."""
     # Check for blocked content
@@ -420,17 +420,19 @@ async def blocking_middleware(
     if last_message and last_message.text:
         if "blocked" in last_message.text.lower():
             print("Request blocked by middleware")
-            context.terminate = True
-            return
+            context.result = AgentResponse(
+                messages=[Message(role="assistant", text="This request was blocked by middleware.")]
+            )
+            raise MiddlewareTermination(result=context.result)
 
     # If no issues, continue normally
-    await next(context)
+    await call_next()
 ```
 
 **What termination means:**
-- Setting `context.terminate = True` signals that processing should stop
-- You can provide a custom result before terminating to give users feedback
-- The agent execution is completely skipped when middleware terminates
+- Set `context.result` before raising `MiddlewareTermination` if you want to return a custom response
+- Raising `MiddlewareTermination` stops the remainder of the middleware chain and skips the normal execution path
+- This pattern works for agent, function, and chat middleware
 
 ## Middleware Result Override
 
@@ -441,17 +443,17 @@ The result type in `context.result` depends on whether the agent invocation is s
 - **Non-streaming**: `context.result` contains an `AgentResponse` with the complete response
 - **Streaming**: `context.result` contains an async generator that yields `AgentResponseUpdate` chunks
 
-You can use `context.is_streaming` to differentiate between these scenarios and handle result overrides appropriately.
+You can use `context.stream` to differentiate between these scenarios and handle result overrides appropriately.
 
 ```python
 async def weather_override_middleware(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]]
+    call_next: Callable[[], Awaitable[None]]
 ) -> None:
     """Middleware that overrides weather results for both streaming and non-streaming."""
 
     # Execute the original agent logic
-    await next(context)
+    await call_next()
 
     # Override results if present
     if context.result is not None:
@@ -462,7 +464,7 @@ async def weather_override_middleware(
             "Great day for outdoor activities!"
         ]
 
-        if context.is_streaming:
+        if context.stream:
             # Streaming override
             async def override_stream() -> AsyncIterable[AgentResponseUpdate]:
                 for chunk in custom_message_parts:

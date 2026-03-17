@@ -5,13 +5,13 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 03/16/2026
 ms.service: agent-framework
 ---
 
 # Termination & Guardrails
 
-Middleware can be used to implement guardrails that control when an agent should stop processing, enforce content policies, or limit conversation length. Setting `terminate` on the context signals that processing should stop and the agent execution is completely skipped.
+Middleware can be used to implement guardrails that control when an agent should stop processing, enforce content policies, or limit conversation length.
 
 :::zone pivot="programming-language-csharp"
 
@@ -87,6 +87,8 @@ Console.WriteLine(await guardedAgent.RunAsync("What is my password?"));
 
 :::zone pivot="programming-language-python"
 
+In Python, middleware stops execution by setting `context.result` when needed and raising `MiddlewareTermination`, or by short-circuiting the chain without calling `call_next()`.
+
 ### Pre-termination middleware
 
 Middleware that terminates before agent execution — useful for blocking disallowed content:
@@ -109,12 +111,11 @@ from agent_framework import (
 )
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
-from pydantic import Field
 
 """
 MiddlewareTypes Termination Example
 
-This sample demonstrates how middleware can terminate execution using the `context.terminate` flag.
+This sample demonstrates how middleware can terminate execution using the `MiddlewareTermination` exception.
 The example includes:
 
 - PreTerminationMiddleware: Terminates execution before calling call_next() to prevent agent processing
@@ -127,7 +128,7 @@ This is useful for implementing security checks, rate limiting, or early exit co
 # NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
 def get_weather(
-    location: Annotated[str, Field(description="The location to get the weather for.")],
+    location: Annotated[str, "The location to get the weather for."],
 ) -> str:
     """Get the weather for a given location."""
     conditions = ["sunny", "cloudy", "rainy", "stormy"]
@@ -300,7 +301,7 @@ from pydantic import Field
 """
 MiddlewareTypes Termination Example
 
-This sample demonstrates how middleware can terminate execution using the `context.terminate` flag.
+This sample demonstrates how middleware can terminate execution using the `MiddlewareTermination` exception.
 The example includes:
 
 - PreTerminationMiddleware: Terminates execution before calling call_next() to prevent agent processing
