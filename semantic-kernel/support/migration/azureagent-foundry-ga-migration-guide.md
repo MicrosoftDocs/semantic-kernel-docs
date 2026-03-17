@@ -13,7 +13,7 @@ ms.service: semantic-kernel
 
 ::: zone pivot="programming-language-csharp"
 
-In Semantic Kernel .NET 1.53.1+, .NET and Python developers using `AzureAIAgent` must to update the patterns they use to interact with the Azure AI Foundry in response to its move to GA.
+In Semantic Kernel .NET 1.53.1+, .NET and Python developers using `AzureAIAgent` must to update the patterns they use to interact with the Microsoft Foundry in response to its move to GA.
 
 ### GA Foundry Project
 
@@ -136,7 +136,7 @@ await agentsClient.VectorStores.DeleteVectorStoreAsync("<store id>");
 
 ## `AzureAIAgent`
 
-In Semantic Kernel Python 1.31.0 and above, `AzureAIAgent` support has been updated to align with Azure AI Foundry's general availability. This update requires several changes for developers integrating with Foundry projects.
+In Semantic Kernel Python 1.31.0 and above, `AzureAIAgent` support has been updated to align with Foundry's general availability. This update requires several changes for developers integrating with Foundry projects.
 
 The `project_connection_string` and its environment variable `AZURE_AI_AGENT_PROJECT_CONNECTION_STRING` are no longer supported. Instead, you must configure an `endpoint` using the `AZURE_AI_AGENT_ENDPOINT` environment variable. The endpoint is found on your Azure Foundry project page and follows this format: `https://<resource>.services.ai.azure.com/api/projects/<project-name>`
 
