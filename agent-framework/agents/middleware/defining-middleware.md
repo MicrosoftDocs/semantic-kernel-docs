@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 09/29/2025
+ms.date: 03/16/2026
 ms.service: agent-framework
 ---
 
@@ -233,17 +233,19 @@ if __name__ == "__main__":
 Create a simple logging middleware to see when your agent runs:
 
 ```python
+from collections.abc import Awaitable, Callable
+
 from agent_framework import AgentContext
 
 async def logging_agent_middleware(
     context: AgentContext,
-    next: Callable[[AgentContext], Awaitable[None]],
+    call_next: Callable[[], Awaitable[None]],
 ) -> None:
     """Simple middleware that logs agent execution."""
     print("Agent starting...")
 
     # Continue to agent execution
-    await next(context)
+    await call_next()
 
     print("Agent finished!")
 ```
@@ -267,33 +269,34 @@ async def main():
 
 ## Step 4: Create Function Middleware
 
-If your agent uses functions, you can intercept function calls:
+If your agent uses functions, you can intercept function calls and set tool-only runtime values before the tool executes:
 
 ```python
+from collections.abc import Awaitable, Callable
+
 from agent_framework import FunctionInvocationContext
 
-def get_time():
+def get_time(ctx: FunctionInvocationContext) -> str:
     """Get the current time."""
     from datetime import datetime
-    return datetime.now().strftime("%H:%M:%S")
+    source = ctx.kwargs.get("request_source", "direct")
+    return f"[{source}] {datetime.now().strftime('%H:%M:%S')}"
 
-async def logging_function_middleware(
+async def inject_function_kwargs(
     context: FunctionInvocationContext,
-    next: Callable[[FunctionInvocationContext], Awaitable[None]],
+    call_next: Callable[[], Awaitable[None]],
 ) -> None:
-    """Middleware that logs function calls."""
-    print(f"Calling function: {context.function.name}")
+    """Middleware that adds tool-only runtime values before execution."""
+    context.kwargs.setdefault("request_source", "middleware")
 
-    await next(context)
-
-    print(f"Function result: {context.result}")
+    await call_next()
 
 # Add both the function and middleware to your agent
 async with AzureAIAgentClient(credential=credential).as_agent(
     name="TimeAgent",
     instructions="You can tell the current time.",
     tools=[get_time],
-    middleware=[logging_function_middleware],
+    middleware=[inject_function_kwargs],
 ) as agent:
     result = await agent.run("What time is it?")
 ```

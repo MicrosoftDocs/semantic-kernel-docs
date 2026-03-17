@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 03/16/2026
 ms.service: agent-framework
 ---
 
@@ -199,7 +199,7 @@ async def security_and_override_middleware(
                         ]
                     )
 
-                    # Set terminate flag to stop execution
+                    # Raise MiddlewareTermination to stop execution after setting context.result
                     raise MiddlewareTermination
 
     # Continue to next middleware or AI execution
@@ -451,7 +451,7 @@ async def security_and_override_middleware(
                         ]
                     )
 
-                    # Set terminate flag to stop execution
+                    # Raise MiddlewareTermination to stop execution after setting context.result
                     raise MiddlewareTermination
 
     # Continue to next middleware or AI execution
