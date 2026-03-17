@@ -5,9 +5,23 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 03/12/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                                  | C# | Python | Notes           |
+  |------------------------------------------|:--:|:------:|-----------------|
+  | Set Up the Azure OpenAI Client           | ✅ |   ✅   |                 |
+  | Define Your Agents                       | ✅ |   ✅   |                 |
+  | Set Up the Sequential Orchestration      | ✅ |   ✅   |                 |
+  | Run the Sequential Workflow              | ✅ |   ✅   |                 |
+  | Sample Output                            | ✅ |   ✅   |                 |
+  | Advanced: Mixing Agents with Custom Executors | ❌ |   ✅   | Python-specific |
+  | Key Concepts                             | ✅ |   ✅   |                 |
+-->
 
 # Microsoft Agent Framework Workflows Orchestrations - Sequential
 
@@ -89,24 +103,33 @@ Execute the workflow and process the events:
 // 4) Run the workflow
 var messages = new List<ChatMessage> { new(ChatRole.User, "Hello, world!") };
 
-StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
+await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, messages);
 await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
-List<ChatMessage> result = new();
-await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+string? lastExecutorId = null;
+List<ChatMessage> result = [];
+await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 {
     if (evt is AgentResponseUpdateEvent e)
     {
-        Console.WriteLine($"{e.ExecutorId}: {e.Data}");
+        if (e.ExecutorId != lastExecutorId)
+        {
+            lastExecutorId = e.ExecutorId;
+            Console.WriteLine();
+            Console.Write($"{e.ExecutorId}: ");
+        }
+
+        Console.Write(e.Update.Text);
     }
     else if (evt is WorkflowOutputEvent outputEvt)
     {
-        result = (List<ChatMessage>)outputEvt.Data!;
+        result = outputEvt.As<List<ChatMessage>>()!;
         break;
     }
 }
 
 // Display final result
+Console.WriteLine();
 foreach (var message in result)
 {
     Console.WriteLine($"{message.Role}: {message.Content}");
@@ -127,7 +150,7 @@ English_Translation: Assistant: Spanish detected. Hello, world!
 - **Sequential Processing**: Each agent processes the output of the previous agent in order
 - **AgentWorkflowBuilder.BuildSequential()**: Creates a pipeline workflow from a collection of agents
 - **ChatClientAgent**: Represents an agent backed by a chat client with specific instructions
-- **StreamingRun**: Provides real-time execution with event streaming capabilities
+- **InProcessExecution.RunStreamingAsync()**: Runs the workflow and returns a `StreamingRun` for real-time event streaming
 - **Event Handling**: Monitor agent progress through `AgentResponseUpdateEvent` and completion through `WorkflowOutputEvent`
 
 ::: zone-end
@@ -137,11 +160,16 @@ English_Translation: Assistant: Spanish detected. Hello, world!
 In sequential orchestration, each agent processes the task in turn, with output flowing from one to the next. Start by defining agents for a two-stage process:
 
 ```python
-from agent_framework.azure import AzureChatClient
+import os
+from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
-# 1) Create agents using AzureChatClient
-chat_client = AzureChatClient(credential=AzureCliCredential())
+# 1) Create agents using AzureOpenAIResponsesClient
+chat_client = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+)
 
 writer = chat_client.as_agent(
     instructions=(
@@ -174,17 +202,18 @@ workflow = SequentialBuilder(participants=[writer, reviewer]).build()
 Execute the workflow and collect the final conversation showing each agent's contribution:
 
 ```python
+from typing import Any, cast
 from agent_framework import Message, WorkflowEvent
 
 # 3) Run and print final conversation
-output_evt: WorkflowEvent | None = None
-async for event in workflow.run_stream("Write a tagline for a budget-friendly eBike."):
+outputs: list[list[Message]] = []
+async for event in workflow.run("Write a tagline for a budget-friendly eBike.", stream=True):
     if event.type == "output":
-        output_evt = event
+        outputs.append(cast(list[Message], event.data))
 
-if output_evt:
+if outputs:
     print("===== Final Conversation =====")
-    messages: list[Message] | Any = output_evt.data
+    messages: list[Message] = outputs[-1]
     for i, msg in enumerate(messages, start=1):
         name = msg.author_name or ("assistant" if msg.role == "assistant" else "user")
         print(f"{'-' * 60}\n{i:02d} [{name}]\n{msg.text}")
@@ -213,8 +242,11 @@ Sequential orchestration supports mixing agents with custom executors for specia
 
 ### Define a Custom Executor
 
+> [!NOTE]
+> When a custom executor follows an agent in the sequence, its handler receives an `AgentExecutorResponse` (because agents are internally wrapped by `AgentExecutor`). Use `agent_response.full_conversation` to access the full conversation history.
+
 ```python
-from agent_framework import Executor, WorkflowContext, handler
+from agent_framework import AgentExecutorResponse, Executor, WorkflowContext, handler
 from agent_framework import Message
 
 class Summarizer(Executor):
@@ -223,16 +255,17 @@ class Summarizer(Executor):
     @handler
     async def summarize(
         self,
-        conversation: list[Message],
+        agent_response: AgentExecutorResponse,
         ctx: WorkflowContext[list[Message]]
     ) -> None:
-        users = sum(1 for m in conversation if m.role == "user")
-        assistants = sum(1 for m in conversation if m.role == "assistant")
-        summary = Message(
-            role="assistant",
-            contents=[f"Summary -> users:{users} assistants:{assistants}"]
-        )
-        await ctx.send_message(list(conversation) + [summary])
+        if not agent_response.full_conversation:
+            await ctx.send_message([Message("assistant", ["No conversation to summarize."])])
+            return
+
+        users = sum(1 for m in agent_response.full_conversation if m.role == "user")
+        assistants = sum(1 for m in agent_response.full_conversation if m.role == "assistant")
+        summary = Message("assistant", [f"Summary -> users:{users} assistants:{assistants}"])
+        await ctx.send_message(list(agent_response.full_conversation) + [summary])
 ```
 
 ### Build a Mixed Sequential Workflow
@@ -271,7 +304,7 @@ Summary -> users:1 assistants:1
 ## Key Concepts
 
 - **Shared Context**: Each participant receives the full conversation history, including all previous messages
-- **Order Matters**: Agents execute strictly in the order specified in the `participants()` list
+- **Order Matters**: Agents execute strictly in the order specified in the `participants` list
 - **Flexible Participants**: You can mix agents and custom executors in any order
 - **Conversation Flow**: Each agent/executor appends to the conversation, building a complete dialogue
 

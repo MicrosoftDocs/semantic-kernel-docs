@@ -4,10 +4,27 @@ description: In-depth look at Handoff Orchestrations in Microsoft Agent Framewor
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 03/12/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                              | C# | Python | Notes                           |
+  |--------------------------------------|:--:|:------:|--------------------------------|
+  | Set Up the Client                    | ✅ |   ✅   |                                |
+  | Define Specialized Agents            | ✅ |   ✅   |                                |
+  | Configure Handoff Rules              | ✅ |   ✅   |                                |
+  | Run Interactive Workflow             | ✅ |   ✅   | Different patterns per language |
+  | Autonomous Mode                      | ❌ |   ✅   | Python-specific                |
+  | Tool Approval (HITL)                 | ❌ |   ✅   |                                |
+  | Checkpointing                        | ❌ |   ✅   |                                |
+  | Sample Interaction                   | ✅ |   ✅   |                                |
+  | Context Synchronization              | ✅ |   ✅   | Shared section                 |
+  | Key Concepts                         | ✅ |   ✅   |                                |
+-->
 
 # Microsoft Agent Framework Workflows Orchestrations - Handoff
 
@@ -95,10 +112,9 @@ Define which agents can hand off to which other agents:
 
 ```csharp
 // 3) Build handoff workflow with routing rules
-var workflow = AgentWorkflowBuilder.StartHandoffWith(triageAgent)
+var workflow = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent)
     .WithHandoffs(triageAgent, [mathTutor, historyTutor]) // Triage can route to either specialist
-    .WithHandoff(mathTutor, triageAgent)                  // Math tutor can return to triage
-    .WithHandoff(historyTutor, triageAgent)               // History tutor can return to triage
+    .WithHandoffs([mathTutor, historyTutor], triageAgent) // Both specialists can return to triage
     .Build();
 ```
 
@@ -117,19 +133,27 @@ while (true)
     messages.Add(new(ChatRole.User, userInput));
 
     // Execute workflow and process events
-    StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
+    await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, messages);
     await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
+    string? lastExecutorId = null;
     List<ChatMessage> newMessages = new();
-    await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+    await foreach (WorkflowEvent evt in run.WatchStreamAsync())
     {
         if (evt is AgentResponseUpdateEvent e)
         {
-            Console.WriteLine($"{e.ExecutorId}: {e.Data}");
+            if (e.ExecutorId != lastExecutorId)
+            {
+                lastExecutorId = e.ExecutorId;
+                Console.WriteLine();
+                Console.WriteLine(e.ExecutorId);
+            }
+
+            Console.Write(e.Update.Text);
         }
         else if (evt is WorkflowOutputEvent outputEvt)
         {
-            newMessages = (List<ChatMessage>)outputEvt.Data!;
+            newMessages = outputEvt.As<List<ChatMessage>>()!;
             break;
         }
     }
@@ -181,11 +205,17 @@ def process_return(order_number: Annotated[str, "Order number to process return 
 ## Set Up the Chat Client
 
 ```python
-from agent_framework.azure import AzureOpenAIChatClient
+import os
+
+from agent_framework.azure import AzureOpenAIResponsesClient
 from azure.identity import AzureCliCredential
 
-# Initialize the Azure OpenAI chat client
-chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+chat_client = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+)
+
 ```
 
 ## Define Your Specialized Agents
@@ -437,7 +467,7 @@ order_agent = chat_client.as_agent(
 
 ```python
 from agent_framework import (
-    FunctionApprovalRequestContent,
+    Content,
     WorkflowEvent,
 )
 from agent_framework.orchestrations import HandoffBuilder, HandoffAgentUserRequest
@@ -472,7 +502,7 @@ while pending_requests:
             user_input = input("You: ")
             responses[request.request_id] = HandoffAgentUserRequest.create_response(user_input)
 
-        elif isinstance(request.data, FunctionApprovalRequestContent):
+        elif isinstance(request.data, Content) and request.data.type == "function_approval_request":
             # Agent wants to call a tool that requires approval
             func_call = request.data.function_call
             args = func_call.parse_arguments() or {}
@@ -481,7 +511,7 @@ while pending_requests:
             print(f"Arguments: {args}")
 
             approval = input("Approve? (y/n): ").strip().lower() == "y"
-            responses[request.request_id] = request.data.create_response(approved=approval)
+            responses[request.request_id] = request.data.to_function_approval_response(approved=approval)
 
     # Send all responses and collect new requests
     pending_requests = []
@@ -520,7 +550,7 @@ async for event in workflow.run_stream("I need a refund for order 12345"):
 # Process can exit here - checkpoint is saved automatically
 
 # Later: Resume from checkpoint and provide approval
-checkpoints = await storage.list_checkpoints()
+checkpoints = await storage.list_checkpoints(workflow_name="durable_support")
 latest = sorted(checkpoints, key=lambda c: c.timestamp, reverse=True)[0]
 
 # Step 1: Restore checkpoint to reload pending requests
@@ -532,8 +562,8 @@ async for event in workflow.run_stream(checkpoint_id=latest.checkpoint_id):
 # Step 2: Send responses
 responses = {}
 for req in restored_requests:
-    if isinstance(req.data, FunctionApprovalRequestContent):
-        responses[req.request_id] = req.data.create_response(approved=True)
+    if isinstance(req.data, Content) and req.data.type == "function_approval_request":
+        responses[req.request_id] = req.data.to_function_approval_response(approved=True)
     elif isinstance(req.data, HandoffAgentUserRequest):
         responses[req.request_id] = HandoffAgentUserRequest.create_response("Yes, please process the refund.")
 
@@ -593,7 +623,7 @@ After broadcasting the response, the participant then checks whether it needs to
 ::: zone pivot="programming-language-csharp"
 
 - **Dynamic Routing**: Agents can decide which agent should handle the next interaction based on context
-- **AgentWorkflowBuilder.StartHandoffWith()**: Defines the initial agent that starts the workflow
+- **AgentWorkflowBuilder.CreateHandoffBuilderWith()**: Defines the initial agent that starts the workflow
 - **WithHandoff()** and **WithHandoffs()**: Configures handoff rules between specific agents
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Multi-turn Support**: Supports ongoing conversations with seamless agent switching
@@ -610,8 +640,8 @@ After broadcasting the response, the participant then checks whether it needs to
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
 - **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human approval
-- **FunctionApprovalRequestContent**: Emitted when an agent calls a tool requiring approval; use `create_response(approved=...)` to respond
-- **Checkpointing**: Use `with_checkpointing()` for durable workflows that can pause and resume across process restarts
+- **Function Approval Handling**: When an agent calls a tool requiring approval, a `Content` object with type `"function_approval_request"` is emitted; use `to_function_approval_response(approved=...)` to respond
+- **Checkpointing**: Pass `checkpoint_storage=` to `HandoffBuilder` for durable workflows that can pause and resume across process restarts
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
 
 ::: zone-end

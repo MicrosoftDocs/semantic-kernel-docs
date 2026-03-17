@@ -19,7 +19,7 @@ The Microsoft Agent Framework provides support for several types of agents to ac
 All agents are derived from a common base class, `AIAgent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
 ::: zone-end
 ::: zone pivot="programming-language-python"
-All agents are derived from a common base class, [`Agent`](/python/api/agent-framework-core/agent_framework.agent?view=agent-framework-python-latest), which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
+All agents are derived from a common base class, `Agent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
 ::: zone-end
 
 ## Default Agent Runtime Execution Model
@@ -57,9 +57,9 @@ To make creating these agents even easier, Agent Framework provides helpers for 
 
 | Underlying inference service | Description | Service chat history storage supported | InMemory/Custom chat history storage supported |
 |------------------------------|-------------|----------------------------------------|------------------------------------------------|
-|[Microsoft Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Foundry Agent Service as its backend.|Yes|No|
-|[Foundry Models ChatCompletion](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via ChatCompletion.|No|Yes|
-|[Foundry Models Responses](./providers/azure-ai-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via Responses.|Yes|Yes|
+|[Microsoft Foundry Agent](./providers/microsoft-foundry.md)|An agent that uses the Foundry Agent Service as its backend.|Yes|No|
+|[Foundry Models ChatCompletion](./providers/microsoft-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via ChatCompletion.|No|Yes|
+|[Foundry Models Responses](./providers/microsoft-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via Responses.|Yes|Yes|
 |[Foundry Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Foundry Anthropic Service as its backend.|No|Yes|
 |[Azure OpenAI ChatCompletion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
 |[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
@@ -101,7 +101,7 @@ When using Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you ha
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
 | OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
-| [Azure AI Foundry Anthropic](/azure/ai-foundry/foundry-models/how-to/use-foundry-models-claude?view=foundry-classic) | Anthropic Foundry SDK | [Anthropic.Foundry](https://www.nuget.org/packages/Anthropic.Foundry) | Resource name required |
+| [Azure AI Foundry Anthropic](/azure/ai-foundry/foundry-models/how-to/use-foundry-models-claude) | Anthropic Foundry SDK | [Anthropic.Foundry](https://www.nuget.org/packages/Anthropic.Foundry) | Resource name required |
 | Anthropic | Anthropic SDK | [Anthropic](https://www.nuget.org/packages/Anthropic) | No url or resource name required |
 
 1. [Upgrading from Azure OpenAI to Foundry](/azure/ai-foundry/how-to/upgrade-azure-openai)
@@ -201,7 +201,7 @@ AIAgent agent = client.AsAIAgent(
 
 Agent Framework makes it easy to create simple agents based on many different inference services.
 Any inference service that provides a chat client implementation can be used to build these agents.
-This can be done using the [`SupportsChatGetResponse`](/python/api/agent-framework-core/agent_framework.supportschatgetresponse?view=agent-framework-python-latest), which defines a standard for the methods that a client needs to support to be used with the standard [`Agent`](/python/api/agent-framework-core/agent_framework.agent?view=agent-framework-python-latest) class.
+This can be done using the `SupportsChatGetResponse` protocol, which defines a standard for the methods that a client needs to support to be used with the standard `Agent` class.
 
 These agents support a wide range of functionality out of the box:
 
@@ -211,7 +211,7 @@ These agents support a wide range of functionality out of the box:
 1. Structured output
 1. Streaming responses
 
-To create one of these agents, simply construct an [`Agent`](/python/api/agent-framework-core/agent_framework.agent?view=agent-framework-python-latest) using the chat client implementation of your choice.
+To create one of these agents, simply construct an `Agent` using the chat client implementation of your choice.
 
 
 ```python
@@ -239,7 +239,7 @@ agent = AzureOpenAIResponsesClient(credential=DefaultAzureCredential(), project_
 ```
 
 > [!NOTE]
-> This example shows using the AzureOpenAIResponsesClient, but the same pattern applies to any chat client that implements [`SupportsChatGetResponse`](/python/api/agent-framework-core/agent_framework.supportschatgetresponse?view=agent-framework-python-latest), see [providers overview](./providers/index.md) for more details on other clients.
+> This example shows using the AzureOpenAIResponsesClient, but the same pattern applies to any chat client that implements `SupportsChatGetResponse`, see [providers overview](./providers/index.md) for more details on other clients.
 
 For detailed examples, see the agent-specific documentation sections below.
 
@@ -247,7 +247,7 @@ For detailed examples, see the agent-specific documentation sections below.
 
 |Underlying Inference Service|Description|Service Chat History storage supported|
 |---|---|---|
-|[Foundry Agent](./providers/azure-ai-foundry.md)|An agent that uses the Agent Service as its backend.|Yes|
+|[Foundry Agent](./providers/microsoft-foundry.md)|An agent that uses the Agent Service as its backend.|Yes|
 |[Azure OpenAI Chat Completion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|
 |[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|
 |[Azure OpenAI Assistants](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Assistants service.|Yes|
@@ -258,7 +258,7 @@ For detailed examples, see the agent-specific documentation sections below.
 |[Amazon Bedrock](https://github.com/microsoft/agent-framework/tree/main/python/packages/bedrock)|An agent that uses Amazon Bedrock models through the Agent Framework Bedrock chat client.|No|
 |[GitHub Copilot](./providers/github-copilot.md)|An agent that uses the GitHub Copilot SDK backend.|No|
 |[Ollama (OpenAI-compatible)](./providers/ollama.md)|An agent that uses locally hosted Ollama models via OpenAI-compatible APIs.|No|
-|[Any other ChatClient](./providers/custom.md)|You can also use any other implementation of [`SupportsChatGetResponse`](/python/api/agent-framework-core/agent_framework.supportschatgetresponse?view=agent-framework-python-latest) to create an agent.|Varies|
+|[Any other ChatClient](./providers/custom.md)|You can also use any other implementation of `SupportsChatGetResponse` to create an agent.|Varies|
 
 Custom chat history storage is supported whenever session-based conversation state is supported.
 
@@ -315,7 +315,7 @@ For tools and tool patterns, see [Tools overview](./tools/index.md).
 
 ## Custom agents
 
-For fully custom implementations (for example deterministic agents or API-backed agents), see [Custom Agents](./providers/custom.md). That page covers implementing [`SupportsAgentRun`](/python/api/agent-framework-core/agent_framework.supportsagentrun?view=agent-framework-python-latest) or extending [`BaseAgent`](/python/api/agent-framework-core/agent_framework.baseagent?view=agent-framework-python-latest), including streaming updates with [`AgentResponseUpdate`](/python/api/agent-framework-core/agent_framework.agentresponseupdate?view=agent-framework-python-latest).
+For fully custom implementations (for example deterministic agents or API-backed agents), see [Custom Agents](./providers/custom.md). That page covers implementing `SupportsAgentRun` or extending `BaseAgent`, including streaming updates with `AgentResponseUpdate`.
 
 ## Other agent types
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: sergeymenshykh
 ms.topic: reference
 ms.author: semenshi
-ms.date: 10/16/2025
+ms.date: 03/13/2026
 ms.service: agent-framework
 ---
 
@@ -58,7 +58,7 @@ For non-streaming scenarios, when you initially run an agent, it may or may not 
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new DefaultAzureCredential())
-    .GetOpenAIResponseClient("<deployment-name>")
+    .GetResponsesClient("<deployment-name>")
     .AsAIAgent();
 
 AgentRunOptions options = new()
@@ -103,7 +103,7 @@ In streaming scenarios, background responses work much like regular streaming re
 AIAgent agent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new DefaultAzureCredential())
-    .GetOpenAIResponseClient("<deployment-name>")
+    .GetResponsesClient("<deployment-name>")
     .AsAIAgent();
 
 AgentRunOptions options = new()
@@ -180,7 +180,7 @@ agent = Agent(
     client=OpenAIResponsesClient(model_id="o3"),
 )
 
-session = await agent.create_session()
+session = agent.create_session()
 
 # Start a background run — returns immediately
 response = await agent.run(
@@ -212,7 +212,7 @@ print(response.text)
 In streaming scenarios, background responses work like regular streaming — the agent streams updates back in real time. The key difference is that each update includes a `continuation_token`, enabling stream resumption if the connection is interrupted:
 
 ```python
-session = await agent.create_session()
+session = agent.create_session()
 
 # Start a streaming background run
 last_token = None

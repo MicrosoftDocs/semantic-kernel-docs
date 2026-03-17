@@ -1022,17 +1022,22 @@
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-ai-foundry-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/azure-ai-foundry",
+      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
       "redirect_document_id": true
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-ai-foundry-models-chat-completion-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/azure-ai-foundry",
+      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-ai-foundry-models-responses-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/azure-ai-foundry",
+      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "agent-framework/agents/providers/azure-ai-foundry.md",
+      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
       "redirect_document_id": false
     },
     {

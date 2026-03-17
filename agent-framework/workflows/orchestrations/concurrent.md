@@ -5,10 +5,23 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 09/12/2025
+ms.date: 03/12/2026
 ms.service: agent-framework
 ---
 
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                                    | C# | Python | Notes           |
+  |--------------------------------------------|:--:|:------:|-----------------|
+  | Client Setup and Agent Definition          | ✅ |   ✅   |                 |
+  | Set Up the Concurrent Orchestration        | ✅ |   ✅   |                 |
+  | Run the Concurrent Workflow                | ✅ |   ✅   |                 |
+  | Sample Output                              | ✅ |   ✅   |                 |
+  | Advanced: Custom Agent Executors           | ❌ |   ✅   | Python-specific |
+  | Advanced: Custom Aggregator                | ❌ |   ✅   | Python-specific |
+  | Key Concepts                               | ✅ |   ✅   |                 |
+-->
 
 # Microsoft Agent Framework Workflows Orchestrations - Concurrent
 
@@ -86,19 +99,19 @@ Execute the workflow and process events from all agents running simultaneously:
 // 4) Run the workflow
 var messages = new List<ChatMessage> { new(ChatRole.User, "Hello, world!") };
 
-StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
+await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, messages);
 await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
 List<ChatMessage> result = new();
-await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 {
     if (evt is AgentResponseUpdateEvent e)
     {
-        Console.WriteLine($"{e.ExecutorId}: {e.Data}");
+        Console.WriteLine($"{e.ExecutorId}: {e.Update.Text}");
     }
     else if (evt is WorkflowOutputEvent outputEvt)
     {
-        result = (List<ChatMessage>)outputEvt.Data!;
+        result = outputEvt.As<List<ChatMessage>>()!;
         break;
     }
 }
@@ -140,10 +153,17 @@ Assistant: English detected. Hello, world!
 Agents are specialized entities that can process tasks. The following code defines three agents: a research expert, a marketing expert, and a legal expert.
 
 ```python
-from agent_framework.azure import AzureChatClient
+import os
 
-# 1) Create three domain agents using AzureChatClient
-chat_client = AzureChatClient(credential=AzureCliCredential())
+from agent_framework.azure import AzureOpenAIResponsesClient
+from azure.identity import AzureCliCredential
+
+# 1) Create three domain agents using AzureOpenAIResponsesClient
+chat_client = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+)
 
 researcher = chat_client.as_agent(
     instructions=(
@@ -179,23 +199,25 @@ from agent_framework.orchestrations import ConcurrentBuilder
 
 # 2) Build a concurrent workflow
 # Participants are either Agents (type of SupportsAgentRun) or Executors
-workflow = ConcurrentBuilder().participants([researcher, marketer, legal]).build()
+workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 ```
 
 ## Run the Concurrent Workflow and Collect the Results
 
 ```python
-from agent_framework import Message, WorkflowOutputEvent
+from typing import cast
+
+from agent_framework import Message, WorkflowEvent
 
 # 3) Run with a single prompt, stream progress, and pretty-print the final combined messages
-output_evt: WorkflowOutputEvent  | None = None
-async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowOutputEvent):
-        output_evt = event
+output_data: list[Message] | None = None
+async for event in workflow.run("We are launching a new budget-friendly electric bike for urban commuters.", stream=True):
+    if event.type == "output":
+        output_data = event.data
 
-if output_evt:
+if output_data:
     print("===== Final Aggregated Conversation (messages) =====")
-    messages: list[Message] | Any = output_evt.data
+    messages: list[Message] = cast(list[Message], output_data)
     for i, msg in enumerate(messages, start=1):
         name = msg.author_name if msg.author_name else "user"
         print(f"{'-' * 60}\n\n{i:02d} [{name}]:\n{msg.text}")
@@ -273,17 +295,15 @@ from agent_framework import (
 )
 
 class ResearcherExec(Executor):
-    agent: Agent
-
-    def __init__(self, chat_client: AzureChatClient, id: str = "researcher"):
-        agent = chat_client.as_agent(
+    def __init__(self, chat_client: AzureOpenAIResponsesClient, id: str = "researcher"):
+        self.agent = chat_client.as_agent(
             instructions=(
                 "You're an expert market and product researcher. Given a prompt, provide concise, factual insights,"
                 " opportunities, and risks."
             ),
             name=id,
         )
-        super().__init__(agent=agent, id=id)
+        super().__init__(id=id)
 
     @handler
     async def run(self, request: AgentExecutorRequest, ctx: WorkflowContext[AgentExecutorResponse]) -> None:
@@ -292,17 +312,15 @@ class ResearcherExec(Executor):
         await ctx.send_message(AgentExecutorResponse(self.id, response, full_conversation=full_conversation))
 
 class MarketerExec(Executor):
-    agent: Agent
-
-    def __init__(self, chat_client: AzureChatClient, id: str = "marketer"):
-        agent = chat_client.as_agent(
+    def __init__(self, chat_client: AzureOpenAIResponsesClient, id: str = "marketer"):
+        self.agent = chat_client.as_agent(
             instructions=(
                 "You're a creative marketing strategist. Craft compelling value propositions and target messaging"
                 " aligned to the prompt."
             ),
             name=id,
         )
-        super().__init__(agent=agent, id=id)
+        super().__init__(id=id)
 
     @handler
     async def run(self, request: AgentExecutorRequest, ctx: WorkflowContext[AgentExecutorResponse]) -> None:
@@ -314,13 +332,17 @@ class MarketerExec(Executor):
 ### Build a Workflow with Custom Executors
 
 ```python
-chat_client = AzureChatClient(credential=AzureCliCredential())
+chat_client = AzureOpenAIResponsesClient(
+    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    credential=AzureCliCredential(),
+)
 
 researcher = ResearcherExec(chat_client)
 marketer = MarketerExec(chat_client)
 legal = LegalExec(chat_client)
 
-workflow = ConcurrentBuilder().participants([researcher, marketer, legal]).build()
+workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 ```
 
 ## Advanced: Custom Aggregator
@@ -330,29 +352,32 @@ By default, concurrent orchestration aggregates all agent responses into a list 
 ### Define a Custom Aggregator
 
 ```python
-# Define a custom aggregator callback that uses the chat client to summarize
-async def summarize_results(results: list[Any]) -> str:
+from agent_framework import AgentExecutorResponse
+
+# Create a summarizer agent for the aggregator
+summarizer_agent = chat_client.as_agent(
+    instructions=(
+        "You are a helpful assistant that consolidates multiple domain expert outputs "
+        "into one cohesive, concise summary with clear takeaways. Keep it under 200 words."
+    ),
+    name="summarizer",
+)
+
+# Define a custom aggregator callback
+async def summarize_results(results: list[AgentExecutorResponse]) -> str:
     # Extract one final assistant message per agent
     expert_sections: list[str] = []
     for r in results:
         try:
-            messages = getattr(r.agent_run_response, "messages", [])
+            messages = getattr(r.agent_response, "messages", [])
             final_text = messages[-1].text if messages and hasattr(messages[-1], "text") else "(no content)"
-            expert_sections.append(f"{getattr(r, 'executor_id', 'expert')}:\n{final_text}")
+            expert_sections.append(f"{r.executor_id}:\n{final_text}")
         except Exception as e:
-            expert_sections.append(f"{getattr(r, 'executor_id', 'expert')}: (error: {type(e).__name__}: {e})")
+            expert_sections.append(f"{r.executor_id}: (error: {type(e).__name__}: {e})")
 
     # Ask the model to synthesize a concise summary of the experts' outputs
-    system_msg = Message(
-        role="system",
-        contents=[(
-            "You are a helpful assistant that consolidates multiple domain expert outputs "
-            "into one cohesive, concise summary with clear takeaways. Keep it under 200 words."
-        )],
-    )
-    user_msg = Message(role="user", contents=["\n\n".join(expert_sections]))
-
-    response = await chat_client.get_response([system_msg, user_msg])
+    prompt = "\n\n".join(expert_sections)
+    response = await summarizer_agent.run(prompt)
     # Return the model's final assistant text as the completion result
     return response.messages[-1].text if response.messages else ""
 ```
@@ -361,20 +386,19 @@ async def summarize_results(results: list[Any]) -> str:
 
 ```python
 workflow = (
-    ConcurrentBuilder()
-    .participants([researcher, marketer, legal])
+    ConcurrentBuilder(participants=[researcher, marketer, legal])
     .with_aggregator(summarize_results)
     .build()
 )
 
-output_evt: WorkflowOutputEvent | None = None
-async for event in workflow.run_stream("We are launching a new budget-friendly electric bike for urban commuters."):
-    if isinstance(event, WorkflowOutputEvent):
-        output_evt = event
+output = None
+async for event in workflow.run("We are launching a new budget-friendly electric bike for urban commuters.", stream=True):
+    if event.type == "output":
+        output = event.data
 
-if output_evt:
+if output:
     print("===== Final Consolidated Output =====")
-    print(output_evt.data)
+    print(output)
 ```
 
 ### Sample Output with Custom Aggregator

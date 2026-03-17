@@ -115,28 +115,32 @@ pip install agent-framework --pre
 
 Each client type uses different environment variables:
 
-### Chat Completion
+# [Chat Completion](#tab/oai-chat-completion)
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
 OPENAI_CHAT_MODEL_ID="gpt-4o-mini"
 ```
 
-### Responses
+# [Responses](#tab/oai-responses)
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
 OPENAI_RESPONSES_MODEL_ID="gpt-4o-mini"
 ```
 
-### Assistants
+# [Assistants](#tab/oai-assistants)
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
 OPENAI_CHAT_MODEL_ID="gpt-4o-mini"
 ```
 
-## Chat Completion Client
+---
+
+## Create OpenAI Agents
+
+# [Chat Completion](#tab/oai-chat-completion)
 
 `OpenAIChatClient` uses the Chat Completions API — the simplest option with broad model support.
 
@@ -163,7 +167,7 @@ asyncio.run(main())
 async def web_search_example():
     client = OpenAIChatClient()
     web_search = client.get_web_search_tool()
-    
+
     agent = client.as_agent(
         name="SearchBot",
         instructions="You can search the web for current information.",
@@ -173,7 +177,7 @@ async def web_search_example():
     print(result)
 ```
 
-## Responses Client
+# [Responses](#tab/oai-responses)
 
 `OpenAIResponsesClient` uses the Responses API — the most feature-rich option with hosted tools.
 
@@ -221,7 +225,7 @@ async def hosted_tools_example():
     print(result)
 ```
 
-## Assistants Client
+# [Assistants](#tab/oai-assistants)
 
 `OpenAIAssistantProvider` uses the Assistants API — server-managed agents with built-in code interpreter and file search. The provider manages assistant lifecycle automatically.
 
@@ -250,6 +254,8 @@ asyncio.run(main())
 ```
 
 **Supported tools:** Function tools, code interpreter, file search, local MCP tools.
+
+---
 
 ## Common Features
 

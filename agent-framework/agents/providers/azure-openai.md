@@ -150,26 +150,28 @@ pip install agent-framework --pre
 
 Each client type uses different environment variables:
 
-### Chat Completion
+# [Chat Completion](#tab/aoai-chat-completion)
 
 ```bash
 AZURE_OPENAI_ENDPOINT="https://<myresource>.openai.azure.com"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-4o-mini"
 ```
 
-### Responses
+# [Responses](#tab/aoai-responses)
 
 ```bash
 AZURE_OPENAI_ENDPOINT="https://<myresource>.openai.azure.com"
 AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-4o-mini"
 ```
 
-### Assistants
+# [Assistants](#tab/aoai-assistants)
 
 ```bash
 AZURE_OPENAI_ENDPOINT="https://<myresource>.openai.azure.com"
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-4o-mini"
 ```
+
+---
 
 Optionally, you can also set:
 
@@ -180,7 +182,9 @@ AZURE_OPENAI_API_KEY="<your-api-key>"  # If not using Azure CLI authentication
 
 All clients use Azure credentials for authentication. The simplest approach is `AzureCliCredential` after running `az login`. All Azure clients accept a unified `credential` parameter that supports `TokenCredential`, `AsyncTokenCredential`, or a callable token provider — token caching and refresh are handled automatically.
 
-## Chat Completion Client
+## Create Azure OpenAI Agents
+
+# [Chat Completion](#tab/aoai-chat-completion)
 
 `AzureOpenAIChatClient` uses the Chat Completions API — the simplest option with broad model support.
 
@@ -202,7 +206,7 @@ asyncio.run(main())
 
 **Supported tools:** Function tools, web search, local MCP tools.
 
-## Responses Client
+# [Responses](#tab/aoai-responses)
 
 `AzureOpenAIResponsesClient` uses the Responses API — the most feature-rich option with hosted tools.
 
@@ -269,7 +273,7 @@ async def hosted_tools_example():
     print(result)
 ```
 
-## Assistants Client
+# [Assistants](#tab/aoai-assistants)
 
 `AzureOpenAIAssistantsClient` uses the Assistants API — server-managed agents with built-in code interpreter and file search. Note the `async with` context manager for automatic assistant lifecycle management.
 
@@ -290,6 +294,8 @@ asyncio.run(main())
 ```
 
 **Supported tools:** Function tools, code interpreter, file search, local MCP tools.
+
+---
 
 ## Common Features
 
