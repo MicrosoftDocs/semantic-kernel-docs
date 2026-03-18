@@ -5,9 +5,25 @@ zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: conceptual
 ms.author: crickman
-ms.date: 03/05/2026
+ms.date: 03/18/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Feature parity table – highlight impactful SDK differences between C# and Python.
+  Keep in sync when features are added or removed.
+
+  | Feature                                      | C# | Python | Notes                                                                                                       |
+  |----------------------------------------------|:--:|:------:|-------------------------------------------------------------------------------------------------------------|
+  | Truncation strategy                          | ✅ |   ✅   |                                                                                                             |
+  | Sliding window strategy                      | ✅ |   ✅   |                                                                                                             |
+  | Tool-result collapse strategy                | ✅ |   ✅   |                                                                                                             |
+  | Summarization strategy                       | ✅ |   ✅   |                                                                                                             |
+  | Selective tool-call exclusion strategy       | ❌ |   ✅   | Python-only: fully drops older tool-call groups; C# ToolResultCompactionStrategy collapses them instead     |
+  | Trigger / target predicate system            | ✅ |   ❌   | C#-only: CompactionTrigger delegates control when each strategy fires and stops; Python strategies use internal parameters |
+  | Composed pipeline strategy                   | ✅ |   ✅   | C#: PipelineCompactionStrategy (trigger-driven, runs all children); Python: TokenBudgetComposedStrategy (token-budget-driven, early-stop) |
+  | Post-run compaction of persisted history     | ❌ |   ✅   | Python-only: CompactionProvider.after_strategy compacts stored history after each run; C# compacts in-flight context only |
+-->
 
 # Compaction
 
