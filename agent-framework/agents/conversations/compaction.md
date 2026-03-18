@@ -5,9 +5,37 @@ zone_pivot_groups: programming-languages
 author: crickman
 ms.topic: conceptual
 ms.author: crickman
-ms.date: 03/05/2026
+ms.date: 03/18/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                                           | C# | Python | Notes                            |
+  |---------------------------------------------------|:--:|:------:|----------------------------------|
+  | Why compaction matters                            | ✅ |   ✅   |                                  |
+  | Applicability: In-memory history agents only      | ✅ |   ✅   |                                  |
+  | Core concepts – Message groups                    | ✅ |   ✅   |                                  |
+  | Core concepts – Triggers                          | ✅ |   ❌   | C#-specific                      |
+  | Core concepts – Trigger vs. target                | ✅ |   ❌   | C#-specific                      |
+  | Core concepts – Compaction strategies (protocol)  | ❌ |   ✅   | Python-specific                  |
+  | Core concepts – Tokenizer                         | ❌ |   ✅   | Python-specific                  |
+  | TruncationCompactionStrategy / TruncationStrategy | ✅ |   ✅   |                                  |
+  | SlidingWindowCompactionStrategy / SlidingWindowStrategy | ✅ | ✅ |                                 |
+  | ToolResultCompactionStrategy                      | ✅ |   ✅   |                                  |
+  | SummarizationCompactionStrategy / SummarizationStrategy | ✅ | ✅ |                                |
+  | PipelineCompactionStrategy                        | ✅ |   ❌   | C#-specific; Python uses TokenBudgetComposedStrategy |
+  | SelectiveToolCallCompactionStrategy               | ❌ |   ✅   | Python-specific                  |
+  | TokenBudgetComposedStrategy                       | ❌ |   ✅   | Python-specific; C# uses PipelineCompactionStrategy |
+  | Using compaction – Registering with the builder API | ✅ | ❌   | C#-specific                      |
+  | Using compaction – Registering through ChatClientAgentOptions | ✅ | ❌ | C#-specific               |
+  | Using compaction – Registering with an agent      | ❌ |   ✅   | Python-specific                  |
+  | Using compaction – Compacting persisted history after each run | ❌ | ✅ | Python-specific        |
+  | Using compaction – Ad-hoc compaction              | ✅ |   ✅   |                                  |
+  | Choosing a strategy                               | ✅ |   ✅   |                                  |
+  | Next steps                                        | ✅ |   ✅   |                                  |
+-->
 
 # Compaction
 
