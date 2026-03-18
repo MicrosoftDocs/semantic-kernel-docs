@@ -10,31 +10,19 @@ ms.service: agent-framework
 ---
 
 <!--
-  Language parity table – keep in sync when adding/removing sections.
+  Feature parity table – highlight impactful SDK differences between C# and Python.
+  Keep in sync when features are added or removed.
 
-  | Section                                           | C# | Python | Notes                            |
-  |---------------------------------------------------|:--:|:------:|----------------------------------|
-  | Why compaction matters                            | ✅ |   ✅   |                                  |
-  | Applicability: In-memory history agents only      | ✅ |   ✅   |                                  |
-  | Core concepts – Message groups                    | ✅ |   ✅   |                                  |
-  | Core concepts – Triggers                          | ✅ |   ❌   | C#-specific                      |
-  | Core concepts – Trigger vs. target                | ✅ |   ❌   | C#-specific                      |
-  | Core concepts – Compaction strategies (protocol)  | ❌ |   ✅   | Python-specific                  |
-  | Core concepts – Tokenizer                         | ❌ |   ✅   | Python-specific                  |
-  | TruncationCompactionStrategy / TruncationStrategy | ✅ |   ✅   |                                  |
-  | SlidingWindowCompactionStrategy / SlidingWindowStrategy | ✅ | ✅ |                                 |
-  | ToolResultCompactionStrategy                      | ✅ |   ✅   |                                  |
-  | SummarizationCompactionStrategy / SummarizationStrategy | ✅ | ✅ |                                |
-  | PipelineCompactionStrategy                        | ✅ |   ❌   | C#-specific; Python uses TokenBudgetComposedStrategy |
-  | SelectiveToolCallCompactionStrategy               | ❌ |   ✅   | Python-specific                  |
-  | TokenBudgetComposedStrategy                       | ❌ |   ✅   | Python-specific; C# uses PipelineCompactionStrategy |
-  | Using compaction – Registering with the builder API | ✅ | ❌   | C#-specific                      |
-  | Using compaction – Registering through ChatClientAgentOptions | ✅ | ❌ | C#-specific               |
-  | Using compaction – Registering with an agent      | ❌ |   ✅   | Python-specific                  |
-  | Using compaction – Compacting persisted history after each run | ❌ | ✅ | Python-specific        |
-  | Using compaction – Ad-hoc compaction              | ✅ |   ✅   |                                  |
-  | Choosing a strategy                               | ✅ |   ✅   |                                  |
-  | Next steps                                        | ✅ |   ✅   |                                  |
+  | Feature                                      | C# | Python | Notes                                                                                                       |
+  |----------------------------------------------|:--:|:------:|-------------------------------------------------------------------------------------------------------------|
+  | Truncation strategy                          | ✅ |   ✅   |                                                                                                             |
+  | Sliding window strategy                      | ✅ |   ✅   |                                                                                                             |
+  | Tool-result collapse strategy                | ✅ |   ✅   |                                                                                                             |
+  | Summarization strategy                       | ✅ |   ✅   |                                                                                                             |
+  | Selective tool-call exclusion strategy       | ❌ |   ✅   | Python-only: fully drops older tool-call groups; C# ToolResultCompactionStrategy collapses them instead     |
+  | Trigger / target predicate system            | ✅ |   ❌   | C#-only: CompactionTrigger delegates control when each strategy fires and stops; Python strategies use internal parameters |
+  | Composed pipeline strategy                   | ✅ |   ✅   | C#: PipelineCompactionStrategy (trigger-driven, runs all children); Python: TokenBudgetComposedStrategy (token-budget-driven, early-stop) |
+  | Post-run compaction of persisted history     | ❌ |   ✅   | Python-only: CompactionProvider.after_strategy compacts stored history after each run; C# compacts in-flight context only |
 -->
 
 # Compaction
