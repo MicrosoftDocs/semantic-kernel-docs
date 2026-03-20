@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
-ms.date: 03/16/2026
+ms.date: 03/20/2026
 ms.service: agent-framework
 ---
 
@@ -299,6 +299,9 @@ Chat middleware intercepts chat requests sent to AI models. It uses the `ChatCon
 - `function_invocation_kwargs`: Tool-only runtime values that will be forwarded by the chat layer
 
 The `call_next` callback continues to the next middleware or sends the request to the AI service.
+
+> [!NOTE]
+> Chat middleware runs inside the function invocation loop. This means it executes for **each model call**, including calls that send tool results back to the model during a multi-turn tool calling sequence.
 
 ### Function-based
 

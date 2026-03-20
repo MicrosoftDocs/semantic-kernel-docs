@@ -51,23 +51,23 @@
   <rect x="475" y="30" width="330" height="285" rx="8" ry="8" fill="#e0f2f1" stroke="#00695c" stroke-width="2"/>
   <text x="640" y="52" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600" fill="#00695c">ChatClient</text>
   
-  <!-- Chat Middleware + Telemetry box -->
-  <rect x="490" y="65" width="130" height="80" rx="5" ry="5" fill="white" stroke="#00695c" stroke-width="1.5"/>
-  <text x="555" y="90" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">Chat Middleware</text>
-  <text x="555" y="105" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">+ Telemetry</text>
-  <text x="555" y="125" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">middleware=[]</text>
-  <text x="555" y="138" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">(optional)</text>
-  
-  <!-- Function Invocation box -->
-  <rect x="640" y="65" width="150" height="120" rx="5" ry="5" fill="#b2dfdb" stroke="#00695c" stroke-width="1.5"/>
-  <text x="715" y="88" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">FunctionInvocation</text>
-  <text x="715" y="103" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">Tool calling loop</text>
+  <!-- FunctionInvocation box (left) -->
+  <rect x="490" y="65" width="150" height="120" rx="5" ry="5" fill="#b2dfdb" stroke="#00695c" stroke-width="1.5"/>
+  <text x="565" y="88" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">FunctionInvocation</text>
+  <text x="565" y="103" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">Tool calling loop</text>
   
   <!-- Function Middleware nested inside Function Invocation -->
-  <rect x="652" y="115" width="126" height="55" rx="3" ry="3" fill="white" stroke="#00695c" stroke-width="1"/>
-  <text x="715" y="135" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#00695c">Function Middleware</text>
-  <text x="715" y="150" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#00695c">+ Telemetry</text>
-  <text x="715" y="163" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">(per tool call)</text>
+  <rect x="502" y="115" width="126" height="55" rx="3" ry="3" fill="white" stroke="#00695c" stroke-width="1"/>
+  <text x="565" y="135" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#00695c">Function Middleware</text>
+  <text x="565" y="150" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#00695c">+ Telemetry</text>
+  <text x="565" y="163" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">(per tool call)</text>
+  
+  <!-- Chat Middleware + Telemetry box (right) -->
+  <rect x="660" y="65" width="130" height="80" rx="5" ry="5" fill="white" stroke="#00695c" stroke-width="1.5"/>
+  <text x="725" y="88" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">Chat Middleware</text>
+  <text x="725" y="103" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">+ Telemetry</text>
+  <text x="725" y="123" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">middleware=[]</text>
+  <text x="725" y="136" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">(per model call)</text>
   
   <!-- RawChatClient box -->
   <rect x="490" y="200" width="300" height="100" rx="5" ry="5" fill="#b2dfdb" stroke="#00695c" stroke-width="1.5"/>
@@ -93,15 +93,15 @@
   <!-- Agent to ChatClient -->
   <line x1="445" y1="167" x2="470" y2="167" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
   
-  <!-- Chat Middleware to FunctionInvocation -->
-  <line x1="620" y1="105" x2="635" y2="105" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <!-- FunctionInvocation to Chat Middleware -->
+  <line x1="640" y1="105" x2="655" y2="105" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
   
-  <!-- FunctionInvocation to RawChatClient (down) -->
-  <line x1="715" y1="185" x2="715" y2="195" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <!-- Chat Middleware to RawChatClient (down) -->
+  <line x1="725" y1="145" x2="725" y2="195" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
   
   <!-- Loop arrow for tool calling -->
-  <path d="M 790 140 Q 800 120 790 100" stroke="#00695c" stroke-width="1.5" fill="none" marker-end="url(#looparrow)"/>
-  <text x="810" y="120" font-family="Segoe UI, sans-serif" font-size="8" fill="#00695c">loop</text>
+  <path d="M 485 140 Q 475 120 485 100" stroke="#00695c" stroke-width="1.5" fill="none" marker-end="url(#looparrow)"/>
+  <text x="462" y="123" font-family="Segoe UI, sans-serif" font-size="8" fill="#00695c">loop</text>
   
   <!-- ChatClient to LLM -->
   <line x1="805" y1="250" x2="855" y2="180" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
