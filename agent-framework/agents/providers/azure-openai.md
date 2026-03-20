@@ -148,6 +148,9 @@ pip install agent-framework --pre
 
 ## Configuration
 
+> [!IMPORTANT]
+> The `AzureOpenAIChatClient` and `AzureOpenAIAssistantsClient` require an **Azure OpenAI resource** endpoint (format: `https://<myresource>.openai.azure.com`). The `AzureOpenAIResponsesClient` can use either an Azure OpenAI resource endpoint **or** a [Microsoft Foundry project](/azure/ai-foundry/what-is-ai-foundry) endpoint (format: `https://<your-project>.services.ai.azure.com/api/projects/<project-id>`). If you need to use the Foundry Agent Service instead, see the [Foundry Agents provider page](./azure-ai-foundry.md).
+
 Each client type uses different environment variables:
 
 # [Chat Completion](#tab/aoai-chat-completion)
@@ -228,7 +231,7 @@ asyncio.run(main())
 
 ### Responses Client with Microsoft Foundry project endpoint
 
-`AzureOpenAIResponsesClient` can also be created from a Foundry project endpoint:
+Instead of an Azure OpenAI resource endpoint, `AzureOpenAIResponsesClient` can also be created from a [Microsoft Foundry project](/azure/ai-foundry/what-is-ai-foundry) endpoint. Use a Foundry project endpoint when you want to access models deployed through a Microsoft Foundry project rather than a standalone Azure OpenAI resource:
 
 ```python
 from agent_framework.azure import AzureOpenAIResponsesClient
