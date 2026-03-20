@@ -16,7 +16,7 @@ Semantic Kernel provides a wide range of AI service integrations to help you bui
 
 With the available AI connectors, developers can easily build AI agents with swappable components. This allows you to experiment with different AI services to find the best combination for your use case.
 
-### AI Services
+### AI services
 
 | Services                       |  C#   | Python | Java  | Notes                            |
 | ------------------------------ | :---: | :----: | :---: | -------------------------------- |

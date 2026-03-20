@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 975 285" style="max-width: 975px; background-color: white;">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+  
+  <!-- User node -->
+  <rect x="20" y="125" width="70" height="45" rx="22" ry="22" fill="#e1f5fe" stroke="#01579b" stroke-width="2"/>
+  <text x="55" y="152" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="13" font-weight="500">User</text>
+  
+  <!-- Agent Middleware box -->
+  <rect x="120" y="55" width="110" height="185" rx="6" ry="6" fill="#ede7f6" stroke="#5e35b1" stroke-width="2"/>
+  <text x="175" y="80" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" font-weight="600" fill="#5e35b1">Agent</text>
+  <text x="175" y="95" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" font-weight="600" fill="#5e35b1">Middleware</text>
+  <text x="175" y="120" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">(optional)</text>
+  <text x="175" y="140" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">.Use()</text>
+  <text x="175" y="155" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">decorators</text>
+  <text x="175" y="180" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555" font-style="italic">Message</text>
+  <text x="175" y="192" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555" font-style="italic">AIContextProvider</text>
+  <text x="175" y="204" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555" font-style="italic">can be used</text>
+  <text x="175" y="216" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555" font-style="italic">as middleware</text>
+  
+  <!-- ChatClientAgent box -->
+  <rect x="260" y="45" width="230" height="205" rx="8" ry="8" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="375" y="70" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600" fill="#7b1fa2">ChatClientAgent</text>
+  
+  <!-- Context Layer box -->
+  <rect x="275" y="90" width="200" height="145" rx="6" ry="6" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+  <text x="375" y="112" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="12" font-weight="600" fill="#e65100">Context Layer</text>
+  
+  <!-- ChatHistoryProvider -->
+  <rect x="290" y="125" width="170" height="40" rx="4" ry="4" fill="white" stroke="#e65100" stroke-width="1"/>
+  <text x="375" y="150" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10">ChatHistoryProvider</text>
+  
+  <!-- AIContextProviders -->
+  <rect x="290" y="175" width="170" height="45" rx="4" ry="4" fill="white" stroke="#e65100" stroke-width="1"/>
+  <text x="375" y="193" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10">AIContextProviders[]</text>
+  <text x="375" y="208" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#666">(memory, RAG, etc.)</text>
+  
+  <!-- IChatClient Pipeline box (separate from agent) -->
+  <rect x="520" y="25" width="320" height="245" rx="8" ry="8" fill="#e0f2f1" stroke="#00695c" stroke-width="2"/>
+  <text x="680" y="50" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600" fill="#00695c">IChatClient Pipeline</text>
+  
+  <!-- Client Middleware decorators -->
+  <rect x="535" y="70" width="125" height="85" rx="4" ry="4" fill="white" stroke="#00695c" stroke-width="1"/>
+  <text x="597" y="90" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10">Client</text>
+  <text x="597" y="105" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10">Middleware</text>
+  <text x="597" y="122" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555" font-style="italic">AIContextProvider</text>
+  <text x="597" y="134" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555" font-style="italic">can be used</text>
+  <text x="597" y="146" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555" font-style="italic">as middleware</text>
+  
+  <!-- Function Invoking -->
+  <rect x="535" y="165" width="125" height="85" rx="4" ry="4" fill="white" stroke="#00695c" stroke-width="1"/>
+  <text x="597" y="195" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9">FunctionInvoking</text>
+  <text x="597" y="210" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9">ChatClient</text>
+  <text x="597" y="235" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">(tool calling)</text>
+  
+  <!-- Inner Chat Client -->
+  <rect x="690" y="70" width="130" height="180" rx="4" ry="4" fill="#b2dfdb" stroke="#00695c" stroke-width="1.5"/>
+  <text x="755" y="100" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" font-weight="500">Inner</text>
+  <text x="755" y="117" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="11" font-weight="500">ChatClient</text>
+  <text x="755" y="145" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">Azure OpenAI</text>
+  <text x="755" y="162" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">OpenAI</text>
+  <text x="755" y="179" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">Anthropic</text>
+  <text x="755" y="196" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">Foundry</text>
+  <text x="755" y="213" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">Ollama</text>
+  <text x="755" y="230" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" fill="#555">etc.</text>
+  
+  <!-- Flow arrows inside chat client -->
+  <!-- Middleware to Function Invoking -->
+  <line x1="597" y1="155" x2="597" y2="160" stroke="#666" stroke-width="1" marker-end="url(#arrowhead)"/>
+  <!-- Function Invoking to Inner Client -->
+  <line x1="660" y1="207" x2="685" y2="165" stroke="#666" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  
+  <!-- LLM node -->
+  <rect x="880" y="125" width="80" height="45" rx="22" ry="22" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
+  <text x="920" y="152" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="13">LLM</text>
+  
+  <!-- External flow arrows -->
+  <!-- User to Middleware -->
+  <line x1="90" y1="147" x2="115" y2="147" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Middleware to Agent -->
+  <line x1="230" y1="147" x2="255" y2="147" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Agent to ChatClient -->
+  <line x1="490" y1="147" x2="515" y2="147" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- ChatClient to LLM -->
+  <line x1="840" y1="147" x2="875" y2="147" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+</svg>
