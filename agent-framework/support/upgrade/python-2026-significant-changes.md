@@ -4,7 +4,7 @@ description: Guide to significant changes in Python releases for Microsoft Agent
 author: eavanvalkenburg
 ms.topic: upgrade-and-migration-article
 ms.author: edvan
-ms.date: 03/13/2026
+ms.date: 03/20/2026
 ms.service: agent-framework
 ---
 # Python 2026 Significant Changes Guide
@@ -18,9 +18,27 @@ This document will be removed once we reach the 1.0.0 stable release, so please 
 
 ---
 
-## python-1.0.0rc5 / python-1.0.0b260318 (March 18, 2026)
+## python-1.0.0rc5 / python-1.0.0b260319 (March 19, 2026)
 
-**Release:** Scheduled for March 18, 2026. `agent-framework-core` and `agent-framework-azure-ai` move to `1.0.0rc5`; the remaining Python packages align on the March 2026 build line (`1.0.0b260318`).
+### 🔴 Chat client pipeline reordered: FunctionInvocation now wraps ChatMiddleware
+
+**PR:** [#4746](https://github.com/microsoft/agent-framework/pull/4746)
+
+The ChatClient pipeline ordering has changed. `FunctionInvocation` is now the outermost layer and wraps `ChatMiddleware`, which means chat middleware runs **per model call** (including each iteration of the tool calling loop) instead of once around the entire function invocation sequence.
+
+**Old pipeline order:**
+```
+ChatMiddleware → FunctionInvocation → RawChatClient
+```
+
+**New pipeline order:**
+```
+FunctionInvocation → ChatMiddleware → ChatTelemetry → RawChatClient
+```
+
+If you have custom chat middleware that assumed it ran only once per agent invocation (wrapping the entire tool calling loop), update it to be safe for repeated execution. Chat middleware is now invoked for each individual LLM request, including requests that send tool results back to the model.
+
+Additionally, `ChatTelemetry` is now a separate layer from `ChatMiddleware` in the pipeline, running closest to `RawChatClient`.
 
 ### 🔴 Public runtime kwargs split into explicit buckets
 

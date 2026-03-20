@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 03/11/2026
+ms.date: 03/20/2026
 ms.service: agent-framework
 ---
 
@@ -45,8 +45,8 @@ The `Agent` class builds a pipeline through class composition with two main comp
 
 **ChatClient** (separate and interchangeable component):
 
-1. **Chat Middleware + Telemetry** - Optional middleware chain and instrumentation layers
-2. **FunctionInvocation** - Handles tool calling loop, invoking Function Middleware + Telemetry per tool call
+1. **FunctionInvocation** - Handles tool calling loop, invoking Function Middleware + Telemetry per tool call
+2. **Chat Middleware + Telemetry** - Optional middleware chain and instrumentation layers, running per model call
 3. **RawChatClient** - Provider-specific implementation (Azure OpenAI, OpenAI, Anthropic, etc.) that communicates with the LLM
 
 When you call `run()`, your request flows through the Agent layers, then into the ChatClient pipeline for LLM communication.
@@ -231,9 +231,9 @@ When you invoke an agent, the request flows through the pipeline:
 
 **ChatClient pipeline:**
 
-4. **Chat Middleware + Telemetry** executes (if configured)
-5. **FunctionInvocation** sends request to the LLM and handles tool calling loop
+4. **FunctionInvocation** manages the tool calling loop
    - For each tool call, **Function Middleware + Telemetry** executes
+5. **Chat Middleware + Telemetry** executes per model call (if configured)
 6. **RawChatClient** handles provider-specific LLM communication
 7. Response flows back through the same layers
 8. **Context providers** are notified of new messages for storage

@@ -98,6 +98,9 @@ For more information on how to run and interact with agents, see the [Agent gett
 
 ### Environment Variables
 
+> [!IMPORTANT]
+> `AzureAIAgentClient` (Foundry Agent Service v1) and `AzureAIClient` (Foundry Agent Service v2) both require an **Azure AI Foundry project** endpoint (format: `https://<your-project>.services.ai.azure.com/api/projects/<project-id>`), **not** an Azure OpenAI resource endpoint. You must have an [Azure AI Foundry project](/azure/ai-foundry/what-is-ai-foundry) to use this provider. If you have a standalone Azure OpenAI resource instead, see the [Azure OpenAI provider page](./azure-openai.md).
+
 Before using Foundry Agents, you need to set up these environment variables:
 
 ```bash
