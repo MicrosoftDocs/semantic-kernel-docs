@@ -152,6 +152,10 @@ items:
       href: workflows/orchestrations/group-chat.md
     - name: Magentic
       href: workflows/orchestrations/magentic.md
+  - name: Advanced
+    items:
+    - name: Agent Executor
+      href: workflows/advanced/agent-executor.md
 - name: Integrations
   items:
   - name: Overview
