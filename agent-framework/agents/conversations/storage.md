@@ -361,4 +361,4 @@ resumed = AgentSession.from_dict(serialized)
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Running Agents](../running-agents.md)
+> [Compaction](./compaction.md)

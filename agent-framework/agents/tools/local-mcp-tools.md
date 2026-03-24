@@ -420,4 +420,4 @@ if __name__ == "__main__":
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Using workflows as Agents](../../workflows/as-agents.md)
+> [Conversations & Memory](../conversations/index.md)

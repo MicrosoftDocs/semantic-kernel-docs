@@ -881,4 +881,4 @@ if __name__ == "__main__":
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Background Responses](../background-responses.md)
+> [Defining Middleware](./defining-middleware.md)

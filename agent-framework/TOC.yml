@@ -40,6 +40,8 @@ items:
     href: agents/observability.md
   - name: Agent Skills
     href: agents/skills.md
+  - name: Agent Safety
+    href: agents/safety.md
   - name: Tools
     items:
     - name: Overview
