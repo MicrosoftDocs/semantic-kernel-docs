@@ -84,7 +84,7 @@ ChatCompletionAgent agent =
 
 ```python
 agent = ChatCompletionAgent(
-    service=AzureChatCompletion(), # or other supported AI Services
+    service=AzureChatCompletion(), # or other supported AI services
     name="StoryTeller",
     instructions="Tell a story about {{$topic}} that is {{$length}} sentences long.",
     arguments=KernelArguments(topic="Dog", length="2"),
