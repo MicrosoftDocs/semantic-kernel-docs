@@ -162,6 +162,8 @@ items:
       href: workflows/advanced/execution-modes.md
     - name: Resettable Executors
       href: workflows/advanced/resettable-executors.md
+    - name: Sub-Workflows
+      href: workflows/advanced/sub-workflows.md
 - name: Integrations
   items:
   - name: Overview
