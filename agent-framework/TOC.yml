@@ -158,6 +158,8 @@ items:
     items:
     - name: Agent Executor
       href: workflows/advanced/agent-executor.md
+    - name: Execution Modes
+      href: workflows/advanced/execution-modes.md
     - name: Resettable Executors
       href: workflows/advanced/resettable-executors.md
 - name: Integrations
