@@ -451,7 +451,7 @@ Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Context Providers](./conversations/context-providers.md)
+> [Agent Safety](./safety.md)
 
 ### Related content
 

@@ -515,4 +515,4 @@ See the [Agent getting started tutorials](../../get-started/your-first-agent.md)
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Azure AI Agents](./microsoft-foundry.md)
+> [Ollama](./ollama.md)
