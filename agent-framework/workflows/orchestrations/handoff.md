@@ -646,6 +646,14 @@ After broadcasting the response, the participant then checks whether it needs to
 
 ::: zone-end
 
+## The Handoff Agent Executor
+
+Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:
+
+- **Handoff tool injection** — automatically registers handoff tools on each agent based on the configured handoff rules, so the agent can invoke a tool to transfer control.
+- **Handoff function detection** — inspects the agent's response for handoff tool calls and routes control to the target agent.
+- **Tool call filtering** — filters out handoff-related function calls and tool results from the conversation history before forwarding to the next agent, preventing internal workflow mechanics from confusing the model.
+
 ## Next steps
 
 > [!div class="nextstepaction"]

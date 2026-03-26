@@ -604,4 +604,4 @@ For more information on how to run and interact with agents, see the [Agent gett
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Foundry Models based Agents](./microsoft-foundry.md)
+> [Anthropic](./anthropic.md)

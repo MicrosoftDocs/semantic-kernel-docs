@@ -212,4 +212,4 @@ Use `function_invocation_kwargs` for tool-invocation flows and `client_kwargs` f
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Middleware Overview](./index.md)
+> [Providers](../providers/index.md)

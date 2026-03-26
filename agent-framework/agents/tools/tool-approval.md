@@ -563,4 +563,4 @@ if __name__ == "__main__":
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Producing Structured Output with agents](../structured-output.md)
+> [Code Interpreter](./code-interpreter.md)

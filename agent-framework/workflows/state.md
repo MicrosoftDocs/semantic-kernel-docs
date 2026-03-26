@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/09/2026
+ms.date: 03/25/2026
 ms.service: agent-framework
 ---
 
@@ -18,6 +18,7 @@ ms.service: agent-framework
   | Accessing State                            | ✅ |   ✅   |       |
   | State Isolation – Mutable vs Immutable     | ✅ |   ✅   | Prose only, no code needed |
   | State Isolation – Helper Methods           | ❌ |   ✅   | C# coming soon |
+  | State Isolation – Resetting Shared Executors| ✅ |   ❌   | C#-specific; links to advanced page |
   | Agent State Management                     | ❌ |   ✅   | C# coming soon |
 -->
 
@@ -190,6 +191,16 @@ workflow_b = create_workflow()
 
 > [!TIP]
 > To ensure proper state isolation and thread safety, also make sure that executor instances created inside the helper method do not share external mutable state.
+
+::: zone pivot="programming-language-csharp"
+
+### Resetting Shared Executors
+
+If you need to share executor instances across workflow runs — for example, when executor construction is expensive or when a workflow is exposed as an agent — stateful executors must implement `IResettableExecutor`. This interface provides a `ResetAsync()` method that the workflow runtime calls automatically between runs to clear stale state.
+
+For details on when and how to implement `IResettableExecutor`, see [Resettable Executors](./advanced/resettable-executors.md).
+
+::: zone-end
 
 ### Agent State Management
 

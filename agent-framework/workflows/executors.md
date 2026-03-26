@@ -5,20 +5,21 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 03/24/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                    | C# | Python |                 |
-  |----------------------------|:--:|:-------:|-----------------|
-  | Basic Executor Structure   | ✅ |   ✅   |                 |
-  | Multiple Input Types       | ✅ |   ✅   |                 |
-  | Function-Based Executors   | ✅ |   ✅   |                 |
-  | Explicit Type Parameters   | ❌ |   ✅   | Python-specific |
-  | The WorkflowContext Object | ✅ |   ✅   |                 |
+  | Section                    | C# | Python | Notes            |
+  |----------------------------|:--:|:------:|------------------|
+  | Basic Executor Structure   | ✅ |   ✅   |                  |
+  | Resettable Executors (TIP) | ✅ |   ❌   | C#-specific; links to advanced page |
+  | Multiple Input Types       | ✅ |   ✅   |                  |
+  | Function-Based Executors   | ✅ |   ✅   |                  |
+  | Explicit Type Parameters   | ❌ |   ✅   | Python-specific  |
+  | The WorkflowContext Object | ✅ |   ✅   |                  |
 -->
 
 # Executors
@@ -68,6 +69,9 @@ internal sealed partial class UppercaseExecutor() : Executor("UppercaseExecutor"
     }
 }
 ```
+
+> [!TIP]
+> Executors can hold mutable state. If a stateful executor is shared across workflow runs, it must implement `IResettableExecutor` to clear stale state between runs. See [Resettable Executors](./advanced/resettable-executors.md) for details.
 
 ## Multiple Input Types
 

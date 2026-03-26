@@ -650,7 +650,4 @@ compacted = await apply_compaction(
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Context Providers](context-providers.md)
-
-> [!div class="nextstepaction"]
-> [Storage](storage.md)
+> [Middleware](../middleware/index.md)

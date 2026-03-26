@@ -320,4 +320,4 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Azure OpenAI](./azure-openai.md)
+> [Microsoft Foundry](./microsoft-foundry.md)

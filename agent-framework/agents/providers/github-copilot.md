@@ -396,4 +396,4 @@ For more information on how to run and interact with agents, see the [Agent gett
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Custom Agents](./custom.md)
+> [Copilot Studio](./copilot-studio.md)
