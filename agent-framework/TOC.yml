@@ -164,6 +164,10 @@ items:
     href: integrations/purview.md
   - name: M365
     href: integrations/m365.md
+  - name: Neo4j GraphRAG Provider
+    href: integrations/neo4j-graphrag.md
+  - name: Neo4j Memory Provider
+    href: integrations/neo4j-memory.md
   - name: A2A Protocol
     href: integrations/a2a.md
   - name: AG-UI Protocol

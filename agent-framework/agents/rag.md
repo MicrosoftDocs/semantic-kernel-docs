@@ -553,56 +553,7 @@ This pattern works with any Semantic Kernel VectorStore connector, including:
 
 Each connector provides the same `create_search_function` method that can be bridged to Agent Framework tools, allowing you to choose the vector database that best fits your needs. See [the full list here](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors).
 
-### Using Neo4j for GraphRAG
-
-Neo4j offers two separate integrations for Agent Framework, each serving a different purpose. This provider (`agent-framework-neo4j`) is for **GraphRAG** — searching an existing knowledge graph to ground agent responses. For **persistent memory** that learns from conversations and builds a knowledge graph over time, see the [Neo4j Memory Provider](./agent-memory.md#neo4j-memory-provider).
-
-For knowledge graph scenarios where relationships between entities matter, the Neo4j Context Provider offers GraphRAG. It supports vector, fulltext, and hybrid search modes, with optional graph traversal to enrich results with related entities via custom Cypher queries.
-
-```python
-from agent_framework import Agent
-from agent_framework.azure import AzureAIClient
-from agent_framework_neo4j import Neo4jContextProvider, Neo4jSettings, AzureAIEmbedder
-from azure.identity.aio import AzureCliCredential
-
-settings = Neo4jSettings()
-
-neo4j_provider = Neo4jContextProvider(
-    uri=settings.uri,
-    username=settings.username,
-    password=settings.get_password(),
-    index_name="documentChunks",
-    index_type="vector",
-    embedder=AzureAIEmbedder(...),
-    top_k=5,
-    retrieval_query="""
-        MATCH (node)-[:FROM_DOCUMENT]->(doc:Document)
-        OPTIONAL MATCH (doc)<-[:FILED]-(company:Company)
-        RETURN node.text AS text, score, doc.title AS title, company.name AS company
-        ORDER BY score DESC
-    """,
-)
-
-async with (
-    neo4j_provider,
-    AzureAIClient(credential=AzureCliCredential(), project_endpoint=project_endpoint) as client,
-    Agent(
-        client=client,
-        instructions="You are a financial analyst assistant.",
-        context_providers=[neo4j_provider],
-    ) as agent,
-):
-    session = agent.create_session()
-    response = await agent.run("What risks does Acme Corp face?", session=session)
-```
-
-Key features:
-- **Index-driven**: Works with any Neo4j vector or fulltext index
-- **Graph traversal**: Custom Cypher queries enrich search results with related entities
-- **Search modes**: Vector (semantic similarity), fulltext (keyword/BM25), or hybrid (both combined)
-
-> [!TIP]
-> Install with `pip install agent-framework-neo4j`. See the [Neo4j Context Provider repository](https://github.com/neo4j-labs/neo4j-maf-provider) for complete documentation and the [PyPI package page](https://pypi.org/project/agent-framework-neo4j/) for version details.
+For knowledge graph RAG using graph traversal and Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/neo4j-graphrag.md).
 
 ::: zone-end
 
