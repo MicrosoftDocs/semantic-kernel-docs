@@ -12,15 +12,16 @@ ms.service: agent-framework
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                                  | C# | Python | Notes           |
-  |------------------------------------------|:--:|:------:|-----------------|
-  | Set Up the Azure OpenAI Client           | ✅ |   ✅   |                 |
-  | Define Your Agents                       | ✅ |   ✅   |                 |
-  | Set Up the Sequential Orchestration      | ✅ |   ✅   |                 |
-  | Run the Sequential Workflow              | ✅ |   ✅   |                 |
-  | Sample Output                            | ✅ |   ✅   |                 |
+  | Section                                       | C# | Python | Notes           |
+  |-----------------------------------------------|:--:|:------:|-----------------|
+  | Set Up the Azure OpenAI Client                | ✅ |   ✅   |                 |
+  | Define Your Agents                            | ✅ |   ✅   |                 |
+  | Set Up the Sequential Orchestration           | ✅ |   ✅   |                 |
+  | Run the Sequential Workflow                   | ✅ |   ✅   |                 |
+  | Sample Output                                 | ✅ |   ✅   |                 |
+  | Sequential with Human-in-the-Loop             | ✅ |   ✅   |                 |
   | Advanced: Mixing Agents with Custom Executors | ❌ |   ✅   | Python-specific |
-  | Key Concepts                             | ✅ |   ✅   |                 |
+  | Key Concepts                                  | ✅ |   ✅   |                 |
 -->
 
 # Microsoft Agent Framework Workflows Orchestrations - Sequential
@@ -38,6 +39,7 @@ In sequential orchestration, agents are organized in a pipeline. Each agent proc
 
 - How to create a sequential pipeline of agents
 - How to chain agents where each builds upon the previous output
+- How to add human-in-the-loop approval for sensitive tool calls
 - How to mix agents with custom executors for specialized tasks
 - How to track the conversation flow through the pipeline
 
@@ -145,6 +147,63 @@ Spanish_Translation: Assistant: French detected. ¡Hola, mundo!
 English_Translation: Assistant: Spanish detected. Hello, world!
 ```
 
+## Sequential Orchestration with Human-in-the-Loop
+
+Sequential orchestrations support human-in-the-loop interactions through tool approval. When agents use tools wrapped with `ApprovalRequiredAIFunction`, the workflow pauses and emits a `RequestInfoEvent` containing a `ToolApprovalRequestContent`. External systems (such as a human operator) can inspect the tool call, approve or reject it, and the workflow resumes accordingly.
+
+<p align="center">
+    <img src="../resources/images/orchestration-sequential-hitl.png" alt="Sequential Orchestration with Human-in-the-Loop" width="600">
+</p>
+
+> [!TIP]
+> For more details on the request and response model, see [Human-in-the-Loop](../human-in-the-loop.md).
+
+### Define Agents with Approval-Required Tools
+
+Create agents where sensitive tools are wrapped with `ApprovalRequiredAIFunction`:
+
+```csharp
+ChatClientAgent deployAgent = new(
+    client,
+    "You are a DevOps engineer. Check staging status first, then deploy to production.",
+    "DeployAgent",
+    "Handles deployments",
+    [
+        AIFunctionFactory.Create(CheckStagingStatus),
+        new ApprovalRequiredAIFunction(AIFunctionFactory.Create(DeployToProduction))
+    ]);
+
+ChatClientAgent verifyAgent = new(
+    client,
+    "You are a QA engineer. Verify that the deployment was successful and summarize the results.",
+    "VerifyAgent",
+    "Verifies deployments");
+```
+
+### Build and Run with Approval Handling
+
+Build the sequential workflow normally. The approval flow is handled through the event stream:
+
+```csharp
+var workflow = AgentWorkflowBuilder.BuildSequential([deployAgent, verifyAgent]);
+
+await foreach (WorkflowEvent evt in run.WatchStreamAsync())
+{
+    if (evt is RequestInfoEvent e &&
+        e.Request.TryGetDataAs(out ToolApprovalRequestContent? approvalRequest))
+    {
+        await run.SendResponseAsync(
+            e.Request.CreateResponse(approvalRequest.CreateResponse(approved: true)));
+    }
+}
+```
+
+> [!NOTE]
+> `AgentWorkflowBuilder.BuildSequential()` supports tool approval out of the box — no additional configuration is needed. When an agent calls a tool wrapped with `ApprovalRequiredAIFunction`, the workflow automatically pauses and emits a `RequestInfoEvent`.
+
+> [!TIP]
+> For a complete runnable example of this approval flow, see the [`GroupChatToolApproval` sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/Agents/GroupChatToolApproval). The same `RequestInfoEvent` handling pattern applies to other orchestrations.
+
 ## Key Concepts
 
 - **Sequential Processing**: Each agent processes the output of the previous agent in order
@@ -152,6 +211,8 @@ English_Translation: Assistant: Spanish detected. Hello, world!
 - **ChatClientAgent**: Represents an agent backed by a chat client with specific instructions
 - **InProcessExecution.RunStreamingAsync()**: Runs the workflow and returns a `StreamingRun` for real-time event streaming
 - **Event Handling**: Monitor agent progress through `AgentResponseUpdateEvent` and completion through `WorkflowOutputEvent`
+- **Tool Approval**: Wrap sensitive tools with `ApprovalRequiredAIFunction` to require human approval before execution
+- **RequestInfoEvent**: Emitted when a tool requires approval; contains `ToolApprovalRequestContent` with the tool call details
 
 ::: zone-end
 
@@ -301,12 +362,114 @@ sustainable transportation for daily commuting needs.
 Summary -> users:1 assistants:1
 ```
 
+## Sequential Orchestration with Human-in-the-Loop
+
+Sequential orchestrations support human-in-the-loop interactions in two ways: **tool approval** for controlling sensitive tool calls, and **request info** for pausing after each agent response to gather feedback.
+
+<p align="center">
+    <img src="../resources/images/orchestration-sequential-hitl.png" alt="Sequential Orchestration with Human-in-the-Loop" width="600">
+</p>
+
+> [!TIP]
+> For more details on the request and response model, see [Human-in-the-Loop](../human-in-the-loop.md).
+
+### Tool Approval in Sequential Workflows
+
+Use `@tool(approval_mode="always_require")` to mark tools that need human approval before execution. The workflow pauses and emits a `request_info` event when the agent tries to call the tool.
+
+```python
+@tool(approval_mode="always_require")
+def execute_database_query(query: str) -> str:
+    return f"Query executed successfully: {query}"
+
+
+database_agent = Agent(
+    client=chat_client,
+    name="DatabaseAgent",
+    instructions="You are a database assistant.",
+    tools=[execute_database_query],
+)
+
+workflow = SequentialBuilder(participants=[database_agent]).build()
+```
+
+Process the event stream and handle approval requests:
+
+```python
+async def process_event_stream(stream):
+    responses = {}
+    async for event in stream:
+        if event.type == "request_info" and event.data.type == "function_approval_request":
+            responses[event.request_id] = event.data.to_function_approval_response(approved=True)
+    return responses if responses else None
+
+stream = workflow.run("Check the schema and update all pending orders", stream=True)
+
+pending_responses = await process_event_stream(stream)
+while pending_responses is not None:
+    stream = workflow.run(stream=True, responses=pending_responses)
+    pending_responses = await process_event_stream(stream)
+```
+
+> [!TIP]
+> For a complete runnable example, see [`sequential_builder_tool_approval.py`](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/tool-approval/sequential_builder_tool_approval.py). Tool approval works with `SequentialBuilder` without any extra builder configuration.
+
+### Request Info for Agent Feedback
+
+Use `.with_request_info()` to pause after specific agents respond, allowing external input (such as human review) before the next agent begins:
+
+```python
+drafter = Agent(
+    client=chat_client,
+    name="drafter",
+    instructions="You are a document drafter. Create a brief draft on the given topic.",
+)
+
+editor = Agent(
+    client=chat_client,
+    name="editor",
+    instructions="You are an editor. Review and improve the draft. Incorporate any human feedback.",
+)
+
+finalizer = Agent(
+    client=chat_client,
+    name="finalizer",
+    instructions="You are a finalizer. Create a polished final version.",
+)
+
+# Enable request info for the editor agent only
+workflow = (
+    SequentialBuilder(participants=[drafter, editor, finalizer])
+    .with_request_info(agents=["editor"])
+    .build()
+)
+
+async def process_event_stream(stream):
+    responses = {}
+    async for event in stream:
+        if event.type == "request_info":
+            responses[event.request_id] = AgentRequestInfoResponse.approve()
+    return responses if responses else None
+
+stream = workflow.run("Write a brief introduction to artificial intelligence.", stream=True)
+
+pending_responses = await process_event_stream(stream)
+while pending_responses is not None:
+    stream = workflow.run(stream=True, responses=pending_responses)
+    pending_responses = await process_event_stream(stream)
+```
+
+> [!TIP]
+> See the full samples: [sequential tool approval](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/tool-approval/sequential_builder_tool_approval.py) and [sequential request info](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/human-in-the-loop/sequential_request_info.py).
+
 ## Key Concepts
 
 - **Shared Context**: Each participant receives the full conversation history, including all previous messages
 - **Order Matters**: Agents execute strictly in the order specified in the `participants` list
 - **Flexible Participants**: You can mix agents and custom executors in any order
 - **Conversation Flow**: Each agent/executor appends to the conversation, building a complete dialogue
+- **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human review
+- **Request Info**: Use `.with_request_info(agents=[...])` to pause after specific agents for external feedback
 
 ::: zone-end
 
