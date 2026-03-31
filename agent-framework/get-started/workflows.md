@@ -21,35 +21,35 @@ Define workflow steps (executors):
 using Microsoft.Agents.AI.Workflows;
 
 // Step 1: Convert text to uppercase
-class UpperCase : Executor
-{
-    [Handler]
-    public async Task ToUpperCase(string text, WorkflowContext<string> ctx)
-    {
-        await ctx.SendMessageAsync(text.ToUpper());
-    }
-}
+Func<string, string> uppercaseFunc = s => s.ToUpperInvariant();
+var uppercase = uppercaseFunc.BindAsExecutor("UppercaseExecutor");
 
 // Step 2: Reverse the string and yield output
-[Executor(Id = "reverse_text")]
-static async Task ReverseText(string text, WorkflowContext<Never, string> ctx)
+class ReverseTextExecutor() : Executor<string, string>("ReverseTextExecutor")
 {
-    var reversed = new string(text.Reverse().ToArray());
-    await ctx.YieldOutputAsync(reversed);
+    public override ValueTask<string> HandleAsync(string message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    {
+        return ValueTask.FromResult(string.Concat(message.Reverse()));
+    }
 }
+ReverseTextExecutor reverse = new();
 ```
 
 Build and run the workflow:
 
 ```csharp
-var upper = new UpperCase();
-var workflow = new AgentWorkflowBuilder(startExecutor: upper)
-    .AddEdge(upper, ReverseText)
-    .Build();
+WorkflowBuilder builder = new(uppercase);
+builder.AddEdge(uppercase, reverse).WithOutputFrom(reverse);
+var workflow = builder.Build();
 
-var result = await workflow.RunAsync("hello world");
-Console.WriteLine($"Output: {string.Join(", ", result.GetOutputs())}");
-// Output: DLROW OLLEH
+await using Run run = await InProcessExecution.RunAsync(workflow, "Hello, World!");
+foreach (WorkflowEvent evt in run.NewEvents)
+{
+    if (evt is ExecutorCompletedEvent executorComplete)
+    {
+        Console.WriteLine($"{executorComplete.ExecutorId}: {executorComplete.Data}");
+    }
+}
 ```
 
 > [!TIP]
