@@ -49,7 +49,7 @@ Console.WriteLine(await agent.RunAsync("What does the document say about today's
 
 The following example shows how to create an agent with the File Search tool and sample documents:
 
-### Define sample documents
+### File Search Tool Example
 
 ```python
 # Copyright (c) Microsoft. All rights reserved.
