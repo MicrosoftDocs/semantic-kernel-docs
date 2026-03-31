@@ -439,7 +439,7 @@ Here's a complete server implementation with state management:
 """AG-UI server with state management."""
 
 from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework_ag_ui import (
     AgentFrameworkAgent,
     RecipeConfirmationStrategy,
@@ -485,10 +485,11 @@ agent = Agent(
     - Add finishing touches: lemon zest, fresh parsley
     - Make instructions more detailed and professional
     """,
-    chat_client=AzureOpenAIChatClient(
+    chat_client=OpenAIChatCompletionClient(
+        model=deployment_name,
+        azure_endpoint=endpoint,
+        api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
-        endpoint=endpoint,
-        deployment_name=deployment_name,
     ),
     tools=[update_recipe],
 )

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 02/12/2026
+ms.date: 03/26/2026
 ms.service: agent-framework
 ---
 
@@ -20,7 +20,7 @@ Microsoft Agent Framework supports three distinct Azure OpenAI client types, eac
 | **Assistants** | [Assistants API](/azure/ai-services/openai/how-to/assistant) | Server-managed agents with code interpreter and file search |
 
 > [!TIP]
-> For direct OpenAI equivalents (`OpenAIChatClient`, `OpenAIResponsesClient`, `OpenAIAssistantsClient`), see the [OpenAI provider page](./openai.md). The tool support is identical.
+> For direct OpenAI equivalents (`OpenAIChatClient`, `OpenAIChatCompletionClient`, `OpenAIAssistantsClient`), see the [OpenAI provider page](./openai.md). The tool support is identical.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -140,223 +140,10 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-## Installation
-
-```bash
-pip install agent-framework --pre
-```
-
-## Configuration
+## Python guidance
 
 > [!IMPORTANT]
-> The `AzureOpenAIChatClient` and `AzureOpenAIAssistantsClient` require an **Azure OpenAI resource** endpoint (format: `https://<myresource>.openai.azure.com`). The `AzureOpenAIResponsesClient` can use either an Azure OpenAI resource endpoint **or** a [Microsoft Foundry project](/azure/ai-foundry/what-is-ai-foundry) endpoint (format: `https://<your-project>.services.ai.azure.com/api/projects/<project-id>`). If you need to use the Foundry Agent Service instead, see the [Foundry Agents provider page](./azure-ai-foundry.md).
-
-Each client type uses different environment variables:
-
-# [Chat Completion](#tab/aoai-chat-completion)
-
-```bash
-AZURE_OPENAI_ENDPOINT="https://<myresource>.openai.azure.com"
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-4o-mini"
-```
-
-# [Responses](#tab/aoai-responses)
-
-```bash
-AZURE_OPENAI_ENDPOINT="https://<myresource>.openai.azure.com"
-AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-4o-mini"
-```
-
-# [Assistants](#tab/aoai-assistants)
-
-```bash
-AZURE_OPENAI_ENDPOINT="https://<myresource>.openai.azure.com"
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-4o-mini"
-```
-
----
-
-Optionally, you can also set:
-
-```bash
-AZURE_OPENAI_API_VERSION="2024-10-21"  # Default API version
-AZURE_OPENAI_API_KEY="<your-api-key>"  # If not using Azure CLI authentication
-```
-
-All clients use Azure credentials for authentication. The simplest approach is `AzureCliCredential` after running `az login`. All Azure clients accept a unified `credential` parameter that supports `TokenCredential`, `AsyncTokenCredential`, or a callable token provider — token caching and refresh are handled automatically.
-
-## Create Azure OpenAI Agents
-
-# [Chat Completion](#tab/aoai-chat-completion)
-
-`AzureOpenAIChatClient` uses the Chat Completions API — the simplest option with broad model support.
-
-```python
-import asyncio
-from agent_framework.azure import AzureOpenAIChatClient
-from azure.identity import AzureCliCredential
-
-async def main():
-    agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
-        name="Joker",
-        instructions="You are good at telling jokes.",
-    )
-    result = await agent.run("Tell me a joke about a pirate.")
-    print(result)
-
-asyncio.run(main())
-```
-
-**Supported tools:** Function tools, web search, local MCP tools.
-
-# [Responses](#tab/aoai-responses)
-
-`AzureOpenAIResponsesClient` uses the Responses API — the most feature-rich option with hosted tools.
-
-```python
-import asyncio
-from agent_framework.azure import AzureOpenAIResponsesClient
-from azure.identity import AzureCliCredential
-
-async def main():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
-        name="FullFeaturedAgent",
-        instructions="You are a helpful assistant with access to many tools.",
-    )
-    result = await agent.run("Write and run a Python script that calculates fibonacci numbers.")
-    print(result)
-
-asyncio.run(main())
-```
-
-### Responses Client with Microsoft Foundry project endpoint
-
-Instead of an Azure OpenAI resource endpoint, `AzureOpenAIResponsesClient` can also be created from a [Microsoft Foundry project](/azure/ai-foundry/what-is-ai-foundry) endpoint. Use a Foundry project endpoint when you want to access models deployed through a Microsoft Foundry project rather than a standalone Azure OpenAI resource:
-
-```python
-from agent_framework.azure import AzureOpenAIResponsesClient
-from azure.identity import AzureCliCredential
-
-client = AzureOpenAIResponsesClient(
-    project_endpoint="https://<your-project>.services.ai.azure.com/api/projects/<project-id>",
-    deployment_name="gpt-4o-mini",
-    credential=AzureCliCredential(),
-)
-agent = client.as_agent(
-    name="FoundryResponsesAgent",
-    instructions="You are a helpful assistant.",
-)
-```
-
-**Supported tools:** Function tools, tool approval, code interpreter, file search, web search, hosted MCP, local MCP tools.
-
-### Hosted Tools with Responses Client
-
-The Responses client provides `get_*_tool()` methods for each hosted tool type:
-
-```python
-async def hosted_tools_example():
-    client = AzureOpenAIResponsesClient(credential=AzureCliCredential())
-
-    code_interpreter = client.get_code_interpreter_tool()
-    web_search = client.get_web_search_tool()
-    file_search = client.get_file_search_tool(vector_store_ids=["vs_abc123"])
-    mcp_tool = client.get_mcp_tool(
-        name="GitHub",
-        url="https://api.githubcopilot.com/mcp/",
-        approval_mode="never_require",
-    )
-
-    agent = client.as_agent(
-        name="PowerAgent",
-        instructions="You have access to code execution, web search, files, and GitHub.",
-        tools=[code_interpreter, web_search, file_search, mcp_tool],
-    )
-    result = await agent.run("Search the web for Python best practices, then write a summary.")
-    print(result)
-```
-
-# [Assistants](#tab/aoai-assistants)
-
-`AzureOpenAIAssistantsClient` uses the Assistants API — server-managed agents with built-in code interpreter and file search. Note the `async with` context manager for automatic assistant lifecycle management.
-
-```python
-import asyncio
-from agent_framework.azure import AzureOpenAIAssistantsClient
-from azure.identity import AzureCliCredential
-
-async def main():
-    async with AzureOpenAIAssistantsClient(credential=AzureCliCredential()).as_agent(
-        name="DataAnalyst",
-        instructions="You analyze data using code execution.",
-    ) as agent:
-        result = await agent.run("Calculate the first 20 prime numbers.")
-        print(result)
-
-asyncio.run(main())
-```
-
-**Supported tools:** Function tools, code interpreter, file search, local MCP tools.
-
----
-
-## Common Features
-
-All three client types support these standard agent features:
-
-### Function Tools
-
-```python
-from agent_framework import tool
-
-@tool
-def get_weather(location: str) -> str:
-    """Get the weather for a given location."""
-    return f"The weather in {location} is sunny, 25°C."
-
-async def example():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
-        instructions="You are a weather assistant.",
-        tools=get_weather,
-    )
-    result = await agent.run("What's the weather in Tokyo?")
-    print(result)
-```
-
-### Multi-Turn Conversations
-
-```python
-async def thread_example():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
-        instructions="You are a helpful assistant.",
-    )
-    session = await agent.create_session()
-
-    result1 = await agent.run("My name is Alice", session=session)
-    print(result1)
-    result2 = await agent.run("What's my name?", session=session)
-    print(result2)  # Remembers "Alice"
-```
-
-### Streaming
-
-```python
-async def streaming_example():
-    agent = AzureOpenAIResponsesClient(credential=AzureCliCredential()).as_agent(
-        instructions="You are a creative storyteller.",
-    )
-    print("Agent: ", end="", flush=True)
-    async for chunk in agent.run("Tell me a short story about AI.", stream=True):
-        if chunk.text:
-            print(chunk.text, end="", flush=True)
-    print()
-```
-
-## Using the Agent
-
-All client types produce a standard `Agent` that supports the same operations.
-
-For more information, see the [Get Started tutorials](../../get-started/your-first-agent.md).
+> Python Azure OpenAI guidance now lives on the [OpenAI provider page](./openai.md). Use that page for `OpenAIChatCompletionClient`, `OpenAIChatClient`, and `OpenAIEmbeddingClient`, deployment-name-to-`model` mapping, explicit Azure routing inputs such as `credential` or `azure_endpoint`, `api_version` configuration after Azure is selected, plus `base_url` guidance for full `.../openai/v1` URLs. If `OPENAI_API_KEY` is also present, the generic clients stay on OpenAI unless you pass explicit Azure routing inputs. If only `AZURE_OPENAI_*` settings are present, Azure environment fallback still works. Deprecated `AzureOpenAI*` compatibility classes still exist under `agent_framework.azure` for migration, but new Python code should use `agent_framework.openai`. For new Python solutions, we recommend deploying models with Microsoft Foundry and connecting to them with `FoundryChatClient` instead of staying on the Azure OpenAI-specific path. If you need Foundry project endpoints or the Foundry Agent Service instead, see the [Foundry provider page](./microsoft-foundry.md).
 
 ::: zone-end
 

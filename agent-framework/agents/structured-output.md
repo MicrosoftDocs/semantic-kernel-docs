@@ -222,11 +222,17 @@ class PersonInfo(BaseModel):
 Now you can create an agent using the Azure OpenAI Chat Client:
 
 ```python
-from agent_framework.azure import AzureOpenAIChatClient
+import os
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import AzureCliCredential
 
 # Create the agent using Azure OpenAI Chat Client
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+agent = OpenAIChatCompletionClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+).as_agent(
     name="HelpfulAssistant",
     instructions="You are a helpful assistant that extracts person information from text."
 )
@@ -285,7 +291,7 @@ if final_response.value:
 
 import asyncio
 
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 from pydantic import BaseModel
 
 """
@@ -306,7 +312,7 @@ class OutputStruct(BaseModel):
 async def non_streaming_example() -> None:
     print("=== Non-streaming example ===")
 
-    agent = OpenAIResponsesClient().as_agent(
+    agent = OpenAIChatClient().as_agent(
         name="CityAgent",
         instructions="You are a helpful agent that describes cities in a structured format.",
     )
@@ -327,7 +333,7 @@ async def non_streaming_example() -> None:
 async def streaming_example() -> None:
     print("=== Streaming example ===")
 
-    agent = OpenAIResponsesClient().as_agent(
+    agent = OpenAIChatClient().as_agent(
         name="CityAgent",
         instructions="You are a helpful agent that describes cities in a structured format.",
     )

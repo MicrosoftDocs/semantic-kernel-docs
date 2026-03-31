@@ -219,9 +219,9 @@ Coming soon...
 Non-isolated example (shared agent state):
 
 ```python
-writer_agent = AzureOpenAIResponsesClient(
+writer_agent = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 ).as_agent(
     instructions=(
@@ -229,9 +229,9 @@ writer_agent = AzureOpenAIResponsesClient(
     ),
     name="writer_agent",
 )
-reviewer_agent = AzureOpenAIResponsesClient(
+reviewer_agent = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 ).as_agent(
     instructions=(
@@ -255,9 +255,9 @@ def create_workflow() -> Workflow:
     Each call produces new agent instances with their own threads,
     ensuring no conversation history leaks between workflow runs.
     """
-    writer_agent = AzureOpenAIResponsesClient(
+    writer_agent = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=AzureCliCredential(),
     ).as_agent(
         instructions=(
@@ -265,9 +265,9 @@ def create_workflow() -> Workflow:
         ),
         name="writer_agent",
     )
-    reviewer_agent = AzureOpenAIResponsesClient(
+    reviewer_agent = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=AzureCliCredential(),
     ).as_agent(
         instructions=(

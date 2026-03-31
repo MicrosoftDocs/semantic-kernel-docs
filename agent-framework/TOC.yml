@@ -102,6 +102,8 @@ items:
       href: agents/providers/openai.md
     - name: Microsoft Foundry
       href: agents/providers/microsoft-foundry.md
+    - name: Foundry Local
+      href: agents/providers/foundry-local.md
     - name: Anthropic
       href: agents/providers/anthropic.md
     - name: Ollama

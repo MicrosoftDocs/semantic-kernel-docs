@@ -109,7 +109,7 @@ Use [the vector store connectors documentation](/semantic-kernel/concepts/vector
 from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
 from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
 from semantic_kernel.functions import KernelParameterMetadata
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 # Define your data model
 class SupportArticle:
@@ -158,7 +158,7 @@ async with collection:
     search_tool = search_function.as_agent_framework_tool()
 
     # Create an agent with the search tool
-    agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(
+    agent = OpenAIChatClient(model="gpt-4o").as_agent(
         instructions="You are a helpful support specialist. Use the search tool to find relevant information before answering questions. Always cite your sources.",
         tools=search_tool
     )

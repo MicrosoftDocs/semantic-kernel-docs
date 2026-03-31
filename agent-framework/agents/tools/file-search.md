@@ -57,7 +57,7 @@ The following example shows how to create an agent with the File Search tool and
 import asyncio
 
 from agent_framework import Agent, Content
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 """
 OpenAI Responses Client with File Search Example
@@ -69,7 +69,7 @@ for direct document-based question answering and information retrieval.
 # Helper functions
 
 
-async def create_vector_store(client: OpenAIResponsesClient) -> tuple[str, Content]:
+async def create_vector_store(client: OpenAIChatClient) -> tuple[str, Content]:
     """Create a vector store with sample documents."""
     file = await client.client.files.create(
         file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), purpose="user_data"
@@ -85,14 +85,14 @@ async def create_vector_store(client: OpenAIResponsesClient) -> tuple[str, Conte
     return file.id, Content.from_hosted_vector_store(vector_store_id=vector_store.id)
 
 
-async def delete_vector_store(client: OpenAIResponsesClient, file_id: str, vector_store_id: str) -> None:
+async def delete_vector_store(client: OpenAIChatClient, file_id: str, vector_store_id: str) -> None:
     """Delete the vector store after using it."""
     await client.client.vector_stores.delete(vector_store_id=vector_store_id)
     await client.client.files.delete(file_id=file_id)
 
 
 async def main() -> None:
-    client = OpenAIResponsesClient()
+    client = OpenAIChatClient()
 
     message = "What is the weather today? Do a file search to find the answer."
 
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 import asyncio
 
 from agent_framework import Agent, Content
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 """
 OpenAI Responses Client with File Search Example
@@ -142,7 +142,7 @@ for direct document-based question answering and information retrieval.
 # Helper functions
 
 
-async def create_vector_store(client: OpenAIResponsesClient) -> tuple[str, Content]:
+async def create_vector_store(client: OpenAIChatClient) -> tuple[str, Content]:
     """Create a vector store with sample documents."""
     file = await client.client.files.create(
         file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), purpose="user_data"
@@ -158,14 +158,14 @@ async def create_vector_store(client: OpenAIResponsesClient) -> tuple[str, Conte
     return file.id, Content.from_hosted_vector_store(vector_store_id=vector_store.id)
 
 
-async def delete_vector_store(client: OpenAIResponsesClient, file_id: str, vector_store_id: str) -> None:
+async def delete_vector_store(client: OpenAIChatClient, file_id: str, vector_store_id: str) -> None:
     """Delete the vector store after using it."""
     await client.client.vector_stores.delete(vector_store_id=vector_store_id)
     await client.client.files.delete(file_id=file_id)
 
 
 async def main() -> None:
-    client = OpenAIResponsesClient()
+    client = OpenAIChatClient()
 
     message = "What is the weather today? Do a file search to find the answer."
 

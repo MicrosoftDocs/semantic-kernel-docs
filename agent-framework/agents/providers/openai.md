@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 02/11/2026
+ms.date: 03/26/2026
 ms.service: agent-framework
 ---
 
@@ -19,8 +19,6 @@ Microsoft Agent Framework supports three distinct OpenAI client types, each targ
 | **Responses** | [Responses API](https://platform.openai.com/docs/api-reference/responses) | Full-featured agents with hosted tools (code interpreter, file search, web search, hosted MCP) |
 | **Assistants** | [Assistants API](https://platform.openai.com/docs/api-reference/assistants) | Server-managed agents with code interpreter and file search |
 
-> [!TIP]
-> For Azure OpenAI equivalents (`AzureOpenAIChatClient`, `AzureOpenAIResponsesClient`, `AzureOpenAIAssistantsClient`), see the [Azure OpenAI provider page](./azure-openai.md). The tool support is identical.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -105,11 +103,17 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
+> [!TIP]
+> In Python, Azure OpenAI now uses the same `agent_framework.openai` clients shown here. Pass explicit Azure routing inputs such as `credential` or `azure_endpoint` when you want Azure routing, then set `api_version` for the Azure API surface you want to use. If `OPENAI_API_KEY` is configured, the generic clients stay on OpenAI even when `AZURE_OPENAI_*` variables are also present. If you already have a full `.../openai/v1` URL, use `base_url` instead of `azure_endpoint`. For Microsoft Foundry project endpoints and the Foundry Agent Service, see the [Microsoft Foundry provider page](./microsoft-foundry.md). For local runtimes, see [Foundry Local](./foundry-local.md).
+
+
 ## Installation
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework agent-framework-openai --pre
 ```
+
+`agent-framework-openai` is the optional Python provider package for both direct OpenAI and Azure OpenAI usage.
 
 ## Configuration
 
@@ -119,37 +123,92 @@ Each client type uses different environment variables:
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
-OPENAI_CHAT_MODEL_ID="gpt-4o-mini"
+OPENAI_MODEL="gpt-4o-mini"
 ```
 
 # [Responses](#tab/oai-responses)
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
-OPENAI_RESPONSES_MODEL_ID="gpt-4o-mini"
+OPENAI_MODEL="gpt-4o-mini"
 ```
 
 # [Assistants](#tab/oai-assistants)
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
-OPENAI_CHAT_MODEL_ID="gpt-4o-mini"
+OPENAI_MODEL="gpt-4o-mini"
 ```
 
 ---
+
+### Azure OpenAI with the same clients
+
+Azure OpenAI now uses the same Python OpenAI clients as direct OpenAI. The preferred and clearest Azure pattern is to pass explicit Azure routing inputs such as `credential` or `azure_endpoint`, then set `api_version` for Azure once routing is selected. If `OPENAI_API_KEY` is set, the generic clients stay on OpenAI unless you pass those Azure routing inputs. If you only have `AZURE_OPENAI_*` settings, Azure environment fallback still works.
+
+```bash
+AZURE_OPENAI_ENDPOINT="https://<resource>.openai.azure.com"
+AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+AZURE_OPENAI_API_VERSION="your-api-version"
+```
+
+```python
+import asyncio
+import os
+from agent_framework.openai import OpenAIChatClient
+from azure.identity import AzureCliCredential
+
+async def main():
+    agent = OpenAIChatClient(
+        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+        api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        credential=AzureCliCredential(),
+    ).as_agent(
+        name="AzureOpenAIResponsesAgent",
+        instructions="You are a helpful assistant.",
+    )
+
+    result = await agent.run("Hello!")
+    print(result)
+
+asyncio.run(main())
+```
+
+If you already have a full Azure OpenAI URL that ends with `/openai/v1`, pass it as `base_url` instead of `azure_endpoint`. Keep `api_version` aligned to the Azure OpenAI API surface you are using. If `OPENAI_API_KEY` is also set in your environment, these explicit Azure inputs keep the client on Azure.
+
+> [!NOTE]
+> Use `OpenAIChatClient` for the Responses API. For Azure key auth, you can still pass `api_key`, but `credential=` is now the preferred Azure auth surface.
+
+### Azure embeddings with the same client family
+
+`OpenAIEmbeddingClient` follows the same routing rules as the chat clients. For Azure embeddings, pass the deployment name as `model` and prefer explicit Azure inputs:
+
+```python
+import os
+from agent_framework.openai import OpenAIEmbeddingClient
+from azure.identity import AzureCliCredential
+
+client = OpenAIEmbeddingClient(
+    model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+)
+```
 
 ## Create OpenAI Agents
 
 # [Chat Completion](#tab/oai-chat-completion)
 
-`OpenAIChatClient` uses the Chat Completions API — the simplest option with broad model support.
+`OpenAIChatCompletionClient` uses the Chat Completions API — the simplest option with broad model support.
 
 ```python
 import asyncio
-from agent_framework.openai import OpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 
 async def main():
-    agent = OpenAIChatClient().as_agent(
+    agent = OpenAIChatCompletionClient().as_agent(
         name="HelpfulAssistant",
         instructions="You are a helpful assistant.",
     )
@@ -165,7 +224,7 @@ asyncio.run(main())
 
 ```python
 async def web_search_example():
-    client = OpenAIChatClient()
+    client = OpenAIChatCompletionClient()
     web_search = client.get_web_search_tool()
 
     agent = client.as_agent(
@@ -179,14 +238,14 @@ async def web_search_example():
 
 # [Responses](#tab/oai-responses)
 
-`OpenAIResponsesClient` uses the Responses API — the most feature-rich option with hosted tools.
+`OpenAIChatClient` uses the Responses API — the most feature-rich option with hosted tools.
 
 ```python
 import asyncio
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 async def main():
-    agent = OpenAIResponsesClient().as_agent(
+    agent = OpenAIChatClient().as_agent(
         name="FullFeaturedAgent",
         instructions="You are a helpful assistant with access to many tools.",
     )
@@ -204,7 +263,7 @@ The Responses client provides `get_*_tool()` methods for each hosted tool type:
 
 ```python
 async def hosted_tools_example():
-    client = OpenAIResponsesClient()
+    client = OpenAIChatClient()
 
     # Each tool is created via a client method
     code_interpreter = client.get_code_interpreter_tool()
@@ -228,6 +287,9 @@ async def hosted_tools_example():
 # [Assistants](#tab/oai-assistants)
 
 `OpenAIAssistantProvider` uses the Assistants API — server-managed agents with built-in code interpreter and file search. The provider manages assistant lifecycle automatically.
+
+> [!WARNING]
+> Python Assistants API support (`OpenAIAssistantProvider` / `OpenAIAssistantsClient`) is a compatibility path and will be removed before GA. For new Python code, prefer the Responses API via `OpenAIChatClient`.
 
 ```python
 import asyncio
@@ -272,7 +334,7 @@ def get_weather(location: str) -> str:
     return f"The weather in {location} is sunny, 25°C."
 
 async def example():
-    agent = OpenAIResponsesClient().as_agent(
+    agent = OpenAIChatClient().as_agent(
         instructions="You are a weather assistant.",
         tools=get_weather,
     )
@@ -284,7 +346,7 @@ async def example():
 
 ```python
 async def thread_example():
-    agent = OpenAIResponsesClient().as_agent(
+    agent = OpenAIChatClient().as_agent(
         instructions="You are a helpful assistant.",
     )
     session = await agent.create_session()
@@ -299,7 +361,7 @@ async def thread_example():
 
 ```python
 async def streaming_example():
-    agent = OpenAIResponsesClient().as_agent(
+    agent = OpenAIChatClient().as_agent(
         instructions="You are a creative storyteller.",
     )
     print("Agent: ", end="", flush=True)

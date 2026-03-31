@@ -149,13 +149,19 @@ AZURE_OPENAI_ENDPOINT=https://my-resource.openai.azure.com/
 Register cleanup hooks to properly close credentials and resources on shutdown:
 
 ```python
+import os
 from azure.identity.aio import DefaultAzureCredential
 from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework_devui import register_cleanup, serve
 
 credential = DefaultAzureCredential()
-client = AzureOpenAIChatClient()
+client = OpenAIChatCompletionClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=credential,
+)
 agent = Agent(name="MyAgent", chat_client=client)
 
 # Register cleanup hook - credential will be closed on shutdown
