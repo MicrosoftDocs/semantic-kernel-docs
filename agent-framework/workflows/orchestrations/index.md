@@ -20,6 +20,9 @@ Agent Framework provides several built-in multi-agent orchestration patterns:
 | [Group Chat](group-chat.md) | Agents collaborate in a shared conversation |
 | [Magentic](magentic.md) | A manager agent dynamically coordinates specialized agents |
 
+> [!TIP]
+> Orchestrations support **human-in-the-loop** interactions through tool approval and request info. Agents can use approval-required tools that pause the workflow for human review before execution. See [Human-in-the-Loop](../human-in-the-loop.md) and the [sequential orchestration HITL tutorial](sequential.md#sequential-orchestration-with-human-in-the-loop) for details.
+
 ## Next steps
 
 > [!div class="nextstepaction"]

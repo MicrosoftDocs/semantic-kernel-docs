@@ -31,7 +31,7 @@ var instrumentedChatClient = new AzureOpenAIClient(new Uri(endpoint), new Defaul
     .GetChatClient(deploymentName)
     .AsIChatClient() // Converts a native OpenAI SDK ChatClient into a Microsoft.Extensions.AI.IChatClient
     .AsBuilder()
-    .UseOpenTelemetry(sourceName: "MyApplication", configure: (cfg) => cfg.EnableSensitiveData = true)    // Enable OpenTelemetry instrumentation with sensitive data
+    .UseOpenTelemetry(sourceName: SourceName, configure: (cfg) => cfg.EnableSensitiveData = true)    // Enable OpenTelemetry instrumentation with sensitive data
     .Build();
 ```
 
@@ -46,7 +46,7 @@ var agent = new ChatClientAgent(
     name: "OpenTelemetryDemoAgent",
     instructions: "You are a helpful assistant that provides concise and informative responses.",
     tools: [AIFunctionFactory.Create(GetWeatherAsync)]
-).WithOpenTelemetry(sourceName: "MyApplication", enableSensitiveData: true);    // Enable OpenTelemetry instrumentation with sensitive data
+).WithOpenTelemetry(sourceName: SourceName, configure: (cfg) => cfg.EnableSensitiveData = true); // Enable OpenTelemetry instrumentation with sensitive data
 ```
 
 > [!IMPORTANT]
@@ -70,7 +70,9 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using System;
 
-var SourceName = "MyApplication";
+// The source name under which all activities, metrics, and logs will be emitted.
+const string SourceName = "MyApplication";
+const string ServiceName = "AgentOpenTelemetry";
 
 var applicationInsightsConnectionString = Environment.GetEnvironmentVariable("APPLICATION_INSIGHTS_CONNECTION_STRING")
     ?? throw new InvalidOperationException("APPLICATION_INSIGHTS_CONNECTION_STRING is not set.");
@@ -82,11 +84,12 @@ var resourceBuilder = ResourceBuilder
 using var tracerProvider = Sdk.CreateTracerProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddSource(SourceName)
-    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry.
-    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry.
     .AddAzureMonitorTraceExporter(options => options.ConnectionString = applicationInsightsConnectionString)
     .Build();
 ```
+
+> [!TIP]
+> The `AddSource` method is used to specify the source name which the provider will listen to. Make sure it matches the source name you used in your instrumentation code (e.g., `UseOpenTelemetry(sourceName: SourceName)`). If a source name is not specified in the instrumentation code, it will default to `Experimental.Microsoft.Agents.AI`, in which case you should use `AddSource("Experimental.Microsoft.Agents.AI")` in your tracer provider and meter provider configuration.
 
 > [!TIP]
 > Depending on your backend, you can use different exporters. For more information, see the [OpenTelemetry .NET documentation](https://opentelemetry.io/docs/instrumentation/net/exporters/). For local development, consider using the [Aspire Dashboard](#aspire-dashboard).
@@ -112,7 +115,6 @@ var resourceBuilder = ResourceBuilder
 using var meterProvider = Sdk.CreateMeterProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddSource(SourceName)
-    .AddMeter("*Microsoft.Agents.AI") // Agent Framework metrics
     .AddAzureMonitorMetricExporter(options => options.ConnectionString = applicationInsightsConnectionString)
     .Build();
 ```
@@ -154,8 +156,6 @@ Consider using the Aspire Dashboard as a quick way to visualize your traces and 
 using var tracerProvider = Sdk.CreateTracerProviderBuilder()
     .SetResourceBuilder(resourceBuilder)
     .AddSource(SourceName)
-    .AddSource("*Microsoft.Extensions.AI") // Listen to the Experimental.Microsoft.Extensions.AI source for chat client telemetry.
-    .AddSource("*Microsoft.Extensions.Agents*") // Listen to the Experimental.Microsoft.Extensions.Agents source for agent telemetry.
     .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
     .Build();
 ```
@@ -174,16 +174,19 @@ See a full example of an agent with OpenTelemetry enabled in the [Agent Framewor
 ## Dependencies
 
 ### Included packages
+
 To enable observability in your Python application, the following OpenTelemetry packages are installed by default:
+
 - [opentelemetry-api](https://pypi.org/project/opentelemetry-api/)
 - [opentelemetry-sdk](https://pypi.org/project/opentelemetry-sdk/)
 - [opentelemetry-semantic-conventions-ai](https://pypi.org/project/opentelemetry-semantic-conventions-ai/)
 
-
 ### Exporters
+
 We do *not* install exporters by default to prevent unnecessary dependencies and potential issues with auto instrumentation. There is a large variety of exporters available for different backends, so you can choose the ones that best fit your needs.
 
 Some common exporters you may want to install based on your needs:
+
 - For gRPC protocol support: install `opentelemetry-exporter-otlp-proto-grpc`
 - For HTTP protocol support: install `opentelemetry-exporter-otlp-proto-http`
 - For Azure Application Insights: install `azure-monitor-opentelemetry`
@@ -191,6 +194,7 @@ Some common exporters you may want to install based on your needs:
 Use the [OpenTelemetry Registry](https://opentelemetry.io/ecosystem/registry/?language=python&component=instrumentation) to find more exporters and instrumentation packages.
 
 ## Enable Observability (Python)
+
 ### Five patterns for configuring observability
 
 We've identified multiple ways to configure observability in your application, depending on your needs:
@@ -330,6 +334,7 @@ The following environment variables control Agent Framework observability:
 The `configure_otel_providers()` function automatically reads standard OpenTelemetry environment variables:
 
 **OTLP Configuration** (for Aspire Dashboard, Jaeger, etc.):
+
 - `OTEL_EXPORTER_OTLP_ENDPOINT` - Base endpoint for all signals (e.g., `http://localhost:4317`)
 - `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` - Traces-specific endpoint (overrides base)
 - `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT` - Metrics-specific endpoint (overrides base)
@@ -338,6 +343,7 @@ The `configure_otel_providers()` function automatically reads standard OpenTelem
 - `OTEL_EXPORTER_OTLP_HEADERS` - Headers for all signals (e.g., `key1=value1,key2=value2`)
 
 **Service Identification**:
+
 - `OTEL_SERVICE_NAME` - Service name (default: `agent_framework`)
 - `OTEL_SERVICE_VERSION` - Service version (default: package version)
 - `OTEL_RESOURCE_ATTRIBUTES` - Additional resource attributes
@@ -356,7 +362,8 @@ Make sure you have your Foundry configured with a Azure Monitor instance, see [d
 pip install azure-monitor-opentelemetry
 ```
 
-#### Configure observability directly from the `AzureAIClient`:
+#### Configure observability directly from the `AzureAIClient`
+
 For Foundry projects, you can configure observability directly from the `AzureAIClient`:
 
 ```python
@@ -377,8 +384,8 @@ async def main():
 > [!TIP]
 > The arguments for `client.configure_azure_monitor()` are passed through to the underlying `configure_azure_monitor()` function from the `azure-monitor-opentelemetry` package, see [documentation](/python/api/overview/azure/monitor-opentelemetry-readme#usage) for details, we take care of setting the connection string and resource.
 
+#### Configure azure monitor and optionally enable instrumentation
 
-#### Configure azure monitor and optionally enable instrumentation:
 For non-Foundry projects with Application Insights, make sure you setup a custom agent in Foundry, see [details](/azure/ai-foundry/control-plane/register-custom-agent).
 
 Then run your agent with the same _OpenTelemetry agent ID_ as registered in Foundry, and configure azure monitor as follows:
