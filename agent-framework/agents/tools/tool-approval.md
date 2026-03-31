@@ -62,7 +62,7 @@ AIAgent agent = new AzureOpenAIClient(
      .AsAIAgent(instructions: "You are a helpful assistant", tools: [approvalRequiredWeatherFunction]);
 ```
 
-Since you now have a function that requires approval, the agent might respond with a request for approval, instead of executing the function directly and returning the result.
+Since you now have a function that requires approval, the agent might respond with a request for approval instead of executing the function directly and returning the result.
 You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
 
 ```csharp
@@ -97,7 +97,7 @@ Console.WriteLine(await agent.RunAsync(approvalMessage, session));
 Whenever you are using function tools with human in the loop approvals, remember to check for `FunctionApprovalRequestContent` instances in the response, after each agent run, until all function calls have been approved or rejected.
 
 > [!TIP]
-> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+> See the [.NET Agents Step 01: Using Function Tools with Approvals](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/Agents/Agent_Step01_UsingFunctionToolsWithApprovals) sample for a complete, runnable example.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -153,7 +153,7 @@ async with Agent(
     # Agent is ready to use
 ```
 
-Since you now have a function that requires approval, the agent might respond with a request for approval, instead of executing the function directly and returning the result.
+Since you now have a function that requires approval, the agent might respond with a request for approval instead of executing the function directly and returning the result.
 You can check the response for any user input requests, which indicates that the agent requires user approval for a function.
 
 ```python
@@ -181,7 +181,7 @@ user_approval = True  # or False to reject
 
 # Create the approval response
 approval_message = Message(
-    role="user", 
+    role="user",
     contents=[user_input_needed.create_response(user_approval)]
 )
 
@@ -202,32 +202,32 @@ When working with multiple function calls that require approval, you may need to
 async def handle_approvals(query: str, agent) -> str:
     """Handle function call approvals in a loop."""
     current_input = query
-    
+
     while True:
         result = await agent.run(current_input)
-        
+
         if not result.user_input_requests:
             # No more approvals needed, return the final result
             return result.text
-        
+
         # Build new input with all context
         new_inputs = [query]
-        
+
         for user_input_needed in result.user_input_requests:
             print(f"Approval needed for: {user_input_needed.function_call.name}")
             print(f"Arguments: {user_input_needed.function_call.arguments}")
-            
+
             # Add the assistant message with the approval request
             new_inputs.append(Message(role="assistant", contents=[user_input_needed]))
-            
+
             # Get user approval (in practice, this would be interactive)
             user_approval = True  # Replace with actual user input
-            
+
             # Add the user's approval response
             new_inputs.append(
                 Message(role="user", contents=[user_input_needed.create_response(user_approval)])
             )
-        
+
         # Continue with all the context
         current_input = new_inputs
 
