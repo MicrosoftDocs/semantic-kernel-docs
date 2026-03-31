@@ -34,7 +34,7 @@ The sample requires two environment variables:
 - `AZURE_FOUNDRY_PROJECT_MODEL_ID`: The model deployment name (defaults to "gpt-4.1-mini")
 
 ```csharp
-var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT") 
+var endpoint = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_ENDPOINT")
     ?? throw new InvalidOperationException("AZURE_FOUNDRY_PROJECT_ENDPOINT is not set.");
 var model = Environment.GetEnvironmentVariable("AZURE_FOUNDRY_PROJECT_MODEL_ID") ?? "gpt-4.1-mini";
 ```
@@ -130,8 +130,8 @@ The agent is invoked with a question and executes using the configured MCP tools
 ```csharp
 AgentSession session = await agent.CreateSessionAsync();
 var response = await agent.RunAsync(
-    "Please summarize the Azure AI Agent documentation related to MCP Tool calling?", 
-    session, 
+    "Please summarize the Azure AI Agent documentation related to MCP Tool calling?",
+    session,
     runOptions);
 Console.WriteLine(response);
 ```
@@ -145,7 +145,7 @@ await persistentAgentsClient.Administration.DeleteAgentAsync(agent.Id);
 ```
 
 > [!TIP]
-> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+> See the [.NET Foundry Agent Hosted MCP Sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/ModelContextProtocol/FoundryAgent_Hosted_MCP) for a complete runnable example.
 
 
 ::: zone-end
@@ -190,11 +190,11 @@ async def basic_foundry_mcp_example():
 
         # Create agent with hosted MCP tool
         agent = client.as_agent(
-            name="MicrosoftLearnAgent", 
+            name="MicrosoftLearnAgent",
             instructions="You answer questions by searching Microsoft Learn content only.",
             tools=learn_mcp,
         )
-        
+
         # Simple query without approval workflow
         result = await agent.run(
             "Please summarize the Azure AI Agent documentation related to MCP tool calling?"
@@ -223,7 +223,7 @@ async def multi_tool_mcp_example():
             approval_mode="never_require",  # Auto-approve documentation searches
         )
         github_mcp = client.get_mcp_tool(
-            name="GitHub MCP", 
+            name="GitHub MCP",
             url="https://api.github.com/mcp",
             approval_mode="always_require",  # Require approval for GitHub operations
             headers={"Authorization": "Bearer github-token"},
@@ -235,7 +235,7 @@ async def multi_tool_mcp_example():
             instructions="You can search documentation and access GitHub repositories.",
             tools=[learn_mcp, github_mcp],
         )
-        
+
         result = await agent.run(
             "Find Azure documentation and also check the latest commits in microsoft/semantic-kernel"
         )
