@@ -84,7 +84,7 @@ async def streaming_example():
     agent = CopilotStudioAgent()
 
     print("Agent: ", end="", flush=True)
-    async for chunk in agent.run("What is the capital of France?", stream=True):
+    async for chunk in agent.run("What is the largest city in France?", stream=True):
         if chunk.text:
             print(chunk.text, end="", flush=True)
     print()
