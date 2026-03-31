@@ -65,10 +65,9 @@ from neo4j_agent_memory.integrations.microsoft_agent import (
     create_memory_tools,
 )
 
-# MemorySettings accepts nested configuration for Neo4j, embedding, and LLM providers.
-# When loading from environment variables or .env files, use the NAM_ prefix with __
-# as nested delimiter (e.g. NAM_NEO4J__URI, NAM_NEO4J__PASSWORD, NAM_EMBEDDING__MODEL).
-# Here we pass configuration directly via constructor arguments.
+# Pass Neo4j and embedding configuration directly via constructor arguments.
+# MemorySettings also supports loading from environment variables or .env files
+# using the NAM_ prefix (e.g. NAM_NEO4J__URI, NAM_EMBEDDING__MODEL).
 settings = MemorySettings(
     neo4j={
         "uri": os.environ["NEO4J_URI"],

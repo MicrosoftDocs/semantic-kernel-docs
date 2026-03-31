@@ -139,15 +139,13 @@ from agent_framework_neo4j import Neo4jContextProvider, Neo4jSettings, AzureAISe
 from azure.identity import DefaultAzureCredential
 from azure.identity.aio import AzureCliCredential
 
-credential = AzureCliCredential()
-sync_credential = DefaultAzureCredential()
-
 # Reads NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD from environment variables
 neo4j_settings = Neo4jSettings()
 
 # Reads AZURE_AI_PROJECT_ENDPOINT, AZURE_AI_EMBEDDING_NAME from environment variables
 azure_settings = AzureAISettings()
 
+sync_credential = DefaultAzureCredential()
 embedder = AzureAIEmbedder(
     endpoint=azure_settings.inference_endpoint,
     credential=sync_credential,
@@ -172,6 +170,7 @@ neo4j_provider = Neo4jContextProvider(
 
 async with (
     neo4j_provider,
+    AzureCliCredential() as credential,
     AzureAIClient(credential=credential, project_endpoint=azure_settings.project_endpoint) as client,
     Agent(
         client=client,

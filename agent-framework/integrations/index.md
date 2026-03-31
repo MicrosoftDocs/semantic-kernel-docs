@@ -86,8 +86,8 @@ Here is a list of existing providers that can be used.
 
 | RAG AI Context Provider                                            | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
-| [Text Search Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI/TextSearchProvider.cs) | Preview         |
 | [Neo4j GraphRAG Provider](./neo4j-graphrag.md) | Preview         |
+| [Text Search Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI/TextSearchProvider.cs) | Preview         |
 
 ::: zone-end
 
