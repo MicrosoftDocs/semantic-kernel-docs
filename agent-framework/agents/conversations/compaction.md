@@ -59,7 +59,7 @@ Compaction solves these problems by selectively removing, collapsing, or summari
 
 Compaction applies only to agents that manage their own conversation history in memory. Agents that rely on service-managed context or conversation state do not benefit from compaction because the service already handles context management. Examples of service-managed agents include:
 
-- **Foundry Agents** — context is managed server-side by the Azure AI Foundry service.
+- **Foundry Agents** — context is managed server-side by the Microsoft Foundry service.
 - **Responses API with store enabled** (the default) — conversation state is stored and managed by the OpenAI service.
 - **Copilot Studio agents** — conversation context is maintained by the Copilot Studio service.
 
@@ -650,7 +650,4 @@ compacted = await apply_compaction(
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Context Providers](context-providers.md)
-
-> [!div class="nextstepaction"]
-> [Storage](storage.md)
+> [Middleware](../middleware/index.md)

@@ -129,14 +129,16 @@ To test your own agents with Dojo:
 Create a new agent following the [Getting Started](getting-started.md) guide:
 
 ```python
+import os
 from agent_framework import Agent
-from agent_framework_azure_ai import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 
 # Create your agent
-chat_client = AzureOpenAIChatClient(
-    endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+chat_client = OpenAIChatCompletionClient(
+    model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    deployment_name=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
 )
 
 agent = Agent(

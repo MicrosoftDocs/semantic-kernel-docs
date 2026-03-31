@@ -142,10 +142,16 @@ When creating the agent, you can now provide the function tool to the agent, by 
 
 ```python
 import asyncio
-from agent_framework.azure import AzureOpenAIChatClient
+import os
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import AzureCliCredential
 
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+agent = OpenAIChatCompletionClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+).as_agent(
     instructions="You are a helpful assistant",
     tools=get_weather
 )

@@ -201,14 +201,14 @@ To use a workflow as an agent, the workflow's start executor must be able to han
 Call `as_agent()` on any compatible workflow to convert it into an agent:
 
 ```python
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from agent_framework.orchestrations import SequentialBuilder
 from azure.identity import AzureCliCredential
 
 # Create your chat client and agents
-client = AzureOpenAIResponsesClient(
+client = FoundryChatClient(
     project_endpoint="<your-endpoint>",
-    deployment_name="<your-deployment>",
+    model="<your-deployment>",
     credential=AzureCliCredential(),
 )
 
@@ -325,16 +325,16 @@ Here's a complete example demonstrating a workflow agent with streaming output:
 import asyncio
 import os
 
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from agent_framework.orchestrations import SequentialBuilder
 from azure.identity import AzureCliCredential
 
 
 async def main():
     # Set up the chat client
-    client = AzureOpenAIResponsesClient(
+    client = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=AzureCliCredential(),
     )
 

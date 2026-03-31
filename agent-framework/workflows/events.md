@@ -52,6 +52,9 @@ SuperStepCompletedEvent  // Superstep completes
 RequestInfoEvent         // A request is issued
 ```
 
+> [!NOTE]
+> When agents use approval-required tools, `RequestInfoEvent` typically carries a `ToolApprovalRequestContent` payload for tool calls that require human approval. See [Human-in-the-Loop](./human-in-the-loop.md) for details on handling these events.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -80,6 +83,9 @@ WorkflowEvent.type == "superstep_completed" # Superstep completes
 # Request events
 WorkflowEvent.type == "request_info"        # A request is issued
 ```
+
+> [!NOTE]
+> When agents use approval-required tools, `request_info` events typically carry a `Content` payload with `type == "function_approval_request"` for tool calls that require human approval. See [Human-in-the-Loop](./human-in-the-loop.md) for details on handling these events.
 
 ::: zone-end
 

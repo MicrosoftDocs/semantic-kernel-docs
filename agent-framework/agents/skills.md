@@ -129,9 +129,10 @@ Console.WriteLine(response.Text);
 Create a `SkillsProvider` pointing to a directory containing your skills, and add it to the agent's context providers:
 
 ```python
+import os
 from pathlib import Path
 from agent_framework import SkillsProvider
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity.aio import AzureCliCredential
 
 # Discover skills from the 'skills' directory
@@ -140,7 +141,12 @@ skills_provider = SkillsProvider(
 )
 
 # Create an agent with the skills provider
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+agent = OpenAIChatCompletionClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+).as_agent(
     name="SkillsAgent",
     instructions="You are a helpful assistant.",
     context_providers=[skills_provider],
@@ -451,7 +457,7 @@ Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Context Providers](./conversations/context-providers.md)
+> [Agent Safety](./safety.md)
 
 ### Related content
 

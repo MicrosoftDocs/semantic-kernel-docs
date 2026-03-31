@@ -101,7 +101,7 @@ When using Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you ha
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
 | OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
-| [Azure AI Foundry Anthropic](/azure/ai-foundry/foundry-models/how-to/use-foundry-models-claude) | Anthropic Foundry SDK | [Anthropic.Foundry](https://www.nuget.org/packages/Anthropic.Foundry) | Resource name required |
+| [Microsoft Foundry Anthropic](/azure/ai-foundry/foundry-models/how-to/use-foundry-models-claude) | Anthropic Foundry SDK | [Anthropic.Foundry](https://www.nuget.org/packages/Anthropic.Foundry) | Resource name required |
 | Anthropic | Anthropic SDK | [Anthropic](https://www.nuget.org/packages/Anthropic) | No url or resource name required |
 
 1. [Upgrading from Azure OpenAI to Foundry](/azure/ai-foundry/how-to/upgrade-azure-openai)
@@ -169,7 +169,7 @@ AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
     name: "Joker");
 ```
 
-### Using the Azure AI Foundry Anthropic SDK
+### Using the Foundry Anthropic SDK
 
 The resource is the subdomain name / first name coming before '.services.ai.azure.com' in the endpoint Uri.
 
@@ -217,29 +217,37 @@ To create one of these agents, simply construct an `Agent` using the chat client
 ```python
 import os
 from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import DefaultAzureCredential
 
-Agent(
-    client=AzureOpenAIResponsesClient(credential=DefaultAzureCredential(), project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"), deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME")),
-    instructions="You are a helpful assistant"
-) as agent
+agent = Agent(
+    client=FoundryChatClient(
+        credential=DefaultAzureCredential(),
+        project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
+        model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+    ),
+    instructions="You are a helpful assistant",
+)
 response = await agent.run("Hello!")
 ```
 
 Alternatively, you can use the convenience method on the chat client:
 
 ```python
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import DefaultAzureCredential
 
-agent = AzureOpenAIResponsesClient(credential=DefaultAzureCredential(), project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"), deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME")).as_agent(
+agent = FoundryChatClient(
+    credential=DefaultAzureCredential(),
+    project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
+    model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+).as_agent(
     instructions="You are a helpful assistant"
 )
 ```
 
 > [!NOTE]
-> This example shows using the AzureOpenAIResponsesClient, but the same pattern applies to any chat client that implements `SupportsChatGetResponse`, see [providers overview](./providers/index.md) for more details on other clients.
+> This example shows using the FoundryChatClient, but the same pattern applies to any chat client that implements `SupportsChatGetResponse`, see [providers overview](./providers/index.md) for more details on other clients.
 
 For detailed examples, see the agent-specific documentation sections below.
 
@@ -293,17 +301,17 @@ You can provide function tools to agents for enhanced capabilities:
 import os
 from typing import Annotated
 from azure.identity.aio import DefaultAzureCredential
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 
 def get_weather(location: Annotated[str, "The location to get the weather for."]) -> str:
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny with a high of 25°C."
 
 async with DefaultAzureCredential() as credential:
-    agent = AzureOpenAIResponsesClient(
+    agent = FoundryChatClient(
         credential=credential,
         project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
-        deployment_name=os.getenv("AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"),
+        model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
     ).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather,

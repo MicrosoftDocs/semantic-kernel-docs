@@ -520,7 +520,7 @@ app.MapOpenAIResponses(scienceAgent, responsesPath: "/api/responses");
 
 ## Connecting to OpenAI-Compatible Endpoints (Python)
 
-The Python `OpenAIChatClient` and `OpenAIResponsesClient` both support a `base_url` parameter, enabling you to connect to **any** OpenAI-compatible endpoint — including self-hosted agents, local inference servers (Ollama, LM Studio, vLLM), or third-party OpenAI-compatible APIs.
+The Python `OpenAIChatCompletionClient` and `OpenAIChatClient` both support a `base_url` parameter, enabling you to connect to **any** OpenAI-compatible endpoint — including self-hosted agents, local inference servers (Ollama, LM Studio, vLLM), or third-party OpenAI-compatible APIs.
 
 ```bash
 pip install agent-framework --pre
@@ -528,12 +528,12 @@ pip install agent-framework --pre
 
 ### Chat Completions Client
 
-Use `OpenAIChatClient` with `base_url` to point to any Chat Completions-compatible server:
+Use `OpenAIChatCompletionClient` with `base_url` to point to any Chat Completions-compatible server:
 
 ```python
 import asyncio
 from agent_framework import tool
-from agent_framework.openai import OpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 
 @tool(approval_mode="never_require")
 def get_weather(location: str) -> str:
@@ -542,10 +542,10 @@ def get_weather(location: str) -> str:
 
 async def main():
     # Point to any OpenAI-compatible endpoint
-    agent = OpenAIChatClient(
+    agent = OpenAIChatCompletionClient(
         base_url="http://localhost:11434/v1/",  # e.g. Ollama
         api_key="not-needed",                   # placeholder for local servers
-        model_id="llama3.2",
+        model="llama3.2",
     ).as_agent(
         name="WeatherAgent",
         instructions="You are a helpful weather assistant.",
@@ -560,17 +560,17 @@ asyncio.run(main())
 
 ### Responses Client
 
-Use `OpenAIResponsesClient` with `base_url` for endpoints that support the Responses API:
+Use `OpenAIChatClient` with `base_url` for endpoints that support the Responses API:
 
 ```python
 import asyncio
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 async def main():
-    agent = OpenAIResponsesClient(
+    agent = OpenAIChatClient(
         base_url="https://your-hosted-agent.example.com/v1/",
         api_key="your-api-key",
-        model_id="gpt-4o-mini",
+        model="gpt-4o-mini",
     ).as_agent(
         name="Assistant",
         instructions="You are a helpful assistant.",
@@ -605,12 +605,19 @@ The `base_url` approach works with any server exposing the OpenAI Chat Completio
 
 ### Using Azure OpenAI Clients
 
-The Azure OpenAI variants (`AzureOpenAIChatClient`, `AzureOpenAIResponsesClient`) connect to Azure OpenAI endpoints using Azure credentials — no `base_url` needed:
+Use the same generic OpenAI clients for Azure OpenAI by passing explicit Azure routing inputs instead of `base_url`:
 
 ```python
-from agent_framework.azure import AzureOpenAIResponsesClient
+import os
+from agent_framework.openai import OpenAIChatClient
+from azure.identity import AzureCliCredential
 
-agent = AzureOpenAIResponsesClient().as_agent(
+agent = OpenAIChatClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+).as_agent(
     name="Assistant",
     instructions="You are a helpful assistant.",
 )
@@ -619,7 +626,8 @@ agent = AzureOpenAIResponsesClient().as_agent(
 Configure with environment variables:
 ```bash
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
-export AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-4o-mini"
+export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+export AZURE_OPENAI_API_VERSION="your-api-version"
 ```
 
 ::: zone-end

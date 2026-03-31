@@ -408,7 +408,7 @@ Create a file named `server.py`:
 import os
 
 from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
 from fastapi import FastAPI
@@ -422,10 +422,11 @@ if not endpoint:
 if not deployment_name:
     raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
 
-chat_client = AzureOpenAIChatClient(
+chat_client = OpenAIChatCompletionClient(
+    model=deployment_name,
+    azure_endpoint=endpoint,
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),
-    endpoint=endpoint,
-    deployment_name=deployment_name,
 )
 
 # Create the AI agent
@@ -453,7 +454,7 @@ if __name__ == "__main__":
 - **`Agent`**: The Agent Framework agent that will handle incoming requests
 - **FastAPI Integration**: Uses FastAPI's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages
-- **Configuration**: `AzureOpenAIChatClient` reads from environment variables or accepts parameters directly
+- **Configuration**: `OpenAIChatCompletionClient` accepts explicit Azure routing inputs such as `model`, `azure_endpoint`, `api_version`, and `credential`, and can also read from environment variables
 
 ### Configure and Run the Server
 

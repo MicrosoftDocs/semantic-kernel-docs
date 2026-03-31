@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
 ms.author: markwallace
-ms.date: 09/24/2025
+ms.date: 03/30/2026
 ms.service: agent-framework
 ---
 
@@ -156,6 +156,9 @@ The full source code and instructions to run this sample is available at <https:
 
 This allows your agents to access external tools and services seamlessly.
 
+> [!NOTE]
+> On minimal Python installs, MCP support might need to be installed manually. Install `mcp --pre` to use `MCPStdioTool`, `MCPStreamableHTTPTool`, or `Agent.as_mcp_server()`. Install `mcp[ws] --pre` if you also need `MCPWebsocketTool`.
+
 ## MCP Tool Types
 
 The Agent Framework supports three types of MCP connections:
@@ -279,7 +282,7 @@ Each server provides different tools and capabilities that extend your agent's f
 import os
 
 from agent_framework import Agent, MCPStreamableHTTPTool
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 from httpx import AsyncClient
 
 """
@@ -320,7 +323,7 @@ async def api_key_auth_example() -> None:
             http_client=http_client,  # Pass HTTP client with authentication headers
         ) as mcp_tool,
         Agent(
-            client=OpenAIResponsesClient(),
+            client=OpenAIChatClient(),
             name="Agent",
             instructions="You are a helpful assistant.",
             tools=mcp_tool,
@@ -383,15 +386,18 @@ dotnet add package ModelContextProtocol --prerelease
 
 Call `.as_mcp_server()` on an agent to expose it as an MCP server:
 
+> [!NOTE]
+> Python `agent.as_mcp_server()` also depends on the optional `mcp` package. If you use a slim/core-based install, run `pip install mcp --pre` first.
+
 ```python
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 from typing import Annotated
 
 def get_specials() -> Annotated[str, "Returns the specials from the menu."]:
     return "Special Soup: Clam Chowder, Special Salad: Cobb Salad"
 
 # Create an agent with tools
-agent = OpenAIResponsesClient().as_agent(
+agent = OpenAIChatClient().as_agent(
     name="RestaurantAgent",
     description="Answer questions about the menu.",
     tools=[get_specials],
@@ -420,4 +426,4 @@ if __name__ == "__main__":
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Using workflows as Agents](../../workflows/as-agents.md)
+> [Conversations & Memory](../conversations/index.md)

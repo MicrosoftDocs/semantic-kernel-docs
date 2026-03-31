@@ -94,7 +94,7 @@ from agent_framework import (
     ResponseStream,
     tool,
 )
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 from pydantic import Field
 
 """
@@ -260,7 +260,7 @@ async def main() -> None:
 
     # For authentication, run `az login` command in terminal or replace AzureCliCredential with preferred
     # authentication option.
-    agent = OpenAIResponsesClient(
+    agent = OpenAIChatClient(
         middleware=[validate_weather_middleware, weather_override_middleware],
     ).as_agent(
         name="WeatherAgent",
@@ -316,7 +316,7 @@ from agent_framework import (
     ResponseStream,
     tool,
 )
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 from pydantic import Field
 
 """
@@ -482,7 +482,7 @@ async def main() -> None:
 
     # For authentication, run `az login` command in terminal or replace AzureCliCredential with preferred
     # authentication option.
-    agent = OpenAIResponsesClient(
+    agent = OpenAIChatClient(
         middleware=[validate_weather_middleware, weather_override_middleware],
     ).as_agent(
         name="WeatherAgent",

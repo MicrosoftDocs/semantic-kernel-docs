@@ -171,7 +171,7 @@ curl -X POST http://localhost:7071/api/agents/Joker/run \
 - [A2A Protocol](../integrations/a2a.md) — expose and consume agents via A2A
 - [Azure Functions](../integrations/azure-functions.md) — serverless agent hosting
 - [AG-UI Protocol](../integrations/ag-ui/index.md) — web-based agent UIs
-- [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Azure AI Foundry
+- [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Microsoft Foundry
 - [Foundry Hosted Agents sample (Python)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) — run an end-to-end Agent Framework hosted-agent sample
 
 ## See also

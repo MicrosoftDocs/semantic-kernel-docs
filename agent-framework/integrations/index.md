@@ -13,7 +13,7 @@ zone_pivot_groups: programming-languages
 
 Microsoft Agent Framework has integrations with many different services, tools and protocols.
 
-## Azure AI Foundry Hosted Agents
+## Microsoft Foundry Hosted Agents
 
 - [Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents)
 - [Hosted Agents sample (Python, Agent Framework)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework)

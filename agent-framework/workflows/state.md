@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/09/2026
+ms.date: 03/25/2026
 ms.service: agent-framework
 ---
 
@@ -18,6 +18,7 @@ ms.service: agent-framework
   | Accessing State                            | ✅ |   ✅   |       |
   | State Isolation – Mutable vs Immutable     | ✅ |   ✅   | Prose only, no code needed |
   | State Isolation – Helper Methods           | ❌ |   ✅   | C# coming soon |
+  | State Isolation – Resetting Shared Executors| ✅ |   ❌   | C#-specific; links to advanced page |
   | Agent State Management                     | ❌ |   ✅   | C# coming soon |
 -->
 
@@ -191,6 +192,16 @@ workflow_b = create_workflow()
 > [!TIP]
 > To ensure proper state isolation and thread safety, also make sure that executor instances created inside the helper method do not share external mutable state.
 
+::: zone pivot="programming-language-csharp"
+
+### Resetting Shared Executors
+
+If you need to share executor instances across workflow runs — for example, when executor construction is expensive or when a workflow is exposed as an agent — stateful executors must implement `IResettableExecutor`. This interface provides a `ResetAsync()` method that the workflow runtime calls automatically between runs to clear stale state.
+
+For details on when and how to implement `IResettableExecutor`, see [Resettable Executors](./advanced/resettable-executors.md).
+
+::: zone-end
+
 ### Agent State Management
 
 Agent context is managed via agent threads. By default, each agent in a workflow will get its own thread unless the agent is managed by a custom executor. For more information, refer to [Working with Agents](./agents-in-workflows.md).
@@ -208,9 +219,9 @@ Coming soon...
 Non-isolated example (shared agent state):
 
 ```python
-writer_agent = AzureOpenAIResponsesClient(
+writer_agent = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 ).as_agent(
     instructions=(
@@ -218,9 +229,9 @@ writer_agent = AzureOpenAIResponsesClient(
     ),
     name="writer_agent",
 )
-reviewer_agent = AzureOpenAIResponsesClient(
+reviewer_agent = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 ).as_agent(
     instructions=(
@@ -244,9 +255,9 @@ def create_workflow() -> Workflow:
     Each call produces new agent instances with their own threads,
     ensuring no conversation history leaks between workflow runs.
     """
-    writer_agent = AzureOpenAIResponsesClient(
+    writer_agent = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=AzureCliCredential(),
     ).as_agent(
         instructions=(
@@ -254,9 +265,9 @@ def create_workflow() -> Workflow:
         ),
         name="writer_agent",
     )
-    reviewer_agent = AzureOpenAIResponsesClient(
+    reviewer_agent = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=AzureCliCredential(),
     ).as_agent(
         instructions=(
