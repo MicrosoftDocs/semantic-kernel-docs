@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -59,11 +59,12 @@ async Task<AgentResponse> EnrichMiddleware(
     return response;
 }
 
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-        .GetChatClient("gpt-4o-mini")
-        .AsAIAgent(instructions: "You are a helpful assistant.");
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "You are a helpful assistant.");
 
 var agentWithState = agent
     .AsBuilder()
@@ -75,6 +76,9 @@ Console.WriteLine(await agentWithState.RunAsync("What's the weather in New York?
 Console.WriteLine(await agentWithState.RunAsync("What time is it in London?"));
 Console.WriteLine($"Total calls: {sharedState["callCount"]}");
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 :::zone-end
 

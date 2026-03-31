@@ -5,9 +5,10 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/16/2026
+ms.date: 03/31/2026
 ms.service: agent-framework
 ---
+
 
 # Runtime Context
 
@@ -15,10 +16,255 @@ Runtime context provides middleware with access to information about the current
 
 :::zone pivot="programming-language-csharp"
 
-In C#, runtime context is typically passed through `AgentRunOptions` or custom session state. Middleware can access session properties and run options to make runtime decisions.
+In C#, runtime context flows through three main surfaces:
+
+- `AgentRunOptions.AdditionalProperties` for per-run key-value metadata that middleware and tools can read.
+- `FunctionInvocationContext` for inspecting and modifying tool call arguments inside function invocation middleware.
+- `AgentSession.StateBag` for shared state that persists across runs within a conversation.
+
+Use the narrowest surface that fits. Per-run metadata belongs in `AdditionalProperties`, persistent conversation state belongs in the session's `StateBag`, and tool-argument manipulation belongs in function invocation middleware.
 
 > [!TIP]
 > See the [Agent vs Run Scope](./agent-vs-run-scope.md) page for information on how middleware scope affects access to runtime context.
+
+### Choose the right runtime surface
+
+| Use case | API surface | Accessed from |
+|---|---|---|
+| Share conversation state or data across runs | `AgentSession.StateBag` | `session.StateBag` in run middleware, `AIAgent.CurrentRunContext?.Session` in tools |
+| Pass per-run metadata to middleware or tools | `AgentRunOptions.AdditionalProperties` | `options.AdditionalProperties` in run middleware, `AIAgent.CurrentRunContext?.RunOptions` in tools |
+| Inspect or modify tool call arguments in middleware | `FunctionInvocationContext` | Function invocation middleware callback |
+
+### Pass per-run values via `AgentRunOptions`
+
+Use `AdditionalProperties` on `AgentRunOptions` to attach per-run key-value data. Function invocation middleware can forward these values into tool arguments.
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.AI.Projects;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+[Description("Send an email to the specified address.")]
+static string SendEmail(
+    [Description("Recipient email address.")] string address,
+    [Description("User ID of the sender.")] string userId,
+    [Description("Tenant name.")] string tenant = "default")
+{
+    return $"Queued email for {address} from {userId} ({tenant})";
+}
+
+// Function invocation middleware that injects per-run values into tool arguments
+async ValueTask<object?> InjectRunContext(
+    AIAgent agent,
+    FunctionInvocationContext context,
+    Func<FunctionInvocationContext, CancellationToken, ValueTask<object?>> next,
+    CancellationToken cancellationToken)
+{
+    var runOptions = AIAgent.CurrentRunContext?.RunOptions;
+    if (runOptions?.AdditionalProperties is { } props)
+    {
+        if (props.TryGetValue("user_id", out var userId))
+        {
+            context.Arguments["userId"] = userId;
+        }
+
+        if (props.TryGetValue("tenant", out var tenant))
+        {
+            context.Arguments["tenant"] = tenant;
+        }
+    }
+
+    return await next(context, cancellationToken);
+}
+
+AIAgent baseAgent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "Send email updates.",
+            tools: [AIFunctionFactory.Create(SendEmail)]);
+
+var agent = baseAgent
+    .AsBuilder()
+        .Use(InjectRunContext)
+    .Build();
+
+var response = await agent.RunAsync(
+    "Email the launch update to finance@example.com",
+    options: new AgentRunOptions
+    {
+        AdditionalProperties = new AdditionalPropertiesDictionary
+        {
+            ["user_id"] = "user-123",
+            ["tenant"] = "contoso",
+        }
+    });
+
+Console.WriteLine(response);
+```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+The middleware reads per-run valuesfrom `AgentRunOptions.AdditionalProperties` via the ambient `AIAgent.CurrentRunContext` and injects them into the tool's `FunctionInvocationContext.Arguments` before the tool executes.
+
+### Function invocation middleware receives context
+
+Function invocation middleware uses `FunctionInvocationContext` to inspect or modify tool arguments, intercept results, or skip tool execution entirely.
+
+```csharp
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.AI.Projects;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+async ValueTask<object?> EnrichToolContext(
+    AIAgent agent,
+    FunctionInvocationContext context,
+    Func<FunctionInvocationContext, CancellationToken, ValueTask<object?>> next,
+    CancellationToken cancellationToken)
+{
+    if (!context.Arguments.ContainsKey("tenant"))
+    {
+        context.Arguments["tenant"] = "contoso";
+    }
+
+    if (!context.Arguments.ContainsKey("requestSource"))
+    {
+        context.Arguments["requestSource"] = "middleware";
+    }
+
+    return await next(context, cancellationToken);
+}
+
+AIAgent baseAgent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "Send email updates.",
+            tools: [AIFunctionFactory.Create(SendEmail)]);
+
+var agent = baseAgent
+    .AsBuilder()
+        .Use(EnrichToolContext)
+    .Build();
+```
+
+The middleware receives the function invocation context and calls `next` to continue the pipeline. Mutate `context.Arguments` before calling `next`, and the tool sees the updated values.
+
+### Use `AgentSession.StateBag` for shared runtime state
+
+```csharp
+using System;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.AI.Projects;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+[Description("Store the specified topic in session state.")]
+static string RememberTopic(
+    [Description("Topic to remember.")] string topic)
+{
+    var session = AIAgent.CurrentRunContext?.Session;
+    if (session is null)
+    {
+        return "No session available.";
+    }
+
+    session.StateBag.SetValue("topic", topic);
+    return $"Stored '{topic}' in session state.";
+}
+
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "Remember important topics.",
+            tools: [AIFunctionFactory.Create(RememberTopic)]);
+
+var session = await agent.CreateSessionAsync();
+await agent.RunAsync("Remember that the budget review is on Friday.", session: session);
+Console.WriteLine(session.StateBag.GetValue<string>("topic"));
+```
+
+Pass the session explicitly with `session:` and access it from tools via `AIAgent.CurrentRunContext?.Session`. The `StateBag` provides type-safe, thread-safe storage that persists across runs within the same session.
+
+### Share session state across middleware and tools
+
+Run middleware can read and write the session's `StateBag`, and any changes are visible to function invocation middleware and tools executing in the same request.
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.AI.Projects;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+// Run middleware that stamps the session with request metadata
+async Task<AgentResponse> StampRequestMetadata(
+    IEnumerable<ChatMessage> messages,
+    AgentSession? session,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    CancellationToken cancellationToken)
+{
+    if (session is not null && options?.AdditionalProperties is { } props)
+    {
+        if (props.TryGetValue("request_id", out var requestId))
+        {
+            session.StateBag.SetValue("requestId", requestId?.ToString());
+        }
+    }
+
+    return await innerAgent.RunAsync(messages, session, options, cancellationToken);
+}
+
+AIAgent baseAgent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "You are a helpful assistant.");
+
+var agent = baseAgent
+    .AsBuilder()
+        .Use(runFunc: StampRequestMetadata, runStreamingFunc: null)
+    .Build();
+
+var session = await agent.CreateSessionAsync();
+await agent.RunAsync(
+    "Hello!",
+    session: session,
+    options: new AgentRunOptions
+    {
+        AdditionalProperties = new AdditionalPropertiesDictionary
+        {
+            ["request_id"] = "req-abc-123",
+        }
+    });
+
+Console.WriteLine(session.StateBag.GetValue<string>("requestId"));
+```
+
+Run middleware receives the session directly as a parameter. Use `StateBag.SetValue` and `GetValue` for type-safe access. Any values stored during the run middleware phase are available to tools and function invocation middleware via `AIAgent.CurrentRunContext?.Session`.
 
 :::zone-end
 

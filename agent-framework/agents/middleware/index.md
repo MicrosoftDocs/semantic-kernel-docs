@@ -43,9 +43,12 @@ var middlewareEnabledAgent = originalAgent
 `IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
 
 ```csharp
-var chatClient = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient();
+var chatClient = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .GetProjectOpenAIClient()
+        .GetResponsesClient()
+        .AsIChatClient(deploymentName);
 
 var middlewareEnabledChatClient = chatClient
     .AsBuilder()
@@ -62,12 +65,16 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
  an agent via one of the helper methods on SDK clients.
 
 ```csharp
-var agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
-        .AsBuilder()
-            .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
-        .Build());
+var agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: deploymentName,
+            instructions: "You are a helpful assistant.",
+            clientFactory: (chatClient) => chatClient
+                .AsBuilder()
+                    .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
+                .Build());
 ```
 
 ## Agent Run Middleware
