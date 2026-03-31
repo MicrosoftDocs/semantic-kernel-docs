@@ -553,9 +553,11 @@ This pattern works with any Semantic Kernel VectorStore connector, including:
 
 Each connector provides the same `create_search_function` method that can be bridged to Agent Framework tools, allowing you to choose the vector database that best fits your needs. See [the full list here](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors).
 
-For knowledge graph RAG using graph traversal and Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/neo4j-graphrag.md).
-
 ::: zone-end
+
+## Graph RAG
+
+For GraphRAG using graph traversal enriched search with Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/neo4j-graphrag.md).
 
 ## Next steps
 

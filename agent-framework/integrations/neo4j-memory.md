@@ -4,7 +4,7 @@ description: Learn how to use the Neo4j Memory Provider to add persistent knowle
 zone_pivot_groups: programming-languages
 author: retroryan
 ms.topic: article
-ms.author: ryanknight
+ms.author: westey
 ms.date: 03/29/2026
 ms.service: agent-framework
 ---
@@ -41,7 +41,7 @@ This provider is not yet available for C#. See the Python tab for usage examples
 - A Neo4j instance (self-hosted or [Neo4j AuraDB](https://neo4j.com/cloud/aura/))
 - An Azure AI Foundry project with a deployed chat model
 - An OpenAI API key or Azure OpenAI deployment (for embeddings and entity extraction)
-- Environment variables set: `NEO4J_URI`, `NEO4J_PASSWORD`, `AZURE_AI_PROJECT_ENDPOINT`
+- Environment variables set: `NEO4J_URI`, `NEO4J_PASSWORD`, `AZURE_AI_PROJECT_ENDPOINT`, `OPENAI_API_KEY`
 - Azure CLI credentials configured (`az login`)
 - Python 3.10 or later
 
@@ -66,8 +66,9 @@ from neo4j_agent_memory.integrations.microsoft_agent import (
 )
 
 # MemorySettings accepts nested configuration for Neo4j, embedding, and LLM providers.
-# Environment variables use the NAM_ prefix with __ as nested delimiter
-# (e.g. NAM_NEO4J__URI, NAM_NEO4J__PASSWORD, NAM_EMBEDDING__MODEL).
+# When loading from environment variables or .env files, use the NAM_ prefix with __
+# as nested delimiter (e.g. NAM_NEO4J__URI, NAM_NEO4J__PASSWORD, NAM_EMBEDDING__MODEL).
+# Here we pass configuration directly via constructor arguments.
 settings = MemorySettings(
     neo4j={
         "uri": os.environ["NEO4J_URI"],
@@ -90,8 +91,9 @@ async with memory_client:
     tools = create_memory_tools(memory)
 
     async with (
+        AzureCliCredential() as credential,
         AzureAIClient(
-            credential=AzureCliCredential(),
+            credential=credential,
             project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
         ) as client,
         Agent(

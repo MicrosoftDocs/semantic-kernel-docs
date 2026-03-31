@@ -4,7 +4,7 @@ description: Learn how to use the Neo4j GraphRAG Context Provider to add knowled
 zone_pivot_groups: programming-languages
 author: retroryan
 ms.topic: article
-ms.author: ryanknight
+ms.author: westey
 ms.date: 03/29/2026
 ms.service: agent-framework
 ---
@@ -36,7 +36,7 @@ This provider is not yet available for C#. See the Python tab for usage examples
 
 - A Neo4j instance (self-hosted or [Neo4j AuraDB](https://neo4j.com/cloud/aura/)) with a vector or fulltext index configured
 - An Azure AI Foundry project with a deployed chat model and an embedding model (e.g. `text-embedding-ada-002`)
-- Environment variables set: `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `AZURE_AI_PROJECT_ENDPOINT`
+- Environment variables set: `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `AZURE_AI_PROJECT_ENDPOINT`, `AZURE_AI_EMBEDDING_NAME`
 - Azure CLI credentials configured (`az login`)
 - Python 3.10 or later
 
@@ -52,9 +52,11 @@ pip install agent-framework-neo4j
 from agent_framework import Agent
 from agent_framework.azure import AzureAIClient
 from agent_framework_neo4j import Neo4jContextProvider, Neo4jSettings, AzureAISettings, AzureAIEmbedder
+from azure.identity import DefaultAzureCredential
 from azure.identity.aio import AzureCliCredential
 
 credential = AzureCliCredential()
+sync_credential = DefaultAzureCredential()
 
 # Reads NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD from environment variables
 neo4j_settings = Neo4jSettings()
@@ -64,7 +66,7 @@ azure_settings = AzureAISettings()
 
 embedder = AzureAIEmbedder(
     endpoint=azure_settings.inference_endpoint,
-    credential=credential,
+    credential=sync_credential,
     model=azure_settings.embedding_model,
 )
 

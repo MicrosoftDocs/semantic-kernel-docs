@@ -70,9 +70,9 @@ Here is a list of existing providers that can be used.
 | Memory AI Context Provider                                         | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
 | [Mem0 Memory Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/mem0/agent_framework_mem0/_provider.py) | Preview         |
-| [Redis Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_provider.py)     | Preview         |
-| [Purview Context Provider](./purview.md) | Preview         |
 | [Neo4j Memory Provider](./neo4j-memory.md) | Preview         |
+| [Purview Context Provider](./purview.md) | Preview         |
+| [Redis Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_provider.py)     | Preview         |
 
 ::: zone-end
 
