@@ -20,6 +20,7 @@ ms.service: agent-framework
   | Resuming from Checkpoints      | ✅ |   ✅   |       |
   | Rehydrating from Checkpoints   | ✅ |   ✅   |       |
   | Save Executor States           | ✅ |   ✅   |       |
+  | Security Considerations        | ✅ |   ✅   |       |
   | Next Steps                     | ✅ |   ✅   |       |
 -->
 
@@ -256,6 +257,31 @@ Also, to ensure the state is correctly restored when resuming from a checkpoint,
 async def on_checkpoint_restore(self, state: dict[str, Any]) -> None:
     self._messages = state.get("messages", [])
 ```
+
+::: zone-end
+
+## Security Considerations
+
+> [!IMPORTANT]
+> Checkpoint storage is a trust boundary. Whether you use the built-in storage implementations or a custom one, the storage backend must be treated as trusted, private infrastructure. **Never load checkpoints from untrusted or potentially tampered sources.** Loading a malicious checkpoint can execute arbitrary code.
+
+::: zone pivot="programming-language-csharp"
+
+Ensure that the storage location used for checkpoints is secured appropriately. Only authorized services and users should have read or write access to checkpoint data.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+### Pickle serialization
+
+`FileCheckpointStorage` uses Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. Because `pickle.loads()` can execute arbitrary code during deserialization, a compromised checkpoint file can run malicious code when loaded. The post-deserialization type check performed by the framework cannot prevent this.
+
+If your threat model does not permit pickle-based serialization, use `InMemoryCheckpointStorage` or implement a custom `CheckpointStorage` with an alternative serialization strategy.
+
+### Storage location responsibility
+
+`FileCheckpointStorage` requires an explicit `storage_path` parameter — there is no default directory. While the framework validates against path traversal attacks, securing the storage directory itself (file permissions, encryption at rest, access controls) is the developer's responsibility. Only authorized processes should have read or write access to the checkpoint directory.
 
 ::: zone-end
 

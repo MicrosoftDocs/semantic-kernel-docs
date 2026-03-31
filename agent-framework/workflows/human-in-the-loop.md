@@ -17,6 +17,7 @@ ms.service: agent-framework
   | Overview                             | ✅ |   ✅   |                                                  |
   | Enable Request and Response Handling | ✅ |   ✅   | C# uses RequestPort; Python uses ctx.request_info |
   | Handling Requests and Responses      | ✅ |   ✅   |                                                  |
+  | HITL with Agent Orchestrations       | ✅ |   ✅   | No zone pivots; links to orchestration docs     |
   | Checkpoints and Requests             | ✅ |   ✅   |                                                  |
   | Next Steps                           | ✅ |   ✅   |                                                  |
 -->
@@ -230,6 +231,19 @@ while pending_responses is not None:
 
 ::: zone-end
 
+## Human-in-the-Loop with Agent Orchestrations
+
+The `RequestPort` pattern described above works with custom executors and `WorkflowBuilder`. When using **agent orchestrations** (such as sequential, concurrent, or group chat workflows), **tool approval** is achieved through the human-in-the-loop request/response mechanism.
+
+Agents can use tools that require human approval before execution. When the agent attempts to call an approval-required tool, the workflow pauses and emits a `RequestInfoEvent` just like the `RequestPort` pattern, but the event payload contains a `ToolApprovalRequestContent` (C#) or a `Content` with `type == "function_approval_request"` (Python) instead of a custom request type.
+
+> [!TIP]
+> For complete examples with code, see:
+> - [Sequential orchestration with HITL](./orchestrations/sequential.md#sequential-orchestration-with-human-in-the-loop)
+> - [GroupChatToolApproval sample (C#)](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/Agents/GroupChatToolApproval)
+> - [Sequential tool approval sample (Python)](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/tool-approval/sequential_builder_tool_approval.py)
+> - [Sequential request info sample (Python)](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/human-in-the-loop/sequential_request_info.py)
+
 ## Checkpoints and Requests
 
 To learn more about checkpoints, see [Checkpoints](./checkpoints.md).
@@ -238,6 +252,7 @@ When a checkpoint is created, pending requests are also saved as part of the che
 
 ## Next Steps
 
+- [Learn about sequential orchestration with HITL](./orchestrations/sequential.md#sequential-orchestration-with-human-in-the-loop).
 - [Learn how to manage state](./state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
 - [Learn how to monitor workflows](./observability.md).
