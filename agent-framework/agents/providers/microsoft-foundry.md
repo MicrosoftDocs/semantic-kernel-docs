@@ -200,4 +200,4 @@ Both `FoundryChatClient` and `FoundryAgent` integrate with the standard Python `
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Anthropic](./anthropic.md)
+> [Foundry Local](./foundry-local.md)
