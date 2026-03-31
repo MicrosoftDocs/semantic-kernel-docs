@@ -190,12 +190,12 @@ The `Agent` class accepts any client that implements `SupportsChatGetResponse`. 
 
 ```python
 from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 
-client = AzureOpenAIResponsesClient(
+client = FoundryChatClient(
     credential=credential,
     project_endpoint=endpoint,
-    deployment_name=model,
+    model=model,
 )
 
 agent = Agent(client=client, instructions="You are helpful.")

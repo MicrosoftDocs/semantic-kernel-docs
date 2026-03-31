@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 03/25/2026
 ms.service: agent-framework
 ---
 
@@ -56,7 +56,8 @@ Agent Framework supports many different inference services through chat clients.
 
 - **[Azure OpenAI](./azure-openai.md)** — Full-featured provider with Azure identity support.
 - **[OpenAI](./openai.md)** — Direct OpenAI API access.
-- **[Foundry](./microsoft-foundry.md)** — Persistent server-side agents with managed chat history.
+- **[Foundry](./microsoft-foundry.md)** — Microsoft Foundry project inference and service-managed agents.
+- **[Foundry Local](./foundry-local.md)** — Run supported Foundry models locally with `FoundryLocalClient` (Python only).
 - **[Anthropic](./anthropic.md)** — Claude models with extended thinking and hosted tools support.
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration.

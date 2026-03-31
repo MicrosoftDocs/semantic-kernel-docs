@@ -106,11 +106,17 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 Call `.as_tool()` on an agent to convert it to a function tool that can be provided to another agent:
 
 ```python
-from agent_framework.azure import AzureOpenAIChatClient
+import os
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import AzureCliCredential
 
 # Create the inner agent with its own tools
-weather_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+weather_agent = OpenAIChatCompletionClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+).as_agent(
     name="WeatherAgent",
     description="An agent that answers questions about the weather.",
     instructions="You answer questions about the weather.",
@@ -118,7 +124,12 @@ weather_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
 )
 
 # Create the main agent and provide the inner agent as a function tool
-main_agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(
+main_agent = OpenAIChatCompletionClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+).as_agent(
     instructions="You are a helpful assistant.",
     tools=weather_agent.as_tool()
 )

@@ -54,7 +54,7 @@ The following example shows how to create an agent with the Web Search tool:
 import asyncio
 
 from agent_framework import Agent
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 """
 OpenAI Responses Client with Web Search Example
@@ -65,7 +65,7 @@ for direct real-time information retrieval and current data access.
 
 
 async def main() -> None:
-    client = OpenAIResponsesClient()
+    client = OpenAIChatClient()
 
     # Create web search tool with location context
     web_search_tool = client.get_web_search_tool(

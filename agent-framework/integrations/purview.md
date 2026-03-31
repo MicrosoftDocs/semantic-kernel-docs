@@ -82,7 +82,7 @@ Console.WriteLine(response);
 import asyncio
 import os
 from agent_framework import Agent, Message, Role
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework.microsoft import PurviewPolicyMiddleware, PurviewSettings
 from azure.identity import AzureCliCredential, InteractiveBrowserCredential
 
@@ -91,7 +91,12 @@ os.environ.setdefault("AZURE_OPENAI_ENDPOINT", "<azureOpenAIEndpoint>")
 os.environ.setdefault("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME", "<azureOpenAIChatDeploymentName>")
 
 async def main():
-    chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+    chat_client = OpenAIChatCompletionClient(
+        model=os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"],
+        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+        api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        credential=AzureCliCredential(),
+    )
     purview_middleware = PurviewPolicyMiddleware(
         credential=InteractiveBrowserCredential(
             client_id="<clientId>",

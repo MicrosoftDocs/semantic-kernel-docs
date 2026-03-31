@@ -222,13 +222,13 @@ In sequential orchestration, each agent processes the task in turn, with output 
 
 ```python
 import os
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity import AzureCliCredential
 
-# 1) Create agents using AzureOpenAIResponsesClient
-chat_client = AzureOpenAIResponsesClient(
+# 1) Create agents using FoundryChatClient
+chat_client = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 )
 

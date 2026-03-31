@@ -182,7 +182,7 @@ actions:
 Before you begin, ensure you have:
 
 - .NET 8.0 or later
-- An [Azure AI Foundry](https://ai.azure.com/) project with at least one deployed agent
+- A [Microsoft Foundry](https://ai.azure.com/) project with at least one deployed agent
 - The following NuGet packages installed:
 
 ```bash
@@ -251,7 +251,7 @@ trigger:
 
 ### Step 2: Configure the Agent Provider
 
-Create a C# console application to execute the workflow. First, configure the agent provider that connects to Azure AI Foundry:
+Create a C# console application to execute the workflow. First, configure the agent provider that connects to Foundry:
 
 ```csharp
 using Azure.Identity;
@@ -268,7 +268,7 @@ IConfiguration configuration = new ConfigurationBuilder()
 string foundryEndpoint = configuration["FOUNDRY_PROJECT_ENDPOINT"] 
     ?? throw new InvalidOperationException("FOUNDRY_PROJECT_ENDPOINT not configured");
 
-// Create the agent provider that connects to Azure AI Foundry
+// Create the agent provider that connects to Foundry
 // WARNING: DefaultAzureCredential is convenient for development but requires 
 // careful consideration in production environments.
 AzureAgentProvider agentProvider = new(
@@ -411,7 +411,7 @@ DeclarativeWorkflowOptions options = new(agentProvider)
 
 ### Agent Provider Setup
 
-The `AzureAgentProvider` connects your workflow to Azure AI Foundry agents:
+The `AzureAgentProvider` connects your workflow to Foundry agents:
 
 ```csharp
 using Azure.Identity;
@@ -857,7 +857,7 @@ With an expression:
 
 #### InvokeAzureAgent
 
-Invokes an Azure AI Foundry agent.
+Invokes a Foundry agent.
 
 Basic invocation:
 
@@ -1321,7 +1321,7 @@ using Azure.AI.Projects;
 using Azure.AI.Projects.OpenAI;
 using Azure.Identity;
 
-// Ensure agents exist in Azure AI Foundry
+// Ensure agents exist in Foundry
 AIProjectClient aiProjectClient = new(foundryEndpoint, new DefaultAzureCredential());
 
 await aiProjectClient.CreateAgentAsync(
