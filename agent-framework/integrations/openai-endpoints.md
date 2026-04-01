@@ -72,11 +72,10 @@ Install the following packages:
   # Hosting.A2A.AspNetCore for OpenAI ChatCompletions/Responses protocol(s) integration
   dotnet add package Microsoft.Agents.AI.Hosting.OpenAI --prerelease
 
-  # Libraries to connect to Azure OpenAI
-  dotnet add package Azure.AI.OpenAI --prerelease
+  # Libraries to connect to Microsoft Foundry
+  dotnet add package Azure.AI.Projects --prerelease
   dotnet add package Azure.Identity
-  dotnet add package Microsoft.Extensions.AI
-  dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+  dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 
   # Swagger to test app
   dotnet add package Microsoft.AspNetCore.OpenApi
@@ -93,11 +92,10 @@ Install the following packages:
     <!-- Hosting.OpenAI for OpenAI ChatCompletions/Responses protocol(s) integration -->
     <PackageReference Include="Microsoft.Agents.AI.Hosting.OpenAI" Version="1.0.0-alpha.251110.2" />
 
-    <!-- Libraries to connect to Azure OpenAI -->
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.5.0-beta.1" />
+    <!-- Libraries to connect to Microsoft Foundry -->
+    <PackageReference Include="Azure.AI.Projects" Version="1.0.0-beta.9" />
     <PackageReference Include="Azure.Identity" Version="1.17.0" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.2" />
-    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.10.2-preview.1.25552.1" />
+    <PackageReference Include="Microsoft.Agents.AI.Foundry" Version="1.0.0-preview.251110.2" />
       
     <!-- Swagger to test app -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
@@ -142,10 +140,10 @@ You can also simply edit the `appsettings.json`, but that's not recommended for 
 Replace the contents of `Program.cs` with the following code:
 
 ```csharp
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
+using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting;
-using Microsoft.Extensions.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -157,18 +155,15 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-// Register the chat client
-IChatClient chatClient = new AzureOpenAIClient(
-        new Uri(endpoint),
-        new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient();
-builder.Services.AddSingleton(chatClient);
-
 builder.AddOpenAIChatCompletions();
 
-// Register an agent
-var pirateAgent = builder.AddAIAgent("pirate", instructions: "You are a pirate. Speak like a pirate.");
+// Create an agent
+var pirateAgent = new AIProjectClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential())
+    .AsAIAgent(
+        model: deploymentName,
+        instructions: "You are a pirate. Speak like a pirate.");
 
 var app = builder.Build();
 
@@ -181,6 +176,9 @@ app.MapOpenAIChatCompletions(pirateAgent);
 
 app.Run();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Testing the Chat Completions Endpoint
 
@@ -289,10 +287,10 @@ Follow the same prerequisites as the Chat Completions example (steps 1-3).
 #### 4. Add the code to Program.cs
 
 ```csharp
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
+using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting;
-using Microsoft.Extensions.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -304,19 +302,16 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-// Register the chat client
-IChatClient chatClient = new AzureOpenAIClient(
-        new Uri(endpoint),
-        new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient();
-builder.Services.AddSingleton(chatClient);
-
 builder.AddOpenAIResponses();
 builder.AddOpenAIConversations();
 
-// Register an agent
-var pirateAgent = builder.AddAIAgent("pirate", instructions: "You are a pirate. Speak like a pirate.");
+// Create an agent
+var pirateAgent = new AIProjectClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential())
+    .AsAIAgent(
+        model: deploymentName,
+        instructions: "You are a pirate. Speak like a pirate.");
 
 var app = builder.Build();
 

@@ -21,7 +21,7 @@ Add the required NuGet packages to your project.
 
 ```dotnetcli
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.AzureAI.Persistent --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry.Persistent --prerelease
 ```
 
 ## Create Foundry Agents

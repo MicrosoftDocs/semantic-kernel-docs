@@ -157,7 +157,7 @@ The chat client layer handles the actual communication with the LLM service.
 `ChatClientAgent` uses an `IChatClient` instance, which can be decorated with additional middleware:
 
 ```csharp
-var chatClient = new AzureOpenAIClient(endpoint, credential)
+var chatClient = new AIProjectClient(endpoint, credential)
     .GetChatClient(deploymentName)
     .AsIChatClient()
     .AsBuilder()
@@ -170,7 +170,7 @@ var agent = new ChatClientAgent(chatClient, instructions: "You are helpful.");
 You can also use `AIContextProvider` as chat client middleware to enrich messages, tools, and instructions at the client level. This must be used within the context of a running `AIAgent`:
 
 ```csharp
-var chatClient = new AzureOpenAIClient(endpoint, credential)
+var chatClient = new AIProjectClient(endpoint, credential)
     .GetChatClient(deploymentName)
     .AsIChatClient()
     .AsBuilder()

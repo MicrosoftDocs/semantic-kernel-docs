@@ -80,11 +80,11 @@ The `ListToolsAsync()` method returns a collection of tools that the MCP server 
 Create your agent and provide the MCP tools during initialization:
 
 ```csharp
-AIAgent agent = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
     new Uri(endpoint),
     new DefaultAzureCredential())
-     .GetChatClient(deploymentName)
      .AsAIAgent(
+         model: deploymentName,
          instructions: "You answer questions related to GitHub repositories only.",
          tools: [.. mcpTools.Cast<AITool>()]);
 
@@ -345,7 +345,7 @@ Wrap the agent in a function tool using `.AsAIFunction()`, create an `McpServerT
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -353,11 +353,13 @@ using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Server;
 
 // Create the agent
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-        .GetChatClient("gpt-4o-mini")
-        .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "You are good at telling jokes.",
+            name: "Joker");
 
 // Convert the agent to an MCP tool
 McpServerTool tool = McpServerTool.Create(agent.AsAIFunction());
@@ -371,6 +373,9 @@ builder.Services
 
 await builder.Build().RunAsync();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Install the required NuGet packages:
 

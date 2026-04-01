@@ -22,25 +22,28 @@ The following example shows how to create an agent with the Web Search tool:
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
-// Requires: dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+// Requires: dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
     ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
 // Create an agent with the web search (Bing grounding) tool
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
+AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
     .AsAIAgent(
+        model: deploymentName,
         instructions: "You are a helpful assistant that can search the web for current information.",
         tools: [new WebSearchToolDefinition()]);
 
 Console.WriteLine(await agent.RunAsync("What is the current weather in Seattle?"));
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 :::zone-end
 

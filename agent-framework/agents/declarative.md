@@ -20,10 +20,9 @@ The following example shows how to create a declarative agent from a YAML config
 ```csharp
 using System;
 using System.IO;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
-using Microsoft.Extensions.AI;
 
 // Load agent configuration from a YAML file
 var yamlContent = File.ReadAllText("agent-config.yaml");
@@ -31,13 +30,16 @@ var yamlContent = File.ReadAllText("agent-config.yaml");
 // Create the agent from the YAML definition
 AIAgent agent = AgentFactory.CreateFromYaml(
     yamlContent,
-    new AzureOpenAIClient(
-        new Uri("https://<myresource>.openai.azure.com"),
-        new AzureCliCredential()));
+    new AIProjectClient(
+        new Uri("<your-foundry-project-endpoint>"),
+        new DefaultAzureCredential()));
 
 // Run the declarative agent
 Console.WriteLine(await agent.RunAsync("Why is the sky blue?"));
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 :::zone-end
 

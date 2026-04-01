@@ -26,10 +26,10 @@ Agent Framework integrates with [OpenTelemetry](https://opentelemetry.io/), and 
 To enable observability for your chat client, you need to build the chat client as follows:
 
 ```csharp
-// Using the Azure OpenAI client as an example
-var instrumentedChatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+// Using the AIProjectClient as an example
+var instrumentedChatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
-    .AsIChatClient() // Converts a native OpenAI SDK ChatClient into a Microsoft.Extensions.AI.IChatClient
+    .AsIChatClient() // Converts into a Microsoft.Extensions.AI.IChatClient
     .AsBuilder()
     .UseOpenTelemetry(sourceName: SourceName, configure: (cfg) => cfg.EnableSensitiveData = true)    // Enable OpenTelemetry instrumentation with sensitive data
     .Build();

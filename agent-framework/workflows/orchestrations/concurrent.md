@@ -48,7 +48,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
@@ -58,7 +58,7 @@ using Microsoft.Agents.AI;
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
     throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-var client = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+var client = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
     .AsIChatClient();
 ```

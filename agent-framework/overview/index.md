@@ -31,7 +31,7 @@ interactive, robust, and safe AI applications.
 :::zone pivot="programming-language-csharp"
 
 ```dotnetcli
-dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 ```csharp
