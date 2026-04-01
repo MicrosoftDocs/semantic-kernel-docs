@@ -306,14 +306,14 @@ async def thread_example():
     )
 
     async with agent:
-        thread = agent.create_session()
+        session = agent.create_session()
 
         # First interaction
-        result1 = await agent.run("My name is Alice.", session=thread)
+        result1 = await agent.run("My name is Alice.", session=session)
         print(f"Agent: {result1}")
 
         # Second interaction - agent remembers the context
-        result2 = await agent.run("What's my name?", session=thread)
+        result2 = await agent.run("What's my name?", session=session)
         print(f"Agent: {result2}")  # Should remember "Alice"
 ```
 
@@ -322,7 +322,7 @@ async def thread_example():
 By default, the agent cannot execute shell commands, read/write files, or fetch URLs. To enable these capabilities, provide a permission handler:
 
 ```python
-from copilot.types import PermissionRequest, PermissionRequestResult
+from copilot.generated.session_events import PermissionRequest
 
 def prompt_permission(
     request: PermissionRequest, context: dict[str, str]

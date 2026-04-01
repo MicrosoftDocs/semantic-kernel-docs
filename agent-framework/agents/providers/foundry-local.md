@@ -76,4 +76,4 @@ For additional runtime controls, `FoundryLocalClient` also supports options such
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Microsoft Foundry Provider](./microsoft-foundry.md)
+> [Anthropic](./anthropic.md)
