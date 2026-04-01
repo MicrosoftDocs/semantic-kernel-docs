@@ -26,24 +26,26 @@ First, create a basic agent with a function tool.
 ```csharp
 using System;
 using System.ComponentModel;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using OpenAI;
 
 [Description("The current datetime offset.")]
 static string GetDateTime()
     => DateTimeOffset.Now.ToString();
 
-AIAgent baseAgent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-        .GetChatClient("gpt-4o-mini")
+AIAgent baseAgent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
         .AsAIAgent(
+            model: "gpt-4o-mini",
             instructions: "You are an AI assistant that helps people find information.",
             tools: [AIFunctionFactory.Create(GetDateTime, name: nameof(GetDateTime))]);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ## Step 2: Create Your Agent Run Middleware
 
@@ -178,9 +180,12 @@ To add middleware to your <xref:Microsoft.Extensions.AI.IChatClient>, you can us
 After adding the middleware, you can use the `IChatClient` with your agent as usual.
 
 ```csharp
-var chatClient = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
-    .GetChatClient("gpt-4o-mini")
-    .AsIChatClient();
+var chatClient = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .GetProjectOpenAIClient()
+        .GetResponsesClient()
+        .AsIChatClient("gpt-4o-mini");
 
 var middlewareEnabledChatClient = chatClient
     .AsBuilder()
@@ -194,12 +199,16 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
  an agent via one of the helper methods on SDK clients.
 
 ```csharp
-var agent = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new AzureCliCredential())
-    .GetChatClient("gpt-4o-mini")
-    .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
-        .AsBuilder()
-            .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
-        .Build());
+var agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "You are a helpful assistant.",
+            clientFactory: (chatClient) => chatClient
+                .AsBuilder()
+                    .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
+                .Build());
 ```
 
 ::: zone-end

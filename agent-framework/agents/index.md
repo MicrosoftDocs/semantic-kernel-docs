@@ -18,6 +18,7 @@ The Microsoft Agent Framework provides support for several types of agents to ac
 ::: zone pivot="programming-language-csharp"
 All agents are derived from a common base class, `AIAgent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
 ::: zone-end
+
 ::: zone pivot="programming-language-python"
 All agents are derived from a common base class, `Agent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
 ::: zone-end
@@ -28,7 +29,7 @@ All agents in the Microsoft Agent Framework execute using a structured runtime m
 
 ![AI Agent Diagram](../media/agent.svg)
 
-> [!IMPORTANT]
+> [!WARNING]
 > If you use Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization's Azure compliance and geographic boundaries and any related implications.
 
 ::: zone pivot="programming-language-csharp"
@@ -66,7 +67,6 @@ To make creating these agents even easier, Agent Framework provides helpers for 
 |[Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Anthropic Service as its backend.|No|Yes|
 |[OpenAI ChatCompletion](./providers/openai.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
 |[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
-|[OpenAI Assistants](./providers/openai.md)|An agent that uses the OpenAI Assistants service.|Yes|No|
 |[Any other `IChatClient`](./providers/custom.md)|You can also use any other [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation to create an agent.|Varies|Varies|
 
 ## Complex custom agents
@@ -261,7 +261,6 @@ For detailed examples, see the agent-specific documentation sections below.
 |[Azure OpenAI Assistants](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Assistants service.|Yes|
 |[OpenAI Chat Completion](./providers/openai.md)|An agent that uses the OpenAI Chat Completion service.|No|
 |[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|
-|[OpenAI Assistants](./providers/openai.md)|An agent that uses the OpenAI Assistants service.|Yes|
 |[Anthropic Claude](./providers/anthropic.md)|An agent that uses Anthropic Claude models.|No|
 |[Amazon Bedrock](https://github.com/microsoft/agent-framework/tree/main/python/packages/bedrock)|An agent that uses Amazon Bedrock models through the Agent Framework Bedrock chat client.|No|
 |[GitHub Copilot](./providers/github-copilot.md)|An agent that uses the GitHub Copilot SDK backend.|No|

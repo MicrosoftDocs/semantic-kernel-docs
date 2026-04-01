@@ -11,18 +11,19 @@ ms.service: agent-framework
 
 # Providers Overview
 
-Microsoft Agent Framework supports several types of agents to accommodate different use cases and requirements. All agents are derived from a common base class, `AIAgent`, which provides a consistent interface for all agent types.
+Microsoft Agent Framework supports several types of agents to accommodate different use cases and requirements. All agents are derived from a common base class (`AIAgent` in .NET, `BaseAgent` in Python), which provides a consistent interface for all agent types.
 
 ## Provider Comparison
 
 | Provider | Function Tools | Structured Output | Code Interpreter | File Search | MCP Tools | Background Responses |
 |----------|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Azure OpenAI](./azure-openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [OpenAI](./openai.md) | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| [OpenAI](./openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Microsoft Foundry](./microsoft-foundry.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Anthropic](./anthropic.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Anthropic](./anthropic.md) | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
 | [Ollama](./ollama.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [GitHub Copilot](./github-copilot.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| [Foundry Local](./foundry-local.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| [GitHub Copilot](./github-copilot.md) | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
 | [Copilot Studio](./copilot-studio.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | [Custom](./custom.md) | Varies | Varies | Varies | Varies | Varies | Varies |
 
@@ -61,6 +62,7 @@ Agent Framework supports many different inference services through chat clients.
 - **[Anthropic](./anthropic.md)** — Claude models with extended thinking and hosted tools support.
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration.
+- **[Copilot Studio](./copilot-studio.md)** — Integration with Microsoft Copilot Studio agents.
 - **[Custom](./custom.md)** — Build your own provider by implementing the `BaseAgent` class.
 
 :::zone-end

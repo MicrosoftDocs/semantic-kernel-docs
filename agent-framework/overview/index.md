@@ -16,7 +16,7 @@ Agent Framework offers two primary categories of capabilities:
 
 | | Description |
 |---|---|
-| **[Agents](../agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Azure OpenAI, OpenAI, Anthropic, Ollama, and [more](../agents/providers/index.md). |
+| **[Agents](../agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Microsoft Foundry, Anthropic, Azure OpenAI, OpenAI, Ollama, and [more](../agents/providers/index.md). |
 | **[Workflows](../workflows/index.md)** | Graph-based workflows that connect agents and functions for multi-step tasks with type-safe routing, checkpointing, and human-in-the-loop support. |
 
 The framework also provides foundational building
@@ -31,22 +31,21 @@ interactive, robust, and safe AI applications.
 :::zone pivot="programming-language-csharp"
 
 ```dotnetcli
-dotnet add package Azure.AI.OpenAI --prerelease
-dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
 ```
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 
-AIAgent agent = new AzureOpenAIClient(
-        new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!),
+AIAgent agent = new AIProjectClient(
+        new Uri("https://your-foundry-service.services.ai.azure.com/api/projects/your-foundry-project"),
         new AzureCliCredential())
-    .GetChatClient("gpt-4o-mini")
-    .AsAIAgent(instructions: "You are a friendly assistant. Keep your answers brief.");
+    .AsAIAgent(
+        model: "gpt-5.4-mini",
+        instructions: "You are a friendly assistant. Keep your answers brief.");
 
 Console.WriteLine(await agent.RunAsync("What is the largest city in France?"));
 ```
@@ -60,10 +59,13 @@ pip install agent-framework --pre
 ```
 
 ```python
+    from agent_framework.foundry import FoundryChatClient
+    from azure.identity import AzureCliCredential
+
     credential = AzureCliCredential()
     client = FoundryChatClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        project_endpoint="https://your-foundry-service.services.ai.azure.com/api/projects/your-foundry-project",
+        model="gpt-5.4-mini",
         credential=credential,
     )
 
