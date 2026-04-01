@@ -61,9 +61,9 @@ pip install agent-framework --pre
 
 ```python
     credential = AzureCliCredential()
-    client = AzureOpenAIResponsesClient(
+    client = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=credential,
     )
 

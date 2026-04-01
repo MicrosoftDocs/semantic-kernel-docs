@@ -111,16 +111,19 @@ app.Run();
 
 ```python
 import os
-from agent_framework.azure import AzureOpenAIChatClient, AgentFunctionApp
+from agent_framework.azure import AgentFunctionApp
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import DefaultAzureCredential
 
 endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini")
+api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Create an AI agent following the standard Microsoft Agent Framework pattern
-agent = AzureOpenAIChatClient(
-    endpoint=endpoint,
-    deployment_name=deployment_name,
+agent = OpenAIChatCompletionClient(
+    azure_endpoint=endpoint,
+    model=deployment_name,
+    api_version=api_version,
     credential=DefaultAzureCredential()
 ).as_agent(
     instructions="You are good at telling jokes.",
@@ -720,18 +723,21 @@ Open `function_app.py` to see the agent configuration:
 
 ```python
 import os
-from agent_framework.azure import AzureOpenAIChatClient, AgentFunctionApp
+from agent_framework.azure import AgentFunctionApp
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import DefaultAzureCredential
 
 endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT is not set.")
 deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini")
+api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Create an AI agent following the standard Microsoft Agent Framework pattern
-agent = AzureOpenAIChatClient(
-    endpoint=endpoint,
-    deployment_name=deployment_name,
+agent = OpenAIChatCompletionClient(
+    azure_endpoint=endpoint,
+    model=deployment_name,
+    api_version=api_version,
     credential=DefaultAzureCredential()
 ).as_agent(
     instructions="You are a helpful assistant that can answer questions and provide information.",
@@ -1180,18 +1186,21 @@ Update your `function_app.py` to register the translation agents alongside the e
 ```python
 import os
 from azure.identity import DefaultAzureCredential
-from agent_framework.azure import AzureOpenAIChatClient, AgentFunctionApp
+from agent_framework.azure import AgentFunctionApp
+from agent_framework.openai import OpenAIChatCompletionClient
 
 # Get the Azure OpenAI configuration
 endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT is not set.")
-deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4o-mini")
+deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini")
+api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Create the Azure OpenAI client
-chat_client = AzureOpenAIChatClient(
-    endpoint=endpoint,
-    deployment_name=deployment_name,
+chat_client = OpenAIChatCompletionClient(
+    azure_endpoint=endpoint,
+    model=deployment_name,
+    api_version=api_version,
     credential=DefaultAzureCredential()
 )
 

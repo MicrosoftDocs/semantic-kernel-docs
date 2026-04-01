@@ -204,7 +204,7 @@ For the complete working implementation of this Azure Foundry agents workflow, s
 
 You'll create a workflow that:
 
-- Uses `AzureOpenAIResponsesClient` to create intelligent agents
+- Uses `FoundryChatClient` to create intelligent agents
 - Implements a Writer agent that creates content based on prompts
 - Implements a Reviewer agent that provides feedback on the content
 - Connects agents in a sequential workflow pipeline
@@ -232,7 +232,7 @@ import asyncio
 import os
 
 from agent_framework import AgentResponseUpdate, WorkflowBuilder
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity import AzureCliCredential
 ```
 
@@ -242,9 +242,9 @@ Create one shared client that you can use to construct multiple agents:
 
 ```python
 async def main() -> None:
-    client = AzureOpenAIResponsesClient(
+    client = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=AzureCliCredential(),
     )
 ```
@@ -314,14 +314,14 @@ if __name__ == "__main__":
 
 ## How It Works
 
-1. **Client Setup**: Uses one `AzureOpenAIResponsesClient` with Azure CLI credentials for authentication.
+1. **Client Setup**: Uses one `FoundryChatClient` with Azure CLI credentials for authentication.
 2. **Agent Creation**: Creates Writer and Reviewer agents from the same client configuration.
 3. **Sequential Processing**: Writer agent generates content first, then passes it to the Reviewer agent.
 4. **Streaming Updates**: Output events (`type="output"`) with `AgentResponseUpdate` data provide real-time token updates as agents generate responses.
 
 ## Key Concepts
 
-- **AzureOpenAIResponsesClient**: Shared client used to create workflow agents with consistent configuration.
+- **FoundryChatClient**: Shared client used to create workflow agents with consistent configuration.
 - **WorkflowEvent**: Output events (`type="output"`) contain agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming).
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next.
 

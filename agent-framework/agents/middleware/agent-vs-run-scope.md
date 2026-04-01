@@ -20,7 +20,7 @@ When both are registered, agent-level middleware runs first (outermost), followe
 
 :::zone pivot="programming-language-csharp"
 
-In C#, middleware is registered on an agent using the builder pattern. Agent-level middleware is applied during agent construction, while run-level middleware can be provided via `AgentRunOptions`.
+In C#, middleware is registered on an agent using the builder pattern with `.AsBuilder().Use(...).Build()`. Agent-level middleware is applied during agent construction and persists across all runs. Run-level middleware uses the same pattern but builds a decorated agent inline before calling `RunAsync` or `RunStreamingAsync`.
 
 ### Agent-level middleware
 
@@ -30,6 +30,7 @@ Agent-level middleware is registered at construction time and applies to every r
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
@@ -50,6 +51,20 @@ async Task<AgentResponse> SecurityMiddleware(
     return response;
 }
 
+async IAsyncEnumerable<AgentResponseUpdate> SecurityStreamingMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentSession? session,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    [EnumeratorCancellation] CancellationToken cancellationToken)
+{
+    Console.WriteLine("[Security] Validating streaming request...");
+    await foreach (var update in innerAgent.RunStreamingAsync(messages, session, options, cancellationToken))
+    {
+        yield return update;
+    }
+}
+
 AIAgent baseAgent = new AzureOpenAIClient(
     new Uri("https://<myresource>.openai.azure.com"),
     new AzureCliCredential())
@@ -59,7 +74,7 @@ AIAgent baseAgent = new AzureOpenAIClient(
 // Register middleware at the agent level
 var agentWithMiddleware = baseAgent
     .AsBuilder()
-        .Use(runFunc: SecurityMiddleware, runStreamingFunc: null)
+        .Use(runFunc: SecurityMiddleware, runStreamingFunc: SecurityStreamingMiddleware)
     .Build();
 
 Console.WriteLine(await agentWithMiddleware.RunAsync("What's the weather in Paris?"));
@@ -67,7 +82,7 @@ Console.WriteLine(await agentWithMiddleware.RunAsync("What's the weather in Pari
 
 ### Run-level middleware
 
-Run-level middleware is provided per request via `AgentRunOptions`:
+Run-level middleware uses the same builder pattern, applied inline for a specific invocation:
 
 ```csharp
 // Run-level middleware: applied to a specific run only
@@ -84,10 +99,30 @@ async Task<AgentResponse> DebugMiddleware(
     return response;
 }
 
-// Pass run-level middleware via AgentRunOptions for this specific call
-var runOptions = new AgentRunOptions { RunMiddleware = DebugMiddleware };
-Console.WriteLine(await baseAgent.RunAsync("What's the weather in Tokyo?", options: runOptions));
+async IAsyncEnumerable<AgentResponseUpdate> DebugStreamingMiddleware(
+    IEnumerable<ChatMessage> messages,
+    AgentSession? session,
+    AgentRunOptions? options,
+    AIAgent innerAgent,
+    [EnumeratorCancellation] CancellationToken cancellationToken)
+{
+    Console.WriteLine($"[Debug] Input messages: {messages.Count()}");
+    await foreach (var update in innerAgent.RunStreamingAsync(messages, session, options, cancellationToken))
+    {
+        yield return update;
+    }
+}
+
+// Apply run-level middleware by building a decorated agent inline for this specific call
+Console.WriteLine(await baseAgent
+    .AsBuilder()
+        .Use(runFunc: DebugMiddleware, runStreamingFunc: DebugStreamingMiddleware)
+    .Build()
+    .RunAsync("What's the weather in Tokyo?"));
 ```
+
+> [!TIP]
+> The `.AsBuilder().Use(...).Build()` pattern creates a lightweight wrapper around the original agent. You can chain multiple `.Use()` calls to compose several middleware for a single invocation.
 
 :::zone-end
 

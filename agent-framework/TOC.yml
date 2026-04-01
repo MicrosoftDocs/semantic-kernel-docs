@@ -40,6 +40,8 @@ items:
     href: agents/observability.md
   - name: Agent Skills
     href: agents/skills.md
+  - name: Agent Safety
+    href: agents/safety.md
   - name: Tools
     items:
     - name: Overview
@@ -100,6 +102,8 @@ items:
       href: agents/providers/openai.md
     - name: Microsoft Foundry
       href: agents/providers/microsoft-foundry.md
+    - name: Foundry Local
+      href: agents/providers/foundry-local.md
     - name: Anthropic
       href: agents/providers/anthropic.md
     - name: Ollama
@@ -152,6 +156,16 @@ items:
       href: workflows/orchestrations/group-chat.md
     - name: Magentic
       href: workflows/orchestrations/magentic.md
+  - name: Advanced
+    items:
+    - name: Agent Executor
+      href: workflows/advanced/agent-executor.md
+    - name: Execution Modes
+      href: workflows/advanced/execution-modes.md
+    - name: Resettable Executors
+      href: workflows/advanced/resettable-executors.md
+    - name: Sub-Workflows
+      href: workflows/advanced/sub-workflows.md
 - name: Integrations
   items:
   - name: Overview

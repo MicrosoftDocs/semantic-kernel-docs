@@ -205,4 +205,4 @@ async def streaming_example():
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Providers Overview](./index.md)
+> [GitHub Copilot](./github-copilot.md)

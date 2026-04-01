@@ -49,7 +49,7 @@ Use the smallest surface that fits the data. This keeps tool inputs explicit and
 from typing import Annotated
 
 from agent_framework import FunctionInvocationContext, tool
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 
 @tool(approval_mode="never_require")
@@ -62,7 +62,7 @@ def send_email(
     return f"Queued email for {address} from {user_id} ({tenant})"
 
 
-agent = OpenAIResponsesClient().as_agent(
+agent = OpenAIChatClient().as_agent(
     name="Notifier",
     instructions="Send email updates.",
     tools=[send_email],
@@ -93,7 +93,7 @@ Function middleware uses the same `FunctionInvocationContext` object that tools 
 from collections.abc import Awaitable, Callable
 
 from agent_framework import FunctionInvocationContext
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 
 async def enrich_tool_runtime_context(
@@ -105,7 +105,7 @@ async def enrich_tool_runtime_context(
     await call_next()
 
 
-agent = OpenAIResponsesClient().as_agent(
+agent = OpenAIChatClient().as_agent(
     name="Notifier",
     instructions="Send email updates.",
     tools=[send_email],
@@ -121,7 +121,7 @@ The middleware contract uses `call_next()` with no arguments. Mutate `context.kw
 from typing import Annotated
 
 from agent_framework import FunctionInvocationContext, tool
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 
 @tool(approval_mode="never_require")
@@ -136,7 +136,7 @@ def remember_topic(
     return f"Stored {topic!r} in session state."
 
 
-agent = OpenAIResponsesClient().as_agent(
+agent = OpenAIChatClient().as_agent(
     name="MemoryAgent",
     instructions="Remember important topics.",
     tools=[remember_topic],
@@ -155,7 +155,7 @@ When an agent is exposed as a tool via `as_tool()`, runtime function kwargs alre
 
 ```python
 from agent_framework import FunctionInvocationContext, tool
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 
 @tool(description="Store findings for later steps.")
@@ -164,7 +164,7 @@ def store_findings(findings: str, ctx: FunctionInvocationContext) -> None:
         ctx.session.state["findings"] = findings
 
 
-client = OpenAIResponsesClient()
+client = OpenAIChatClient()
 
 research_agent = client.as_agent(
     name="ResearchAgent",
@@ -212,4 +212,4 @@ Use `function_invocation_kwargs` for tool-invocation flows and `client_kwargs` f
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Middleware Overview](./index.md)
+> [Providers](../providers/index.md)

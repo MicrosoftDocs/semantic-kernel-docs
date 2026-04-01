@@ -207,12 +207,12 @@ def process_return(order_number: Annotated[str, "Order number to process return 
 ```python
 import os
 
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity import AzureCliCredential
 
-chat_client = AzureOpenAIResponsesClient(
+chat_client = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 )
 
@@ -433,11 +433,17 @@ def process_refund(order_number: Annotated[str, "Order number to process refund 
 ### Create Agents with Approval-Required Tools
 
 ```python
+import os
 from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import AzureCliCredential
 
-client = AzureOpenAIChatClient(credential=AzureCliCredential())
+chat_client = OpenAIChatCompletionClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+)
 
 triage_agent = chat_client.as_agent(
     instructions=(
@@ -645,6 +651,14 @@ After broadcasting the response, the participant then checks whether it needs to
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
 
 ::: zone-end
+
+## The Handoff Agent Executor
+
+Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:
+
+- **Handoff tool injection** — automatically registers handoff tools on each agent based on the configured handoff rules, so the agent can invoke a tool to transfer control.
+- **Handoff function detection** — inspects the agent's response for handoff tool calls and routes control to the target agent.
+- **Tool call filtering** — filters out handoff-related function calls and tool results from the conversation history before forwarding to the next agent, preventing internal workflow mechanics from confusing the model.
 
 ## Next steps
 

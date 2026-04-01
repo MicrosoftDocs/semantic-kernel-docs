@@ -172,12 +172,12 @@ For non-streaming scenarios, when you initially run an agent with `background=Tr
 ```python
 import asyncio
 from agent_framework import Agent
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 agent = Agent(
     name="researcher",
     instructions="You are a helpful research assistant.",
-    client=OpenAIResponsesClient(model_id="o3"),
+    client=OpenAIChatClient(model="o3"),
 )
 
 session = agent.create_session()

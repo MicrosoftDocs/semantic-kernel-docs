@@ -491,7 +491,8 @@ from agent_framework import (
     Case,
     Default,
 )
-from agent_framework.azure import AzureOpenAIChatClient
+import os
+from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import AzureCliCredential
 from pydantic import BaseModel
 ```
@@ -595,7 +596,12 @@ Set up the Azure OpenAI agents with structured output formatting:
 async def main() -> None:
     # Create agents
     # AzureCliCredential uses your current az login. This avoids embedding secrets in code.
-    chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+    chat_client = OpenAIChatCompletionClient(
+        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+        api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        credential=AzureCliCredential(),
+    )
 
     # Agent 1. Classifies spam and returns a DetectionResult object.
     # response_format enforces that the LLM returns parsable JSON for the Pydantic model.
@@ -1234,7 +1240,12 @@ Update the spam detection agent to be less confident and return three-way classi
 
 ```python
 async def main():
-    chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+    chat_client = OpenAIChatCompletionClient(
+        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+        api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        credential=AzureCliCredential(),
+    )
 
     # Enhanced spam detection agent with three-way classification
     spam_detection_agent = AgentExecutor(
@@ -2066,7 +2077,12 @@ Create agents for analysis, assistance, and summarization:
 
 ```python
 async def main() -> None:
-    chat_client = AzureOpenAIChatClient(credential=AzureCliCredential())
+    chat_client = OpenAIChatCompletionClient(
+        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+        api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        credential=AzureCliCredential(),
+    )
 
     # Enhanced analysis agent
     email_analysis_agent = AgentExecutor(

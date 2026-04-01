@@ -4,7 +4,7 @@ description: Guide to significant changes in Python releases for Microsoft Agent
 author: eavanvalkenburg
 ms.topic: upgrade-and-migration-article
 ms.author: edvan
-ms.date: 03/20/2026
+ms.date: 03/30/2026
 ms.service: agent-framework
 ---
 # Python 2026 Significant Changes Guide
@@ -15,6 +15,260 @@ This document lists all significant changes in Python releases since the start o
 - 🟡 **Enhancement** — New capability or improvement; existing code continues to work
 
 This document will be removed once we reach the 1.0.0 stable release, so please refer to it when upgrading between versions in 2026 to ensure you don't miss any important changes. For detailed upgrade instructions on specific topics (e.g., options migration), refer to the linked upgrade guides or the linked PR's.
+
+---
+
+## python-1.0.0rc6
+
+This section captures the significant Python changes currently being tracked for `python-1.0.0rc6`.
+
+### 🔴 Provider-leading client design and package split
+
+**PR:** [#4818](https://github.com/microsoft/agent-framework/pull/4818)
+
+PR `#4818` reorganizes the Python provider surface around provider-specific packages and namespaces.
+
+- OpenAI clients now live in the `agent-framework-openai` package, while still importing from the `agent_framework.openai` namespace.
+- Microsoft Foundry clients now live in the `agent-framework-foundry` package and the `agent_framework.foundry` namespace.
+- Foundry Local is also exposed from `agent_framework.foundry` as `FoundryLocalClient`.
+- `OpenAIResponsesClient` is renamed to `OpenAIChatClient`.
+- `OpenAIChatClient` is renamed to `OpenAIChatCompletionClient`.
+- Client configuration is standardized on `model`, replacing older parameters such as `model_id`, `deployment_name`, and `model_deployment_name`.
+- For new Azure OpenAI code, use the `agent_framework.openai` clients. The older `AzureOpenAI*` classes still exist under `agent_framework.azure` as deprecated compatibility shims.
+- For new Foundry code, use `FoundryChatClient` for direct project inference, `FoundryAgent` for Prompt Agents and HostedAgents, and `FoundryLocalClient` for local runtimes.
+- `AzureAIClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentClient`, `AzureAIAgentsProvider`, and `OpenAIAssistantsClient` now sit on deprecated or compatibility paths. `AzureAIAgentClient` and related classes targets the v1 Agent Service surface and will be removed before GA.
+- Sample coverage was reorganized to match the new provider-leading layout, including Foundry samples under `samples/02-agents/providers/foundry/`.
+
+### Package mapping
+
+| Scenario | Install | Primary namespace |
+|---|---|---|
+| OpenAI and Azure OpenAI | `pip install agent-framework-openai --pre` | `agent_framework.openai` |
+| Microsoft Foundry project endpoints and Agent Service | `pip install agent-framework-foundry --pre` | `agent_framework.foundry` |
+| Foundry Local | `pip install agent-framework-foundry-local --pre` | `agent_framework.foundry` |
+| Legacy/lower-level Azure AI clients | `pip install agent-framework-azure-ai --pre` | `agent_framework.azure` |
+
+**Before:**
+```python
+from agent_framework.openai import OpenAIResponsesClient
+
+client = OpenAIResponsesClient(model_id="gpt-5.4")
+```
+
+**After:**
+```python
+from agent_framework.openai import OpenAIChatClient
+
+client = OpenAIChatClient(model="gpt-5.4")
+```
+
+If you previously used Azure OpenAI directly, map the old dedicated classes to the new provider-leading OpenAI classes:
+
+- `AzureOpenAIResponsesClient` → `OpenAIChatClient`
+- `AzureOpenAIChatClient` → `OpenAIChatCompletionClient`
+- `AzureOpenAIEmbeddingClient` → `OpenAIEmbeddingClient`
+- `AzureOpenAIAssistantsClient` → `OpenAIAssistantsClient` or `OpenAIAssistantProvider`
+
+The code change is mostly a class-name move plus `deployment_name` → `model`. For Azure OpenAI compatibility, use explicit Azure inputs on the new OpenAI clients. `credential=` is now the preferred Azure auth surface, while a callable `api_key` remains a compatibility path:
+
+**Before (`AzureOpenAIResponsesClient`):**
+```python
+from agent_framework.azure import AzureOpenAIResponsesClient
+
+client = AzureOpenAIResponsesClient(
+    endpoint=azure_endpoint,
+    deployment_name=deployment_name,
+    credential=credential,
+)
+```
+
+**After (`OpenAIChatClient`):**
+```python
+from agent_framework.openai import OpenAIChatClient
+from azure.identity import AzureCliCredential
+
+api_version = "your-azure-openai-api-version"
+
+client = OpenAIChatClient(
+    azure_endpoint=azure_endpoint,
+    model=deployment_name,
+    credential=AzureCliCredential(),
+    api_version=api_version,
+)
+```
+
+**Before (`AzureOpenAIChatClient`):**
+```python
+from agent_framework.azure import AzureOpenAIChatClient
+
+client = AzureOpenAIChatClient(
+    endpoint=azure_endpoint,
+    deployment_name=deployment_name,
+    credential=credential,
+)
+```
+
+**After (`OpenAIChatCompletionClient`):**
+```python
+from agent_framework.openai import OpenAIChatCompletionClient
+from azure.identity import AzureCliCredential
+
+api_version = "your-azure-openai-api-version"
+
+client = OpenAIChatCompletionClient(
+    azure_endpoint=azure_endpoint,
+    model=deployment_name,
+    credential=AzureCliCredential(),
+    api_version=api_version,
+)
+```
+
+If you want to move from Azure OpenAI endpoints to a Microsoft Foundry project endpoint, use the Foundry-oriented surface instead:
+
+**Before (Azure OpenAI endpoint):**
+```python
+from agent_framework.azure import AzureOpenAIResponsesClient
+from azure.identity import AzureCliCredential
+
+client = AzureOpenAIResponsesClient(
+    deployment_name="gpt-4.1",
+    credential=AzureCliCredential(),
+)
+```
+
+**After (Foundry project):**
+```python
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
+from azure.identity import AzureCliCredential
+
+client = FoundryChatClient(
+    project_endpoint="https://your-project.services.ai.azure.com",
+    model="gpt-4.1",
+    credential=AzureCliCredential(),
+)
+
+agent = Agent(client=client)
+```
+
+For local Microsoft Foundry runtimes, use the Foundry namespace plus the local connector:
+
+```python
+from agent_framework.foundry import FoundryLocalClient
+
+client = FoundryLocalClient(model="phi-4-mini")
+```
+
+If you omit `model`, set `FOUNDRY_LOCAL_MODEL` in your environment.
+
+Also update environment/configuration names where applicable:
+
+- `OPENAI_RESPONSES_MODEL_ID` / `OPENAI_CHAT_MODEL_ID` → `OPENAI_MODEL`
+- Azure OpenAI deployment names now map to the `model` argument on `OpenAIChatClient` / `OpenAIChatCompletionClient`
+- Use `azure_endpoint` for Azure OpenAI resource URLs, or `base_url` if you already have a full `.../openai/v1` URL, and set `api_version` for the Azure OpenAI API surface you are using
+- Adopt Foundry-specific settings such as `FOUNDRY_PROJECT_ENDPOINT`, `FOUNDRY_MODEL`, `FOUNDRY_AGENT_NAME`, and `FOUNDRY_AGENT_VERSION` for cloud Foundry clients
+- Use `FOUNDRY_LOCAL_MODEL` for Foundry Local
+
+This change is currently tracked under `python-1.0.0rc6`; add the release-notes link once the corresponding Python release is published.
+
+---
+
+### 🔴 Core dependencies are now intentionally slim
+
+**PR:** [#4904](https://github.com/microsoft/agent-framework/pull/4904)
+
+PR `#4904` follows the provider package split from `#4818` by slimming down `agent-framework-core` and removing more transitive provider dependencies from the core package.
+
+- `agent-framework-core` is now intentionally minimal.
+- If you import `agent_framework.openai`, install `agent-framework-openai --pre`.
+- If you import Azure compatibility or lower-level Azure AI clients from `agent_framework.azure`, install `agent-framework-azure-ai --pre`.
+- If you use MCP tools, `Agent.as_mcp_server()`, or other MCP integrations on a minimal install, install `mcp --pre` manually. For WebSocket MCP support, install `mcp[ws] --pre`.
+- If you want the broad "everything included" experience, install the meta package `agent-framework --pre`.
+
+This does **not** redesign the provider surface again; it changes what is installed by default when you only bring in core.
+
+**Before (core-only installs often brought in more provider functionality transitively):**
+```bash
+pip install agent-framework-core --pre
+```
+
+**After (install the provider package you actually use):**
+```bash
+pip install agent-framework-core --pre
+pip install agent-framework-openai --pre
+```
+
+or:
+
+```bash
+pip install agent-framework-core --pre
+pip install agent-framework-azure-ai --pre
+```
+
+If you upgrade an existing project that previously depended on core plus lazy provider imports, audit your imports and make the provider packages explicit in your environment or dependency files. Do the same for MCP dependencies if you rely on MCP tools or MCP server hosting.
+
+---
+
+### 🔴 Generic OpenAI clients now prefer explicit routing signals
+
+**PR:** [#4925](https://github.com/microsoft/agent-framework/pull/4925)
+
+PR `#4925` changes how the generic `agent_framework.openai` clients decide between OpenAI and Azure OpenAI.
+
+- Generic OpenAI clients no longer switch to Azure just because `AZURE_OPENAI_*` environment variables are present.
+- If `OPENAI_API_KEY` is configured, the generic clients stay on OpenAI unless you pass an explicit Azure routing signal such as `credential` or `azure_endpoint`.
+- If only `AZURE_OPENAI_*` settings are present, the generic clients can still fall back to Azure environment-based routing.
+- The preferred Azure OpenAI pattern is now to pass explicit Azure settings plus `credential=AzureCliCredential()` on `OpenAIChatClient`, `OpenAIChatCompletionClient`, and the embedding client.
+- Deprecated `AzureOpenAI*` wrappers preserve their compatibility behavior, so existing wrapper-based code does not follow the new generic-client precedence rules.
+
+**Before (`OpenAIChatClient` could route to Azure because Azure env vars were present):**
+```python
+import os
+from agent_framework.openai import OpenAIChatClient
+
+os.environ["OPENAI_API_KEY"] = "sk-openai"
+os.environ["AZURE_OPENAI_ENDPOINT"] = "https://your-resource.openai.azure.com"
+os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"] = "gpt-4o-mini"
+
+client = OpenAIChatClient(model="gpt-4o-mini")
+```
+
+**After (generic OpenAI stays on OpenAI; pass explicit Azure inputs to force Azure routing):**
+```python
+import os
+from agent_framework.openai import OpenAIChatClient
+from azure.identity import AzureCliCredential
+
+client = OpenAIChatClient(
+    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+)
+```
+
+If your environment contains both `OPENAI_*` and `AZURE_OPENAI_*` values, audit any generic `agent_framework.openai` client construction and make the provider choice explicit. The Azure provider samples were updated to pass Azure inputs directly for this reason.
+
+Azure embeddings now follow the same routing model:
+
+```python
+import os
+from agent_framework.openai import OpenAIEmbeddingClient
+from azure.identity import AzureCliCredential
+
+client = OpenAIEmbeddingClient(
+    model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    credential=AzureCliCredential(),
+)
+```
+
+For embedding scenarios, map:
+
+- `AzureOpenAIEmbeddingClient` → `OpenAIEmbeddingClient`
+- `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME` → `model`
+- `OPENAI_EMBEDDING_MODEL` remains the OpenAI-side embedding environment variable
 
 ---
 
@@ -1819,6 +2073,9 @@ No significant changes in this release.
 
 | Release | Release Notes | Type | Change | PR |
 |---------|---------------|------|--------|-----|
+| 1.0.0rc6 | PR only | 🔴 Breaking | Provider-leading refactor: split `agent-framework-openai`, `agent-framework-foundry`, and `agent-framework-foundry-local`; rename OpenAI clients; move Foundry to `agent_framework.foundry`; deprecate Azure AI and Assistants compatibility paths | [#4818](https://github.com/microsoft/agent-framework/pull/4818) |
+| 1.0.0rc6 | PR only | 🔴 Breaking | `agent-framework-core` is now intentionally slim; install explicit provider packages such as `agent-framework-openai` or `agent-framework-azure-ai`, and install `mcp` manually for MCP tooling on minimal installs, or use the `agent-framework` meta package for the broader default experience | [#4904](https://github.com/microsoft/agent-framework/pull/4904) |
+| 1.0.0rc6 | PR only | 🔴 Breaking | Generic `agent_framework.openai` clients now prefer explicit routing signals; OpenAI stays on OpenAI when `OPENAI_API_KEY` is set, and Azure scenarios should pass explicit Azure routing inputs such as `credential` or `azure_endpoint`, then configure `api_version` | [#4925](https://github.com/microsoft/agent-framework/pull/4925) |
 | 1.0.0rc5 / 1.0.0b260318 | N/A (scheduled) | 🔴 Breaking | Public runtime kwargs split into `function_invocation_kwargs` and `client_kwargs`; tools now use `FunctionInvocationContext` / `ctx.session` | [#4581](https://github.com/microsoft/agent-framework/pull/4581) |
 | 1.0.0rc4 / 1.0.0b260311 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0rc4) | 🔴 Breaking | Azure AI integrations now target `azure-ai-projects` 2.0 GA; `foundry_features` was removed and `allow_preview` is the preview opt-in | [#4536](https://github.com/microsoft/agent-framework/pull/4536) |
 | 1.0.0rc4 / 1.0.0b260311 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0rc4) | 🔴 Breaking | GitHub Copilot integration now uses `ToolInvocation` / `ToolResult`; `agent-framework-github-copilot` requires Python 3.11+ | [#4551](https://github.com/microsoft/agent-framework/pull/4551) |

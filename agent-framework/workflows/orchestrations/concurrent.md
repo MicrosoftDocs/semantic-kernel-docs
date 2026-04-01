@@ -155,13 +155,13 @@ Agents are specialized entities that can process tasks. The following code defin
 ```python
 import os
 
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity import AzureCliCredential
 
-# 1) Create three domain agents using AzureOpenAIResponsesClient
-chat_client = AzureOpenAIResponsesClient(
+# 1) Create three domain agents using FoundryChatClient
+chat_client = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 )
 
@@ -295,7 +295,7 @@ from agent_framework import (
 )
 
 class ResearcherExec(Executor):
-    def __init__(self, chat_client: AzureOpenAIResponsesClient, id: str = "researcher"):
+    def __init__(self, chat_client: FoundryChatClient, id: str = "researcher"):
         self.agent = chat_client.as_agent(
             instructions=(
                 "You're an expert market and product researcher. Given a prompt, provide concise, factual insights,"
@@ -312,7 +312,7 @@ class ResearcherExec(Executor):
         await ctx.send_message(AgentExecutorResponse(self.id, response, full_conversation=full_conversation))
 
 class MarketerExec(Executor):
-    def __init__(self, chat_client: AzureOpenAIResponsesClient, id: str = "marketer"):
+    def __init__(self, chat_client: FoundryChatClient, id: str = "marketer"):
         self.agent = chat_client.as_agent(
             instructions=(
                 "You're a creative marketing strategist. Craft compelling value propositions and target messaging"
@@ -332,9 +332,9 @@ class MarketerExec(Executor):
 ### Build a Workflow with Custom Executors
 
 ```python
-chat_client = AzureOpenAIResponsesClient(
+chat_client = FoundryChatClient(
     project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     credential=AzureCliCredential(),
 )
 

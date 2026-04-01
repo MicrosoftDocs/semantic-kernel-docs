@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/17/2026
+ms.date: 03/30/2026
 ms.service: agent-framework
 ---
 
@@ -77,21 +77,21 @@ from agent_framework import (
     Agent,
     Content,
 )
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 """
-OpenAI Responses Client with Code Interpreter Example
+OpenAI Chat Client with Code Interpreter Example
 
-This sample demonstrates using get_code_interpreter_tool() with OpenAI Responses Client
+This sample demonstrates using get_code_interpreter_tool() with OpenAI Chat Client
 for Python code execution and mathematical problem solving.
 """
 
 
 async def main() -> None:
-    """Example showing how to use the code interpreter tool with OpenAI Responses."""
-    print("=== OpenAI Responses Agent with Code Interpreter Example ===")
+    """Example showing how to use the code interpreter tool with OpenAI Chat."""
+    print("=== OpenAI Chat Client Agent with Code Interpreter Example ===")
 
-    client = OpenAIResponsesClient()
+    client = OpenAIChatClient()
     agent = Agent(
         client=client,
         instructions="You are a helpful assistant that can write and execute Python code to solve problems.",
@@ -124,12 +124,11 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-### Streaming code-interpreter deltas
+### Current OpenAI code interpreter sample
 
-When using Assistants clients with streaming, code-interpreter input can arrive in incremental deltas before the final tool result.
-You can inspect streaming updates and aggregate code fragments as they arrive:
+The current OpenAI code-interpreter sample in the code repo uses `OpenAIChatClient` and shows how to inspect generated code plus the final execution output:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/providers/azure_openai/azure_assistants_with_code_interpreter.py" range="23-39,61-67":::
+:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/providers/openai/client_with_code_interpreter.py" range="23-57":::
 
 :::zone-end
 

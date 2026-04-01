@@ -393,7 +393,7 @@ import os
 from typing import Annotated, Any
 
 from agent_framework import Agent, tool
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework_ag_ui import add_agent_framework_fastapi_endpoint
 from azure.identity import AzureCliCredential
 from fastapi import FastAPI
@@ -437,10 +437,11 @@ if not endpoint:
 if not deployment_name:
     raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
 
-chat_client = AzureOpenAIChatClient(
+chat_client = OpenAIChatCompletionClient(
+    model=deployment_name,
+    azure_endpoint=endpoint,
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),
-    endpoint=endpoint,
-    deployment_name=deployment_name,    
 )
 
 # Create agent with tools
@@ -687,7 +688,7 @@ weather_tools = WeatherTools(api_key="your-api-key")
 agent = Agent(
     name="WeatherAgent",
     instructions="You are a weather assistant.",
-    chat_client=AzureOpenAIChatClient(...),
+    chat_client=OpenAIChatCompletionClient(...),
     tools=[
         weather_tools.get_current_weather,
         weather_tools.get_forecast,
