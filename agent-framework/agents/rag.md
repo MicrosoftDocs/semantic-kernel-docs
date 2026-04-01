@@ -304,6 +304,10 @@ Each connector provides the same `create_search_function` method that can be bri
 
 ::: zone-end
 
+## Graph RAG
+
+For GraphRAG using graph traversal enriched search with Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/neo4j-graphrag.md).
+
 ## Next steps
 
 > [!div class="nextstepaction"]
