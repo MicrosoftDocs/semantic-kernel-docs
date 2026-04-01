@@ -18,25 +18,53 @@ Declarative agents allow you to define agent configuration using YAML or JSON fi
 The following example shows how to create a declarative agent from a YAML configuration:
 
 ```csharp
-using System;
-using System.IO;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
-// Load agent configuration from a YAML file
-var yamlContent = File.ReadAllText("agent-config.yaml");
+// Create the chat client
+IChatClient chatClient = new AzureOpenAIClient(
+    new Uri("https://<myresource>.openai.azure.com"),
+    new DefaultAzureCredential())
+     .GetChatClient("gpt-4o-mini")
+     .AsIChatClient();
 
-// Create the agent from the YAML definition
-AIAgent agent = AgentFactory.CreateFromYaml(
-    yamlContent,
-    new AzureOpenAIClient(
-        new Uri("https://<myresource>.openai.azure.com"),
-        new AzureCliCredential()));
+// Define the agent using a YAML definition.
+var yamlDefinition =
+    """
+    kind: Prompt
+    name: Assistant
+    description: Helpful assistant
+    instructions: You are a helpful assistant. You answer questions in the language specified by the user. You return your answers in a JSON format.
+    model:
+        options:
+            temperature: 0.9
+            topP: 0.95
+    outputSchema:
+        properties:
+            language:
+                type: string
+                required: true
+                description: The language of the answer.
+            answer:
+                type: string
+                required: true
+                description: The answer text.
+    """;
 
-// Run the declarative agent
-Console.WriteLine(await agent.RunAsync("Why is the sky blue?"));
+// Create the agent from the YAML definition.
+var agentFactory = new ChatClientPromptAgentFactory(chatClient);
+var agent = await agentFactory.CreateFromYamlAsync(yamlDefinition);
+
+// Invoke the agent and output the text result.
+Console.WriteLine(await agent!.RunAsync("Tell me a joke about a pirate in English."));
+
+// Invoke the agent with streaming support.
+await foreach (var update in agent!.RunStreamingAsync("Tell me a joke about a pirate in French."))
+{
+    Console.WriteLine(update);
+}
 ```
 
 :::zone-end
