@@ -354,7 +354,7 @@ public static class Program
             ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
         var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
-            .GetChatClient(deploymentName).AsIChatClient();
+            .GetProjectOpenAIClient().GetProjectResponsesClient().AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent spamDetectionAgent = GetSpamDetectionAgent(chatClient);
@@ -973,7 +973,10 @@ public static class Program
         // Set up the Azure OpenAI client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential()).GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient()
+            .GetProjectResponsesClient()
+            .AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent spamDetectionAgent = GetSpamDetectionAgent(chatClient);
@@ -1721,7 +1724,10 @@ public static class Program
         // Set up the Azure OpenAI client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential()).GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient()
+            .GetProjectResponsesClient()
+            .AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent emailAnalysisAgent = GetEmailAnalysisAgent(chatClient);

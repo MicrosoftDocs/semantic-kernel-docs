@@ -158,8 +158,9 @@ The chat client layer handles the actual communication with the LLM service.
 
 ```csharp
 var chatClient = new AIProjectClient(endpoint, credential)
-    .GetChatClient(deploymentName)
-    .AsIChatClient()
+    .GetProjectOpenAIClient()
+    .GetProjectResponsesClient()
+    .AsIChatClient(deploymentName)
     .AsBuilder()
     .Use(CustomChatClientMiddleware)
     .Build();
@@ -171,8 +172,9 @@ You can also use `AIContextProvider` as chat client middleware to enrich message
 
 ```csharp
 var chatClient = new AIProjectClient(endpoint, credential)
-    .GetChatClient(deploymentName)
-    .AsIChatClient()
+    .GetProjectOpenAIClient()
+    .GetProjectResponsesClient()
+    .AsIChatClient(deploymentName)
     .AsBuilder()
     .UseAIContextProviders(new MyContextProvider())
     .Build();

@@ -28,8 +28,9 @@ To enable observability for your chat client, you need to build the chat client 
 ```csharp
 // Using the AIProjectClient as an example
 var instrumentedChatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient() // Converts into a Microsoft.Extensions.AI.IChatClient
+    .GetProjectOpenAIClient()
+    .GetProjectResponsesClient()
+    .AsIChatClient(deploymentName) // Converts into a Microsoft.Extensions.AI.IChatClient
     .AsBuilder()
     .UseOpenTelemetry(sourceName: SourceName, configure: (cfg) => cfg.EnableSensitiveData = true)    // Enable OpenTelemetry instrumentation with sensitive data
     .Build();
