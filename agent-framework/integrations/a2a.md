@@ -61,28 +61,8 @@ Install the following packages:
   dotnet add package Microsoft.AspNetCore.OpenApi
   dotnet add package Swashbuckle.AspNetCore
   ```
-  ## [Package Reference](#tab/package-reference)
-  
-  Add the following `<PackageReference>` elements to your `.csproj` file within an `<ItemGroup>`:
-  
-  ```xml
-  <ItemGroup>
-    <!-- Hosting.A2A.AspNetCore for A2A protocol integration -->
-    <PackageReference Include="Microsoft.Agents.AI.Hosting.A2A.AspNetCore" Version="1.0.0-preview.251110.2" />
-
-    <!-- Libraries to connect to Microsoft Foundry -->
-    <PackageReference Include="Azure.AI.Projects" Version="1.0.0-beta.9" />
-    <PackageReference Include="Azure.Identity" Version="1.17.0" />
-    <PackageReference Include="Microsoft.Agents.AI.Foundry" Version="1.0.0-preview.251110.2" />
-      
-    <!-- Swagger to test app -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
-  </ItemGroup>
-  ```
 
   ---
-
 
 #### 3. Configure Azure OpenAI connection
 

@@ -21,75 +21,80 @@ Add the required NuGet packages to your project.
 
 ```dotnetcli
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.Foundry.Persistent --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
-## Create Foundry Agents
+## Two agent types
 
-As a first step you need to create a client to connect to the Agent Service.
+The Microsoft Foundry integration exposes two distinct usage patterns:
+
+| Type | Produced type | Description | Use when |
+|---|---|---|---|
+| **Responses Agent** | `ChatClientAgent` | Your app provides programmatically a model, instructions, and tools at runtime via `AIProjectClient.AsAIAgent(...)`. No server-side agent resource is created. | You own the agent definition and want a simple, flexible setup. This is the pattern used in most samples. |
+| **Foundry Agent** (versioned) | `FoundryAgent` | Server-managed — agent definitions are created and versioned either through the Foundry portal or programmatically via `AIProjectClient.Agents`. Wrap an `AgentVersion` or `AgentRecord` or `AgentReference` with `AIProjectClient.AsAIAgent(...)`. | You need strict, versioned agent definitions managed in the Foundry portal, through service APIs |
+
+## Responses Agent (direct inference)
+
+Use `AsAIAgent` on `AIProjectClient` directly with a model and instructions. This is the recommended starting point for most scenarios.
 
 ```csharp
-using System;
-using Azure.AI.Agents.Persistent;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 
-var persistentAgentsClient = new PersistentAgentsClient(
-    "https://<myresource>.services.ai.azure.com/api/projects/<myproject>",
-    new DefaultAzureCredential());
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            name: "Joker",
+            instructions: "You are good at telling jokes.");
+
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-To use the Agent Service, you need create an agent resource in the service.
-This can be done using either the Azure.AI.Agents.Persistent SDK or using Microsoft Agent Framework helpers.
+This path is code-first and does not create a server-managed agent resource.
 
-### Using the Persistent SDK
+## Foundry Agent (versioned)
 
-Create a persistent agent and retrieve it as an `AIAgent` using the `PersistentAgentsClient`.
-
-```csharp
-// Create a persistent agent
-var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
-    model: "gpt-4o-mini",
-    name: "Joker",
-    instructions: "You are good at telling jokes.");
-
-// Retrieve the agent that was just created as an AIAgent using its ID
-AIAgent agent1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
-
-// Invoke the agent and output the text result.
-Console.WriteLine(await agent1.RunAsync("Tell me a joke about a pirate."));
-```
-
-### Using Agent Framework helpers
-
-You can also create and return an `AIAgent` in one step:
+Use the native `AIProjectClient.Agents` APIs from the AI Projects SDK to retrieve versioned agent resources, then wrap them with `AsAIAgent`. Agents can be created and configured directly in the Foundry portal or programmatically via `AIProjectClient.Agents`.
 
 ```csharp
-AIAgent agent2 = await persistentAgentsClient.CreateAIAgentAsync(
-    model: "gpt-4o-mini",
-    name: "Joker",
-    instructions: "You are good at telling jokes.");
+using Azure.AI.Projects;
+using Azure.AI.Projects.Agents;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Foundry;
+
+var aiProjectClient = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential());
+
+// Retrieve an existing agent by name (uses the latest version automatically)
+AgentRecord jokerRecord = await aiProjectClient.Agents.GetAgentAsync("Joker");
+FoundryAgent agent = aiProjectClient.AsAIAgent(jokerRecord);
+
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
-## Reusing Foundry Agents
-
-You can reuse existing Foundry Agents by retrieving them using their IDs.
-
-```csharp
-AIAgent agent3 = await persistentAgentsClient.GetAIAgentAsync("<agent-id>");
-```
-
-> [!TIP]
-> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+> [!IMPORTANT]
+> Foundry Agents tools and instructions are strict to the ones it was created with, attempting to modify tooling or instructions at runtime is not supported.
 
 ## Using the agent
 
-The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+Both `ChatClientAgent` (Responses) and `FoundryAgent` (versioned) are standard `AIAgent` instances and support all standard operations including sessions, tools, middleware, and streaming.
+
+```csharp
+AgentSession session = await agent.CreateSessionAsync();
+Console.WriteLine(await agent.RunAsync("Tell me a joke.", session));
+Console.WriteLine(await agent.RunAsync("Now make it funnier.", session));
+```
 
 For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../get-started/your-first-agent.md).
+
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
