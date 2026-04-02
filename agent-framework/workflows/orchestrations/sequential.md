@@ -135,7 +135,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 Console.WriteLine();
 foreach (var message in result)
 {
-    Console.WriteLine($"{message.Role}: {message.Content}");
+    Console.WriteLine($"{message.Role}: {message.Text}");
 }
 ```
 

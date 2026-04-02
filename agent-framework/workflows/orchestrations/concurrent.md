@@ -121,7 +121,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 Console.WriteLine("===== Final Aggregated Results =====");
 foreach (var message in result)
 {
-    Console.WriteLine($"{message.Role}: {message.Content}");
+    Console.WriteLine($"{message.Role}: {message.Text}");
 }
 ```
 

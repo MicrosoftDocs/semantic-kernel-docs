@@ -113,7 +113,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         this._jsonSerializerOptions = jsonSerializerOptions;
     }
 
-    public override Task<AgentResponse> RunAsync(
+    protected override Task<AgentResponse> RunCoreAsync(
         IEnumerable<ChatMessage> messages,
         AgentSession? session = null,
         AgentRunOptions? options = null,
@@ -123,7 +123,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
             .ToAgentResponseAsync(cancellationToken);
     }
 
-    public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(
+    protected override async IAsyncEnumerable<AgentResponseUpdate> RunCoreStreamingAsync(
         IEnumerable<ChatMessage> messages,
         AgentSession? session = null,
         AgentRunOptions? options = null,
@@ -203,21 +203,24 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         var response = allUpdates.ToAgentResponse();
 
         // Try to deserialize the structured state response
-        if (response.TryDeserialize(this._jsonSerializerOptions, out JsonElement stateSnapshot))
+        JsonElement stateSnapshot;
+        try
         {
-            // Serialize and emit as STATE_SNAPSHOT via DataContent
-            byte[] stateBytes = JsonSerializer.SerializeToUtf8Bytes(
-                stateSnapshot,
-                this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)));
-            yield return new AgentResponseUpdate
-            {
-                Contents = [new DataContent(stateBytes, "application/json")]
-            };
+            stateSnapshot = JsonSerializer.Deserialize<JsonElement>(response.Text, this._jsonSerializerOptions);
         }
-        else
+        catch (JsonException)
         {
             yield break;
         }
+
+        // Serialize and emit as STATE_SNAPSHOT via DataContent
+        byte[] stateBytes = JsonSerializer.SerializeToUtf8Bytes(
+            stateSnapshot,
+            this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)));
+        yield return new AgentResponseUpdate
+        {
+            Contents = [new DataContent(stateBytes, "application/json")]
+        };
 
         // Second run: Generate user-friendly summary
         var secondRunMessages = messages.Concat(response.Messages).Append(
