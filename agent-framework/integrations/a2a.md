@@ -64,9 +64,9 @@ Install the following packages:
 
   ---
 
-#### 3. Configure Azure OpenAI connection
+#### 3. Configure Microsoft Foundry connection
 
-The application requires an Azure OpenAI connection. Configure the endpoint and deployment name using `dotnet user-secrets` or environment variables.
+The application requires a Microsoft Foundry project connection. Configure the endpoint and deployment name using `dotnet user-secrets` or environment variables.
 You can also simply edit the `appsettings.json`, but that's not recommended for the apps deployed in production since some of the data can be considered to be secret.
 
   ## [User-Secrets](#tab/user-secrets)

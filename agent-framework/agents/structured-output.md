@@ -154,10 +154,13 @@ AIAgent agent = new AIProjectClient(
     new DefaultAzureCredential())
         .AsAIAgent(new ChatClientAgentOptions()
         {
-            Model = "gpt-4o-mini",
             Name = "HelpfulAssistant",
-            Instructions = "You are a helpful assistant.",
-            ChatOptions = new() { ResponseFormat = ChatResponseFormat.ForJsonSchema<PersonInfo>() }
+            ChatOptions = new()
+            {
+                ModelId = "gpt-4o-mini",
+                Instructions = "You are a helpful assistant.",
+                ResponseFormat = ChatResponseFormat.ForJsonSchema<PersonInfo>()
+            }
         });
 
 > [!WARNING]

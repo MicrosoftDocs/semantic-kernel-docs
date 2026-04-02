@@ -108,7 +108,7 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 
 :::zone pivot="programming-language-python"
 
-Call `.as_tool()` on an agent to convert it to a function toolthat can be provided to another agent:
+Call `.as_tool()` on an agent to convert it to a function tool that can be provided to another agent:
 
 ```python
 import os

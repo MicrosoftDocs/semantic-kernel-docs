@@ -30,8 +30,8 @@ The Microsoft Foundry integration exposes two distinct usage patterns:
 
 | Type | Produced type | Description | Use when |
 |---|---|---|---|
-| **Responses Agent** | `ChatClientAgent` | Your app provides programmatically a model, instructions, and tools at runtime via `AIProjectClient.AsAIAgent(...)`. No server-side agent resource is created. | You own the agent definition and want a simple, flexible setup. This is the pattern used in most samples. |
-| **Foundry Agent** (versioned) | `FoundryAgent` | Server-managed — agent definitions are created and versioned either through the Foundry portal or programmatically via `AIProjectClient.Agents`. Wrap an `AgentVersion` or `AgentRecord` or `AgentReference` with `AIProjectClient.AsAIAgent(...)`. | You need strict, versioned agent definitions managed in the Foundry portal, through service APIs |
+| **Responses Agent** | `ChatClientAgent` | Your app programmatically provides a model, instructions, and tools at runtime via `AIProjectClient.AsAIAgent(...)`. No server-side agent resource is created. | You own the agent definition and want a simple, flexible setup. This is the pattern used in most samples. |
+| **Foundry Agent** (versioned) | `FoundryAgent` | Server-managed — agent definitions are created and versioned either through the Foundry portal or programmatically via `AIProjectClient.Agents`. Pass an `AgentVersion` or `AgentRecord` or `AgentReference` to `AIProjectClient.AsAIAgent(...)`. | You need strict, versioned agent definitions managed in the Foundry portal, through service APIs |
 
 ## Responses Agent (direct inference)
 
@@ -94,7 +94,6 @@ Console.WriteLine(await agent.RunAsync("Now make it funnier.", session));
 ```
 
 For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../get-started/your-first-agent.md).
-
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
