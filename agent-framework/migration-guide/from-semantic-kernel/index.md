@@ -77,14 +77,15 @@ Agent creation in Agent Framework is made simpler with extensions provided by al
 
 ```csharp
 AIAgent openAIAgent = chatClient.AsAIAgent(instructions: ParrotInstructions);
-AIAgent azureFoundryAgent = await persistentAgentsClient.CreateAIAgentAsync(instructions: ParrotInstructions);
+AIAgent azureFoundryAgent = aiProjectClient.AsAIAgent(model: deploymentName, instructions: ParrotInstructions);
 AIAgent openAIAssistantAgent = await assistantClient.CreateAIAgentAsync(instructions: ParrotInstructions);
 ```
 
-Additionally, for hosted agent providers you can also use the `GetAIAgent` method to retrieve an agent from an existing hosted agent.
+Additionally, for hosted agent providers you can also use the `AsAIAgent` method to retrieve an agent from an existing hosted agent record.
 
 ```csharp
-AIAgent azureFoundryAgent = await persistentAgentsClient.GetAIAgentAsync(agentId);
+ProjectsAgentRecord agentRecord = await aiProjectClient.AgentAdministrationClient.GetAgentAsync(agentName);
+AIAgent azureFoundryAgent = aiProjectClient.AsAIAgent(agentRecord);
 ```
 
 ## 3. Agent Thread/Session Creation

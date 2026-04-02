@@ -97,7 +97,7 @@ When using Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you ha
 | [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
 | [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
 | [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
-| [Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Persistent Agents SDK | [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
+| [Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Projects SDK + Microsoft Agents AI Foundry | [Azure.AI.Projects](https://www.nuget.org/packages/Azure.AI.Projects) / [Microsoft.Agents.AI.Foundry](https://www.nuget.org/packages/Microsoft.Agents.AI.Foundry) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
 | OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
@@ -158,13 +158,13 @@ AIAgent agent = new AIProjectClient(
          name: "Joker");
 ```
 
-### Using the Azure AI Persistent Agents SDK
+### Using the Azure AI Projects SDK with Foundry Agents
 
-This SDK is only supported with the Agent Service. See the table above for the correct URL to use.
+This SDK is used for both Responses API based agents and versioned Foundry Agents. See the table above for the correct URL to use.
 
 ```csharp
-var persistentAgentsClient = new PersistentAgentsClient(serviceUrl, new DefaultAzureCredential());
-AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
+var aiProjectClient = new AIProjectClient(new Uri(serviceUrl), new DefaultAzureCredential());
+AIAgent agent = aiProjectClient.AsAIAgent(
     model: deploymentName,
     instructions: "You are good at telling jokes.",
     name: "Joker");

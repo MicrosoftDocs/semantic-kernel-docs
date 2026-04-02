@@ -31,7 +31,7 @@ The Microsoft Foundry integration exposes two distinct usage patterns:
 | Type | Produced type | Description | Use when |
 |---|---|---|---|
 | **Responses Agent** | `ChatClientAgent` | Your app programmatically provides a model, instructions, and tools at runtime via `AIProjectClient.AsAIAgent(...)`. No server-side agent resource is created. | You own the agent definition and want a simple, flexible setup. This is the pattern used in most samples. |
-| **Foundry Agent** (versioned) | `FoundryAgent` | Server-managed — agent definitions are created and versioned either through the Foundry portal or programmatically via `AIProjectClient.Agents`. Pass an `AgentVersion` or `AgentRecord` or `AgentReference` to `AIProjectClient.AsAIAgent(...)`. | You need strict, versioned agent definitions managed in the Foundry portal, through service APIs |
+| **Foundry Agent** (versioned) | `FoundryAgent` | Server-managed — agent definitions are created and versioned either through the Foundry portal or programmatically via `AIProjectClient.AgentAdministrationClient`. Pass a `ProjectsAgentVersion` or `ProjectsAgentRecord` or `AgentReference` to `AIProjectClient.AsAIAgent(...)`. | You need strict, versioned agent definitions managed in the Foundry portal, through service APIs |
 
 ## Responses Agent (direct inference)
 
@@ -60,7 +60,7 @@ This path is code-first and does not create a server-managed agent resource.
 
 ## Foundry Agent (versioned)
 
-Use the native `AIProjectClient.Agents` APIs from the AI Projects SDK to retrieve versioned agent resources, then wrap them with `AsAIAgent`. Agents can be created and configured directly in the Foundry portal or programmatically via `AIProjectClient.Agents`.
+Use the native `AIProjectClient.AgentAdministrationClient` APIs from the AI Projects SDK to retrieve versioned agent resources, then wrap them with `AsAIAgent`. Agents can be created and configured directly in the Foundry portal or programmatically via `AIProjectClient.AgentAdministrationClient`.
 
 ```csharp
 using Azure.AI.Projects;
@@ -74,7 +74,7 @@ var aiProjectClient = new AIProjectClient(
     new DefaultAzureCredential());
 
 // Retrieve an existing agent by name (uses the latest version automatically)
-AgentRecord jokerRecord = await aiProjectClient.Agents.GetAgentAsync("Joker");
+ProjectsAgentRecord jokerRecord = await aiProjectClient.AgentAdministrationClient.GetAgentAsync("Joker");
 FoundryAgent agent = aiProjectClient.AsAIAgent(jokerRecord);
 
 Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
