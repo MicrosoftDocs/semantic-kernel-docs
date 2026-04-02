@@ -66,24 +66,27 @@ mcpTool.AllowedTools.Add("microsoft_docs_search");
 - **serverUrl**: The URL of the hosted MCP server
 - **AllowedTools**: Specifies which tools from the MCP server the agent can use
 
-#### 4. Persistent Agent Creation
+#### 4. Agent Creation
 
-The agent is created server-side using the Foundry Persistent Agents SDK:
+The agent is created server-side using the Azure AI Projects SDK:
 
 ```csharp
-var persistentAgentsClient = new PersistentAgentsClient(endpoint, new DefaultAzureCredential());
+var aiProjectClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential());
 
-var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
-    model: model,
-    name: AgentName,
-    instructions: AgentInstructions,
-    tools: [mcpTool]);
+var agentVersion = await aiProjectClient.AgentAdministrationClient.CreateAgentVersionAsync(
+    AgentName,
+    new ProjectsAgentVersionCreationOptions(
+        new DeclarativeAgentDefinition(model)
+        {
+            Instructions = AgentInstructions,
+            Tools = { mcpTool }
+        }));
 ```
 
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-This creates a persistent agent that:
+This creates a versioned agent that:
 - Lives on the Foundry service
 - Has access to the specified MCP tools
 - Can maintain conversation state across multiple interactions
@@ -93,7 +96,7 @@ This creates a persistent agent that:
 The created agent is retrieved as an `AIAgent` instance:
 
 ```csharp
-AIAgent agent = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+AIAgent agent = aiProjectClient.AsAIAgent(agentVersion);
 ```
 
 #### 6. Tool Resource Configuration
@@ -141,7 +144,7 @@ Console.WriteLine(response);
 The sample demonstrates proper resource cleanup:
 
 ```csharp
-await persistentAgentsClient.Administration.DeleteAgentAsync(agent.Id);
+await aiProjectClient.AgentAdministrationClient.DeleteAgentAsync(agent.Id);
 ```
 
 > [!TIP]

@@ -1326,7 +1326,7 @@ AIProjectClient aiProjectClient = new(foundryEndpoint, new DefaultAzureCredentia
 
 await aiProjectClient.CreateAgentAsync(
     agentName: "ResearcherAgent",
-    agentDefinition: new PromptAgentDefinition(modelName)
+    agentDefinition: new DeclarativeAgentDefinition(modelName)
     {
         Instructions = "You are a research specialist..."
     },
