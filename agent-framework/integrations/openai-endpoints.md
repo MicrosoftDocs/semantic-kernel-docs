@@ -501,7 +501,7 @@ app.MapOpenAIResponses(scienceAgent, responsesPath: "/api/responses");
 The Python `OpenAIChatCompletionClient` and `OpenAIChatClient` both support a `base_url` parameter, enabling you to connect to **any** OpenAI-compatible endpoint — including self-hosted agents, local inference servers (Ollama, LM Studio, vLLM), or third-party OpenAI-compatible APIs.
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework
 ```
 
 ### Chat Completions Client
@@ -591,7 +591,7 @@ from agent_framework.openai import OpenAIChatClient
 from azure.identity import AzureCliCredential
 
 agent = OpenAIChatClient(
-    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_CHAT_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),
@@ -604,9 +604,11 @@ agent = OpenAIChatClient(
 Configure with environment variables:
 ```bash
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
-export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+export AZURE_OPENAI_CHAT_MODEL="gpt-4o-mini"
 export AZURE_OPENAI_API_VERSION="your-api-version"
 ```
+
+`OpenAIChatClient` prefers `AZURE_OPENAI_CHAT_MODEL`; `AZURE_OPENAI_MODEL` remains the shared fallback if you need one.
 
 ::: zone-end
 

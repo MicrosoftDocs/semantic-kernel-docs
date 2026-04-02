@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 03/16/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -220,13 +220,16 @@ First, create a basic agent:
 
 ```python
 import asyncio
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
     credential = AzureCliCredential()
 
-    async with AzureAIAgentClient(credential=credential).as_agent(
+    async with Agent(
+
+        client=FoundryChatClient(credential=credential),
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
     ) as agent:
@@ -267,7 +270,9 @@ Add the middleware when creating your agent:
 async def main():
     credential = AzureCliCredential()
 
-    async with AzureAIAgentClient(credential=credential).as_agent(
+    async with Agent(
+
+        client=FoundryChatClient(credential=credential),
         name="GreetingAgent",
         instructions="You are a friendly greeting assistant.",
         middleware=[logging_agent_middleware],  # Add your middleware here
@@ -301,7 +306,8 @@ async def inject_function_kwargs(
     await call_next()
 
 # Add both the function and middleware to your agent
-async with AzureAIAgentClient(credential=credential).as_agent(
+async with Agent(
+    client=FoundryChatClient(credential=credential),
     name="TimeAgent",
     instructions="You can tell the current time.",
     tools=[get_time],
@@ -353,7 +359,8 @@ from agent_framework import (
     Message,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -437,7 +444,8 @@ async def main() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
@@ -483,7 +491,8 @@ from agent_framework import (
     Message,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -567,7 +576,8 @@ async def main() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
@@ -613,7 +623,8 @@ from agent_framework import (
     Message,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -697,7 +708,8 @@ async def main() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,

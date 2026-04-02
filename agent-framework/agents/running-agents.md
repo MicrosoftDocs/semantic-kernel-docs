@@ -118,7 +118,7 @@ Common options include:
 
 - `max_tokens`: Maximum number of tokens to generate
 - `temperature`: Controls randomness in response generation
-- `model_id`: Override the model for this specific run
+- `model`: Override the model for this specific run
 - `top_p`: Nucleus sampling parameter
 - `response_format`: Specify the response format (e.g., structured output)
 
@@ -142,7 +142,7 @@ agent = OpenAIChatClient().as_agent(
 options: OpenAIChatOptions = {
     "temperature": 0.3,
     "max_tokens": 150,
-    "model_id": "gpt-4o",
+    "model": "gpt-4o",
     "presence_penalty": 0.5,
     "frequency_penalty": 0.3
 }

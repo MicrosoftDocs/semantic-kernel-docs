@@ -214,7 +214,7 @@ AZURE_OPENAI_API_VERSION="..."
 
 OPENAI_API_KEY="sk-..."
 OPENAI_ORG_ID=""
-OPENAI_CHAT_MODEL_ID=""
+OPENAI_CHAT_MODEL=""
 ```
 
 Once configured, the respective AI service classes will pick up the required variables and use them during instantiation.

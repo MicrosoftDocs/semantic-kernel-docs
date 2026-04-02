@@ -97,7 +97,7 @@ model:
   id: =Env.AZURE_OPENAI_MODEL
   connection:
     kind: remote
-    endpoint: =Env.AZURE_AI_PROJECT_ENDPOINT
+    endpoint: =Env.FOUNDRY_PROJECT_ENDPOINT
 """
     async with (
         AzureCliCredential() as credential,

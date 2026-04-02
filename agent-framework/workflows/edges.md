@@ -465,7 +465,7 @@ You'll create an email processing workflow that demonstrates conditional routing
 ### Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework-core --pre`
+- Agent Framework installed: `pip install agent-framework-core`
 - Azure OpenAI service configured with proper environment variables
 - Azure CLI authentication: `az login`
 
@@ -599,7 +599,7 @@ async def main() -> None:
     # Create agents
     # AzureCliCredential uses your current az login. This avoids embedding secrets in code.
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
@@ -1248,7 +1248,7 @@ Update the spam detection agent to be less confident and return three-way classi
 ```python
 async def main():
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
@@ -2091,7 +2091,7 @@ Create agents for analysis, assistance, and summarization:
 ```python
 async def main() -> None:
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),

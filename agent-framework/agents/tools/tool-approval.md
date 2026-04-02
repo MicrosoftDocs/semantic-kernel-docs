@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/15/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -149,7 +149,7 @@ from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 async with Agent(
-    chat_client=OpenAIChatClient(),
+    client=OpenAIChatClient(),
     name="WeatherAgent",
     instructions="You are a helpful weather assistant.",
     tools=[get_weather, get_weather_detail],

@@ -212,8 +212,8 @@ from agent_framework.foundry import FoundryChatClient
 from azure.identity import AzureCliCredential
 
 chat_client = FoundryChatClient(
-    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+    model=os.environ["FOUNDRY_MODEL"],
     credential=AzureCliCredential(),
 )
 
@@ -440,7 +440,7 @@ from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import AzureCliCredential
 
 chat_client = OpenAIChatCompletionClient(
-    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),

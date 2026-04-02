@@ -119,7 +119,7 @@ from agent_framework.openai import OpenAIChatCompletionClient
 from azure.identity import DefaultAzureCredential
 
 endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini")
+deployment_name = os.getenv("AZURE_OPENAI_CHAT_COMPLETION_MODEL", "gpt-4o-mini")
 api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Create an AI agent following the standard Microsoft Agent Framework pattern
@@ -731,7 +731,7 @@ from azure.identity import DefaultAzureCredential
 endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT is not set.")
-deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini")
+deployment_name = os.getenv("AZURE_OPENAI_CHAT_COMPLETION_MODEL", "gpt-4o-mini")
 api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Create an AI agent following the standard Microsoft Agent Framework pattern
@@ -1194,7 +1194,7 @@ from agent_framework.openai import OpenAIChatCompletionClient
 endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT is not set.")
-deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini")
+deployment_name = os.getenv("AZURE_OPENAI_CHAT_COMPLETION_MODEL", "gpt-4o-mini")
 api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Create the Azure OpenAI client

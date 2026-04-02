@@ -87,7 +87,7 @@ Creating an `OpenAIResponsesAgent` requires first creating a client to be able t
 To configure the model used by the OpenAI or Azure OpenAI Responses API, new environment variables are introduced:
 
 ```bash
-OPENAI_RESPONSES_MODEL_ID=""
+OPENAI_RESPONSES_MODEL=""
 AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=""
 ```
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 02/10/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
@@ -209,11 +209,14 @@ For prerequisites and installing packages, see the [Create and run a simple agen
 The `Agent` is built on top of any chat client implementation that supports structured output.
 The `Agent` uses the `response_format` parameter to specify the desired output schema.
 
-When creating or running the agent, you can provide a Pydantic model that defines the structure of the expected output.
+When creating or running the agent, you can provide either:
+
+- A Pydantic model that defines the structure of the expected output.
+- A JSON schema mapping (`dict`) when you want parsed JSON without defining a model class.
 
 Various response formats are supported based on the underlying chat client capabilities.
 
-This example creates an agent that produces structured output in the form of a JSON object that conforms to a Pydantic model schema.
+The first example creates an agent that produces structured output in the form of a JSON object that conforms to a Pydantic model schema.
 
 First, define a Pydantic model that represents the structure of the output you want from the agent:
 
@@ -236,7 +239,7 @@ from azure.identity import AzureCliCredential
 
 # Create the agent using Azure OpenAI Chat Client
 agent = OpenAIChatCompletionClient(
-    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),
@@ -255,7 +258,7 @@ response = await agent.run(
 )
 ```
 
-The agent response will contain the structured output in the `value` property, which can be accessed directly as a Pydantic model instance:
+For a Pydantic model response format, the agent response contains the structured output in the `value` property as a model instance:
 
 ```python
 if response.value:
@@ -263,6 +266,31 @@ if response.value:
     print(f"Name: {person_info.name}, Age: {person_info.age}, Occupation: {person_info.occupation}")
 else:
     print("No structured data found in response")
+```
+
+### Use a JSON schema mapping
+
+If you already have a JSON schema as a Python mapping, pass that schema directly as `response_format`. In this mode, `response.value` contains the parsed JSON value (typically a `dict` or `list`) instead of a Pydantic model instance.
+
+```python
+person_info_schema = {
+    "type": "object",
+    "properties": {
+        "name": {"type": "string"},
+        "age": {"type": "integer"},
+        "occupation": {"type": "string"},
+    },
+    "required": ["name", "age", "occupation"],
+}
+
+response = await agent.run(
+    "Please provide information about John Smith, who is a 35-year-old software engineer.",
+    response_format=person_info_schema,
+)
+
+if response.value:
+    person_info = response.value
+    print(f"Name: {person_info['name']}, Age: {person_info['age']}, Occupation: {person_info['occupation']}")
 ```
 
 When streaming, `agent.run(..., stream=True)` returns a `ResponseStream`. The stream's built-in finalizer automatically handles structured output parsing, so you can iterate for real-time updates and then call `get_final_response()` to get the parsed result:
@@ -280,6 +308,8 @@ if final_response.value:
     person_info = final_response.value
     print(f"Name: {person_info.name}, Age: {person_info.age}, Occupation: {person_info.occupation}")
 ```
+
+The same rule applies when `response_format` is a JSON schema mapping: `final_response.value` contains parsed JSON instead of a Pydantic model instance.
 
 If you don't need to process individual streaming updates, you can skip iteration entirely — `get_final_response()` will automatically consume the stream:
 

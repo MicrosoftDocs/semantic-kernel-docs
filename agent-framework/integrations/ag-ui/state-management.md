@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -488,7 +488,7 @@ agent = Agent(
     - Add finishing touches: lemon zest, fresh parsley
     - Make instructions more detailed and professional
     """,
-    chat_client=OpenAIChatCompletionClient(
+    client=OpenAIChatCompletionClient(
         model=deployment_name,
         azure_endpoint=endpoint,
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
@@ -622,7 +622,7 @@ async def main():
     # Wrap with Agent for convenient API
     agent = Agent(
         name="ClientAgent",
-        chat_client=chat_client,
+        client=chat_client,
         instructions="You are a helpful assistant.",
     )
 

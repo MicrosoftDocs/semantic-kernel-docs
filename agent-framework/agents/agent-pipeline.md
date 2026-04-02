@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 03/20/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
@@ -40,13 +40,13 @@ The `Agent` class builds a pipeline through class composition with two main comp
 **Agent** (outer component):
 
 1. **Agent Middleware + Telemetry** - the `AgentMiddlewareLayer` and `AgentTelemetryLayer` classes handle middleware invocation and OpenTelemetry instrumentation
-2. **RawAgent** - Core agent logic that invokes context providers
-3. **Context Providers** - Unified `context_providers` list manages history and additional context
+2. **RawAgent** - Core agent logic that invokes context providers and collects provider-added middleware
+3. **Context Providers** - Unified `context_providers` list manages history, additional context, and per-run chat/function middleware
 
 **ChatClient** (separate and interchangeable component):
 
 1. **FunctionInvocation** - Handles tool calling loop, invoking Function Middleware + Telemetry per tool call
-2. **Chat Middleware + Telemetry** - Optional middleware chain and instrumentation layers, running per model call
+2. **Chat Middleware + Telemetry** - Optional middleware chain and instrumentation layers, including any chat middleware added by context providers, running per model call
 3. **RawChatClient** - Provider-specific implementation (Azure OpenAI, OpenAI, Anthropic, etc.) that communicates with the LLM
 
 When you call `run()`, your request flows through the Agent layers, then into the ChatClient pipeline for LLM communication.
@@ -144,6 +144,8 @@ agent = Agent(
 )
 ```
 
+Context providers can also attach chat or function middleware to a single invocation via `SessionContext.extend_middleware()`. The agent flattens those additions in provider order before entering the ChatClient pipeline.
+
 ::: zone-end
 
 For detailed context provider patterns, see [Context Providers](./conversations/context-providers.md).
@@ -228,14 +230,14 @@ When you invoke an agent, the request flows through the pipeline:
 **Agent pipeline:**
 
 1. **Agent Middleware + Telemetry** executes middleware (if configured) and records spans
-2. **RawAgent** invokes context providers to load history and add context
+2. **RawAgent** invokes context providers to load history, add context, and collect provider-added chat/function middleware
 3. Request is passed to the ChatClient
 
 **ChatClient pipeline:**
 
 4. **FunctionInvocation** manages the tool calling loop
-   - For each tool call, **Function Middleware + Telemetry** executes
-5. **Chat Middleware + Telemetry** executes per model call (if configured)
+   - For each tool call, **Function Middleware + Telemetry** executes, including any function middleware added by context providers
+5. **Chat Middleware + Telemetry** executes per model call (if configured), including any chat middleware added by context providers
 6. **RawChatClient** handles provider-specific LLM communication
 7. Response flows back through the same layers
 8. **Context providers** are notified of new messages for storage
@@ -276,6 +278,16 @@ var copilotAgent = originalCopilotAgent
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
+
+## Other agent types
+
+Not every Python agent uses the full `Agent` + `ChatClient` pipeline. `GitHubCopilotAgent`, for example, sends requests through the GitHub Copilot CLI instead of a local chat client.
+
+Even so, Python `GitHubCopilotAgent` still supports agent middleware and now runs `context_providers` around each invocation. Provider-added messages and instructions are included in the prompt sent to Copilot, and providers receive the matching `after_run` callback once a response is available.
+
+> [!NOTE]
+> Because `GitHubCopilotAgent` does not use a local chat client, chat client middleware still does not apply.
+
 ::: zone-end
 
 ## Next steps

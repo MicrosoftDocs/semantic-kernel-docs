@@ -145,7 +145,7 @@ skills_provider = SkillsProvider(
 
 # Create an agent with the skills provider
 agent = OpenAIChatCompletionClient(
-    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),

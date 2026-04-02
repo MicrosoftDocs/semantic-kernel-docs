@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: reezaali149
 ms.topic: article
 ms.author: v-reezaali
-ms.date: 10/28/2025
+ms.date: 04/01/2026
 ms.service: purview
 ---
 
@@ -27,7 +27,7 @@ Before you begin, ensure you have:
 - Microsoft 365 subscription with an E5 license and pay-as-you-go billing setup.
   - For testing, you can use a Microsoft 365 Developer Program tenant. For more information, see [Join the Microsoft 365 Developer Program](https://developer.microsoft.com/en-us/microsoft-365/dev-program).
 - Agent Framework SDK: To install the Agent Framework SDK:
-  - Python: Run `pip install agent-framework --pre`.
+  - Python: Run `pip install agent-framework`.
   - .NET: Install from NuGet.
 
 ## How to integrate Microsoft Purview into your agent
@@ -87,11 +87,11 @@ from azure.identity import AzureCliCredential, InteractiveBrowserCredential
 
 # Set default environment variables if not already set
 os.environ.setdefault("AZURE_OPENAI_ENDPOINT", "<azureOpenAIEndpoint>")
-os.environ.setdefault("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME", "<azureOpenAIChatDeploymentName>")
+os.environ.setdefault("AZURE_OPENAI_CHAT_COMPLETION_MODEL", "<azureOpenAIChatDeploymentName>")
 
 async def main():
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
@@ -103,7 +103,7 @@ async def main():
         settings=PurviewSettings(app_name="My Secure Agent")
     )
     agent = Agent(
-        chat_client=chat_client,
+        client=chat_client,
         instructions="You are a secure assistant.",
         middleware=[purview_middleware]
     )

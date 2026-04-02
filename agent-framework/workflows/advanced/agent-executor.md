@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/16/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
@@ -201,7 +201,7 @@ workflow = (
 Create an `AgentExecutor` explicitly when you need to:
 
 - Share a session between multiple agents.
-- Provide a custom executor ID.
+- Provide a custom executor ID for routing and targeted runtime kwargs.
 - Reference the same executor instance in multiple edges.
 
 ```python
@@ -225,6 +225,9 @@ workflow = (
 | `session` | `AgentSession \| None` | Session to use for agent runs. If `None`, a new session is created from the agent. |
 | `id` | `str \| None` | Unique executor ID. Defaults to the agent's name if available. |
 
+> [!TIP]
+> The executor ID is also the key used when you target `workflow.run(function_invocation_kwargs=...)` or `client_kwargs=` at individual agents. If you omit `id`, the workflow uses the wrapped agent's name.
+
 ## Input Types
 
 The `AgentExecutor` defines multiple handler methods, each accepting a different input type. The workflow engine automatically dispatches the correct handler based on the message type. All input types trigger the agent to run immediately, except for `AgentExecutorRequest` where the `should_respond` flag controls whether the agent runs or simply caches the messages:
@@ -246,7 +249,7 @@ from agent_framework import AgentExecutorRequest, Message
 
 # Create a request with messages
 request = AgentExecutorRequest(
-    messages=[Message("user", text="Hello, world!")],
+    messages=[Message(role="user", contents=["Hello, world!"])],
     should_respond=True,
 )
 
@@ -337,7 +340,7 @@ The `AgentExecutor` supports checkpointing for saving and restoring state in lon
 On restore, the executor deserializes this state, allowing the workflow to resume from where it left off.
 
 > [!WARNING]
-> Checkpointing with agents that use server-side sessions (such as `AzureAIAgentClient`) has limitations. Server-side session state is not captured in checkpoints and can be modified by subsequent runs. Consider implementing a custom executor if you need reliable checkpointing with server-side sessions.
+> Checkpointing with agents that use server-side sessions (such as `FoundryAgent`) has limitations. Server-side session state is not captured in checkpoints and can be modified by subsequent runs. Consider implementing a custom executor if you need reliable checkpointing with server-side sessions.
 
 ::: zone-end
 

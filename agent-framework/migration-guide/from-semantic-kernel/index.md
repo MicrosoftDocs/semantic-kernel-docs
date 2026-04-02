@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: reference
 ms.author: westey
-ms.date: 11/11/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -325,12 +325,12 @@ from semantic_kernel.agents import ChatCompletionAgent
 ### Agent Framework
 
 Agent Framework package is installed as `agent-framework` and imported as `agent_framework`.
-Agent Framework is built up differently, it has a core package `agent-framework-core` that contains the core functionality, and then there are multiple packages that rely on that core package, such as `agent-framework-azure-ai`, `agent-framework-mem0`, `agent-framework-copilotstudio`, etc. When you run `pip install agent-framework --pre` it will install the core package and *all* packages, so that you can get started with all the features quickly. When you are ready to reduce the number of packages because you know what you need, you can install only the packages you need, so for instance if you only plan to use Foundry and Mem0 you can install only those two packages: `pip install agent-framework-azure-ai agent-framework-mem0 --pre`, `agent-framework-core` is a dependency to those two, so will automatically be installed.
+Agent Framework is built up differently, it has a core package `agent-framework-core` that contains the core functionality, and then there are multiple packages that rely on that core package, such as `agent-framework-openai`, `agent-framework-foundry`, `agent-framework-mem0`, `agent-framework-copilotstudio`, etc. When you run `pip install agent-framework` it will install the core package and the provider packages that ship in the meta package, so that you can get started with the common features quickly. When you are ready to reduce the number of packages because you know what you need, you can install only the packages you need, so for instance if you only plan to use Foundry and Mem0 you can install only those two packages: `pip install --pre agent-framework-foundry agent-framework-mem0`, `agent-framework-core` is a dependency to those two, so will automatically be installed.
 
 Even though the packages are split up, the imports are all from `agent_framework`, or it's modules. So for instance to import the client for Foundry you would do:
 
 ```python
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework.foundry import FoundryChatClient
 ```
 
 Many of the most commonly used types are imported directly from `agent_framework`:
@@ -374,18 +374,20 @@ agent = ChatCompletionAgent(
 Agent creation in Agent Framework can be done in two ways, directly:
 
 ```python
-from agent_framework.azure import AzureAIAgentClient
-from agent_framework import Message, Agent
+from agent_framework import Agent, Message
+from agent_framework.foundry import FoundryChatClient
+from azure.identity import AzureCliCredential
 
-agent = Agent(chat_client=AzureAIAgentClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
+agent = Agent(client=FoundryChatClient(credential=AzureCliCredential()), instructions="You are a helpful assistant")
 ```
 
 Or, with the convenience methods provided by chat clients:
 
 ```python
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity import AzureCliCredential
-agent = AzureOpenAIChatClient(credential=AzureCliCredential()).as_agent(instructions="You are a helpful assistant")
+
+agent = FoundryChatClient(credential=AzureCliCredential()).as_agent(instructions="You are a helpful assistant")
 ```
 
 The direct method exposes all possible parameters you can set for your agent. While the convenience method has a subset, you can still pass in the same set of parameters, because it calls the direct method internally.
@@ -546,11 +548,11 @@ from semantic_kernel import Kernel
 from semantic_kernel.functions import KernelFunctionFromPrompt
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAIChatPromptExecutionSettings
 from semantic_kernel.prompt_template import KernelPromptTemplate, PromptTemplateConfig
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 # Create a kernel with services and plugins
 kernel = Kernel()
-# will get the api_key and model_id from the environment
+# will get the api_key and model from the environment
 kernel.add_service(OpenAIChatCompletion(service_id="default"))
 
 # Create a function from a prompt template that uses plugin functions
@@ -579,7 +581,7 @@ kernel_function = KernelFunctionFromPrompt(
 agent_tool = kernel_function.as_agent_framework_tool(kernel=kernel)
 
 # Use the tool with an Agent Framework agent
-agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(tools=agent_tool)
+agent = OpenAIChatClient(model="gpt-4o").as_agent(tools=agent_tool)
 response = await agent.run("What kind of day is it?")
 print(response.text)
 ```
@@ -588,7 +590,7 @@ print(response.text)
 
 ```python
 from semantic_kernel.functions import kernel_function
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 # Create a plugin class with kernel functions
 @kernel_function(name="get_weather", description="Get the weather for a location")
@@ -599,7 +601,7 @@ def get_weather(self, location: str) -> str:
 agent_tool = get_weather.as_agent_framework_tool()
 
 # Use the tool with an Agent Framework agent
-agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(tools=agent_tool)
+agent = OpenAIChatClient(model="gpt-4o").as_agent(tools=agent_tool)
 response = await agent.run("What's the weather in Seattle?")
 print(response.text)
 ```
@@ -613,7 +615,7 @@ from semantic_kernel import Kernel
 from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
 from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
 from semantic_kernel.functions import KernelParameterMetadata
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
 # Define your data model
 class HotelSampleClass:
@@ -667,7 +669,7 @@ async with collection:
     search_tool = search_function.as_agent_framework_tool()
 
     # Use the tool with an Agent Framework agent
-    agent = OpenAIResponsesClient(model_id="gpt-4o").as_agent(
+    agent = OpenAIChatClient(model="gpt-4o").as_agent(
         instructions="You are a travel agent that helps people find hotels.",
         tools=search_tool
     )

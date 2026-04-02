@@ -66,7 +66,7 @@ await foreach (var update in agent.RunStreamingAsync("Tell me a one-sentence fun
 :::zone pivot="programming-language-python"
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework
 ```
 
 Create and run an agent:

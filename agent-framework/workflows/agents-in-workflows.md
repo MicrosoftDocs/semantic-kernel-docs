@@ -225,7 +225,7 @@ You'll create a workflow that:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework --pre`
+- Agent Framework installed: `pip install agent-framework`
 - Azure OpenAI Responses configured with proper environment variables
 - Azure CLI authentication: `az login`
 
@@ -249,8 +249,8 @@ Create one shared client that you can use to construct multiple agents:
 ```python
 async def main() -> None:
     client = FoundryChatClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+        model=os.environ["FOUNDRY_MODEL"],
         credential=AzureCliCredential(),
     )
 ```

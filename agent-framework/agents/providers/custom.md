@@ -188,7 +188,7 @@ In most cases building your own agent will involve more complex logic and integr
 Add the required Python packages to your project.
 
 ```bash
-pip install agent-framework-core --pre
+pip install agent-framework-core
 ```
 
 ## Create a Custom Agent

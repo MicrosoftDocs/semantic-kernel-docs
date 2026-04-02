@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 03/25/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
@@ -102,13 +102,13 @@ For more information on how to run and interact with agents, see the [Agent gett
 
 In Python, all Foundry-specific clients now live under `agent_framework.foundry`.
 
-- `agent-framework-foundry` provides the cloud Foundry connectors: `FoundryChatClient`, `FoundryAgent`, and `FoundryMemoryProvider`.
+- `agent-framework-foundry` provides the cloud Foundry connectors: `FoundryChatClient`, `FoundryAgent`, `FoundryEmbeddingClient`, and `FoundryMemoryProvider`.
 - `agent-framework-foundry-local` provides `FoundryLocalClient` for local model execution.
 
 > [!IMPORTANT]
-> This page is for Microsoft Foundry project endpoints and the Foundry Agent Service. If you have a standalone Azure OpenAI resource endpoint (`https://<your-resource>.openai.azure.com`), use the Python guidance on the [OpenAI provider page](./openai.md). If you want to run supported models locally, see the [Foundry Local provider page](./foundry-local.md).
+> This page covers the current Python clients for Microsoft Foundry project endpoints, models endpoints, and the Foundry Agent Service. If you have a standalone Azure OpenAI resource endpoint (`https://<your-resource>.openai.azure.com`), use the Python guidance on the [OpenAI provider page](./openai.md). If you want to run supported models locally, see the [Foundry Local provider page](./foundry-local.md).
 
-## Two ways to use Foundry in Python
+## Foundry chat and agent patterns in Python
 
 | Scenario | Python shape | Use when |
 |---|---|---|
@@ -118,11 +118,11 @@ In Python, all Foundry-specific clients now live under `agent_framework.foundry`
 ## Installation
 
 ```bash
-pip install agent-framework-foundry --pre
+pip install agent-framework-foundry
 pip install azure-identity
 ```
 
-If you still rely on the older Azure AI compatibility classes, install `agent-framework-azure-ai --pre` separately.
+The same `agent-framework-foundry` package also includes `FoundryEmbeddingClient` for Foundry models-endpoint embeddings.
 
 ## Configuration
 
@@ -143,6 +143,17 @@ FOUNDRY_AGENT_VERSION="1.0"
 
 Use `FOUNDRY_AGENT_VERSION` for Prompt Agents. Hosted agents can omit it.
 
+### `FoundryEmbeddingClient`
+
+```bash
+FOUNDRY_MODELS_ENDPOINT="https://<apim-instance>.azure-api.net/<foundry-instance>/models"
+FOUNDRY_MODELS_API_KEY="<api-key>"
+FOUNDRY_EMBEDDING_MODEL="text-embedding-3-small"
+FOUNDRY_IMAGE_EMBEDDING_MODEL="Cohere-embed-v3-english"  # optional
+```
+
+`FoundryChatClient` and `FoundryAgent` use the project endpoint. `FoundryEmbeddingClient` uses the separate models endpoint.
+
 ### Choose the right Python client
 
 | Scenario | Preferred client | Notes |
@@ -150,8 +161,8 @@ Use `FOUNDRY_AGENT_VERSION` for Prompt Agents. Hosted agents can omit it.
 | Azure OpenAI resource | `OpenAIChatCompletionClient` / `OpenAIChatClient` | Use the [OpenAI provider page](./openai.md). |
 | Microsoft Foundry project inference | `Agent(client=FoundryChatClient(...))` | Uses the Foundry Responses endpoint. |
 | Microsoft Foundry service-managed agent | `FoundryAgent` | Recommended for Prompt Agents and HostedAgents. |
+| Microsoft Foundry models-endpoint embeddings | `FoundryEmbeddingClient` | Uses `FOUNDRY_MODELS_ENDPOINT` plus `FOUNDRY_EMBEDDING_MODEL` / `FOUNDRY_IMAGE_EMBEDDING_MODEL`. |
 | Foundry Local runtime | `Agent(client=FoundryLocalClient(...))` | See [Foundry Local](./foundry-local.md). |
-| Legacy/lower-level Azure AI agent APIs | `AzureAIClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentClient` | Available under `agent_framework.azure` as deprecated or compatibility paths. |
 
 ## Create an agent with `FoundryChatClient`
 
@@ -175,6 +186,18 @@ agent = Agent(
 
 `FoundryChatClient` is the Foundry-first Python path for direct inference and supports tools, structured output, and streaming.
 
+## Create embeddings with `FoundryEmbeddingClient`
+
+Use `FoundryEmbeddingClient` when you want text or image embeddings from a Foundry models endpoint.
+
+```python
+from agent_framework.foundry import FoundryEmbeddingClient
+
+async with FoundryEmbeddingClient() as client:
+    result = await client.get_embeddings(["hello from Agent Framework"])
+    print(result[0].dimensions)
+```
+
 ## Connect to a service-managed agent with `FoundryAgent`
 
 Use `FoundryAgent` when the agent definition lives in Foundry. This is the recommended Python API for Prompt Agents and HostedAgents.
@@ -194,7 +217,7 @@ agent = FoundryAgent(
 For a HostedAgent, omit `agent_version` and use the hosted agent name instead.
 
 > [!WARNING]
-> `AzureAIClient`, `AzureAIProjectAgentProvider`, and `AzureAIAgentsProvider` are older Azure AI compatibility or lower-level paths. `AzureAIAgentClient` targets the v1 Agent Service compatibility surface and will be removed before GA. For new Python code, prefer `FoundryAgent`.
+> The older Python `AzureAIClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentClient`, `AzureAIAgentsProvider`, and Azure AI embedding compatibility surfaces were removed from the current `agent_framework.azure` namespace. For current Python code, use `FoundryChatClient` when your app owns instructions and tools, `FoundryAgent` when the agent definition lives in Foundry, and `FoundryEmbeddingClient` for Foundry models-endpoint embeddings.
 
 ## Using the agent
 

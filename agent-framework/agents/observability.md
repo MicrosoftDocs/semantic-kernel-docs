@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 12/16/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -363,22 +363,25 @@ Make sure you have your Foundry configured with a Azure Monitor instance, see [d
 pip install azure-monitor-opentelemetry
 ```
 
-#### Configure observability directly from the `AzureAIClient`
+#### Configure observability directly from the `FoundryChatClient`
 
-For Foundry projects, you can configure observability directly from the `AzureAIClient`:
+For Foundry projects, you can configure observability directly from the `FoundryChatClient`:
 
 ```python
-from agent_framework.azure import AzureAIClient
-from azure.ai.projects.aio import AIProjectClient
+import os
+
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
-    async with (
-        AzureCliCredential() as credential,
-        AIProjectClient(endpoint="https://<your-project>.foundry.azure.com", credential=credential) as project_client,
-        AzureAIClient(project_client=project_client) as client,
-    ):
-        # Automatically configures Azure Monitor with connection string from project
+    async with AzureCliCredential() as credential:
+        client = FoundryChatClient(
+            project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+            model=os.environ["FOUNDRY_MODEL"],
+            credential=credential,
+        )
+
+        # Automatically configures Azure Monitor with the connection string from the Foundry project
         await client.configure_azure_monitor(enable_live_metrics=True)
 ```
 
@@ -405,7 +408,7 @@ enable_instrumentation()
 
 # Create your agent with the same OpenTelemetry agent ID as registered in Foundry
 agent = Agent(
-    chat_client=...,
+    client=...,
     name="My Agent",
     instructions="You are a helpful assistant.",
     id="<OpenTelemetry agent ID>"

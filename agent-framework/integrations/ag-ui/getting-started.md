@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -415,12 +415,12 @@ from fastapi import FastAPI
 
 # Read required configuration
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
+deployment_name = os.environ.get("AZURE_OPENAI_CHAT_COMPLETION_MODEL")
 
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT environment variable is required")
 if not deployment_name:
-    raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
+    raise ValueError("AZURE_OPENAI_CHAT_COMPLETION_MODEL environment variable is required")
 
 chat_client = OpenAIChatCompletionClient(
     model=deployment_name,
@@ -433,7 +433,7 @@ chat_client = OpenAIChatCompletionClient(
 agent = Agent(
     name="AGUIAssistant",
     instructions="You are a helpful assistant.",
-    chat_client=chat_client,
+    client=chat_client,
 )
 
 # Create FastAPI app
@@ -462,7 +462,7 @@ Set the required environment variables:
 
 ```bash
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
-export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+export AZURE_OPENAI_CHAT_COMPLETION_MODEL="gpt-4o-mini"
 ```
 
 Run the server:
@@ -518,7 +518,7 @@ async def main():
     # Create agent with the chat client
     agent = Agent(
         name="ClientAgent",
-        chat_client=chat_client,
+        client=chat_client,
         instructions="You are a helpful assistant.",
     )
 

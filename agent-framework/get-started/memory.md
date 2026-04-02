@@ -94,7 +94,7 @@ Run it — the agent now has access to the context:
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/04_memory.py) for the complete runnable file.
 
 > [!NOTE]
-> In Python, persistence/memory is handled by Context and History providers. A `BaseHistoryProvider` is also a `BaseContextProvider`, and `InMemoryHistoryProvider` is the built-in local, in-memory implementation.
+> In Python, persistence/memory is handled by `ContextProvider` and `HistoryProvider` implementations. `BaseContextProvider` and `BaseHistoryProvider` remain as deprecated aliases, and `InMemoryHistoryProvider` is the built-in local, in-memory history provider.
 > `RawAgent` may auto-add `InMemoryHistoryProvider()` in specific cases (for example, when using a session with no configured context providers and no service-side storage indicators), but this is not guaranteed in all scenarios.
 > If you always want local persistence, add an `InMemoryHistoryProvider` explicitly. Also make sure only one history provider has `load_messages=True`, so you don't replay multiple stores into the same invocation.
 >

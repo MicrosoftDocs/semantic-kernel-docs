@@ -4,7 +4,7 @@ titleSuffix: Microsoft Foundry
 description: Learn different Agent Framework agent types.
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 09/04/2025
+ms.date: 04/01/2026
 ms.reviewer: ssalgado
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -224,8 +224,8 @@ from azure.identity.aio import DefaultAzureCredential
 agent = Agent(
     client=FoundryChatClient(
         credential=DefaultAzureCredential(),
-        project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
-        model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+        project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
+        model=os.getenv("FOUNDRY_MODEL"),
     ),
     instructions="You are a helpful assistant",
 )
@@ -240,8 +240,8 @@ from azure.identity.aio import DefaultAzureCredential
 
 agent = FoundryChatClient(
     credential=DefaultAzureCredential(),
-    project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
-    model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+    project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
+    model=os.getenv("FOUNDRY_MODEL"),
 ).as_agent(
     instructions="You are a helpful assistant"
 )
@@ -259,7 +259,6 @@ For detailed examples, see the agent-specific documentation sections below.
 |[Foundry Agent](./providers/microsoft-foundry.md)|An agent that uses the Agent Service as its backend.|Yes|
 |[Azure OpenAI Chat Completion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|
 |[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|
-|[Azure OpenAI Assistants](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Assistants service.|Yes|
 |[OpenAI Chat Completion](./providers/openai.md)|An agent that uses the OpenAI Chat Completion service.|No|
 |[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|
 |[Anthropic Claude](./providers/anthropic.md)|An agent that uses Anthropic Claude models.|No|
@@ -287,9 +286,11 @@ async for chunk in agent.run("What's the weather like in Portland?", stream=True
 
 For streaming examples, see:
 
-- [Azure AI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_basic.py)
-- [Azure OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_chat_client_basic.py)
-- [OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_basic.py)
+- [Foundry streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_basic.py)
+- [Azure OpenAI Chat Completion streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_chat_completion_client_basic.py)
+- [Azure OpenAI Responses streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_client_basic.py)
+- [OpenAI Chat Completion streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_basic.py)
+- [OpenAI Responses streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/client_basic.py)
 
 For more invocation patterns, see [Running Agents](./running-agents.md).
 
@@ -310,8 +311,8 @@ def get_weather(location: Annotated[str, "The location to get the weather for."]
 async with DefaultAzureCredential() as credential:
     agent = FoundryChatClient(
         credential=credential,
-        project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
-        model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+        project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
+        model=os.getenv("FOUNDRY_MODEL"),
     ).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather,
