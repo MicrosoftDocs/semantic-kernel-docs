@@ -184,7 +184,7 @@ var chatClient = new AIProjectClient(
     new Uri("<your-foundry-project-endpoint>"),
     new DefaultAzureCredential())
         .GetProjectOpenAIClient()
-        .GetResponsesClient()
+        .GetProjectResponsesClient()
         .AsIChatClient("gpt-4o-mini");
 
 var middlewareEnabledChatClient = chatClient

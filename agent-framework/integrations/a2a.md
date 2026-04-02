@@ -119,7 +119,7 @@ IChatClient chatClient = new AIProjectClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
         .GetProjectOpenAIClient()
-        .GetResponsesClient()
+        .GetProjectResponsesClient()
         .AsIChatClient(deploymentName);
 
 builder.Services.AddSingleton(chatClient);
