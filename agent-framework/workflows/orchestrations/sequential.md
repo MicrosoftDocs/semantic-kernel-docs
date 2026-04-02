@@ -56,7 +56,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
@@ -66,9 +66,10 @@ using Microsoft.Agents.AI;
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ??
     throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-var client = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient();
+var client = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetProjectOpenAIClient()
+    .GetProjectResponsesClient()
+    .AsIChatClient(deploymentName);
 ```
 
 > [!WARNING]
@@ -134,7 +135,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 Console.WriteLine();
 foreach (var message in result)
 {
-    Console.WriteLine($"{message.Role}: {message.Content}");
+    Console.WriteLine($"{message.Role}: {message.Text}");
 }
 ```
 
@@ -227,8 +228,8 @@ from azure.identity import AzureCliCredential
 
 # 1) Create agents using FoundryChatClient
 chat_client = FoundryChatClient(
-    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+    model=os.environ["FOUNDRY_MODEL"],
     credential=AzureCliCredential(),
 )
 

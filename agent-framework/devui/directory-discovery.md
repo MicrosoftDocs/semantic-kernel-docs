@@ -4,7 +4,7 @@ description: Learn how to structure your agents and workflows for automatic disc
 author: moonbox3
 ms.topic: how-to
 ms.author: evmattso
-ms.date: 12/10/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -56,7 +56,7 @@ def get_weather(location: str) -> str:
 
 agent = Agent(
     name="weather_agent",
-    chat_client=OpenAIChatClient(),
+    client=OpenAIChatClient(),
     tools=[get_weather],
     instructions="You are a helpful weather assistant."
 )

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/15/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -34,11 +34,10 @@ Here is an example of a simple function tool that fakes getting the weather for 
 using System;
 using System.ComponentModel;
 using System.Linq;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using OpenAI;
 
 [Description("Get the weather for a given location.")]
 static string GetWeather([Description("The location to get the weather for.")] string location)
@@ -55,12 +54,17 @@ AIFunction approvalRequiredWeatherFunction = new ApprovalRequiredAIFunction(weat
 When creating the agent, you can now provide the approval requiring function tool to the agent, by passing a list of tools to the `AsAIAgent` method.
 
 ```csharp
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-     .GetChatClient("gpt-4o-mini")
-     .AsAIAgent(instructions: "You are a helpful assistant", tools: [approvalRequiredWeatherFunction]);
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+     .AsAIAgent(
+        model: "gpt-4o-mini",
+        instructions: "You are a helpful assistant",
+        tools: [approvalRequiredWeatherFunction]);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Since you now have a function that requires approval, the agent might respond with a request for approval instead of executing the function directly and returning the result.
 You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
@@ -145,7 +149,7 @@ from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 async with Agent(
-    chat_client=OpenAIChatClient(),
+    client=OpenAIChatClient(),
     name="WeatherAgent",
     instructions="You are a helpful weather assistant.",
     tools=[get_weather, get_weather_detail],

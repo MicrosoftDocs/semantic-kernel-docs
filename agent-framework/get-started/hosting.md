@@ -37,16 +37,20 @@ The `Microsoft.Agents.AI.Hosting` library is the foundation for hosting AI agent
 Before configuring agents or workflows, register an `IChatClient` in the dependency injection container. In the examples below, it is registered as a keyed singleton under the name `chat-model`:
 
 ```csharp
-// endpoint is of 'https://<your-own-foundry-endpoint>.openai.azure.com/' format
+// endpoint is your Microsoft Foundry project endpoint
 // deploymentName is 'gpt-4o-mini' for example
 
-IChatClient chatClient = new AzureOpenAIClient(
+IChatClient chatClient = new AIProjectClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient();
+    .GetProjectOpenAIClient()
+    .GetProjectResponsesClient()
+    .AsIChatClient(deploymentName);
 builder.Services.AddSingleton(chatClient);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 #### AddAIAgent
 

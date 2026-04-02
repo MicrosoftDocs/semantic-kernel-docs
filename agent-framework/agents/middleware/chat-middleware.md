@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/16/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -91,7 +91,8 @@ from agent_framework import (
     chat_middleware,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -197,9 +198,13 @@ async def security_and_override_middleware(
                         messages=[
                             Message(
                                 role="assistant",
-                                text="I cannot process requests containing sensitive information. "
-                                "Please rephrase your question without including passwords, secrets, or other "
-                                "sensitive data.",
+                                contents=[
+                                    (
+                                        "I cannot process requests containing sensitive information. "
+                                        "Please rephrase your question without including passwords, secrets, or other "
+                                        "sensitive data."
+                                    )
+                                ],
                             )
                         ]
                     )
@@ -221,7 +226,8 @@ async def class_based_chat_middleware() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="EnhancedChatAgent",
             instructions="You are a helpful AI assistant.",
             # Register class-based middleware at agent level (applies to all runs)
@@ -243,7 +249,8 @@ async def function_based_chat_middleware() -> None:
 
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="FunctionMiddlewareAgent",
             instructions="You are a helpful AI assistant.",
             # Register function-based middleware at agent level
@@ -273,7 +280,8 @@ async def run_level_middleware() -> None:
 
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="RunLevelAgent",
             instructions="You are a helpful AI assistant.",
             tools=get_weather,
@@ -343,7 +351,8 @@ from agent_framework import (
     chat_middleware,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -449,9 +458,13 @@ async def security_and_override_middleware(
                         messages=[
                             Message(
                                 role="assistant",
-                                text="I cannot process requests containing sensitive information. "
-                                "Please rephrase your question without including passwords, secrets, or other "
-                                "sensitive data.",
+                                contents=[
+                                    (
+                                        "I cannot process requests containing sensitive information. "
+                                        "Please rephrase your question without including passwords, secrets, or other "
+                                        "sensitive data."
+                                    )
+                                ],
                             )
                         ]
                     )
@@ -473,7 +486,8 @@ async def class_based_chat_middleware() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="EnhancedChatAgent",
             instructions="You are a helpful AI assistant.",
             # Register class-based middleware at agent level (applies to all runs)
@@ -495,7 +509,8 @@ async def function_based_chat_middleware() -> None:
 
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="FunctionMiddlewareAgent",
             instructions="You are a helpful AI assistant.",
             # Register function-based middleware at agent level
@@ -525,7 +540,8 @@ async def run_level_middleware() -> None:
 
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="RunLevelAgent",
             instructions="You are a helpful AI assistant.",
             tools=get_weather,

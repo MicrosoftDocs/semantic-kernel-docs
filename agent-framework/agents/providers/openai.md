@@ -1,23 +1,25 @@
 ---
 title: OpenAI Agents
-description: Learn how to use Microsoft Agent Framework with OpenAI services — Chat Completions, Responses, and Assistants APIs.
+description: Learn how to use Microsoft Agent Framework with OpenAI services, including Chat Completions and Responses in Python and Chat Completions, Responses, and Assistants in C#.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 03/26/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
 # OpenAI Agents
 
-Microsoft Agent Framework supports three distinct OpenAI client types, each targeting a different API surface with different tool capabilities:
+Microsoft Agent Framework supports multiple OpenAI client types. In C#, that includes Chat Completion, Responses, and Assistants. In Python, the provider-leading OpenAI surfaces are Chat Completion and Responses:
 
 | Client Type | API | Best For |
 |---|---|---|
 | **Chat Completion** | [Chat Completions API](https://platform.openai.com/docs/api-reference/chat/create) | Simple agents, broad model support |
 | **Responses** | [Responses API](https://platform.openai.com/docs/api-reference/responses) | Full-featured agents with hosted tools (code interpreter, file search, web search, hosted MCP) |
 | **Assistants** | [Assistants API](https://platform.openai.com/docs/api-reference/assistants) | Server-managed agents with code interpreter and file search |
+
+Language availability varies. Python uses the Chat Completion and Responses clients on this page; the Assistants coverage below is C# only.
 
 
 ::: zone pivot="programming-language-csharp"
@@ -110,45 +112,42 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 ## Installation
 
 ```bash
-pip install agent-framework agent-framework-openai --pre
+pip install agent-framework-openai
 ```
 
 `agent-framework-openai` is the optional Python provider package for both direct OpenAI and Azure OpenAI usage.
 
 ## Configuration
 
-Each client type uses different environment variables:
+The Python OpenAI chat clients use these environment-variable patterns:
 
-# [Chat Completion](#tab/oai-chat-completion)
-
-```bash
-OPENAI_API_KEY="your-openai-api-key"
-OPENAI_MODEL="gpt-4o-mini"
-```
-
-# [Responses](#tab/oai-responses)
+# [Chat Completion](#tab/oai-config-chat-completion)
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
-OPENAI_MODEL="gpt-4o-mini"
+OPENAI_CHAT_COMPLETION_MODEL="gpt-4o-mini"
+# Optional shared fallback:
+# OPENAI_MODEL="gpt-4o-mini"
 ```
 
-# [Assistants](#tab/oai-assistants)
+# [Responses](#tab/oai-config-responses)
 
 ```bash
 OPENAI_API_KEY="your-openai-api-key"
-OPENAI_MODEL="gpt-4o-mini"
+OPENAI_CHAT_MODEL="gpt-4o-mini"
+# Optional shared fallback:
+# OPENAI_MODEL="gpt-4o-mini"
 ```
-
----
 
 ### Azure OpenAI with the same clients
 
-Azure OpenAI now uses the same Python OpenAI clients as direct OpenAI. The preferred and clearest Azure pattern is to pass explicit Azure routing inputs such as `credential` or `azure_endpoint`, then set `api_version` for Azure once routing is selected. If `OPENAI_API_KEY` is set, the generic clients stay on OpenAI unless you pass those Azure routing inputs. If you only have `AZURE_OPENAI_*` settings, Azure environment fallback still works.
+Azure OpenAI now uses the same Python OpenAI clients as direct OpenAI. The preferred and clearest Azure pattern is to pass explicit Azure routing inputs such as `credential` or `azure_endpoint`, then set `api_version` for Azure once routing is selected. If `OPENAI_API_KEY` is set, the generic clients stay on OpenAI unless you pass those Azure routing inputs. If you only have `AZURE_OPENAI_*` settings, Azure environment fallback still works. `OpenAIChatClient` prefers `AZURE_OPENAI_CHAT_MODEL`, `OpenAIChatCompletionClient` prefers `AZURE_OPENAI_CHAT_COMPLETION_MODEL`, and both fall back to `AZURE_OPENAI_MODEL`.
 
 ```bash
 AZURE_OPENAI_ENDPOINT="https://<resource>.openai.azure.com"
-AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+AZURE_OPENAI_CHAT_MODEL="gpt-4o-mini"
+# Optional shared fallback:
+# AZURE_OPENAI_MODEL="gpt-4o-mini"
 AZURE_OPENAI_API_VERSION="your-api-version"
 ```
 
@@ -160,7 +159,7 @@ from azure.identity import AzureCliCredential
 
 async def main():
     agent = OpenAIChatClient(
-        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
@@ -182,7 +181,7 @@ If you already have a full Azure OpenAI URL that ends with `/openai/v1`, pass it
 
 ### Azure embeddings with the same client family
 
-`OpenAIEmbeddingClient` follows the same routing rules as the chat clients. For Azure embeddings, pass the deployment name as `model` and prefer explicit Azure inputs:
+`OpenAIEmbeddingClient` follows the same routing rules as the chat clients. For Azure embeddings, pass the embedding deployment as `model` and prefer explicit Azure inputs:
 
 ```python
 import os
@@ -190,7 +189,7 @@ from agent_framework.openai import OpenAIEmbeddingClient
 from azure.identity import AzureCliCredential
 
 client = OpenAIEmbeddingClient(
-    model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_EMBEDDING_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),
@@ -199,7 +198,7 @@ client = OpenAIEmbeddingClient(
 
 ## Create OpenAI Agents
 
-# [Chat Completion](#tab/oai-chat-completion)
+# [Chat Completion](#tab/oai-create-chat-completion)
 
 `OpenAIChatCompletionClient` uses the Chat Completions API — the simplest option with broad model support.
 
@@ -236,7 +235,7 @@ async def web_search_example():
     print(result)
 ```
 
-# [Responses](#tab/oai-responses)
+# [Responses](#tab/oai-create-responses)
 
 `OpenAIChatClient` uses the Responses API — the most feature-rich option with hosted tools.
 
@@ -284,44 +283,14 @@ async def hosted_tools_example():
     print(result)
 ```
 
-# [Assistants](#tab/oai-assistants)
-
-`OpenAIAssistantProvider` uses the Assistants API — server-managed agents with built-in code interpreter and file search. The provider manages assistant lifecycle automatically.
-
-> [!WARNING]
-> Python Assistants API support (`OpenAIAssistantProvider` / `OpenAIAssistantsClient`) is a compatibility path and will be removed before GA. For new Python code, prefer the Responses API via `OpenAIChatClient`.
-
-```python
-import asyncio
-from agent_framework.openai import OpenAIAssistantProvider
-from openai import AsyncOpenAI
-
-async def main():
-    client = AsyncOpenAI()
-    provider = OpenAIAssistantProvider(client)
-
-    agent = await provider.create_agent(
-        name="DataAnalyst",
-        model="gpt-4o-mini",
-        instructions="You analyze data using code execution.",
-    )
-
-    try:
-        result = await agent.run("Calculate the first 20 prime numbers.")
-        print(result)
-    finally:
-        await provider.delete_agent(agent.id)
-
-asyncio.run(main())
-```
-
-**Supported tools:** Function tools, code interpreter, file search, local MCP tools.
+> [!IMPORTANT]
+> Python no longer ships an Assistants compatibility client/provider. For current Python code, use `OpenAIChatClient` for Responses API scenarios or `OpenAIChatCompletionClient` for Chat Completions. If you need a service-managed agent in Microsoft Foundry, see the [Microsoft Foundry provider page](./microsoft-foundry.md).
 
 ---
 
 ## Common Features
 
-All three client types support these standard agent features:
+These client types support these standard agent features:
 
 ### Function Tools
 

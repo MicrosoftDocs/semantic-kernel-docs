@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 01/26/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
@@ -251,6 +251,21 @@ async def explicit_config_example():
 ```
 
 ## Agent Features
+
+### Context Providers
+
+Python `GitHubCopilotAgent` also supports `context_providers=[...]`. Providers run before and after each invocation, so provider-added messages and instructions are included in the Copilot prompt and history providers can observe the final response.
+
+```python
+from agent_framework import InMemoryHistoryProvider
+
+agent = GitHubCopilotAgent(
+    default_options={"instructions": "You are a helpful coding assistant."},
+    context_providers=[InMemoryHistoryProvider()],
+)
+```
+
+You can combine built-in history providers with custom context providers. For implementation patterns, see [Context Providers](../conversations/context-providers.md).
 
 ### Function Tools
 

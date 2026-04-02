@@ -68,7 +68,7 @@ Collect messages from multiple sources into a single target:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-builder.AddFanInBarrierEdge(sources: [worker1, worker2, worker3], target: aggregatorExecutor);
+builder.AddFanInBarrierEdge(sources: [ worker1, worker2, worker3 ], target: aggregatorExecutor);
 ```
 
 ::: zone-end
@@ -116,10 +116,10 @@ You'll create an email processing workflow that demonstrates conditional routing
 First, install the required packages for your .NET project:
 
 ```dotnetcli
-dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.AI.Projects --prerelease
 dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.Workflows --prerelease
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 ### Define Data Models
@@ -200,7 +200,7 @@ This condition function:
 Set up the AI agents that will handle spam detection and email assistance:
 
 ```csharp
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -210,10 +210,11 @@ using Microsoft.Extensions.AI;
 /// </summary>
 /// <returns>A ChatClientAgent configured for spam detection</returns>
 private static ChatClientAgent GetSpamDetectionAgent(IChatClient chatClient) =>
-    new(chatClient, new ChatClientAgentOptions(instructions: "You are a spam detection assistant that identifies spam emails.")
+    new(chatClient, new ChatClientAgentOptions
     {
         ChatOptions = new()
         {
+            Instructions = "You are a spam detection assistant that identifies spam emails.",
             ResponseFormat = ChatResponseFormat.ForJsonSchema(AIJsonUtilities.CreateJsonSchema(typeof(DetectionResult)))
         }
     });
@@ -223,10 +224,11 @@ private static ChatClientAgent GetSpamDetectionAgent(IChatClient chatClient) =>
 /// </summary>
 /// <returns>A ChatClientAgent configured for email assistance</returns>
 private static ChatClientAgent GetEmailAssistantAgent(IChatClient chatClient) =>
-    new(chatClient, new ChatClientAgentOptions(instructions: "You are an email assistant that helps users draft professional responses to emails.")
+    new(chatClient, new ChatClientAgentOptions
     {
         ChatOptions = new()
         {
+            Instructions = "You are an email assistant that helps users draft professional responses to emails.",
             ResponseFormat = ChatResponseFormat.ForJsonSchema(AIJsonUtilities.CreateJsonSchema(typeof(EmailResponse)))
         }
     });
@@ -353,8 +355,8 @@ public static class Program
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
             ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-            .GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient().GetProjectResponsesClient().AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent spamDetectionAgent = GetSpamDetectionAgent(chatClient);
@@ -378,7 +380,7 @@ public static class Program
 
         // Execute the workflow with sample spam email
         string emailContent = "Congratulations! You've won $1,000,000! Click here to claim your prize now!";
-        StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, emailContent));
+        StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, new ChatMessage(ChatRole.User, emailContent));
         await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
 
         await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
@@ -463,7 +465,7 @@ You'll create an email processing workflow that demonstrates conditional routing
 ### Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework-core --pre`
+- Agent Framework installed: `pip install agent-framework-core`
 - Azure OpenAI service configured with proper environment variables
 - Azure CLI authentication: `az login`
 
@@ -597,7 +599,7 @@ async def main() -> None:
     # Create agents
     # AzureCliCredential uses your current az login. This avoids embedding secrets in code.
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
@@ -815,10 +817,11 @@ Update the spam detection agent to be less confident and return three-way classi
 /// </summary>
 /// <returns>A ChatClientAgent configured for three-way spam detection</returns>
 private static ChatClientAgent GetSpamDetectionAgent(IChatClient chatClient) =>
-    new(chatClient, new ChatClientAgentOptions(instructions: "You are a spam detection assistant that identifies spam emails. Be less confident in your assessments.")
+    new(chatClient, new ChatClientAgentOptions
     {
         ChatOptions = new()
         {
+            Instructions = "You are a spam detection assistant that identifies spam emails. Be less confident in your assessments.",
             ResponseFormat = ChatResponseFormat.ForJsonSchema<DetectionResult>()
         }
     });
@@ -828,10 +831,11 @@ private static ChatClientAgent GetSpamDetectionAgent(IChatClient chatClient) =>
 /// </summary>
 /// <returns>A ChatClientAgent configured for email assistance</returns>
 private static ChatClientAgent GetEmailAssistantAgent(IChatClient chatClient) =>
-    new(chatClient, new ChatClientAgentOptions(instructions: "You are an email assistant that helps users draft responses to emails with professionalism.")
+    new(chatClient, new ChatClientAgentOptions
     {
         ChatOptions = new()
         {
+            Instructions = "You are an email assistant that helps users draft responses to emails with professionalism.",
             ResponseFormat = ChatResponseFormat.ForJsonSchema<EmailResponse>()
         }
     });
@@ -973,7 +977,10 @@ public static class Program
         // Set up the Azure OpenAI client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential()).GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient()
+            .GetProjectResponsesClient()
+            .AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent spamDetectionAgent = GetSpamDetectionAgent(chatClient);
@@ -1012,7 +1019,7 @@ public static class Program
         string email = Resources.Read("ambiguous_email.txt");
 
         // Execute the workflow
-        StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, email));
+        StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, new ChatMessage(ChatRole.User, email));
         await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
         await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
         {
@@ -1241,7 +1248,7 @@ Update the spam detection agent to be less confident and return three-way classi
 ```python
 async def main():
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
@@ -1674,10 +1681,11 @@ Create agents for analysis, assistance, and summarization:
 /// </summary>
 /// <returns>A ChatClientAgent configured for comprehensive email analysis</returns>
 private static ChatClientAgent GetEmailAnalysisAgent(IChatClient chatClient) =>
-    new(chatClient, new ChatClientAgentOptions(instructions: "You are a spam detection assistant that identifies spam emails.")
+    new(chatClient, new ChatClientAgentOptions
     {
         ChatOptions = new()
         {
+            Instructions = "You are a spam detection assistant that identifies spam emails.",
             ResponseFormat = ChatResponseFormat.ForJsonSchema<AnalysisResult>()
         }
     });
@@ -1687,10 +1695,11 @@ private static ChatClientAgent GetEmailAnalysisAgent(IChatClient chatClient) =>
 /// </summary>
 /// <returns>A ChatClientAgent configured for email assistance</returns>
 private static ChatClientAgent GetEmailAssistantAgent(IChatClient chatClient) =>
-    new(chatClient, new ChatClientAgentOptions(instructions: "You are an email assistant that helps users draft responses to emails with professionalism.")
+    new(chatClient, new ChatClientAgentOptions
     {
         ChatOptions = new()
         {
+            Instructions = "You are an email assistant that helps users draft responses to emails with professionalism.",
             ResponseFormat = ChatResponseFormat.ForJsonSchema<EmailResponse>()
         }
     });
@@ -1700,10 +1709,11 @@ private static ChatClientAgent GetEmailAssistantAgent(IChatClient chatClient) =>
 /// </summary>
 /// <returns>A ChatClientAgent configured for email summarization</returns>
 private static ChatClientAgent GetEmailSummaryAgent(IChatClient chatClient) =>
-    new(chatClient, new ChatClientAgentOptions(instructions: "You are an assistant that helps users summarize emails.")
+    new(chatClient, new ChatClientAgentOptions
     {
         ChatOptions = new()
         {
+            Instructions = "You are an assistant that helps users summarize emails.",
             ResponseFormat = ChatResponseFormat.ForJsonSchema<EmailSummary>()
         }
     });
@@ -1721,7 +1731,10 @@ public static class Program
         // Set up the Azure OpenAI client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential()).GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient()
+            .GetProjectResponsesClient()
+            .AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent emailAnalysisAgent = GetEmailAnalysisAgent(chatClient);
@@ -1767,7 +1780,7 @@ public static class Program
         string email = Resources.Read("email.txt");
 
         // Execute the workflow with custom event handling
-        StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, email));
+        StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, new ChatMessage(ChatRole.User, email));
         await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
         await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
         {
@@ -2078,7 +2091,7 @@ Create agents for analysis, assistance, and summarization:
 ```python
 async def main() -> None:
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),

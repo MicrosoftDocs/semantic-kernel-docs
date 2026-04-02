@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 03/25/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
@@ -21,73 +21,77 @@ Add the required NuGet packages to your project.
 
 ```dotnetcli
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.AzureAI.Persistent --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
-## Create Foundry Agents
+## Two agent types
 
-As a first step you need to create a client to connect to the Agent Service.
+The Microsoft Foundry integration exposes two distinct usage patterns:
+
+| Type | Produced type | Description | Use when |
+|---|---|---|---|
+| **Responses Agent** | `ChatClientAgent` | Your app programmatically provides a model, instructions, and tools at runtime via `AIProjectClient.AsAIAgent(...)`. No server-side agent resource is created. | You own the agent definition and want a simple, flexible setup. This is the pattern used in most samples. |
+| **Foundry Agent** (versioned) | `FoundryAgent` | Server-managed — agent definitions are created and versioned either through the Foundry portal or programmatically via `AIProjectClient.AgentAdministrationClient`. Pass a `ProjectsAgentVersion` or `ProjectsAgentRecord` or `AgentReference` to `AIProjectClient.AsAIAgent(...)`. | You need strict, versioned agent definitions managed in the Foundry portal, through service APIs |
+
+## Responses Agent (direct inference)
+
+Use `AsAIAgent` on `AIProjectClient` directly with a model and instructions. This is the recommended starting point for most scenarios.
 
 ```csharp
-using System;
-using Azure.AI.Agents.Persistent;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 
-var persistentAgentsClient = new PersistentAgentsClient(
-    "https://<myresource>.services.ai.azure.com/api/projects/<myproject>",
-    new DefaultAzureCredential());
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            name: "Joker",
+            instructions: "You are good at telling jokes.");
+
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-To use the Agent Service, you need create an agent resource in the service.
-This can be done using either the Azure.AI.Agents.Persistent SDK or using Microsoft Agent Framework helpers.
+This path is code-first and does not create a server-managed agent resource.
 
-### Using the Persistent SDK
+## Foundry Agent (versioned)
 
-Create a persistent agent and retrieve it as an `AIAgent` using the `PersistentAgentsClient`.
-
-```csharp
-// Create a persistent agent
-var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
-    model: "gpt-4o-mini",
-    name: "Joker",
-    instructions: "You are good at telling jokes.");
-
-// Retrieve the agent that was just created as an AIAgent using its ID
-AIAgent agent1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
-
-// Invoke the agent and output the text result.
-Console.WriteLine(await agent1.RunAsync("Tell me a joke about a pirate."));
-```
-
-### Using Agent Framework helpers
-
-You can also create and return an `AIAgent` in one step:
+Use the native `AIProjectClient.AgentAdministrationClient` APIs from the AI Projects SDK to retrieve versioned agent resources, then wrap them with `AsAIAgent`. Agents can be created and configured directly in the Foundry portal or programmatically via `AIProjectClient.AgentAdministrationClient`.
 
 ```csharp
-AIAgent agent2 = await persistentAgentsClient.CreateAIAgentAsync(
-    model: "gpt-4o-mini",
-    name: "Joker",
-    instructions: "You are good at telling jokes.");
+using Azure.AI.Projects;
+using Azure.AI.Projects.Agents;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Foundry;
+
+var aiProjectClient = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential());
+
+// Retrieve an existing agent by name (uses the latest version automatically)
+ProjectsAgentRecord jokerRecord = await aiProjectClient.AgentAdministrationClient.GetAgentAsync("Joker");
+FoundryAgent agent = aiProjectClient.AsAIAgent(jokerRecord);
+
+Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 ```
 
-## Reusing Foundry Agents
-
-You can reuse existing Foundry Agents by retrieving them using their IDs.
-
-```csharp
-AIAgent agent3 = await persistentAgentsClient.GetAIAgentAsync("<agent-id>");
-```
-
-> [!TIP]
-> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+> [!IMPORTANT]
+> Foundry Agents tools and instructions are strict to the ones it was created with, attempting to modify tooling or instructions at runtime is not supported.
 
 ## Using the agent
 
-The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
+Both `ChatClientAgent` (Responses) and `FoundryAgent` (versioned) are standard `AIAgent` instances and support all standard operations including sessions, tools, middleware, and streaming.
+
+```csharp
+AgentSession session = await agent.CreateSessionAsync();
+Console.WriteLine(await agent.RunAsync("Tell me a joke.", session));
+Console.WriteLine(await agent.RunAsync("Now make it funnier.", session));
+```
 
 For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../get-started/your-first-agent.md).
 
@@ -98,13 +102,13 @@ For more information on how to run and interact with agents, see the [Agent gett
 
 In Python, all Foundry-specific clients now live under `agent_framework.foundry`.
 
-- `agent-framework-foundry` provides the cloud Foundry connectors: `FoundryChatClient`, `FoundryAgent`, and `FoundryMemoryProvider`.
+- `agent-framework-foundry` provides the cloud Foundry connectors: `FoundryChatClient`, `FoundryAgent`, `FoundryEmbeddingClient`, and `FoundryMemoryProvider`.
 - `agent-framework-foundry-local` provides `FoundryLocalClient` for local model execution.
 
 > [!IMPORTANT]
-> This page is for Microsoft Foundry project endpoints and the Foundry Agent Service. If you have a standalone Azure OpenAI resource endpoint (`https://<your-resource>.openai.azure.com`), use the Python guidance on the [OpenAI provider page](./openai.md). If you want to run supported models locally, see the [Foundry Local provider page](./foundry-local.md).
+> This page covers the current Python clients for Microsoft Foundry project endpoints, models endpoints, and the Foundry Agent Service. If you have a standalone Azure OpenAI resource endpoint (`https://<your-resource>.openai.azure.com`), use the Python guidance on the [OpenAI provider page](./openai.md). If you want to run supported models locally, see the [Foundry Local provider page](./foundry-local.md).
 
-## Two ways to use Foundry in Python
+## Foundry chat and agent patterns in Python
 
 | Scenario | Python shape | Use when |
 |---|---|---|
@@ -114,11 +118,11 @@ In Python, all Foundry-specific clients now live under `agent_framework.foundry`
 ## Installation
 
 ```bash
-pip install agent-framework-foundry --pre
+pip install agent-framework-foundry
 pip install azure-identity
 ```
 
-If you still rely on the older Azure AI compatibility classes, install `agent-framework-azure-ai --pre` separately.
+The same `agent-framework-foundry` package also includes `FoundryEmbeddingClient` for Foundry models-endpoint embeddings.
 
 ## Configuration
 
@@ -139,6 +143,17 @@ FOUNDRY_AGENT_VERSION="1.0"
 
 Use `FOUNDRY_AGENT_VERSION` for Prompt Agents. Hosted agents can omit it.
 
+### `FoundryEmbeddingClient`
+
+```bash
+FOUNDRY_MODELS_ENDPOINT="https://<apim-instance>.azure-api.net/<foundry-instance>/models"
+FOUNDRY_MODELS_API_KEY="<api-key>"
+FOUNDRY_EMBEDDING_MODEL="text-embedding-3-small"
+FOUNDRY_IMAGE_EMBEDDING_MODEL="Cohere-embed-v3-english"  # optional
+```
+
+`FoundryChatClient` and `FoundryAgent` use the project endpoint. `FoundryEmbeddingClient` uses the separate models endpoint.
+
 ### Choose the right Python client
 
 | Scenario | Preferred client | Notes |
@@ -146,8 +161,8 @@ Use `FOUNDRY_AGENT_VERSION` for Prompt Agents. Hosted agents can omit it.
 | Azure OpenAI resource | `OpenAIChatCompletionClient` / `OpenAIChatClient` | Use the [OpenAI provider page](./openai.md). |
 | Microsoft Foundry project inference | `Agent(client=FoundryChatClient(...))` | Uses the Foundry Responses endpoint. |
 | Microsoft Foundry service-managed agent | `FoundryAgent` | Recommended for Prompt Agents and HostedAgents. |
+| Microsoft Foundry models-endpoint embeddings | `FoundryEmbeddingClient` | Uses `FOUNDRY_MODELS_ENDPOINT` plus `FOUNDRY_EMBEDDING_MODEL` / `FOUNDRY_IMAGE_EMBEDDING_MODEL`. |
 | Foundry Local runtime | `Agent(client=FoundryLocalClient(...))` | See [Foundry Local](./foundry-local.md). |
-| Legacy/lower-level Azure AI agent APIs | `AzureAIClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentClient` | Available under `agent_framework.azure` as deprecated or compatibility paths. |
 
 ## Create an agent with `FoundryChatClient`
 
@@ -171,6 +186,18 @@ agent = Agent(
 
 `FoundryChatClient` is the Foundry-first Python path for direct inference and supports tools, structured output, and streaming.
 
+## Create embeddings with `FoundryEmbeddingClient`
+
+Use `FoundryEmbeddingClient` when you want text or image embeddings from a Foundry models endpoint.
+
+```python
+from agent_framework.foundry import FoundryEmbeddingClient
+
+async with FoundryEmbeddingClient() as client:
+    result = await client.get_embeddings(["hello from Agent Framework"])
+    print(result[0].dimensions)
+```
+
 ## Connect to a service-managed agent with `FoundryAgent`
 
 Use `FoundryAgent` when the agent definition lives in Foundry. This is the recommended Python API for Prompt Agents and HostedAgents.
@@ -190,7 +217,7 @@ agent = FoundryAgent(
 For a HostedAgent, omit `agent_version` and use the hosted agent name instead.
 
 > [!WARNING]
-> `AzureAIClient`, `AzureAIProjectAgentProvider`, and `AzureAIAgentsProvider` are older Azure AI compatibility or lower-level paths. `AzureAIAgentClient` targets the v1 Agent Service compatibility surface and will be removed before GA. For new Python code, prefer `FoundryAgent`.
+> The older Python `AzureAIClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentClient`, `AzureAIAgentsProvider`, and Azure AI embedding compatibility surfaces were removed from the current `agent_framework.azure` namespace. For current Python code, use `FoundryChatClient` when your app owns instructions and tools, `FoundryAgent` when the agent definition lives in Foundry, and `FoundryEmbeddingClient` for Foundry models-endpoint embeddings.
 
 ## Using the agent
 

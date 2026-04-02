@@ -4,7 +4,7 @@ description: Learn how to use DevUI, a sample app for running and testing agents
 author: moonbox3
 ms.topic: overview
 ms.author: evmattso
-ms.date: 12/10/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -75,7 +75,7 @@ def get_weather(location: str) -> str:
 # Create your agent
 agent = Agent(
     name="WeatherAgent",
-    chat_client=OpenAIChatClient(),
+    client=OpenAIChatClient(),
     tools=[get_weather]
 )
 

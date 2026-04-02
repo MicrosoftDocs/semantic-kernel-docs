@@ -31,7 +31,7 @@ interactive, robust, and safe AI applications.
 :::zone pivot="programming-language-csharp"
 
 ```dotnetcli
-dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 ```csharp
@@ -55,7 +55,7 @@ Console.WriteLine(await agent.RunAsync("What is the largest city in France?"));
 :::zone pivot="programming-language-python"
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework
 ```
 
 ```python

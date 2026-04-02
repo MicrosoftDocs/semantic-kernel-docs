@@ -4,7 +4,7 @@ description: Learn about security best practices and deployment options for DevU
 author: moonbox3
 ms.topic: how-to
 ms.author: evmattso
-ms.date: 12/10/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -157,12 +157,12 @@ from agent_framework_devui import register_cleanup, serve
 
 credential = DefaultAzureCredential()
 client = OpenAIChatCompletionClient(
-    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=credential,
 )
-agent = Agent(name="MyAgent", chat_client=client)
+agent = Agent(name="MyAgent", client=client)
 
 # Register cleanup hook - credential will be closed on shutdown
 register_cleanup(agent, credential.close)
@@ -175,7 +175,7 @@ When using MCP (Model Context Protocol) tools with DevUI:
 
 ```python
 # Correct - DevUI handles cleanup automatically
-mcp_tool = MCPStreamableHTTPTool(url="http://localhost:8011/mcp", chat_client=chat_client)
+mcp_tool = MCPStreamableHTTPTool(url="http://localhost:8011/mcp", client=chat_client)
 agent = Agent(tools=mcp_tool)
 serve(entities=[agent])
 ```

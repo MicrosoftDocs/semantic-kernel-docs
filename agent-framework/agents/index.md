@@ -4,7 +4,7 @@ titleSuffix: Microsoft Foundry
 description: Learn different Agent Framework agent types.
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 09/04/2025
+ms.date: 04/01/2026
 ms.reviewer: ssalgado
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -97,7 +97,7 @@ When using Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you ha
 | [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
 | [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
 | [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
-| [Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Persistent Agents SDK | [Azure.AI.Agents.Persistent](https://www.nuget.org/packages/Azure.AI.Agents.Persistent) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
+| [Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Projects SDK + Microsoft Agents AI Foundry | [Azure.AI.Projects](https://www.nuget.org/packages/Azure.AI.Projects) / [Microsoft.Agents.AI.Foundry](https://www.nuget.org/packages/Microsoft.Agents.AI.Foundry) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
 | [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
 | OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
@@ -139,31 +139,32 @@ Once you have created the OpenAIClient, you can get a sub client for the specifi
 
 ```csharp
 AIAgent agent = client
-    .GetChatClient(model)
-    .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+    .AsAIAgent(model: model, instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
-### Using the Azure OpenAI SDK
+### Using the Azure AI Projects SDK
 
-This SDK can be used to connect to both Azure OpenAI and Foundry Models services.
-Either way, you will need to supply the correct service URL when creating the `AzureOpenAIClient`.
+This SDK can be used to connect to Foundry services.
+You will need to supply the correct project endpoint URL when creating the `AIProjectClient`.
 See the table above for the correct URL to use.
 
 ```csharp
-AIAgent agent = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
     new Uri(serviceUrl),
     new DefaultAzureCredential())
-     .GetChatClient(deploymentName)
-     .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+     .AsAIAgent(
+         model: deploymentName,
+         instructions: "You are good at telling jokes.",
+         name: "Joker");
 ```
 
-### Using the Azure AI Persistent Agents SDK
+### Using the Azure AI Projects SDK with Foundry Agents
 
-This SDK is only supported with the Agent Service. See the table above for the correct URL to use.
+This SDK is used for both Responses API based agents and versioned Foundry Agents. See the table above for the correct URL to use.
 
 ```csharp
-var persistentAgentsClient = new PersistentAgentsClient(serviceUrl, new DefaultAzureCredential());
-AIAgent agent = await persistentAgentsClient.CreateAIAgentAsync(
+var aiProjectClient = new AIProjectClient(new Uri(serviceUrl), new DefaultAzureCredential());
+AIAgent agent = aiProjectClient.AsAIAgent(
     model: deploymentName,
     instructions: "You are good at telling jokes.",
     name: "Joker");
@@ -223,8 +224,8 @@ from azure.identity.aio import DefaultAzureCredential
 agent = Agent(
     client=FoundryChatClient(
         credential=DefaultAzureCredential(),
-        project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
-        model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+        project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
+        model=os.getenv("FOUNDRY_MODEL"),
     ),
     instructions="You are a helpful assistant",
 )
@@ -239,8 +240,8 @@ from azure.identity.aio import DefaultAzureCredential
 
 agent = FoundryChatClient(
     credential=DefaultAzureCredential(),
-    project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
-    model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+    project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
+    model=os.getenv("FOUNDRY_MODEL"),
 ).as_agent(
     instructions="You are a helpful assistant"
 )
@@ -258,7 +259,6 @@ For detailed examples, see the agent-specific documentation sections below.
 |[Foundry Agent](./providers/microsoft-foundry.md)|An agent that uses the Agent Service as its backend.|Yes|
 |[Azure OpenAI Chat Completion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|
 |[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|
-|[Azure OpenAI Assistants](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Assistants service.|Yes|
 |[OpenAI Chat Completion](./providers/openai.md)|An agent that uses the OpenAI Chat Completion service.|No|
 |[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|
 |[Anthropic Claude](./providers/anthropic.md)|An agent that uses Anthropic Claude models.|No|
@@ -286,9 +286,11 @@ async for chunk in agent.run("What's the weather like in Portland?", stream=True
 
 For streaming examples, see:
 
-- [Azure AI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_basic.py)
-- [Azure OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_chat_client_basic.py)
-- [OpenAI streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_basic.py)
+- [Foundry streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_basic.py)
+- [Azure OpenAI Chat Completion streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_chat_completion_client_basic.py)
+- [Azure OpenAI Responses streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_client_basic.py)
+- [OpenAI Chat Completion streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_basic.py)
+- [OpenAI Responses streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/client_basic.py)
 
 For more invocation patterns, see [Running Agents](./running-agents.md).
 
@@ -309,8 +311,8 @@ def get_weather(location: Annotated[str, "The location to get the weather for."]
 async with DefaultAzureCredential() as credential:
     agent = FoundryChatClient(
         credential=credential,
-        project_endpoint=os.getenv("AZURE_AI_PROJECT_ENDPOINT"),
-        model=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+        project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
+        model=os.getenv("FOUNDRY_MODEL"),
     ).as_agent(
         instructions="You are a helpful weather assistant.",
         tools=get_weather,

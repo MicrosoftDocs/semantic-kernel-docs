@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -113,7 +113,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         this._jsonSerializerOptions = jsonSerializerOptions;
     }
 
-    public override Task<AgentResponse> RunAsync(
+    protected override Task<AgentResponse> RunCoreAsync(
         IEnumerable<ChatMessage> messages,
         AgentSession? session = null,
         AgentRunOptions? options = null,
@@ -123,7 +123,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
             .ToAgentResponseAsync(cancellationToken);
     }
 
-    public override async IAsyncEnumerable<AgentResponseUpdate> RunStreamingAsync(
+    protected override async IAsyncEnumerable<AgentResponseUpdate> RunCoreStreamingAsync(
         IEnumerable<ChatMessage> messages,
         AgentSession? session = null,
         AgentRunOptions? options = null,
@@ -203,21 +203,24 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         var response = allUpdates.ToAgentResponse();
 
         // Try to deserialize the structured state response
-        if (response.TryDeserialize(this._jsonSerializerOptions, out JsonElement stateSnapshot))
+        JsonElement stateSnapshot;
+        try
         {
-            // Serialize and emit as STATE_SNAPSHOT via DataContent
-            byte[] stateBytes = JsonSerializer.SerializeToUtf8Bytes(
-                stateSnapshot,
-                this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)));
-            yield return new AgentResponseUpdate
-            {
-                Contents = [new DataContent(stateBytes, "application/json")]
-            };
+            stateSnapshot = JsonSerializer.Deserialize<JsonElement>(response.Text, this._jsonSerializerOptions);
         }
-        else
+        catch (JsonException)
         {
             yield break;
         }
+
+        // Serialize and emit as STATE_SNAPSHOT via DataContent
+        byte[] stateBytes = JsonSerializer.SerializeToUtf8Bytes(
+            stateSnapshot,
+            this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)));
+        yield return new AgentResponseUpdate
+        {
+            Contents = [new DataContent(stateBytes, "application/json")]
+        };
 
         // Second run: Generate user-friendly summary
         var secondRunMessages = messages.Concat(response.Messages).Append(
@@ -237,8 +240,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
 
 ```csharp
 using Microsoft.Agents.AI;
-using Microsoft.Extensions.AI;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 
 AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
@@ -248,15 +250,13 @@ AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
     string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME")
         ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-    AzureOpenAIClient azureClient = new AzureOpenAIClient(
-        new Uri(endpoint),
-        new DefaultAzureCredential());
-
-    var chatClient = azureClient.GetChatClient(deploymentName);
-
     // Create base agent
-    AIAgent baseAgent = chatClient.AsIChatClient().AsAIAgent(
-        name: "RecipeAgent",
+    AIAgent baseAgent = new AIProjectClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential())
+        .AsAIAgent(
+            model: deploymentName,
+            name: "RecipeAgent",
         instructions: """
             You are a helpful recipe assistant. When users ask you to create or suggest a recipe,
             respond with a complete RecipeResponse JSON object that includes:
@@ -275,6 +275,9 @@ AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
     return new SharedStateAgent(baseAgent, jsonSerializerOptions);
 }
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Map the Agent Endpoint
 
@@ -485,7 +488,7 @@ agent = Agent(
     - Add finishing touches: lemon zest, fresh parsley
     - Make instructions more detailed and professional
     """,
-    chat_client=OpenAIChatCompletionClient(
+    client=OpenAIChatCompletionClient(
         model=deployment_name,
         azure_endpoint=endpoint,
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
@@ -619,7 +622,7 @@ async def main():
     # Wrap with Agent for convenient API
     agent = Agent(
         name="ClientAgent",
-        chat_client=chat_client,
+        client=chat_client,
         instructions="You are a helpful assistant.",
     )
 

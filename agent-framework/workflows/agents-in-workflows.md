@@ -64,9 +64,9 @@ You'll create a workflow that:
 First, install the required packages for your .NET project:
 
 ```dotnetcli
-dotnet add package Azure.AI.Agents.Persistent --prerelease
+dotnet add package Azure.AI.Projects --prerelease
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 dotnet add package Microsoft.Agents.AI.Workflows --prerelease
 ```
 
@@ -75,9 +75,11 @@ dotnet add package Microsoft.Agents.AI.Workflows --prerelease
 Configure the Azure Foundry client with environment variables and authentication:
 
 ```csharp
-using Azure.AI.Agents.Persistent;
+using Azure.AI.Projects;
+using Azure.AI.Projects.Agents;
 using Azure.Identity;
 using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Foundry;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 
@@ -85,11 +87,11 @@ public static class Program
 {
     private static async Task Main()
     {
-        // Set up the Azure OpenAI client
+        // Set up the Azure AI Project client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_AI_PROJECT_ENDPOINT")
             ?? throw new InvalidOperationException("AZURE_AI_PROJECT_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_AI_MODEL_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var persistentAgentsClient = new PersistentAgentsClient(endpoint, new AzureCliCredential());
+        var aiProjectClient = new AIProjectClient(new Uri(endpoint), new AzureCliCredential());
 ```
 
 ## Step 3: Create Agent Factory Method
@@ -101,20 +103,24 @@ Implement a helper method to create Azure Foundry agents with specific instructi
     /// Creates a translation agent for the specified target language.
     /// </summary>
     /// <param name="targetLanguage">The target language for translation</param>
-    /// <param name="persistentAgentsClient">The PersistentAgentsClient to create the agent</param>
+    /// <param name="aiProjectClient">The AIProjectClient to create the agent</param>
     /// <param name="model">The model to use for the agent</param>
     /// <returns>A ChatClientAgent configured for the specified language</returns>
     private static async Task<ChatClientAgent> GetTranslationAgentAsync(
         string targetLanguage,
-        PersistentAgentsClient persistentAgentsClient,
+        AIProjectClient aiProjectClient,
         string model)
     {
-        var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
-            model: model,
-            name: $"{targetLanguage} Translator",
-            instructions: $"You are a translation assistant that translates the provided text to {targetLanguage}.");
+        string agentName = $"{targetLanguage} Translator";
+        var version = await aiProjectClient.AgentAdministrationClient.CreateAgentVersionAsync(
+            agentName,
+            new ProjectsAgentVersionCreationOptions(
+                new DeclarativeAgentDefinition(model)
+                {
+                    Instructions = $"You are a translation assistant that translates the provided text to {targetLanguage}."
+                }));
 
-        return await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+        return aiProjectClient.AsAIAgent(version);
     }
 }
 ```
@@ -125,9 +131,9 @@ Create three translation agents using the helper method:
 
 ```csharp
         // Create agents
-        AIAgent frenchAgent = await GetTranslationAgentAsync("French", persistentAgentsClient, deploymentName);
-        AIAgent spanishAgent = await GetTranslationAgentAsync("Spanish", persistentAgentsClient, deploymentName);
-        AIAgent englishAgent = await GetTranslationAgentAsync("English", persistentAgentsClient, deploymentName);
+        AIAgent frenchAgent = await GetTranslationAgentAsync("French", aiProjectClient, deploymentName);
+        AIAgent spanishAgent = await GetTranslationAgentAsync("Spanish", aiProjectClient, deploymentName);
+        AIAgent englishAgent = await GetTranslationAgentAsync("English", aiProjectClient, deploymentName);
 ```
 
 ## Step 5: Build the Workflow
@@ -169,16 +175,16 @@ Properly clean up the Azure Foundry agents after use:
 
 ```csharp
         // Cleanup the agents created for the sample.
-        await persistentAgentsClient.Administration.DeleteAgentAsync(frenchAgent.Id);
-        await persistentAgentsClient.Administration.DeleteAgentAsync(spanishAgent.Id);
-        await persistentAgentsClient.Administration.DeleteAgentAsync(englishAgent.Id);
+        await aiProjectClient.AgentAdministrationClient.DeleteAgentAsync(frenchAgent.Id);
+        await aiProjectClient.AgentAdministrationClient.DeleteAgentAsync(spanishAgent.Id);
+        await aiProjectClient.AgentAdministrationClient.DeleteAgentAsync(englishAgent.Id);
     }
 ```
 
 ## How It Works
 
-1. **Azure Foundry Client Setup**: Uses `PersistentAgentsClient` with Azure CLI credentials for authentication
-2. **Agent Creation**: Creates persistent agents on Azure Foundry with specific instructions for translation
+1. **Azure Foundry Client Setup**: Uses `AIProjectClient` with Azure CLI credentials for authentication
+2. **Agent Creation**: Creates versioned agents on Azure Foundry with specific instructions for translation
 3. **Sequential Processing**: French agent translates input first, then Spanish agent, then English agent
 4. **Turn Token Pattern**: Agents cache messages and only process when they receive a `TurnToken`
 5. **Streaming Updates**: `AgentResponseUpdateEvent` provides real-time token updates as agents generate responses
@@ -187,7 +193,7 @@ Properly clean up the Azure Foundry agents after use:
 ## Key Concepts
 
 - **Azure Foundry Agent Service**: Cloud-based AI agents with advanced reasoning capabilities
-- **PersistentAgentsClient**: Client for creating and managing agents on Azure Foundry
+- **AIProjectClient**: Client for creating and managing agents on Azure Foundry
 - **WorkflowEvent**: Output events (`type="output"`) contain agent output data (`AgentResponseUpdate` for streaming, `AgentResponse` for non-streaming)
 - **TurnToken**: Signal that triggers agent processing after message caching
 - **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next
@@ -219,7 +225,7 @@ You'll create a workflow that:
 ## Prerequisites
 
 - Python 3.10 or later
-- Agent Framework installed: `pip install agent-framework --pre`
+- Agent Framework installed: `pip install agent-framework`
 - Azure OpenAI Responses configured with proper environment variables
 - Azure CLI authentication: `az login`
 
@@ -243,8 +249,8 @@ Create one shared client that you can use to construct multiple agents:
 ```python
 async def main() -> None:
     client = FoundryChatClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+        model=os.environ["FOUNDRY_MODEL"],
         credential=AzureCliCredential(),
     )
 ```

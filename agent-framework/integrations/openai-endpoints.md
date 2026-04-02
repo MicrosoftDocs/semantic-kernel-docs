@@ -82,28 +82,6 @@ Install the following packages:
   dotnet add package Microsoft.AspNetCore.OpenApi
   dotnet add package Swashbuckle.AspNetCore
   ```
-  ## [Package Reference](#tab/package-reference)
-  
-  Add the following `<PackageReference>` elements to your `.csproj` file within an `<ItemGroup>`:
-  
-  ```xml
-
-
-  <ItemGroup>
-    <!-- Hosting.OpenAI for OpenAI ChatCompletions/Responses protocol(s) integration -->
-    <PackageReference Include="Microsoft.Agents.AI.Hosting.OpenAI" Version="1.0.0-alpha.251110.2" />
-
-    <!-- Libraries to connect to Azure OpenAI -->
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.5.0-beta.1" />
-    <PackageReference Include="Azure.Identity" Version="1.17.0" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.2" />
-    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.10.2-preview.1.25552.1" />
-      
-    <!-- Swagger to test app -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
-  </ItemGroup>
-  ```
 
   ---
 
@@ -523,7 +501,7 @@ app.MapOpenAIResponses(scienceAgent, responsesPath: "/api/responses");
 The Python `OpenAIChatCompletionClient` and `OpenAIChatClient` both support a `base_url` parameter, enabling you to connect to **any** OpenAI-compatible endpoint — including self-hosted agents, local inference servers (Ollama, LM Studio, vLLM), or third-party OpenAI-compatible APIs.
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework
 ```
 
 ### Chat Completions Client
@@ -613,7 +591,7 @@ from agent_framework.openai import OpenAIChatClient
 from azure.identity import AzureCliCredential
 
 agent = OpenAIChatClient(
-    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_CHAT_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),
@@ -626,9 +604,11 @@ agent = OpenAIChatClient(
 Configure with environment variables:
 ```bash
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
-export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+export AZURE_OPENAI_CHAT_MODEL="gpt-4o-mini"
 export AZURE_OPENAI_API_VERSION="your-api-version"
 ```
+
+`OpenAIChatClient` prefers `AZURE_OPENAI_CHAT_MODEL`; `AZURE_OPENAI_MODEL` remains the shared fallback if you need one.
 
 ::: zone-end
 

@@ -120,6 +120,32 @@ response = await agent.run("Continue this conversation.", session=session)
 
 :::zone-end
 
+## Per-service-call local history persistence
+
+Tool-calling runs can make multiple model calls before a single `agent.run()` completes. By default, local history providers persist once after the full run. If you want local history to mirror service-managed conversations more closely, set `require_per_service_call_history_persistence=True` so history providers run around each model call instead.
+
+:::zone pivot="programming-language-python"
+
+```python
+from agent_framework import Agent, InMemoryHistoryProvider
+from agent_framework.openai import OpenAIChatClient
+
+agent = Agent(
+    client=OpenAIChatClient(),
+    name="StorageAgent",
+    instructions="You are a helpful assistant.",
+    context_providers=[InMemoryHistoryProvider("memory", load_messages=True)],
+    require_per_service_call_history_persistence=True,
+)
+```
+
+> [!IMPORTANT]
+> Use this mode only for framework-managed local history. If the run is already bound to a service-managed conversation (for example via `session.service_session_id` or `options={"conversation_id": ...}`), Agent Framework raises an error instead of mixing the two persistence models.
+>
+> This mode is especially useful when middleware can terminate immediately after a tool call: persisting per model call keeps local history aligned with what a service-managed conversation would keep.
+
+:::zone-end
+
 ## Third-party/Custom storage pattern
 
 For database/Redis/blob-backed history, implement a custom history provider.

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -100,7 +100,8 @@ from agent_framework import (
     FunctionInvocationContext,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -188,7 +189,8 @@ async def main() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="UtilityAgent",
             instructions="You are a helpful assistant that can provide weather information and current time.",
             tools=[get_weather, get_time],

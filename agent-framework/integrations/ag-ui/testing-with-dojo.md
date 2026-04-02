@@ -4,7 +4,7 @@ description: Learn how to test your Microsoft Agent Framework agents with AG-UI'
 zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
-ms.date: 11/07/2025
+ms.date: 04/01/2026
 ms.author: evmattso
 ms.service: agent-framework
 ---
@@ -62,12 +62,12 @@ Edit the `.env` file and add your API credentials:
 ```python
 # For OpenAI
 OPENAI_API_KEY=your_api_key_here
-OPENAI_CHAT_MODEL_ID="gpt-4.1"
+OPENAI_CHAT_COMPLETION_MODEL="gpt-4.1"
 
 # Or for Azure OpenAI
 AZURE_OPENAI_ENDPOINT=your_endpoint_here
 AZURE_OPENAI_API_KEY=your_api_key_here
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=your_deployment_here
+AZURE_OPENAI_CHAT_COMPLETION_MODEL=your_deployment_here
 ```
 
 > [!NOTE]
@@ -135,7 +135,7 @@ from agent_framework.openai import OpenAIChatCompletionClient
 
 # Create your agent
 chat_client = OpenAIChatCompletionClient(
-    model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
+    model=os.getenv("AZURE_OPENAI_CHAT_COMPLETION_MODEL"),
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
@@ -143,7 +143,7 @@ chat_client = OpenAIChatCompletionClient(
 
 agent = Agent(
     name="my_test_agent",
-    chat_client=chat_client,
+    client=chat_client,
     system_message="You are a helpful assistant.",
 )
 ```

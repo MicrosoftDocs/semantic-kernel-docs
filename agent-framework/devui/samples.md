@@ -4,7 +4,7 @@ description: Browse sample agents and workflows for use with DevUI.
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 12/10/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -97,7 +97,7 @@ from agent_framework.openai import OpenAIChatClient
 
 agent = Agent(
     name="my_agent",
-    chat_client=OpenAIChatClient(),
+    client=OpenAIChatClient(),
     instructions="You are a helpful assistant."
 )
 ```

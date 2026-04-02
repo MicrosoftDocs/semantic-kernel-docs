@@ -44,6 +44,8 @@ $env:ANTHROPIC_DEPLOYMENT_NAME="claude-haiku-4-5"  # or your preferred model
 
 You can get an API key from the [Anthropic Console](https://console.anthropic.com/).
 
+For provider-hosted Anthropic endpoints, the Python package also exposes `AnthropicFoundryClient`, `AnthropicBedrockClient`, and `AnthropicVertexClient`.
+
 ### For Azure Foundry with API Key
 
 ```powershell
@@ -172,14 +174,14 @@ Set up the required environment variables for Anthropic authentication:
 ```bash
 # Required for Anthropic API access
 ANTHROPIC_API_KEY="your-anthropic-api-key"
-ANTHROPIC_CHAT_MODEL_ID="claude-sonnet-4-5-20250929"  # or your preferred model
+ANTHROPIC_CHAT_MODEL="claude-sonnet-4-5-20250929"  # or your preferred model
 ```
 
 Alternatively, you can use a `.env` file in your project root:
 
 ```env
 ANTHROPIC_API_KEY=your-anthropic-api-key
-ANTHROPIC_CHAT_MODEL_ID=claude-sonnet-4-5-20250929
+ANTHROPIC_CHAT_MODEL=claude-sonnet-4-5-20250929
 ```
 
 You can get an API key from the [Anthropic Console](https://console.anthropic.com/).
@@ -218,7 +220,7 @@ You can provide explicit configuration instead of relying on environment variabl
 ```python
 async def explicit_config_example():
     agent = AnthropicClient(
-        model_id="claude-sonnet-4-5-20250929",
+        model="claude-sonnet-4-5-20250929",
         api_key="your-api-key-here",
     ).as_agent(
         name="HelpfulAssistant",
@@ -236,17 +238,15 @@ After you've setup Anthropic on Foundry, ensure you have the following environme
 ```bash
 ANTHROPIC_FOUNDRY_API_KEY="your-foundry-api-key"
 ANTHROPIC_FOUNDRY_RESOURCE="your-foundry-resource-name"
+ANTHROPIC_CHAT_MODEL="claude-haiku-4-5"
 ```
 Then create the agent as follows:
 
 ```python
-from agent_framework.anthropic import AnthropicClient
-from anthropic import AsyncAnthropicFoundry
+from agent_framework.foundry import AnthropicFoundryClient
 
 async def foundry_example():
-    agent = AnthropicClient(
-        anthropic_client=AsyncAnthropicFoundry()
-    ).as_agent(
+    agent = AnthropicFoundryClient().as_agent(
         name="FoundryAgent",
         instructions="You are a helpful assistant using Anthropic on Foundry.",
     )
@@ -255,8 +255,8 @@ async def foundry_example():
     print(result.text)
 ```
 
-> Note:
-> This requires `anthropic>=0.74.0` to be installed.
+> [!NOTE]
+> If you prefer configuring a full Anthropic-compatible endpoint instead of a resource name, set `ANTHROPIC_FOUNDRY_BASE_URL` in addition to `ANTHROPIC_FOUNDRY_API_KEY`.
 
 ## Agent Features
 
