@@ -68,7 +68,7 @@ Collect messages from multiple sources into a single target:
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-builder.AddFanInBarrierEdge(sources: new[] { worker1, worker2, worker3 }, target: aggregatorExecutor);
+builder.AddFanInBarrierEdge(sources: [ worker1, worker2, worker3 ], target: aggregatorExecutor);
 ```
 
 ::: zone-end
