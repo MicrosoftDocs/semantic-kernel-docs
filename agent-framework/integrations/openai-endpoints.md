@@ -82,28 +82,6 @@ Install the following packages:
   dotnet add package Microsoft.AspNetCore.OpenApi
   dotnet add package Swashbuckle.AspNetCore
   ```
-  ## [Package Reference](#tab/package-reference)
-  
-  Add the following `<PackageReference>` elements to your `.csproj` file within an `<ItemGroup>`:
-  
-  ```xml
-
-
-  <ItemGroup>
-    <!-- Hosting.OpenAI for OpenAI ChatCompletions/Responses protocol(s) integration -->
-    <PackageReference Include="Microsoft.Agents.AI.Hosting.OpenAI" Version="1.0.0-alpha.251110.2" />
-
-    <!-- Libraries to connect to Azure OpenAI -->
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.5.0-beta.1" />
-    <PackageReference Include="Azure.Identity" Version="1.17.0" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.2" />
-    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.10.2-preview.1.25552.1" />
-      
-    <!-- Swagger to test app -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
-  </ItemGroup>
-  ```
 
   ---
 

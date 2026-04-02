@@ -237,8 +237,7 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
 
 ```csharp
 using Microsoft.Agents.AI;
-using Microsoft.Extensions.AI;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 
 AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
@@ -248,15 +247,13 @@ AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
     string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME")
         ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-    AzureOpenAIClient azureClient = new AzureOpenAIClient(
-        new Uri(endpoint),
-        new DefaultAzureCredential());
-
-    var chatClient = azureClient.GetChatClient(deploymentName);
-
     // Create base agent
-    AIAgent baseAgent = chatClient.AsIChatClient().AsAIAgent(
-        name: "RecipeAgent",
+    AIAgent baseAgent = new AIProjectClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential())
+        .AsAIAgent(
+            model: deploymentName,
+            name: "RecipeAgent",
         instructions: """
             You are a helpful recipe assistant. When users ask you to create or suggest a recipe,
             respond with a complete RecipeResponse JSON object that includes:
@@ -275,6 +272,9 @@ AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
     return new SharedStateAgent(baseAgent, jsonSerializerOptions);
 }
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Map the Agent Endpoint
 

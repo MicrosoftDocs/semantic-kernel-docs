@@ -22,11 +22,11 @@ You can send images to an agent by creating a `ChatMessage` that includes both t
 First, create an `AIAgent` that is able to analyze images.
 
 ```csharp
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
     new DefaultAzureCredential())
-    .GetChatClient("gpt-4o")
     .AsAIAgent(
+        model: "gpt-4o",
         name: "VisionAgent",
         instructions: "You are a helpful agent that can analyze images");
 ```

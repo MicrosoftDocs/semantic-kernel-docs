@@ -139,22 +139,23 @@ Once you have created the OpenAIClient, you can get a sub client for the specifi
 
 ```csharp
 AIAgent agent = client
-    .GetChatClient(model)
-    .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+    .AsAIAgent(model: model, instructions: "You are good at telling jokes.", name: "Joker");
 ```
 
-### Using the Azure OpenAI SDK
+### Using the Azure AI Projects SDK
 
-This SDK can be used to connect to both Azure OpenAI and Foundry Models services.
-Either way, you will need to supply the correct service URL when creating the `AzureOpenAIClient`.
+This SDK can be used to connect to Foundry services.
+You will need to supply the correct project endpoint URL when creating the `AIProjectClient`.
 See the table above for the correct URL to use.
 
 ```csharp
-AIAgent agent = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
     new Uri(serviceUrl),
     new DefaultAzureCredential())
-     .GetChatClient(deploymentName)
-     .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+     .AsAIAgent(
+         model: deploymentName,
+         instructions: "You are good at telling jokes.",
+         name: "Joker");
 ```
 
 ### Using the Azure AI Persistent Agents SDK

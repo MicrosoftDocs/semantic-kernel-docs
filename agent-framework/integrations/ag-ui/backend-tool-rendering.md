@@ -43,13 +43,12 @@ Here's a complete server implementation demonstrating how to register tools with
 
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
-using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
@@ -142,21 +141,23 @@ AITool[] tools =
 ];
 
 // Create the AI agent with tools
-ChatClient chatClient = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
-    .GetChatClient(deploymentName);
-
-ChatClientAgent agent = chatClient.AsIChatClient().AsAIAgent(
-    name: "AGUIAssistant",
-    instructions: "You are a helpful assistant with access to restaurant information.",
-    tools: tools);
+    .AsAIAgent(
+        model: deploymentName,
+        name: "AGUIAssistant",
+        instructions: "You are a helpful assistant with access to restaurant information.",
+        tools: tools);
 
 // Map the AG-UI agent endpoint
 app.MapAGUI("/", agent);
 
 await app.RunAsync();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Key Concepts
 

@@ -116,10 +116,10 @@ You'll create an email processing workflow that demonstrates conditional routing
 First, install the required packages for your .NET project:
 
 ```dotnetcli
-dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.AI.Projects --prerelease
 dotnet add package Azure.Identity
 dotnet add package Microsoft.Agents.AI.Workflows --prerelease
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 ### Define Data Models
@@ -200,7 +200,7 @@ This condition function:
 Set up the AI agents that will handle spam detection and email assistance:
 
 ```csharp
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -353,8 +353,8 @@ public static class Program
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
             ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-            .GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient().GetProjectResponsesClient().AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent spamDetectionAgent = GetSpamDetectionAgent(chatClient);
@@ -973,7 +973,10 @@ public static class Program
         // Set up the Azure OpenAI client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential()).GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient()
+            .GetProjectResponsesClient()
+            .AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent spamDetectionAgent = GetSpamDetectionAgent(chatClient);
@@ -1721,7 +1724,10 @@ public static class Program
         // Set up the Azure OpenAI client
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("AZURE_OPENAI_ENDPOINT is not set.");
         var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
-        var chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential()).GetChatClient(deploymentName).AsIChatClient();
+        var chatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+            .GetProjectOpenAIClient()
+            .GetProjectResponsesClient()
+            .AsIChatClient(deploymentName);
 
         // Create agents
         AIAgent emailAnalysisAgent = GetEmailAnalysisAgent(chatClient);

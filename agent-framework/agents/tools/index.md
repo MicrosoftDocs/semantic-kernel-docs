@@ -78,26 +78,31 @@ Call `.AsAIFunction()` on an `AIAgent` to convert it to a function tool that can
 
 ```csharp
 // Create the inner agent with its own tools
-AIAgent weatherAgent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-     .GetChatClient("gpt-4o-mini")
+AIAgent weatherAgent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
      .AsAIAgent(
+        model: "gpt-4o-mini",
         instructions: "You answer questions about the weather.",
         name: "WeatherAgent",
         description: "An agent that answers questions about the weather.",
         tools: [AIFunctionFactory.Create(GetWeather)]);
 
 // Create the main agent and provide the inner agent as a function tool
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-     .GetChatClient("gpt-4o-mini")
-     .AsAIAgent(instructions: "You are a helpful assistant.", tools: [weatherAgent.AsAIFunction()]);
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+     .AsAIAgent(
+        model: "gpt-4o-mini",
+        instructions: "You are a helpful assistant.",
+        tools: [weatherAgent.AsAIFunction()]);
 
 // The main agent can now call the weather agent as a tool
 Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?"));
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 :::zone-end
 

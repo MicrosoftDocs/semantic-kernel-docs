@@ -44,9 +44,9 @@ When hosted in the [Azure Functions Flex Consumption](/azure/azure-functions/fle
 In a .NET Azure Functions project, add the required NuGet packages.
 
 ```bash
-dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.AI.Projects --prerelease
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 dotnet add package Microsoft.Agents.AI.Hosting.AzureFunctions --prerelease
 ```
 
@@ -76,7 +76,7 @@ When you configure a durable agent, the durable task extension automatically cre
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AzureFunctions;
@@ -87,9 +87,9 @@ var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
 
 // Create an AI agent following the standard Microsoft Agent Framework pattern
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
+AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
     .AsAIAgent(
+        model: deploymentName,
         instructions: "You are good at telling jokes.",
         name: "Joker");
 
@@ -104,6 +104,9 @@ using IHost app = FunctionsApplication
     .Build();
 app.Run();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 :::zone-end
 
@@ -681,23 +684,21 @@ Now let's examine the code that defines your durable agent.
 Open `Program.cs` to see the agent configuration:
 
 ```csharp
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AzureFunctions;
 using Microsoft.Azure.Functions.Worker.Builder;
-using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Hosting;
-using OpenAI;
 
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") 
     ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT environment variable is not set");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT") ?? "gpt-4o-mini";
 
 // Create an AI agent following the standard Microsoft Agent Framework pattern
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
+AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
     .AsAIAgent(
+        model: deploymentName,
         instructions: "You are a helpful assistant that can answer questions and provide information.",
         name: "MyDurableAgent");
 
@@ -1128,14 +1129,12 @@ Update your `Program.cs` to register the translation agents alongside the existi
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AzureFunctions;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Hosting;
-using OpenAI;
-using OpenAI.Chat;
 
 // Get the Azure OpenAI configuration
 string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
@@ -1143,21 +1142,23 @@ string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
 string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT")
     ?? "gpt-4o-mini";
 
-// Create the Azure OpenAI client
-AzureOpenAIClient client = new(new Uri(endpoint), new DefaultAzureCredential());
-ChatClient chatClient = client.GetChatClient(deploymentName);
+// Create the Microsoft Foundry client
+AIProjectClient client = new(new Uri(endpoint), new DefaultAzureCredential());
 
 // Create the main agent from the first tutorial
-AIAgent mainAgent = chatClient.AsAIAgent(
+AIAgent mainAgent = client.AsAIAgent(
+    model: deploymentName,
     instructions: "You are a helpful assistant that can answer questions and provide information.",
     name: "MyDurableAgent");
 
 // Create translation agents
-AIAgent frenchAgent = chatClient.AsAIAgent(
+AIAgent frenchAgent = client.AsAIAgent(
+    model: deploymentName,
     instructions: "You are a translator. Translate the following text to French. Return only the translation, no explanations.",
     name: "FrenchTranslator");
 
-AIAgent spanishAgent = chatClient.AsAIAgent(
+AIAgent spanishAgent = client.AsAIAgent(
+    model: deploymentName,
     instructions: "You are a translator. Translate the following text to Spanish. Return only the translation, no explanations.",
     name: "SpanishTranslator");
 

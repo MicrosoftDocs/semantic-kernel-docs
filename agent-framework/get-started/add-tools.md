@@ -29,7 +29,7 @@ Create an agent with the tool:
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -38,10 +38,15 @@ var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
     ?? throw new InvalidOperationException("Set AZURE_OPENAI_ENDPOINT");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent(instructions: "You are a helpful assistant.", tools: [AIFunctionFactory.Create(GetWeather)]);
+AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+    .AsAIAgent(
+        model: deploymentName,
+        instructions: "You are a helpful assistant.",
+        tools: [AIFunctionFactory.Create(GetWeather)]);
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 The agent will automatically call your tool when relevant:
 

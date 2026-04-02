@@ -40,13 +40,11 @@ The following code sample demonstrates how to add the Microsoft Purview policy m
 
 ```csharp
 
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Purview;
-using Microsoft.Extensions.AI;
-using OpenAI;
 
 string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
@@ -58,11 +56,12 @@ TokenCredential browserCredential = new InteractiveBrowserCredential(
         ClientId = purviewClientAppId
     });
 
-AIAgent agent = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
     new Uri(endpoint),
     new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent("You are a secure assistant.")
+    .AsAIAgent(
+        model: deploymentName,
+        instructions: "You are a secure assistant.")
     .AsBuilder()
     .WithPurview(browserCredential, new PurviewSettings("My Secure Agent"))
     .Build();

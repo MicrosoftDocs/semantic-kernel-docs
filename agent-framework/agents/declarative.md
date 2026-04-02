@@ -18,17 +18,17 @@ Declarative agents allow you to define agent configuration using YAML or JSON fi
 The following example shows how to create a declarative agent from a YAML configuration:
 
 ```csharp
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
-using Microsoft.Extensions.AI;
 
 // Create the chat client
-IChatClient chatClient = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
+IChatClient chatClient = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
     new DefaultAzureCredential())
-     .GetChatClient("gpt-4o-mini")
-     .AsIChatClient();
+        .GetProjectOpenAIClient()
+        .GetProjectResponsesClient()
+        .AsIChatClient("gpt-4o-mini");
 
 // Define the agent using a YAML definition.
 var yamlDefinition =
@@ -66,6 +66,9 @@ await foreach (var update in agent!.RunStreamingAsync("Tell me a joke about a pi
     Console.WriteLine(update);
 }
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 :::zone-end
 

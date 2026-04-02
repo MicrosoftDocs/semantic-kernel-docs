@@ -37,20 +37,25 @@ public class PersonInfo
 
 ## Create the agent
 
-Create a `ChatClientAgent` using the Azure OpenAI Chat Client.
+Create a `ChatClientAgent` using the Azure AI Projects Client.
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-        .GetChatClient("gpt-4o-mini")
-        .AsAIAgent(name: "HelpfulAssistant", instructions: "You are a helpful assistant.");
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            name: "HelpfulAssistant",
+            instructions: "You are a helpful assistant.");
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ## Structured output with RunAsync\<T\>
 
@@ -144,15 +149,18 @@ You must assemble all the updates into a single response before deserializing it
 using System.Text.Json;
 using Microsoft.Extensions.AI;
 
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
     new DefaultAzureCredential())
-        .GetChatClient("gpt-4o-mini")
         .AsAIAgent(new ChatClientAgentOptions()
         {
             Name = "HelpfulAssistant",
-            Instructions = "You are a helpful assistant.",
-            ChatOptions = new() { ResponseFormat = ChatResponseFormat.ForJsonSchema<PersonInfo>() }
+            ChatOptions = new()
+            {
+                ModelId = "gpt-4o-mini",
+                Instructions = "You are a helpful assistant.",
+                ResponseFormat = ChatResponseFormat.ForJsonSchema<PersonInfo>()
+            }
         });
 
 > [!WARNING]

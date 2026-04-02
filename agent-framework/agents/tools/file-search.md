@@ -22,26 +22,29 @@ The following example shows how to create an agent with the File Search tool:
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
-// Requires: dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+// Requires: dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
     ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
 // Create an agent with the file search hosted tool
 // Provide vector store IDs containing your uploaded documents
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
+AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
     .AsAIAgent(
+        model: deploymentName,
         instructions: "You are a helpful assistant that searches through files to find information.",
         tools: [new FileSearchToolDefinition(vectorStoreIds: ["<your-vector-store-id>"])]);
 
 Console.WriteLine(await agent.RunAsync("What does the document say about today's weather?"));
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 :::zone-end
 

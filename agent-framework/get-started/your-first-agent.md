@@ -16,16 +16,16 @@ Create an agent and get a response — in just a few lines of code.
 :::zone pivot="programming-language-csharp"
 
 ```dotnetcli
-dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.AI.Projects --prerelease
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 Create the agent:
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 
@@ -33,10 +33,15 @@ var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
     ?? throw new InvalidOperationException("Set AZURE_OPENAI_ENDPOINT");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent(instructions: "You are a friendly assistant. Keep your answers brief.", name: "HelloAgent");
+AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+    .AsAIAgent(
+        model: deploymentName,
+        instructions: "You are a friendly assistant. Keep your answers brief.",
+        name: "HelloAgent");
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Run it:
 

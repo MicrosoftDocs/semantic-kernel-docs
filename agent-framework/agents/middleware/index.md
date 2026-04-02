@@ -47,7 +47,7 @@ var chatClient = new AIProjectClient(
     new Uri("<your-foundry-project-endpoint>"),
     new DefaultAzureCredential())
         .GetProjectOpenAIClient()
-        .GetResponsesClient()
+        .GetProjectResponsesClient()
         .AsIChatClient(deploymentName);
 
 var middlewareEnabledChatClient = chatClient
