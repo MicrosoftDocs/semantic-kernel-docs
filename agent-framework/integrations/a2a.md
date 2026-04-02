@@ -102,6 +102,7 @@ using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting;
+using Microsoft.Extensions.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -113,13 +114,18 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-// Create an agent
-var pirateAgent = new AIProjectClient(
+// Register the chat client
+IChatClient chatClient = new AIProjectClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
-    .AsAIAgent(
-        model: deploymentName,
-        instructions: "You are a pirate. Speak like a pirate.");
+        .GetProjectOpenAIClient()
+        .GetResponsesClient()
+        .AsIChatClient(deploymentName);
+
+builder.Services.AddSingleton(chatClient);
+
+// Register an agent
+var pirateAgent = builder.AddAIAgent("pirate", instructions: "You are a pirate. Speak like a pirate.");
 
 var app = builder.Build();
 
