@@ -53,7 +53,7 @@ var agent = new ChatClientAgent(
 > [!IMPORTANT]
 > When you enable observability for your chat clients and agents, you might see duplicated information, especially when sensitive data is enabled. The chat context (including prompts and responses) that is captured by both the chat client and the agent will be included in both spans. Depending on your needs, you might choose to enable observability only on the chat client or only on the agent to avoid duplication. See the [GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) for more details on the attributes captured for LLM and Agents.
 
-> [!NOTE]
+> [!WARNING]
 > Only enable sensitive data in development or testing environments, as it might expose user information in production logs and traces. Sensitive data includes prompts, responses, function call arguments, and results.
 
 ### Configuration
@@ -327,7 +327,7 @@ The following environment variables control Agent Framework observability:
 - `ENABLE_CONSOLE_EXPORTERS` - Default is `false`, set to `true` to enable console output for telemetry.
 - `VS_CODE_EXTENSION_PORT` - Port for AI Toolkit or Microsoft Foundry VS Code extension integration.
 
-> [!NOTE]
+> [!WARNING]
 > Sensitive information includes prompts, responses, and more, and should only be enabled in development or test environments. It is not recommended to enable this in production as it may expose sensitive data.
 
 #### Standard OpenTelemetry environment variables

@@ -180,6 +180,8 @@ items:
     href: integrations/m365.md
   - name: Neo4j GraphRAG Provider
     href: integrations/neo4j-graphrag.md
+  - name: Chat History Memory Provider
+    href: integrations/chat-history-memory-provider.md
   - name: Neo4j Memory Provider
     href: integrations/neo4j-memory.md
   - name: A2A Protocol
