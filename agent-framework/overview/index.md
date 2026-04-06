@@ -125,9 +125,6 @@ and [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md).
 Both Semantic Kernel and AutoGen have benefited significantly from the open-source community,
 and the same is expected for Agent Framework. Microsoft Agent Framework welcomes contributions and will keep improving with new features and capabilities.
 
-> [!NOTE]
-> Microsoft Agent Framework is currently in public preview. Please submit any feedback or issues on the [GitHub repository](https://github.com/microsoft/agent-framework).
-
 > [!IMPORTANT]
 > If you use Microsoft Agent Framework to build applications that operate with any third-party servers, agents, code, or non-Azure Direct models ("Third-Party Systems"), you do so at your own risk. Third-Party Systems are Non-Microsoft Products under the Microsoft Product Terms and are governed by their own third-party license terms. You are responsible for any usage and associated costs.
 >
