@@ -13,6 +13,9 @@ ms.service: agent-framework
 
 Context providers run around each invocation to add context before execution and process data after execution.
 
+> [!NOTE]
+> For a list of pre-built context providers you can use with your agent, see [Integrations](../../integrations/index.md)
+
 ## Built-in pattern
 
 :::zone pivot="programming-language-csharp"
