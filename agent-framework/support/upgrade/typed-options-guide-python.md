@@ -4,7 +4,7 @@ description: Guide on upgrading chat client and chat agent options to use TypedD
 author: eavanvalkenburg
 ms.topic: upgrade-and-migration-article
 ms.author: edvan
-ms.date: 01/15/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -24,7 +24,7 @@ Previously, options were passed as **direct keyword arguments** on methods like 
 # Options were individual keyword arguments
 response = await client.get_response(
     "Hello!",
-    model_id="gpt-4",
+    model="gpt-4",
     temperature=0.7,
     max_tokens=1000,
 )
@@ -32,7 +32,7 @@ response = await client.get_response(
 # For provider-specific options not in the base set, you used additional_properties
 response = await client.get_response(
     "Hello!",
-    model_id="gpt-4",
+    model="gpt-4",
     additional_properties={"reasoning_effort": "medium"},
 )
 ```
@@ -46,7 +46,7 @@ Most options are now passed through a single `options` parameter as a typed dict
 response = await client.get_response(
     "Hello!",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.7,
         "max_tokens": 1000,
         "reasoning_effort": "medium",  # Provider-specific options included directly
@@ -59,10 +59,10 @@ response = await client.get_response(
 > ```python
 > # Agent creation accepts both tools and instructions as keyword arguments
 > agent = Agent(
->     chat_client=client,
+>     client=client,
 >     tools=[my_function],
 >     instructions="You are a helpful assistant.",
->     default_options={"model_id": "gpt-4", "temperature": 0.7},
+>     default_options={"model": "gpt-4", "temperature": 0.7},
 > )
 >
 > # agent.run() only accepts tools as a keyword argument
@@ -74,7 +74,7 @@ response = await client.get_response(
 
 ### Key Changes
 
-1. **Consolidated Options Parameter**: Most keyword arguments (`model_id`, `temperature`, etc.) are now passed via a single `options` dict
+1. **Consolidated Options Parameter**: Most keyword arguments (`model`, `temperature`, etc.) are now passed via a single `options` dict
 2. **Exception for Agent Creation**: `instructions` and `tools` remain available as direct keyword arguments on `Agent.__init__()` and `as_agent()`
 3. **Exception for Agent Run**: `tools` remains available as a direct keyword argument on `agent.run()`
 4. **TypedDict-based Options**: Options are defined as `TypedDict` classes for type safety
@@ -105,7 +105,7 @@ client = OpenAIChatClient()
 # Options passed as individual keyword arguments
 response = await client.get_response(
     "Hello!",
-    model_id="gpt-4",
+    model="gpt-4",
     temperature=0.7,
     max_tokens=1000,
 )
@@ -113,7 +113,7 @@ response = await client.get_response(
 # Streaming also used keyword arguments
 async for chunk in client.get_streaming_response(
     "Tell me a story",
-    model_id="gpt-4",
+    model="gpt-4",
     temperature=0.9,
 ):
     print(chunk.text, end="")
@@ -130,7 +130,7 @@ client = OpenAIChatClient()
 response = await client.get_response(
     "Hello!",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.7,
         "max_tokens": 1000,
     },
@@ -140,7 +140,7 @@ response = await client.get_response(
 async for chunk in client.get_streaming_response(
     "Tell me a story",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.9,
     },
 ):
@@ -161,7 +161,7 @@ from agent_framework.openai import OpenAIChatClient
 client = OpenAIChatClient()
 response = await client.get_response(
     "What is 2 + 2?",
-    model_id="gpt-4",
+    model="gpt-4",
     temperature=0.7,
     additional_properties={
         "reasoning_effort": "medium",  # No type checking or autocomplete
@@ -179,7 +179,7 @@ client = OpenAIChatClient()
 response = await client.get_response(
     "What is 2 + 2?",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.7,
         "reasoning_effort": "medium",  # Type checking or autocomplete
     },
@@ -205,7 +205,7 @@ client = OpenAIChatClient[MyCustomOpenAIChatOptions]()
 response = await client.get_response(
     "Hello!",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.7,
         "custom_param": "my_value",  # IDE autocomplete works!
     },
@@ -232,9 +232,9 @@ client = OpenAIChatClient()
 
 # Default options as keyword arguments on constructor
 agent = Agent(
-    chat_client=client,
+    client=client,
     name="assistant",
-    model_id="gpt-4",
+    model="gpt-4",
     temperature=0.7,
 )
 
@@ -253,10 +253,10 @@ from agent_framework.openai import OpenAIChatClient, OpenAIChatOptions
 
 client = OpenAIChatClient()
 agent = Agent(
-    chat_client=client,
+    client=client,
     name="assistant",
     default_options={ # <- type checkers will verify this dict
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.7,
     },
 )
@@ -279,7 +279,7 @@ client = OpenAIChatClient()
 response = await client.get_response(
     "Hello!",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.7,
         "reasoning_effort": "medium",
     },
@@ -295,7 +295,7 @@ client = AnthropicClient[AnthropicChatOptions]()
 response = await client.get_response(
     "Hello!",
     options={
-        "model_id": "claude-3-opus-20240229",
+        "model": "claude-3-opus-20240229",
         "max_tokens": 1000,
     },
 )
@@ -332,7 +332,7 @@ client = OpenAIChatClient[OpenAIReasoningChatOptions]()
 response = await client.get_response(
     "What is 2 + 2?",
     options={
-        "model_id": "o3",
+        "model": "o3",
         "max_tokens": 100,
         "allow_multiple_tool_calls": True,
         "reasoning_effort": "medium",  # IDE autocomplete works!
@@ -350,9 +350,9 @@ from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 agent = Agent(
-    chat_client=OpenAIChatClient[OpenAIReasoningChatOptions](),
+    client=OpenAIChatClient[OpenAIReasoningChatOptions](),
     default_options={
-        "model_id": "o3",
+        "model": "o3",
         "max_tokens": 100,
         "allow_multiple_tool_calls": True,
         "reasoning_effort": "medium",
@@ -366,9 +366,9 @@ from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 agent = Agent[OpenAIReasoningChatOptions](
-    chat_client=OpenAIChatClient(),
+    client=OpenAIChatClient(),
     default_options={
-        "model_id": "o3",
+        "model": "o3",
         "max_tokens": 100,
         "allow_multiple_tool_calls": True,
         "reasoning_effort": "medium",
@@ -394,7 +394,7 @@ class MyCustomClient(BaseChatClient):
         **kwargs: Any,
     ) -> ChatResponse:
         # Access options via class attributes
-        model = chat_options.model_id
+        model = chat_options.model
         temp = chat_options.temperature
         # ...
 ```
@@ -423,7 +423,7 @@ class MyCustomClient(BaseChatClient[TOptions], Generic[TOptions]):
         **kwargs: Any,
     ) -> ChatResponse:
         # Access options via dict access
-        model = options.get("model_id")
+        model = options.get("model")
         temp = options.get("temperature")
         # ...
 ```
@@ -446,7 +446,7 @@ await client.get_response("Hello", options={"temperature": 0.7})
 # Before - multiple keyword arguments
 await client.get_response(
     "Hello",
-    model_id="gpt-4",
+    model="gpt-4",
     temperature=0.7,
     max_tokens=1000,
 )
@@ -455,7 +455,7 @@ await client.get_response(
 await client.get_response(
     "Hello",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "temperature": 0.7,
         "max_tokens": 1000,
     },
@@ -470,7 +470,7 @@ For chat clients, `tools` now goes in the options dict:
 # Before - tools as keyword argument on chat client
 await client.get_response(
     "What's the weather?",
-    model_id="gpt-4",
+    model="gpt-4",
     tools=[my_function],
     tool_choice="auto",
 )
@@ -479,7 +479,7 @@ await client.get_response(
 await client.get_response(
     "What's the weather?",
     options={
-        "model_id": "gpt-4",
+        "model": "gpt-4",
         "tools": [my_function],
         "tool_choice": "auto",
     },
@@ -493,20 +493,20 @@ For agent creation, `tools` and `instructions` can remain as keyword arguments. 
 ```python
 # Before
 agent = Agent(
-    chat_client=client,
+    client=client,
     name="assistant",
     tools=[my_function],
     instructions="You are helpful.",
-    model_id="gpt-4",
+    model="gpt-4",
 )
 
 # After - tools and instructions stay as keyword args on creation
 agent = Agent(
-    chat_client=client,
+    client=client,
     name="assistant",
     tools=[my_function],  # Still a keyword argument!
     instructions="You are helpful.",  # Still a keyword argument!
-    default_options={"model_id": "gpt-4"},
+    default_options={"model": "gpt-4"},
 )
 
 # For run(), only tools is available as keyword argument
@@ -521,7 +521,7 @@ response = await agent.run(
 # Before - using additional_properties
 await client.get_response(
     "Solve this problem",
-    model_id="o3",
+    model="o3",
     additional_properties={"reasoning_effort": "high"},
 )
 
@@ -529,7 +529,7 @@ await client.get_response(
 await client.get_response(
     "Solve this problem",
     options={
-        "model_id": "o3",
+        "model": "o3",
         "reasoning_effort": "high",
     },
 )
@@ -540,7 +540,7 @@ await client.get_response(
 ```python
 # Define reusable options
 my_options: OpenAIChatOptions = {
-    "model_id": "gpt-4",
+    "model": "gpt-4",
     "temperature": 0.7,
 }
 
@@ -571,7 +571,7 @@ extended_options = {**my_options, "max_tokens": 500}
 
 ### ChatClient Updates
 
-1. Find all calls to `get_response()` and `get_streaming_response()` that use keyword arguments like `model_id=`, `temperature=`, `tools=`, etc.
+1. Find all calls to `get_response()` and `get_streaming_response()` that use keyword arguments like `model=`, `temperature=`, `tools=`, etc.
 2. Move all keyword arguments into an `options={...}` dictionary
 3. Move any `additional_properties` values directly into the `options` dict
 
@@ -586,7 +586,7 @@ extended_options = {**my_options, "max_tokens": 500}
 ### Custom Chat Client Updates
 
 1. Update the `_inner_get_response()` and `_inner_get_streaming_response()` method signatures: change `chat_options: ChatOptions` parameter to `options: dict[str, Any]`
-2. Update attribute access (e.g., `chat_options.model_id`) to dict access (e.g., `options.get("model_id")`)
+2. Update attribute access (e.g., `chat_options.model`) to dict access (e.g., `options.get("model")`)
 3. **(Optional)** If using non-standard parameters: Define a custom TypedDict
 4. Add generic type parameters to your client class
 

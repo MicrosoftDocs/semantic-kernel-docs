@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
-ms.date: 03/20/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -43,9 +43,12 @@ var middlewareEnabledAgent = originalAgent
 `IChatClient` middleware can be registered on an `IChatClient` before it is used with a `ChatClientAgent`, by using the chat client builder pattern.
 
 ```csharp
-var chatClient = new AzureOpenAIClient(new Uri("https://<myresource>.openai.azure.com"), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient();
+var chatClient = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .GetProjectOpenAIClient()
+        .GetProjectResponsesClient()
+        .AsIChatClient(deploymentName);
 
 var middlewareEnabledChatClient = chatClient
     .AsBuilder()
@@ -62,12 +65,16 @@ var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You 
  an agent via one of the helper methods on SDK clients.
 
 ```csharp
-var agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent("You are a helpful assistant.", clientFactory: (chatClient) => chatClient
-        .AsBuilder()
-            .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
-        .Build());
+var agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: deploymentName,
+            instructions: "You are a helpful assistant.",
+            clientFactory: (chatClient) => chatClient
+                .AsBuilder()
+                    .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
+                .Build());
 ```
 
 ## Agent Run Middleware
@@ -372,11 +379,13 @@ Middleware can be registered at two levels with different scopes and behaviors.
 ### Agent-Level vs Run-Level Middleware
 
 ```python
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 
 # Agent-level middleware: Applied to ALL runs of the agent
-async with AzureAIAgentClient(credential=credential).as_agent(
+async with Agent(
+    client=FoundryChatClient(credential=credential),
     name="WeatherAgent",
     instructions="You are a helpful weather assistant.",
     tools=get_weather,
@@ -424,7 +433,7 @@ async def blocking_middleware(
         if "blocked" in last_message.text.lower():
             print("Request blocked by middleware")
             context.result = AgentResponse(
-                messages=[Message(role="assistant", text="This request was blocked by middleware.")]
+                messages=[Message(role="assistant", contents=["This request was blocked by middleware."])]
             )
             raise MiddlewareTermination(result=context.result)
 
@@ -506,7 +515,8 @@ from agent_framework import (
     Message,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -590,7 +600,8 @@ async def main() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
@@ -636,7 +647,8 @@ from agent_framework import (
     Message,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -720,7 +732,8 @@ async def main() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
@@ -766,7 +779,8 @@ from agent_framework import (
     Message,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -850,7 +864,8 @@ async def main() -> None:
     # authentication option.
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,

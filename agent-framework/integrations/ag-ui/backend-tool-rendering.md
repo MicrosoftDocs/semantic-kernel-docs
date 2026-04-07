@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -43,13 +43,12 @@ Here's a complete server implementation demonstrating how to register tools with
 
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
-using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
@@ -142,21 +141,23 @@ AITool[] tools =
 ];
 
 // Create the AI agent with tools
-ChatClient chatClient = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
-    .GetChatClient(deploymentName);
-
-ChatClientAgent agent = chatClient.AsIChatClient().AsAIAgent(
-    name: "AGUIAssistant",
-    instructions: "You are a helpful assistant with access to restaurant information.",
-    tools: tools);
+    .AsAIAgent(
+        model: deploymentName,
+        name: "AGUIAssistant",
+        instructions: "You are a helpful assistant with access to restaurant information.",
+        tools: tools);
 
 // Map the AG-UI agent endpoint
 app.MapAGUI("/", agent);
 
 await app.RunAsync();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Key Concepts
 
@@ -430,12 +431,12 @@ def search_restaurants(
 
 # Read required configuration
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
+deployment_name = os.environ.get("AZURE_OPENAI_CHAT_COMPLETION_MODEL")
 
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT environment variable is required")
 if not deployment_name:
-    raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
+    raise ValueError("AZURE_OPENAI_CHAT_COMPLETION_MODEL environment variable is required")
 
 chat_client = OpenAIChatCompletionClient(
     model=deployment_name,
@@ -448,7 +449,7 @@ chat_client = OpenAIChatCompletionClient(
 agent = Agent(
     name="TravelAssistant",
     instructions="You are a helpful travel assistant. Use the available tools to help users plan their trips.",
-    chat_client=chat_client,
+    client=chat_client,
     tools=[get_weather, search_restaurants],
 )
 
@@ -522,7 +523,7 @@ async def main():
     # Create agent with the chat client
     agent = Agent(
         name="ClientAgent",
-        chat_client=chat_client,
+        client=chat_client,
         instructions="You are a helpful assistant.",
     )
 
@@ -688,7 +689,7 @@ weather_tools = WeatherTools(api_key="your-api-key")
 agent = Agent(
     name="WeatherAgent",
     instructions="You are a weather assistant.",
-    chat_client=OpenAIChatCompletionClient(...),
+    client=OpenAIChatCompletionClient(...),
     tools=[
         weather_tools.get_current_weather,
         weather_tools.get_forecast,

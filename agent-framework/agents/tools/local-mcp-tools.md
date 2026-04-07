@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
 ms.author: markwallace
-ms.date: 03/30/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -80,11 +80,11 @@ The `ListToolsAsync()` method returns a collection of tools that the MCP server 
 Create your agent and provide the MCP tools during initialization:
 
 ```csharp
-AIAgent agent = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
     new Uri(endpoint),
     new DefaultAzureCredential())
-     .GetChatClient(deploymentName)
      .AsAIAgent(
+         model: deploymentName,
          instructions: "You answer questions related to GitHub repositories only.",
          tools: [.. mcpTools.Cast<AITool>()]);
 
@@ -146,10 +146,8 @@ Popular MCP servers include:
 Each server provides different tools and capabilities that extend your agent's functionality.
 This integration allows your agents to seamlessly access external data and services while maintaining the security and standardization benefits of the Model Context Protocol.
 
-The full source code and instructions to run this sample is available at <https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/ModelContextProtocol/Agent_MCP_Server>.
-
 > [!TIP]
-> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+> The full source code and instructions to run this sample is available at <https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/ModelContextProtocol/Agent_MCP_Server>.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -181,7 +179,7 @@ async def local_mcp_example():
             args=["mcp-server-calculator"]
         ) as mcp_server,
         Agent(
-            chat_client=OpenAIChatClient(),
+            client=OpenAIChatClient(),
             name="MathAgent",
             instructions="You are a helpful math assistant that can solve calculations.",
         ) as agent,
@@ -203,33 +201,35 @@ Use `MCPStreamableHTTPTool` to connect to MCP servers over HTTP with Server-Sent
 ```python
 import asyncio
 from agent_framework import Agent, MCPStreamableHTTPTool
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 
 async def http_mcp_example():
     """Example using an HTTP-based MCP server."""
-    async with (
-        AzureCliCredential() as credential,
-        MCPStreamableHTTPTool(
-            name="Microsoft Learn MCP",
-            url="https://learn.microsoft.com/api/mcp",
-            headers={"Authorization": "Bearer your-token"},
-        ) as mcp_server,
-        Agent(
-            chat_client=AzureAIAgentClient(credential=credential),
-            name="DocsAgent",
-            instructions="You help with Microsoft documentation questions.",
-        ) as agent,
-    ):
-        result = await agent.run(
-            "How to create an Azure storage account using az cli?",
-            tools=mcp_server
-        )
-        print(result)
+    async with AzureCliCredential() as credential:
+        client = FoundryChatClient(credential=credential)
+        async with (
+            MCPStreamableHTTPTool(
+                name="Microsoft Learn MCP",
+                url="https://learn.microsoft.com/api/mcp",
+            ) as mcp_server,
+            Agent(
+                client=client,
+                name="DocsAgent",
+                instructions="You help with Microsoft documentation questions.",
+            ) as agent,
+        ):
+            result = await agent.run(
+                "How to create an Azure storage account using az cli?",
+                tools=mcp_server
+            )
+            print(result)
 
 if __name__ == "__main__":
     asyncio.run(http_mcp_example())
 ```
+
+For authenticated HTTP endpoints, prefer `header_provider` together with `function_invocation_kwargs` so secrets stay in runtime context instead of being baked into a shared HTTP client.
 
 ### MCPWebsocketTool - WebSocket MCP Servers
 
@@ -248,7 +248,7 @@ async def websocket_mcp_example():
             url="wss://api.example.com/mcp",
         ) as mcp_server,
         Agent(
-            chat_client=OpenAIChatClient(),
+            client=OpenAIChatClient(),
             name="DataAgent",
             instructions="You provide real-time data insights.",
         ) as agent,
@@ -279,16 +279,16 @@ Each server provides different tools and capabilities that extend your agent's f
 ```python
 # Copyright (c) Microsoft. All rights reserved.
 
+import asyncio
 import os
 
 from agent_framework import Agent, MCPStreamableHTTPTool
 from agent_framework.openai import OpenAIChatClient
-from httpx import AsyncClient
 
 """
 MCP Authentication Example
 
-This example demonstrates how to authenticate with MCP servers using API key headers.
+This example demonstrates the runtime `header_provider` pattern for authenticating with MCP servers.
 
 For more authentication examples including OAuth 2.0 flows, see:
 - https://github.com/modelcontextprotocol/python-sdk/tree/main/examples/clients/simple-auth-client
@@ -298,41 +298,32 @@ For more authentication examples including OAuth 2.0 flows, see:
 
 async def api_key_auth_example() -> None:
     """Example of using API key authentication with MCP server."""
-    # Configuration
     mcp_server_url = os.getenv("MCP_SERVER_URL", "your-mcp-server-url")
     api_key = os.getenv("MCP_API_KEY")
+    if not api_key:
+        raise ValueError("MCP_API_KEY environment variable must be set.")
 
-    # Create authentication headers
-    # Common patterns:
-    # - Bearer token: "Authorization": f"Bearer {api_key}"
-    # - API key header: "X-API-Key": api_key
-    # - Custom header: "Authorization": f"ApiKey {api_key}"
-    auth_headers = {
-        "Authorization": f"Bearer {api_key}",
-    }
-
-    # Create HTTP client with authentication headers
-    http_client = AsyncClient(headers=auth_headers)
-
-    # Create MCP tool with the configured HTTP client
-    async with (
-        MCPStreamableHTTPTool(
+    async with Agent(
+        client=OpenAIChatClient(),
+        name="Agent",
+        instructions="You are a helpful assistant.",
+        tools=MCPStreamableHTTPTool(
             name="MCP tool",
             description="MCP tool description",
             url=mcp_server_url,
-            http_client=http_client,  # Pass HTTP client with authentication headers
-        ) as mcp_tool,
-        Agent(
-            client=OpenAIChatClient(),
-            name="Agent",
-            instructions="You are a helpful assistant.",
-            tools=mcp_tool,
-        ) as agent,
-    ):
+            header_provider=lambda kwargs: {"Authorization": f"Bearer {kwargs['mcp_api_key']}"},
+        ),
+    ) as agent:
         query = "What tools are available to you?"
         print(f"User: {query}")
-        result = await agent.run(query)
+        result = await agent.run(
+            query,
+            function_invocation_kwargs={"mcp_api_key": api_key},
+        )
         print(f"Agent: {result.text}")
+
+if __name__ == "__main__":
+    asyncio.run(api_key_auth_example())
 ```
 
 ::: zone-end
@@ -347,7 +338,7 @@ Wrap the agent in a function tool using `.AsAIFunction()`, create an `McpServerT
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -355,11 +346,13 @@ using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Server;
 
 // Create the agent
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-        .GetChatClient("gpt-4o-mini")
-        .AsAIAgent(instructions: "You are good at telling jokes.", name: "Joker");
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "You are good at telling jokes.",
+            name: "Joker");
 
 // Convert the agent to an MCP tool
 McpServerTool tool = McpServerTool.Create(agent.AsAIFunction());
@@ -373,6 +366,9 @@ builder.Services
 
 await builder.Build().RunAsync();
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 Install the required NuGet packages:
 

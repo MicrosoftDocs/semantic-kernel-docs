@@ -13,6 +13,9 @@ ms.service: agent-framework
 
 Context providers run around each invocation to add context before execution and process data after execution.
 
+> [!NOTE]
+> For a list of pre-built context providers you can use with your agent, see [Integrations](../../integrations/index.md)
+
 ## Built-in pattern
 
 :::zone pivot="programming-language-csharp"
@@ -282,10 +285,10 @@ internal sealed class AdvancedServiceMemoryProvider : AIContextProvider
 ```python
 from typing import Any
 
-from agent_framework import AgentSession, BaseContextProvider, SessionContext
+from agent_framework import AgentSession, ContextProvider, SessionContext
 
 
-class UserPreferenceProvider(BaseContextProvider):
+class UserPreferenceProvider(ContextProvider):
     def __init__(self) -> None:
         super().__init__("user-preferences")
 
@@ -314,6 +317,11 @@ class UserPreferenceProvider(BaseContextProvider):
                 state["favorite_food"] = text.split("favorite food is", 1)[1].strip().rstrip(".")
 ```
 
+> [!NOTE]
+> `ContextProvider` and `HistoryProvider` are the canonical Python base classes. `BaseContextProvider` and `BaseHistoryProvider` still exist as deprecated aliases for compatibility, but new providers should inherit from the new names.
+>
+> Context providers can also add chat or function middleware for the current invocation by calling `context.extend_middleware(self.source_id, middleware)`. The agent flattens those additions with `context.get_middleware()` and applies them in provider order before invoking the chat client.
+
 :::zone-end
 
 :::zone pivot="programming-language-python"
@@ -326,10 +334,10 @@ History providers are context providers specialized for loading/storing messages
 from collections.abc import Sequence
 from typing import Any
 
-from agent_framework import BaseHistoryProvider, Message
+from agent_framework import HistoryProvider, Message
 
 
-class DatabaseHistoryProvider(BaseHistoryProvider):
+class DatabaseHistoryProvider(HistoryProvider):
     def __init__(self, db: Any) -> None:
         super().__init__("db-history", load_messages=True)
         self._db = db
@@ -365,6 +373,7 @@ class DatabaseHistoryProvider(BaseHistoryProvider):
 > [!IMPORTANT]
 > In Python, you can configure multiple history providers, but **only one** should use `load_messages=True`.
 > Use additional providers for diagnostics/evals with `load_messages=False` and `store_context_messages=True` so they capture context from other providers alongside input/output.
+> If you need local history to persist around each model call in a tool loop, see [Storage](./storage.md#per-service-call-local-history-persistence).
 >
 > Example pattern:
 >

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 03/26/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -143,7 +143,7 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 ## Python guidance
 
 > [!IMPORTANT]
-> Python Azure OpenAI guidance now lives on the [OpenAI provider page](./openai.md). Use that page for `OpenAIChatCompletionClient`, `OpenAIChatClient`, and `OpenAIEmbeddingClient`, deployment-name-to-`model` mapping, explicit Azure routing inputs such as `credential` or `azure_endpoint`, `api_version` configuration after Azure is selected, plus `base_url` guidance for full `.../openai/v1` URLs. If `OPENAI_API_KEY` is also present, the generic clients stay on OpenAI unless you pass explicit Azure routing inputs. If only `AZURE_OPENAI_*` settings are present, Azure environment fallback still works. Deprecated `AzureOpenAI*` compatibility classes still exist under `agent_framework.azure` for migration, but new Python code should use `agent_framework.openai`. For new Python solutions, we recommend deploying models with Microsoft Foundry and connecting to them with `FoundryChatClient` instead of staying on the Azure OpenAI-specific path. If you need Foundry project endpoints or the Foundry Agent Service instead, see the [Foundry provider page](./microsoft-foundry.md).
+> Python Azure OpenAI guidance now lives on the [OpenAI provider page](./openai.md). Use that page for `OpenAIChatCompletionClient`, `OpenAIChatClient`, and `OpenAIEmbeddingClient`, deployment-name-to-`model` mapping, explicit Azure routing inputs such as `credential` or `azure_endpoint`, `api_version` configuration after Azure is selected, plus `base_url` guidance for full `.../openai/v1` URLs. If `OPENAI_API_KEY` is also present, the generic clients stay on OpenAI unless you pass explicit Azure routing inputs. If only `AZURE_OPENAI_*` settings are present, Azure environment fallback still works. The old Python `AzureOpenAI*` compatibility classes were removed from the current `agent_framework.azure` namespace, so migrate older code to `agent_framework.openai`. For new Python solutions, we recommend deploying models with Microsoft Foundry and connecting to them with `FoundryChatClient` instead of staying on the Azure OpenAI-specific path. If you need Foundry project endpoints or the Foundry Agent Service instead, see the [Foundry provider page](./microsoft-foundry.md). For a broader migration checklist, see the [Python significant changes guide](../../support/upgrade/python-2026-significant-changes.md).
 
 ::: zone-end
 

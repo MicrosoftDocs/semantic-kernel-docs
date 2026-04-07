@@ -41,7 +41,54 @@ Console.WriteLine(await agent.RunAsync("What are our company policies on remote 
 :::zone pivot="programming-language-python"
 
 > [!NOTE]
-> Python support for Copilot Studio agents is coming soon.
+> Python support for Copilot Studio agents is available through the `agent-framework-copilotstudio` package.
+
+## Installation
+
+```bash
+pip install agent-framework-copilotstudio --pre
+```
+
+## Configuration
+
+Set the following environment variables for automatic configuration:
+
+```bash
+COPILOTSTUDIOAGENT__ENVIRONMENTID="<your-environment-id>"
+COPILOTSTUDIOAGENT__SCHEMANAME="<your-agent-schema-name>"
+COPILOTSTUDIOAGENT__AGENTAPPID="<your-client-id>"
+COPILOTSTUDIOAGENT__TENANTID="<your-tenant-id>"
+```
+
+## Create a Copilot Studio Agent
+
+`CopilotStudioAgent` reads connection settings from environment variables automatically:
+
+```python
+import asyncio
+from agent_framework.microsoft import CopilotStudioAgent
+
+async def main():
+    agent = CopilotStudioAgent()
+
+    result = await agent.run("What are our company policies on remote work?")
+    print(result)
+
+asyncio.run(main())
+```
+
+## Streaming
+
+```python
+async def streaming_example():
+    agent = CopilotStudioAgent()
+
+    print("Agent: ", end="", flush=True)
+    async for chunk in agent.run("What is the largest city in France?", stream=True):
+        if chunk.text:
+            print(chunk.text, end="", flush=True)
+    print()
+```
 
 :::zone-end
 

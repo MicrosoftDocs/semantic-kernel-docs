@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: retroryan
 ms.topic: article
 ms.author: westey
-ms.date: 03/29/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -41,7 +41,7 @@ This provider is not yet available for C#. See the Python tab for usage examples
 - A Neo4j instance (self-hosted or [Neo4j AuraDB](https://neo4j.com/cloud/aura/))
 - An Azure AI Foundry project with a deployed chat model
 - An OpenAI API key or Azure OpenAI deployment (for embeddings and entity extraction)
-- Environment variables set: `NEO4J_URI`, `NEO4J_PASSWORD`, `AZURE_AI_PROJECT_ENDPOINT`, `OPENAI_API_KEY`
+- Environment variables set: `NEO4J_URI`, `NEO4J_PASSWORD`, `FOUNDRY_PROJECT_ENDPOINT`, `FOUNDRY_MODEL`, `OPENAI_API_KEY`
 - Azure CLI credentials configured (`az login`)
 - Python 3.10 or later
 
@@ -57,7 +57,7 @@ pip install neo4j-agent-memory[microsoft-agent]
 import os
 from pydantic import SecretStr
 from agent_framework import Agent
-from agent_framework.azure import AzureAIClient
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from neo4j_agent_memory import MemoryClient, MemorySettings
 from neo4j_agent_memory.integrations.microsoft_agent import (
@@ -89,19 +89,16 @@ async with memory_client:
     )
     tools = create_memory_tools(memory)
 
-    async with (
-        AzureCliCredential() as credential,
-        AzureAIClient(
+    async with AzureCliCredential() as credential, Agent(
+            client=FoundryChatClient(
             credential=credential,
-            project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        ) as client,
-        Agent(
-            client=client,
-            instructions="You are a helpful assistant with persistent memory.",
-            tools=tools,
-            context_providers=[memory.context_provider],
-        ) as agent,
-    ):
+            project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+            model=os.environ["FOUNDRY_MODEL"],
+        ),
+        instructions="You are a helpful assistant with persistent memory.",
+        tools=tools,
+        context_providers=[memory.context_provider],
+    ) as agent:
         session = agent.create_session()
         response = await agent.run("Remember that I prefer window seats on flights.", session=session)
 ```

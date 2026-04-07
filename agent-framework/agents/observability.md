@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 12/16/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -26,10 +26,11 @@ Agent Framework integrates with [OpenTelemetry](https://opentelemetry.io/), and 
 To enable observability for your chat client, you need to build the chat client as follows:
 
 ```csharp
-// Using the Azure OpenAI client as an example
-var instrumentedChatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsIChatClient() // Converts a native OpenAI SDK ChatClient into a Microsoft.Extensions.AI.IChatClient
+// Using the AIProjectClient as an example
+var instrumentedChatClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetProjectOpenAIClient()
+    .GetProjectResponsesClient()
+    .AsIChatClient(deploymentName) // Converts into a Microsoft.Extensions.AI.IChatClient
     .AsBuilder()
     .UseOpenTelemetry(sourceName: SourceName, configure: (cfg) => cfg.EnableSensitiveData = true)    // Enable OpenTelemetry instrumentation with sensitive data
     .Build();
@@ -52,7 +53,7 @@ var agent = new ChatClientAgent(
 > [!IMPORTANT]
 > When you enable observability for your chat clients and agents, you might see duplicated information, especially when sensitive data is enabled. The chat context (including prompts and responses) that is captured by both the chat client and the agent will be included in both spans. Depending on your needs, you might choose to enable observability only on the chat client or only on the agent to avoid duplication. See the [GenAI Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) for more details on the attributes captured for LLM and Agents.
 
-> [!NOTE]
+> [!WARNING]
 > Only enable sensitive data in development or testing environments, as it might expose user information in production logs and traces. Sensitive data includes prompts, responses, function call arguments, and results.
 
 ### Configuration
@@ -326,7 +327,7 @@ The following environment variables control Agent Framework observability:
 - `ENABLE_CONSOLE_EXPORTERS` - Default is `false`, set to `true` to enable console output for telemetry.
 - `VS_CODE_EXTENSION_PORT` - Port for AI Toolkit or Microsoft Foundry VS Code extension integration.
 
-> [!NOTE]
+> [!WARNING]
 > Sensitive information includes prompts, responses, and more, and should only be enabled in development or test environments. It is not recommended to enable this in production as it may expose sensitive data.
 
 #### Standard OpenTelemetry environment variables
@@ -362,22 +363,25 @@ Make sure you have your Foundry configured with a Azure Monitor instance, see [d
 pip install azure-monitor-opentelemetry
 ```
 
-#### Configure observability directly from the `AzureAIClient`
+#### Configure observability directly from the `FoundryChatClient`
 
-For Foundry projects, you can configure observability directly from the `AzureAIClient`:
+For Foundry projects, you can configure observability directly from the `FoundryChatClient`:
 
 ```python
-from agent_framework.azure import AzureAIClient
-from azure.ai.projects.aio import AIProjectClient
+import os
+
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 
 async def main():
-    async with (
-        AzureCliCredential() as credential,
-        AIProjectClient(endpoint="https://<your-project>.foundry.azure.com", credential=credential) as project_client,
-        AzureAIClient(project_client=project_client) as client,
-    ):
-        # Automatically configures Azure Monitor with connection string from project
+    async with AzureCliCredential() as credential:
+        client = FoundryChatClient(
+            project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+            model=os.environ["FOUNDRY_MODEL"],
+            credential=credential,
+        )
+
+        # Automatically configures Azure Monitor with the connection string from the Foundry project
         await client.configure_azure_monitor(enable_live_metrics=True)
 ```
 
@@ -404,7 +408,7 @@ enable_instrumentation()
 
 # Create your agent with the same OpenTelemetry agent ID as registered in Foundry
 agent = Agent(
-    chat_client=...,
+    client=...,
     name="My Agent",
     instructions="You are a helpful assistant.",
     id="<OpenTelemetry agent ID>"

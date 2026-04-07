@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
 ms.author: markwallace
-ms.date: 09/24/2025
+ms.date: 03/31/2026
 ms.service: agent-framework
 ---
 
@@ -118,7 +118,7 @@ Common options include:
 
 - `max_tokens`: Maximum number of tokens to generate
 - `temperature`: Controls randomness in response generation
-- `model_id`: Override the model for this specific run
+- `model`: Override the model for this specific run
 - `top_p`: Nucleus sampling parameter
 - `response_format`: Specify the response format (e.g., structured output)
 
@@ -142,7 +142,7 @@ agent = OpenAIChatClient().as_agent(
 options: OpenAIChatOptions = {
     "temperature": 0.3,
     "max_tokens": 150,
-    "model_id": "gpt-4o",
+    "model": "gpt-4o",
     "presence_penalty": 0.5,
     "frequency_penalty": 0.3
 }
@@ -269,20 +269,38 @@ Here are some popular types from <xref:Microsoft.Extensions.AI>:
 | <xref:Microsoft.Extensions.AI.FunctionResultContent> | The result of a function tool invocation. |
 
 ::: zone-end
+
 ::: zone pivot="programming-language-python"
 
 The Python Agent Framework uses message and content types from the `agent_framework` package.
-Messages are represented by the `Message` class and all content classes inherit from the base `Content` class.
+Messages are represented by the `Message` class and all content items are represented by the `Content` class discriminated by the `type` property.
 
-Various `Content` subclasses exist that are used to represent different types of content:
+All content is represented by the unified `Content` class with factory methods for each content type. Use the `type` property to check the content type. The following content types are available:
 
-|Type|Description|
-|---|---|
-|`Content`|Unified content type with factory methods (`Content.from_text()`, `Content.from_data()`, `Content.from_uri()`). Use the `type` property to check content type ("text", "data", "uri").|
-|`FunctionCallContent`|A request by an AI service to invoke a function tool.|
-|`FunctionResultContent`|The result of a function tool invocation.|
-|`ErrorContent`|Error information when processing fails.|
-|`UsageContent`|Token usage and billing information from the AI service.|
+| Content Type | Factory Method | Description |
+|---|---|---|
+| `"text"` | `Content.from_text()` | Textual content for input and output. Typically contains the text result from an agent. |
+| `"text_reasoning"` | `Content.from_text_reasoning()` | Reasoning text from models that support chain-of-thought reasoning. May include protected data. |
+| `"data"` | `Content.from_data()`, `Content.from_uri()` | Binary content encoded as a data URI. Used for images, audio, video, and documents. |
+| `"uri"` | `Content.from_uri()` | A URL pointing to hosted content such as an image, audio, or video. |
+| `"error"` | `Content.from_error()` | Error information when processing fails. Includes optional error code and details. |
+| `"function_call"` | `Content.from_function_call()` | A request by an AI service to invoke a function tool. |
+| `"function_result"` | `Content.from_function_result()` | The result of a function tool invocation. |
+| `"usage"` | `Content.from_usage()` | Token usage and billing information from the AI service. |
+| `"hosted_file"` | `Content.from_hosted_file()` | A reference to a file hosted by the provider (for example, uploaded to OpenAI). |
+| `"hosted_vector_store"` | `Content.from_hosted_vector_store()` | A reference to a vector store hosted by the provider. |
+| `"code_interpreter_tool_call"` | `Content.from_code_interpreter_tool_call()` | A request by the AI service to execute code via a code interpreter. |
+| `"code_interpreter_tool_result"` | `Content.from_code_interpreter_tool_result()` | The result of a code interpreter execution. |
+| `"image_generation_tool_call"` | `Content.from_image_generation_tool_call()` | A request by the AI service to generate an image. |
+| `"image_generation_tool_result"` | `Content.from_image_generation_tool_result()` | The result of an image generation request. |
+| `"mcp_server_tool_call"` | `Content.from_mcp_server_tool_call()` | A request to invoke a tool on an MCP server. |
+| `"mcp_server_tool_result"` | `Content.from_mcp_server_tool_result()` | The result of an MCP server tool invocation. |
+| `"shell_tool_call"` | `Content.from_shell_tool_call()` | A request by the AI service to execute shell commands. |
+| `"shell_tool_result"` | `Content.from_shell_tool_result()` | The aggregate result of a shell tool call. |
+| `"shell_command_output"` | `Content.from_shell_command_output()` | The output of a single shell command execution. |
+| `"function_approval_request"` | `Content.from_function_approval_request()` | A request for user approval before executing a function call. |
+| `"function_approval_response"` | `Content.from_function_approval_response()` | The user's response to a function approval request. |
+| `"oauth_consent_request"` | `Content.from_oauth_consent_request()` | A request for the user to complete OAuth consent via a provided link. |
 
 Here's how to work with different content types:
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -54,13 +54,13 @@ Install the necessary packages for the server:
 
 ```bash
 dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --prerelease
-dotnet add package Azure.AI.OpenAI --prerelease
+dotnet add package Azure.AI.Projects --prerelease
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 > [!NOTE]
-> The `Microsoft.Extensions.AI.OpenAI` package is required for the `AsIChatClient()` extension method that converts OpenAI's `ChatClient` to the `IChatClient` interface expected by Agent Framework.
+> The `Microsoft.Agents.AI.Foundry` package is required for the `AsAIAgent()` extension method that creates an Agent Framework agent from an `AIProjectClient`.
 
 ### Server Code
 
@@ -69,11 +69,10 @@ Create a file named `Program.cs`:
 ```csharp
 // Copyright (c) Microsoft. All rights reserved.
 
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
+using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
-using Microsoft.Extensions.AI;
-using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
@@ -87,14 +86,13 @@ string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
 // Create the AI agent
-ChatClient chatClient = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
-    .GetChatClient(deploymentName);
-
-AIAgent agent = chatClient.AsIChatClient().AsAIAgent(
-    name: "AGUIAssistant",
-    instructions: "You are a helpful assistant.");
+    .AsAIAgent(
+        model: deploymentName,
+        name: "AGUIAssistant",
+        instructions: "You are a helpful assistant.");
 
 // Map the AG-UI agent endpoint
 app.MapAGUI("/", agent);
@@ -102,15 +100,17 @@ app.MapAGUI("/", agent);
 await app.RunAsync();
 ```
 
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
 ### Key Concepts
 
 - **`AddAGUI`**: Registers AG-UI services with the dependency injection container
 - **`MapAGUI`**: Extension method that registers the AG-UI endpoint with automatic request/response handling and SSE streaming
-- **`ChatClient` and `AsIChatClient()`**: `AzureOpenAIClient.GetChatClient()` returns OpenAI's `ChatClient` type. The `AsIChatClient()` extension method (from `Microsoft.Extensions.AI.OpenAI`) converts it to the `IChatClient` interface required by Agent Framework
-- **`AsAIAgent`**: Creates an Agent Framework agent from an `IChatClient`
+- **`AsAIAgent`**: Creates an Agent Framework agent from an `AIProjectClient` with a specified model and instructions
 - **ASP.NET Core Integration**: Uses ASP.NET Core's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages
-- **Configuration**: `AzureOpenAIClient` with `DefaultAzureCredential` provides secure authentication
+- **Configuration**: `AIProjectClient` with `DefaultAzureCredential` provides secure authentication
 
 ### Configure and Run the Server
 
@@ -415,12 +415,12 @@ from fastapi import FastAPI
 
 # Read required configuration
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
+deployment_name = os.environ.get("AZURE_OPENAI_CHAT_COMPLETION_MODEL")
 
 if not endpoint:
     raise ValueError("AZURE_OPENAI_ENDPOINT environment variable is required")
 if not deployment_name:
-    raise ValueError("AZURE_OPENAI_DEPLOYMENT_NAME environment variable is required")
+    raise ValueError("AZURE_OPENAI_CHAT_COMPLETION_MODEL environment variable is required")
 
 chat_client = OpenAIChatCompletionClient(
     model=deployment_name,
@@ -433,7 +433,7 @@ chat_client = OpenAIChatCompletionClient(
 agent = Agent(
     name="AGUIAssistant",
     instructions="You are a helpful assistant.",
-    chat_client=chat_client,
+    client=chat_client,
 )
 
 # Create FastAPI app
@@ -462,7 +462,7 @@ Set the required environment variables:
 
 ```bash
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
-export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
+export AZURE_OPENAI_CHAT_COMPLETION_MODEL="gpt-4o-mini"
 ```
 
 Run the server:
@@ -518,7 +518,7 @@ async def main():
     # Create agent with the chat client
     agent = Agent(
         name="ClientAgent",
-        chat_client=chat_client,
+        client=chat_client,
         instructions="You are a helpful assistant.",
     )
 

@@ -86,7 +86,7 @@ The Agent Framework includes a skills provider that discovers skills from filesy
 Create a `FileAgentSkillsProvider` pointing to a directory containing your skills, and add it to the agent's context providers:
 
 ```csharp
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 
@@ -95,19 +95,22 @@ var skillsProvider = new FileAgentSkillsProvider(
     skillPath: Path.Combine(AppContext.BaseDirectory, "skills"));
 
 // Create an agent with the skills provider
-AIAgent agent = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
     new Uri(endpoint), new DefaultAzureCredential())
-    .GetResponsesClient(deploymentName)
     .AsAIAgent(new ChatClientAgentOptions
     {
         Name = "SkillsAgent",
         ChatOptions = new()
         {
+            ModelId = deploymentName,
             Instructions = "You are a helpful assistant.",
         },
         AIContextProviders = [skillsProvider],
     });
 ```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
 ### Invoking the agent
 
@@ -142,7 +145,7 @@ skills_provider = SkillsProvider(
 
 # Create an agent with the skills provider
 agent = OpenAIChatCompletionClient(
-    model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
+    model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     credential=AzureCliCredential(),

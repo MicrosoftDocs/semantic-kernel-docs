@@ -16,7 +16,7 @@ Agent Framework offers two primary categories of capabilities:
 
 | | Description |
 |---|---|
-| **[Agents](../agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Azure OpenAI, OpenAI, Anthropic, Ollama, and [more](../agents/providers/index.md). |
+| **[Agents](../agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Microsoft Foundry, Anthropic, Azure OpenAI, OpenAI, Ollama, and [more](../agents/providers/index.md). |
 | **[Workflows](../workflows/index.md)** | Graph-based workflows that connect agents and functions for multi-step tasks with type-safe routing, checkpointing, and human-in-the-loop support. |
 
 The framework also provides foundational building
@@ -31,22 +31,21 @@ interactive, robust, and safe AI applications.
 :::zone pivot="programming-language-csharp"
 
 ```dotnetcli
-dotnet add package Azure.AI.OpenAI --prerelease
-dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 ```csharp
 using System;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 
-AIAgent agent = new AzureOpenAIClient(
-        new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!),
+AIAgent agent = new AIProjectClient(
+        new Uri("https://your-foundry-service.services.ai.azure.com/api/projects/your-foundry-project"),
         new AzureCliCredential())
-    .GetChatClient("gpt-4o-mini")
-    .AsAIAgent(instructions: "You are a friendly assistant. Keep your answers brief.");
+    .AsAIAgent(
+        model: "gpt-5.4-mini",
+        instructions: "You are a friendly assistant. Keep your answers brief.");
 
 Console.WriteLine(await agent.RunAsync("What is the largest city in France?"));
 ```
@@ -56,14 +55,17 @@ Console.WriteLine(await agent.RunAsync("What is the largest city in France?"));
 :::zone pivot="programming-language-python"
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework
 ```
 
 ```python
+    from agent_framework.foundry import FoundryChatClient
+    from azure.identity import AzureCliCredential
+
     credential = AzureCliCredential()
     client = FoundryChatClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        project_endpoint="https://your-foundry-service.services.ai.azure.com/api/projects/your-foundry-project",
+        model="gpt-5.4-mini",
         credential=credential,
     )
 
@@ -123,11 +125,12 @@ and [Migration Guide from AutoGen](../migration-guide/from-autogen/index.md).
 Both Semantic Kernel and AutoGen have benefited significantly from the open-source community,
 and the same is expected for Agent Framework. Microsoft Agent Framework welcomes contributions and will keep improving with new features and capabilities.
 
-> [!NOTE]
-> Microsoft Agent Framework is currently in public preview. Please submit any feedback or issues on the [GitHub repository](https://github.com/microsoft/agent-framework).
-
 > [!IMPORTANT]
-> If you use Microsoft Agent Framework to build applications that operate with third-party servers or agents, you do so at your own risk. We recommend reviewing all data being shared with third-party servers or agents and being cognizant of third-party practices for retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization's Azure compliance and geographic boundaries and any related implications.
+> If you use Microsoft Agent Framework to build applications that operate with any third-party servers, agents, code, or non-Azure Direct models ("Third-Party Systems"), you do so at your own risk. Third-Party Systems are Non-Microsoft Products under the Microsoft Product Terms and are governed by their own third-party license terms. You are responsible for any usage and associated costs.
+>
+> We recommend reviewing all data being shared with and received from Third-Party Systems and being cognizant of third-party practices for handling, sharing, retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization's Azure compliance and geographic boundaries and any related implications, and that appropriate permissions, boundaries and approvals are provisioned.
+>
+> You are responsible for carefully reviewing and testing applications you build using Microsoft Agent Framework in the context of your specific use cases, and making all appropriate decisions and customizations. This includes implementing your own responsible AI mitigations such as metaprompt, content filters, or other safety systems, and ensuring your applications meet appropriate quality, reliability, security, and trustworthiness standards. See also: [Transparency FAQ](https://github.com/microsoft/agent-framework/blob/main/TRANSPARENCY_FAQS.md)
 
 ## Next steps
 

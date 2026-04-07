@@ -20,8 +20,9 @@ For conversation/session patterns alongside retrieval, see [Conversations & Memo
 ## Using TextSearchProvider
 
 The `TextSearchProvider` class is an out-of-the-box implementation of a RAG context provider.
+It supports different modes of operation, e.g. doing a search for each agent run with chat history, or advertising function tools for doing searches.
 
-It can easily be attached to a `ChatClientAgent` using the `AIContextProviders` option to provide RAG capabilities to the agent.
+It can easily be attached to a `ChatClientAgent` using the `AIContextProviders` option.
 
 ```csharp
 // Configure the options for the TextSearchProvider.
@@ -30,7 +31,7 @@ TextSearchProviderOptions textSearchOptions = new()
     SearchTime = TextSearchProviderOptions.TextSearchBehavior.BeforeAIInvoke,
 };
 
-// Create the AI agent with the TextSearchProvider as the AI context provider.
+// Create the AI agent with the TextSearchProvider.
 AIAgent agent = azureOpenAIClient
     .GetChatClient(deploymentName)
     .AsAIAgent(new ChatClientAgentOptions
@@ -68,12 +69,12 @@ static Task<IEnumerable<TextSearchProvider.TextSearchResult>> SearchAdapter(stri
 
 ### TextSearchProvider Options
 
-The `TextSearchProvider` can be customized via the `TextSearchProviderOptions` class. Here is an example of creating options to run the search prior to every model invocation and keep a short rolling window of conversation context.
+The `TextSearchProvider` can be customized via the `TextSearchProviderOptions` class. Here is an example of creating options to run the search prior to every model invocation and keep a short rolling window of chat history for searches.
 
 ```csharp
 TextSearchProviderOptions textSearchOptions = new()
 {
-    // Run the search prior to every model invocation and keep a short rolling window of conversation context.
+    // Run the search prior to every model invocation and keep a short rolling window of chat history for searches.
     SearchTime = TextSearchProviderOptions.TextSearchBehavior.BeforeAIInvoke,
     RecentMessageMemoryLimit = 6,
 };
@@ -83,17 +84,17 @@ The `TextSearchProvider` class supports the following options via the `TextSearc
 
 | Option | Type | Description | Default |
 |--------|------|-------------|---------|
-| SearchTime | `TextSearchProviderOptions.TextSearchBehavior` | Indicates when the search should be executed. There are two options, each time the agent is invoked, or on-demand via function calling. | `TextSearchProviderOptions.TextSearchBehavior.BeforeAIInvoke` |
+| SearchTime | `TextSearchProviderOptions.TextSearchBehavior` | Indicates when the search should be executed. There are two options, each time the agent is run, or on-demand via function calling. | `TextSearchProviderOptions.TextSearchBehavior.BeforeAIInvoke` |
 | FunctionToolName | `string` | The name of the exposed search tool when operating in on-demand mode. | "Search" |
 | FunctionToolDescription | `string` | The description of the exposed search tool when operating in on-demand mode. | "Allows searching for additional information to help answer the user question." |
-| ContextPrompt | `string` | The context prompt prefixed to results when operating in `BeforeAIInvoke` mode. | "## Additional Context\nConsider the following information from source documents when responding to the user:" |
-| CitationsPrompt | `string` | The instruction appended after results to request citations when operating in `BeforeAIInvoke` mode. | "Include citations to the source document with document name and link if document name and link is available." |
-| ContextFormatter | `Func<IList<TextSearchProvider.TextSearchResult>, string>` | Optional delegate to fully customize formatting of the result list when operating in `BeforeAIInvoke` mode. If provided, `ContextPrompt` and `CitationsPrompt` are ignored. | `null` |
+| ContextPrompt | `string` | The context prompt prefixed to results. | "## Additional Context\nConsider the following information from source documents when responding to the user:" |
+| CitationsPrompt | `string` | The instruction appended after results to request citations. | "Include citations to the source document with document name and link if document name and link is available." |
+| ContextFormatter | `Func<IList<TextSearchProvider.TextSearchResult>, string>` | Optional delegate to fully customize formatting of the result list. If provided, `ContextPrompt` and `CitationsPrompt` are ignored. | `null` |
 | RecentMessageMemoryLimit | `int` | The number of recent conversation messages (both user and assistant) to keep in memory and include when constructing the search input for `BeforeAIInvoke` searches. | `0` (disabled) |
 | RecentMessageRolesIncluded | `List<ChatRole>` | The list of `ChatRole` types to filter recent messages to when deciding which recent messages to include when constructing the search input. | `ChatRole.User` |
 
 > [!TIP]
-> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+> See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/AgentWithRAG) for complete runnable examples.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -286,258 +287,6 @@ agent = chat_client.as_agent(
 ```
 
 This approach allows the agent to choose the most appropriate search strategy based on the user's query.
-
-### Complete example
-
-```python
-# Copyright (c) Microsoft. All rights reserved.
-
-import asyncio
-from collections.abc import MutableSequence, Sequence
-from typing import Any
-
-from agent_framework import Agent, BaseContextProvider, Context, Message, SupportsChatGetResponse
-from agent_framework.azure import AzureAIClient
-from azure.identity.aio import AzureCliCredential
-from pydantic import BaseModel
-
-
-class UserInfo(BaseModel):
-    name: str | None = None
-    age: int | None = None
-
-
-class UserInfoMemory(BaseContextProvider):
-    def __init__(self, client: SupportsChatGetResponse, user_info: UserInfo | None = None, **kwargs: Any):
-        """Create the memory.
-
-        If you pass in kwargs, they will be attempted to be used to create a UserInfo object.
-        """
-
-        self._chat_client = client
-        if user_info:
-            self.user_info = user_info
-        elif kwargs:
-            self.user_info = UserInfo.model_validate(kwargs)
-        else:
-            self.user_info = UserInfo()
-
-    async def invoked(
-        self,
-        request_messages: Message | Sequence[Message],
-        response_messages: Message | Sequence[Message] | None = None,
-        invoke_exception: Exception | None = None,
-        **kwargs: Any,
-    ) -> None:
-        """Extract user information from messages after each agent call."""
-        # Check if we need to extract user info from user messages
-        user_messages = [msg for msg in request_messages if hasattr(msg, "role") and msg.role == "user"]  # type: ignore
-
-        if (self.user_info.name is None or self.user_info.age is None) and user_messages:
-            try:
-                # Use the chat client to extract structured information
-                result = await self._chat_client.get_response(
-                    messages=request_messages,  # type: ignore
-                    instructions="Extract the user's name and age from the message if present. "
-                    "If not present return nulls.",
-                    options={"response_format": UserInfo},
-                )
-
-                # Update user info with extracted data
-                try:
-                    extracted = result.value
-                    if self.user_info.name is None and extracted.name:
-                        self.user_info.name = extracted.name
-                    if self.user_info.age is None and extracted.age:
-                        self.user_info.age = extracted.age
-                except Exception:
-                    pass  # Failed to extract, continue without updating
-
-            except Exception:
-                pass  # Failed to extract, continue without updating
-
-    async def invoking(self, messages: Message | MutableSequence[Message], **kwargs: Any) -> Context:
-        """Provide user information context before each agent call."""
-        instructions: list[str] = []
-
-        if self.user_info.name is None:
-            instructions.append(
-                "Ask the user for their name and politely decline to answer any questions until they provide it."
-            )
-        else:
-            instructions.append(f"The user's name is {self.user_info.name}.")
-
-        if self.user_info.age is None:
-            instructions.append(
-                "Ask the user for their age and politely decline to answer any questions until they provide it."
-            )
-        else:
-            instructions.append(f"The user's age is {self.user_info.age}.")
-
-        # Return context with additional instructions
-        return Context(instructions=" ".join(instructions))
-
-    def serialize(self) -> str:
-        """Serialize the user info for thread persistence."""
-        return self.user_info.model_dump_json()
-
-
-async def main():
-    async with AzureCliCredential() as credential:
-        client = AzureAIClient(credential=credential)
-
-        # Create the memory provider
-        memory_provider = UserInfoMemory(client)
-
-        # Create the agent with memory
-        async with Agent(
-            client=client,
-            instructions="You are a friendly assistant. Always address the user by their name.",
-            context_providers=[memory_provider],
-        ) as agent:
-            # Create a new thread for the conversation
-            thread = agent.create_session()
-
-            print(await agent.run("Hello, what is the square root of 9?", session=thread))
-            print(await agent.run("My name is Ruaidhrí", session=thread))
-            print(await agent.run("I am 20 years old", session=thread))
-
-            # Access the memory component and inspect the memories
-            user_info_memory = memory_provider
-            if user_info_memory:
-                print()
-                print(f"MEMORY - User Name: {user_info_memory.user_info.name}")  # type: ignore
-                print(f"MEMORY - User Age: {user_info_memory.user_info.age}")  # type: ignore
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-```python
-# Copyright (c) Microsoft. All rights reserved.
-
-import asyncio
-from collections.abc import MutableSequence, Sequence
-from typing import Any
-
-from agent_framework import Agent, BaseContextProvider, Context, Message, SupportsChatGetResponse
-from agent_framework.azure import AzureAIClient
-from azure.identity.aio import AzureCliCredential
-from pydantic import BaseModel
-
-
-class UserInfo(BaseModel):
-    name: str | None = None
-    age: int | None = None
-
-
-class UserInfoMemory(BaseContextProvider):
-    def __init__(self, client: SupportsChatGetResponse, user_info: UserInfo | None = None, **kwargs: Any):
-        """Create the memory.
-
-        If you pass in kwargs, they will be attempted to be used to create a UserInfo object.
-        """
-
-        self._chat_client = client
-        if user_info:
-            self.user_info = user_info
-        elif kwargs:
-            self.user_info = UserInfo.model_validate(kwargs)
-        else:
-            self.user_info = UserInfo()
-
-    async def invoked(
-        self,
-        request_messages: Message | Sequence[Message],
-        response_messages: Message | Sequence[Message] | None = None,
-        invoke_exception: Exception | None = None,
-        **kwargs: Any,
-    ) -> None:
-        """Extract user information from messages after each agent call."""
-        # Check if we need to extract user info from user messages
-        user_messages = [msg for msg in request_messages if hasattr(msg, "role") and msg.role == "user"]  # type: ignore
-
-        if (self.user_info.name is None or self.user_info.age is None) and user_messages:
-            try:
-                # Use the chat client to extract structured information
-                result = await self._chat_client.get_response(
-                    messages=request_messages,  # type: ignore
-                    instructions="Extract the user's name and age from the message if present. "
-                    "If not present return nulls.",
-                    options={"response_format": UserInfo},
-                )
-
-                # Update user info with extracted data
-                try:
-                    extracted = result.value
-                    if self.user_info.name is None and extracted.name:
-                        self.user_info.name = extracted.name
-                    if self.user_info.age is None and extracted.age:
-                        self.user_info.age = extracted.age
-                except Exception:
-                    pass  # Failed to extract, continue without updating
-
-            except Exception:
-                pass  # Failed to extract, continue without updating
-
-    async def invoking(self, messages: Message | MutableSequence[Message], **kwargs: Any) -> Context:
-        """Provide user information context before each agent call."""
-        instructions: list[str] = []
-
-        if self.user_info.name is None:
-            instructions.append(
-                "Ask the user for their name and politely decline to answer any questions until they provide it."
-            )
-        else:
-            instructions.append(f"The user's name is {self.user_info.name}.")
-
-        if self.user_info.age is None:
-            instructions.append(
-                "Ask the user for their age and politely decline to answer any questions until they provide it."
-            )
-        else:
-            instructions.append(f"The user's age is {self.user_info.age}.")
-
-        # Return context with additional instructions
-        return Context(instructions=" ".join(instructions))
-
-    def serialize(self) -> str:
-        """Serialize the user info for thread persistence."""
-        return self.user_info.model_dump_json()
-
-
-async def main():
-    async with AzureCliCredential() as credential:
-        client = AzureAIClient(credential=credential)
-
-        # Create the memory provider
-        memory_provider = UserInfoMemory(client)
-
-        # Create the agent with memory
-        async with Agent(
-            client=client,
-            instructions="You are a friendly assistant. Always address the user by their name.",
-            context_providers=[memory_provider],
-        ) as agent:
-            # Create a new thread for the conversation
-            thread = agent.create_session()
-
-            print(await agent.run("Hello, what is the square root of 9?", session=thread))
-            print(await agent.run("My name is Ruaidhrí", session=thread))
-            print(await agent.run("I am 20 years old", session=thread))
-
-            # Access the memory component and inspect the memories
-            user_info_memory = memory_provider
-            if user_info_memory:
-                print()
-                print(f"MEMORY - User Name: {user_info_memory.user_info.name}")  # type: ignore
-                print(f"MEMORY - User Age: {user_info_memory.user_info.age}")  # type: ignore
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
 
 ### Supported VectorStore Connectors
 

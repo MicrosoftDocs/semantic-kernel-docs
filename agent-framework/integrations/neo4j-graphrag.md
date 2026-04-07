@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: retroryan
 ms.topic: article
 ms.author: westey
-ms.date: 03/29/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -120,7 +120,7 @@ Console.WriteLine(await agent.RunAsync("What risks does Acme Corp face?", sessio
 
 - A Neo4j instance (self-hosted or [Neo4j AuraDB](https://neo4j.com/cloud/aura/)) with a vector or fulltext index configured
 - An Azure AI Foundry project with a deployed chat model and an embedding model (e.g. `text-embedding-ada-002`)
-- Environment variables set: `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `AZURE_AI_PROJECT_ENDPOINT`, `AZURE_AI_EMBEDDING_NAME`
+- Environment variables set: `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `FOUNDRY_PROJECT_ENDPOINT`, `FOUNDRY_MODEL`, `AZURE_AI_EMBEDDING_NAME`
 - Azure CLI credentials configured (`az login`)
 - Python 3.10 or later
 
@@ -133,8 +133,10 @@ pip install agent-framework-neo4j
 ## Usage
 
 ```python
+import os
+
 from agent_framework import Agent
-from agent_framework.azure import AzureAIClient
+from agent_framework.foundry import FoundryChatClient
 from agent_framework_neo4j import Neo4jContextProvider, Neo4jSettings, AzureAISettings, AzureAIEmbedder
 from azure.identity import DefaultAzureCredential
 from azure.identity.aio import AzureCliCredential
@@ -142,7 +144,7 @@ from azure.identity.aio import AzureCliCredential
 # Reads NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD from environment variables
 neo4j_settings = Neo4jSettings()
 
-# Reads AZURE_AI_PROJECT_ENDPOINT, AZURE_AI_EMBEDDING_NAME from environment variables
+# Reads FOUNDRY_PROJECT_ENDPOINT, AZURE_AI_EMBEDDING_NAME from environment variables
 azure_settings = AzureAISettings()
 
 sync_credential = DefaultAzureCredential()
@@ -171,9 +173,12 @@ neo4j_provider = Neo4jContextProvider(
 async with (
     neo4j_provider,
     AzureCliCredential() as credential,
-    AzureAIClient(credential=credential, project_endpoint=azure_settings.project_endpoint) as client,
     Agent(
-        client=client,
+        client=FoundryChatClient(
+            credential=credential,
+            project_endpoint=azure_settings.project_endpoint,
+            model=os.environ["FOUNDRY_MODEL"],
+        ),
         instructions="You are a financial analyst assistant.",
         context_providers=[neo4j_provider],
     ) as agent,

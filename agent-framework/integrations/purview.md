@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: reezaali149
 ms.topic: article
 ms.author: v-reezaali
-ms.date: 10/28/2025
+ms.date: 04/01/2026
 ms.service: purview
 ---
 
@@ -27,7 +27,7 @@ Before you begin, ensure you have:
 - Microsoft 365 subscription with an E5 license and pay-as-you-go billing setup.
   - For testing, you can use a Microsoft 365 Developer Program tenant. For more information, see [Join the Microsoft 365 Developer Program](https://developer.microsoft.com/en-us/microsoft-365/dev-program).
 - Agent Framework SDK: To install the Agent Framework SDK:
-  - Python: Run `pip install agent-framework --pre`.
+  - Python: Run `pip install agent-framework`.
   - .NET: Install from NuGet.
 
 ## How to integrate Microsoft Purview into your agent
@@ -40,13 +40,11 @@ The following code sample demonstrates how to add the Microsoft Purview policy m
 
 ```csharp
 
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Purview;
-using Microsoft.Extensions.AI;
-using OpenAI;
 
 string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
@@ -58,11 +56,12 @@ TokenCredential browserCredential = new InteractiveBrowserCredential(
         ClientId = purviewClientAppId
     });
 
-AIAgent agent = new AzureOpenAIClient(
+AIAgent agent = new AIProjectClient(
     new Uri(endpoint),
     new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent("You are a secure assistant.")
+    .AsAIAgent(
+        model: deploymentName,
+        instructions: "You are a secure assistant.")
     .AsBuilder()
     .WithPurview(browserCredential, new PurviewSettings("My Secure Agent"))
     .Build();
@@ -88,11 +87,11 @@ from azure.identity import AzureCliCredential, InteractiveBrowserCredential
 
 # Set default environment variables if not already set
 os.environ.setdefault("AZURE_OPENAI_ENDPOINT", "<azureOpenAIEndpoint>")
-os.environ.setdefault("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME", "<azureOpenAIChatDeploymentName>")
+os.environ.setdefault("AZURE_OPENAI_CHAT_COMPLETION_MODEL", "<azureOpenAIChatDeploymentName>")
 
 async def main():
     chat_client = OpenAIChatCompletionClient(
-        model=os.environ["AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
         azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
         credential=AzureCliCredential(),
@@ -104,7 +103,7 @@ async def main():
         settings=PurviewSettings(app_name="My Secure Agent")
     )
     agent = Agent(
-        chat_client=chat_client,
+        client=chat_client,
         instructions="You are a secure assistant.",
         middleware=[purview_middleware]
     )

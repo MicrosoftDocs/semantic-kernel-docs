@@ -60,7 +60,7 @@ pip install agent-framework-ollama --pre
 # [OpenAI Compatible](#tab/ollama-openai)
 
 ```bash
-pip install agent-framework --pre
+pip install agent-framework
 ```
 
 ---
@@ -70,7 +70,7 @@ pip install agent-framework --pre
 # [Native Ollama](#tab/ollama-native)
 
 ```bash
-OLLAMA_MODEL_ID="llama3.2"
+OLLAMA_MODEL="llama3.2"
 ```
 
 The native client connects to `http://localhost:11434` by default. You can override this by passing `host` to the client.
@@ -118,7 +118,7 @@ async def main():
     agent = OpenAIChatClient(
         api_key="ollama",  # Placeholder, Ollama doesn't require an API key
         base_url=os.environ["OLLAMA_ENDPOINT"],
-        model_id=os.environ["OLLAMA_MODEL"],
+        model=os.environ["OLLAMA_MODEL"],
     ).as_agent(
         name="HelpfulAssistant",
         instructions="You are a helpful assistant running locally via Ollama.",
@@ -172,7 +172,7 @@ async def main():
     agent = OpenAIChatClient(
         api_key="ollama",
         base_url=os.environ["OLLAMA_ENDPOINT"],
-        model_id=os.environ["OLLAMA_MODEL"],
+        model=os.environ["OLLAMA_MODEL"],
     ).as_agent(
         name="TimeAgent",
         instructions="You are a helpful time agent.",

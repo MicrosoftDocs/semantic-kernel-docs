@@ -38,7 +38,7 @@ may be supplied. Here is a list of existing providers that can be used.
 
 | Chat History Provider                                              | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
-| [In-Memory Chat History Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI.Abstractions/InMemoryChatHistoryProvider.cs) | Preview         |
+| [In-Memory Chat History Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI.Abstractions/InMemoryChatHistoryProvider.cs) | Released         |
 | [Cosmos DB Chat History Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI.CosmosNoSql/CosmosChatHistoryProvider.cs)    | Preview         |
 
 ::: zone-end
@@ -61,7 +61,7 @@ Here is a list of existing providers that can be used.
 
 | Memory AI Context Provider                                         | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
-| [Chat History Memory Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI/Memory/ChatHistoryMemoryProvider.cs) | Preview         |
+| [Chat History Memory Provider](./chat-history-memory-provider.md) | Released         |
 
 ::: zone-end
 
@@ -87,7 +87,7 @@ Here is a list of existing providers that can be used.
 | RAG AI Context Provider                                            | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
 | [Neo4j GraphRAG Provider](./neo4j-graphrag.md) | Preview         |
-| [Text Search Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI/TextSearchProvider.cs) | Preview         |
+| [Text Search Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI/TextSearchProvider.cs) | Released         |
 
 ::: zone-end
 

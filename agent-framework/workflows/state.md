@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/25/2026
+ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
@@ -132,6 +132,39 @@ class WordCountingExecutor(Executor):
 
 ::: zone-end
 
+## Workflow-scoped runtime kwargs
+
+For values that should flow to agents and tools without becoming shared workflow state, pass them on `workflow.run()` as `function_invocation_kwargs=` or `client_kwargs=`.
+
+- If none of the top-level keys match an executor ID, the mapping is treated as global and every matching agent executor receives the same dict.
+- If one or more top-level keys match executor IDs, the whole mapping is treated as per-executor targeting and each executor receives only its own entry.
+- The same global-vs-targeted rules apply to both `function_invocation_kwargs` and `client_kwargs`.
+
+```python
+await workflow.run(
+    "Create the report",
+    function_invocation_kwargs={
+        "tenant": "contoso",
+        "request_id": "req-42",
+    },
+)
+
+await workflow.run(
+    "Create the report",
+    function_invocation_kwargs={
+        "researcher": {
+            "db_config": {"connection_string": "..."},
+        },
+        "writer": {
+            "user_preferences": {"format": "markdown"},
+        },
+    },
+)
+```
+
+> [!TIP]
+> Executor-targeted kwargs use workflow executor IDs. For wrapped agents, that is the agent name by default, or the explicit `id` you pass to `AgentExecutor(...)`.
+
 ## State Isolation
 
 In real-world applications, properly managing state is critical when handling multiple tasks or requests. Without proper isolation, shared state between different workflow executions can lead to unexpected behavior, data corruption, and race conditions. This section explains how to ensure state isolation within Microsoft Agent Framework Workflows, providing insights into best practices and common pitfalls.
@@ -220,8 +253,8 @@ Non-isolated example (shared agent state):
 
 ```python
 writer_agent = FoundryChatClient(
-    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+    model=os.environ["FOUNDRY_MODEL"],
     credential=AzureCliCredential(),
 ).as_agent(
     instructions=(
@@ -230,8 +263,8 @@ writer_agent = FoundryChatClient(
     name="writer_agent",
 )
 reviewer_agent = FoundryChatClient(
-    project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+    model=os.environ["FOUNDRY_MODEL"],
     credential=AzureCliCredential(),
 ).as_agent(
     instructions=(
@@ -256,8 +289,8 @@ def create_workflow() -> Workflow:
     ensuring no conversation history leaks between workflow runs.
     """
     writer_agent = FoundryChatClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+        model=os.environ["FOUNDRY_MODEL"],
         credential=AzureCliCredential(),
     ).as_agent(
         instructions=(
@@ -266,8 +299,8 @@ def create_workflow() -> Workflow:
         name="writer_agent",
     )
     reviewer_agent = FoundryChatClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+        model=os.environ["FOUNDRY_MODEL"],
         credential=AzureCliCredential(),
     ).as_agent(
         instructions=(

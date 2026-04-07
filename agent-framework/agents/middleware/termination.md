@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/16/2026
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.AI.OpenAI;
+using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -65,11 +65,12 @@ async Task<AgentResponse> GuardrailMiddleware(
     return response;
 }
 
-AIAgent agent = new AzureOpenAIClient(
-    new Uri("https://<myresource>.openai.azure.com"),
-    new AzureCliCredential())
-        .GetChatClient("gpt-4o-mini")
-        .AsAIAgent(instructions: "You are a helpful assistant.");
+AIAgent agent = new AIProjectClient(
+    new Uri("<your-foundry-project-endpoint>"),
+    new DefaultAzureCredential())
+        .AsAIAgent(
+            model: "gpt-4o-mini",
+            instructions: "You are a helpful assistant.");
 
 var guardedAgent = agent
     .AsBuilder()
@@ -83,11 +84,17 @@ Console.WriteLine(await guardedAgent.RunAsync("What's the weather in Seattle?"))
 Console.WriteLine(await guardedAgent.RunAsync("What is my password?"));
 ```
 
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
 :::zone-end
 
 :::zone pivot="programming-language-python"
 
 In Python, middleware stops execution by setting `context.result` when needed and raising `MiddlewareTermination`, or by short-circuiting the chain without calling `call_next()`.
+
+> [!NOTE]
+> History providers normally persist once after the full `agent.run()`. If your run can make multiple model calls (for example through tool loops) and you want local history to match service-managed conversation behavior when termination happens after a tool call, create the agent with `require_per_service_call_history_persistence=True`.
 
 ### Pre-termination middleware
 
@@ -109,7 +116,8 @@ from agent_framework import (
     MiddlewareTermination,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 
 """
@@ -159,10 +167,12 @@ class PreTerminationMiddleware(AgentMiddleware):
                         messages=[
                             Message(
                                 role="assistant",
-                                text=(
-                                    f"Sorry, I cannot process requests containing '{blocked_word}'. "
-                                    "Please rephrase your question."
-                                ),
+                                contents=[
+                                    (
+                                        f"Sorry, I cannot process requests containing '{blocked_word}'. "
+                                        "Please rephrase your question."
+                                    )
+                                ],
                             )
                         ]
                     )
@@ -207,7 +217,8 @@ async def pre_termination_middleware() -> None:
     print("\n--- Example 1: Pre-termination MiddlewareTypes ---")
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
@@ -234,7 +245,8 @@ async def post_termination_middleware() -> None:
     print("\n--- Example 2: Post-termination MiddlewareTypes ---")
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
@@ -294,7 +306,8 @@ from agent_framework import (
     MiddlewareTermination,
     tool,
 )
-from agent_framework.azure import AzureAIAgentClient
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
@@ -345,10 +358,12 @@ class PreTerminationMiddleware(AgentMiddleware):
                         messages=[
                             Message(
                                 role="assistant",
-                                text=(
-                                    f"Sorry, I cannot process requests containing '{blocked_word}'. "
-                                    "Please rephrase your question."
-                                ),
+                                contents=[
+                                    (
+                                        f"Sorry, I cannot process requests containing '{blocked_word}'. "
+                                        "Please rephrase your question."
+                                    )
+                                ],
                             )
                         ]
                     )
@@ -393,7 +408,8 @@ async def pre_termination_middleware() -> None:
     print("\n--- Example 1: Pre-termination MiddlewareTypes ---")
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
@@ -420,7 +436,8 @@ async def post_termination_middleware() -> None:
     print("\n--- Example 2: Post-termination MiddlewareTypes ---")
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(credential=credential).as_agent(
+        Agent(
+            client=FoundryChatClient(credential=credential),
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,

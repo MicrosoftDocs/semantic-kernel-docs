@@ -4,7 +4,7 @@ description: A comprehensive guide for migrating from AutoGen to the Microsoft A
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 09/29/2025
+ms.date: 04/01/2026
 ms.service: agent-framework
 ---
 
@@ -87,7 +87,7 @@ agent = AssistantAgent(name="assistant", model_client=client, tools=[my_tool])
 result = await agent.run(task="Help me with this task")
 
 # Agent Framework
-agent = Agent(name="assistant", chat_client=client, tools=[my_tool])
+agent = Agent(name="assistant", client=client, tools=[my_tool])
 result = await agent.run("Help me with this task")
 ```
 
@@ -107,11 +107,11 @@ Both frameworks provide model clients for major AI providers, with similar but n
 
 | Feature                 | AutoGen                           | Agent Framework              |
 | ----------------------- | --------------------------------- | ---------------------------- |
-| OpenAI Client           | `OpenAIChatCompletionClient`      | `OpenAIChatClient`           |
-| OpenAI Responses Client | ❌ Not available                  | `OpenAIResponsesClient`      |
-| Azure OpenAI            | `AzureOpenAIChatCompletionClient` | `AzureOpenAIChatClient`      |
-| Azure OpenAI Responses  | ❌ Not available                  | `AzureOpenAIResponsesClient` |
-| Azure AI                | `AzureAIChatCompletionClient`     | `AzureAIAgentClient`         |
+| OpenAI Client           | `OpenAIChatCompletionClient`      | `OpenAIChatCompletionClient` |
+| OpenAI Responses Client | ❌ Not available                  | `OpenAIChatClient`           |
+| Azure OpenAI            | `AzureOpenAIChatCompletionClient` | `OpenAIChatCompletionClient` |
+| Azure OpenAI Responses  | ❌ Not available                  | `OpenAIChatClient`           |
+| Azure AI                | `AzureAIChatCompletionClient`     | `FoundryChatClient` / `FoundryAgent` |
 | Anthropic               | `AnthropicChatCompletionClient`   | 🚧 Planned                   |
 | Ollama                  | `OllamaChatCompletionClient`      | 🚧 Planned                   |
 | Caching                 | `ChatCompletionCache` wrapper     | 🚧 Planned                   |
@@ -139,41 +139,51 @@ client = AzureOpenAIChatCompletionClient(
 ### Agent Framework ChatClients
 
 ```python
-from agent_framework.openai import OpenAIChatClient
-from agent_framework.azure import AzureOpenAIChatClient
+from agent_framework.openai import OpenAIChatCompletionClient
+from azure.identity import AzureCliCredential
 
 # OpenAI (reads API key from environment)
-client = OpenAIChatClient(model_id="gpt-5")
+client = OpenAIChatCompletionClient(model="gpt-5")
 
-# Azure OpenAI (uses environment or default credentials; see samples for auth options)
-client = AzureOpenAIChatClient(model_id="gpt-5")
+# Azure OpenAI (pass explicit Azure routing inputs)
+client = OpenAIChatCompletionClient(
+    model="gpt-5",
+    azure_endpoint="https://your-endpoint.openai.azure.com/",
+    api_version="2024-12-01",
+    credential=AzureCliCredential(),
+)
 ```
 
 For detailed examples, see:
 
-- [OpenAI Chat Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_basic.py) - Basic OpenAI client setup
-- [Azure OpenAI Chat Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_chat_client_basic.py) - Azure OpenAI with authentication
-- [Azure AI Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_basic.py) - Azure AI agent integration
+- [OpenAI Chat Completion Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_basic.py) - Basic OpenAI chat-completions setup
+- [Azure OpenAI Chat Completion Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_chat_completion_client_basic.py) - Azure OpenAI with explicit routing and authentication
+- [Foundry Chat Client](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_basic.py) - Foundry project inference with the current Python client
 
 ### Responses API Support (Agent Framework Exclusive)
 
-Agent Framework's `AzureOpenAIResponsesClient` and `OpenAIResponsesClient` provide specialized support for reasoning models and structured responses not available in AutoGen:
+Agent Framework's `OpenAIChatClient` provides Responses API support for both direct OpenAI and Azure OpenAI routing, including reasoning models and structured responses not available in AutoGen:
 
 ```python
-from agent_framework.azure import AzureOpenAIResponsesClient
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
+from azure.identity import AzureCliCredential
 
 # Azure OpenAI with Responses API
-azure_responses_client = AzureOpenAIResponsesClient(model_id="gpt-5")
+azure_responses_client = OpenAIChatClient(
+    model="gpt-5",
+    azure_endpoint="https://your-endpoint.openai.azure.com/",
+    api_version="2024-12-01",
+    credential=AzureCliCredential(),
+)
 
 # OpenAI with Responses API
-openai_responses_client = OpenAIResponsesClient(model_id="gpt-5")
+openai_responses_client = OpenAIChatClient(model="gpt-5")
 ```
 
 For Responses API examples, see:
 
-- [Azure Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_responses_client_basic.py) - Azure OpenAI with responses
-- [OpenAI Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_responses_client_basic.py) - OpenAI responses integration
+- [Azure Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_client_basic.py) - Azure OpenAI with the Responses client
+- [OpenAI Responses Client Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/client_basic.py) - OpenAI responses integration
 
 ## Single-Agent Feature Mapping
 
@@ -218,13 +228,13 @@ def get_time() -> str:
     return "Current time: 2:30 PM"
 
 # Create client
-client = OpenAIChatClient(model_id="gpt-5")
+client = OpenAIChatClient(model="gpt-5")
 
 async def example():
     # Direct creation with default options
     agent = Agent(
         name="assistant",
-        chat_client=client,
+        client=client,
         instructions="You are a helpful assistant.",
         tools=[get_weather],  # Multi-turn by default
         default_options={
@@ -296,30 +306,24 @@ print((await agent.run("What about that number times 10?", session=session)).tex
 
 For conversation session examples, see:
 
-- [Azure AI with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_session.py) - Conversation state management
-- [OpenAI Chat Client with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_session.py) - Session usage patterns
-- [Redis-backed Sessions](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/conversations/redis_chat_message_store_session.py) - Persisting conversation state externally
+- [Foundry Chat Client with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_with_session.py) - Conversation state management with Foundry project inference
+- [OpenAI Chat Completion Client with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_with_session.py) - Session usage patterns
+- [Redis-backed Sessions](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/conversations/redis_history_provider.py) - Persisting conversation state externally
 
 #### OpenAI Assistant Agent Equivalence
 
-Both frameworks provide OpenAI Assistant API integration:
+AutoGen still exposes an `OpenAIAssistantAgent`, but current Agent Framework Python guidance no longer uses a Python Assistants-specific surface. Migrate to the Responses client for direct OpenAI or Azure OpenAI work, or use `FoundryAgent` when you need a service-managed agent:
 
 ```python
-# AutoGen OpenAIAssistantAgent
-from autogen_ext.agents.openai import OpenAIAssistantAgent
+from agent_framework.openai import OpenAIChatClient
+from agent_framework.foundry import FoundryAgent
 ```
 
-```python
-# Agent Framework has OpenAI Assistants support via OpenAIAssistantsClient
-from agent_framework.openai import OpenAIAssistantsClient
-```
+For comparable current Python examples, see:
 
-For OpenAI Assistant examples, see:
-
-- [OpenAI Assistants Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_assistants_basic.py) - Basic assistant setup
-- [OpenAI Assistants with Function Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_assistants_with_function_tools.py) - Custom tools integration
-- [Azure OpenAI Assistants Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_assistants_basic.py) - Azure assistant setup
-- [OpenAI Assistants with Session](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_assistants_with_session.py) - Session management
+- [OpenAI with Code Interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/client_with_code_interpreter.py) - Hosted tool workflow with the Responses client
+- [OpenAI with File Search](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/client_with_file_search.py) - Hosted file search with the Responses client
+- [Foundry Hosted Agent](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_agent_hosted.py) - Service-managed agent pattern in Foundry
 
 ### Streaming Support
 
@@ -392,7 +396,7 @@ from agent_framework import Message, Content, Role
 import base64
 
 # Text message
-text_msg = Message(role=Role.USER, text="Hello")
+text_msg = Message(role=Role.USER, contents=["Hello"])
 
 # Supply real image bytes, or use a data: URI/URL via Content.from_uri()
 image_bytes = b"<your_image_bytes>"
@@ -453,42 +457,41 @@ def get_weather(
     return f"Weather in {location}: sunny"
 
 # Direct use with agent (automatic conversion)
-agent = Agent(name="assistant", chat_client=client, tools=[get_weather])
+agent = Agent(name="assistant", client=client, tools=[get_weather])
 ```
 
 For detailed examples, see:
 
-- [OpenAI Chat Agent Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_basic.py) - Simple OpenAI chat agent
-- [OpenAI with Function Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_function_tools.py) - Agent with custom tools
-- [Azure OpenAI Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_openai/azure_chat_client_basic.py) - Azure OpenAI agent setup
+- [OpenAI Chat Completion Agent Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_basic.py) - Simple OpenAI chat-completions agent
+- [OpenAI with Function Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_with_function_tools.py) - Agent with custom tools
+- [Azure OpenAI Basic](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_chat_completion_client_basic.py) - Azure OpenAI agent setup
 
 #### Hosted Tools (Agent Framework Exclusive)
 
 Agent Framework provides hosted tools that are not available in AutoGen:
 
 ```python
-from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
-# Azure OpenAI Responses client with a model that supports hosted tools
-client = AzureOpenAIResponsesClient(model_id="gpt-5")
+# Responses client with a model that supports hosted tools
+client = OpenAIChatClient(model="gpt-5")
 
 # Hosted tools are created from the client
 code_tool = client.get_code_interpreter_tool()
 search_tool = client.get_web_search_tool()
 
-agent = Agent(
+agent = client.as_agent(
     name="researcher",
-    chat_client=client,
+    instructions="Use the available hosted tools to research answers.",
     tools=[code_tool, search_tool]
 )
 ```
 
 For detailed examples, see:
 
-- [Azure AI with Code Interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_code_interpreter.py) - Code execution tool
-- [Azure AI with Multiple Tools](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai_agent/azure_ai_with_multiple_tools.py) - Multiple hosted tools
-- [OpenAI with Web Search](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_web_search.py) - Web search integration
+- [Foundry with Code Interpreter](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_with_code_interpreter.py) - Code execution tool
+- [Foundry with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_with_hosted_mcp.py) - Hosted MCP tool integration
+- [OpenAI with Web Search](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_with_web_search.py) - Web search integration
 
 Requirements and caveats:
 
@@ -516,7 +519,7 @@ from agent_framework import Agent, MCPStdioTool, MCPStreamableHTTPTool, MCPWebso
 from agent_framework.openai import OpenAIChatClient
 
 # Create client for the example
-client = OpenAIChatClient(model_id="gpt-5")
+client = OpenAIChatClient(model="gpt-5")
 
 # Stdio MCP server
 mcp_tool = MCPStdioTool(
@@ -537,15 +540,15 @@ ws_mcp = MCPWebsocketTool(
     url="ws://localhost:8000/ws"
 )
 
-agent = Agent(name="assistant", chat_client=client, tools=[mcp_tool])
+agent = Agent(name="assistant", client=client, tools=[mcp_tool])
 ```
 
 For MCP examples, see:
 
-- [OpenAI with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_chat_client_with_local_mcp.py) - Using MCPStreamableHTTPTool with OpenAI
-- [OpenAI with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/openai_responses_client_with_hosted_mcp.py) - Using hosted MCP services
-- [Azure AI with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_local_mcp.py) - Using MCP with Azure AI
-- [Azure AI with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure_ai/azure_ai_with_hosted_mcp.py) - Using hosted MCP with Azure AI
+- [OpenAI with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_with_local_mcp.py) - Using MCP with the chat-completions client
+- [OpenAI with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/client_with_hosted_mcp.py) - Using hosted MCP services with the Responses client
+- [Foundry with Local MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_with_local_mcp.py) - Using MCP with Foundry project inference
+- [Foundry with Hosted MCP](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_with_hosted_mcp.py) - Using hosted MCP with Foundry
 
 ### Agent-as-a-Tool Pattern
 
@@ -587,7 +590,7 @@ from agent_framework import Agent
 # Create specialized agent
 writer = Agent(
     name="writer",
-    chat_client=client,
+    client=client,
     instructions="You are a creative writer."
 )
 
@@ -602,7 +605,7 @@ writer_tool = writer.as_tool(
 # Use in coordinator
 coordinator = Agent(
     name="coordinator",
-    chat_client=client,
+    client=client,
     tools=[writer_tool]
 )
 ```
@@ -639,7 +642,7 @@ async def security_middleware(
 
 agent = Agent(
     name="secure_agent",
-    chat_client=client,
+    client=client,
     middleware=[logging_middleware, security_middleware]
 )
 ```
@@ -1235,7 +1238,7 @@ manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator that coordinates the workflow",
     instructions="You coordinate a team to complete complex tasks efficiently.",
-    chat_client=OpenAIChatClient(),
+    client=OpenAIChatClient(),
 )
 
 workflow = MagenticBuilder(
@@ -1291,7 +1294,7 @@ manager_agent = Agent(
     name="MagenticManager",
     description="Orchestrator for complex tasks",
     instructions="Custom orchestration instructions...",
-    chat_client=OpenAIChatClient(model_id="gpt-4o"),
+    client=OpenAIChatClient(model="gpt-4o"),
 )
 
 workflow = (
@@ -1671,11 +1674,11 @@ setup_observability(
 )
 
 # Create client for the example
-client = OpenAIChatClient(model_id="gpt-5")
+client = OpenAIChatClient(model="gpt-5")
 
 async def observability_example():
     # Observability is automatically applied to all agents and workflows
-    agent = Agent(name="assistant", chat_client=client)
+    agent = Agent(name="assistant", client=client)
     result = await agent.run("Hello")  # Automatically traced
 ```
 
