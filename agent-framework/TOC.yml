@@ -198,8 +198,12 @@ items:
       href: integrations/ag-ui/frontend-tools.md
     - name: Security Considerations
       href: integrations/ag-ui/security-considerations.md
+    - name: Workflows
+      href: integrations/ag-ui/workflows.md
     - name: Human-in-the-Loop
       href: integrations/ag-ui/human-in-the-loop.md
+    - name: MCP Apps Compatibility
+      href: integrations/ag-ui/mcp-apps.md
     - name: State Management
       href: integrations/ag-ui/state-management.md
     - name: Testing with Dojo
