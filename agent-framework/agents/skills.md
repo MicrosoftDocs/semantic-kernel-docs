@@ -125,7 +125,7 @@ AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredent
 
 ### Multiple skill directories
 
-You can point the provider to a single parent folder — each subfolder containing a `SKILL.md` is automatically discovered as a skill:
+You can point the provider to a single parent directory — each subdirectory containing a `SKILL.md` is automatically discovered as a skill:
 
 ```csharp
 var skillsProvider = new AgentSkillsProvider(
@@ -152,7 +152,7 @@ By default, the provider recognizes resources with extensions `.md`, `.json`, `.
 var fileOptions = new AgentFileSkillsSourceOptions
 {
     AllowedResourceExtensions = [".md", ".txt"],
-    ResourceFolders = ["docs", "templates"],
+    ResourceDirectories = ["docs", "templates"],
 };
 
 var skillsProvider = new AgentSkillsProvider(
@@ -222,7 +222,7 @@ Pass `AgentFileSkillsSourceOptions` to the `AgentSkillsProvider` constructor or 
 var fileOptions = new AgentFileSkillsSourceOptions
 {
     AllowedScriptExtensions = [".py"],
-    ScriptFolders = ["scripts", "tools"],
+    ScriptDirectories = ["scripts", "tools"],
 };
 
 // Via constructor
