@@ -384,9 +384,9 @@ Ensure that the storage location used for checkpoints is secured appropriately. 
 
 ### Pickle serialization
 
-Both `FileCheckpointStorage` and `CosmosCheckpointStorage` use Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects.
+Both `FileCheckpointStorage` and `CosmosCheckpointStorage` use Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, both providers use a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and all `agent_framework` internal types are permitted during deserialization. Any other type encountered in a checkpoint causes deserialization to fail with a `WorkflowCheckpointException`.
 
-`FileCheckpointStorage` uses a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and all `agent_framework` internal types are permitted during deserialization. Any other type encountered in a checkpoint causes deserialization to fail with a `WorkflowCheckpointException`. `FileCheckpointStorage` also accepts an `allowed_checkpoint_types` parameter to extend the restricted unpickler with application-specific types, using `"module:qualname"` format:
+To allow additional application-specific types, pass them via the `allowed_checkpoint_types` parameter using `"module:qualname"` format:
 
 ```python
 from agent_framework import FileCheckpointStorage
@@ -400,7 +400,23 @@ storage = FileCheckpointStorage(
 )
 ```
 
-`CosmosCheckpointStorage` does not currently apply deserialization restrictions. Treat Cosmos-backed checkpoint containers as strictly trusted storage and restrict write access accordingly.
+`CosmosCheckpointStorage` accepts the same parameter:
+
+```python
+from azure.identity.aio import DefaultAzureCredential
+from agent_framework_azure_cosmos import CosmosCheckpointStorage
+
+storage = CosmosCheckpointStorage(
+    endpoint="https://my-account.documents.azure.com:443/",
+    credential=DefaultAzureCredential(),
+    database_name="agent-db",
+    container_name="checkpoints",
+    allowed_checkpoint_types=[
+        "my_app.models:SafeState",
+        "my_app.models:UserProfile",
+    ],
+)
+```
 
 If your threat model does not permit pickle-based serialization at all, use `InMemoryCheckpointStorage` or implement a custom `CheckpointStorage` with an alternative serialization strategy.
 
