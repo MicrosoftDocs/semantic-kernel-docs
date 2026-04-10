@@ -208,6 +208,28 @@ items:
       href: integrations/ag-ui/state-management.md
     - name: Testing with Dojo
       href: integrations/ag-ui/testing-with-dojo.md
+- name: The Agent Development Journey
+  items:
+  - name: Overview
+    href: journey/index.md
+  - name: LLM Fundamentals
+    href: journey/llm-fundamentals.md
+  - name: From LLMs to Agents
+    href: journey/from-llms-to-agents.md
+  - name: Adding Tools
+    href: journey/adding-tools.md
+  - name: Adding Skills
+    href: journey/adding-skills.md
+  - name: Adding Middleware
+    href: journey/adding-middleware.md
+  - name: Context Providers
+    href: journey/adding-context-providers.md
+  - name: Agents as Tools
+    href: journey/agents-as-tools.md
+  - name: "Agent-to-Agent (A2A)"
+    href: journey/agent-to-agent.md
+  - name: Workflows
+    href: journey/workflows.md
 - name: DevUI
   items:
   - name: Overview
