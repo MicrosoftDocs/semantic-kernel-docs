@@ -263,7 +263,7 @@ async def on_checkpoint_restore(self, state: dict[str, Any]) -> None:
 ## Security Considerations
 
 > [!IMPORTANT]
-> Checkpoint storage is a trust boundary. Whether you use the built-in storage implementations or a custom one, the storage backend must be treated as trusted, private infrastructure. **Never load checkpoints from untrusted or potentially tampered sources.** Loading a malicious checkpoint can execute arbitrary code.
+> Checkpoint storage is a trust boundary. Whether you use the built-in storage implementations or a custom one, the storage backend must be treated as trusted, private infrastructure. **Never load checkpoints from untrusted or potentially tampered sources.**
 
 ::: zone pivot="programming-language-csharp"
 
@@ -275,9 +275,23 @@ Ensure that the storage location used for checkpoints is secured appropriately. 
 
 ### Pickle serialization
 
-`FileCheckpointStorage` uses Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. Because `pickle.loads()` can execute arbitrary code during deserialization, a compromised checkpoint file can run malicious code when loaded. The post-deserialization type check performed by the framework cannot prevent this.
+`FileCheckpointStorage` uses Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, the framework uses a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and all `agent_framework` internal types are permitted during deserialization. Any other type encountered in a checkpoint causes deserialization to fail with a `WorkflowCheckpointException`.
 
-If your threat model does not permit pickle-based serialization, use `InMemoryCheckpointStorage` or implement a custom `CheckpointStorage` with an alternative serialization strategy.
+To allow additional application-specific types, pass them to `FileCheckpointStorage` via the `allowed_checkpoint_types` parameter using `"module:qualname"` format:
+
+```python
+from agent_framework import FileCheckpointStorage
+
+storage = FileCheckpointStorage(
+    "/tmp/checkpoints",
+    allowed_checkpoint_types=[
+        "my_app.models:SafeState",
+        "my_app.models:UserProfile",
+    ],
+)
+```
+
+If your threat model does not permit pickle-based serialization at all, use `InMemoryCheckpointStorage` or implement a custom `CheckpointStorage` with an alternative serialization strategy.
 
 ### Storage location responsibility
 
