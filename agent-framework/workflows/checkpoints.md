@@ -79,7 +79,19 @@ IReadOnlyList<CheckpointInfo> checkpoints = run.Checkpoints;
 
 ::: zone pivot="programming-language-python"
 
-To enable checkpointing, a `CheckpointStorage` needs to be provided when creating a workflow. A checkpoint can then be accessed via the storage.
+To enable checkpointing, a `CheckpointStorage` needs to be provided when creating a workflow. A checkpoint can then be accessed via the storage. Agent Framework ships three built-in implementations — pick the one that matches your durability and deployment needs:
+
+| Provider | Package | Durability | Best for |
+|---|---|---|---|
+| `InMemoryCheckpointStorage` | `agent-framework` | In-process only | Tests, demos, short-lived workflows |
+| `FileCheckpointStorage` | `agent-framework` | Local disk | Single-machine workflows, local development |
+| `CosmosCheckpointStorage` | `agent-framework-azure-cosmos` | Azure Cosmos DB | Production, distributed, cross-process workflows |
+
+All three implement the same `CheckpointStorage` protocol, so you can swap providers without changing workflow or executor code.
+
+# [In-Memory](#tab/py-ckpt-inmemory)
+
+`InMemoryCheckpointStorage` keeps checkpoints in process memory. Best for tests, demos, and short-lived workflows where you do not need durability across restarts.
 
 ```python
 from agent_framework import (
@@ -88,7 +100,6 @@ from agent_framework import (
 )
 
 # Create a checkpoint storage to manage checkpoints
-# There are different implementations of CheckpointStorage, such as InMemoryCheckpointStorage and FileCheckpointStorage.
 checkpoint_storage = InMemoryCheckpointStorage()
 
 # Build a workflow with checkpointing enabled
@@ -105,6 +116,104 @@ async for event in workflow.run(input, stream=True):
 # Access checkpoints from the storage
 checkpoints = await checkpoint_storage.list_checkpoints(workflow_name=workflow.name)
 ```
+
+# [File](#tab/py-ckpt-file)
+
+`FileCheckpointStorage` persists checkpoints to a local directory on disk. Best for single-machine workflows that need to survive process restarts, and for local development.
+
+```python
+from agent_framework import (
+    FileCheckpointStorage,
+    WorkflowBuilder,
+)
+
+# Create a checkpoint storage backed by a directory on disk.
+# storage_path is required — there is no default directory.
+checkpoint_storage = FileCheckpointStorage("/var/lib/agent-framework/checkpoints")
+
+# Build a workflow with checkpointing enabled
+builder = WorkflowBuilder(start_executor=start_executor, checkpoint_storage=checkpoint_storage)
+builder.add_edge(start_executor, executor_b)
+builder.add_edge(executor_b, executor_c)
+builder.add_edge(executor_b, end_executor)
+workflow = builder.build()
+
+# Run the workflow
+async for event in workflow.run(input, stream=True):
+    ...
+
+# Access checkpoints from the storage
+checkpoints = await checkpoint_storage.list_checkpoints(workflow_name=workflow.name)
+```
+
+See the [Security Considerations](#security-considerations) section for guidance on restricting which Python types can be deserialized via the `allowed_checkpoint_types` parameter.
+
+# [Azure Cosmos DB](#tab/py-ckpt-cosmos)
+
+`CosmosCheckpointStorage` persists checkpoints to Azure Cosmos DB NoSQL. Best for production and distributed workflows that need durable, cross-process checkpointing. Install the optional provider package:
+
+```bash
+pip install agent-framework-azure-cosmos --pre
+```
+
+The database and container are created automatically on first use, with `/workflow_name` as the partition key for efficient per-workflow queries. The recommended authentication mode is managed identity / RBAC via an Azure `TokenCredential` such as `DefaultAzureCredential`:
+
+```python
+from azure.identity.aio import DefaultAzureCredential
+from agent_framework import WorkflowBuilder
+from agent_framework_azure_cosmos import CosmosCheckpointStorage
+
+# CosmosCheckpointStorage is an async context manager — it closes the underlying
+# Cosmos client on exit when it created the client itself.
+async with (
+    DefaultAzureCredential() as credential,
+    CosmosCheckpointStorage(
+        endpoint="https://<account>.documents.azure.com:443/",
+        credential=credential,
+        database_name="agent-framework",
+        container_name="workflow-checkpoints",
+    ) as checkpoint_storage,
+):
+    # Build a workflow with checkpointing enabled
+    builder = WorkflowBuilder(start_executor=start_executor, checkpoint_storage=checkpoint_storage)
+    builder.add_edge(start_executor, executor_b)
+    builder.add_edge(executor_b, executor_c)
+    builder.add_edge(executor_b, end_executor)
+    workflow = builder.build()
+
+    # Run the workflow
+    async for event in workflow.run(input, stream=True):
+        ...
+
+    # Access checkpoints from the storage
+    checkpoints = await checkpoint_storage.list_checkpoints(workflow_name=workflow.name)
+```
+
+Account key authentication is also supported by passing the key directly as the `credential` argument:
+
+```python
+from agent_framework_azure_cosmos import CosmosCheckpointStorage
+
+checkpoint_storage = CosmosCheckpointStorage(
+    endpoint="https://<account>.documents.azure.com:443/",
+    credential="<your-account-key>",
+    database_name="agent-framework",
+    container_name="workflow-checkpoints",
+)
+```
+
+Connection details can also be supplied entirely through environment variables:
+
+| Variable | Description |
+|---|---|
+| `AZURE_COSMOS_ENDPOINT` | Cosmos DB account endpoint |
+| `AZURE_COSMOS_DATABASE_NAME` | Database name |
+| `AZURE_COSMOS_CONTAINER_NAME` | Container name |
+| `AZURE_COSMOS_KEY` | Account key (optional if using Azure credentials) |
+
+`CosmosCheckpointStorage` also accepts a pre-created `CosmosClient` (via `cosmos_client=`) or `ContainerProxy` (via `container_client=`) if your application already manages the Cosmos client lifecycle.
+
+---
 
 ::: zone-end
 
@@ -275,9 +384,9 @@ Ensure that the storage location used for checkpoints is secured appropriately. 
 
 ### Pickle serialization
 
-`FileCheckpointStorage` uses Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, the framework uses a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and all `agent_framework` internal types are permitted during deserialization. Any other type encountered in a checkpoint causes deserialization to fail with a `WorkflowCheckpointException`.
+Both `FileCheckpointStorage` and `CosmosCheckpointStorage` use Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, both providers use a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and all `agent_framework` internal types are permitted during deserialization. Any other type encountered in a checkpoint causes deserialization to fail with a `WorkflowCheckpointException`.
 
-To allow additional application-specific types, pass them to `FileCheckpointStorage` via the `allowed_checkpoint_types` parameter using `"module:qualname"` format:
+To allow additional application-specific types, pass them via the `allowed_checkpoint_types` parameter using `"module:qualname"` format:
 
 ```python
 from agent_framework import FileCheckpointStorage
@@ -291,11 +400,31 @@ storage = FileCheckpointStorage(
 )
 ```
 
+`CosmosCheckpointStorage` accepts the same parameter:
+
+```python
+from azure.identity.aio import DefaultAzureCredential
+from agent_framework_azure_cosmos import CosmosCheckpointStorage
+
+storage = CosmosCheckpointStorage(
+    endpoint="https://my-account.documents.azure.com:443/",
+    credential=DefaultAzureCredential(),
+    database_name="agent-db",
+    container_name="checkpoints",
+    allowed_checkpoint_types=[
+        "my_app.models:SafeState",
+        "my_app.models:UserProfile",
+    ],
+)
+```
+
 If your threat model does not permit pickle-based serialization at all, use `InMemoryCheckpointStorage` or implement a custom `CheckpointStorage` with an alternative serialization strategy.
 
 ### Storage location responsibility
 
 `FileCheckpointStorage` requires an explicit `storage_path` parameter — there is no default directory. While the framework validates against path traversal attacks, securing the storage directory itself (file permissions, encryption at rest, access controls) is the developer's responsibility. Only authorized processes should have read or write access to the checkpoint directory.
+
+`CosmosCheckpointStorage` relies on Azure Cosmos DB for storage. Use managed identity / RBAC where possible, scope the database and container to the workflow service, and rotate account keys if you use key-based auth. As with file storage, only authorized principals should have read or write access to the Cosmos DB container that holds checkpoint documents.
 
 ::: zone-end
 
