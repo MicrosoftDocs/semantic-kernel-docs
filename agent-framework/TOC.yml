@@ -38,6 +38,8 @@ items:
     href: agents/declarative.md
   - name: Observability
     href: agents/observability.md
+  - name: Evaluation
+    href: agents/evaluation.md
   - name: Agent Skills
     href: agents/skills.md
   - name: Agent Safety
