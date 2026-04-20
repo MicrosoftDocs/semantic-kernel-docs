@@ -184,7 +184,7 @@ agent = Agent(
 )
 ```
 
-`FoundryChatClient` is the Foundry-first Python path for direct inference and supports tools, structured output, and streaming.
+`FoundryChatClient` is the Foundry-first Python path for direct inference and supports tools, structured outputs, and streaming.
 
 ## Create embeddings with `FoundryEmbeddingClient`
 
