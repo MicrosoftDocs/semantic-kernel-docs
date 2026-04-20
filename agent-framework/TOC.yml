@@ -28,8 +28,8 @@ items:
     href: agents/agent-pipeline.md
   - name: Multimodal
     href: agents/multimodal.md
-  - name: Structured Output
-    href: agents/structured-output.md
+  - name: Structured Outputs
+    href: agents/structured-outputs.md
   - name: Background Responses
     href: agents/background-responses.md
   - name: RAG
