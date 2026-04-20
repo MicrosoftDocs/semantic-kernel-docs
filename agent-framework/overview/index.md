@@ -5,8 +5,8 @@ zone_pivot_groups: programming-languages
 ms.topic: overview
 ms.date: 02/09/2026
 ms.service: agent-framework
-author: markwallace-microsoft
-ms.author: markwallace
+author: moonbox3
+ms.author: evmattso
 ms.reviewer: ssalgado
 ---
 

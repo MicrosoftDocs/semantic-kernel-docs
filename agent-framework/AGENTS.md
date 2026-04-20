@@ -27,7 +27,7 @@ agent-framework/
 ├── agents/                    # Deep-dive reference
 │   ├── index.md               # Agents overview & landing
 │   ├── running-agents.md
-│   ├── structured-output.md
+│   ├── structured-outputs.md
 │   ├── declarative.md
 │   ├── observability.md
 │   ├── rag.md

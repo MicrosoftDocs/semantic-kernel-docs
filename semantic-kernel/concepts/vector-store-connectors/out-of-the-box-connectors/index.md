@@ -1,5 +1,5 @@
 ---
-title: Out-of-the-box Vector Store connectors (Preview)
+title: Out-of-the-box Vector Store connectors
 description: Out-of-the-box Vector Store connectors
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -8,15 +8,12 @@ ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel
 ---
-# Out-of-the-box Vector Store connectors (Preview)
+# Out-of-the-box Vector Store connectors
 
 ::: zone pivot="programming-language-csharp"
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
-
-> [!WARNING]
-> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ::: zone-end
 ::: zone pivot="programming-language-java"
@@ -37,25 +34,25 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 
 | Vector Store Connectors                                            |             C#               | Uses officially supported SDK  |        Maintainer / Vendor        |
 | ------------------------------------------------------------------ | :--------------------------: | :----------------------------: | :-------------------------------: |
-| [Azure AI Search](./azure-ai-search-connector.md)                  |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [Cosmos DB MongoDB (vCore)](./azure-cosmosdb-mongodb-connector.md) |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
+| [Azure AI Search](./azure-ai-search-connector.md)                  |             ✅              |               ✅               |              Microsoft            | 
+| [Cosmos DB MongoDB (vCore)](./azure-cosmosdb-mongodb-connector.md) |             ✅              |               ✅               |              Microsoft            | 
+| [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |             ✅              |               ✅               |              Microsoft            | 
 | [Couchbase](./couchbase-connector.md)                              |             ✅              |               ✅               |             Couchbase             |
 | [Elasticsearch](./elasticsearch-connector.md)                      |             ✅              |               ✅               |              Elastic              |
 | Chroma                                                             |          Planned             |                                |                                   |
-| [In-Memory](./inmemory-connector.md)                               |             ✅              |              N/A                | Microsoft Semantic Kernel Project |
+| [In-Memory](./inmemory-connector.md)                               |             ✅              |              N/A                |              Microsoft            | 
 | Milvus                                                             |          Planned             |                                |                                   |
-| [MongoDB](./mongodb-connector.md)                                  |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [Neon Serverless Postgres](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/neon1722366567200.neon_serverless_postgres_azure_prod) |Use [Postgres Connector](./postgres-connector.md)|      ✅               | Microsoft Semantic Kernel Project |
+| [MongoDB](./mongodb-connector.md)                                  |             ✅              |               ✅               |              Microsoft            | 
+| [Neon Serverless Postgres](https://neon.com/) |Use [Postgres Connector](./postgres-connector.md)  |               ✅               |              Microsoft            | 
 | [Oracle](./oracle-connector.md)                                    |             ✅              |               ✅               |              Oracle               |
-| [Pinecone](./pinecone-connector.md)                                |             ✅              |               ❌               | Microsoft Semantic Kernel Project |
-| [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [Redis](./redis-connector.md)                                      |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [SQL Server](./sql-connector.md)                                   |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [SQLite](./sqlite-connector.md)                                    |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
-| [Volatile (In-Memory)](./volatile-connector.md)                    | Deprecated (use In-Memory)   |              N/A               | Microsoft Semantic Kernel Project |
-| [Weaviate](./weaviate-connector.md)                                |             ✅              |               ✅               | Microsoft Semantic Kernel Project |
+| [Pinecone](./pinecone-connector.md)                                |             ✅              |               ❌               |              Microsoft            | 
+| [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               |              Microsoft            | 
+| [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               |              Microsoft            | 
+| [Redis](./redis-connector.md)                                      |             ✅              |               ✅               |              Microsoft            | 
+| [SQL Server](./sql-connector.md)                                   |             ✅              |               ✅               |              Microsoft            | 
+| [SQLite](./sqlite-connector.md)                                    |             ✅              |               ✅               |              Microsoft            | 
+| [Volatile (In-Memory)](./volatile-connector.md)                    | Deprecated (use In-Memory)   |              N/A               |              Microsoft            | 
+| [Weaviate](./weaviate-connector.md)                                |             ✅              |               ✅               |              Microsoft            | 
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -70,8 +67,8 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Faiss](./faiss-connector.md)                                      |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [In-Memory](./inmemory-connector.md)                               |    ✅    |                    N/A                       | Microsoft Semantic Kernel Project |
 | [MongoDB](./mongodb-connector.md)                                  |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
-| [Neon Serverless Postgres](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/neon1722366567200.neon_serverless_postgres_azure_prod) |Use [Postgres Connector](./postgres-connector.md)| ✅              | Microsoft Semantic Kernel Project |
-| [Oracle](./oracle-connector.md)                                    |    ✅    |        ✅              |   Oracle               |
+| [Neon Serverless Postgres](https://neon.com/) |Use [Postgres Connector](./postgres-connector.md) |   ✅                      | Microsoft Semantic Kernel Project |
+| [Oracle](./oracle-connector.md)                                    |    ✅    |                     ✅                      |   Oracle                          |
 | [Pinecone](./pinecone-connector.md)                                |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Postgres](./postgres-connector.md)                                |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Qdrant](./qdrant-connector.md)                                    |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
