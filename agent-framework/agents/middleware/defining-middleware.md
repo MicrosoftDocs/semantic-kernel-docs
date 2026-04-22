@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 04/01/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -737,6 +737,72 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Defining middleware
+
+Middleware in Go implements the `middleware.Middleware` interface:
+
+```go
+package middleware
+
+type RunFunc = func(ctx context.Context, messages []*message.Message,
+    options ...agentopt.Option) iter.Seq2[*message.ResponseUpdate, error]
+
+type Middleware interface {
+    Run(next RunFunc, ctx context.Context, messages []*message.Message,
+        options ...agentopt.Option) iter.Seq2[*message.ResponseUpdate, error]
+}
+```
+
+### Using a function as middleware
+
+For simple middleware, use `middleware.Func`:
+
+```go
+import "github.com/microsoft/agent-framework-go/middleware"
+
+var loggingMiddleware = middleware.Func(
+    func(next middleware.RunFunc, ctx context.Context, messages []*message.Message,
+        options ...agentopt.Option) iter.Seq2[*message.ResponseUpdate, error] {
+        log.Println("Agent invoked with", len(messages), "messages")
+        return next(ctx, messages, options...)
+    },
+)
+```
+
+### Struct-based middleware
+
+For middleware that carries state, implement the interface on a struct:
+
+```go
+type TimingMiddleware struct{}
+
+func (t *TimingMiddleware) Run(next middleware.RunFunc, ctx context.Context,
+    messages []*message.Message, options ...agentopt.Option) iter.Seq2[*message.ResponseUpdate, error] {
+    start := time.Now()
+    result := next(ctx, messages, options...)
+    return func(yield func(*message.ResponseUpdate, error) bool) {
+        for update, err := range result {
+            if !yield(update, err) {
+                return
+            }
+        }
+        log.Printf("Agent run took %v", time.Since(start))
+    }
+}
+```
+
+### Chaining middleware
+
+Use `middleware.RunChain` to manually chain middlewares:
+
+```go
+result := middleware.RunChain(ctx, providerRun, []middleware.Middleware{mw1, mw2}, messages)
+```
+
+Middleware is chained in reverse order — `mw1` wraps `mw2`, which wraps the provider.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

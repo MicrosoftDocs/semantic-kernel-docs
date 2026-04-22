@@ -107,6 +107,12 @@ For a complete working implementation with visualization, see the [Concurrent wi
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 The exported diagram will look similar to the following for the example workflow:
 
 ```mermaid

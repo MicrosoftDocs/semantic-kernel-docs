@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
-ms.date: 04/01/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -893,6 +893,38 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Middleware overview
+
+Middleware in Go intercepts and modifies agent behavior at the run level. All middleware implements the `middleware.Middleware` interface.
+
+### Built-in middleware
+
+| Middleware | Package | Purpose |
+|---|---|---|
+| Auto-call | `middleware/autocall` | Automatically invokes function tools |
+| Context provider | `middleware/contextprovider` | Injects context from providers |
+| OpenTelemetry | `middleware/otel` | Traces agent invocations |
+| Structured output | `middleware/structuredoutput` | Handles structured output parsing |
+| Logger | `middleware/logger` | Logs agent interactions |
+
+### Registering middleware
+
+```go
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Middlewares: []middleware.Middleware{
+            otel.New(otel.Config{}),
+            myCustomMiddleware,
+        },
+    },
+})
+```
+
+Middleware is applied in the order declared — the first middleware wraps the outermost layer.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

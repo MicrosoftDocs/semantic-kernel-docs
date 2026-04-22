@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -118,6 +118,53 @@ print(f"Final result: {events.get_outputs()}")
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Workflows overview
+
+The `workflow` package provides a graph-based execution model where executors are connected by edges.
+
+### Key concepts
+
+- **Executor** — A processing unit that receives input and produces output
+- **Edge** — Connects the output of one executor to the input of another
+- **Builder** — Constructs workflows by defining executors and edges
+- **Run** — Executes a workflow with given input
+
+### Create a simple workflow
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/workflow"
+    "github.com/microsoft/agent-framework-go/workflow/inproc"
+)
+
+uppercase := workflow.BindFunc("UppercaseExecutor", true, func(input string) string {
+    return strings.ToUpper(input)
+})
+
+reverse := workflow.BindFunc("ReverseExecutor", true, func(input string) string {
+    runes := []rune(input)
+    slices.Reverse(runes)
+    return string(runes)
+})
+
+wf, err := workflow.NewBuilder(uppercase).
+    AddEdge(uppercase, reverse).
+    WithOutputFrom(reverse).
+    Build()
+
+run, err := inproc.Run(context.Background(), wf, "", "Hello, World!")
+for evt := range run.NewEvents() {
+    if evt, ok := evt.(workflow.ExecutorCompletedEvent); ok {
+        fmt.Printf("%s: %v\n", evt.ExecutorID, evt.Result)
+    }
+}
+```
+
+> [!TIP]
+> See the [workflow examples](https://github.com/microsoft/agent-framework-go/tree/main/examples/03-workflows) for complete runnable samples.
+
+::: zone-end
 ## Workflow Validation
 
 The framework performs comprehensive validation when building workflows:

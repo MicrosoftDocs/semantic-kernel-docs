@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/11/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -285,6 +285,36 @@ If your threat model does not permit pickle-based serialization, use `InMemoryCh
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Checkpoints
+
+Workflows support checkpointing to pause and resume execution.
+
+### Checkpoint hooks
+
+Executors can save and restore state at checkpoints through `ExecutorConfig`:
+
+```go
+config := &workflow.ExecutorConfig{
+    OnCheckpoint: func(ctx context.Context) error {
+        // Save executor state
+        return nil
+    },
+    OnCheckpointRestored: func(ctx context.Context) error {
+        // Restore executor state
+        return nil
+    },
+}
+```
+
+### Resume from checkpoint
+
+```go
+checkpoints := run.Checkpoints()
+restored, err := inproc.RestoreCheckpoint(ctx, wf, checkpoints[0])
+```
+
+::: zone-end
 ## Next Steps
 
 - [Learn how to monitor workflows](./observability.md).

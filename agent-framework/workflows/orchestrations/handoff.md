@@ -653,6 +653,12 @@ After broadcasting the response, the participant then checks whether it needs to
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## The Handoff Agent Executor
 
 Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:

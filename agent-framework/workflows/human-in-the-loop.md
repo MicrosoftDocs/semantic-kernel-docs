@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -231,6 +231,22 @@ while pending_responses is not None:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Human in the loop
+
+Workflows support human-in-the-loop patterns through `RequestPort`, which pauses execution and waits for external input.
+
+### RequestPort
+
+```go
+import "github.com/microsoft/agent-framework-go/workflow"
+```
+
+A `RequestPort` defines a typed request/response channel between the workflow and the outside world. When an executor reaches a request port, the workflow pauses and emits an external request event. The workflow resumes when an external response is provided.
+
+This enables approval flows, user input collection, and other interactive patterns within automated workflows.
+
+::: zone-end
 ## Human-in-the-Loop with Agent Orchestrations
 
 The `RequestPort` pattern described above works with custom executors and `WorkflowBuilder`. When using **agent orchestrations** (such as sequential, concurrent, or group chat workflows), **tool approval** is achieved through the human-in-the-loop request/response mechanism.

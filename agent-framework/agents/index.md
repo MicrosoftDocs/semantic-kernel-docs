@@ -4,7 +4,7 @@ titleSuffix: Microsoft Foundry
 description: Learn different Agent Framework agent types.
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 04/01/2026
+ms.date: 04/22/2026
 ms.reviewer: ssalgado
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -340,6 +340,73 @@ Agent Framework also includes protocol-backed agents, such as:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Agent overview
+
+In Go, agents are created through provider-specific constructors that return an `*agent.Agent`. The core types are:
+
+- `agent.Agent` — The main agent type with `Run`, `RunText`, `RunMessage` methods
+- `agent.Config` — Configuration for name, instructions, tools, middleware, and context providers
+- `agent.ProviderConfig` — Provider-level configuration (run function, session management)
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/agent/provider/openaichatagent"
+)
+
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: "gpt-4o-mini",
+    Config: agent.Config{
+        Name:         "MyAgent",
+        Instructions: "You are a helpful assistant.",
+        Tools:        []tool.Tool{myTool},
+        Middlewares:  []middleware.Middleware{logger},
+    },
+})
+```
+
+### Running the agent
+
+```go
+// Non-streaming
+resp, err := a.RunText(ctx, "Hello!").Collect()
+
+// Streaming
+for update, err := range a.RunText(ctx, "Hello!", agentopt.Stream(true)) {
+    // process each update
+}
+
+// With message objects
+msg := message.New(&message.TextContent{Text: "Hello!"})
+resp, err := a.RunMessage(ctx, msg).Collect()
+```
+
+### Sessions
+
+Sessions maintain conversation state across multiple turns:
+
+```go
+session, err := a.CreateSession(ctx)
+resp, _ := a.RunText(ctx, "My name is Alice.", agentopt.Session(session)).Collect()
+resp, _ = a.RunText(ctx, "What is my name?", agentopt.Session(session)).Collect()
+```
+
+### Supported providers
+
+| Provider | Package | Constructor |
+|---|---|---|
+| OpenAI Chat Completions | `openaichatagent` | `openaichatagent.New(client, config)` |
+| OpenAI Responses | `openairesponsesagent` | `openairesponsesagent.New(client, config)` |
+| Anthropic | `anthropicagent` | `anthropicagent.New(client, config)` |
+| Google Gemini | `geminiagent` | `geminiagent.New(client, config)` |
+| A2A | `a2aagent` | `a2aagent.New(client, config)` |
+| AG-UI | `aguiagent` | `aguiagent.New(client, config)` |
+
+> [!TIP]
+> See the [Go examples](https://github.com/microsoft/agent-framework-go/tree/main/examples) for complete runnable samples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

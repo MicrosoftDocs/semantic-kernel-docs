@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/24/2025
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -129,6 +129,40 @@ This will print the agent's analysis of the image to the console.
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Multimodal inputs
+
+Go agents support multimodal inputs through the `message` package. You can send text, images, and data content in a single message.
+
+### Send an image with a text prompt
+
+```go
+import "github.com/microsoft/agent-framework-go/message"
+
+msg := message.New(
+    &message.TextContent{Text: "What do you see in this image?"},
+    &message.URIContent{
+        URI:       "https://example.com/image.jpg",
+        MediaType: "image/jpeg",
+    },
+)
+
+resp, err := a.RunMessage(ctx, msg).Collect()
+```
+
+### Content types
+
+| Type | Description |
+|---|---|
+| `message.TextContent` | Text content |
+| `message.URIContent` | Image or file referenced by URL |
+| `message.ImageContent` | Image with base64-encoded data |
+| `message.DataContent` | Generic binary data |
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step11_using_images/main.go) for a complete runnable example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

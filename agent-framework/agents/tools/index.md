@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -157,6 +157,60 @@ weather_tool = weather_agent.as_tool(
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Tools overview
+
+Go agents support several tool types through the `tool` package:
+
+| Tool Type | Package | Description |
+|---|---|---|
+| Function tools | `tool/functool` | Custom Go functions the agent can call |
+| MCP tools | `tool/mcptool` | Tools from Model Context Protocol servers |
+| Hosted tools | `tool/hostedtool` | Service-side tools (web search, file search, code interpreter) |
+
+### Tool interface
+
+All tools implement the `tool.Tool` interface:
+
+```go
+type Tool interface {
+    Name() string
+    Description() string
+}
+```
+
+Function tools additionally implement `tool.FuncTool`:
+
+```go
+type FuncTool interface {
+    Tool
+    Schema() map[string]any
+    ReturnSchema() map[string]any
+    Call(ctx Context, arguments string) (any, error)
+}
+```
+
+### Registering tools
+
+Pass tools to the agent via `agent.Config.Tools`:
+
+```go
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Instructions: "You are a helpful assistant.",
+        Tools: []tool.Tool{weatherTool, calculatorTool},
+    },
+})
+```
+
+Or add tools per-run:
+
+```go
+resp, err := a.RunText(ctx, "What's the weather?", agentopt.Tool(weatherTool)).Collect()
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/30/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -135,6 +135,28 @@ The current OpenAI code-interpreter sample in the code repo uses `OpenAIChatClie
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Code interpreter
+
+The `hostedtool.CodeInterpreter` type enables server-side code execution when using a provider that supports it.
+
+```go
+import "github.com/microsoft/agent-framework-go/tool/hostedtool"
+
+codeInterpreter := &hostedtool.CodeInterpreter{}
+
+a := openairesponsesagent.New(client, openairesponsesagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Tools: []tool.Tool{codeInterpreter},
+    },
+})
+```
+
+> [!NOTE]
+> Code interpreter is a hosted tool — code execution happens on the AI service side, not locally.
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

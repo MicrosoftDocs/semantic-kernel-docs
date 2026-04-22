@@ -712,3 +712,10 @@ Now that you understand backend tool rendering, you can:
 - [Function Tools Tutorial](../../agents/tools/function-tools.md)
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end

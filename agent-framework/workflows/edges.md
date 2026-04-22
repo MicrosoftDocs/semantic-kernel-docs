@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -2240,6 +2240,24 @@ For the complete working implementation, see the [multi_selection_edge_group.py]
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Edges
+
+Edges define data flow between executors in a workflow.
+
+### Connect executors
+
+```go
+wf, err := workflow.NewBuilder(executorA).
+    AddEdge(executorA, executorB).
+    AddEdge(executorB, executorC).
+    WithOutputFrom(executorC).
+    Build()
+```
+
+Edges route the output of one executor to the input of the next. The builder API provides a fluent interface for defining the workflow graph.
+
+::: zone-end
 ## Next Steps
 
 > [!div class="nextstepaction"]

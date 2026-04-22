@@ -3,7 +3,7 @@ title: Microsoft Agent Framework Overview
 description: "Build AI agents and multi-agent workflows in .NET and Python with Microsoft Agent Framework."
 zone_pivot_groups: programming-languages
 ms.topic: overview
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 author: markwallace-microsoft
 ms.author: markwallace
@@ -91,6 +91,40 @@ That's it — an agent that calls an LLM and returns a response. From here you c
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Getting started with Go
+
+Install the framework:
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+Create your first agent:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/agent/provider/openaichatagent"
+    "github.com/openai/openai-go/v3"
+)
+
+a := openaichatagent.New(
+    openai.NewClient(),
+    openaichatagent.Config{
+        Model: "gpt-4o-mini",
+        Config: agent.Config{
+            Instructions: "You are a helpful assistant.",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Hello!").Collect()
+```
+
+For step-by-step tutorials, see the [Get Started guide](../get-started/your-first-agent.md).
+
+:::zone-end
 > [!div class="nextstepaction"]
 > [Get Started — full tutorial](../get-started/your-first-agent.md)
 

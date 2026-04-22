@@ -143,3 +143,10 @@ Execution modes are not applicable to Python workflows. Python workflows use a s
 For information on running Python workflows, see [Workflow Builder & Execution](../workflows.md).
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end

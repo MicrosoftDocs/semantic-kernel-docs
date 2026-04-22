@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -110,6 +110,66 @@ resumed = AgentSession.from_dict(serialized)
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Sessions
+
+The `memory.Session` type provides thread-safe state management for conversations.
+
+### Create and use a session
+
+```go
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+
+// Attach the session to runs
+resp, _ := a.RunText(ctx, "Hello!", agentopt.Session(session)).Collect()
+resp, _ = a.RunText(ctx, "Follow-up question.", agentopt.Session(session)).Collect()
+```
+
+### Store and retrieve values
+
+Sessions provide typed key-value storage:
+
+```go
+type UserPrefs struct {
+    Theme    string `json:"theme"`
+    Language string `json:"language"`
+}
+
+// Store a value
+session.Set("user_prefs", UserPrefs{Theme: "dark", Language: "en"})
+
+// Retrieve a value
+var prefs UserPrefs
+session.Get("user_prefs", &prefs)
+
+// Delete a value
+session.Delete("user_prefs")
+```
+
+### Serialize sessions for persistence
+
+```go
+// Serialize to JSON
+data, err := a.MarshalSession(ctx, session)
+
+// Save to disk, database, etc.
+os.WriteFile("session.json", data, 0644)
+
+// Later, restore the session
+loaded, _ := os.ReadFile("session.json")
+resumedSession, err := a.UnmarshalSession(ctx, loaded)
+
+// Continue the conversation
+resp, _ := a.RunText(ctx, "Continue from where we left off.", agentopt.Session(resumedSession)).Collect()
+```
+
+> [!TIP]
+> See the [persisted conversation sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step06_persisted_conversation/main.go) for a complete example.
+
+:::zone-end
 > [!IMPORTANT]
 > Sessions are agent/service-specific. Reusing a session with a different agent configuration or provider can lead to invalid context.
 

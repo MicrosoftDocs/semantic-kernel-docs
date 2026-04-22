@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -382,6 +382,67 @@ class DatabaseHistoryProvider(HistoryProvider):
 > audit = InMemoryHistoryProvider("audit", load_messages=False, store_context_messages=True)
 > agent = OpenAIChatClient().as_agent(context_providers=[primary, audit])
 > ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+## Context providers
+
+Context providers inject additional context before each agent run and persist state after each run.
+
+### Define a context provider
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/memory"
+    "github.com/microsoft/agent-framework-go/message"
+)
+
+provider := &memory.ContextProvider{
+    SourceID: "user_memory",
+    Provide: func(ctx memory.BeforeRunContext) (memory.Context, error) {
+        // Inject context before the agent runs
+        return memory.Context{
+            Messages: []*message.Message{{
+                Role:     message.RoleSystem,
+                Contents: []message.Content{&message.TextContent{Text: "User prefers short answers."}},
+            }},
+        }, nil
+    },
+    Store: func(ctx memory.AfterRunContext) error {
+        // Persist state after the agent runs
+        return nil
+    },
+}
+```
+
+### Register context providers
+
+```go
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        ContextProviders: []*memory.ContextProvider{provider},
+    },
+})
+```
+
+### Access session state in providers
+
+Context providers can read and write session state:
+
+```go
+Provide: func(ctx memory.BeforeRunContext) (memory.Context, error) {
+    var state MyState
+    ctx.Session.Get("my_key", &state)
+    // Use state to customize context...
+},
+Store: func(ctx memory.AfterRunContext) error {
+    // Extract info from response messages
+    ctx.Session.Set("my_key", updatedState)
+    return nil
+},
+```
 
 :::zone-end
 

@@ -1335,6 +1335,12 @@ def agent_orchestration_workflow(context: df.DurableOrchestrationContext):
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+:::zone-end
 ### Test the orchestration
 
 Ensure your local development dependencies from the first tutorial are still running:

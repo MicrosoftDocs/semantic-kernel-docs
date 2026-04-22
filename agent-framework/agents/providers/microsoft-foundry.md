@@ -224,6 +224,12 @@ For a HostedAgent, omit `agent_version` and use the hosted agent name instead.
 Both `FoundryChatClient` and `FoundryAgent` integrate with the standard Python `Agent` experience, including tool calling, sessions, and streaming responses. For local runtimes, use the separate [Foundry Local provider page](./foundry-local.md).
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

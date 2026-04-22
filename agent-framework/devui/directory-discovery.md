@@ -135,6 +135,12 @@ When DevUI starts with no discovered entities, it displays a **sample gallery** 
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next Steps
 
 - [API Reference](./api-reference.md) - Learn about the OpenAI-compatible API

@@ -304,6 +304,12 @@ Each connector provides the same `create_search_function` method that can be bri
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Graph RAG
 
 For GraphRAG using graph traversal enriched search with Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/neo4j-graphrag.md).

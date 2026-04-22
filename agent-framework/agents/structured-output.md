@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/02/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -410,6 +410,69 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Structured output
+
+Go agents support structured output through the `agentopt.StructuredOutput` option. Define a Go struct and the framework automatically generates the JSON schema and unmarshals the response.
+
+### Define the output type
+
+```go
+type PersonInfo struct {
+    Name       string `json:"name"`
+    Age        int    `json:"age"`
+    Occupation string `json:"occupation"`
+}
+```
+
+### Request structured output
+
+Use a generic helper to invoke the agent and unmarshal the response:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agentopt"
+)
+
+func runFor[T any](ctx context.Context, a *agent.Agent, message string, opts ...agentopt.Option) (T, error) {
+    var v T
+    opts = append(opts, agentopt.StructuredOutput(&v), agentopt.Stream(false))
+    for _, err := range a.RunText(ctx, message, opts...) {
+        if err != nil {
+            return v, err
+        }
+    }
+    return v, nil
+}
+
+person, err := runFor[PersonInfo](ctx, a,
+    "Please provide information about John Smith, who is a 35-year-old software engineer.")
+fmt.Println("Name:", person.Name)
+fmt.Println("Age:", person.Age)
+```
+
+### Specify response format at agent level
+
+You can also set the response format on the agent configuration so all runs produce structured output:
+
+```go
+import "github.com/microsoft/agent-framework-go/format/jsonformat"
+
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Instructions: "You are a helpful assistant.",
+        RunOptions: []agentopt.Option{
+            agentopt.ResponseFormat(jsonformat.MustFor[PersonInfo]()),
+        },
+    },
+})
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step05_structured_output/main.go) for a complete runnable example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

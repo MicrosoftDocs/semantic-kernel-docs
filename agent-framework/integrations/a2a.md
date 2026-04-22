@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmkorolev
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 02/11/2026
+ms.date: 04/22/2026
 ms.author: dmkorolev
 ---
 
@@ -332,6 +332,61 @@ async with A2AAgent(
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## A2A Protocol
+
+The Go Agent Framework supports the Agent-to-Agent (A2A) protocol for both hosting and consuming agents.
+
+### Host an agent via A2A
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent/hosting/a2ahosting"
+    "github.com/a2aproject/a2a-go/a2a"
+    "github.com/a2aproject/a2a-go/a2asrv"
+)
+
+card := &a2a.AgentCard{
+    URL:             "http://localhost:5000",
+    ProtocolVersion: "0.3.0",
+    Version:         "1.0.0",
+    Capabilities:    a2a.AgentCapabilities{Streaming: false},
+}
+
+mux := http.NewServeMux()
+mux.Handle("/", a2ahosting.NewHTTPHandler(a2ahosting.ExecutorConfig{
+    Agent: myAgent,
+}, a2asrv.WithExtendedAgentCard(card)))
+mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(card))
+
+http.ListenAndServe(":5000", mux)
+```
+
+### Consume an A2A agent
+
+```go
+import (
+    "github.com/a2aproject/a2a-go/a2aclient"
+    "github.com/a2aproject/a2a-go/a2aclient/agentcard"
+    "github.com/microsoft/agent-framework-go/agent/provider/a2aagent"
+)
+
+card, _ := agentcard.DefaultResolver.Resolve(ctx, "http://localhost:5000")
+client, _ := a2aclient.NewFromCard(ctx, card)
+
+a := a2aagent.New(client, a2aagent.Config{
+    Config: agent.Config{
+        Name: "RemoteAgent",
+    },
+})
+
+resp, err := a.RunText(ctx, "Hello!").Collect()
+```
+
+> [!TIP]
+> See the [A2A client-server sample](https://github.com/microsoft/agent-framework-go/tree/main/examples/05-end-to-end/a2a_client_server) for a complete example.
+
+::: zone-end
 ## See Also
 
 - [Integrations Overview](./index.md)

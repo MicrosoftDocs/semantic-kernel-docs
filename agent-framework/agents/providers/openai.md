@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/02/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -348,6 +348,86 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## OpenAI Chat Completions
+
+The `openaichatagent` package creates agents using the OpenAI Chat Completions API.
+
+### Installation
+
+```bash
+go get github.com/microsoft/agent-framework-go
+go get github.com/openai/openai-go/v3
+```
+
+### Direct OpenAI
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/agent/provider/openaichatagent"
+    "github.com/openai/openai-go/v3"
+)
+
+a := openaichatagent.New(
+    openai.NewClient(), // uses OPENAI_API_KEY env var
+    openaichatagent.Config{
+        Model: "gpt-4o-mini",
+        Config: agent.Config{
+            Instructions: "You are a helpful assistant.",
+            Name:         "MyAgent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Tell me a joke.").Collect()
+```
+
+### Azure OpenAI
+
+Use the same `openaichatagent` package with Azure credentials:
+
+```go
+import (
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    openai "github.com/openai/openai-go/v3"
+    "github.com/openai/openai-go/v3/azure"
+)
+
+token, _ := azidentity.NewDefaultAzureCredential(nil)
+
+a := openaichatagent.New(
+    openai.NewClient(
+        azure.WithEndpoint(endpoint, apiVersion),
+        azure.WithTokenCredential(token),
+    ),
+    openaichatagent.Config{
+        Model: deployment,
+        Config: agent.Config{
+            Instructions: "You are a helpful assistant.",
+        },
+    },
+)
+```
+
+### Custom options
+
+Pass provider-specific options using `openaichatagent.ChatCompletionNewParams`:
+
+```go
+resp, err := a.RunText(ctx, "Hello!",
+    openaichatagent.ChatCompletionNewParams(openai.ChatCompletionNewParams{
+        Temperature: openai.Float(0.7),
+    }),
+).Collect()
+```
+
+**Supported tools:** Function tools, web search, local MCP tools.
+
+> [!TIP]
+> See the [OpenAI provider sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/openai/main.go) and [Azure OpenAI sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/azure/main.go) for complete examples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -127,6 +127,30 @@ if __name__ == "__main__":
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## File search
+
+The `hostedtool.FileSearch` type enables server-side file search when using a provider that supports it (such as OpenAI Responses).
+
+```go
+import "github.com/microsoft/agent-framework-go/tool/hostedtool"
+
+fileSearch := &hostedtool.FileSearch{
+    MaximumResultCount: 10,
+}
+
+a := openairesponsesagent.New(client, openairesponsesagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Tools: []tool.Tool{fileSearch},
+    },
+})
+```
+
+> [!NOTE]
+> File search is a hosted tool — the search is performed by the AI service, not locally.
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

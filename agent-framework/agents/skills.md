@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
-ms.date: 03/11/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -436,6 +436,81 @@ When a script is rejected (`approved=False`), the agent is informed that the use
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Agent skills
+
+Go agents support skills through the `memory/skills` package. Skills follow a progressive disclosure pattern: advertise → load → read resources → run scripts.
+
+### File-based skills
+
+Discover skills from `SKILL.md` files on disk:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/memory"
+    "github.com/microsoft/agent-framework-go/memory/skills"
+    "github.com/microsoft/agent-framework-go/memory/skills/fsskills"
+)
+
+skillsRoot, _ := os.OpenRoot("skills")
+defer skillsRoot.Close()
+
+skillsProvider := skills.NewContextProvider(skills.ContextProviderOptions{
+    Sources: []skills.Source{
+        fsskills.NewSourceOptions(fsskills.SourceOptions{}, skillsRoot.FS()),
+    },
+})
+
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Instructions:     "You are a helpful assistant.",
+        ContextProviders: []*memory.ContextProvider{skillsProvider},
+    },
+})
+```
+
+### Code-defined skills
+
+Define skills entirely in Go code:
+
+```go
+skill := &skills.Skill{
+    Frontmatter: skills.Frontmatter{
+        Name:        "unit-converter",
+        Description: "Convert between common units using a multiplication factor.",
+    },
+    Content: "Use this skill when the user asks to convert between units.",
+    Resources: []skills.Resource{
+        {
+            Name:        "conversion-table",
+            Description: "Lookup table of multiplication factors.",
+            Read: func(context.Context) (any, error) {
+                return conversionTable, nil
+            },
+        },
+    },
+    Scripts: []skills.Script{
+        {
+            Name:        "convert",
+            Description: "Multiplies a value by a conversion factor.",
+            Run: func(_ context.Context, _ *skills.Skill, args map[string]any) (any, error) {
+                // perform conversion
+                return result, nil
+            },
+        },
+    },
+}
+
+provider := skills.NewContextProvider(skills.ContextProviderOptions{
+    Skills: []*skills.Skill{skill},
+})
+```
+
+> [!TIP]
+> See the [skills examples](https://github.com/microsoft/agent-framework-go/tree/main/examples/02-agents/skills) for complete runnable samples.
+
+:::zone-end
 ## Security best practices
 
 Agent Skills should be treated like any third-party code you bring into your project. Because skill instructions are injected into the agent's context — and skills can include scripts — applying the same level of review and governance you would to an open-source dependency is essential.

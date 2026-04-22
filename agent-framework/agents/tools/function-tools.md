@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 03/16/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -178,6 +178,89 @@ This pattern is a good fit for long-lived tool state. Use `FunctionInvocationCon
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Function tools
+
+Function tools let agents call custom Go functions. The `functool` package provides a simple way to define type-safe tools with automatic schema generation.
+
+### Define a function tool
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/tool"
+    "github.com/microsoft/agent-framework-go/tool/functool"
+)
+
+var weatherTool = functool.MustNew(&functool.Func{
+    Name:        "weather",
+    Description: "Get the current weather for a given location",
+}, func(_ tool.Context, location string) (string, error) {
+    return fmt.Sprintf("The weather in %s is cloudy with a high of 15°C.", location), nil
+})
+```
+
+The function signature determines the tool's input schema. The `tool.Context` parameter is injected by the framework and is not exposed to the model.
+
+### Structured input types
+
+For tools with multiple parameters, define a struct:
+
+```go
+type WeatherInput struct {
+    Location string `json:"location" jsonschema:"description=The city to check weather for"`
+    Unit     string `json:"unit" jsonschema:"description=Temperature unit (celsius or fahrenheit),enum=celsius,enum=fahrenheit"`
+}
+
+var weatherTool = functool.MustNew(&functool.Func{
+    Name:        "weather",
+    Description: "Get weather for a location",
+}, func(_ tool.Context, input WeatherInput) (string, error) {
+    return fmt.Sprintf("Weather in %s: 15°%s", input.Location, input.Unit), nil
+})
+```
+
+### Create an agent with tools
+
+```go
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Instructions: "You are a helpful assistant.",
+        Tools:        []tool.Tool{weatherTool},
+    },
+})
+
+resp, err := a.RunText(ctx, "What is the weather like in Amsterdam?").Collect()
+```
+
+### Use an agent as a function tool
+
+Any agent can be wrapped as a function tool for use by another agent:
+
+```go
+weatherAgent := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Instructions: "You answer questions about the weather.",
+        Name:         "WeatherAgent",
+        Description:  "An agent that answers weather questions.",
+        Tools:        []tool.Tool{weatherTool},
+    },
+})
+
+mainAgent := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Instructions: "You are a helpful assistant who responds in French.",
+        Tools:        []tool.Tool{weatherAgent.AsFuncTool()},
+    },
+})
+```
+
+> [!TIP]
+> See the [function tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step03_using_function_tools/main.go) and the [agent as tool sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step12_as_function_tool/main.go) for complete examples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

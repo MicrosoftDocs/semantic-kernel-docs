@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
 ms.author: markwallace
-ms.date: 04/01/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -419,6 +419,56 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Local MCP tools
+
+The `mcptool` package lets agents use tools from Model Context Protocol (MCP) servers.
+
+### Connect to an MCP server
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/tool/mcptool"
+    "github.com/modelcontextprotocol/go-sdk/mcp"
+)
+
+session, err := mcptool.Connect(ctx, &mcp.StreamableClientTransport{
+    Endpoint: "https://learn.microsoft.com/api/mcp",
+})
+if err != nil {
+    panic(err)
+}
+defer session.Close()
+```
+
+### List and use MCP tools
+
+```go
+tools, err := mcptool.ListTools(ctx, session)
+if err != nil {
+    panic(err)
+}
+
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: "gpt-4o-mini",
+    Config: agent.Config{
+        Instructions: "You are a helpful assistant.",
+        Tools:        tools,
+    },
+})
+
+resp, err := a.RunText(ctx, "How to create an Azure storage account using az cli?").Collect()
+```
+
+### Supported transports
+
+- **HTTP/SSE** — `mcp.StreamableClientTransport{Endpoint: "https://..."}`
+- **Stdio** — Launch a local MCP server process
+
+> [!TIP]
+> See the [MCP tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/mcp/agent_mcp_server/main.go) for a complete runnable example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

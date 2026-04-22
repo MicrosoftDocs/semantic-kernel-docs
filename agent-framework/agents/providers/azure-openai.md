@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/01/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -147,6 +147,68 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Azure OpenAI
+
+In Go, Azure OpenAI uses the same `openaichatagent` package as direct OpenAI, with Azure-specific client initialization.
+
+### Installation
+
+```bash
+go get github.com/microsoft/agent-framework-go
+go get github.com/openai/openai-go/v3
+go get github.com/Azure/azure-sdk-for-go/sdk/azidentity
+```
+
+### Create an Azure OpenAI agent
+
+```go
+import (
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/agent/provider/openaichatagent"
+    openai "github.com/openai/openai-go/v3"
+    "github.com/openai/openai-go/v3/azure"
+)
+
+endpoint := os.Getenv("AZURE_OPENAI_ENDPOINT")
+deployment := os.Getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+apiVersion := "2025-01-01-preview"
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    panic(err)
+}
+
+a := openaichatagent.New(
+    openai.NewClient(
+        azure.WithEndpoint(endpoint, apiVersion),
+        azure.WithTokenCredential(token),
+    ),
+    openaichatagent.Config{
+        Model: deployment,
+        Config: agent.Config{
+            Instructions: "You are a helpful assistant.",
+            Name:         "AzureAgent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Hello!").Collect()
+```
+
+### Environment variables
+
+| Variable | Description |
+|---|---|
+| `AZURE_OPENAI_ENDPOINT` | Your Azure OpenAI resource endpoint |
+| `AZURE_OPENAI_DEPLOYMENT_NAME` | The deployment/model name |
+| `AZURE_OPENAI_API_VERSION` | API version (e.g., `2025-01-01-preview`) |
+
+> [!TIP]
+> See the [Azure OpenAI sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/azure/main.go) for a complete example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

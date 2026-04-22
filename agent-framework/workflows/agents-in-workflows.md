@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -337,6 +337,55 @@ For the complete working implementation, see [azure_ai_agents_streaming.py](http
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Agents in workflows
+
+Agents can be used as workflow executors, enabling AI-powered workflow steps.
+
+### Bind an agent as an executor
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent/provider/openaichatagent"
+    "github.com/microsoft/agent-framework-go/workflow"
+    "github.com/microsoft/agent-framework-go/workflow/inproc"
+)
+
+frenchAgent := openaichatagent.New(client, openaichatagent.Config{
+    Model: "gpt-4o-mini",
+    Config: agent.Config{
+        Instructions: "You translate text to French.",
+    },
+})
+
+spanishAgent := openaichatagent.New(client, openaichatagent.Config{
+    Model: "gpt-4o-mini",
+    Config: agent.Config{
+        Instructions: "You translate text to Spanish.",
+    },
+})
+
+french := frenchAgent.Bind(false)
+spanish := spanishAgent.Bind(false)
+
+wf, err := workflow.NewBuilder(french).
+    AddEdge(french, spanish).
+    Build()
+
+run, err := inproc.Stream(ctx, wf, "", message.NewText("Hello World"))
+emitEvents := true
+run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents})
+for evt, err := range run.WatchStream(ctx) {
+    if evt, ok := evt.(workflow.ResponseUpdateEvent); ok {
+        fmt.Printf("%s: %v\n", evt.ExecutorID, evt.Update)
+    }
+}
+```
+
+> [!TIP]
+> See the [agents in workflows sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/_start-here/03_agents/main.go) for a complete example.
+
+::: zone-end
 ## Next Steps
 
 > [!div class="nextstepaction"]

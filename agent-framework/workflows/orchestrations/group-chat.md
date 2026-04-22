@@ -444,6 +444,12 @@ workflow = GroupChatBuilder(
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Context Synchronization
 
 As mentioned at the beginning of this guide, all agents in a group chat see the full conversation history.

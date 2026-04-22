@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 04/02/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -290,6 +290,45 @@ Even so, Python `GitHubCopilotAgent` still supports agent middleware and now run
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Agent pipeline architecture
+
+In Go, agents use a layered middleware pipeline. Middlewares wrap the agent's `Run` function, each calling `next` to pass control to the next layer.
+
+### Pipeline order
+
+When an agent runs, middlewares are applied in this order:
+
+1. **Context provider middleware** — Injects context from registered `ContextProvider` instances
+2. **Custom middlewares** — Your registered middlewares, applied in declaration order
+3. **Auto-call middleware** — Automatically invokes function tools when the model requests them
+4. **Provider** — The underlying LLM provider (e.g., OpenAI, Anthropic)
+
+### Middleware interface
+
+```go
+type Middleware interface {
+    Run(next RunFunc, ctx context.Context, messages []*message.Message,
+        options ...agentopt.Option) iter.Seq2[*message.ResponseUpdate, error]
+}
+```
+
+Each middleware receives the `next` function in the chain and can:
+- Modify messages or options before calling `next`
+- Process or transform the response after calling `next`
+- Short-circuit the pipeline by returning without calling `next`
+
+### Built-in middlewares
+
+| Middleware | Package | Purpose |
+|---|---|---|
+| Auto-call | `middleware/autocall` | Automatically invokes function tools |
+| Context provider | `middleware/contextprovider` | Injects context from providers |
+| OpenTelemetry | `middleware/otel` | Traces agent invocations |
+| Structured output | `middleware/structuredoutput` | Handles structured output parsing |
+| Logger | `middleware/logger` | Logs agent interactions |
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

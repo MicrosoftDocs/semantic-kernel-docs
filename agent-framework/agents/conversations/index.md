@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -69,6 +69,43 @@ resumed = AgentSession.from_dict(serialized)
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Conversations overview
+
+The Go `memory` package provides the core types for managing conversation state:
+
+- `memory.Session` — Thread-safe key-value state container tied to a conversation
+- `memory.ContextProvider` — Injects context before runs and persists state after runs
+
+### Create a session
+
+```go
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+```
+
+### Use a session for multi-turn conversations
+
+```go
+resp, _ := a.RunText(ctx, "My name is Alice.", agentopt.Session(session)).Collect()
+resp, _ = a.RunText(ctx, "What is my name?", agentopt.Session(session)).Collect()
+```
+
+### Persist sessions
+
+Sessions can be serialized to JSON for storage and later resumed:
+
+```go
+data, err := a.MarshalSession(ctx, session)
+// store data...
+
+// later:
+session, err := a.UnmarshalSession(ctx, data)
+```
+
+:::zone-end
 ## Guide map
 
 | Page | Focus |

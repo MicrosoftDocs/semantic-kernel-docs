@@ -107,6 +107,12 @@ Without an OTLP endpoint, traces are captured locally and displayed only in the 
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Related Documentation
 
 For more details on Agent Framework observability:

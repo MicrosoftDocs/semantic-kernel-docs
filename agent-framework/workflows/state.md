@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 04/02/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -320,6 +320,21 @@ workflow_b = create_workflow()
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Workflow state
+
+Workflows manage state through scoped storage on the `Run` object.
+
+### State scoping
+
+Executors can store state in different scopes:
+
+- **Local scope** — Private to the executor instance
+- **Named scope** — Shared across executors with the same scope key
+
+State is accessed through the workflow context and persists across workflow events within a run.
+
+::: zone-end
 ## Summary
 
 State isolation in Microsoft Agent Framework Workflows can be effectively managed by wrapping executor and agent instantiation along with workflow building inside helper methods. By calling the helper method each time you need a new workflow, you ensure each instance has fresh, independent state and avoid unintended state sharing between different workflow executions.

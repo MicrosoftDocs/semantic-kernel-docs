@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 04/01/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -580,6 +580,54 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Observability with OpenTelemetry
+
+The Go Agent Framework includes an OpenTelemetry middleware that automatically traces agent invocations.
+
+### Setup
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/middleware/otel"
+
+    "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+    sdktrace "go.opentelemetry.io/otel/sdk/trace"
+    otellib "go.opentelemetry.io/otel"
+)
+
+// Create a tracer provider with a console exporter
+exporter, _ := stdouttrace.New(stdouttrace.WithPrettyPrint())
+tp := sdktrace.NewTracerProvider(sdktrace.WithBatcher(exporter))
+defer tp.Shutdown(context.Background())
+otellib.SetTracerProvider(tp)
+```
+
+### Add the middleware to your agent
+
+```go
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Instructions: "You are a helpful assistant.",
+        Middlewares: []middleware.Middleware{
+            otel.New(otel.Config{}), // OpenTelemetry tracing
+        },
+    },
+})
+```
+
+The middleware emits spans with attributes including:
+
+- `gen_ai.provider.name` — The provider name (e.g., "openai")
+- `gen_ai.agent.id` — The agent's unique ID
+- `gen_ai.agent.name` — The agent's display name
+- `gen_ai.agent.description` — The agent's description
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step08_observability/main.go) for a complete runnable example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

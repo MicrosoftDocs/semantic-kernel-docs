@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/25/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -71,6 +71,33 @@ Agent Framework supports many different inference services through chat clients.
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Providers overview
+
+The Go Agent Framework supports multiple LLM providers. Each provider package creates a standard `*agent.Agent` with a provider-specific constructor.
+
+| Provider | Package | Import Path |
+|---|---|---|
+| OpenAI Chat Completions | `openaichatagent` | `agent/provider/openaichatagent` |
+| OpenAI Responses | `openairesponsesagent` | `agent/provider/openairesponsesagent` |
+| Anthropic | `anthropicagent` | `agent/provider/anthropicagent` |
+| Google Gemini | `geminiagent` | `agent/provider/geminiagent` |
+| A2A | `a2aagent` | `agent/provider/a2aagent` |
+| AG-UI | `aguiagent` | `agent/provider/aguiagent` |
+
+All providers follow the same pattern:
+
+```go
+a := <provider>.New(client, <provider>.Config{
+    Model: "model-name",
+    Config: agent.Config{
+        Name:         "MyAgent",
+        Instructions: "You are a helpful assistant.",
+    },
+})
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

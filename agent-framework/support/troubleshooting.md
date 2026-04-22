@@ -34,6 +34,12 @@ Ensure you're using .NET 8.0 SDK or later. Run `dotnet --version` to check your 
 Ensure you're using Python 3.10 or later. Run `python --version` to check your installed version.
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+:::zone-end
 ## Getting Help
 
 If you can't find a solution here, visit our [GitHub Discussions](https://github.com/microsoft/agent-framework/discussions) for community support.

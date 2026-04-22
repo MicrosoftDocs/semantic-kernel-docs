@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/25/2025
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -411,6 +411,44 @@ For more information on how to run and interact with agents, see the [Agent gett
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Custom providers
+
+You can create a custom provider by implementing `agent.ProviderConfig` and passing it to `agent.New`:
+
+```go
+import "github.com/microsoft/agent-framework-go/agent"
+
+a := agent.New(agent.ProviderConfig{
+    Run: func(ctx context.Context, messages []*message.Message,
+        options ...agentopt.Option) iter.Seq2[*message.ResponseUpdate, error] {
+        // Your custom LLM logic here
+        return func(yield func(*message.ResponseUpdate, error) bool) {
+            yield(&message.ResponseUpdate{
+                Role: message.RoleAssistant,
+                Contents: []message.Content{
+                    &message.TextContent{Text: "Hello from custom provider!"},
+                },
+            }, nil)
+        }
+    },
+    ProviderName: "my-custom-provider",
+}, agent.Config{
+    Instructions: "You are a helpful assistant.",
+})
+```
+
+### Optional functions
+
+| Function | Purpose |
+|---|---|
+| `CreateSession` | Create a new session for the provider |
+| `MarshalSession` | Serialize session state |
+| `UnmarshalSession` | Deserialize session state |
+| `FormatOfFn` | Generate format descriptor for structured output |
+| `UnmarshalFn` | Unmarshal structured output |
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

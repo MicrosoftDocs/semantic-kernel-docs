@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: conceptual
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -384,6 +384,44 @@ resumed = AgentSession.from_dict(serialized)
 > Use an additional audit/eval history provider (`load_messages=False`, `store_context_messages=True`) to capture enriched context plus input/output without affecting primary history loading.
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Persistent storage
+
+Sessions can be persisted through serialization. The agent provides `MarshalSession` and `UnmarshalSession` methods for this purpose.
+
+### File-based storage
+
+```go
+// Save session state
+data, err := a.MarshalSession(ctx, session)
+if err != nil {
+    panic(err)
+}
+os.WriteFile("session.json", data, 0644)
+
+// Load session state
+loaded, _ := os.ReadFile("session.json")
+session, err := a.UnmarshalSession(ctx, loaded)
+```
+
+### Custom storage backends
+
+For database-backed storage, serialize the session to `[]byte` and store it with your preferred backend:
+
+```go
+// Store in your database
+data, _ := a.MarshalSession(ctx, session)
+db.Set(sessionID, data)
+
+// Retrieve from your database
+data, _ := db.Get(sessionID)
+session, _ := a.UnmarshalSession(ctx, data)
+```
+
+> [!TIP]
+> See the [third-party session storage sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step07_3rdparty_session_storage/main.go) for a complete example.
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

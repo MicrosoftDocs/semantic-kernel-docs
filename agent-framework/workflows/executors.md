@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/24/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -240,6 +240,44 @@ class LogExecutor(Executor):
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Executors
+
+Executors are the processing units in a workflow. They receive input, perform work, and produce output.
+
+### Function executors
+
+The simplest way to create an executor is with `workflow.BindFunc`:
+
+```go
+uppercase := workflow.BindFunc("UppercaseExecutor", true, func(input string) string {
+    return strings.ToUpper(input)
+})
+```
+
+The second parameter (`true`) indicates that the executor auto-completes (returns a result immediately).
+
+### Agent executors
+
+Agents can be used as workflow executors via `agent.Bind`:
+
+```go
+agentExecutor := myAgent.Bind(false) // false = manual completion via events
+```
+
+### Executor lifecycle
+
+Executors support lifecycle hooks through `workflow.ExecutorConfig`:
+
+| Hook | Purpose |
+|---|---|
+| `ConfigureRoutes` | Set up message routing |
+| `Initialize` | Setup when workflow starts |
+| `Reset` | Reset state between runs |
+| `OnCheckpoint` | Save state at checkpoint |
+| `OnCheckpointRestored` | Restore state from checkpoint |
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

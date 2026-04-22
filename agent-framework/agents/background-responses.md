@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: sergeymenshykh
 ms.topic: reference
 ms.author: semenshi
-ms.date: 03/13/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -253,6 +253,21 @@ if last_token is not None:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Background responses
+
+Go agents support background responses through the `agentopt.AllowBackgroundResponses` option. This enables the agent to produce asynchronous responses that can be retrieved later.
+
+```go
+resp, err := a.RunText(ctx, "Start a long analysis.",
+    agentopt.Session(session),
+    agentopt.AllowBackgroundResponses(true),
+).Collect()
+```
+
+Background responses require an explicit session via `agentopt.Session(session)` to ensure consistent behavior between initial and follow-up runs.
+
+::: zone-end
 ## Best Practices
 
 When working with background responses, consider the following best practices:

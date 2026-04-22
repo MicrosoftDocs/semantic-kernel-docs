@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -277,6 +277,37 @@ async for event in workflow.run(input_message, stream=True):
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Events
+
+Workflows emit events during execution. Events can be observed through the run object.
+
+### Observe events
+
+```go
+run, err := inproc.Run(ctx, wf, "", input)
+for evt := range run.NewEvents() {
+    switch e := evt.(type) {
+    case workflow.ExecutorCompletedEvent:
+        fmt.Printf("Executor %s completed: %v\n", e.ExecutorID, e.Result)
+    case workflow.ResponseUpdateEvent:
+        fmt.Printf("Agent %s: %v\n", e.ExecutorID, e.Update)
+    }
+}
+```
+
+### Streaming events
+
+For streaming workflows, use `inproc.Stream` and `WatchStream`:
+
+```go
+run, err := inproc.Stream(ctx, wf, "", input)
+for evt := range run.WatchStream(ctx) {
+    // process streaming events
+}
+```
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

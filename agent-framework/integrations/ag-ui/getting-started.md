@@ -791,3 +791,10 @@ Now that you understand the basics of AG-UI, you can:
 - [AG-UI Protocol Specification](https://docs.ag-ui.com/)
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end

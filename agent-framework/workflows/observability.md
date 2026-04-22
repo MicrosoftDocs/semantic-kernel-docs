@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/11/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -215,6 +215,40 @@ Workflow telemetry is enabled through the global `enable_instrumentation()` func
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Workflow observability
+
+Workflows can be traced using the same OpenTelemetry middleware used for agents.
+
+### Add tracing to agent executors
+
+When agents are used as workflow executors, their middleware (including the OTEL middleware) is active during workflow execution:
+
+```go
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Middlewares: []middleware.Middleware{
+            otel.New(otel.Config{}),
+        },
+    },
+})
+```
+
+### Observe workflow events
+
+Monitor workflow execution through event streams:
+
+```go
+for evt := range run.NewEvents() {
+    switch e := evt.(type) {
+    case workflow.ExecutorCompletedEvent:
+        log.Printf("Executor %s completed", e.ExecutorID)
+    }
+}
+```
+
+::: zone-end
 ## Next Steps
 
 - [Learn about state isolation in workflows](./state.md).

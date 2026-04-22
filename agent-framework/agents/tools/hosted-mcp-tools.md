@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: markwallace
 ms.topic: reference
 ms.author: markwallace
-ms.date: 04/01/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -336,6 +336,34 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Hosted MCP tools
+
+The `hostedtool` package provides marker types for hosted tools. These tools are not executed locally — they inform the AI service that it's allowed to perform certain actions server-side.
+
+### Hosted MCP Server
+
+```go
+import "github.com/microsoft/agent-framework-go/tool/hostedtool"
+
+mcpTool := &hostedtool.MCPServer{
+    ServerName:    "my-server",
+    ServerAddress: "https://mcp.example.com",
+    AllowedTools:  []string{"search", "analyze"},
+}
+
+a := openaichatagent.New(client, openaichatagent.Config{
+    Model: deployment,
+    Config: agent.Config{
+        Tools: []tool.Tool{mcpTool},
+    },
+})
+```
+
+> [!NOTE]
+> Hosted MCP tools require a provider that supports them, such as the OpenAI Responses API (`openairesponsesagent`).
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]
