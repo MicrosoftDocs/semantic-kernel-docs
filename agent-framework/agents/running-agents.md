@@ -335,7 +335,6 @@ for message in response.messages:
 ::: zone-end
 
 ::: zone pivot="programming-language-go"
-## Streaming and non-streaming
 
 In Go, `RunText` returns a `ResponseStream` — an iterator of `(ResponseUpdate, error)` pairs.
 
@@ -360,8 +359,6 @@ for update, err := range a.RunText(ctx, "What is the weather like in Amsterdam?"
 }
 ```
 
-## Agent run options
-
 Options are passed as variadic `agentopt.Option` arguments. Available options include:
 
 - `agentopt.Stream(true)` — Enable streaming
@@ -377,8 +374,6 @@ resp, err := a.RunText(ctx, "Tell me a joke.",
     agentopt.Session(session),
 ).Collect()
 ```
-
-## Response types
 
 `ResponseStream` yields `*message.ResponseUpdate` values. Each update contains:
 
