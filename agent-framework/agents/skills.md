@@ -973,11 +973,12 @@ Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Safety](./safety.md)
+> [CodeAct](./code_act.md)
 
 ### Related content
 
 - [Agent Skills specification](https://agentskills.io/)
+- [CodeAct](./code_act.md)
 - [Context Providers](./conversations/context-providers.md)
 - [Running Agents](./running-agents.md)
 - [Tools Overview](./tools/index.md)
