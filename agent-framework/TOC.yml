@@ -28,8 +28,8 @@ items:
     href: agents/agent-pipeline.md
   - name: Multimodal
     href: agents/multimodal.md
-  - name: Structured Output
-    href: agents/structured-output.md
+  - name: Structured Outputs
+    href: agents/structured-outputs.md
   - name: Background Responses
     href: agents/background-responses.md
   - name: RAG
@@ -38,8 +38,12 @@ items:
     href: agents/declarative.md
   - name: Observability
     href: agents/observability.md
+  - name: Evaluation
+    href: agents/evaluation.md
   - name: Agent Skills
     href: agents/skills.md
+  - name: CodeAct
+    href: agents/code_act.md
   - name: Agent Safety
     href: agents/safety.md
   - name: Tools
@@ -174,6 +178,8 @@ items:
     href: integrations/azure-functions.md
   - name: OpenAI-Compatible Endpoints
     href: integrations/openai-endpoints.md
+  - name: Hyperlight CodeAct
+    href: integrations/hyperlight.md
   - name: Purview
     href: integrations/purview.md
   - name: M365
@@ -198,12 +204,38 @@ items:
       href: integrations/ag-ui/frontend-tools.md
     - name: Security Considerations
       href: integrations/ag-ui/security-considerations.md
+    - name: Workflows
+      href: integrations/ag-ui/workflows.md
     - name: Human-in-the-Loop
       href: integrations/ag-ui/human-in-the-loop.md
+    - name: MCP Apps Compatibility
+      href: integrations/ag-ui/mcp-apps.md
     - name: State Management
       href: integrations/ag-ui/state-management.md
     - name: Testing with Dojo
       href: integrations/ag-ui/testing-with-dojo.md
+- name: The Agent Development Journey
+  items:
+  - name: Overview
+    href: journey/index.md
+  - name: LLM Fundamentals
+    href: journey/llm-fundamentals.md
+  - name: From LLMs to Agents
+    href: journey/from-llms-to-agents.md
+  - name: Adding Tools
+    href: journey/adding-tools.md
+  - name: Adding Skills
+    href: journey/adding-skills.md
+  - name: Adding Middleware
+    href: journey/adding-middleware.md
+  - name: Context Providers
+    href: journey/adding-context-providers.md
+  - name: Agents as Tools
+    href: journey/agents-as-tools.md
+  - name: "Agent-to-Agent (A2A)"
+    href: journey/agent-to-agent.md
+  - name: Workflows
+    href: journey/workflows.md
 - name: DevUI
   items:
   - name: Overview
