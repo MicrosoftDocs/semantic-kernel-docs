@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -162,6 +162,56 @@ curl -X POST http://localhost:7071/api/agents/Joker/run \
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py) for the complete runnable file, and the [Azure Functions hosting samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/azure_functions) for more patterns.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+## Hosting with A2A Protocol
+
+The Go port provides A2A hosting through `a2ahosting`, which wraps an agent in an HTTP handler compatible with the Agent-to-Agent protocol.
+
+Create an agent:
+
+```go
+import (
+	"github.com/microsoft/agent-framework-go/agent"
+	"github.com/microsoft/agent-framework-go/agent/hosting/a2ahosting"
+	"github.com/microsoft/agent-framework-go/agent/provider/openaichatagent"
+	"github.com/a2aproject/a2a-go/a2a"
+	"github.com/a2aproject/a2a-go/a2asrv"
+)
+
+a := openaichatagent.New(client, openaichatagent.Config{
+	Model: deployment,
+	Config: agent.Config{
+		Instructions: "You are a helpful assistant.",
+	},
+})
+```
+
+Expose the agent via A2A:
+
+```go
+card := &a2a.AgentCard{
+	URL:             "http://localhost:5000",
+	ProtocolVersion: "0.3.0",
+	Version:         "1.0.0",
+	Capabilities:    a2a.AgentCapabilities{Streaming: false},
+}
+
+mux := http.NewServeMux()
+mux.Handle("/", a2ahosting.NewHTTPHandler(a2ahosting.ExecutorConfig{
+	Agent: a,
+}, a2asrv.WithExtendedAgentCard(card)))
+mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(card))
+
+log.Println("A2A server listening on :5000")
+http.ListenAndServe(":5000", mux)
+```
+
+> [!TIP]
+> See the [full A2A client-server sample](https://github.com/microsoft/agent-framework-go/tree/main/examples/05-end-to-end/a2a_client_server) for a complete runnable example.
 
 :::zone-end
 

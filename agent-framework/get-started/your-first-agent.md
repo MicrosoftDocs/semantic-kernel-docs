@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -91,6 +91,81 @@ Or stream the response:
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/01_hello_agent.py) for the complete runnable file.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+Create and run an agent:
+
+```go
+package main
+
+import (
+	"cmp"
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/microsoft/agent-framework-go/agent"
+	"github.com/microsoft/agent-framework-go/agent/provider/openaichatagent"
+	openai "github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/azure"
+)
+
+func main() {
+	endpoint := os.Getenv("AZURE_OPENAI_ENDPOINT")
+	deployment := cmp.Or(os.Getenv("AZURE_OPENAI_DEPLOYMENT_NAME"), "gpt-4o-mini")
+	apiVersion := cmp.Or(os.Getenv("AZURE_OPENAI_API_VERSION"), "2025-01-01-preview")
+
+	token, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		panic(err)
+	}
+
+	a := openaichatagent.New(
+		openai.NewClient(
+			azure.WithEndpoint(endpoint, apiVersion),
+			azure.WithTokenCredential(token),
+		),
+		openaichatagent.Config{
+			Model: deployment,
+			Config: agent.Config{
+				Instructions: "You are a friendly assistant. Keep your answers brief.",
+				Name:         "HelloAgent",
+			},
+		},
+	)
+
+	ctx := context.Background()
+
+	// Invoke the agent and collect the text result.
+	resp, err := a.RunText(ctx, "What is the largest city in France?").Collect()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(resp)
+}
+```
+
+Or stream the response:
+
+```go
+for update, err := range a.RunText(ctx, "Tell me a one-sentence fun fact.", agentopt.Stream(true)) {
+	if err != nil {
+		panic(err)
+	}
+	fmt.Print(update)
+}
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/01-get-started/01_hello_agent/main.go) for the complete runnable file.
 
 :::zone-end
 

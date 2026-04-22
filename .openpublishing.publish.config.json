@@ -74,6 +74,12 @@
       "url": "https://github.com/microsoft/agent-framework",
       "branch": "main",
       "branch_mapping": {}
+    },
+    {
+      "path_to_root": "agent-framework-go",
+      "url": "https://github.com/microsoft/agent-framework-go",
+      "branch": "main",
+      "branch_mapping": {}
     }
   ],
   "branch_target_mapping": {

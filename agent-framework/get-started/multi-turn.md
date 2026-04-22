@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -61,6 +61,53 @@ Use `AgentSession` to maintain context across multiple calls:
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/03_multi_turn.py) for the complete runnable file.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Use `CreateSession` to maintain context across multiple calls:
+
+```go
+a := openaichatagent.New(
+	openai.NewClient(
+		azure.WithEndpoint(endpoint, apiVersion),
+		azure.WithTokenCredential(token),
+	),
+	openaichatagent.Config{
+		Model: deployment,
+		Config: agent.Config{
+			Instructions: "You are a friendly assistant. Keep your answers brief.",
+			Name:         "ConversationAgent",
+		},
+	},
+)
+
+ctx := context.Background()
+
+// Create a session to maintain conversation history.
+session, err := a.CreateSession(ctx)
+if err != nil {
+	panic(err)
+}
+
+// First turn.
+resp, err := a.RunText(ctx, "My name is Alice and I love hiking.", agentopt.Session(session)).Collect()
+if err != nil {
+	panic(err)
+}
+fmt.Println(resp)
+
+// Second turn — the agent remembers the user's name and hobby.
+resp, err = a.RunText(ctx, "What do you remember about me?", agentopt.Session(session)).Collect()
+if err != nil {
+	panic(err)
+}
+fmt.Println(resp)
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/01-get-started/03_multi_turn/main.go) for the complete runnable file.
 
 :::zone-end
 

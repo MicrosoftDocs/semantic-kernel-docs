@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -69,6 +69,63 @@ Build and run the workflow:
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/05_first_workflow.py) for the complete runnable file.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Define workflow steps (executors) and connect them with edges:
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"slices"
+	"strings"
+
+	"github.com/microsoft/agent-framework-go/workflow"
+	"github.com/microsoft/agent-framework-go/workflow/inproc"
+)
+
+func main() {
+	// Step 1: Convert text to uppercase.
+	uppercase := workflow.BindFunc("UppercaseExecutor", true, func(input string) string {
+		return strings.ToUpper(input)
+	})
+
+	// Step 2: Reverse the string.
+	reverse := workflow.BindFunc("ReverseExecutor", true, func(input string) string {
+		runes := []rune(input)
+		slices.Reverse(runes)
+		return string(runes)
+	})
+
+	// Build the workflow by connecting executors sequentially.
+	wf, err := workflow.NewBuilder(uppercase).
+		AddEdge(uppercase, reverse).
+		WithOutputFrom(reverse).
+		Build()
+	if err != nil {
+		panic(err)
+	}
+
+	// Execute the workflow with sample input.
+	run, err := inproc.Run(context.Background(), wf, "", "Hello, World!")
+	if err != nil {
+		panic(err)
+	}
+	for evt := range run.NewEvents() {
+		if evt, ok := evt.(workflow.ExecutorCompletedEvent); ok {
+			fmt.Printf("%s: %v\n", evt.ExecutorID, evt.Result)
+		}
+	}
+}
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/01-get-started/05_first_workflow/main.go) for the complete runnable file.
 
 :::zone-end
 

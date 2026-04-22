@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -71,6 +71,59 @@ Create an agent with the tool:
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/02_add_tools.py) for the complete runnable file.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Define a tool using `functool`:
+
+```go
+import (
+	"fmt"
+
+	"github.com/microsoft/agent-framework-go/tool"
+	"github.com/microsoft/agent-framework-go/tool/functool"
+)
+
+var weatherTool = functool.MustNew(&functool.Func{
+	Name:        "weather",
+	Description: "Get the current weather for a given location",
+}, func(_ tool.Context, location string) (string, error) {
+	return fmt.Sprintf("The weather in %s is cloudy with a high of 15°C.", location), nil
+})
+```
+
+Create an agent with the tool:
+
+```go
+a := openaichatagent.New(
+	openai.NewClient(
+		azure.WithEndpoint(endpoint, apiVersion),
+		azure.WithTokenCredential(token),
+	),
+	openaichatagent.Config{
+		Model: deployment,
+		Config: agent.Config{
+			Instructions: "You are a helpful assistant",
+			Tools:        []tool.Tool{weatherTool},
+		},
+	},
+)
+```
+
+The agent will automatically call your tool when relevant:
+
+```go
+resp, err := a.RunText(ctx, "What is the weather like in Amsterdam?").Collect()
+if err != nil {
+	panic(err)
+}
+fmt.Println(resp)
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/01-get-started/02_add_tools/main.go) for the complete runnable file.
 
 :::zone-end
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
@@ -118,6 +118,93 @@ Run it — the agent now has access to the context:
 >     context_providers=[memory_store, agent_memory, audit_store],  # audit store last
 > )
 > ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Define a context provider that stores user info in session state and injects personalization instructions:
+
+```go
+import (
+	"github.com/microsoft/agent-framework-go/memory"
+	"github.com/microsoft/agent-framework-go/message"
+)
+
+const userMemorySourceID = "user_memory"
+
+type providerState struct {
+	UserName string `json:"user_name,omitempty"`
+}
+
+func newUserMemoryProvider() *memory.ContextProvider {
+	return &memory.ContextProvider{
+		SourceID: userMemorySourceID,
+		Provide:  provideUserMemory,
+		Store:    storeUserMemory,
+	}
+}
+
+func provideUserMemory(ctx memory.BeforeRunContext) (memory.Context, error) {
+	var state providerState
+	ctx.Session.Get(userMemorySourceID, &state)
+
+	instructions := "You don't know the user's name yet. Ask for it politely."
+	if state.UserName != "" {
+		instructions = fmt.Sprintf("The user's name is %s. Always address them by name.", state.UserName)
+	}
+	return memory.Context{Messages: []*message.Message{{
+		Role: message.RoleSystem,
+		Contents: []message.Content{
+			&message.TextContent{Text: instructions},
+		},
+	}}}, nil
+}
+```
+
+Create an agent with the context provider:
+
+```go
+a := openaichatagent.New(
+	openai.NewClient(
+		azure.WithEndpoint(endpoint, apiVersion),
+		azure.WithTokenCredential(token),
+	),
+	openaichatagent.Config{
+		Model: deployment,
+		Config: agent.Config{
+			Instructions:     "You are a friendly assistant.",
+			Name:             "MemoryAgent",
+			ContextProviders: []*memory.ContextProvider{newUserMemoryProvider()},
+		},
+	},
+)
+```
+
+Run it — the agent now has access to the context:
+
+```go
+ctx := context.Background()
+session, err := a.CreateSession(ctx)
+if err != nil {
+	panic(err)
+}
+
+// The provider doesn't know the user yet.
+resp, err := a.RunText(ctx, "Hello, what is the square root of 9?", agentopt.Session(session)).Collect()
+fmt.Println(resp)
+
+// Teach the provider the user's name.
+resp, err = a.RunText(ctx, "My name is Alice", agentopt.Session(session)).Collect()
+fmt.Println(resp)
+
+// Subsequent calls are personalized using session state.
+resp, err = a.RunText(ctx, "What is 2 + 2?", agentopt.Session(session)).Collect()
+fmt.Println(resp)
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/01-get-started/04_memory/main.go) for the complete runnable file.
 
 :::zone-end
 
