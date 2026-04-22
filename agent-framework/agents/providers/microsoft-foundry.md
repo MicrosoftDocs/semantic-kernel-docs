@@ -95,6 +95,11 @@ Console.WriteLine(await agent.RunAsync("Now make it funnier.", session));
 
 For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../get-started/your-first-agent.md).
 
+## Toolboxes
+
+> [!NOTE]
+> Foundry Toolbox .NET docs are coming soon.
+
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
@@ -222,6 +227,137 @@ For a HostedAgent, omit `agent_version` and use the hosted agent name instead.
 ## Using the agent
 
 Both `FoundryChatClient` and `FoundryAgent` integrate with the standard Python `Agent` experience, including tool calling, sessions, and streaming responses. For local runtimes, use the separate [Foundry Local provider page](./foundry-local.md).
+
+## Toolboxes
+
+> [!IMPORTANT]
+> Toolbox APIs are experimental. The surface may change in future releases.
+
+A **Foundry toolbox** is a named, versioned server-side bundle of hosted tool configurations (code interpreter, file search, image generation, MCP, web search) configured in a Microsoft Foundry project. Toolboxes let you manage tool configuration once in the Foundry portal and reuse it across agents.
+
+Agent Framework covers **consumption** only — creating and updating toolbox versions is done through the Foundry portal or the raw `azure-ai-projects` SDK (`azure-ai-projects>=2.1.0`).
+
+### FoundryAgent vs FoundryChatClient
+
+| Agent type | Toolbox behavior |
+|---|---|
+| **FoundryAgent** (hosted) | Toolbox attachment happens server-side. No client-side wiring is required. |
+| **FoundryChatClient** (direct inference) | Fetch the toolbox with `get_toolbox()` and pass it as `tools=`. |
+
+### Two consumption patterns
+
+| Pattern | Description |
+|---|---|
+| **Native (hosted tools)** | Tool configs execute on the Foundry runtime. Pass the toolbox directly as `tools=`. |
+| **MCP** | Use `MCPStreamableHTTPTool` against the toolbox's MCP endpoint. Works with any chat client, not just `FoundryChatClient`. |
+
+### Fetching a toolbox
+
+Use `FoundryChatClient.get_toolbox()` to retrieve a toolbox:
+
+```python
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
+from azure.identity.aio import AzureCliCredential
+
+async with AzureCliCredential() as credential:
+    client = FoundryChatClient(credential=credential)
+    toolbox = await client.get_toolbox("research_toolbox")
+
+    async with Agent(client=client, name="ResearchAgent", tools=toolbox) as agent:
+        result = await agent.run("Summarize recent findings.")
+        print(result.text)
+```
+
+When `version` is omitted, `get_toolbox` resolves the default version in two requests. Pin a specific version to avoid the extra round trip:
+
+```python
+toolbox = await client.get_toolbox("research_toolbox", version="v3")
+```
+
+> [!NOTE]
+> Each `get_toolbox()` call hits the network — there is no framework-side cache, because default versions can change server-side. Caching is caller-owned.
+
+### Implicit flattening
+
+You do not need to write `toolbox.tools`. The framework's `normalize_tools` recognizes `ToolboxVersionObject` and flattens automatically. All of these work:
+
+```python
+# Single toolbox
+agent = Agent(client=client, tools=toolbox)
+
+# Toolbox in a list
+agent = Agent(client=client, tools=[toolbox])
+
+# Mix local function tools with a toolbox
+agent = Agent(client=client, tools=[get_internal_metrics, toolbox])
+
+# Combine multiple toolboxes
+agent = Agent(client=client, tools=[toolbox_a, toolbox_b])
+```
+
+### Filtering tools with `select_toolbox_tools`
+
+If your toolbox bundles several tools but an agent only needs a subset, use `select_toolbox_tools` to narrow the set after fetching. This avoids sending unnecessary tool definitions to the model, which reduces token usage and prevents the model from invoking tools you do not intend to expose:
+
+```python
+from agent_framework.foundry import select_toolbox_tools, get_toolbox_tool_name
+
+# Filter by tool name
+tools = select_toolbox_tools(toolbox, include_names=["web_search", "code_interpreter"])
+
+# Filter by tool type
+tools = select_toolbox_tools(toolbox, include_types=["mcp", "web_search"])
+
+# Filter with a custom predicate
+tools = select_toolbox_tools(toolbox, predicate=lambda t: "search" in (get_toolbox_tool_name(t) or ""))
+```
+
+Helper functions `get_toolbox_tool_name(tool)` and `get_toolbox_tool_type(tool)` return the selection name and raw type of a tool entry, respectively. `FoundryHostedToolType` is a `TypeAlias` (`Literal["code_interpreter", "file_search", "image_generation", "mcp", "web_search"] | str`) for IDE-guided completion on `include_types` / `exclude_types`.
+
+### MCP consumption path
+
+You can also consume a toolbox as an MCP server by pointing `MCPStreamableHTTPTool` at the toolbox's MCP endpoint URL.
+
+The MCP endpoint URL is shown on the Foundry Portal or follows the format:
+
+`https://<account>.services.ai.azure.com/api/projects/<project>/toolsets/<name>/mcp?api-version=v1`
+
+Because the client connects to the Foundry toolbox endpoint directly, you must authenticate with an Entra ID bearer token via `header_provider`:
+
+```python
+from azure.identity.aio import DefaultAzureCredential
+from azure.identity.aio import get_bearer_token_provider
+from agent_framework import Agent, MCPStreamableHTTPTool
+
+credential = DefaultAzureCredential()
+token_provider = get_bearer_token_provider(credential, "https://ai.azure.com/.default")
+
+mcp_tool = MCPStreamableHTTPTool(
+    name="research_mcp",
+    url="https://<your-toolbox-mcp-endpoint>",
+    header_provider=lambda: {"Authorization": f"Bearer {token_provider()}"},
+)
+
+async with Agent(client=client, name="MCPAgent", tools=[mcp_tool]) as agent:
+    result = await agent.run("Search for recent papers on LLM agents.")
+    print(result.text)
+```
+
+### Limitations
+
+- **MCP tools inside a toolbox use server-side authentication.** Authentication to the upstream MCP server is handled via `project_connection_id` (an OAuth connection configured in the Foundry project). The client never holds bearer tokens for the upstream server.
+- **Consuming a toolbox as an MCP server requires client-side authentication.** When you point `MCPStreamableHTTPTool` at a toolbox's MCP endpoint, you must supply an Entra ID bearer token (for example, via `get_bearer_token_provider(credential, "https://ai.azure.com/.default")`) through `header_provider`.
+- **Consent-flow handling is a runtime concern.** If a toolbox MCP tool triggers `CONSENT_REQUIRED` during `agent.run()`, it is handled at run time, not during toolbox fetch.
+
+### Samples
+
+| Sample | Description |
+|---|---|
+| [foundry_chat_client_with_toolbox.py](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/providers/foundry/foundry_chat_client_with_toolbox.py) | Basic toolbox fetch, version pinning, combining toolboxes, and filtering |
+| [foundry_chat_client_with_toolbox_mcp.py](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/providers/foundry/foundry_chat_client_with_toolbox_mcp.py) | MCP consumption path with `MCPStreamableHTTPTool` |
+| [foundry_toolbox_context_provider.py](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/context_providers/foundry_toolbox_context_provider.py) | Dynamic per-turn tool selection via a context provider |
+
 ::: zone-end
 
 ## Next steps
