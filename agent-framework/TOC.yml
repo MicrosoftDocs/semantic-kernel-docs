@@ -42,6 +42,8 @@ items:
     href: agents/evaluation.md
   - name: Agent Skills
     href: agents/skills.md
+  - name: CodeAct
+    href: agents/code_act.md
   - name: Agent Safety
     href: agents/safety.md
   - name: Tools
@@ -176,6 +178,8 @@ items:
     href: integrations/azure-functions.md
   - name: OpenAI-Compatible Endpoints
     href: integrations/openai-endpoints.md
+  - name: Hyperlight CodeAct
+    href: integrations/hyperlight.md
   - name: Purview
     href: integrations/purview.md
   - name: M365

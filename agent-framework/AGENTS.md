@@ -204,11 +204,13 @@ Every docs page maps to sample files in both repos:
 | `agents/tools/hosted-mcp-tools.md` | `02-agents/tools/hosted_mcp_tools.py` | `02-agents/tools/HostedMcpTools.cs` |
 | `agents/tools/local-mcp-tools.md` | `02-agents/tools/local_mcp_tools.py` | `02-agents/tools/LocalMcpTools.cs` |
 | `agents/tools/tool-approval.md` | `02-agents/tools/tool_approval.py` | `02-agents/tools/ToolApproval.cs` |
+| `agents/code_act.md` | `python/packages/hyperlight/samples/codeact_benchmark.py` | N/A |
 | `agents/middleware/*.md` | `02-agents/middleware/<matching>.py` | `02-agents/middleware/<matching>.cs` |
 | `agents/providers/foundry-local.md` | `02-agents/providers/foundry/foundry_local_agent.py` | N/A |
 | `agents/providers/*.md` | `02-agents/providers/<matching>.py` | `02-agents/providers/<matching>.cs` |
 | `agents/conversations/*.md` | `02-agents/conversations/<matching>.py` | `02-agents/conversations/<matching>.cs` |
 | `workflows/<pattern>.md` | `03-workflows/<pattern>/<matching>.py` | `03-workflows/<pattern>/<matching>.cs` |
+| `integrations/hyperlight.md` | `python/packages/hyperlight/samples/codeact_context_provider.py` | N/A |
 | `integrations/a2a.md` | `04-hosting/a2a/` | `04-hosting/a2a/` |
 | `integrations/azure-functions.md` | `04-hosting/azure-functions/` | `04-hosting/azure-functions/` |
 
