@@ -907,7 +907,12 @@
     },
     {
       "source_path": "agent-framework/tutorials/agents/structured-output.md",
-      "redirect_url": "/agent-framework/agents/structured-output",
+      "redirect_url": "/agent-framework/agents/structured-outputs",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "agent-framework/agents/structured-output.md",
+      "redirect_url": "/agent-framework/agents/structured-outputs",
       "redirect_document_id": true
     },
     {

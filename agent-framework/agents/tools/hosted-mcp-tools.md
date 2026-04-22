@@ -2,9 +2,9 @@
 title: MCP and Foundry Agents
 description: Using MCP with Foundry Agents
 zone_pivot_groups: programming-languages
-author: markwallace
+author: moonbox3
 ms.topic: reference
-ms.author: markwallace
+ms.author: evmattso
 ms.date: 04/01/2026
 ms.service: agent-framework
 ---
