@@ -49,7 +49,7 @@ The following providers are available for .NET:
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration with shell and file access.
 - **[Copilot Studio](./copilot-studio.md)** — Integration with Microsoft Copilot Studio agents.
-- **[A2A](./a2a.md)** — Connect to remote agents via the Agent-to-Agent (A2A) protocol.
+- **[A2A](./agent-to-agent.md)** — Connect to remote agents via the Agent-to-Agent (A2A) protocol.
 - **[Custom](./custom.md)** — Build your own provider by implementing the `AIAgent` base class.
 
 :::zone-end
