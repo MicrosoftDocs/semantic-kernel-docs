@@ -1,5 +1,5 @@
 ---
-title: A2A
+title: A2A Hosting
 description: Learn how to host Agent Framework agents via the A2A protocol in ASP.NET Core.
 author: sergeymenshykh
 ms.topic: tutorial

@@ -1,5 +1,5 @@
 ---
-title: A2A
+title: A2A Agent
 description: Learn how to connect to remote A2A agents using the A2AAgent in Microsoft Agent Framework.
 zone_pivot_groups: programming-languages
 author: sergeymenshykh
