@@ -15,7 +15,7 @@ Microsoft Agent Framework supports several types of agents to accommodate differ
 
 ## Provider Comparison
 
-| Provider | Function Tools | Structured Output | Code Interpreter | File Search | MCP Tools | Background Responses |
+| Provider | Function Tools | Structured Outputs | Code Interpreter | File Search | MCP Tools | Background Responses |
 |----------|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Azure OpenAI](./azure-openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [OpenAI](./openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
