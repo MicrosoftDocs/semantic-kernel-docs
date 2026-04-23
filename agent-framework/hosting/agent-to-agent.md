@@ -226,7 +226,7 @@ In this example, neither agent has an agent card, so clients must know the endpo
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [A2A Provider](../agents/providers/a2a.md)
+> [A2A Provider](../agents/providers/agent-to-agent.md)
 
 ## See also
 

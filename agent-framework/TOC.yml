@@ -117,7 +117,7 @@ items:
     - name: Copilot Studio
       href: agents/providers/copilot-studio.md
     - name: A2A
-      href: agents/providers/a2a.md
+      href: agents/providers/agent-to-agent.md
     - name: Custom Provider
       href: agents/providers/custom.md
 - name: Workflows
@@ -219,7 +219,7 @@ items:
 - name: Hosting
   items:
   - name: A2A
-    href: hosting/a2a-hosting.md
+    href: hosting/agent-to-agent.md
 - name: The Agent Development Journey
   items:
   - name: Overview

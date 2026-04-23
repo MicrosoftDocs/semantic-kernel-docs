@@ -9,7 +9,7 @@ ms.date: 04/22/2026
 ms.service: agent-framework
 ---
 
-# A2A Protocol
+# A2A Agent
 
 The `A2AAgent` enables your application to connect to remote agents that are exposed via the [Agent-to-Agent (A2A) protocol](https://a2a-protocol.org/latest/). It wraps any A2A-compliant endpoint as a standard `AIAgent`, so you can use familiar methods like `RunAsync` and `RunStreamingAsync` to interact with remote agents regardless of what framework or technology they were built with.
 
