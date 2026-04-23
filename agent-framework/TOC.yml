@@ -219,7 +219,7 @@ items:
 - name: Hosting
   items:
   - name: A2A
-    href: hosting/a2a.md
+    href: hosting/a2a-hosting.md
 - name: The Agent Development Journey
   items:
   - name: Overview
