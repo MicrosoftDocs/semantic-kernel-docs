@@ -227,4 +227,3 @@ if (continuationToken is not null)
 
 > [!div class="nextstepaction"]
 > [Custom Provider](./custom.md)
-
