@@ -112,6 +112,8 @@ items:
       href: agents/providers/github-copilot.md
     - name: Copilot Studio
       href: agents/providers/copilot-studio.md
+    - name: A2A
+      href: agents/providers/a2a.md
     - name: Custom Provider
       href: agents/providers/custom.md
 - name: Workflows
@@ -208,6 +210,10 @@ items:
       href: integrations/ag-ui/state-management.md
     - name: Testing with Dojo
       href: integrations/ag-ui/testing-with-dojo.md
+- name: Hosting
+  items:
+  - name: A2A
+    href: hosting/a2a.md
 - name: DevUI
   items:
   - name: Overview
