@@ -15,7 +15,7 @@ The Agent Framework's A2A integration packages have been updated to use A2A SDK 
 This guide covers the changes you need to make to migrate your existing code.
 
 > [!NOTE]
-> This guide covers changes to the Agent Framework's A2A abstraction layer. For details on the underlying A2A SDK changes (such as the `TaskManager` → `A2AServer` + `IAgentHandler` migration), see the [A2A SDK migration guide](https://github.com/a2aproject/a2a-dotnet/blob/main/docs/taskmanager-migration-guide.md).
+> This guide covers changes to the Agent Framework's A2A abstraction layer.
 
 ## Quick reference
 
@@ -297,7 +297,6 @@ app.Run();
 
 ## See also
 
-- [A2A Hosting](../hosting/agent-to-agent.md) - full reference for the new hosting API
 - [A2A Agent](../agents/providers/agent-to-agent.md) - full reference for the A2A agent provider
-- [A2A SDK migration guide](https://github.com/a2aproject/a2a-dotnet/blob/main/docs/taskmanager-migration-guide.md) - underlying A2A SDK v0.3 -> v1 changes. The published guide is currently out of date with the v1 API; see [a2a-dotnet PR #384](https://github.com/a2aproject/a2a-dotnet/pull/384) for the in-progress update.
+- [A2A Hosting](../hosting/agent-to-agent.md) - full reference for the new hosting API
 - [A2A Protocol Specification](https://a2a-protocol.org/latest/)
