@@ -61,14 +61,14 @@ foreach (WorkflowEvent evt in run.NewEvents)
 
 Define workflow steps (executors) and connect them with edges:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_functional_workflow_with_agents.py" id="create_workflow" highlight="26":::
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="create_workflow" highlight="26":::
 
 Build and run the workflow:
 
 :::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/05_first_workflow.py" id="run_workflow" highlight="3":::
 
 > [!TIP]
-> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/05_functional_workflow_with_agents.py) for the complete runnable file.
+> See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/05_first_workflow.py) for the complete runnable file.
 
 :::zone-end
 
