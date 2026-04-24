@@ -27,10 +27,13 @@ Stored messages are scoped using configurable identifiers (application, agent, u
 
 ## Prerequisites
 
-- A vector store implementation from [Microsoft.Extensions.VectorData](https://www.nuget.org/packages/Microsoft.Extensions.VectorData.Abstractions) (for example, [`InMemoryVectorStore`](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.InMemory), [Azure AI Search](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.AzureAISearch), or [other supported stores](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors))
+- A vector store implementation from 📦 [Microsoft.Extensions.VectorData.Abstractions](https://www.nuget.org/packages/Microsoft.Extensions.VectorData.Abstractions) (for example, 📦 [`InMemoryVectorStore`](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.InMemory), 📦 [Azure AI Search](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.AzureAISearch), or [other supported stores](./index.md#vector-store-abstraction-implementations))
 - An embedding model configured on your vector store
 - Azure OpenAI or OpenAI deployment for the chat model
 - .NET 8.0 or later
+
+> [!TIP]
+> See the [Vector Stores integration](./index.md#vector-stores) documentation for more information on the VectorData abstraction and available implementations.
 
 ## Usage
 
