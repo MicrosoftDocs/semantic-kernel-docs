@@ -270,6 +270,8 @@ items:
       href: migration-guide/from-semantic-kernel/index.md
     - name: Migration Samples
       href: migration-guide/from-semantic-kernel/samples.md
+  - name: A2A SDK v1
+    href: migration-guide/agent-to-agent-sdk-v1.md
 - name: API Reference
   items:
   - name: .NET API Reference
