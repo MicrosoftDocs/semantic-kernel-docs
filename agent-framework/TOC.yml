@@ -116,6 +116,8 @@ items:
       href: agents/providers/github-copilot.md
     - name: Copilot Studio
       href: agents/providers/copilot-studio.md
+    - name: A2A
+      href: agents/providers/agent-to-agent.md
     - name: Custom Provider
       href: agents/providers/custom.md
 - name: Workflows
@@ -214,6 +216,10 @@ items:
       href: integrations/ag-ui/state-management.md
     - name: Testing with Dojo
       href: integrations/ag-ui/testing-with-dojo.md
+- name: Hosting
+  items:
+  - name: A2A
+    href: hosting/agent-to-agent.md
 - name: The Agent Development Journey
   items:
   - name: Overview
@@ -264,6 +270,8 @@ items:
       href: migration-guide/from-semantic-kernel/index.md
     - name: Migration Samples
       href: migration-guide/from-semantic-kernel/samples.md
+  - name: A2A SDK v1
+    href: migration-guide/agent-to-agent-sdk-v1.md
 - name: API Reference
   items:
   - name: .NET API Reference

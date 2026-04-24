@@ -247,6 +247,9 @@ if __name__ == "__main__":
 
 The Python Agent Framework provides seamless integration with Foundry's hosted MCP capabilities, enabling secure and scalable access to external tools while maintaining the flexibility and control needed for production applications.
 
+> [!TIP]
+> MCP tools can also be bundled into **Foundry toolboxes** — named, versioned server-side collections of hosted tool configurations. Toolboxes let you manage tool configuration once and reuse it across agents. See the [Toolboxes section on the Microsoft Foundry provider page](../providers/microsoft-foundry.md#toolboxes) for details on fetching toolboxes and the MCP consumption path.
+
 ### Complete example
 
 ```python
