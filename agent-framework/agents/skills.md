@@ -175,8 +175,13 @@ var skillsProvider = new AgentSkillsProvider(
 ```csharp
 // Simplified equivalent of what SubprocessScriptRunner.RunAsync does internally
 using System.Diagnostics;
+using System.Text.Json;
 
-static async Task<string> RunAsync(AgentSkill skill, AgentSkillScript script, IDictionary<string, object?>? args)
+static async Task<string> RunAsync(
+    AgentFileSkill skill,
+    AgentFileSkillScript script,
+    JsonElement? args,
+    IServiceProvider? serviceProvider)
 {
     var psi = new ProcessStartInfo("python3")
     {
@@ -184,15 +189,11 @@ static async Task<string> RunAsync(AgentSkill skill, AgentSkillScript script, ID
         UseShellExecute = false,
     };
     psi.ArgumentList.Add(Path.Combine(skill.Path, script.Path));
-    if (args != null)
+    if (args is { ValueKind: JsonValueKind.Array } json)
     {
-        foreach (var (key, value) in args)
+        foreach (var element in json.EnumerateArray())
         {
-            if (value is not null)
-            {
-                psi.ArgumentList.Add($"--{key}");
-                psi.ArgumentList.Add(value.ToString()!);
-            }
+            psi.ArgumentList.Add(element.GetString()!);
         }
     }
     using var process = Process.Start(psi)!;
@@ -202,7 +203,7 @@ static async Task<string> RunAsync(AgentSkill skill, AgentSkillScript script, ID
 }
 ```
 
-The runner runs each discovered script as a local subprocess, forwarding the JSON arguments provided by the agent as command-line flags.
+The runner runs each discovered script as a local subprocess. File-based scripts expect arguments as a JSON array of strings — each array element becomes a positional command-line argument.
 
 > [!WARNING]
 > `SubprocessScriptRunner` is provided for **demonstration purposes only**. For production use, consider adding:
