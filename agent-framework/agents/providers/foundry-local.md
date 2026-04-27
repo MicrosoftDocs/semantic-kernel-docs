@@ -67,7 +67,7 @@ asyncio.run(main())
 
 ## Model capabilities
 
-Not every local model supports the same features. Function calling and structured output depend on the selected model. The `FoundryLocalClient.manager` helper can be used to inspect the local catalog and supported capabilities before you run an agent.
+Not every local model supports the same features. Function calling and structured outputs depend on the selected model. The `FoundryLocalClient.manager` helper can be used to inspect the local catalog and supported capabilities before you run an agent.
 
 For additional runtime controls, `FoundryLocalClient` also supports options such as `device`, `bootstrap`, and `prepare_model`.
 
