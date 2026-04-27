@@ -84,6 +84,9 @@ As a rule of thumb:
 
 Because host tools run outside the sandbox, `file_mounts` and `allowed_domains` constrain the sandboxed code itself, not the host callback behind `call_tool(...)`. When you need controlled access to a sensitive resource, prefer a narrow host tool over broadening sandbox permissions.
 
+> [!NOTE]
+> Tools invoked through `call_tool(...)` return their native Python value (`dict`, `list`, primitive, or custom object) directly to the guest. Any `result_parser` configured on a `FunctionTool` is intended for LLM-facing consumers and does **not** run on the sandbox path — apply formatting inside the tool function itself if you need it for in-sandbox consumers.
+
 ## Use `HyperlightExecuteCodeTool` for direct wiring
 
 When you need to mix `execute_code` with direct-only tools on the same agent, use `HyperlightExecuteCodeTool` instead of the provider. For fixed configurations, you can build the CodeAct instructions once and wire the tool directly:
