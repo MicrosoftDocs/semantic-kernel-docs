@@ -15,7 +15,7 @@ Microsoft Agent Framework supports several types of agents to accommodate differ
 
 ## Provider Comparison
 
-| Provider | Function Tools | Structured Output | Code Interpreter | File Search | MCP Tools | Background Responses |
+| Provider | Function Tools | Structured Outputs | Code Interpreter | File Search | MCP Tools | Background Responses |
 |----------|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Azure OpenAI](./azure-openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [OpenAI](./openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -49,6 +49,7 @@ The following providers are available for .NET:
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration with shell and file access.
 - **[Copilot Studio](./copilot-studio.md)** — Integration with Microsoft Copilot Studio agents.
+- **[A2A](./agent-to-agent.md)** — Connect to remote agents via the Agent-to-Agent (A2A) protocol.
 - **[Custom](./custom.md)** — Build your own provider by implementing the `AIAgent` base class.
 
 :::zone-end
