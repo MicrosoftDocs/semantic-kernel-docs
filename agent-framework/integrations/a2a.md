@@ -238,7 +238,7 @@ app.MapA2A(scienceAgent, "/a2a/science");
 
 ::: zone pivot="programming-language-python"
 
-The `agent-framework-a2a` package lets you connect to and communicate with external A2A-compliant agents.
+The `agent-framework-a2a` package lets you both **connect to** external A2A-compliant agents and **expose** an Agent Framework agent over the A2A protocol.
 
 ```bash
 pip install agent-framework-a2a --pre
@@ -329,6 +329,63 @@ async with A2AAgent(
 ) as agent:
     response = await agent.run("Hello!")
 ```
+
+## Exposing an Agent Framework Agent over A2A
+
+The `A2AExecutor` adapts any Agent Framework `Agent` to the A2A server-side protocol. You can host it with the official [`a2a-sdk`](https://pypi.org/project/a2a-sdk/) Starlette/ASGI server so that other A2A clients can discover and call your agent.
+
+```python
+import uvicorn
+from a2a.server.apps import A2AStarletteApplication
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.tasks import InMemoryTaskStore
+from a2a.types import AgentCapabilities, AgentCard, AgentSkill
+from agent_framework import Agent
+from agent_framework.a2a import A2AExecutor
+from agent_framework.openai import OpenAIChatClient
+
+flight_skill = AgentSkill(
+    id="Flight_Booking",
+    name="Flight Booking",
+    description="Search and book flights across Europe.",
+    tags=["flights", "travel", "europe"],
+    examples=[],
+)
+
+public_agent_card = AgentCard(
+    name="Europe Travel Agent",
+    description="Helps users search and book flights and hotels across Europe.",
+    url="http://localhost:9999/",
+    version="1.0.0",
+    defaultInputModes=["text"],
+    defaultOutputModes=["text"],
+    capabilities=AgentCapabilities(streaming=True),
+    skills=[flight_skill],
+)
+
+agent = Agent(
+    client=OpenAIChatClient(),
+    name="Europe Travel Agent",
+    instructions="You are a helpful Europe Travel Agent.",
+)
+
+request_handler = DefaultRequestHandler(
+    agent_executor=A2AExecutor(agent),
+    task_store=InMemoryTaskStore(),
+)
+
+server = A2AStarletteApplication(
+    agent_card=public_agent_card,
+    http_handler=request_handler,
+).build()
+
+uvicorn.run(server, host="0.0.0.0", port=9999)
+```
+
+`A2AExecutor` streams agent updates as A2A artifacts when the underlying agent supports streaming, propagates the A2A `context_id` as the agent's `thread_id`, and exposes `save_thread`/`get_thread` hooks you can override for persistent thread storage.
+
+> [!TIP]
+> See the [`agent_framework_to_a2a.py` sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/a2a/agent_framework_to_a2a.py) for a complete runnable example.
 
 ::: zone-end
 

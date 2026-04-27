@@ -221,6 +221,41 @@ agent = FoundryAgent(
 
 For a HostedAgent, omit `agent_version` and use the hosted agent name instead.
 
+### Connecting to a deployed (hosted) Foundry agent
+
+For HostedAgents that run service-side sessions (`/agents/{name}/sessions`), use `FoundryAgent` with `allow_preview=True` to opt into the preview Responses surface and pass `version="v2"`:
+
+```python
+from agent_framework.foundry import FoundryAgent
+from azure.identity import AzureCliCredential
+
+agent = FoundryAgent(
+    agent_name="my-hosted-agent",
+    credential=AzureCliCredential(),
+    allow_preview=True,
+    version="v2",
+)
+```
+
+When you need to manage the underlying service session yourself — for example to bind a session to a specific tenant or user — create the session through the preview `AIProjectClient` API and wrap it with `agent.get_session(...)`:
+
+```python
+from azure.ai.projects.aio import AIProjectClient
+from azure.ai.projects.models import VersionRefIndicator
+
+service_session = await project_client.beta.agents.create_session(
+    agent_name="my-hosted-agent",
+    isolation_key="user-123",
+    version_indicator=VersionRefIndicator(agent_version="1.0"),
+)
+session = agent.get_session(service_session.agent_session_id)
+
+response = await agent.run("Hello!", session=session)
+```
+
+> [!TIP]
+> See the [`using_deployed_agent.py` sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/foundry-hosted-agents/responses/using_deployed_agent.py) for a complete example, including resolving the latest version automatically.
+
 > [!WARNING]
 > The older Python `AzureAIClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentClient`, `AzureAIAgentsProvider`, and Azure AI embedding compatibility surfaces were removed from the current `agent_framework.azure` namespace. For current Python code, use `FoundryChatClient` when your app owns instructions and tools, `FoundryAgent` when the agent definition lives in Foundry, and `FoundryEmbeddingClient` for Foundry models-endpoint embeddings.
 
