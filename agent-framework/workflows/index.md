@@ -45,7 +45,19 @@ Microsoft Agent Framework offers two complementary APIs for building workflows:
 - **[Functional Workflow API](./functional.md)** *(Python, experimental)*: Write workflows as plain `async` functions using `@workflow` and `@step` decorators. Use native Python control flow (`if`/`else`, loops, `asyncio.gather`) instead of graph concepts. A good starting point before adopting the graph API.
 - **[Workflow Builder & Execution](./workflows.md)**: Build workflows as directed graphs using `WorkflowBuilder`, `executors`, and `edges`. Best for fixed topologies with type-validated message routing and superstep-based parallel execution.
 
-Both APIs support streaming, human-in-the-loop, checkpointing, and `.as_agent()` wrapping.
+Both APIs are fully supported and produce the same observable results (events, streaming, HITL, checkpoints). Choose based on what fits your workflow best:
+
+| | Functional (`@workflow`) | Graph (`WorkflowBuilder`) |
+|---|---|---|
+| **Control flow** | Native Python (`if`, loops, `asyncio.gather`) | Edges and conditions |
+| **Best for** | Sequential pipelines, custom loops, ad-hoc parallelism | Fixed graphs, fan-out/fan-in, type-validated message routing |
+| **Parallelism** | `asyncio.gather` | Parallel edge groups, superstep execution |
+| **Observability** | Per-step events with `@step` | Per-executor events |
+| **HITL** | `ctx.request_info()` | `RequestInfoExecutor` |
+| **Checkpointing** | Per-`@step` result caching | Superstep-boundary checkpoints |
+| **Agent wrapping** | `.as_agent()` on `FunctionalWorkflow` | `.as_agent()` on `Workflow` |
+
+Start with `@workflow` when you want to express your logic in plain Python. Move to `WorkflowBuilder` when you need strict type-validated message routing or the graph execution model.
 
 ## Core Concepts
 

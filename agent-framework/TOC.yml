@@ -124,54 +124,60 @@ items:
   items:
   - name: Overview
     href: workflows/index.md
-  - name: Executors
-    href: workflows/executors.md
-  - name: Edges
-    href: workflows/edges.md
-  - name: Events
-    href: workflows/events.md
-  - name: Workflow Builder & Execution
-    href: workflows/workflows.md
-  - name: Agents in Workflows
-    href: workflows/agents-in-workflows.md
-  - name: Human-in-the-Loop
-    href: workflows/human-in-the-loop.md
-  - name: State Management
-    href: workflows/state.md
-  - name: Checkpoints & Resuming
-    href: workflows/checkpoints.md
-  - name: Declarative Workflows
-    href: workflows/declarative.md
-  - name: Observability
-    href: workflows/observability.md
-  - name: Workflows as Agents
-    href: workflows/as-agents.md
-  - name: Visualization
-    href: workflows/visualization.md
-  - name: Orchestrations
+  - name: Functional
     items:
-    - name: Overview
-      href: workflows/orchestrations/index.md
-    - name: Sequential
-      href: workflows/orchestrations/sequential.md
-    - name: Concurrent
-      href: workflows/orchestrations/concurrent.md
-    - name: Handoff
-      href: workflows/orchestrations/handoff.md
-    - name: Group Chat
-      href: workflows/orchestrations/group-chat.md
-    - name: Magentic
-      href: workflows/orchestrations/magentic.md
-  - name: Advanced
+    - name: Functional Workflow API
+      href: workflows/functional.md
+  - name: Graph-based
     items:
-    - name: Agent Executor
-      href: workflows/advanced/agent-executor.md
-    - name: Execution Modes
-      href: workflows/advanced/execution-modes.md
-    - name: Resettable Executors
-      href: workflows/advanced/resettable-executors.md
-    - name: Sub-Workflows
-      href: workflows/advanced/sub-workflows.md
+    - name: Executors
+      href: workflows/executors.md
+    - name: Edges
+      href: workflows/edges.md
+    - name: Events
+      href: workflows/events.md
+    - name: Workflow Builder & Execution
+      href: workflows/workflows.md
+    - name: Agents in Workflows
+      href: workflows/agents-in-workflows.md
+    - name: Human-in-the-Loop
+      href: workflows/human-in-the-loop.md
+    - name: State Management
+      href: workflows/state.md
+    - name: Checkpoints & Resuming
+      href: workflows/checkpoints.md
+    - name: Declarative Workflows
+      href: workflows/declarative.md
+    - name: Observability
+      href: workflows/observability.md
+    - name: Workflows as Agents
+      href: workflows/as-agents.md
+    - name: Visualization
+      href: workflows/visualization.md
+    - name: Orchestrations
+      items:
+      - name: Overview
+        href: workflows/orchestrations/index.md
+      - name: Sequential
+        href: workflows/orchestrations/sequential.md
+      - name: Concurrent
+        href: workflows/orchestrations/concurrent.md
+      - name: Handoff
+        href: workflows/orchestrations/handoff.md
+      - name: Group Chat
+        href: workflows/orchestrations/group-chat.md
+      - name: Magentic
+        href: workflows/orchestrations/magentic.md
+    - name: Advanced
+      items:
+      - name: Agent Executor
+        href: workflows/advanced/agent-executor.md
+      - name: Execution Modes
+        href: workflows/advanced/execution-modes.md
+      - name: Resettable Executors
+        href: workflows/advanced/resettable-executors.md
+      - name: Sub-Workflows
+        href: workflows/advanced/sub-workflows.md
 - name: Integrations
   items:
   - name: Overview
