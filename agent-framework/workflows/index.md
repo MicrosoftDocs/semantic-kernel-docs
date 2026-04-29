@@ -38,6 +38,15 @@ While an agent and a workflow can involve multiple steps to achieve a goal, they
 - **Checkpointing**: Save workflow states via checkpoints, enabling recovery and resumption of long-running processes on server sides.
 - **Multi-Agent Orchestration**: Built-in patterns for coordinating multiple AI agents, including sequential, concurrent, hand-off, and magentic.
 
+## Workflow APIs
+
+Microsoft Agent Framework offers two complementary APIs for building workflows:
+
+- **[Functional Workflow API](./functional.md)** *(Python, experimental)*: Write workflows as plain `async` functions using `@workflow` and `@step` decorators. Use native Python control flow (`if`/`else`, loops, `asyncio.gather`) instead of graph concepts. A good starting point before adopting the graph API.
+- **[Workflow Builder & Execution](./workflows.md)**: Build workflows as directed graphs using `WorkflowBuilder`, `executors`, and `edges`. Best for fixed topologies with type-validated message routing and superstep-based parallel execution.
+
+Both APIs support streaming, human-in-the-loop, checkpointing, and `.as_agent()` wrapping.
+
 ## Core Concepts
 
 - **[Executors](./executors.md)**: represent individual processing units within a workflow. They can be AI agents or custom logic components. They receive input messages, perform specific tasks, and produce output messages.
