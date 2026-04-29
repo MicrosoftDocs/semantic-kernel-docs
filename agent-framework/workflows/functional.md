@@ -18,21 +18,7 @@ zone_pivot_groups: programming-languages
 
 The functional workflow API lets you write workflows as plain Python async functions. Instead of defining executor classes, wiring edges, and using `WorkflowBuilder`, you decorate an `async` function with `@workflow` and use native Python control flow — `if`/`else`, `for` loops, `asyncio.gather` — to express your logic.
 
-## When to use functional vs. graph workflows
-
-Both APIs are fully supported and produce the same observable results (events, streaming, HITL, checkpoints). Choose based on what fits your workflow best:
-
-| | Functional (`@workflow`) | Graph (`WorkflowBuilder`) |
-|---|---|---|
-| **Control flow** | Native Python (`if`, loops, `asyncio.gather`) | Edges and conditions |
-| **Best for** | Sequential pipelines, custom loops, ad-hoc parallelism | Fixed graphs, fan-out/fan-in, type-validated message routing |
-| **Parallelism** | `asyncio.gather` | Parallel edge groups, superstep execution |
-| **Observability** | Per-step events with `@step` | Per-executor events |
-| **HITL** | `ctx.request_info()` | `RequestInfoExecutor` |
-| **Checkpointing** | Per-`@step` result caching | Superstep-boundary checkpoints |
-| **Agent wrapping** | `.as_agent()` on `FunctionalWorkflow` | `.as_agent()` on `Workflow` |
-
-Start with `@workflow` when you want to express your logic in plain Python. Move to `WorkflowBuilder` when you need strict type-validated message routing or the graph execution model.
+For a side-by-side comparison with the graph API, see [Workflow APIs](./index.md#workflow-apis) on the Workflows overview.
 
 ## `@workflow` decorator
 
