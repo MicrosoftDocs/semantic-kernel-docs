@@ -2,10 +2,10 @@
 title: Semantic Kernel Filters
 description: Learn about filters in Semantic Kernel.
 zone_pivot_groups: programming-languages
-author: dmytrostruk
+author: eavanvalkenburg
 ms.topic: conceptual
-ms.author: sopand
-ms.date: 09/10/2024
+ms.author: edvan
+ms.date: 04/29/2026
 ms.service: semantic-kernel
 ---
 
@@ -67,7 +67,7 @@ To use a filter, first define it, then add it to the `Kernel` object either thro
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-To use a filter, you can either define a function with the required parameters and add it to the `Kernel` object using the `add_filter` method, or use the `@kernel.filter` decorator to define a filter function and add it to the `Kernel` object.
+To use a filter, you can either define a function with the required parameters and register it on the `Kernel` object using the `add_filter` method (passing a `FilterTypes` value or its string equivalent), or use the `@kernel.filter` decorator to define and register the filter in one step.
 
 ::: zone-end
 
@@ -123,7 +123,7 @@ kernel.FunctionInvocationFilters.Add(new LoggingFilter(logger));
 
 import logging
 from typing import Awaitable, Callable
-from semantic_kernel.filters import FunctionInvocationContext
+from semantic_kernel.filters import FilterTypes, FunctionInvocationContext
 
 logger = logging.getLogger(__name__)
 
@@ -135,15 +135,15 @@ async def logger_filter(context: FunctionInvocationContext, next: Callable[[Func
     logger.info(f"FunctionInvoked - {context.function.plugin_name}.{context.function.name}")
 
 # Add filter to the kernel
-kernel.add_filter('function_invocation', logger_filter)
+kernel.add_filter(FilterTypes.FUNCTION_INVOCATION, logger_filter)
 
 ```
 
-You can also add a filter directly to the kernel:
+You can also use the `@kernel.filter` decorator to register a filter directly:
 
 ```python
 
-@kernel.filter('function_invocation')
+@kernel.filter(FilterTypes.FUNCTION_INVOCATION)
 async def logger_filter(context: FunctionInvocationContext, next: Callable[[FunctionInvocationContext], Awaitable[None]]) -> None:
     logger.info(f"FunctionInvoking - {context.function.plugin_name}.{context.function.name}")
 
@@ -212,8 +212,28 @@ kernel.PromptRenderFilters.Add(new SafePromptFilter());
 ::: zone pivot="programming-language-python"
 
 ```python
+from typing import Awaitable, Callable
 from semantic_kernel.filters import FilterTypes, PromptRenderContext
 
+async def safe_prompt_filter(
+    context: PromptRenderContext,
+    next: Callable[[PromptRenderContext], Awaitable[None]],
+) -> None:
+    # Example: get function information
+    function_name = context.function.name
+
+    await next(context)
+
+    # Example: override the rendered prompt before sending it to the AI
+    context.rendered_prompt = f"Safe prompt: {context.rendered_prompt or ''}"
+
+# Register the filter on the kernel
+kernel.add_filter(FilterTypes.PROMPT_RENDERING, safe_prompt_filter)
+```
+
+You can also use the `@kernel.filter` decorator to register a filter directly:
+
+```python
 @kernel.filter(FilterTypes.PROMPT_RENDERING)
 async def prompt_rendering_filter(context: PromptRenderContext, next):
     await next(context)
@@ -294,6 +314,12 @@ async def auto_function_invocation_filter(context: AutoFunctionInvocationContext
         context.terminate = True
 ```
 
+As with the other filter types, you can also register the filter using `kernel.add_filter`:
+
+```python
+kernel.add_filter(FilterTypes.AUTO_FUNCTION_INVOCATION, auto_function_invocation_filter)
+```
+
 ### Code examples
 * [Auto function invocation filter examples](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/filtering/auto_function_invoke_filters.py)
 
@@ -350,7 +376,7 @@ public sealed class DualModeFilter : IFunctionInvocationFilter
 
 ## Using filters with `IChatCompletionService`
 
-In cases where `IChatCompletionService` is used directly instead of `Kernel`, filters will only be invoked when a `Kernel` object is passed as a parameter to the chat completion service methods, as filters are attached to the `Kernel` instance. 
+In cases where `IChatCompletionService` is used directly instead of `Kernel`, filters will only be invoked when a `Kernel` object is passed as a parameter to the chat completion service methods, as filters are attached to the `Kernel` instance.
 
 ```csharp
 Kernel kernel = Kernel.CreateBuilder()
