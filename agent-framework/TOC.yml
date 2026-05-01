@@ -224,6 +224,8 @@ items:
       href: integrations/ag-ui/testing-with-dojo.md
 - name: Hosting
   items:
+  - name: Foundry Hosted Agents
+    href: hosting/foundry-hosted-agent.md
   - name: A2A
     href: hosting/agent-to-agent.md
 - name: The Agent Development Journey
