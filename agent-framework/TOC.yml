@@ -28,8 +28,8 @@ items:
     href: agents/agent-pipeline.md
   - name: Multimodal
     href: agents/multimodal.md
-  - name: Structured Output
-    href: agents/structured-output.md
+  - name: Structured Outputs
+    href: agents/structured-outputs.md
   - name: Background Responses
     href: agents/background-responses.md
   - name: RAG
@@ -38,8 +38,12 @@ items:
     href: agents/declarative.md
   - name: Observability
     href: agents/observability.md
+  - name: Evaluation
+    href: agents/evaluation.md
   - name: Agent Skills
     href: agents/skills.md
+  - name: CodeAct
+    href: agents/code_act.md
   - name: Agent Safety
     href: agents/safety.md
   - name: Tools
@@ -112,60 +116,68 @@ items:
       href: agents/providers/github-copilot.md
     - name: Copilot Studio
       href: agents/providers/copilot-studio.md
+    - name: A2A
+      href: agents/providers/agent-to-agent.md
     - name: Custom Provider
       href: agents/providers/custom.md
 - name: Workflows
   items:
   - name: Overview
     href: workflows/index.md
-  - name: Executors
-    href: workflows/executors.md
-  - name: Edges
-    href: workflows/edges.md
-  - name: Events
-    href: workflows/events.md
-  - name: Workflow Builder & Execution
-    href: workflows/workflows.md
-  - name: Agents in Workflows
-    href: workflows/agents-in-workflows.md
-  - name: Human-in-the-Loop
-    href: workflows/human-in-the-loop.md
-  - name: State Management
-    href: workflows/state.md
-  - name: Checkpoints & Resuming
-    href: workflows/checkpoints.md
-  - name: Declarative Workflows
-    href: workflows/declarative.md
-  - name: Observability
-    href: workflows/observability.md
-  - name: Workflows as Agents
-    href: workflows/as-agents.md
-  - name: Visualization
-    href: workflows/visualization.md
-  - name: Orchestrations
+  - name: Functional
     items:
-    - name: Overview
-      href: workflows/orchestrations/index.md
-    - name: Sequential
-      href: workflows/orchestrations/sequential.md
-    - name: Concurrent
-      href: workflows/orchestrations/concurrent.md
-    - name: Handoff
-      href: workflows/orchestrations/handoff.md
-    - name: Group Chat
-      href: workflows/orchestrations/group-chat.md
-    - name: Magentic
-      href: workflows/orchestrations/magentic.md
-  - name: Advanced
+    - name: Functional Workflow API
+      href: workflows/functional.md
+  - name: Graph-based
     items:
-    - name: Agent Executor
-      href: workflows/advanced/agent-executor.md
-    - name: Execution Modes
-      href: workflows/advanced/execution-modes.md
-    - name: Resettable Executors
-      href: workflows/advanced/resettable-executors.md
-    - name: Sub-Workflows
-      href: workflows/advanced/sub-workflows.md
+    - name: Executors
+      href: workflows/executors.md
+    - name: Edges
+      href: workflows/edges.md
+    - name: Events
+      href: workflows/events.md
+    - name: Workflow Builder & Execution
+      href: workflows/workflows.md
+    - name: Agents in Workflows
+      href: workflows/agents-in-workflows.md
+    - name: Human-in-the-Loop
+      href: workflows/human-in-the-loop.md
+    - name: State Management
+      href: workflows/state.md
+    - name: Checkpoints & Resuming
+      href: workflows/checkpoints.md
+    - name: Declarative Workflows
+      href: workflows/declarative.md
+    - name: Observability
+      href: workflows/observability.md
+    - name: Workflows as Agents
+      href: workflows/as-agents.md
+    - name: Visualization
+      href: workflows/visualization.md
+    - name: Orchestrations
+      items:
+      - name: Overview
+        href: workflows/orchestrations/index.md
+      - name: Sequential
+        href: workflows/orchestrations/sequential.md
+      - name: Concurrent
+        href: workflows/orchestrations/concurrent.md
+      - name: Handoff
+        href: workflows/orchestrations/handoff.md
+      - name: Group Chat
+        href: workflows/orchestrations/group-chat.md
+      - name: Magentic
+        href: workflows/orchestrations/magentic.md
+    - name: Advanced
+      items:
+      - name: Agent Executor
+        href: workflows/advanced/agent-executor.md
+      - name: Execution Modes
+        href: workflows/advanced/execution-modes.md
+      - name: Resettable Executors
+        href: workflows/advanced/resettable-executors.md
+      - name: Sub-Workflows
+        href: workflows/advanced/sub-workflows.md
 - name: Integrations
   items:
   - name: Overview
@@ -174,6 +186,8 @@ items:
     href: integrations/azure-functions.md
   - name: OpenAI-Compatible Endpoints
     href: integrations/openai-endpoints.md
+  - name: Hyperlight CodeAct
+    href: integrations/hyperlight.md
   - name: Purview
     href: integrations/purview.md
   - name: M365
@@ -198,12 +212,44 @@ items:
       href: integrations/ag-ui/frontend-tools.md
     - name: Security Considerations
       href: integrations/ag-ui/security-considerations.md
+    - name: Workflows
+      href: integrations/ag-ui/workflows.md
     - name: Human-in-the-Loop
       href: integrations/ag-ui/human-in-the-loop.md
+    - name: MCP Apps Compatibility
+      href: integrations/ag-ui/mcp-apps.md
     - name: State Management
       href: integrations/ag-ui/state-management.md
     - name: Testing with Dojo
       href: integrations/ag-ui/testing-with-dojo.md
+- name: Hosting
+  items:
+  - name: Foundry Hosted Agents
+    href: hosting/foundry-hosted-agent.md
+  - name: A2A
+    href: hosting/agent-to-agent.md
+- name: The Agent Development Journey
+  items:
+  - name: Overview
+    href: journey/index.md
+  - name: LLM Fundamentals
+    href: journey/llm-fundamentals.md
+  - name: From LLMs to Agents
+    href: journey/from-llms-to-agents.md
+  - name: Adding Tools
+    href: journey/adding-tools.md
+  - name: Adding Skills
+    href: journey/adding-skills.md
+  - name: Adding Middleware
+    href: journey/adding-middleware.md
+  - name: Context Providers
+    href: journey/adding-context-providers.md
+  - name: Agents as Tools
+    href: journey/agents-as-tools.md
+  - name: "Agent-to-Agent (A2A)"
+    href: journey/agent-to-agent.md
+  - name: Workflows
+    href: journey/workflows.md
 - name: DevUI
   items:
   - name: Overview
@@ -232,6 +278,8 @@ items:
       href: migration-guide/from-semantic-kernel/index.md
     - name: Migration Samples
       href: migration-guide/from-semantic-kernel/samples.md
+  - name: A2A SDK v1
+    href: migration-guide/agent-to-agent-sdk-v1.md
 - name: API Reference
   items:
   - name: .NET API Reference

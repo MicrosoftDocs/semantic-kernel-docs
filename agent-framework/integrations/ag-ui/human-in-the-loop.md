@@ -629,10 +629,10 @@ The server middleware must remove approval protocol messages after processing:
 - **Solution**: After converting approval responses, remove both the `request_approval` tool call and its result message
 - **Reason**: Prevents "tool_calls must be followed by tool messages" errors
 
-## Next Steps
+## Next steps
 
-<!-- - **[Learn State Management](state-management.md)**: Manage shared state with approval workflows -->
-- **[Explore Function Tools](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
+> [!div class="nextstepaction"]
+> [MCP Apps Compatibility](./mcp-apps.md)
 
 ::: zone-end
 
@@ -1116,12 +1116,10 @@ def transfer_funds(...): pass
 def close_account(...): pass
 ```
 
-## Next Steps
+## Next steps
 
-Now that you understand human-in-the-loop, you can:
-
-- **[Learn State Management](state-management.md)**: Manage shared state with approval workflows
-- **[Explore Advanced Patterns](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
+> [!div class="nextstepaction"]
+> [MCP Apps Compatibility](./mcp-apps.md)
 
 ## Additional Resources
 
