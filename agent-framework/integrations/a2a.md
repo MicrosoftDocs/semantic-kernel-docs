@@ -307,6 +307,26 @@ async with A2AAgent(name="worker", url="https://a2a-agent.example.com") as agent
         print(result)
 ```
 
+### Conversation Identity (context_id)
+
+When you call `A2AAgent.run()` with an `AgentSession`, the agent automatically derives the A2A `context_id` from `session.service_session_id` if the outgoing message does not already carry one. This lets you maintain conversation continuity across multiple A2A calls without manually setting `context_id` on every message:
+
+```python
+from agent_framework import AgentSession
+from agent_framework.a2a import A2AAgent
+
+async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent:
+    session = AgentSession(service_session_id="my-conversation-1")
+
+    # context_id is automatically set to "my-conversation-1"
+    response = await agent.run("Hello!", session=session)
+
+    # Subsequent calls with the same session continue the conversation
+    response = await agent.run("Follow-up question", session=session)
+```
+
+If a message has an explicit `context_id` in its `additional_properties`, that value takes precedence over the session-derived fallback.
+
 ### Authentication
 
 Use an `AuthInterceptor` for secured A2A endpoints:
