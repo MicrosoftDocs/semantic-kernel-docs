@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: conceptual
 ms.author: taochen
-ms.date: 04/02/2026
+ms.date: 05/08/2026
 ms.service: agent-framework
 ---
 
@@ -22,6 +22,7 @@ ms.service: agent-framework
   | Streaming Behavior             | ✅ |   ✅   |                                           |
   | Shared Sessions                | ✅ |   ✅   |                                           |
   | Configuration Options          | ✅ |   ❌   | C#-specific (AIAgentHostOptions)           |
+  | Context Modes                  | ❌ |   ✅   | Python-only                                |
   | Checkpointing                  | ✅ |   ✅   |                                           |
 -->
 
@@ -224,6 +225,8 @@ workflow = (
 | `agent` | `SupportsAgentRun` | The agent to wrap. |
 | `session` | `AgentSession \| None` | Session to use for agent runs. If `None`, a new session is created from the agent. |
 | `id` | `str \| None` | Unique executor ID. Defaults to the agent's name if available. |
+| `context_mode` | `"full" \| "last_agent" \| "custom" \| None` | Controls how conversation context is handled when receiving an `AgentExecutorResponse` from an upstream agent. Defaults to `"full"`, which provides the upstream agent's full conversation (input + response). See [Context Modes](#context-modes). |
+| `context_filter` | `Callable[[list[Message]], list[Message]] \| None` | Custom filter function for selecting which messages to include. Required when `context_mode` is `"custom"`. |
 
 > [!TIP]
 > The executor ID is also the key used when you target `workflow.run(function_invocation_kwargs=...)` or `client_kwargs=` at individual agents. If you omit `id`, the workflow uses the wrapped agent's name.
@@ -270,9 +273,9 @@ After the agent completes, the executor sends an `AgentExecutorResponse` downstr
 |-------|------|-------------|
 | `executor_id` | `str` | The ID of the executor that produced the response. |
 | `agent_response` | `AgentResponse` | The underlying agent response (unaltered from the client). |
-| `full_conversation` | `list[Message] \| None` | The full conversation context (prior inputs + agent outputs) for chaining. |
+| `full_conversation` | `list[Message]` | The full conversation context (prior inputs + agent outputs) for chaining. |
 
-When chaining agent executors, the downstream executor receives the `AgentExecutorResponse` via the `from_response` handler. It uses the `full_conversation` field to preserve the complete conversation history, preventing downstream agents from losing prior context:
+When chaining agent executors, the downstream executor receives the `AgentExecutorResponse` via the `from_response` handler. By default, it uses the `full_conversation` field to preserve the complete conversation history, preventing downstream agents from losing prior context. You can change this behavior with [context modes](#context-modes):
 
 ```python
 spam_detector = AgentExecutor(create_spam_detector_agent())
@@ -309,6 +312,74 @@ for output in outputs:
     if isinstance(output, AgentResponse):
         print(output.text)
 ```
+
+## Context Modes
+
+When agents are chained together, the `context_mode` parameter on `AgentExecutor` controls what conversation context the agent consumes when it receives an `AgentExecutorResponse` from an upstream agent via the `from_response` handler.
+
+### Available modes
+
+| Mode | Behavior |
+|------|----------|
+| `"full"` (default) | The agent consumes the upstream agent's full conversation — both the input messages provided to the upstream agent and its response messages. |
+| `"last_agent"` | The agent consumes only the upstream agent's response messages, excluding the input that was provided to the upstream agent. |
+| `"custom"` | A user-provided `context_filter` function determines which messages the agent consumes. Requires the `context_filter` parameter. |
+
+### Using `last_agent` mode
+
+Use `"last_agent"` when each agent should focus solely on transforming the previous agent's output without being influenced by earlier conversation turns. This is useful for translation pipelines, progressive refinement, and similar sequential transformations:
+
+```python
+from agent_framework import AgentExecutor, WorkflowBuilder
+
+# Each agent consumes only the previous agent's response messages
+french_executor = AgentExecutor(french_agent, context_mode="last_agent")
+spanish_executor = AgentExecutor(spanish_agent, context_mode="last_agent")
+
+workflow = (
+    WorkflowBuilder(start_executor=writer_agent)
+    .add_edge(writer_agent, french_executor)
+    .add_edge(french_executor, spanish_executor)
+    .build()
+)
+```
+
+With `context_mode="last_agent"`, the French translator consumes only the writer's response messages (excluding the original user prompt that was input to the writer), and the Spanish translator consumes only the French translator's response messages.
+
+### Using `custom` mode
+
+For fine-grained control over what context an agent consumes, use `context_mode="custom"` with a `context_filter` function. The filter receives the full conversation as a `list[Message]` and returns the filtered subset:
+
+```python
+from agent_framework import AgentExecutor, Message
+
+def keep_user_and_last_agent(messages: list[Message]) -> list[Message]:
+    """Keep only user messages and the last agent's response."""
+    user_msgs = [m for m in messages if m.role == "user"]
+    agent_msgs = [m for m in messages if m.role == "assistant"]
+    return user_msgs + agent_msgs[-1:] if agent_msgs else user_msgs
+
+executor = AgentExecutor(
+    my_agent,
+    context_mode="custom",
+    context_filter=keep_user_and_last_agent,
+)
+```
+
+### Context modes in SequentialBuilder
+
+The `SequentialBuilder` orchestration provides a convenient `chain_only_agent_responses` parameter that configures all agent participants to use `context_mode="last_agent"`, so each agent consumes only the previous agent's response messages:
+
+```python
+from agent_framework.orchestrations import SequentialBuilder
+
+workflow = SequentialBuilder(
+    participants=[writer, translator, reviewer],
+    chain_only_agent_responses=True,
+).build()
+```
+
+For a complete example, see [sequential_chain_only_agent_responses.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/sequential_chain_only_agent_responses.py) in the Agent Framework repository.
 
 ## Shared Sessions
 

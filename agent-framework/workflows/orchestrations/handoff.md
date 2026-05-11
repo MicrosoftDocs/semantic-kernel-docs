@@ -4,7 +4,7 @@ description: In-depth look at Handoff Orchestrations in Microsoft Agent Framewor
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/12/2026
+ms.date: 05/09/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -644,6 +644,7 @@ After broadcasting the response, the participant then checks whether it needs to
 - **HandoffBuilder**: Creates workflows with automatic handoff tool registration
 - **with_start_agent()**: Defines which agent receives user input first
 - **add_handoff()**: Configures specific handoff relationships between agents
+- **Output**: Each agent's responses surfaces as `output` events (`AgentResponse` in non-streaming mode and `AgentResponseUpdate` in streaming mode); there is no synthetic terminal event. Because every agent's response is already an output event, handoff has no separate `intermediate_outputs` parameter — all outputs are inherently visible
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
 - **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human approval
