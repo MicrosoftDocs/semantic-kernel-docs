@@ -24,6 +24,7 @@ Agent Framework supports many different types of tools that extend agent capabil
 | [Web Search](./web-search.md) | Search the web for information |
 | [Hosted MCP Tools](./hosted-mcp-tools.md) | MCP tools hosted by Microsoft Foundry |
 | [Local MCP Tools](./local-mcp-tools.md) | MCP tools running locally or on custom servers |
+| [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes) | Named, versioned bundles of hosted tool configurations managed in a Foundry project |
 
 :::zone pivot="programming-language-csharp"
 

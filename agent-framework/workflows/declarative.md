@@ -5,56 +5,71 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 03/11/2026
+ms.date: 05/11/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                        | C# | Python | Notes                    |
-  |--------------------------------|:--:|:------:|--------------------------|
-  | Basic YAML Structure           | ✅ |   ✅   |                          |
-  | Prerequisites                  | ✅ |   ✅   |                          |
-  | Your First Declarative Workflow| ✅ |   ✅   |                          |
-  | Core Concepts                  | ✅ |   ✅   |                          |
-  | Variable Namespaces            | ✅ |   ✅   | C# lacks Workflow.Inputs/Outputs |
-  | Expression Language            | ✅ |   ✅   | C# has additional PowerFx funcs  |
-  | Configuration Options          | ✅ |   ❌   | C#-specific              |
-  | Agent Provider Setup           | ✅ |   ❌   | C#-specific              |
-  | Workflow Execution             | ✅ |   ❌   | C#-specific              |
-  | Resuming from Checkpoints      | ✅ |   ❌   | C#-specific              |
-  | SetVariable                    | ✅ |   ✅   |                          |
-  | SetMultipleVariables           | ✅ |   ✅   |                          |
-  | SetTextVariable                | ✅ |   ❌   | C#-specific              |
-  | AppendValue                    | ❌ |   ✅   | Python-specific          |
-  | ResetVariable                  | ✅ |   ✅   |                          |
-  | ClearAllVariables              | ✅ |   ❌   | C#-specific              |
-  | ParseValue                     | ✅ |   ❌   | C#-specific              |
-  | EditTableV2                    | ✅ |   ❌   | C#-specific              |
-  | If                             | ✅ |   ✅   |                          |
-  | ConditionGroup                 | ✅ |   ✅   |                          |
-  | Foreach                        | ✅ |   ✅   |                          |
-  | RepeatUntil                    | ❌ |   ✅   | Python-specific          |
-  | BreakLoop                      | ✅ |   ✅   |                          |
-  | ContinueLoop                   | ✅ |   ✅   |                          |
-  | GotoAction                     | ✅ |   ✅   |                          |
-  | SendActivity                   | ✅ |   ✅   |                          |
-  | EmitEvent                      | ❌ |   ✅   | Python-specific          |
-  | InvokeAzureAgent               | ✅ |   ✅   |                          |
-  | InvokeFunctionTool             | ✅ |   ✅   |                          |
-  | InvokeMcpTool                  | ✅ |   ❌   | C#-specific              |
-  | Question                       | ✅ |   ✅   |                          |
-  | Confirmation                   | ❌ |   ✅   | Python-specific          |
-  | RequestExternalInput           | ✅ |   ✅   |                          |
-  | WaitForInput                   | ❌ |   ✅   | Python-specific          |
-  | EndWorkflow                    | ✅ |   ✅   |                          |
-  | EndConversation                | ✅ |   ✅   |                          |
-  | CreateConversation             | ✅ |   ✅   |                          |
-  | Conversation Actions           | ✅ |   ❌   | C#-specific              |
-  | Expression Syntax              | ❌ |   ✅   | Python zone only (detailed) |
-  | Advanced Patterns              | ✅ |   ✅   |                          |
-  | Next Steps                     | ✅ |   ✅   |                          |
+  Sections (presence in each language zone):
+
+  | Section                        | C# | Python | Notes                                          |
+  |--------------------------------|:--:|:------:|------------------------------------------------|
+  | Basic YAML Structure           | ✅ |   ✅   |                                                |
+  | Prerequisites                  | ✅ |   ✅   |                                                |
+  | Your First Declarative Workflow| ✅ |   ✅   |                                                |
+  | Core Concepts                  | ✅ |   ✅   |                                                |
+  | Variable Namespaces            | ✅ |   ✅   | Python adds `Workflow.Inputs`                  |
+  | Expression Language            | ✅ |   ✅   |                                                |
+  | Configuration Options          | ✅ |   ✅   |                                                |
+  | Agent Provider / Registry      | ✅ |   ✅   |                                                |
+  | Workflow Execution             | ✅ |   ✅   |                                                |
+  | Resuming from Checkpoints      | ✅ |   ✅   |                                                |
+  | Actions Reference              | ✅ |   ✅   |                                                |
+  | Advanced Patterns              | ✅ |   ✅   |                                                |
+  | Next Steps                     | ✅ |   ✅   |                                                |
+
+  Action-kind parity (verified against source at C:\code\agent-framework):
+    - C#: dotnet/src/Microsoft.Agents.AI.Workflows.Declarative/Interpreter/WorkflowActionVisitor.cs
+    - Python: python/packages/declarative/agent_framework_declarative/_workflows/_executors_*.py
+
+  | Action                              | C# | Python | Notes                                            |
+  |-------------------------------------|:--:|:------:|--------------------------------------------------|
+  | SetVariable                         | ✅ |   ✅   |                                                  |
+  | SetValue                            | ❌ |   ✅   | Python alias for SetVariable using `path:`       |
+  | SetMultipleVariables                | ✅ |   ✅   |                                                  |
+  | SetTextVariable                     | ✅ |   ✅   |                                                  |
+  | AppendValue                         | ❌ |   ✅   | Python-only                                      |
+  | ResetVariable                       | ✅ |   ✅   |                                                  |
+  | ClearAllVariables                   | ✅ |   ✅   |                                                  |
+  | ParseValue                          | ✅ |   ✅   |                                                  |
+  | EditTable                           | ❌ |   ✅   | Python-only                                      |
+  | EditTableV2                         | ✅ |   ✅   |                                                  |
+  | If                                  | ✅ |   ✅   |                                                  |
+  | ConditionGroup                      | ✅ |   ✅   |                                                  |
+  | Switch                              | ❌ |   ✅   | Python-only alias for ConditionGroup             |
+  | Foreach                             | ✅ |   ✅   |                                                  |
+  | BreakLoop                           | ✅ |   ✅   |                                                  |
+  | ContinueLoop                        | ✅ |   ✅   |                                                  |
+  | GotoAction                          | ✅ |   ✅   |                                                  |
+  | SendActivity                        | ✅ |   ✅   |                                                  |
+  | EmitEvent                           | ❌ |   ✅   | Python-only (C# explicitly NotSupported)         |
+  | InvokeAzureAgent                    | ✅ |   ✅   |                                                  |
+  | InvokeFunctionTool                  | ✅ |   ✅   |                                                  |
+  | InvokeMcpTool                       | ✅ |   ✅   |                                                  |
+  | HttpRequestAction                   | ✅ |   ✅   |                                                  |
+  | Question                            | ✅ |   ✅   |                                                  |
+  | Confirmation                        | ❌ |   ✅   | Python-only                                      |
+  | RequestExternalInput                | ✅ |   ✅   |                                                  |
+  | WaitForInput                        | ❌ |   ✅   | Python-only                                      |
+  | EndWorkflow / EndDialog             | ✅ |   ✅   | `EndDialog` is the Python alias                  |
+  | EndConversation                     | ✅ |   ✅   |                                                  |
+  | CreateConversation                  | ✅ |   ✅   |                                                  |
+  | CancelDialog / CancelAllDialogs     | ✅ |   ✅   |                                                  |
+  | AddConversationMessage              | ✅ |   ❌   | C#-only                                          |
+  | CopyConversationMessages            | ✅ |   ❌   | C#-only                                          |
+  | RetrieveConversationMessage[s]      | ✅ |   ❌   | C#-only                                          |
 -->
 
 # Declarative Workflows - Overview
@@ -89,24 +104,7 @@ The YAML structure differs slightly between C# and Python implementations. See t
 
 ## Action Types
 
-Declarative workflows support various action types. The following table shows availability by language:
-
-| Category | Actions | C# | Python |
-|----------|---------|-----|--------|
-| Variable Management | `SetVariable`, `SetMultipleVariables`, `ResetVariable` | ✅ | ✅ |
-| Variable Management | `AppendValue` | ❌ | ✅ |
-| Variable Management | `SetTextVariable`, `ClearAllVariables`, `ParseValue`, `EditTableV2` | ✅ | ❌ |
-| Control Flow | `If`, `ConditionGroup`, `Foreach`, `BreakLoop`, `ContinueLoop`, `GotoAction` | ✅ | ✅ |
-| Control Flow | `RepeatUntil` | ❌ | ✅ |
-| Output | `SendActivity` | ✅ | ✅ |
-| Output | `EmitEvent` | ❌ | ✅ |
-| Agent Invocation | `InvokeAzureAgent` | ✅ | ✅ |
-| Tool Invocation | `InvokeFunctionTool` | ✅ | ✅ |
-| Tool Invocation | `InvokeMcpTool` | ✅ | ❌ |
-| Human-in-the-Loop | `Question`, `RequestExternalInput` | ✅ | ✅ |
-| Human-in-the-Loop | `Confirmation`, `WaitForInput` | ❌ | ✅ |
-| Workflow Control | `EndWorkflow`, `EndConversation`, `CreateConversation` | ✅ | ✅ |
-| Conversation | `AddConversationMessage`, `CopyConversationMessages`, `RetrieveConversationMessage`, `RetrieveConversationMessages` | ✅ | ❌ |
+Declarative workflows support a wide range of action kinds covering variable management, control flow, agent and tool invocation, HTTP and MCP integration, human-in-the-loop, and conversation control. The complete language-specific reference appears in each zone below; for an at-a-glance availability matrix across both languages, see [Quick Reference Table](#quick-reference-table) at the bottom of this article.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -398,6 +396,9 @@ DeclarativeWorkflowOptions options = new(agentProvider)
     
     // MCP tool handler for InvokeMcpTool actions (optional)
     McpToolHandler = mcpToolHandler,
+
+    // HTTP request handler for HttpRequestAction actions (optional)
+    HttpRequestHandler = new DefaultHttpRequestHandler(),
     
     // PowerFx expression limits (optional)
     MaximumCallDepth = 50,
@@ -916,7 +917,7 @@ With external loop (continues until condition is met):
 | `output.messages` | No | Path to store conversation messages |
 | `output.autoSend` | No | Automatically send response to user |
 
-### Tool Invocation Actions (C# only)
+### Tool and HTTP Actions
 
 #### InvokeFunctionTool
 
@@ -1055,6 +1056,51 @@ WorkflowFactory workflowFactory = new("workflow.yaml", foundryEndpoint)
 {
     McpToolHandler = mcpToolHandler
 };
+```
+
+#### HttpRequestAction
+
+Sends an HTTP request through the configured `IHttpRequestHandler`. Successful JSON responses are parsed before assignment; non-2xx responses fail the action.
+
+```yaml
+- kind: HttpRequestAction
+  id: fetch_repo_info
+  method: GET
+  url: "https://api.github.com/repos/Microsoft/agent-framework"
+  headers:
+    Accept: application/vnd.github+json
+    User-Agent: agent-framework
+  queryParameters:
+    per_page: 10
+  response: Local.RepoInfo
+  responseHeaders: Local.RepoHeaders
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `url` | Yes | Absolute request URL |
+| `method` | No | HTTP method; defaults to `GET` |
+| `headers` | No | Request headers |
+| `queryParameters` | No | Query parameters appended to the URL |
+| `body` | No | Request body; use `kind: json`, `raw`, or `none` |
+| `requestTimeoutInMilliseconds` | No | Per-request timeout |
+| `conversationId` | No | Adds a successful response body to the conversation |
+| `response` | No | Path to store the parsed response body |
+| `responseHeaders` | No | Path to store response headers |
+
+**C# Setup for HttpRequestAction:**
+
+Set `HttpRequestHandler` when building the workflow. Use a custom handler when you need retries, or URL allowlisting.
+
+```csharp
+DeclarativeWorkflowOptions options = new(agentProvider)
+{
+    HttpRequestHandler = new DefaultHttpRequestHandler(),
+};
+
+Workflow workflow = DeclarativeWorkflowBuilder.Build<string>("workflow.yaml", options);
 ```
 
 ### Human-in-the-Loop Actions
@@ -1256,8 +1302,9 @@ Retrieves multiple messages from a conversation.
 | `SendActivity` | Output | ✅ | ✅ | Send message to user |
 | `EmitEvent` | Output | ❌ | ✅ | Emit custom event |
 | `InvokeAzureAgent` | Agent | ✅ | ✅ | Call Azure AI agent |
-| `InvokeFunctionTool` | Tool | ✅ | ✅| Invoke function directly |
-| `InvokeMcpTool` | Tool | ✅ | ❌ | Invoke MCP server tool |
+| `InvokeFunctionTool` | Tool | ✅ | ✅ | Invoke function directly |
+| `InvokeMcpTool` | Tool | ✅ | ✅ | Invoke MCP server tool |
+| `HttpRequestAction` | HTTP | ✅ | ✅ | Call HTTP endpoint |
 | `Question` | Human-in-the-Loop | ✅ | ✅ | Ask user a question |
 | `Confirmation` | Human-in-the-Loop | ❌ | ✅ | Yes/no confirmation |
 | `RequestExternalInput` | Human-in-the-Loop | ✅ | ✅ | Request external input |
@@ -1611,7 +1658,8 @@ Declarative workflows support various action types:
 | Control Flow | `If`, `ConditionGroup`, `Foreach`, `RepeatUntil`, `BreakLoop`, `ContinueLoop`, `GotoAction` |
 | Output | `SendActivity`, `EmitEvent` |
 | Agent Invocation | `InvokeAzureAgent` |
-| Tool Invocation | `InvokeFunctionTool` |
+| Tool Invocation | `InvokeFunctionTool`, `InvokeMcpTool` |
+| HTTP | `HttpRequestAction` |
 | Human-in-the-Loop | `Question`, `Confirmation`, `RequestExternalInput`, `WaitForInput` |
 | Workflow Control | `EndWorkflow`, `EndConversation`, `CreateConversation` |
 
@@ -2043,7 +2091,7 @@ With external loop (continues until condition is met):
 | `output.messages` | No | Path to store conversation messages |
 | `output.autoSend` | No | Automatically send response to user |
 
-### Tool Invocation Actions
+### Tool and HTTP Actions
 
 #### InvokeFunctionTool
 
@@ -2100,6 +2148,95 @@ factory = (
 # Load and run the workflow
 workflow = factory.create_workflow_from_yaml_path("workflow.yaml")
 result = await workflow.run({"location": "Seattle", "unit": "F"})
+```
+
+#### InvokeMcpTool
+
+Invokes a tool on an MCP server through the configured `MCPToolHandler`.
+
+```yaml
+- kind: InvokeMcpTool
+  id: search_docs
+  serverUrl: https://learn.microsoft.com/api/mcp
+  serverLabel: microsoft_docs
+  toolName: microsoft_docs_search
+  arguments:
+    query: =Local.searchQuery
+  output:
+    result: Local.searchResults
+    messages: Local.toolMessage
+    autoSend: true
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `serverUrl` | Yes | MCP server URL |
+| `toolName` | Yes | Tool name on the MCP server |
+| `serverLabel` | No | Human-readable server label |
+| `arguments` | No | Arguments passed to the tool |
+| `headers` | No | Request headers; empty values are skipped |
+| `connection.name` | No | Named connection for custom handlers |
+| `conversationId` | No | Adds successful tool output to the conversation |
+| `requireApproval` | No | Requests approval before invoking the tool |
+| `output.result` | No | Path to store parsed tool output |
+| `output.messages` | No | Path to store the tool message |
+| `output.autoSend` | No | Emits tool output to the workflow result; defaults to `true` |
+
+**Python setup for InvokeMcpTool:**
+
+Pass an MCP tool handler to `WorkflowFactory`. Use a custom handler when you need authentication, managed connections, or URL allowlisting.
+
+```python
+from agent_framework.declarative import DefaultMCPToolHandler, WorkflowFactory
+
+factory = WorkflowFactory(mcp_tool_handler=DefaultMCPToolHandler())
+workflow = factory.create_workflow_from_yaml_path("workflow.yaml")
+```
+
+#### HttpRequestAction
+
+Sends an HTTP request through the configured `HttpRequestHandler`. Successful JSON responses are parsed before assignment; non-2xx responses fail the action.
+
+```yaml
+- kind: HttpRequestAction
+  id: fetch_repo_info
+  method: GET
+  url: =Concat("https://api.github.com/repos/", Local.repoName)
+  headers:
+    Accept: application/vnd.github+json
+    User-Agent: agent-framework
+  queryParameters:
+    per_page: 10
+  response: Local.repoInfo
+  responseHeaders: Local.repoHeaders
+```
+
+**Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `url` | Yes | Absolute request URL |
+| `method` | No | HTTP method; defaults to `GET` |
+| `headers` | No | Request headers |
+| `queryParameters` | No | Query parameters appended to the URL |
+| `body` | No | Request body; use `kind: json`, `raw`, or `none` |
+| `requestTimeoutInMilliseconds` | No | Per-request timeout |
+| `connection.name` | No | Named connection for custom handlers |
+| `conversationId` | No | Adds a successful response body to the conversation |
+| `response` | No | Path to store the parsed response body |
+| `responseHeaders` | No | Path to store response headers |
+
+**Python setup for HttpRequestAction:**
+
+Pass an HTTP request handler to `WorkflowFactory`. Use a custom handler when you need authentication, retries, or URL allowlisting.
+
+```python
+from agent_framework.declarative import DefaultHttpRequestHandler, WorkflowFactory
+
+factory = WorkflowFactory(http_request_handler=DefaultHttpRequestHandler())
+workflow = factory.create_workflow_from_yaml_path("workflow.yaml")
 ```
 
 ### Human-in-the-Loop Actions
@@ -2242,6 +2379,8 @@ Creates a new conversation context.
 | `EmitEvent` | Output | Emit custom event |
 | `InvokeAzureAgent` | Agent | Call Azure AI agent |
 | `InvokeFunctionTool` | Tool | Invoke registered function |
+| `InvokeMcpTool` | Tool | Invoke MCP server tool |
+| `HttpRequestAction` | HTTP | Call HTTP endpoint |
 | `Question` | Human-in-the-Loop | Ask user a question |
 | `Confirmation` | Human-in-the-Loop | Yes/no confirmation |
 | `RequestExternalInput` | Human-in-the-Loop | Request external input |

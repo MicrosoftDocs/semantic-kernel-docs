@@ -132,4 +132,4 @@ This will print the agent's analysis of the image to the console.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Structured Output](structured-output.md)
+> [Structured Outputs](structured-outputs.md)

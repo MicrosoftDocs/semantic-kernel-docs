@@ -2,9 +2,9 @@
 title: Running Agents
 description: Learn how to run agents with Agent Framework
 zone_pivot_groups: programming-languages
-author: markwallace
+author: moonbox3
 ms.topic: reference
-ms.author: markwallace
+ms.author: evmattso
 ms.date: 03/31/2026
 ms.service: agent-framework
 ---
@@ -120,7 +120,7 @@ Common options include:
 - `temperature`: Controls randomness in response generation
 - `model`: Override the model for this specific run
 - `top_p`: Nucleus sampling parameter
-- `response_format`: Specify the response format (e.g., structured output)
+- `response_format`: Specify the response format (e.g., structured outputs)
 
 > [!NOTE]
 > The `tools` and `instructions` parameters remain as direct keyword arguments and are not passed via the `options` dictionary.
