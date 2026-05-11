@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/12/2026
+ms.date: 05/08/2026
 ms.service: agent-framework
 ---
 
@@ -21,6 +21,8 @@ ms.service: agent-framework
   | Sample Output                                 | ✅ |   ✅   |                 |
   | Sequential with Human-in-the-Loop             | ✅ |   ✅   |                 |
   | Advanced: Mixing Agents with Custom Executors | ❌ |   ✅   | Python-specific |
+  | Controlling Context Between Agents             | ❌ |   ✅   | Python-specific |
+  | Intermediate Outputs                           | ❌ |   ✅   | Python-specific |
   | Key Concepts                                  | ✅ |   ✅   |                 |
 -->
 
@@ -33,7 +35,7 @@ In sequential orchestration, agents are organized in a pipeline. Each agent proc
 </p>
 
 > [!IMPORTANT]
-> The full conversation history from previous agents is passed to the next agent in the sequence. Each agent can see all prior messages, allowing for context-aware processing.
+> By default, each agent in the sequence consumes the previous agent's full conversation — both the input messages provided to the previous agent and its response messages. You can configure agents to consume only the previous agent's response messages instead. See [Controlling Context Between Agents](#controlling-context-between-agents) for details.
 
 ## What You'll Learn
 
@@ -261,38 +263,28 @@ workflow = SequentialBuilder(participants=[writer, reviewer]).build()
 
 ## Run the Sequential Workflow
 
-Execute the workflow and collect the final conversation showing each agent's contribution:
+Execute the workflow and collect the final output. The terminal output is an `AgentResponse` containing the last agent's response messages:
 
 ```python
-from typing import Any, cast
-from agent_framework import Message, WorkflowEvent
+from agent_framework import AgentResponse
 
-# 3) Run and print final conversation
-outputs: list[list[Message]] = []
-async for event in workflow.run("Write a tagline for a budget-friendly eBike.", stream=True):
-    if event.type == "output":
-        outputs.append(cast(list[Message], event.data))
+# 3) Run and print the last agent's response
+events = await workflow.run("Write a tagline for a budget-friendly eBike.")
+outputs = events.get_outputs()
 
 if outputs:
-    print("===== Final Conversation =====")
-    messages: list[Message] = outputs[-1]
-    for i, msg in enumerate(messages, start=1):
-        name = msg.author_name or ("assistant" if msg.role == "assistant" else "user")
-        print(f"{'-' * 60}\n{i:02d} [{name}]\n{msg.text}")
+    print("===== Final Response =====")
+    final: AgentResponse = outputs[0]
+    for msg in final.messages:
+        name = msg.author_name or "assistant"
+        print(f"[{name}]\n{msg.text}")
 ```
 
 ## Sample Output
 
 ```plaintext
-===== Final Conversation =====
-------------------------------------------------------------
-01 [user]
-Write a tagline for a budget-friendly eBike.
-------------------------------------------------------------
-02 [writer]
-Ride farther, spend less—your affordable eBike adventure starts here.
-------------------------------------------------------------
-03 [reviewer]
+===== Final Response =====
+[reviewer]
 This tagline clearly communicates affordability and the benefit of extended travel, making it
 appealing to budget-conscious consumers. It has a friendly and motivating tone, though it could
 be slightly shorter for more punch. Overall, a strong and effective suggestion!
@@ -305,29 +297,30 @@ Sequential orchestration supports mixing agents with custom executors for specia
 ### Define a Custom Executor
 
 > [!NOTE]
-> When a custom executor follows an agent in the sequence, its handler receives an `AgentExecutorResponse` (because agents are internally wrapped by `AgentExecutor`). Use `agent_response.full_conversation` to access the full conversation history.
+> When a custom executor follows an agent in the sequence, its handler receives an `AgentExecutorResponse` (because agents are internally wrapped by `AgentExecutor`). Use `agent_response.full_conversation` to access the full conversation history. A custom executor used as the **last participant** (terminator) must call `ctx.yield_output(AgentResponse(...))` so its output becomes the workflow's terminal output.
 
 ```python
-from agent_framework import AgentExecutorResponse, Executor, WorkflowContext, handler
+from agent_framework import AgentExecutorResponse, AgentResponse, Executor, WorkflowContext, handler
 from agent_framework import Message
+from typing_extensions import Never
 
 class Summarizer(Executor):
-    """Simple summarizer: consumes full conversation and appends an assistant summary."""
+    """Terminator custom executor: consumes full conversation and yields a summary as the workflow's final answer."""
 
     @handler
     async def summarize(
         self,
         agent_response: AgentExecutorResponse,
-        ctx: WorkflowContext[list[Message]]
+        ctx: WorkflowContext[Never, AgentResponse]
     ) -> None:
         if not agent_response.full_conversation:
-            await ctx.send_message([Message("assistant", ["No conversation to summarize."])])
+            await ctx.yield_output(AgentResponse(messages=[Message("assistant", ["No conversation to summarize."])]))
             return
 
         users = sum(1 for m in agent_response.full_conversation if m.role == "user")
         assistants = sum(1 for m in agent_response.full_conversation if m.role == "assistant")
         summary = Message("assistant", [f"Summary -> users:{users} assistants:{assistants}"])
-        await ctx.send_message(list(agent_response.full_conversation) + [summary])
+        await ctx.yield_output(AgentResponse(messages=[summary]))
 ```
 
 ### Build a Mixed Sequential Workflow
@@ -347,20 +340,58 @@ workflow = SequentialBuilder(participants=[content, summarizer]).build()
 ### Sample Output with Custom Executor
 
 ```plaintext
-------------------------------------------------------------
-01 [user]
-Explain the benefits of budget eBikes for commuters.
-------------------------------------------------------------
-02 [content]
-Budget eBikes offer commuters an affordable, eco-friendly alternative to cars and public transport.
-Their electric assistance reduces physical strain and allows riders to cover longer distances quickly,
-minimizing travel time and fatigue. Budget models are low-cost to maintain and operate, making them accessible
-for a wider range of people. Additionally, eBikes help reduce traffic congestion and carbon emissions,
-supporting greener urban environments. Overall, budget eBikes provide cost-effective, efficient, and
-sustainable transportation for daily commuting needs.
-------------------------------------------------------------
-03 [assistant]
+===== Final Summary =====
 Summary -> users:1 assistants:1
+```
+
+## Controlling Context Between Agents
+
+By default, each agent in a `SequentialBuilder` workflow consumes the previous agent's full conversation (input + response messages). Setting `chain_only_agent_responses=True` configures all agents in the sequence to consume only the previous agent's response messages instead:
+
+```python
+workflow = SequentialBuilder(
+    participants=[writer, translator, reviewer],
+    chain_only_agent_responses=True,
+).build()
+```
+
+This is useful for translation pipelines, progressive refinement, and other scenarios where each agent should focus solely on transforming the prior agent's output without being influenced by earlier conversation turns.
+
+For a complete example, see [sequential_chain_only_agent_responses.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/sequential_chain_only_agent_responses.py) in the Agent Framework repository.
+
+> [!TIP]
+> For more fine-grained control over context flow — including custom filter functions — see [Context Modes](../advanced/agent-executor.md#context-modes) in the Agent Executor reference.
+
+## Intermediate Outputs
+
+By default, only the last participant's output surfaces as a workflow `output` event. Set `intermediate_outputs=True` to surface every participant's output, in addition to the final output:
+
+```python
+workflow = SequentialBuilder(
+    participants=[writer, reviewer, editor],
+    intermediate_outputs=True,
+).build()
+```
+
+You can handle these events in real-time in streaming mode:
+
+```python
+from agent_framework import AgentResponseUpdate
+
+# Track the last author to format streaming output.
+last_author: str | None = None
+
+async for event in workflow.run("Write a tagline for a budget-friendly eBike.", stream=True):
+    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+        update = event.data
+        author = update.author_name
+        if author != last_author:
+            if last_author is not None:
+                print()  # Newline between different authors
+            print(f"{author}: {update.text}", end="", flush=True)
+            last_author = author
+        else:
+            print(update.text, end="", flush=True)
 ```
 
 ## Sequential Orchestration with Human-in-the-Loop
@@ -465,10 +496,13 @@ while pending_responses is not None:
 
 ## Key Concepts
 
-- **Shared Context**: Each participant receives the full conversation history, including all previous messages
+- **Shared Context**: By default, each agent consumes the previous agent's full conversation, including input and response messages
+- **Context Control**: Use `chain_only_agent_responses=True` to configure agents to consume only the previous agent's response messages
+- **AgentResponse Output**: The workflow's terminal output is an `AgentResponse` containing the last agent's response (not the full conversation)
 - **Order Matters**: Agents execute strictly in the order specified in the `participants` list
 - **Flexible Participants**: You can mix agents and custom executors in any order
-- **Conversation Flow**: Each agent/executor appends to the conversation, building a complete dialogue
+- **Custom Terminator Contract**: A custom executor used as the last participant must call `ctx.yield_output(AgentResponse(...))` to produce the terminal output
+- **Intermediate Outputs**: Set `intermediate_outputs=True` to surface every participant's output as a workflow `output` event, not just the last participant's
 - **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human review
 - **Request Info**: Use `.with_request_info(agents=[...])` to pause after specific agents for external feedback
 
