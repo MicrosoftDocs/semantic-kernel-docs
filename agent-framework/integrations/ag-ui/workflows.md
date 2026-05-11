@@ -309,6 +309,31 @@ RUN_FINISHED          interrupts=[{id: "...", value: {function_approval_request}
 
 The client can then display an approval dialog and resume with the user's decision.
 
+## Receiving Forwarded Props
+
+AG-UI clients (such as CopilotKit) can include a `forwarded_props` (or `forwardedProps`) field in the input payload. The AG-UI integration automatically passes these props to the workflow's `run` method via the `function_invocation_kwargs` keyword argument:
+
+```python
+class MyWorkflow(Workflow):
+    async def run(
+        self,
+        *,
+        message=None,
+        responses=None,
+        stream: bool = False,
+        function_invocation_kwargs: dict | None = None,
+    ):
+        forwarded_props = (function_invocation_kwargs or {}).get("forwarded_props", {})
+        # Use forwarded_props for custom routing, feature flags, etc.
+        ...
+```
+
+Key details:
+
+- Both `forwarded_props` and `forwardedProps` are accepted in the input payload; internally they are normalized to `forwarded_props`.
+- If `workflow.run()` does not accept `function_invocation_kwargs` (or `**kwargs`), the props are silently dropped — existing workflows are unaffected.
+- Forwarded props are also stored in session metadata but are filtered from LLM-bound metadata, so they do not leak into chat client requests.
+
 ## Next steps
 
 > [!div class="nextstepaction"]
