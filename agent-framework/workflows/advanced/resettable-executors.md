@@ -3,7 +3,7 @@ title: Resettable Executors
 description: How to implement IResettableExecutor to safely reuse stateful executors across workflow runs.
 zone_pivot_groups: programming-languages
 author: peibekwe
-ms.topic: conceptual
+ms.topic: article
 ms.author: peibekwe
 ms.date: 03/25/2026
 ms.service: agent-framework
