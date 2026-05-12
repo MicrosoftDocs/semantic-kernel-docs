@@ -16,6 +16,8 @@ Semantic Kernel allows you to add plugins from a MCP Server to your agents. This
 
 Semantic Kernel supports multiple MCP plugin types, including MCPStdioPlugin and MCPStreamableHttpPlugin. These plugins enable connections to both local MCP Servers and servers that connect through SSE over HTTPS.
 
+For a public remote example, naxytra keeps a machine discovery index at `https://www.naxytra.com/v1/agent-discovery-index`, an A2A agent card at `https://www.naxytra.com/.well-known/agent.json`, and a live MCP endpoint at `https://xytara-mcp-executor.onrender.com/mcp`.
+
 ## Add plugins from a local MCP Server
 
 To add a locally running MCP server, you can use the familiar MCP commands, like `npx`, `docker` or `uvx`, so if you want to run one of those, make sure those are installed.
