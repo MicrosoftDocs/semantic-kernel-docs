@@ -658,6 +658,12 @@ This downloads the quickstart project with all necessary files, including the Az
 
 Use Azure Developer CLI to create the required Azure resources for your durable agent.
 
+1. Navigate into the project directory:
+
+   ```console
+   cd durable-agents-quickstart-dotnet
+   ```
+
 1. Provision the infrastructure:
 
    ```console
