@@ -1,6 +1,6 @@
 ---
 title: Azure OpenAI Agents
-description: Learn how to use Microsoft Agent Framework with Azure OpenAI services — Chat Completions, Responses, and Assistants APIs.
+description: Learn how to use Microsoft Agent Framework with Azure OpenAI services — Chat Completions and Responses APIs.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -17,10 +17,9 @@ Microsoft Agent Framework supports three distinct Azure OpenAI client types, eac
 |---|---|---|
 | **Chat Completion** | [Chat Completions API](/azure/ai-services/openai/how-to/chatgpt) | Simple agents, broad model support |
 | **Responses** | [Responses API](/azure/ai-services/openai/how-to/responses) | Full-featured agents with hosted tools (code interpreter, file search, web search, hosted MCP) |
-| **Assistants** | [Assistants API](/azure/ai-services/openai/how-to/assistant) | Server-managed agents with code interpreter and file search |
 
 > [!TIP]
-> For direct OpenAI equivalents (`OpenAIChatClient`, `OpenAIChatCompletionClient`, `OpenAIAssistantsClient`), see the [OpenAI provider page](./openai.md). The tool support is identical.
+> For direct OpenAI equivalents (`OpenAIChatClient`, `OpenAIChatCompletionClient`), see the [OpenAI provider page](./openai.md). The tool support is identical.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -81,22 +80,6 @@ Console.WriteLine(await agent.RunAsync("Write a Python function to sort a list."
 ```
 
 **Supported tools:** Function tools, tool approval, code interpreter, file search, web search, hosted MCP, local MCP tools.
-
-## Assistants Client
-
-The Assistants client creates server-managed agents with built-in code interpreter and file search.
-
-```csharp
-var assistantsClient = client.GetAssistantClient();
-
-AIAgent agent = assistantsClient.AsAIAgent(
-    instructions: "You are a data analysis assistant.",
-    name: "DataHelper");
-
-Console.WriteLine(await agent.RunAsync("Analyze trends in the uploaded data."));
-```
-
-**Supported tools:** Function tools, code interpreter, file search, local MCP tools.
 
 ### Function Tools
 
