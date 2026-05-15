@@ -1,6 +1,7 @@
-﻿---
+---
 title: A2A SDK v1 Migration Guide
 description: Learn how to migrate existing Agent Framework A2A Agent and A2A Hosting code after the A2A SDK was updated from v0.3 to v1.
+zone_pivot_groups: programming-languages
 author: sergeymenshykh
 ms.topic: conceptual
 ms.author: semenshi
@@ -16,6 +17,8 @@ This guide covers the changes you need to make to migrate your existing code.
 
 > [!NOTE]
 > This guide covers changes to the Agent Framework's A2A abstraction layer.
+
+::: zone pivot="programming-language-csharp"
 
 ## Quick reference
 
@@ -294,6 +297,205 @@ app.Run();
 | `MapA2A(agent, path, agentCard)` | `AddA2AServer("name")` + `MapA2AHttpJson("name", path)` / `MapA2AJsonRpc("name", path)` + `MapWellKnownAgentCard(card)` |
 | `Microsoft.Agents.AI.Hosting.A2A.AIAgentExtensions.MapA2A` | Consolidated into `A2AServerServiceCollectionExtensions.AddA2AServer` |
 | `A2AHostingOptions` | Renamed to `A2AServerRegistrationOptions` |
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+## A2A Hosting (server-side)
+
+### Server setup
+
+The `A2AStarletteApplication` convenience class has been removed. Build the Starlette app directly using route helpers:
+
+**Before:**
+
+```python
+from a2a.server.apps import A2AStarletteApplication
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.tasks import InMemoryTaskStore
+
+request_handler = DefaultRequestHandler(
+    agent_executor=A2AExecutor(agent),
+    task_store=InMemoryTaskStore(),
+)
+
+server = A2AStarletteApplication(
+    agent_card=public_agent_card,
+    http_handler=request_handler,
+).build()
+```
+
+**After:**
+
+```python
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
+from a2a.server.tasks import InMemoryTaskStore
+from starlette.applications import Starlette
+
+request_handler = DefaultRequestHandler(
+    agent_executor=A2AExecutor(agent),
+    task_store=InMemoryTaskStore(),
+    agent_card=public_agent_card,
+)
+
+server = Starlette(
+    routes=[
+        *create_agent_card_routes(public_agent_card),
+        *create_jsonrpc_routes(request_handler, "/"),
+    ]
+)
+```
+
+> [!IMPORTANT]
+> `DefaultRequestHandler` now requires the `agent_card` parameter. `create_jsonrpc_routes` requires a second `rpc_url` argument (typically `"/"`).
+
+### AgentCard construction
+
+The `AgentCard` no longer has a top-level `url` field. Use `supported_interfaces` with `AgentInterface` instead. Field names have moved from camelCase to snake_case.
+
+**Before:**
+
+```python
+from a2a.types import AgentCapabilities, AgentCard, AgentSkill
+
+agent_card = AgentCard(
+    name="Travel Agent",
+    description="Helps plan travel.",
+    url="http://localhost:9999/",
+    version="1.0.0",
+    defaultInputModes=["text"],
+    defaultOutputModes=["text"],
+    capabilities=AgentCapabilities(streaming=True),
+    skills=[...],
+)
+```
+
+**After:**
+
+```python
+from a2a.types import AgentCapabilities, AgentCard, AgentInterface, AgentSkill
+
+agent_card = AgentCard(
+    name="Travel Agent",
+    description="Helps plan travel.",
+    version="1.0.0",
+    default_input_modes=["text"],
+    default_output_modes=["text"],
+    capabilities=AgentCapabilities(streaming=True),
+    supported_interfaces=[
+        AgentInterface(url="http://localhost:9999/", protocol_binding="JSONRPC"),
+    ],
+    skills=[...],
+)
+```
+
+### Full before and after example
+
+**Before:**
+
+```python
+import uvicorn
+from a2a.server.apps import A2AStarletteApplication
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.tasks import InMemoryTaskStore
+from a2a.types import AgentCapabilities, AgentCard
+from agent_framework import Agent
+from agent_framework.a2a import A2AExecutor
+from agent_framework.openai import OpenAIChatClient
+
+agent_card = AgentCard(
+    name="My Agent",
+    url="http://localhost:9999/",
+    version="1.0.0",
+    defaultInputModes=["text"],
+    defaultOutputModes=["text"],
+    capabilities=AgentCapabilities(streaming=True),
+    skills=[],
+)
+
+agent = Agent(
+    client=OpenAIChatClient(),
+    name="My Agent",
+    instructions="You are a helpful assistant.",
+)
+
+handler = DefaultRequestHandler(
+    agent_executor=A2AExecutor(agent),
+    task_store=InMemoryTaskStore(),
+)
+
+server = A2AStarletteApplication(
+    agent_card=agent_card,
+    http_handler=handler,
+).build()
+
+uvicorn.run(server, host="0.0.0.0", port=9999)
+```
+
+**After:**
+
+```python
+import uvicorn
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
+from a2a.server.tasks import InMemoryTaskStore
+from a2a.types import AgentCapabilities, AgentCard, AgentInterface
+from agent_framework import Agent
+from agent_framework.a2a import A2AExecutor
+from agent_framework.openai import OpenAIChatClient
+from starlette.applications import Starlette
+
+agent_card = AgentCard(
+    name="My Agent",
+    version="1.0.0",
+    default_input_modes=["text"],
+    default_output_modes=["text"],
+    capabilities=AgentCapabilities(streaming=True),
+    supported_interfaces=[
+        AgentInterface(url="http://localhost:9999/", protocol_binding="JSONRPC"),
+    ],
+    skills=[],
+)
+
+agent = Agent(
+    client=OpenAIChatClient(),
+    name="My Agent",
+    instructions="You are a helpful assistant.",
+)
+
+handler = DefaultRequestHandler(
+    agent_executor=A2AExecutor(agent),
+    task_store=InMemoryTaskStore(),
+    agent_card=agent_card,
+)
+
+server = Starlette(
+    routes=[
+        *create_agent_card_routes(agent_card),
+        *create_jsonrpc_routes(handler, "/"),
+    ]
+)
+
+uvicorn.run(server, host="0.0.0.0", port=9999)
+```
+
+## Removed and renamed APIs
+
+| Old | New |
+|-----|-----|
+| `A2AStarletteApplication` | Removed. Use `Starlette` from `starlette.applications` with `create_agent_card_routes` and `create_jsonrpc_routes` |
+| `from a2a.server.apps import A2AStarletteApplication` | `from starlette.applications import Starlette` + `from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes` |
+| `DefaultRequestHandler(agent_executor=..., task_store=...)` | `DefaultRequestHandler(agent_executor=..., task_store=..., agent_card=...)` |
+| `AgentCard(url=...)` | `AgentCard(supported_interfaces=[AgentInterface(url=..., protocol_binding="JSONRPC")])` |
+| `defaultInputModes` / `defaultOutputModes` | `default_input_modes` / `default_output_modes` |
+| `TextPart`, `FilePart`, `DataPart` | `Part` (with `text`, `url`, `raw` fields) |
+| `TaskState.completed`, `TaskState.failed` | `TaskState.TASK_STATE_COMPLETED`, `TaskState.TASK_STATE_FAILED` |
+| `Role("agent")`, `Role("user")` | `Role.ROLE_AGENT`, `Role.ROLE_USER` |
+| `client.resubscribe(...)` | `client.subscribe(...)` |
+
+::: zone-end
 
 ## See also
 
