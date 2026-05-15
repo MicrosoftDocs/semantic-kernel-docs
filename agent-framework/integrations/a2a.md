@@ -294,7 +294,7 @@ async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent
 
 ### Long-Running Tasks
 
-By default, `A2AAgent` waits for the remote agent to finish before returning. For long-running tasks, set `background=True` to get a continuation token you can use to poll or resubscribe later:
+By default, `A2AAgent` waits for the remote agent to finish before returning. For long-running tasks, set `background=True` to get a continuation token you can use to poll or subscribe later:
 
 ```python
 async with A2AAgent(name="worker", url="https://a2a-agent.example.com") as agent:
@@ -356,13 +356,14 @@ The `A2AExecutor` adapts any Agent Framework `Agent` to the A2A server-side prot
 
 ```python
 import uvicorn
-from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
 from a2a.server.tasks import InMemoryTaskStore
-from a2a.types import AgentCapabilities, AgentCard, AgentSkill
+from a2a.types import AgentCapabilities, AgentCard, AgentInterface, AgentSkill
 from agent_framework import Agent
 from agent_framework.a2a import A2AExecutor
 from agent_framework.openai import OpenAIChatClient
+from starlette.applications import Starlette
 
 flight_skill = AgentSkill(
     id="Flight_Booking",
@@ -375,11 +376,13 @@ flight_skill = AgentSkill(
 public_agent_card = AgentCard(
     name="Europe Travel Agent",
     description="Helps users search and book flights and hotels across Europe.",
-    url="http://localhost:9999/",
     version="1.0.0",
-    defaultInputModes=["text"],
-    defaultOutputModes=["text"],
+    default_input_modes=["text"],
+    default_output_modes=["text"],
     capabilities=AgentCapabilities(streaming=True),
+    supported_interfaces=[
+        AgentInterface(url="http://localhost:9999/", protocol_binding="JSONRPC"),
+    ],
     skills=[flight_skill],
 )
 
@@ -392,17 +395,20 @@ agent = Agent(
 request_handler = DefaultRequestHandler(
     agent_executor=A2AExecutor(agent),
     task_store=InMemoryTaskStore(),
+    agent_card=public_agent_card,
 )
 
-server = A2AStarletteApplication(
-    agent_card=public_agent_card,
-    http_handler=request_handler,
-).build()
+server = Starlette(
+    routes=[
+        *create_agent_card_routes(public_agent_card),
+        *create_jsonrpc_routes(request_handler, "/"),
+    ]
+)
 
 uvicorn.run(server, host="0.0.0.0", port=9999)
 ```
 
-`A2AExecutor` streams agent updates as A2A artifacts when the underlying agent supports streaming, propagates the A2A `context_id` as the agent's `thread_id`, and exposes `save_thread`/`get_thread` hooks you can override for persistent thread storage.
+`A2AExecutor` streams agent updates as A2A artifacts when the underlying agent supports streaming and propagates the A2A `context_id` as the agent session's `session_id`. You can subclass `A2AExecutor` and override the `handle_events` method to implement custom transformations from your agent's output format to A2A protocol events.
 
 > [!TIP]
 > See the [`agent_framework_to_a2a.py` sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/a2a/agent_framework_to_a2a.py) for a complete runnable example.
