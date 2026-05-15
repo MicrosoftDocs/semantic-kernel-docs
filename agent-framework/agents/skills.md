@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
 ms.author: semenshi
-ms.date: 04/10/2026
+ms.date: 05/15/2026
 ms.service: agent-framework
 ---
 
@@ -81,10 +81,10 @@ This pattern keeps the agent's context window lean while giving it access to dee
 `AgentSkillsProvider` (C#) and `SkillsProvider` (Python) are context providers that make skills available to agents. They support three skill sources:
 
 - **File-based** — skills discovered from `SKILL.md` files in filesystem directories
-- **Code-defined** — skills defined inline in code using `AgentInlineSkill` (C#) or `Skill` (Python)
-- **Class-based** — skills encapsulated in a C# class deriving from `AgentClassSkill<T>` (C# only)
+- **Code-defined** — skills defined inline in code using `AgentInlineSkill` (C#) or `InlineSkill` (Python)
+- **Class-based** — skills encapsulated in a class deriving from `AgentClassSkill<T>` (C#) or `ClassSkill` (Python)
 
-For mixing multiple sources in one provider, use `AgentSkillsProviderBuilder` (C# only — see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios)).
+For mixing multiple sources in one provider, use `AgentSkillsProviderBuilder` (C#) or compose source classes such as `AggregatingSkillsSource`, `FilteringSkillsSource`, and `DeduplicatingSkillsSource` (Python) — see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios) (C#) or [Source composition: advanced multi-source scenarios](#source-composition-advanced-multi-source-scenarios) (Python).
 
 :::zone pivot="programming-language-csharp"
 
@@ -243,28 +243,32 @@ var skillsProvider = new AgentSkillsProviderBuilder()
 
 ## File-based skills
 
-Create a `SkillsProvider` pointing to a directory containing your skills, and add it to the agent's context providers:
+Use the `SkillsProvider.from_paths()` factory to discover skills from directories containing `SKILL.md` files, and add the provider to the agent's context providers:
 
 ```python
 import os
 from pathlib import Path
-from agent_framework import SkillsProvider
-from agent_framework.openai import OpenAIChatCompletionClient
-from azure.identity.aio import AzureCliCredential
+from agent_framework import Agent, SkillsProvider
+from agent_framework.foundry import FoundryChatClient
+from azure.identity import AzureCliCredential
 
 # Discover skills from the 'skills' directory
-skills_provider = SkillsProvider(
-    skill_paths=Path(__file__).parent / "skills"
+skills_provider = SkillsProvider.from_paths(
+    skill_paths=Path(__file__).parent / "skills",
 )
 
 # Create an agent with the skills provider
-agent = OpenAIChatCompletionClient(
-    model=os.environ["AZURE_OPENAI_CHAT_COMPLETION_MODEL"],
-    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
-    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+endpoint = os.environ["FOUNDRY_PROJECT_ENDPOINT"]
+deployment = os.environ.get("FOUNDRY_MODEL", "gpt-4o-mini")
+
+client = FoundryChatClient(
+    project_endpoint=endpoint,
+    model=deployment,
     credential=AzureCliCredential(),
-).as_agent(
-    name="SkillsAgent",
+)
+
+agent = Agent(
+    client=client,
     instructions="You are a helpful assistant.",
     context_providers=[skills_provider],
 )
@@ -272,10 +276,10 @@ agent = OpenAIChatCompletionClient(
 
 ### Multiple skill directories
 
-You can point the provider to a single parent folder — each subfolder containing a `SKILL.md` is automatically discovered as a skill:
+You can point the provider to a single parent directory — each subdirectory containing a `SKILL.md` is automatically discovered as a skill:
 
 ```python
-skills_provider = SkillsProvider(
+skills_provider = SkillsProvider.from_paths(
     skill_paths=Path(__file__).parent / "all-skills"
 )
 ```
@@ -283,7 +287,7 @@ skills_provider = SkillsProvider(
 Or pass a list of paths to search multiple root directories:
 
 ```python
-skills_provider = SkillsProvider(
+skills_provider = SkillsProvider.from_paths(
     skill_paths=[
         Path(__file__).parent / "company-skills",
         Path(__file__).parent / "team-skills",
@@ -293,43 +297,52 @@ skills_provider = SkillsProvider(
 
 The provider searches up to two levels deep.
 
-### Customizing resource discovery
+### Customizing resource and script discovery
 
-By default, `SkillsProvider` recognizes resources with extensions `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt`. It scans all subdirectories within each skill folder. Pass `resource_extensions` to change the recognized file types:
+By default, resources are discovered from `references/` and `assets/` subdirectories, and scripts from `scripts/`, per the [agentskills.io specification](https://agentskills.io/specification). Recognized resource extensions are `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt`. Use `resource_directories`, `script_directories`, and `resource_extensions` to customize these defaults:
 
 ```python
-skills_provider = SkillsProvider(
+skills_provider = SkillsProvider.from_paths(
     skill_paths=Path(__file__).parent / "skills",
     resource_extensions=(".md", ".txt"),
+    resource_directories=["docs", "templates"],
+    script_directories=["scripts", "tools"],
 )
 ```
 
+Use `"."` to include files at the skill root level in addition to subdirectories.
+
 ### Script execution
 
-To enable execution of file-based scripts, pass a `script_runner` to `SkillsProvider`. Any sync or async callable that satisfies the `SkillScriptRunner` protocol can be used:
+To enable execution of file-based scripts, pass a `script_runner` to `SkillsProvider.from_paths()`. Any sync or async callable that satisfies the `SkillScriptRunner` protocol can be used:
 
 ```python
 from pathlib import Path
-from agent_framework import Skill, SkillScript, SkillsProvider
+from agent_framework import FileSkill, FileSkillScript, SkillsProvider
 
-def my_runner(skill: Skill, script: SkillScript, args: dict | None = None) -> str:
+def my_runner(
+    skill: FileSkill,
+    script: FileSkillScript,
+    args: dict | list[str] | None = None,
+) -> str:
     """Run a file-based script as a subprocess."""
     import subprocess, sys
-    cmd = [sys.executable, str(Path(skill.path) / script.path)]
-    if args:
-        for key, value in args.items():
-            if value is not None:
-                cmd.extend([f"--{key}", str(value)])
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+    script_path = Path(script.full_path)
+    cmd = [sys.executable, str(script_path)]
+    if isinstance(args, list):
+        cmd.extend(args)
+    result = subprocess.run(
+        cmd, capture_output=True, text=True, timeout=30, cwd=str(script_path.parent)
+    )
     return result.stdout.strip()
 
-skills_provider = SkillsProvider(
+skills_provider = SkillsProvider.from_paths(
     skill_paths=Path(__file__).parent / "skills",
     script_runner=my_runner,
 )
 ```
 
-The runner receives the resolved `Skill`, `SkillScript`, and an optional `args` dictionary. File-based scripts are automatically discovered from `.py` files in skill directories.
+The runner receives the resolved `FileSkill`, `FileSkillScript`, and an optional `args` argument. File-based scripts expect arguments as a JSON array of strings — each array element becomes a positional command-line argument. Scripts are automatically discovered from `.py` files in the `scripts/` subdirectory of each skill directory.
 
 > [!WARNING]
 > The runner above is provided for **demonstration purposes only**. For production use, consider adding:
@@ -340,7 +353,7 @@ The runner receives the resolved `Skill`, `SkillScript`, and an optional `args` 
 > - Structured logging and audit trails
 
 > [!NOTE]
-> If file-based skills with scripts are provided but no `script_runner` is set, `SkillsProvider` raises a `ValueError`.
+> If file-based skills with scripts are provided but no `script_runner` is set, `SkillsProvider` raises an error when script execution is attempted.
 
 :::zone-end
 
@@ -449,7 +462,7 @@ var skillsProvider = new AgentSkillsProvider(unitConverterSkill);
 
 :::zone pivot="programming-language-python"
 
-In addition to file-based skills discovered from `SKILL.md` files, you can define skills entirely in Python code. Code-defined skills are useful when:
+In addition to file-based skills discovered from `SKILL.md` files, you can define skills entirely in Python code using `InlineSkill`. Code-defined skills are useful when:
 
 - Skill content is generated dynamically (for example, reading from a database or environment).
 - You want to keep skill definitions alongside the application code that uses them.
@@ -457,21 +470,23 @@ In addition to file-based skills discovered from `SKILL.md` files, you can defin
 
 ### Basic code skill
 
-Create a `Skill` instance with a name, description, and instruction content. Optionally attach `SkillResource` instances with static content:
+Create an `InlineSkill` instance with a `SkillFrontmatter` (containing the name and description) and instruction content. Optionally attach `InlineSkillResource` instances with static content:
 
 ```python
 from textwrap import dedent
-from agent_framework import Skill, SkillResource, SkillsProvider
+from agent_framework import InlineSkill, InlineSkillResource, SkillFrontmatter, SkillsProvider
 
-code_style_skill = Skill(
-    name="code-style",
-    description="Coding style guidelines and conventions for the team",
-    content=dedent("""\
+code_style_skill = InlineSkill(
+    frontmatter=SkillFrontmatter(
+        name="code-style",
+        description="Coding style guidelines and conventions for the team",
+    ),
+    instructions=dedent("""\
         Use this skill when answering questions about coding style,
         conventions, or best practices for the team.
     """),
     resources=[
-        SkillResource(
+        InlineSkillResource(
             name="style-guide",
             content=dedent("""\
                 # Team Coding Style Guide
@@ -483,7 +498,7 @@ code_style_skill = Skill(
     ],
 )
 
-skills_provider = SkillsProvider(skills=[code_style_skill])
+skills_provider = SkillsProvider(code_style_skill)
 ```
 
 ### Dynamic resources
@@ -492,23 +507,25 @@ Use the `@skill.resource` decorator to register a function as a resource. The fu
 
 ```python
 import os
-from agent_framework import Skill
+from agent_framework import InlineSkill, SkillFrontmatter
 
-project_info_skill = Skill(
-    name="project-info",
-    description="Project status and configuration information",
-    content="Use this skill for questions about the current project.",
+project_info_skill = InlineSkill(
+    frontmatter=SkillFrontmatter(
+        name="project-info",
+        description="Project status and configuration information",
+    ),
+    instructions="Use this skill for questions about the current project.",
 )
 
 @project_info_skill.resource
-def environment() -> Any:
+def environment() -> str:
     """Get current environment configuration."""
     env = os.environ.get("APP_ENV", "development")
     region = os.environ.get("APP_REGION", "us-east-1")
     return f"Environment: {env}, Region: {region}"
 
 @project_info_skill.resource(name="team-roster", description="Current team members")
-def get_team_roster() -> Any:
+def get_team_roster() -> str:
     """Return the team roster."""
     return "Alice Chen (Tech Lead), Bob Smith (Backend Engineer)"
 ```
@@ -517,15 +534,17 @@ When the decorator is used without arguments (`@skill.resource`), the function n
 
 ### Code-defined scripts
 
-Use the `@skill.script` decorator to register a function as an executable script on a skill. Code-defined scripts run **in-process** and do not require a script executor. Both sync and async functions are supported:
+Use the `@skill.script` decorator to register a function as an executable script on a skill. Code-defined scripts run **in-process** and do not require a script runner. Both sync and async functions are supported:
 
 ```python
-from agent_framework import Skill
+from agent_framework import InlineSkill, SkillFrontmatter
 
-unit_converter_skill = Skill(
-    name="unit-converter",
-    description="Convert between common units using a conversion factor",
-    content="Use the convert script to perform unit conversions.",
+unit_converter_skill = InlineSkill(
+    frontmatter=SkillFrontmatter(
+        name="unit-converter",
+        description="Convert between common units using a conversion factor",
+    ),
+    instructions="Use the convert script to perform unit conversions.",
 )
 
 @unit_converter_skill.script(name="convert", description="Convert a value: result = value × factor")
@@ -537,26 +556,6 @@ def convert_units(value: float, factor: float) -> str:
 ```
 
 When the decorator is used without arguments (`@skill.script`), the function name becomes the script name and the docstring becomes the description. The function's typed parameters are automatically converted into a JSON Schema that the agent uses to pass arguments.
-
-### Combining file-based and code-defined skills
-
-Pass both `skill_paths` and `skills` to a single `SkillsProvider`. File-based skills are discovered first; if a code-defined skill has the same name as an existing file-based skill, the code-defined skill is skipped:
-
-```python
-from pathlib import Path
-from agent_framework import Skill, SkillsProvider
-
-my_skill = Skill(
-    name="my-code-skill",
-    description="A code-defined skill",
-    content="Instructions for the skill.",
-)
-
-skills_provider = SkillsProvider(
-    skill_paths=Path(__file__).parent / "skills",
-    skills=[my_skill],
-)
-```
 
 :::zone-end
 
@@ -622,9 +621,82 @@ When the `[AgentSkillResource]` attribute is applied to a property or method, it
 
 :::zone-end
 
-:::zone pivot="programming-language-csharp"
+:::zone pivot="programming-language-python"
 
-## Builder: advanced multi-source scenarios
+## Class-based skills
+
+Class-based skills let you bundle all skill components — name, description, instructions, resources, and scripts — into a single Python class. Subclass `ClassSkill`, then use the `@ClassSkill.resource` and `@ClassSkill.script` decorators for automatic discovery:
+
+```python
+import json
+from textwrap import dedent
+from agent_framework import ClassSkill, SkillFrontmatter
+
+class UnitConverterSkill(ClassSkill):
+    """A unit-converter skill defined as a Python class."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            frontmatter=SkillFrontmatter(
+                name="unit-converter",
+                description=(
+                    "Convert between common units using a multiplication factor. "
+                    "Use when asked to convert miles, kilometers, pounds, or kilograms."
+                ),
+            ),
+        )
+
+    @property
+    def instructions(self) -> str:
+        return dedent("""\
+            Use this skill when the user asks to convert between units.
+
+            1. Review the conversion-table resource to find the correct factor.
+            2. Use the convert script, passing the value and factor from the table.
+            3. Present the result clearly with both units.
+        """)
+
+    @property
+    @ClassSkill.resource
+    def conversion_table(self) -> str:
+        """Lookup table of multiplication factors for common unit conversions."""
+        return dedent("""\
+            # Conversion Tables
+            Formula: **result = value × factor**
+            | From       | To         | Factor   |
+            |------------|------------|----------|
+            | miles      | kilometers | 1.60934  |
+            | kilometers | miles      | 0.621371 |
+            | pounds     | kilograms  | 0.453592 |
+            | kilograms  | pounds     | 2.20462  |
+        """)
+
+    @ClassSkill.script(name="convert", description="Multiplies a value by a conversion factor.")
+    def convert_units(self, value: float, factor: float) -> str:
+        """Convert a value using a multiplication factor."""
+        result = round(value * factor, 4)
+        return json.dumps({"value": value, "factor": factor, "result": result})
+```
+
+Register the class-based skill with `SkillsProvider`:
+
+```python
+from agent_framework import SkillsProvider
+
+skill = UnitConverterSkill()
+skills_provider = SkillsProvider(skill)
+```
+
+When `@ClassSkill.resource` is applied as a bare decorator (no arguments), the method name becomes the resource name (with underscores converted to hyphens) and the docstring becomes the description. Use `@ClassSkill.resource(name="...", description="...")` to set them explicitly. The same pattern applies to `@ClassSkill.script`.
+
+Resources can be defined as either regular methods or `@property` descriptors. When using `@property`, place `@property` first and `@ClassSkill.resource` second. Resource return values are cached after first access.
+
+> [!NOTE]
+> `ClassSkill` also supports explicitly overriding the `resources` and `scripts` properties to return `InlineSkillResource` and `InlineSkillScript` instances directly, for scenarios where decorator-based discovery does not fit.
+
+:::zone-end
+
+:::zone pivot="programming-language-csharp"
 
 For simple, single-source scenarios, use the `AgentSkillsProvider` constructors directly. Use `AgentSkillsProviderBuilder` when you need any of the following:
 
@@ -659,6 +731,76 @@ var skillsProvider = new AgentSkillsProviderBuilder()
 
 :::zone-end
 
+:::zone pivot="programming-language-python"
+
+## Source composition: advanced multi-source scenarios
+
+For simple scenarios with a single skill or a list of skills, pass them directly to the `SkillsProvider` constructor. For file-based skills, use the `SkillsProvider.from_paths()` factory. For advanced scenarios, compose source classes to control discovery, filtering, and deduplication:
+
+- **`FileSkillsSource`** — discovers skills from `SKILL.md` files on disk.
+- **`InMemorySkillsSource`** — wraps any `Skill` instances (code-defined or class-based) in memory.
+- **`AggregatingSkillsSource`** — combines multiple sources into one.
+- **`FilteringSkillsSource`** — applies a predicate to include or exclude skills.
+- **`DeduplicatingSkillsSource`** — removes duplicate skill names (case-insensitive, first-wins).
+
+### Mixed skill types
+
+Combine file-based, code-defined, and class-based skills in one provider using `AggregatingSkillsSource`. The example below uses placeholder objects:
+
+- `volume_converter_skill` — any `InlineSkill` instance, built as shown in [Code-defined skills](#code-defined-skills).
+- `TemperatureConverterSkill` — any `ClassSkill` subclass, built as shown in [Class-based skills](#class-based-skills).
+- `my_runner` — a `SkillScriptRunner` callable, defined as shown in [Script execution](#script-execution).
+
+```python
+from pathlib import Path
+from agent_framework import (
+    AggregatingSkillsSource,
+    DeduplicatingSkillsSource,
+    FileSkillsSource,
+    InMemorySkillsSource,
+    SkillsProvider,
+)
+
+temperature_converter_skill = TemperatureConverterSkill()
+
+skills_provider = SkillsProvider(
+    DeduplicatingSkillsSource(
+        AggregatingSkillsSource([
+            FileSkillsSource(
+                Path(__file__).parent / "skills",
+                script_runner=my_runner,
+            ),
+            InMemorySkillsSource([volume_converter_skill, temperature_converter_skill]),
+        ])
+    )
+)
+```
+
+### Skill filtering
+
+Use `FilteringSkillsSource` to control which skills the agent sees. The predicate receives each `Skill` and returns `True` to include it. For example, to load skills from a shared directory but hide an experimental one:
+
+```python
+from pathlib import Path
+from agent_framework import (
+    DeduplicatingSkillsSource,
+    FileSkillsSource,
+    FilteringSkillsSource,
+    SkillsProvider,
+)
+
+skills_provider = SkillsProvider(
+    DeduplicatingSkillsSource(
+        FilteringSkillsSource(
+            FileSkillsSource(Path(__file__).parent / "skills"),
+            predicate=lambda skill: skill.frontmatter.name != "experimental-tools",
+        )
+    )
+)
+```
+
+:::zone-end
+
 ## Script approval
 
 :::zone pivot="programming-language-csharp"
@@ -687,28 +829,53 @@ var skillsProvider = new AgentSkillsProviderBuilder()
 
 :::zone pivot="programming-language-python"
 
-Use `require_script_approval=True` on `SkillsProvider` to gate all script execution behind human approval. Instead of executing immediately, the agent pauses and returns approval requests:
+Use `require_script_approval=True` on `SkillsProvider` to gate all script execution behind human approval. Instead of executing immediately, the agent pauses and returns approval requests via `result.user_input_requests`:
 
 ```python
-from agent_framework import Agent, Skill, SkillsProvider
+from textwrap import dedent
+from agent_framework import Agent, InlineSkill, SkillFrontmatter, SkillsProvider
 
-# Create provider with approval enabled
-skills_provider = SkillsProvider(
-    skills=[my_skill],
-    require_script_approval=True,
+deployment_skill = InlineSkill(
+    frontmatter=SkillFrontmatter(
+        name="deployment",
+        description="Tools for deploying application versions to production",
+    ),
+    instructions=dedent("""\
+        Use this skill when the user asks to deploy an application.
+        Run the deploy script with the version and environment parameters.
+    """),
 )
 
-# Run the agent — script calls pause for approval
-result = await agent.run("Deploy version 2.5.0 to production", session=session)
+@deployment_skill.script
+def deploy(version: str, environment: str = "staging") -> str:
+    """Deploy the application to the specified environment."""
+    return f"Deployed version {version} to {environment}"
 
-# Handle approval requests
-while result.user_input_requests:
-    for request in result.user_input_requests:
-        print(f"Script: {request.function_call.name}")
-        print(f"Args: {request.function_call.arguments}")
+skills_provider = SkillsProvider(deployment_skill, require_script_approval=True)
 
-        approval = request.to_function_approval_response(approved=True)
-        result = await agent.run(approval, session=session)
+async with Agent(
+    client=client,
+    instructions="You are a deployment assistant.",
+    context_providers=[skills_provider],
+) as agent:
+    # Use a session so the agent retains context across approval round-trips
+    session = agent.create_session()
+
+    result = await agent.run(
+        "Deploy version 2.5.0 to production",
+        session=session,
+    )
+
+    # Handle approval requests
+    while result.user_input_requests:
+        for request in result.user_input_requests:
+            print(f"Script: {request.function_call.name}")
+            print(f"Args: {request.function_call.arguments}")
+
+            approval = request.to_function_approval_response(approved=True)
+            result = await agent.run(approval, session=session)
+
+    print(result)
 ```
 
 When a script is rejected (`approved=False`), the agent is informed that the user declined and can respond accordingly.
@@ -743,18 +910,18 @@ var skillsProvider = new AgentSkillsProvider(
 :::zone pivot="programming-language-python"
 
 ```python
-skills_provider = SkillsProvider(
+skills_provider = SkillsProvider.from_paths(
     skill_paths=Path(__file__).parent / "skills",
     instruction_template=(
         "You have skills available. Here they are:\n{skills}\n"
-        "Use the `load_skill` function to get skill instructions.\n"
-        "Use the `read_skill_resource` function to read skill files."
+        "{resource_instructions}\n"
+        "{runner_instructions}"
     ),
 )
 ```
 
 > [!NOTE]
-> The custom template must contain a `{skills}` placeholder where the skill list is inserted and a `{runner_instructions}` placeholder where script-related instructions are inserted.
+> The custom template must contain `{skills}` (skill list), `{resource_instructions}` (resource tool hint), and `{runner_instructions}` (script tool hint) placeholders. Literal braces must be escaped as `{{` and `}}`.
 
 :::zone-end
 
@@ -778,7 +945,25 @@ var skillsProvider = new AgentSkillsProvider(
 
 :::zone-end
 
-## Dependency injection
+:::zone pivot="programming-language-python"
+
+## Caching behavior
+
+By default, skill tools and instructions are cached after the first build. Set `disable_caching=True` to force a rebuild on every invocation:
+
+```python
+skills_provider = SkillsProvider.from_paths(
+    skill_paths=Path(__file__).parent / "skills",
+    disable_caching=True,
+)
+```
+
+`disable_caching` is also available on the `SkillsProvider` constructor for code-defined and class-based skills.
+
+> [!NOTE]
+> Disabling caching is useful during development when skill content changes frequently. In production, leave caching enabled (the default) for better performance.
+
+:::zone-end
 
 :::zone pivot="programming-language-csharp"
 
@@ -893,22 +1078,25 @@ response = await agent.run(
 )
 ```
 
-### Resource functions with kwargs
+### Code-defined skills with kwargs
 
 When a resource function declares `**kwargs`, the framework forwards the runtime keyword arguments each time the agent reads the resource:
 
 ```python
+import os
 from typing import Any
-from agent_framework import Skill
+from agent_framework import InlineSkill, SkillFrontmatter
 
-project_info_skill = Skill(
-    name="project-info",
-    description="Project status and configuration information",
-    content="Use this skill for questions about the current project.",
+project_info_skill = InlineSkill(
+    frontmatter=SkillFrontmatter(
+        name="project-info",
+        description="Project status and configuration information",
+    ),
+    instructions="Use this skill for questions about the current project.",
 )
 
 @project_info_skill.resource(name="environment", description="Current environment configuration")
-def environment(**kwargs: Any) -> Any:
+def environment(**kwargs: Any) -> str:
     """Return environment config, optionally scoped to a user."""
     user_id = kwargs.get("user_id", "anonymous")
     env = os.environ.get("APP_ENV", "development")
@@ -917,19 +1105,19 @@ def environment(**kwargs: Any) -> Any:
 
 Resource functions without `**kwargs` are called with no arguments and do not receive runtime context.
 
-### Script functions with kwargs
-
 When a script function declares `**kwargs`, the framework forwards the runtime keyword arguments alongside the `args` provided by the agent:
 
 ```python
 import json
 from typing import Any
-from agent_framework import Skill
+from agent_framework import InlineSkill, SkillFrontmatter
 
-converter_skill = Skill(
-    name="unit-converter",
-    description="Convert between common units using a conversion factor",
-    content="Use the convert script to perform unit conversions.",
+converter_skill = InlineSkill(
+    frontmatter=SkillFrontmatter(
+        name="unit-converter",
+        description="Convert between common units using a conversion factor",
+    ),
+    instructions="Use the convert script to perform unit conversions.",
 )
 
 @converter_skill.script(name="convert", description="Convert a value: result = value × factor")
@@ -947,6 +1135,42 @@ def convert_units(value: float, factor: float, **kwargs: Any) -> str:
 ```
 
 The agent provides `value` and `factor` through the tool call `args`; the application provides `precision` through `function_invocation_kwargs`. Script functions without `**kwargs` receive only the agent-provided arguments.
+
+### Class-based skills with kwargs
+
+Class-based skill methods can also accept `**kwargs` to receive runtime arguments. The pattern works the same way — declare `**kwargs` on resource methods or script methods:
+
+```python
+from typing import Any
+from agent_framework import ClassSkill, SkillFrontmatter
+
+class WeightConverterSkill(ClassSkill):
+    def __init__(self) -> None:
+        super().__init__(
+            frontmatter=SkillFrontmatter(
+                name="weight-converter",
+                description="Convert between weight units (pounds and kilograms).",
+            ),
+        )
+
+    @property
+    def instructions(self) -> str:
+        return "Use this skill to convert between pounds and kilograms."
+
+    @ClassSkill.resource(name="weight-table")
+    def get_weight_table(self, **kwargs: Any) -> str:
+        """Weight conversion factors, scoped to caller context."""
+        user_id = kwargs.get("user_id", "anonymous")
+        return f"Weight table for {user_id}: | lbs | kg | 0.453592 |"
+
+    @ClassSkill.script(name="convert")
+    def convert(self, value: float, factor: float, **kwargs: Any) -> str:
+        """Convert a weight value."""
+        import json
+        precision = kwargs.get("precision", 4)
+        result = round(value * factor, precision)
+        return json.dumps({"value": value, "factor": factor, "result": result})
+```
 
 :::zone-end
 
