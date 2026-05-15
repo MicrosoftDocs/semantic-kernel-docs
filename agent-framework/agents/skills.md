@@ -1,6 +1,6 @@
 ---
 title: Agent Skills
-description: Learn how to extend agent capabilities with Agent Skills — portable packages of instructions, scripts, and resources that agents discover and load on demand.
+description: Learn how to extend agent capabilities with Agent Skills - portable packages of instructions, scripts, and resources that agents discover and load on demand.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: conceptual
@@ -15,10 +15,10 @@ ms.service: agent-framework
 
 Use Agent Skills when you want to:
 
-- **Package domain expertise** — Capture specialized knowledge (expense policies, legal workflows, data analysis pipelines) as reusable, portable packages.
-- **Extend agent capabilities** — Give agents new abilities without changing their core instructions.
-- **Ensure consistency** — Turn multi-step tasks into repeatable, auditable workflows.
-- **Enable interoperability** — Reuse the same skill across different Agent Skills-compatible products.
+- **Package domain expertise** - Capture specialized knowledge (expense policies, legal workflows, data analysis pipelines) as reusable, portable packages.
+- **Extend agent capabilities** - Give agents new abilities without changing their core instructions.
+- **Ensure consistency** - Turn multi-step tasks into repeatable, auditable workflows.
+- **Enable interoperability** - Reuse the same skill across different Agent Skills-compatible products.
 
 ## Skill structure
 
@@ -26,7 +26,7 @@ A skill is a directory containing a `SKILL.md` file with optional subdirectories
 
 ```
 expense-report/
-├── SKILL.md                          # Required — frontmatter + instructions
+├── SKILL.md                          # Required - frontmatter + instructions
 ├── scripts/
 │   └── validate.py                   # Executable code agents can run
 ├── references/
@@ -58,18 +58,18 @@ metadata:
 | `license` | No | License name or reference to a bundled license file. |
 | `compatibility` | No | Max 500 characters. Indicates environment requirements (intended product, system packages, network access, etc.). |
 | `metadata` | No | Arbitrary key-value mapping for additional metadata. |
-| `allowed-tools` | No | Space-delimited list of pre-approved tools the skill may use. Experimental — support may vary between agent implementations. |
+| `allowed-tools` | No | Space-delimited list of pre-approved tools the skill may use. Experimental - support may vary between agent implementations. |
 
-The markdown body after the frontmatter contains the skill instructions — step-by-step guidance, examples of inputs and outputs, common edge cases, or any content that helps the agent perform the task. Keep `SKILL.md` under 500 lines and move detailed reference material to separate files.
+The markdown body after the frontmatter contains the skill instructions - step-by-step guidance, examples of inputs and outputs, common edge cases, or any content that helps the agent perform the task. Keep `SKILL.md` under 500 lines and move detailed reference material to separate files.
 
 ## Progressive disclosure
 
 Agent Skills use a four-stage progressive disclosure pattern to minimize context usage:
 
-1. **Advertise** (~100 tokens per skill) — Skill names and descriptions are injected into the system prompt at the start of each run, so the agent knows what skills are available.
-2. **Load** (< 5000 tokens recommended) — When a task matches a skill's domain, the agent calls the `load_skill` tool to retrieve the full SKILL.md body with detailed instructions.
-3. **Read resources** (as needed) — The agent calls the `read_skill_resource` tool to fetch supplementary files (references, templates, assets) only when required.
-4. **Run scripts** (as needed) — The agent calls the `run_skill_script` tool to execute scripts bundled with a skill.
+1. **Advertise** (~100 tokens per skill) - Skill names and descriptions are injected into the system prompt at the start of each run, so the agent knows what skills are available.
+2. **Load** (< 5000 tokens recommended) - When a task matches a skill's domain, the agent calls the `load_skill` tool to retrieve the full SKILL.md body with detailed instructions.
+3. **Read resources** (as needed) - The agent calls the `read_skill_resource` tool to fetch supplementary files (references, templates, assets) only when required.
+4. **Run scripts** (as needed) - The agent calls the `run_skill_script` tool to execute scripts bundled with a skill.
 
 This pattern keeps the agent's context window lean while giving it access to deep domain knowledge on demand.
 
@@ -80,11 +80,11 @@ This pattern keeps the agent's context window lean while giving it access to dee
 
 `AgentSkillsProvider` (C#) and `SkillsProvider` (Python) are context providers that make skills available to agents. They support three skill sources:
 
-- **File-based** — skills discovered from `SKILL.md` files in filesystem directories
-- **Code-defined** — skills defined inline in code using `AgentInlineSkill` (C#) or `InlineSkill` (Python)
-- **Class-based** — skills encapsulated in a class deriving from `AgentClassSkill<T>` (C#) or `ClassSkill` (Python)
+- **File-based** - skills discovered from `SKILL.md` files in filesystem directories
+- **Code-defined** - skills defined inline in code using `AgentInlineSkill` (C#) or `InlineSkill` (Python)
+- **Class-based** - skills encapsulated in a class deriving from `AgentClassSkill<T>` (C#) or `ClassSkill` (Python)
 
-For mixing multiple sources in one provider, use `AgentSkillsProviderBuilder` (C#) or compose source classes such as `AggregatingSkillsSource`, `FilteringSkillsSource`, and `DeduplicatingSkillsSource` (Python) — see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios) (C#) or [Source composition: advanced multi-source scenarios](#source-composition-advanced-multi-source-scenarios) (Python).
+For mixing multiple sources in one provider, use `AgentSkillsProviderBuilder` (C#) or compose source classes such as `AggregatingSkillsSource`, `FilteringSkillsSource`, and `DeduplicatingSkillsSource` (Python) - see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios) (C#) or [Source composition: advanced multi-source scenarios](#source-composition-advanced-multi-source-scenarios) (Python).
 
 :::zone pivot="programming-language-csharp"
 
@@ -125,7 +125,7 @@ AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredent
 
 ### Multiple skill directories
 
-You can point the provider to a single parent directory — each subdirectory containing a `SKILL.md` is automatically discovered as a skill:
+You can point the provider to a single parent directory - each subdirectory containing a `SKILL.md` is automatically discovered as a skill:
 
 ```csharp
 var skillsProvider = new AgentSkillsProvider(
@@ -203,7 +203,7 @@ static async Task<string> RunAsync(
 }
 ```
 
-The runner runs each discovered script as a local subprocess. File-based scripts expect arguments as a JSON array of strings — each array element becomes a positional command-line argument.
+The runner runs each discovered script as a local subprocess. File-based scripts expect arguments as a JSON array of strings - each array element becomes a positional command-line argument.
 
 > [!WARNING]
 > `SubprocessScriptRunner` is provided for **demonstration purposes only**. For production use, consider adding:
@@ -276,7 +276,7 @@ agent = Agent(
 
 ### Multiple skill directories
 
-You can point the provider to a single parent directory — each subdirectory containing a `SKILL.md` is automatically discovered as a skill:
+You can point the provider to a single parent directory - each subdirectory containing a `SKILL.md` is automatically discovered as a skill:
 
 ```python
 skills_provider = SkillsProvider.from_paths(
@@ -342,7 +342,7 @@ skills_provider = SkillsProvider.from_paths(
 )
 ```
 
-The runner receives the resolved `FileSkill`, `FileSkillScript`, and an optional `args` argument. File-based scripts expect arguments as a JSON array of strings — each array element becomes a positional command-line argument. Scripts are automatically discovered from `.py` files in the `scripts/` subdirectory of each skill directory.
+The runner receives the resolved `FileSkill`, `FileSkillScript`, and an optional `args` argument. File-based scripts expect arguments as a JSON array of strings - each array element becomes a positional command-line argument. Scripts are automatically discovered from `.py` files in the `scripts/` subdirectory of each skill directory.
 
 > [!WARNING]
 > The runner above is provided for **demonstration purposes only**. For production use, consider adding:
@@ -366,6 +366,8 @@ In addition to file-based skills discovered from `SKILL.md` files, you can defin
 - Skill content is generated dynamically (for example, reading from a database or environment).
 - You want to keep skill definitions alongside the application code that uses them.
 - You need resources that execute logic at read time rather than serving static files.
+- Skill definitions need to be **constructed at runtime from data** - for example, creating a personalized skill for each user session based on their role or permissions.
+- A skill needs to **close over call-site state** (local variables, closures) rather than resolve services from a DI container.
 
 ### Basic code skill
 
@@ -456,7 +458,7 @@ var skillsProvider = new AgentSkillsProvider(unitConverterSkill);
 ```
 
 > [!NOTE]
-> To combine code-defined skills with file-based or class-based skills in a single provider, use `AgentSkillsProviderBuilder` — see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios).
+> To combine code-defined skills with file-based or class-based skills in a single provider, use `AgentSkillsProviderBuilder` - see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios).
 
 :::zone-end
 
@@ -467,6 +469,8 @@ In addition to file-based skills discovered from `SKILL.md` files, you can defin
 - Skill content is generated dynamically (for example, reading from a database or environment).
 - You want to keep skill definitions alongside the application code that uses them.
 - You need resources that execute logic at read time rather than serving static files.
+- Skill definitions need to be **constructed at runtime from data** - for example, creating a personalized skill for each user session based on their role or permissions.
+- A skill needs to **close over call-site state** (local variables, closures) rather than resolve services through `**kwargs`.
 
 ### Basic code skill
 
@@ -563,7 +567,7 @@ When the decorator is used without arguments (`@skill.script`), the function nam
 
 ## Class-based skills
 
-Class-based skills let you bundle all skill components — name, description, instructions, resources, and scripts — into a single C# class. Derive from `AgentClassSkill<T>` (where `T` is your class), then annotate properties with `[AgentSkillResource]` and methods with `[AgentSkillScript]` for automatic discovery:
+Class-based skills let you bundle all skill components - name, description, instructions, resources, and scripts - into a single C# class. This makes them easy to package and distribute as NuGet packages - teams can author and ship skills independently, and consumers add them with `dotnet add package` and a single `.UseSkill()` call. Derive from `AgentClassSkill<T>` (where `T` is your class), then annotate properties with `[AgentSkillResource]` and methods with `[AgentSkillScript]` for automatic discovery:
 
 ```csharp
 using System.ComponentModel;
@@ -614,7 +618,7 @@ var skill = new UnitConverterSkill();
 var skillsProvider = new AgentSkillsProvider(skill);
 ```
 
-When the `[AgentSkillResource]` attribute is applied to a property or method, its return value is used as the resource content when the agent reads the resource — use a method when the content needs to be computed at read time. When `[AgentSkillScript]` is applied to a method, the method is invoked when the agent calls the script. Use `[Description]` from `System.ComponentModel` to describe each resource and script for the agent.
+When the `[AgentSkillResource]` attribute is applied to a property or method, its return value is used as the resource content when the agent reads the resource - use a method when the content needs to be computed at read time. When `[AgentSkillScript]` is applied to a method, the method is invoked when the agent calls the script. Use `[Description]` from `System.ComponentModel` to describe each resource and script for the agent.
 
 > [!NOTE]
 > `AgentClassSkill<T>` also supports overriding `Resources` and `Scripts` as collections for scenarios where attribute-based discovery does not fit.
@@ -625,7 +629,7 @@ When the `[AgentSkillResource]` attribute is applied to a property or method, it
 
 ## Class-based skills
 
-Class-based skills let you bundle all skill components — name, description, instructions, resources, and scripts — into a single Python class. Subclass `ClassSkill`, then use the `@ClassSkill.resource` and `@ClassSkill.script` decorators for automatic discovery:
+Class-based skills let you bundle all skill components - name, description, instructions, resources, and scripts - into a single Python class. This makes them easy to package and distribute as PyPI packages - teams can author and ship skills independently, and consumers add them with `pip install` and a single `SkillsProvider()` call. Subclass `ClassSkill`, then use the `@ClassSkill.resource` and `@ClassSkill.script` decorators for automatic discovery:
 
 ```python
 import json
@@ -700,8 +704,8 @@ Resources can be defined as either regular methods or `@property` descriptors. W
 
 For simple, single-source scenarios, use the `AgentSkillsProvider` constructors directly. Use `AgentSkillsProviderBuilder` when you need any of the following:
 
-- **Mixed skill types** — combine file-based, code-defined (`AgentInlineSkill`), and class-based (`AgentClassSkill`) skills in a single provider.
-- **Skill filtering** — include or exclude skills using a predicate.
+- **Mixed skill types** - combine file-based, code-defined (`AgentInlineSkill`), and class-based (`AgentClassSkill`) skills in a single provider.
+- **Skill filtering** - include or exclude skills using a predicate.
 
 ### Mixed skill types
 
@@ -718,7 +722,7 @@ var skillsProvider = new AgentSkillsProviderBuilder()
 
 ### Skill filtering
 
-Use `UseFilter` to include only the skills that meet your criteria — for example, to load skills from a shared directory but exclude experimental ones:
+Use `UseFilter` to include only the skills that meet your criteria - for example, to load skills from a shared directory but exclude experimental ones:
 
 ```csharp
 var approvedSkillNames = new HashSet<string> { "expense-report", "code-style" };
@@ -737,19 +741,19 @@ var skillsProvider = new AgentSkillsProviderBuilder()
 
 For simple scenarios with a single skill or a list of skills, pass them directly to the `SkillsProvider` constructor. For file-based skills, use the `SkillsProvider.from_paths()` factory. For advanced scenarios, compose source classes to control discovery, filtering, and deduplication:
 
-- **`FileSkillsSource`** — discovers skills from `SKILL.md` files on disk.
-- **`InMemorySkillsSource`** — wraps any `Skill` instances (code-defined or class-based) in memory.
-- **`AggregatingSkillsSource`** — combines multiple sources into one.
-- **`FilteringSkillsSource`** — applies a predicate to include or exclude skills.
-- **`DeduplicatingSkillsSource`** — removes duplicate skill names (case-insensitive, first-wins).
+- **`FileSkillsSource`** - discovers skills from `SKILL.md` files on disk.
+- **`InMemorySkillsSource`** - wraps any `Skill` instances (code-defined or class-based) in memory.
+- **`AggregatingSkillsSource`** - combines multiple sources into one.
+- **`FilteringSkillsSource`** - applies a predicate to include or exclude skills.
+- **`DeduplicatingSkillsSource`** - removes duplicate skill names (case-insensitive, first-wins).
 
 ### Mixed skill types
 
 Combine file-based, code-defined, and class-based skills in one provider using `AggregatingSkillsSource`. The example below uses placeholder objects:
 
-- `volume_converter_skill` — any `InlineSkill` instance, built as shown in [Code-defined skills](#code-defined-skills).
-- `TemperatureConverterSkill` — any `ClassSkill` subclass, built as shown in [Class-based skills](#class-based-skills).
-- `my_runner` — a `SkillScriptRunner` callable, defined as shown in [Script execution](#script-execution).
+- `volume_converter_skill` - any `InlineSkill` instance, built as shown in [Code-defined skills](#code-defined-skills).
+- `TemperatureConverterSkill` - any `ClassSkill` subclass, built as shown in [Class-based skills](#class-based-skills).
+- `my_runner` - a `SkillScriptRunner` callable, defined as shown in [Script execution](#script-execution).
 
 ```python
 from pathlib import Path
@@ -967,7 +971,7 @@ skills_provider = SkillsProvider.from_paths(
 
 :::zone pivot="programming-language-csharp"
 
-Skill resource and script delegates can declare an `IServiceProvider` parameter that the Agent Framework injects automatically. This lets skills resolve application services — such as database clients, configuration, or business logic — without hard-coding them into the skill definition.
+Skill resource and script delegates can declare an `IServiceProvider` parameter that the Agent Framework injects automatically. This lets skills resolve application services - such as database clients, configuration, or business logic - without hard-coding them into the skill definition.
 
 ### Setup
 
@@ -997,7 +1001,7 @@ AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredent
 
 ### Code-defined skills with DI
 
-Declare `IServiceProvider` as a parameter in `AddResource` or `AddScript` delegates — the framework resolves and injects it automatically when the agent reads a resource or runs a script:
+Declare `IServiceProvider` as a parameter in `AddResource` or `AddScript` delegates - the framework resolves and injects it automatically when the agent reads a resource or runs a script:
 
 ```csharp
 var distanceSkill = new AgentInlineSkill(
@@ -1020,7 +1024,7 @@ var distanceSkill = new AgentInlineSkill(
 
 ### Class-based skills with DI
 
-Annotate methods with `[AgentSkillResource]` or `[AgentSkillScript]` and declare an `IServiceProvider` parameter — the framework discovers these members via reflection and injects the service provider automatically:
+Annotate methods with `[AgentSkillResource]` or `[AgentSkillScript]` and declare an `IServiceProvider` parameter - the framework discovers these members via reflection and injects the service provider automatically:
 
 ```csharp
 internal sealed class WeightConverterSkill : AgentClassSkill<WeightConverterSkill>
@@ -1065,7 +1069,7 @@ internal sealed class WeightConverterSkill : AgentClassSkill<WeightConverterSkil
 
 :::zone pivot="programming-language-python"
 
-Resource and script functions that accept `**kwargs` automatically receive runtime keyword arguments passed to `agent.run()`. This lets skill functions access application context — such as configuration, user identity, or service clients — without hard-coding them into the skill definition.
+Resource and script functions that accept `**kwargs` automatically receive runtime keyword arguments passed to `agent.run()`. This lets skill functions access application context - such as configuration, user identity, or service clients - without hard-coding them into the skill definition.
 
 ### Passing runtime arguments
 
@@ -1138,7 +1142,7 @@ The agent provides `value` and `factor` through the tool call `args`; the applic
 
 ### Class-based skills with kwargs
 
-Class-based skill methods can also accept `**kwargs` to receive runtime arguments. The pattern works the same way — declare `**kwargs` on resource methods or script methods:
+Class-based skill methods can also accept `**kwargs` to receive runtime arguments. The pattern works the same way - declare `**kwargs` on resource methods or script methods:
 
 ```python
 from typing import Any
@@ -1176,21 +1180,21 @@ class WeightConverterSkill(ClassSkill):
 
 ## Security best practices
 
-Agent Skills should be treated like any third-party code you bring into your project.Because skill instructions are injected into the agent's context — and skills can include scripts — applying the same level of review and governance you would to an open-source dependency is essential.
+Agent Skills should be treated like any third-party code you bring into your project.Because skill instructions are injected into the agent's context - and skills can include scripts - applying the same level of review and governance you would to an open-source dependency is essential.
 
-- **Review before use** — Read all skill content (`SKILL.md`, scripts, and resources) before deploying. Verify that a script's actual behavior matches its stated intent. Check for adversarial instructions that attempt to bypass safety guidelines, exfiltrate data, or modify agent configuration files.
-- **Source trust** — Only install skills from trusted authors or vetted internal contributors. Prefer skills with clear provenance, version control, and active maintenance. Watch for typosquatted skill names that mimic popular packages.
-- **Sandboxing** — Run skills that include executable scripts in isolated environments. Limit filesystem, network, and system-level access to only what the skill requires. Require explicit user confirmation before executing potentially sensitive operations.
-- **Audit and logging** — Record which skills are loaded, which resources are read, and which scripts are executed. This gives you an audit trail to trace agent behavior back to specific skill content if something goes wrong.
+- **Review before use** - Read all skill content (`SKILL.md`, scripts, and resources) before deploying. Verify that a script's actual behavior matches its stated intent. Check for adversarial instructions that attempt to bypass safety guidelines, exfiltrate data, or modify agent configuration files.
+- **Source trust** - Only install skills from trusted authors or vetted internal contributors. Prefer skills with clear provenance, version control, and active maintenance. Watch for typosquatted skill names that mimic popular packages.
+- **Sandboxing** - Run skills that include executable scripts in isolated environments. Limit filesystem, network, and system-level access to only what the skill requires. Require explicit user confirmation before executing potentially sensitive operations.
+- **Audit and logging** - Record which skills are loaded, which resources are read, and which scripts are executed. This gives you an audit trail to trace agent behavior back to specific skill content if something goes wrong.
 
 ## When to use skills vs. workflows
 
 Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend what agents can do, but they work in fundamentally different ways. Choose the approach that best matches your requirements:
 
-- **Control** — With a skill, the AI decides how to execute the instructions. This is ideal when you want the agent to be creative or adaptive. With a workflow, you explicitly define the execution path. Use workflows when you need deterministic, predictable behavior.
-- **Resilience** — A skill runs within a single agent turn. If something fails, the entire operation must be retried. Workflows support [checkpointing](../workflows/checkpoints.md), so they can resume from the last successful step after a failure. Choose workflows when the cost of re-executing the entire process is high.
-- **Side effects** — Skills are suitable when operations are idempotent or low-risk. Prefer workflows when steps produce side effects (sending emails, charging payments) that should not be repeated on retry.
-- **Complexity** — Skills are best for focused, single-domain tasks that one agent can handle. Workflows are better suited for multi-step business processes that coordinate multiple agents, human approvals, or external system integrations.
+- **Control** - With a skill, the AI decides how to execute the instructions. This is ideal when you want the agent to be creative or adaptive. With a workflow, you explicitly define the execution path. Use workflows when you need deterministic, predictable behavior.
+- **Resilience** - A skill runs within a single agent turn. If something fails, the entire operation must be retried. Workflows support [checkpointing](../workflows/checkpoints.md), so they can resume from the last successful step after a failure. Choose workflows when the cost of re-executing the entire process is high.
+- **Side effects** - Skills are suitable when operations are idempotent or low-risk. Prefer workflows when steps produce side effects (sending emails, charging payments) that should not be repeated on retry.
+- **Complexity** - Skills are best for focused, single-domain tasks that one agent can handle. Workflows are better suited for multi-step business processes that coordinate multiple agents, human approvals, or external system integrations.
 
 > [!TIP]
 > As a rule of thumb: if you want the AI to figure out _how_ to accomplish a task, use a skill. If you need to guarantee _what_ steps execute and in what order, use a workflow.
