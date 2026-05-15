@@ -702,6 +702,8 @@ Resources can be defined as either regular methods or `@property` descriptors. W
 
 :::zone pivot="programming-language-csharp"
 
+## Builder: advanced multi-source scenarios
+
 For simple, single-source scenarios, use the `AgentSkillsProvider` constructors directly. Use `AgentSkillsProviderBuilder` when you need any of the following:
 
 - **Mixed skill types** - combine file-based, code-defined (`AgentInlineSkill`), and class-based (`AgentClassSkill`) skills in a single provider.
