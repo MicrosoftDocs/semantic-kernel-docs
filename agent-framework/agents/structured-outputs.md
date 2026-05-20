@@ -1,6 +1,6 @@
 ---
-title: Producing Structured Output with agents
-description: Learn how to use structured output with an agent
+title: Producing Structured Outputs with agents
+description: Learn how to use structured outputs with an agent
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
@@ -9,20 +9,20 @@ ms.date: 04/02/2026
 ms.service: agent-framework
 ---
 
-# Producing Structured Output with Agents
+# Producing Structured Outputs with Agents
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial step shows you how to produce structured output with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
+This tutorial step shows you how to produce structured outputs with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> Not all agent types support structured output natively. The `ChatClientAgent` supports structured output when used with compatible chat clients.
+> Not all agent types support structured outputs natively. The `ChatClientAgent` supports structured outputs when used with compatible chat clients.
 
 ## Prerequisites
 
 For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./running-agents.md) step in this tutorial.
 
-## Define a type for the structured output
+## Define a type for structured outputs
 
 First, define a type that represents the structure of the output you want from the agent.
 
@@ -57,10 +57,10 @@ AIAgent agent = new AIProjectClient(
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-## Structured output with RunAsync\<T\>
+## Structured outputs with RunAsync\<T\>
 
-The `RunAsync<T>` method is available on the `AIAgent` base class. It accepts a generic type parameter that specifies the structured output type.
-This approach is applicable when the structured output type is known at compile time and a typed result instance is needed. It supports primitives, arrays, and complex types.
+The `RunAsync<T>` method is available on the `AIAgent` base class. It accepts a generic type parameter that specifies the structured outputs type.
+This approach is applicable when the structured outputs type is known at compile time and a typed result instance is needed. It supports primitives, arrays, and complex types.
 
 ```csharp
 AgentResponse<PersonInfo> response = await agent.RunAsync<PersonInfo>("Please provide information about John Smith, who is a 35-year-old software engineer.");
@@ -68,15 +68,15 @@ AgentResponse<PersonInfo> response = await agent.RunAsync<PersonInfo>("Please pr
 Console.WriteLine($"Name: {response.Result.Name}, Age: {response.Result.Age}, Occupation: {response.Result.Occupation}");
 ```
 
-## Structured output with ResponseFormat
+## Structured outputs with ResponseFormat
 
-Structured output can be configured by setting the `ResponseFormat` property on `AgentRunOptions` at invocation time, or at agent initialization time for agents that support it, such as `ChatClientAgent` and Foundry Agent.
+Structured outputs can be configured by setting the `ResponseFormat` property on `AgentRunOptions` at invocation time, or at agent initialization time for agents that support it, such as `ChatClientAgent` and Foundry Agent.
 
 This approach is applicable when:
 
-- The structured output type is not known at compile time.
+- The structured outputs type is not known at compile time.
 - The schema is represented as raw JSON.
-- Structured output can only be configured at agent creation time.
+- Structured outputs can only be configured at agent creation time.
 - Only the raw JSON text is needed without deserialization.
 - Inter-agent collaboration is used.
 
@@ -140,7 +140,7 @@ JsonElement result = JsonSerializer.Deserialize<JsonElement>(response.Text);
 Console.WriteLine($"Name: {result.GetProperty("name").GetString()}, Age: {result.GetProperty("age").GetInt32()}, Occupation: {result.GetProperty("occupation").GetString()}");
 ```
 
-## Structured output with streaming
+## Structured outputs with streaming
 
 When streaming, the agent response is streamed as a series of updates, and you can only deserialize the response once all the updates have been received.
 You must assemble all the updates into a single response before deserializing it.
@@ -175,9 +175,9 @@ PersonInfo personInfo = JsonSerializer.Deserialize<PersonInfo>(response.Text)!;
 Console.WriteLine($"Name: {personInfo.Name}, Age: {personInfo.Age}, Occupation: {personInfo.Occupation}");
 ```
 
-## Structured output with agents with no structured output capabilities
+## Structured outputs with agents with no structured outputs capabilities
 
-Some agents don't natively support structured output, either because it's not part of the protocol or because the agents use language models without structured output capabilities. One possible approach is to create a custom decorator agent that wraps any `AIAgent` and uses an additional LLM call via a chat client to convert the agent's text response into structured JSON.
+Some agents don't natively support structured outputs, either because it's not part of the protocol or because the agents use language models without structured outputs capabilities. One possible approach is to create a custom decorator agent that wraps any `AIAgent` and uses an additional LLM call via a chat client to convert the agent's text response into structured JSON.
 
 > [!NOTE]
 > Since this approach relies on an additional LLM call to transform the response, its reliability may not be sufficient for all scenarios.
@@ -195,28 +195,30 @@ For a reference implementation of this pattern that you can adapt to your own re
 ::: zone-end
 ::: zone pivot="programming-language-python"
 
-This tutorial step shows you how to produce structured output with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
+This tutorial step shows you how to produce structured outputs with an agent, where the agent is built on the Azure OpenAI Chat Completion service.
 
 > [!IMPORTANT]
-> Not all agent types support structured output. The `Agent` supports structured output when used with compatible chat clients.
+> Not all agent types support structured outputs. The `Agent` supports structured outputs when used with compatible chat clients.
 
 ## Prerequisites
 
 For prerequisites and installing packages, see the [Create and run a simple agent](./running-agents.md) step in this tutorial.
 
-## Create the agent with structured output
+## Create the agent with structured outputs
 
-The `Agent` is built on top of any chat client implementation that supports structured output.
-The `Agent` uses the `response_format` parameter to specify the desired output schema.
+The `Agent` is built on top of any chat client implementation that supports structured outputs.
+The `Agent` uses the `response_format` key in the `options` dict to specify the desired output schema.
 
-When creating or running the agent, you can provide either:
+When running the agent, you can provide either:
 
 - A Pydantic model that defines the structure of the expected output.
 - A JSON schema mapping (`dict`) when you want parsed JSON without defining a model class.
 
+You can pass the `options` dict at runtime via `agent.run(..., options={"response_format": ...})`, or set it at agent creation time via the `default_options` dict.
+
 Various response formats are supported based on the underlying chat client capabilities.
 
-The first example creates an agent that produces structured output in the form of a JSON object that conforms to a Pydantic model schema.
+The first example creates an agent that produces structured outputs in the form of a JSON object that conforms to a Pydantic model schema.
 
 First, define a Pydantic model that represents the structure of the output you want from the agent:
 
@@ -249,16 +251,16 @@ agent = OpenAIChatCompletionClient(
 )
 ```
 
-Now you can run the agent with some textual information and specify the structured output format using the `response_format` parameter:
+Now you can run the agent with some textual information and specify the structured outputs format using the `response_format` key in the `options` dict:
 
 ```python
 response = await agent.run(
     "Please provide information about John Smith, who is a 35-year-old software engineer.",
-    response_format=PersonInfo
+    options={"response_format": PersonInfo},
 )
 ```
 
-For a Pydantic model response format, the agent response contains the structured output in the `value` property as a model instance:
+For a Pydantic model response format, the agent response contains the structured outputs in the `value` property as a model instance:
 
 ```python
 if response.value:
@@ -270,7 +272,7 @@ else:
 
 ### Use a JSON schema mapping
 
-If you already have a JSON schema as a Python mapping, pass that schema directly as `response_format`. In this mode, `response.value` contains the parsed JSON value (typically a `dict` or `list`) instead of a Pydantic model instance.
+If you already have a JSON schema as a Python mapping, pass that schema directly as the `response_format` value in the `options` dict. In this mode, `response.value` contains the parsed JSON value (typically a `dict` or `list`) instead of a Pydantic model instance.
 
 ```python
 person_info_schema = {
@@ -285,7 +287,7 @@ person_info_schema = {
 
 response = await agent.run(
     "Please provide information about John Smith, who is a 35-year-old software engineer.",
-    response_format=person_info_schema,
+    options={"response_format": person_info_schema},
 )
 
 if response.value:
@@ -293,7 +295,7 @@ if response.value:
     print(f"Name: {person_info['name']}, Age: {person_info['age']}, Occupation: {person_info['occupation']}")
 ```
 
-When streaming, `agent.run(..., stream=True)` returns a `ResponseStream`. The stream's built-in finalizer automatically handles structured output parsing, so you can iterate for real-time updates and then call `get_final_response()` to get the parsed result:
+When streaming, `agent.run(..., stream=True)` returns a `ResponseStream`. The stream's built-in finalizer automatically handles structured outputs parsing, so you can iterate for real-time updates and then call `get_final_response()` to get the parsed result:
 
 ```python
 # Stream updates in real time, then get the structured result
@@ -333,15 +335,15 @@ from agent_framework.openai import OpenAIChatClient
 from pydantic import BaseModel
 
 """
-OpenAI Responses Client with Structured Output Example
+OpenAI Responses Client with Structured Outputs Example
 
-This sample demonstrates using structured output capabilities with OpenAI Responses Client,
+This sample demonstrates using structured outputs capabilities with OpenAI Responses Client,
 showing Pydantic model integration for type-safe response parsing and data extraction.
 """
 
 
 class OutputStruct(BaseModel):
-    """A structured output for testing purposes."""
+    """A structured outputs model for testing purposes."""
 
     city: str
     description: str
@@ -361,7 +363,7 @@ async def non_streaming_example() -> None:
     result = await agent.run(query, options={"response_format": OutputStruct})
 
     if structured_data := result.value:
-        print("Structured Output Agent:")
+        print("Structured Outputs Agent:")
         print(f"City: {structured_data.city}")
         print(f"Description: {structured_data.description}")
     else:
@@ -386,11 +388,11 @@ async def streaming_example() -> None:
             print(update.text, end="", flush=True)
     print()
 
-    # get_final_response() returns the AgentResponse with structured output parsed
+    # get_final_response() returns the AgentResponse with structured outputs parsed
     result = await stream.get_final_response()
 
     if structured_data := result.value:
-        print("Structured Output (from streaming with ResponseStream):")
+        print("Structured Outputs (from streaming with ResponseStream):")
         print(f"City: {structured_data.city}")
         print(f"Description: {structured_data.description}")
     else:
@@ -398,7 +400,7 @@ async def streaming_example() -> None:
 
 
 async def main() -> None:
-    print("=== OpenAI Responses Agent with Structured Output ===")
+    print("=== OpenAI Responses Agent with Structured Outputs ===")
 
     await non_streaming_example()
     await streaming_example()

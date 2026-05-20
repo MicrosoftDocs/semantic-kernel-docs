@@ -400,6 +400,24 @@ async def mcp_example():
         print(result)
 ```
 
+### Observability
+
+`GitHubCopilotAgent` has OpenTelemetry tracing built-in. Call `configure_otel_providers()` once at startup to enable spans, metrics and logs for every run:
+
+```python
+from agent_framework.observability import configure_otel_providers
+from agent_framework.github import GitHubCopilotAgent
+
+configure_otel_providers(enable_console_exporters=True)
+
+async with GitHubCopilotAgent() as agent:
+    response = await agent.run("Hello!")
+```
+
+If you need the underlying agent without the telemetry layer (for example to wrap it in a custom one), import `RawGitHubCopilotAgent` from `agent_framework.github`.
+
+For OTLP exporters and richer examples, see the [observability samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/observability).
+
 ## Using the Agent
 
 The agent is a standard `BaseAgent` and supports all standard agent operations.
