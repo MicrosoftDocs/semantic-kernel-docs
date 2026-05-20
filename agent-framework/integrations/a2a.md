@@ -238,7 +238,7 @@ app.MapA2A(scienceAgent, "/a2a/science");
 
 ::: zone pivot="programming-language-python"
 
-The `agent-framework-a2a` package lets you connect to and communicate with external A2A-compliant agents.
+The `agent-framework-a2a` package lets you both **connect to** external A2A-compliant agents and **expose** an Agent Framework agent over the A2A protocol.
 
 ```bash
 pip install agent-framework-a2a --pre
@@ -294,7 +294,7 @@ async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent
 
 ### Long-Running Tasks
 
-By default, `A2AAgent` waits for the remote agent to finish before returning. For long-running tasks, set `background=True` to get a continuation token you can use to poll or resubscribe later:
+By default, `A2AAgent` waits for the remote agent to finish before returning. For long-running tasks, set `background=True` to get a continuation token you can use to poll or subscribe later:
 
 ```python
 async with A2AAgent(name="worker", url="https://a2a-agent.example.com") as agent:
@@ -306,6 +306,26 @@ async with A2AAgent(name="worker", url="https://a2a-agent.example.com") as agent
         result = await agent.poll_task(response.continuation_token)
         print(result)
 ```
+
+### Conversation Identity (context_id)
+
+When you call `A2AAgent.run()` with an `AgentSession`, the agent automatically derives the A2A `context_id` from `session.service_session_id` if the outgoing message does not already carry one. This lets you maintain conversation continuity across multiple A2A calls without manually setting `context_id` on every message:
+
+```python
+from agent_framework import AgentSession
+from agent_framework.a2a import A2AAgent
+
+async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent:
+    session = AgentSession(service_session_id="my-conversation-1")
+
+    # context_id is automatically set to "my-conversation-1"
+    response = await agent.run("Hello!", session=session)
+
+    # Subsequent calls with the same session continue the conversation
+    response = await agent.run("Follow-up question", session=session)
+```
+
+If a message has an explicit `context_id` in its `additional_properties`, that value takes precedence over the session-derived fallback.
 
 ### Authentication
 
@@ -329,6 +349,69 @@ async with A2AAgent(
 ) as agent:
     response = await agent.run("Hello!")
 ```
+
+## Exposing an Agent Framework Agent over A2A
+
+The `A2AExecutor` adapts any Agent Framework `Agent` to the A2A server-side protocol. You can host it with the official [`a2a-sdk`](https://pypi.org/project/a2a-sdk/) Starlette/ASGI server so that other A2A clients can discover and call your agent.
+
+```python
+import uvicorn
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
+from a2a.server.tasks import InMemoryTaskStore
+from a2a.types import AgentCapabilities, AgentCard, AgentInterface, AgentSkill
+from agent_framework import Agent
+from agent_framework.a2a import A2AExecutor
+from agent_framework.openai import OpenAIChatClient
+from starlette.applications import Starlette
+
+flight_skill = AgentSkill(
+    id="Flight_Booking",
+    name="Flight Booking",
+    description="Search and book flights across Europe.",
+    tags=["flights", "travel", "europe"],
+    examples=[],
+)
+
+public_agent_card = AgentCard(
+    name="Europe Travel Agent",
+    description="Helps users search and book flights and hotels across Europe.",
+    version="1.0.0",
+    default_input_modes=["text"],
+    default_output_modes=["text"],
+    capabilities=AgentCapabilities(streaming=True),
+    supported_interfaces=[
+        AgentInterface(url="http://localhost:9999/", protocol_binding="JSONRPC"),
+    ],
+    skills=[flight_skill],
+)
+
+agent = Agent(
+    client=OpenAIChatClient(),
+    name="Europe Travel Agent",
+    instructions="You are a helpful Europe Travel Agent.",
+)
+
+request_handler = DefaultRequestHandler(
+    agent_executor=A2AExecutor(agent),
+    task_store=InMemoryTaskStore(),
+    agent_card=public_agent_card,
+)
+
+server = Starlette(
+    routes=[
+        *create_agent_card_routes(public_agent_card),
+        *create_jsonrpc_routes(request_handler, "/"),
+    ]
+)
+
+uvicorn.run(server, host="0.0.0.0", port=9999)
+```
+
+`A2AExecutor` streams agent updates as A2A artifacts when the underlying agent supports streaming and propagates the A2A `context_id` as the agent session's `session_id`. You can subclass `A2AExecutor` and override the `handle_events` method to implement custom transformations from your agent's output format to A2A protocol events.
+
+> [!TIP]
+> See the [`agent_framework_to_a2a.py` sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/a2a/agent_framework_to_a2a.py) for a complete runnable example.
 
 ::: zone-end
 

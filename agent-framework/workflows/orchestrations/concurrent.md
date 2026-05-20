@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/12/2026
+ms.date: 05/08/2026
 ms.service: agent-framework
 ---
 
@@ -20,6 +20,7 @@ ms.service: agent-framework
   | Sample Output                              | ✅ |   ✅   |                 |
   | Advanced: Custom Agent Executors           | ❌ |   ✅   | Python-specific |
   | Advanced: Custom Aggregator                | ❌ |   ✅   | Python-specific |
+  | Intermediate Outputs                       | ❌ |   ✅   | Python-specific |
   | Key Concepts                               | ✅ |   ✅   |                 |
 -->
 
@@ -205,78 +206,52 @@ workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 
 ## Run the Concurrent Workflow and Collect the Results
 
+The default aggregator produces a single `AgentResponse` containing one assistant message per participant:
+
 ```python
-from typing import cast
+from agent_framework import AgentResponse
 
-from agent_framework import Message, WorkflowEvent
+# 3) Run with a single prompt and print the aggregated agent responses
+events = await workflow.run("We are launching a new budget-friendly electric bike for urban commuters.")
+outputs = events.get_outputs()
 
-# 3) Run with a single prompt, stream progress, and pretty-print the final combined messages
-output_data: list[Message] | None = None
-async for event in workflow.run("We are launching a new budget-friendly electric bike for urban commuters.", stream=True):
-    if event.type == "output":
-        output_data = event.data
-
-if output_data:
-    print("===== Final Aggregated Conversation (messages) =====")
-    messages: list[Message] = cast(list[Message], output_data)
-    for i, msg in enumerate(messages, start=1):
-        name = msg.author_name if msg.author_name else "user"
-        print(f"{'-' * 60}\n\n{i:02d} [{name}]:\n{msg.text}")
+if outputs:
+    print("===== Final Aggregated Results =====")
+    final: AgentResponse = outputs[0]
+    for msg in final.messages:
+        name = msg.author_name or "assistant"
+        print(f"{'-' * 60}\n\n[{name}]:\n{msg.text}")
 ```
 
 ## Sample Output
 
 ```plaintext
-Sample Output:
+===== Final Aggregated Results =====
+------------------------------------------------------------
 
-    ===== Final Aggregated Conversation (messages) =====
-    ------------------------------------------------------------
+[researcher]:
+**Insights:**
 
-    01 [user]:
-    We are launching a new budget-friendly electric bike for urban commuters.
-    ------------------------------------------------------------
+- **Target Demographic:** Urban commuters seeking affordable, eco-friendly transport;
+    likely to include students, young professionals, and price-sensitive urban residents.
+- **Market Trends:** E-bike sales are growing globally, with increasing urbanization,
+    higher fuel costs, and sustainability concerns driving adoption.
+...
+------------------------------------------------------------
 
-    02 [researcher]:
-    **Insights:**
+[marketer]:
+**Value Proposition:**
+"Empowering your city commute: Our new electric bike combines affordability, reliability, and
+    sustainable design—helping you conquer urban journeys without breaking the bank."
+...
+------------------------------------------------------------
 
-    - **Target Demographic:** Urban commuters seeking affordable, eco-friendly transport;
-        likely to include students, young professionals, and price-sensitive urban residents.
-    - **Market Trends:** E-bike sales are growing globally, with increasing urbanization,
-        higher fuel costs, and sustainability concerns driving adoption.
-    - **Competitive Landscape:** Key competitors include brands like Rad Power Bikes, Aventon,
-        Lectric, and domestic budget-focused manufacturers in North America, Europe, and Asia.
-    - **Feature Expectations:** Customers expect reliability, ease-of-use, theft protection,
-        lightweight design, sufficient battery range for daily city commutes (typically 25-40 miles),
-        and low-maintenance components.
+[legal]:
+**Constraints, Disclaimers, & Policy Concerns for Launching a Budget-Friendly Electric Bike for Urban Commuters:**
 
-    **Opportunities:**
-
-    - **First-time Buyers:** Capture newcomers to e-biking by emphasizing affordability, ease of
-        operation, and cost savings vs. public transit/car ownership.
-    ...
-    ------------------------------------------------------------
-
-    03 [marketer]:
-    **Value Proposition:**
-    "Empowering your city commute: Our new electric bike combines affordability, reliability, and
-        sustainable design—helping you conquer urban journeys without breaking the bank."
-
-    **Target Messaging:**
-
-    *For Young Professionals:*
-    ...
-    ------------------------------------------------------------
-
-    04 [legal]:
-    **Constraints, Disclaimers, & Policy Concerns for Launching a Budget-Friendly Electric Bike for Urban Commuters:**
-
-    **1. Regulatory Compliance**
-    - Verify that the electric bike meets all applicable federal, state, and local regulations
-        regarding e-bike classification, speed limits, power output, and safety features.
-    - Ensure necessary certifications (for example, UL certification for batteries, CE markings if sold internationally) are obtained.
-
-    **2. Product Safety**
-    - Include consumer safety warnings regarding use, battery handling, charging protocols, and age restrictions.
+**1. Regulatory Compliance**
+- Verify that the electric bike meets all applicable federal, state, and local regulations
+    regarding e-bike classification, speed limits, power output, and safety features.
 ```
 
 ## Advanced: Custom Agent Executors
@@ -348,7 +323,7 @@ workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 
 ## Advanced: Custom Aggregator
 
-By default, concurrent orchestration aggregates all agent responses into a list of messages. You can override this behavior with a custom aggregator that processes the results in a specific way:
+By default, concurrent orchestration aggregates all agent responses into a single `AgentResponse` with one assistant message per participant. You can override this behavior with a custom aggregator that processes the results in a specific way:
 
 ### Define a Custom Aggregator
 
@@ -424,13 +399,46 @@ Affordable." Legal review in each target market, compliance vetting, and robust 
 critical before launch.
 ```
 
+## Intermediate Outputs
+
+By default, only the aggregator's output surfaces as a workflow `output` event. Set `intermediate_outputs=True` to also surface each participant's individual output:
+
+```python
+workflow = ConcurrentBuilder(
+    participants=[researcher, marketer, legal],
+    intermediate_outputs=True,
+).build()
+```
+
+You can handle these events in real-time in streaming mode:
+
+```python
+from agent_framework import AgentResponseUpdate
+
+# Track the last author to format streaming output.
+last_author: str | None = None
+
+async for event in workflow.run("Analyze our new product launch strategy.", stream=True):
+    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+        update = event.data
+        author = update.author_name
+        if author != last_author:
+            if last_author is not None:
+                print()  # Newline between different authors
+            print(f"{author}: {update.text}", end="", flush=True)
+            last_author = author
+        else:
+            print(update.text, end="", flush=True)
+```
+
 ## Key Concepts
 
 - **Parallel Execution**: All agents work on the task simultaneously and independently
-- **Result Aggregation**: Results are collected and can be processed by either the default or custom aggregator
+- **AgentResponse Output**: The default aggregator yields a single `AgentResponse` with one assistant message per participant (no user prompt included)
 - **Diverse Perspectives**: Each agent brings its unique expertise to the same problem
 - **Flexible Participants**: You can use agents directly or wrap them in custom executors
 - **Custom Processing**: Override the default aggregator to synthesize results in domain-specific ways
+- **Intermediate Outputs**: Set `intermediate_outputs=True` to surface each participant's individual output, in addition to the aggregator's final output
 
 ::: zone-end
 
