@@ -14,6 +14,9 @@ Building secure AI agents is a shared responsibility between Agent Framework and
 
 This article outlines best practices for building safe and secure agents with Agent Framework.
 
+> [!TIP]
+> For deterministic, label-based defense against prompt injection and data exfiltration, see [Agent Security with FIDES](./security.md). FIDES complements the heuristic best-practices on this page with information-flow control middleware that enforces policies *before* sensitive tools run.
+
 ## Understand trust boundaries
 
 Data flows through several components when an agent runs: user input, chat history providers, context providers, the LLM service, and function tools. Each boundary where data enters or exits your application represents a potential attack surface.
@@ -105,10 +108,12 @@ Agent Framework does not impose constraints on input/output length or request ra
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Tools overview](tools/index.md)
+> [Agent Security with FIDES](./security.md)
 
 ### Related content
 
+- [Agent Security with FIDES](./security.md) — deterministic prompt-injection and data-exfiltration defense
+- [Tool Approval](./tools/tool-approval.md)
 - [Function Tools](./tools/function-tools.md)
 - [Observability](./observability.md)
 - [Context Providers](./conversations/context-providers.md)

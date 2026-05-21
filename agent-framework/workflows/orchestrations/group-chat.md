@@ -363,7 +363,7 @@ Workflow completed.
 - **Iterative Collaboration**: Agents build upon each other's contributions
 - **AgentResponse Output**: The terminal output is an `AgentResponse` containing the orchestrator's completion message
 - **Event Streaming**: Process `AgentResponseUpdate` events in real-time via `workflow.run(task, stream=True)`
-- **Intermediate Outputs**: Set `intermediate_outputs=True` to surface each participant's output, in addition to the orchestrator's final output
+- **Intermediate Outputs**: Pass `intermediate_output_from=[participant, ...]` to surface each listed participant's output as `"intermediate"` events, in addition to the orchestrator's terminal `"output"` event
 
 ::: zone-end
 
@@ -446,14 +446,14 @@ workflow = GroupChatBuilder(
 
 ## Intermediate Outputs
 
-By default, only the orchestrator's final output surfaces as a workflow `output` event. Set `intermediate_outputs=True` to also surface each participant's individual output:
+By default, only the orchestrator's final output surfaces as a workflow `"output"` (terminal) event. Pass `intermediate_output_from` with the participants you want to designate as intermediate sources to also surface their individual outputs as `"intermediate"` events:
 
 ```python
 workflow = GroupChatBuilder(
     participants=[researcher, writer],
     termination_condition=lambda conversation: len(conversation) >= 4,
     selection_func=round_robin_selector,
-    intermediate_outputs=True,
+    intermediate_output_from=[researcher, writer],
 ).build()
 ```
 

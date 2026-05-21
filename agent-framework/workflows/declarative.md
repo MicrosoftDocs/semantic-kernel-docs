@@ -1604,6 +1604,8 @@ async def main() -> None:
     result = await workflow.run({"name": "Alice"})
     for output in result.get_outputs():
         print(f"Output: {output}")
+    for output in result.get_intermediate_outputs():
+        print(f"Intermediate: {output}")
 
 
 if __name__ == "__main__":

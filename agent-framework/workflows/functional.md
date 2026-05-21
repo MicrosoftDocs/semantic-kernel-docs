@@ -83,9 +83,10 @@ raw = await text_pipeline("hello world")   # str — the raw return value
 
 # .run() wraps the result in a WorkflowRunResult with events and state
 result = await text_pipeline.run("hello world")
-print(result.text)                # first output as a string
-print(result.get_outputs())       # list of all outputs
-print(result.get_final_state())   # WorkflowRunState.IDLE
+print(result.text)                        # first output as a string
+print(result.get_outputs())               # list of terminal outputs
+print(result.get_intermediate_outputs())  # list of intermediate outputs
+print(result.get_final_state())           # WorkflowRunState.IDLE
 ```
 
 ### `run()` parameters
@@ -108,7 +109,8 @@ Exactly one of `message`, `responses`, or `checkpoint_id` must be provided per c
 | Method / property | Returns | Description |
 |---|---|---|
 | `.text` | `str` | First output as a string. Empty string if no string outputs. |
-| `.get_outputs()` | `list[Any]` | All outputs emitted by the workflow. |
+| `.get_outputs()` | `list[Any]` | All terminal outputs emitted by the workflow (events with `type == "output"`). |
+| `.get_intermediate_outputs()` | `list[Any]` | All intermediate outputs emitted by the workflow (events with `type == "intermediate"`). |
 | `.get_final_state()` | `WorkflowRunState` | Final run state (`IDLE`, `IDLE_WITH_PENDING_REQUESTS`, `FAILED`, …). |
 | `.get_request_info_events()` | `list[WorkflowEvent]` | Pending HITL requests when state is `IDLE_WITH_PENDING_REQUESTS`. |
 

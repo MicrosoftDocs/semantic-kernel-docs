@@ -123,7 +123,7 @@ Workflow runs emit a richer set of AG-UI events compared to single-agent runs:
 | `STEP_FINISHED` | An executor or superstep completes | Closes the step for UI progress tracking |
 | `CUSTOM` (`status`) | Workflow state changes | Contains `{"state": "<value>"}` in the event value |
 | `CUSTOM` (`request_info`) | Workflow requests human input | Contains the request payload for the client to render a prompt |
-| `CUSTOM` (`workflow_output`) | Workflow produces output | Contains the final or intermediate output data |
+| `CUSTOM` (`workflow_output`) | Workflow produces output | Emitted for both `"output"` (terminal) and `"intermediate"` workflow events. Terminal outputs carry the final answer; intermediate outputs surface as `text_reasoning` content when the workflow runs behind `as_agent()`. |
 | `RUN_FINISHED` | Run completes | May include `interrupts` if the workflow is waiting for input |
 
 Clients can use `STEP_STARTED` / `STEP_FINISHED` events to render progress indicators showing which agent is currently active.

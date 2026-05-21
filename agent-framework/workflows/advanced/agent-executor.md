@@ -306,11 +306,16 @@ async for event in events:
 # Non-streaming mode — receive complete response
 result = await workflow.run("Write a story about a cat.")
 
-# Retrieve AgentResponse objects from the result
+# Retrieve terminal AgentResponse objects from the result
 outputs = result.get_outputs()
 for output in outputs:
     if isinstance(output, AgentResponse):
         print(output.text)
+
+# Retrieve intermediate outputs (progress / observational emissions)
+intermediate_outputs = result.get_intermediate_outputs()
+for item in intermediate_outputs:
+    print(f"Intermediate: {item}")
 ```
 
 ## Context Modes

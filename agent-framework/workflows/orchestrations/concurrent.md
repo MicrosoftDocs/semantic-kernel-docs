@@ -401,12 +401,12 @@ critical before launch.
 
 ## Intermediate Outputs
 
-By default, only the aggregator's output surfaces as a workflow `output` event. Set `intermediate_outputs=True` to also surface each participant's individual output:
+By default, only the aggregator's output surfaces as a workflow `"output"` (terminal) event. Pass `intermediate_output_from` with the participants you want to designate as intermediate sources to also surface their individual outputs as `"intermediate"` events:
 
 ```python
 workflow = ConcurrentBuilder(
     participants=[researcher, marketer, legal],
-    intermediate_outputs=True,
+    intermediate_output_from=[researcher, marketer, legal],
 ).build()
 ```
 
@@ -419,7 +419,7 @@ from agent_framework import AgentResponseUpdate
 last_author: str | None = None
 
 async for event in workflow.run("Analyze our new product launch strategy.", stream=True):
-    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+    if event.type == "intermediate" and isinstance(event.data, AgentResponseUpdate):
         update = event.data
         author = update.author_name
         if author != last_author:
@@ -438,7 +438,7 @@ async for event in workflow.run("Analyze our new product launch strategy.", stre
 - **Diverse Perspectives**: Each agent brings its unique expertise to the same problem
 - **Flexible Participants**: You can use agents directly or wrap them in custom executors
 - **Custom Processing**: Override the default aggregator to synthesize results in domain-specific ways
-- **Intermediate Outputs**: Set `intermediate_outputs=True` to surface each participant's individual output, in addition to the aggregator's final output
+- **Intermediate Outputs**: Pass `intermediate_output_from=[participant, ...]` to surface each listed participant's output as `"intermediate"` events, in addition to the aggregator's terminal `"output"` event
 
 ::: zone-end
 
