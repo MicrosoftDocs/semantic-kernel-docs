@@ -630,18 +630,21 @@ This downloads the quickstart project with all necessary files, including the Az
    # [Bash](#tab/bash)
 
    ```bash
-   python3 -m venv .venv
+   uv venv .venv
    source .venv/bin/activate
    ```
 
    # [PowerShell](#tab/powershell)
 
    ```powershell
-   python3 -m venv .venv
+   uv venv .venv
    .venv\Scripts\Activate.ps1
    ```
 
    ---
+
+   > [!NOTE]
+   > `python3 -m venv .venv` also works, but can hang indefinitely on Windows with Microsoft Store Python due to a known `ensurepip` issue. Use `uv venv .venv` to avoid this.
 
 
 1. Install the required packages:
