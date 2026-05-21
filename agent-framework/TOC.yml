@@ -46,6 +46,8 @@ items:
     href: agents/code_act.md
   - name: Agent Safety
     href: agents/safety.md
+  - name: Agent Security (FIDES)
+    href: agents/security.md
   - name: Tools
     items:
     - name: Overview
