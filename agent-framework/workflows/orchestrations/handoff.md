@@ -644,7 +644,7 @@ After broadcasting the response, the participant then checks whether it needs to
 - **HandoffBuilder**: Creates workflows with automatic handoff tool registration
 - **with_start_agent()**: Defines which agent receives user input first
 - **add_handoff()**: Configures specific handoff relationships between agents
-- **Output**: Each agent's responses surfaces as `output` events (`AgentResponse` in non-streaming mode and `AgentResponseUpdate` in streaming mode); there is no synthetic terminal event. Because every agent's response is already an output event, handoff has no separate `intermediate_outputs` parameter — all outputs are inherently visible
+- **Output**: By default, `final_output_from` is set to **all participants**, so every agent's response surfaces as an `"output"` (terminal) event (`AgentResponse` in non-streaming mode, `AgentResponseUpdate` in streaming mode). To designate specific agents as intermediate sources instead, pass `intermediate_output_from=[agent_a, agent_b]` to `HandoffBuilder` — this implicitly demotes those agents from the default-final set so their responses become `"intermediate"` events. There is no overlap error; the demotion is silent and intentional.
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
 - **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human approval

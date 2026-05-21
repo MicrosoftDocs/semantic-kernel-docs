@@ -364,16 +364,18 @@ For a complete example, see [sequential_chain_only_agent_responses.py](https://g
 
 ## Intermediate Outputs
 
-By default, only the last participant's output surfaces as a workflow `output` event. Set `intermediate_outputs=True` to surface every participant's output, in addition to the final output:
+By default, `SequentialBuilder` designates the **last participant** as the terminal output source (`final_output_from`). Only that participant's output surfaces as an `"output"` event.
+
+To surface earlier participants' outputs as well, pass `intermediate_output_from` with the participants you want to designate as intermediate sources. This implicitly demotes those participants from the default-final set — they emit `"intermediate"` events instead of `"output"` events:
 
 ```python
 workflow = SequentialBuilder(
     participants=[writer, reviewer, editor],
-    intermediate_outputs=True,
+    intermediate_output_from=[writer, reviewer],
 ).build()
 ```
 
-You can handle these events in real-time in streaming mode:
+You can handle both `"intermediate"` and `"output"` events in real-time in streaming mode:
 
 ```python
 from agent_framework import AgentResponseUpdate
@@ -382,13 +384,14 @@ from agent_framework import AgentResponseUpdate
 last_author: str | None = None
 
 async for event in workflow.run("Write a tagline for a budget-friendly eBike.", stream=True):
-    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+    if event.type in ("output", "intermediate") and isinstance(event.data, AgentResponseUpdate):
         update = event.data
         author = update.author_name
         if author != last_author:
             if last_author is not None:
                 print()  # Newline between different authors
-            print(f"{author}: {update.text}", end="", flush=True)
+            label = "FINAL" if event.type == "output" else "intermediate"
+            print(f"[{label}] {author}: {update.text}", end="", flush=True)
             last_author = author
         else:
             print(update.text, end="", flush=True)

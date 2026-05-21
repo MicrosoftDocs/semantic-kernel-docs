@@ -108,7 +108,7 @@ from agent_framework.orchestrations import MagenticBuilder
 
 workflow = MagenticBuilder(
     participants=[researcher_agent, coder_agent],
-    intermediate_outputs=True,
+    intermediate_output_from=[researcher_agent, coder_agent],
     manager_agent=manager_agent,
     max_round_count=10,
     max_stall_count=3,
@@ -121,7 +121,7 @@ workflow = MagenticBuilder(
 
 ## Intermediate Outputs
 
-The `intermediate_outputs=True` parameter in the example above tells the workflow to surface each participant's output as a workflow `output` event, in addition to the manager's final synthesized answer. Without it (the default), only the manager's terminal `AgentResponse` would surface.
+Passing `intermediate_output_from=[...]` to `MagenticBuilder` designates specific participants as intermediate output sources. Their `yield_output` calls emit `"intermediate"` events, while the manager's final synthesized answer remains an `"output"` (terminal) event. Without this parameter (the default), only the manager's terminal `AgentResponse` surfaces.
 
 This is particularly useful for Magentic workflows because:
 
@@ -221,7 +221,7 @@ from agent_framework.orchestrations import (
 
 workflow = MagenticBuilder(
     participants=[researcher_agent, analyst_agent],
-    intermediate_outputs=True,
+    intermediate_output_from=[researcher_agent, analyst_agent],
     enable_plan_review=True,
     manager_agent=manager_agent,
     max_round_count=10,
@@ -291,7 +291,7 @@ while not final_response:
 
 - **Dynamic Coordination**: The Magentic manager dynamically selects which agent should act next based on the evolving context
 - **AgentResponse Output**: The terminal output is an `AgentResponse` containing the manager's synthesized final answer
-- **Intermediate Outputs**: Set `intermediate_outputs=True` to surface each participant's output, in addition to the manager's final answer
+- **Intermediate Outputs**: Pass `intermediate_output_from=[participant, ...]` to designate participants as intermediate output sources. Their outputs emit `"intermediate"` events while the manager's final answer remains the terminal `"output"` event.
 - **Iterative Refinement**: The system can break down complex problems and iteratively refine solutions through multiple rounds
 - **Progress Tracking**: Built-in mechanisms to detect stalls and reset the plan if needed
 - **Flexible Collaboration**: Agents can be called multiple times in any order as determined by the manager
