@@ -221,9 +221,57 @@ agent = FoundryAgent(
 
 For a HostedAgent, omit `agent_version` and use the hosted agent name instead.
 
+### What works and what doesn't with `FoundryAgent`
+
+`FoundryAgent` connects to an agent that already exists in Foundry (a Prompt Agent or a Hosted Agent). The agent's definition — its instructions and its tool configuration — lives in Foundry, not in your Python code. This means several `Agent`-level features behave differently than they do with `Agent(client=FoundryChatClient(...))` or other chat-client–backed agents.
+
+#### Tools
+
+| Tool type passed to `FoundryAgent(...)` | Behavior |
+|---|---|
+| `FunctionTool` (a local Python callable) | **Supported, but only if the matching function definition already exists on the Foundry agent.** The Foundry runtime decides which tools to expose to the model based on the agent definition. When the model calls a function, Foundry returns a tool call to the client and the framework invokes your local Python callable **in your process** (not in Foundry), then sends the result back. Passing a `FunctionTool` client-side just supplies that local implementation — if the function is not declared on the Foundry agent, the model will never call it. |
+| Hosted tools (web search, code interpreter, file search, MCP, image generation, etc.) | **Ignored.** These must be configured on the Foundry agent definition itself, either in the Foundry portal or via the service APIs. Passing them client-side has no effect because the Foundry runtime only knows about tools attached to the agent definition. |
+
+In short: **you cannot add new tools at construction time.** Every tool the model can call — including local Python functions — must already be part of the agent definition in Foundry. Passing a `FunctionTool` to `FoundryAgent(...)` only provides the local implementation that runs in your Python process when the Foundry-defined function is called; it does not register a new tool with the agent.
+
+#### Context providers
+
+`context_providers=[...]` is partially supported. Whether a context provider works depends on *what* the provider tries to do:
+
+| Context provider behavior | Works with `FoundryAgent`? |
+|---|---|
+| Adds extra context as messages (for example, retrieved memory, RAG snippets, user profile information) | **Yes.** The injected context is forwarded with the request. |
+| Persists or observes the conversation (for example, writing turns to an external store) | **Yes.** Runs locally around the request/response. |
+| Adds tools dynamically (for example, `SkillsProvider`, or any provider that returns tools from `invoking()`) | **No, unless the tools are already part of the Foundry agent definition.** The Foundry runtime executes the model against the tools attached to the agent in Foundry; tools that only exist locally are not exposed to the model and will not be invoked. |
+
+If you need dynamic tool selection, skill loading, or any other behavior that relies on tools being added at runtime, use `Agent(client=FoundryChatClient(...))` instead — that path owns the model loop locally and supports the full set of tool types and tool-adding context providers.
+
+#### Run options (`default_options` and `agent.run(...)` options)
+
+Options you pass to `FoundryAgent(default_options=...)` or to `agent.run(..., **options)` (such as `temperature`, `top_p`, `max_tokens`, `instructions`, `tool_choice`, `response_format`, `metadata`, etc.) are **not all honored**. Because the agent definition in Foundry is the source of truth, many options are silently ignored.
+
+For **Prompt Agents**, the framework explicitly removes or overrides the following before sending the request to the Foundry Responses API:
+
+| Option | Behavior with `FoundryAgent` |
+|---|---|
+| `model` | **Ignored.** The model is taken from the Foundry agent definition. |
+| `tools`, `tool_choice`, `parallel_tool_calls` | **Stripped from the request body.** Tools must be declared on the Foundry agent definition (see the previous section). `FunctionTool` callables are still wired up locally for function invocation, but the tool list itself is not sent to the service. |
+| `instructions` and system/developer messages | **Ignored.** The Foundry agent's own instructions are authoritative. System/developer messages are stripped from the message list before the request is sent. |
+| `conversation_id` | **Used**, and mapped to the Foundry agent session when it refers to one. |
+| `extra_body` | **Forwarded**, merged with the framework-set `agent_reference` payload. |
+| Sampling parameters (`temperature`, `top_p`, `max_tokens`, `seed`, `frequency_penalty`, `presence_penalty`, `stop`, …), `metadata`, `user`, `store`, `response_format`, etc. | **Forwarded** to the Responses API. Whether Foundry actually applies them depends on the agent and model configuration — the agent definition can override or constrain them — so do not rely on them taking effect for a Prompt Agent. |
+
+For **Hosted Agents**, the same client-side stripping applies, but everything beyond that depends on what the specific hosted agent implements. A hosted agent may accept, ignore, or reinterpret any option that is forwarded. Treat run-time options as advisory and verify the actual behavior against the hosted agent you are calling.
+
+> [!TIP]
+> If you need precise control over generation parameters, instructions, or tool selection per run, configure them on the Foundry agent definition, or switch to `Agent(client=FoundryChatClient(...))`, which honors `ChatOptions` end-to-end.
+
+> [!TIP]
+> A good rule of thumb: if a feature depends on changing the agent's instructions or tools per run, it belongs on `Agent(client=FoundryChatClient(...))`. If the agent's definition is fixed in Foundry and you only need local function invocation plus message-level context, `FoundryAgent` is the right choice.
+
 ### Connecting to a deployed (hosted) Foundry agent
 
-For HostedAgents that run service-side sessions (`/agents/{name}/sessions`), use `FoundryAgent` with `allow_preview=True` to opt into the preview Responses surface and pass `version="v2"`:
+For HostedAgents that run service-side sessions (`/agents/{name}/sessions`), use `FoundryAgent` with `allow_preview=True` to opt into the preview Responses surface:
 
 ```python
 from agent_framework.foundry import FoundryAgent
@@ -233,7 +281,6 @@ agent = FoundryAgent(
     agent_name="my-hosted-agent",
     credential=AzureCliCredential(),
     allow_preview=True,
-    version="v2",
 )
 ```
 
