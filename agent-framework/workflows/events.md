@@ -65,7 +65,8 @@ RequestInfoEvent         // A request is issued
 # Workflow lifecycle events
 WorkflowEvent.type == "started"             # Workflow execution begins
 WorkflowEvent.type == "status"              # Workflow state changed (use .state)
-WorkflowEvent.type == "output"              # Workflow produces an output
+WorkflowEvent.type == "output"              # Workflow produces a terminal (final) output
+WorkflowEvent.type == "intermediate"        # Workflow produces an intermediate (observational) output
 WorkflowEvent.type == "failed"              # Workflow terminated with error (use .details)
 WorkflowEvent.type == "error"               # Non-fatal error from user code
 WorkflowEvent.type == "warning"             # Workflow encountered a warning
@@ -74,7 +75,7 @@ WorkflowEvent.type == "warning"             # Workflow encountered a warning
 WorkflowEvent.type == "executor_invoked"    # Executor starts processing
 WorkflowEvent.type == "executor_completed"  # Executor finishes processing
 WorkflowEvent.type == "executor_failed"     # Executor encounters an error
-WorkflowEvent.type == "data"                # Executor emitted data (e.g., AgentResponse)
+WorkflowEvent.type == "data"                # Deprecated alias for "intermediate"
 
 # Superstep events
 WorkflowEvent.type == "superstep_started"   # Superstep begins
@@ -86,6 +87,9 @@ WorkflowEvent.type == "request_info"        # A request is issued
 
 > [!NOTE]
 > When agents use approval-required tools, `request_info` events typically carry a `Content` payload with `type == "function_approval_request"` for tool calls that require human approval. See [Human-in-the-Loop](./human-in-the-loop.md) for details on handling these events.
+
+> [!NOTE]
+> `"output"` and `"intermediate"` are the two output discriminators. An executor designated as a **terminal output source** emits `"output"` events (consumed by `WorkflowRunResult.get_outputs()`). One designated as an **intermediate output source** emits `"intermediate"` events (consumed by `WorkflowRunResult.get_intermediate_outputs()`). The `"data"` type is a deprecated alias for `"intermediate"` and will be removed in a future release; prefer filtering on `"intermediate"` in new code.
 
 ::: zone-end
 
@@ -131,8 +135,10 @@ async for event in workflow.run_stream(input_message):
         print(f"Starting {event.executor_id}")
     elif event.type == "executor_completed":
         print(f"Completed {event.executor_id}: {event.data}")
+    elif event.type == "intermediate":
+        print(f"Intermediate output from {event.executor_id}: {event.data}")
     elif event.type == "output":
-        print(f"Workflow produced output: {event.data}")
+        print(f"Terminal output: {event.data}")
         return
     elif event.type == "error":
         print(f"Workflow error: {event.data}")

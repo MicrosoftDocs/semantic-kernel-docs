@@ -175,6 +175,9 @@ Set up the required environment variables for Anthropic authentication:
 # Required for Anthropic API access
 ANTHROPIC_API_KEY="your-anthropic-api-key"
 ANTHROPIC_CHAT_MODEL="claude-sonnet-4-5-20250929"  # or your preferred model
+
+# Optional: override the Anthropic API endpoint (e.g. for Foundry-compatible deployments)
+ANTHROPIC_BASE_URL="https://your-custom-endpoint.com"
 ```
 
 Alternatively, you can use a `.env` file in your project root:
@@ -182,6 +185,7 @@ Alternatively, you can use a `.env` file in your project root:
 ```env
 ANTHROPIC_API_KEY=your-anthropic-api-key
 ANTHROPIC_CHAT_MODEL=claude-sonnet-4-5-20250929
+# ANTHROPIC_BASE_URL=https://your-custom-endpoint.com  # optional
 ```
 
 You can get an API key from the [Anthropic Console](https://console.anthropic.com/).
@@ -230,6 +234,27 @@ async def explicit_config_example():
     result = await agent.run("What can you do?")
     print(result.text)
 ```
+
+### Using a Custom Base URL
+
+Pass `base_url` directly to `AnthropicClient` to point it at any Anthropic-compatible endpoint, such as a Foundry-hosted deployment. This lets you keep the same `AnthropicClient` code and only change the endpoint, rather than switching to `AnthropicFoundryClient`:
+
+```python
+async def custom_base_url_example():
+    agent = AnthropicClient(
+        model="claude-haiku-4-5",
+        api_key="your-api-key-here",
+        base_url="https://your-foundry-resource.services.ai.azure.com/models/anthropic",
+    ).as_agent(
+        name="HelpfulAssistant",
+        instructions="You are a helpful assistant.",
+    )
+
+    result = await agent.run("What can you do?")
+    print(result.text)
+```
+
+`base_url` falls back to the `ANTHROPIC_BASE_URL` environment variable when not passed explicitly.
 
 ### Using Anthropic on Foundry
 

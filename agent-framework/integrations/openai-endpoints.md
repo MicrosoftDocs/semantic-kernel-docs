@@ -622,4 +622,4 @@ export AZURE_OPENAI_API_VERSION="your-api-version"
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Purview](purview.md)
+> [Hyperlight CodeAct](hyperlight.md)
