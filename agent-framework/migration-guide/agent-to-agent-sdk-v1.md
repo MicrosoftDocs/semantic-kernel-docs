@@ -3,7 +3,7 @@ title: A2A SDK v1 Migration Guide
 description: Learn how to migrate existing Agent Framework A2A Agent and A2A Hosting code after the A2A SDK was updated from v0.3 to v1.
 zone_pivot_groups: programming-languages
 author: sergeymenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.date: 04/24/2026
 ms.service: agent-framework
