@@ -2,7 +2,7 @@
 title: From LLMs to Agents
 description: Understand what makes an AI agent more than a raw LLM call, why the agent abstraction matters, and create your first agent with instructions.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/03/2026
 ms.service: agent-framework

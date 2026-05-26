@@ -2,7 +2,7 @@
 title: LLM Fundamentals
 description: Understand how large language models work, their capabilities, limitations, and why they form the foundation of AI agents.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/02/2026
 ms.service: agent-framework

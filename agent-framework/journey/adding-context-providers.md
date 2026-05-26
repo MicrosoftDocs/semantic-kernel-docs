@@ -2,7 +2,7 @@
 title: Adding Context Providers
 description: Understand what context providers are, why agents need them, and how they inject memory, knowledge, and dynamic data into the agent's context window.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/06/2026
 ms.service: agent-framework

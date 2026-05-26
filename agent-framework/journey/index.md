@@ -2,7 +2,7 @@
 title: The Agent Development Journey
 description: A progressive guide from LLM fundamentals to advanced agent patterns, helping you understand when and why to use each capability.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/02/2026
 ms.service: agent-framework

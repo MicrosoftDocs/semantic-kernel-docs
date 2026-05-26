@@ -3,7 +3,7 @@ title: Foundry Hosted Agents
 description: Learn how to host Agent Framework agents in Microsoft Foundry Agent Service as containerized, managed hosted agents.
 zone_pivot_groups: programming-languages
 author: taochen
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/27/2026
 ms.service: agent-framework

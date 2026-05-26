@@ -3,7 +3,7 @@ title: Observability in Semantic Kernel
 description: Introduction to observability in Semantic Kernel
 author: TaoChenOSU
 zone_pivot_groups: programming-languages
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 09/11/2024
 ms.service: semantic-kernel

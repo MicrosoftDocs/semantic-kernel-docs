@@ -2,7 +2,7 @@
 title: Agents as Tools
 description: Compose agents by using one agent as a tool for another — enabling specialization and delegation.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/06/2026
 ms.service: agent-framework

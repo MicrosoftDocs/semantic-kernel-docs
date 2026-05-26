@@ -2,7 +2,7 @@
 title: Adding Tools
 description: Understand why and when agents need tools, the tool-calling loop, types of tools available, and how to choose the right tool strategy.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/03/2026
 ms.service: agent-framework

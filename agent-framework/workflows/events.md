@@ -3,7 +3,7 @@ title: Microsoft Agent Framework Workflows - Events
 description: In-depth look at Events in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 03/05/2026
 ms.service: agent-framework

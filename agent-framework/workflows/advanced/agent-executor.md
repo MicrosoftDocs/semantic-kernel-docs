@@ -3,7 +3,7 @@ title: Agent Executor
 description: Deep dive into the AgentExecutor, the built-in executor that adapts AI agents for use in workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 05/08/2026
 ms.service: agent-framework

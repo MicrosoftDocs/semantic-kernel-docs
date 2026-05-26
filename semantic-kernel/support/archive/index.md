@@ -2,7 +2,7 @@
 title: Semantic Kernel Documentation Archive
 description: Archive of Semantic Kernel documentation.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 05/19/2025
 ms.service: semantic-kernel
