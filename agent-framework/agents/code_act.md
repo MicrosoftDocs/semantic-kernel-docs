@@ -3,7 +3,7 @@ title: CodeAct
 description: Learn what CodeAct is and when to use it with Agent Framework.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 05/05/2026
 ms.service: agent-framework

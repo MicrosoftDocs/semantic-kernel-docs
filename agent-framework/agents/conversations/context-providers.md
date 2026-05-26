@@ -3,7 +3,7 @@ title: Context Providers
 description: Learn built-in and custom context provider patterns, including history provider guidance.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/13/2026
 ms.service: agent-framework
