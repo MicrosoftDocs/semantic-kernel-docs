@@ -214,6 +214,10 @@ if (continuationToken is not null)
 > [!NOTE]
 > A2A agents support stream reconnection (obtaining the same response stream from the beginning), not stream resumption from a specific point in the stream.
 
+## Tools
+
+`A2AAgent` is a transport-level wrapper around a remote A2A agent. Whatever tools the remote agent uses live on the remote side and are invisible to your code. Agent Framework tool types (function tools, code interpreter, file search, hosted/local MCP, etc.) are not configured on the `A2AAgent` itself — to extend the remote agent's capabilities, change the remote agent's configuration.
+
 ::: zone-end
 
 ::: zone pivot="programming-language-python"
@@ -384,6 +388,12 @@ async with A2AAgent(
 ```
 
 When no timeout is specified, the defaults are: 10s connect, 60s read, 10s write, 5s pool.
+
+## Tools
+
+`A2AAgent` is a transport-level wrapper around a remote A2A agent. Whatever tools the remote agent uses live on the remote side and are invisible to your code. Agent Framework tool types (function tools, code interpreter, file search, hosted/local MCP, etc.) are not configured on the `A2AAgent` itself — to extend the remote agent's capabilities, change the remote agent's configuration.
+
+If you want a Foundry agent to call an A2A agent as a tool, see the [`get_a2a_tool` factory on `FoundryChatClient`](./microsoft-foundry.md#agent-to-agent-a2a).
 
 ::: zone-end
 
