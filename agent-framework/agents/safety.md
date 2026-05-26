@@ -2,7 +2,7 @@
 title: Agent Safety
 description: Security best practices for building safe and secure AI agents with Agent Framework.
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 03/24/2026
 ms.service: agent-framework

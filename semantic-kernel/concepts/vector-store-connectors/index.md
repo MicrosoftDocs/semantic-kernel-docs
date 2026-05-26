@@ -3,7 +3,7 @@ title: What are Semantic Kernel Vector Stores? (Preview)
 description: Describes what a Semantic Kernel Vector Store is, and provides a basic example of how to use one and how to get started.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel

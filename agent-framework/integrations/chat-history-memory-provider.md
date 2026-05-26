@@ -3,7 +3,7 @@ title: Chat History Memory Provider for Agent Framework
 description: Learn how to use the Chat History Memory Provider to add semantic memory capabilities to your Agent Framework agents by storing and retrieving chat history from a vector store.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 04/03/2026
 ms.service: agent-framework

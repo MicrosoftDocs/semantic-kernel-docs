@@ -2,7 +2,7 @@
 title: Agent Framework Integrations
 description: Agent Framework Integrations
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 01/27/2026
 ms.service: agent-framework

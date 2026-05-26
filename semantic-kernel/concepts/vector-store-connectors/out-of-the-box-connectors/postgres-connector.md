@@ -3,7 +3,7 @@ title: Using the Semantic Kernel Postgres Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Postgres.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 10/24/2024
 ms.service: semantic-kernel
