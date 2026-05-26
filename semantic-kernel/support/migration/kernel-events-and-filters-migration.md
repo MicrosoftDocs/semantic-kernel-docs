@@ -2,7 +2,7 @@
 title: Kernel Events and Filters Migration
 description: Describes the steps for SK caller code to migrate from Kernel Events and use latest version of Filters
 author: dmytrostruk
-ms.topic: conceptual
+ms.topic: article
 ms.author: dmytrostruk
 ms.date: 11/18/2024
 ms.service: semantic-kernel
