@@ -177,6 +177,19 @@ Console.WriteLine(await agent.RunAsync("Search Microsoft Learn for 'Azure Functi
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
 
+## Tools
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ✅ | Standard `AIFunction` instances. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the framework's function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | Not a Copilot CLI capability. |
+| [File Search](../tools/file-search.md) | ❌ | Not a Copilot CLI capability. |
+| [Web Search](../tools/web-search.md) | ❌ | Not exposed as a hosted tool. |
+| Shell / file system / URL fetching | ✅ | Built into the Copilot CLI runtime and gated by the [Permissions](#permissions) handler you supply. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | Remote (HTTP) MCP servers configured via `SessionConfig.McpServers`. See [MCP Servers](#mcp-servers). |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Local (stdio) MCP servers configured via `SessionConfig.McpServers`. See [MCP Servers](#mcp-servers). |
+
 ## Using the Agent
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
@@ -417,6 +430,19 @@ async with GitHubCopilotAgent() as agent:
 If you need the underlying agent without the telemetry layer (for example to wrap it in a custom one), import `RawGitHubCopilotAgent` from `agent_framework.github`.
 
 For OTLP exporters and richer examples, see the [observability samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/observability).
+
+## Tools
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ✅ | Standard Python callables or `@ai_function`. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the framework's function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | Not a Copilot CLI capability. |
+| [File Search](../tools/file-search.md) | ❌ | Not a Copilot CLI capability. |
+| [Web Search](../tools/web-search.md) | ❌ | Not exposed as a hosted tool. |
+| Shell / file system / URL fetching | ✅ | Built into the Copilot CLI runtime and gated by the [Permissions](#permissions-1) handler you provide. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | Remote (HTTP) MCP servers configured via `default_options["mcp_servers"]`. See [MCP Servers](#mcp-servers-1). |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Local (stdio) MCP servers configured via `default_options["mcp_servers"]`. See [MCP Servers](#mcp-servers-1). |
 
 ## Using the Agent
 

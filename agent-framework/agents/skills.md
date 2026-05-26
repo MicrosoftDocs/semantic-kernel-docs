@@ -3,7 +3,7 @@ title: Agent Skills
 description: Learn how to extend agent capabilities with Agent Skills - portable packages of instructions, scripts, and resources that agents discover and load on demand.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.date: 05/15/2026
 ms.service: agent-framework

@@ -3,7 +3,7 @@ title: Sub-Workflows
 description: Deep dive into composing workflows by nesting them as executors within parent workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 03/23/2026
 ms.service: agent-framework

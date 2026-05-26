@@ -2,7 +2,7 @@
 title: Agent-to-Agent (A2A)
 description: Enable agents to communicate across service and organizational boundaries using the A2A protocol.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/06/2026
 ms.service: agent-framework

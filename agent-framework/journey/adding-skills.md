@@ -2,7 +2,7 @@
 title: Adding Skills
 description: Understand why and when to package agent capabilities into skills, how skills differ from tools, and when to reach for skills vs. other patterns.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/03/2026
 ms.service: agent-framework

@@ -3,7 +3,7 @@ title: Semantic Kernel Filters
 description: Learn about filters in Semantic Kernel.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 04/29/2026
 ms.service: semantic-kernel

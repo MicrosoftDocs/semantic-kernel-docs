@@ -3,7 +3,7 @@ title: Creating and managing a chat history object
 description: Use chat history to maintain a record of messages in a chat session
 zone_pivot_groups: programming-languages
 author: evanmattson
-ms.topic: conceptual
+ms.topic: article
 ms.author: evmattso
 ms.date: 01/20/2025
 ms.service: semantic-kernel

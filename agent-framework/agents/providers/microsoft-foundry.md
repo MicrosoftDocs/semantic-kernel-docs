@@ -95,6 +95,20 @@ Console.WriteLine(await agent.RunAsync("Now make it funnier.", session));
 
 For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../get-started/your-first-agent.md).
 
+## Tools
+
+Foundry agents created from `AIProjectClient.AsAIAgent(...)` (the Responses path) support the standard Agent Framework tool surface — see the [Tools overview](../tools/index.md) for the full list and supported feature matrix. For Foundry agents loaded from a versioned agent definition (`FoundryAgent`), the agent's tools are owned by the Foundry agent definition, not by the client.
+
+| Tool | Notes |
+|---|---|
+| [Function Tools](../tools/function-tools.md) | Supported. |
+| [Tool Approval](../tools/tool-approval.md) | Supported. Provided by the framework's function-invoking chat client. |
+| [Code Interpreter](../tools/code-interpreter.md) | Supported. |
+| [File Search](../tools/file-search.md) | Supported. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | Supported. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | Supported. |
+| [Foundry Toolboxes](#toolboxes) | Supported. |
+
 ## Toolboxes
 
 > [!NOTE]
@@ -190,6 +204,192 @@ agent = Agent(
 ```
 
 `FoundryChatClient` is the Foundry-first Python path for direct inference and supports tools, structured outputs, and streaming.
+
+## Tools
+
+`FoundryChatClient` ships static factory methods for each hosted Foundry tool. The factories return SDK tool objects you pass to `tools=` on `Agent` or directly to `client.get_response(..., tools=[...])`. For `FoundryAgent`, the agent's tools live on the Foundry agent definition itself — see [What works and what doesn't with `FoundryAgent`](#what-works-and-what-doesnt-with-foundryagent).
+
+The factories are class methods, so you do not need an instance to create a tool:
+
+```python
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
+from azure.identity import AzureCliCredential
+
+agent = Agent(
+    client=FoundryChatClient(credential=AzureCliCredential()),
+    instructions="You can search the web and run code.",
+    tools=[
+        FoundryChatClient.get_web_search_tool(),
+        FoundryChatClient.get_code_interpreter_tool(),
+    ],
+)
+```
+
+### Tool support
+
+The table below lists every tool the Python `FoundryChatClient` exposes today. `FoundryAgent` works with the same tools, but they must be configured on the Foundry agent definition rather than passed in code.
+
+| Tool | Factory on `FoundryChatClient` | Status | Detail |
+|---|---|---|---|
+| [Function Tools](../tools/function-tools.md) | n/a — pass any Python callable or `@ai_function` | GA | Invoked locally in your Python process. |
+| [Tool Approval](../tools/tool-approval.md) | n/a — wraps existing tools | GA | Works with hosted MCP and function tools. |
+| [Code Interpreter](../tools/code-interpreter.md) | `get_code_interpreter_tool` | GA | Sandboxed code execution on Foundry. |
+| [File Search](../tools/file-search.md) | `get_file_search_tool` | GA | Search uploaded files via Foundry vector stores. |
+| [Web Search](../tools/web-search.md) | `get_web_search_tool` | GA | Bing-backed web grounding managed by Microsoft. Azure OpenAI models only. |
+| [Image Generation](#image-generation) | `get_image_generation_tool` | GA | Image generation hosted on Foundry. |
+| [Hosted MCP](../tools/hosted-mcp-tools.md) | `get_mcp_tool` | GA | Remote MCP server invoked by Foundry. |
+| [Local MCP](../tools/local-mcp-tools.md) | n/a — use `MCPStreamableHTTPTool` / `MCPStdioTool` | GA | Runs in your process; works with any client. |
+| [Foundry Toolboxes](#toolboxes) | `MCPStreamableHTTPTool` to the toolbox MCP endpoint | GA | Consumed over MCP from `FoundryChatClient`; attached server-side on `FoundryAgent`. |
+| [Bing Grounding](#bing-grounding) | `get_bing_grounding_tool` | Experimental | Bring-your-own Grounding with Bing Search resource. |
+| [Bing Custom Search](#bing-custom-search) | `get_bing_custom_search_tool` | Preview | Bing grounding restricted to a curated domain list. |
+| [Azure AI Search](#azure-ai-search) | `get_azure_ai_search_tool` | Experimental | Search an Azure AI Search index via a Foundry connection. |
+| [SharePoint](#sharepoint) | `get_sharepoint_tool` | Preview | Ground answers in SharePoint content. |
+| [Microsoft Fabric](#microsoft-fabric) | `get_fabric_tool` | Preview | Query a Fabric data agent. |
+| [Memory Search](#memory-search) | `get_memory_search_tool` | Preview | Search a Foundry-managed memory store. |
+| [Computer Use](#computer-use) | `get_computer_use_tool` | Preview | Let the agent drive a desktop or browser environment. |
+| [Browser Automation](#browser-automation) | `get_browser_automation_tool` | Preview | Drive a browser via an Azure Playwright connection. |
+| [Agent-to-Agent (A2A)](#agent-to-agent-a2a) | `get_a2a_tool` | Preview | Call another A2A agent as a tool. |
+
+> [!NOTE]
+> **Experimental** factories wrap GA Foundry SDK types but the wrappers themselves may change before GA. **Preview** factories wrap Foundry SDK types whose underlying capability is in preview and may change or be removed. Both emit an `ExperimentalWarning` the first time they are used in a process.
+
+### Web search variants
+
+Foundry exposes three Bing-backed grounding options. Pick the one that matches your scenario:
+
+- `get_web_search_tool` (GA) — zero-setup default; Bing resource managed by Microsoft. Azure OpenAI models only. Limited to `user_location` and `search_context_size`.
+- `get_bing_grounding_tool` (experimental) — bring your own Grounding with Bing Search Azure resource. Supports `count`, `freshness`, `market`, `set_lang`, and non-OpenAI Foundry models.
+- `get_bing_custom_search_tool` (preview) — bring your own Bing Custom Search instance to restrict grounding to a curated set of domains.
+
+All three send search data outside the Azure compliance boundary. See the [web grounding overview](/azure/foundry/agents/how-to/tools/web-overview) for the full comparison.
+
+```python
+client = FoundryChatClient(credential=AzureCliCredential())
+
+# Default (GA): minimal configuration
+web_search = client.get_web_search_tool(
+    user_location={"city": "Amsterdam", "country": "NL"},
+    search_context_size="medium",
+)
+```
+
+### Image generation
+
+`get_image_generation_tool` configures Foundry's hosted image generation tool. The model produces image content in the response — there are no extra files to manage.
+
+```python
+image_gen = FoundryChatClient.get_image_generation_tool(
+    model="gpt-image-1",
+    size="1024x1024",
+    output_format="png",
+    quality="high",
+)
+```
+
+### Bing grounding
+
+`get_bing_grounding_tool` wraps the Grounding with Bing Search Foundry tool. You create the Grounding with Bing Search resource yourself and add it as a Foundry project connection, then pass the connection ID.
+
+```python
+bing = FoundryChatClient.get_bing_grounding_tool(
+    connection_id="/subscriptions/.../connections/my-bing",
+    market="en-US",
+    freshness="Day",
+    count=10,
+)
+```
+
+### Bing custom search
+
+`get_bing_custom_search_tool` restricts grounding to the allow-list defined on a Bing Custom Search resource.
+
+```python
+bing_custom = FoundryChatClient.get_bing_custom_search_tool(
+    connection_id="/subscriptions/.../connections/my-bing-custom",
+    instance_name="docs-only",
+    market="en-US",
+)
+```
+
+### Azure AI Search
+
+`get_azure_ai_search_tool` lets the agent query an Azure AI Search index through a Foundry project connection.
+
+```python
+ai_search = FoundryChatClient.get_azure_ai_search_tool(
+    index_connection_id="/subscriptions/.../connections/my-search",
+    index_name="product-docs",
+    query_type="vector_semantic_hybrid",
+    top_k=5,
+)
+```
+
+### SharePoint
+
+`get_sharepoint_tool` grounds answers in SharePoint content reachable through a Foundry SharePoint connection.
+
+```python
+sharepoint = FoundryChatClient.get_sharepoint_tool(
+    connection_id="/subscriptions/.../connections/my-sharepoint",
+)
+```
+
+### Microsoft Fabric
+
+`get_fabric_tool` connects the agent to a Microsoft Fabric data agent via a Foundry connection so the agent can answer questions over your Fabric data.
+
+```python
+fabric = FoundryChatClient.get_fabric_tool(
+    connection_id="/subscriptions/.../connections/my-fabric",
+)
+```
+
+### Memory search
+
+`get_memory_search_tool` lets the agent search a Foundry-managed memory store, optionally scoped to a user or tenant.
+
+```python
+memory = FoundryChatClient.get_memory_search_tool(
+    memory_store_name="user-preferences",
+    scope="{{$userId}}",
+)
+```
+
+### Computer use
+
+`get_computer_use_tool` configures the Computer Use preview tool — the model can drive a desktop or browser environment by issuing pointer and keyboard actions.
+
+```python
+computer = FoundryChatClient.get_computer_use_tool(
+    environment="browser",
+    display_width=1280,
+    display_height=800,
+)
+```
+
+### Browser automation
+
+`get_browser_automation_tool` wires the agent into an Azure Playwright Testing resource via a Foundry connection. The agent can drive a real browser through Playwright.
+
+```python
+browser = FoundryChatClient.get_browser_automation_tool(
+    connection_id="/subscriptions/.../connections/my-playwright",
+)
+```
+
+### Agent-to-Agent (A2A)
+
+`get_a2a_tool` exposes a remote A2A agent as a tool so a Foundry agent can call it. Provide either a `base_url` (and optionally `agent_card_path`) or a `project_connection_id` for a stored A2A connection.
+
+```python
+a2a = FoundryChatClient.get_a2a_tool(
+    base_url="https://remote-agent.example.com",
+    agent_card_path="/.well-known/agent-card.json",
+)
+```
+
+For the general A2A guidance — discovery, sessions, streaming — see the [Agent-to-Agent provider page](./agent-to-agent.md).
 
 ## Create embeddings with `FoundryEmbeddingClient`
 

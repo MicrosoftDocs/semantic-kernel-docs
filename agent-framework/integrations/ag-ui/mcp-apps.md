@@ -3,7 +3,7 @@ title: MCP Apps Compatibility with AG-UI
 description: Learn how Agent Framework Python AG-UI endpoints work with CopilotKit's MCPAppsMiddleware for MCP Apps integration
 zone_pivot_groups: programming-languages
 author: moonbox3
-ms.topic: conceptual
+ms.topic: article
 ms.author: evmattso
 ms.date: 04/09/2026
 ms.service: agent-framework

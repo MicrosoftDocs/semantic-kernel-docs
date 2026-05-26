@@ -3,7 +3,7 @@ title: Evaluation
 description: Learn how to evaluate agents and workflows in Agent Framework using local checks, custom evaluators, and Azure AI Foundry.
 zone_pivot_groups: programming-languages
 author: bentho
-ms.topic: conceptual
+ms.topic: article
 ms.author: bentho
 ms.date: 03/26/2026
 ms.service: agent-framework

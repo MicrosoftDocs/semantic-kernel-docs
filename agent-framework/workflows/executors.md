@@ -3,7 +3,7 @@ title: Microsoft Agent Framework Workflows - Executors
 description: In-depth look at Executors in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 03/24/2026
 ms.service: agent-framework

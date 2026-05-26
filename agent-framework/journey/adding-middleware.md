@@ -2,7 +2,7 @@
 title: Adding Middleware
 description: Understand why and when agents need middleware, how the middleware pipeline works, and the types of cross-cutting concerns middleware addresses.
 author: taochen
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/04/2026
 ms.service: agent-framework

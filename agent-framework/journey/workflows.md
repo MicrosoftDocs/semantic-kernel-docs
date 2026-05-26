@@ -2,7 +2,7 @@
 title: Workflows
 description: Orchestrate multi-agent, multi-step processes with explicit control over execution order, state, and human-in-the-loop patterns.
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 04/06/2026
 ms.service: agent-framework

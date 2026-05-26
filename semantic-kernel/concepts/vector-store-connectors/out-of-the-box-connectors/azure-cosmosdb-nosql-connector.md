@@ -3,7 +3,7 @@ title: Using the Semantic Kernel Azure CosmosDB NoSQL Vector Store connector (Pr
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure CosmosDB NoSQL.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 09/23/2024
 ms.service: semantic-kernel

@@ -15,7 +15,7 @@ Prompt injection is the #1 risk on the OWASP LLM Top 10, and most agents in prod
 
 **FIDES** (Flow Integrity Deterministic Enforcement System) is information-flow control as a first-class middleware in Agent Framework. Every piece of content carries an *integrity* label (trusted/untrusted) and a *confidentiality* label (public/private/user-identity), labels propagate automatically through tool calls, and policies are enforced *before* a sensitive tool runs — not after.
 
-FIDES is based on the [FIDES paper by Costa et al.](https://arxiv.org/abs/2503.18813) and ships in `agent-framework-core` as an experimental feature behind `agent_framework.security`.
+FIDES is based on the [FIDES paper by Costa et al.](https://arxiv.org/abs/2505.23643) and ships in `agent-framework-core` as an experimental feature behind `agent_framework.security`.
 
 > [!TIP]
 > FIDES is a deterministic complement to the heuristic best-practices in [Agent Safety](./safety.md). Read that page first for general guidance on trust boundaries, tool approval, and input validation; reach for FIDES when you need a deterministic guarantee about *which untrusted data is allowed to drive which sensitive tool*.
@@ -413,5 +413,5 @@ If you hit a bug or have a feature request, open an issue on [the repository](ht
 - [`agent_framework.security` source](https://github.com/microsoft/agent-framework/blob/main/python/packages/core/agent_framework/security.py)
 - [FIDES samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/security)
 - [FIDES Developer Guide](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/security/FIDES_DEVELOPER_GUIDE.md)
-- [FIDES paper (Costa et al., 2025)](https://arxiv.org/abs/2503.18813)
+- [FIDES paper (Costa et al., 2025)](https://arxiv.org/abs/2505.23643)
 - [Discussion #5624 — share feedback on FIDES](https://github.com/microsoft/agent-framework/discussions/5624)

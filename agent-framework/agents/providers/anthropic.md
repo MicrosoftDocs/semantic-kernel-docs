@@ -148,6 +148,18 @@ public sealed class AnthropicAzureTokenCredential(TokenCredential tokenCredentia
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
 
+## Tools
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ✅ | Standard `AIFunction` instances via `AIFunctionFactory.Create(...)`. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | Not supported by the .NET Anthropic client today. |
+| [File Search](../tools/file-search.md) | ❌ | Not supported. |
+| [Web Search](../tools/web-search.md) | ❌ | Not supported by the .NET Anthropic client today. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | Supported. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Supported. |
+
 ## Using the Agent
 
 The agent is a standard `AIAgent` and supports all standard agent operations.
@@ -283,11 +295,23 @@ async def foundry_example():
 > [!NOTE]
 > If you prefer configuring a full Anthropic-compatible endpoint instead of a resource name, set `ANTHROPIC_FOUNDRY_BASE_URL` in addition to `ANTHROPIC_FOUNDRY_API_KEY`.
 
+## Tools
+
+`AnthropicClient` exposes hosted Anthropic tool factories alongside standard function tool support. Use `client.get_*_tool(...)` to build a tool and pass it through `tools=` on `as_agent(...)` or `Agent(...)`.
+
+| Tool | Factory / construction | Status | Notes |
+|---|---|---|---|
+| [Function Tools](../tools/function-tools.md) | Pass any Python callable or `@ai_function` | ✅ | Invoked locally in your Python process. |
+| [Tool Approval](../tools/tool-approval.md) | Handled by the framework's function-invoking chat client | ✅ | Works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | `client.get_code_interpreter_tool()` | ✅ | Required for [Anthropic Skills](#anthropic-skills). |
+| [File Search](../tools/file-search.md) | n/a | ❌ | Not exposed by the Anthropic API. |
+| [Web Search](../tools/web-search.md) | `client.get_web_search_tool()` | ✅ | Hosted Anthropic web search. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | `client.get_mcp_tool(name=..., url=...)` | ✅ | Remote MCP servers invoked by Anthropic. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | `MCPStreamableHTTPTool` / `MCPStdioTool` | ✅ | Runs in your process. |
+
+For richer examples — combining hosted MCP, web search, extended thinking, and Anthropic Skills — see [Hosted Tools](#hosted-tools) below.
+
 ## Agent Features
-
-### Function Tools
-
-Equip your agent with custom functions:
 
 ```python
 from typing import Annotated
