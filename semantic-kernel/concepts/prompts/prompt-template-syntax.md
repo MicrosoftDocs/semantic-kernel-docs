@@ -2,7 +2,7 @@
 title: Using the out-of-the-box prompt template language 
 description: Learn how to use the Semantic Kernel prompt template language.
 author: johnmaeda
-ms.topic: conceptual
+ms.topic: article
 ms.author: johnmaeda
 ms.date: 10/23/2024
 ms.service: semantic-kernel

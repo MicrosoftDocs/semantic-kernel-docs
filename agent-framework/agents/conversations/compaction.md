@@ -3,7 +3,7 @@ title: Compaction
 description: Learn how to manage conversation history size with compaction strategies that keep context within token limits.
 zone_pivot_groups: programming-languages
 author: crickman
-ms.topic: conceptual
+ms.topic: article
 ms.author: crickman
 ms.date: 03/18/2026
 ms.service: agent-framework

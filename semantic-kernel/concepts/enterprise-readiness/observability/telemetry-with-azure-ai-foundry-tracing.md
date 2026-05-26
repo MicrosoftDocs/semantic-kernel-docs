@@ -2,7 +2,7 @@
 title: Visualize traces on Microsoft Foundry Tracing UI
 description: Learn how to visualize traces on Microsoft Foundry Tracing UI
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 09/12/2024
 ms.service: semantic-kernel

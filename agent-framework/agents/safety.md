@@ -2,7 +2,7 @@
 title: Agent Safety
 description: Security best practices for building safe and secure AI agents with Agent Framework.
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 03/24/2026
 ms.service: agent-framework
@@ -13,6 +13,9 @@ ms.service: agent-framework
 Building secure AI agents is a shared responsibility between Agent Framework and application developers. Agent Framework provides the building blocks — abstractions, providers, and orchestration — but developers are responsible for validating inputs, securing data flows, and configuring tools appropriately for their scenario.
 
 This article outlines best practices for building safe and secure agents with Agent Framework.
+
+> [!TIP]
+> For deterministic, label-based defense against prompt injection and data exfiltration, see [Agent Security with FIDES](./security.md). FIDES complements the heuristic best-practices on this page with information-flow control middleware that enforces policies *before* sensitive tools run.
 
 ## Understand trust boundaries
 
@@ -105,10 +108,12 @@ Agent Framework does not impose constraints on input/output length or request ra
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Tools overview](tools/index.md)
+> [Agent Security with FIDES](./security.md)
 
 ### Related content
 
+- [Agent Security with FIDES](./security.md) — deterministic prompt-injection and data-exfiltration defense
+- [Tool Approval](./tools/tool-approval.md)
 - [Function Tools](./tools/function-tools.md)
 - [Observability](./observability.md)
 - [Context Providers](./conversations/context-providers.md)

@@ -3,7 +3,7 @@ title: Using the Jinja2 prompt template language
 description: Learn how to use the Jinja2 prompt template language with Semantic Kernel.
 zone_pivot_groups: programming-languages
 author: moonbox3
-ms.topic: conceptual
+ms.topic: article
 ms.author: evmattso
 ms.date: 5/20/2025
 ms.service: semantic-kernel

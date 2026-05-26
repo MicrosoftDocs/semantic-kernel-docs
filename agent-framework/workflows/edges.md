@@ -3,7 +3,7 @@ title: Microsoft Agent Framework Workflows - Edges
 description: Edges define how messages flow between executors in a workflow.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 03/05/2026
 ms.service: agent-framework

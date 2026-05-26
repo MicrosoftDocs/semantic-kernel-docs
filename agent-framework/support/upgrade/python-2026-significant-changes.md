@@ -1026,6 +1026,7 @@ The Python session and context-provider migration was completed. `AgentThread` a
 - `agent.get_new_thread()` → `agent.create_session()`
 - `agent.get_new_thread(service_thread_id=...)` → `agent.get_session(service_session_id=...)`
 - `context_provider=` / `chat_message_store_factory=` patterns are replaced by `context_providers=[...]`
+- `ChatMessageStore` was **removed**. Use `HistoryProvider` (or `InMemoryHistoryProvider` for the default in-memory case), both exported from `agent_framework`. If no context provider is passed, the agent auto-injects `InMemoryHistoryProvider`.
 
 **Before:**
 ```python
@@ -1218,7 +1219,7 @@ message = Message(role="user", contents=[Content.from_text("Hello")])
 ```
 
 > [!NOTE]
-> `ChatClient`, `ChatResponse`, `ChatOptions`, and `ChatMessageStore` are **not** renamed by this change.
+> `ChatClient`, `ChatResponse`, and `ChatOptions` are **not** renamed by this change.
 
 ---
 

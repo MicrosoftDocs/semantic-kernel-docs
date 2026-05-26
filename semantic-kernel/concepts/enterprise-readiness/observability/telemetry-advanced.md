@@ -3,7 +3,7 @@ title: More advanced scenarios for telemetry
 description: More advanced scenarios for telemetry
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 09/12/2024
 ms.service: semantic-kernel

@@ -3,7 +3,7 @@ title: Context Providers
 description: Learn built-in and custom context provider patterns, including history provider guidance.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/13/2026
 ms.service: agent-framework
@@ -322,7 +322,11 @@ class UserPreferenceProvider(ContextProvider):
 >
 > Context providers can also add chat or function middleware for the current invocation by calling `context.extend_middleware(self.source_id, middleware)`. The agent flattens those additions with `context.get_middleware()` and applies them in provider order before invoking the chat client.
 
-:::zone-end
+### Dynamic tool selection with Foundry toolboxes
+
+Context providers can dynamically add or remove tools on each turn. For an example that uses a Foundry toolbox to select tools per-turn based on the user's message, see the [foundry_toolbox_context_provider sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/context_providers/foundry_toolbox_context_provider.py). For more on toolboxes, see [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes).
+
+::: zone-end
 
 :::zone pivot="programming-language-python"
 

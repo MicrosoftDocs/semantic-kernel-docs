@@ -3,7 +3,7 @@ title: Using the Semantic Kernel Couchbase Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Couchbase.
 zone_pivot_groups: programming-languages
 author: azaddhirajkumar
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 11/03/2025
 ms.service: semantic-kernel

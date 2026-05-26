@@ -3,7 +3,7 @@ title: Add embedding generation services to Semantic Kernel
 description: Learn how to add embedding generation services to your Semantic Kernel project.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 11/11/2024
 ms.service: semantic-kernel
