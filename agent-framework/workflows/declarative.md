@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 05/11/2026
+ms.date: 05/28/2026
 ms.service: agent-framework
 ---
 
@@ -40,29 +40,24 @@ ms.service: agent-framework
   | SetValue                            | ❌ |   ✅   | Python alias for SetVariable using `path:`       |
   | SetMultipleVariables                | ✅ |   ✅   |                                                  |
   | SetTextVariable                     | ✅ |   ✅   |                                                  |
-  | AppendValue                         | ❌ |   ✅   | Python-only                                      |
   | ResetVariable                       | ✅ |   ✅   |                                                  |
   | ClearAllVariables                   | ✅ |   ✅   |                                                  |
   | ParseValue                          | ✅ |   ✅   |                                                  |
-  | EditTable                           | ❌ |   ✅   | Python-only                                      |
+  | EditTable                           | ✅ |   ✅   |                                                  |
   | EditTableV2                         | ✅ |   ✅   |                                                  |
   | If                                  | ✅ |   ✅   |                                                  |
   | ConditionGroup                      | ✅ |   ✅   |                                                  |
-  | Switch                              | ❌ |   ✅   | Python-only alias for ConditionGroup             |
   | Foreach                             | ✅ |   ✅   |                                                  |
   | BreakLoop                           | ✅ |   ✅   |                                                  |
   | ContinueLoop                        | ✅ |   ✅   |                                                  |
   | GotoAction                          | ✅ |   ✅   |                                                  |
   | SendActivity                        | ✅ |   ✅   |                                                  |
-  | EmitEvent                           | ❌ |   ✅   | Python-only (C# explicitly NotSupported)         |
   | InvokeAzureAgent                    | ✅ |   ✅   |                                                  |
   | InvokeFunctionTool                  | ✅ |   ✅   |                                                  |
   | InvokeMcpTool                       | ✅ |   ✅   |                                                  |
   | HttpRequestAction                   | ✅ |   ✅   |                                                  |
   | Question                            | ✅ |   ✅   |                                                  |
-  | Confirmation                        | ❌ |   ✅   | Python-only                                      |
   | RequestExternalInput                | ✅ |   ✅   |                                                  |
-  | WaitForInput                        | ❌ |   ✅   | Python-only                                      |
   | EndWorkflow / EndDialog             | ✅ |   ✅   | `EndDialog` is the Python alias                  |
   | EndConversation                     | ✅ |   ✅   |                                                  |
   | CreateConversation                  | ✅ |   ✅   |                                                  |
@@ -588,7 +583,7 @@ Sets multiple variables in a single action.
 |----------|----------|-------------|
 | `variables` | Yes | Map of variable paths to values |
 
-#### SetTextVariable (C# only)
+#### SetTextVariable
 
 Sets a text variable to a specified string value.
 
@@ -623,7 +618,7 @@ Clears a variable's value.
 |----------|----------|-------------|
 | `variable` | Yes | Variable path to reset |
 
-#### ClearAllVariables (C# only)
+#### ClearAllVariables
 
 Resets all variables in the current context.
 
@@ -633,7 +628,7 @@ Resets all variables in the current context.
   displayName: Clear all workflow variables
 ```
 
-#### ParseValue (C# only)
+#### ParseValue
 
 Extracts or converts data into a usable format.
 
@@ -652,7 +647,7 @@ Extracts or converts data into a usable format.
 | `source` | Yes | Expression returning the value to parse |
 | `variable` | Yes | Variable path to store the parsed result |
 
-#### EditTableV2 (C# only)
+#### EditTableV2
 
 Modifies data in a structured table format.
 
@@ -1286,29 +1281,24 @@ Retrieves multiple messages from a conversation.
 |--------|----------|-----|--------|-------------|
 | `SetVariable` | Variable | ✅ | ✅ | Set a single variable |
 | `SetMultipleVariables` | Variable | ✅ | ✅ | Set multiple variables |
-| `SetTextVariable` | Variable | ✅ | ❌ | Set a text variable |
-| `AppendValue` | Variable | ❌ | ✅ | Append to list/string |
+| `SetTextVariable` | Variable | ✅ | ✅ | Set a text variable |
 | `ResetVariable` | Variable | ✅ | ✅ | Clear a variable |
-| `ClearAllVariables` | Variable | ✅ | ❌ | Clear all variables |
-| `ParseValue` | Variable | ✅ | ❌ | Parse/transform data |
-| `EditTableV2` | Variable | ✅ | ❌ | Modify table data |
+| `ClearAllVariables` | Variable | ✅ | ✅ | Clear all variables |
+| `ParseValue` | Variable | ✅ | ✅ | Parse/transform data |
+| `EditTableV2` | Variable | ✅ | ✅ | Modify table data |
 | `If` | Control Flow | ✅ | ✅ | Conditional branching |
 | `ConditionGroup` | Control Flow | ✅ | ✅ | Multi-branch switch |
 | `Foreach` | Control Flow | ✅ | ✅ | Iterate over collection |
-| `RepeatUntil` | Control Flow | ❌ | ✅ | Loop until condition |
 | `BreakLoop` | Control Flow | ✅ | ✅ | Exit current loop |
 | `ContinueLoop` | Control Flow | ✅ | ✅ | Skip to next iteration |
 | `GotoAction` | Control Flow | ✅ | ✅ | Jump to action by ID |
 | `SendActivity` | Output | ✅ | ✅ | Send message to user |
-| `EmitEvent` | Output | ❌ | ✅ | Emit custom event |
 | `InvokeAzureAgent` | Agent | ✅ | ✅ | Call Azure AI agent |
 | `InvokeFunctionTool` | Tool | ✅ | ✅ | Invoke function directly |
 | `InvokeMcpTool` | Tool | ✅ | ✅ | Invoke MCP server tool |
 | `HttpRequestAction` | HTTP | ✅ | ✅ | Call HTTP endpoint |
 | `Question` | Human-in-the-Loop | ✅ | ✅ | Ask user a question |
-| `Confirmation` | Human-in-the-Loop | ❌ | ✅ | Yes/no confirmation |
 | `RequestExternalInput` | Human-in-the-Loop | ✅ | ✅ | Request external input |
-| `WaitForInput` | Human-in-the-Loop | ❌ | ✅ | Wait for input |
 | `EndWorkflow` | Workflow Control | ✅ | ✅ | Terminate workflow |
 | `EndConversation` | Workflow Control | ✅ | ✅ | End conversation |
 | `CreateConversation` | Workflow Control | ✅ | ✅ | Create new conversation |
@@ -1656,13 +1646,13 @@ Declarative workflows support various action types:
 
 | Category | Actions |
 |----------|---------|
-| Variable Management | `SetVariable`, `SetMultipleVariables`, `AppendValue`, `ResetVariable` |
-| Control Flow | `If`, `ConditionGroup`, `Foreach`, `RepeatUntil`, `BreakLoop`, `ContinueLoop`, `GotoAction` |
-| Output | `SendActivity`, `EmitEvent` |
+| Variable Management | `SetVariable`, `SetMultipleVariables`, `ResetVariable` |
+| Control Flow | `If`, `ConditionGroup`, `Foreach`, `BreakLoop`, `ContinueLoop`, `GotoAction` |
+| Output | `SendActivity` |
 | Agent Invocation | `InvokeAzureAgent` |
 | Tool Invocation | `InvokeFunctionTool`, `InvokeMcpTool` |
 | HTTP | `HttpRequestAction` |
-| Human-in-the-Loop | `Question`, `Confirmation`, `RequestExternalInput`, `WaitForInput` |
+| Human-in-the-Loop | `Question`, `RequestExternalInput` |
 | Workflow Control | `EndWorkflow`, `EndConversation`, `CreateConversation` |
 
 ## Actions Reference
@@ -1738,24 +1728,6 @@ Sets multiple variables in a single action.
 | Property | Required | Description |
 |----------|----------|-------------|
 | `variables` | Yes | Map of variable paths to values |
-
-#### AppendValue
-
-Appends a value to a list or concatenates to a string.
-
-```yaml
-- kind: AppendValue
-  id: add_item
-  variable: Local.items
-  value: =Workflow.Inputs.newItem
-```
-
-**Properties:**
-
-| Property | Required | Description |
-|----------|----------|-------------|
-| `variable` | Yes | Variable path to append to |
-| `value` | Yes | Value to append |
 
 #### ResetVariable
 
@@ -1890,35 +1862,6 @@ Iterates over a collection.
 | `indexName` | No | Variable name for current index (default: `index`) |
 | `actions` | Yes | Actions to execute for each item |
 
-#### RepeatUntil
-
-Repeats actions until a condition becomes true.
-
-```yaml
-- kind: SetVariable
-  variable: Local.counter
-  value: 0
-
-- kind: RepeatUntil
-  id: count_loop
-  displayName: Count to 5
-  condition: =Local.counter >= 5
-  actions:
-    - kind: SetVariable
-      variable: Local.counter
-      value: =Local.counter + 1
-    - kind: SendActivity
-      activity:
-        text: =Concat("Counter: ", Local.counter)
-```
-
-**Properties:**
-
-| Property | Required | Description |
-|----------|----------|-------------|
-| `condition` | Yes | Loop continues until this is true |
-| `actions` | Yes | Actions to repeat |
-
 #### BreakLoop
 
 Exits the current loop immediately.
@@ -2008,27 +1951,6 @@ With an expression:
 |----------|----------|-------------|
 | `activity` | Yes | The activity to send |
 | `activity.text` | Yes | Message text (literal or expression) |
-
-#### EmitEvent
-
-Emits a custom event.
-
-```yaml
-- kind: EmitEvent
-  id: emit_status
-  displayName: Emit status event
-  eventType: order_status_changed
-  data:
-    orderId: =Workflow.Inputs.orderId
-    status: =Local.newStatus
-```
-
-**Properties:**
-
-| Property | Required | Description |
-|----------|----------|-------------|
-| `eventType` | Yes | Type identifier for the event |
-| `data` | No | Event payload data |
 
 ### Agent Invocation Actions
 
@@ -2265,26 +2187,6 @@ Asks the user a question and stores the response.
 | `variable` | Yes | Path to store the response |
 | `default` | No | Default value if no response |
 
-#### Confirmation
-
-Asks the user for a yes/no confirmation.
-
-```yaml
-- kind: Confirmation
-  id: confirm_delete
-  displayName: Confirm deletion
-  question:
-    text: "Are you sure you want to delete this item?"
-  variable: Local.confirmed
-```
-
-**Properties:**
-
-| Property | Required | Description |
-|----------|----------|-------------|
-| `question.text` | Yes | The confirmation question |
-| `variable` | Yes | Path to store boolean result |
-
 #### RequestExternalInput
 
 Requests input from an external system or process.
@@ -2306,22 +2208,6 @@ Requests input from an external system or process.
 | `prompt.text` | Yes | Description of required input |
 | `variable` | Yes | Path to store the input |
 | `default` | No | Default value |
-
-#### WaitForInput
-
-Pauses the workflow and waits for external input.
-
-```yaml
-- kind: WaitForInput
-  id: wait_for_response
-  variable: Local.externalResponse
-```
-
-**Properties:**
-
-| Property | Required | Description |
-|----------|----------|-------------|
-| `variable` | Yes | Path to store the input when received |
 
 ### Workflow Control Actions
 
@@ -2368,25 +2254,20 @@ Creates a new conversation context.
 |--------|----------|-------------|
 | `SetVariable` | Variable | Set a single variable |
 | `SetMultipleVariables` | Variable | Set multiple variables |
-| `AppendValue` | Variable | Append to list/string |
 | `ResetVariable` | Variable | Clear a variable |
 | `If` | Control Flow | Conditional branching |
 | `ConditionGroup` | Control Flow | Multi-branch switch |
 | `Foreach` | Control Flow | Iterate over collection |
-| `RepeatUntil` | Control Flow | Loop until condition |
 | `BreakLoop` | Control Flow | Exit current loop |
 | `ContinueLoop` | Control Flow | Skip to next iteration |
 | `GotoAction` | Control Flow | Jump to action by ID |
 | `SendActivity` | Output | Send message to user |
-| `EmitEvent` | Output | Emit custom event |
 | `InvokeAzureAgent` | Agent | Call Azure AI agent |
 | `InvokeFunctionTool` | Tool | Invoke registered function |
 | `InvokeMcpTool` | Tool | Invoke MCP server tool |
 | `HttpRequestAction` | HTTP | Call HTTP endpoint |
 | `Question` | Human-in-the-Loop | Ask user a question |
-| `Confirmation` | Human-in-the-Loop | Yes/no confirmation |
 | `RequestExternalInput` | Human-in-the-Loop | Request external input |
-| `WaitForInput` | Human-in-the-Loop | Wait for input |
 | `EndWorkflow` | Workflow Control | Terminate workflow |
 | `EndConversation` | Workflow Control | End conversation |
 | `CreateConversation` | Workflow Control | Create new conversation |
@@ -3046,14 +2927,14 @@ actions:
         activity:
           text: "This request requires manager approval."
 
-      - kind: Confirmation
+      - kind: Question
         id: get_approval
         question:
-          text: =Concat("Do you approve this ", Workflow.Inputs.requestType, " request for $", Workflow.Inputs.amount, "?")
+          text: =Concat("Do you approve this ", Workflow.Inputs.requestType, " request for $", Workflow.Inputs.amount, "? (yes/no)")
         variable: Local.approved
 
       - kind: If
-        condition: =Local.approved
+        condition: =Local.approved = "yes"
         then:
           - kind: SendActivity
             activity:
