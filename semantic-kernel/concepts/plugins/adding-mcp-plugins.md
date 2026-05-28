@@ -3,7 +3,7 @@ title: Give agents access to MCP Servers
 description: Learn how to add plugins from a MCP Server to your agents in Semantic Kernel.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 04/15/2025
 ms.service: semantic-kernel

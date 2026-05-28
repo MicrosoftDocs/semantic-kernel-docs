@@ -3,7 +3,7 @@ title: Agent Pipeline Architecture
 description: Understand how agents build their internal pipeline of middleware, context providers, and chat clients.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 04/02/2026
 ms.service: agent-framework

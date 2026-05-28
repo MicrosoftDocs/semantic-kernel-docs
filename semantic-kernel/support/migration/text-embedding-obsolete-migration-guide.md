@@ -3,7 +3,7 @@ title: Migrating from ITextEmbeddingGenerationService to IEmbeddingGenerator
 description: Describes the steps for migrating from the obsolete ITextEmbeddingGenerationService to the new Microsoft.Extensions.AI IEmbeddingGenerator interface.
 zone_pivot_groups: programming-languages
 author: rogerbarreto
-ms.topic: conceptual
+ms.topic: article
 ms.author: rbarreto
 ms.date: 05/21/2025
 ms.service: semantic-kernel

@@ -2,7 +2,7 @@
 title: Glossary for Semantic Kernel
 description: Glossary for Semantic Kernel
 author: sophialagerkranspandey
-ms.topic: conceptual
+ms.topic: article
 ms.author: sopand
 ms.date: 02/07/2023
 ms.service: semantic-kernel 

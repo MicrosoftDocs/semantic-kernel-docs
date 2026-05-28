@@ -3,7 +3,7 @@ title: Session
 description: Learn what AgentSession contains and how to create, restore, and serialize sessions.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/13/2026
 ms.service: agent-framework

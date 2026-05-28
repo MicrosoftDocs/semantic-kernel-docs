@@ -616,10 +616,10 @@ export AZURE_OPENAI_API_VERSION="your-api-version"
 
 - [Integrations Overview](./index.md)
 - [A2A Integration](./a2a.md)
-- [OpenAI Chat Completions API Reference](https://platform.openai.com/docs/api-reference/chat)
-- [OpenAI Responses API Reference](https://platform.openai.com/docs/api-reference/responses)
+- [OpenAI Chat Completions API Reference](https://developers.openai.com/api/reference/chat-completions/overview)
+- [OpenAI Responses API Reference](https://developers.openai.com/api/reference/responses/overview)
 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Purview](purview.md)
+> [Hyperlight CodeAct](hyperlight.md)

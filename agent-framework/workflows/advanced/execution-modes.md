@@ -3,7 +3,7 @@ title: Workflow Execution Modes
 description: Deep dive into the OffThread and Lockstep execution modes for .NET workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 03/18/2026
 ms.service: agent-framework

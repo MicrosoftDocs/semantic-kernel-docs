@@ -3,7 +3,7 @@ title: Semantic Kernel Text Search Abstractions (Preview)
 description: Provides a detailed look at the Semantic Kernel Text Search abstractions.
 zone_pivot_groups: programming-languages
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 07/10/2024
 ms.service: semantic-kernel

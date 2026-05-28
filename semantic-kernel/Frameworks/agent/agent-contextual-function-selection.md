@@ -3,7 +3,7 @@ title: Contextual Function Selection with Semantic Kernel Agents
 description: An overview of contextual function selection using RAG to dynamically choose the most relevant functions for agent interactions.
 zone_pivot_groups: programming-languages
 author: sergeymenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.date: 12/30/2024
 ms.service: semantic-kernel

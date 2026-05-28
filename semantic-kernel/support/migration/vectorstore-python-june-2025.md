@@ -2,7 +2,7 @@
 title: Vector Store changes for Python - June 2025
 description: Describes the changes included in the June 2025 Vector Store release and how to migrate
 author: edvan
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 01/06/2025
 ms.service: semantic-kernel

@@ -3,7 +3,7 @@ title: Legacy Semantic Kernel Memory Stores
 description: Describes the legacy Semantic Kernel Memory Stores and the benefits of moving to Vector Stores
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 10/15/2024
 ms.service: semantic-kernel

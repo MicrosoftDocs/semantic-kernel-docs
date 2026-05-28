@@ -3,7 +3,7 @@ title: Using the Semantic Kernel Postgres Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Postgres.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 10/24/2024
 ms.service: semantic-kernel
@@ -33,7 +33,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Postgres Vector Store connector can be used to access and manage data in Postgres and also supports [Neon Serverless Postgres](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/neon1722366567200.neon_serverless_postgres_azure_prod).
+The Postgres Vector Store connector can be used to access and manage data in Postgres and also supports [Neon Serverless Postgres](https://neon.com/).
 
 The connector has the following characteristics.
 

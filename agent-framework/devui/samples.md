@@ -36,26 +36,7 @@ The Agent Framework repository includes sample agents and workflows in the `pyth
 | [spam_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/spam_workflow) | Workflow for spam detection |
 | [workflow_agents](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_agents) | Multiple agents in a workflow |
 
-## Running the Samples
-
-### Clone and Navigate
-
-```bash
-git clone https://github.com/microsoft/agent-framework.git
-cd agent-framework/python/samples/02-agents/devui
-```
-
-### Set Up Environment
-
-Each sample may require environment variables. Check for `.env.example` files:
-
-```bash
-# Copy and edit the example file
-cp weather_agent_azure/.env.example weather_agent_azure/.env
-# Edit .env with your credentials
-```
-
-### Launch DevUI
+## Running with DevUI
 
 ```bash
 # Discover all samples
