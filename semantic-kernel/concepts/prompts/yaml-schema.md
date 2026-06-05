@@ -2,7 +2,7 @@
 title: YAML Schema Reference for Prompts
 description: Detailed YAML schema reference for Semantic Kernel prompts
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 11/27/2024
 ms.service: semantic-kernel

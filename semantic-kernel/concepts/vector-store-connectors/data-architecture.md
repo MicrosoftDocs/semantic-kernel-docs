@@ -3,7 +3,7 @@ title: The Semantic Kernel Vector Store data architecture (Preview)
 description: Defines the data architecture for Semantic Kernel, including the relationship between vector stores, collections and records.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel

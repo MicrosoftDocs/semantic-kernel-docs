@@ -3,7 +3,7 @@ title: Sub-Workflows
 description: Deep dive into composing workflows by nesting them as executors within parent workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 03/23/2026
 ms.service: agent-framework
@@ -403,6 +403,19 @@ async for event in parent_workflow.run(input_data, stream=True):
     if event.type == "output":
         # This output came from the sub-workflow
         print(event.data)
+```
+
+### Intermediate emissions from child workflows
+
+`"intermediate"` events produced inside a child workflow bubble up through the parent's event stream automatically. They are attributed to the `WorkflowExecutor`'s own `id` (not to the inner executor that originally emitted them), which preserves encapsulation. Crucially, these events **retain the `"intermediate"` label** regardless of how the parent designates the `WorkflowExecutor` in its own `final_output_from` or `intermediate_output_from` lists.
+
+```python
+async for event in parent_workflow.run(input_data, stream=True):
+    if event.type == "intermediate":
+        # Attributed to the WorkflowExecutor id, e.g. "analysis-pipeline"
+        print(f"[{event.executor_id}] intermediate: {event.data}")
+    elif event.type == "output":
+        print(f"Terminal output: {event.data}")
 ```
 
 ## Requests and Responses

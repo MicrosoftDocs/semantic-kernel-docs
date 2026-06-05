@@ -3,7 +3,7 @@ title: Agent Framework Release Candidate Migration Guide
 description: Describes the steps for developers to update their Agent Framework code to the latest abstractions.
 zone_pivot_groups: programming-languages
 author: moonbox3
-ms.topic: conceptual
+ms.topic: article
 ms.author: evmattso
 ms.date: 02/26/2025
 ms.service: semantic-kernel

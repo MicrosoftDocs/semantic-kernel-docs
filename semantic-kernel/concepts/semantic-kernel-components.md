@@ -3,7 +3,7 @@ title: Semantic Kernel Components
 description: Describes the relationship between the different semantic kernel components
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 11/15/2024
 ms.service: semantic-kernel

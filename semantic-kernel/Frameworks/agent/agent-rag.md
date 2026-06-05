@@ -3,7 +3,7 @@ title: Adding Retrieval Augmented Generation (RAG) to Semantic Kernel Agents
 description: How to use the TextSearchProvider for Retrieval Augmented Generation (RAG) with Semantic Kernel Agents
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 05/22/2025
 ms.service: semantic-kernel

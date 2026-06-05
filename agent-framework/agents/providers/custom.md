@@ -169,6 +169,10 @@ If you don't do this, the user won't be able to have a multi-turn conversation w
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
 
+## Tools
+
+A custom `AIAgent` has whatever tool surface you decide to give it. If you wrap an existing `IChatClient` and pass `tools` through, you inherit that client's tool support — see, for example, the [OpenAI](./openai.md#tools), [Azure OpenAI](./azure-openai.md#tools), or [Microsoft Foundry](./microsoft-foundry.md#tools) provider pages for what the underlying clients support. If your custom agent does not call a chat client (for example, the echo agent above), there are no tools to invoke.
+
 ## Using the Agent
 
 If the `AIAgent` methods are all implemented correctly, the agent would be a standard `AIAgent` and support standard agent operations.
@@ -395,6 +399,10 @@ class EchoAgent(BaseAgent):
             stored.extend(normalized_messages)
             stored.append(complete_response)
 ```
+
+## Tools
+
+A custom `BaseAgent` has whatever tool surface you decide to give it. If you wrap an existing chat client and pass `tools` through, you inherit that client's tool support — see, for example, the [OpenAI](./openai.md#tools), [Microsoft Foundry](./microsoft-foundry.md#tools), or [Anthropic](./anthropic.md#tools) provider pages for what the underlying clients support. If your custom agent does not call a chat client (for example, the echo agent above), there are no tools to invoke.
 
 ## Using the Agent
 

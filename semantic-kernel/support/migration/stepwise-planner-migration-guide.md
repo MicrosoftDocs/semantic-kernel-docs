@@ -3,7 +3,7 @@ title: Migrating from Stepwise Planner to Auto Function Calling
 description: Describes the steps for SK caller code to migrate from Stepwise Planner to Auto Function Calling.
 zone_pivot_groups: programming-languages
 author: dmytrostruk
-ms.topic: conceptual
+ms.topic: article
 ms.author: dmytrostruk
 ms.date: 06/10/2025
 ms.service: semantic-kernel
