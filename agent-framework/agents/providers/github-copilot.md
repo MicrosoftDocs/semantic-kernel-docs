@@ -217,6 +217,7 @@ The agent can be optionally configured using the following environment variables
 | `GITHUB_COPILOT_MODEL` | Model to use (e.g., `gpt-5`, `claude-sonnet-4`) |
 | `GITHUB_COPILOT_TIMEOUT` | Request timeout in seconds |
 | `GITHUB_COPILOT_LOG_LEVEL` | CLI log level |
+| `GITHUB_COPILOT_BASE_DIRECTORY` | Directory for CLI session state and config (defaults to `~/.copilot`) |
 
 ## Getting Started
 
@@ -350,18 +351,21 @@ async def thread_example():
 By default, the agent cannot execute shell commands, read/write files, or fetch URLs. To enable these capabilities, provide a permission handler:
 
 ```python
-from copilot.generated.session_events import PermissionRequest
+import asyncio
 
-def prompt_permission(
+from copilot.generated.rpc import PermissionDecisionDeniedInteractivelyByUser
+from copilot.session import PermissionHandler, PermissionRequestResult
+from copilot.session_events import PermissionRequest
+
+
+async def prompt_permission(
     request: PermissionRequest, context: dict[str, str]
 ) -> PermissionRequestResult:
-    kind = request.get("kind", "unknown")
-    print(f"\n[Permission Request: {kind}]")
-
-    response = input("Approve? (y/n): ").strip().lower()
+    print(f"\n[Permission Request: {request.kind}]")
+    response = (await asyncio.to_thread(input, "Approve? (y/n): ")).strip().lower()
     if response in ("y", "yes"):
-        return PermissionRequestResult(kind="approved")
-    return PermissionRequestResult(kind="denied-interactively-by-user")
+        return PermissionHandler.approve_all(request, context)
+    return PermissionDecisionDeniedInteractivelyByUser()
 
 async def permissions_example():
     agent = GitHubCopilotAgent(
@@ -376,12 +380,26 @@ async def permissions_example():
         print(result)
 ```
 
+For trusted environments where all permissions should be auto-approved, use the built-in `PermissionHandler.approve_all`:
+
+```python
+from copilot.session import PermissionHandler
+
+agent = GitHubCopilotAgent(
+    default_options={
+        "on_permission_request": PermissionHandler.approve_all,
+    },
+)
+```
+
+Permission handlers support both sync and async callbacks. Use `asyncio.to_thread` for interactive prompts in async handlers to avoid blocking the event loop.
+
 ### MCP Servers
 
 Connect to local (stdio) or remote (HTTP) MCP servers for extended capabilities:
 
 ```python
-from copilot.types import MCPServerConfig
+from copilot.session import MCPServerConfig, PermissionHandler
 
 async def mcp_example():
     mcp_servers: dict[str, MCPServerConfig] = {
@@ -403,7 +421,7 @@ async def mcp_example():
     agent = GitHubCopilotAgent(
         default_options={
             "instructions": "You are a helpful assistant with access to the filesystem and Microsoft Learn.",
-            "on_permission_request": prompt_permission,
+            "on_permission_request": PermissionHandler.approve_all,
             "mcp_servers": mcp_servers,
         },
     )
