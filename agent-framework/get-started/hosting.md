@@ -19,7 +19,7 @@ Once you've built your agent, you need to host it so users and other agents can 
 |--------|-------------|----------|
 | [A2A Protocol](../integrations/a2a.md) | Expose agents via the Agent-to-Agent protocol | Multi-agent systems |
 | [OpenAI-Compatible Endpoints](../integrations/openai-endpoints.md) | Expose agents via Chat Completions or Responses APIs | OpenAI-compatible clients |
-| [Azure Functions (Durable)](../integrations/azure-functions.md) | Run agents as durable Azure Functions | Serverless, long-running tasks |
+| [Durable Extension](../integrations/durable-extension.md) | Make agents and workflows durable on Azure Functions or self-hosted compute | Long-running, reliable workloads |
 | [AG-UI Protocol](../integrations/ag-ui/index.md) | Build web-based AI agent applications | Web frontends |
 
 :::zone pivot="programming-language-csharp"
@@ -126,7 +126,7 @@ app.Run();
 ```
 
 > [!TIP]
-> See the [Durable Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/04-hosting/DurableAgents/AzureFunctions) for serverless hosting examples.
+> See the [Durable Agents samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/04-hosting/DurableAgents) for Azure Functions and self-hosted examples.
 
 :::zone-end
 
@@ -173,7 +173,7 @@ curl -X POST http://localhost:7071/api/agents/Joker/run \
 **Go deeper:**
 
 - [A2A Protocol](../integrations/a2a.md) — expose and consume agents via A2A
-- [Azure Functions](../integrations/azure-functions.md) — serverless agent hosting
+- [Durable Extension](../integrations/durable-extension.md) — durable agent and workflow hosting
 - [AG-UI Protocol](../integrations/ag-ui/index.md) — web-based agent UIs
 - [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Microsoft Foundry
 - [Foundry Hosted Agents sample (Python)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) — run an end-to-end Agent Framework hosted-agent sample

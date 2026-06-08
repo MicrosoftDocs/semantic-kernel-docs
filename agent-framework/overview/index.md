@@ -141,4 +141,4 @@ and the same is expected for Agent Framework. Microsoft Agent Framework welcomes
 
 - [Agents overview](../agents/index.md) — architecture, providers, tools
 - [Workflows overview](../workflows/index.md) — sequential, concurrent, branching
-- [Integrations](../integrations/index.md) — A2A, AG-UI, Azure Functions, M365
+- [Integrations](../integrations/index.md) — A2A, AG-UI, Durable Extension, M365

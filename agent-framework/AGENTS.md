@@ -69,7 +69,7 @@ agent-framework/
 │   ├── ag-ui/                 # AG-UI Protocol (multi-page)
 │   │   ├── index.md
 │   │   └── ...
-│   ├── azure-functions.md
+│   ├── durable-extension.md
 │   ├── openai-endpoints.md
 │   ├── m365.md
 │   └── purview.md
@@ -212,7 +212,7 @@ Every docs page maps to sample files in both repos:
 | `workflows/<pattern>.md` | `03-workflows/<pattern>/<matching>.py` | `03-workflows/<pattern>/<matching>.cs` |
 | `integrations/hyperlight.md` | `python/packages/hyperlight/samples/codeact_context_provider.py` | `02-agents/AgentWithCodeAct/` |
 | `integrations/a2a.md` | `04-hosting/a2a/` | `04-hosting/a2a/` |
-| `integrations/azure-functions.md` | `04-hosting/azure-functions/` | `04-hosting/azure-functions/` |
+| `integrations/durable-extension.md` | `04-hosting/azure_functions/`, `04-hosting/durabletask/` | `04-hosting/DurableAgents/`, `04-hosting/DurableWorkflows/` |
 
 ## When adding a new docs page
 

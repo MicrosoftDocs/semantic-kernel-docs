@@ -356,7 +356,7 @@ Once deployed, your agent is accessible through its dedicated Foundry endpoint a
 
 - [Deploy a hosted agent with the Foundry SDK](https://learn.microsoft.com/azure/foundry/agents/how-to/deploy-hosted-agent)
 - [Manage hosted agents](https://learn.microsoft.com/azure/foundry/agents/how-to/manage-hosted-agent)
-- [Azure Functions (Durable) hosting](../integrations/azure-functions.md)
+- [Durable Extension hosting](../integrations/durable-extension.md)
 - [A2A Hosting](agent-to-agent.md)
 - [Python samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework)
 - [C# samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/csharp/hosted-agents/agent-framework)

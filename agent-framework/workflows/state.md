@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 04/02/2026
+ms.date: 06/05/2026
 ms.service: agent-framework
 ---
 
@@ -14,6 +14,7 @@ ms.service: agent-framework
 
   | Section                                    | C# | Python | Notes |
   |--------------------------------------------|:--:|:------:|-------|
+  | State Visibility and Scope Behavior        | ✅ |   ✅   |       |
   | Writing to State                           | ✅ |   ✅   |       |
   | Accessing State                            | ✅ |   ✅   |       |
   | State Isolation – Mutable vs Immutable     | ✅ |   ✅   | Prose only, no code needed |
@@ -29,6 +30,45 @@ This document provides an overview of **State** in the Microsoft Agent Framework
 ## Overview
 
 State allows multiple executors within a workflow to access and modify common data. This feature is essential for scenarios where different parts of the workflow need to share information where direct message passing is not feasible or efficient.
+
+## State Visibility and Scope Behavior
+
+::: zone pivot="programming-language-csharp"
+
+`QueueStateUpdateAsync` and `ReadStateAsync` are both scope-aware:
+
+- If `scopeName` is `null`, the executor's private default scope is used.
+- If `scopeName` is set (for example, `"SharedResponse"`), the value is written to a shared scope that any executor can read when using the same scope name.
+
+Visibility timing follows superstep rules:
+
+- The executor that calls `QueueStateUpdateAsync` can read the updated value immediately in the same handler.
+- Other executors see that update starting in the next superstep.
+
+To share state across executors, use the same non-null scope name in both write and read calls:
+
+```csharp
+private const string SharedScope = "SharedResponse";
+
+await context.QueueStateUpdateAsync("Response", blanketResponse, scopeName: SharedScope, cancellationToken);
+
+var finalResponse = await context.ReadStateAsync<string>("Response", scopeName: SharedScope, cancellationToken);
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+`WorkflowContext.set_state()` and `WorkflowContext.get_state()` operate on workflow state that is available to downstream executors during workflow execution.
+
+Use consistent keys across executors to write and read the same value:
+
+```python
+ctx.set_state("response", blanket_response)
+final_response = ctx.get_state("response")
+```
+
+::: zone-end
 
 ## Writing to State
 
