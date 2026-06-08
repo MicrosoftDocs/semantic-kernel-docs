@@ -153,4 +153,4 @@ See [Creating a search tool from a VectorStore](../agents/rag.md#creating-a-sear
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Azure Functions (Durable)](azure-functions.md)
+> [Durable Extension](durable-extension.md)

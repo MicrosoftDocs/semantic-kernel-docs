@@ -184,8 +184,8 @@ items:
   items:
   - name: Overview
     href: integrations/index.md
-  - name: Azure Functions (Durable)
-    href: integrations/azure-functions.md
+  - name: Durable Extension
+    href: integrations/durable-extension.md
   - name: OpenAI-Compatible Endpoints
     href: integrations/openai-endpoints.md
   - name: Hyperlight CodeAct
