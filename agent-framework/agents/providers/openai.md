@@ -41,9 +41,10 @@ using Microsoft.Agents.AI;
 using OpenAI;
 
 OpenAIClient client = new OpenAIClient("<your_api_key>");
-var responsesClient = client.GetResponseClient("gpt-4o-mini");
+var responsesClient = client.GetResponsesClient();
 
 AIAgent agent = responsesClient.AsAIAgent(
+    model: "gpt-4o-mini",
     instructions: "You are a helpful coding assistant.",
     name: "CodeHelper");
 
