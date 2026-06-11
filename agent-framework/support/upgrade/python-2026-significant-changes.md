@@ -82,6 +82,8 @@ agent = GitHubCopilotAgent(default_options={"base_directory": "/custom/home", "o
 
 Adds support for progressively exposing tools during a run using `FunctionInvocationContext`. Tools can now be dynamically added or removed based on prior tool results within the same agent run.
 
+For full documentation including patterns, caveats, and tool-ordering examples, see [Controlling tool availability](../../agents/tools/controlling-tool-availability.md).
+
 ---
 
 ### 🟡 MCP-based skills discovery (`McpSkillsSource`)
@@ -456,7 +458,7 @@ Adds hosted agent V2 support in `agent-framework-foundry` for the latest Foundry
 Checkpoint deserialization now flows through a restricted unpickler by default, which only permits a built-in set of safe Python types and all `agent_framework` framework types.
 
 - If your application stores custom types in checkpoints, pass their `"module:qualname"` identifiers via the new `allowed_checkpoint_types` constructor parameter — otherwise loads will raise `WorkflowCheckpointException`.
-- See [Security Considerations](https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints?pivots=programming-language-python#security-considerations) for details.
+- See [Security Considerations](../../workflows/checkpoints.md?pivots=programming-language-python#security-considerations) for details.
 
 **Before:**
 ```python

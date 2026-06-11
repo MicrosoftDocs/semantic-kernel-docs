@@ -182,3 +182,11 @@ This pattern is a good fit for long-lived tool state. Use `FunctionInvocationCon
 
 > [!div class="nextstepaction"]
 > [Using function tools with human in the loop approvals](./tool-approval.md)
+
+::: zone pivot="programming-language-python"
+
+## Controlling tool availability at runtime
+
+You can add or remove tools during an agent run using `FunctionInvocationContext.add_tools()` / `remove_tools()`, gate calls via function middleware, or force a specific first call with `tool_choice`. See [Controlling tool availability](./controlling-tool-availability.md) for the full patterns.
+
+::: zone-end

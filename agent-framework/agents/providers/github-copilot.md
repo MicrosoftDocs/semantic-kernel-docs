@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 04/02/2026
+ms.date: 06/08/2026
 ms.service: agent-framework
 ---
 
@@ -23,7 +23,7 @@ Microsoft Agent Framework supports creating agents that use the [GitHub Copilot 
 Add the required NuGet packages to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.Agents.AI.GitHub.Copilot --prerelease
+dotnet add package Microsoft.Agents.AI.GitHub.Copilot
 ```
 
 ## Create a GitHub Copilot Agent
@@ -31,7 +31,7 @@ dotnet add package Microsoft.Agents.AI.GitHub.Copilot --prerelease
 As a first step, create a `CopilotClient` and start it. Then use the `AsAIAgent` extension method to create an agent.
 
 ```csharp
-using GitHub.Copilot.SDK;
+using GitHub.Copilot;
 using Microsoft.Agents.AI;
 
 await using CopilotClient copilotClient = new();
@@ -47,7 +47,7 @@ Console.WriteLine(await agent.RunAsync("What is Microsoft Agent Framework?"));
 You can provide function tools and custom instructions when creating the agent:
 
 ```csharp
-using GitHub.Copilot.SDK;
+using GitHub.Copilot;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
@@ -113,16 +113,18 @@ Console.WriteLine(response); // Should mention "Alice"
 By default, the agent cannot execute shell commands, read/write files, or fetch URLs. To enable these capabilities, provide a permission handler via `SessionConfig`:
 
 ```csharp
-static Task<PermissionRequestResult> PromptPermission(
+static Task<PermissionDecision> PromptPermission(
     PermissionRequest request, PermissionInvocation invocation)
 {
     Console.WriteLine($"\n[Permission Request: {request.Kind}]");
     Console.Write("Approve? (y/n): ");
 
     string? input = Console.ReadLine()?.Trim().ToUpperInvariant();
-    string kind = input is "Y" or "YES" ? "approved" : "denied-interactively-by-user";
+    PermissionDecision decision = input is "Y" or "YES"
+        ? PermissionDecision.ApproveOnce()
+        : PermissionDecision.Reject();
 
-    return Task.FromResult(new PermissionRequestResult { Kind = kind });
+    return Task.FromResult(decision);
 }
 
 await using CopilotClient copilotClient = new();
