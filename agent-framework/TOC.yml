@@ -54,6 +54,8 @@ items:
       href: agents/tools/index.md
     - name: Function Tools
       href: agents/tools/function-tools.md
+    - name: Controlling tool availability
+      href: agents/tools/controlling-tool-availability.md
     - name: Tool Approval
       href: agents/tools/tool-approval.md
     - name: Code Interpreter
