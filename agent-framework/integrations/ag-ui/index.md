@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: overview
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 06/15/2026
 ms.service: agent-framework
 ---
 
@@ -48,10 +48,11 @@ The Agent Framework AG-UI integration supports all 7 AG-UI protocol features:
 
 ## Build agent UIs with CopilotKit
 
-[CopilotKit](https://copilotkit.ai/) provides rich UI components for building agent user interfaces based on the standard AG-UI protocol. CopilotKit supports streaming chat interfaces, frontend & backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see a examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application.
+[CopilotKit](https://copilotkit.ai/) provides rich UI components for building agent user interfaces based on the standard AG-UI protocol. CopilotKit supports streaming chat interfaces, frontend and backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application.
 
-CopilotKit helps you focus on your agent’s capabilities while delivering a polished user experience without reinventing the wheel.
-To learn more about getting started with Microsoft Agent Framework and CopilotKit, see the [Microsoft Agent Framework integration for CopilotKit](https://docs.copilotkit.ai/microsoft-agent-framework) documentation.
+For production applications, use the [Copilot Runtime](https://docs.copilotkit.ai/backend/copilot-runtime) as the server-side connection layer between your user-facing application and your Agent Framework AG-UI endpoint. The runtime keeps the agent connection on your server, where you can enforce authentication, route requests, apply AG-UI middleware, and enable CopilotKit features such as frontend tools, generative UI, human-in-the-loop flows, shared state, observability, and MCP Apps.
+
+Direct AG-UI client connections are useful for local development and protocol testing. For deployed applications, prefer the Copilot Runtime or another trusted frontend server so browser and mobile clients do not connect directly to the AG-UI server. To learn more about getting started with Microsoft Agent Framework and CopilotKit, see the [Microsoft Agent Framework integration for CopilotKit](https://docs.copilotkit.ai/microsoft-agent-framework) documentation.
 
 ::: zone pivot="programming-language-csharp"
 

@@ -4,13 +4,13 @@ description: Essential security guidelines for building secure AG-UI application
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 11/11/2025
+ms.date: 06/15/2026
 ms.service: agent-framework
 ---
 
 # Security Considerations for AG-UI
 
-AG-UI enables powerful real-time interactions between clients and AI agents. This bidirectional communication requires some security considerations. The following document  covers essential security practices for building securing your agents exposed through AG-UI.
+AG-UI enables powerful real-time interactions between clients and AI agents. This bidirectional communication requires some security considerations. The following document covers essential security practices for securing your agents exposed through AG-UI.
 
 ## Overview
 
@@ -40,6 +40,8 @@ The primary trust boundary in AG-UI is between the client and the AG-UI server. 
 
 > [!IMPORTANT]
 > **Do not expose AG-UI servers directly to untrusted clients** (e.g., JavaScript running in browsers, mobile apps). Instead, implement a trusted frontend server that mediates communication and constructs AG-UI protocol messages in a controlled manner. This prevents malicious clients from crafting arbitrary protocol messages.
+
+If you build the user interface with [CopilotKit](https://copilotkit.ai/), the [Copilot Runtime](https://docs.copilotkit.ai/backend/copilot-runtime) can serve as this trusted frontend server. It runs on your server, connects to the AG-UI endpoint from a trusted environment, and gives your application a place to enforce authentication, validate requests, control available tools, and apply middleware before traffic reaches the agent.
 
 ### Potential threats
 
@@ -99,6 +101,8 @@ When using a trusted frontend server, the security model changes significantly:
 
 > [!TIP]
 > The trusted frontend server pattern significantly reduces attack surface by ensuring that only user message **content** comes from untrusted sources, while all other protocol elements (message structure, roles, tools, state, context) are controlled by trusted code.
+
+When using a runtime or proxy layer, keep authorization decisions in that trusted layer. For example, decide which tools, state fields, context values, and forwarded properties a user can send before constructing the AG-UI request to the server.
 
 ## Input Validation and Sanitization
 
