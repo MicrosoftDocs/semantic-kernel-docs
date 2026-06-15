@@ -48,12 +48,9 @@ The Agent Framework AG-UI integration supports all 7 AG-UI protocol features:
 
 ## Build agent UIs with CopilotKit
 
-[CopilotKit](https://copilotkit.ai/) provides rich UI components for building agent user interfaces based on the standard AG-UI protocol. CopilotKit supports streaming chat interfaces, frontend & backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application.
+[CopilotKit](https://copilotkit.ai/) provides rich UI components and headless UI primitives for building agent user interfaces based on the standard AG-UI protocol, so you can ship quickly with prebuilt chat experiences or fully customize the interface for your application. CopilotKit supports streaming chat interfaces, frontend and backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application.
 
-To connect a CopilotKit React frontend to an Agent Framework AG-UI backend, register your endpoint as an `HttpAgent` in the CopilotKit runtime. This allows CopilotKit's frontend tools to flow through as AG-UI client tools, and all AG-UI features (streaming, approvals, state sync) work automatically.
-
-CopilotKit helps you focus on your agent’s capabilities while delivering a polished user experience without reinventing the wheel.
-To learn more about getting started with Microsoft Agent Framework and CopilotKit, see the [Microsoft Agent Framework integration for CopilotKit](https://docs.copilotkit.ai/microsoft-agent-framework) documentation.
+CopilotKit helps you focus on your agent's capabilities while delivering a polished user experience without reinventing the wheel. To learn more about getting started with Microsoft Agent Framework and CopilotKit, see the [Microsoft Agent Framework integration for CopilotKit](https://docs.copilotkit.ai/microsoft-agent-framework) documentation.
 
 ::: zone pivot="programming-language-csharp"
 

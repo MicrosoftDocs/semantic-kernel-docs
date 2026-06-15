@@ -10,7 +10,7 @@ ms.service: agent-framework
 
 # Security Considerations for AG-UI
 
-AG-UI enables powerful real-time interactions between clients and AI agents. This bidirectional communication requires some security considerations. The following document  covers essential security practices for building securing your agents exposed through AG-UI.
+AG-UI enables powerful real-time interactions between clients and AI agents. This bidirectional communication requires some security considerations. The following document covers essential security practices for securing your agents exposed through AG-UI.
 
 ## Overview
 
@@ -100,6 +100,8 @@ When using a trusted frontend server, the security model changes significantly:
 > [!TIP]
 > The trusted frontend server pattern significantly reduces attack surface by ensuring that only user message **content** comes from untrusted sources, while all other protocol elements (message structure, roles, tools, state, context) are controlled by trusted code.
 
+When using a proxy or trusted server layer, keep authorization decisions in that trusted layer. For example, decide which tools, state fields, context values, and forwarded properties a user can send before constructing the AG-UI request to the server.
+
 ## Input Validation and Sanitization
 
 ### Message Content Validation
@@ -148,7 +150,7 @@ Forwarded properties contain arbitrary JSON that passes through the system. Trea
 
 ## Authentication and Authorization
 
-AG-UI does not include built-in authorization mechanism. It is up to your application to prevent unauthorized use of the exposed AG-UI endpoint. 
+AG-UI does not include a built-in authorization mechanism. It is up to your application to prevent unauthorized use of the exposed AG-UI endpoint.
 
 ### Approval State Storage
 
