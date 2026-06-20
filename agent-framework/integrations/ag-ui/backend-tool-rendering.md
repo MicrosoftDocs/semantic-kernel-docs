@@ -508,7 +508,7 @@ Here's an enhanced client using `AGUIChatClient` that displays tool execution:
 import asyncio
 import os
 
-from agent_framework import Agent, ToolCallContent, ToolResultContent
+from agent_framework import Agent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -518,7 +518,7 @@ async def main():
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
     # Create AG-UI chat client
-    chat_client = AGUIChatClient(server_url=server_url)
+    chat_client = AGUIChatClient(endpoint=server_url)
     
     # Create agent with the chat client
     agent = Agent(
@@ -546,11 +546,16 @@ async def main():
                     print(f"\033[96m{update.text}\033[0m", end="", flush=True)
                 
                 # Display tool calls and results
-                for content in update.contents:
-                    if isinstance(content, ToolCallContent):
-                        print(f"\n\033[95m[Calling tool: {content.name}]\033[0m")
-                    elif isinstance(content, ToolResultContent):
-                        result_text = content.result if isinstance(content.result, str) else str(content.result)
+                for content in (update.contents or []):
+                    content_type = getattr(content, "type", "")
+                    if content_type == "function_call":
+                        tool_name = getattr(content, "name", None) or "unknown"
+                        print(f"\n\033[95m[Calling tool: {tool_name}]\033[0m")
+                    elif content_type in {"function_result", "tool_result"}:
+                        result = getattr(content, "result", None)
+                        if result is None:
+                            result = getattr(content, "tool_result", None)
+                        result_text = result if isinstance(result, str) else str(result)
                         print(f"\033[94m[Tool result: {result_text}]\033[0m")
 
             print("\n")
