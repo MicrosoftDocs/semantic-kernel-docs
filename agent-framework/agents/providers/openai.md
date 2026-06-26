@@ -320,7 +320,7 @@ async def thread_example():
     agent = OpenAIChatClient().as_agent(
         instructions="You are a helpful assistant.",
     )
-    session = await agent.create_session()
+    session = agent.create_session()
 
     result1 = await agent.run("My name is Alice", session=session)
     print(result1)

@@ -69,10 +69,10 @@ Here is a list of existing providers that can be used.
 
 | Memory AI Context Provider                                         | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
-| [Mem0 Memory Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/mem0/agent_framework_mem0/_provider.py) | Preview         |
+| [Mem0 Memory Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/mem0/agent_framework_mem0/_context_provider.py) | Preview         |
 | [Neo4j Memory Provider](./neo4j-memory.md) | Preview         |
 | [Purview Context Provider](./purview.md) | Preview         |
-| [Redis Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_provider.py)     | Preview         |
+| [Redis Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_context_provider.py)     | Preview         |
 
 ::: zone-end
 
@@ -95,7 +95,7 @@ Here is a list of existing providers that can be used.
 
 | RAG AI Context Provider                                            | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
-| [Azure AI Search Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/azure-ai-search/agent_framework_azure_ai_search/_search_provider.py) | Preview         |
+| [Azure AI Search Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/azure-ai-search/agent_framework_azure_ai_search/_context_provider.py) | Preview         |
 | [Neo4j GraphRAG Provider](./neo4j-graphrag.md) | Preview         |
 
 ::: zone-end

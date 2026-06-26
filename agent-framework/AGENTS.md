@@ -162,7 +162,7 @@ title: "Page Title"
 description: "One-line description for SEO"
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual        # or "tutorial" for get-started
+ms.topic: article           # or "tutorial" for get-started
 ms.date: MM/DD/YYYY
 ms.service: agent-framework
 ---
@@ -195,7 +195,7 @@ Every docs page maps to sample files in both repos:
 | `get-started/add-tools.md` | `01-get-started/02_add_tools.py` | `01-get-started/02_AddTools.cs` |
 | `get-started/multi-turn.md` | `01-get-started/03_multi_turn.py` | `01-get-started/03_MultiTurn.cs` |
 | `get-started/memory.md` | `01-get-started/04_memory.py` | `01-get-started/04_Memory.cs` |
-| `get-started/workflows.md` | `01-get-started/05_first_workflow.py` | `01-get-started/05_FirstWorkflow.cs` |
+| `get-started/workflows.md` | `01-get-started/07_first_graph_workflow.py` | `01-get-started/05_FirstWorkflow.cs` |
 | `get-started/hosting.md` | `04-hosting/azure_functions/01_single_agent/function_app.py` | `01-get-started/06_HostYourAgent.cs` |
 | `agents/tools/function-tools.md` | `02-agents/tools/function_tools.py` | `02-agents/tools/FunctionTools.cs` |
 | `agents/tools/web-search.md` | `02-agents/tools/web_search.py` | `02-agents/tools/WebSearch.cs` |
@@ -204,13 +204,13 @@ Every docs page maps to sample files in both repos:
 | `agents/tools/hosted-mcp-tools.md` | `02-agents/tools/hosted_mcp_tools.py` | `02-agents/tools/HostedMcpTools.cs` |
 | `agents/tools/local-mcp-tools.md` | `02-agents/tools/local_mcp_tools.py` | `02-agents/tools/LocalMcpTools.cs` |
 | `agents/tools/tool-approval.md` | `02-agents/tools/tool_approval.py` | `02-agents/tools/ToolApproval.cs` |
-| `agents/code_act.md` | `python/packages/hyperlight/samples/codeact_benchmark.py` | `02-agents/AgentWithCodeAct/` |
+| `agents/code_act.md` | `02-agents/context_providers/code_act/code_act.py` | `02-agents/AgentWithCodeAct/` |
 | `agents/middleware/*.md` | `02-agents/middleware/<matching>.py` | `02-agents/middleware/<matching>.cs` |
 | `agents/providers/foundry-local.md` | `02-agents/providers/foundry/foundry_local_agent.py` | N/A |
 | `agents/providers/*.md` | `02-agents/providers/<matching>.py` | `02-agents/providers/<matching>.cs` |
 | `agents/conversations/*.md` | `02-agents/conversations/<matching>.py` | `02-agents/conversations/<matching>.cs` |
 | `workflows/<pattern>.md` | `03-workflows/<pattern>/<matching>.py` | `03-workflows/<pattern>/<matching>.cs` |
-| `integrations/hyperlight.md` | `python/packages/hyperlight/samples/codeact_context_provider.py` | `02-agents/AgentWithCodeAct/` |
+| `integrations/hyperlight.md` | `02-agents/context_providers/code_act/code_act.py` | `02-agents/AgentWithCodeAct/` |
 | `integrations/a2a.md` | `04-hosting/a2a/` | `04-hosting/a2a/` |
 | `integrations/durable-extension.md` | `04-hosting/azure_functions/`, `04-hosting/durabletask/` | `04-hosting/DurableAgents/`, `04-hosting/DurableWorkflows/` |
 

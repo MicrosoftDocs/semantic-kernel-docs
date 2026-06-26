@@ -26,7 +26,7 @@ We recommend that you carefully review and track what MCP servers you add to you
 The MCP tool allows you to pass custom headers, such as authentication keys or schemas, that a remote MCP server might need. We recommend that you review all data that's shared with remote MCP servers and that you log the data for auditing purposes. Be cognizant of non-Microsoft practices for retention and location of data.
 
 > [!IMPORTANT]
-> You can specify headers only by including them in tool_resources at each run. In this way, you can put API keys, OAuth access tokens, or other credentials directly in your request. Headers that you pass in are available only for the current run and aren't persisted.
+> You can specify per-run headers by including them in tool resources at each run, or configure a `header_provider` on Python local MCP tools. Review any API keys, OAuth access tokens, or other credentials shared with remote MCP servers.
 
 For more information on MCP security, see:
 

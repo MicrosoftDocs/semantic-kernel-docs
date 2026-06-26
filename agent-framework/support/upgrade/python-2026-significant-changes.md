@@ -469,7 +469,7 @@ storage = FileCheckpointStorage(directory="./checkpoints")
 
 **After:**
 ```python
-from agent_framework.workflows import FileCheckpointStorage
+from agent_framework import FileCheckpointStorage
 
 storage = FileCheckpointStorage(
     directory="./checkpoints",
@@ -1372,7 +1372,8 @@ model_id = settings.model_id
 
 **After:**
 ```python
-from agent_framework.openai import OpenAISettings, load_settings
+from agent_framework import load_settings
+from agent_framework.openai import OpenAISettings
 
 settings = load_settings(OpenAISettings, env_prefix="OPENAI_")
 api_key = settings["api_key"]
@@ -1405,7 +1406,7 @@ Fixes multiple failures when using reasoning models (e.g., gpt-5-mini, gpt-5.2) 
 Amazon Bedrock is now included in the `agent-framework-core[all]` extras and is available via the `agent_framework.amazon` lazy import surface. Tool-choice behavior was also fixed: unset tool-choice values now remain unset so providers use their service defaults, while explicitly set values are preserved.
 
 ```python
-from agent_framework.amazon import BedrockClient
+from agent_framework.amazon import BedrockChatClient
 ```
 
 ---
@@ -1447,7 +1448,7 @@ When OpenTelemetry is installed, trace context (e.g., W3C `traceparent`) is auto
 The `agent-framework-azurefunctions` package now supports running `Workflow` graphs on Azure Durable Functions. Pass a `workflow` parameter to `AgentFunctionApp` to automatically register agent entities, activity functions, and HTTP endpoints.
 
 ```python
-from agent_framework.azurefunctions import AgentFunctionApp
+from agent_framework.azure import AgentFunctionApp
 
 app = AgentFunctionApp(workflow=my_workflow)
 # Automatically registers:
@@ -1487,9 +1488,9 @@ tools = [HostedCodeInterpreterTool(), HostedWebSearchTool()]
 
 **After:**
 ```python
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
-client = OpenAIResponsesClient()
+client = OpenAIChatClient()
 tools = [client.get_code_interpreter_tool(), client.get_web_search_tool()]
 ```
 
@@ -2027,7 +2028,7 @@ from agent_framework import WorkflowEvent
 
 **Before:**
 ```python
-async for event in workflow.run_stream(input_message):
+async for event in workflow.run(input_message, stream=True):
     if isinstance(event, WorkflowOutputEvent):
         print(f"Output from {event.executor_id}: {event.data}")
     elif isinstance(event, RequestInfoEvent):
@@ -2038,7 +2039,7 @@ async for event in workflow.run_stream(input_message):
 
 **After:**
 ```python
-async for event in workflow.run_stream(input_message):
+async for event in workflow.run(input_message, stream=True):
     if event.type == "output":
         print(f"Output from {event.executor_id}: {event.data}")
     elif event.type == "request_info":
@@ -2064,7 +2065,7 @@ async for event in workflow.run_stream("Write a blog post about AI agents."):
 ```python
 from agent_framework import AgentResponseUpdate
 
-async for event in workflow.run_stream("Write a blog post about AI agents."):
+async for event in workflow.run("Write a blog post about AI agents.", stream=True):
     if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
         print(event.data, end="", flush=True)
     elif event.type == "output":
@@ -2113,6 +2114,7 @@ async for event in workflow.send_responses_streaming(
 async for event in workflow.run(
     checkpoint_id=checkpoint_id,
     responses=[approved_response],
+    stream=True,
 ):
     ...
 ```
@@ -2267,7 +2269,7 @@ func = AIFunction(get_weather)
 
 **After:**
 ```python
-from agent_framework.core import tool, FunctionTool
+from agent_framework import FunctionTool, tool
 
 @tool
 def get_weather(city: str) -> str:
@@ -2299,7 +2301,7 @@ builder.participant_factories(factory1, factory2)
 
 **After:**
 ```python
-from agent_framework.workflows import MagenticBuilder
+from agent_framework.orchestrations import MagenticBuilder
 
 builder = MagenticBuilder()
 builder.with_manager(manager)
@@ -2391,7 +2393,7 @@ elif isinstance(content, FunctionCallContent):
 
 **After:**
 ```python
-from agent_framework.core import Content
+from agent_framework import Content
 
 if content.type == "text":
     print(content.text)
@@ -2412,7 +2414,7 @@ uri = UriContent(uri="https://example.com/image.png", media_type="image/png")
 
 **After:**
 ```python
-from agent_framework.core import Content
+from agent_framework import Content
 
 text = Content.from_text("Hello world")
 data = Content.from_data(data=b"binary", media_type="application/octet-stream")
@@ -2514,14 +2516,11 @@ result = await endpoint.run(
 
 **After:**
 ```python
-from agent_framework.ag_ui import AGUIEndpoint
+from agent_framework.ag_ui import AgentFrameworkAgent
 
-endpoint = AGUIEndpoint(agent=agent)
-result = await endpoint.run(
-    request=request,
-    streaming=True,
-    timeout=30
-)
+agui_agent = AgentFrameworkAgent(agent=agent)
+async for event in agui_agent.run(request):
+    ...
 ```
 
 ---
@@ -2562,9 +2561,9 @@ agent = client.create_agent()
 
 **After:**
 ```python
-from agent_framework.core import ChatClient
+from agent_framework.openai import OpenAIChatClient
 
-client = ChatClient(...)
+client = OpenAIChatClient(...)
 agent = client.as_agent()
 ```
 
@@ -2585,8 +2584,8 @@ async for event in workflow.run_stream(...):
 
 **After:**
 ```python
-async for event in workflow.run_stream(...):
-    if isinstance(event, WorkflowOutputEvent):
+async for event in workflow.run(..., stream=True):
+    if event.type == "output":
         executor = event.executor_id
 ```
 
@@ -2633,10 +2632,9 @@ handoff = HandoffOrchestrator(
 
 **After:**
 ```python
-from agent_framework.workflows import (
+from agent_framework.orchestrations import (
     GroupChatOrchestrator,
     HandoffAgentExecutor,
-    AgentApprovalExecutor
 )
 
 # Group chat with star topology
@@ -2689,7 +2687,7 @@ response = await client.get_response(
 **PR:** [#3139](https://github.com/microsoft/agent-framework/pull/3139)
 
 - `display_name` parameter removed from agents
-- `context_providers` (plural, accepting list) changed to `context_provider` (singular, only 1 allowed)
+- `context_providers` remains the current plural sequence parameter for providers
 - `middleware` now requires a list (no longer accepts single instance)
 - `AggregateContextProvider` removed from code (use sample implementation if needed)
 
@@ -2709,16 +2707,16 @@ aggregate = AggregateContextProvider([provider1, provider2])
 
 **After:**
 ```python
-from agent_framework.core import Agent
+from agent_framework import Agent
 
-# Only one context provider allowed; combine manually if needed
 agent = Agent(
     name="my-agent",  # display_name removed
-    context_provider=provider1,  # singular, only 1
+    client=client,
+    context_providers=[provider1, provider2],
     middleware=[my_middleware],  # must be a list now
 )
 
-# For multiple context providers, create your own aggregate
+# For reusable provider composition, create your own aggregate
 class MyAggregateProvider:
     def __init__(self, providers):
         self.providers = providers

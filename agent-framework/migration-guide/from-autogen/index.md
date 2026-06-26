@@ -351,9 +351,10 @@ async for event in agent.run_stream(task="Hello"):
 # Assume we have client, agent, and tools from previous examples
 async def streaming_example():
     # Chat client streaming - tools go in options dict
-    async for chunk in client.get_streaming_response(
+    async for chunk in client.get_response(
         "Hello",
-        options={"tools": tools}
+        options={"tools": tools},
+        stream=True,
     ):
         if chunk.text:
             print(chunk.text, end="")
@@ -392,11 +393,11 @@ user_message = text_msg.to_model_message()
 #### Agent Framework Message Types
 
 ```python
-from agent_framework import Message, Content, Role
+from agent_framework import Message, Content
 import base64
 
 # Text message
-text_msg = Message(role=Role.USER, contents=["Hello"])
+text_msg = Message(role="user", contents=["Hello"])
 
 # Supply real image bytes, or use a data: URI/URL via Content.from_uri()
 image_bytes = b"<your_image_bytes>"
@@ -405,7 +406,7 @@ image_uri = f"data:image/jpeg;base64,{image_b64}"
 
 # Multi-modal message with mixed content
 multi_modal_msg = Message(
-    role=Role.USER,
+    role="user",
     contents=[
         Content.from_text(text="Describe this image"),
         Content.from_uri(uri=image_uri, media_type="image/jpeg")
@@ -625,7 +626,7 @@ from typing import Callable, Awaitable
 # Assume we have client from previous examples
 async def logging_middleware(
     context: AgentContext,
-    call_next: Callable[[AgentContext], Awaitable[None]]
+    call_next: Callable[[], Awaitable[None]]
 ) -> None:
     print(f"Agent {context.agent.name} starting")
     await call_next()
@@ -633,7 +634,7 @@ async def logging_middleware(
 
 async def security_middleware(
     context: FunctionInvocationContext,
-    call_next: Callable[[FunctionInvocationContext], Awaitable[None]]
+    call_next: Callable[[], Awaitable[None]]
 ) -> None:
     if "password" in str(context.arguments):
         print("Blocking function call with sensitive data")
@@ -1168,7 +1169,7 @@ workflow = SequentialBuilder(participants=[agent1, agent2, agent3]).build()
 # Example usage (would be in async context)
 async def sequential_example():
     # Each agent appends to shared conversation
-    async for event in workflow.run_stream("Discuss this topic"):
+    async for event in workflow.run("Discuss this topic", stream=True):
         if event.type == "output":
             conversation_history = event.data  # list[Message]
 ```
@@ -1191,7 +1192,7 @@ workflow = (ConcurrentBuilder(participants=[agent1, agent2, agent3])
 # Example usage (would be in async context)
 async def concurrent_example():
     # All agents process the input concurrently
-    async for event in workflow.run_stream("Process this in parallel"):
+    async for event in workflow.run("Process this in parallel", stream=True):
         if event.type == "output":
             results = event.data  # Combined results from all agents
 ```
@@ -1252,7 +1253,7 @@ workflow = MagenticBuilder(
 # Example usage (would be in async context)
 async def magentic_example():
     output: str | None = None
-    async for event in workflow.run_stream("Complex research task"):
+    async for event in workflow.run("Complex research task", stream=True):
         if event.type == "output":
             output_messages = cast(list[Message], event.data)
             if output_messages:
@@ -1275,8 +1276,7 @@ from typing import cast
 from agent_framework import (
     AgentResponseUpdate,
     Agent,
-    RequestInfoEvent,
-    WorkflowOutputEvent,
+    WorkflowEvent,
 )
 from agent_framework.orchestrations import (
     MAGENTIC_EVENT_TYPE_AGENT_DELTA,
@@ -1311,7 +1311,7 @@ workflow = (
 )
 
 # Handle human intervention requests during execution
-async for event in workflow.run_stream("Complex task"):
+async for event in workflow.run("Complex task", stream=True):
     if event.type == "request_info" and event.request_type is MagenticHumanInterventionRequest:
         req = cast(MagenticHumanInterventionRequest, event.data)
         if req.kind == MagenticHumanInterventionKind.PLAN_REVIEW:
@@ -1319,7 +1319,7 @@ async for event in workflow.run_stream("Complex task"):
             reply = MagenticHumanInterventionReply(
                 decision=MagenticHumanInterventionDecision.APPROVE
             )
-            async for ev in workflow.send_responses_streaming({event.request_id: reply}):
+            async for ev in workflow.run(responses={event.request_id: reply}, stream=True):
                 pass  # Handle continuation
 ```
 
@@ -1350,7 +1350,7 @@ Agent Framework provides built-in request-response capabilities where any execut
 
 ```python
 from agent_framework import (
-    RequestInfoEvent, WorkflowBuilder, WorkflowContext,
+    WorkflowBuilder, WorkflowContext,
     Executor, handler, response_handler
 )
 from dataclasses import dataclass
@@ -1414,11 +1414,11 @@ async def run_with_human_input():
     completed = False
 
     while not completed:
-        # First iteration uses run_stream, subsequent use send_responses_streaming
+        # First iteration starts the workflow; subsequent iterations pass responses back
         stream = (
-            workflow.send_responses_streaming(pending_responses)
+            workflow.run(responses=pending_responses, stream=True)
             if pending_responses
-            else workflow.run_stream("initial input")
+            else workflow.run("initial input", stream=True)
         )
 
         events = [event async for event in stream]
@@ -1509,7 +1509,7 @@ workflow = (WorkflowBuilder(start_executor=processing_executor, checkpoint_stora
 # Example usage (would be in async context)
 async def checkpoint_example():
     # Run workflow - checkpoints are created automatically
-    async for event in workflow.run_stream("input data"):
+    async for event in workflow.run("input data", stream=True):
         print(f"Event: {event}")
 ```
 
@@ -1525,7 +1525,6 @@ from agent_framework import (
     FileCheckpointStorage,
     WorkflowContext,
     WorkflowBuilder,
-    get_checkpoint_summary,
     handler,
 )
 
@@ -1554,23 +1553,24 @@ def create_workflow(checkpoint_storage: FileCheckpointStorage):
 checkpoint_storage = FileCheckpointStorage(storage_path="./checkpoints")
 
 async def checkpoint_resume_example():
+    # Create workflow instance to get its configured name
+    new_workflow = create_workflow(checkpoint_storage)
+
     # List available checkpoints
-    checkpoints = await checkpoint_storage.list_checkpoints()
+    checkpoints = await checkpoint_storage.list_checkpoints(workflow_name=new_workflow.name)
 
     # Display checkpoint information
     for checkpoint in checkpoints:
-        summary = get_checkpoint_summary(checkpoint)
-        print(f"Checkpoint {summary.checkpoint_id}: iteration={summary.iteration_count}")
+        print(f"Checkpoint {checkpoint.checkpoint_id}: iteration={checkpoint.iteration_count}")
 
     # Resume from a specific checkpoint
     if checkpoints:
         chosen_checkpoint_id = checkpoints[0].checkpoint_id
 
-        # Create new workflow instance and resume
-        new_workflow = create_workflow(checkpoint_storage)
-        async for event in new_workflow.run_stream(
+        async for event in new_workflow.run(
             checkpoint_id=chosen_checkpoint_id,
-            checkpoint_storage=checkpoint_storage
+            checkpoint_storage=checkpoint_storage,
+            stream=True,
         ):
             print(f"Resumed event: {event}")
 ```
@@ -1586,9 +1586,10 @@ Checkpointing works seamlessly with human-in-the-loop workflows, allowing workfl
 async def resume_with_pending_requests_example():
     # Resume from checkpoint - pending requests will be re-emitted
     request_info_events = []
-    async for event in workflow.run_stream(
+    async for event in workflow.run(
         checkpoint_id=checkpoint_id,
-        checkpoint_storage=checkpoint_storage
+        checkpoint_storage=checkpoint_storage,
+        stream=True,
     ):
         if event.type == "request_info":
             request_info_events.append(event)
@@ -1600,7 +1601,7 @@ async def resume_with_pending_requests_example():
         responses[event.request_id] = response
 
     # Send response back to workflow
-    async for event in workflow.send_responses_streaming(responses):
+    async for event in workflow.run(responses=responses, stream=True):
         print(f"Event: {event}")
 ```
 
@@ -1661,17 +1662,14 @@ Agent Framework provides comprehensive observability through multiple approaches
 
 ```python
 from agent_framework import Agent
-from agent_framework.observability import setup_observability
+from agent_framework.observability import configure_otel_providers
 from agent_framework.openai import OpenAIChatClient
 
 # Zero-code setup via environment variables
-# Set ENABLE_OTEL=true
-# Set OTLP_ENDPOINT=http://localhost:4317
+# Set OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 
 # Or manual setup
-setup_observability(
-    otlp_endpoint="http://localhost:4317"
-)
+configure_otel_providers()
 
 # Create client for the example
 client = OpenAIChatClient(model="gpt-5")

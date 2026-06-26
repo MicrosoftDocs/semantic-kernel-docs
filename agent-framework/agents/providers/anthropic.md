@@ -374,7 +374,7 @@ async def hosted_tools_example():
             ),
             client.get_web_search_tool(),
         ],
-        max_tokens=20000,
+        default_options={"max_tokens": 20000},
     )
 
     result = await agent.run("Can you compare Python decorators with C# attributes?")
@@ -386,7 +386,6 @@ async def hosted_tools_example():
 Anthropic supports extended thinking capabilities through the `thinking` feature, which allows the model to show its reasoning process:
 
 ```python
-from agent_framework import TextReasoningContent, UsageContent
 from agent_framework.anthropic import AnthropicClient
 
 async def thinking_example():
@@ -407,11 +406,11 @@ async def thinking_example():
 
     async for chunk in agent.run(query, stream=True):
         for content in chunk.contents:
-            if isinstance(content, TextReasoningContent):
+            if content.type == "text_reasoning":
                 # Display thinking in a different color
                 print(f"\033[32m{content.text}\033[0m", end="", flush=True)
-            if isinstance(content, UsageContent):
-                print(f"\n\033[34m[Usage: {content.details}]\033[0m\n", end="", flush=True)
+            if content.type == "usage":
+                print(f"\n\033[34m[Usage: {content.usage_details}]\033[0m\n", end="", flush=True)
         if chunk.text:
             print(chunk.text, end="", flush=True)
     print()
@@ -422,7 +421,7 @@ async def thinking_example():
 Anthropic provides managed skills that extend agent capabilities, such as creating PowerPoint presentations. Skills require the Code Interpreter tool to function:
 
 ```python
-from agent_framework import HostedFileContent
+from agent_framework import Content
 from agent_framework.anthropic import AnthropicClient
 
 async def skills_example():
@@ -448,7 +447,7 @@ async def skills_example():
     print(f"User: {query}")
     print("Agent: ", end="", flush=True)
 
-    files: list[HostedFileContent] = []
+    files: list[Content] = []
     async for chunk in agent.run(query, stream=True):
         for content in chunk.contents:
             match content.type:

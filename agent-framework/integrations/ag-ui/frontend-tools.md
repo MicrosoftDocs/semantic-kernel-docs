@@ -356,11 +356,9 @@ class AGUIClientWithTools:
                         try:
                             event = json.loads(data)
                             
-                            # Handle tool call requests from server
-                            if event.get("type") == "TOOL_CALL_REQUEST":
-                                await self._handle_tool_call(event, client)
-                            else:
-                                yield event
+                            # Tool calls arrive as TOOL_CALL_START/ARGS/END events
+                            # and results are streamed back as TOOL_CALL_RESULT events.
+                            yield event
 
                             # Capture thread_id
                             if event.get("type") == "RUN_STARTED" and not self.thread_id:
@@ -392,25 +390,13 @@ class AGUIClientWithTools:
 
             print(f"\033[94m[Client Tool Result: {result}]\033[0m")
 
-            # Send result back to server
-            await client.post(
-                f"{self.server_url}/tool_result",
-                json={
-                    "tool_call_id": tool_call_id,
-                    "result": result,
-                },
-            )
+            # In current Python AG-UI, frontend tool declarations are sent with
+            # the run request. Tool-call lifecycle events are streamed back over SSE.
+            print(f"Tool result for {tool_call_id}: {result}")
 
         except Exception as e:
             print(f"\033[91m[Tool Error: {e}]\033[0m")
-            # Send error back to server
-            await client.post(
-                f"{self.server_url}/tool_result",
-                json={
-                    "tool_call_id": tool_call_id,
-                    "error": str(e),
-                },
-            )
+            print(f"Tool error for {tool_call_id}: {e}")
 
 
 async def main():
@@ -464,15 +450,15 @@ if __name__ == "__main__":
 
 1. **Client Registration**: Client sends tool declarations (names, descriptions, parameters) to server
 2. **Server Orchestration**: AI agent decides when to call frontend tools based on user request
-3. **Tool Call Request**: Server sends `TOOL_CALL_REQUEST` event to client via SSE
+3. **Tool Call Events**: Server streams `TOOL_CALL_START`, `TOOL_CALL_ARGS`, and `TOOL_CALL_END` events to the client
 4. **Client Execution**: Client executes the tool locally
-5. **Result Submission**: Client sends result back to server via POST request
+5. **Result Events**: Tool results are represented as `TOOL_CALL_RESULT` events in the stream
 6. **Agent Processing**: Server incorporates result and continues response
 
 ### Key Events
 
-- **`TOOL_CALL_REQUEST`**: Server requests frontend tool execution
-- **`TOOL_CALL_RESULT`**: Client submits execution result (via HTTP POST)
+- **`TOOL_CALL_START` / `TOOL_CALL_ARGS` / `TOOL_CALL_END`**: Server requests and streams tool-call details
+- **`TOOL_CALL_RESULT`**: Tool execution result event
 
 ## Expected Output
 

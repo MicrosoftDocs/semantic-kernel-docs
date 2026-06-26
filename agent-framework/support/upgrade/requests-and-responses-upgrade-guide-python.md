@@ -20,7 +20,7 @@ This release includes two major improvements to the workflow system:
 
 The workflow execution methods have been unified for simplicity:
 
-- **Unified `run_stream()` and `run()` methods**: Replace separate checkpoint-specific methods (`run_stream_from_checkpoint()`, `run_from_checkpoint()`)
+- **Unified `run(..., stream=True)` and `run()` methods**: Replace separate checkpoint-specific methods (`run_stream_from_checkpoint()`, `run_from_checkpoint()`)
 - **Single interface**: Use `checkpoint_id` parameter to resume from checkpoints instead of separate methods
 - **Flexible checkpointing**: Configure checkpoint storage at build time or override at runtime
 - **Clearer semantics**: Mutually exclusive `message` (new run) and `checkpoint_id` (resume) parameters
@@ -56,9 +56,10 @@ async for event in workflow.run_stream_from_checkpoint(
 
 ```python
 # NEW: Unified method with checkpoint_id parameter
-async for event in workflow.run_stream(
+async for event in workflow.run(
     checkpoint_id="checkpoint-id",
-    checkpoint_storage=checkpoint_storage  # Optional if configured at build time
+    checkpoint_storage=checkpoint_storage,  # Optional if configured at build time
+    stream=True,
 ):
     print(f"Event: {event}")
 ```
@@ -94,7 +95,7 @@ result = await workflow.run(
 
 ### Checkpoint Resume with Pending Requests
 
-**Important Breaking Change**: When resuming from a checkpoint that has pending `RequestInfoEvent` objects, the new API re-emits these events automatically. You must capture and respond to them.
+When resuming from a checkpoint that has pending request-info events, the API re-emits these events automatically. You can capture and respond to them, or provide `responses` with `checkpoint_id` in the same call.
 
 **Before (Old Behavior):**
 
@@ -116,10 +117,10 @@ async for event in workflow.run_stream_from_checkpoint(
 **After (New Behavior):**
 
 ```python
-# NEW: Capture re-emitted pending requests
+# Capture re-emitted pending requests
 requests: dict[str, Any] = {}
 
-async for event in workflow.run_stream(checkpoint_id="checkpoint-id"):
+async for event in workflow.run(checkpoint_id="checkpoint-id", stream=True):
     if event.type == "request_info":
         # Pending requests are automatically re-emitted
         print(f"Pending request re-emitted: {event.request_id}")
@@ -132,7 +133,7 @@ for request_id, request_data in requests.items():
     responses[request_id] = response
 
 # Send responses back to workflow
-async for event in workflow.send_responses_streaming(responses):
+async for event in workflow.run(responses=responses, stream=True):
     if event.type == "output":
         print(f"Workflow output: {event.data}")
 ```
@@ -167,15 +168,15 @@ async def run_interactive_session(
         # Determine which API to call
         if responses:
             # Send responses from previous iteration
-            event_stream = workflow.send_responses_streaming(responses)
+            event_stream = workflow.run(responses=responses, stream=True)
             requests.clear()
             responses = None
         else:
             # Start new run or resume from checkpoint
             if initial_message:
-                event_stream = workflow.run_stream(initial_message)
+                event_stream = workflow.run(initial_message, stream=True)
             elif checkpoint_id:
-                event_stream = workflow.run_stream(checkpoint_id=checkpoint_id)
+                event_stream = workflow.run(checkpoint_id=checkpoint_id, stream=True)
             else:
                 raise ValueError("Either initial_message or checkpoint_id required")
 
@@ -370,9 +371,9 @@ class ApprovalRequiredExecutor(Executor):
 
 ### Part 1 Checklist: Workflow APIs
 
-1. **Update API Calls**: Replace `run_stream_from_checkpoint()` with `run_stream(checkpoint_id=...)`
+1. **Update API Calls**: Replace `run_stream_from_checkpoint()` with `run(checkpoint_id=..., stream=True)`
 2. **Update API Calls**: Replace `run_from_checkpoint()` with `run(checkpoint_id=...)`
-3. **Remove `responses` parameter**: Delete any `responses` arguments from checkpoint resume calls
+3. **Use current resume shape**: Pass responses with `workflow.run(responses=..., stream=True)` or together with `checkpoint_id` when resuming and responding in one call
 4. **Add event capture**: Implement logic to capture re-emitted request_info events (`event.type == "request_info"`)
 5. **Test checkpoint resume**: Verify pending requests are re-emitted and handled correctly
 

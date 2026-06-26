@@ -324,21 +324,24 @@ The inner workflow runs as a single step from the parent workflow's perspective.
 | `allow_direct_output` | `bool` | `False` | When `True`, sub-workflow outputs are yielded directly to the parent workflow's event stream instead of being sent as messages to connected executors. |
 | `propagate_request` | `bool` | `False` | When `True`, requests from the sub-workflow are propagated to the parent workflow's event stream as regular request info events. When `False`, requests are wrapped in `SubWorkflowRequestMessage` for interception by parent executors. |
 
-## Implicit vs Explicit Wrapping
+## Wrapping sub-workflows
 
-The `WorkflowBuilder` can automatically wrap `Workflow` instances in a `WorkflowExecutor` when you pass them directly. This is similar to how `Agent` instances are automatically wrapped in `AgentExecutor`.
+Wrap `Workflow` instances explicitly in a `WorkflowExecutor` before adding them to a parent workflow. Agents can be passed directly to `WorkflowBuilder`, but raw `Workflow` instances require this wrapper.
 
 ```python
-# Implicit wrapping — WorkflowBuilder detects the Workflow and wraps it
+from agent_framework import WorkflowExecutor
+
+inner_workflow_executor = WorkflowExecutor(inner_workflow, id="analysis_pipeline")
+
 parent_workflow = (
     WorkflowBuilder(start_executor=coordinator)
-    .add_edge(coordinator, inner_workflow)    # Workflow auto-wrapped
-    .add_edge(inner_workflow, reviewer)
+    .add_edge(coordinator, inner_workflow_executor)
+    .add_edge(inner_workflow_executor, reviewer)
     .build()
 )
 ```
 
-Use explicit wrapping when you need to:
+Explicit wrapping lets you:
 
 - Assign a specific executor ID for reference in multiple edges.
 - Reuse the same `WorkflowExecutor` instance across the graph.
@@ -407,7 +410,7 @@ async for event in parent_workflow.run(input_data, stream=True):
 
 ### Intermediate emissions from child workflows
 
-`"intermediate"` events produced inside a child workflow bubble up through the parent's event stream automatically. They are attributed to the `WorkflowExecutor`'s own `id` (not to the inner executor that originally emitted them), which preserves encapsulation. Crucially, these events **retain the `"intermediate"` label** regardless of how the parent designates the `WorkflowExecutor` in its own `final_output_from` or `intermediate_output_from` lists.
+`"intermediate"` events produced inside a child workflow bubble up through the parent's event stream automatically. They are attributed to the `WorkflowExecutor`'s own `id` (not to the inner executor that originally emitted them), which preserves encapsulation. Crucially, these events **retain the `"intermediate"` label** regardless of how the parent designates the `WorkflowExecutor` in its own `output_from` or `intermediate_output_from` lists.
 
 ```python
 async for event in parent_workflow.run(input_data, stream=True):
@@ -500,18 +503,22 @@ data_pipeline = (
     .build()
 )
 
+data_pipeline_executor = WorkflowExecutor(data_pipeline, id="data_pipeline")
+
 # Level 2: Analysis pipeline (contains the data pipeline)
 analysis_pipeline = (
-    WorkflowBuilder(start_executor=data_pipeline)  # Implicit wrapping
-    .add_edge(data_pipeline, analyzer)
+    WorkflowBuilder(start_executor=data_pipeline_executor)
+    .add_edge(data_pipeline_executor, analyzer)
     .build()
 )
+
+analysis_pipeline_executor = WorkflowExecutor(analysis_pipeline, id="analysis_pipeline")
 
 # Level 3: Top-level orchestration
 top_workflow = (
     WorkflowBuilder(start_executor=coordinator)
-    .add_edge(coordinator, analysis_pipeline)       # Implicit wrapping
-    .add_edge(analysis_pipeline, reporter)
+    .add_edge(coordinator, analysis_pipeline_executor)
+    .add_edge(analysis_pipeline_executor, reporter)
     .build()
 )
 ```
@@ -528,7 +535,7 @@ When a sub-workflow fails, the error is propagated to the parent workflow. The `
 
 ```python
 async for event in parent_workflow.run(input_data, stream=True):
-    if event.type == "failed":
+    if event.type == "error":
         print(f"Sub-workflow failed: {event.details.message}")
     elif event.type == "output":
         print(event.data)
@@ -562,7 +569,7 @@ async for event in parent_workflow.run("Analyze the dataset", stream=True):
         print(event.data)
 
 # Resume from a checkpoint
-checkpoints = await checkpoint_storage.list_checkpoints()
+checkpoints = await checkpoint_storage.list_checkpoints(workflow_name=parent_workflow.name)
 async for event in parent_workflow.run(
     checkpoint_id=checkpoints[-1].checkpoint_id,
     checkpoint_storage=checkpoint_storage,

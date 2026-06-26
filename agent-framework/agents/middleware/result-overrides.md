@@ -179,7 +179,7 @@ async def validate_weather_middleware(context: ChatContext, call_next: Callable[
             response.messages.append(Message(role="assistant", contents=[validation_note]))
             return response
 
-        context.result.with_finalizer(_append_validation_note)
+        context.result = context.result.with_finalizer(_append_validation_note)
     elif isinstance(context.result, ChatResponse):
         context.result.messages.append(Message(role="assistant", contents=[validation_note]))
 
@@ -253,7 +253,7 @@ async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[]
             return update
 
         context.result.with_transform_hook(_clean_update)
-        context.result.with_finalizer(_sanitize)
+        context.result = context.result.with_finalizer(_sanitize)
     elif isinstance(context.result, AgentResponse):
         context.result = _sanitize(context.result)
 
@@ -401,7 +401,7 @@ async def validate_weather_middleware(context: ChatContext, call_next: Callable[
             response.messages.append(Message(role="assistant", contents=[validation_note]))
             return response
 
-        context.result.with_finalizer(_append_validation_note)
+        context.result = context.result.with_finalizer(_append_validation_note)
     elif isinstance(context.result, ChatResponse):
         context.result.messages.append(Message(role="assistant", contents=[validation_note]))
 
@@ -475,7 +475,7 @@ async def agent_cleanup_middleware(context: AgentContext, call_next: Callable[[]
             return update
 
         context.result.with_transform_hook(_clean_update)
-        context.result.with_finalizer(_sanitize)
+        context.result = context.result.with_finalizer(_sanitize)
     elif isinstance(context.result, AgentResponse):
         context.result = _sanitize(context.result)
 

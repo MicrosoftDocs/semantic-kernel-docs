@@ -239,7 +239,7 @@ The simplest way to create a GitHub Copilot agent:
 ```python
 async def basic_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful assistant."},
+        instructions="You are a helpful assistant.",
     )
 
     async with agent:
@@ -254,8 +254,8 @@ You can provide explicit configuration through `default_options`:
 ```python
 async def explicit_config_example():
     agent = GitHubCopilotAgent(
+        instructions="You are a helpful assistant.",
         default_options={
-            "instructions": "You are a helpful assistant.",
             "model": "gpt-5",
             "timeout": 120,
         },
@@ -276,7 +276,7 @@ Python `GitHubCopilotAgent` also supports `context_providers=[...]`. Providers r
 from agent_framework import InMemoryHistoryProvider
 
 agent = GitHubCopilotAgent(
-    default_options={"instructions": "You are a helpful coding assistant."},
+    instructions="You are a helpful coding assistant.",
     context_providers=[InMemoryHistoryProvider()],
 )
 ```
@@ -299,7 +299,7 @@ def get_weather(
 
 async def tools_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful weather agent."},
+        instructions="You are a helpful weather agent.",
         tools=[get_weather],
     )
 
@@ -315,7 +315,7 @@ Get responses as they are generated for better user experience:
 ```python
 async def streaming_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful assistant."},
+        instructions="You are a helpful assistant.",
     )
 
     async with agent:
@@ -333,7 +333,7 @@ Maintain conversation context across multiple interactions:
 ```python
 async def thread_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful assistant."},
+        instructions="You are a helpful assistant.",
     )
 
     async with agent:
@@ -371,8 +371,8 @@ async def prompt_permission(
 
 async def permissions_example():
     agent = GitHubCopilotAgent(
+        instructions="You are a helpful assistant that can execute shell commands.",
         default_options={
-            "instructions": "You are a helpful assistant that can execute shell commands.",
             "on_permission_request": prompt_permission,
         },
     )
@@ -421,8 +421,8 @@ async def mcp_example():
     }
 
     agent = GitHubCopilotAgent(
+        instructions="You are a helpful assistant with access to the filesystem and Microsoft Learn.",
         default_options={
-            "instructions": "You are a helpful assistant with access to the filesystem and Microsoft Learn.",
             "on_permission_request": PermissionHandler.approve_all,
             "mcp_servers": mcp_servers,
         },

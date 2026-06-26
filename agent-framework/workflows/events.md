@@ -130,7 +130,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 ```python
 from agent_framework import WorkflowEvent
 
-async for event in workflow.run_stream(input_message):
+async for event in workflow.run(input_message, stream=True):
     if event.type == "executor_invoked":
         print(f"Starting {event.executor_id}")
     elif event.type == "executor_completed":

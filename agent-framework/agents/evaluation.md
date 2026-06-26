@@ -201,11 +201,11 @@ var foundry = new FoundryEvals(chatConfiguration, FoundryEvals.Relevance, Foundr
 ::: zone pivot="programming-language-python"
 
 ```python
-from agent_framework_azure_ai import FoundryEvals
+from agent_framework.foundry import FoundryEvals
 
 evals = FoundryEvals(
     project_client=project_client,
-    model_deployment="gpt-4o",
+    model="gpt-4o",
     evaluators=[FoundryEvals.RELEVANCE, FoundryEvals.COHERENCE],
 )
 ```
@@ -226,7 +226,7 @@ By default, `FoundryEvals` runs **relevance**, **coherence**, and **task adheren
 | **Safety** | `violence`, `sexual`, `self_harm`, `hate_unfairness` |
 
 > [!NOTE]
-> `FoundryEvals` requires an Azure AI Foundry project with an AI model deployment. The `model_deployment` parameter specifies which model to use as the LLM judge.
+> `FoundryEvals` requires an Azure AI Foundry project with an AI model deployment. The `model` parameter specifies which model to use as the LLM judge.
 
 ## Evaluate an agent
 
@@ -260,11 +260,11 @@ results.AssertAllPassed();  // Throws if any item failed
 
 ```python
 from agent_framework import evaluate_agent
-from agent_framework_azure_ai import FoundryEvals
+from agent_framework.foundry import FoundryEvals
 
 evals = FoundryEvals(
     project_client=project_client,
-    model_deployment="gpt-4o",
+    model="gpt-4o",
     evaluators=[FoundryEvals.RELEVANCE, FoundryEvals.COHERENCE],
 )
 
@@ -280,7 +280,7 @@ results = await evaluate_agent(
 
 for r in results:
     print(f"{r.provider}: {r.passed}/{r.total}")
-    r.assert_passed()  # Raises AssertionError if any item failed
+    r.raise_for_status()  # Raises EvalNotPassedError if any item failed
 ```
 
 `evaluate_agent` runs the agent once per query, converts each interaction to an `EvalItem`, and passes the batch to the evaluator. It returns one `EvalResults` per evaluator provider.
@@ -527,9 +527,9 @@ results.AssertAllPassed();
 
 ```python
 from agent_framework import evaluate_workflow
-from agent_framework_azure_ai import FoundryEvals
+from agent_framework.foundry import FoundryEvals
 
-evals = FoundryEvals(project_client=project_client, model_deployment="gpt-4o")
+evals = FoundryEvals(project_client=project_client, model="gpt-4o")
 result = await workflow.run("Plan a trip to Paris")
 
 eval_results = await evaluate_workflow(
@@ -590,7 +590,7 @@ foreach (var r in results)
 
 ```python
 from agent_framework import evaluate_agent, evaluator, LocalEvaluator, keyword_check
-from agent_framework_azure_ai import FoundryEvals
+from agent_framework.foundry import FoundryEvals
 
 @evaluator
 def is_helpful(response: str) -> bool:
@@ -598,7 +598,7 @@ def is_helpful(response: str) -> bool:
 
 foundry = FoundryEvals(
     project_client=project_client,
-    model_deployment="gpt-4o",
+    model="gpt-4o",
     evaluators=[FoundryEvals.RELEVANCE, FoundryEvals.COHERENCE],
 )
 

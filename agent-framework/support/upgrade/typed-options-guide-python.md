@@ -137,12 +137,13 @@ response = await client.get_response(
 )
 
 # Same pattern for streaming
-async for chunk in client.get_streaming_response(
+async for chunk in client.get_response(
     "Tell me a story",
     options={
         "model": "gpt-4",
         "temperature": 0.9,
     },
+    stream=True,
 ):
     print(chunk.text, end="")
 ```
@@ -419,6 +420,7 @@ class MyCustomClient(BaseChatClient[TOptions], Generic[TOptions]):
         self,
         *,
         messages: MutableSequence[Message],
+        stream: bool,
         options: dict[str, Any],  # Note: parameter renamed and just a dict
         **kwargs: Any,
     ) -> ChatResponse:
@@ -571,7 +573,7 @@ extended_options = {**my_options, "max_tokens": 500}
 
 ### ChatClient Updates
 
-1. Find all calls to `get_response()` and `get_streaming_response()` that use keyword arguments like `model=`, `temperature=`, `tools=`, etc.
+1. Find all calls to `get_response()` that use keyword arguments like `model=`, `temperature=`, `tools=`, etc.
 2. Move all keyword arguments into an `options={...}` dictionary
 3. Move any `additional_properties` values directly into the `options` dict
 
@@ -585,7 +587,7 @@ extended_options = {**my_options, "max_tokens": 500}
 
 ### Custom Chat Client Updates
 
-1. Update the `_inner_get_response()` and `_inner_get_streaming_response()` method signatures: change `chat_options: ChatOptions` parameter to `options: dict[str, Any]`
+1. Update the `_inner_get_response()` method signature: add `stream: bool` and change the old `chat_options: ChatOptions` parameter to `options: dict[str, Any]`
 2. Update attribute access (e.g., `chat_options.model`) to dict access (e.g., `options.get("model")`)
 3. **(Optional)** If using non-standard parameters: Define a custom TypedDict
 4. Add generic type parameters to your client class

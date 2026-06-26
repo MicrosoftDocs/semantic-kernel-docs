@@ -62,7 +62,7 @@ session = agent.create_session()
 await agent.run("Remember that I prefer vegetarian food.", session=session)
 ```
 
-`RawAgent` may auto-add `InMemoryHistoryProvider("memory")` in specific cases, but add it explicitly when you want deterministic local memory behavior.
+`RawAgent` may auto-add `InMemoryHistoryProvider()` with the default source id `"in_memory"` in specific cases, but add it explicitly when you want deterministic local memory behavior.
 
 :::zone-end
 
@@ -318,13 +318,13 @@ class UserPreferenceProvider(ContextProvider):
 ```
 
 > [!NOTE]
-> `ContextProvider` and `HistoryProvider` are the canonical Python base classes. `BaseContextProvider` and `BaseHistoryProvider` still exist as deprecated aliases for compatibility, but new providers should inherit from the new names.
+> `ContextProvider` and `HistoryProvider` are the canonical Python base classes.
 >
 > Context providers can also add chat or function middleware for the current invocation by calling `context.extend_middleware(self.source_id, middleware)`. The agent flattens those additions with `context.get_middleware()` and applies them in provider order before invoking the chat client.
 
-### Dynamic tool selection with Foundry toolboxes
+### Dynamic tool selection
 
-Context providers can dynamically add or remove tools on each turn. For an example that uses a Foundry toolbox to select tools per-turn based on the user's message, see the [foundry_toolbox_context_provider sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/context_providers/foundry_toolbox_context_provider.py). For more on toolboxes, see [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes).
+Context providers can add tools for the current invocation with `context.extend_tools(self.source_id, tools)`. For progressive tool loading during a function-calling loop, see the [dynamic_tool_exposure sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/tools/dynamic_tool_exposure.py). For more on toolboxes, see [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes).
 
 ::: zone-end
 
@@ -353,7 +353,7 @@ class DatabaseHistoryProvider(HistoryProvider):
         state: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> list[Message]:
-        key = (state or {}).get(self.source_id, {}).get("history_key", session_id or "default")
+        key = (state or {}).get("history_key", session_id or "default")
         rows = await self._db.load_messages(key)
         return [Message.from_dict(row) for row in rows]
 
@@ -368,7 +368,7 @@ class DatabaseHistoryProvider(HistoryProvider):
         if not messages:
             return
         if state is not None:
-            key = state.setdefault(self.source_id, {}).setdefault("history_key", session_id or "default")
+            key = state.setdefault("history_key", session_id or "default")
         else:
             key = session_id or "default"
         await self._db.save_messages(key, [m.to_dict() for m in messages])

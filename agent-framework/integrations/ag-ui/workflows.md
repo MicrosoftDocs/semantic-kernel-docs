@@ -27,7 +27,7 @@ This tutorial shows you how to expose Agent Framework workflows through an AG-UI
 Before you begin, ensure you have:
 
 - Python 3.10 or later
-- `agent-framework-ag-ui` installed
+- `agent-framework-ag-ui` and `agent-framework-foundry` installed
 - Familiarity with the [Getting Started](getting-started.md) tutorial
 - Basic understanding of Agent Framework [workflows](../../workflows/index.md)
 
@@ -191,7 +191,7 @@ from agent_framework.ag_ui import (
     AgentFrameworkWorkflow,
     add_agent_framework_fastapi_endpoint,
 )
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient
 from agent_framework.orchestrations import HandoffBuilder
 from azure.identity import AzureCliCredential
 from fastapi import FastAPI
@@ -226,9 +226,9 @@ def lookup_order_details(order_id: str) -> dict[str, str]:
 ```python
 def create_handoff_workflow() -> Workflow:
     """Build a handoff workflow with triage, refund, and order agents."""
-    client = AzureOpenAIResponsesClient(
-        project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+    client = FoundryChatClient(
+        project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+        model=os.environ["FOUNDRY_MODEL"],
         credential=AzureCliCredential(),
     )
 
