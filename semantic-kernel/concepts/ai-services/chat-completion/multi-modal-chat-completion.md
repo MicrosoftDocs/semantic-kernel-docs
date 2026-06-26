@@ -3,7 +3,7 @@ title: Multi-modal chat completion
 description: Doing chat completion with images
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 11/14/2024
 ms.service: semantic-kernel

@@ -3,7 +3,7 @@ title: Add chat completion services to Semantic Kernel
 description: Learn how to add gpt-4, Mistral, Google, and other chat completion services to your Semantic Kernel project.
 zone_pivot_groups: programming-languages
 author: moonbox3
-ms.topic: conceptual
+ms.topic: article
 ms.author: evmattso
 ms.date: 07/12/2023
 ms.service: semantic-kernel

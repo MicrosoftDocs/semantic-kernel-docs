@@ -394,15 +394,18 @@ When a workflow runs as an agent, workflow events are converted to agent respons
 - `run()`: Returns an `AgentResponse` containing the complete result after the workflow finishes
 - `run(..., stream=True)`: Returns an async iterable of `AgentResponseUpdate` objects as the workflow executes, providing real-time updates
 
+`as_agent()` forwards both `"output"` (terminal) and `"intermediate"` events to the caller. The set of forwarded event types is `AGENT_FORWARDED_EVENT_TYPES = {"output", "intermediate"}`. All other workflow-internal events are dropped.
+
 During execution, internal workflow events are mapped to agent responses as follows:
 
 | Workflow Event | Agent Response |
 |----------------|----------------|
-| `event.type == "output"` | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
+| `event.type == "output"` | Terminal answer — passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming). `response.text` returns only these terminal outputs. |
+| `event.type == "intermediate"` | Observational progress — rendered as `text_reasoning` content in `AgentResponseUpdate`. Not included in `response.text`. |
 | `event.type == "request_info"` | Converted to function call content using `WorkflowAgent.REQUEST_INFO_FUNCTION_NAME` |
 | Other events | Ignored (workflow-internal only) |
 
-This conversion allows you to use the standard agent interface while still having access to detailed workflow information when needed.
+This conversion allows you to use the standard agent interface while still having access to detailed workflow information when needed. The `.text` property on both `AgentResponse` and `AgentResponseUpdate` returns only the terminal (`"output"`) answer; inspect `text_reasoning` content items to access intermediate progress.
 
 ::: zone-end
 

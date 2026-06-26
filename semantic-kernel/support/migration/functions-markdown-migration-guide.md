@@ -2,7 +2,7 @@
 title: Functions.Markdown to Functions.Yaml Package Migration Guide
 description: Describes the steps to migrate from the APIs of the Functions.Markdown NuGet package to the APIs of the Functions.Yaml package.
 author: SergeyMenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.date: 05/07/2025
 ms.service: semantic-kernel

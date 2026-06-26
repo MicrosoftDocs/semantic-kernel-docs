@@ -3,7 +3,7 @@ title: Conversations & Memory overview in Agent Framework
 description: Learn the core AgentSession usage pattern and how to navigate sessions, context providers, and storage.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/13/2026
 ms.service: agent-framework
