@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 05/28/2026
+ms.date: 06/26/2026
 ms.service: agent-framework
 ---
 
@@ -518,6 +518,59 @@ if (lastCheckpoint is not null)
     // Continue processing events...
 }
 ```
+
+### AOT and Trim-Aggressive Checkpointing
+
+When you publish with Native AOT (`dotnet publish -p:PublishAot=true`) or otherwise disable `System.Text.Json`'s reflection fallback (`<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>`), the default `CheckpointManager.CreateJson(store)` call fails on checkpoint commit or rehydration.
+
+The declarative-workflow package ships a source-generated `JsonSerializerOptions` instance, `DeclarativeWorkflowJsonOptions.Default`, that covers every declarative-package type flowing through the checkpoint pipeline. Pass it as the second argument to `CheckpointManager.CreateJson`:
+
+```csharp
+using Microsoft.Agents.AI.Workflows.Checkpointing;
+using Microsoft.Agents.AI.Workflows.Declarative;
+
+// AOT-safe: type info is resolved via the source-generated JsonSerializerContext,
+// so no runtime reflection is required.
+CheckpointManager checkpointManager = CheckpointManager.CreateJson(
+    store,
+    DeclarativeWorkflowJsonOptions.Default);
+```
+
+> [!NOTE]
+> Passing `DeclarativeWorkflowJsonOptions.Default` is **safe to use in non-AOT environments** as well. It is a drop-in upgrade for `CheckpointManager.CreateJson(store)` — reflection-enabled apps see no behavior change. Adopt it unconditionally so the same code keeps working if you later publish with AOT or trimming.
+
+`DeclarativeWorkflowJsonOptions` is marked `[Experimental("MAAI001")]`. Suppress the diagnostic at the call site or in your project file:
+
+```xml
+<PropertyGroup>
+  <NoWarn>$(NoWarn);MAAI001</NoWarn>
+</PropertyGroup>
+```
+
+#### Registering user-defined types
+
+If your workflow input, custom `ActionExecutorResult.Result` payloads, or non-primitive approval-request arguments are user-defined types, clone `Default` and append your own source-generated resolver:
+
+```csharp
+// Compose: declarative-package types + your app's source-gen context.
+JsonSerializerOptions options = new(DeclarativeWorkflowJsonOptions.Default);
+options.TypeInfoResolverChain.Add(MyAppJsonContext.Default);
+options.MakeReadOnly();
+
+CheckpointManager checkpointManager = CheckpointManager.CreateJson(store, options);
+```
+
+Where `MyAppJsonContext` is a `JsonSerializerContext` you define for your app's types:
+
+```csharp
+[JsonSourceGenerationOptions(JsonSerializerDefaults.Web)]
+[JsonSerializable(typeof(MyWorkflowInput))]
+[JsonSerializable(typeof(MyCustomResult))]
+internal sealed partial class MyAppJsonContext : JsonSerializerContext;
+```
+
+> [!TIP]
+> For an end-to-end runnable example — including the YAML workflow, an `AzureCliCredential`-backed agent, and an observable "drop the options to see the failure" mode — see the [`AotCheckpointing` sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/Declarative/AotCheckpointing) in `dotnet/samples/03-workflows/Declarative/AotCheckpointing`. The sample's `.csproj` sets `JsonSerializerIsReflectionEnabledByDefault=false` to reproduce the AOT failure mode without requiring a full AOT publish.
 
 ## Actions Reference
 
